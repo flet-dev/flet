@@ -591,7 +591,6 @@ class DiffBuilder(object):
 
     def _configure_dataclass(self, item, parent):
         if dataclasses.is_dataclass(item):
-
             # set parent
             if parent:
                 # print(
@@ -617,7 +616,7 @@ class DiffBuilder(object):
                         # )
                         changes = getattr(obj, "__changes")
                         changes[name] = (old_value, new_value)
-                super(obj.__class__, obj).__setattr__(name, value)
+                object.__setattr__(obj, name, value)
 
             item.__class__.__setattr__ = control_setattr  # type: ignore
 
