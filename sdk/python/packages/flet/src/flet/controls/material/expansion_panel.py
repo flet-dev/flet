@@ -1,12 +1,11 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.controls import padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.padding import PaddingValue
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     Number,
     OptionalColorValue,
@@ -50,7 +49,7 @@ class ExpansionPanelList(ConstrainedControl):
     divider_color: OptionalColorValue = None
     elevation: Number = 2
     expanded_header_padding: PaddingValue = field(
-        default_factory=lambda: padding.symmetric(vertical=16.0)
+        default_factory=lambda: Padding.symmetric(vertical=16.0)
     )
     expand_icon_color: OptionalColorValue = None
     spacing: OptionalNumber = None

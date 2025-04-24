@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
-from flet.controls.control_state import ControlState, OptionalControlStateValue
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.padding import PaddingValue
 from flet.controls.types import ClipBehavior, ColorValue, MouseCursor, OptionalNumber
 
@@ -24,19 +24,6 @@ class MenuStyle:
     side: OptionalControlStateValue[BorderSide] = None
     shape: OptionalControlStateValue[OutlinedBorder] = None
     mouse_cursor: OptionalControlStateValue[MouseCursor] = None
-
-    def __post_init__(self):
-        if not isinstance(self.padding, dict):
-            self.padding = {ControlState.DEFAULT: self.padding}
-
-        if not isinstance(self.side, dict):
-            self.side = {ControlState.DEFAULT: self.side}
-
-        if not isinstance(self.shape, dict):
-            self.shape = {ControlState.DEFAULT: self.shape}
-
-        if not isinstance(self.mouse_cursor, dict):
-            self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
 
 
 @control("MenuBar")
