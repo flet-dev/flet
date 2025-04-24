@@ -1,9 +1,10 @@
 import datetime
 from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import msgpack
+
 from flet.controls.duration import Duration
 
 
@@ -123,6 +124,7 @@ class ControlEventBody:
     target: int
     name: str
     data: Any
+    fields: Optional[Dict[str, Any]] = None
 
 
 @dataclass

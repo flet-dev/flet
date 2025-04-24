@@ -1,25 +1,6 @@
 import 'package:flet/flet.dart';
+import 'package:flet/src/utils/events.dart';
 import 'package:flutter/material.dart';
-
-class ContainerTapEvent {
-  final double localX;
-  final double localY;
-  final double globalX;
-  final double globalY;
-
-  ContainerTapEvent(
-      {required this.localX,
-      required this.localY,
-      required this.globalX,
-      required this.globalY});
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'lx': localX,
-        'ly': localY,
-        'gx': globalX,
-        'gy': globalY
-      };
-}
 
 class ContainerControl extends StatelessWidget with FletStoreMixin {
   final Control control;
@@ -72,7 +53,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
-        ? () => control.triggerEvent("animation_end", "container")
+        ? () => control.triggerEvent("animation_end", data: "container")
         : null;
     if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
         ink &&
@@ -95,21 +76,14 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                   }
                 : null,
             onTapDown: onTapDown
-                ? (details) {
-                    control.triggerEvent(
-                        "tap_down",
-                        ContainerTapEvent(
-                                localX: details.localPosition.dx,
-                                localY: details.localPosition.dy,
-                                globalX: details.globalPosition.dx,
-                                globalY: details.globalPosition.dy)
-                            .toJson());
+                ? (TapDownDetails details) {
+                    control.triggerEvent("tap_down", fields: details.toMap());
                   }
                 : null,
             onLongPress:
                 onLongPress ? () => control.triggerEvent("long_press") : null,
             onHover: onHover
-                ? (value) => control.triggerEvent("hover", value)
+                ? (value) => control.triggerEvent("hover", data: value)
                 : null,
             borderRadius: borderRadius,
             splashColor: control.getColor("ink_color", context),
@@ -176,12 +150,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               : MouseCursor.defer,
           onEnter: onHover
               ? (value) {
-                  control.triggerEvent("hover", true);
+                  control.triggerEvent("hover", data: true);
                 }
               : null,
           onExit: onHover
               ? (value) {
-                  control.triggerEvent("hover", false);
+                  control.triggerEvent("hover", data: false);
                 }
               : null,
           child: GestureDetector(
@@ -196,15 +170,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                   }
                 : null,
             onTapDown: onTapDown
-                ? (details) {
-                    control.triggerEvent(
-                        "tap_down",
-                        ContainerTapEvent(
-                                localX: details.localPosition.dx,
-                                localY: details.localPosition.dy,
-                                globalX: details.globalPosition.dx,
-                                globalY: details.globalPosition.dy)
-                            .toJson());
+                ? (TapDownDetails details) {
+                    control.triggerEvent("tap_down", fields: details.toMap());
                   }
                 : null,
             onLongPress: onLongPress

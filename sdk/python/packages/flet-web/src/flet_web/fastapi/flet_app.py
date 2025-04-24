@@ -1,13 +1,15 @@
 import asyncio
-import gc
 import logging
 import os
 import traceback
 import weakref
 from typing import Any, Optional
 
+import flet_web.fastapi as flet_fastapi
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
+from flet_web.fastapi.flet_app_manager import app_manager
+
 from flet.controls.base_control import BaseControl
 from flet.controls.page import PageDisconnectedException
 from flet.controls.update_behavior import UpdateBehavior
@@ -25,11 +27,6 @@ from flet.messaging.protocol import (
 )
 from flet.messaging.session import Session
 from flet.utils import random_string, sha1
-
-import flet_web.fastapi as flet_fastapi
-from flet_web.fastapi.flet_app_manager import app_manager
-from flet_web.fastapi.oauth_state import OAuthState
-from flet_web.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -192,8 +189,9 @@ class FletApp(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        print(f"_on_message: {action} {body}")
+        # print(f"_on_message: {action} {body}")
         task = None
+        print(f"Action:{action}")
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
@@ -251,7 +249,9 @@ class FletApp(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            await self.__session.dispatch_event(req.target, req.name, req.data)
+            await self.__session.dispatch_event(
+                req.target, req.name, req.data, req.fields
+            )
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)

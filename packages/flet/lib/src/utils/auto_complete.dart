@@ -19,10 +19,7 @@ class AutoCompleteSuggestion {
     return key;
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'key': key,
-        'value': value,
-      };
+  Map<String, dynamic> toMap() => <String, dynamic>{'key': key, 'value': value};
 
   @override
   bool operator ==(Object other) {

@@ -19,12 +19,23 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
+from flet.utils.deprecated import deprecated
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
 )
 
 logger = logging.getLogger("flet")
+
+
+@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+def app(*args, **kwargs):
+    return run(*args, **kwargs)
+
+
+@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+async def app_async(*args, **kwargs):
+    return await run_async(*args, **kwargs)
 
 
 def run(

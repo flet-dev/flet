@@ -87,14 +87,14 @@ class FletSocketBackendChannel implements FletBackendChannel {
 
   // Note: At this point, the incoming message is already a decoded MessagePack object.
   _onMessage(dynamic message) {
-    onMessage(Message.fromJson(message));
+    onMessage(Message.fromList(message));
   }
 
   @override
   void send(Message message) {
     // Serialize the message using MessagePack and send it.
     _socket!.add(
-        msgpack.serialize(message.toJson(), extEncoder: FletMsgpackEncoder()));
+        msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder()));
   }
 
   @override

@@ -87,10 +87,11 @@ class Control extends ChangeNotifier {
   /// This method checks if the control has an event handler for the given
   /// [eventName] and triggers the event if the application is not in a loading state.
   ///
-  /// - [eventName]: The name of the event to trigger.
-  /// - [eventData]: Optional data to pass along with the event.
-  void triggerEvent(String eventName, [dynamic eventData]) {
-    return backend.triggerControlEvent(this, eventName, eventData);
+  /// - [name]: The name of the event to trigger.
+  /// - [data]: Optional data to pass along with the event. Will be accessible as `e.data` in the Python event handler.
+  /// - [fields]: Optional fields to pass along with the event.
+  void triggerEvent(String name, {dynamic data, Map<String, dynamic>? fields}) {
+    return backend.triggerControlEvent(this, name, data: data, fields: fields);
   }
 
   /// Updates the properties of this control.
@@ -356,16 +357,16 @@ class Control extends ChangeNotifier {
     return results.length == 1 ? results[0] : results;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return Map.fromEntries(
       properties.entries.where((e) => e.value != null).map((e) {
         if (e.value is Control) {
-          return MapEntry(e.key, (e.value as Control).toJson());
+          return MapEntry(e.key, (e.value as Control).toMap());
         } else if (e.value is List &&
             e.value.isNotEmpty &&
             e.value.first is Control) {
           return MapEntry(e.key,
-              (e.value as List).map((c) => (c as Control).toJson()).toList());
+              (e.value as List).map((c) => (c as Control).toMap()).toList());
         } else {
           return MapEntry(e.key, e.value);
         }
@@ -375,7 +376,7 @@ class Control extends ChangeNotifier {
 
   @override
   String toString() {
-    return toJson().toString();
+    return toMap().toString();
   }
 
   @override

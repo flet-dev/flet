@@ -14,10 +14,7 @@ import 'base_controls.dart';
 class DataTableControl extends StatelessWidget {
   final Control control;
 
-  const DataTableControl({
-    super.key,
-    required this.control,
-  });
+  const DataTableControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +67,7 @@ class DataTableControl extends StatelessWidget {
       sortColumnIndex: control.getInt("sort_column_index"),
       onSelectAll: control.getBool("on_select_all", false)!
           ? (bool? selected) {
-              control.triggerEvent("select_all", selected);
+              control.triggerEvent("select_all", data: selected);
             }
           : null,
       columns: control.children("columns").map((column) {
@@ -83,8 +80,10 @@ class DataTableControl extends StatelessWidget {
           mouseCursor: WidgetStateMouseCursor.clickable,
           onSort: column.getBool("on_sort", false)!
               ? (columnIndex, ascending) {
-                  column
-                      .triggerEvent("sort", {"i": columnIndex, "a": ascending});
+                  column.triggerEvent("sort", fields: {
+                    "column_index": columnIndex,
+                    "ascending": ascending
+                  });
                 }
               : null,
           label: column.buildTextOrWidget("label")!,
@@ -97,14 +96,10 @@ class DataTableControl extends StatelessWidget {
           selected: row.getBool("selected", false)!,
           color: parseWidgetStateColor(row.get("color"), theme),
           onSelectChanged: row.getBool("on_select_changed", false)!
-              ? (selected) {
-                  row.triggerEvent("select_changed", selected);
-                }
+              ? (selected) => row.triggerEvent("select_changed", data: selected)
               : null,
           onLongPress: row.getBool("on_long_press", false)!
-              ? () {
-                  row.triggerEvent("long_press");
-                }
+              ? () => row.triggerEvent("long_press")
               : null,
           cells: row.children("cells").map((cell) {
             cell.notifyParent = true;
@@ -113,33 +108,25 @@ class DataTableControl extends StatelessWidget {
               placeholder: cell.getBool("placeholder", false)!,
               showEditIcon: cell.getBool("show_edit_icon", false)!,
               onDoubleTap: cell.getBool("on_double_tap", false)!
-                  ? () {
-                      cell.triggerEvent("double_tap");
-                    }
+                  ? () => cell.triggerEvent("double_tap")
                   : null,
               onLongPress: cell.getBool("on_long_press", false)!
-                  ? () {
-                      cell.triggerEvent("long_press");
-                    }
+                  ? () => cell.triggerEvent("long_press")
                   : null,
               onTap: cell.getBool("on_tap", false)!
-                  ? () {
-                      cell.triggerEvent("tap");
-                    }
+                  ? () => cell.triggerEvent("tap")
                   : null,
               onTapCancel: cell.getBool("on_tap_cancel", false)!
-                  ? () {
-                      cell.triggerEvent("tap_cancel");
-                    }
+                  ? () => cell.triggerEvent("tap_cancel")
                   : null,
               onTapDown: cell.getBool("on_tap_down", false)!
                   ? (details) {
-                      cell.triggerEvent("tap_down", {
+                      cell.triggerEvent("tap_down", fields: {
                         "kind": details.kind?.name,
-                        "lx": details.localPosition.dx,
-                        "ly": details.localPosition.dy,
-                        "gx": details.globalPosition.dx,
-                        "gy": details.globalPosition.dy,
+                        "local_x": details.localPosition.dx,
+                        "local_y": details.localPosition.dy,
+                        "global_x": details.globalPosition.dx,
+                        "global_y": details.globalPosition.dy,
                       });
                     }
                   : null,

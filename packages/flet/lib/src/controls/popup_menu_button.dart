@@ -50,7 +50,7 @@ class PopupMenuButtonControl extends StatelessWidget {
         menuPadding: control.getPadding("menu_padding"),
         position: control.getPopupMenuPosition("menu_position"),
         onSelected: (String selection) =>
-            control.triggerEvent("select", selection),
+            control.triggerEvent("select", data: selection),
         onCanceled: () => control.triggerEvent("cancel"),
         onOpened: () => control.triggerEvent("open"),
         itemBuilder: (BuildContext context) => control
@@ -88,7 +88,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       padding: padding,
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
-                      onTap: () => item.triggerEvent("click", !checked),
+                      onTap: () => item.triggerEvent("click", data: !checked),
                       child: child,
                     )
                   : PopupMenuItem<String>(

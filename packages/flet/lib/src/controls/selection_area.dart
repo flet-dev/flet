@@ -23,7 +23,7 @@ class SelectionAreaControl extends StatelessWidget {
     var selectionArea = SelectionArea(
       child: content,
       onSelectionChanged: (SelectedContent? selection) {
-        control.triggerEvent("change", selection?.plainText);
+        control.triggerEvent("change", data: selection?.plainText);
       },
     );
 

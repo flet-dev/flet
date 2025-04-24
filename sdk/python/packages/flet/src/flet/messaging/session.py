@@ -1,10 +1,9 @@
 import asyncio
-import gc
 import logging
 import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 from flet.controls.base_control import BaseControl
 from flet.controls.control import Control
@@ -27,15 +26,17 @@ from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
 
+__all__ = ["Session"]
+
 
 class Session:
     def __init__(self, conn: Connection):
         self.__conn = conn
         self.__id = random_string(16)
         self.__expires_at = None
-        self.__index: weakref.WeakValueDictionary[int, Control] = (
-            weakref.WeakValueDictionary()
-        )
+        self.__index: weakref.WeakValueDictionary[
+            int, Control
+        ] = weakref.WeakValueDictionary()
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
@@ -127,38 +128,55 @@ class Session:
     # - add-only list
     # - disable mount/unmount
 
-    async def dispatch_event(self, control_id: int, event_name: str, event_data: Any):
-        if control := self.__index.get(control_id):
-            field_name = f"on_{event_name}"
-            try:
-                event_type = ControlEvent.get_event_field_type(control, field_name)
-                if event_type is not None:
-                    if event_type == ControlEvent or not isinstance(event_data, dict):
-                        # simple event
-                        e = ControlEvent(
-                            control=control, name=event_name, data=event_data
-                        )
-                    else:
-                        # custom event
-                        args = dict(event_data)
-                        args["control"] = control
-                        args["name"] = event_name
-                        args["data"] = event_data
-                        e = from_dict(event_type, args)
-                    if hasattr(control, field_name):
-                        event_handler = getattr(control, field_name)
-                        UpdateBehavior.reset()
+    async def dispatch_event(
+        self,
+        control_id: int,
+        event_name: str,
+        event_data: Any,
+        event_fields: Optional[Dict[str, Any]] = None,
+    ):
+        control = self.__index.get(control_id)
+        if not control:
+            # control not found
+            return
 
-                        if asyncio.iscoroutinefunction(event_handler):
-                            await event_handler(e)
-                        elif callable(event_handler):
-                            event_handler(e)
+        field_name = f"on_{event_name}"
+        if not hasattr(control, field_name):
+            # field_name not defined
+            return
+        try:
+            event_type = ControlEvent.get_event_field_type(control, field_name)
+            if event_type is None:
+                return
 
-                        if UpdateBehavior.auto_update_enabled():
-                            self.auto_update(control)
-            except Exception as ex:
-                tb = traceback.format_exc()
-                self.error(f"Exception in '{field_name}': {ex}\n{tb}")
+            if event_type == ControlEvent or not isinstance(event_fields, dict):
+                # simple ControlEvent
+                e = ControlEvent(control=control, name=event_name, data=event_data)
+            else:
+                # custom ControlEvent
+                args = {
+                    "control": control,
+                    "name": event_name,
+                    "data": event_data,
+                    **(event_fields or {}),
+                }
+                e = from_dict(event_type, args)
+                print(f"dispatch_event: {e}")
+
+            UpdateBehavior.reset()
+
+            # Handle async and sync event handlers accordingly
+            event_handler = getattr(control, field_name)
+            if asyncio.iscoroutinefunction(event_handler):
+                await event_handler(e)
+            elif callable(event_handler):
+                event_handler(e)
+
+            if UpdateBehavior.auto_update_enabled():
+                self.auto_update(control)
+        except Exception as ex:
+            tb = traceback.format_exc()
+            self.error(f"Exception in '{field_name}': {ex}\n{tb}")
 
     def invoke_method(self, control_id: int, call_id: str, method_name: str, args: Any):
         self.connection.send_message(

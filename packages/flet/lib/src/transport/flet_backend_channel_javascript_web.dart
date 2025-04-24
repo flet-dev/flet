@@ -32,7 +32,7 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   }
 
   void _onMessage(JSUint8Array data) {
-    onMessage(Message.fromJson(msgpack.deserialize(data.toDart)));
+    onMessage(Message.fromList(msgpack.deserialize(data.toDart)));
   }
 
   @override
@@ -43,7 +43,7 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
 
   @override
   void send(Message message) {
-    jsSend(msgpack.serialize(message.toJson()).toJS);
+    jsSend(msgpack.serialize(message.toList()).toJS);
   }
 
   @override

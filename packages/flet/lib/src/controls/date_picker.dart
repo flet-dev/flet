@@ -39,9 +39,9 @@ class _DatePickerControlState extends State<DatePickerControl> {
       widget.control
           .updateProperties({"value": dateValue ?? value, "open": false});
       if (dateValue != null) {
-        widget.control.triggerEvent("change", dateValue);
+        widget.control.triggerEvent("change", data: dateValue);
       }
-      widget.control.triggerEvent("dismiss", dateValue == null);
+      widget.control.triggerEvent("dismiss", data: dateValue == null);
     }
 
     Widget createSelectDateDialog() {
@@ -64,7 +64,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
         fieldHintText: widget.control.getString("field_hint_text"),
         fieldLabelText: widget.control.getString("field_label_text"),
         onDatePickerModeChange: (DatePickerEntryMode mode) {
-          widget.control.triggerEvent("entry_mode_change", mode.name);
+          widget.control.triggerEvent("entry_mode_change", data: mode.name);
         },
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)

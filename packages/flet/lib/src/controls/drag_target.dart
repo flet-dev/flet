@@ -50,7 +50,7 @@ class DragTargetControl extends StatelessWidget {
         var data = json.decode(details.data);
         control.triggerEvent(
             "move",
-            DragTargetEvent(
+            fields: DragTargetEvent(
                     srcId: data["id"],
                     x: details.offset.dx,
                     y: details.offset.dy)
@@ -60,14 +60,14 @@ class DragTargetControl extends StatelessWidget {
         var data = json.decode(details.data);
         var srcGroup = data["group"] as String;
         var groupMatch = srcGroup == group;
-        control.triggerEvent("will_accept", groupMatch);
+        control.triggerEvent("will_accept", data: groupMatch);
         return groupMatch;
       },
       onAcceptWithDetails: (DragTargetDetails<String> details) {
         var data = json.decode(details.data);
         control.triggerEvent(
             "accept",
-            DragTargetEvent(
+            fields: DragTargetEvent(
                     srcId: data["id"],
                     x: details.offset.dx,
                     y: details.offset.dy)
@@ -79,7 +79,7 @@ class DragTargetControl extends StatelessWidget {
           var jd = json.decode(data);
           srcId = jd["id"];
         }
-        control.triggerEvent("leave", srcId);
+        control.triggerEvent("leave", data: srcId);
       },
     );
   }

@@ -97,13 +97,13 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
             ? null
             : (Object exception, StackTrace? stackTrace) {
                 widget.control
-                    .triggerEvent("image_error", exception.toString());
+                    .triggerEvent("image_error", data: exception.toString());
               },
         onInactiveThumbImageError: inactiveThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {
                 widget.control
-                    .triggerEvent("image_error", exception.toString());
+                    .triggerEvent("image_error", data: exception.toString());
               },
         value: _value,
         offLabelColor: widget.control.getColor("off_label_color", context),

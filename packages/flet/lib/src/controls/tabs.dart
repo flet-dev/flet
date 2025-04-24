@@ -45,7 +45,7 @@ class _TabsControlState extends State<TabsControl>
     var index = _tabController!.index;
     if (_selectedIndex != index) {
       widget.control.updateProperties({"selected_index": index});
-      widget.control.triggerEvent("change", index);
+      widget.control.triggerEvent("change", data: index);
       _selectedIndex = index;
     }
   }
@@ -142,7 +142,7 @@ class _TabsControlState extends State<TabsControl>
         widget.control.getBorderRadius("splash_border_radius");
 
     void onTap(int index) {
-      widget.control.triggerEvent("click", index);
+      widget.control.triggerEvent("click", data: index);
     }
 
     var indicator = indicatorBorderRadius != null ||

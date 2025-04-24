@@ -65,12 +65,12 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
           maxRadius: control.getDouble("max_radius"),
           onBackgroundImageError: backgroundImage != null
               ? (object, trace) {
-                  control.triggerEvent("image_error", "background");
+                  control.triggerEvent("image_error", data: "background");
                 }
               : null,
           onForegroundImageError: foregroundImage != null
               ? (object, trace) {
-                  control.triggerEvent("image_error", "foreground");
+                  control.triggerEvent("image_error", data: "foreground");
                 }
               : null,
           child: content);

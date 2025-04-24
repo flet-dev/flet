@@ -59,7 +59,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
   void _onChange(bool? value) {
     _value = value;
     widget.control.updateProperties({"value": value}, notify: true);
-    widget.control.triggerEvent("change", value);
+    widget.control.triggerEvent("change", data: value);
   }
 
   @override

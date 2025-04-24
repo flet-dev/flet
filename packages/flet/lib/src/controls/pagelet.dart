@@ -58,7 +58,7 @@ class _PageletControlState extends State<PageletControl> {
     void dismissDrawer(dynamic id) {
       // fixme: id
       widget.control.updateProperties({"open": false});
-      widget.control.triggerEvent("dismiss", context);
+      widget.control.triggerEvent("dismiss");
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

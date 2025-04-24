@@ -7,7 +7,7 @@ class InvokeMethodResponseBody {
   InvokeMethodResponseBody(
       {required this.controlId, required this.callId, this.result, this.error});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'control_id': controlId,
         'call_id': callId,
         'result': result,

@@ -114,13 +114,14 @@ class FletBackend extends ChangeNotifier {
       if (controlId == null) {
         // root error handler
         errorsHandler!.addListener(() {
-          triggerControlEvent(page, "error", errorsHandler!.error!);
+          triggerControlEvent(page, "error", data: errorsHandler!.error!);
         });
       } else if (controlId != null && _parentFletBackend != null) {
         // parent error handler
         errorsHandler?.addListener(() {
           _parentFletBackend?.target?.triggerControlEventById(
-              controlId!, "error", errorsHandler!.error!);
+              controlId!, "error",
+              data: errorsHandler!.error!);
         });
       }
     }
@@ -183,9 +184,9 @@ class FletBackend extends ChangeNotifier {
               'width': page.get("width"),
               'height': page.get("height"),
               'platform': page.get("platform"),
-              'window': page.child("window")!.toJson(),
+              'window': page.child("window")!.toMap(),
               'media': page.get("media"),
-            }).toJson()));
+            }).toMap()));
   }
 
   _onClientRegistered(RegisterClientResponseBody resp) {
@@ -262,28 +263,30 @@ class FletBackend extends ChangeNotifier {
   /// [eventName] and triggers the event if the application is not in a loading state.
   ///
   /// - [control]: The control for which the event is triggered.
-  /// - [eventName]: The name of the event to trigger.
-  /// - [eventData]: Optional data to pass along with the event.
-  void triggerControlEvent(Control control, String eventName,
-      [dynamic eventData]) {
-    if (!isLoading && control.getBool("on_$eventName", false)!) {
-      debugPrint("${control.type}(${control.id}).on_$eventName($eventData)");
-      triggerControlEventById(control.id, eventName, eventData);
+  /// - [name]: The name of the event to trigger.
+  /// - [data]: Optional data to pass along with the event. Will be accessible as `e.data` in the Python event handler.
+  /// - [fields]: Optional fields to pass along with the event.
+  void triggerControlEvent(Control control, String name,
+      {dynamic data, Map<String, dynamic>? fields}) {
+    if (!isLoading && control.getBool("on_$name", false)!) {
+      debugPrint(
+          "${control.type}(${control.id}).on_$name(data=$data, fields=$fields)");
+      triggerControlEventById(control.id, name, data: data, fields: fields);
     }
   }
 
-  void triggerControlEventById(int controlId, String eventName,
-      [dynamic eventData]) {
+  void triggerControlEventById(int controlId, String name,
+      {dynamic data, Map<String, dynamic>? fields}) {
     _send(Message(
         action: MessageAction.controlEvent,
         payload: ControlEventBody(
-                target: controlId, name: eventName, data: eventData)
-            .toJson()));
+                target: controlId, name: name, data: data, fields: fields)
+            .toMap()));
   }
 
   void _sendRouteChangeEvent(String route) {
     updateControl(page.id, {"route": route});
-    triggerControlEvent(page, "route_change", route);
+    triggerControlEvent(page, "route_change", data: route);
   }
 
   void onWindowEvent(String eventName, WindowState windowState) {
@@ -291,7 +294,7 @@ class FletBackend extends ChangeNotifier {
     var window = page.get("window");
     if (window != null && window is Control) {
       updateControl(window.id, windowState.toMap());
-      triggerControlEvent(window, "event", {"type": eventName});
+      triggerControlEvent(window, "event", fields: {"type": eventName});
       notifyListeners();
     }
   }
@@ -299,16 +302,16 @@ class FletBackend extends ChangeNotifier {
   void updatePageSize(Size newSize) async {
     debugPrint("Page size updated: $newSize");
     pageSize = newSize;
-    var eventData = {"width": newSize.width, "height": newSize.height};
-    updateControl(page.id, eventData);
-    triggerControlEvent(page, "resized", eventData);
+    var newProps = {"width": newSize.width, "height": newSize.height};
+    updateControl(page.id, newProps);
+    triggerControlEvent(page, "resized", fields: newProps);
 
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
       debugPrint("Window state updated: $windowState");
       var window = page.child("window")!;
       updateControl(window.id, windowState.toMap());
-      triggerControlEvent(window, "event", {"type": "resized"});
+      triggerControlEvent(window, "event", fields: {"type": "resized"});
     }
 
     if (!pageSizeUpdated.isCompleted) {
@@ -328,7 +331,7 @@ class FletBackend extends ChangeNotifier {
   void updateMedia(PageMediaData newMedia) {
     debugPrint("Page media updated: $newMedia");
     media = newMedia;
-    updateControl(page.id, {"media": newMedia.toJson()});
+    updateControl(page.id, {"media": newMedia.toMap()});
     triggerControlEvent(page, "media_change");
     notifyListeners();
   }
@@ -357,7 +360,7 @@ class FletBackend extends ChangeNotifier {
       if (python && !isLoading) {
         _send(Message(
             action: MessageAction.updateControl,
-            payload: UpdateControlBody(id: id, props: props).toJson()));
+            payload: UpdateControlBody(id: id, props: props).toMap()));
       }
     }
   }
@@ -375,7 +378,7 @@ class FletBackend extends ChangeNotifier {
   }
 
   _onMessage(Message message) {
-    debugPrint("Received message: ${message.toJson()}");
+    debugPrint("Received message: ${message.toList()}");
     //debugPrint("message.payload: ${message.payload}");
     switch (message.action) {
       case MessageAction.registerClient:
@@ -426,7 +429,7 @@ class FletBackend extends ChangeNotifier {
                 callId: req.callId,
                 result: result,
                 error: error)
-            .toJson()));
+            .toMap()));
   }
 
   _onSessionCrashed(SessionCrashedBody body) {

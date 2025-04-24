@@ -65,7 +65,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
                 Container(color: Colors.transparent),
         onDismissed: widget.control.getBool("on_dismiss", false)!
             ? (DismissDirection direction) => widget.control
-                .triggerEvent("dismiss", {"direction": direction.name})
+                .triggerEvent("dismiss", fields: {"direction": direction.name})
             : null,
         onResize: widget.control.getBool("on_resize", false)!
             ? () => widget.control.triggerEvent("resize")
@@ -74,12 +74,12 @@ class _DismissibleControlState extends State<DismissibleControl> {
             ? (DismissUpdateDetails details) {
                 widget.control.triggerEvent(
                     "update",
-                    DismissibleUpdateEvent(
+                    fields: DismissibleUpdateEvent(
                             direction: details.direction.name,
                             previousReached: details.previousReached,
                             progress: details.progress,
                             reached: details.reached)
-                        .toJson());
+                        .toMap());
               }
             : null,
         confirmDismiss: widget.control.getBool("on_confirm_dismiss", false)!
@@ -87,8 +87,8 @@ class _DismissibleControlState extends State<DismissibleControl> {
                 var completer = Completer<bool?>();
                 widget.control
                     .updateProperties({"_completer": completer}, python: false);
-                widget.control.triggerEvent(
-                    "confirm_dismiss", {"direction": direction.name});
+                widget.control.triggerEvent("confirm_dismiss",
+                    fields: {"direction": direction.name});
                 return completer.future;
               }
             : null,
@@ -118,7 +118,7 @@ class DismissibleUpdateEvent {
       required this.previousReached,
       required this.reached});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'direction': direction,
         'progress': progress,
         'reached': reached,

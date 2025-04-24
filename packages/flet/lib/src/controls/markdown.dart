@@ -79,7 +79,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
           softLineBreak: control.getBool("soft_line_break", false)!,
           onSelectionChanged: (String? text, TextSelection selection,
               SelectionChangedCause? cause) {
-            control.triggerEvent("selection_change", {
+            control.triggerEvent("selection_change", fields: {
               "text": text ?? "",
               "cause": cause?.name ?? "unknown",
               "selection": {
@@ -101,7 +101,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
             if (autoFollowLinks && href != null) {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
-            control.triggerEvent("tap_link", href?.toString());
+            control.triggerEvent("tap_link", data: href);
           });
 
       return ConstrainedControl(control: control, child: markdown);

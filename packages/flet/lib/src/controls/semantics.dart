@@ -83,13 +83,13 @@ class SemanticsControl extends StatelessWidget {
           : null,
       onMoveCursorForwardByCharacter: control.getBool(
               "on_move_cursor_forward_by_character", false)!
-          ? (bool value) =>
-              control.triggerEvent("move_cursor_forward_by_character", value)
-          : null,
+              ? (bool value) => control
+                  .triggerEvent("move_cursor_forward_by_character", data: value)
+              : null,
       onMoveCursorBackwardByCharacter: control.getBool(
               "on_move_cursor_backward_by_character", false)!
-          ? (bool value) =>
-              control.triggerEvent("move_cursor_backward_by_character", value)
+          ? (bool value) => control
+              .triggerEvent("move_cursor_backward_by_character", data: value)
           : null,
       onDidGainAccessibilityFocus:
           control.getBool("on_did_gain_accessibility_focus", false)!
@@ -100,7 +100,7 @@ class SemanticsControl extends StatelessWidget {
               ? () => control.triggerEvent("did_lose_accessibility_focus")
               : null,
       onSetText: control.getBool("on_set_text", false)!
-          ? (String text) => control.triggerEvent("set_text", text)
+          ? (String text) => control.triggerEvent("set_text", data: text)
           : null,
     );
 

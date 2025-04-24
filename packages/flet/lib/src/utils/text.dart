@@ -263,3 +263,17 @@ extension TextParsers on Control {
         defaultTextStyle: defaultTextStyle, defaultValue: defaultValue);
   }
 }
+
+extension TextSelectionExtension on TextSelection {
+  Map<String, dynamic> toMap() => {
+        "start": start,
+        "end": end,
+        "base_offset": baseOffset,
+        "extent_offset": extentOffset,
+        "affinity": affinity.name,
+        "directional": isDirectional,
+        "collapsed": isCollapsed,
+        "valid": isValid,
+        "normalized": isNormalized,
+      };
+}

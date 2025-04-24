@@ -140,7 +140,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
           : (String? value) {
               _value = value!;
               widget.control.updateProperties({"value": value});
-              widget.control.triggerEvent("change", value);
+              widget.control.triggerEvent("change", data: value);
             },
       items: items,
     );

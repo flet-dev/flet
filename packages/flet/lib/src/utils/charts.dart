@@ -6,8 +6,8 @@ import '../utils/gradient.dart';
 import 'colors.dart';
 import 'numbers.dart';
 
-FlGridData parseChartGridData(ThemeData theme, Control control,
-    String horizPropName, String vertPropName) {
+FlGridData parseChartGridData(Control control, String horizPropName,
+    String vertPropName, ThemeData theme) {
   var hv = control.get(horizPropName);
   var vv = control.get(vertPropName);
   if (hv == null && vv == null) {

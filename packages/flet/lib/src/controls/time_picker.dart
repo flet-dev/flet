@@ -29,9 +29,9 @@ class _TimePickerControlState extends State<TimePickerControl> {
       widget.control.updateProperties({"_open": false}, python: false);
       widget.control.updateProperties({"value": timeValue, "open": false});
       if (timeValue != null) {
-        widget.control.triggerEvent("change", timeValue);
+        widget.control.triggerEvent("change", data: timeValue);
       }
-      widget.control.triggerEvent("dismiss", timeValue == null);
+      widget.control.triggerEvent("dismiss", data: timeValue == null);
     }
 
     Widget createSelectTimeDialog() {
@@ -45,9 +45,9 @@ class _TimePickerControlState extends State<TimePickerControl> {
         errorInvalidText: widget.control.getString("error_invalid_text"),
         initialEntryMode: widget.control.getTimePickerEntryMode(
             "time_picker_entry_mode", TimePickerEntryMode.dial)!,
-        orientation: parseOrientation(widget.control.getString("orientation")),
+        orientation: widget.control.getOrientation("orientation"),
         onEntryModeChanged: (TimePickerEntryMode mode) {
-          widget.control.triggerEvent("entry_mode_change", mode.name);
+          widget.control.triggerEvent("entry_mode_change", data: mode.name);
         },
       );
 

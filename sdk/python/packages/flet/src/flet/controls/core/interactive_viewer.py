@@ -1,4 +1,5 @@
-from dataclasses import dataclass, field
+import asyncio
+from dataclasses import dataclass
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -6,10 +7,13 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.core.gesture_detector import (
+    ScaleEndEvent,
+    ScaleStartEvent,
+    ScaleUpdateEvent,
+)
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import MarginValue
-from flet.controls.transform import Offset
 from flet.controls.types import ClipBehavior, Number, OptionalEventCallable
 
 __all__ = [
@@ -21,27 +25,18 @@ __all__ = [
 
 
 @dataclass
-class InteractiveViewerInteractionStartEvent(ControlEvent):
-    pointer_count: int = field(metadata={"data_field": "pc"})
-    global_focal_point: Offset = field(metadata={"data_field": "gfp"})
-    local_focal_point: Offset = field(metadata={"data_field": "lfp"})
+class InteractiveViewerInteractionStartEvent(ScaleStartEvent):
+    pass
 
 
 @dataclass
-class InteractiveViewerInteractionUpdateEvent(ControlEvent):
-    pointer_count: int = field(metadata={"data_field": "pc"})
-    global_focal_point: Offset = field(metadata={"data_field": "gfp"})
-    local_focal_point: Offset = field(metadata={"data_field": "lfp"})
-    scale: float = field(metadata={"data_field": "s"})
-    horizontal_scale: float = field(metadata={"data_field": "hs"})
-    vertical_scale: float = field(metadata={"data_field": "vs"})
-    rotation: float = field(metadata={"data_field": "rot"})
+class InteractiveViewerInteractionUpdateEvent(ScaleUpdateEvent):
+    pass
 
 
 @dataclass
-class InteractiveViewerInteractionEndEvent(ControlEvent):
-    pointer_count: int = field(metadata={"data_field": "pc"})
-    scale_velocity: float = field(metadata={"data_field": "sv"})
+class InteractiveViewerInteractionEndEvent(ScaleEndEvent):
+    pass
 
 
 @control("InteractiveViewer")
@@ -73,9 +68,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     on_interaction_update: OptionalEventCallable[
         InteractiveViewerInteractionUpdateEvent
     ] = None
-    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent] = (
-        None
-    )
+    on_interaction_end: OptionalEventCallable[
+        InteractiveViewerInteractionEndEvent
+    ] = None
 
     def before_update(self):
         super().before_update()
@@ -91,18 +86,33 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         ), "interaction_end_friction_coefficient must be greater than 0"
 
     def reset(self, animation_duration: OptionalDurationValue = None):
-        self.invoke_method(
-            "reset", arguments={"duration": self._convert_attr_json(animation_duration)}
+        asyncio.create_task(self.reset_async(animation_duration))
+
+    async def reset_async(self, animation_duration: OptionalDurationValue = None):
+        await self._invoke_method_async(
+            "reset", arguments={"animation_duration": animation_duration}
         )
 
     def save_state(self):
-        self.invoke_method("save_state")
+        asyncio.create_task(self.save_state_async())
+
+    async def save_state_async(self):
+        await self._invoke_method_async("save_state")
 
     def restore_state(self):
-        self.invoke_method("restore_state")
+        asyncio.create_task(self.restore_state_async())
+
+    async def restore_state_async(self):
+        await self._invoke_method_async("restore_state")
 
     def zoom(self, factor: Number):
-        self.invoke_method("zoom", arguments={"factor": str(factor)})
+        asyncio.create_task(self.zoom_async(factor))
 
-    def pan(self, dx: Number, dy: Number):
-        self.invoke_method("pan", arguments={"dx": str(dx), "dy": str(dy)})
+    async def zoom_async(self, factor: Number):
+        await self._invoke_method_async("zoom", arguments={"factor": factor})
+
+    def pan(self, dx: Number, dy: Number = 0, dz: Number = 0):
+        asyncio.create_task(self.pan_async(dx, dy, dz))
+
+    async def pan_async(self, dx: Number, dy: Number = 0, dz: Number = 0):
+        await self._invoke_method_async("pan", arguments={"dx": dx, "dy": dy, "dz": dz})

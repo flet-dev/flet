@@ -1,6 +1,10 @@
-import 'package:flet/flet.dart';
+import 'package:flet/src/extensions/control.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'base_controls.dart';
 
 class ExpansionPanelListControl extends StatelessWidget {
@@ -19,7 +23,7 @@ class ExpansionPanelListControl extends StatelessWidget {
       control
           .children("controls")[index]
           .updateProperties({"expanded": isExpanded}, notify: true);
-      control.triggerEvent("change", index);
+      control.triggerEvent("change", data: index);
     }
 
     var panelList = ExpansionPanelList(
