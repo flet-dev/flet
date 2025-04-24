@@ -137,7 +137,6 @@ class Session:
         control = self.__index.get(control_id)
         if not control:
             # control not found
-            print("control not found:", control_id)
             return
 
         field_name = f"on_{event_name}"
@@ -146,7 +145,6 @@ class Session:
             return
         try:
             event_type = ControlEvent.get_event_field_type(control, field_name)
-            print("event_type:", event_type)
             if event_type is None:
                 return
 

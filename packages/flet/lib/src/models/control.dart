@@ -299,7 +299,9 @@ class Control extends ChangeNotifier {
               newList[index] = merged;
               changed = true;
             }
-          } else if (newList[index] is Control) {
+          } else if (newList[index] is Control &&
+              v is Map &&
+              (!v.containsKey("_i") || v["_i"] == newList[index].id)) {
             (newList[index] as Control)
                 .applyPatch(v, backend, shouldNotify: notify);
           } else {
