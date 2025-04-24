@@ -99,8 +99,7 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -109,8 +108,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -371,16 +369,15 @@ class Page(AdaptiveControl):
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
         if not skip_route_change_event:
-            self.run_task(
-                self.__on_route_change.get_handler(),
-                ControlEvent(
-                    target="page",
-                    name="route_change",
-                    data=self.route,
-                    page=self,
-                    control=self,
-                ),
+            e = RouteChangeEvent(
+                name="route_change", control=self, data=self.route, route=self.route
             )
+            if self.on_route_change:
+                if asyncio.iscoroutinefunction(self.on_route_change):
+                    self.run_task(self.on_route_change, e)
+                elif callable(self.on_route_change):
+                    self.on_route_change(e)
+
         self.update()
         self.query()  # Update query url (required when using go)
 
