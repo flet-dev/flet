@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
-from flet.controls import alignment
 from flet.controls.alignment import Alignment
 
 __all__ = [
@@ -35,8 +34,8 @@ class Gradient:
 
 @dataclass
 class LinearGradient(Gradient):
-    begin: Alignment = field(default_factory=lambda: alignment.center_left)
-    end: Alignment = field(default_factory=lambda: alignment.center_right)
+    begin: Alignment = field(default_factory=lambda: Alignment.center_left())
+    end: Alignment = field(default_factory=lambda: Alignment.center_right())
 
     def __post_init__(self):
         self.type = "linear"
@@ -44,7 +43,7 @@ class LinearGradient(Gradient):
 
 @dataclass
 class RadialGradient(Gradient):
-    center: Alignment = field(default_factory=lambda: alignment.center)
+    center: Alignment = field(default_factory=lambda: Alignment.center())
     radius: Number = 0.5
     focal: Optional[Alignment] = None
     focal_radius: Number = 0.0
@@ -55,7 +54,7 @@ class RadialGradient(Gradient):
 
 @dataclass
 class SweepGradient(Gradient):
-    center: Alignment = field(default_factory=lambda: alignment.center)
+    center: Alignment = field(default_factory=lambda: Alignment.center())
     start_angle: Number = 0.0
     end_angle: Number = math.pi * 2
 

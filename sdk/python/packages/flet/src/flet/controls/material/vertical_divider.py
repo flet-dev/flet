@@ -24,13 +24,13 @@ class VerticalDivider(Control):
                 [
                     ft.Container(
                         bgcolor=ft.colors.ORANGE_300,
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.center(),
                         expand=True,
                     ),
                     ft.VerticalDivider(),
                     ft.Container(
                         bgcolor=ft.colors.BROWN_400,
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.center(),
                         expand=True,
                     ),
                 ],

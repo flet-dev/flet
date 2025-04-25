@@ -42,7 +42,7 @@ class Option(Control):
     """
     Defines the alignment of this option in it's container.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and defaults to `alignment.center_left`.
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and defaults to `Alignment.center_left()`.
     """
 
     text_style: Optional[TextStyle] = None
