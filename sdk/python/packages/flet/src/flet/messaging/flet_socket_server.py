@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, Optional
 
 import msgpack
-
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -118,7 +117,7 @@ class FletSocketServer(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        # print(f"_on_message: {action} {body}")
+        print(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
