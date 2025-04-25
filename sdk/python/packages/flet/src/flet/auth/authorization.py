@@ -1,7 +1,5 @@
-import asyncio
 import json
 import secrets
-import threading
 import time
 from typing import List, Optional, Tuple
 
@@ -9,7 +7,6 @@ import httpx
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
 from flet.auth.user import User
-from flet.utils import is_asyncio
 from flet.version import version
 from oauthlib.oauth2 import WebApplicationClient
 from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
@@ -41,21 +38,10 @@ class Authorization:
                 if s not in self.scope:
                     self.scope.append(s)
 
-    def dehydrate_token(self, saved_token: str):
-        self.__token = OAuthToken.from_json(saved_token)
-        self.__refresh_token()
-        self.__fetch_user_and_groups()
-
     async def dehydrate_token_async(self, saved_token: str):
         self.__token = OAuthToken.from_json(saved_token)
         await self.__refresh_token_async()
         await self.__fetch_user_and_groups_async()
-
-    # token
-    @property
-    def token(self) -> Optional[OAuthToken]:
-        self.__refresh_token()
-        return self.__token
 
     # token_async
     @property
@@ -76,27 +62,7 @@ class Authorization:
         )
         return authorization_url, self.state
 
-    def request_token(self, code: str):
-        req = self.__get_request_token_request(code)
-        with httpx.Client(follow_redirects=True) as client:
-            resp = client.send(req)
-            resp.raise_for_status()
-            client = WebApplicationClient(self.provider.client_id)
-            t = client.parse_request_body_response(resp.text)
-            self.__token = self.__convert_token(t)
-            self.__fetch_user_and_groups()
-
     async def request_token_async(self, code: str):
-        req = self.__get_request_token_request(code)
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            resp = await client.send(req)
-            resp.raise_for_status()
-            client = WebApplicationClient(self.provider.client_id)
-            t = client.parse_request_body_response(resp.text)
-            self.__token = self.__convert_token(t)
-            await self.__fetch_user_and_groups_async()
-
-    def __get_request_token_request(self, code: str):
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
             code=code,
@@ -107,24 +73,16 @@ class Authorization:
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
-        return httpx.Request(
+        req = httpx.Request(
             "POST", self.provider.token_endpoint, content=data, headers=headers
         )
-
-    def __fetch_user_and_groups(self):
-        assert self.__token is not None
-        if self.fetch_user:
-            self.user = self.provider._fetch_user(self.__token.access_token)
-            if self.user is None and self.provider.user_endpoint is not None:
-                if self.provider.user_id_fn is None:
-                    raise Exception(
-                        "user_id_fn must be specified too if user_endpoint is not None"
-                    )
-                self.user = self.__get_user()
-            if self.fetch_groups and self.user is not None:
-                self.user.groups = self.provider._fetch_groups(
-                    self.__token.access_token
-                )
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            resp = await client.send(req)
+            resp.raise_for_status()
+            client = WebApplicationClient(self.provider.client_id)
+            t = client.parse_request_body_response(resp.text)
+            self.__token = self.__convert_token(t)
+            await self.__fetch_user_and_groups_async()
 
     async def __fetch_user_and_groups_async(self):
         assert self.__token is not None
@@ -151,21 +109,7 @@ class Authorization:
             refresh_token=t.get("refresh_token"),
         )
 
-    def __refresh_token(self):
-        refresh_req = self.__get_refresh_token_request()
-        if refresh_req:
-            with httpx.Client(follow_redirects=True) as client:
-                refresh_resp = client.send(refresh_req)
-                self.__complete_refresh_token_request(refresh_resp)
-
     async def __refresh_token_async(self):
-        refresh_req = self.__get_refresh_token_request()
-        if refresh_req:
-            async with httpx.AsyncClient(follow_redirects=True) as client:
-                refresh_resp = await client.send(refresh_req)
-                self.__complete_refresh_token_request(refresh_resp)
-
-    def __get_refresh_token_request(self):
         if (
             self.__token is None
             or self.__token.expires_at is None
@@ -184,43 +128,32 @@ class Authorization:
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
-        return httpx.Request(
+        refresh_req = httpx.Request(
             "POST", url=self.provider.token_endpoint, content=data, headers=headers
         )
-
-    def __complete_refresh_token_request(self, refresh_resp):
-        refresh_resp.raise_for_status()
-        assert self.__token is not None
-        client = WebApplicationClient(self.provider.client_id)
-        t = client.parse_request_body_response(refresh_resp.text)
-        if t.get("refresh_token") is None:
-            t["refresh_token"] = self.__token.refresh_token
-        self.__token = self.__convert_token(t)
-
-    def __get_user(self):
-        user_req = self.__get_user_request()
-        with httpx.Client() as client:
-            user_resp = client.send(user_req)
-            return self.__complete_user_request(user_resp)
+        if refresh_req:
+            async with httpx.AsyncClient(follow_redirects=True) as client:
+                refresh_resp = await client.send(refresh_req)
+                refresh_resp.raise_for_status()
+                assert self.__token is not None
+                client = WebApplicationClient(self.provider.client_id)
+                t = client.parse_request_body_response(refresh_resp.text)
+                if t.get("refresh_token") is None:
+                    t["refresh_token"] = self.__token.refresh_token
+                self.__token = self.__convert_token(t)
 
     async def __get_user_async(self):
-        user_req = self.__get_user_request()
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            user_resp = await client.send(user_req)
-            return self.__complete_user_request(user_resp)
-
-    def __get_user_request(self):
         assert self.token is not None
         assert self.provider.user_endpoint is not None
         headers = self.__get_default_headers()
         headers["Authorization"] = f"Bearer {self.token.access_token}"
-        return httpx.Request("GET", self.provider.user_endpoint, headers=headers)
-
-    def __complete_user_request(self, user_resp):
-        user_resp.raise_for_status()
-        assert self.provider.user_id_fn is not None
-        uj = json.loads(user_resp.text)
-        return User(uj, str(self.provider.user_id_fn(uj)))
+        user_req = httpx.Request("GET", self.provider.user_endpoint, headers=headers)
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            user_resp = await client.send(user_req)
+            user_resp.raise_for_status()
+            assert self.provider.user_id_fn is not None
+            uj = json.loads(user_resp.text)
+            return User(uj, str(self.provider.user_id_fn(uj)))
 
     def __get_default_headers(self):
         return {

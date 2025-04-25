@@ -90,7 +90,7 @@ _session_page = ContextVar("flet_session_page", default=None)
 
 class context:
     @classproperty
-    def page(cls) -> "Page":
+    def page(cls) -> Optional["Page"]:
         return _session_page.get()
 
 
