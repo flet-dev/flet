@@ -1,13 +1,11 @@
-[tool.poetry]
+[project]
 name = "flet-project"
 version = "0.1.0"
 description = ""
-authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
 package-mode = false
-
-[tool.poetry.dependencies]
-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.14"
 
 [tool.poetry.group.dev.dependencies]
 flet-cli = {path = "packages/flet-cli", develop = true}
@@ -24,6 +22,9 @@ pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
 gunicorn = "^21.2.0"
 pypi-cleanup = "0.1.4"
+matplotlib = "^3.10.1"
+plotly = "^6.0.1"
+pandas = "^2.2.3"
 
 [build-system]
 requires = ["poetry-core"]
