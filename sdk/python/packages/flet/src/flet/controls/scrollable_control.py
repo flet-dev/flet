@@ -51,7 +51,7 @@ class ScrollableControl(Control):
     scroll: Optional[ScrollMode] = None
     auto_scroll: bool = False
     reverse: bool = False
-    on_scroll_interval: Number = 10  # todo: test that this value gets set
+    scroll_interval: Number = 10
     on_scroll: OptionalEventCallable[OnScrollEvent] = None
 
     def scroll_to(
