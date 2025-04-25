@@ -191,7 +191,6 @@ class FletApp(Connection):
         body = data[1]
         # print(f"_on_message: {action} {body}")
         task = None
-        print(f"Action:{action}")
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 

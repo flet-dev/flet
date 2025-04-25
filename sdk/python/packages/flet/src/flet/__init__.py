@@ -241,6 +241,7 @@ from flet.controls.duration import (
     Duration,
     DurationValue,
     OptionalDateTimeValue,
+    OptionalDuration,
     OptionalDurationValue,
 )
 from flet.controls.exceptions import (

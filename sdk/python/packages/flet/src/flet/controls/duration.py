@@ -13,6 +13,7 @@ __all__ = [
     "MICROSECONDS_PER_DAY",
     "DateTimeValue",
     "OptionalDateTimeValue",
+    "OptionalDuration",
 ]
 
 MICROSECONDS_PER_MILLISECOND = 1_000
@@ -185,6 +186,7 @@ class Duration:
         return self.in_microseconds >= other.in_microseconds
 
 
+OptionalDuration = Optional[Duration]
 DurationValue = Union[Duration, int]
 OptionalDurationValue = Optional[DurationValue]
 DateTimeValue = Union[datetime, date]

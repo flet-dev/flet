@@ -343,8 +343,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   instance.minNumberOfTouches = multiTapTouches;
                   instance.onMultiTap = (correctNumberOfTouches) {
                     if (onMultiTap) {
-                      widget.control.triggerEvent("multi_tap",
-                          {"correct_touches": correctNumberOfTouches});
+                      widget.control.triggerEvent(
+                          "multi_tap", {"ct": correctNumberOfTouches});
                     }
                     if (onMultiLongPress) {
                       if (correctNumberOfTouches) {
