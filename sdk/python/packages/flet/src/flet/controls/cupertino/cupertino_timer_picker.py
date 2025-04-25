@@ -1,7 +1,6 @@
 from dataclasses import field
 from enum import Enum
 
-from flet.controls import alignment
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -30,7 +29,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     """
 
     value: DurationValue = field(default_factory=lambda: Duration())
-    alignment: Alignment = field(default_factory=lambda: alignment.center)
+    alignment: Alignment = field(default_factory=lambda: Alignment.center())
     second_interval: int = 1
     minute_interval: int = 1
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS

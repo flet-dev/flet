@@ -46,7 +46,7 @@ class UserFonts {
 Map<String, String>? parseFonts(dynamic value,
     [Map<String, String>? defaultValue]) {
   if (value == null) return {};
-  return Map<String, String>.fromEntries(value.entries);
+  return Map<String, String>.from(value);
 }
 
 extension UserFontParsers on Control {

@@ -16,7 +16,7 @@ class ControlWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Key? controlKey;
-    var key = control.getString("key", "")!;
+    var key = control.getString("scroll_key", "")!;
     if (key != "") {
       if (key.startsWith("test:")) {
         controlKey = Key(key.substring(5));

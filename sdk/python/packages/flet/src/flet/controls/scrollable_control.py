@@ -51,24 +51,26 @@ class ScrollableControl(Control):
     scroll: Optional[ScrollMode] = None
     auto_scroll: bool = False
     reverse: bool = False
-    on_scroll_interval: Number = 10  # todo: test that this value gets set
+    scroll_interval: Number = 10
     on_scroll: OptionalEventCallable[OnScrollEvent] = None
 
     def scroll_to(
         self,
         offset: OptionalNumber = None,
         delta: OptionalNumber = None,
-        key: OptionalString = None,
+        scroll_key: OptionalString = None,
         duration: DurationValue = Duration(),
         curve: AnimationCurve = AnimationCurve.EASE,
     ):
-        asyncio.create_task(self.scroll_to_async(offset, delta, key, duration, curve))
+        asyncio.create_task(
+            self.scroll_to_async(offset, delta, scroll_key, duration, curve)
+        )
 
     async def scroll_to_async(
         self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
-        key: Optional[str] = None,
+        scroll_key: Optional[str] = None,
         duration: DurationValue = Duration(),
         curve: AnimationCurve = AnimationCurve.EASE,
     ):
@@ -77,7 +79,7 @@ class ScrollableControl(Control):
             {
                 "offset": offset,
                 "delta": delta,
-                "key": key,
+                "scroll_key": scroll_key,
                 "duration": duration,
                 "curve": curve,
             },

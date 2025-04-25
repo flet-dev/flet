@@ -3,11 +3,12 @@ import re
 import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
-from flet.controls import alignment
+from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
-from flet.controls.core.container import Container
+from flet.controls.box import BoxFit
 from flet.controls.core.image import Image
 from flet.controls.material.badge import BadgeValue
+from flet.controls.material.container import Container
 from flet.controls.material.tooltip import TooltipValue
 from flet.controls.ref import Ref
 from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
@@ -135,8 +136,8 @@ class MatplotlibChart(Container):
         return self.__isolated
 
     def build(self):
-        self.alignment = alignment.center
-        self.__img = Image(fit=ImageFit.FILL)
+        self.alignment = Alignment.center()
+        self.__img = Image(fit=BoxFit.FILL)
         self.content = self.__img
 
     def before_update(self):
