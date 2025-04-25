@@ -18,7 +18,7 @@ class BottomAppBarControl extends StatelessWidget {
       shape: control.getNotchedShape("shape"),
       shadowColor: control.getColor("shadow_color", context),
       surfaceTintColor: control.getColor("surface_tint_color", context),
-      color: control.getColor("bgCcolor", context),
+      color: control.getColor("bgcolor", context),
       notchMargin: control.getDouble("notch_margin", 4.0)!,
       child: control.buildWidget("content"),
     );

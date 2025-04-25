@@ -3,6 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
@@ -143,9 +144,11 @@ class FloatingActionButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert self.icon or (
-            self.content and self.content.visible
-        ), "at minimum, text, icon or a visible content must be provided"
+        assert (
+            self.icon
+            or isinstance(self.content, str)
+            or (isinstance(self.content, Control) and self.content.visible)
+        ), "at minimum, icon or a visible content must be provided"
         assert (
             self.elevation is None or self.elevation >= 0
         ), "elevation cannot be negative"
