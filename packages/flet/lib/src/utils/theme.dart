@@ -578,7 +578,7 @@ VisualDensity? parseVisualDensity(String? density,
   }
 }
 
-PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? value,
+PageTransitionsTheme? parsePageTransitions(Map<dynamic, dynamic>? value,
     [PageTransitionsTheme? defaultValue]) {
   if (value == null) {
     return defaultValue;
