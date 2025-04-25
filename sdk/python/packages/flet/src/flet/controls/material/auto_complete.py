@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from numbers import Number
-from typing import List, Optional
+from typing import List
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -12,8 +12,8 @@ __all__ = ["AutoComplete", "AutoCompleteSuggestion", "AutoCompleteSelectEvent"]
 
 @dataclass
 class AutoCompleteSuggestion:
-    key: str = field(default=None)
-    value: str = field(default=None)
+    key: str
+    value: str
 
 
 @dataclass
@@ -29,7 +29,7 @@ class AutoComplete(Control):
     Online docs: https://flet.dev/docs/controls/autocomplete
     """
 
-    suggestions: Optional[List[AutoCompleteSuggestion]] = field(default_factory=list)
+    suggestions: List[AutoCompleteSuggestion] = field(default_factory=list)
     """
     A list of [`AutoCompleteSuggestion`](https://flet.dev/docs/reference/types/autocompletesuggestion) controls representing the suggestions to be displayed. 
 

@@ -49,8 +49,8 @@ class _CanvasControlState extends State<CanvasControl> {
                 _lastSize == null) {
               _lastResize = now;
               _lastSize = size;
-              widget.control.triggerEvent(
-                  "resize", {"width": size.width, "height": size.height});
+              widget.control
+                  .triggerEvent("resize", {"w": size.width, "h": size.height});
             }
           }
         },

@@ -11,8 +11,8 @@ from flet.controls.types import OptionalEventCallable, OptionalNumber
 
 @dataclass
 class CanvasResizeEvent(ControlEvent):
-    width: float
-    height: float
+    width: float = field(metadata={"data_field": "w"})
+    height: float = field(metadata={"data_field": "h"})
 
 
 @control("Canvas")

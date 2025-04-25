@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/events.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -80,8 +81,8 @@ class DataTableControl extends StatelessWidget {
           mouseCursor: WidgetStateMouseCursor.clickable,
           onSort: column.getBool("on_sort", false)!
               ? (columnIndex, ascending) {
-                  column.triggerEvent("sort",
-                      {"column_index": columnIndex, "ascending": ascending});
+                  column.triggerEvent(
+                      "sort", {"ci": columnIndex, "asc": ascending});
                 }
               : null,
           label: column.buildTextOrWidget("label")!,
@@ -118,15 +119,8 @@ class DataTableControl extends StatelessWidget {
                   ? () => cell.triggerEvent("tap_cancel")
                   : null,
               onTapDown: cell.getBool("on_tap_down", false)!
-                  ? (details) {
-                      cell.triggerEvent("tap_down", {
-                        "kind": details.kind?.name,
-                        "local_x": details.localPosition.dx,
-                        "local_y": details.localPosition.dy,
-                        "global_x": details.globalPosition.dx,
-                        "global_y": details.globalPosition.dy,
-                      });
-                    }
+                  ? (TapDownDetails details) =>
+                      cell.triggerEvent("tap_down", details.toMap())
                   : null,
             );
           }).toList(),

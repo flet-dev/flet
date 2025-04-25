@@ -26,8 +26,8 @@ from flet.controls.types import (
 
 @dataclass
 class DataColumnSortEvent(ControlEvent):
-    column_index: int
-    ascending: bool = False
+    column_index: int = field(metadata={"data_field": "ci"})
+    ascending: bool = field(metadata={"data_field": "asc"})
 
 
 @control("column")
