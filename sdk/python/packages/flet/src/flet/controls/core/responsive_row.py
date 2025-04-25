@@ -49,7 +49,6 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     spacing: ResponsiveNumber = 10
     run_spacing: ResponsiveNumber = 10
-    rtl: Optional[bool] = None
 
     def clean(self):
         super().clean()
