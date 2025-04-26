@@ -2,7 +2,7 @@ import asyncio
 from enum import Enum
 
 from flet.controls.base_control import control
-from flet.controls.service import Service
+from flet.controls.services.service import Service
 
 __all__ = ["SemanticsService", "Assertiveness"]
 
@@ -32,7 +32,7 @@ class SemanticsService(Service):
             "announce_message",
             arguments={
                 "message": message,
-                "rtl": str(rtl),
+                "rtl": rtl,
                 "assertiveness": assertiveness,
             },
         )

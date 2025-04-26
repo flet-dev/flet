@@ -2,7 +2,7 @@ import asyncio
 from typing import Any, List
 
 from flet.controls.base_control import control
-from flet.controls.service import Service
+from flet.controls.services.service import Service
 
 __all__ = ["SharedPreferences"]
 
@@ -10,7 +10,6 @@ __all__ = ["SharedPreferences"]
 @control("SharedPreferences")
 class SharedPreferences(Service):
     def set(self, key: str, value: Any) -> None:
-        assert value is not None
         asyncio.create_task(self.set_async(key, value))
 
     async def set_async(self, key: str, value: Any) -> bool:

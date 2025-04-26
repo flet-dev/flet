@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 import '../flet_service.dart';
@@ -25,6 +26,8 @@ class StoragePaths extends FletService {
     if (!isWebPlatform()) {
       var applicationCacheDirectory =
           (await getApplicationCacheDirectory()).path;
+      var consoleLogFilename =
+          path.join(applicationCacheDirectory, "console.log");
       var applicationDocumentsDirectory =
           (await getApplicationDocumentsDirectory()).path;
       var applicationSupportDirectory =
@@ -53,6 +56,7 @@ class StoragePaths extends FletService {
         "library_directory": libraryDirectory,
         "external_cache_directory": externalCacheDirectory,
         "temporary_directory": temporaryDirectory,
+        "console_log_filename": consoleLogFilename,
       });
     }
   }

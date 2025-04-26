@@ -30,11 +30,6 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
-from flet.controls.core.browser_context_menu import BrowserContextMenu
-from flet.controls.core.clipboard import Clipboard
-from flet.controls.core.shared_preferences import SharedPreferences
-from flet.controls.core.storage_paths import StoragePaths
-from flet.controls.core.url_launcher import UrlLauncher
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
@@ -49,7 +44,12 @@ from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import OptionalPaddingValue, Padding
 from flet.controls.query_string import QueryString
 from flet.controls.scrollable_control import OnScrollEvent
-from flet.controls.service import Service
+from flet.controls.services.browser_context_menu import BrowserContextMenu
+from flet.controls.services.clipboard import Clipboard
+from flet.controls.services.service import Service
+from flet.controls.services.shared_preferences import SharedPreferences
+from flet.controls.services.storage_paths import StoragePaths
+from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.session_storage import SessionStorage
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
