@@ -147,7 +147,6 @@ from flet.controls.core.gesture_detector import (
     TapEvent,
 )
 from flet.controls.core.grid_view import GridView
-from flet.controls.core.haptic_feedback import HapticFeedback
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
 from flet.controls.core.interactive_viewer import (
@@ -171,11 +170,8 @@ from flet.controls.core.responsive_row import ResponsiveRow
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.semantics import Semantics
-from flet.controls.core.semantics_service import Assertiveness, SemanticsService
 from flet.controls.core.shader_mask import ShaderMask
-from flet.controls.core.shake_detector import ShakeDetector
 from flet.controls.core.stack import Stack, StackFit
-from flet.controls.core.storage_paths import StoragePaths
 from flet.controls.core.text import Text, TextAffinity, TextSelection
 from flet.controls.core.text_span import TextSpan
 from flet.controls.core.transparent_pointer import TransparentPointer
@@ -368,7 +364,6 @@ from flet.controls.material.vertical_divider import VerticalDivider
 from flet.controls.padding import OptionalPaddingValue, Padding, PaddingValue
 from flet.controls.page import (
     AppLifecycleStateChangeEvent,
-    BrowserContextMenu,
     KeyboardEvent,
     LoginEvent,
     Page,
@@ -394,7 +389,12 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
-from flet.controls.service import Service
+from flet.controls.services.browser_context_menu import BrowserContextMenu
+from flet.controls.services.haptic_feedback import HapticFeedback
+from flet.controls.services.semantics_service import Assertiveness, SemanticsService
+from flet.controls.services.service import Service
+from flet.controls.services.shake_detector import ShakeDetector
+from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.size import Size
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (

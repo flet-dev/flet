@@ -45,10 +45,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
           var childWidth = colWidth * bpCol + bpSpacing * (bpCol - 1);
 
           controls.add(ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: childWidth,
-              maxWidth: childWidth,
-            ),
+            constraints:
+                BoxConstraints(minWidth: childWidth, maxWidth: childWidth),
             child: ControlWidget(key: key, control: control),
           ));
         }

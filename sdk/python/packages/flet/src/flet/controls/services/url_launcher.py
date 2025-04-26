@@ -2,7 +2,7 @@ import asyncio
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.service import Service
+from flet.controls.services.service import Service
 
 __all__ = ["UrlLauncher"]
 
