@@ -17,9 +17,9 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("ResponsiveRowControl build: ${control.id}");
 
-    final columns = control.getResponsiveNumber("columns", 12, {})!;
-    final spacing = control.getResponsiveNumber("spacing", 10, {})!;
-    final runSpacing = control.getResponsiveNumber("run_spacing", 10, {})!;
+    final columns = control.getResponsiveNumber("columns", 12)!;
+    final spacing = control.getResponsiveNumber("spacing", 10)!;
+    final runSpacing = control.getResponsiveNumber("run_spacing", 10)!;
     return withPageSize((context, view) {
       var result = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -34,7 +34,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
         double totalCols = 0;
         List<Widget> controls = [];
         for (var ctrl in control.children("controls")) {
-          final col = ctrl.getResponsiveNumber("col", 12, {})!;
+          final col = ctrl.getResponsiveNumber("col", 12)!;
           var bpCol =
               getBreakpointNumber(col, view.size.width, view.breakpoints);
           totalCols += bpCol;
@@ -49,7 +49,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
               minWidth: childWidth,
               maxWidth: childWidth,
             ),
-            child: ControlWidget(key: key, control: control),
+            child: ControlWidget(key: key, control: ctrl),
           ));
         }
 
