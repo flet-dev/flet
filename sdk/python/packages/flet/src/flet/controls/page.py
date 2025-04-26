@@ -394,7 +394,7 @@ class Page(AdaptiveControl):
 
         return self.__authorization
 
-    async def _authorize_callback_async(self, data: dict[str, Any]) -> None:
+    async def _authorize_callback_async(self, data: dict[str, str]) -> None:
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state
@@ -743,7 +743,7 @@ class Page(AdaptiveControl):
         return self.__default_view().auto_scroll
 
     @auto_scroll.setter
-    def auto_scroll(self, value: Optional[bool]):
+    def auto_scroll(self, value: bool):
         self.__default_view().auto_scroll = value
 
     # Magic methods
@@ -787,8 +787,8 @@ class KeyboardEvent(ControlEvent):
 
 @dataclass
 class LoginEvent(ControlEvent):
-    error: str
-    error_description: str
+    error: Optional[str]
+    error_description: Optional[str]
 
 
 @dataclass
