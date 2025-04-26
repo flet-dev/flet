@@ -81,4 +81,3 @@ class Slider(ConstrainedControl, AdaptiveControl):
         ), "min must be less than or equal to max"
         assert self.value >= self.min, "value must be greater than or equal to min"
         assert self.value <= self.max, "value must be less than or equal to max"
-        # self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)

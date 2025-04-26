@@ -18,7 +18,7 @@ except ImportError:
 __all__ = ["MatplotlibChart"]
 
 
-@control
+@control(kw_only=True)
 class MatplotlibChart(Container):
     """
     Displays Matplotlib(https://matplotlib.org/) chart.

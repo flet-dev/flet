@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from flet.controls.base_control import control
-from flet.controls.service import Service
+from flet.controls.services.service import Service
 
 __all__ = ["StoragePaths"]
 
@@ -17,3 +17,4 @@ class StoragePaths(Service):
     library_directory: str = ""
     external_cache_directory: Optional[str] = None
     temporary_directory: str = ""
+    console_log_filename: str = ""

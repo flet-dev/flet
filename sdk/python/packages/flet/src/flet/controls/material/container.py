@@ -40,7 +40,7 @@ class ContainerTapEvent(TapEvent):
     pass
 
 
-@control("Container", kw_only=True)
+@control("Container")
 class Container(ConstrainedControl, AdaptiveControl):
     """
     Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
