@@ -10,6 +10,7 @@ import 'controls/adaptive_switch.dart';
 import 'controls/adaptive_texfield.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/app_bar.dart';
+import 'controls/auto_complete.dart';
 import 'controls/autofill_group.dart';
 import 'controls/banner.dart';
 import 'controls/bar_chart.dart';
@@ -228,6 +229,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoTimerPickerControl(key: key, control: control);
       case "DataTable":
         return DataTableControl(key: key, control: control);
+      case "AutoComplete":
+        return AutoCompleteControl(key: key, control: control);
       case "DatePicker":
         return DatePickerControl(key: key, control: control);
       case "Divider":

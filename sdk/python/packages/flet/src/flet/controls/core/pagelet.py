@@ -48,7 +48,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     content: Control
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     navigation_bar: Optional[Union[NavigationBar, CupertinoNavigationBar]] = None
-    bottom_app_bar: Optional[BottomAppBar] = None
+    bottom_appbar: Optional[BottomAppBar] = None
     bottom_sheet: OptionalControl = None
     drawer: Optional[NavigationDrawer] = None
     end_drawer: Optional[NavigationDrawer] = None

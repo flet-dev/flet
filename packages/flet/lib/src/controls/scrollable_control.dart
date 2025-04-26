@@ -39,15 +39,15 @@ class _ScrollableControlState extends State<ScrollableControl>
     debugPrint("ScrollableControl.$name($args)");
     var offset = parseDouble(args["offset"]);
     var delta = parseDouble(args["delta"]);
-    var key = args["key"] != null
-        ? widget.control.backend.globalKeys[args["key"]]
+    var scrollKey = args["scroll_key"] != null
+        ? widget.control.backend.globalKeys[args["scroll_key"]]
         : null;
     switch (name) {
       case "scroll_to":
         var duration = parseDuration(args["duration"], Duration.zero)!;
         var curve = parseCurve(args["curve"], Curves.ease)!;
-        if (key != null) {
-          var ctx = key.currentContext;
+        if (scrollKey != null) {
+          var ctx = scrollKey.currentContext;
           if (ctx != null) {
             Scrollable.ensureVisible(ctx, duration: duration, curve: curve);
           }

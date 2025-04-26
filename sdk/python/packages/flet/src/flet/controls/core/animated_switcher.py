@@ -29,14 +29,14 @@ class AnimatedSwitcher(ConstrainedControl):
 
         c1 = ft.Container(
             ft.Text("Hello!", style=ft.TextThemeStyle.HEADLINE_MEDIUM),
-            alignment=ft.alignment.center,
+            alignment=ft.Alignment.center(),
             width=200,
             height=200,
             bgcolor=ft.colors.GREEN,
         )
         c2 = ft.Container(
             ft.Text("Bye!", size=50),
-            alignment=ft.alignment.center,
+            alignment=ft.Alignment.center(),
             width=200,
             height=200,
             bgcolor=ft.colors.YELLOW,

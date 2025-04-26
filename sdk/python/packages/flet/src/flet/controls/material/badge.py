@@ -51,7 +51,7 @@ class Badge(BaseControl):
     For example:
 
     ```python
-    badge.alignment = ft.alignment.top_left
+    badge.alignment = ft.Alignment.top_left()
     ```
 
     Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).

@@ -48,14 +48,15 @@ class LoadingPage extends StatelessWidget {
               color: theme.colorScheme.onErrorContainer, size: 30),
           const SizedBox(width: 8),
           Flexible(
-              child: Text(
+              child: SelectionArea(
+                  child: Text(
             message,
             softWrap: true,
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
                 .copyWith(color: theme.colorScheme.onErrorContainer),
-          ))
+          )))
         ]),
       );
     }
