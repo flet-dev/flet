@@ -117,8 +117,7 @@ class FletSocketServer(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        if action == ClientAction.UPDATE_CONTROL_PROPS:
-            print(f"_on_message: {action} {body}")
+        # print(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
