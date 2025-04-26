@@ -44,8 +44,7 @@ class Authorization:
         await self.__fetch_user_and_groups_async()
 
     # token_async
-    @property
-    async def token_async(self) -> Optional[OAuthToken]:
+    async def get_token_async(self):
         await self.__refresh_token_async()
         return self.__token
 

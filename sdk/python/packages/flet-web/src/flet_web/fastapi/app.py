@@ -5,16 +5,18 @@ from typing import Awaitable, Callable, Optional, Union
 from fastapi import Request, WebSocket
 from flet.controls.page import Page
 from flet.controls.types import WebRenderer
+from starlette.middleware.base import BaseHTTPMiddleware
+
 from flet_web.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,
     FletApp,
+    app_manager,
 )
 from flet_web.fastapi.flet_fastapi import FastAPI
 from flet_web.fastapi.flet_oauth import FletOAuth
 from flet_web.fastapi.flet_static_files import FletStaticFiles
 from flet_web.fastapi.flet_upload import FletUpload
-from starlette.middleware.base import BaseHTTPMiddleware
 
 
 def app(
@@ -80,8 +82,9 @@ def app(
     @fastapi_app.websocket(f"/{websocket_endpoint}")
     async def app_handler(websocket: WebSocket):
         await FletApp(
-            asyncio.get_running_loop(),
-            session_handler,
+            loop=asyncio.get_running_loop(),
+            executor=app_manager.executor,
+            session_handler=session_handler,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
             upload_endpoint_path=upload_endpoint_path,

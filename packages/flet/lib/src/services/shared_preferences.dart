@@ -21,7 +21,6 @@ class SharedPreferencesService extends FletService {
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("SharedPreferencesService.$name($args)");
     var prefs = await SharedPreferences.getInstance();
     switch (name) {
       case "set":

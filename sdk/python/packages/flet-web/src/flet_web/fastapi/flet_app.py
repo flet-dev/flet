@@ -3,6 +3,8 @@ import logging
 import os
 import traceback
 import weakref
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 import msgpack
@@ -27,6 +29,7 @@ from flet.utils import random_string, sha1
 
 import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.flet_app_manager import app_manager
+from flet_web.fastapi.oauth_state import OAuthState
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -38,6 +41,7 @@ class FletApp(Connection):
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,
+        executor: ThreadPoolExecutor,
         session_handler,
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
@@ -60,7 +64,8 @@ class FletApp(Connection):
         logger.info(f"New FletApp: {self.__id}")
 
         self.__session = None
-        self.__loop = loop
+        self.loop = loop
+        self.executor = executor
         self.__session_handler = session_handler
         self.__session_timeout_seconds = session_timeout_seconds
         self.__oauth_state_timeout_seconds = oauth_state_timeout_seconds
@@ -102,7 +107,7 @@ class FletApp(Connection):
         )
 
         self.pubsubhub = app_manager.get_pubsubhub(
-            self.__session_handler, loop=self.__loop
+            self.__session_handler, loop=self.loop
         )
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
@@ -248,7 +253,9 @@ class FletApp(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            await self.__session.dispatch_event(req.target, req.name, req.data)
+            task = asyncio.create_task(
+                self.__session.dispatch_event(req.target, req.name, req.data)
+            )
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
@@ -291,20 +298,16 @@ class FletApp(Connection):
     #         None,
     #     )
 
-    # def __process_oauth_authorize_command(self, attrs: Dict[str, Any]):
-    #     state_id = attrs["state"]
-    #     state = OAuthState(
-    #         session_id=self.__get_unique_session_id(self._client_details.sessionId),
-    #         expires_at=datetime.now(timezone.utc)
-    #         + timedelta(seconds=self.__oauth_state_timeout_seconds),
-    #         complete_page_html=attrs.get("completePageHtml", None),
-    #         complete_page_url=attrs.get("completePageUrl", None),
-    #     )
-    #     app_manager.store_state(state_id, state)
-    #     return (
-    #         "",
-    #         None,
-    #     )
+    def oauth_authorize(self, attrs: dict[str, Any]):
+        state_id = attrs["state"]
+        state = OAuthState(
+            session_id=self.__get_unique_session_id(self.__session.id),
+            expires_at=datetime.now(timezone.utc)
+            + timedelta(seconds=self.__oauth_state_timeout_seconds),
+            complete_page_html=attrs.get("completePageHtml", None),
+            complete_page_url=attrs.get("completePageUrl", None),
+        )
+        app_manager.store_state(state_id, state)
 
     def __get_unique_session_id(self, session_id: str):
         client_hash = sha1(f"{self.client_ip}{self.client_user_agent}")
