@@ -1,20 +1,23 @@
+import 'package:flutter/foundation.dart';
+
 import '../models/control.dart';
 import '../utils/numbers.dart';
 
-Map<String, double>? parseResponsiveNumber(dynamic value, double defaultDouble,
-    [Map<String, double>? defaultValue]) {
-  if (value == null) return defaultValue;
+Map<String, double>? parseResponsiveNumber(dynamic value, double defaultValue) {
+  Map<String, double> result = {};
 
-  if (value is! Map<String, dynamic>) {
-    value = {"": value};
+  if (value != null) {
+    if (value is Map) {
+      result = value.map<String, double>(
+        (key, val) => MapEntry(key.toString(), parseDouble(val, 0)!),
+      );
+    } else {
+      result[""] = value;
+    }
   }
 
-  final result = value.map<String, double>(
-    (key, val) => MapEntry(key, parseDouble(val, 0)!),
-  );
-
-  if (!result.containsKey("")) {
-    result[""] = defaultDouble;
+  if (result[""] == null) {
+    result[""] = defaultValue;
   }
 
   return result;
@@ -24,6 +27,8 @@ double getBreakpointNumber(
     Map<String, double> value, double width, Map<String, double> breakpoints) {
   // default value
   double? result = value[""];
+
+  debugPrint("getBreakpointNumber: $value, $width, $breakpoints");
 
   double maxBpWidth = 0;
   value.forEach((bpName, respValue) {
@@ -48,9 +53,7 @@ double getBreakpointNumber(
 
 extension ResponsiveParsers on Control {
   Map<String, double>? getResponsiveNumber(
-      String propertyName, double defaultDouble,
-      [Map<String, double>? defaultValue]) {
-    return parseResponsiveNumber(
-        get(propertyName), defaultDouble, defaultValue);
+      String propertyName, double defaultValue) {
+    return parseResponsiveNumber(get(propertyName), defaultValue);
   }
 }
