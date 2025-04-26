@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional
+from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
@@ -17,16 +17,17 @@ class UrlLauncher(Service):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
-        args = {"url": url}
-        if web_window_name:
-            args["web_window_name"] = web_window_name
-        if web_popup_window:
-            args["web_popup_window"] = str(web_popup_window)
-        if window_width:
-            args["window_width"] = str(window_width)
-        if window_height:
-            args["window_height"] = str(window_height)
-        await self._invoke_method_async("launch_url", args)
+
+        await self._invoke_method_async(
+            "launch_url",
+            {
+                "url": url,
+                "web_window_name": web_window_name,
+                "web_popup_window": web_popup_window,
+                "window_width": window_width,
+                "window_height": window_height,
+            },
+        )
 
     def launch_url(
         self,

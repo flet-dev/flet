@@ -7,7 +7,7 @@ from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
-from flet.controls.duration import Duration, DurationValue
+from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
 from flet.controls.types import (
     Number,
     OptionalEventCallable,
@@ -59,8 +59,8 @@ class ScrollableControl(Control):
         offset: OptionalNumber = None,
         delta: OptionalNumber = None,
         scroll_key: OptionalString = None,
-        duration: DurationValue = Duration(),
-        curve: AnimationCurve = AnimationCurve.EASE,
+        duration: OptionalDurationValue = None,
+        curve: Optional[AnimationCurve] = None,
     ):
         asyncio.create_task(
             self.scroll_to_async(offset, delta, scroll_key, duration, curve)
@@ -71,8 +71,8 @@ class ScrollableControl(Control):
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         scroll_key: Optional[str] = None,
-        duration: DurationValue = Duration(),
-        curve: AnimationCurve = AnimationCurve.EASE,
+        duration: OptionalDurationValue = None,
+        curve: Optional[AnimationCurve] = None,
     ):
         await self._invoke_method_async(
             "scroll_to",

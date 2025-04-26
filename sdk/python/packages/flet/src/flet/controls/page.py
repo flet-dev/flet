@@ -22,6 +22,8 @@ from typing import (
 )
 from urllib.parse import urlparse
 
+from flet.auth.authorization import Authorization
+from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import BaseControl, control
@@ -90,27 +92,8 @@ _session_page = ContextVar("flet_session_page", default=None)
 
 class context:
     @classproperty
-    def page(cls) -> "Page":
+    def page(cls) -> Optional["Page"]:
         return _session_page.get()
-
-
-try:
-    from flet.auth.authorization import Authorization
-    from flet.auth.oauth_provider import OAuthProvider
-except ImportError as e:
-
-    class OAuthProvider:
-        ...
-
-    class Authorization:
-        def __init__(
-            self,
-            provider: OAuthProvider,
-            fetch_user: bool,
-            fetch_groups: bool,
-            scope: Optional[List[str]] = None,
-        ):
-            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -238,34 +221,29 @@ class Page(AdaptiveControl):
 
     def update(self, *controls) -> None:
         if len(controls) == 0:
-            r = self.__update(self)
+            self.__update(self)
         else:
-            r = self.__update(*controls)
-        self.__handle_mount_unmount(*r)
+            self.__update(*controls)
 
     def add(self, *controls: Control) -> None:
         self.controls.extend(controls)
-        r = self.__update(self)
-        self.__handle_mount_unmount(*r)
+        self.__update(self)
 
     def insert(self, at: int, *controls: Control) -> None:
         n = at
         for control in controls:
             self.controls.insert(n, control)
             n += 1
-        r = self.__update(self)
-        self.__handle_mount_unmount(*r)
+        self.__update(self)
 
     def remove(self, *controls: Control) -> None:
         for control in controls:
             self.controls.remove(control)
-        r = self.__update(self)
-        self.__handle_mount_unmount(*r)
+        self.__update(self)
 
     def remove_at(self, index: int) -> None:
         self.controls.pop(index)
-        r = self.__update(self)
-        self.__handle_mount_unmount(*r)
+        self.__update(self)
 
     def clean(self) -> None:
         self._clean(self)
@@ -290,31 +268,9 @@ class Page(AdaptiveControl):
             return sess
         raise Exception("An attempt to fetch destroyed session.")
 
-    def __update(self, *controls: Control) -> Tuple[List[Control], List[Control]]:
-        # if not self.__get_session().is_connected:
-        #     raise PageDisconnectedException("Page has been disconnected")
-        # commands, added_controls, removed_controls = self.__prepare_update(*controls)
-        # self.__validate_controls_page(added_controls)
-        # results = self.__conn.send_commands(self._session_id, commands).results
+    def __update(self, *controls: Control):
         for control in controls:
             self.get_session().patch_control(control)
-        return [], []  # added_controls, removed_controls
-
-    def __validate_controls_page(self, added_controls: List[Control]) -> None:
-        for ctrl in added_controls:
-            if ctrl.page and ctrl.page != self:
-                raise Exception(
-                    f"Control has already been added to another page: {ctrl}"
-                )
-
-    def __handle_mount_unmount(self, added_controls, removed_controls) -> None:
-        # for ctrl in removed_controls:
-        #     ctrl.will_unmount()
-        #     ctrl.parent = None  # remove parent reference
-        #     ctrl.page = None
-        # for ctrl in added_controls:
-        #     ctrl.did_mount()
-        pass
 
     def error(self, message: str) -> None:
         self.get_session().error(message)
@@ -328,7 +284,9 @@ class Page(AdaptiveControl):
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
-        future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.loop)
+        future = asyncio.run_coroutine_threadsafe(
+            handler(*args, **kwargs), self.get_session().connection.loop
+        )
 
         def _on_completion(f):
             try:
@@ -359,8 +317,9 @@ class Page(AdaptiveControl):
         if is_pyodide():
             handler_with_context(*args, **kwargs)
         else:
-            self.loop.call_soon_threadsafe(
-                self.loop.run_in_executor,
+            loop = self.get_session().connection.loop
+            loop.call_soon_threadsafe(
+                loop.run_in_executor,
                 self.executor,
                 partial(handler_with_context, *args, **kwargs),
             )
@@ -386,64 +345,11 @@ class Page(AdaptiveControl):
     def get_upload_url(self, file_name: str, expires: int) -> str:
         return self.get_session().connection.get_upload_url(file_name, expires)
 
-    def login(
-        self,
-        provider: OAuthProvider,
-        fetch_user: Optional[bool] = True,
-        fetch_groups: Optional[bool] = False,
-        scope: Optional[List[str]] = None,
-        saved_token: Optional[str] = None,
-        on_open_authorization_url: Optional[Callable[[str], None]] = None,
-        complete_page_html: Optional[str] = None,
-        redirect_to_page: Optional[bool] = False,
-        authorization: Type[AT] = Authorization,
-    ) -> AT:
-        self.__authorization = authorization(
-            provider,
-            fetch_user=fetch_user,
-            fetch_groups=fetch_groups,
-            scope=scope,
-        )
-        if saved_token is None:
-            authorization_url, state = self.__authorization.get_authorization_data()
-            auth_attrs = {"state": state}
-            if complete_page_html:
-                auth_attrs["completePageHtml"] = complete_page_html
-            if redirect_to_page:
-                up = urlparse(provider.redirect_url)
-                auth_attrs["completePageUrl"] = up._replace(
-                    path=self.__conn.page_name
-                ).geturl()
-            result = self._send_command("oauthAuthorize", attrs=auth_attrs)
-            if result.error != "":
-                raise Exception(result.error)
-            if on_open_authorization_url:
-                on_open_authorization_url(authorization_url)
-            else:
-                self.launch_url(
-                    authorization_url, "flet_oauth_signin", web_popup_window=self.web
-                )
-        else:
-            self.__authorization.dehydrate_token(saved_token)
-            self.run_task(
-                self.__on_login.get_handler(),
-                LoginEvent(
-                    error="",
-                    error_description="",
-                    page=self,
-                    control=self,
-                    target="page",
-                    name="on_login",
-                    data="",
-                ),
-            )
-        return self.__authorization
-
     async def login_async(
         self,
         provider: OAuthProvider,
-        fetch_user: Optional[bool] = True,
-        fetch_groups: Optional[bool] = False,
+        fetch_user: bool = True,
+        fetch_groups: bool = False,
         scope: Optional[List[str]] = None,
         saved_token: Optional[str] = None,
         on_open_authorization_url: Optional[
@@ -467,11 +373,9 @@ class Page(AdaptiveControl):
             if redirect_to_page:
                 up = urlparse(provider.redirect_url)
                 auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.__conn.page_name}{self.route}"
+                    path=f"{self.get_session().connection.page_name}{self.route}"
                 ).geturl()
-            result = self._send_command("oauthAuthorize", attrs=auth_attrs)
-            if result.error != "":
-                raise Exception(result.error)
+            self.get_session().connection.oauth_authorize(auth_attrs)
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
@@ -480,27 +384,19 @@ class Page(AdaptiveControl):
                 )
         else:
             await self.__authorization.dehydrate_token_async(saved_token)
-            self.run_task(
-                self.__on_login.get_handler(),
-                LoginEvent(
-                    error="",
-                    error_description="",
-                    page=self,
-                    control=self,
-                    target="page",
-                    name="on_login",
-                    data="",
-                ),
-            )
+
+            e = LoginEvent(name="login", control=self, error="", error_description="")
+            if self.on_login:
+                if asyncio.iscoroutinefunction(self.on_login):
+                    self.run_task(self.on_login, e)
+                elif callable(self.on_login):
+                    self.on_login(e)
+
         return self.__authorization
 
-    async def _authorize_callback_async(self, data: str) -> None:
-        await self.on_event_async(ControlEvent("page", "authorize", json.dumps(data)))
-
-    async def __on_authorize_async(self, e) -> None:
+    async def _authorize_callback_async(self, data: dict[str, str]) -> None:
         assert self.__authorization
-        d = json.loads(e.data)
-        state = d.get("state")
+        state = data.get("state")
         assert state == self.__authorization.state
 
         if not self.web:
@@ -510,37 +406,35 @@ class Page(AdaptiveControl):
             else:
                 # activate desktop window
                 self.window.to_front()
-        login_evt = LoginEvent(
-            error=d.get("error"),
-            error_description=d.get("error_description"),
-            page=self,
+        e = LoginEvent(
+            error=data.get("error"),
+            error_description=data.get("error_description"),
             control=self,
-            target="page",
-            name="on_login",
-            data="",
+            name="login",
         )
-        if not login_evt.error:
+        if not e.error:
             # perform token request
 
-            code = d.get("code")
+            code = data.get("code")
             assert code not in [None, ""]
             try:
                 await self.__authorization.request_token_async(code)
             except Exception as ex:
-                login_evt.error = str(ex)
-        self.run_task(
-            self.__on_login.get_handler(),
-            login_evt,
-        )
+                e.error = str(ex)
+        if self.on_login:
+            if asyncio.iscoroutinefunction(self.on_login):
+                self.run_task(self.on_login, e)
+            elif callable(self.on_login):
+                self.on_login(e)
 
     def logout(self) -> None:
         self.__authorization = None
-        self.run_task(
-            self.__on_logout.get_handler(),
-            ControlEvent(
-                target="page", name="logout", data="", control=self, page=self
-            ),
-        )
+        e = ControlEvent(name="logout", control=self)
+        if self.on_logout:
+            if asyncio.iscoroutinefunction(self.on_logout):
+                self.run_task(self.on_logout, e)
+            elif callable(self.on_logout):
+                self.on_logout(e)
 
     def launch_url(
         self,
@@ -587,12 +481,16 @@ class Page(AdaptiveControl):
         self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
-        key: Optional[str] = None,
+        scroll_key: Optional[str] = None,
         duration: OptionalDurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ) -> None:
         self.__default_view().scroll_to(
-            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+            offset=offset,
+            delta=delta,
+            scroll_key=scroll_key,
+            duration=duration,
+            curve=curve,
         )
 
     def show_dialog(self, dialog: DialogControl) -> None:
@@ -845,7 +743,7 @@ class Page(AdaptiveControl):
         return self.__default_view().auto_scroll
 
     @auto_scroll.setter
-    def auto_scroll(self, value: Optional[bool]):
+    def auto_scroll(self, value: bool):
         self.__default_view().auto_scroll = value
 
     # Magic methods
@@ -889,8 +787,8 @@ class KeyboardEvent(ControlEvent):
 
 @dataclass
 class LoginEvent(ControlEvent):
-    error: str
-    error_description: str
+    error: Optional[str]
+    error_description: Optional[str]
 
 
 @dataclass

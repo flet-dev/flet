@@ -121,7 +121,15 @@ class Session:
         self.apply_patch(self.__page._i, patch)
 
     def get_page_patch(self):
-        return self.__get_update_control_patch(self.__page, prev_control=None)[0][""]
+        patch, added_controls, _ = self.__get_update_control_patch(
+            self.__page, prev_control=None
+        )
+
+        for added_control in added_controls:
+            self.__index[added_control._i] = added_control
+            added_control.did_mount()
+
+        return patch[""]
 
     # optimizations:
     # - disable auto-update
@@ -192,6 +200,10 @@ class Session:
         if control := self.__index.get(control_id):
             control._handle_invoke_method_results(
                 call_id=call_id, result=result, error=error
+            )
+        else:
+            raise Exception(
+                f"Error handling invoke method results. Control with ID {control_id} is not registered."
             )
 
     def auto_update(self, control: BaseControl):

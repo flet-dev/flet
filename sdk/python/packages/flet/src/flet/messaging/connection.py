@@ -1,7 +1,7 @@
 import logging
 from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
-from typing import Optional
+from typing import Any, Optional
 
 from flet.messaging.protocol import ClientMessage
 from flet.pubsub.pubsub_hub import PubSubHub
@@ -51,6 +51,9 @@ class Connection:
         raise NotImplementedError()
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
+        raise NotImplementedError()
+
+    def oauth_authorize(self, attrs: dict[str, Any]):
         raise NotImplementedError()
 
     def dispose(self):
