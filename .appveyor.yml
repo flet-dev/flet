@@ -338,7 +338,11 @@ for:
 
       # build package
       - cd $flet_sdk_root
-      - uv build --wheel --package flet-desktop
+      - sh: |
+          if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+            sed -i 's/flet-desktop/flet-desktop-light/g' pyproject.toml
+          fi
+      - uv build --wheel --package $PACKAGE_NAME
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
