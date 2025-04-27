@@ -6,7 +6,6 @@ authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
 license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10"
-
 dependencies = [
     "flet-cli; extra == 'cli'",
     "flet-desktop; extra == 'desktop' and (platform_system == 'Darwin' or platform_system == 'Windows')",

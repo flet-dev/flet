@@ -162,9 +162,9 @@ for:
     install:
       - python --version
       - pip3 install --upgrade setuptools wheel twine tomlkit
-      - ps: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+      - ps: irm https://astral.sh/uv/install.ps1 | iex
       - ps: Add-SessionPath "$HOME\AppData\Roaming\Python\Scripts"
-      - poetry --version
+      - uv --version
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
@@ -194,13 +194,8 @@ for:
       - mkdir %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app
       - xcopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet\ /s /e
 
-      # install poetry env
-      - cd %flet_sdk_root%
-      - poetry install
-
-      # build "flet-desktop" package
-      - cd packages\flet-desktop
-      - poetry build
+      # build package
+      - uv build --wheel --package flet-desktop
       - ps: |
           $ErrorActionPreference = "Continue"
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
@@ -209,15 +204,14 @@ for:
             Remove-Item $_.FullName
           }
           $ErrorActionPreference = "Stop"
-      - cd %APPVEYOR_BUILD_FOLDER%
-      - dir %flet_sdk_root%\packages\flet-desktop\dist
+      - dir %flet_sdk_root%\dist
 
       # publish
       - ps: |
           if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
-              twine upload $env:flet_sdk_root\packages\flet-desktop\dist\*
+              twine upload $env:flet_sdk_root\dist\*
           } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
-            $wheels = (Get-ChildItem $env:flet_sdk_root/packages/flet-desktop/dist/*.whl | Select-Object -ExpandProperty FullName)
+            $wheels = (Get-ChildItem $env:flet_sdk_root/dist/*.whl | Select-Object -ExpandProperty FullName)
             foreach ($wheel in $wheels) {
                 curl.exe -sF package=@$wheel https://$env:GEMFURY_TOKEN@push.fury.io/flet/
             }
@@ -227,7 +221,7 @@ for:
 
     artifacts:
       - path: client\build\windows\x64\runner\flet-windows.zip
-      - path: sdk\python\packages\flet-desktop\dist\*.whl
+      - path: sdk\python\packages\*.whl
 
     deploy:
       provider: GitHub
@@ -261,27 +255,21 @@ for:
       # Python package
       - patch_python_package_versions
 
-      # install poetry env
-      - cd $flet_sdk_root
-      - poetry install
-
-      # build "flet-desktop" package
-      - pushd packages/flet-desktop
-      - poetry build
+      # build package
+      - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
             python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
             rm $file
           done
-      - popd
 
       # publish
-      - publish_to_pypi packages/flet-desktop/dist/*.whl
+      - publish_to_pypi dist/*.whl
 
     artifacts:
       - path: client/flet-macos.tar.gz
-      - path: sdk/python/packages/flet-desktop/dist/*.whl
+      - path: sdk/python/dist/*.whl
 
     deploy:
       provider: GitHub
@@ -346,13 +334,8 @@ for:
       # Python package
       - patch_python_package_versions
 
-      # install poetry env
-      - cd $flet_sdk_root
-      - poetry install
-
-      # build "flet-desktop" package
-      - pushd packages/flet-desktop
-      - poetry build
+      # build package
+      - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
@@ -361,14 +344,13 @@ for:
             done
             rm "$file"
           done
-      - popd
 
       # publish
-      - publish_to_pypi packages/flet-desktop/dist/*.whl
+      - publish_to_pypi dist/*.whl
 
     artifacts:
       - path: client/flet-linux-*.tar.gz
-      - path: sdk/python/packages/flet-desktop/dist/*.whl
+      - path: sdk/python/dist/*.whl
 
     deploy:
       provider: GitHub
@@ -402,21 +384,15 @@ for:
       # Python package
       - patch_python_package_versions
 
-      # install poetry env
-      - cd $flet_sdk_root
-      - poetry install
-
-      # build "flet-web" package
-      - pushd packages/flet-web
-      - poetry build
-      - popd
+      # build package
+      - uv build --wheel --package flet-web
 
       # publish
-      - publish_to_pypi packages/flet-web/dist/*.whl
+      - publish_to_pypi dist/*.whl
 
     artifacts:
       - path: client/build/flet-web.tar.gz
-      - path: sdk/python/packages/flet-web/dist/*.whl
+      - path: sdk/python/dist/*.whl
 
     deploy:
       provider: GitHub
@@ -437,14 +413,13 @@ for:
       - cd sdk/python
       - python -m ensurepip --upgrade
       - pip3 install --upgrade setuptools pip
-      - curl -sSL https://install.python-poetry.org | python -
+      - curl -LsSf https://astral.sh/uv/install.sh | sh
       - export PATH="$HOME/.local/bin:$PATH"
-      - poetry install
 
     build: off
 
     test_script:
-      - poetry run pytest
+      - uv run pytest
 
   ######################
   #    Python Build    #
@@ -461,30 +436,18 @@ for:
     build_script:
       - patch_python_package_versions
 
-      # install poetry env
-      - cd $flet_sdk_root
-      - poetry install
+      # build packages
+      - uv build --wheel --package flet-cli
+      - uv build --wheel --package flet
 
-      # build "flet-cli" package
-      - pushd packages/flet-cli
-      - poetry build
-      - popd
-
-      # build "flet" package
-      - pushd packages/flet
-      - poetry build
+      # update deps
       - python $root/ci/update-flet-wheel-deps.py dist
-      - popd
 
-      # publish package
-      - |
-          publish_to_pypi \
-            packages/flet-cli/dist/*.whl \
-            packages/flet/dist/*.whl
+      # publish packages
+      - publish_to_pypi dist/*.whl
 
     artifacts:
-      - path: sdk/python/packages/flet-cli/dist/*
-      - path: sdk/python/packages/flet/dist/*
+      - path: sdk/python/dist/*
 
     deploy:
       provider: GitHub
