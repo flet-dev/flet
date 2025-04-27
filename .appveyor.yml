@@ -163,7 +163,7 @@ for:
       - python --version
       - pip3 install --upgrade setuptools wheel twine tomlkit
       - ps: irm https://astral.sh/uv/install.ps1 | iex
-      - ps: Add-SessionPath "$HOME\AppData\Roaming\Python\Scripts"
+      - ps: Add-SessionPath "$HOME\.local\bin"
       - uv --version
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
