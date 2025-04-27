@@ -195,6 +195,7 @@ for:
       - xcopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet\ /s /e
 
       # build package
+      - cd %flet_sdk_root%
       - uv build --wheel --package flet-desktop
       - ps: |
           $ErrorActionPreference = "Continue"
@@ -204,7 +205,7 @@ for:
             Remove-Item $_.FullName
           }
           $ErrorActionPreference = "Stop"
-      - dir %flet_sdk_root%\dist
+      - dir dist
 
       # publish
       - ps: |
@@ -256,6 +257,7 @@ for:
       - patch_python_package_versions
 
       # build package
+      - cd $flet_sdk_root
       - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
@@ -335,6 +337,7 @@ for:
       - patch_python_package_versions
 
       # build package
+      - cd $flet_sdk_root
       - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
@@ -385,6 +388,7 @@ for:
       - patch_python_package_versions
 
       # build package
+      - cd $flet_sdk_root
       - uv build --wheel --package flet-web
 
       # publish
@@ -437,6 +441,7 @@ for:
       - patch_python_package_versions
 
       # build packages
+      - cd $flet_sdk_root
       - uv build --wheel --package flet-cli
       - uv build --wheel --package flet
 
