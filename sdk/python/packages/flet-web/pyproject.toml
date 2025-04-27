@@ -2,30 +2,25 @@
 name = "flet-web"
 version = "0.1.0"
 description = "Flet web client in Flutter."
-authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10"
 
-[tool.poetry]
-packages = [{ include = "flet_web", from = "src" }]
+dependencies = [
+    "flet",
+    "fastapi >=0.115.12",
+    "uvicorn[standard] >=0.34.2"
+]
 
-include = [{ path = "src/flet_web/web/**/*", format = ["sdist", "wheel"] }]
-
-[tool.poetry.urls]
+[project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
 
-[tool.poetry.dependencies]
-flet = { version = "0.1.0" }
-fastapi = "*"
-uvicorn = { extras = ["standard"], version = "*" }
+[tool.setuptools.package-data]
+"flet_web.web" = ["**/*"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-profile = "black"
-float_to_top = true
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

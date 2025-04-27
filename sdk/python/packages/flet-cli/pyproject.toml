@@ -2,34 +2,28 @@
 name = "flet-cli"
 version = "0.1.0"
 description = "Flet CLI"
-authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10"
 
-[tool.poetry]
-packages = [{ include = "flet_cli", from = "src" }]
+dependencies = [
+    "flet",
+    "watchdog >=4.0.0",
+    "packaging >=25.0",
+    "qrcode >=7.4.2",
+    "toml >=0.10.2",
+    "cookiecutter >=2.6.0"
+]
 
-[tool.poetry.urls]
+[project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
 
-[tool.poetry.dependencies]
-flet = { version = "0.1.0" }
-watchdog = "^4.0.0"
-packaging = "*"
-qrcode = "^7.4.2"
-toml = "^0.10.2"
-cookiecutter = "^2.6.0"
-
-[tool.poetry.plugins."pyinstaller40"]
+[project.entry-points."pyinstaller40"]
 hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-profile = "black"
-float_to_top = true
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
