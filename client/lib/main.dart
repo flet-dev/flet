@@ -107,18 +107,18 @@ void main([List<String>? args]) async {
     appStartupScreenMessage: "Working...",
     extensions: const [
 // // --FAT_CLIENT_START--
-//       flet_audio.createControl,
-//       flet_video.createControl,
+//       flet_audio.Extension(),
+//       flet_video.Extension(),
 // // --FAT_CLIENT_END--
-//       flet_audio_recorder.createControl,
-//       flet_geolocator.createControl,
-//       flet_permission_handler.createControl,
-//       flet_lottie.createControl,
-//       flet_map.createControl,
-//       flet_ads.createControl,
-//       flet_rive.createControl,
-//       flet_webview.createControl,
-//       flet_flashlight.createControl,
+//       flet_audio_recorder.Extension(),
+//       flet_geolocator.Extension(),
+//       flet_permission_handler.Extension(),
+//       flet_lottie.Extension(),
+//       flet_map.Extension(),
+//       flet_ads.Extension(),
+//       flet_rive.Extension(),
+//       flet_webview.Extension(),
+//       flet_flashlight.Extension(),
     ],
   ));
 }
