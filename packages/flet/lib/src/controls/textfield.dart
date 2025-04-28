@@ -146,7 +146,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
     var textVerticalAlign = widget.control.getDouble("text_vertical_align");
 
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
-
     var focusValue = widget.control.getString("focus");
     var blurValue = widget.control.getString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
@@ -159,7 +158,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
     }
 
     var fitParentSize = widget.control.getBool("fit_parent_size", false)!;
-
     var maxLength = widget.control.getInt("max_length");
 
     Widget textField = TextFormField(
@@ -262,25 +260,18 @@ class _TextFieldControlState extends State<TextFieldControl> {
     if (widget.control.get("expand") == true ||
         (widget.control.get("expand") is int &&
             widget.control.getInt("expand", 0)! > 0)) {
+      return ConstrainedControl(control: widget.control, child: textField);
+    } else {
+      double? width = widget.control.getDouble("width");
+
       return ConstrainedControl(
         control: widget.control,
-        child: textField,
-      );
-    } else {
-      return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth == double.infinity &&
-              widget.control.getDouble("width") == null) {
-            textField = ConstrainedBox(
-              constraints: const BoxConstraints.tightFor(width: 300),
-              child: textField,
-            );
-          }
-
-          return ConstrainedControl(control: widget.control, child: textField);
-        },
+        child: width == null
+            ? ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 300),
+                child: textField)
+            : textField,
       );
     }
-    //});
   }
 }
