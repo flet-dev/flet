@@ -8,7 +8,7 @@ FilteringTextInputFormatter? parseInputFilter(dynamic value,
   if (value == null) return defaultValue;
   var regexString = value["regex_string"]?.toString();
   if (regexString == null) return defaultValue;
-  return CustomFilteringTextInputFormatter.fromJSON(value);
+  return CustomFilteringTextInputFormatter.fromMap(value);
 }
 
 class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
@@ -18,20 +18,20 @@ class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
       {bool allow = true, String replacementString = ""})
       : super(_pattern, allow: allow, replacementString: replacementString);
 
-  // Factory constructor to create an instance from JSON
-  factory CustomFilteringTextInputFormatter.fromJSON(
-      Map<String, dynamic> json) {
+  // Factory constructor to create an instance from a map
+  factory CustomFilteringTextInputFormatter.fromMap(
+      Map<dynamic, dynamic> value) {
     final pattern = RegExp(
-      json["regex_string"]?.toString() ?? "",
-      multiLine: parseBool(json["multiline"], false)!,
-      unicode: parseBool(json["unicode"], false)!,
-      caseSensitive: parseBool(json["case_sensitive"], true)!,
-      dotAll: parseBool(json["dot_all"], false)!,
+      value["regex_string"]?.toString() ?? "",
+      multiLine: parseBool(value["multiline"], false)!,
+      unicode: parseBool(value["unicode"], false)!,
+      caseSensitive: parseBool(value["case_sensitive"], true)!,
+      dotAll: parseBool(value["dot_all"], false)!,
     );
 
     return CustomFilteringTextInputFormatter._(pattern,
-        allow: parseBool(json["allow"], true)!,
-        replacementString: json["replacement_string"]?.toString() ?? "");
+        allow: parseBool(value["allow"], true)!,
+        replacementString: value["replacement_string"]?.toString() ?? "");
   }
 
   @override

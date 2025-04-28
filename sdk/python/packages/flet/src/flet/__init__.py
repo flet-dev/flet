@@ -131,12 +131,13 @@ from flet.controls.core.file_picker import (
     FilePickerUploadFile,
 )
 from flet.controls.core.flet_app import FletApp
-from flet.controls.core.gesture_detector import (
+from flet.controls.core.gesture_detector import GestureDetector
+from flet.controls.events import (
     DragEndEvent,
     DragStartEvent,
     DragUpdateEvent,
-    GestureDetector,
     HoverEvent,
+    PointerEvent,
     LongPressEndEvent,
     LongPressStartEvent,
     MultiTapEvent,

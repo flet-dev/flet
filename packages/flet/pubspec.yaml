@@ -4,7 +4,7 @@ homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet
 version: 0.27.6
 
-# This package supports all platforms listed below.
+# Supported platforms
 platforms:
   android:
   ios:

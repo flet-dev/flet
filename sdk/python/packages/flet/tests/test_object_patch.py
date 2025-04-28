@@ -7,7 +7,8 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
 from flet.controls.control import Control
-from flet.controls.core.gesture_detector import DragUpdateEvent, GestureDetector
+from flet.controls.core.gesture_detector import GestureDetector
+from flet.controls.events import DragUpdateEvent
 from flet.controls.core.text import Text
 from flet.controls.material.button import Button
 
