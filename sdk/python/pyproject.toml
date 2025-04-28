@@ -5,29 +5,63 @@ description = ""
 authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
 requires-python = ">=3.10,<3.14"
+dependencies = [
+    "flet",
+    "flet-cli",
+    "flet-desktop",
+    "flet-web"
+]
 
-[tool.poetry]
-package-mode = false
+[tool.uv.sources]
+flet = { workspace = true }
+flet-cli = { workspace = true }
+flet-desktop = { workspace = true }
+flet-web = { workspace = true }
 
-[tool.poetry.group.dev.dependencies]
-flet-cli = {path = "packages/flet-cli", develop = true}
-flet-desktop = {path = "packages/flet-desktop", develop = true}
-flet-web = {path = "packages/flet-web", develop = true}
-flet = {path = "packages/flet", develop = true}
-pytest = "^7.2.0"
-black = "^22.12.0"
-tomlkit = "^0.11.6"
-cryptography = "^39.0.0"
-pyinstaller = "^6.6.0"
-pillow = "^10.3.0"
-pre-commit = "^2.21.0"
-hypercorn = "^0.14.4"
-gunicorn = "^21.2.0"
-pypi-cleanup = "0.1.4"
-matplotlib = "^3.10.1"
-plotly = "^6.0.1"
-pandas = "^2.2.3"
+[tool.uv.workspace]
+members = ["packages/*"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "pytest >=7.2.0",
+    "tomlkit >=0.11.6",
+    "cryptography >=39.0.0",
+    "pyinstaller >=6.6.0",
+    "pillow >=10.3.0",
+    "pre-commit >=2.21.0",
+    "hypercorn >=0.14.4",
+    "gunicorn >=21.2.0",
+    "pypi-cleanup==0.1.4",
+    "matplotlib >=3.10.1",
+    "plotly >=6.0.1",
+    "pandas >=2.2.3",
+    "ruff>=0.11.7",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+fix = true
+show-fixes = true
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I"
+]
+preview = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
