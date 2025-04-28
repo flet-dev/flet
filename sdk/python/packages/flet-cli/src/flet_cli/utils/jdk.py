@@ -25,8 +25,7 @@ def check_jdk_version(jdk_path):
     try:
         result = subprocess.run(
             [os.path.join(jdk_path, "bin", "javac"), "-version"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
         )
         version_line = result.stdout.strip("\n").split(" ")[
@@ -34,7 +33,7 @@ def check_jdk_version(jdk_path):
         ]  # Extract version from output
         major_version = int(version_line.split(".")[0])
         return major_version == JDK_MAJOR_VER
-    except (IndexError, ValueError, FileNotFoundError) as e:
+    except (IndexError, ValueError, FileNotFoundError):
         return False
 
 
@@ -101,7 +100,6 @@ def install_jdk(log, progress: Optional[Progress] = None):
 
     # Step 4: Check if JDK is already installed
     if not install_dir.exists():
-
         # Step 5: Download and extract JDK
         archive_path = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}.{ext}")
         log(f"Downloading JDK from {url}...")

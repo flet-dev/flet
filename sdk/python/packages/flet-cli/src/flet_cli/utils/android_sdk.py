@@ -97,10 +97,10 @@ class AndroidSDK:
                     "AMD64": "win",
                 },
             }[platform.system()][platform.machine()]
-        except KeyError as e:
+        except KeyError:
             raise Exception(
                 f"Unsupported platform: {platform.system()}-{platform.machine()}"
-            )
+            ) from None
 
         return (
             f"https://dl.google.com/android/repository/"
@@ -119,8 +119,8 @@ class AndroidSDK:
                 install = False
             else:
                 self.log(
-                    f"Android SDK installation at {home_dir} does not contain cmdline tools. "
-                    + "Android SDK will be re-installed."
+                    f"Android SDK installation at {home_dir} does not contain "
+                    + "cmdline tools. Android SDK will be re-installed."
                 )
 
         if install:
@@ -136,7 +136,7 @@ class AndroidSDK:
         return str(home_dir)
 
     def _install_cmdlinetools(self, android_home: Path):
-        archive_path = os.path.join(tempfile.gettempdir(), f"commandlinetools.zip")
+        archive_path = os.path.join(tempfile.gettempdir(), "commandlinetools.zip")
         url = self.cmdline_tools_url()
         self.log(f"Downloading Android cmdline tools from {url}...")
         download_with_progress(url, archive_path, progress=self.progress)
@@ -225,7 +225,6 @@ class AndroidSDK:
         return p.stdout
 
     def run(self, args, env=None, cwd=None, capture_output=True):
-
         self.log(f"Run subprocess: {args}")
 
         cmd_env = {"JAVA_HOME": self.java_home}

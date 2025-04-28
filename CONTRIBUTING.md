@@ -10,20 +10,20 @@ git clone https://github.com/flet-dev/flet
 
 ## Python SDK
 
-### Install Poetry
+### Install uv
 
 #### Windows
 
 ```powershell
-(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
 Be sure to add `%USERPROFILE%\AppData\Roaming\Python\Scripts` to `PATH`.
 
-#### macOS
+#### macOS/Linux
 
 ```
-curl -sSL https://install.python-poetry.org | python3 -
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 ### Open worker directory
@@ -37,7 +37,7 @@ cd sdk/python
 To install all Flet dependencies and enable the project as editable package run:
 
 ```
-poetry install
+uv sync
 ```
 
 ### Check the installation
@@ -57,7 +57,7 @@ flet.app(target=main)
 and then run it:
 
 ```
-poetry run python hello.py
+uv run python hello.py
 ```
 
 During the first run Flet Client (`flet`) executable will be downloaded from [Flet GitHub releases](https://github.com/flet-dev/flet/releases) to a user temp directory and then started from there. The version of release to download from is taken from `flet/version.py` file.
@@ -66,10 +66,10 @@ You should see a new native OS window opened with "Hello, world!" in it.
 
 ### Running tests
 
-Pytest should be run with `poetry run`:
+Pytest should be run with `uv run`:
 
 ```
-poetry run pytest
+uv run pytest
 ```
 
 ### Code formatting
@@ -95,18 +95,9 @@ Install `isort` extension for imports formatting: https://marketplace.visualstud
 
 ### pre-commit
 
-[pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `poetry install`.
-To install the pre-commit hooks run: `poetry run pre-commit install`.
+[pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `uv sync`.
+To install the pre-commit hooks run: `uv run pre-commit install`.
 Once installed, every time you commit, pre-commit will run the configured hooks against changed files.
-
-## Possible installation error when working with a source package
-
-When you run python3 hello.py, you might encounter an error like this:
-`FileNotFoundError: [Error 2] No such file or directory: '/var/folders/xm/cyv42vbs27gff3s39vy97rx00000gn/T/fletd-0.1.50/fletd'`
-
-To resolve the issue, just delete this folder `../T/fletd-0.1.50/fletd`. The folder is the one with the FileNotFound Error encountered earlier.
-
-It should work now.
 
 ## Flutter client
 
@@ -163,7 +154,7 @@ Create a new folder preferably named `playground` (it has been added to the giti
 Try running the below command, where `<your-main.py>` is the file to test your additions:
 
 ```bash
-poetry run flet run -w -p 8550 playground/<your-main.py>
+uv run flet run -w -p 8550 playground/<your-main.py>
 ```
 You should see http://127.0.0.1:8550/ opened in the browser and also a desktop window with the output of your code.
 Making changes to the `<your-main.py>` will automatically trigger a hot reload.
@@ -182,9 +173,10 @@ You will be able to see the debugging outputs of the flet client in this termina
   - slowest: use `flutter run` as seen previously.
 
 - When you make changes to the flet **python** files, you will need to restart/rerun the Python client for the changes to take effect in the opened flutter applications. This is done with the same command:
-    ```bash
-    poetry run flet run -w -p 8550 playground/<your-main.py>
-    ```
+
+```bash
+uv run flet run -w -p 8550 playground/<your-main.py>
+```
 
 ## Releasing Flet
 
@@ -252,17 +244,17 @@ which ruby
 * **GitHub Desktop**: https://desktop.github.com/download/
 Open GitHub Desktop app, install Rosetta.
 
-* **Poetry**: https://python-poetry.org/docs/#installing-with-the-official-installer
+* **uv**: https://docs.astral.sh/uv/getting-started/installation/
 
-After installing poetry, set PATH:
+After installing uv, set PATH:
 ```
 echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.zprofile
 ```
 
-Check Poetry version and make sure it's in PATH:
+Check `uv` version and make sure it's in PATH:
 
 ```
-poetry --version
+uv --version
 ```
 
 * **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
