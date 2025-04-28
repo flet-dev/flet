@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, get_args
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.animation import AnimationValue
@@ -73,7 +73,7 @@ class Tab(AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("iconMargin", self.__icon_margin)
-        if isinstance(self.__icon, IconValue):
+        if isinstance(self.__icon, get_args(IconValue)):
             self._set_enum_attr("icon", self.__icon, IconEnums)
 
     # text
