@@ -2,14 +2,13 @@ import argparse
 import sys
 
 import flet.version
-from flet.version import update_version
-
 import flet_cli.commands.build
 import flet_cli.commands.create
+import flet_cli.commands.doctor  # Adding the doctor command
 import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
-import flet_cli.commands.doctor # Adding the doctor command
+from flet.version import update_version
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -18,12 +17,15 @@ def set_default_subparser(
 ):
     """
     Set a default subparser when no subparser is provided.
-    This should be called after setting up the argument parser but before `parse_args()`.
+    This should be called after setting up the argument parser but before
+    `parse_args()`.
 
     Parameters:
     - name (str): The name of the default subparser to use.
-    - args (list, optional): A list of arguments passed to `parse_args()`. Defaults to None.
-    - index (int): Position in `sys.argv` where the default subparser should be inserted. Defaults to 0.
+    - args (list, optional): A list of arguments passed to `parse_args()`. Defaults
+      to None.
+    - index (int): Position in `sys.argv` where the default subparser should be
+      inserted. Defaults to 0.
     """
 
     # exit if help or version flags are present
@@ -39,9 +41,7 @@ def set_default_subparser(
 
     # all subparser names
     subparser_names = [
-        sp_name
-        for action in subparser_actions
-        for sp_name in action._name_parser_map.keys()
+        sp_name for action in subparser_actions for sp_name in action._name_parser_map
     ]
 
     # if an existing subparser is provided, skip setting a default
@@ -76,7 +76,9 @@ def main():
     flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
-    flet_cli.commands.doctor.Command.register_to(sp, "doctor") # Register the doctor command
+    flet_cli.commands.doctor.Command.register_to(
+        sp, "doctor"
+    )  # Register the doctor command
 
     # set "run" as the default subparser
     set_default_subparser(parser, name="run", index=1)
