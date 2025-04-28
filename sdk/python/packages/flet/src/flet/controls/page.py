@@ -69,7 +69,7 @@ from flet.controls.types import (
     ThemeMode,
     Wrapper,
 )
-from flet.utils import classproperty, is_pyodide
+from flet.utils import classproperty, deprecated, is_pyodide
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
@@ -493,6 +493,15 @@ class Page(AdaptiveControl):
             curve=curve,
         )
 
+    @deprecated(
+        reason="Use Page.show_dialog() instead",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
+    def open(self, control: DialogControl) -> None:
+        self.show_dialog(control)
+
     def show_dialog(self, dialog: DialogControl) -> None:
         if dialog in self._dialogs.controls:
             raise Exception("Dialog is already opened")
@@ -519,6 +528,15 @@ class Page(AdaptiveControl):
 
         self._dialogs.controls.append(dialog)
         self._dialogs.update()
+
+    @deprecated(
+        reason="Use Page.pop_dialog() instead",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
+    def close(self, control: DialogControl) -> None:
+        self.pop_dialog()
 
     def pop_dialog(self) -> Optional[DialogControl]:
         # get the top most opened dialog
