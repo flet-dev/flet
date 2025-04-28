@@ -459,7 +459,7 @@ for:
       - publish_to_pypi dist/*.whl
 
     artifacts:
-      - path: sdk/python/dist/*
+      - path: sdk/python/dist/*.whl
 
     deploy:
       provider: GitHub
