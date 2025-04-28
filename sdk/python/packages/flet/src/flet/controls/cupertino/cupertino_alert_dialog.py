@@ -1,10 +1,14 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.controls.animation import Animation
+from flet.controls.animation import Animation, AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
+
+from flet.controls.duration import Duration
+
+from flet.controls.types import StrOrControl
 
 __all__ = ["CupertinoAlertDialog"]
 
@@ -91,7 +95,19 @@ class CupertinoAlertDialog(DialogControl):
     """
 
     modal: bool = False
-    title: Optional[Control] = None
+    title: Optional[StrOrControl] = None
     content: Optional[Control] = None
     actions: List[Control] = field(default_factory=list)
-    inset_animation: Optional[Animation] = None
+    inset_animation: Animation = field(
+        default_factory=lambda: Animation(
+            curve=AnimationCurve.DECELERATE, duration=Duration(milliseconds=100)
+        )
+    )
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            (isinstance(self.title, str) or self.title.visible)
+            or (self.content and self.content.visible)
+            or any(a.visible for a in self.actions)
+        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"

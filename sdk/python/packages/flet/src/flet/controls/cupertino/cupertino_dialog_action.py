@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.text_style import TextStyle
-from flet.controls.types import OptionalControlEventCallable
+from flet.controls.types import OptionalControlEventCallable, StrOrControl
 
 __all__ = ["CupertinoDialogAction"]
 
@@ -34,13 +34,13 @@ class CupertinoDialogAction(Control):
             on_dismiss=dialog_dismissed,
             actions=[
                 ft.CupertinoDialogAction(
-                    text="Yes",
-                    is_destructive_action=True,
+                    content="Yes",
+                    destructive=True,
                     on_click=handle_action_click,
                 ),
                 ft.CupertinoDialogAction(
-                    text="No",
-                    is_default_action=True,
+                    content="No",
+                    default=True,
                     on_click=handle_action_click
                 ),
             ],
@@ -62,9 +62,14 @@ class CupertinoDialogAction(Control):
     Online docs: https://flet.dev/docs/controls/cupertinodialogaction
     """
 
-    text: Optional[str] = None
-    content: Optional[Control] = None
-    is_default_action: bool = False
-    is_destructive_action: bool = False
+    content: StrOrControl
+    default: bool = False
+    destructive: bool = False
     text_style: Optional[TextStyle] = None
     on_click: OptionalControlEventCallable = None
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            isinstance(self.content, str) or self.content.visible
+        ), "content must be a string or a visible Control"

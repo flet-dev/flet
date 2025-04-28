@@ -18,8 +18,8 @@ class CupertinoActionSheetAction(ConstrainedControl):
     """
 
     content: StrOrControl
-    is_default_action: bool = False
-    is_destructive_action: bool = False
+    default: bool = False
+    destructive: bool = False
     mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
 
@@ -27,4 +27,4 @@ class CupertinoActionSheetAction(ConstrainedControl):
         super().before_update()
         assert (
             isinstance(self.content, str) or self.content.visible
-        ), "if content is a Control, it must be visible"
+        ), "content must be a string or a visible Control"
