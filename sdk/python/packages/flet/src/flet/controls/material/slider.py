@@ -82,7 +82,9 @@ class Slider(ConstrainedControl, AdaptiveControl):
         assert self.max is None or self.min <= self.max, (
             "min must be less than or equal to max"
         )
-        assert self.value and self.value >= self.min, "value must be greater than "
-        "or equal to min"
-        assert self.value and self.value <= self.max, "value must be less than or "
-        "equal to max"
+        assert self.value is None or self.value >= self.min, (
+            "value must be greater than or equal to min"
+        )
+        assert self.value is None or self.value <= self.max, (
+            "value must be less than or equal to max"
+        )
