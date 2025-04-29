@@ -134,7 +134,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             self.icon
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
-        ), "at least icon, or content (string or visible Control) must be provided"
+        ), "at least icon or content (string or visible Control) must be provided"
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
