@@ -389,8 +389,8 @@ for:
       - ls "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
       - cp "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js/flutter.js.map" $flet_sdk_root/packages/flet-web/src/flet_web/web
       - curl -L $PYODIDE_URL | tar -xj -C "$flet_sdk_root/packages/flet-web/src/flet_web/web"
-      - curl -L $PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl "$flet_sdk_root/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
-      - curl -L $PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl "$flet_sdk_root/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
+      - curl -L $PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl -o "$flet_sdk_root/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
+      - curl -L $PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl -o "$flet_sdk_root/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
       - popd
       - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
