@@ -2022,9 +2022,6 @@ class Command(BaseCommand):
         if self.package_platform == "Pyodide" and not self.template_data["no_wasm"]:
             build_args.append("--wasm")
 
-        # print(self.template_data["no_cdn"])
-        # exit(1)
-
         android_signing_key_store = (
             self.options.android_signing_key_store
             or self.get_pyproject("tool.flet.android.signing.key_store")

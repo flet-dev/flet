@@ -12,6 +12,9 @@ WidgetStateProperty<T?>? getWidgetStateProperty<T>(
   if (j is! Map<dynamic, dynamic>) {
     j = {"default": j};
   }
+  if (j.containsKey("")) {
+    j["default"] = j.remove("");
+  }
   if (!j.keys.every(
       (k) => k == "default" || WidgetState.values.any((v) => v.name == k))) {
     // wrap into another dict
