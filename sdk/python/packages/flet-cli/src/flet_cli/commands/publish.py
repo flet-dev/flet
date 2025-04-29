@@ -123,7 +123,12 @@ class Command(BaseCommand):
         from flet.utils.pip import ensure_flet_web_package_installed
 
         ensure_flet_web_package_installed()
-        from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
+        from flet_web import (
+            get_package_web_dir,
+            patch_font_manifest_json,
+            patch_index_html,
+            patch_manifest_json,
+        )
 
         # constants
         dist_name = "dist"
@@ -278,6 +283,8 @@ class Command(BaseCommand):
             "tool.flet.web.pwa_theme_color"
         )
 
+        no_cdn = options.no_cdn or get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+
         print("Patching index.html")
         patch_index_html(
             index_path=os.path.join(dist_dir, "index.html"),
@@ -293,16 +300,15 @@ class Command(BaseCommand):
                 or "auto"
             ),
             use_color_emoji=(
-                bool(
-                    options.use_color_emoji
-                    or get_pyproject("tool.flet.web.use_color_emoji")
-                )
+                options.use_color_emoji
+                or get_pyproject("tool.flet.web.use_color_emoji")
             ),
             route_url_strategy=str(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
                 or "path"
             ),
+            no_cdn=no_cdn,
         )
 
         print("Patching manifest.json")
@@ -314,3 +320,9 @@ class Command(BaseCommand):
             background_color=pwa_background_color,
             theme_color=pwa_theme_color,
         )
+
+        if no_cdn:
+            print("Patching FontManifest.json")
+            patch_font_manifest_json(
+                manifest_path=os.path.join(dist_dir, "assets", "FontManifest.json")
+            )

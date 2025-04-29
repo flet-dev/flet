@@ -1,5 +1,6 @@
 import asyncio
 import concurrent.futures
+import contextlib
 import logging
 import os
 import signal
@@ -49,6 +50,7 @@ def run(
     web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji=False,
     route_url_strategy="path",
+    no_cdn=False,
     export_asgi_app=False,
 ):
     if is_pyodide():
@@ -67,6 +69,7 @@ def run(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         )
 
     return asyncio.run(
@@ -81,6 +84,7 @@ def run(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         )
     )
 
@@ -96,6 +100,7 @@ async def run_async(
     web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji=False,
     route_url_strategy="path",
+    no_cdn=False,
 ):
     if is_pyodide():
         __run_pyodide(target)
@@ -171,6 +176,7 @@ async def run_async(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
             blocking=(view == AppView.WEB_BROWSER or view is None or force_web_server),
             on_startup=on_app_startup,
         )
@@ -199,20 +205,16 @@ async def run_async(
                 assets_dir if view != AppView.FLET_APP_WEB else None,
                 view == AppView.FLET_APP_HIDDEN,
             )
-            try:
+            with contextlib.suppress(Exception):
                 await fvp.wait()
-            except:
-                pass
 
             close_flet_view(pid_file)
 
         elif url_prefix and is_socket_server:
             on_app_startup(conn.page_url)
 
-            try:
+            with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
-            except KeyboardInterrupt:
-                pass
 
     finally:
         await conn.close()
@@ -268,6 +270,7 @@ async def __run_web_server(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
+    no_cdn,
     blocking,
     on_startup,
 ):
@@ -296,6 +299,7 @@ async def __run_web_server(
         web_renderer=web_renderer,
         use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
+        no_cdn=no_cdn,
         blocking=blocking,
         on_startup=on_startup,
         log_level=logging.getLevelName(log_level).lower(),
@@ -324,7 +328,7 @@ def __run_pyodide(target):
             )
             session.error(f"There was an error while processing your request: {e}")
 
-    conn = PyodideConnection(
+    PyodideConnection(
         on_session_created=on_session_created,
     )
 
@@ -357,11 +361,10 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
 
 
 def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd=False):
-    if upload_dir:
-        if not Path(upload_dir).is_absolute():
-            upload_dir = str(
-                Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
-                .joinpath(upload_dir)
-                .resolve()
-            )
+    if upload_dir and not Path(upload_dir).is_absolute():
+        upload_dir = str(
+            Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
+            .joinpath(upload_dir)
+            .resolve()
+        )
     return upload_dir

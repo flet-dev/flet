@@ -1146,10 +1146,8 @@ class Command(BaseCommand):
                 or "auto"
             ),
             "use_color_emoji": (
-                "true"
-                if self.options.use_color_emoji
+                self.options.use_color_emoji
                 or self.get_pyproject("tool.flet.web.use_color_emoji")
-                else "false"
             ),
             "pwa_background_color": (
                 self.options.pwa_background_color

@@ -2,10 +2,11 @@ import asyncio
 import logging
 from typing import Optional
 
-import flet_web.fastapi
-import flet_web.fastapi as flet_fastapi
 import uvicorn
 from flet.controls.types import WebRenderer
+
+import flet_web.fastapi
+import flet_web.fastapi as flet_fastapi
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -28,6 +29,7 @@ def get_fastapi_web_app(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
+    no_cdn,
 ):
     web_path = f"/{page_name.strip('/')}"
     app = flet_web.fastapi.FastAPI()
@@ -40,6 +42,7 @@ def get_fastapi_web_app(
             web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         ),
     )
 
@@ -57,11 +60,11 @@ async def serve_fastapi_web_app(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
+    no_cdn,
     blocking,
     on_startup,
     log_level,
 ):
-
     web_path = f"/{page_name.strip('/')}"
     page_url = f"http://{url_host}:{port}{web_path if web_path != '/' else ''}"
 
@@ -80,6 +83,7 @@ async def serve_fastapi_web_app(
             web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         ),
     )
     config = uvicorn.Config(app, host=host, port=port, log_level=log_level)

@@ -33,6 +33,7 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
         pyodideUrl: globalThis.pyodideUrl ?? defaultPyodideUrl,
         args: args,
         documentUrl: _documentUrl,
+        appPackageUrl: globalThis.appPackageUrl,
         micropipIncludePre: globalThis.micropipIncludePre,
         pythonModuleName: globalThis.pythonModuleName
     });

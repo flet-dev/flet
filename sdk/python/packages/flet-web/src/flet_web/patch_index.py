@@ -18,8 +18,9 @@ def patch_index_html(
     web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji: bool = False,
     route_url_strategy: str = "path",
+    no_cdn: bool = False,
 ):
-    with open(index_path, "r", encoding="utf-8") as f:
+    with open(index_path, encoding="utf-8") as f:
         index = f.read()
 
     if pyodide and pyodide_script_path:
@@ -42,37 +43,39 @@ def patch_index_html(
     )
     index = index.replace("%FLET_ROUTE_URL_STRATEGY%", route_url_strategy)
 
+    index = index.replace(
+        "<!-- noCdn -->",
+        f"<script>noCdn={str(no_cdn).lower()};</script>",
+    )
+
     if base_href:
         base_url = base_href.strip("/").strip()
         index = index.replace(
             '<base href="/">',
-            '<base href="{}">'.format(
-                "/" if base_url == "" else "/{}/".format(base_url)
-            ),
+            '<base href="{}">'.format("/" if base_url == "" else f"/{base_url}/"),
         )
     if websocket_endpoint_path:
         index = re.sub(
             r"\<meta name=\"flet-websocket-endpoint-path\" content=\"(.+)\">",
-            r'<meta name="flet-websocket-endpoint-path" content="{}">'.format(
-                websocket_endpoint_path
-            ),
+            rf'<meta name="flet-websocket-endpoint-path" '
+            f'content="{websocket_endpoint_path}">',
             index,
         )
     if app_name:
         index = re.sub(
             r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",
-            r'<meta name="apple-mobile-web-app-title" content="{}">'.format(app_name),
+            rf'<meta name="apple-mobile-web-app-title" content="{app_name}">',
             index,
         )
         index = re.sub(
             r"\<title>(.+)</title>",
-            r"<title>{}</title>".format(app_name),
+            rf"<title>{app_name}</title>",
             index,
         )
     if app_description:
         index = re.sub(
             r"\<meta name=\"description\" content=\"(.+)\">",
-            r'<meta name="description" content="{}">'.format(app_description),
+            rf'<meta name="description" content="{app_description}">',
             index,
         )
 
@@ -88,7 +91,7 @@ def patch_manifest_json(
     background_color: Optional[str] = None,
     theme_color: Optional[str] = None,
 ):
-    with open(manifest_path, "r", encoding="utf-8") as f:
+    with open(manifest_path, encoding="utf-8") as f:
         manifest = json.loads(f.read())
 
     if app_name:
@@ -106,6 +109,16 @@ def patch_manifest_json(
 
     if theme_color:
         manifest["theme_color"] = theme_color
+
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        f.write(json.dumps(manifest, indent=2))
+
+
+def patch_font_manifest_json(manifest_path: str):
+    with open(manifest_path, encoding="utf-8") as f:
+        manifest = json.loads(f.read())
+
+    manifest.append({"family": "Roboto", "fonts": [{"asset": "fonts/roboto.woff2"}]})
 
     with open(manifest_path, "w", encoding="utf-8") as f:
         f.write(json.dumps(manifest, indent=2))

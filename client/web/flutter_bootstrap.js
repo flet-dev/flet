@@ -6,6 +6,9 @@ var config = {};
 if (webRenderer != "auto") {
     config.renderer = webRenderer;
 }
+if (globalThis.canvasKitBaseUrl) {
+    config.canvasKitBaseUrl = globalThis.canvasKitBaseUrl;
+}
 _flutter.loader.load({
     config: config,
     serviceWorkerSettings: {
