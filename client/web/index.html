@@ -28,11 +28,21 @@
   <script>
     var webRenderer = "auto";
     var useColorEmoji = false;
+    var appPackageUrl = "app.tar.gz";
+    var noCdn = false;
   </script>
 
   <!-- webRenderer -->
   <!-- useColorEmoji -->
   <!-- pyodideCode -->
+  <!-- noCdn -->
+
+  <script>
+    if (noCdn) {
+      var canvasKitBaseUrl = "/canvaskit/";
+      var pyodideUrl = "/pyodide/pyodide.js";
+    }
+  </script>
 
   <script src="python.js"></script>
 </head>

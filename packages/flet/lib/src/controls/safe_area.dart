@@ -17,10 +17,10 @@ class SafeAreaControl extends StatelessWidget {
     debugPrint("SafeArea build: ${control.id}");
 
     final safeArea = SafeArea(
-        left: control.getBool("left", true)!,
-        top: control.getBool("top", true)!,
-        right: control.getBool("right", true)!,
-        bottom: control.getBool("bottom", true)!,
+        left: control.getBool("avoid_intrusions_left", true)!,
+        top: control.getBool("avoid_intrusions_top", true)!,
+        right: control.getBool("avoid_intrusions_right", true)!,
+        bottom: control.getBool("avoid_intrusions_bottom", true)!,
         maintainBottomViewPadding:
             control.getBool("maintain_bottom_view_padding", false)!,
         minimum: control.getEdgeInsets("minimum_padding", EdgeInsets.zero)!,

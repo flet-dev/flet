@@ -1,7 +1,7 @@
 import asyncio
-import json
 import logging
 import weakref
+from collections.abc import Awaitable, Coroutine
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import InitVar, dataclass, field
@@ -9,14 +9,8 @@ from functools import partial
 from typing import (
     TYPE_CHECKING,
     Any,
-    Awaitable,
     Callable,
-    Coroutine,
-    Dict,
-    List,
     Optional,
-    Tuple,
-    Type,
     TypeVar,
     Union,
 )
@@ -71,6 +65,13 @@ from flet.controls.types import (
 )
 from flet.utils import classproperty, deprecated, is_pyodide
 
+if not is_pyodide():
+    from flet.auth.authorization_service import AuthorizationService
+
+    AuthorizationImpl = AuthorizationService
+else:
+    AuthorizationImpl = Authorization
+
 if TYPE_CHECKING:
     from flet.messaging.session import Session
     from flet.pubsub.pubsub_client import PubSubClient
@@ -112,7 +113,8 @@ class Page(AdaptiveControl):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
 
-    A page instance and the root view are automatically created when a new user session started.
+    A page instance and the root view are automatically created when a new
+    user session started.
 
     Example:
 
@@ -135,7 +137,7 @@ class Page(AdaptiveControl):
 
     sess: InitVar["Session"]
 
-    views: List[View] = field(default_factory=lambda: [View()])
+    views: list[View] = field(default_factory=lambda: [View()])
     window: Window = field(default_factory=lambda: Window())
     browser_context_menu: BrowserContextMenu = field(
         default_factory=lambda: BrowserContextMenu()
@@ -169,7 +171,7 @@ class Page(AdaptiveControl):
     media: Optional["PageMediaData"] = None
     client_ip: Optional[str] = None
     client_user_agent: Optional[str] = None
-    fonts: Optional[Dict[str, str]] = None
+    fonts: Optional[dict[str, str]] = None
     scroll_event_interval: OptionalNumber = None
 
     on_close: OptionalControlEventCallable = None
@@ -231,14 +233,14 @@ class Page(AdaptiveControl):
 
     def insert(self, at: int, *controls: Control) -> None:
         n = at
-        for control in controls:
-            self.controls.insert(n, control)
+        for c in controls:
+            self.controls.insert(n, c)
             n += 1
         self.__update(self)
 
     def remove(self, *controls: Control) -> None:
-        for control in controls:
-            self.controls.remove(control)
+        for c in controls:
+            self.controls.remove(c)
         self.__update(self)
 
     def remove_at(self, index: int) -> None:
@@ -246,22 +248,8 @@ class Page(AdaptiveControl):
         self.__update(self)
 
     def clean(self) -> None:
-        self._clean(self)
         self.controls.clear()
-
-    def _clean(self, control: Control) -> None:
-        # with self.__lock:
-        #     control._previous_children.clear()
-        #     assert control.uid is not None
-        #     removed_controls = []
-        #     for child in control._get_children():
-        #         removed_controls.extend(
-        #             self._remove_control_recursively(self.index, child)
-        #         )
-        #     self._send_command("clean", [control.uid])
-        #     for c in removed_controls:
-        #         c.will_unmount()
-        pass
+        self.__update(self)
 
     def get_session(self):
         if sess := self.__session():
@@ -269,8 +257,8 @@ class Page(AdaptiveControl):
         raise Exception("An attempt to fetch destroyed session.")
 
     def __update(self, *controls: Control):
-        for control in controls:
-            self.get_session().patch_control(control)
+        for c in controls:
+            self.get_session().patch_control(c)
 
     def error(self, message: str) -> None:
         self.get_session().error(message)
@@ -350,14 +338,14 @@ class Page(AdaptiveControl):
         provider: OAuthProvider,
         fetch_user: bool = True,
         fetch_groups: bool = False,
-        scope: Optional[List[str]] = None,
+        scope: Optional[list[str]] = None,
         saved_token: Optional[str] = None,
         on_open_authorization_url: Optional[
             Callable[[str], Coroutine[Any, Any, None]]
         ] = None,
         complete_page_html: Optional[str] = None,
         redirect_to_page: Optional[bool] = False,
-        authorization: Type[AT] = Authorization,
+        authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
         self.__authorization = authorization(
             provider,
@@ -515,8 +503,10 @@ class Page(AdaptiveControl):
             if (
                 original_on_dismiss
                 and not hasattr(dialog, "_force_close")
-                and args[0].data
-                != False  # e.data == False for TimePicker and DatePicker if they were dismissed without changing the value
+                and args[
+                    0
+                ].data  # e.data == False for TimePicker and DatePicker if they were
+                # dismissed without changing the value
             ):
                 original_on_dismiss(*args, **kwargs)
             dialog.on_dismiss = original_on_dismiss
@@ -546,7 +536,7 @@ class Page(AdaptiveControl):
         if not dialog:
             return None
         dialog.open = False
-        setattr(dialog, "_force_close", True)
+        dialog._force_close = True
         dialog.update()
         return dialog
 
@@ -587,7 +577,7 @@ class Page(AdaptiveControl):
 
     # overlay
     @property
-    def overlay(self) -> List[Control]:
+    def overlay(self) -> list[Control]:
         return self._overlay.controls
 
     # session_storage
@@ -597,20 +587,20 @@ class Page(AdaptiveControl):
 
     # controls
     @property
-    def controls(self) -> List[Control]:
+    def controls(self) -> list[Control]:
         return self.__default_view().controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
+    def controls(self, value: list[Control]):
         self.__default_view().controls = value
 
     # services
     @property
-    def services(self) -> List[Service]:
+    def services(self) -> list[Service]:
         return self._user_services.services
 
     @services.setter
-    def services(self, value: List[Service]):
+    def services(self, value: list[Service]):
         self._user_services.services = value
 
     # appbar
@@ -771,17 +761,17 @@ class Page(AdaptiveControl):
 
 @control("Overlay")
 class Overlay(BaseControl):
-    controls: List[Control] = field(default_factory=list)
+    controls: list[Control] = field(default_factory=list)
 
 
 @control("Dialogs")
 class Dialogs(BaseControl):
-    controls: List[DialogControl] = field(default_factory=list)
+    controls: list[DialogControl] = field(default_factory=list)
 
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
-    services: List[Service] = field(default_factory=list)
+    services: list[Service] = field(default_factory=list)
 
 
 @dataclass

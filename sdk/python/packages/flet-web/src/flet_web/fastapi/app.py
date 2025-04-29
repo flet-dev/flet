@@ -1,6 +1,7 @@
 import asyncio
 import os
-from typing import Awaitable, Callable, Optional, Union
+from collections.abc import Awaitable
+from typing import Callable, Optional, Union
 
 from fastapi import Request, WebSocket
 from flet.controls.page import Page
@@ -29,6 +30,7 @@ def app(
     web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji: bool = False,
     route_url_strategy: str = "path",
+    no_cdn: bool = False,
     upload_dir: Optional[str] = None,
     upload_endpoint_path: Optional[str] = None,
     max_upload_size: Optional[int] = None,
@@ -40,20 +42,29 @@ def app(
     Mount all Flet FastAPI handlers in one call.
 
     Parameters:
-    * `session_handler` (function or coroutine) - application entry point - a method called for newly connected user. Handler must have 1 parameter: `page` - `Page` instance.
+    * `session_handler` (function or coroutine) - application entry point - a method
+       called for newly connected user. Handler must have 1 parameter: `page` - `Page`
+       instance.
     * `assets_dir` (str, optional) - an absolute path to app's assets directory.
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
     * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
+    * `use_color_emoji` (bool) - whether to load a font with color emoji.
+       Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
+    * `no_cdn` (bool) - do not load resources from CDN.
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
-    * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint, e.g. `/upload`.
-    * `max_upload_size` (str, int) - maximum size of a single upload, bytes. Unlimited if `None`.
+    * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint,
+       e.g. `/upload`.
+    * `max_upload_size` (str, int) - maximum size of a single upload, bytes.
+       Unlimited if `None`.
     * `secret_key` (str, optional) - secret key to sign and verify upload requests.
-    * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
-    * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
+    * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after
+       user disconnected.
+    * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds,
+       which is a maximum allowed time between starting OAuth flow and redirecting
+       to OAuth callback URL.
     """
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
@@ -118,6 +129,7 @@ def app(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         ),
     )
 

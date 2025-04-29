@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -183,16 +182,13 @@ class FletSocketServer(Connection):
     async def close(self):
         logger.debug("Closing connection...")
 
-        logger.debug(f"Finishing all sessions...")
+        logger.debug("Finishing all sessions...")
         if self.session:
             await self.session.disconnect(0)
 
         if self.executor:
             logger.debug("Shutting down thread pool...")
-            if sys.version_info >= (3, 9):
-                self.executor.shutdown(wait=False, cancel_futures=True)
-            else:
-                self.executor.shutdown(wait=False)
+            self.executor.shutdown(wait=False, cancel_futures=True)
 
         # close socket
         if self.__receive_loop_task:
