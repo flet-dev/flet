@@ -68,9 +68,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     on_interaction_update: OptionalEventCallable[
         InteractiveViewerInteractionUpdateEvent
     ] = None
-    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent] = (
-        None
-    )
+    on_interaction_end: OptionalEventCallable[
+        InteractiveViewerInteractionEndEvent
+    ] = None
 
     def before_update(self):
         super().before_update()
