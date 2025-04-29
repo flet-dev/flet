@@ -1,6 +1,5 @@
 import argparse
 import os
-import re
 import shutil
 import sys
 import tarfile
@@ -111,6 +110,13 @@ class Command(BaseCommand):
             help="default color for your web application's user interface",
             required=False,
         )
+        parser.add_argument(
+            "--no-cdn",
+            dest="no_cdn",
+            action="store_true",
+            default=False,
+            help="disable loading of CanvasKit, Pyodide and fonts from CDN.",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         import flet.version
@@ -189,7 +195,7 @@ class Command(BaseCommand):
             deps = toml_dependencies
             print(f"pyproject.toml dependencies: {deps}")
         elif requirements_txt.exists():
-            with open(requirements_txt, "r", encoding="utf-8") as f:
+            with open(requirements_txt, encoding="utf-8") as f:
                 deps = list(
                     filter(
                         lambda dep: not dep.startswith("#"),
@@ -211,14 +217,15 @@ class Command(BaseCommand):
         def filter_tar(tarinfo: tarfile.TarInfo):
             full_path = os.path.join(script_dir, tarinfo.name)
             if (
-                tarinfo.name.startswith(".")
-                or tarinfo.name.startswith("__pycache__")
-                or tarinfo.name == reqs_filename
+                (
+                    tarinfo.name.startswith(".")
+                    or tarinfo.name.startswith("__pycache__")
+                    or tarinfo.name == reqs_filename
+                )
+                or assets_dir
+                and is_within_directory(assets_dir, full_path)
+                or is_within_directory(dist_dir, full_path)
             ):
-                return None
-            elif assets_dir and is_within_directory(assets_dir, full_path):
-                return None
-            elif is_within_directory(dist_dir, full_path):
                 return None
             # tarinfo.uid = tarinfo.gid = 0
             # tarinfo.uname = tarinfo.gname = "root"
@@ -281,19 +288,15 @@ class Command(BaseCommand):
             pyodide_pre=options.pre,
             pyodide_script_path=str(script_path),
             web_renderer=WebRenderer(
-                (
-                    options.web_renderer
-                    or get_pyproject("tool.flet.web.renderer")
-                    or "auto"
-                )
+                options.web_renderer
+                or get_pyproject("tool.flet.web.renderer")
+                or "auto"
             ),
             use_color_emoji=(
-                True
-                if (
+                bool(
                     options.use_color_emoji
                     or get_pyproject("tool.flet.web.use_color_emoji")
                 )
-                else False
             ),
             route_url_strategy=str(
                 options.route_url_strategy
