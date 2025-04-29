@@ -7,13 +7,13 @@ from flet.controls.padding import PaddingValue
 __all__ = ["SafeArea"]
 
 
-@control("SafeArea", kw_only=True)
+@control("SafeArea")
 class SafeArea(ConstrainedControl, AdaptiveControl):
     content: Control
-    left: bool = True
-    top: bool = True
-    right: bool = True
-    bottom: bool = True
+    avoid_intrusions_left: bool = True
+    avoid_intrusions_top: bool = True
+    avoid_intrusions_right: bool = True
+    avoid_intrusions_bottom: bool = True
     maintain_bottom_view_padding: bool = False
     minimum_padding: PaddingValue = 0
 

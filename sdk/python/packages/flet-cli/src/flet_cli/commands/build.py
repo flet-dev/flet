@@ -1160,10 +1160,11 @@ class Command(BaseCommand):
                 or self.get_pyproject("tool.flet.web.pwa_theme_color")
             ),
             "no_wasm": (
-                self.options.no_wasm or not self.get_pyproject("tool.flet.web.wasm")
+                self.options.no_wasm
+                or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
             ),
             "no_cdn": (
-                self.options.no_cdn or not self.get_pyproject("tool.flet.web.cdn")
+                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
             ),
             "base_url": f"/{base_url}/" if base_url else "/",
             "split_per_abi": split_per_abi,
@@ -2022,6 +2023,9 @@ class Command(BaseCommand):
 
         if self.package_platform == "Pyodide" and not self.template_data["no_wasm"]:
             build_args.append("--wasm")
+
+        # print(self.template_data["no_cdn"])
+        # exit(1)
 
         android_signing_key_store = (
             self.options.android_signing_key_store
