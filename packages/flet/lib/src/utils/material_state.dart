@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 
-WidgetStateProperty<T?>? getWidgetStateProperty<T>(dynamic value,
-    T Function(dynamic) converterFromJson,
+WidgetStateProperty<T?>? getWidgetStateProperty<T>(
+    dynamic value, T Function(dynamic) converterFromJson,
     [T? defaultValue]) {
   if (value == null) return null;
   var j = value;
   if (j is! Map<dynamic, dynamic>) {
+    j = {"default": j};
+  }
+  if (!j.keys.every(
+      (k) => k == "default" || WidgetState.values.any((v) => v.name == k))) {
+    // wrap into another dict
     j = {"default": j};
   }
   return WidgetStateFromJSON(j, converterFromJson, defaultValue);
