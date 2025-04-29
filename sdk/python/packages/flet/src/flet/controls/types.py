@@ -53,14 +53,28 @@ class NotchShape(Enum):
     CIRCULAR = "circular"
 
 
+
+
+class ResponsiveRowBreakpoint(Enum):
+    """
+    Breakpoints for responsive design.
+    """
+
+    XS = "xs"
+    SM = "sm"
+    MD = "md"
+    LG = "lg"
+    XL = "xl"
+    XXL = "xxl"
 Number = Union[int, float]
-ResponsiveNumber = Union[Dict[str, Number], Number]
+ResponsiveNumber = Union[Dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
 OptionalNumber = Optional[Number]
 
 # literal type alias
 OptionalString = Optional[str]
 OptionalBool = Optional[bool]
 OptionalInt = Optional[int]
+OptionalFloat = Optional[float]
 
 
 class MainAxisAlignment(Enum):

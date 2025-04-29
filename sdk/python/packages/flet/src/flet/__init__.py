@@ -509,6 +509,7 @@ from flet.controls.types import (
     PagePlatform,
     PointerDeviceType,
     ResponsiveNumber,
+    ResponsiveRowBreakpoint,
     ScrollMode,
     StrokeCap,
     StrokeJoin,
