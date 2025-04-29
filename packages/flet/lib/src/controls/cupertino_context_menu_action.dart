@@ -20,8 +20,8 @@ class CupertinoContextMenuActionControl extends StatelessWidget {
           "content (string or visible Control) must be provided");
     }
     return CupertinoContextMenuAction(
-        isDefaultAction: control.getBool("is_default_action", false)!,
-        isDestructiveAction: control.getBool("is_destructive_action", false)!,
+        isDefaultAction: control.getBool("default", false)!,
+        isDestructiveAction: control.getBool("destructive", false)!,
         onPressed: () {
           if (!control.disabled) {
             control.triggerEvent("click");

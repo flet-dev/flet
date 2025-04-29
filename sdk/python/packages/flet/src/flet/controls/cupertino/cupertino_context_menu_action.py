@@ -18,7 +18,13 @@ class CupertinoContextMenuAction(AdaptiveControl):
     """
 
     content: StrOrControl
-    is_default_action: bool = False
-    is_destructive_action: bool = False
+    default: bool = False
+    destructive: bool = False
     trailing_icon: Optional[IconValue] = None
     on_click: OptionalControlEventCallable = None
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            isinstance(self.content, str) or self.content.visible
+        ), "content must be a string or a visible Control"

@@ -19,12 +19,12 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
     var content = control.buildTextOrWidget("content");
     if (content == null) {
       return const ErrorControl(
-          "CupertinoActionSheetAction.content (string or visible Control) must be provided");
+          "CupertinoActionSheetAction.content must be a string or visible Control");
     }
 
     final actionSheet = CupertinoActionSheetAction(
-      isDefaultAction: control.getBool("is_default_action", false)!,
-      isDestructiveAction: control.getBool("is_destructive_action", false)!,
+      isDefaultAction: control.getBool("default", false)!,
+      isDestructiveAction: control.getBool("destructive", false)!,
       onPressed: () {
         if (!control.disabled) {
           control.triggerEvent("click");

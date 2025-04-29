@@ -5,6 +5,7 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../widgets/error.dart';
 import 'base_controls.dart';
 
 class CupertinoDialogActionControl extends StatelessWidget {
@@ -16,17 +17,18 @@ class CupertinoDialogActionControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
 
+    var content = control.buildTextOrWidget("content");
+    if (content == null) {
+      return const ErrorControl(
+          "CupertinoDialogAction.content must be a string or visible Control");
+    }
+
     var cupertinoDialogAction = CupertinoDialogAction(
-      isDefaultAction: control.getBool("is_default_action", false)!,
-      isDestructiveAction: control.getBool("is_destructive_action", false)!,
+      isDefaultAction: control.getBool("default", false)!,
+      isDestructiveAction: control.getBool("destructive", false)!,
       textStyle: control.getTextStyle("text_style", Theme.of(context)),
-      onPressed: !control.disabled
-          ? () {
-              control.triggerEvent("click");
-            }
-          : null,
-      child: control.buildWidget("content") ??
-          Text(control.getString("text", "")!),
+      onPressed: !control.disabled ? () => control.triggerEvent("click") : null,
+      child: content,
     );
 
     return BaseControl(control: control, child: cupertinoDialogAction);

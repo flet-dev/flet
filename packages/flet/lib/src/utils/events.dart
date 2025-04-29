@@ -88,39 +88,6 @@ extension TapUpDetailsExtension on TapUpDetails {
       };
 }
 
-extension PointerScrollEventExt on PointerScrollEvent {
-  Map<String, dynamic> toMap() => {
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": position.dx,
-        "gy": position.dy,
-        "sdx": scrollDelta.dx,
-        "sdy": scrollDelta.dy,
-      };
-}
-
-extension PointerEnterEventExt on PointerEnterEvent {
-  Map<String, dynamic> toMap() => {
-        "k": kind.name,
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": position.dx,
-        "gy": position.dy,
-        "ts": timeStamp,
-      };
-}
-
-extension PointerExitEventExt on PointerExitEvent {
-  Map<String, dynamic> toMap() => {
-        "k": kind.name,
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": position.dx,
-        "gy": position.dy,
-        "ts": timeStamp,
-      };
-}
-
 extension DragStartDetailsExtension on DragStartDetails {
   Map<String, dynamic> toMap() => {
         "k": kind?.name,
@@ -147,8 +114,11 @@ extension DragUpdateDetailsExtension on DragUpdateDetails {
   }
 }
 
-extension PointerHoverEventExt on PointerHoverEvent {
-  Map<String, dynamic> toMap(double previousX, double previousY) {
+extension PointerEventExtension on PointerEvent {
+  Map<String, dynamic> toMap([double? previousDx, double? previousDy]) {
+    // todo: should dx/dy be null if previousDx/Dy is null?
+    var dx = previousDx != null ? previousDx - localPosition.dx : null;
+    var dy = previousDy != null ? previousDy - localPosition.dy : null;
     return {
       "k": kind.name,
       "lx": localPosition.dx,
@@ -156,8 +126,36 @@ extension PointerHoverEventExt on PointerHoverEvent {
       "gx": position.dx,
       "gy": position.dy,
       "ts": timeStamp,
-      "dx": localPosition.dx - previousX,
-      "dy": localPosition.dy - previousY,
+      "vId": viewId,
+      "btt": buttons,
+      "obs": obscured,
+      "dev": device,
+      "ps": pressure,
+      "pMin": pressureMin,
+      "pMax": pressureMax,
+      "dist": distance,
+      "distMax": distanceMax,
+      "size": size,
+      "rMj": radiusMajor,
+      "rMn": radiusMinor,
+      "rMin": radiusMin,
+      "rMax": radiusMax,
+      "or": orientation,
+      "tilt": tilt,
+      "eId": embedderId,
+      "dx": dx,
+      "dy": dy,
     };
   }
+}
+
+extension PointerScrollEventExtension on PointerScrollEvent {
+  Map<String, dynamic> toMap() => {
+        "lx": localPosition.dx,
+        "ly": localPosition.dy,
+        "gx": position.dx,
+        "gy": position.dy,
+        "sdx": scrollDelta.dx,
+        "sdy": scrollDelta.dy,
+      };
 }

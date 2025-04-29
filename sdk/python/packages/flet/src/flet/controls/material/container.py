@@ -17,7 +17,7 @@ from flet.controls.box import (
 )
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.core.gesture_detector import TapEvent
+from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue

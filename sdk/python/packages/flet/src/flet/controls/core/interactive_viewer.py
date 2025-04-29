@@ -7,7 +7,7 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.core.gesture_detector import (
+from flet.controls.events import (
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,

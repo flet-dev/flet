@@ -294,21 +294,20 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
           child: textField);
     }
 
-    if (widget.control.getInt("expand", 0)! > 0) {
+    if (widget.control.get("expand") == true ||
+        (widget.control.get("expand") is int &&
+            widget.control.getInt("expand", 0)! > 0)) {
       return ConstrainedControl(control: widget.control, child: textField);
     } else {
-      return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth == double.infinity &&
-              widget.control.getDouble("width") == null) {
-            textField = ConstrainedBox(
-              constraints: const BoxConstraints.tightFor(width: 300),
-              child: textField,
-            );
-          }
+      double? width = widget.control.getDouble("width");
 
-          return ConstrainedControl(control: widget.control, child: textField);
-        },
+      return ConstrainedControl(
+        control: widget.control,
+        child: width == null
+            ? ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 300),
+                child: textField)
+            : textField,
       );
     }
   }

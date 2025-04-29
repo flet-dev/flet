@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
-import 'control_widget.dart';
 
 class CupertinoAlertDialogControl extends StatefulWidget {
   final Control control;
@@ -49,12 +48,12 @@ class _CupertinoAlertDialogControlState
   }
 
   Widget _createCupertinoAlertDialog() {
-    var titleControl = widget.control.child("title");
-    var contentControl = widget.control.child("content");
-    var actionControls = widget.control.children("actions");
-    if (titleControl == null &&
-        contentControl == null &&
-        actionControls.isEmpty) {
+    var title = widget.control.buildTextOrWidget("title");
+    var content = widget.control.buildWidget("content");
+    var actions = widget.control.buildWidgets("actions");
+    if (title == null &&
+        content == null &&
+        actions.isEmpty) {
       return const ErrorControl(
           "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
@@ -67,21 +66,9 @@ class _CupertinoAlertDialogControlState
     return CupertinoAlertDialog(
       insetAnimationCurve: insetAnimation.curve,
       insetAnimationDuration: insetAnimation.duration,
-      title: titleControl != null
-          ? ControlWidget(
-              control: titleControl,
-            )
-          : null,
-      content: contentControl != null
-          ? ControlWidget(
-              control: contentControl,
-            )
-          : null,
-      actions: actionControls
-          .map((actionControl) => ControlWidget(
-                control: actionControl,
-              ))
-          .toList(),
+      title: title,
+      content: content,
+      actions: actions,
     );
   }
 
