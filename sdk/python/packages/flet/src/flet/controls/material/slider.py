@@ -28,9 +28,12 @@ class SliderInteraction(Enum):
 @control("Slider")
 class Slider(ConstrainedControl, AdaptiveControl):
     """
-    A slider provides a visual indication of adjustable content, as well as the current setting in the total range of content.
+    A slider provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content.
 
-    Use a slider when you want people to set defined values (such as volume or brightness), or when people would benefit from instant feedback on the effect of setting changes.
+    Use a slider when you want people to set defined values (such as volume or
+    brightness), or when people would benefit from instant feedback on the effect
+    of setting changes.
 
     Example:
     ```
@@ -51,7 +54,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/slider
     """
 
-    value: Number = 0.0
+    value: OptionalNumber = None
     label: Optional[str] = None
     min: Number = 0.0
     max: Number = 1.0
@@ -76,8 +79,10 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.max is None or self.min <= self.max
-        ), "min must be less than or equal to max"
-        assert self.value >= self.min, "value must be greater than or equal to min"
-        assert self.value <= self.max, "value must be less than or equal to max"
+        assert self.max is None or self.min <= self.max, (
+            "min must be less than or equal to max"
+        )
+        assert self.value and self.value >= self.min, "value must be greater than "
+        "or equal to min"
+        assert self.value and self.value <= self.max, "value must be less than or "
+        "equal to max"
