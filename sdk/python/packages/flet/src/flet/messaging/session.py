@@ -34,9 +34,9 @@ class Session:
         self.__conn = conn
         self.__id = random_string(16)
         self.__expires_at = None
-        self.__index: weakref.WeakValueDictionary[
-            int, Control
-        ] = weakref.WeakValueDictionary()
+        self.__index: weakref.WeakValueDictionary[int, Control] = (
+            weakref.WeakValueDictionary()
+        )
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
@@ -98,7 +98,6 @@ class Session:
             control=control, prev_control=control
         )
         if patch:
-
             for removed_control in removed_controls:
                 removed_control.will_unmount()
                 self.__index.pop(removed_control._i, None)
@@ -203,7 +202,8 @@ class Session:
             )
         else:
             raise Exception(
-                f"Error handling invoke method results. Control with ID {control_id} is not registered."
+                f"Error handling invoke method results. Control with ID {control_id} "
+                "is not registered."
             )
 
     def auto_update(self, control: BaseControl):
@@ -229,9 +229,13 @@ class Session:
             control_cls=BaseControl,
         )
 
+        # print("\n\npatch:", patch)
         # print(f"\n\nadded_controls: ({len(added_controls)})")
         # for ac in added_controls:
         #     print(f"added_control: {ac._c}({ac._i})")
-        # print(f"\n\nremoved_controls ({len(removed_controls)}):", removed_controls)
+
+        # print(f"\n\nremoved_controls: ({len(removed_controls)})")
+        # for c in removed_controls:
+        #     print(f"removed_control: {c._c}({c._i})")
 
         return patch.to_graph(), added_controls, removed_controls

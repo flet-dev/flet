@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # python-json-patch - An implementation of the JSON Patch format
 # https://github.com/stefankoegl/python-json-patch
@@ -46,11 +45,10 @@ class InvalidObjectPatch(ObjectPatchException):
     """Raised if an invalid Object Patch is created"""
 
 
-class PatchOperation(object):
+class PatchOperation:
     """A single operation inside a Object Patch."""
 
     def __init__(self, operation):
-
         if not operation.__contains__("path"):
             raise InvalidObjectPatch("Operation must have a 'path' member")
 
@@ -89,9 +87,10 @@ class PatchOperation(object):
                 return doc[part]
 
             except IndexError:
-                raise ObjectPatchException("index '%s' is out of bounds" % (part,))
+                raise ObjectPatchException(f"index '{part}' is out of bounds") from None
 
-        # Else the object is a mapping or supports __getitem__(so assume custom indexing)
+        # Else the object is a mapping or supports __getitem__
+        # (so assume custom indexing)
         try:
             if hasattr(doc, "__getitem__"):
                 return doc[part]
@@ -99,7 +98,7 @@ class PatchOperation(object):
                 return getattr(doc, str(part))
 
         except KeyError:
-            raise ObjectPatchException("member '%s' not found in %s" % (part, doc))
+            raise ObjectPatchException(f"member '{part}' not found in {doc}") from None
 
     def to_last(self, doc):
         """Resolves ptr until the last step, returns (sub-doc, last-step)"""
@@ -205,7 +204,7 @@ class MoveOperation(PatchOperation):
         return key
 
 
-class ObjectPatch(object):
+class ObjectPatch:
     """An Object Patch is a list of Patch Operations."""
 
     def __init__(self, patch):
@@ -267,7 +266,7 @@ class ObjectPatch(object):
         return root
 
 
-class DiffBuilder(object):
+class DiffBuilder:
     def __init__(
         self,
         src_doc,
@@ -346,8 +345,8 @@ class DiffBuilder(object):
                 op_first, op_second = curr[2], curr[1][2]
                 if (
                     op_first.location == op_second.location
-                    and type(op_first) == RemoveOperation
-                    and type(op_second) == AddOperation
+                    and isinstance(op_first, RemoveOperation)
+                    and isinstance(op_second, AddOperation)
                 ):
                     yield ReplaceOperation(
                         {
@@ -367,7 +366,7 @@ class DiffBuilder(object):
         index = self.take_index(item, _ST_REMOVE)
         if index is not None:
             op = index[2]
-            if type(op.key) == int and type(key) == int:
+            if isinstance(op.key, int) and isinstance(key, int):
                 for v in self.iter_from(index):
                     op.key = v._on_undo_remove(op.path, op.key)
 
@@ -409,7 +408,7 @@ class DiffBuilder(object):
             # for numeric string dict keys while the intention is to only handle lists.
             # So we do an explicit check on the item affected by the op instead.
             added_item = op.to_last(self.dst_doc)
-            if type(added_item) == list:
+            if isinstance(added_item, list):
                 for v in self.iter_from(index):
                     op.key = v._on_undo_add(op.path, op.key)
 
@@ -481,12 +480,12 @@ class DiffBuilder(object):
                     and dataclasses.is_dataclass(new)
                     and (
                         (self.in_place and old == new)
-                        or (not self.in_place and type(old) == type(new))
+                        or (not self.in_place and type(old) is type(new))
                     )
                 ):
                     self._compare_dataclasses(parent, _path_join(path, key), old, new)
 
-                elif type(old) != type(new) or old != new:
+                elif type(old) is not type(new) or old != new:
                     self._item_removed(path, key, old)
                     self._item_added(parent, path, key, new)
 
@@ -573,6 +572,7 @@ class DiffBuilder(object):
         elif isinstance(src, list) and isinstance(dst, list):
             if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):
                 self._item_replaced(parent, path, key, dst)
+                self._remove_control(src)
             else:
                 self._compare_lists(parent, _path_join(path, key), src, dst)
 
@@ -581,26 +581,29 @@ class DiffBuilder(object):
             and dataclasses.is_dataclass(dst)
             and (
                 (self.in_place and src == dst)
-                or (not self.in_place and type(src) == type(dst))
+                or (not self.in_place and type(src) is type(dst))
             )
         ):
             self._compare_dataclasses(parent, _path_join(path, key), src, dst)
 
-        elif type(src) != type(dst) or src != dst:
+        elif type(src) is not type(dst) or src != dst:
             self._item_replaced(parent, path, key, dst)
+            self._remove_control(src)
 
     def _configure_dataclass(self, item, parent):
         if dataclasses.is_dataclass(item):
             # set parent
             if parent:
                 # print(
-                #     f"\n*** _configure_control: ***\n\nitem: {item._c}({item._i})\nparent: {parent._c}({parent._i})"
+                #     f"\n*** _configure_control: ***\n\nitem: {item._c}({item._i})""
+                # "\nparent: {parent._c}({parent._i})"
                 # )
                 # if hasattr(item, "_parent"):
                 #     raise Exception(
-                #         f"Control {item._c}({item._i}) is already a part of {item.parent._c}({item.parent._i})."
+                #         f"Control {item._c}({item._i}) is already a part of "
+                # "{item.parent._c}({item.parent._i})."
                 #     )
-                setattr(item, "_parent", weakref.ref(parent))
+                item._parent = weakref.ref(parent)
 
             def control_setattr(obj, name, value):
                 if not name.startswith("_") and hasattr(obj, "__changes"):
@@ -625,7 +628,7 @@ class DiffBuilder(object):
 
             # recurse through fields
             for field in dataclasses.fields(item):
-                if not "skip" in field.metadata:
+                if "skip" not in field.metadata:
                     self._configure_dataclass(getattr(item, field.name), item)
 
             if self.control_cls and isinstance(item, self.control_cls):
@@ -647,7 +650,6 @@ class DiffBuilder(object):
 
     def _remove_control(self, item):
         if self.control_cls and isinstance(item, self.control_cls):
-
             # recurse through list props
             for item_list in getattr(item, "__prev_lists", {}).values():
                 self._remove_control(item_list)
