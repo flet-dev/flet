@@ -12,7 +12,7 @@ Gradient? parseGradient(dynamic value, ThemeData theme) {
   if (value == null) return null;
 
   String type = value["type"];
-  var colors = parseColors(theme, value["colors"]);
+  var colors = parseColors(value["colors"], theme);
   var stops = parseGradientStops(value["stops"]);
   var rotation = parseRotation(value["rotation"]);
   if (type == "linear") {
@@ -123,6 +123,7 @@ Color lerpGradient(List<Color> colors, List<double> stops, double t) {
   }
   return colors.last;
 }
+
 extension GradientParsers on Control {
   Gradient? getGradient(String propertyName, ThemeData theme) {
     return parseGradient(get(propertyName), theme);

@@ -5,6 +5,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
@@ -49,7 +50,6 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
-    text: Optional[str] = None  # todo(0.73.0): remove in favor of content
     on_click: OptionalControlEventCallable = None
     on_long_press: OptionalControlEventCallable = None
     on_hover: OptionalControlEventCallable = None
@@ -59,8 +59,10 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert (
-            self.text or self.icon or (self.content and self.content.visible)
-        ), "at minimum, text, icon or a visible content must be provided"
+            self.icon
+            or isinstance(self.content, str)
+            or (isinstance(self.content, Control) and self.content.visible)
+        ), "at minimum, icon or a visible content must be provided"
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
