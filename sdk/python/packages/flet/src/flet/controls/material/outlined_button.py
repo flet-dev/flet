@@ -42,9 +42,9 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/outlinedbutton
     """
 
+    content: Optional[StrOrControl] = None
     icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
-    content: Optional[StrOrControl] = None
     style: Optional[ButtonStyle] = None
     autofocus: bool = False
     clip_behavior: ClipBehavior = ClipBehavior.NONE
