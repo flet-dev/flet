@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flet/flet.dart';
 // import 'package:flet_ads/flet_ads.dart' as flet_ads;
-// // --FAT_CLIENT_START--
-// import 'package:flet_audio/flet_audio.dart' as flet_audio;
-// // --FAT_CLIENT_END--
+// --FAT_CLIENT_START--
+import 'package:flet_audio/flet_audio.dart' as flet_audio;
+// --FAT_CLIENT_END--
 // import 'package:flet_audio_recorder/flet_audio_recorder.dart'
 //     as flet_audio_recorder;
 // import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
@@ -14,9 +14,9 @@ import 'package:flet/flet.dart';
 // import 'package:flet_permission_handler/flet_permission_handler.dart'
 //     as flet_permission_handler;
 // import 'package:flet_rive/flet_rive.dart' as flet_rive;
-// // --FAT_CLIENT_START--
-// import 'package:flet_video/flet_video.dart' as flet_video;
-// // --FAT_CLIENT_END--
+// --FAT_CLIENT_START--
+import 'package:flet_video/flet_video.dart' as flet_video;
+// --FAT_CLIENT_END--
 // import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -33,11 +33,12 @@ void main([List<String>? args]) async {
   await setupDesktop();
 
   WidgetsFlutterBinding.ensureInitialized();
+  List<FletExtension> extensions = [];
 
-  // // --FAT_CLIENT_START--
-  // flet_audio.ensureInitialized();
-  // flet_video.ensureInitialized();
-  // // --FAT_CLIENT_END--
+  // --FAT_CLIENT_START--
+  extensions.add(flet_audio.Extension());
+  extensions.add(flet_video.Extension());
+  // --FAT_CLIENT_END--
   // flet_audio_recorder.ensureInitialized();
   // flet_geolocator.ensureInitialized();
   // flet_permission_handler.ensureInitialized();
@@ -47,6 +48,11 @@ void main([List<String>? args]) async {
   // flet_rive.ensureInitialized();
   // flet_webview.ensureInitialized();
   // flet_flashlight.ensureInitialized();
+
+  // initialize extensions
+  for (var extension in extensions) {
+    extension.ensureInitialized();
+  }
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -105,20 +111,6 @@ void main([List<String>? args]) async {
     errorsHandler: errorsHandler,
     showAppStartupScreen: true,
     appStartupScreenMessage: "Working...",
-    extensions: const [
-// // --FAT_CLIENT_START--
-//       flet_audio.Extension(),
-//       flet_video.Extension(),
-// // --FAT_CLIENT_END--
-//       flet_audio_recorder.Extension(),
-//       flet_geolocator.Extension(),
-//       flet_permission_handler.Extension(),
-//       flet_lottie.Extension(),
-//       flet_map.Extension(),
-//       flet_ads.Extension(),
-//       flet_rive.Extension(),
-//       flet_webview.Extension(),
-//       flet_flashlight.Extension(),
-    ],
+    extensions: extensions,
   ));
 }
