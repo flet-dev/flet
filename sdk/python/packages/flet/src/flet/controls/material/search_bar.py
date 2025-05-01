@@ -101,7 +101,7 @@ class SearchBar(ConstrainedControl):
     def close_view(self, text: Optional[str] = None):
         asyncio.create_task(self.close_view_async(text))
 
-    def close_view_async(self, text: Optional[str] = None):
-        self._invoke_method_async(
+    async def close_view_async(self, text: Optional[str] = None):
+        await self._invoke_method_async(
             "close_view", {"text": text if text is not None else self.value}
         )
