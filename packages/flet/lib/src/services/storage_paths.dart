@@ -12,52 +12,55 @@ class StoragePaths extends FletService {
   void init() {
     super.init();
     debugPrint("StoragePaths(${control.id}).init: ${control.properties}");
-    updateValues();
+    control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("StoragePaths.$name($args)");
+    // path_provider doesn't support web
+    if (!isWebPlatform()) {
+      switch (name) {
+        case "get_application_cache_directory":
+          return (await getApplicationCacheDirectory()).path;
+        case "get_application_documents_directory":
+          return (await getApplicationDocumentsDirectory()).path;
+        case "get_application_support_directory":
+          return (await getApplicationSupportDirectory()).path;
+        case "get_downloads_directory":
+          return (await getDownloadsDirectory())?.path;
+        case "get_external_cache_directories":
+          return isAndroidMobile()
+              ? (await getExternalCacheDirectories())
+                  ?.map((e) => e.path)
+                  .toList()
+              : null;
+        case "get_external_storage_directories":
+          return isAndroidMobile()
+              ? (await getExternalStorageDirectories())
+                  ?.map((e) => e.path)
+                  .toList()
+              : null;
+        case "get_library_directory":
+          return isApplePlatform() ? (await getLibraryDirectory()).path : null;
+        case "get_external_cache_directory":
+          return isAndroidMobile()
+              ? (await getExternalStorageDirectory())?.path
+              : null;
+        case "get_temporary_directory":
+          return (await getTemporaryDirectory()).path;
+        case "get_console_log_filename":
+          return path.join(
+              (await getApplicationCacheDirectory()).path, "console.log");
+        default:
+          throw Exception("Unknown StoragePaths method: $name");
+      }
+    }
   }
 
   @override
-  void update() {
-    debugPrint("StoragePaths(${control.id}).update: ${control.properties}");
-    updateValues();
-  }
-
-  void updateValues() async {
-    // path_provider doesn't support web
-    if (!isWebPlatform()) {
-      var applicationCacheDirectory =
-          (await getApplicationCacheDirectory()).path;
-      var consoleLogFilename =
-          path.join(applicationCacheDirectory, "console.log");
-      var applicationDocumentsDirectory =
-          (await getApplicationDocumentsDirectory()).path;
-      var applicationSupportDirectory =
-          (await getApplicationSupportDirectory()).path;
-      var downloadsDirectory = (await getDownloadsDirectory())?.path;
-      var externalCacheDirectories = isAndroidMobile()
-          ? (await getExternalCacheDirectories())?.map((e) => e.path).toList()
-          : null;
-      var externalStorageDirectories = isAndroidMobile()
-          ? (await getExternalStorageDirectories())?.map((e) => e.path).toList()
-          : null;
-      var libraryDirectory =
-          isApplePlatform() ? (await getLibraryDirectory()).path : null;
-      var externalCacheDirectory = isAndroidMobile()
-          ? (await getExternalStorageDirectory())?.path
-          : null;
-      var temporaryDirectory = (await getTemporaryDirectory()).path;
-
-      control.updateProperties({
-        "application_cache_directory": applicationCacheDirectory,
-        "application_documents_directory": applicationDocumentsDirectory,
-        "application_support_directory": applicationSupportDirectory,
-        "downloads_directory": downloadsDirectory,
-        "external_cache_directories": externalCacheDirectories,
-        "external_storage_directories": externalStorageDirectories,
-        "library_directory": libraryDirectory,
-        "external_cache_directory": externalCacheDirectory,
-        "temporary_directory": temporaryDirectory,
-        "console_log_filename": consoleLogFilename,
-      });
-    }
+  void dispose() {
+    debugPrint("StoragePaths(${control.id}).dispose()");
+    control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
   }
 }
