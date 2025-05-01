@@ -23,7 +23,7 @@ class AutoCompleteControl extends StatelessWidget {
         control.updateProperties(
             {"selected_index": suggestions.indexOf(selection)});
         control.triggerEvent(
-            "select",
+            "selection",
             AutoCompleteSuggestion(key: selection.key, value: selection.value)
                 .toMap());
       },
