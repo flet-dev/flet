@@ -1,4 +1,7 @@
 // ignore: avoid_web_libraries_in_flutter
+import 'dart:js_interop';
+import 'dart:ui_web';
+
 import 'package:web/web.dart' as web;
 
 import 'strings.dart';
@@ -10,27 +13,42 @@ bool isProgressiveWebApp() {
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  var meta = web.document.head
-      ?.querySelector("meta[name='flet-websocket-endpoint-path']");
-  return trim(meta?.attributes.getNamedItem("content")?.value ?? "ws", "/");
+  return trim(getHeadMetaContent("flet-websocket-endpoint-path") ?? "ws", "/");
 }
 
 String getFletRouteUrlStrategy() {
-  var meta =
-      web.document.head?.querySelector("meta[name='flet-route-url-strategy']");
-  if (meta != null) {
-    var metaAttr = meta.attributes.getNamedItem("content");
-    return (metaAttr != null) ? metaAttr.value : "";
-  }
-  return "";
+  return getHeadMetaContent("flet-route-url-strategy") ?? "";
 }
 
 bool isFletWebPyodideMode() {
-  var meta = web.document.head?.querySelector("meta[name='flet-web-pyodide']");
-  return meta != null
-      ? meta.attributes.getNamedItem("content")?.value.toLowerCase() == "true"
-      : false;
+  return getHeadMetaContent("flet-web-pyodide")?.toLowerCase() == "true";
 }
+
+bool isMultiView() {
+  return fletConfig?.multiView == true;
+}
+
+String? getHeadMetaContent(String metaName) {
+  var meta = web.document.head?.querySelector("meta[name='$metaName']");
+  return meta?.attributes.getNamedItem("content")?.value;
+}
+
+Map<dynamic, dynamic> getViewInitialData(int viewId) {
+  return (views.getInitialData(viewId)?.dartify() ?? {}) as Map;
+}
+
+@JS('fletConfig')
+@staticInterop
+class FletConfig {}
+
+extension FletConfigExtension on FletConfig {
+  external String get webRenderer;
+  external bool get useColorEmoji;
+  external bool get multiView;
+}
+
+@JS()
+external FletConfig? get fletConfig;
 
 void openPopupBrowserWindow(
     String url, String windowName, int width, int height) {

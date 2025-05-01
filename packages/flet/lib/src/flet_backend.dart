@@ -192,6 +192,7 @@ class FletBackend extends ChangeNotifier {
               'platform': page.get("platform"),
               'window': page.child("window")!.toMap(),
               'media': page.get("media"),
+              'platform_views': page.get("platform_views"),
             }).toMap()));
   }
 

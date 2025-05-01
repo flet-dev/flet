@@ -2,12 +2,13 @@
 {{flutter_build_config}}
 
 var loading = document.querySelector('#loading');
+
 var config = {};
-if (webRenderer != "auto") {
-    config.renderer = webRenderer;
+if (fletConfig.webRenderer != "auto") {
+    config.renderer = fletConfig.webRenderer;
 }
-if (globalThis.canvasKitBaseUrl) {
-    config.canvasKitBaseUrl = globalThis.canvasKitBaseUrl;
+if (fletConfig.noCdn) {
+    config.canvasKitBaseUrl = fletConfig.canvasKitBaseUrl;
 }
 _flutter.loader.load({
     config: config,
@@ -16,10 +17,14 @@ _flutter.loader.load({
     },
     onEntrypointLoaded: async function (engineInitializer) {
         loading.classList.add('main_done');
-        const appRunner = await engineInitializer.initializeEngine({useColorEmoji: useColorEmoji});
+        const engine = await engineInitializer.initializeEngine({
+            useColorEmoji: fletConfig.useColorEmoji,
+            multiViewEnabled: fletConfig.multiView
+        });
 
         loading.classList.add('init_done');
-        await appRunner.runApp();
+        fletConfig.flutterApp = await engine.runApp();
+        fletConfig.flutterAppResolve(fletConfig.flutterApp);
 
         window.setTimeout(function () {
             loading.remove();

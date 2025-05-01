@@ -26,23 +26,52 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
-    var webRenderer = "auto";
-    var useColorEmoji = false;
-    var appPackageUrl = "app.tar.gz";
-    var noCdn = false;
+    var fletConfig = {
+      multiView: true,
+      noCdn: false,
+      canvasKitBaseUrl: "/canvaskit/",
+      pyodideUrl: "/pyodide/pyodide.js",
+      webRenderer: "auto",
+      useColorEmoji: false,
+      appPackageUrl: "app.tar.gz"
+    }
+
+    fletConfig.flutterAppLoaded = new Promise((resolve) => {
+      fletConfig.flutterAppResolve = resolve;
+    });
+
+    fletConfig.flutterAppLoaded.then((flutterApp) => {
+      console.log("Flutter app loaded");
+      console.log(flutterApp.addView({
+        hostElement: document.querySelector('#view-1'),
+        initialData: {
+          greeting: 'Hello, world!',
+          randomValue: Math.floor(Math.random() * 100),
+        },
+        viewConstraints: {
+          maxWidth: Infinity,
+          maxHeight: Infinity,
+        }
+      }));
+      console.log(flutterApp.addView({
+        hostElement: document.querySelector('#view-2'),
+        initialData: {
+          bar: "baz"
+        },
+        viewConstraints: {
+          minWidth: 320,
+          maxWidth: 320,
+          minHeight: 200,
+          maxHeight: 300,
+        }
+      }));
+    });
   </script>
 
   <!-- webRenderer -->
   <!-- useColorEmoji -->
   <!-- pyodideCode -->
   <!-- noCdn -->
-
-  <script>
-    if (noCdn) {
-      var canvasKitBaseUrl = "/canvaskit/";
-      var pyodideUrl = "/pyodide/pyodide.js";
-    }
-  </script>
 
   <script src="python.js"></script>
 </head>
@@ -106,5 +135,10 @@
     <img src="icons/loading-animation.png" alt="Loading..." />
   </div>
   <script src="flutter_bootstrap.js" async></script>
+
+  <h1>View 1</h1>
+  <div id="view-1"></div>
+  <h1>View 2</h1>
+  <div id="view-2"></div>
 </body>
 </html>

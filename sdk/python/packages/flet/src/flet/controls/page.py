@@ -24,6 +24,7 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
+from flet.controls.core.platform_view import PlatformView
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
@@ -138,6 +139,7 @@ class Page(AdaptiveControl):
     sess: InitVar["Session"]
 
     views: list[View] = field(default_factory=lambda: [View()])
+    platform_views: list[PlatformView] = field(default_factory=list)
     window: Window = field(default_factory=lambda: Window())
     browser_context_menu: BrowserContextMenu = field(
         default_factory=lambda: BrowserContextMenu()
@@ -190,6 +192,8 @@ class Page(AdaptiveControl):
     on_logout: OptionalControlEventCallable = None
     on_error: OptionalControlEventCallable = None
     on_scroll: OptionalEventCallable["OnScrollEvent"] = None
+    on_multi_view_add: OptionalEventCallable["MultiViewAddEvent"] = None
+    on_multi_view_remove: OptionalEventCallable["MultiViewRemoveEvent"] = None
 
     def __post_init__(
         self,
@@ -822,3 +826,14 @@ class AppLifecycleStateChangeEvent(ControlEvent):
 class PageResizeEvent(ControlEvent):
     width: float
     height: float
+
+
+@dataclass
+class MultiViewAddEvent(ControlEvent):
+    view_id: int
+    initial_data: Any
+
+
+@dataclass
+class MultiViewRemoveEvent(ControlEvent):
+    view_id: int

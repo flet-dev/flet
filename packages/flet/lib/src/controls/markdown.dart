@@ -11,11 +11,10 @@ import '../utils/markdown.dart';
 import '../utils/numbers.dart';
 import '../utils/uri.dart';
 import '../widgets/error.dart';
-import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'highlight_view.dart';
 
-class MarkdownControl extends StatelessWidget with FletStoreMixin {
+class MarkdownControl extends StatelessWidget {
   final Control control;
 
   static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
@@ -33,79 +32,76 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
     var autoFollowLinks = control.getBool("auto_follow_links", false)!;
     var autoFollowLinksTarget = control.getString("auto_follow_links_target");
 
-    return withPageArgs((context, pageArgs) {
-      bool selectable = control.getBool("selectable", false)!;
-      var codeStyleSheet =
-          control.getMarkdownStyleSheet("code_style_sheet", context) ??
-              MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-                  code: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(fontFamily: "monospace"));
-      var mdStyleSheet =
-          control.getMarkdownStyleSheet("md_style_sheet", context);
-      var codeTheme =
-          control.getMarkdownCodeTheme("code_theme", Theme.of(context));
-      Widget markdown = MarkdownBody(
-          data: value,
-          selectable: selectable,
-          imageDirectory: pageArgs.assetsDir != ""
-              ? pageArgs.assetsDir
-              : getBaseUri(pageArgs.pageUri!).toString(),
-          extensionSet: extensionSet,
-          builders: {
-            'code': CodeElementBuilder(codeTheme, codeStyleSheet, selectable),
-          },
-          styleSheet: mdStyleSheet,
-          imageBuilder: (Uri uri, String? title, String? alt) {
-            String s = uri.toString();
-            var srcBase64 = isBase64ImageString(s) ? s : null;
-            var src = isUrlOrPath(s) ? s : null;
-            if (src == null && srcBase64 == null) {
-              return ErrorControl("Invalid image URI: $s");
-            }
+    bool selectable = control.getBool("selectable", false)!;
+    var codeStyleSheet =
+        control.getMarkdownStyleSheet("code_style_sheet", context) ??
+            MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                code: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontFamily: "monospace"));
+    var mdStyleSheet = control.getMarkdownStyleSheet("md_style_sheet", context);
+    var codeTheme =
+        control.getMarkdownCodeTheme("code_theme", Theme.of(context));
+    Widget markdown = MarkdownBody(
+        data: value,
+        selectable: selectable,
+        imageDirectory: control.backend.assetsDir != ""
+            ? control.backend.assetsDir
+            : getBaseUri(control.backend.pageUri).toString(),
+        extensionSet: extensionSet,
+        builders: {
+          'code': CodeElementBuilder(codeTheme, codeStyleSheet, selectable),
+        },
+        styleSheet: mdStyleSheet,
+        imageBuilder: (Uri uri, String? title, String? alt) {
+          String s = uri.toString();
+          var srcBase64 = isBase64ImageString(s) ? s : null;
+          var src = isUrlOrPath(s) ? s : null;
+          if (src == null && srcBase64 == null) {
+            return ErrorControl("Invalid image URI: $s");
+          }
 
-            return buildImage(
-                context: context,
-                control: control,
-                src: src,
-                srcBase64: srcBase64,
-                semanticsLabel: alt,
-                disabled: control.disabled,
-                errorCtrl: control.buildWidget("img_error_content"));
-          },
-          shrinkWrap: control.getBool("shrink_wrap", true)!,
-          fitContent: control.getBool("fit_content", true)!,
-          softLineBreak: control.getBool("soft_line_break", false)!,
-          onSelectionChanged: (String? text, TextSelection selection,
-              SelectionChangedCause? cause) {
-            control.triggerEvent("selection_change", {
-              "text": text ?? "",
-              "cause": cause?.name ?? "unknown",
-              "selection": {
-                "start": selection.start,
-                "end": selection.end,
-                "selection": text ?? "",
-                "base_offset": selection.baseOffset,
-                "extent_offset": selection.extentOffset,
-                "affinity": selection.affinity.name,
-                "directional": selection.isDirectional,
-                "collapsed": selection.isCollapsed,
-                "valid": selection.isValid,
-                "normalized": selection.isNormalized,
-              },
-            });
-          },
-          onTapText: () => control.triggerEvent("tap_text"),
-          onTapLink: (String text, String? href, String title) {
-            if (autoFollowLinks && href != null) {
-              openWebBrowser(href, webWindowName: autoFollowLinksTarget);
-            }
-            control.triggerEvent("tap_link", href);
+          return buildImage(
+              context: context,
+              control: control,
+              src: src,
+              srcBase64: srcBase64,
+              semanticsLabel: alt,
+              disabled: control.disabled,
+              errorCtrl: control.buildWidget("img_error_content"));
+        },
+        shrinkWrap: control.getBool("shrink_wrap", true)!,
+        fitContent: control.getBool("fit_content", true)!,
+        softLineBreak: control.getBool("soft_line_break", false)!,
+        onSelectionChanged: (String? text, TextSelection selection,
+            SelectionChangedCause? cause) {
+          control.triggerEvent("selection_change", {
+            "text": text ?? "",
+            "cause": cause?.name ?? "unknown",
+            "selection": {
+              "start": selection.start,
+              "end": selection.end,
+              "selection": text ?? "",
+              "base_offset": selection.baseOffset,
+              "extent_offset": selection.extentOffset,
+              "affinity": selection.affinity.name,
+              "directional": selection.isDirectional,
+              "collapsed": selection.isCollapsed,
+              "valid": selection.isValid,
+              "normalized": selection.isNormalized,
+            },
           });
+        },
+        onTapText: () => control.triggerEvent("tap_text"),
+        onTapLink: (String text, String? href, String title) {
+          if (autoFollowLinks && href != null) {
+            openWebBrowser(href, webWindowName: autoFollowLinksTarget);
+          }
+          control.triggerEvent("tap_link", href);
+        });
 
-      return ConstrainedControl(control: control, child: markdown);
-    });
+    return ConstrainedControl(control: control, child: markdown);
   }
 }
 
