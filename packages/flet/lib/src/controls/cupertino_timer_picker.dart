@@ -26,15 +26,19 @@ class _CupertinoTimerPickerControlState
     Widget picker = CupertinoTimerPicker(
       mode: widget.control
           .getCupertinoTimerPickerMode("mode", CupertinoTimerPickerMode.hms)!,
-      initialTimerDuration: widget.control.getDuration("value", Duration.zero)!,
+      initialTimerDuration: widget.control
+          .getDuration("value", Duration.zero, DurationUnit.seconds)!,
       minuteInterval: widget.control.getInt("minute_interval", 1)!,
       secondInterval: widget.control.getInt("second_interval", 1)!,
       itemExtent: widget.control.getDouble("item_extent", 32.0)!,
       alignment: widget.control.getAlignment("alignment", Alignment.center)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
       onTimerDurationChanged: (duration) {
-        widget.control.updateProperties({"value": duration});
-        widget.control.triggerEvent("change", duration);
+        final valueIsInt = widget.control.get("value") is int;
+        // preserve the value's type
+        final d = valueIsInt ? duration.inSeconds : duration;
+        widget.control.updateProperties({"value": d});
+        widget.control.triggerEvent("change", d);
       },
     );
 
