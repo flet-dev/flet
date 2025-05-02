@@ -21,7 +21,8 @@ from flet_web.fastapi.flet_upload import FletUpload
 
 
 def app(
-    session_handler: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
+    main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
+    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
@@ -42,9 +43,11 @@ def app(
     Mount all Flet FastAPI handlers in one call.
 
     Parameters:
-    * `session_handler` (function or coroutine) - application entry point - a method
+    * `main` (function or coroutine) - application entry point - a method
        called for newly connected user. Handler must have 1 parameter: `page` - `Page`
        instance.
+    * `before_main` - a function that is called after Page was created, but before
+       calling `main`.
     * `assets_dir` (str, optional) - an absolute path to app's assets directory.
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
@@ -95,7 +98,8 @@ def app(
         await FletApp(
             loop=asyncio.get_running_loop(),
             executor=app_manager.executor,
-            session_handler=session_handler,
+            main=main,
+            before_main=before_main,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
             upload_endpoint_path=upload_endpoint_path,

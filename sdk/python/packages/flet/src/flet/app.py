@@ -35,12 +35,13 @@ def app(*args, **kwargs):
 
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
-async def app_async(*args, **kwargs):
-    return await run_async(*args, **kwargs)
+def app_async(*args, **kwargs):
+    return run_async(*args, **kwargs)
 
 
 def run(
-    target,
+    main,
+    before_main=None,
     name="",
     host=None,
     port=0,
@@ -52,9 +53,10 @@ def run(
     route_url_strategy="path",
     no_cdn=False,
     export_asgi_app=False,
+    target=None,  # for backward compatibility
 ):
     if is_pyodide():
-        __run_pyodide(target)
+        __run_pyodide(main=main or target, before_main=before_main)
         return
 
     if export_asgi_app:
@@ -62,7 +64,8 @@ def run(
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
-            session_handler=target,
+            main=main or target,
+            before_main=before_main,
             page_name=__get_page_name(name),
             assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
             upload_dir=__get_upload_dir_path(upload_dir, relative_to_cwd=True),
@@ -74,7 +77,8 @@ def run(
 
     return asyncio.run(
         run_async(
-            target=target,
+            main=main or target,
+            before_main=before_main,
             name=name,
             host=host,
             port=port,
@@ -85,12 +89,14 @@ def run(
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
             no_cdn=no_cdn,
+            target=target,
         )
     )
 
 
 async def run_async(
-    target,
+    main,
+    before_main=None,
     name="",
     host=None,
     port=0,
@@ -101,9 +107,10 @@ async def run_async(
     use_color_emoji=False,
     route_url_strategy="path",
     no_cdn=False,
+    target=None,
 ):
     if is_pyodide():
-        __run_pyodide(target)
+        __run_pyodide(main=main or target, before_main=before_main)
         return
 
     if isinstance(view, str):
@@ -162,12 +169,14 @@ async def run_async(
     conn = (
         await __run_socket_server(
             port=port,
-            session_handler=target,
+            main=main or target,
+            before_main=before_main,
             blocking=is_embedded(),
         )
         if is_socket_server
         else await __run_web_server(
-            session_handler=target,
+            main=main or target,
+            before_main=before_main,
             host=host,
             port=port,
             page_name=page_name,
@@ -220,7 +229,7 @@ async def run_async(
         await conn.close()
 
 
-async def __run_socket_server(port=0, session_handler=None, blocking=False):
+async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
     from flet.messaging.flet_socket_server import FletSocketServer
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
@@ -230,13 +239,13 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
     async def on_session_created(session: Session):
         logger.info("App session started")
         try:
-            assert session_handler is not None
+            assert main is not None
             UpdateBehavior.reset()
-            if asyncio.iscoroutinefunction(session_handler):
-                await session_handler(session.page)
+            if asyncio.iscoroutinefunction(main):
+                await main(session.page)
             else:
                 # run synchronously
-                session_handler(session.page)
+                main(session.page)
 
             if UpdateBehavior.auto_update_enabled():
                 session.auto_update(session.page)
@@ -253,6 +262,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         port=port,
         uds_path=uds_path,
         on_session_created=on_session_created,
+        before_main=before_main,
         blocking=blocking,
         executor=executor,
     )
@@ -261,7 +271,8 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
 
 
 async def __run_web_server(
-    session_handler,
+    main,
+    before_main,
     host,
     port,
     page_name,
@@ -289,7 +300,8 @@ async def __run_web_server(
         log_level = logging.FATAL
 
     return await serve_fastapi_web_app(
-        session_handler,
+        main,
+        before_main=before_main,
         host=host,
         url_host=url_host,
         port=port,
@@ -306,18 +318,18 @@ async def __run_web_server(
     )
 
 
-def __run_pyodide(target):
+def __run_pyodide(main=None, before_main=None):
     from flet.messaging.pyodide_connection import PyodideConnection
 
     async def on_session_created(session: Session):
         logger.info("App session started")
         try:
-            assert target is not None
+            assert main is not None
             UpdateBehavior.reset()
-            if asyncio.iscoroutinefunction(target):
-                await target(session.page)
+            if asyncio.iscoroutinefunction(main):
+                await main(session.page)
             else:
-                target(session.page)
+                main(session.page)
 
             if UpdateBehavior.auto_update_enabled():
                 session.auto_update(session.page)
@@ -328,9 +340,7 @@ def __run_pyodide(target):
             )
             session.error(f"There was an error while processing your request: {e}")
 
-    PyodideConnection(
-        on_session_created=on_session_created,
-    )
+    PyodideConnection(on_session_created=on_session_created, before_main=before_main)
 
 
 def __get_page_name(name: str):

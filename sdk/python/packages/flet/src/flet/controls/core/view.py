@@ -41,7 +41,6 @@ class View(ScrollableControl, ConstrainedControl):
     """
 
     route: Optional[str] = None
-    multi_view_id: Optional[int] = None
     controls: list[Control] = field(default_factory=list)
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     bottom_appbar: Optional[BottomAppBar] = None

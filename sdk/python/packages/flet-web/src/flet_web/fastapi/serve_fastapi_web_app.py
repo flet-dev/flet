@@ -22,7 +22,8 @@ class WebServerHandle:
 
 
 def get_fastapi_web_app(
-    session_handler,
+    main,
+    before_main,
     page_name: str,
     assets_dir,
     upload_dir,
@@ -36,7 +37,8 @@ def get_fastapi_web_app(
     app.mount(
         web_path,
         flet_web.fastapi.app(
-            session_handler,
+            main,
+            before_main=before_main,
             upload_dir=upload_dir,
             assets_dir=assets_dir,
             web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
@@ -50,7 +52,8 @@ def get_fastapi_web_app(
 
 
 async def serve_fastapi_web_app(
-    session_handler,
+    main,
+    before_main,
     host,
     url_host,
     port,
@@ -77,7 +80,8 @@ async def serve_fastapi_web_app(
     app.mount(
         web_path,
         flet_web.fastapi.app(
-            session_handler,
+            main,
+            before_main=before_main,
             upload_dir=upload_dir,
             assets_dir=assets_dir,
             web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,

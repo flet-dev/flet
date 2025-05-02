@@ -24,7 +24,7 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
-from flet.controls.core.platform_view import PlatformView
+from flet.controls.core.multi_view import MultiView
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
@@ -139,7 +139,7 @@ class Page(AdaptiveControl):
     sess: InitVar["Session"]
 
     views: list[View] = field(default_factory=lambda: [View()])
-    platform_views: list[PlatformView] = field(default_factory=list)
+    multi_views: list[MultiView] = field(default_factory=list)
     window: Window = field(default_factory=lambda: Window())
     browser_context_menu: BrowserContextMenu = field(
         default_factory=lambda: BrowserContextMenu()
@@ -216,9 +216,7 @@ class Page(AdaptiveControl):
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
 
-        self.__last_route = None
-
-    def get_control(self, id: int) -> Optional[Control]:
+    def get_control(self, id: int) -> Optional[BaseControl]:
         return self.get_session().index.get(id)
 
     def __default_view(self) -> View:
@@ -266,6 +264,13 @@ class Page(AdaptiveControl):
 
     def error(self, message: str) -> None:
         self.get_session().error(message)
+
+    def before_event(self, e: ControlEvent):
+        if isinstance(e, RouteChangeEvent):
+            if self.route == e.route:
+                return False
+            self.query()
+        return super().before_event(e)
 
     def run_task(
         self,

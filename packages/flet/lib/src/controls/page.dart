@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/platform_utils_web.dart';
+import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +12,16 @@ import 'package:provider/provider.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/keyboard_event.dart';
+import '../models/multi_view.dart';
 import '../models/page_design.dart';
-import '../models/platform_view.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../services/service_registry.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
@@ -28,9 +30,6 @@ import '../widgets/loading_page.dart';
 import '../widgets/page_control_data.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
-
-export '../utils/platform_utils_web.dart'
-    if (dart.library.io) "../utils/platform_utils_non_web.dart";
 
 class PageControl extends StatefulWidget {
   final Control control;
@@ -62,7 +61,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   Map<String, dynamic>? _localeConfiguration;
   String? _prevViewRoutes;
 
-  final Map<int, PlatformView> _views = <int, PlatformView>{};
+  final Map<int, MultiView> _multiViews = <int, MultiView>{};
+  bool _registeredFromMultiViews = false;
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
-    _updateViews();
+    _updateMultiViews();
 
     _routeParser = RouteParser();
 
@@ -107,7 +107,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didUpdateWidget(covariant PageControl oldWidget) {
     debugPrint("Page.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
-    _updateViews();
+    _updateMultiViews();
 
     // page services
     var pageServicesControl = widget.control.child("_page_services");
@@ -133,7 +133,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   @override
   void didChangeMetrics() {
-    _updateViews();
+    _updateMultiViews();
   }
 
   @override
@@ -148,40 +148,40 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _updateViews() {
+  void _updateMultiViews() {
+    if (!isMultiView()) {
+      return;
+    }
     bool changed = false;
     for (final FlutterView view
         in WidgetsBinding.instance.platformDispatcher.views) {
-      if (!_views.containsKey(view.viewId)) {
+      if (!_multiViews.containsKey(view.viewId)) {
         var initialData = getViewInitialData(view.viewId);
         debugPrint("View initial data ${view.viewId}: $initialData");
-        _views[view.viewId] = PlatformView(
+        _multiViews[view.viewId] = MultiView(
             viewId: view.viewId, flutterView: view, initialData: initialData);
-        widget.control.triggerEvent("multi_view_add",
+        widget.control.backend.triggerControlEventById(
+            widget.control.id,
+            "multi_view_add",
             {"view_id": view.viewId, "initial_data": initialData});
         changed = true;
       }
     }
-    for (var viewId in _views.keys.toList()) {
+    for (var viewId in _multiViews.keys.toList()) {
       if (!WidgetsBinding.instance.platformDispatcher.views
           .any((view) => view.viewId == viewId)) {
-        _views.remove(viewId);
-        widget.control.triggerEvent("multi_view_remove", viewId);
+        _multiViews.remove(viewId);
+        widget.control.backend.triggerControlEventById(
+            widget.control.id, "multi_view_remove", viewId);
         changed = true;
       }
     }
-    if (changed) {
-      widget.control.updateProperties({
-        "platform_views": _views.values.map((view) => view.toMap()).toList()
-      });
-      debugPrint("Views: $_views");
-      if (isMultiView() && widget.control.backend.isLoading) {
-        // register
-        widget.control.backend.onRouteUpdated("/");
-      } else {
-        // re-draw
-        setState(() {});
-      }
+    if (changed && !_registeredFromMultiViews) {
+      _registeredFromMultiViews = true;
+      widget.control.backend.onRouteUpdated("/");
+    } else {
+      // re-draw
+      setState(() {});
     }
   }
 
@@ -377,29 +377,77 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           FletBackend.of(context).appStartupScreenMessage ?? "";
 
       List<Widget> views = [];
-      for (var view in _views.entries) {
-        var fletViewControl = widget.control
-            .children("views")
-            .firstWhereOrNull((v) => v.get("multi_view_id") == view.key);
-        var fletView = fletViewControl != null
-            ? ControlWidget(control: fletViewControl)
-            : Directionality(
-                textDirection: TextDirection.ltr,
-                child: Container(
-                  constraints:
-                      const BoxConstraints.tightFor(width: 500, height: 500),
-                  child: Stack(children: [
-                    const PageMedia(),
-                    LoadingPage(
-                      isLoading: appStatus.isLoading,
-                      message: appStatus.isLoading
-                          ? appStartupScreenMessage
-                          : appStatus.error,
-                    )
-                  ]),
-                ),
+      for (var view in _multiViews.entries) {
+        var multiViewControl = widget.control
+            .children("multi_views")
+            .firstWhereOrNull((v) => v.get("view_id") == view.key)
+            ?.buildWidget("content");
+        var viewChild = multiViewControl ??
+            Container(
+              constraints:
+                  const BoxConstraints.tightFor(width: 500, height: 500),
+              child: Stack(children: [
+                const PageMedia(),
+                LoadingPage(
+                  isLoading: appStatus.isLoading,
+                  message: appStatus.isLoading
+                      ? appStartupScreenMessage
+                      : appStatus.error,
+                )
+              ]),
+            );
+        viewChild = _widgetsDesign == PageDesign.cupertino
+            ? CupertinoApp(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger:
+                    widget.control.getBool("show_semantics_debugger", false)!,
+                home: viewChild,
+                title: windowTitle,
+                theme: _themeMode == ThemeMode.light ||
+                        ((_themeMode == null ||
+                                _themeMode == ThemeMode.system) &&
+                            _brightness == Brightness.light)
+                    ? parseCupertinoTheme(
+                        widget.control.get("theme"), context, Brightness.light)
+                    : widget.control.getString("dark_theme") != null
+                        ? widget.control.getCupertinoTheme(
+                            "dark_theme", context, Brightness.dark)
+                        : widget.control.getCupertinoTheme(
+                            "theme", context, Brightness.dark),
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: _localeConfiguration != null
+                    ? _localeConfiguration!["supported_locales"]
+                    : [const Locale('en', 'US')],
+                locale: _localeConfiguration != null
+                    ? (_localeConfiguration?["locale"])
+                    : null,
+              )
+            : MaterialApp(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger:
+                    widget.control.getBool("show_semantics_debugger", false)!,
+                home: viewChild,
+                title: windowTitle,
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: _localeConfiguration != null
+                    ? _localeConfiguration!["supported_locales"]
+                    : [const Locale('en', 'US')],
+                locale: _localeConfiguration != null
+                    ? (_localeConfiguration?["locale"])
+                    : null,
+                theme: _lightTheme,
+                darkTheme: _darkTheme,
+                themeMode: _themeMode,
               );
-        views.add(View(view: view.value.flutterView, child: fletView));
+        views.add(View(view: view.value.flutterView, child: viewChild));
       }
       appContextChild = ViewCollection(views: views);
     }

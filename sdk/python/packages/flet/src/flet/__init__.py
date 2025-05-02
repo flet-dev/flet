@@ -316,9 +316,9 @@ from flet.controls.core.markdown import (
 from flet.controls.core.markdown import (
     MarkdownStyleSheet as MarkdownStyleSheet,
 )
+from flet.controls.core.multi_view import MultiView as MultiView
 from flet.controls.core.pagelet import Pagelet as Pagelet
 from flet.controls.core.placeholder import Placeholder as Placeholder
-from flet.controls.core.platform_view import PlatformView as PlatformView
 from flet.controls.core.reorderable_draggable import (
     ReorderableDraggable as ReorderableDraggable,
 )

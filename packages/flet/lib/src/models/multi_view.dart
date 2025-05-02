@@ -1,11 +1,11 @@
 import 'dart:ui';
 
-class PlatformView {
+class MultiView {
   int viewId;
   FlutterView flutterView;
   Map<dynamic, dynamic> initialData;
 
-  PlatformView(
+  MultiView(
       {required this.viewId,
       required this.flutterView,
       required this.initialData});
