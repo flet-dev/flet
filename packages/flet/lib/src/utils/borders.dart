@@ -115,11 +115,11 @@ WidgetStateBorderSide? parseWidgetStateBorderSide(
 }
 
 class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
-  late final Map<String, BorderSide?> _states;
+  late final Map<dynamic, BorderSide?> _states;
   late final BorderSide? _defaultValue;
 
   WidgetStateBorderSideFromJSON(
-      Map<String, dynamic>? jsonDictValue,
+      Map<dynamic, dynamic>? jsonDictValue,
       BorderSide? Function(dynamic) converterFromJson,
       BorderSide? defaultValue) {
     _defaultValue = defaultValue;

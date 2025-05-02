@@ -126,7 +126,8 @@ class _ChipControlState extends State<ChipControl> {
       onSelected: onSelect && !disabled
           ? (bool selected) {
               _selected = selected;
-              widget.control.updateProperties({"selected": selected});
+              widget.control
+                  .updateProperties({"selected": selected}, notify: true);
               widget.control.triggerEvent("select", selected);
             }
           : null,
