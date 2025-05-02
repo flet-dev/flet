@@ -25,7 +25,7 @@ bool isFletWebPyodideMode() {
 }
 
 bool isMultiView() {
-  return fletConfig?.multiView == true;
+  return fletJS?.multiView == true;
 }
 
 String? getHeadMetaContent(String metaName) {
@@ -37,18 +37,18 @@ Map<dynamic, dynamic> getViewInitialData(int viewId) {
   return (views.getInitialData(viewId)?.dartify() ?? {}) as Map;
 }
 
-@JS('fletConfig')
+@JS('flet')
 @staticInterop
-class FletConfig {}
+class FletJS {}
 
-extension FletConfigExtension on FletConfig {
+extension FletJSExtension on FletJS {
   external String get webRenderer;
   external bool get useColorEmoji;
   external bool get multiView;
 }
 
 @JS()
-external FletConfig? get fletConfig;
+external FletJS? get fletJS;
 
 void openPopupBrowserWindow(
     String url, String windowName, int width, int height) {

@@ -26,8 +26,8 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
-    var fletConfig = {
-      multiView: true,
+    var flet = {
+      multiView: false,
       noCdn: false,
       canvasKitBaseUrl: "/canvaskit/",
       pyodideUrl: "/pyodide/pyodide.js",
@@ -36,35 +36,37 @@
       appPackageUrl: "app.tar.gz"
     }
 
-    fletConfig.flutterAppLoaded = new Promise((resolve) => {
-      fletConfig.flutterAppResolve = resolve;
+    flet.flutterAppLoaded = new Promise((resolve) => {
+      flet.flutterAppResolve = resolve;
     });
 
-    fletConfig.flutterAppLoaded.then((flutterApp) => {
+    flet.flutterAppLoaded.then((flutterApp) => {
       console.log("Flutter app loaded");
-      console.log(flutterApp.addView({
-        hostElement: document.querySelector('#view-1'),
-        initialData: {
-          greeting: 'Hello, world!',
-          randomValue: Math.floor(Math.random() * 100),
-        },
-        viewConstraints: {
-          maxWidth: Infinity,
-          maxHeight: Infinity,
-        }
-      }));
-      console.log(flutterApp.addView({
-        hostElement: document.querySelector('#view-2'),
-        initialData: {
-          bar: "baz"
-        },
-        viewConstraints: {
-          minWidth: 320,
-          maxWidth: 320,
-          minHeight: 200,
-          maxHeight: 300,
-        }
-      }));
+      if (flet.multiView) {
+        console.log(flutterApp.addView({
+          hostElement: document.querySelector('#view-1'),
+          initialData: {
+            greeting: 'Hello, world!',
+            randomValue: Math.floor(Math.random() * 100),
+          },
+          viewConstraints: {
+            maxWidth: Infinity,
+            maxHeight: Infinity,
+          }
+        }));
+        console.log(flutterApp.addView({
+          hostElement: document.querySelector('#view-2'),
+          initialData: {
+            bar: "baz"
+          },
+          viewConstraints: {
+            minWidth: 320,
+            maxWidth: 320,
+            minHeight: 200,
+            maxHeight: 300,
+          }
+        }));
+      }
     });
   </script>
 

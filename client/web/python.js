@@ -30,12 +30,12 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
 
     // initialize worker
     app.worker.postMessage({
-        pyodideUrl: fletConfig.noCdn ? fletConfig.pyodideUrl : defaultPyodideUrl,
+        pyodideUrl: flet.noCdn ? flet.pyodideUrl : defaultPyodideUrl,
         args: args,
         documentUrl: _documentUrl,
-        appPackageUrl: fletConfig.appPackageUrl,
-        micropipIncludePre: fletConfig.micropipIncludePre,
-        pythonModuleName: fletConfig.pythonModuleName
+        appPackageUrl: flet.appPackageUrl,
+        micropipIncludePre: flet.micropipIncludePre,
+        pythonModuleName: flet.pythonModuleName
     });
 
     await pythonInitialized;

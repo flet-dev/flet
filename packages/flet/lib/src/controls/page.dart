@@ -51,14 +51,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
 
-  bool? _adaptive;
   PageDesign _widgetsDesign = PageDesign.material;
-  TargetPlatform _platform = defaultTargetPlatform;
   Brightness? _brightness;
   ThemeMode? _themeMode;
   ThemeData? _lightTheme;
   ThemeData? _darkTheme;
-  Map<String, dynamic>? _localeConfiguration;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
@@ -273,17 +270,14 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       });
     }
 
-    _platform = TargetPlatform.values.firstWhere(
+    var platform = TargetPlatform.values.firstWhere(
         (a) =>
             a.name.toLowerCase() ==
             widget.control.getString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _adaptive = widget.control.adaptive;
-
-    _widgetsDesign = _adaptive == true &&
-            (_platform == TargetPlatform.iOS ||
-                _platform == TargetPlatform.macOS)
+    _widgetsDesign = widget.control.adaptive == true &&
+            (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)
         ? PageDesign.cupertino
         : PageDesign.material;
 
@@ -291,8 +285,14 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _themeMode = widget.control.getThemeMode("theme_mode") ??
         FletAppContext.of(context)?.themeMode;
 
-    _localeConfiguration =
+    var localeConfiguration =
         widget.control.getLocaleConfiguration("locale_configuration");
+
+    var localizationsDelegates = const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ];
 
     _brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
@@ -313,60 +313,47 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       _darkTheme = darkTheme;
     }
 
-    Widget appContextChild;
+    var cupertinoTheme = _themeMode == ThemeMode.light ||
+            ((_themeMode == null || _themeMode == ThemeMode.system) &&
+                _brightness == Brightness.light)
+        ? parseCupertinoTheme(
+            widget.control.get("theme"), context, Brightness.light)
+        : widget.control.getString("dark_theme") != null
+            ? widget.control
+                .getCupertinoTheme("dark_theme", context, Brightness.dark)
+            : widget.control
+                .getCupertinoTheme("theme", context, Brightness.dark);
+
+    var showSemanticsDebugger =
+        widget.control.getBool("show_semantics_debugger", false)!;
+
+    Widget app;
 
     if (!isMultiView()) {
-      appContextChild = _widgetsDesign == PageDesign.cupertino
+      app = _widgetsDesign == PageDesign.cupertino
           ? CupertinoApp.router(
               debugShowCheckedModeBanner: false,
-              showSemanticsDebugger:
-                  widget.control.getBool("show_semantics_debugger", false)!,
+              showSemanticsDebugger: showSemanticsDebugger,
               routerDelegate: _routerDelegate,
               routeInformationParser: _routeParser,
               title: windowTitle,
-              theme: _themeMode == ThemeMode.light ||
-                      ((_themeMode == null || _themeMode == ThemeMode.system) &&
-                          _brightness == Brightness.light)
-                  ? parseCupertinoTheme(
-                      widget.control.get("theme"), context, Brightness.light)
-                  : widget.control.getString("dark_theme") != null
-                      ? widget.control.getCupertinoTheme(
-                          "dark_theme", context, Brightness.dark)
-                      : widget.control
-                          .getCupertinoTheme("theme", context, Brightness.dark),
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: _localeConfiguration != null
-                  ? _localeConfiguration!["supported_locales"]
-                  : [const Locale('en', 'US')],
-              locale: _localeConfiguration != null
-                  ? (_localeConfiguration?["locale"])
-                  : null,
+              theme: cupertinoTheme,
+              localizationsDelegates: localizationsDelegates,
+              supportedLocales: localeConfiguration.supportedLocales,
+              locale: localeConfiguration.locale,
             )
           : MaterialApp.router(
               debugShowCheckedModeBanner: false,
-              showSemanticsDebugger:
-                  widget.control.getBool("show_semantics_debugger", false)!,
+              showSemanticsDebugger: showSemanticsDebugger,
               routerDelegate: _routerDelegate,
               routeInformationParser: _routeParser,
               title: windowTitle,
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: _localeConfiguration != null
-                  ? _localeConfiguration!["supported_locales"]
-                  : [const Locale('en', 'US')],
-              locale: _localeConfiguration != null
-                  ? (_localeConfiguration?["locale"])
-                  : null,
               theme: _lightTheme,
               darkTheme: _darkTheme,
               themeMode: _themeMode,
+              localizationsDelegates: localizationsDelegates,
+              supportedLocales: localeConfiguration.supportedLocales,
+              locale: localeConfiguration.locale,
             );
     } else {
       // multi-view mode
@@ -399,62 +386,34 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         viewChild = _widgetsDesign == PageDesign.cupertino
             ? CupertinoApp(
                 debugShowCheckedModeBanner: false,
-                showSemanticsDebugger:
-                    widget.control.getBool("show_semantics_debugger", false)!,
-                home: viewChild,
+                showSemanticsDebugger: showSemanticsDebugger,
                 title: windowTitle,
-                theme: _themeMode == ThemeMode.light ||
-                        ((_themeMode == null ||
-                                _themeMode == ThemeMode.system) &&
-                            _brightness == Brightness.light)
-                    ? parseCupertinoTheme(
-                        widget.control.get("theme"), context, Brightness.light)
-                    : widget.control.getString("dark_theme") != null
-                        ? widget.control.getCupertinoTheme(
-                            "dark_theme", context, Brightness.dark)
-                        : widget.control.getCupertinoTheme(
-                            "theme", context, Brightness.dark),
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: _localeConfiguration != null
-                    ? _localeConfiguration!["supported_locales"]
-                    : [const Locale('en', 'US')],
-                locale: _localeConfiguration != null
-                    ? (_localeConfiguration?["locale"])
-                    : null,
+                theme: cupertinoTheme,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+                localizationsDelegates: localizationsDelegates,
+                home: viewChild,
               )
             : MaterialApp(
                 debugShowCheckedModeBanner: false,
-                showSemanticsDebugger:
-                    widget.control.getBool("show_semantics_debugger", false)!,
-                home: viewChild,
+                showSemanticsDebugger: showSemanticsDebugger,
                 title: windowTitle,
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: _localeConfiguration != null
-                    ? _localeConfiguration!["supported_locales"]
-                    : [const Locale('en', 'US')],
-                locale: _localeConfiguration != null
-                    ? (_localeConfiguration?["locale"])
-                    : null,
                 theme: _lightTheme,
                 darkTheme: _darkTheme,
                 themeMode: _themeMode,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+                localizationsDelegates: localizationsDelegates,
+                home: viewChild,
               );
         views.add(View(view: view.value.flutterView, child: viewChild));
       }
-      appContextChild = ViewCollection(views: views);
+      app = ViewCollection(views: views);
     }
 
     return FletAppContext(
       themeMode: _themeMode,
-      child: appContextChild,
+      child: app,
     );
   }
 
@@ -475,7 +434,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     List<Page<dynamic>> pages = [];
     if (views.isEmpty) {
       pages.add(AnimatedTransitionPage(
-          key: ValueKey("empty_route_${widget.control.id}"),
           fadeTransition: true,
           duration: Duration.zero,
           child: showAppStartupScreen
@@ -525,8 +483,10 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             key: navigatorKey,
             pages: pages,
             onDidRemovePage: (page) {
-              widget.control
-                  .triggerEvent("view_pop", (page.key as ValueKey).value);
+              if (page.key != null) {
+                widget.control
+                    .triggerEvent("view_pop", (page.key as ValueKey).value);
+              }
             }));
   }
 }
