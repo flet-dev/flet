@@ -112,23 +112,25 @@ It should work now.
 
 Add the `FLET_VIEW_PATH` and `FLET_WEB_PATH` variables to the environment variables or profile scripts for your respective OS, making sure to modify the path accordingly:
 
-- On macOS (in `~/.zprofile` or any other profile script):
+- On macOS (in `~/.zprofile` or any other profile script)*:
 ```
 # Flet
 export FLET_VIEW_PATH="$HOME/{path-to-flet}/flet/client/build/macos/Build/Products/Release"
 export FLET_WEB_PATH="$HOME/{path-to-flet}/flet/client/build/web"
 ```
 
+
 - On Windows (open "System Properties" > "Environment Variables", then add a new environment variable):
   - as "Variable name", enter `FLET_VIEW_PATH`, and as "Value", `{path-to-flet}\flet\client\build\windows\x64\runner\Release`
   - as "Variable name", enter `FLET_WEB_PATH`, and as "Value", `{path-to-flet}\flet\client\build\web`
 
-- On Linux (in `~/.bash_profile` or any other profile script):
+- On Linux (in `~/.bash_profile` or any other profile script)*:
 ```
 # Flet
 export FLET_VIEW_PATH="$HOME/{path-to-flet}/flet/client/build/linux/{arch}/release/bundle"
 export FLET_WEB_PATH="$HOME/{path-to-flet}/flet/client/build/web"
 ```
+
 
 If you have Microsoft Edge installed and want to use it for debugging Flutter apps:
 
@@ -138,6 +140,8 @@ export CHROME_EXECUTABLE="/Applications/Microsoft Edge.app/Contents/MacOS/Micros
 ```
 
 If you added these through the terminal, close that terminal session and create a new one.
+
+\* <small>if continuing in the same shell run `source ~/.zprofile` to activate variables in current session</small>
 
 ### Building the Flutter client
 Open an instance of your IDE (preferably VS Code) at the `flet-dev/flet/client` directory.
