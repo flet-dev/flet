@@ -53,14 +53,28 @@ class NotchShape(Enum):
     CIRCULAR = "circular"
 
 
+
+
+class ResponsiveRowBreakpoint(Enum):
+    """
+    Breakpoints for responsive design.
+    """
+
+    XS = "xs"
+    SM = "sm"
+    MD = "md"
+    LG = "lg"
+    XL = "xl"
+    XXL = "xxl"
 Number = Union[int, float]
-ResponsiveNumber = Union[Dict[str, Number], Number]
+ResponsiveNumber = Union[Dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
 OptionalNumber = Optional[Number]
 
 # literal type alias
 OptionalString = Optional[str]
 OptionalBool = Optional[bool]
 OptionalInt = Optional[int]
+OptionalFloat = Optional[float]
 
 
 class MainAxisAlignment(Enum):
@@ -181,6 +195,17 @@ class PagePlatform(Enum):
     WINDOWS = "windows"
     LINUX = "linux"
 
+    def is_apple(self) -> bool:
+        """Whether this PagePlatform instance is an Apple (iOS or macOS) platform."""
+        return self in {PagePlatform.IOS, PagePlatform.MACOS}
+
+    def is_mobile(self) -> bool:
+        """Whether this PagePlatform instance is a mobile (iOS or Android) platform."""
+        return self in {PagePlatform.IOS, PagePlatform.ANDROID}
+
+    def is_desktop(self) -> bool:
+        """Whether this PagePlatform instance is a desktop (macOS, Windows, Linux) platform."""
+        return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
 
 class ThemeMode(Enum):
     SYSTEM = "system"

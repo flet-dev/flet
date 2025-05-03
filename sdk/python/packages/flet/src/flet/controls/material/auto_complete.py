@@ -19,6 +19,7 @@ class AutoCompleteSuggestion:
 @dataclass
 class AutoCompleteSelectEvent(ControlEvent):
     selection: AutoCompleteSuggestion
+    selection_index: int
 
 
 @control("AutoComplete")

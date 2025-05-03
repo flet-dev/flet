@@ -1,13 +1,20 @@
 from dataclasses import field
-from typing import List, Optional
+from enum import Enum
+from typing import List, Dict, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.types import CrossAxisAlignment, MainAxisAlignment, ResponsiveNumber
+from flet.controls.types import (
+    CrossAxisAlignment,
+    MainAxisAlignment,
+    Number,
+    ResponsiveRowBreakpoint,
+    ResponsiveNumber,
+)
 
-__all__ = ["ResponsiveRow"]
+__all__ = ["ResponsiveRow", "ResponsiveRowBreakpoint", "ResponsiveNumber"]
 
 
 @control("ResponsiveRow")
@@ -49,6 +56,16 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     spacing: ResponsiveNumber = 10
     run_spacing: ResponsiveNumber = 10
+    breakpoints: Dict[Union[ResponsiveRowBreakpoint, str], Number] = field(
+        default_factory=lambda: {
+            ResponsiveRowBreakpoint.XS: 0,
+            ResponsiveRowBreakpoint.SM: 576,
+            ResponsiveRowBreakpoint.MD: 768,
+            ResponsiveRowBreakpoint.LG: 992,
+            ResponsiveRowBreakpoint.XL: 1200,
+            ResponsiveRowBreakpoint.XXL: 1400,
+        }
+    )
 
     def clean(self):
         super().clean()
