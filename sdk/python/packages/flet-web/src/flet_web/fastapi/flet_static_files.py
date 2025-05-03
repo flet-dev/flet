@@ -34,8 +34,6 @@ class FletStaticFiles(StaticFiles):
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
     * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `use_color_emoji` (bool) - whether to load a font with color emoji.
-       Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `no_cdn` - do not load CanvasKit, Pyodide and fonts from CDN
     * `websocket_endpoint_path` (str, optional) - absolute URL of Flet app
@@ -50,7 +48,6 @@ class FletStaticFiles(StaticFiles):
         app_short_name: Optional[str] = None,
         app_description: Optional[str] = None,
         web_renderer: WebRenderer = WebRenderer.AUTO,
-        use_color_emoji: bool = False,
         route_url_strategy: str = "path",
         no_cdn: bool = False,
         websocket_endpoint_path: Optional[str] = None,
@@ -64,7 +61,6 @@ class FletStaticFiles(StaticFiles):
         self.__app_short_name = app_short_name
         self.__app_description = app_description
         self.__web_renderer = web_renderer
-        self.__use_color_emoji = use_color_emoji
         self.__route_url_strategy = route_url_strategy
         self.__no_cdn = no_cdn
         self.__websocket_endpoint_path = websocket_endpoint_path
@@ -73,10 +69,6 @@ class FletStaticFiles(StaticFiles):
         env_web_renderer = os.getenv("FLET_WEB_RENDERER")
         if env_web_renderer:
             self.__web_renderer = WebRenderer(env_web_renderer)
-
-        env_use_color_emoji = get_bool_env_var("FLET_WEB_USE_COLOR_EMOJI")
-        if env_use_color_emoji is not None:
-            self.__use_color_emoji = env_use_color_emoji
 
         env_route_url_strategy = os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
         if env_route_url_strategy:
@@ -87,7 +79,6 @@ class FletStaticFiles(StaticFiles):
             self.__no_cdn = env_no_cdn
 
         logger.info(f"Web renderer configured: {self.__web_renderer}")
-        logger.info(f"Use color emoji: {self.__use_color_emoji}")
         logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
         logger.info(f"No CDN configured: {self.__no_cdn}")
 
@@ -172,7 +163,6 @@ class FletStaticFiles(StaticFiles):
             app_name=self.__app_name,
             app_description=self.__app_description,
             web_renderer=WebRenderer(self.__web_renderer),
-            use_color_emoji=self.__use_color_emoji,
             route_url_strategy=self.__route_url_strategy,
             no_cdn=self.__no_cdn,
         )

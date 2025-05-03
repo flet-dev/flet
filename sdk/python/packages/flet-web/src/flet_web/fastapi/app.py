@@ -29,7 +29,6 @@ def app(
     app_short_name: Optional[str] = None,
     app_description: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    use_color_emoji: bool = False,
     route_url_strategy: str = "path",
     no_cdn: bool = False,
     upload_dir: Optional[str] = None,
@@ -53,8 +52,6 @@ def app(
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
     * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `use_color_emoji` (bool) - whether to load a font with color emoji.
-       Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `no_cdn` (bool) - do not load resources from CDN.
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
@@ -131,7 +128,6 @@ def app(
             app_short_name=app_short_name,
             app_description=app_description,
             web_renderer=web_renderer,
-            use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
             websocket_endpoint_path=websocket_endpoint,
             no_cdn=no_cdn,

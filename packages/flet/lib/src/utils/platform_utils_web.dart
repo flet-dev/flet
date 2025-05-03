@@ -53,7 +53,6 @@ extension FletJSExtension on FletJS {
   external String get canvasKitBaseUrl;
   external String get pyodideUrl;
   external String get webRenderer;
-  external bool get useColorEmoji;
   external bool get appPackageUrl;
 }
 

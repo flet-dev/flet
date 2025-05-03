@@ -16,7 +16,6 @@ def patch_index_html(
     pyodide_pre: bool = False,
     pyodide_script_path: str = "",
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    use_color_emoji: bool = False,
     route_url_strategy: str = "path",
     no_cdn: bool = False,
 ):
@@ -33,7 +32,6 @@ def patch_index_html(
 
     app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
     app_config.append(f'flet.webRenderer="{web_renderer.value}";')
-    app_config.append(f"flet.useColorEmoji={str(use_color_emoji).lower()};")
     app_config.append(f'flet.routeUrlStrategy="{route_url_strategy}";')
 
     if websocket_endpoint_path:
