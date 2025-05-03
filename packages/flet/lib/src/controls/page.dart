@@ -21,6 +21,8 @@ import '../utils/locale.dart';
 import '../utils/numbers.dart';
 import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
+import '../utils/session_store_web.dart'
+    if (dart.library.io) "../utils/session_store_non_web.dart";
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
@@ -149,6 +151,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       return;
     }
     bool changed = false;
+
+    bool triggerAddViewEvent = SessionStore.get("triggerAddViewEvent") == null;
     for (final FlutterView view
         in WidgetsBinding.instance.platformDispatcher.views) {
       if (!_multiViews.containsKey(view.viewId)) {
@@ -156,10 +160,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         debugPrint("View initial data ${view.viewId}: $initialData");
         _multiViews[view.viewId] = MultiView(
             viewId: view.viewId, flutterView: view, initialData: initialData);
-        widget.control.backend.triggerControlEventById(
-            widget.control.id,
-            "multi_view_add",
-            {"view_id": view.viewId, "initial_data": initialData});
+        if (triggerAddViewEvent) {
+          widget.control.backend.triggerControlEventById(
+              widget.control.id,
+              "multi_view_add",
+              {"view_id": view.viewId, "initial_data": initialData});
+        }
         changed = true;
       }
     }
@@ -167,11 +173,14 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       if (!WidgetsBinding.instance.platformDispatcher.views
           .any((view) => view.viewId == viewId)) {
         _multiViews.remove(viewId);
-        widget.control.backend.triggerControlEventById(
-            widget.control.id, "multi_view_remove", viewId);
+        if (triggerAddViewEvent) {
+          widget.control.backend.triggerControlEventById(
+              widget.control.id, "multi_view_remove", viewId);
+        }
         changed = true;
       }
     }
+    SessionStore.set("triggerAddViewEvent", "true");
     if (changed && !_registeredFromMultiViews) {
       _registeredFromMultiViews = true;
       widget.control.backend.onRouteUpdated("/");
