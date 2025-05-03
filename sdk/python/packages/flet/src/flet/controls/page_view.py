@@ -42,6 +42,19 @@ from flet.utils import deprecated
 logger = logging.getLogger("flet")
 
 
+@dataclass
+class PageMediaData:
+    padding: Padding
+    view_padding: Padding
+    view_insets: Padding
+
+
+@dataclass
+class PageResizeEvent(ControlEvent):
+    width: float
+    height: float
+
+
 @control("PageView", isolated=True, kw_only=True)
 class PageView(AdaptiveControl):
     """
@@ -60,7 +73,7 @@ class PageView(AdaptiveControl):
     width: OptionalNumber = None
     height: OptionalNumber = None
     title: Optional[str] = None
-    media: Optional["PageMediaData"] = None
+    media: Optional[PageMediaData] = None
     scroll_event_interval: OptionalNumber = None
     on_resized: OptionalEventCallable["PageResizeEvent"] = None
     on_media_change: OptionalControlEventCallable = None
@@ -353,16 +366,3 @@ class Overlay(BaseControl):
 @control("Dialogs")
 class Dialogs(BaseControl):
     controls: list[DialogControl] = field(default_factory=list)
-
-
-@dataclass
-class PageMediaData:
-    padding: Padding
-    view_padding: Padding
-    view_insets: Padding
-
-
-@dataclass
-class PageResizeEvent(ControlEvent):
-    width: float
-    height: float
