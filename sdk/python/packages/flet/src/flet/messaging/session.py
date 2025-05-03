@@ -74,7 +74,6 @@ class Session:
         _session_page.set(self.__page)
         self.__conn = conn
         self.__expires_at = None
-        UpdateBehavior.disable_auto_update()
         await self.dispatch_event(self.__page._i, "connect", None)
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
@@ -85,7 +84,6 @@ class Session:
         if self.__conn:
             self.__conn.dispose()
             self.__conn = None
-        UpdateBehavior.disable_auto_update()
         await self.dispatch_event(self.__page._i, "disconnect", None)
 
     def close(self):

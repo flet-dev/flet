@@ -19,6 +19,7 @@ else:
 
 if TYPE_CHECKING:
     from .page import Page
+    from .page_view import PageView
 
 __all__ = [
     "BaseControl",
@@ -124,12 +125,12 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> Optional["Page"]:
-        from .page import Page
+    def page(self) -> Optional[Union["Page", "PageView"]]:
+        from .page import Page, PageView
 
-        parent = self
+        parent = self.parent
         while parent:
-            if isinstance(parent, Page):
+            if isinstance(parent, (Page, PageView)):
                 return parent
             parent = parent.parent
         return None

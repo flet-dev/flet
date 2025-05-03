@@ -190,6 +190,7 @@ class FletBackend extends ChangeNotifier {
                   'web': page.get("web"),
                   'debug': page.get("debug"),
                   'wasm': page.get("wasm"),
+                  'multi_view': page.get("multi_view"),
                   'platform_brightness': page.get("platform_brightness"),
                   'width': page.get("width"),
                   'height': page.get("height"),

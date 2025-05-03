@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../models/page_design.dart';
 
-class PageControlData extends InheritedWidget {
+class PageContext extends InheritedWidget {
   final PageDesign widgetsDesign;
   final ThemeMode? themeMode;
   final Brightness? brightness;
 
-  const PageControlData(
+  const PageContext(
       {required this.themeMode,
       required this.brightness,
       required this.widgetsDesign,
@@ -15,12 +15,12 @@ class PageControlData extends InheritedWidget {
       super.key});
 
   @override
-  bool updateShouldNotify(covariant PageControlData oldWidget) {
+  bool updateShouldNotify(covariant PageContext oldWidget) {
     return themeMode != oldWidget.themeMode ||
         brightness != oldWidget.brightness ||
         widgetsDesign != oldWidget.widgetsDesign;
   }
 
-  static PageControlData? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<PageControlData>();
+  static PageContext? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<PageContext>();
 }

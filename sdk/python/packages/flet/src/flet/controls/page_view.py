@@ -70,6 +70,36 @@ class PageView(AdaptiveControl):
         assert len(self.views) > 0, "views list is empty."
         return self.views[0]
 
+    def update(self, *controls) -> None:
+        if len(controls) == 0:
+            self.page.update(self)
+        else:
+            self.page.update(*controls)
+
+    def add(self, *controls: Control) -> None:
+        self.controls.extend(controls)
+        self.update()
+
+    def insert(self, at: int, *controls: Control) -> None:
+        n = at
+        for c in controls:
+            self.controls.insert(n, c)
+            n += 1
+        self.update()
+
+    def remove(self, *controls: Control) -> None:
+        for c in controls:
+            self.controls.remove(c)
+        self.update()
+
+    def remove_at(self, index: int) -> None:
+        self.controls.pop(index)
+        self.update()
+
+    def clean(self) -> None:
+        self.controls.clear()
+        self.update()
+
     def scroll_to(
         self,
         offset: Optional[float] = None,

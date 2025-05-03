@@ -130,10 +130,11 @@ class Page(PageView):
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
 
     route: Optional[str] = None
-    web: Optional[bool] = field(default=False)
-    pwa: Optional[bool] = field(default=False)
-    debug: Optional[bool] = field(default=False)
-    wasm: Optional[bool] = field(default=False)
+    web: bool = field(default=False)
+    pwa: bool = field(default=False)
+    debug: bool = field(default=False)
+    wasm: bool = field(default=False)
+    multi_view: bool = field(default=False)
     platform: Optional[PagePlatform] = None
     platform_brightness: Optional[Brightness] = None
     client_ip: Optional[str] = None
@@ -184,30 +185,6 @@ class Page(PageView):
             self.__update(self)
         else:
             self.__update(*controls)
-
-    def add(self, *controls: Control) -> None:
-        self.controls.extend(controls)
-        self.__update(self)
-
-    def insert(self, at: int, *controls: Control) -> None:
-        n = at
-        for c in controls:
-            self.controls.insert(n, c)
-            n += 1
-        self.__update(self)
-
-    def remove(self, *controls: Control) -> None:
-        for c in controls:
-            self.controls.remove(c)
-        self.__update(self)
-
-    def remove_at(self, index: int) -> None:
-        self.controls.pop(index)
-        self.__update(self)
-
-    def clean(self) -> None:
-        self.controls.clear()
-        self.__update(self)
 
     def get_session(self):
         if sess := self.__session():

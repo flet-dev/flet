@@ -27,7 +27,7 @@
 
   <script>
     var flet = {
-      multiView: true,
+      multiView: false,
       noCdn: false,
       canvasKitBaseUrl: "/canvaskit/",
       pyodideUrl: "/pyodide/pyodide.js",
@@ -52,7 +52,7 @@
           viewConstraints: {
             //maxWidth: Infinity,
             maxHeight: Infinity,
-            minHeight: 400,
+            minHeight: 300,
             minWidth: 620
           }
         }));
@@ -64,8 +64,8 @@
           viewConstraints: {
             minWidth: 620,
             //maxWidth: 320,
-            minHeight: 500,
-            //maxHeight: 300,
+            //minHeight: 400,
+            maxHeight: 400,
           }
         }));
       }

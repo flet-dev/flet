@@ -26,9 +26,8 @@ import '../utils/session_store_web.dart'
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
-import '../widgets/flet_app_context.dart';
 import '../widgets/loading_page.dart';
-import '../widgets/page_control_data.dart';
+import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
 
@@ -52,11 +51,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
 
-  PageDesign _widgetsDesign = PageDesign.material;
-  Brightness? _brightness;
-  ThemeMode? _themeMode;
-  ThemeData? _lightTheme;
-  ThemeData? _darkTheme;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
@@ -278,91 +272,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       });
     }
 
-    var platform = TargetPlatform.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.getString("platform", "")!.toLowerCase(),
-        orElse: () => defaultTargetPlatform);
-
-    _widgetsDesign = widget.control.adaptive == true &&
-            (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)
-        ? PageDesign.cupertino
-        : PageDesign.material;
-
-    // theme
-    _themeMode = widget.control.getThemeMode("theme_mode") ??
-        FletAppContext.of(context)?.themeMode;
-
-    var localeConfiguration =
-        widget.control.getLocaleConfiguration("locale_configuration");
-
-    var localizationsDelegates = const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ];
-
-    _brightness = context.select<FletBackend, Brightness>(
-        (backend) => backend.platformBrightness);
-
-    var windowTitle = widget.control.getString("title", "")!;
-
-    var lightTheme =
-        widget.control.getTheme("theme", context, Brightness.light);
-    var darkTheme = widget.control.getString("dark_theme") == null
-        ? widget.control.getTheme("theme", context, Brightness.dark)
-        : parseTheme(
-            widget.control.get("dark_theme"), context, Brightness.dark);
-
-    if (_lightTheme == null || !themesEqual(_lightTheme!, lightTheme)) {
-      _lightTheme = lightTheme;
-    }
-    if (_darkTheme == null || !themesEqual(_darkTheme!, darkTheme)) {
-      _darkTheme = darkTheme;
-    }
-
-    var cupertinoTheme = _themeMode == ThemeMode.light ||
-            ((_themeMode == null || _themeMode == ThemeMode.system) &&
-                _brightness == Brightness.light)
-        ? parseCupertinoTheme(
-            widget.control.get("theme"), context, Brightness.light)
-        : widget.control.getString("dark_theme") != null
-            ? widget.control
-                .getCupertinoTheme("dark_theme", context, Brightness.dark)
-            : widget.control
-                .getCupertinoTheme("theme", context, Brightness.dark);
-
-    var showSemanticsDebugger =
-        widget.control.getBool("show_semantics_debugger", false)!;
-
-    Widget app;
-
     if (!widget.control.backend.multiView) {
-      app = _widgetsDesign == PageDesign.cupertino
-          ? CupertinoApp.router(
-              debugShowCheckedModeBanner: false,
-              showSemanticsDebugger: showSemanticsDebugger,
-              routerDelegate: _routerDelegate,
-              routeInformationParser: _routeParser,
-              title: windowTitle,
-              theme: cupertinoTheme,
-              localizationsDelegates: localizationsDelegates,
-              supportedLocales: localeConfiguration.supportedLocales,
-              locale: localeConfiguration.locale,
-            )
-          : MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              showSemanticsDebugger: showSemanticsDebugger,
-              routerDelegate: _routerDelegate,
-              routeInformationParser: _routeParser,
-              title: windowTitle,
-              theme: _lightTheme,
-              darkTheme: _darkTheme,
-              themeMode: _themeMode,
-              localizationsDelegates: localizationsDelegates,
-              supportedLocales: localeConfiguration.supportedLocales,
-              locale: localeConfiguration.locale,
-            );
+      // single page mode
+      return _buildApp(widget.control, null);
     } else {
       // multi-view mode
       var appStatus = context
@@ -373,22 +285,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
       List<Widget> views = [];
       for (var view in _multiViews.entries) {
-        var viewControl = widget.control
+        var multiViewControl = widget.control
             .children("multi_views")
-            .firstWhereOrNull((v) => v.get("view_id") == view.key)
-            ?.children("views")
-            .firstOrNull;
-        debugPrint("viewControl: $viewControl");
-        Widget viewChild = viewControl != null
-            ? Container(
-                constraints:
-                    const BoxConstraints.tightFor(width: 500, height: 500),
-                child: ControlWidget(control: viewControl),
-              )
-            : Container(
-                constraints:
-                    const BoxConstraints.tightFor(width: 500, height: 500),
-                child: Stack(children: [
+            .firstWhereOrNull((v) => v.get("view_id") == view.key);
+
+        var viewControl = multiViewControl?.children("views").firstOrNull;
+
+        Widget viewChild = SizedBox(
+          width: 100,
+          height: 100,
+          child: viewControl != null
+              ? ControlWidget(control: viewControl)
+              : Stack(children: [
                   const PageMedia(),
                   LoadingPage(
                     isLoading: appStatus.isLoading,
@@ -397,8 +305,75 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                         : appStatus.error,
                   )
                 ]),
-              );
-        viewChild = _widgetsDesign == PageDesign.cupertino
+        );
+
+        viewChild = _buildApp(multiViewControl ?? widget.control, viewChild);
+        views.add(View(view: view.value.flutterView, child: viewChild));
+      }
+      return ViewCollection(views: views);
+    }
+  }
+
+  Widget _buildApp(Control control, Widget? home) {
+    var platform = TargetPlatform.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            control.getString("platform", "")!.toLowerCase(),
+        orElse: () => defaultTargetPlatform);
+
+    var widgetsDesign = control.adaptive == true &&
+            (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)
+        ? PageDesign.cupertino
+        : PageDesign.material;
+
+    // theme
+    var themeMode = control.getThemeMode("theme_mode") ??
+        PageContext.of(context)?.themeMode;
+
+    var localeConfiguration =
+        control.getLocaleConfiguration("locale_configuration");
+
+    var localizationsDelegates = const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ];
+
+    var brightness = context.select<FletBackend, Brightness>(
+        (backend) => backend.platformBrightness);
+
+    var windowTitle = control.getString("title", "")!;
+
+    var newLightTheme = control.getTheme("theme", context, Brightness.light);
+    var newDarkTheme = control.getString("dark_theme") == null
+        ? control.getTheme("theme", context, Brightness.dark)
+        : parseTheme(control.get("dark_theme"), context, Brightness.dark);
+
+    var lightTheme = control.get("_lightTheme");
+    if (lightTheme == null || !themesEqual(lightTheme!, newLightTheme)) {
+      control.updateProperties({"_lightTheme": newLightTheme}, python: false);
+      lightTheme = newLightTheme;
+    }
+
+    var darkTheme = control.get("_darkTheme");
+    if (darkTheme == null || !themesEqual(darkTheme!, newDarkTheme)) {
+      control.updateProperties({"_darkTheme": newDarkTheme}, python: false);
+      darkTheme = newDarkTheme;
+    }
+
+    var cupertinoTheme = themeMode == ThemeMode.light ||
+            ((themeMode == null || themeMode == ThemeMode.system) &&
+                brightness == Brightness.light)
+        ? parseCupertinoTheme(control.get("theme"), context, Brightness.light)
+        : control.getString("dark_theme") != null
+            ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
+            : control.getCupertinoTheme("theme", context, Brightness.dark);
+
+    var showSemanticsDebugger =
+        control.getBool("show_semantics_debugger", false)!;
+
+    var app = widgetsDesign == PageDesign.cupertino
+        ? home != null
             ? CupertinoApp(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
@@ -407,27 +382,49 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
-                home: viewChild,
+                home: home,
               )
-            : MaterialApp(
+            : CupertinoApp.router(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                routerDelegate: _routerDelegate,
+                routeInformationParser: _routeParser,
+                title: windowTitle,
+                theme: cupertinoTheme,
+                localizationsDelegates: localizationsDelegates,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+              )
+        : home != null
+            ? MaterialApp(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
                 title: windowTitle,
-                theme: _lightTheme,
-                darkTheme: _darkTheme,
-                themeMode: _themeMode,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
-                home: viewChild,
+                home: home,
+              )
+            : MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                routerDelegate: _routerDelegate,
+                routeInformationParser: _routeParser,
+                title: windowTitle,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                localizationsDelegates: localizationsDelegates,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
               );
-        views.add(View(view: view.value.flutterView, child: viewChild));
-      }
-      app = ViewCollection(views: views);
-    }
-
-    return FletAppContext(
-      themeMode: _themeMode,
+    return PageContext(
+      themeMode: themeMode,
+      brightness: brightness,
+      widgetsDesign: widgetsDesign,
       child: app,
     );
   }
@@ -490,18 +487,14 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       _prevViewRoutes = viewRoutes;
     }
 
-    return PageControlData(
-        themeMode: _themeMode,
-        brightness: _brightness,
-        widgetsDesign: _widgetsDesign,
-        child: Navigator(
-            key: navigatorKey,
-            pages: pages,
-            onDidRemovePage: (page) {
-              if (page.key != null) {
-                widget.control
-                    .triggerEvent("view_pop", (page.key as ValueKey).value);
-              }
-            }));
+    return Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onDidRemovePage: (page) {
+          if (page.key != null) {
+            widget.control
+                .triggerEvent("view_pop", (page.key as ValueKey).value);
+          }
+        });
   }
 }
