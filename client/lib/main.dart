@@ -115,8 +115,10 @@ void main([List<String>? args]) async {
   );
 
   if (isMultiView()) {
+    debugPrint("Multi View mode");
     runWidget(app);
   } else {
+    debugPrint("Single app mode");
     runApp(app);
   }
 }

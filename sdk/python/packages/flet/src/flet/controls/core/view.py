@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Optional, Union
 
-from flet.controls.base_control import control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
@@ -41,7 +41,7 @@ class View(ScrollableControl, ConstrainedControl):
     """
 
     route: Optional[str] = None
-    controls: list[Control] = field(default_factory=list)
+    controls: list[BaseControl] = field(default_factory=list)
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     bottom_appbar: Optional[BottomAppBar] = None
     floating_action_button: Optional[FloatingActionButton] = None

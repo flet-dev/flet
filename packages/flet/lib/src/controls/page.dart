@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -365,24 +364,31 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
       List<Widget> views = [];
       for (var view in _multiViews.entries) {
-        var multiViewControl = widget.control
+        var viewControl = widget.control
             .children("multi_views")
             .firstWhereOrNull((v) => v.get("view_id") == view.key)
-            ?.buildWidget("content");
-        var viewChild = multiViewControl ??
-            Container(
-              constraints:
-                  const BoxConstraints.tightFor(width: 500, height: 500),
-              child: Stack(children: [
-                const PageMedia(),
-                LoadingPage(
-                  isLoading: appStatus.isLoading,
-                  message: appStatus.isLoading
-                      ? appStartupScreenMessage
-                      : appStatus.error,
-                )
-              ]),
-            );
+            ?.children("views")
+            .firstOrNull;
+        debugPrint("viewControl: $viewControl");
+        Widget viewChild = viewControl != null
+            ? Container(
+                constraints:
+                    const BoxConstraints.tightFor(width: 500, height: 500),
+                child: ControlWidget(control: viewControl),
+              )
+            : Container(
+                constraints:
+                    const BoxConstraints.tightFor(width: 500, height: 500),
+                child: Stack(children: [
+                  const PageMedia(),
+                  LoadingPage(
+                    isLoading: appStatus.isLoading,
+                    message: appStatus.isLoading
+                        ? appStartupScreenMessage
+                        : appStatus.error,
+                  )
+                ]),
+              );
         viewChild = _widgetsDesign == PageDesign.cupertino
             ? CupertinoApp(
                 debugShowCheckedModeBanner: false,

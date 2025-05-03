@@ -316,7 +316,6 @@ from flet.controls.core.markdown import (
 from flet.controls.core.markdown import (
     MarkdownStyleSheet as MarkdownStyleSheet,
 )
-from flet.controls.core.multi_view import MultiView as MultiView
 from flet.controls.core.pagelet import Pagelet as Pagelet
 from flet.controls.core.placeholder import Placeholder as Placeholder
 from flet.controls.core.reorderable_draggable import (
@@ -699,6 +698,7 @@ from flet.controls.material.time_picker import (
 from flet.controls.material.tooltip import Tooltip as Tooltip
 from flet.controls.material.tooltip import TooltipTriggerMode as TooltipTriggerMode
 from flet.controls.material.vertical_divider import VerticalDivider as VerticalDivider
+from flet.controls.multi_view import MultiView as MultiView
 from flet.controls.padding import OptionalPaddingValue as OptionalPaddingValue
 from flet.controls.padding import Padding as Padding
 from flet.controls.padding import PaddingValue as PaddingValue
@@ -724,12 +724,6 @@ from flet.controls.page import (
     PageDisconnectedException as PageDisconnectedException,
 )
 from flet.controls.page import (
-    PageMediaData as PageMediaData,
-)
-from flet.controls.page import (
-    PageResizeEvent as PageResizeEvent,
-)
-from flet.controls.page import (
     RouteChangeEvent as RouteChangeEvent,
 )
 from flet.controls.page import (
@@ -737,6 +731,15 @@ from flet.controls.page import (
 )
 from flet.controls.page import (
     context as context,
+)
+from flet.controls.page_view import (
+    PageMediaData as PageMediaData,
+)
+from flet.controls.page_view import (
+    PageResizeEvent as PageResizeEvent,
+)
+from flet.controls.page_view import (
+    PageView as PageView,
 )
 from flet.controls.painting import (
     Paint as Paint,

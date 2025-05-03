@@ -47,7 +47,7 @@ extension FletJSExtension on FletJS {
   external bool get multiView;
 }
 
-@JS()
+@JS('flet')
 external FletJS? get fletJS;
 
 void openPopupBrowserWindow(
