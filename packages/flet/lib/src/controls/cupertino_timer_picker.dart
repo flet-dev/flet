@@ -34,9 +34,9 @@ class _CupertinoTimerPickerControlState
       alignment: widget.control.getAlignment("alignment", Alignment.center)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
       onTimerDurationChanged: (duration) {
-        final valueIsInt = widget.control.get("value") is int;
-        // preserve the value's type
-        final d = valueIsInt ? duration.inSeconds : duration;
+        // preserve (original) value's type
+        final d =
+            widget.control.get("value") is int ? duration.inSeconds : duration;
         widget.control.updateProperties({"value": d});
         widget.control.triggerEvent("change", d);
       },
