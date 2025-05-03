@@ -13,15 +13,15 @@ bool isProgressiveWebApp() {
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  return trim(getHeadMetaContent("flet-websocket-endpoint-path") ?? "ws", "/");
+  return trim(fletJS?.webSocketEndpoint ?? "ws", "/");
 }
 
 String getFletRouteUrlStrategy() {
-  return getHeadMetaContent("flet-route-url-strategy") ?? "";
+  return fletJS?.routeUrlStrategy ?? "";
 }
 
 bool isFletWebPyodideMode() {
-  return getHeadMetaContent("flet-web-pyodide")?.toLowerCase() == "true";
+  return fletJS?.pyodide == true;
 }
 
 bool isMultiView() {
@@ -37,14 +37,24 @@ Map<dynamic, dynamic> getViewInitialData(int viewId) {
   return (views.getInitialData(viewId)?.dartify() ?? {}) as Map;
 }
 
-@JS('flet')
+@JS()
+@anonymous
 @staticInterop
-class FletJS {}
+class FletJS {
+  external factory FletJS();
+}
 
 extension FletJSExtension on FletJS {
+  external bool get pyodide;
+  external bool get multiView;
+  external bool get noCdn;
+  external String get webSocketEndpoint;
+  external String get routeUrlStrategy;
+  external String get canvasKitBaseUrl;
+  external String get pyodideUrl;
   external String get webRenderer;
   external bool get useColorEmoji;
-  external bool get multiView;
+  external bool get appPackageUrl;
 }
 
 @JS('flet')

@@ -23,29 +23,25 @@ def patch_index_html(
     with open(index_path, encoding="utf-8") as f:
         index = f.read()
 
+    app_config = []
+
     if pyodide and pyodide_script_path:
         module_name = Path(pyodide_script_path).stem
-        pyodideCode = f"""
-        <script>
-            var micropipIncludePre = {str(pyodide_pre).lower()};
-            var pythonModuleName = "{module_name}";
-        </script>
-        """
-        index = index.replace("<!-- pyodideCode -->", pyodideCode)
-    index = index.replace("%FLET_WEB_PYODIDE%", str(pyodide).lower())
-    index = index.replace(
-        "<!-- webRenderer -->",
-        f'<script>webRenderer="{web_renderer.value}";</script>',
-    )
-    index = index.replace(
-        "<!-- useColorEmoji -->",
-        f"<script>useColorEmoji={str(use_color_emoji).lower()};</script>",
-    )
-    index = index.replace("%FLET_ROUTE_URL_STRATEGY%", route_url_strategy)
+        app_config.append("flet.pyodide = true;")
+        app_config.append(f"flet.micropipIncludePre = {str(pyodide_pre).lower()};")
+        app_config.append(f'flet.pythonModuleName = "{module_name}";')
+
+    app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
+    app_config.append(f'flet.webRenderer="{web_renderer.value}";')
+    app_config.append(f"flet.useColorEmoji={str(use_color_emoji).lower()};")
+    app_config.append(f'flet.routeUrlStrategy="{route_url_strategy}";')
+
+    if websocket_endpoint_path:
+        app_config.append(f'flet.webSocketEndpoint="{websocket_endpoint_path}";')
 
     index = index.replace(
-        "<!-- noCdn -->",
-        f"<script>noCdn={str(no_cdn).lower()};</script>",
+        "<!-- fletAppConfig -->",
+        "<script>\n{}\n</script>".format("\n".join(app_config)),
     )
 
     if base_href:
@@ -54,13 +50,7 @@ def patch_index_html(
             '<base href="/">',
             '<base href="{}">'.format("/" if base_url == "" else f"/{base_url}/"),
         )
-    if websocket_endpoint_path:
-        index = re.sub(
-            r"\<meta name=\"flet-websocket-endpoint-path\" content=\"(.+)\">",
-            rf'<meta name="flet-websocket-endpoint-path" '
-            f'content="{websocket_endpoint_path}">',
-            index,
-        )
+
     if app_name:
         index = re.sub(
             r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",

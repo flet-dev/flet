@@ -133,6 +133,7 @@ def app(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            websocket_endpoint_path=websocket_endpoint,
             no_cdn=no_cdn,
         ),
     )

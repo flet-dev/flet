@@ -17,21 +17,20 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
-  <!-- Flet specific -->
-  <meta name="flet-route-url-strategy" content="%FLET_ROUTE_URL_STRATEGY%">
-  <meta name="flet-web-pyodide" content="%FLET_WEB_PYODIDE%">
-  <meta name="flet-websocket-endpoint-path" content="/ws">
-
   <title>Flet</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
     var flet = {
+      pyodide: false,
       multiView: false,
       noCdn: false,
+      webSocketEndpoint: "/ws",
+      routeUrlStrategy: "path",
       canvasKitBaseUrl: "/canvaskit/",
       pyodideUrl: "/pyodide/pyodide.js",
       webRenderer: "auto",
+      fontFallbackBaseUrl: null, // for Noto Emoji, use Google CDN
       useColorEmoji: false,
       appPackageUrl: "app.tar.gz"
     }
@@ -72,10 +71,7 @@
     });
   </script>
 
-  <!-- webRenderer -->
-  <!-- useColorEmoji -->
-  <!-- pyodideCode -->
-  <!-- noCdn -->
+  <!-- fletAppConfig -->
 
   <script src="python.js"></script>
 </head>

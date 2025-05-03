@@ -10,6 +10,8 @@ if (flet.webRenderer != "auto") {
 if (flet.noCdn) {
     config.canvasKitBaseUrl = flet.canvasKitBaseUrl;
 }
+config.fontFallbackBaseUrl = "/";
+
 _flutter.loader.load({
     config: config,
     serviceWorkerSettings: {
@@ -19,7 +21,8 @@ _flutter.loader.load({
         loading.classList.add('main_done');
         const engine = await engineInitializer.initializeEngine({
             useColorEmoji: flet.useColorEmoji,
-            multiViewEnabled: flet.multiView
+            multiViewEnabled: flet.multiView,
+            fontFallbackBaseUrl: flet.fontFallbackBaseUrl
         });
 
         loading.classList.add('init_done');
