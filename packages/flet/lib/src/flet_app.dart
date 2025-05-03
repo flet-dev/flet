@@ -21,6 +21,7 @@ class FletApp extends StatefulWidget {
   final List<FletExtension>? extensions;
   final Map<String, dynamic>? args;
   final bool? forcePyodide;
+  final bool multiView;
 
   const FletApp(
       {super.key,
@@ -35,7 +36,8 @@ class FletApp extends StatefulWidget {
       this.reconnectTimeoutMs,
       this.extensions,
       this.args,
-      this.forcePyodide});
+      this.forcePyodide,
+      this.multiView = false});
 
   @override
   State<FletApp> createState() => _FletAppState();
@@ -66,6 +68,7 @@ class _FletAppState extends State<FletApp> {
             extensions: widget.extensions ?? [],
             args: widget.args,
             forcePyodide: widget.forcePyodide,
+            multiView: widget.multiView ?? false,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
       },

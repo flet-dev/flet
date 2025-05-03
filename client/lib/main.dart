@@ -112,9 +112,10 @@ void main([List<String>? args]) async {
     showAppStartupScreen: true,
     appStartupScreenMessage: "Working...",
     extensions: extensions,
+    multiView: isMultiView(),
   );
 
-  if (isMultiView()) {
+  if (app.multiView) {
     debugPrint("Multi View mode");
     runWidget(app);
   } else {

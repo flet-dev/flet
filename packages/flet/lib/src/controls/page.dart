@@ -147,7 +147,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _updateMultiViews() {
-    if (!isMultiView()) {
+    if (!widget.control.backend.multiView) {
       return;
     }
     bool changed = false;
@@ -337,7 +337,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     Widget app;
 
-    if (!isMultiView()) {
+    if (!widget.control.backend.multiView) {
       app = _widgetsDesign == PageDesign.cupertino
           ? CupertinoApp.router(
               debugShowCheckedModeBanner: false,

@@ -35,6 +35,7 @@ import 'utils/weak_value_map.dart';
 
 /// FletBackend - Handles business logic, provides data, and acts as ChangeNotifier
 class FletBackend extends ChangeNotifier {
+  bool multiView = false;
   bool _disposed = false;
   final WeakReference<FletBackend>? _parentFletBackend;
   final Uri pageUri;
@@ -80,6 +81,7 @@ class FletBackend extends ChangeNotifier {
   FletBackend(
       {required this.pageUri,
       required this.assetsDir,
+      required this.multiView,
       int? reconnectIntervalMs,
       int? reconnectTimeoutMs,
       this.errorsHandler,
@@ -105,6 +107,7 @@ class FletBackend extends ChangeNotifier {
       "web": kIsWeb,
       "debug": kDebugMode,
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
+      "multi_view": multiView,
       "window": {
         "_c": "Window",
         "_i": 2,

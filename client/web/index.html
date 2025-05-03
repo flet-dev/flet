@@ -50,8 +50,10 @@
             randomValue: Math.floor(Math.random() * 100),
           },
           viewConstraints: {
-            maxWidth: Infinity,
+            //maxWidth: Infinity,
             maxHeight: Infinity,
+            minHeight: 400,
+            minWidth: 620
           }
         }));
         console.log(flutterApp.addView({
@@ -60,10 +62,10 @@
             bar: "baz"
           },
           viewConstraints: {
-            minWidth: 320,
-            maxWidth: 320,
-            minHeight: 200,
-            maxHeight: 300,
+            minWidth: 620,
+            //maxWidth: 320,
+            minHeight: 500,
+            //maxHeight: 300,
           }
         }));
       }
@@ -139,7 +141,7 @@
   <script src="flutter_bootstrap.js" async></script>
 
   <h1>View 1</h1>
-  <div id="view-1"></div>
+  <div id="view-1" style="display: flex; justify-content: center;"></div>
   <h1>View 2</h1>
   <div id="view-2"></div>
 </body>
