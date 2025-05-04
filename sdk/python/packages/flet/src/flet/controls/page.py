@@ -150,6 +150,7 @@ class Page(PageView):
     on_keyboard_event: OptionalEventCallable["KeyboardEvent"] = None
     on_connect: OptionalControlEventCallable = None
     on_disconnect: OptionalControlEventCallable = None
+    on_close: OptionalControlEventCallable = None
     on_login: OptionalEventCallable["LoginEvent"] = None
     on_logout: OptionalControlEventCallable = None
     on_error: OptionalControlEventCallable = None

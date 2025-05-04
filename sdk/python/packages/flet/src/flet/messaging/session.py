@@ -89,6 +89,7 @@ class Session:
     def close(self):
         logger.debug(f"Closing expired session: {self.id}")
         self.__pubsub_client.unsubscribe_all()
+        asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
 
     def patch_control(self, control: BaseControl):
         patch, added_controls, removed_controls = self.__get_update_control_patch(
