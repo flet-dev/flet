@@ -5,10 +5,12 @@ import logging
 import os
 import signal
 import traceback
+from collections.abc import Awaitable
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
-from flet.controls.types import AppView, WebRenderer
+from flet.controls.page import Page
+from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
 from flet.utils import (
@@ -28,6 +30,9 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
+if TYPE_CHECKING:
+    from flet.controls.page import Page
+
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 def app(*args, **kwargs):
@@ -40,22 +45,23 @@ def app_async(*args, **kwargs):
 
 
 def run(
-    main,
-    before_main=None,
-    name="",
-    host=None,
-    port=0,
+    main: Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]],
+    before_main: Optional[
+        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
+    ] = None,
+    name: str = "",
+    host: Optional[str] = None,
+    port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
+    assets_dir: Optional[str] = "assets",
+    upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    route_url_strategy="path",
-    no_cdn=False,
-    export_asgi_app=False,
-    target=None,  # for backward compatibility
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: Optional[bool] = False,
+    export_asgi_app: Optional[bool] = False,
 ):
     if is_pyodide():
-        __run_pyodide(main=main or target, before_main=before_main)
+        __run_pyodide(main=main, before_main=before_main)
         return
 
     if export_asgi_app:
@@ -63,7 +69,7 @@ def run(
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
-            main=main or target,
+            main=main,
             before_main=before_main,
             page_name=__get_page_name(name),
             assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
@@ -73,9 +79,15 @@ def run(
             no_cdn=no_cdn,
         )
 
+    if isinstance(web_renderer, str):
+        web_renderer = WebRenderer(web_renderer)
+
+    if isinstance(route_url_strategy, str):
+        route_url_strategy = RouteUrlStrategy(route_url_strategy)
+
     return asyncio.run(
         run_async(
-            main=main or target,
+            main=main,
             before_main=before_main,
             name=name,
             host=host,
@@ -86,27 +98,27 @@ def run(
             web_renderer=web_renderer,
             route_url_strategy=route_url_strategy,
             no_cdn=no_cdn,
-            target=target,
         )
     )
 
 
 async def run_async(
-    main,
-    before_main=None,
-    name="",
-    host=None,
-    port=0,
+    main: Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]],
+    before_main: Optional[
+        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
+    ] = None,
+    name: str = "",
+    host: Optional[str] = None,
+    port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
+    assets_dir: Optional[str] = "assets",
+    upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    route_url_strategy="path",
-    no_cdn=False,
-    target=None,
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: Optional[bool] = False,
 ):
     if is_pyodide():
-        __run_pyodide(main=main or target, before_main=before_main)
+        __run_pyodide(main=main, before_main=before_main)
         return
 
     if isinstance(view, str):
@@ -114,6 +126,9 @@ async def run_async(
 
     if isinstance(web_renderer, str):
         web_renderer = WebRenderer(web_renderer)
+
+    if isinstance(route_url_strategy, str):
+        route_url_strategy = RouteUrlStrategy(route_url_strategy)
 
     force_web_server = get_bool_env_var("FLET_FORCE_WEB_SERVER") or is_linux_server()
     if force_web_server:
@@ -165,13 +180,13 @@ async def run_async(
     conn = (
         await __run_socket_server(
             port=port,
-            main=main or target,
+            main=main,
             before_main=before_main,
             blocking=is_embedded(),
         )
         if is_socket_server
         else await __run_web_server(
-            main=main or target,
+            main=main,
             before_main=before_main,
             host=host,
             port=port,

@@ -1060,9 +1060,6 @@ from flet.controls.types import (
     Number as Number,
 )
 from flet.controls.types import (
-    OnFocusEvent as OnFocusEvent,
-)
-from flet.controls.types import (
     OptionalBool as OptionalBool,
 )
 from flet.controls.types import (
@@ -1095,6 +1092,7 @@ from flet.controls.types import (
 from flet.controls.types import (
     ResponsiveNumber as ResponsiveNumber,
 )
+from flet.controls.types import RouteUrlStrategy as RouteUrlStrategy
 from flet.controls.types import (
     ScrollMode as ScrollMode,
 )

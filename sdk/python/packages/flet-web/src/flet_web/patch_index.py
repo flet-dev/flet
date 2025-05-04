@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 
 def patch_index_html(
@@ -16,7 +16,7 @@ def patch_index_html(
     pyodide_pre: bool = False,
     pyodide_script_path: str = "",
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    route_url_strategy: str = "path",
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: bool = False,
 ):
     with open(index_path, encoding="utf-8") as f:
@@ -32,7 +32,7 @@ def patch_index_html(
 
     app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
     app_config.append(f'flet.webRenderer="{web_renderer.value}";')
-    app_config.append(f'flet.routeUrlStrategy="{route_url_strategy}";')
+    app_config.append(f'flet.routeUrlStrategy="{route_url_strategy.value}";')
 
     if websocket_endpoint_path:
         app_config.append(f'flet.webSocketEndpoint="{websocket_endpoint_path}";')

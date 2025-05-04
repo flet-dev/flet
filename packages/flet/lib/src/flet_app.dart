@@ -68,7 +68,7 @@ class _FletAppState extends State<FletApp> {
             extensions: widget.extensions ?? [],
             args: widget.args,
             forcePyodide: widget.forcePyodide,
-            multiView: widget.multiView ?? false,
+            multiView: widget.multiView,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
       },

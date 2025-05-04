@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi.staticfiles import StaticFiles
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet.utils import Once, get_bool_env_var
 from starlette.types import Receive, Scope, Send
 
@@ -48,7 +48,7 @@ class FletStaticFiles(StaticFiles):
         app_short_name: Optional[str] = None,
         app_description: Optional[str] = None,
         web_renderer: WebRenderer = WebRenderer.AUTO,
-        route_url_strategy: str = "path",
+        route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
         no_cdn: bool = False,
         websocket_endpoint_path: Optional[str] = None,
     ) -> None:
@@ -72,7 +72,7 @@ class FletStaticFiles(StaticFiles):
 
         env_route_url_strategy = os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
         if env_route_url_strategy:
-            self.__route_url_strategy = env_route_url_strategy
+            self.__route_url_strategy = RouteUrlStrategy(env_route_url_strategy)
 
         env_no_cdn = get_bool_env_var("FLET_WEB_NO_CDN")
         if env_no_cdn is not None:
@@ -162,7 +162,7 @@ class FletStaticFiles(StaticFiles):
             websocket_endpoint_path=ws_path,
             app_name=self.__app_name,
             app_description=self.__app_description,
-            web_renderer=WebRenderer(self.__web_renderer),
+            web_renderer=self.__web_renderer,
             route_url_strategy=self.__route_url_strategy,
             no_cdn=self.__no_cdn,
         )

@@ -274,7 +274,6 @@ class FletBackend extends ChangeNotifier {
   /// - [control]: The control for which the event is triggered.
   /// - [eventName]: The name of the event to trigger.
   /// - [eventData]: Optional data to pass along with the event.
-  /// - [force]: Do not check if there is a subscriber for this event.
   void triggerControlEvent(Control control, String eventName,
       [dynamic eventData]) {
     if (control.get("on_$eventName") == true) {

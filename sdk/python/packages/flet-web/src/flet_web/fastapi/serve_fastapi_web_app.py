@@ -3,7 +3,7 @@ import logging
 from typing import Optional
 
 import uvicorn
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 import flet_web.fastapi
 import flet_web.fastapi as flet_fastapi
@@ -28,7 +28,7 @@ def get_fastapi_web_app(
     assets_dir,
     upload_dir,
     web_renderer: Optional[WebRenderer],
-    route_url_strategy,
+    route_url_strategy: Optional[RouteUrlStrategy],
     no_cdn,
 ):
     web_path = f"/{page_name.strip('/')}"
@@ -40,8 +40,8 @@ def get_fastapi_web_app(
             before_main=before_main,
             upload_dir=upload_dir,
             assets_dir=assets_dir,
-            web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
-            route_url_strategy=route_url_strategy,
+            web_renderer=web_renderer or WebRenderer.AUTO,
+            route_url_strategy=route_url_strategy or RouteUrlStrategy.PATH,
             no_cdn=no_cdn,
         ),
     )

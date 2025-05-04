@@ -5,7 +5,7 @@ from typing import Callable, Optional, Union
 
 from fastapi import Request, WebSocket
 from flet.controls.page import Page
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from flet_web.fastapi.flet_app import (
@@ -29,7 +29,7 @@ def app(
     app_short_name: Optional[str] = None,
     app_description: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    route_url_strategy: str = "path",
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: bool = False,
     upload_dir: Optional[str] = None,
     upload_endpoint_path: Optional[str] = None,

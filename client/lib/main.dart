@@ -116,10 +116,9 @@ void main([List<String>? args]) async {
   );
 
   if (app.multiView) {
-    debugPrint("Multi View mode");
+    debugPrint("Flet Web Multi-View mode");
     runWidget(app);
   } else {
-    debugPrint("Single app mode");
     runApp(app);
   }
 }
