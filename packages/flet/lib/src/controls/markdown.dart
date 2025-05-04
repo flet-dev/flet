@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -67,6 +69,7 @@ class MarkdownControl extends StatelessWidget {
               control: control,
               src: src,
               srcBase64: srcBase64,
+              srcBytes: Uint8List(0),
               semanticsLabel: alt,
               disabled: control.disabled,
               errorCtrl: control.buildWidget("img_error_content"));

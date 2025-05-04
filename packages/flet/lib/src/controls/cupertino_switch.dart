@@ -91,8 +91,10 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         trackOutlineWidth:
             widget.control.getWidgetStateDouble("track_outline_width"),
         thumbIcon: widget.control.getWidgetStateIcon("thumb_icon", theme),
-        inactiveThumbImage: getImageProvider(context, inactiveThumbImage, null),
-        activeThumbImage: getImageProvider(context, activeThumbImage, null),
+        inactiveThumbImage:
+            getImageProvider(context, inactiveThumbImage, null, null),
+        activeThumbImage:
+            getImageProvider(context, activeThumbImage, null, null),
         onActiveThumbImageError: activeThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {

@@ -120,7 +120,8 @@ DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
 
   var src = value["src"];
   var srcBase64 = value["src_base64"];
-  ImageProvider? image = getImageProvider(context, src, srcBase64);
+  var srcBytes = value["src_bytes"];
+  ImageProvider? image = getImageProvider(context, src, srcBase64, srcBytes);
   if (image == null) {
     return defaultValue;
   }
@@ -141,7 +142,7 @@ DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
 }
 
 ImageProvider? getImageProvider(
-    BuildContext context, String? src, String? srcBase64) {
+    BuildContext context, String? src, String? srcBase64, Uint8List? srcBytes) {
   src = src?.trim();
   srcBase64 = srcBase64?.trim();
 
@@ -150,7 +151,13 @@ ImageProvider? getImageProvider(
       Uint8List bytes = base64Decode(srcBase64);
       return MemoryImage(bytes);
     } catch (ex) {
-      debugPrint("getImageProvider failed decoding srcBase64");
+      debugPrint("getImageProvider failed decoding src_base64");
+    }
+  } else if (srcBytes != null && srcBytes.isNotEmpty) {
+    try {
+      return MemoryImage(srcBytes);
+    } catch (ex) {
+      debugPrint("getImageProvider failed decoding src_bytes");
     }
   }
   if (src != null && src != "") {
@@ -169,6 +176,7 @@ Widget buildImage({
   required Widget? errorCtrl,
   required String? src,
   required String? srcBase64,
+  required Uint8List srcBytes,
   double? width,
   double? height,
   ImageRepeat repeat = ImageRepeat.noRepeat,
@@ -187,9 +195,12 @@ Widget buildImage({
   Widget? image;
   const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
-  if (srcBase64 != null && srcBase64.isNotEmpty) {
+  Uint8List bytes = srcBytes;
+  if (bytes.isEmpty && srcBase64 != null && srcBase64.isNotEmpty) {
+    bytes = base64Decode(srcBase64);
+  }
+  if (bytes.isNotEmpty) {
     try {
-      Uint8List bytes = base64Decode(srcBase64);
       if (arrayIndexOf(bytes, Uint8List.fromList(utf8.encode(svgTag))) != -1) {
         image = SvgPicture.memory(bytes,
             width: width,
