@@ -268,21 +268,6 @@ from flet.controls.core.dismissible import (
 from flet.controls.core.drag_target import DragTarget as DragTarget
 from flet.controls.core.drag_target import DragTargetEvent as DragTargetEvent
 from flet.controls.core.draggable import Draggable as Draggable
-from flet.controls.core.file_picker import (
-    FilePicker as FilePicker,
-)
-from flet.controls.core.file_picker import (
-    FilePickerFileType as FilePickerFileType,
-)
-from flet.controls.core.file_picker import (
-    FilePickerResultEvent as FilePickerResultEvent,
-)
-from flet.controls.core.file_picker import (
-    FilePickerUploadEvent as FilePickerUploadEvent,
-)
-from flet.controls.core.file_picker import (
-    FilePickerUploadFile as FilePickerUploadFile,
-)
 from flet.controls.core.flet_app import FletApp as FletApp
 from flet.controls.core.gesture_detector import GestureDetector as GestureDetector
 from flet.controls.core.grid_view import GridView as GridView
@@ -772,6 +757,18 @@ from flet.controls.scrollable_control import (
 )
 from flet.controls.services.browser_context_menu import (
     BrowserContextMenu as BrowserContextMenu,
+)
+from flet.controls.services.file_picker import (
+    FilePicker as FilePicker,
+)
+from flet.controls.services.file_picker import (
+    FilePickerFileType as FilePickerFileType,
+)
+from flet.controls.services.file_picker import (
+    FilePickerUploadEvent as FilePickerUploadEvent,
+)
+from flet.controls.services.file_picker import (
+    FilePickerUploadFile as FilePickerUploadFile,
 )
 from flet.controls.services.haptic_feedback import HapticFeedback as HapticFeedback
 from flet.controls.services.semantics_service import Assertiveness as Assertiveness

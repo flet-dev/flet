@@ -1,20 +1,15 @@
 import asyncio
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
+from flet.controls.services.service import Service
 from flet.controls.types import OptionalEventCallable
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 __all__ = [
     "FilePicker",
-    "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerFileType",
     "FilePickerUploadFile",
@@ -33,24 +28,18 @@ class FilePickerFileType(Enum):
 
 @dataclass
 class FilePickerUploadFile:
-    name: str
     upload_url: str
-    id: int = None
     method: str = field(default="PUT")
+    id: Optional[int] = None
+    name: Optional[str] = None
 
 
 @dataclass
 class FilePickerFile:
-    name: str
-    path: str
-    size: int
     id: int
-
-
-@dataclass
-class FilePickerResultEvent(ControlEvent):
-    path: Optional[str]
-    files: Optional[List[FilePickerFile]] = None
+    name: str
+    size: int
+    path: Optional[str] = None
 
 
 @dataclass
@@ -61,9 +50,10 @@ class FilePickerUploadEvent(ControlEvent):
 
 
 @control("FilePicker")
-class FilePicker(Control):
+class FilePicker(Service):
     """
-    A control that allows you to use the native file explorer to pick single or multiple files, with extensions filtering support and upload.
+    A control that allows you to use the native file explorer to pick single
+    or multiple files, with extensions filtering support and upload.
 
     Example:
     ```
@@ -72,7 +62,8 @@ class FilePicker(Control):
     def main(page: ft.Page):
         def pick_files_result(e: ft.FilePickerResultEvent):
             selected_files.value = (
-                ", ".join(map(lambda f: f.name, e.files)) if e.files else "Cancelled!"
+                ", ".join(map(lambda f: f.name, e.files)) if e.files
+                else "Cancelled!"
             )
             selected_files.update()
 
@@ -104,69 +95,40 @@ class FilePicker(Control):
     Online docs: https://flet.dev/docs/controls/filepicker
     """
 
-    on_result: OptionalEventCallable[FilePickerResultEvent] = None
     on_upload: OptionalEventCallable[FilePickerUploadEvent] = None
 
-    # _result: Optional[FilePickerResultEvent] = field(init=False, repr=False)
-
-    def before_update(self):
-        super().before_update()
-
-    # @property
-    # def result(self) -> Optional[FilePickerResultEvent]:
-    #     return self._result
-
-    async def upload_async(self, files: List[FilePickerUploadFile]):
-        await self._invoke_method_async(
+    def upload_async(self, files: list[FilePickerUploadFile]):
+        return self._invoke_method_async(
             "upload",
-            {
-                # "files": [
-                #     {
-                #         "name": file.name,
-                #         "upload_url": file.upload_url,
-                #         "id": file.id,
-                #         "method": file.method,
-                #     }
-                #     for file in files
-                # ],
-                "files": files
-            },
+            {"files": files},
         )
 
-    def upload(self, files: List[FilePickerUploadFile]):
+    def upload(self, files: list[FilePickerUploadFile]):
         asyncio.create_task(self.upload_async(files))
 
-    async def get_directory_path_async(
+    def get_directory_path_async(
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
     ):
-        await self._invoke_method_async(
+        return self._invoke_method_async(
             "get_directory_path",
             {
                 "dialog_title": dialog_title,
                 "initial_directory": initial_directory,
             },
+            timeout=3600,  # 1 hour
         )
 
-    def get_directory_path(
-        self,
-        dialog_title: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-    ):
-        asyncio.create_task(
-            self.get_directory_path_async(dialog_title, initial_directory)
-        )
-
-    async def save_file_async(
+    def save_file_async(
         self,
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
         file_type: FilePickerFileType = FilePickerFileType.ANY,
-        allowed_extensions: Optional[List[str]] = None,
+        allowed_extensions: Optional[list[str]] = None,
     ):
-        await self._invoke_method_async(
+        return self._invoke_method_async(
             "save_file",
             {
                 "dialog_title": dialog_title,
@@ -175,24 +137,7 @@ class FilePicker(Control):
                 "file_type": file_type,
                 "allowed_extensions": allowed_extensions,
             },
-        )
-
-    def save_file(
-        self,
-        dialog_title: Optional[str] = None,
-        file_name: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
-        allowed_extensions: Optional[List[str]] = None,
-    ):
-        asyncio.create_task(
-            self.save_file_async(
-                dialog_title,
-                file_name,
-                initial_directory,
-                file_type,
-                allowed_extensions,
-            )
+            timeout=3600,  # 1 hour
         )
 
     async def pick_files_async(
@@ -200,10 +145,10 @@ class FilePicker(Control):
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
         file_type: FilePickerFileType = FilePickerFileType.ANY,
-        allowed_extensions: Optional[List[str]] = None,
+        allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
     ):
-        await self._invoke_method_async(
+        files = await self._invoke_method_async(
             "pick_files",
             {
                 "dialog_title": dialog_title,
@@ -212,22 +157,6 @@ class FilePicker(Control):
                 "allowed_extensions": allowed_extensions,
                 "allow_multiple": allow_multiple,
             },
+            timeout=3600,  # 1 hour
         )
-
-    def pick_files(
-        self,
-        dialog_title: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
-        allowed_extensions: Optional[List[str]] = None,
-        allow_multiple: bool = False,
-    ):
-        asyncio.create_task(
-            self.pick_files_async(
-                dialog_title,
-                initial_directory,
-                file_type,
-                allowed_extensions,
-                allow_multiple,
-            )
-        )
+        return [FilePickerFile(**file) for file in files]

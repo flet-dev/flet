@@ -30,6 +30,7 @@ from flet.utils import random_string, sha1
 import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.flet_app_manager import app_manager
 from flet_web.fastapi.oauth_state import OAuthState
+from flet_web.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -292,20 +293,16 @@ class FletApp(Connection):
         )
         self.__send_queue.put_nowait(m)
 
-    # def _process_get_upload_url_command(self, attrs):
-    #     assert len(attrs) == 2, '"getUploadUrl" command has wrong number of attrs'
-    #     assert (
-    #         self.__upload_endpoint_path
-    #     ), "upload_path should be specified to enable uploads"
-    #     return (
-    #         build_upload_url(
-    #             self.__upload_endpoint_path,
-    #             attrs["file"],
-    #             int(attrs["expires"]),
-    #             self.__secret_key,
-    #         ),
-    #         None,
-    #     )
+    def get_upload_url(self, file_name: str, expires: int) -> str:
+        assert self.__upload_endpoint_path, (
+            "upload_path should be specified to enable uploads"
+        )
+        return build_upload_url(
+            self.__upload_endpoint_path,
+            file_name,
+            expires,
+            self.__secret_key,
+        )
 
     def oauth_authorize(self, attrs: dict[str, Any]):
         state_id = attrs["state"]

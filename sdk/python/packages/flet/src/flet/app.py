@@ -36,12 +36,12 @@ if TYPE_CHECKING:
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 def app(*args, **kwargs):
-    return run(*args, **kwargs)
+    return run(kwargs["target"], *args, **kwargs)
 
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 def app_async(*args, **kwargs):
-    return run_async(*args, **kwargs)
+    return run_async(kwargs["target"], *args, **kwargs)
 
 
 def run(
@@ -59,9 +59,10 @@ def run(
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: Optional[bool] = False,
     export_asgi_app: Optional[bool] = False,
+    target=None,
 ):
     if is_pyodide():
-        __run_pyodide(main=main, before_main=before_main)
+        __run_pyodide(main=main or target, before_main=before_main)
         return
 
     if export_asgi_app:
@@ -69,7 +70,7 @@ def run(
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
-            main=main,
+            main=main or target,
             before_main=before_main,
             page_name=__get_page_name(name),
             assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
@@ -87,7 +88,7 @@ def run(
 
     return asyncio.run(
         run_async(
-            main=main,
+            main=main or target,
             before_main=before_main,
             name=name,
             host=host,
@@ -116,9 +117,10 @@ async def run_async(
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: Optional[bool] = False,
+    target=None,
 ):
     if is_pyodide():
-        __run_pyodide(main=main, before_main=before_main)
+        __run_pyodide(main=main or target, before_main=before_main)
         return
 
     if isinstance(view, str):
@@ -180,13 +182,13 @@ async def run_async(
     conn = (
         await __run_socket_server(
             port=port,
-            main=main,
+            main=main or target,
             before_main=before_main,
             blocking=is_embedded(),
         )
         if is_socket_server
         else await __run_web_server(
-            main=main,
+            main=main or target,
             before_main=before_main,
             host=host,
             port=port,
