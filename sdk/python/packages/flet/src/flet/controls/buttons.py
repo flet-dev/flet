@@ -30,7 +30,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OutlinedBorder:
     side: OptionalBorderSide = None
     type: str = ""

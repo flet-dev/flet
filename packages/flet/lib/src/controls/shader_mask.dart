@@ -5,7 +5,6 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -22,12 +21,8 @@ class ShaderMaskControl extends StatelessWidget {
       return const ErrorControl("ShaderMask.shader must be provided");
     }
     final shaderMask = ShaderMask(
-        shaderCallback: (bounds) {
-          debugPrint("shaderCallback: $bounds, $gradient");
-          return gradient.createShader(bounds);
-        },
-        blendMode: parseBlendMode(
-            control.getString("blend_mode"), BlendMode.modulate)!,
+        shaderCallback: (bounds) => gradient.createShader(bounds),
+        blendMode: control.getBlendMode("blend_mode", BlendMode.modulate)!,
         child: control.buildWidget("content"));
     return ConstrainedControl(
         control: control,
@@ -37,10 +32,7 @@ class ShaderMaskControl extends StatelessWidget {
 
   Widget _clipCorners(Widget widget, {BorderRadius? borderRadius}) {
     return borderRadius != null
-        ? ClipRRect(
-            borderRadius: borderRadius,
-            child: widget,
-          )
+        ? ClipRRect(borderRadius: borderRadius, child: widget)
         : widget;
   }
 }

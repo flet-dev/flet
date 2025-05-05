@@ -1071,6 +1071,9 @@ from flet.controls.types import (
     OptionalEventCallable as OptionalEventCallable,
 )
 from flet.controls.types import (
+    OptionalFloat as OptionalFloat,
+)
+from flet.controls.types import (
     OptionalInt as OptionalInt,
 )
 from flet.controls.types import (
@@ -1090,6 +1093,9 @@ from flet.controls.types import (
 )
 from flet.controls.types import (
     ResponsiveNumber as ResponsiveNumber,
+)
+from flet.controls.types import (
+    ResponsiveRowBreakpoint as ResponsiveRowBreakpoint,
 )
 from flet.controls.types import RouteUrlStrategy as RouteUrlStrategy
 from flet.controls.types import (

@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../flet_service.dart';
 import '../utils/launch_url.dart';
+import '../utils/numbers.dart';
 
 class UrlLauncherService extends FletService {
   UrlLauncherService({required super.control});
@@ -26,9 +27,9 @@ class UrlLauncherService extends FletService {
       case "launch_url":
         return openWebBrowser(args["url"]!,
             webWindowName: args["web_window_name"],
-            webPopupWindow: args["web_popup_window"],
-            windowWidth: args["window_width"],
-            windowHeight: args["window_height"]);
+            webPopupWindow: parseBool(args["web_popup_window"]),
+            windowWidth: parseInt(args["window_width"]),
+            windowHeight: parseInt(args["window_height"]));
       case "can_launch_url":
         return canLaunchUrl(Uri.parse(args["url"]!));
       case "close_in_app_web_view":

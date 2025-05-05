@@ -8,7 +8,7 @@ from flet.controls.types import Number, ResponsiveNumber
 
 __all__ = [
     "Control",
-    "OptionalControl",
+    "OptionalControl"
 ]
 
 
@@ -16,7 +16,7 @@ __all__ = [
 class Control(BaseControl):
     expand: Optional[Union[bool, int]] = None
     expand_loose: Optional[bool] = None
-    col: ResponsiveNumber = 12
+    col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     opacity: Number = 1.0
     tooltip: Optional[TooltipValue] = None
     badge: Optional[BadgeValue] = None

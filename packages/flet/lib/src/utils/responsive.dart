@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../models/control.dart';
 import '../utils/numbers.dart';
 
@@ -25,30 +23,29 @@ Map<String, double>? parseResponsiveNumber(dynamic value, double defaultValue) {
 
 double getBreakpointNumber(
     Map<String, double> value, double width, Map<String, double> breakpoints) {
-  // default value
-  double? result = value[""];
+  // Defaults
+  double? selectedValue = value[""];
+  double highestMatchedBreakpoint = 0;
 
-  debugPrint("getBreakpointNumber: $value, $width, $breakpoints");
+  for (final entry in value.entries) {
+    final bpName = entry.key;
+    final v = entry.value;
 
-  double maxBpWidth = 0;
-  value.forEach((bpName, respValue) {
-    if (bpName == "") {
-      return;
-    }
-    var bpWidth = breakpoints[bpName];
-    if (bpWidth == null) {
-      throw Exception("Unknown breakpoint: $bpName");
-    }
-    if (width >= bpWidth && bpWidth >= maxBpWidth) {
-      maxBpWidth = bpWidth;
-      result = respValue;
-    }
-  });
+    if (bpName.isEmpty) continue;
 
-  if (result == null) {
+    final bpWidth = breakpoints[bpName];
+    if (bpWidth == null) continue;
+
+    if (width >= bpWidth && bpWidth >= highestMatchedBreakpoint) {
+      highestMatchedBreakpoint = bpWidth;
+      selectedValue = v;
+    }
+  }
+
+  if (selectedValue == null) {
     throw Exception("Responsive number not found for width=$width: $value");
   }
-  return result!;
+  return selectedValue;
 }
 
 extension ResponsiveParsers on Control {

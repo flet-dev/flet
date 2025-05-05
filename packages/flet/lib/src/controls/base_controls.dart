@@ -220,7 +220,7 @@ Widget _positionedControl(
     );
   } else if (left != null || top != null || right != null || bottom != null) {
     var parent = control.parent;
-    if (parent?.type != "Stack" && parent?.type != "Page") {
+    if (!["Stack", "Page", "Overlay"].contains(parent?.type)) {
       return ErrorControl("Error displaying ${control.type}",
           description:
               "Control can be positioned absolutely with \"left\", \"top\", \"right\" and \"bottom\" properties inside Stack control only.");

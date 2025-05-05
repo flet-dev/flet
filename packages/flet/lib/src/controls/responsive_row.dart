@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/numbers.dart';
 import '../utils/responsive.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
@@ -20,23 +21,30 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
     final columns = control.getResponsiveNumber("columns", 12)!;
     final spacing = control.getResponsiveNumber("spacing", 10)!;
     final runSpacing = control.getResponsiveNumber("run_spacing", 10)!;
+
     return withPageSize((context, view) {
       var result = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        debugPrint(
-            "ResponsiveRow constraints: maxWidth=${constraints.maxWidth}, maxHeight=${constraints.maxHeight}");
-
+        // breakpoints
+        final rawBreakpoints =
+            control.get<Map>("breakpoints", view.breakpoints)!;
+        final breakpoints = <String, double>{};
+        rawBreakpoints.forEach((k, v) {
+          final val = parseDouble(v);
+          if (val != null) {
+            breakpoints[k.toString()] = val;
+          }
+        });
         var bpSpacing =
-            getBreakpointNumber(spacing, view.size.width, view.breakpoints);
+            getBreakpointNumber(spacing, view.size.width, breakpoints);
         var bpColumns =
-            getBreakpointNumber(columns, view.size.width, view.breakpoints);
+            getBreakpointNumber(columns, view.size.width, breakpoints);
 
         double totalCols = 0;
         List<Widget> controls = [];
         for (var ctrl in control.children("controls")) {
           final col = ctrl.getResponsiveNumber("col", 12)!;
-          var bpCol =
-              getBreakpointNumber(col, view.size.width, view.breakpoints);
+          var bpCol = getBreakpointNumber(col, view.size.width, breakpoints);
           totalCols += bpCol;
 
           // calculate child width
@@ -45,10 +53,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
           var childWidth = colWidth * bpCol + bpSpacing * (bpCol - 1);
 
           controls.add(ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: childWidth,
-              maxWidth: childWidth,
-            ),
+            constraints:
+                BoxConstraints(minWidth: childWidth, maxWidth: childWidth),
             child: ControlWidget(key: key, control: ctrl),
           ));
         }
@@ -78,10 +84,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                   children: controls,
                 );
         } catch (e) {
-          return ErrorControl(
-            "Error displaying ResponsiveRow",
-            description: e.toString(),
-          );
+          return ErrorControl("Error displaying ResponsiveRow",
+              description: e.toString());
         }
       });
 

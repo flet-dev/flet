@@ -98,7 +98,7 @@ class BaseControl:
     _i: int = field(init=False)
     _c: str = field(init=False)
     data: Any = skip_field()
-    ref: InitVar[Optional[Ref[Any]]] = None
+    ref: InitVar[Optional[Ref["BaseControl"]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
