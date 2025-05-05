@@ -18,36 +18,13 @@ class CupertinoPickerControl extends StatefulWidget {
 }
 
 class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
-  int _index = 0;
-  int previousIndex = 0;
-  bool isScrollUp = false;
-  bool isScrollDown = true;
   FixedExtentScrollController scrollController = FixedExtentScrollController();
 
   @override
   void initState() {
     super.initState();
     scrollController = FixedExtentScrollController(
-        initialItem: widget.control.getInt("selectedIndex", _index)!);
-    scrollController.addListener(_manageScroll);
-  }
-
-  void _manageScroll() {
-    // https://stackoverflow.com/a/75283541
-    // Fixes https://github.com/flet-dev/flet/issues/3649
-    if (previousIndex != scrollController.selectedItem) {
-      isScrollDown = previousIndex < scrollController.selectedItem;
-      isScrollUp = previousIndex > scrollController.selectedItem;
-
-      var previousIndexTemp = previousIndex;
-      previousIndex = scrollController.selectedItem;
-
-      if (isScrollUp) {
-        scrollController.jumpToItem(previousIndexTemp - 1);
-      } else if (isScrollDown) {
-        scrollController.jumpToItem(previousIndexTemp + 1);
-      }
-    }
+        initialItem: widget.control.getInt("selected_index", 0)!);
   }
 
   @override
@@ -78,7 +55,6 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
                 CupertinoColors.tertiarySystemFill)!,
           ),
       onSelectedItemChanged: (int index) {
-        _index = index;
         widget.control.updateProperties({"selected_index": index});
         widget.control.triggerEvent("change", index);
       },
