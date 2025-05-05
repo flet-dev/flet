@@ -8,7 +8,7 @@ import '../utils/numbers.dart';
 import '../widgets/error.dart';
 
 class DragTargetEvent {
-  final String srcId;
+  final int srcId;
   final double x;
   final double y;
 
