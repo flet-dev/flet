@@ -105,7 +105,7 @@ WidgetStateBorderSide? parseWidgetStateBorderSide(
     {BorderSide? defaultBorderSide = BorderSide.none,
     WidgetStateBorderSide? defaultValue}) {
   if (value == null) return defaultValue;
-  if (value is Map<String, dynamic> &&
+  if (value is Map &&
       (value.containsKey("width") || value.containsKey("color"))) {
     value = {"default": value};
   }
@@ -119,7 +119,7 @@ class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
   late final BorderSide? _defaultValue;
 
   WidgetStateBorderSideFromJSON(
-      Map<String, dynamic>? jsonDictValue,
+      Map<dynamic, dynamic>? jsonDictValue,
       BorderSide? Function(dynamic) converterFromJson,
       BorderSide? defaultValue) {
     _defaultValue = defaultValue;
