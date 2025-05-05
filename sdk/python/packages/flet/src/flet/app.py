@@ -36,12 +36,18 @@ if TYPE_CHECKING:
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 def app(*args, **kwargs):
-    return run(kwargs["target"], *args, **kwargs)
+    new_args = list(args)
+    if "target" in kwargs:
+        new_args.insert(0, kwargs["target"])
+    return run(*new_args, **kwargs)
 
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 def app_async(*args, **kwargs):
-    return run_async(kwargs["target"], *args, **kwargs)
+    new_args = list(args)
+    if "target" in kwargs:
+        new_args.insert(0, kwargs["target"])
+    return run_async(*new_args, **kwargs)
 
 
 def run(
