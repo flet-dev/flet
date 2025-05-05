@@ -267,6 +267,8 @@ from flet.controls.core.dismissible import (
 )
 from flet.controls.core.drag_target import DragTarget as DragTarget
 from flet.controls.core.drag_target import DragTargetEvent as DragTargetEvent
+from flet.controls.core.drag_target import DragTargetLeaveEvent as DragTargetLeaveEvent
+from flet.controls.core.drag_target import DragWillAcceptEvent as DragWillAcceptEvent
 from flet.controls.core.draggable import Draggable as Draggable
 from flet.controls.core.flet_app import FletApp as FletApp
 from flet.controls.core.gesture_detector import GestureDetector as GestureDetector

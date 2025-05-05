@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -7,6 +5,13 @@ import '../models/control.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
+
+class DraggableData {
+  final int id;
+  final String group;
+
+  DraggableData({required this.id, required this.group});
+}
 
 class DraggableControl extends StatelessWidget {
   final Control control;
@@ -23,10 +28,8 @@ class DraggableControl extends StatelessWidget {
       return const ErrorControl("Draggable.content must be visible");
     }
 
-    var data = json.encode({"id": control.id, "group": group});
-
-    return Draggable<String>(
-      data: data,
+    return Draggable<DraggableData>(
+      data: DraggableData(id: control.id, group: group),
       axis: control.getAxis("axis"),
       affinity: control.getAxis("affinity"),
       maxSimultaneousDrags: control.getInt("max_simultaneous_drags"),

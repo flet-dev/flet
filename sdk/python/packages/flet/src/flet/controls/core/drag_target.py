@@ -1,10 +1,11 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.transform import Offset
-from flet.controls.types import OptionalControlEventCallable, OptionalEventCallable
+from flet.controls.types import OptionalEventCallable
 
 __all__ = ["DragTarget", "DragTargetEvent"]
 
@@ -14,7 +15,12 @@ class DragTarget(Control):
     """
     A control that completes drag operation when a `Draggable` widget is dropped.
 
-    When a draggable is dragged on top of a drag target, the drag target is asked whether it will accept the data the draggable is carrying. The drag target will accept incoming drag if it belongs to the same group as draggable. If the user does drop the draggable on top of the drag target (and the drag target has indicated that it will accept the draggable's data), then the drag target is asked to accept the draggable's data.
+    When a draggable is dragged on top of a drag target, the drag target is asked
+    whether it will accept the data the draggable is carrying. The drag target will
+    accept incoming drag if it belongs to the same group as draggable. If the user
+    does drop the draggable on top of the drag target (and the drag target has
+    indicated that it will accept the draggable's data), then the drag target is
+    asked to accept the draggable's data.
 
     Example:
     ```
@@ -106,14 +112,19 @@ class DragTarget(Control):
 
     content: Control
     group: str = "default"
-    on_will_accept: OptionalControlEventCallable = None
+    on_will_accept: OptionalEventCallable["DragWillAcceptEvent"] = None
     on_accept: OptionalEventCallable["DragTargetEvent"] = None
-    on_leave: OptionalControlEventCallable = None
+    on_leave: OptionalEventCallable["DragTargetLeaveEvent"] = None
     on_move: OptionalEventCallable["DragTargetEvent"] = None
 
     def before_update(self):
         super().before_update()
         assert self.content.visible, "content must be visible"
+
+
+@dataclass
+class DragWillAcceptEvent(ControlEvent):
+    accept: bool
 
 
 @dataclass
@@ -125,3 +136,8 @@ class DragTargetEvent(ControlEvent):
     @property
     def offset(self) -> Offset:
         return Offset(self.x, self.y)
+
+
+@dataclass
+class DragTargetLeaveEvent(ControlEvent):
+    src_id: Optional[int]

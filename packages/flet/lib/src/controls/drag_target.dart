@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
+import 'draggable.dart';
 
 class DragTargetEvent {
   final int srcId;
@@ -38,7 +37,7 @@ class DragTargetControl extends StatelessWidget {
       return const ErrorControl("DragTarget.content must be visible");
     }
 
-    return DragTarget<String>(
+    return DragTarget<DraggableData>(
       builder: (
         BuildContext context,
         List<dynamic> accepted,
@@ -46,40 +45,31 @@ class DragTargetControl extends StatelessWidget {
       ) {
         return content;
       },
-      onMove: (DragTargetDetails<String> details) {
-        var data = json.decode(details.data);
+      onMove: (DragTargetDetails<DraggableData> details) {
         control.triggerEvent(
             "move",
             DragTargetEvent(
-                    srcId: data["id"],
+                    srcId: details.data.id,
                     x: details.offset.dx,
                     y: details.offset.dy)
                 .toMap());
       },
-      onWillAcceptWithDetails: (DragTargetDetails<String> details) {
-        var data = json.decode(details.data);
-        var srcGroup = data["group"] as String;
-        var groupMatch = srcGroup == group;
-        control.triggerEvent("will_accept", groupMatch);
+      onWillAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
+        var groupMatch = details.data.group == group;
+        control.triggerEvent("will_accept", {"accept": groupMatch});
         return groupMatch;
       },
-      onAcceptWithDetails: (DragTargetDetails<String> details) {
-        var data = json.decode(details.data);
+      onAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
         control.triggerEvent(
             "accept",
             DragTargetEvent(
-                    srcId: data["id"],
+                    srcId: details.data.id,
                     x: details.offset.dx,
                     y: details.offset.dy)
                 .toMap());
       },
-      onLeave: (String? data) {
-        int? srcId;
-        if (data != null) {
-          var jd = json.decode(data);
-          srcId = jd["id"];
-        }
-        control.triggerEvent("leave", srcId);
+      onLeave: (DraggableData? data) {
+        control.triggerEvent("leave", {"src_id", data?.id});
       },
     );
   }
