@@ -15,7 +15,8 @@ import 'list_tile.dart';
 class CupertinoCheckboxControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoCheckboxControl({super.key, required this.control});
+  CupertinoCheckboxControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoCheckboxControl> createState() => _CheckboxControlState();

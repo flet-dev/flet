@@ -14,10 +14,8 @@ import 'base_controls.dart';
 class CupertinoButtonControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoButtonControl({
-    super.key,
-    required this.control,
-  });
+  CupertinoButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();

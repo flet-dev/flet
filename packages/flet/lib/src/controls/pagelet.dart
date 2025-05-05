@@ -17,7 +17,8 @@ import 'navigation_drawer.dart';
 class PageletControl extends StatefulWidget {
   final Control control;
 
-  const PageletControl({super.key, required this.control});
+  PageletControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<PageletControl> createState() => _PageletControlState();

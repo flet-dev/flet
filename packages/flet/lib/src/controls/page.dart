@@ -34,7 +34,8 @@ import 'control_widget.dart';
 class PageControl extends StatefulWidget {
   final Control control;
 
-  const PageControl({super.key, required this.control});
+  PageControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<PageControl> createState() => _PageControlState();

@@ -16,7 +16,8 @@ import 'base_controls.dart';
 class GestureDetectorControl extends StatefulWidget {
   final Control control;
 
-  const GestureDetectorControl({super.key, required this.control});
+  GestureDetectorControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();

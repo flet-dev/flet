@@ -29,7 +29,8 @@ import 'scrollable_control.dart';
 class ViewControl extends StatefulWidget {
   final Control control;
 
-  const ViewControl({super.key, required this.control});
+  ViewControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ViewControl> createState() => _ViewControlState();

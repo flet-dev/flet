@@ -13,7 +13,8 @@ import 'scrollable_control.dart';
 class ReorderableListViewControl extends StatefulWidget {
   final Control control;
 
-  const ReorderableListViewControl({super.key, required this.control});
+  ReorderableListViewControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ReorderableListViewControl> createState() => _ListViewControlState();

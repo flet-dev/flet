@@ -10,7 +10,8 @@ import 'control_widget.dart';
 class CupertinoPickerControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoPickerControl({super.key, required this.control});
+  CupertinoPickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoPickerControl> createState() => _CupertinoPickerControlState();

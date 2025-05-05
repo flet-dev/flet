@@ -13,7 +13,8 @@ import '../widgets/error.dart';
 class BottomSheetControl extends StatefulWidget {
   final Control control;
 
-  const BottomSheetControl({super.key, required this.control});
+  BottomSheetControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();

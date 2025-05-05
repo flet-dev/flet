@@ -7,10 +7,8 @@ import 'cupertino_button.dart';
 class IconButtonControl extends StatefulWidget {
   final Control control;
 
-  const IconButtonControl({
-    super.key,
-    required this.control,
-  });
+  IconButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<IconButtonControl> createState() => _IconButtonControlState();

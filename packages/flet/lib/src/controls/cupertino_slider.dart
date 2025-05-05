@@ -11,10 +11,8 @@ import 'base_controls.dart';
 class CupertinoSliderControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoSliderControl({
-    super.key,
-    required this.control,
-  });
+  CupertinoSliderControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoSliderControl> createState() => _CupertinoSliderControlState();

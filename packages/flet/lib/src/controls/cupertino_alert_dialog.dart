@@ -11,7 +11,8 @@ import '../widgets/error.dart';
 class CupertinoAlertDialogControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoAlertDialogControl({super.key, required this.control});
+  CupertinoAlertDialogControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoAlertDialogControl> createState() =>
@@ -51,9 +52,7 @@ class _CupertinoAlertDialogControlState
     var title = widget.control.buildTextOrWidget("title");
     var content = widget.control.buildWidget("content");
     var actions = widget.control.buildWidgets("actions");
-    if (title == null &&
-        content == null &&
-        actions.isEmpty) {
+    if (title == null && content == null && actions.isEmpty) {
       return const ErrorControl(
           "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }

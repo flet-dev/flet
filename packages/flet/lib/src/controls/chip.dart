@@ -17,7 +17,8 @@ import 'base_controls.dart';
 class ChipControl extends StatefulWidget {
   final Control control;
 
-  const ChipControl({super.key, required this.control});
+  ChipControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ChipControl> createState() => _ChipControlState();

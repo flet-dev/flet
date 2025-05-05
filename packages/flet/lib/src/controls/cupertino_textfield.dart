@@ -6,7 +6,8 @@ import 'package:flutter/services.dart';
 class CupertinoTextFieldControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoTextFieldControl({super.key, required this.control});
+  CupertinoTextFieldControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoTextFieldControl> createState() =>

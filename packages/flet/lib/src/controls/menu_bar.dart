@@ -1,13 +1,11 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/error.dart';
-import 'base_controls.dart';
-
 class MenuBarControl extends StatefulWidget {
   final Control control;
 
-  const MenuBarControl({super.key, required this.control});
+  MenuBarControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<MenuBarControl> createState() => _MenuBarControlState();

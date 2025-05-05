@@ -14,10 +14,8 @@ import 'list_tile.dart';
 class SwitchControl extends StatefulWidget {
   final Control control;
 
-  const SwitchControl({
-    super.key,
-    required this.control,
-  });
+  SwitchControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<SwitchControl> createState() => _SwitchControlState();
