@@ -58,8 +58,8 @@ class MenuItemButton(ConstrainedControl):
     """
     Whether to clip the content of this control or not.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and 
-    defaults to `ClipBehavior.NONE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    and defaults to `ClipBehavior.NONE`.
     """
 
     style: Optional[ButtonStyle] = None
