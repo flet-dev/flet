@@ -7,7 +7,12 @@ from flet.controls.control_event import ControlEvent
 from flet.controls.transform import Offset
 from flet.controls.types import OptionalEventCallable
 
-__all__ = ["DragTarget", "DragTargetEvent"]
+__all__ = [
+    "DragTarget",
+    "DragTargetEvent",
+    "DragWillAcceptEvent",
+    "DragTargetLeaveEvent",
+]
 
 
 @control("DragTarget")
