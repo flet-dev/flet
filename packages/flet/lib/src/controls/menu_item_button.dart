@@ -76,7 +76,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
           : null,
       leadingIcon: widget.control.buildWidget("leading"),
       trailingIcon: widget.control.buildWidget("trailing_icon"),
-      child: widget.control.buildWidget("content"),
+      child: widget.control.buildTextOrWidget("content"),
     );
 
     var focusValue = widget.control.getString("focus");
