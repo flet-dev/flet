@@ -102,7 +102,8 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)
     """
-    Defines the appearance of the button items that are arrayed within the navigation bar.
+    Defines the appearance of the button items that are arrayed within the navigation 
+    bar.
 
     The value must be a list of two or more `NavigationBarDestination` instances.
     """
