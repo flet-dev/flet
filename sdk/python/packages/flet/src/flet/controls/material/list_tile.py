@@ -84,14 +84,17 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     trailing: Optional[Control] = None
     """
-    A `Control` to display after the title. Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    A `Control` to display after the title. Typically an [`Icon`](https://flet.dev/docs/controls/icon) 
+    control.
     """
 
     content_padding: OptionalPaddingValue = None
     """
-    The tile's internal padding. Insets a ListTile's contents: its `leading`, `title`, `subtitle`, and `trailing` controls.
+    The tile's internal padding. Insets a ListTile's contents: its `leading`, `title`, 
+    `subtitle`, and `trailing` controls.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and defaults to `padding.symmetric(horizontal=16)`.
+    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and 
+    defaults to `padding.symmetric(horizontal=16)`.
     """
 
     bgcolor: OptionalColorValue = None
@@ -101,7 +104,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     bgcolor_activated: Optional[str] = None
     """
-    The list tile's splash [color](https://flet.dev/docs/reference/colors) after the tile was tapped.
+    The list tile's splash [color](https://flet.dev/docs/reference/colors) after the 
+    tile was tapped.
     """
 
     hover_color: OptionalColorValue = None
@@ -111,46 +115,56 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     selected: bool = False
     """
-    If this tile is also enabled then icons and text are rendered with the same color. By default the selected color is the theme's primary color.
+    If this tile is also enabled then icons and text are rendered with the same color. 
+    By default the selected color is the theme's primary color.
     """
 
     dense: bool = False
     """
-    Whether this list tile is part of a vertically dense list. Dense list tiles default to a smaller height.
+    Whether this list tile is part of a vertically dense list. Dense list tiles default 
+    to a smaller height.
     """
 
     autofocus: bool = False
     """
-    `True` if the control will be selected as the initial focus. If there is more than one control on a page with autofocus set, then the first one added to the page will get focus.
+    `True` if the control will be selected as the initial focus. If there is more than 
+    one control on a page with autofocus set, then the first one added to the page will 
+    get focus.
     """
 
     toggle_inputs: bool = False
     """
-    Whether clicking on a list tile should toggle the state of `Radio`, `Checkbox` or `Switch` inside the tile.
+    Whether clicking on a list tile should toggle the state of `Radio`, `Checkbox` or `
+    Switch` inside the tile.
 
     Defaults to `False`.
     """
 
     selected_color: OptionalColorValue = None
     """
-    Defines the [color](https://flet.dev/docs/reference/colors) used for icons and text when `selected=True`.
+    Defines the [color](https://flet.dev/docs/reference/colors) used for icons and text 
+    when `selected=True`.
     """
 
     selected_tile_color: OptionalColorValue = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of ListTile when `selected=True`.
+    Defines the background [color](https://flet.dev/docs/reference/colors) of ListTile 
+    when `selected=True`.
     """
 
     style: Optional[ListTileStyle] = None
     """
     Defines the font used for the title.
 
-    Value is of type [`ListTileStyle`](https://flet.dev/docs/reference/types/listtilestyle) and defaults to `ListTileStyle.LIST`.
+    Value is of type [`ListTileStyle`](https://flet.dev/docs/reference/types/listtilestyle) 
+    and defaults to `ListTileStyle.LIST`.
     """
 
-    enable_feedback: bool = field(default=True)
+    enable_feedback: bool = True
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. On Android, for example, setting this to `True` produce a click sound and a long-press will produce a short vibration. 
+    Whether detected gestures should provide acoustic and/or haptic feedback. 
+    On Android, for example, setting this to `True` produce a click sound and a 
+    long-press will produce a short vibration. 
 
     Defaults to `True`.
     """
@@ -178,37 +192,43 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     url: Optional[str] = None
     """
-    The URL to open when the list tile is clicked. If registered, `on_click` event is fired after that.
+    The URL to open when the list tile is clicked. If registered, `on_click` event is 
+    fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and defaults to `UrlTarget.BLANK`.
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget).
     """
 
     title_alignment: Optional[ListTileTitleAlignment] = None
     """
-    Defines how `leading` and `trailing` are vertically aligned relative to the titles (`title` and `subtitle`).
+    Defines how `leading` and `trailing` are vertically aligned relative to the titles 
+    (`title` and `subtitle`).
 
-    Value is of type [`ListTileAlignment`](https://flet.dev/docs/reference/types/listtilealignment) and defaults
-    to `ListTileAlignment.THREE_LINE` in Material 3 or `ListTileAlignment.TITLE_HEIGHT` in Material 2.
+    Value is of type [`ListTileAlignment`](https://flet.dev/docs/reference/types/listtilealignment)
+    and defaults to `ListTileAlignment.THREE_LINE` in Material 3 or 
+    `ListTileAlignment.TITLE_HEIGHT` in Material 2.
     """
 
     icon_color: OptionalColorValue = None
     """
-    Defines the default [color](https://flet.dev/docs/reference/colors) for the `Icon`s present in `leading` and `trailing`.
+    Defines the default [color](https://flet.dev/docs/reference/colors) for the `Icon`s 
+    present in `leading` and `trailing`.
     """
 
     text_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for text. Defines the color of `Text` controls found in `title`, `subtitle`, `leading`, and `trailing`.
+    The [color](https://flet.dev/docs/reference/colors) used for text. Defines the color
+    of `Text` controls found in `title`, `subtitle`, `leading`, and `trailing`.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    The tile's shape. The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) class.
+    The tile's shape. The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
+    class.
     """
 
     visual_density: Optional[VisualDensity] = None
@@ -220,34 +240,40 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this control.
-    The value is [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor) enum.
+    The cursor to be displayed when a mouse pointer enters or is hovering over this 
+    control. The value is [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor) 
+    enum.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `title` control.
+    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `title` 
+    control.
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `subtitle` control.
+    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `subtitle` 
+    control.
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `leading` and `trailing` controls.
+    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `leading` 
+    and `trailing` controls.
     """
 
     min_height: OptionalNumber = None
     """
     The minimum height allocated for this control.
 
-    If `None` or not set, default tile heights are `56.0`, `72.0`, and `88.0` for one, two, and three lines of text
-    respectively.
-    If [`dense`](https://flet.dev/docs/controls/listtile#dense) is `True`, these defaults are changed to `48.0`, `64.0`, and `76.0`.
+    If `None` or not set, default tile heights are `56.0`, `72.0`, and `88.0` for one, 
+    two, and three lines of text respectively.
+    If [`dense`](https://flet.dev/docs/controls/listtile#dense) is `True`, these 
+    defaults are changed to `48.0`, `64.0`, and `76.0`.
 
-    Note that, a visual density value or a large title will also adjust the default tile heights.
+    Note that, a visual density value or a large title will also adjust the default 
+    tile heights.
     """
 
     on_click: OptionalControlEventCallable = None
