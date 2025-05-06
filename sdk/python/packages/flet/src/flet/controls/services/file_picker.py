@@ -97,8 +97,8 @@ class FilePicker(Service):
 
     on_upload: OptionalEventCallable[FilePickerUploadEvent] = None
 
-    def upload_async(self, files: list[FilePickerUploadFile]):
-        return self._invoke_method_async(
+    async def upload_async(self, files: list[FilePickerUploadFile]):
+        await self._invoke_method_async(
             "upload",
             {"files": files},
         )
@@ -106,12 +106,12 @@ class FilePicker(Service):
     def upload(self, files: list[FilePickerUploadFile]):
         asyncio.create_task(self.upload_async(files))
 
-    def get_directory_path_async(
+    async def get_directory_path_async(
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
-    ):
-        return self._invoke_method_async(
+    ) -> Optional[str]:
+        return await self._invoke_method_async(
             "get_directory_path",
             {
                 "dialog_title": dialog_title,
@@ -120,15 +120,15 @@ class FilePicker(Service):
             timeout=3600,  # 1 hour
         )
 
-    def save_file_async(
+    async def save_file_async(
         self,
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
-    ):
-        return self._invoke_method_async(
+    ) -> Optional[str]:
+        return await self._invoke_method_async(
             "save_file",
             {
                 "dialog_title": dialog_title,
@@ -147,7 +147,7 @@ class FilePicker(Service):
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
-    ):
+    ) -> list[FilePickerFile]:
         files = await self._invoke_method_async(
             "pick_files",
             {
