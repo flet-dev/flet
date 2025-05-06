@@ -105,7 +105,7 @@ WidgetStateBorderSide? parseWidgetStateBorderSide(
     {BorderSide? defaultBorderSide = BorderSide.none,
     WidgetStateBorderSide? defaultValue}) {
   if (value == null) return defaultValue;
-  if (value is Map<String, dynamic> &&
+  if (value is Map &&
       (value.containsKey("width") || value.containsKey("color"))) {
     value = {"default": value};
   }

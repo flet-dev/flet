@@ -104,7 +104,7 @@ void main([List<String>? args]) async {
     };
   }
 
-  runApp(FletApp(
+  var app = FletApp(
     title: 'Flet',
     pageUrl: pageUrl,
     assetsDir: assetsDir,
@@ -112,5 +112,13 @@ void main([List<String>? args]) async {
     showAppStartupScreen: true,
     appStartupScreenMessage: "Working...",
     extensions: extensions,
-  ));
+    multiView: isMultiView(),
+  );
+
+  if (app.multiView) {
+    debugPrint("Flet Web Multi-View mode");
+    runWidget(app);
+  } else {
+    runApp(app);
+  }
 }

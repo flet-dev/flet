@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -15,7 +15,8 @@ __all__ = ["SubmenuButton"]
 @control("SubmenuButton")
 class SubmenuButton(ConstrainedControl):
     """
-    A menu button that displays a cascading menu. It can be used as part of a MenuBar, or as a standalone control.
+    A menu button that displays a cascading menu. It can be used as part of
+    a MenuBar, or as a standalone control.
 
     -----
 
@@ -23,7 +24,7 @@ class SubmenuButton(ConstrainedControl):
     """
 
     content: Optional[Control] = None
-    controls: List[Control] = field(default_factory=list)
+    controls: list[Control] = field(default_factory=list)
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -35,14 +36,3 @@ class SubmenuButton(ConstrainedControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-
-    # def before_update(self):
-    #     super().before_update()
-    #     if self.__style is not None:
-    #         self.__style.side = self._wrap_attr_dict(self.__style.side)
-    #         self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-    #     if self.__menu_style is not None:
-    #         self.__menu_style.side = self._wrap_attr_dict(self.__menu_style.side)
-    #         self.__menu_style.shape = self._wrap_attr_dict(self.__menu_style.shape)
-    #     self._set_attr_json("style", self.__style)
-    #     self._set_attr_json("menuStyle", self.__menu_style)

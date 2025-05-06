@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/keyboard_event.dart';
+import '../models/multi_view.dart';
 import '../models/page_design.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
@@ -15,26 +19,29 @@ import '../routing/router_delegate.dart';
 import '../services/service_registry.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) "../utils/platform_utils_non_web.dart";
+import '../utils/session_store_web.dart'
+    if (dart.library.io) "../utils/session_store_non_web.dart";
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
-import '../widgets/flet_app_context.dart';
-import '../widgets/flet_store_mixin.dart';
 import '../widgets/loading_page.dart';
-import '../widgets/page_control_data.dart';
+import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
 
 class PageControl extends StatefulWidget {
   final Control control;
 
-  const PageControl({super.key, required this.control});
+  PageControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<PageControl> createState() => _PageControlState();
 }
 
-class _PageControlState extends State<PageControl> with FletStoreMixin {
+class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
@@ -45,20 +52,18 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
 
-  bool? _adaptive;
-  PageDesign _widgetsDesign = PageDesign.material;
-  TargetPlatform _platform = defaultTargetPlatform;
-  Brightness? _brightness;
-  ThemeMode? _themeMode;
-  ThemeData? _lightTheme;
-  ThemeData? _darkTheme;
-  Map<String, dynamic>? _localeConfiguration;
   String? _prevViewRoutes;
+
+  final Map<int, MultiView> _multiViews = <int, MultiView>{};
+  bool _registeredFromMultiViews = false;
 
   @override
   void initState() {
     debugPrint("Page.initState: ${widget.control.id}");
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+    _updateMultiViews();
 
     _routeParser = RouteParser();
 
@@ -95,6 +100,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   void didUpdateWidget(covariant PageControl oldWidget) {
     debugPrint("Page.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
+    _updateMultiViews();
 
     // page services
     var pageServicesControl = widget.control.child("_page_services");
@@ -119,14 +125,64 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   }
 
   @override
+  void didChangeMetrics() {
+    _updateMultiViews();
+  }
+
+  @override
   void dispose() {
     debugPrint("Page.dispose: ${widget.control.id}");
+    WidgetsBinding.instance.removeObserver(this);
     _routeState.removeListener(_routeChanged);
     _appLifecycleListener.dispose();
     if (_keyboardHandlerSubscribed) {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
     super.dispose();
+  }
+
+  void _updateMultiViews() {
+    if (!widget.control.backend.multiView) {
+      return;
+    }
+    bool changed = false;
+
+    bool triggerAddViewEvent = SessionStore.get("triggerAddViewEvent") == null;
+    for (final FlutterView view
+        in WidgetsBinding.instance.platformDispatcher.views) {
+      if (!_multiViews.containsKey(view.viewId)) {
+        var initialData = getViewInitialData(view.viewId);
+        debugPrint("View initial data ${view.viewId}: $initialData");
+        _multiViews[view.viewId] = MultiView(
+            viewId: view.viewId, flutterView: view, initialData: initialData);
+        if (triggerAddViewEvent) {
+          widget.control.backend.triggerControlEventById(
+              widget.control.id,
+              "multi_view_add",
+              {"view_id": view.viewId, "initial_data": initialData});
+        }
+        changed = true;
+      }
+    }
+    for (var viewId in _multiViews.keys.toList()) {
+      if (!WidgetsBinding.instance.platformDispatcher.views
+          .any((view) => view.viewId == viewId)) {
+        _multiViews.remove(viewId);
+        if (triggerAddViewEvent) {
+          widget.control.backend.triggerControlEventById(
+              widget.control.id, "multi_view_remove", viewId);
+        }
+        changed = true;
+      }
+    }
+    SessionStore.set("triggerAddViewEvent", "true");
+    if (changed && !_registeredFromMultiViews) {
+      _registeredFromMultiViews = true;
+      widget.control.backend.onRouteUpdated("/");
+    } else {
+      // re-draw
+      setState(() {});
+    }
   }
 
   void _routeChanged() {
@@ -217,101 +273,161 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       });
     }
 
-    _platform = TargetPlatform.values.firstWhere(
+    if (!widget.control.backend.multiView) {
+      // single page mode
+      return _buildApp(widget.control, null);
+    } else {
+      // multi-view mode
+      var appStatus = context
+          .select<FletBackend, ({bool isLoading, String error})>((backend) =>
+              (isLoading: backend.isLoading, error: backend.error));
+      var appStartupScreenMessage =
+          FletBackend.of(context).appStartupScreenMessage ?? "";
+
+      List<Widget> views = [];
+      for (var view in _multiViews.entries) {
+        var multiViewControl = widget.control
+            .children("multi_views")
+            .firstWhereOrNull((v) => v.get("view_id") == view.key);
+
+        var viewControl = multiViewControl?.children("views").firstOrNull;
+
+        Widget viewChild = SizedBox(
+          width: 100,
+          height: 100,
+          child: viewControl != null
+              ? ControlWidget(control: viewControl)
+              : Stack(children: [
+                  const PageMedia(),
+                  LoadingPage(
+                    isLoading: appStatus.isLoading,
+                    message: appStatus.isLoading
+                        ? appStartupScreenMessage
+                        : appStatus.error,
+                  )
+                ]),
+        );
+
+        viewChild = _buildApp(multiViewControl ?? widget.control, viewChild);
+        views.add(View(view: view.value.flutterView, child: viewChild));
+      }
+      return ViewCollection(views: views);
+    }
+  }
+
+  Widget _buildApp(Control control, Widget? home) {
+    var platform = TargetPlatform.values.firstWhere(
         (a) =>
             a.name.toLowerCase() ==
-            widget.control.getString("platform", "")!.toLowerCase(),
+            control.getString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _adaptive = widget.control.adaptive;
-
-    _widgetsDesign = _adaptive == true &&
-            (_platform == TargetPlatform.iOS ||
-                _platform == TargetPlatform.macOS)
+    var widgetsDesign = control.adaptive == true &&
+            (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)
         ? PageDesign.cupertino
         : PageDesign.material;
 
     // theme
-    _themeMode = widget.control.getThemeMode("theme_mode") ??
-        FletAppContext.of(context)?.themeMode;
+    var themeMode = control.getThemeMode("theme_mode") ??
+        PageContext.of(context)?.themeMode;
 
-    _localeConfiguration =
-        widget.control.getLocaleConfiguration("locale_configuration");
+    var localeConfiguration =
+        control.getLocaleConfiguration("locale_configuration");
 
-    _brightness = context.select<FletBackend, Brightness>(
+    var localizationsDelegates = const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ];
+
+    var brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
 
-    var windowTitle = widget.control.getString("title", "")!;
+    var windowTitle = control.getString("title", "")!;
 
-    var lightTheme =
-        widget.control.getTheme("theme", context, Brightness.light);
-    var darkTheme = widget.control.getString("dark_theme") == null
-        ? widget.control.getTheme("theme", context, Brightness.dark)
-        : parseTheme(
-            widget.control.get("dark_theme"), context, Brightness.dark);
+    var newLightTheme = control.getTheme("theme", context, Brightness.light);
+    var newDarkTheme = control.getString("dark_theme") == null
+        ? control.getTheme("theme", context, Brightness.dark)
+        : parseTheme(control.get("dark_theme"), context, Brightness.dark);
 
-    if (_lightTheme == null || !themesEqual(_lightTheme!, lightTheme)) {
-      _lightTheme = lightTheme;
-    }
-    if (_darkTheme == null || !themesEqual(_darkTheme!, darkTheme)) {
-      _darkTheme = darkTheme;
+    var lightTheme = control.get("_lightTheme");
+    if (lightTheme == null || !themesEqual(lightTheme!, newLightTheme)) {
+      control.updateProperties({"_lightTheme": newLightTheme}, python: false);
+      lightTheme = newLightTheme;
     }
 
-    return FletAppContext(
-        themeMode: _themeMode,
-        child: _widgetsDesign == PageDesign.cupertino
-            ? CupertinoApp.router(
+    var darkTheme = control.get("_darkTheme");
+    if (darkTheme == null || !themesEqual(darkTheme!, newDarkTheme)) {
+      control.updateProperties({"_darkTheme": newDarkTheme}, python: false);
+      darkTheme = newDarkTheme;
+    }
+
+    var cupertinoTheme = themeMode == ThemeMode.light ||
+            ((themeMode == null || themeMode == ThemeMode.system) &&
+                brightness == Brightness.light)
+        ? parseCupertinoTheme(control.get("theme"), context, Brightness.light)
+        : control.getString("dark_theme") != null
+            ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
+            : control.getCupertinoTheme("theme", context, Brightness.dark);
+
+    var showSemanticsDebugger =
+        control.getBool("show_semantics_debugger", false)!;
+
+    var app = widgetsDesign == PageDesign.cupertino
+        ? home != null
+            ? CupertinoApp(
                 debugShowCheckedModeBanner: false,
-                showSemanticsDebugger:
-                    widget.control.getBool("show_semantics_debugger", false)!,
+                showSemanticsDebugger: showSemanticsDebugger,
+                title: windowTitle,
+                theme: cupertinoTheme,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+                localizationsDelegates: localizationsDelegates,
+                home: home,
+              )
+            : CupertinoApp.router(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 title: windowTitle,
-                theme: _themeMode == ThemeMode.light ||
-                        ((_themeMode == null ||
-                                _themeMode == ThemeMode.system) &&
-                            _brightness == Brightness.light)
-                    ? parseCupertinoTheme(
-                        widget.control.get("theme"), context, Brightness.light)
-                    : widget.control.getString("dark_theme") != null
-                        ? widget.control.getCupertinoTheme(
-                            "dark_theme", context, Brightness.dark)
-                        : widget.control.getCupertinoTheme(
-                            "theme", context, Brightness.dark),
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: _localeConfiguration != null
-                    ? _localeConfiguration!["supported_locales"]
-                    : [const Locale('en', 'US')],
-                locale: _localeConfiguration != null
-                    ? (_localeConfiguration?["locale"])
-                    : null,
+                theme: cupertinoTheme,
+                localizationsDelegates: localizationsDelegates,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+              )
+        : home != null
+            ? MaterialApp(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                title: windowTitle,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+                localizationsDelegates: localizationsDelegates,
+                home: home,
               )
             : MaterialApp.router(
                 debugShowCheckedModeBanner: false,
-                showSemanticsDebugger:
-                    widget.control.getBool("show_semantics_debugger", false)!,
+                showSemanticsDebugger: showSemanticsDebugger,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 title: windowTitle,
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: _localeConfiguration != null
-                    ? _localeConfiguration!["supported_locales"]
-                    : [const Locale('en', 'US')],
-                locale: _localeConfiguration != null
-                    ? (_localeConfiguration?["locale"])
-                    : null,
-                theme: _lightTheme,
-                darkTheme: _darkTheme,
-                themeMode: _themeMode,
-              ));
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                localizationsDelegates: localizationsDelegates,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+              );
+    return PageContext(
+      themeMode: themeMode,
+      brightness: brightness,
+      widgetsDesign: widgetsDesign,
+      child: app,
+    );
   }
 
   Widget _buildNavigator(
@@ -331,7 +447,6 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     List<Page<dynamic>> pages = [];
     if (views.isEmpty) {
       pages.add(AnimatedTransitionPage(
-          key: ValueKey("empty_route_${widget.control.id}"),
           fadeTransition: true,
           duration: Duration.zero,
           child: showAppStartupScreen
@@ -373,16 +488,14 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       _prevViewRoutes = viewRoutes;
     }
 
-    return PageControlData(
-        themeMode: _themeMode,
-        brightness: _brightness,
-        widgetsDesign: _widgetsDesign,
-        child: Navigator(
-            key: navigatorKey,
-            pages: pages,
-            onDidRemovePage: (page) {
-              widget.control
-                  .triggerEvent("view_pop", (page.key as ValueKey).value);
-            }));
+    return Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onDidRemovePage: (page) {
+          if (page.key != null) {
+            widget.control
+                .triggerEvent("view_pop", (page.key as ValueKey).value);
+          }
+        });
   }
 }

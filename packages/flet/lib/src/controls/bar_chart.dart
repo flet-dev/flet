@@ -51,7 +51,8 @@ class BarChartEventData extends Equatable {
 class BarChartControl extends StatefulWidget {
   final Control control;
 
-  const BarChartControl({super.key, required this.control});
+  BarChartControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<BarChartControl> createState() => _BarChartControlState();

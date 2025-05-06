@@ -20,10 +20,9 @@ class AutoCompleteControl extends StatelessWidget {
     var autoComplete = Autocomplete(
       optionsMaxHeight: control.getDouble("suggestions_max_height", 200)!,
       onSelected: (AutoCompleteSuggestion selection) {
-        control.triggerEvent("select", {
-          "selection": selection.toMap(),
-          "selection_index": suggestions.indexOf(selection)
-        });
+        control.updateProperties(
+            {"_selected_index": suggestions.indexOf(selection)});
+        control.triggerEvent("select", {"selection": selection.toMap()});
       },
       // optionsViewBuilder: optionsViewBuilder,
       optionsBuilder: (TextEditingValue textEditingValue) {

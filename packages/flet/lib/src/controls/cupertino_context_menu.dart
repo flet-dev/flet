@@ -9,7 +9,8 @@ import '../widgets/flet_store_mixin.dart';
 class CupertinoContextMenuControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoContextMenuControl({super.key, required this.control});
+  CupertinoContextMenuControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoContextMenuControl> createState() =>

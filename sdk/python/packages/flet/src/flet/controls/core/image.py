@@ -48,6 +48,7 @@ class Image(ConstrainedControl):
 
     src: OptionalString = None
     src_base64: OptionalString = None
+    src_bytes: Optional[bytes] = None
     error_content: OptionalControl = None
     repeat: Optional[ImageRepeat] = None
     fit: Optional[BoxFit] = None

@@ -13,7 +13,8 @@ import 'base_controls.dart';
 class CupertinoNavigationBarControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoNavigationBarControl({super.key, required this.control});
+  CupertinoNavigationBarControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoNavigationBarControl> createState() =>

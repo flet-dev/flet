@@ -52,7 +52,8 @@ class LineChartEventDataSpot extends Equatable {
 class LineChartControl extends StatefulWidget {
   final Control control;
 
-  const LineChartControl({super.key, required this.control});
+  LineChartControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<LineChartControl> createState() => _LineChartControlState();

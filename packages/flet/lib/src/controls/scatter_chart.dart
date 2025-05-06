@@ -32,7 +32,8 @@ class ScatterChartEventData extends Equatable {
 class ScatterChartControl extends StatefulWidget {
   final Control control;
 
-  const ScatterChartControl({super.key, required this.control});
+  ScatterChartControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ScatterChartControl> createState() => _ScatterChartControlState();

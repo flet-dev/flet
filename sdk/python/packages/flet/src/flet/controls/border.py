@@ -45,7 +45,7 @@ class Border:
     def all(
         cls, width: OptionalNumber = None, color: OptionalColorValue = None
     ) -> "Border":
-        bs = BorderSide(width, color)
+        bs = BorderSide(width or 1.0, color or Colors.BLACK)
         return Border(left=bs, top=bs, right=bs, bottom=bs)
 
     @classmethod
@@ -76,7 +76,7 @@ class Border:
     show_parentheses=True,
 )
 def all(width: Optional[float] = None, color: Optional[ColorValue] = None) -> Border:
-    bs = BorderSide(width, color)
+    bs = BorderSide(width or 1.0, color or Colors.BLACK)
     return Border(left=bs, top=bs, right=bs, bottom=bs)
 
 

@@ -34,6 +34,7 @@ class FletSocketServer(Connection):
         port: int = 0,
         uds_path: Optional[str] = None,
         on_session_created=None,
+        before_main=None,
         blocking=False,
         executor: Optional[ThreadPoolExecutor] = None,
     ):
@@ -42,6 +43,7 @@ class FletSocketServer(Connection):
         self.__port = port
         self.__uds_path = uds_path
         self.__on_session_created = on_session_created
+        self.__before_main = before_main
         self.__blocking = blocking
         self.__running_tasks = set()
         self.loop = loop
@@ -128,6 +130,11 @@ class FletSocketServer(Connection):
                 # apply page patch
                 if not req.session_id:
                     self.session.apply_page_patch(req.page)
+
+                if asyncio.iscoroutinefunction(self.__before_main):
+                    await self.__before_main(self.session.page)
+                elif callable(self.__before_main):
+                    self.__before_main(self.session.page)
 
                 # register response
                 self.send_message(

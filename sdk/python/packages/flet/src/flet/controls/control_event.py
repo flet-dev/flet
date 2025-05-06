@@ -6,14 +6,16 @@ from typing import (
     Any,
     ForwardRef,
     Optional,
+    Union,
     _eval_type,
     get_args,
     get_origin,
 )
 
 if TYPE_CHECKING:
-    from .control import Control
+    from .base_control import BaseControl
     from .page import Page
+    from .page_view import PageView
 __all__ = ["ControlEvent"]
 
 
@@ -21,10 +23,10 @@ __all__ = ["ControlEvent"]
 class ControlEvent:
     name: str
     data: Optional[Any] = field(default=None, kw_only=True)
-    control: "Control" = field(repr=False)
+    control: "BaseControl" = field(repr=False)
 
     @property
-    def page(self) -> Optional["Page"]:
+    def page(self) -> Optional[Union["Page", "PageView"]]:
         return self.control.page
 
     @property
@@ -68,4 +70,4 @@ class ControlEvent:
 
             return event_type
         except Exception as e:
-            raise Exception(f"[resolve error] {field_name}: {e}")
+            raise Exception(f"[resolve error] {field_name}: {e}") from e

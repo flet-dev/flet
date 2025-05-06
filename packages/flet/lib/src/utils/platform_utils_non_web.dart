@@ -20,5 +20,13 @@ bool isFletWebPyodideMode() {
   return false;
 }
 
+bool isMultiView() {
+  return false;
+}
+
+Map<dynamic, dynamic> getViewInitialData(int viewId) {
+  return {};
+}
+
 void openPopupBrowserWindow(
     String url, String windowName, int minWidth, int minHeight) {}

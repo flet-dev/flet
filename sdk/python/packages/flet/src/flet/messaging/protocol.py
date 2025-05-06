@@ -1,10 +1,9 @@
 import datetime
 from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
-from typing import Any, Dict
+from typing import Any
 
 import msgpack
-
 from flet.controls.duration import Duration
 
 
@@ -57,6 +56,8 @@ def configure_encode_object_for_msgpack(control_cls):
             return msgpack.ExtType(2, obj.strftime("%H:%M").encode("utf-8"))
         elif isinstance(obj, Duration):
             return msgpack.ExtType(3, obj.in_microseconds)
+        elif callable(obj):
+            raise Exception(f"Cannot serialize method: {obj}") from None
         return obj
 
     return encode_object_for_msgpack
@@ -97,7 +98,7 @@ class RegisterClientRequestBody:
 @dataclass
 class SessionPayload:
     id: str
-    controls: Dict[str, Dict[str, Any]]
+    controls: dict[str, dict[str, Any]]
 
 
 @dataclass
@@ -136,7 +137,7 @@ class InvokeMethodRequestBody:
     control_id: int
     call_id: str
     name: str
-    args: Dict[str, Any]
+    args: dict[str, Any]
 
 
 @dataclass

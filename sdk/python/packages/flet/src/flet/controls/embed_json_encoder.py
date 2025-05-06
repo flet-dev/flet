@@ -1,54 +1,12 @@
 import enum
 import json
-from typing import Dict
-
-from flet.controls.border import Border, BorderSide
-from flet.controls.border_radius import BorderRadius
-from flet.controls.box import BoxConstraints
-from flet.controls.margin import Margin
-from flet.controls.padding import Padding
 
 __all__ = ["EmbedJsonEncoder"]
 
 
 class EmbedJsonEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, BorderSide):
-            obj_as_dict = {
-                "w": obj.width,
-                "c": obj.color,
-                "sa": obj.stroke_align,
-            }
-        elif isinstance(obj, Border):
-            obj_as_dict = {
-                "l": obj.left,
-                "t": obj.top,
-                "r": obj.right,
-                "b": obj.bottom,
-            }
-        elif isinstance(obj, BorderRadius):
-            obj_as_dict = {
-                "bl": obj.bottom_left,
-                "br": obj.bottom_right,
-                "tl": obj.top_left,
-                "tr": obj.top_right,
-            }
-        elif isinstance(obj, (Margin, Padding)):
-            obj_as_dict = {
-                "l": obj.left,
-                "t": obj.top,
-                "r": obj.right,
-                "b": obj.bottom,
-            }
-        elif isinstance(obj, BoxConstraints):
-            obj_as_dict = {
-                "min_width": obj.min_width,
-                "max_width": obj.max_width,
-                "min_height": obj.min_height,
-                "max_height": obj.max_height,
-            }
-        else:
-            obj_as_dict = self._convert_enums(obj.__dict__)
+        obj_as_dict = self._convert_enums(obj.__dict__)
 
         # Convert inf to string "inf" to avoid JSON serialization error
         for key, value in obj_as_dict.items():
@@ -61,7 +19,7 @@ class EmbedJsonEncoder(json.JSONEncoder):
         return super().encode(self._convert_enums(o))
 
     def _convert_enums(self, obj):
-        if isinstance(obj, Dict):
+        if isinstance(obj, dict):
             return dict(
                 map(
                     lambda item: (

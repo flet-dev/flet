@@ -4,7 +4,8 @@ import msgpack
 from flet.controls.base_control import BaseControl
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.padding import Padding
-from flet.controls.page import Page, PageMediaData
+from flet.controls.page import Page
+from flet.controls.page_view import PageMediaData
 from flet.controls.types import Brightness, PagePlatform
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import configure_encode_object_for_msgpack
@@ -30,7 +31,7 @@ def test_simple_patch_dataclass():
 
     patch_dataclass(settings, patch)
 
-    assert settings.debug == True
+    assert settings.debug
     assert isinstance(settings.config, Config)
     assert settings.config.timeout == 2.5
 
@@ -98,6 +99,7 @@ def test_page_patch_dataclass():
     # assert page._prev_debug is True
     assert page.platform_brightness == Brightness.LIGHT
     # assert page._prev_platform_brightness == Brightness.LIGHT
+    print("page.media:", page.media)
     assert isinstance(page.media, PageMediaData)
     assert isinstance(page.media.padding, Padding)
     assert isinstance(page.media.view_insets, Padding)

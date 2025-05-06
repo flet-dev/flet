@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import field
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 import msgpack
 from flet.controls.base_control import BaseControl, control
@@ -8,8 +8,8 @@ from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
 from flet.controls.control import Control
 from flet.controls.core.gesture_detector import GestureDetector
-from flet.controls.events import DragUpdateEvent
 from flet.controls.core.text import Text
+from flet.controls.events import DragUpdateEvent
 from flet.controls.material.button import Button
 
 # import flet as ft
@@ -85,22 +85,22 @@ class MyButton(ElevatedButton):
 @control("MyService")
 class MyService(Service):
     prop_1: Optional[str] = None
-    prop_2: List[int] = field(default_factory=list)
+    prop_2: list[int] = field(default_factory=list)
 
 
 @control("Span")
 class Span(Control):
     text: Optional[str] = None
     cls: Optional[str] = None
-    controls: List[Any] = field(default_factory=list)
-    head_controls: List[Any] = field(default_factory=list)
+    controls: list[Any] = field(default_factory=list)
+    head_controls: list[Any] = field(default_factory=list)
 
 
 @control("Div")
 class Div(Control):
     cls: Optional[str] = None
     some_value: Any = None
-    controls: List[Any] = field(default_factory=list)
+    controls: list[Any] = field(default_factory=list)
 
 
 def test_control_type():
@@ -140,7 +140,7 @@ def test_simple_page():
     page.data = 100000
     page.bgcolor = Colors.GREEN
     page.fonts = {"font1": "font_url_1", "font2": "font_url_2"}
-    page.on_close = lambda e: print("on close")
+    page.on_login = lambda e: print("on login")
     page.services.append(MyService(prop_1="Hello", prop_2=[1, 2, 3]))
 
     # page and window have hard-coded IDs
@@ -161,12 +161,12 @@ def test_simple_page():
     assert isinstance(u_msg, dict)
     assert "" in u_msg
     assert u_msg[""]["_i"] > 0
-    assert u_msg[""]["on_close"]
+    assert u_msg[""]["on_login"]
     assert len(u_msg[""]["views"]) > 0
     assert "on_connect" not in u_msg[""]
 
     # update sub-tree
-    page.on_close = None
+    page.on_login = None
     page.controls[0].some_value = "Another text"
     page.controls[0].controls = [
         SuperElevatedButton(
@@ -195,7 +195,7 @@ def test_changes_tracking():
     )
 
     # initial update
-    msg = update_page(page, {}, show_details=True)
+    update_page(page, {}, show_details=True)
 
     # second update
     btn.content = Text("A new button content")
@@ -206,7 +206,7 @@ def test_changes_tracking():
     # t2 = Text("BBB")
     page.controls.append(Text("Line 2"))
 
-    msg = update_page(page, show_details=True)
+    update_page(page, show_details=True)
 
 
 def test_large_updates():
@@ -244,7 +244,7 @@ def test_large_updates():
     )
 
     # initial update
-    msg = update_page(page, {}, show_details=True)
+    update_page(page, {}, show_details=True)
 
     # second update
     for i in range(1, 1000):
@@ -252,7 +252,7 @@ def test_large_updates():
             cv.Line(i + 1, i + 100, i + 10, i + 20, paint=Paint(stroke_width=3))
         )
 
-    msg = update_page(cp, show_details=False)
+    update_page(cp, show_details=False)
 
     cp.shapes[100].x1 = 12
 
@@ -262,7 +262,7 @@ def test_large_updates():
             cv.Line(i + 1, i + 100, i + 10, i + 20, paint=Paint(stroke_width=3))
         )
 
-    msg = update_page(cp, show_details=True)
+    update_page(cp, show_details=True)
 
 
 # exit()

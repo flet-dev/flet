@@ -15,7 +15,8 @@ import 'cupertino_navigation_bar.dart';
 class NavigationBarControl extends StatefulWidget {
   final Control control;
 
-  const NavigationBarControl({super.key, required this.control});
+  NavigationBarControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();

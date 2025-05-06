@@ -1,9 +1,9 @@
 from dataclasses import field
-from typing import List, Optional, Union
+from typing import Optional, Union
 
-from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
+from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
@@ -27,11 +27,13 @@ __all__ = ["View"]
 
 
 @control("View")
-class View(ScrollableControl, AdaptiveControl):
+class View(ScrollableControl, ConstrainedControl):
     """
     View is the top most container for all other controls.
 
-    A root view is automatically created when a new user session started. From layout perspective the View represents a `Column`(https://flet.dev/docs/controls/column/) control, so it has a similar behavior and shares same properties.
+    A root view is automatically created when a new user session started. From layout
+    perspective the View represents a `Column`(https://flet.dev/docs/controls/column/)
+    control, so it has a similar behavior and shares same properties.
 
     -----
 
@@ -39,7 +41,7 @@ class View(ScrollableControl, AdaptiveControl):
     """
 
     route: Optional[str] = None
-    controls: List[Control] = field(default_factory=list)
+    controls: list[BaseControl] = field(default_factory=list)
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     bottom_appbar: Optional[BottomAppBar] = None
     floating_action_button: Optional[FloatingActionButton] = None

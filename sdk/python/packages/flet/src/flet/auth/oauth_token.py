@@ -1,5 +1,5 @@
 import json
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.embed_json_encoder import EmbedJsonEncoder
 
@@ -8,7 +8,7 @@ class OAuthToken:
     def __init__(
         self,
         access_token: str,
-        scope: Optional[List[str]] = None,
+        scope: Optional[list[str]] = None,
         token_type: Optional[str] = None,
         expires_in: Optional[int] = None,
         expires_at: Optional[float] = None,

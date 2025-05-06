@@ -12,7 +12,7 @@ class BannerControl extends StatefulWidget {
   final Control control;
 
   BannerControl({Key? key, required this.control})
-      : super(key: ValueKey(control.id));
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<BannerControl> createState() => _BannerControlState();

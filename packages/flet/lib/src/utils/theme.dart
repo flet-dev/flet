@@ -203,7 +203,7 @@ ThemeData parseTheme(
           MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
 }
 
-ColorScheme? parseColorScheme(Map<String, dynamic>? value, ThemeData theme,
+ColorScheme? parseColorScheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [ColorScheme? defaultValue]) {
   if (value == null) return defaultValue;
   return theme.colorScheme.copyWith(
@@ -260,7 +260,7 @@ ColorScheme? parseColorScheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 TextTheme? parseTextTheme(
-    Map<String, dynamic>? value, ThemeData theme, TextTheme textTheme,
+    Map<dynamic, dynamic>? value, ThemeData theme, TextTheme textTheme,
     [TextTheme? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -283,7 +283,7 @@ TextTheme? parseTextTheme(
   );
 }
 
-ButtonThemeData? parseButtonTheme(Map<String, dynamic>? value, ThemeData theme,
+ButtonThemeData? parseButtonTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [ButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -304,7 +304,7 @@ ButtonThemeData? parseButtonTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 ElevatedButtonThemeData? parseElevatedButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [ElevatedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -339,7 +339,7 @@ ElevatedButtonThemeData? parseElevatedButtonTheme(
 }
 
 OutlinedButtonThemeData? parseOutlinedButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [OutlinedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -374,7 +374,7 @@ OutlinedButtonThemeData? parseOutlinedButtonTheme(
 }
 
 TextButtonThemeData? parseTextButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [TextButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -409,7 +409,7 @@ TextButtonThemeData? parseTextButtonTheme(
 }
 
 FilledButtonThemeData? parseFilledButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [FilledButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -444,7 +444,7 @@ FilledButtonThemeData? parseFilledButtonTheme(
 }
 
 IconButtonThemeData? parseIconButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [IconButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -479,7 +479,7 @@ IconButtonThemeData? parseIconButtonTheme(
 }
 
 DataTableThemeData? parseDataTableTheme(
-    Map<String, dynamic>? value, BuildContext context,
+    Map<dynamic, dynamic>? value, BuildContext context,
     [DataTableThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   var theme = Theme.of(context);
@@ -505,7 +505,7 @@ DataTableThemeData? parseDataTableTheme(
 }
 
 ScrollbarThemeData? parseScrollBarTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [ScrollbarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   return theme.scrollbarTheme.copyWith(
@@ -523,7 +523,7 @@ ScrollbarThemeData? parseScrollBarTheme(
   );
 }
 
-TabBarThemeData? parseTabBarTheme(Map<String, dynamic>? value, ThemeData theme,
+TabBarThemeData? parseTabBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [TabBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -597,7 +597,7 @@ PageTransitionsTheme? parsePageTransitions(Map<dynamic, dynamic>? value,
   });
 }
 
-DialogThemeData? parseDialogTheme(Map<String, dynamic>? value, ThemeData theme,
+DialogThemeData? parseDialogTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [DialogThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -619,7 +619,7 @@ DialogThemeData? parseDialogTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 BottomSheetThemeData? parseBottomSheetTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [BottomSheetThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -639,7 +639,7 @@ BottomSheetThemeData? parseBottomSheetTheme(
   );
 }
 
-CardThemeData? parseCardTheme(Map<String, dynamic>? value, ThemeData theme,
+CardThemeData? parseCardTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [CardThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -653,7 +653,7 @@ CardThemeData? parseCardTheme(Map<String, dynamic>? value, ThemeData theme,
       margin: parseMargin(value["margin"]));
 }
 
-ChipThemeData? parseChipTheme(Map<String, dynamic>? value, ThemeData theme,
+ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [ChipThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -687,7 +687,7 @@ ChipThemeData? parseChipTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [FloatingActionButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -718,7 +718,7 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
 }
 
 NavigationRailThemeData? parseNavigationRailTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [NavigationRailThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -739,7 +739,7 @@ NavigationRailThemeData? parseNavigationRailTheme(
   );
 }
 
-AppBarTheme? parseAppBarTheme(Map<String, dynamic>? value, ThemeData theme,
+AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [AppBarTheme? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -762,7 +762,7 @@ AppBarTheme? parseAppBarTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 BottomAppBarTheme? parseBottomAppBarTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [BottomAppBarTheme? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -777,7 +777,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
   );
 }
 
-RadioThemeData? parseRadioTheme(Map<String, dynamic>? value, ThemeData theme,
+RadioThemeData? parseRadioTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [RadioThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -791,7 +791,7 @@ RadioThemeData? parseRadioTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 CheckboxThemeData? parseCheckboxTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [CheckboxThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -807,7 +807,7 @@ CheckboxThemeData? parseCheckboxTheme(
   );
 }
 
-BadgeThemeData? parseBadgeTheme(Map<String, dynamic>? value, ThemeData theme,
+BadgeThemeData? parseBadgeTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [BadgeThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -823,7 +823,7 @@ BadgeThemeData? parseBadgeTheme(Map<String, dynamic>? value, ThemeData theme,
   );
 }
 
-SwitchThemeData? parseSwitchTheme(Map<String, dynamic>? value, ThemeData theme,
+SwitchThemeData? parseSwitchTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [SwitchThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -842,7 +842,7 @@ SwitchThemeData? parseSwitchTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 DividerThemeData? parseDividerTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [DividerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -856,7 +856,7 @@ DividerThemeData? parseDividerTheme(
 }
 
 SnackBarThemeData? parseSnackBarTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [SnackBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -882,7 +882,7 @@ SnackBarThemeData? parseSnackBarTheme(
 }
 
 MaterialBannerThemeData? parseBannerTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [MaterialBannerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -899,7 +899,7 @@ MaterialBannerThemeData? parseBannerTheme(
 }
 
 DatePickerThemeData? parseDatePickerTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [DatePickerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -958,7 +958,7 @@ DatePickerThemeData? parseDatePickerTheme(
 }
 
 TimePickerThemeData? parseTimePickerTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [TimePickerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -995,7 +995,7 @@ TimePickerThemeData? parseTimePickerTheme(
 }
 
 DropdownMenuThemeData? parseDropdownMenuTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [DropdownMenuThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1006,7 +1006,7 @@ DropdownMenuThemeData? parseDropdownMenuTheme(
 }
 
 ListTileThemeData? parseListTileTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [ListTileThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1035,7 +1035,7 @@ ListTileThemeData? parseListTileTheme(
 }
 
 TooltipThemeData? parseTooltipTheme(
-    Map<String, dynamic>? value, BuildContext context,
+    Map<dynamic, dynamic>? value, BuildContext context,
     [TooltipThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1060,7 +1060,7 @@ TooltipThemeData? parseTooltipTheme(
 }
 
 ExpansionTileThemeData? parseExpansionTileTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [ExpansionTileThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1078,7 +1078,7 @@ ExpansionTileThemeData? parseExpansionTileTheme(
   );
 }
 
-SliderThemeData? parseSliderTheme(Map<String, dynamic>? value, ThemeData theme,
+SliderThemeData? parseSliderTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [SliderThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1123,7 +1123,7 @@ SliderThemeData? parseSliderTheme(Map<String, dynamic>? value, ThemeData theme,
 }
 
 ProgressIndicatorThemeData? parseProgressIndicatorTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [ProgressIndicatorThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1147,7 +1147,7 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
 }
 
 PopupMenuThemeData? parsePopupMenuTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [PopupMenuThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1169,7 +1169,7 @@ PopupMenuThemeData? parsePopupMenuTheme(
 }
 
 SearchBarThemeData? parseSearchBarTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [SearchBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1190,7 +1190,7 @@ SearchBarThemeData? parseSearchBarTheme(
 }
 
 SearchViewThemeData? parseSearchViewTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [SearchViewThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1212,7 +1212,7 @@ SearchViewThemeData? parseSearchViewTheme(
 }
 
 NavigationDrawerThemeData? parseNavigationDrawerTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [NavigationDrawerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1230,7 +1230,7 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
 }
 
 NavigationBarThemeData? parseNavigationBarTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [NavigationBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1251,7 +1251,7 @@ NavigationBarThemeData? parseNavigationBarTheme(
 }
 
 SegmentedButtonThemeData? parseSegmentedButtonTheme(
-    Map<String, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme,
     [SegmentedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   var selectedIcon = parseIcon(value["selected_icon"]);
@@ -1262,7 +1262,7 @@ SegmentedButtonThemeData? parseSegmentedButtonTheme(
   );
 }
 
-IconThemeData? parseIconTheme(Map<String, dynamic>? value, ThemeData theme,
+IconThemeData? parseIconTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     [IconThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 

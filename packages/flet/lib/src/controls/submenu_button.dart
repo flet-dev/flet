@@ -12,7 +12,8 @@ import 'base_controls.dart';
 class SubmenuButtonControl extends StatefulWidget {
   final Control control;
 
-  const SubmenuButtonControl({super.key, required this.control});
+  SubmenuButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<SubmenuButtonControl> createState() => _SubmenuButtonControlState();

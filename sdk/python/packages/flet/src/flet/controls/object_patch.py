@@ -606,7 +606,15 @@ class DiffBuilder:
                 item._parent = weakref.ref(parent)
 
             def control_setattr(obj, name, value):
-                if not name.startswith("_") and hasattr(obj, "__changes"):
+                if (
+                    not name.startswith("_")
+                    and (
+                        name != "data"
+                        or not self.control_cls
+                        or not isinstance(obj, self.control_cls)
+                    )
+                    and hasattr(obj, "__changes")
+                ):
                     old_value = getattr(obj, name, None)
                     if name.startswith("on_"):
                         old_value = old_value is not None

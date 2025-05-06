@@ -65,8 +65,3 @@ class Radio(ConstrainedControl, AdaptiveControl):
     mouse_cursor: Optional[MouseCursor] = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-
-    # def before_update(self):
-    #     super().before_update()
-    #     self._set_attr_json("fillColor", self.__fill_color, wrap_attr_dict=True)
-    #     self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)

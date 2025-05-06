@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 class ButtonControl extends StatefulWidget {
   final Control control;
 
-  const ButtonControl({
-    super.key,
-    required this.control,
-  });
+  ButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ButtonControl> createState() => _ButtonControlState();

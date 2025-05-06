@@ -24,10 +24,11 @@ logger = logging.getLogger("flet")
 
 
 class PyodideConnection(Connection):
-    def __init__(self, on_session_created):
+    def __init__(self, on_session_created, before_main):
         super().__init__()
         self.__receive_queue = asyncio.Queue()
         self.__on_session_created = on_session_created
+        self.__before_main = before_main
         flet_js.start_connection = self.connect
         self.__running_tasks = set()
         self.pubsubhub = PubSubHub()
@@ -63,6 +64,11 @@ class PyodideConnection(Connection):
 
                 # apply page patch
                 self.session.apply_page_patch(req.page)
+
+                if asyncio.iscoroutinefunction(self.__before_main):
+                    await self.__before_main(self.session.page)
+                elif callable(self.__before_main):
+                    self.__before_main(self.session.page)
 
                 # register response
                 self.send_message(

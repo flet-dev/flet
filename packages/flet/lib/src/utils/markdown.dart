@@ -28,7 +28,7 @@ md.ExtensionSet? parseMarkdownExtensionSet(String? value,
 Map<String, TextStyle> parseMarkdownCodeTheme(dynamic value, ThemeData theme) {
   if (value == null) return {};
   if (value is String) return themeMap[value.toLowerCase()] ?? {};
-  if (value is Map<String, dynamic>) {
+  if (value is Map<dynamic, dynamic>) {
     String transformKey(String key) {
       switch (key) {
         case 'class_name':

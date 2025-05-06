@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Optional
 
-import pytest
 from flet.controls.padding import Padding
-from flet.controls.page import PageMediaData
+from flet.controls.page_view import PageMediaData
 from flet.utils import from_dict
 
 
@@ -42,8 +41,8 @@ def test_simple():
         age: Optional[int]
         status: Status
         address: Optional[Address]
-        tags: List[str]
-        metadata: Dict[str, int]
+        tags: list[str]
+        metadata: dict[str, int]
 
     user_data = {
         "name": "Alice",

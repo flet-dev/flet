@@ -13,10 +13,8 @@ import 'base_controls.dart';
 class SliderControl extends StatefulWidget {
   final Control control;
 
-  const SliderControl({
-    super.key,
-    required this.control,
-  });
+  SliderControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<SliderControl> createState() => _SliderControlState();

@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -21,7 +21,10 @@ __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehav
 
 
 class NavigationBarLabelBehavior(Enum):
-    """Defines how the destinations' labels will be laid out and when they'll be displayed."""
+    """
+    Defines how the destinations' labels will be laid out and when they'll
+    be displayed.
+    """
 
     ALWAYS_SHOW = "alwaysShow"
     ALWAYS_HIDE = "alwaysHide"
@@ -30,9 +33,12 @@ class NavigationBarLabelBehavior(Enum):
 
 @control("NavigationBarDestination")
 class NavigationBarDestination(AdaptiveControl):
-    """Defines the appearance of the button items that are arrayed within the navigation bar.
+    """
+    Defines the appearance of the button items that are arrayed within the
+    navigation bar.
 
-    The value must be a list of two or more NavigationBarDestination instances."""
+    The value must be a list of two or more NavigationBarDestination instances.
+    """
 
     label: Optional[str] = None
     icon: Optional[IconValueOrControl] = None
@@ -45,7 +51,8 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.
 
-    Navigation bars offer a persistent and convenient way to switch between primary destinations in an app.
+    Navigation bars offer a persistent and convenient way to switch between
+    primary destinations in an app.
 
     Example:
 
@@ -75,7 +82,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/navigationbar
     """
 
-    destinations: List[NavigationBarDestination] = field(default_factory=list)
+    destinations: list[NavigationBarDestination] = field(default_factory=list)
     selected_index: int = 0
     bgcolor: OptionalColorValue = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
@@ -88,7 +95,3 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     animation_duration: OptionalDurationValue = None
     overlay_color: OptionalControlStateValue[ColorValue] = None
     on_change: OptionalControlEventCallable = None
-
-    def before_update(self):
-        super().before_update()
-        # self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)

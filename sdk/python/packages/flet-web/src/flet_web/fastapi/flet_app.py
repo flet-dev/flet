@@ -30,6 +30,7 @@ from flet.utils import random_string, sha1
 import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.flet_app_manager import app_manager
 from flet_web.fastapi.oauth_state import OAuthState
+from flet_web.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -42,7 +43,8 @@ class FletApp(Connection):
         self,
         loop: asyncio.AbstractEventLoop,
         executor: ThreadPoolExecutor,
-        session_handler,
+        main,
+        before_main,
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
@@ -53,10 +55,16 @@ class FletApp(Connection):
 
         Parameters:
 
-        * `session_handler` (Coroutine) - application entry point - an async method called for newly connected user. Handler coroutine must have 1 parameter: `page` - `Page` instance.
-        * `session_timeout_seconds` (int, optional) - session lifetime, in seconds, after user disconnected.
-        * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
-        * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint, e.g. `/upload`.
+        * `session_handler` (Coroutine) - application entry point - an async method
+           called for newly connected user. Handler coroutine must have
+           1 parameter: `page` - `Page` instance.
+        * `session_timeout_seconds` (int, optional) - session lifetime, in seconds,
+           after user disconnected.
+        * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime,
+           in seconds, which is a maximum allowed time between starting OAuth flow
+           and redirecting to OAuth callback URL.
+        * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint,
+           e.g. `/upload`.
         * `secret_key` (str, optional) - secret key to sign upload requests.
         """
         super().__init__()
@@ -66,7 +74,8 @@ class FletApp(Connection):
         self.__session = None
         self.loop = loop
         self.executor = executor
-        self.__session_handler = session_handler
+        self.__main = main
+        self.__before_main = before_main
         self.__session_timeout_seconds = session_timeout_seconds
         self.__oauth_state_timeout_seconds = oauth_state_timeout_seconds
         self.__running_tasks = set()
@@ -100,15 +109,9 @@ class FletApp(Connection):
         self.client_ip = (
             self.__websocket.client.host if self.__websocket.client else ""
         ).split(":")[0]
-        self.client_user_agent = (
-            self.__websocket.headers["user-agent"]
-            if "user-agent" in self.__websocket.headers
-            else ""
-        )
+        self.client_user_agent = self.__websocket.headers.get("user-agent", "")
 
-        self.pubsubhub = app_manager.get_pubsubhub(
-            self.__session_handler, loop=self.loop
-        )
+        self.pubsubhub = app_manager.get_pubsubhub(self.__main, loop=self.loop)
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
 
@@ -133,19 +136,20 @@ class FletApp(Connection):
         assert self.__session
         logger.info(f"Start session: {self.__session.id}")
         try:
-            assert self.__session_handler is not None
+            assert self.__main is not None
             UpdateBehavior.reset()
 
-            if asyncio.iscoroutinefunction(self.__session_handler):
-                await self.__session_handler(self.__session.page)
+            if asyncio.iscoroutinefunction(self.__main):
+                await self.__main(self.__session.page)
             else:
-                self.__session_handler(self.__session.page)
+                self.__main(self.__session.page)
 
             if UpdateBehavior.auto_update_enabled():
                 self.__session.auto_update(self.__session.page)
         except PageDisconnectedException:
             logger.debug(
-                f"Session handler attempted to update disconnected page: {self.__session.id}"
+                "Session handler attempted to update disconnected page: "
+                f"{self.__session.id}"
             )
         except BrokenPipeError:
             logger.info(f"Session handler terminated: {self.__session.id}")
@@ -194,7 +198,7 @@ class FletApp(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        # print(f"_on_message: {action} {body}")
+        print(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -224,6 +228,12 @@ class FletApp(Connection):
 
             # apply page patch
             self.__session.apply_page_patch(req.page)
+
+            if new_session:
+                if asyncio.iscoroutinefunction(self.__before_main):
+                    await self.__before_main(self.__session.page)
+                elif callable(self.__before_main):
+                    self.__before_main(self.__session.page)
 
             # register response
             self.send_message(
@@ -283,20 +293,16 @@ class FletApp(Connection):
         )
         self.__send_queue.put_nowait(m)
 
-    # def _process_get_upload_url_command(self, attrs):
-    #     assert len(attrs) == 2, '"getUploadUrl" command has wrong number of attrs'
-    #     assert (
-    #         self.__upload_endpoint_path
-    #     ), "upload_path should be specified to enable uploads"
-    #     return (
-    #         build_upload_url(
-    #             self.__upload_endpoint_path,
-    #             attrs["file"],
-    #             int(attrs["expires"]),
-    #             self.__secret_key,
-    #         ),
-    #         None,
-    #     )
+    def get_upload_url(self, file_name: str, expires: int) -> str:
+        assert self.__upload_endpoint_path, (
+            "upload_path should be specified to enable uploads"
+        )
+        return build_upload_url(
+            self.__upload_endpoint_path,
+            file_name,
+            expires,
+            self.__secret_key,
+        )
 
     def oauth_authorize(self, attrs: dict[str, Any]):
         state_id = attrs["state"]
@@ -304,8 +310,8 @@ class FletApp(Connection):
             session_id=self.__get_unique_session_id(self.__session.id),
             expires_at=datetime.now(timezone.utc)
             + timedelta(seconds=self.__oauth_state_timeout_seconds),
-            complete_page_html=attrs.get("completePageHtml", None),
-            complete_page_url=attrs.get("completePageUrl", None),
+            complete_page_html=attrs.get("completePageHtml"),
+            complete_page_url=attrs.get("completePageUrl"),
         )
         app_manager.store_state(state_id, state)
 

@@ -5,7 +5,7 @@ from typing import Callable, Optional, Union
 
 from fastapi import Request, WebSocket
 from flet.controls.page import Page
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from flet_web.fastapi.flet_app import (
@@ -21,15 +21,15 @@ from flet_web.fastapi.flet_upload import FletUpload
 
 
 def app(
-    session_handler: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
+    main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
+    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
     app_short_name: Optional[str] = None,
     app_description: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    use_color_emoji: bool = False,
-    route_url_strategy: str = "path",
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: bool = False,
     upload_dir: Optional[str] = None,
     upload_endpoint_path: Optional[str] = None,
@@ -42,16 +42,16 @@ def app(
     Mount all Flet FastAPI handlers in one call.
 
     Parameters:
-    * `session_handler` (function or coroutine) - application entry point - a method
+    * `main` (function or coroutine) - application entry point - a method
        called for newly connected user. Handler must have 1 parameter: `page` - `Page`
        instance.
+    * `before_main` - a function that is called after Page was created, but before
+       calling `main`.
     * `assets_dir` (str, optional) - an absolute path to app's assets directory.
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
     * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `use_color_emoji` (bool) - whether to load a font with color emoji.
-       Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `no_cdn` (bool) - do not load resources from CDN.
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
@@ -95,7 +95,8 @@ def app(
         await FletApp(
             loop=asyncio.get_running_loop(),
             executor=app_manager.executor,
-            session_handler=session_handler,
+            main=main,
+            before_main=before_main,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
             upload_endpoint_path=upload_endpoint_path,
@@ -127,8 +128,8 @@ def app(
             app_short_name=app_short_name,
             app_description=app_description,
             web_renderer=web_renderer,
-            use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            websocket_endpoint_path=websocket_endpoint,
             no_cdn=no_cdn,
         ),
     )

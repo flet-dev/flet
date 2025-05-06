@@ -55,7 +55,6 @@ import 'controls/dropdown.dart';
 import 'controls/dropdownm2.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
-import 'controls/file_picker.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
 import 'controls/gesture_detector.dart';
@@ -110,6 +109,7 @@ import 'flet_service.dart';
 import 'models/control.dart';
 import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
+import 'services/file_picker.dart';
 import 'services/haptic_feedback.dart';
 import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
@@ -331,8 +331,7 @@ class FletCoreExtension extends FletExtension {
         return CupertinoRadioControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
-      case "FilePicker":
-        return FilePickerControl(key: key, control: control);
+
       case "Pagelet":
         return PageletControl(key: key, control: control);
       default:
@@ -347,6 +346,8 @@ class FletCoreExtension extends FletExtension {
         return BrowserContextMenuService(control: control);
       case "Clipboard":
         return ClipboardService(control: control);
+      case "FilePicker":
+        return FilePickerService(control: control);
       case "HapticFeedback":
         return HapticFeedbackService(control: control);
       case "ShakeDetector":

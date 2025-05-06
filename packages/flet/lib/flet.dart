@@ -9,7 +9,6 @@ export 'src/flet_extension.dart';
 export 'src/flet_service.dart';
 export 'src/models/asset_source.dart';
 export 'src/models/control.dart';
-export 'src/models/page_args_model.dart';
 export 'src/models/page_size_view_model.dart';
 export 'src/utils.dart';
 export 'src/utils/alignment.dart';
