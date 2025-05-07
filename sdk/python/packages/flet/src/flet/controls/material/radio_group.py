@@ -16,8 +16,22 @@ class RadioGroup(Control):
     """
 
     content: Control
+    """
+    The content of the RadioGroup.
+
+    Typically a list of `Radio` controls nested in a container control, e.g. `Column`,
+    `Row`.
+    """
+
     value: Optional[str] = None
+    """
+    Current value of the RadioGroup.
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the state of the RadioGroup is changed.
+    """
 
     def before_update(self):
         super().before_update()
