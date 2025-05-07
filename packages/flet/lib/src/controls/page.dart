@@ -1189,7 +1189,12 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   _popCompleter = Completer<bool>();
                   widget.backend
                       .triggerControlEvent(widget.viewId, "confirm_pop");
-                  _popCompleter!.future.then((shouldPop) {
+                  _popCompleter!.future
+                      .timeout(
+                    const Duration(minutes: 5),
+                    onTimeout: () => false,
+                  )
+                      .then((shouldPop) {
                     if (context.mounted && shouldPop) {
                       if (widget.isRootView) {
                         SystemNavigator.pop();
