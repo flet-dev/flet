@@ -5,7 +5,7 @@ import os
 import signal
 import traceback
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Callable, Union
 
 import flet.version
 from flet.core.event import Event
@@ -19,6 +19,7 @@ from flet.utils import (
     is_linux_server,
     is_pyodide,
     open_in_browser,
+    deprecated
 )
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
@@ -30,22 +31,21 @@ import flet
 logger = logging.getLogger(flet.__name__)
 
 
-def app(
-    target,
-    name="",
+def run(
+    target: Callable[[Page], None],
+    name: str = "",
     host=None,
-    port=0,
+    port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
+    assets_dir: Union[str, os.PathLike] = "assets",
+    upload_dir: Optional[Union[str, os.PathLike]] = None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
-    use_color_emoji=False,
-    route_url_strategy="path",
-    export_asgi_app=False,
+    use_color_emoji: bool = False,
+    route_url_strategy: str = "path",
+    export_asgi_app: bool = False,
 ):
     if is_pyodide():
-        __run_pyodide(target)
-        return
+        return __run_pyodide(target)
 
     if export_asgi_app:
         ensure_flet_web_package_installed()
@@ -62,7 +62,7 @@ def app(
         )
 
     return asyncio.run(
-        app_async(
+        run_async(
             target=target,
             name=name,
             host=host,
@@ -77,17 +77,50 @@ def app(
     )
 
 
-async def app_async(
-    target,
-    name="",
+@deprecated(
+    reason="flet.app() method is deprecated. Use flet.run() instead.",
+    version="0.28",
+    delete_version="0.31",
+)
+def app(
+    target: Callable[[Page], None],
+    name: str = "",
     host=None,
-    port=0,
+    port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
+    assets_dir: Union[str, os.PathLike] = "assets",
+    upload_dir: Optional[Union[str, os.PathLike]] = None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
-    use_color_emoji=False,
-    route_url_strategy="path",
+    use_color_emoji: bool = False,
+    route_url_strategy: str = "path",
+    export_asgi_app: bool = False,
+):
+    return run(
+        target=target,
+        name=name,
+        host=host,
+        port=port,
+        view=view,
+        assets_dir=assets_dir,
+        upload_dir=upload_dir,
+        web_renderer=web_renderer,
+        use_color_emoji=use_color_emoji,
+        route_url_strategy=route_url_strategy,
+        export_asgi_app=export_asgi_app
+    )
+
+
+async def run_async(
+    target: Callable[[Page], None],
+    name: str = "",
+    host=None,
+    port: int = 0,
+    view: Optional[AppView] = AppView.FLET_APP,
+    assets_dir: Union[str, os.PathLike] = "assets",
+    upload_dir: Optional[Union[str, os.PathLike]] = None,
+    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
+    use_color_emoji: bool = False,
+    route_url_strategy: str = "path",
 ):
     if is_pyodide():
         __run_pyodide(target)
@@ -104,14 +137,14 @@ async def app_async(
         view = AppView.WEB_BROWSER
 
     env_port = os.getenv("FLET_SERVER_PORT")
-    if env_port is not None and env_port:
+    if env_port:
         port = int(env_port)
 
     if port == 0 and force_web_server:
         port = 8000
 
     env_host = os.getenv("FLET_SERVER_IP")
-    if env_host is not None and env_host:
+    if env_host:
         host = env_host
 
     assets_dir = __get_assets_dir_path(assets_dir)
@@ -119,7 +152,7 @@ async def app_async(
     page_name = __get_page_name(name)
 
     is_socket_server = (
-        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        is_embedded() or view in [AppView.FLET_APP, AppView.FLET_APP_HIDDEN]
     ) and not force_web_server
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
@@ -172,11 +205,7 @@ async def app_async(
 
     try:
         if (
-            (
-                view == AppView.FLET_APP
-                or view == AppView.FLET_APP_HIDDEN
-                or view == AppView.FLET_APP_WEB
-            )
+            view in [AppView.FLET_APP, AppView.FLET_APP_HIDDEN, AppView.FLET_APP_WEB]
             and not force_web_server
             and not is_embedded()
             and url_prefix is None
@@ -210,7 +239,42 @@ async def app_async(
         await conn.close()
 
 
-async def __run_socket_server(port=0, session_handler=None, blocking=False):
+@deprecated(
+    reason="flet.app_async() method is deprecated. Use flet.run_async() instead.",
+    version="0.28",
+    delete_version="0.31",
+)
+async def app_async(
+    target: Callable[[Page], None],
+    name: str = "",
+    host=None,
+    port: int = 0,
+    view: Optional[AppView] = AppView.FLET_APP,
+    assets_dir: Union[str, os.PathLike] = "assets",
+    upload_dir: Optional[Union[str, os.PathLike]] = None,
+    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
+    use_color_emoji: bool = False,
+    route_url_strategy: str = "path",
+):
+    return run_async(
+        target=target,
+        name=name,
+        host=host,
+        port=port,
+        view=view,
+        assets_dir=assets_dir,
+        upload_dir=upload_dir,
+        web_renderer=web_renderer,
+        use_color_emoji=use_color_emoji,
+        route_url_strategy=route_url_strategy
+    )
+
+
+async def __run_socket_server(
+    port: int = 0,
+    session_handler=None,
+    blocking: bool = False,
+):
     from flet.flet_socket_server import FletSocketServer
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
@@ -312,7 +376,7 @@ async def __run_web_server(
     )
 
 
-def __run_pyodide(target):
+def __run_pyodide(target: Callable[[Page], None]) -> None:
     import flet_js
     from flet.pyodide_connection import PyodideConnection
 
@@ -354,7 +418,7 @@ def __get_page_name(name: str):
     return env_page_name if not name and env_page_name else name
 
 
-def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
+def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd: bool = False) -> Optional[str]:
     if assets_dir:
         if not Path(assets_dir).is_absolute():
             if "_MEI" in __file__:
@@ -371,15 +435,13 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
         logger.info(f"Assets path configured: {assets_dir}")
 
     env_assets_dir = os.getenv("FLET_ASSETS_DIR")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
-    return assets_dir
+    return env_assets_dir or assets_dir
 
 
-def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd=False):
+def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd: bool = False) -> Optional[str]:
     if upload_dir:
         if not Path(upload_dir).is_absolute():
-            upload_dir = str(
+            return str(
                 Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
                 .joinpath(upload_dir)
                 .resolve()

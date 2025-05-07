@@ -1,4 +1,4 @@
-from flet.app import app, app_async
+from flet.app import run, app, run_async, app_async
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alert_dialog import AlertDialog
 from flet.core.alignment import Alignment, Axis
