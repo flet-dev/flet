@@ -1,6 +1,6 @@
 import asyncio
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide, OptionalBorderSide
@@ -26,17 +26,16 @@ __all__ = ["SearchBar"]
 @control("SearchBar")
 class SearchBar(ConstrainedControl):
     """
-    Manages a "search view" route that allows the user to select one of the suggested completions for a search query.
-
-    -----
+    Manages a "search view" route that allows the user to select one of the suggested
+    completions for a search query.
 
     Online docs: https://flet.dev/docs/controls/searchbar
     """
 
-    controls: List[Control] = field(default_factory=list)
+    controls: list[Control] = field(default_factory=list)
     value: str = ""
     bar_leading: OptionalControl = None
-    bar_trailing: Optional[List[Control]] = None
+    bar_trailing: Optional[list[Control]] = None
     bar_hint_text: OptionalString = None
     bar_bgcolor: OptionalControlStateValue[ColorValue] = None
     bar_overlay_color: OptionalControlStateValue[ColorValue] = None
@@ -50,7 +49,7 @@ class SearchBar(ConstrainedControl):
     bar_padding: OptionalControlStateValue[PaddingValue] = None
     bar_scroll_padding: PaddingValue = 20
     view_leading: OptionalControl = None
-    view_trailing: Optional[List[Control]] = None
+    view_trailing: Optional[list[Control]] = None
     view_elevation: OptionalNumber = None
     view_bgcolor: OptionalColorValue = None
     view_hint_text: OptionalString = None
