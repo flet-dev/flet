@@ -22,7 +22,9 @@ __all__ = ["ElevatedButton"]
 @control("ElevatedButton")
 class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
-    Elevated buttons are essentially filled tonal buttons with a shadow. To prevent shadow creep, only use them when absolutely necessary, such as when the button requires visual separation from a patterned background.
+    Elevated buttons are essentially filled tonal buttons with a shadow. To prevent
+    shadow creep, only use them when absolutely necessary, such as when the button
+    requires visual separation from a patterned background.
 
     Online docs: https://flet.dev/docs/controls/elevatedbutton
     """
@@ -44,46 +46,55 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     color: OptionalColorValue = None
     """
-    Button's text [color](https://flet.dev/docs/reference/colors). If both `color` and `style.color` are provided, `color` value will be used.
+    Button's text [color](https://flet.dev/docs/reference/colors). If both `color` and 
+    `style.color` are provided, `color` value will be used.
     """
 
     bgcolor: OptionalColorValue = None
     """
-    Button's background [color](https://flet.dev/docs/reference/colors). If both `bgcolor` and `style.bgcolor` are provided, `bgcolor` value will be used.
+    Button's background [color](https://flet.dev/docs/reference/colors). If both 
+    `bgcolor` and `style.bgcolor` are provided, `bgcolor` value will be used.
     """
 
     elevation: Number = 1
     """
-    Button's elevation. If both `elevation` and `style.elevation` are provided, `elevation` value will be used.
+    Button's elevation. If both `elevation` and `style.elevation` are provided, 
+    `elevation` value will be used.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle) class. 
+    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle) 
+    class. 
     """
 
     autofocus: Optional[bool] = None
     """
-    True if the control will be selected as the initial focus. If there is more than one control on a page with autofocus set, then the first one added to the page will get focus.
+    True if the control will be selected as the initial focus. If there is more than 
+    one control on a page with autofocus set, then the first one added to the page will 
+    get focus.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.NONE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    and defaults to `ClipBehavior.NONE`.
     """
 
     url: Optional[str] = None
     """
-    The URL to open when the button is clicked. If registered, `on_click` event is fired after that.
+    The URL to open when the button is clicked. If registered, `on_click` event is 
+    fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and defaults to `UrlTarget.BLANK`.
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
+    defaults to `UrlTarget.BLANK`.
     """
 
     on_click: OptionalControlEventCallable = None
@@ -98,7 +109,9 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     on_hover: OptionalControlEventCallable = None
     """
-    Fires when a mouse pointer enters or exists the button response area. `data` property of event object contains `true` (string) when cursor enters and `false` when it exits.
+    Fires when a mouse pointer enters or exists the button response area. `data` 
+    property of event object contains `true` (string) when cursor enters and `false` 
+    when it exits.
 
     ```python
     import flet as ft

@@ -60,19 +60,21 @@ class Radio(ConstrainedControl, AdaptiveControl):
     fill_color: OptionalControlStateValue[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) that fills the radio, in all or
-    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
+    states.
     """
 
     active_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio when it is
-    selected.
+    The [color](https://flet.dev/docs/reference/colors) used to fill this radio when it 
+    is selected.
     """
 
     overlay_color: OptionalControlStateValue[ColorValue] = None
     """
     The overlay [color](https://flet.dev/docs/reference/colors) of this radio in all or
-    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
+    states.
     """
 
     hover_color: OptionalColorValue = None

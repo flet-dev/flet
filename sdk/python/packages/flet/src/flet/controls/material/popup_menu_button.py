@@ -11,7 +11,6 @@ from flet.controls.control import Control
 from flet.controls.padding import OptionalPaddingValue, PaddingValue
 from flet.controls.types import (
     ClipBehavior,
-    IconValue,
     IconValueOrControl,
     MouseCursor,
     Number,

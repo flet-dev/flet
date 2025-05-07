@@ -8,7 +8,7 @@ sh ci/generate_material_icons_python.sh
 
 import random
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Optional
 
 __all__ = ["Icons"]
 
@@ -16,15 +16,16 @@ __all__ = ["Icons"]
 class Icons(str, Enum):
     @staticmethod
     def random(
-        exclude: Optional[List["Icons"]] = None,
-        weights: Optional[Dict["Icons", int]] = None,
+        exclude: Optional[list["Icons"]] = None,
+        weights: Optional[dict["Icons", int]] = None,
     ) -> Optional["Icons"]:
         """
         Selects a random icon, with optional exclusions and weights.
 
         Args:
             exclude: A list of icons members to exclude from the selection.
-            weights: A dictionary mapping icon members to their respective weights for weighted random selection.
+            weights: A dictionary mapping icon members to their respective weights for
+            weighted random selection.
 
         Returns:
             A randomly selected icon, or None if all members are excluded.
