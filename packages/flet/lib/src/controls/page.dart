@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
@@ -768,6 +769,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 widgetsDesign: _widgetsDesign,
                 brightness: _brightness,
                 themeMode: _themeMode,
+                isRootView: view.id == routesView.views.first.id,
               );
 
               //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
@@ -792,10 +794,11 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
           Widget nextChild = Navigator(
               key: navigatorKey,
               pages: pages,
-              onPopPage: (route, dynamic result) {
-                widget.backend.triggerControlEvent("page", "view_pop",
-                    ((route.settings as Page).key as ValueKey).value);
-                return false;
+              onDidRemovePage: (page) {
+                if (page.key != null) {
+                  widget.backend.triggerControlEvent(
+                      "page", "view_pop", (page.key as ValueKey).value);
+                }
               });
 
           // wrap navigator into non-visual offstage controls
@@ -821,9 +824,10 @@ class ViewControl extends StatefulWidget {
   final PageDesign widgetsDesign;
   final Brightness? brightness;
   final ThemeMode? themeMode;
+  final bool isRootView;
 
-  const ViewControl(
-      {super.key,
+  ViewControl(
+      {Key? key,
       required this.parent,
       required this.viewId,
       required this.overlayWidgets,
@@ -832,7 +836,9 @@ class ViewControl extends StatefulWidget {
       required this.parentAdaptive,
       required this.widgetsDesign,
       required this.brightness,
-      required this.themeMode});
+      required this.themeMode,
+      required this.isRootView})
+      : super(key: ValueKey("control_$viewId"));
 
   @override
   State<ViewControl> createState() => _ViewControlState();
@@ -840,6 +846,7 @@ class ViewControl extends StatefulWidget {
 
 class _ViewControlState extends State<ViewControl> with FletStoreMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  Completer<bool>? _popCompleter;
 
   @override
   Widget build(BuildContext context) {
@@ -875,6 +882,16 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               CrossAxisAlignment.start)!;
           final fabLocation = parseFloatingActionButtonLocation(
               control, "floatingActionButtonLocation");
+          final canPop = control.attrBool("canPop", true)!;
+
+          widget.backend.subscribeMethods(control.id, (methodName, args) async {
+            debugPrint("View.onMethod(${control.id})");
+            if (methodName == "confirm_pop") {
+              _popCompleter?.complete(bool.tryParse(args["shouldPop"] ?? ""));
+              widget.backend.unsubscribeMethods(control.id);
+            }
+            return null;
+          });
 
           Control? appBar;
           Control? cupertinoAppBar;
@@ -907,7 +924,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                 ctrl.name == "drawer_start") {
               drawer = ctrl;
               continue;
-            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "drawer_end") {
+            } else if (ctrl.type == "navigationdrawer" &&
+                ctrl.name == "drawer_end") {
               endDrawer = ctrl;
               continue;
             }
@@ -1153,13 +1171,36 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                 child: scaffold,
               );
             }
-            var result = Directionality(
+            Widget result = Directionality(
                 textDirection: textDirection,
                 child: widget.loadingPage != null
                     ? Stack(
                         children: [scaffold, widget.loadingPage!],
                       )
                     : scaffold);
+
+            result = PopScope(
+                canPop: canPop,
+                onPopInvokedWithResult: (didPop, result) {
+                  if (didPop || !control.attrBool("onConfirmPop", false)!) {
+                    return;
+                  }
+                  debugPrint("Page.onPopInvokedWithResult()");
+                  _popCompleter = Completer<bool>();
+                  widget.backend
+                      .triggerControlEvent(widget.viewId, "confirm_pop");
+                  _popCompleter!.future.then((shouldPop) {
+                    if (context.mounted && shouldPop) {
+                      if (widget.isRootView) {
+                        SystemNavigator.pop();
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    }
+                  });
+                },
+                child: result);
+
             return withPageArgs((context, pageArgs) {
               var backgroundDecoration = parseBoxDecoration(
                   Theme.of(context), control, "decoration", pageArgs);
