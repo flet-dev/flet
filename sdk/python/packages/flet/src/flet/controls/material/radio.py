@@ -27,18 +27,95 @@ class Radio(ConstrainedControl, AdaptiveControl):
     """
 
     label: str = ""
+    """
+    The clickable label to display on the right of a Radio.
+    """
+
     label_position: LabelPosition = LabelPosition.RIGHT
+    """
+    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition)
+    and defaults to `LabelPosition.RIGHT`.
+    """
+
     label_style: Optional[TextStyle] = None
+    """
+    The label's style.
+
+    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    """
+
     value: Optional[str] = None
+    """
+    The value to set to containing `RadioGroup` when the radio is selected.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus.
+
+    If there is more than one control on a page with autofocus set, then the first one
+    added to the page will get focus.
+    """
+
     fill_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) that fills the radio, in all or
+    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    """
+
     active_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) used to fill this radio when it is
+    selected.
+    """
+
     overlay_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The overlay [color](https://flet.dev/docs/reference/colors) of this radio in all or
+    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    """
+
     hover_color: OptionalColorValue = None
+    """
+    The color of this radio when it is hovered.
+    """
+
     focus_color: OptionalColorValue = None
+    """
+    The color of this radio when it has the input focus.
+    """
+
     splash_radius: OptionalNumber = None
+    """
+    The splash radius of the circular Material ink response.
+    """
+
     toggleable: bool = False
+    """
+    Set to `True` if this radio button is allowed to be returned to an indeterminate
+    state by selecting it again when selected.
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Defines how compact the radio's layout will be.
+
+    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
+    """
+
     mouse_cursor: Optional[MouseCursor] = None
+    """
+    The cursor for a mouse pointer entering or hovering over this control.
+
+    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the control has received focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the control has lost focus.
+    """
