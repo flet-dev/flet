@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
@@ -30,16 +30,14 @@ class SegmentedButton(ConstrainedControl):
     """
     A segmented button control.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/segmentedbutton
     """
 
-    segments: List[Segment]
+    segments: list[Segment]
     style: Optional[ButtonStyle] = None
     allow_empty_selection: bool = False
     allow_multiple_selection: bool = False
-    selected: List[str] = field(default_factory=list)
+    selected: list[str] = field(default_factory=list)
     selected_icon: Optional[Control] = None
     show_selected_icon: bool = True
     direction: Optional[Axis] = None
@@ -56,4 +54,5 @@ class SegmentedButton(ConstrainedControl):
         ), "allow_empty_selection must be True for selected to be empty"
         assert (
             len(self.selected) < 2 or self.allow_multiple_selection
-        ), "allow_multiple_selection must be True for selected to have more than one item"
+        ), "allow_multiple_selection must be True for selected to have more than one "
+        "item"
