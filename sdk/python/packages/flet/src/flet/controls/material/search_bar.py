@@ -33,44 +33,241 @@ class SearchBar(ConstrainedControl):
     """
 
     controls: list[Control] = field(default_factory=list)
+    """
+    The list of controls to be displayed below the search bar when in search view.
+    These controls are usually `ListTile`s and will be displayed in a `ListView`.
+    """
+
     value: str = ""
+    """
+    The text in the search bar.
+    """
+
     bar_leading: OptionalControl = None
+    """
+    A `Control` to display before the text input field when the search view is close.
+    This is typically an `Icon` or an `IconButton`.
+    """
+
     bar_trailing: Optional[list[Control]] = None
+    """
+    A `Control` to display after the text input field when the search view is close.
+
+    These controls can represent additional modes of searching (e.g voice search),
+    an avatar, or an overflow menu and are usually not more than two.
+    """
+
     bar_hint_text: OptionalString = None
+    """
+    Defines the text to be shown in the search bar when it is empty and the search
+    view is close. Usually some text that suggests what sort of input the field
+    accepts.
+    """
+
     bar_bgcolor: OptionalControlStateValue[ColorValue] = None
+    """
+    Defines the background [color](https://flet.dev/docs/reference/colors) of the
+    search bar in all or specific
+    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    """
+
     bar_overlay_color: OptionalControlStateValue[ColorValue] = None
+    """
+    Defines the highlight [color](https://flet.dev/docs/reference/colors) that's
+    typically used to indicate that the search bar is in `FOCUSED`, `HOVERED`, or
+    `PRESSED` [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    states.
+    """
+
     bar_shadow_color: OptionalControlStateValue[ColorValue] = None
+    """
+    TBD
+    """
+
     bar_surface_tint_color: OptionalControlStateValue[ColorValue] = None
+    """
+    TBD
+    """
+
     bar_elevation: OptionalControlStateValue[OptionalNumber] = None
+    """
+    TBD
+    """
+
     bar_border_side: OptionalControlStateValue[BorderSide] = None
+    """
+    TBD
+    """
+
     bar_shape: OptionalControlStateValue[OutlinedBorder] = None
+    """
+    TBD
+    """
+
     bar_text_style: OptionalControlStateValue[TextStyle] = None
+    """
+    TBD
+    """
+
     bar_hint_text_style: OptionalControlStateValue[TextStyle] = None
+    """
+    TBD
+    """
+
     bar_padding: OptionalControlStateValue[PaddingValue] = None
+    """
+    TBD
+    """
+
     bar_scroll_padding: PaddingValue = 20
+    """
+    Configures the padding around a Scrollable when the text field scrolls into view.
+
+    If the bar's text field is partially off-screen or covered (e.g., by the
+    keyboard), it scrolls into view, ensuring it is positioned at the specified
+    distance from the Scrollable edges.
+
+    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
+    """
+
     view_leading: OptionalControl = None
+    """
+    A `Control` to display before the text input field when the search view is open.
+    Typically an `Icon` or an `IconButton`.
+
+    Defaults to a back button which closes/pops the search view.
+    """
+
     view_trailing: Optional[list[Control]] = None
+    """
+    A list of `Control`s to display after the text input field when the search view is
+    open.
+
+    Defaults to a close button which closes/pops the search view.
+    """
+
     view_elevation: OptionalNumber = None
+    """
+    Defines the elevation of the search view.
+    """
+
     view_bgcolor: OptionalColorValue = None
+    """
+    Defines the background [color](https://flet.dev/docs/reference/colors) of the
+    search view.
+    """
+
     view_hint_text: OptionalString = None
+    """
+    Defines the text to be displayed when the search bar's input field is empty.
+    """
+
     view_side: OptionalBorderSide = None
+    """
+    Defines the color and weight of the search view's outline.
+
+    Value is of type [`BorderSide`](https://flet.dev/docs/reference/types/borderside).
+    """
+
     view_shape: OptionalOutlinedBorder = None
+    """
+    Defines the shape of the search view.
+
+    Value is of type
+    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    """
+
     view_header_text_style: OptionalTextStyle = None
+    """
+    Defines the [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of the
+    text being edited on the search view.
+    """
+
     view_hint_text_style: OptionalTextStyle = None
+    """
+    Defines the [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of
+    `view_hint_text`.
+    """
+
     view_size_constraints: OptionalBoxConstraints = None
+    """
+    TBD
+    """
+
     view_header_height: OptionalNumber = None
+    """
+    TBD
+    """
+
     divider_color: OptionalColorValue = None
+    """
+    The color of the divider when in search view.
+    """
+
     capitalization: Optional[TextCapitalization] = None
+    """
+    Enables automatic on-the-fly capitalization of entered text.
+
+    Value is of type
+    [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization).
+    """
+
     full_screen: bool = False
+    """
+    Defines whether the search view grows to fill the entire screen when the search
+    bar is tapped. Defaults to `False`.
+    """
+
     keyboard_type: KeyboardType = KeyboardType.TEXT
+    """
+    The type of action button to use for the keyboard.
+
+    Value is of type
+    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults
+    to `KeyboardType TEXT`.
+    """
+
     view_surface_tint_color: OptionalColorValue = None
+    """
+    Defines the color of the search view's surface tint.
+    """
+
     autofocus: bool = False
+    """
+    Whether the text field should focus itself if nothing else is already focused.
+
+    Defaults to `False`.
+    """
+
     on_tap: OptionalControlEventCallable = None
+    """
+    Fires when the search bar is tapped.
+    """
+
     on_tap_outside_bar: OptionalControlEventCallable = None
+    """
+    TBD
+    """
+
     on_submit: OptionalControlEventCallable = None
+    """
+    Fires when user presses ENTER while focus is on SearchBar.
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the typed input in the search bar has changed.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    TBD
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    TBD
+    """
 
     def __contains__(self, item):
         return item in self.controls
