@@ -18,6 +18,7 @@ from flet.core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalEventCallable,
     PaddingValue,
     ScrollMode,
@@ -55,6 +56,8 @@ class View(ScrollableControl, AdaptiveControl):
         bgcolor: Optional[ColorValue] = None,
         decoration: Optional[BoxDecoration] = None,
         foreground_decoration: Optional[BoxDecoration] = None,
+        can_pop: Optional[bool] = None,
+        on_confirm_pop: OptionalControlEventCallable = None,
         #
         # ScrollableControl
         #
@@ -99,6 +102,8 @@ class View(ScrollableControl, AdaptiveControl):
         self.fullscreen_dialog = fullscreen_dialog
         self.decoration = decoration
         self.foreground_decoration = foreground_decoration
+        self.can_pop = can_pop
+        self.on_confirm_pop = on_confirm_pop
 
     def _get_control_name(self):
         return "view"
@@ -133,6 +138,9 @@ class View(ScrollableControl, AdaptiveControl):
             self.__end_drawer._set_attr_internal("n", "drawer_end")
             children.append(self.__end_drawer)
         return children + self.__controls
+
+    def confirm_pop(self, shouldPop: bool):
+        self.invoke_method("confirm_pop", {"shouldPop": str(shouldPop).lower()})
 
     # route
     @property
@@ -302,6 +310,25 @@ class View(ScrollableControl, AdaptiveControl):
     @decoration.setter
     def decoration(self, value: Optional[BoxDecoration]):
         self.__decoration = value
+
+    # can_pop
+    @property
+    def can_pop(self) -> Optional[bool]:
+        return self._get_attr("canPop", data_type="bool")
+
+    @can_pop.setter
+    def can_pop(self, value: Optional[bool]):
+        self._set_attr("canPop", value)
+
+    # on_confirm_pop
+    @property
+    def on_confirm_pop(self):
+        return self._get_event_handler("confirm_pop")
+
+    @on_confirm_pop.setter
+    def on_confirm_pop(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("confirm_pop", handler)
+        self._set_attr("onConfirmPop", True if handler is not None else None)
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

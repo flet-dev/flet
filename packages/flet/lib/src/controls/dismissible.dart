@@ -56,7 +56,8 @@ class _DismissibleControlState extends State<DismissibleControl> {
         parseDismissThresholds(widget.control, "dismissThresholds");
 
     DismissDirection direction = parseDismissDirection(
-        widget.control.attrString("dismissDirection"), DismissDirection.horizontal)!;
+        widget.control.attrString("dismissDirection"),
+        DismissDirection.horizontal)!;
 
     widget.backend.subscribeMethods(widget.control.id,
         (methodName, args) async {
@@ -118,7 +119,10 @@ class _DismissibleControlState extends State<DismissibleControl> {
                     widget.control.state["confirm_dismiss"] = completer;
                     widget.backend.triggerControlEvent(
                         widget.control.id, "confirm_dismiss", direction.name);
-                    return completer.future;
+                    return completer.future.timeout(
+                      const Duration(minutes: 5),
+                      onTimeout: () => false,
+                    );
                   }
                 : null,
             movementDuration: Duration(

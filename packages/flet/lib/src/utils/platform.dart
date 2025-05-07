@@ -15,6 +15,16 @@ bool isMobilePlatform() {
           defaultTargetPlatform == TargetPlatform.android);
 }
 
+/// Checks if the current platform is iOS
+bool isiOSPlatform() {
+  return !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+}
+
+/// Checks if the current platform is Android
+bool isAndroidPlatform() {
+  return !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+}
+
 /// Checks if the current platform is Windows desktop.
 bool isWindowsDesktop() {
   return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
