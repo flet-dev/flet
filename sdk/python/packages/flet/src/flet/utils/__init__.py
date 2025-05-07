@@ -1,6 +1,6 @@
 from flet.utils.browser import open_in_browser
 from flet.utils.classproperty import classproperty
-from flet.utils.deprecated import deprecated
+from flet.utils.deprecated import warn_deprecated, deprecated
 from flet.utils.files import (
     cleanup_path,
     copy_tree,

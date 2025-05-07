@@ -17,6 +17,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import warn_deprecated
 
 
 class Segment(Control):
@@ -116,13 +117,18 @@ class SegmentedButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/segmentedbutton
     """
 
+    def __check_selected_type_is_deprecated(self, selected: Optional[Union[list, Set]]) -> list:
+        if isinstance(selected, set):
+            warn_deprecated("Using set as type of selected param", "0.28", "0.31", "Use list instead.")
+        return list(selected) if selected is not None else []
+
     def __init__(
         self,
         segments: List[Segment],
         style: Optional[ButtonStyle] = None,
         allow_empty_selection: Optional[bool] = None,
         allow_multiple_selection: Optional[bool] = None,
-        selected: Optional[Set] = None,
+        selected: Optional[Union[list, Set]] = None,
         selected_icon: Optional[Control] = None,
         show_selected_icon: Optional[bool] = None,
         direction: Optional[Axis] = None,
@@ -195,7 +201,8 @@ class SegmentedButton(ConstrainedControl):
         self.allow_multiple_selection = allow_multiple_selection
         self.allow_empty_selection = allow_empty_selection
         self.selected_icon = selected_icon
-        self.selected = selected
+
+        self.selected = self.__check_selected_type_is_deprecated(selected)
         self.style = style
         self.direction = direction
         self.padding = padding
@@ -292,16 +299,17 @@ class SegmentedButton(ConstrainedControl):
 
     # selected
     @property
-    def selected(self) -> Optional[Set]:
+    def selected(self) -> list:
         s = self._get_attr("selected")
-        return set(json.loads(s)) if s else s
+        return list(json.loads(s)) if s else []
 
     @selected.setter
-    def selected(self, value: Optional[Set]):
+    def selected(self, value: Optional[Union[list, Set]]):
+        value = self.__check_selected_type_is_deprecated(value)
         self._set_attr(
             "selected",
             (
-                json.dumps(list(value), separators=(",", ":"))
+                json.dumps(value, separators=(",", ":"))
                 if value is not None
                 else None
             ),

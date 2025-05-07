@@ -2,14 +2,21 @@ import functools
 import warnings
 from typing import TypeVar, Any, Type, Optional, Callable
 
-def __get_deprecated_message(
+def warn_deprecated(
     name: str,
     version: str,
-    delete_version: Optional[str],
-    reason: str
-) -> str:
-    delete_version_message = f' and will be removed in version {delete_version}' if delete_version else ''
-    return f"{name} is deprecated since version {version}{delete_version_message}. {reason}"
+    delete_version: Optional[str] = None,
+    reason: Optional[str] = None
+) -> None:
+    delete_version_message = f" and will be removed in version {delete_version}" if delete_version else ""
+    reason_message = " " + reason if reason else ""
+    msg = f"{name} is deprecated since version {version}{delete_version_message}.{reason_message}"
+
+    warnings.warn(
+        msg,
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
 
 F = TypeVar('F', bound=Callable[..., Any])
 T = TypeVar('T')
@@ -33,15 +40,11 @@ def deprecated(
     def decorator(func: F):
         @functools.wraps(func)
         def new_func(*args, **kwargs):
-            warnings.warn(
-                __get_deprecated_message(
-                    name=f"{func.__name__}{'()' if is_method else ''}",
-                    version=version,
-                    delete_version=delete_version,
-                    reason=reason
-                ),
-                category=DeprecationWarning,
-                stacklevel=2,
+            warn_deprecated(
+                name=f"{func.__name__}{'()' if is_method else ''}",
+                version=version,
+                delete_version=delete_version,
+                reason=reason
             )
             return func(*args, **kwargs)
 
@@ -69,15 +72,11 @@ def deprecated_class(
 
         @functools.wraps(orig_init)
         def new_init(self, *args, **kwargs):
-            warnings.warn(
-                __get_deprecated_message(
-                    name=cls.__name__,
-                    version=version,
-                    delete_version=delete_version,
-                    reason=reason
-                ),
-                category=DeprecationWarning,
-                stacklevel=2
+            warn_deprecated(
+                name=cls.__name__,
+                version=version,
+                delete_version=delete_version,
+                reason=reason
             )
             orig_init(self, *args, **kwargs)
 
@@ -93,13 +92,9 @@ def deprecated_property(
     version: str,
     delete_version: Optional[str] = None,
 ) -> None:
-    warnings.warn(
-        __get_deprecated_message(
-            name=f'{name} property',
-            version=version,
-            delete_version=delete_version,
-            reason=reason
-        ),
-        category=DeprecationWarning,
-        stacklevel=2,
+    warn_deprecated(
+        name=f'{name} property',
+        version=version,
+        delete_version=delete_version,
+        reason=reason
     )
