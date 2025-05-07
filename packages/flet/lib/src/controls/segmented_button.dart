@@ -52,7 +52,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     var selected = widget.control
         .get<List>("selected", [])!
         .map((e) => e.toString())
-        .toList();
+        .toSet();
     var segments = widget.control.children("segments");
 
     if (segments.isEmpty) {

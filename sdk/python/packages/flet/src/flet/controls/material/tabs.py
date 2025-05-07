@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -30,11 +30,34 @@ __all__ = ["Tab", "Tabs"]
 
 @control("Tab")
 class Tab(AdaptiveControl):
+    """
+    TBD
+    """
+
     label: Optional[StrOrControl] = None
+    """
+    TBD
+    """
+
     content: Optional[Control] = None
+    """
+    A `Control` to display below the Tab when it is selected.
+    """
+
     icon: Optional[IconValueOrControl] = None
+    """
+    An icon to display on the left of Tab text.
+    """
+
     height: OptionalNumber = None
+    """
+    TBD
+    """
+
     icon_margin: OptionalMarginValue = None
+    """
+    TBD
+    """
 
     def before_update(self):
         super().before_update()
@@ -46,12 +69,14 @@ class Tab(AdaptiveControl):
 @control("Tabs")
 class Tabs(ConstrainedControl, AdaptiveControl):
     """
-    The Tabs control is used for navigating frequently accessed, distinct content categories. Tabs allow for navigation between two or more content views and relies on text headers to articulate the different sections of content.
+    The Tabs control is used for navigating frequently accessed, distinct content
+    categories. Tabs allow for navigation between two or more content views and relies
+    on text headers to articulate the different sections of content.
 
     Online docs: https://flet.dev/docs/controls/tabs
     """
 
-    tabs: List[Tab] = field(default_factory=list)
+    tabs: list[Tab] = field(default_factory=list)
     selected_index: int = 0
     scrollable: bool = True
     tab_alignment: Optional[TabAlignment] = None
