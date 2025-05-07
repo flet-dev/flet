@@ -39,27 +39,168 @@ class Slider(ConstrainedControl, AdaptiveControl):
     """
 
     value: OptionalNumber = None
+    """
+    The currently selected value for this slider.
+
+    The slider's thumb is drawn at a position that corresponds to this value.
+
+    Defaults to value of `min` property.
+    """
+
     label: Optional[str] = None
+    """
+    Format with `{value}`.
+
+    A label to show above the slider when the slider is active. The value of
+    `label` may contain `{value}` which will be replaced with a current slider
+    value.
+
+    It is used to display the value of a discrete slider, and it is displayed as
+    part of the value indicator shape.
+
+    If not set, then the value indicator will not be displayed.
+    """
+
     min: Number = 0.0
+    """
+    The minimum value the user can select. Must be less than or equal to `max`.
+
+    If the `max` is equal to the `min`, then the slider is disabled.
+
+    Defaults to `0.0`.
+    """
+
     max: Number = 1.0
+    """
+    The maximum value the user can select. Must be greater than or equal to `min`.
+
+    If the `max` is equal to the `min`, then the slider is disabled.
+
+    Defaults to `1.0`.
+    """
+
     divisions: Optional[int] = None
+    """
+    The number of discrete divisions.
+
+    Typically used with `label` to show the current discrete value.
+
+    If not set, the slider is continuous.
+    """
+
     round: int = 0
+    """
+    The number of decimals displayed on the `label` containing `value`.
+
+    Defaults to `0`, which displays value rounded to the nearest integer.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus. If there is more
+    than one control on a page with autofocus set, then the first one added to the
+    page will get focus.
+    """
+
     active_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use for the portion of
+    the slider track that is active.
+
+    The "active" side of the slider is the side between the thumb and the minimum
+    value.
+    """
+
     inactive_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) for the inactive portion of
+    the slider track.
+
+    The "inactive" side of the slider is the side between the thumb and the maximum
+    value.
+    """
+
     thumb_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the thumb.
+    """
+
     interaction: Optional[SliderInteraction] = None
+    """
+    The allowed way for the user to interact with this slider. Value is a
+    [`SliderInteraction`](https://flet.dev/docs/reference/types/sliderinteraction)
+    and defaults to `SliderInteraction.TAP_AND_SLIDE`.
+    """
+
     secondary_active_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use for the portion of
+    the slider track between the thumb and the `secondary_track_value`.
+    """
+
     overlay_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The highlight [color](https://flet.dev/docs/reference/colors) that's typically
+    used to indicate that the range slider thumb is in `ControlState.HOVERED` or
+    `DRAGGED`
+    [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
+    """
+
     secondary_track_value: OptionalNumber = None
+    """
+    The secondary track value for this slider.
+
+    If not null, a secondary track using `secondary_active_color` is drawn between
+    the thumb and this value, over the inactive track. If less than `value`, then
+    the secondary track is not shown.
+
+    It can be ideal for media scenarios such as showing the buffering progress
+    while the `value` shows the play progress.
+    """
+
     mouse_cursor: Optional[MouseCursor] = None
+    """
+    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    control.
+
+    Value is of type
+    [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    TBD
+    """
+
     year_2023: Optional[bool] = None
+    """
+    TBD
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the state of the Slider is changed.
+    """
+
     on_change_start: OptionalControlEventCallable = None
+    """
+    Fires when the user starts selecting a new value for the slider.
+    """
+
     on_change_end: OptionalControlEventCallable = None
+    """
+    Fires when the user is done selecting a new value for the slider.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the control has received focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the control has lost focus.
+    """
 
     def before_update(self):
         super().before_update()
