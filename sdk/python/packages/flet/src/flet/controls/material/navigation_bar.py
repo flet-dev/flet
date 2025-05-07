@@ -22,7 +22,8 @@ __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehav
 
 class NavigationBarLabelBehavior(Enum):
     """
-    Defines how the destinations' labels will be laid out and when they'll be displayed.
+    Defines how the destinations' labels will be laid out and when they'll
+    be displayed.
     """
 
     ALWAYS_SHOW = "alwaysShow"
@@ -33,8 +34,8 @@ class NavigationBarLabelBehavior(Enum):
 @control("NavigationBarDestination")
 class NavigationBarDestination(AdaptiveControl):
     """
-    Defines the appearance of the button items that are arrayed within the navigation
-    bar.
+    Defines the appearance of the button items that are arrayed within the
+    navigation bar.
 
     The value must be a list of two or more NavigationBarDestination instances.
     """
@@ -184,7 +185,3 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
     Fires when selected destination changed.
     """
-
-    def before_update(self):
-        super().before_update()
-        # self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)

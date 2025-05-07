@@ -42,7 +42,7 @@ ImageFilter? parseBlur(dynamic value, [ImageFilter? defaultValue]) {
   } else if (value is List) {
     sigmaX = parseDouble(value.isNotEmpty ? value[0] : 0, 0)!;
     sigmaY = parseDouble(value.length > 1 ? value[1] : value[0], 0)!;
-  } else if (value is Map<String, dynamic>) {
+  } else if (value is Map) {
     sigmaX = parseDouble(value["sigma_x"], 0)!;
     sigmaY = parseDouble(value["sigma_y"], 0)!;
     tileMode = parseTileMode(value["tile_mode"]);

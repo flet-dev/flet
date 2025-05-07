@@ -2,24 +2,32 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 
-Map<String, dynamic>? parseLocaleConfiguration(dynamic value,
-    [Map<String, dynamic>? defaultValue]) {
-  if (value == null) return defaultValue;
-  List<Locale>? supportedLocales;
+class LocaleConfiguration {
+  final List<Locale> supportedLocales;
+  final Locale? locale;
 
-  var sl = value["supported_locales"];
-  Locale? locale = parseLocale(value["current_locale"]);
-  if (sl != null) {
-    supportedLocales =
-        sl.map((e) => parseLocale(e)).whereType<Locale>().toList();
+  const LocaleConfiguration(
+      {required this.supportedLocales, required this.locale});
+}
+
+LocaleConfiguration parseLocaleConfiguration(dynamic value) {
+  List<Locale>? supportedLocales;
+  Locale? locale;
+
+  if (value != null) {
+    var sl = value["supported_locales"];
+    if (sl != null) {
+      supportedLocales =
+          sl.map((e) => parseLocale(e)).whereType<Locale>().toList();
+    }
+    locale = parseLocale(value["current_locale"]);
   }
 
-  return {
-    "supportedLocales": supportedLocales != null && supportedLocales.isNotEmpty
-        ? supportedLocales
-        : [const Locale("en", "US")], // American locale as fallback
-    "locale": locale
-  };
+  return LocaleConfiguration(
+      supportedLocales: supportedLocales != null && supportedLocales.isNotEmpty
+          ? supportedLocales
+          : [const Locale("en", "US")],
+      locale: locale);
 }
 
 Locale? parseLocale(dynamic value, [Locale? defaultValue]) {
@@ -36,10 +44,11 @@ Locale? parseLocale(dynamic value, [Locale? defaultValue]) {
       scriptCode:
           (scriptCode != null && scriptCode.isNotEmpty) ? scriptCode : null);
 }
+
 extension LocaleParsers on Control {
-  Map<String, dynamic>? getLocaleConfiguration(String propertyName,
-      [Map<String, dynamic>? defaultValue]) {
-    return parseLocaleConfiguration(get(propertyName), defaultValue);
+  LocaleConfiguration getLocaleConfiguration(String propertyName,
+      [LocaleConfiguration? defaultValue]) {
+    return parseLocaleConfiguration(get(propertyName));
   }
 
   Locale? getLocale(String propertyName, [Locale? defaultValue]) {

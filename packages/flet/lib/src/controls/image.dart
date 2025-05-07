@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -25,10 +27,11 @@ class ImageControl extends StatelessWidget {
     debugPrint("Image build: ${control.id}");
 
     var src = control.getString("src", "")!;
-    var srcBase64 = control.getString("srcBase64", "")!;
-    if (src == "" && srcBase64 == "") {
+    var srcBase64 = control.getString("src_base64", "")!;
+    var srcBytes = (control.get("src_bytes") as Uint8List?) ?? Uint8List(0);
+    if (src == "" && srcBase64 == "" && srcBytes.isEmpty) {
       return const ErrorControl(
-          "Image must have either \"src\" or \"src_base64\" specified.");
+          "Image must have either \"src\" or \"src_base64\" or \"src_bytes\" specified.");
     }
     var errorContent = control.buildWidget("error_content");
 
@@ -37,6 +40,7 @@ class ImageControl extends StatelessWidget {
       control: control,
       src: src,
       srcBase64: srcBase64,
+      srcBytes: srcBytes,
       width: control.getDouble("width"),
       height: control.getDouble("height"),
       cacheWidth: control.getInt("cache_width"),

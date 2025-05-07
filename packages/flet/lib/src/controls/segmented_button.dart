@@ -13,7 +13,8 @@ import 'base_controls.dart';
 class SegmentedButtonControl extends StatefulWidget {
   final Control control;
 
-  const SegmentedButtonControl({super.key, required this.control});
+  SegmentedButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<SegmentedButtonControl> createState() => _SegmentedButtonControlState();

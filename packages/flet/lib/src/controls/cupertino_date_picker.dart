@@ -10,7 +10,8 @@ import 'base_controls.dart';
 class CupertinoDatePickerControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoDatePickerControl({super.key, required this.control});
+  CupertinoDatePickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoDatePickerControl> createState() =>
@@ -19,7 +20,6 @@ class CupertinoDatePickerControl extends StatefulWidget {
 
 class _CupertinoDatePickerControlState
     extends State<CupertinoDatePickerControl> {
-
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDatePicker build: ${widget.control.id}");

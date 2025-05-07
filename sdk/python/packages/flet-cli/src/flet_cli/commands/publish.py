@@ -85,13 +85,6 @@ class Command(BaseCommand):
             help="web renderer to use",
         )
         parser.add_argument(
-            "--use-color-emoji",
-            dest="use_color_emoji",
-            action="store_true",
-            default=False,
-            help="enables color emojis",
-        )
-        parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
             choices=["path", "hash"],
@@ -298,10 +291,6 @@ class Command(BaseCommand):
                 options.web_renderer
                 or get_pyproject("tool.flet.web.renderer")
                 or "auto"
-            ),
-            use_color_emoji=(
-                options.use_color_emoji
-                or get_pyproject("tool.flet.web.use_color_emoji")
             ),
             route_url_strategy=str(
                 options.route_url_strategy

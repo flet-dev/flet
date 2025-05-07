@@ -15,7 +15,8 @@ import 'list_tile.dart';
 class RadioControl extends StatefulWidget {
   final Control control;
 
-  const RadioControl({super.key, required this.control});
+  RadioControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<RadioControl> createState() => _RadioControlState();

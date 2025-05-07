@@ -6,10 +6,8 @@ import 'package:flutter/services.dart';
 class DropdownControl extends StatefulWidget {
   final Control control;
 
-  const DropdownControl({
-    super.key,
-    required this.control,
-  });
+  DropdownControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<DropdownControl> createState() => _DropdownControlState();

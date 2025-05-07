@@ -10,10 +10,8 @@ import '../utils/time.dart';
 class DatePickerControl extends StatefulWidget {
   final Control control;
 
-  const DatePickerControl({
-    super.key,
-    required this.control,
-  });
+  DatePickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();

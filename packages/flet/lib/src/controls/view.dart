@@ -18,7 +18,7 @@ import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import '../utils/theme.dart';
 import '../widgets/loading_page.dart';
-import '../widgets/page_control_data.dart';
+import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import '../widgets/scaffold_key_provider.dart';
 import 'app_bar.dart';
@@ -29,7 +29,8 @@ import 'scrollable_control.dart';
 class ViewControl extends StatefulWidget {
   final Control control;
 
-  const ViewControl({super.key, required this.control});
+  ViewControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ViewControl> createState() => _ViewControlState();
@@ -118,7 +119,7 @@ class _ViewControlState extends State<ViewControl> {
       child = ScrollNotificationControl(control: control, child: child);
     }
 
-    var pageData = PageControlData.of(context);
+    var pageData = PageContext.of(context);
 
     Control? appBar = control.child("appbar");
     Widget? appBarWidget;

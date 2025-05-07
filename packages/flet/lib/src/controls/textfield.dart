@@ -5,10 +5,8 @@ import 'package:flutter/services.dart';
 class TextFieldControl extends StatefulWidget {
   final Control control;
 
-  const TextFieldControl({
-    super.key,
-    required this.control,
-  });
+  TextFieldControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();

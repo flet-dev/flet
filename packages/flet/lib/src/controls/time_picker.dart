@@ -9,7 +9,8 @@ import '../utils/time.dart';
 class TimePickerControl extends StatefulWidget {
   final Control control;
 
-  const TimePickerControl({super.key, required this.control});
+  TimePickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<TimePickerControl> createState() => _TimePickerControlState();

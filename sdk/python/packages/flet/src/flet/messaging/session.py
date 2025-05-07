@@ -6,7 +6,6 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from flet.controls.base_control import BaseControl
-from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page, _session_page
@@ -34,7 +33,7 @@ class Session:
         self.__conn = conn
         self.__id = random_string(16)
         self.__expires_at = None
-        self.__index: weakref.WeakValueDictionary[int, Control] = (
+        self.__index: weakref.WeakValueDictionary[int, BaseControl] = (
             weakref.WeakValueDictionary()
         )
         self.__page = Page(self)
@@ -75,7 +74,6 @@ class Session:
         _session_page.set(self.__page)
         self.__conn = conn
         self.__expires_at = None
-        UpdateBehavior.disable_auto_update()
         await self.dispatch_event(self.__page._i, "connect", None)
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
@@ -86,12 +84,12 @@ class Session:
         if self.__conn:
             self.__conn.dispose()
             self.__conn = None
-        UpdateBehavior.disable_auto_update()
         await self.dispatch_event(self.__page._i, "disconnect", None)
 
     def close(self):
         logger.debug(f"Closing expired session: {self.id}")
         self.__pubsub_client.unsubscribe_all()
+        asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
 
     def patch_control(self, control: BaseControl):
         patch, added_controls, removed_controls = self.__get_update_control_patch(
@@ -168,17 +166,20 @@ class Session:
                 }
                 e = from_dict(event_type, args)
 
-            UpdateBehavior.reset()
+            handle_event = control.before_event(e)
 
-            # Handle async and sync event handlers accordingly
-            event_handler = getattr(control, field_name)
-            if asyncio.iscoroutinefunction(event_handler):
-                await event_handler(e)
-            elif callable(event_handler):
-                event_handler(e)
+            if handle_event is None or handle_event:
+                UpdateBehavior.reset()
 
-            if UpdateBehavior.auto_update_enabled():
-                self.auto_update(control)
+                # Handle async and sync event handlers accordingly
+                event_handler = getattr(control, field_name)
+                if asyncio.iscoroutinefunction(event_handler):
+                    await event_handler(e)
+                elif callable(event_handler):
+                    event_handler(e)
+
+                if UpdateBehavior.auto_update_enabled():
+                    self.auto_update(control)
         except Exception as ex:
             tb = traceback.format_exc()
             self.error(f"Exception in '{field_name}': {ex}\n{tb}")

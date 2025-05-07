@@ -10,7 +10,7 @@ Map<String, double>? parseResponsiveNumber(dynamic value, double defaultValue) {
         (key, val) => MapEntry(key.toString(), parseDouble(val, 0)!),
       );
     } else {
-      result[""] = value;
+      result[""] = parseDouble(value, 0)!;
     }
   }
 

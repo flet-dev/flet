@@ -35,6 +35,7 @@ import 'utils/weak_value_map.dart';
 
 /// FletBackend - Handles business logic, provides data, and acts as ChangeNotifier
 class FletBackend extends ChangeNotifier {
+  bool multiView = false;
   bool _disposed = false;
   final WeakReference<FletBackend>? _parentFletBackend;
   final Uri pageUri;
@@ -54,8 +55,8 @@ class FletBackend extends ChangeNotifier {
   int _reconnectStarted = 0;
   int _reconnectDelayMs = 0;
   FletBackendChannel? _backendChannel;
+  final List<Message> _sendQueue = [];
   String route = "";
-  String _deepLinkingRoute = "";
   bool isLoading = true;
   final Completer<void> pageSizeUpdated = Completer<void>();
   String error = "";
@@ -80,6 +81,7 @@ class FletBackend extends ChangeNotifier {
   FletBackend(
       {required this.pageUri,
       required this.assetsDir,
+      required this.multiView,
       int? reconnectIntervalMs,
       int? reconnectTimeoutMs,
       this.errorsHandler,
@@ -105,6 +107,7 @@ class FletBackend extends ChangeNotifier {
       "web": kIsWeb,
       "debug": kDebugMode,
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
+      "multi_view": multiView,
       "window": {
         "_c": "Window",
         "_i": 2,
@@ -175,24 +178,27 @@ class FletBackend extends ChangeNotifier {
   }
 
   _registerClient() {
-    _send(Message(
-        action: MessageAction.registerClient,
-        payload: RegisterClientRequestBody(
-            sessionId: SessionStore.getSessionId(pageUri.toString()),
-            pageName: getWebPageName(pageUri),
-            page: {
-              'route': page.get("route"),
-              'pwa': page.get("pwa"),
-              'web': page.get("web"),
-              'debug': page.get("debug"),
-              'wasm': page.get("wasm"),
-              'platform_brightness': page.get("platform_brightness"),
-              'width': page.get("width"),
-              'height': page.get("height"),
-              'platform': page.get("platform"),
-              'window': page.child("window")!.toMap(),
-              'media': page.get("media"),
-            }).toMap()));
+    _send(
+        Message(
+            action: MessageAction.registerClient,
+            payload: RegisterClientRequestBody(
+                sessionId: SessionStore.getSessionId(pageUri.toString()),
+                pageName: getWebPageName(pageUri),
+                page: {
+                  'route': page.get("route"),
+                  'pwa': page.get("pwa"),
+                  'web': page.get("web"),
+                  'debug': page.get("debug"),
+                  'wasm': page.get("wasm"),
+                  'multi_view': page.get("multi_view"),
+                  'platform_brightness': page.get("platform_brightness"),
+                  'width': page.get("width"),
+                  'height': page.get("height"),
+                  'platform': page.get("platform"),
+                  'window': page.child("window")!.toMap(),
+                  'media': page.get("media"),
+                }).toMap()),
+        unbuffered: true);
   }
 
   _onClientRegistered(RegisterClientResponseBody resp) {
@@ -206,11 +212,12 @@ class FletBackend extends ChangeNotifier {
 
       page.applyPatch(resp.patch, this);
 
-      if (_deepLinkingRoute.isNotEmpty) {
-        debugPrint("Sending buffered deep link route: $_deepLinkingRoute");
-        _sendRouteChangeEvent(_deepLinkingRoute);
+      // drain send queue
+      debugPrint("Send queue: ${_sendQueue.length}");
+      for (var message in _sendQueue) {
+        _send(message);
       }
-      _deepLinkingRoute = "";
+      _sendQueue.clear();
     } else {
       // error response!
       isLoading = true;
@@ -249,10 +256,6 @@ class FletBackend extends ChangeNotifier {
         // connect to the server
         connect();
       }();
-    } else if (isLoading) {
-      // buffer route
-      debugPrint("Saving deep linking route");
-      _deepLinkingRoute = newRoute;
     } else {
       // existing route change
       debugPrint("New page route: $newRoute");
@@ -273,7 +276,7 @@ class FletBackend extends ChangeNotifier {
   /// - [eventData]: Optional data to pass along with the event.
   void triggerControlEvent(Control control, String eventName,
       [dynamic eventData]) {
-    if (!isLoading && control.getBool("on_$eventName", false)!) {
+    if (control.get("on_$eventName") == true) {
       debugPrint("${control.type}(${control.id}).on_$eventName($eventData)");
       triggerControlEventById(control.id, eventName, eventData);
     }
@@ -289,8 +292,8 @@ class FletBackend extends ChangeNotifier {
   }
 
   void _sendRouteChangeEvent(String route) {
-    updateControl(page.id, {"route": route});
-    triggerControlEvent(page, "route_change", route);
+    updateControl(page.id, {"route": route}, notify: true);
+    triggerControlEventById(page.id, "route_change", {"route": route});
   }
 
   void onWindowEvent(String eventName, WindowState windowState) {
@@ -361,7 +364,7 @@ class FletBackend extends ChangeNotifier {
       if (dart) {
         control.applyPatch(props, this, shouldNotify: notify);
       }
-      if (python && !isLoading) {
+      if (python) {
         _send(Message(
             action: MessageAction.updateControl,
             payload: UpdateControlBody(id: id, props: props).toMap()));
@@ -482,8 +485,12 @@ class FletBackend extends ChangeNotifier {
     }
   }
 
-  _send(Message message) {
-    //debugPrint("_send: ${message.payload}");
-    _backendChannel?.send(message);
+  _send(Message message, {bool unbuffered = false}) {
+    if (unbuffered || !isLoading) {
+      debugPrint("_send: ${message.payload}");
+      _backendChannel?.send(message);
+    } else {
+      _sendQueue.add(message);
+    }
   }
 }

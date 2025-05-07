@@ -1,12 +1,23 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Protocol, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Optional,
+    Protocol,
+    TypeVar,
+    Union,
+)
 
 from flet.controls.colors import Colors
 from flet.controls.control_event import ControlEvent
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.cupertino.cupertino_icons import CupertinoIcons
 from flet.controls.material.icons import Icons
+
+if TYPE_CHECKING:
+    from flet.controls.control import Control
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -25,6 +36,11 @@ class WebRenderer(Enum):
     AUTO = "auto"
     CANVAS_KIT = "canvaskit"
     SKWASM = "skwasm"
+
+
+class RouteUrlStrategy(Enum):
+    PATH = "path"
+    HASH = "hash"
 
 
 class UrlTarget(Enum):
@@ -53,8 +69,6 @@ class NotchShape(Enum):
     CIRCULAR = "circular"
 
 
-
-
 class ResponsiveRowBreakpoint(Enum):
     """
     Breakpoints for responsive design.
@@ -66,8 +80,10 @@ class ResponsiveRowBreakpoint(Enum):
     LG = "lg"
     XL = "xl"
     XXL = "xxl"
+
+
 Number = Union[int, float]
-ResponsiveNumber = Union[Dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
+ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
 OptionalNumber = Optional[Number]
 
 # literal type alias
@@ -204,8 +220,12 @@ class PagePlatform(Enum):
         return self in {PagePlatform.IOS, PagePlatform.ANDROID}
 
     def is_desktop(self) -> bool:
-        """Whether this PagePlatform instance is a desktop (macOS, Windows, Linux) platform."""
+        """
+        Whether this PagePlatform instance is a desktop (macOS, Windows, Linux)
+        platform.
+        """
         return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
+
 
 class ThemeMode(Enum):
     SYSTEM = "system"
@@ -331,7 +351,7 @@ class Locale:
 
 @dataclass
 class LocaleConfiguration:
-    supported_locales: Optional[List[Locale]] = None
+    supported_locales: Optional[list[Locale]] = None
     current_locale: Optional[Locale] = None
 
 
@@ -339,13 +359,6 @@ class LocaleConfiguration:
 EventType = TypeVar("EventType", bound=ControlEvent)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
-
-
-class OnFocusEvent(ControlEvent):
-    def __init__(self, e: ControlEvent):
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        self.primary: bool = bool(e.data)
-
 
 # Colors
 ColorEnums = (Colors, CupertinoColors)
@@ -366,5 +379,4 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...

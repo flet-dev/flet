@@ -10,10 +10,8 @@ from flet.controls.types import (
     IconValue,
     LabelPosition,
     MouseCursor,
-    OnFocusEvent,
     OptionalColorValue,
     OptionalControlEventCallable,
-    OptionalEventCallable,
     OptionalNumber,
     StrOrControl,
 )
@@ -24,9 +22,11 @@ __all__ = ["Switch"]
 @control("Switch")
 class Switch(ConstrainedControl, AdaptiveControl):
     """
-    A toggle represents a physical switch that allows someone to choose between two mutually exclusive options.
+    A toggle represents a physical switch that allows someone to choose between
+    two mutually exclusive options.
 
-    or example, "On/Off", "Show/Hide". Choosing an option should produce an immediate result.
+    or example, "On/Off", "Show/Hide". Choosing an option should produce
+    an immediate result.
 
     Example:
     ```
@@ -77,22 +77,11 @@ class Switch(ConstrainedControl, AdaptiveControl):
     track_outline_width: OptionalControlStateValue[OptionalNumber] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_change: OptionalControlEventCallable = None
-    on_focus: OptionalEventCallable[OnFocusEvent] = None
+    on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.splash_radius is None or self.splash_radius >= 0
-        ), "splash_radius cannot be negative"
-        #     super().before_update()
-        #     self._set_attr_json("thumbColor", self.__thumb_color, wrap_attr_dict=True)
-        #     self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
-        #     self._set_attr_json(
-        #         "trackOutlineColor", self.__track_outline_color, wrap_attr_dict=True
-        #     )
-        #     self._set_attr_json(
-        #         "trackOutlineWidth", self.__track_outline_width, wrap_attr_dict=True
-        #     )
-        #     self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
-        #     self._set_attr_json("trackColor", self.__track_color, wrap_attr_dict=True)
+        assert self.splash_radius is None or self.splash_radius >= 0, (
+            "splash_radius cannot be negative"
+        )

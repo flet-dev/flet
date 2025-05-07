@@ -64,7 +64,7 @@ class ScaleDetails {
       required this.scaleY,
       required this.alignment});
 
-  factory ScaleDetails.fromJson(Map<String, dynamic> value) {
+  factory ScaleDetails.fromJson(Map<dynamic, dynamic> value) {
     return ScaleDetails(
         scale: parseDouble(value["scale"]),
         scaleX: parseDouble(value["scale_x"]),

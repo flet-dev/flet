@@ -7,12 +7,13 @@ class ScrollableControl extends StatefulWidget {
   final Axis scrollDirection;
   final ScrollController? scrollController;
 
-  const ScrollableControl(
-      {super.key,
+  ScrollableControl(
+      {Key? key,
       required this.control,
       required this.child,
       required this.scrollDirection,
-      this.scrollController});
+      this.scrollController})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ScrollableControl> createState() => _ScrollableControlState();

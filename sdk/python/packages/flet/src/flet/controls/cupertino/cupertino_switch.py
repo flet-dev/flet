@@ -30,7 +30,8 @@ class CupertinoSwitch(ConstrainedControl):
             ft.Switch(label="Material Checkbox", value=True),
             ft.Container(height=20),
             ft.Text(
-                "Adaptive Switch shows as CupertinoSwitch on macOS and iOS and as Switch on other platforms:"
+                "Adaptive Switch shows as CupertinoSwitch on macOS and iOS and "
+                "as Switch on other platforms:"
             ),
             ft.Switch(adaptive=True, label="Adaptive Switch", value=True),
         )
@@ -62,13 +63,3 @@ class CupertinoSwitch(ConstrainedControl):
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
     on_image_error: OptionalControlEventCallable = None
-
-    def before_update(self):
-        super().before_update()
-        # self._set_attr_json(
-        #     "trackOutlineColor", self.__track_outline_color, wrap_attr_dict=True
-        # )
-        # self._set_attr_json(
-        #     "trackOutlineWidth", self.__track_outline_width, wrap_attr_dict=True
-        # )
-        # self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)

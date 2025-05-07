@@ -20,7 +20,8 @@ typedef CanvasControlOnPaintCallback = void Function(Size size);
 class CanvasControl extends StatefulWidget {
   final Control control;
 
-  const CanvasControl({super.key, required this.control});
+  CanvasControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CanvasControl> createState() => _CanvasControlState();

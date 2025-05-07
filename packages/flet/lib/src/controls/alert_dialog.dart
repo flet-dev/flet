@@ -15,7 +15,8 @@ import 'control_widget.dart';
 class AlertDialogControl extends StatefulWidget {
   final Control control;
 
-  const AlertDialogControl({super.key, required this.control});
+  AlertDialogControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<AlertDialogControl> createState() => _AlertDialogControlState();

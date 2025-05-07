@@ -3,8 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Both controls must be equal", () {
-    var backend =
-        FletBackend(pageUri: Uri.parse("uri"), assetsDir: "", extensions: []);
+    var backend = FletBackend(
+        pageUri: Uri.parse("uri"),
+        assetsDir: "",
+        extensions: [],
+        multiView: false);
     var c1 = Control(
         id: 1,
         type: "Button",

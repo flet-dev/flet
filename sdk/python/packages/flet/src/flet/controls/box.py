@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
 from flet.controls.border import Border
@@ -70,8 +70,8 @@ class BoxShadow:
     blur_style: ShadowBlurStyle = ShadowBlurStyle.NORMAL
 
 
-ShadowValue = Union[BoxShadow, List[BoxShadow]]
-OptionalShadowValue = Union[BoxShadow, List[BoxShadow]]
+ShadowValue = Union[BoxShadow, list[BoxShadow]]
+OptionalShadowValue = Union[BoxShadow, list[BoxShadow]]
 
 
 class BoxShape(Enum):
@@ -93,6 +93,7 @@ class BoxFit(Enum):
 class DecorationImage:
     src: Optional[str] = None
     src_base64: Optional[str] = None
+    src_bytes: Optional[bytes] = None
     color_filter: Optional[ColorFilter] = None
     fit: Optional[ImageFit] = None
     alignment: Optional[Alignment] = None
@@ -125,12 +126,14 @@ class BoxConstraints:
     max_height: Number = float("inf")
 
     def __post_init__(self):
-        assert (
-            0 <= self.min_width <= self.max_width <= float("inf")
-        ), "min_width and max_width must be between 0 and infinity and min_width must be less than or equal to max_width"
-        assert (
-            0 <= self.min_height <= self.max_height <= float("inf")
-        ), "min_height and max_height must be between 0 and infinity and min_height must be less than or equal to max_height"
+        assert 0 <= self.min_width <= self.max_width <= float("inf"), (
+            "min_width and max_width must be between 0 and infinity "
+            "and min_width must be less than or equal to max_width"
+        )
+        assert 0 <= self.min_height <= self.max_height <= float("inf"), (
+            "min_height and max_height must be between 0 and infinity "
+            "and min_height must be less than or equal to max_height"
+        )
 
 
 # typing

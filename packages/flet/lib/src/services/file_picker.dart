@@ -1,40 +1,27 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/control.dart';
+import '../flet_service.dart';
 import '../utils/file_picker.dart';
-import '../utils/numbers.dart';
-import '../widgets/flet_store_mixin.dart';
 
-class FilePickerControl extends StatefulWidget {
-  final Control control;
+class FilePickerService extends FletService {
+  FilePickerService({required super.control});
 
-  const FilePickerControl({super.key, required this.control});
-
-  @override
-  State<FilePickerControl> createState() => _FilePickerControlState();
-}
-
-class _FilePickerControlState extends State<FilePickerControl>
-    with FletStoreMixin {
-  String? _upload;
-  String? _path;
   List<PlatformFile>? _files;
 
   @override
-  void initState() {
-    super.initState();
-    widget.control.addInvokeMethodListener(_invokeMethod);
+  void init() {
+    super.init();
+    debugPrint("FilePickerService(${control.id}).init: ${control.properties}");
+    control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
   void dispose() {
-    widget.control.removeInvokeMethodListener(_invokeMethod);
+    debugPrint("FilePickerService(${control.id}).dispose()");
+    control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
@@ -52,15 +39,12 @@ class _FilePickerControlState extends State<FilePickerControl>
     }
     switch (name) {
       case "upload":
-        var upload = args["upload"];
-        if (_upload != upload && upload != null && _files != null) {
-          _upload = upload;
-          debugPrint("Upload: $_upload");
-          // TODO
+        var files = args["files"];
+        if (files != null && _files != null) {
+          uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
-        FilePicker.platform
-            .pickFiles(
+        _files = (await FilePicker.platform.pickFiles(
                 dialogTitle: dialogTitle,
                 initialDirectory: initialDirectory,
                 lockParentWindow: true,
@@ -68,74 +52,55 @@ class _FilePickerControlState extends State<FilePickerControl>
                 allowedExtensions: allowedExtensions,
                 allowMultiple: args["allow_multiple"],
                 withData: false,
-                withReadStream: true)
-            .then((FilePickerResult? result) {
-          _files = result?.files;
-          sendEvent();
-        });
+                withReadStream: true))
+            ?.files;
+        return _files != null
+            ? _files!.asMap().entries.map((file) {
+                return FilePickerFile(
+                        id: file.key, // use entry's index as id
+                        name: file.value.name,
+                        path: kIsWeb ? null : file.value.path,
+                        size: file.value.size)
+                    .toMap();
+              }).toList()
+            : [];
       case "save_file":
-        if (!kIsWeb) {
-          FilePicker.platform
-              .saveFile(
-            dialogTitle: dialogTitle,
-            fileName: args["file_name"],
-            initialDirectory: initialDirectory,
-            lockParentWindow: true,
-            type: fileType,
-            allowedExtensions: allowedExtensions,
-            // bytes:
-          )
-              .then((result) {
-            _path = result;
-            sendEvent();
-          });
+        if (kIsWeb) {
+          throw Exception("Save File dialog is not supported on web.");
         }
+        return await FilePicker.platform.saveFile(
+          dialogTitle: dialogTitle,
+          fileName: args["file_name"],
+          initialDirectory: initialDirectory,
+          lockParentWindow: true,
+          type: fileType,
+          allowedExtensions: allowedExtensions,
+          // bytes:
+        );
       case "get_directory_path":
-        if (!kIsWeb) {
-          FilePicker.platform
-              .getDirectoryPath(
-            dialogTitle: dialogTitle,
-            initialDirectory: initialDirectory,
-            lockParentWindow: true,
-          )
-              .then((result) {
-            _path = result;
-            sendEvent();
-          });
+        if (kIsWeb) {
+          throw Exception("Get Directory Path dialog is not supported on web.");
         }
+        return await FilePicker.platform.getDirectoryPath(
+          dialogTitle: dialogTitle,
+          initialDirectory: initialDirectory,
+          lockParentWindow: true,
+        );
       default:
         throw Exception("Unknown FilePicker method: $name");
     }
   }
 
-  void sendEvent() {
-    var result = FilePickerResultEvent(
-            path: _path,
-            files: _files?.asMap().entries.map((entry) {
-              PlatformFile f = entry.value;
-              return FilePickerFile(
-                  id: entry.key, // use entry's index as id
-                  name: f.name,
-                  path: kIsWeb ? null : f.path,
-                  size: f.size);
-            }).toList())
-        .toMap();
-
-    widget.control.triggerEvent("result", result);
-    // widget.control.updateProperties({"_result": result});
-  }
-
-  Future uploadFiles(String filesJson, Uri pageUri) async {
-    var uj = json.decode(filesJson);
-    var uploadFiles = (uj as List).map((u) => FilePickerUploadFile(
-        id: parseInt(u["id"], -1)!, // -1 = invalid
+  Future uploadFiles(List<dynamic> files, Uri pageUri) async {
+    var uploadFiles = files.map((u) => FilePickerUploadFile(
+        id: u["id"],
         name: u["name"],
         uploadUrl: u["upload_url"],
         method: u["method"]));
 
     for (var uf in uploadFiles) {
-      var file = ((uf.id >= 0 && uf.id < _files!.length)
-              ? _files![uf.id]
+      var file = ((uf.id != null && uf.id! >= 0 && uf.id! < _files!.length)
+              ? _files![uf.id!]
               : null) // by id
           ??
           _files!.firstWhereOrNull((f) => f.name == uf.name); // by name
@@ -200,7 +165,7 @@ class _FilePickerControlState extends State<FilePickerControl>
   }
 
   void sendProgress(String name, double? progress, String? error) {
-    widget.control.triggerEvent(
+    control.triggerEvent(
         "upload",
         FilePickerUploadProgressEvent(
                 name: name, progress: progress, error: error)
@@ -220,11 +185,5 @@ class _FilePickerControlState extends State<FilePickerControl>
     } else {
       return uploadUrl;
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    debugPrint("FilePicker build: ${widget.control.id}");
-    return const SizedBox.shrink();
   }
 }

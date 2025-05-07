@@ -15,7 +15,8 @@ import 'list_tile.dart';
 class CupertinoRadioControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoRadioControl({super.key, required this.control});
+  CupertinoRadioControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();

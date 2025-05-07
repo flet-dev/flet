@@ -14,7 +14,7 @@ class DismissibleControl extends StatefulWidget {
   final Control control;
 
   DismissibleControl({Key? key, required this.control})
-      : super(key: ValueKey("dismissible_${control.id}"));
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<DismissibleControl> createState() => _DismissibleControlState();

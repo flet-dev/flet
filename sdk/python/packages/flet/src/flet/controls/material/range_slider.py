@@ -19,7 +19,8 @@ __all__ = ["RangeSlider"]
 class RangeSlider(ConstrainedControl):
     """
     A Material Design range slider. Used to select a range from a range of values.
-    A range slider can be used to select from either a continuous or a discrete set of values.
+    A range slider can be used to select from either a continuous or a discrete
+    set of values.
     The default is to use a continuous range of values from min to max.
 
     Example:
@@ -28,17 +29,20 @@ class RangeSlider(ConstrainedControl):
 
 
     def range_slider_changed(e):
-        print(f"On change! Values are ({e.control.start_value}, {e.control.end_value})")
+        print(f"On change! Values are ({e.control.start_value}, "
+        f"{e.control.end_value})")
 
 
     def range_slider_started_change(e):
         print(
-            f"On change start! Values are ({e.control.start_value}, {e.control.end_value})"
+            f"On change start! Values are ({e.control.start_value}, "
+            f"{e.control.end_value})"
         )
 
 
     def range_slider_ended_change(e):
-        print(f"On change end! Values are ({e.control.start_value}, {e.control.end_value})")
+        print(f"On change end! Values are ({e.control.start_value}, "
+        f"{e.control.end_value})")
 
 
     def main(page: ft.Page):
@@ -92,10 +96,6 @@ class RangeSlider(ConstrainedControl):
     on_change_end: OptionalControlEventCallable = None
 
     def before_update(self):
-        #     super().before_update()
-        #     self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
-        #     self._set_attr_json("mouseCursor", self.__mouse_cursor, wrap_attr_dict=True)
-
         # if value is not None:
         #     if self.max is not None:
         #         assert value <= self.max, "min must be less than or equal to max"
