@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -27,12 +27,10 @@ class ReorderableListView(ListView):
     """
     A scrollable list of controls that can be reordered.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/reorderablelistview
     """
 
-    controls: List[Control] = field(default_factory=list)
+    controls: list[Control] = field(default_factory=list)
     horizontal: bool = False
     item_extent: OptionalNumber = None
     first_item_prototype: bool = False
