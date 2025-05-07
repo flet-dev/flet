@@ -1,13 +1,13 @@
 import functools
 import warnings
-from typing import TypeVar, Type, Optional, Callable
+from typing import TypeVar, Any, Type, Optional, Callable
 
 def __get_deprecated_message(
     name: str,
     version: str,
     delete_version: Optional[str],
     reason: str
-):
+) -> str:
     delete_version_message = f' and will be removed in version {delete_version}' if delete_version else ''
     return f"{name} is deprecated since version {version}{delete_version_message}. {reason}"
 
@@ -30,7 +30,7 @@ def deprecated(
     :return: A decorator that wraps the function/method/property/event and emits a deprecation warning.
     """
 
-    def decorator(func):
+    def decorator(func: F):
         @functools.wraps(func)
         def new_func(*args, **kwargs):
             warnings.warn(
