@@ -117,7 +117,7 @@ class SegmentedButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/segmentedbutton
     """
 
-    def __check_selected_type_is_deprecated(self, selected: Optional[Union[list, Set]]) -> list:
+    def __check_selected_type_is_deprecated(self, selected: Optional[Union[List[str], Set]]) -> list:
         if isinstance(selected, set):
             warn_deprecated("Using set as type of selected param", "0.28", "0.31", "Use list instead.")
         return list(selected) if selected is not None else []
@@ -128,7 +128,7 @@ class SegmentedButton(ConstrainedControl):
         style: Optional[ButtonStyle] = None,
         allow_empty_selection: Optional[bool] = None,
         allow_multiple_selection: Optional[bool] = None,
-        selected: Optional[Union[list, Set]] = None,
+        selected: Optional[Union[List[str], Set]] = None,
         selected_icon: Optional[Control] = None,
         show_selected_icon: Optional[bool] = None,
         direction: Optional[Axis] = None,
@@ -299,12 +299,12 @@ class SegmentedButton(ConstrainedControl):
 
     # selected
     @property
-    def selected(self) -> list:
+    def selected(self) -> List[str]:
         s = self._get_attr("selected")
         return list(json.loads(s)) if s else []
 
     @selected.setter
-    def selected(self, value: Optional[Union[list, Set]]):
+    def selected(self, value: Optional[Union[List[str], Set]]):
         value = self.__check_selected_type_is_deprecated(value)
         self._set_attr(
             "selected",
