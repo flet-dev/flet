@@ -27,13 +27,74 @@ class NavigationRailLabelType(Enum):
 
 @control("NavigationRailDestination")
 class NavigationRailDestination(Control):
+    """
+    TBD
+    """
 
     icon: Optional[IconValueOrControl] = None
+    """
+    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
+    destination. 
+
+    Example with icon name:
+    ```
+    icon=ft.Icons.BOOKMARK
+    ```
+    Example with Control:
+    ```
+    icon=ft.Icon(ft.Icons.BOOKMARK)
+    ```
+
+    If `selected_icon` is provided, this will only be displayed when the destination is
+    not selected.
+
+    To make the NavigationRail more accessible, consider choosing an icon with a stroked
+    and filled version, such as `ft.Icons.CLOUD` and `ft.Icons.CLOUD_QUEUE`. The icon
+    should be set to the stroked version and `selected_icon` to the filled version.
+    """
+
     selected_icon: Optional[IconValueOrControl] = None
+    """
+    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
+    displayed when this destination is selected. 
+
+    Example with icon name:
+    ```
+    selected_icon=ft.Icons.BOOKMARK
+    ```
+    Example with Control:
+    ```
+    selected_icon=ft.Icon(ft.Icons.BOOKMARK)
+    ```
+
+    If this icon is not provided, the NavigationRail will display `icon` in either
+    state.
+    """
+
     label: Optional[StrOrControl] = None
+    """
+    A string or Control representing the destination's label.
+    """
+
     padding: OptionalPaddingValue = None
+    """
+    The amount of space to inset the destination item.
+
+    Padding is an instance of
+    [`Padding`](https://flet.dev/docs/reference/types/padding) class.
+    """
+
     indicator_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the `indicator_shape` when
+    this destination is selected.
+    """
+
     indicator_shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the selection indicator. The value is an instance of
+    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) class.
+    """
 
 
 @control("NavigationRail")
