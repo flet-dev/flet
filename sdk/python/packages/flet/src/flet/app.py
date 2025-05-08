@@ -78,8 +78,8 @@ def run(
 
 
 @deprecated(
-    reason="flet.app() method is deprecated. Use flet.run() instead.",
-    version="0.28",
+    reason="Use flet.run() instead.",
+    version="0.28.1",
     delete_version="0.31",
 )
 def app(
@@ -240,8 +240,8 @@ async def run_async(
 
 
 @deprecated(
-    reason="flet.app_async() method is deprecated. Use flet.run_async() instead.",
-    version="0.28",
+    reason="Use flet.run_async() instead.",
+    version="0.28.1",
     delete_version="0.31",
 )
 async def app_async(
