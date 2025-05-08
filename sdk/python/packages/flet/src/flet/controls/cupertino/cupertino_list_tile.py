@@ -124,3 +124,9 @@ class CupertinoListTile(ConstrainedControl):
     """
     Fires when a user clicks or taps the list tile.
     """
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            isinstance(self.title, str) or self.title.visible
+        ), "title must be a string or a visible Control"
