@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from flet.controls.border import Border
 from flet.controls.border_radius import OptionalBorderRadiusValue
@@ -20,7 +20,8 @@ class TooltipTriggerMode:
 
 @dataclass
 class Tooltip:
-    """Tooltips provide text labels which help explain the function of a button or other user interface action."""
+    """Tooltips provide text labels which help explain the function of a button or
+    other user interface action."""
 
     message: str
     enable_feedback: Optional[bool] = None
@@ -30,7 +31,7 @@ class Tooltip:
     padding: OptionalPaddingValue = None
     bgcolor: OptionalColorValue = None
     image: Optional[DecorationImage] = None
-    shadow: Optional[List[BoxShadow]] = None
+    shadow: Optional[list[BoxShadow]] = None
     blend_mode: Optional[BlendMode] = None
     gradient: Optional[Gradient] = None
     border: Optional[Border] = None
