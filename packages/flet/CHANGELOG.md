@@ -1,3 +1,14 @@
+# 0.28.0
+
+* New Features and Flutter 3.29 ([#4891](https://github.com/flet-dev/flet/issues/4891))
+* Fixed: `Dropdown.expand` has no effect ([#5042](https://github.com/flet-dev/flet/pull/5042))
+* feat: custom `ReorderableListView` drag handle listeners ([#5051](https://github.com/flet-dev/flet/pull/5051))
+* Fixed: `LineChartDataPoint.tooltip` not properly rendered ([#5105](https://github.com/flet-dev/flet/pull/5105))
+* Remove Flet v0.25 deprecations ([#5155](https://github.com/flet-dev/flet/pull/5155))
+* Prevent platform back button from popping a route with pop confirmation event ([#5280](https://github.com/flet-dev/flet/issues/5280))
+* Fixed: SearchBar does not handle capitalization correctly ([#5014](https://github.com/flet-dev/flet/issues/5014))
+* Fixed: `FilePicker` upload fails if original filename is modified ([#5037](https://github.com/flet-dev/flet/issues/5037))
+
 # 0.27.6
 
 * Fix `flet build`: allow dependencies with commas ([#5033](https://github.com/flet-dev/flet/issues/5033))
