@@ -119,7 +119,7 @@ class SegmentedButton(ConstrainedControl):
 
     def __check_selected_type_is_deprecated(self, selected: Optional[Union[List[str], Set]]) -> list:
         if isinstance(selected, set):
-            warn_deprecated("Using set as type of selected param", "0.28", "0.31", "Use list instead.")
+            warn_deprecated("Using set as type of selected param", "0.28.1", "0.31", "Use list instead.")
         return list(selected) if selected is not None else []
 
     def __init__(
