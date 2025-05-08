@@ -51,21 +51,82 @@ class TextCapitalization(Enum):
 
 @dataclass
 class InputFilter:
+    """
+    `InputFilter` class.
+    """
+
     regex_string: str
+    """
+    A regular expression pattern for the filter.
+
+    It is recommended to use raw strings (prefix your string with `r`) for the pattern,
+    ex: `r"pattern"`.
+    """
+
     allow: bool = True
+    """
+    A boolean value indicating whether to allow or deny/block the matched patterns.
+
+    Value is of type `bool` and defaults to `True`.
+    """
+
     replacement_string: str = ""
+    """
+    A string used to replace banned/denied patterns.
+
+    Defaults to an empty string.
+    """
+
     multiline: bool = False
+    """
+    Whether this regular expression matches multiple lines.
+
+    If the regexp does match multiple lines, the "^" and "$" characters match the
+    beginning and end of lines. If not, the characters match the beginning and end of
+    the input.
+    """
+
     case_sensitive: bool = True
+    """
+    Whether this regular expression is case sensitive.
+
+    If the regular expression is not case sensitive, it will match an input letter with
+    a pattern letter even if the two letters are different case versions of the same
+    letter.
+    """
+
     unicode: bool = False
+    """
+    Whether this regular expression uses Unicode mode.
+    """
+
     dot_all: bool = False
+    """
+    Whether "." in this regular expression matches line terminators.
+
+    When false, the "." character matches a single character, unless that character
+    terminates a line. When true, then the "." character will match any single
+    character including line terminators.
+
+    This feature is distinct from `multiline`. They affect the behavior of different
+    pattern characters, so they can be used together or separately.
+    """
 
 
 class NumbersOnlyInputFilter(InputFilter):
+    """
+    Allows only numbers.
+    """
+
     def __init__(self):
         super().__init__(regex_string=r"^[0-9]*$", allow=True, replacement_string="")
 
 
 class TextOnlyInputFilter(InputFilter):
+    """
+    Allows only text.
+    """
+
     def __init__(self):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
