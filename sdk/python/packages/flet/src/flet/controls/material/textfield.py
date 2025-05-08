@@ -148,8 +148,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
     The type of keyboard to use for editing the text. The property value is 
-    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults to 
-    `KeyboardType.TEXT`.
+    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults 
+    to `KeyboardType.TEXT`.
     """
 
     multiline: bool = False
@@ -192,12 +192,12 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     can_reveal_password: bool = False
     """
-    Displays a toggle icon button that allows revealing the entered password. Is shown if 
-    both `password` and `can_reveal_password` are `True`.
+    Displays a toggle icon button that allows revealing the entered password. Is shown 
+    if both `password` and `can_reveal_password` are `True`.
 
     The icon is displayed in the same location as `suffix` and in case both 
-    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is not 
-    shown.
+    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is 
+    not shown.
     """
 
     read_only: bool = False
@@ -212,9 +212,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, i.e. 
-    new line can be added with `Shift`+`Enter` and pressing just `Enter` fires `on_submit` 
-    event.
+    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, 
+    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires 
+    `on_submit` event.
     """
 
     text_align: Optional[TextAlign] = None
@@ -227,18 +227,17 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than one 
-    control on a page with autofocus set, then the first one added to the page will get 
-    focus.
+    True if the control will be selected as the initial focus. If there is more than 
+    one control on a page with autofocus set, then the first one added to the page will 
+    get focus.
     """
 
     capitalization: Optional[TextCapitalization] = None
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Value is of type 
-    [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization) and 
-    defaults to `TextCapitalization.NONE`.
+    Value is of type [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization) 
+    and defaults to `TextCapitalization.NONE`.
     """
 
     autocorrect: bool = True
@@ -252,9 +251,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether to show input suggestions as the user types.
 
-    This flag only affects Android. On iOS, suggestions are tied directly to `autocorrect`, 
-    so that suggestions are only shown when `autocorrect` is `True`. On Android 
-    autocorrection and suggestion are controlled separately.
+    This flag only affects Android. On iOS, suggestions are tied directly to 
+    `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`. 
+    On Android autocorrection and suggestion are controlled separately.
 
     Defaults to `True`.
     """
@@ -263,9 +262,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether to allow the platform to automatically format dashes.
 
-    This flag only affects iOS versions 11 and above. As an example of what this does, two 
-    consecutive hyphen characters will be automatically replaced with one en dash, and 
-    three consecutive hyphens will become one em dash.
+    This flag only affects iOS versions 11 and above. As an example of what this does, 
+    two consecutive hyphen characters will be automatically replaced with one en dash, 
+    and three consecutive hyphens will become one em dash.
 
     Defaults to `True`.
     """
@@ -274,9 +273,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether to allow the platform to automatically format quotes.
 
-    This flag only affects iOS. As an example of what this does, a standard vertical double 
-    quote character will be automatically replaced by a left or right double quote 
-    depending on its position in a word.
+    This flag only affects iOS. As an example of what this does, a standard vertical 
+    double quote character will be automatically replaced by a left or right double 
+    quote depending on its position in a word.
 
     Defaults to `True`.
     """
@@ -394,11 +393,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
-    autofill_hints: Optional[Union[AutofillHint, List[AutofillHint]]] = None
+    autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
     """
-    Helps the autofill service identify the type of this text input. Value can either be a 
-    single [`AutoFillHint`](https://flet.dev/docs/reference/types/autofillhint) enum item or 
-    a list of them.
+    Helps the autofill service identify the type of this text input. Value can either 
+    be a single [`AutoFillHint`](https://flet.dev/docs/reference/types/autofillhint) 
+    enum item or a list of them.
 
     More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
@@ -450,11 +449,9 @@ class TextField(FormFieldControl, AdaptiveControl):
             self.max_length is None or self.max_length == -1 or self.max_length > 0
         ), "max_length must be either equal to -1 or greater than 0"
         if (
-            (
-                self.bgcolor is not None
-                or self.fill_color is not None
-                or self.hover_color is not None
-                or self.focused_color is not None
-            )
+            self.bgcolor is not None
+            or self.fill_color is not None
+            or self.hover_color is not None
+            or self.focused_color is not None
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
