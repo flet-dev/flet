@@ -12,46 +12,46 @@ class VerticalDivider(Control):
 
     In the material design language, this represents a divider.
 
-    Example:
-
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-
-        page.add(
-            ft.Row(
-                [
-                    ft.Container(
-                        bgcolor=ft.colors.ORANGE_300,
-                        alignment=ft.Alignment.center(),
-                        expand=True,
-                    ),
-                    ft.VerticalDivider(),
-                    ft.Container(
-                        bgcolor=ft.colors.BROWN_400,
-                        alignment=ft.Alignment.center(),
-                        expand=True,
-                    ),
-                ],
-                spacing=0,
-                expand=True,
-            )
-        )
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/verticaldivider
     """
 
     width: OptionalNumber = None
+    """
+    The divider's width. The divider itself is always drawn as a vertical line
+    that is centered within the width specified by this value.
+
+    Defaults to `16.0`.
+    """
+
     thickness: OptionalNumber = None
+    """
+    The thickness of the line drawn within the divider.
+
+    A divider with a thickness of `0.0` is always drawn as a line with a width of
+    exactly one device pixel.
+
+    Defaults to `0.0`.
+    """
+
     color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use when painting the
+    line.
+    """
+
     leading_indent: OptionalNumber = None
+    """
+    The amount of empty space to the leading edge of the divider.
+
+    Defaults to `0.0`.
+    """
+
     trailing_indent: OptionalNumber = None
+    """
+    The amount of empty space to the trailing edge of the divider.
+
+    Defaults to `0.0`.
+    """
 
     def before_update(self):
         super().before_update()

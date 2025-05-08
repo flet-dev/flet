@@ -1,4 +1,3 @@
-from dataclasses import field
 from enum import Enum
 from typing import Optional
 
@@ -253,14 +252,14 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `subtitle` 
-    control.
+    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the 
+    `subtitle` control.
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `leading` 
-    and `trailing` controls.
+    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the 
+    `leading` and `trailing` controls.
     """
 
     min_height: OptionalNumber = None

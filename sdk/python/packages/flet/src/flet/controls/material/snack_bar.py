@@ -37,60 +37,162 @@ class DismissDirection(Enum):
 @control("SnackBar")
 class SnackBar(DialogControl):
     """
-    A lightweight message with an optional action which briefly displays at the bottom of the screen.
-
-    Example:
-    ```
-    import flet as ft
-
-    class Data:
-        def __init__(self) -> None:
-            self.counter = 0
-
-    d = Data()
-
-    def main(page):
-
-        page.snack_bar = ft.SnackBar(
-            content=ft.Text("Hello, world!"),
-            action="Alright!",
-        )
-        page.snack_bar.open = True
-
-        def on_click(e):
-            page.snack_bar = ft.SnackBar(ft.Text(f"Hello {d.counter}"))
-            page.snack_bar.open = True
-            d.counter += 1
-            page.update()
-
-        page.add(ft.ElevatedButton("Open SnackBar", on_click=on_click))
-
-    ft.app(target=main)
-    ```
-
-    -----
+    A lightweight message with an optional action which briefly displays at the
+    bottom of the screen.
 
     Online docs: https://flet.dev/docs/controls/snackbar
     """
 
     content: Control
+    """
+    The primary content of the snack bar.
+
+    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    """
+
     behavior: Optional[SnackBarBehavior] = None
+    """
+    This defines the behavior and location of the snack bar.
+
+    Defines where a SnackBar should appear within a page and how its location
+    should be adjusted when the page also includes a `FloatingActionButton` or a
+    `NavigationBar`.
+
+    Value is of type
+    [`SnackBarBehavior`](https://flet.dev/docs/reference/types/snackbarbehavior)
+    and defaults to `SnackBarBehavior.FIXED`.
+
+    **Note:**
+
+    * If `behavior=SnackBarBehavior.FLOATING`, the length of the bar is defined
+      by either `width` or `margin`, and if both are specified, `width` takes
+      precedence over `margin`.
+    * `width` and `margin` are ignored if `behavior!=SnackBarBehavior.FLOATING`.
+    """
+
     dismiss_direction: Optional[DismissDirection] = None
+    """
+    The direction in which the SnackBar can be dismissed.
+
+    Value is of type
+    [`DismissDirection`](https://flet.dev/docs/reference/types/dismissdirection)
+    and defaults to `DismissDirection.DOWN`.
+    """
+
     show_close_icon: bool = False
+    """
+    Whether to include a "close" icon widget.
+
+    Tapping the icon will close the snack bar.
+    """
+
     action: Optional[str] = None
+    """
+    An optional action that the user can take based on the snack bar.
+
+    For example, the snack bar might let the user undo the operation that prompted
+    the snackbar. Snack bars can have at most one action.
+
+    The action should not be "dismiss" or "cancel".
+    """
+
     action_color: OptionalColorValue = None
+    """
+    The foreground [color](https://flet.dev/docs/reference/colors) of action
+    button.
+    """
+
     close_icon_color: OptionalColorValue = None
+    """
+    An optional color for the close icon, if `show_close_icon=True`.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    SnackBar background [color](https://flet.dev/docs/reference/colors).
+    """
+
     duration: OptionalDurationValue = None
+    """
+    The number of *milliseconds* that the SnackBar stays open for.
+
+    Defaults to `4000`
+    ([4 seconds](https://api.flutter.dev/flutter/material/SnackBar/duration.html)).
+    """
+
     margin: OptionalMarginValue = None
+    """
+    Empty space to surround the snack bar.
+
+    Has effect only when `behavior=SnackBarBehavior.FLOATING` and will be ignored
+    if `width` is specified.
+    """
+
     padding: OptionalPaddingValue = None
+    """
+    The amount of padding to apply to the snack bar's content and optional action.
+
+    Value is of type
+    [`Padding`](https://flet.dev/docs/reference/types/padding) or a number.
+    """
+
     width: OptionalNumber = None
+    """
+    The width of the snack bar.
+
+    If width is specified, the snack bar will be centered horizontally in the
+    available space.
+
+    Has effect only when `behavior=SnackBarBehavior.FLOATING`. It can not be used
+    if `margin` is specified.
+    """
+
     elevation: OptionalNumber = None
+    """
+    The z-coordinate at which to place the snack bar. This controls the size of the
+    shadow below the snack bar.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the snack bar's.
+
+    Value is of type
+    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    The `content` will be clipped (or not) according to this option.
+
+    Value is of type
+    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and
+    defaults to `ClipBehavior.HARD_EDGE`.
+    """
+
     action_overflow_threshold: Number = 0.25
+    """
+    The percentage (between `0.0` and `1.0`) threshold for `action`'s width before
+    it overflows to a new line.
+
+    If the width of the snackbar's `content` is greater than this percentage of the
+    width of the snackbar minus the width of its `action`, then the `action` will
+    appear below the `content`.
+
+    At a value of `0.0`, the `action` will not overflow to a new line.
+
+    Defaults to `0.25`.
+    """
+
     on_action: OptionalControlEventCallable = None
+    """
+    Fires when action button is clicked.
+    """
+
     on_visible: OptionalControlEventCallable = None
+    """
+    Fires the first time that the snackbar is visible within the page.
+    """
 
     def before_update(self):
         super().before_update()

@@ -43,7 +43,8 @@ class ContainerTapEvent(TapEvent):
 @control("Container")
 class Container(ConstrainedControl, AdaptiveControl):
     """
-    Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
+    Container allows to decorate a control with background color and border and
+    position it with padding, margin and alignment.
 
     Online docs: https://flet.dev/docs/controls/container
     """
@@ -55,16 +56,19 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     padding: OptionalPaddingValue = None
     """
-    Empty space to inscribe inside a container decoration (background, border). The child control is placed inside this padding.
+    Empty space to inscribe inside a container decoration (background, border). The 
+    child control is placed inside this padding.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) or a number.
+    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) or a 
+    number.
     """
 
     margin: OptionalMarginValue = None
     """
     Empty space to surround the decoration and child control.
 
-    Value is of type [`Margin`](https://flet.dev/docs/reference/types/margin) class or a number.
+    Value is of type [`Margin`](https://flet.dev/docs/reference/types/margin) class or 
+    a number.
     """
 
     alignment: Optional[Alignment] = None
@@ -76,7 +80,8 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     bgcolor: OptionalColorValue = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of the container.
+    Defines the background [color](https://flet.dev/docs/reference/colors) of the 
+    container.
     """
 
     gradient: Optional[Gradient] = None
@@ -90,7 +95,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     The blend mode applied to the `color` or `gradient` background of the container. 
 
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode) and defaults to `BlendMode.MODULATE`.
+    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode) and 
+    defaults to `BlendMode.MODULATE`.
     """
 
     border: Optional[Border] = None
@@ -111,14 +117,17 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Sets the shape of the container.
 
-    Value is of type [`BoxShape`](https://flet.dev/docs/reference/types/boxshape) and defaults to `BoxShape.RECTANGLE`.
+    Value is of type [`BoxShape`](https://flet.dev/docs/reference/types/boxshape) and 
+    defaults to `BoxShape.RECTANGLE`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.ANTI_ALIAS` if `border_radius` is not `None`; otherwise `ClipBehavior.NONE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    and defaults to `ClipBehavior.ANTI_ALIAS` if `border_radius` is not `None`; 
+    otherwise `ClipBehavior.NONE`.
     """
 
     ink: bool = False
@@ -130,7 +139,9 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the `bgcolor` or `gradient`. If `shape=BoxShape.CIRCLE` then this image is clipped to the circle's boundary; if `border_radius` is not `None` then the image is clipped to the given radii.
+    An image to paint above the `bgcolor` or `gradient`. If `shape=BoxShape.CIRCLE` 
+    then this image is clipped to the circle's boundary; if `border_radius` is not 
+    `None` then the image is clipped to the given radii.
 
     Value is of type [`DecorationImage`](https://flet.dev/docs/reference/types/decorationimage).
     """
@@ -142,7 +153,8 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     animate: Optional[AnimationValue] = None
     """
-    Enables container "implicit" animation that gradually changes its values over a period of time.
+    Enables container "implicit" animation that gradually changes its values over a 
+    period of time.
 
     Value is of type [`AnimationValue`](https://flet.dev/docs/reference/types/animationvalue).
     """
@@ -153,8 +165,10 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     The value of this property could be one of the following:
 
-    * **a number** - specifies the same value for horizontal and vertical sigmas, e.g. `10`.
-    * **a tuple** - specifies separate values for horizontal and vertical sigmas, e.g. `(10, 1)`.
+    * **a number** - specifies the same value for horizontal and vertical sigmas, e.g. 
+    `10`.
+    * **a tuple** - specifies separate values for horizontal and vertical sigmas, e.g. 
+    `(10, 1)`.
     * **an instance of [`Blur`](https://flet.dev/docs/reference/types/blur)**
 
     For example:
@@ -199,24 +213,28 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Shadows cast by the container.
 
-    Value is of type [`BoxShadow`](https://flet.dev/docs/reference/types/boxshadow) or a `List[BoxShadow]`.
+    Value is of type [`BoxShadow`](https://flet.dev/docs/reference/types/boxshadow) or 
+    a `List[BoxShadow]`.
     """
 
     url: Optional[str] = None
     """
-    The URL to open when the container is clicked. If provided, `on_click` event is fired after that.
+    The URL to open when the container is clicked. If provided, `on_click` event is 
+    fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and defaults to `UrlTarget.BLANK`.
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
+    defaults to `UrlTarget.BLANK`.
     """
 
     theme: Optional[Theme] = None
     """
-    Allows setting a nested `theme` for all controls inside the container and down the tree.
+    Allows setting a nested `theme` for all controls inside the container and down the 
+    tree.
 
     Value is of type [`Theme`](https://flet.dev/docs/cookbook/theming).
 
@@ -266,16 +284,20 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     dark_theme: Optional[Theme] = None
     """
-    Allows setting a nested `theme` to be used when in dark theme mode for all controls inside the container and down the tree.
+    Allows setting a nested `theme` to be used when in dark theme mode for all controls 
+    inside the container and down the tree.
 
     Value is of type [`Theme`](https://flet.dev/docs/cookbook/theming).
     """
 
     theme_mode: Optional[ThemeMode] = None
     """
-    Setting `theme_mode` "resets" parent theme and creates a new, unique scheme for all controls inside the container. Otherwise the styles defined in container's `theme` property override corresponding styles from the parent, inherited theme.
+    Setting `theme_mode` "resets" parent theme and creates a new, unique scheme for all 
+    controls inside the container. Otherwise the styles defined in container's `theme` 
+    property override corresponding styles from the parent, inherited theme.
 
-    Value is of type [`ThemeMode`](https://flet.dev/docs/reference/types/thememode) and defaults to `ThemeMode.SYSTEM`.
+    Value is of type [`ThemeMode`](https://flet.dev/docs/reference/types/thememode) and 
+    defaults to `ThemeMode.SYSTEM`.
     """
 
     color_filter: Optional[ColorFilter] = None
@@ -311,7 +333,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     Event handler argument is of type [`ContainerTapEvent`](https://flet.dev/docs/reference/types/containertapevent).
 
     :::info
-    If `ink` is `True`, `e` will be plain `ControlEvent` with empty `data` instead of `ContainerTapEvent`.
+    If `ink` is `True`, `e` will be plain `ControlEvent` with empty `data` instead of 
+    `ContainerTapEvent`.
     :::
 
     A simple usage example:
@@ -358,7 +381,8 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     on_hover: OptionalControlEventCallable = None
     """
-    Fires when a mouse pointer enters or exists the container area. `data` property of event object contains `true` (string) when cursor enters and `false` when it exits.
+    Fires when a mouse pointer enters or exists the container area. `data` property of 
+    event object contains `true` (string) when cursor enters and `false` when it exits.
 
     A simple example of a container changing its background color on mouse hover:
 
@@ -371,7 +395,13 @@ class Container(ConstrainedControl, AdaptiveControl):
             e.control.update()
 
         page.add(
-            ft.Container(width=100, height=100, bgcolor="red", ink=False, on_hover=on_hover)
+            ft.Container(
+                width=100, 
+                height=100, 
+                bgcolor="red", 
+                ink=False, 
+                on_hover=on_hover,
+            )
         )
 
     ft.app(main)

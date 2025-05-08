@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -22,9 +22,12 @@ __all__ = ["Banner"]
 @control("Banner")
 class Banner(DialogControl):
     """
-    A banner displays an important, succinct message, and provides actions for users to address (or dismiss the banner). A user action is required for it to be dismissed.
+    A banner displays an important, succinct message, and provides actions for users to
+    address (or dismiss the banner). A user action is required for it to be dismissed.
 
-    Banners are displayed at the top of the screen, below a top app bar. They are persistent and non-modal, allowing the user to either ignore them or interact with them at any time.
+    Banners are displayed at the top of the screen, below a top app bar. They are
+    persistent and non-modal, allowing the user to either ignore them or interact with
+    them at any time.
 
     Online docs: https://flet.dev/docs/controls/banner
     """
@@ -36,11 +39,12 @@ class Banner(DialogControl):
     Typically a [`Text`](https://flet.dev/docs/controls/text) control.
     """
 
-    actions: List[Control] = field(default_factory=list)
+    actions: list[Control] = field(default_factory=list)
     """
     The set of actions that are displayed at the bottom or trailing side of the Banner.
 
-    Typically this is a list of [`TextButton`](https://flet.dev/docs/controls/textbutton) controls.
+    Typically this is a list of [`TextButton`](https://flet.dev/docs/controls/textbutton) 
+    controls.
     """
 
     leading: Optional[IconValueOrControl] = None
@@ -54,7 +58,8 @@ class Banner(DialogControl):
     """
     The amount of space by which to inset the leading control.
 
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding) class or a number.
+    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding) 
+    class or a number.
 
     Defaults to `16` virtual pixels.
     """
@@ -63,18 +68,24 @@ class Banner(DialogControl):
     """
     The amount of space by which to inset the content.
 
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding) class or a number.
+    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding) 
+    class or a number.
 
-    If the actions are below the content, this defaults to `padding.only(left=16.0, top=24.0, right=16.0, bottom=4.0)`.
+    If the actions are below the content, this defaults to 
+    `padding.only(left=16.0, top=24.0, right=16.0, bottom=4.0)`.
 
-    If the actions are trailing the content, this defaults to `padding.only(left=16.0, top=2.0)`.
+    If the actions are trailing the content, this defaults to 
+    `padding.only(left=16.0, top=2.0)`.
     """
 
     force_actions_below: bool = False
     """
-    An override to force the actions to be below the content regardless of how many there are.
+    An override to force the actions to be below the content regardless of how many 
+    there are.
 
-    If this is `True`, the actions will be placed below the content. If this is `False`, the actions will be placed on the trailing side of the content if `actions` length is `1` and below the content if greater than `1`.
+    If this is `True`, the actions will be placed below the content. If this is 
+    `False`, the actions will be placed on the trailing side of the content if 
+    `actions` length is `1` and below the content if greater than `1`.
 
     Defaults to `False`.
     """
@@ -86,7 +97,8 @@ class Banner(DialogControl):
 
     surface_tint_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor` to indicate elevation.
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor` 
+    to indicate elevation.
     """
 
     shadow_color: OptionalColorValue = None
@@ -108,7 +120,8 @@ class Banner(DialogControl):
     """
     The amount of space surrounding the banner.
 
-    The value is an instance of [`Margin`](https://flet.dev/docs/reference/types/margin) class or a number.
+    The value is an instance of [`Margin`](https://flet.dev/docs/reference/types/margin) 
+    class or a number.
     """
 
     content_text_style: Optional[TextStyle] = None

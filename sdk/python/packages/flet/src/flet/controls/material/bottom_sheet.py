@@ -12,7 +12,8 @@ from flet.controls.types import ClipBehavior, OptionalColorValue, OptionalNumber
 @control("BottomSheet")
 class BottomSheet(DialogControl):
     """
-    A modal bottom sheet is an alternative to a menu or a dialog and prevents the user from interacting with the rest of the app.
+    A modal bottom sheet is an alternative to a menu or a dialog and prevents the user
+    from interacting with the rest of the app.
 
     Online docs: https://flet.dev/docs/controls/bottomsheet
     """
@@ -39,7 +40,8 @@ class BottomSheet(DialogControl):
 
     enable_drag: bool = False
     """
-    Specifies whether the bottom sheet can be dragged up and down and dismissed by swiping downwards.
+    Specifies whether the bottom sheet can be dragged up and down and dismissed by 
+    swiping downwards.
     """
 
     show_drag_handle: bool = False
@@ -49,21 +51,24 @@ class BottomSheet(DialogControl):
 
     use_safe_area: bool = True
     """
-    Specifies whether the sheet will avoid system intrusions on the top, left, and right.
+    Specifies whether the sheet will avoid system intrusions on the top, left, and 
+    right.
 
     Defaults to `False`.
     """
 
     is_scroll_controlled: bool = False
     """
-    Specifies if the bottom sheet contains scrollable content, such as ListView or GridView.
+    Specifies if the bottom sheet contains scrollable content, such as ListView or 
+    GridView.
 
     Defaults to `False`.
     """
 
     maintain_bottom_view_insets_padding: bool = True
     """
-    Adds a padding at the bottom to avoid obstructing bottom sheet content with on-screen keyboard or other system elements.
+    Adds a padding at the bottom to avoid obstructing bottom sheet content with 
+    on-screen keyboard or other system elements.
     """
 
     animation_style: Optional[AnimationStyle] = None

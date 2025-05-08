@@ -8,7 +8,6 @@ import '../utils/box.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -23,7 +22,7 @@ class PopupMenuButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    var content = control.buildWidget("content");
+    var content = control.buildTextOrWidget("content");
 
     var popupMenuButton = PopupMenuButton<String>(
         enabled: !control.disabled,
@@ -57,27 +56,24 @@ class PopupMenuButtonControl extends StatelessWidget {
                 .children("items")
                 .where((i) => i.type == "PopupMenuItem")
                 .map((item) {
-              var itemIcon = item.getIcon("icon");
-              var text = item.getString("text", "")!;
               var checked = item.getBool("checked");
               var height = item.getDouble("height", 48.0)!;
               var padding = item.getPadding("padding");
-              var content = item.buildWidget("content");
+              var itemContent = item.buildTextOrWidget("content");
+              var itemIcon = item.buildIconOrWidget("icon");
               var mouseCursor = item.getMouseCursor("mouse_cursor");
 
               Widget? child;
-              if (content != null) {
-                // custom content
-                child = content;
-              } else if (itemIcon != null && text != "") {
-                // icon and text
+              if (itemContent != null && itemIcon == null) {
+                child = itemContent;
+              } else if (itemContent == null && itemIcon != null) {
+                child = itemIcon;
+              } else if (itemContent != null && itemIcon != null) {
                 child = Row(children: [
-                  Icon(itemIcon),
+                  itemIcon,
                   const SizedBox(width: 8),
-                  Text(text)
+                  itemContent
                 ]);
-              } else if (text != "") {
-                child = Text(text);
               }
 
               var result = checked != null

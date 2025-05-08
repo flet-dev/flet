@@ -94,8 +94,8 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
               value: segment.getString("value")!,
               enabled: !segment.disabled,
               tooltip: segment.disabled ? null : segment.getString("tooltip"),
-              icon: segment.buildWidget("icon"),
-              label: segment.buildWidget("label"));
+              icon: segment.buildIconOrWidget("icon"),
+              label: segment.buildTextOrWidget("label"));
         }).toList());
 
     return ConstrainedControl(control: widget.control, child: segmentedButton);

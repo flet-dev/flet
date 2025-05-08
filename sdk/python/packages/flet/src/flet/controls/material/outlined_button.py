@@ -21,40 +21,92 @@ __all__ = ["OutlinedButton"]
 @control("OutlinedButton")
 class OutlinedButton(ConstrainedControl, AdaptiveControl):
     """
-    Outlined buttons are medium-emphasis buttons. They contain actions that are important, but aren’t the primary action in an app. Outlined buttons pair well with filled buttons to indicate an alternative, secondary action.
-
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.title = "Basic outlined buttons"
-        page.add(
-            ft.OutlinedButton(text="Outlined button"),
-            ft.OutlinedButton("Disabled button", disabled=True),
-        )
-
-    ft.app(target=main)
-    ```
-
-    -----
+    Outlined buttons are medium-emphasis buttons. They contain actions that are
+    important, but aren’t the primary action in an app. Outlined buttons pair well with
+    filled buttons to indicate an alternative, secondary action.
 
     Online docs: https://flet.dev/docs/controls/outlinedbutton
     """
 
     content: Optional[StrOrControl] = None
+    """
+    A Control representing custom button content.
+    """
+
     icon: Optional[IconValueOrControl] = None
+    """
+    Icon shown in the button.
+    """
+
     icon_color: OptionalColorValue = None
+    """
+    Icon [color](https://flet.dev/docs/reference/colors).
+    """
+
     style: Optional[ButtonStyle] = None
+    """
+    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle) 
+    class.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus.
+
+    If there is more than one control on a page with autofocus set, then the first one
+    added to the page will get focus.
+    """
+
     clip_behavior: ClipBehavior = ClipBehavior.NONE
+    """
+    The content will be clipped (or not) according to this option.
+
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    and defaults to `ClipBehavior.NONE`.
+    """
+
     url: Optional[str] = None
+    """
+    The URL to open when the button is clicked.
+
+    If registered, `on_click` event is fired after that.
+    """
+
     url_target: Optional[UrlTarget] = None
+    """
+    Where to open URL in the web mode.
+
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
+    defaults to `UrlTarget.BLANK`.
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when a user clicks the button.
+    """
+
     on_long_press: OptionalControlEventCallable = None
+    """
+    Fires when the button is long-pressed.
+    """
+
     on_hover: OptionalControlEventCallable = None
+    """
+    Fires when a mouse pointer enters or exists the button response area.
+
+    `data` property of event object contains `true` (string) when cursor enters and
+    `false` when it exits.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the control has received focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the control has lost focus.
+    """
 
     def before_update(self):
         super().before_update()

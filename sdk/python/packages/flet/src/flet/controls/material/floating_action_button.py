@@ -21,7 +21,10 @@ __all__ = ["FloatingActionButton"]
 @control("FloatingActionButton")
 class FloatingActionButton(ConstrainedControl):
     """
-    A floating action button is a circular icon button that hovers over content to promote a primary action in the application. Floating action button is usually set to `page.floating_action_button`, but can also be added as a regular control at any place on a page.
+    A floating action button is a circular icon button that hovers over content to
+    promote a primary action in the application. Floating action button is usually set
+    to `page.floating_action_button`, but can also be added as a regular control at any
+    place on a page.
 
     Online docs: https://flet.dev/docs/controls/floatingactionbutton
     """
@@ -45,37 +48,44 @@ class FloatingActionButton(ConstrainedControl):
     """
     The shape of the FAB's border.
 
-    The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) class.
+    The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) 
+    class.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than one control on a page with autofocus set, then the first one added to the page will get focus.
+    True if the control will be selected as the initial focus. If there is more than 
+    one control on a page with autofocus set, then the first one added to the page will 
+    get focus.
     """
 
     mini: bool = False
     """
     Controls the size of this button.
 
-    By default, floating action buttons are non-mini and have a height and width of `56.0` logical pixels. Mini floating
-    action buttons have a height and width of `40.0` logical pixels with a layout width and height of `48.0` logical pixels.
+    By default, floating action buttons are non-mini and have a height and width of 
+    `56.0` logical pixels. Mini floating action buttons have a height and width of 
+    `40.0` logical pixels with a layout width and height of `48.0` logical pixels.
     """
 
     foreground_color: OptionalColorValue = None
     """
-    The default foreground [color](https://flet.dev/docs/reference/colors) for icons and text within the button.
+    The default foreground [color](https://flet.dev/docs/reference/colors) for icons 
+    and text within the button.
     """
 
     focus_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for filling the button when the button has input focus.
+    The [color](https://flet.dev/docs/reference/colors) to use for filling the button 
+    when the button has input focus.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.NONE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    and defaults to `ClipBehavior.NONE`.
     """
 
     elevation: OptionalNumber = None
@@ -115,24 +125,29 @@ class FloatingActionButton(ConstrainedControl):
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. On Android, for example, setting this to `True` will produce a click sound and a long-press will produce a short vibration.
+    Whether detected gestures should provide acoustic and/or haptic feedback. On 
+    Android, for example, setting this to `True` will produce a click sound and a 
+    long-press will produce a short vibration.
     """
 
     url: Optional[str] = None
     """
-    The URL to open when the button is clicked. If registered, `on_click` event is fired after that.
+    The URL to open when the button is clicked. If registered, `on_click` event is 
+    fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and defaults to `UrlTarget.BLANK`.
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
+    defaults to `UrlTarget.BLANK`.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this control.
+    The cursor to be displayed when a mouse pointer enters or is hovering over this 
+    control.
 
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
