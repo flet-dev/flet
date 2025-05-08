@@ -45,9 +45,11 @@ class DatePicker(DialogControl):
     """
     A Material-style date picker dialog.
 
-    It is added to [`page.overlay`](https://flet.dev/page#overlay) and can be opened by calling `Page.open_dialog()` method.
+    It is added to [`page.overlay`](https://flet.dev/page#overlay) and can be opened by
+    calling `Page.open_dialog()` method.
 
-    Depending on the `date_picker_entry_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
+    Depending on the `date_picker_entry_mode`, it will show either a Calendar or an
+    Input (TextField) for picking a date.
 
     Online docs: https://flet.dev/docs/controls/datepicker
     """
@@ -87,22 +89,24 @@ class DatePicker(DialogControl):
     """
     The type of keyboard to use for editing the text.
 
-    Value is of type [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults to `KeyboardType.DATETIME`.
+    Value is of type [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) 
+    and defaults to `KeyboardType.DATETIME`.
     """
 
     date_picker_mode: DatePickerMode = DatePickerMode.DAY
     """
     Initial display of a calendar date picker.
 
-    Value is of type [`DatePickerMode`](https://flet.dev/docs/reference/types/datepickermode) and defaults to `DatePickerMode.DAY`.
+    Value is of type [`DatePickerMode`](https://flet.dev/docs/reference/types/datepickermode) 
+    and defaults to `DatePickerMode.DAY`.
     """
 
     date_picker_entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
 
-    Value is of type [`DatePickerEntryMode`](https://flet.dev/docs/reference/types/datepickerentrymode) and defaults
-    to `DatePickerEntryMode.CALENDAR`.
+    Value is of type [`DatePickerEntryMode`](https://flet.dev/docs/reference/types/datepickerentrymode) 
+    and defaults to `DatePickerEntryMode.CALENDAR`.
     """
 
     help_text: Optional[str] = None
@@ -126,14 +130,16 @@ class DatePicker(DialogControl):
 
     error_format_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the entered date is not in the correct format.
+    The error message displayed below the TextField if the entered date is not in the 
+    correct format.
 
     Defaults to `"Invalid format"`.
     """
 
     error_invalid_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the date is earlier than `first_date` or later than `last_date`.
+    The error message displayed below the TextField if the date is earlier than 
+    `first_date` or later than `last_date`.
 
     Defaults to `"Out of range"`.
     """
@@ -142,7 +148,8 @@ class DatePicker(DialogControl):
     """
     The hint text displayed in the text field.
 
-    The default value is the date format string that depends on your locale. For example, 'mm/dd/yyyy' for en_US.
+    The default value is the date format string that depends on your locale. For 
+    example, 'mm/dd/yyyy' for en_US.
     """
 
     field_label_text: Optional[str] = None
@@ -154,29 +161,34 @@ class DatePicker(DialogControl):
 
     switch_to_calendar_icon: Optional[IconValue] = None
     """
-    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode` is `DatePickerEntryMode.INPUT`.
-    Clicking on icon changes the `DatePickerEntryMode` to `DatePickerEntryMode.CALENDAR`. If `None`, `icons.CALENDAR_TODAY`
-    is used.
+    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode` 
+    is `DatePickerEntryMode.INPUT`.
+    Clicking on icon changes the `DatePickerEntryMode` to 
+    `DatePickerEntryMode.CALENDAR`. If `None`, `icons.CALENDAR_TODAY` is used.
     """
 
     switch_to_input_icon: Optional[IconValue] = None
     """
-    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode` is `DatePickerEntryMode.CALENDAR`.
-    Clicking on icon changes the `DatePickerEntryMode` to `DatePickerEntryMode.INPUT`. If `None`, `icons.EDIT_OUTLINED` is
-    used.
+    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode` 
+    is `DatePickerEntryMode.CALENDAR`.
+    Clicking on icon changes the `DatePickerEntryMode` to `DatePickerEntryMode.INPUT`. 
+    If `None`, `icons.EDIT_OUTLINED` is used.
     """
 
     barrier_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the modal barrier that darkens everything below the date picker.
+    The [color](https://flet.dev/docs/reference/colors) of the modal barrier that 
+    darkens everything below the date picker.
 
-    If `None`, the [`DialogTheme.barrier_color`](https://flet.dev/docs/reference/types/dialogtheme#barrier_color) is used. 
+    If `None`, the [`DialogTheme.barrier_color`](https://flet.dev/docs/reference/types/dialogtheme#barrier_color) 
+    is used. 
     If it is also `None`, then `Colors.BLACK_54` is used.
     """
 
     on_change: OptionalControlEventCallable = None
     """
-    Fires when user clicks confirm button. `value` property is updated with selected date. `e.data` also contains the selected date.
+    Fires when user clicks confirm button. `value` property is updated with selected 
+    date. `e.data` also contains the selected date.
     """
 
     on_entry_mode_change: OptionalEventCallable[DatePickerEntryModeChangeEvent] = None

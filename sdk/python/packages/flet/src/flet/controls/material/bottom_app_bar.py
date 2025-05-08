@@ -30,27 +30,32 @@ class BottomAppBar(ConstrainedControl):
 
     surface_tint_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor` to indicate elevation.
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor` 
+    to indicate elevation.
 
-    If this is `None`, no overlay will be applied. Otherwise this color will be composited on top of `bgcolor` with an opacity related to `elevation` and used to paint the BottomAppBar's background.
+    If this is `None`, no overlay will be applied. Otherwise this color will be 
+    composited on top of `bgcolor` with an opacity related to `elevation` and used to 
+    paint the BottomAppBar's background.
 
     Defaults to `None`.
     """
 
     bgcolor: OptionalColorValue = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for the BottomAppBar. Default color is defined by current theme.
+    The fill [color](https://flet.dev/docs/reference/colors) to use for the 
+    BottomAppBar. Default color is defined by current theme.
     """
 
     shadow_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below the BottomAppBar.
+    The [color](https://flet.dev/docs/reference/colors) of the shadow below the 
+    BottomAppBar.
     """
 
     padding: OptionalPaddingValue = None
     """
-    Empty space to inscribe inside a container decoration (background, border). Padding is an instance
-    of [`Padding`](https://flet.dev/docs/reference/types/padding) class.
+    Empty space to inscribe inside a container decoration (background, border). Padding 
+    is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding) class.
 
     Defaults to `padding.symmetric(vertical=12.0, horizontal=16.0)`.
     """
@@ -59,7 +64,8 @@ class BottomAppBar(ConstrainedControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.NONE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    and defaults to `ClipBehavior.NONE`.
     """
 
     shape: Optional[NotchShape] = None

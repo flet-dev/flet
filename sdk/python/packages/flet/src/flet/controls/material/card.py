@@ -21,7 +21,8 @@ class CardVariant(Enum):
 @control("Card")
 class Card(ConstrainedControl, AdaptiveControl):
     """
-    A material design card: a panel with slightly rounded corners and an elevation shadow.
+    A material design card: a panel with slightly rounded corners and an elevation
+    shadow.
 
     Online docs: https://flet.dev/docs/controls/card
     """
@@ -30,7 +31,10 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
     The `Control` that should be displayed inside the card.
 
-    This control can only have one child. To lay out multiple children, let this control's child be a control such as [`Row`](https://flet.dev/docs/controls/row), [`Column`](https://flet.dev/docs/controls/column), or [`Stack`](https://flet.dev/docs/controls/stack), which have a children property, and then provide the children to that control.
+    This control can only have one child. To lay out multiple children, let this 
+    control's child be a control such as [`Row`](https://flet.dev/docs/controls/row), 
+    [`Column`](https://flet.dev/docs/controls/column), or [`Stack`](https://flet.dev/docs/controls/stack), 
+    which have a children property, and then provide the children to that control.
     """
 
     margin: OptionalMarginValue = None
@@ -52,14 +56,18 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     shadow_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to paint the shadow below the card.
+    The [color](https://flet.dev/docs/reference/colors) to paint the shadow below the 
+    card.
     """
 
     surface_tint_color: OptionalColorValue = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `color` to indicate elevation.
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `color` 
+    to indicate elevation.
 
-    If this is `None`, no overlay will be applied. Otherwise this color will be composited on top of `color` with an opacity related to `elevation` and used to paint the background of the card.
+    If this is `None`, no overlay will be applied. Otherwise this color will be 
+    composited on top of `color` with an opacity related to `elevation` and used to 
+    paint the background of the card.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -77,12 +85,15 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     is_semantic_container: bool = True
     """
-    Set to `True` (default) if this card represents a single semantic container, or to `False` if it instead represents a collection of individual semantic nodes (different types of content).
+    Set to `True` (default) if this card represents a single semantic container, or to 
+    `False` if it instead represents a collection of individual semantic nodes 
+    (different types of content).
     """
 
     show_border_on_foreground: bool = True
     """
-    Whether the shape of the border should be painted in front of the `content` or behind.
+    Whether the shape of the border should be painted in front of the `content` or 
+    behind.
 
     Defaults to `True`.
     """
@@ -91,5 +102,6 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
     Defines the card variant to be used.
 
-    Value is of type [`CardVariant`](https://flet.dev/docs/reference/types/cardvariant) and defaults to `CardVariant.ELEVATED`.
+    Value is of type [`CardVariant`](https://flet.dev/docs/reference/types/cardvariant) 
+    and defaults to `CardVariant.ELEVATED`.
     """

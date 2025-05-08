@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -26,7 +26,8 @@ class AppBar(AdaptiveControl):
     """
     A `Control` to display before the toolbar's title.
 
-    Typically the leading control is an [`Icon`](https://flet.dev/docs/controls/icon) or an [`IconButton`](https://flet.dev/docs/controls/iconbutton).
+    Typically the leading control is an [`Icon`](https://flet.dev/docs/controls/icon) 
+    or an [`IconButton`](https://flet.dev/docs/controls/iconbutton).
 
     Value is of type `Control`.
     """
@@ -35,23 +36,28 @@ class AppBar(AdaptiveControl):
     """
     Defines the width of leading control.
 
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `56.0`.
+    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
+    and defaults to `56.0`.
     """
 
     automatically_imply_leading: bool = True
     """
     Controls whether we should try to imply the leading widget if null.
 
-    If `True` and `leading` is null, automatically try to deduce what the leading widget should be. If `False` and `leading` is null, leading space is given to title. If leading widget is not null, this parameter has no effect.
+    If `True` and `leading` is null, automatically try to deduce what the leading 
+    widget should be. If `False` and `leading` is null, leading space is given to 
+    title. If leading widget is not null, this parameter has no effect.
 
     Value is of type `bool`.
     """
 
     title: Optional[StrOrControl] = None
     """
-    The primary `Control` displayed in the app bar. Typically a [`Text`](https://flet.dev/docs/controls/text) control that contains a description of the current contents of the app.
+    The primary `Control` displayed in the app bar. Typically a [`Text`](https://flet.dev/docs/controls/text) 
+    control that contains a description of the current contents of the app.
 
-    **Note** that, if `AppBar.adaptive=True` and the app is opened on an iOS or macOS device, this control will be automatically centered.
+    **Note** that, if `AppBar.adaptive=True` and the app is opened on an iOS or macOS 
+    device, this control will be automatically centered.
 
     Value is of type `Control`.
     """
@@ -67,26 +73,31 @@ class AppBar(AdaptiveControl):
     """
     Defines the height of the toolbar component of an AppBar.
 
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `56.0`.
+    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
+    and defaults to `56.0`.
     """
 
     color: OptionalColorValue = None
     """
-    The default [color](https://flet.dev/docs/reference/colors) for `Text` and `Icon` controls within the app bar. Default color is defined by current theme.
+    The default [color](https://flet.dev/docs/reference/colors) for `Text` and `Icon` 
+    controls within the app bar. Default color is defined by current theme.
     """
 
     bgcolor: OptionalColorValue = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for an AppBar. Default color is defined by current theme.
+    The fill [color](https://flet.dev/docs/reference/colors) to use for an AppBar. 
+    Default color is defined by current theme.
     """
 
     elevation: OptionalNumber = None
     """
     The app bar's elevation.
 
-    Note: This effect is only visible when using the Material 2 design (`Theme.use_material3=False`).
+    Note: This effect is only visible when using the Material 2 design 
+    (`Theme.use_material3=False`).
 
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `4`.
+    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
+    and defaults to `4`.
     """
 
     elevation_on_scroll: OptionalNumber = None
@@ -105,7 +116,8 @@ class AppBar(AdaptiveControl):
 
     surface_tint_color: OptionalColorValue = None
     """
-    The color of the surface tint overlay applied to the app bar's `bgcolor` to indicate elevation.
+    The color of the surface tint overlay applied to the app bar's `bgcolor` to 
+    indicate elevation.
 
     By default, no overlay will be applied.
     """
@@ -121,7 +133,8 @@ class AppBar(AdaptiveControl):
     """
     Forces the app bar to be transparent (instead of Material's default type).
 
-    This will also remove the visual display of `bgcolor` and `elevation`, and affect other characteristics of this app bar.
+    This will also remove the visual display of `bgcolor` and `elevation`, and affect 
+    other characteristics of this app bar.
 
     Value is of type `bool`.
     """
@@ -135,7 +148,8 @@ class AppBar(AdaptiveControl):
 
     title_spacing: OptionalNumber = None
     """
-    The spacing around `title` on the horizontal axis. It is applied even if there are no `leading` or `actions` controls.
+    The spacing around `title` on the horizontal axis. It is applied even if there are 
+    no `leading` or `actions` controls.
 
     If you want `title` to take all the space available, set this value to `0.0`.
 
@@ -149,20 +163,28 @@ class AppBar(AdaptiveControl):
     Value is of type `bool` and defaults to `False`.
     """
 
-    actions: Optional[List[Control]] = None
+    actions: Optional[list[Control]] = None
     """
     A list of `Control`s to display in a row after the title control.
 
-    Typically these controls are [`IconButtons`](https://flet.dev/docs/controls/iconbutton) representing common operations. For less common operations, consider using a [`PopupMenuButton`](https://flet.dev/docs/controls/popupmenubutton) as the last action.
+    Typically these controls are [`IconButtons`](https://flet.dev/docs/controls/iconbutton) 
+    representing common operations. For less common operations, consider using a 
+    [`PopupMenuButton`](https://flet.dev/docs/controls/popupmenubutton) as the last 
+    action.
 
-    **Note** that, if `AppBar.adaptive=True` and the app is opened on an iOS or macOS device, only the first element of this list will be used. This is because the `CupertinoAppBar`(which will be used on those two platforms) only accepts one - trailing - action control.
+    **Note** that, if `AppBar.adaptive=True` and the app is opened on an iOS or macOS 
+    device, only the first element of this list will be used. This is because the 
+    `CupertinoAppBar`(which will be used on those two platforms) only accepts one - 
+    trailing - action control.
     """
 
     toolbar_opacity: Number = 1.0
     """
-    The opacity of the toolbar. Value ranges from `0.0` (transparent) to `1.0` (fully opaque).
+    The opacity of the toolbar. Value ranges from `0.0` (transparent) to `1.0` (fully 
+    opaque).
 
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `1.0`.
+    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
+    and defaults to `1.0`.
     """
 
     title_text_style: Optional[TextStyle] = None
@@ -174,7 +196,8 @@ class AppBar(AdaptiveControl):
 
     toolbar_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the `Text` controls in the app bar's `leading` and `actions` (but not `title`).
+    The style to be used for the `Text` controls in the app bar's `leading` and 
+    `actions` (but not `title`).
 
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
