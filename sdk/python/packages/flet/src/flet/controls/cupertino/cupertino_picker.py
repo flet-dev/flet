@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -20,12 +20,10 @@ class CupertinoPicker(ConstrainedControl):
     """
     An iOS-styled picker.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/cupertinopicker
     """
 
-    controls: List[Control] = field(default_factory=list)
+    controls: list[Control] = field(default_factory=list)
     item_extent: Number = 32.0
     selected_index: int = 0
     bgcolor: OptionalColorValue = None
