@@ -14,8 +14,8 @@ class CupertinoActionSheetControl extends StatelessWidget {
     debugPrint("CupertinoActionSheetControl build: ${control.id}");
 
     var sheet = CupertinoActionSheet(
-      title: control.buildWidget("title"),
-      message: control.buildWidget("message"),
+      title: control.buildTextOrWidget("title"),
+      message: control.buildTextOrWidget("message"),
       cancelButton: control.buildWidget("cancel"),
       actions: control.buildWidgets("actions"),
     );

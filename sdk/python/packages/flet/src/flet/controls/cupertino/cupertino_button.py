@@ -30,31 +30,119 @@ class CupertinoButton(ConstrainedControl):
     """
     An iOS-style button.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/cupertinobutton
     """
 
     content: Optional[StrOrControl] = None
+    """
+    A Control representing custom button content.
+    """
+
     icon: Optional[IconValueOrControl] = None
+    """
+    Icon shown in the button.
+    """
+
     icon_color: OptionalColorValue = None
+    """
+    Icon [color](https://flet.dev/docs/reference/colors).
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    Button's background [color](https://flet.dev/docs/reference/colors).
+    """
+
     color: OptionalColorValue = None
+    """
+    Button's text [color](https://flet.dev/docs/reference/colors).
+    """
+
     disabled_bgcolor: OptionalColorValue = None
+    """
+    The background [color](https://flet.dev/docs/reference/colors) of the button when 
+    it is disabled.
+    """
+
     opacity_on_click: Number = 0.4
+    """
+    Defines the opacity of the button when it is clicked. When not pressed, 
+    the button has an opacity of `1.0`.
+
+    Defaults to `0.4`.
+    """
+
     min_size: Number = None
+    """
+    The minimum size of the button.
+
+    Defaults to `44.0`.
+    """
+
     size_style: CupertinoButtonSize = CupertinoButtonSize.LARGE
+    """
+    TBD
+    """
+
     padding: OptionalPaddingValue = None
+    """
+    The amount of space to surround the `content` control inside the bounds of the 
+    button.
+    """
+
     alignment: OptionalAlignment = None
+    """
+    TBD
+    """
+
     border_radius: BorderRadiusValue = 8.0
+    """
+    TBD
+    """
+
     url: Optional[str] = None
+    """
+    The URL to open when the button is clicked. If registered, `on_click` event is 
+    fired after that.
+    """
+
     url_target: Optional[UrlTarget] = None
+    """
+    Where to open URL in the web mode.
+
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
+    defaults to `UrlTarget.BLANK`.
+    """
+
     autofocus: bool = False
+    """
+    TBD
+    """
+
     focus_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when a user clicks the button.
+    """
+
     on_long_press: OptionalControlEventCallable = None
+    """
+    Fires when a user long-presses the button.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the button receives focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the button loses focus.
+    """
 
     def before_update(self):
         super().before_update()
