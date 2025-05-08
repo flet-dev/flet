@@ -27,7 +27,7 @@ class CupertinoContextMenu(AdaptiveControl):
     actions: list[Control] = field(default_factory=list)
     """
     A list of action buttons to be shown in the menu. These actions are typically 
-    [`CupertinoContextMenuAction`](/docs/controls/cupertinocontextmenuaction)s. 
+    [`CupertinoContextMenuAction`](https://flet.dev/docs/controls/cupertinocontextmenuaction)s. 
     This list must have at least one action.
     """
 
