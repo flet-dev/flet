@@ -34,8 +34,6 @@ class CupertinoDatePicker(ConstrainedControl):
     """
     An iOS-styled date picker.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/cupertinodatepicker
     """
 
@@ -83,12 +81,14 @@ class CupertinoDatePicker(ConstrainedControl):
         ]:
             assert (
                 1 <= self.minimum_year <= value.year
-            ), f"value.year ({value.year}) can't be less than minimum_year ({self.minimum_year})"
+            ), f"value.year ({value.year}) can't be less than minimum_year "
+            f"({self.minimum_year})"
 
             if self.maximum_year:
                 assert (
                     value.year <= self.maximum_year
-                ), f"value.year ({value.year}) can't be greater than maximum_year ({self.maximum_year})"
+                ), f"value.year ({value.year}) can't be greater than maximum_year "
+                f"({self.maximum_year})"
 
             if self.first_date:
                 assert (
@@ -107,4 +107,5 @@ class CupertinoDatePicker(ConstrainedControl):
 
         assert (
             value.minute % self.minute_interval == 0
-        ), f"value.minute ({value.minute}) must be divisible by minute_interval ({self.minute_interval})"
+        ), f"value.minute ({value.minute}) must be divisible by minute_interval "
+        f"({self.minute_interval})"
