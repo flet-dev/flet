@@ -141,50 +141,297 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
 
     value: str = ""
+    """
+    Current value of the TextField.
+    """
+
     keyboard_type: KeyboardType = KeyboardType.TEXT
+    """
+    The type of keyboard to use for editing the text. The property value is 
+    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults to 
+    `KeyboardType.TEXT`.
+    """
+
     multiline: bool = False
+    """
+    `True` if TextField can contain multiple lines of text.
+    """
+
     min_lines: Optional[int] = None
+    """
+    The minimum number of lines to occupy when the content spans fewer lines.
+
+    This affects the height of the field itself and does not limit the number of lines 
+    that can be entered into the field.
+
+    Defaults to `1`.
+    """
+
     max_lines: Optional[int] = None
+    """
+    The maximum number of lines to show at one time, wrapping if necessary.
+
+    This affects the height of the field itself and does not limit the number of lines 
+    that can be entered into the field.
+
+    If this is `1` (the default), the text will not wrap, but will scroll horizontally 
+    instead.
+    """
+
     max_length: Optional[int] = None
+    """
+    Limits a maximum number of characters that can be entered into TextField.
+    """
+
     password: bool = False
+    """
+    Whether to hide the text being edited.
+
+    Defaults to `False`.
+    """
+
     can_reveal_password: bool = False
+    """
+    Displays a toggle icon button that allows revealing the entered password. Is shown if 
+    both `password` and `can_reveal_password` are `True`.
+
+    The icon is displayed in the same location as `suffix` and in case both 
+    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is not 
+    shown.
+    """
+
     read_only: bool = False
+    """
+    Whether the text can be changed.
+
+    When this is set to `True`, the text cannot be modified by any shortcut or keyboard 
+    operation. The text is still selectable.
+
+    Defaults to `False`.
+    """
+
     shift_enter: bool = False
+    """
+    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, i.e. 
+    new line can be added with `Shift`+`Enter` and pressing just `Enter` fires `on_submit` 
+    event.
+    """
+
     text_align: Optional[TextAlign] = None
+    """
+    How the text should be aligned horizontally.
+
+    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign) and 
+    defaults to `TextAlign.LEFT`.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus. If there is more than one 
+    control on a page with autofocus set, then the first one added to the page will get 
+    focus.
+    """
+
     capitalization: Optional[TextCapitalization] = None
+    """
+    Enables automatic on-the-fly capitalization of entered text.
+
+    Value is of type 
+    [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization) and 
+    defaults to `TextCapitalization.NONE`.
+    """
+
     autocorrect: bool = True
+    """
+    Whether to enable autocorrection.
+
+    Defaults to `True`.
+    """
+
     enable_suggestions: bool = True
+    """
+    Whether to show input suggestions as the user types.
+
+    This flag only affects Android. On iOS, suggestions are tied directly to `autocorrect`, 
+    so that suggestions are only shown when `autocorrect` is `True`. On Android 
+    autocorrection and suggestion are controlled separately.
+
+    Defaults to `True`.
+    """
+
     smart_dashes_type: bool = True
+    """
+    Whether to allow the platform to automatically format dashes.
+
+    This flag only affects iOS versions 11 and above. As an example of what this does, two 
+    consecutive hyphen characters will be automatically replaced with one en dash, and 
+    three consecutive hyphens will become one em dash.
+
+    Defaults to `True`.
+    """
+
     smart_quotes_type: bool = True
+    """
+    Whether to allow the platform to automatically format quotes.
+
+    This flag only affects iOS. As an example of what this does, a standard vertical double 
+    quote character will be automatically replaced by a left or right double quote 
+    depending on its position in a word.
+
+    Defaults to `True`.
+    """
+
     show_cursor: bool = True
+    """
+    Whether the field's cursor is to be shown.
+
+    Defaults to `True`.
+    """
+
     cursor_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of TextField cursor.
+    """
+
     cursor_error_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     cursor_width: Number = 2.0
+    """
+    Sets cursor width.
+    """
+
     cursor_height: OptionalNumber = None
+    """
+    Sets cursor height.
+    """
+
     cursor_radius: OptionalNumber = None
+    """
+    Sets cursor radius.
+    """
+
     selection_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of TextField selection.
+    """
+
     input_filter: Optional[InputFilter] = None
+    """
+    Provides as-you-type filtering/validation.
+
+    Similar to the `on_change` callback, the input filters are not applied when the 
+    content of the field is changed programmatically.
+
+    Value is of type 
+    [`InputFilter`](https://flet.dev/docs/reference/types/inputfilter) class.
+    """
+
     obscuring_character: str = "•"
+    """
+    TBD
+    """
+
     enable_interactive_selection: bool = True
+    """
+    TBD
+    """
+
     enable_ime_personalized_learning: bool = True
+    """
+    TBD
+    """
+
     can_request_focus: bool = True
+    """
+    TBD
+    """
+
     ignore_pointers: bool = False
+    """
+    TBD
+    """
+
     enable_stylus_handwriting: bool = True
+    """
+    TBD
+    """
+
     animate_cursor_opacity: Optional[bool] = None
+    """
+    TBD
+    """
+
     always_call_on_tap: bool = False
+    """
+    TBD
+    """
+
     scroll_padding: PaddingValue = 20
+    """
+    TBD
+    """
+
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    """
+    TBD
+    """
+
     keyboard_brightness: Optional[Brightness] = None
+    """
+    TBD
+    """
+
     mouse_cursor: Optional[MouseCursor] = None
+    """
+    TBD
+    """
+
     strut_style: Optional[StrutStyle] = None
+    """
+    TBD
+    """
+
     autofill_hints: Optional[Union[AutofillHint, List[AutofillHint]]] = None
+    """
+    Helps the autofill service identify the type of this text input. Value can either be a 
+    single [`AutoFillHint`](https://flet.dev/docs/reference/types/autofillhint) enum item or 
+    a list of them.
+
+    More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the typed input for the TextField has changed.
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    TBD
+    """
+
     on_submit: OptionalControlEventCallable = None
+    """
+    Fires when user presses ENTER while focus is on TextField.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the control has received focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the control has lost focus.
+    """
+
     on_tap_outside: OptionalControlEventCallable = None
+    """
+    TBD
+    """
 
     def before_update(self):
         super().before_update()
