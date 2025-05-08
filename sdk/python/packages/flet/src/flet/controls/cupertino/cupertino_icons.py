@@ -8,7 +8,7 @@ sh ci/generate_cupertino_icons_python.sh
 
 import random
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Optional
 
 __all__ = ["CupertinoIcons"]
 
@@ -16,15 +16,16 @@ __all__ = ["CupertinoIcons"]
 class CupertinoIcons(str, Enum):
     @staticmethod
     def random(
-        exclude: Optional[List["CupertinoIcons"]] = None,
-        weights: Optional[Dict["CupertinoIcons", int]] = None,
+        exclude: Optional[list["CupertinoIcons"]] = None,
+        weights: Optional[dict["CupertinoIcons", int]] = None,
     ) -> Optional["CupertinoIcons"]:
         """
         Selects a random icon, with optional exclusions and weights.
 
         Args:
             exclude: A list of icons members to exclude from the selection.
-            weights: A dictionary mapping icon members to their respective weights for weighted random selection.
+            weights: A dictionary mapping icon members to their respective weights for
+            weighted random selection.
 
         Returns:
             A randomly selected icon, or None if all members are excluded.
