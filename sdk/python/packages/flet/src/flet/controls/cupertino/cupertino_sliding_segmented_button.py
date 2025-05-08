@@ -1,5 +1,4 @@
 from dataclasses import field
-from typing import List
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -20,12 +19,10 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     """
     A CupertinoSlidingSegmentedButton.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/cupertinoslidingsegmentedbutton
     """
 
-    controls: List[Control] = field(default_factory=list)
+    controls: list[Control] = field(default_factory=list)
     selected_index: int = 0
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     thumb_color: OptionalColorValue = None
