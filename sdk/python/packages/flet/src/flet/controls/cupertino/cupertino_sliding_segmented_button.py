@@ -23,14 +23,47 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     """
 
     controls: list[Control] = field(default_factory=list)
+    """
+    A list of `Control`s to display as segments inside the CupertinoSegmentedButton.
+    Must have at least 2 items.
+    """
+
     selected_index: int = 0
+    """
+    The index (starting from 0) of the selected segment in the `controls` list.
+    """
+
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
+    """
+    The background [color](https://flet.dev/docs/reference/colors) of the button.
+    """
+
     thumb_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the button when it is not
+    selected.
+    """
+
     padding: PaddingValue = field(
         default_factory=lambda: Padding.symmetric(vertical=2, horizontal=3)
     )
+    """
+    The button's padding.
+
+    Padding value is an instance of
+    [Padding](https://flet.dev/docs/reference/types/padding) class.
+    """
+
     proportional_width: bool = False
+    """
+    TBD
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the state of the button is changed - when one of the `controls` is 
+    clicked.
+    """
 
     def before_update(self):
         super().before_update()
