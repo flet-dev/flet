@@ -1,11 +1,21 @@
 from flet.app import app, app_async
+from flet.core import (
+    alignment,
+    border,
+    border_radius,
+    dropdown,
+    dropdownm2,
+    margin,
+    padding,
+    painting,
+    size,
+)
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alert_dialog import AlertDialog
 from flet.core.alignment import Alignment, Axis
 from flet.core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
-from flet.core.animation import Animation, AnimationCurve
+from flet.core.animation import Animation, AnimationCurve, AnimationStyle
 from flet.core.app_bar import AppBar
-from flet.core.reorderable_draggable import ReorderableDraggable
 from flet.core.audio import (
     Audio,
     AudioDurationChangeEvent,
@@ -278,6 +288,7 @@ from flet.core.radio import Radio
 from flet.core.radio_group import RadioGroup
 from flet.core.range_slider import RangeSlider
 from flet.core.ref import Ref
+from flet.core.reorderable_draggable import ReorderableDraggable
 from flet.core.reorderable_list_view import OnReorderEvent, ReorderableListView
 from flet.core.responsive_row import ResponsiveRow
 from flet.core.rive import Rive
