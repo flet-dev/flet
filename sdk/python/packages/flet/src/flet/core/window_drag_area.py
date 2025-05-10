@@ -53,8 +53,8 @@ class WindowDragArea(GestureDetector):
         )
 
         self.maximizable = maximizable
-        self.on_double_tap = on_double_tap
-        self.on_pan_start = on_pan_start
+        self._on_double_tap = on_double_tap
+        self._on_pan_start = on_pan_start
 
     def before_update(self):
         super().before_update()
@@ -62,16 +62,13 @@ class WindowDragArea(GestureDetector):
 
     def handle_double_tap(self, e: TapEvent):
         if self.maximizable and self.page.window.maximizable:
-            if not self.page.window.maximized:
-                self.page.window.maximized = True
-            else:
-                self.page.window.maximized = False
+            self.page.window.maximized = not self.page.window.maximized
             self.page.update()
 
-        if self.on_double_tap is not None and self.page.window.maximized:
-            self.on_double_tap(e)
+        if self._on_double_tap is not None and self.page.window.maximized:
+            self._on_double_tap(e)
 
     def handle_pan_start(self, e: DragStartEvent):
         self.page.window.start_dragging()
-        if self.on_pan_start is not None:
-            self.on_pan_start(e)
+        if self._on_pan_start is not None:
+            self._on_pan_start(e)
