@@ -1,3 +1,7 @@
+# 0.28.2
+
+* Fixed missing imports in `__init__.py` ([#5292](https://github.com/flet-dev/flet/pull/5292)).
+
 # 0.28.0
 
 * New Features and Flutter 3.29 ([#4891](https://github.com/flet-dev/flet/issues/4891))

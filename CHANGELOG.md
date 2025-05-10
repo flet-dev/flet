@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.28.2
+
+* Fixed missing imports in `__init__.py` ([#5292](https://github.com/flet-dev/flet/pull/5292)).
+
 ## 0.28.0
 
 * feat(cli): `flet -V` as alternative to `flet --version` ([#4791](https://github.com/flet-dev/flet/pull/4791))
