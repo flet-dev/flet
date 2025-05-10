@@ -1,6 +1,7 @@
 # 0.28.2
 
 * Fixed missing imports in `__init__.py` ([#5292](https://github.com/flet-dev/flet/pull/5292)).
+* Fixed: GestureDetector should have at least one event handler defined ([#5293](https://github.com/flet-dev/flet/pull/5293)).
 
 # 0.28.0
 
