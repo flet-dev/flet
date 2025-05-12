@@ -44,11 +44,11 @@ dependencies:
       ref: v1
       path: src/flutter/flet_video
 # --FAT_CLIENT_END--
-#   flet_lottie:
-#     git:
-#       url: https://github.com/flet-dev/flet-lottie.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_lottie
+  flet_lottie:
+    git:
+      url: https://github.com/flet-dev/flet-lottie.git
+      ref: v1
+      path: src/flutter/flet_lottie
 #   flet_map:
 #     git:
 #       url: https://github.com/flet-dev/flet-map.git
