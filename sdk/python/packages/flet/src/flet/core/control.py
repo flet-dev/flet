@@ -134,21 +134,24 @@ class Control:
         if name not in self.__attrs:
             return def_value
         s_val = self.__attrs[name][0]
-        if data_type == "bool" and s_val is not None and isinstance(s_val, str):
+
+        if not isinstance(s_val, str):
+            return s_val
+
+        if data_type == "bool":
             return s_val.lower() == "true"
-        elif data_type == "bool?" and isinstance(s_val, str):
+        elif data_type == "bool?":
             if s_val.lower() == "true":
                 return True
             elif s_val.lower() == "false":
                 return False
             else:
                 return def_value
-        elif data_type == "float" and s_val is not None and isinstance(s_val, str):
+        elif data_type == "float":
             return float(s_val)
-        elif data_type == "int" and s_val is not None and isinstance(s_val, str):
+        elif data_type == "int":
             return int(s_val)
-        else:
-            return s_val
+        return s_val
 
     def _set_attr(self, name: str, value: V, dirty: bool = True) -> None:
         self._set_attr_internal(name, value, dirty)
@@ -340,19 +343,7 @@ class Control:
         wait_for_result: bool = False,
         wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
-        assert (
-            self.__page
-        ), f"{self.__class__.__qualname__} Control must be added to the page first"
-        if arguments:
-            # remove items with None values and convert other values to string
-            arguments = {k: str(v) for k, v in arguments.items() if v is not None}
-        return self.__page._invoke_method(
-            control_id=self.uid,
-            method_name=method_name,
-            arguments=arguments,
-            wait_for_result=wait_for_result,
-            wait_timeout=wait_timeout,
-        )
+        return self.__invoke_method(method_name,arguments,wait_for_result,wait_timeout)
 
     def invoke_method_async(
         self,
@@ -361,13 +352,24 @@ class Control:
         wait_for_result: bool = False,
         wait_timeout: Optional[float] = 5,
     ):
+        return self.__invoke_method(method_name,arguments,wait_for_result,wait_timeout, is_async=True)
+
+    def __invoke_method(
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, str]] = None,
+        wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
+        *,
+        is_async: bool = False
+    ):
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
         if arguments:
             # remove items with None values and convert other values to string
             arguments = {k: str(v) for k, v in arguments.items() if v is not None}
-        return self.__page._invoke_method_async(
+        return (self.__page._invoke_method_async if is_async else self.__page._invoke_method)(
             control_id=self.uid,
             method_name=method_name,
             arguments=arguments,
@@ -594,9 +596,7 @@ class Control:
 
     # Magic methods
     def __str__(self) -> str:
-        attrs = {}
-        for k, v in self.__attrs.items():
-            attrs[k] = v[0]
+        attrs = {k: v[0] for k, v in self.__attrs.items()}
         return f"{self._get_control_name()} {attrs}"
 
     def __repr__(self) -> str:
