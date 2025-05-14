@@ -402,7 +402,7 @@ from flet.controls.services.semantics_service import Assertiveness, SemanticsSer
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.size import Size
+from flet.controls.geometry import Size, Rect
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     OptionalStrutStyle,
@@ -886,6 +886,7 @@ __all__ = [
     "ShakeDetector",
     "StoragePaths",
     "Size",
+    "Rect",
     "TemplateRoute",
     "OptionalStrutStyle",
     "OptionalTextBaseline",
