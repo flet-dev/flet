@@ -1,5 +1,12 @@
 # Flet changelog
 
+## 0.28.3
+
+* New: Multiple subscribers can subscribe to a published topic by `send_all_on_topic` ([#5303](https://github.com/flet-dev/flet/issues/5303))
+* Fixed: Local Images Not Rendering in Android App using Flet 0.27.6 ([#5198](https://github.com/flet-dev/flet/issues/5198))
+* Fixed: FilePicker.save_file() opens blank gray screen in APK build (works fine in VS) ([#5301](https://github.com/flet-dev/flet/issues/5301))
+* Fixed: Routing / Navigation broken since flet 0.28.2 ([#5302](https://github.com/flet-dev/flet/issues/5302))
+
 ## 0.28.2
 
 * Fixed missing imports in `__init__.py` ([#5292](https://github.com/flet-dev/flet/pull/5292)).

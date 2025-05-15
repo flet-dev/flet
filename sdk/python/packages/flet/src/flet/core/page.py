@@ -107,10 +107,9 @@ class context:
 try:
     from flet.auth.authorization import Authorization
     from flet.auth.oauth_provider import OAuthProvider
-except ImportError as e:
+except ImportError:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -119,8 +118,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -624,7 +622,9 @@ class Page(AdaptiveControl):
         self._add_event_handler("route_change", self.__on_route_change.get_handler())
 
         def convert_view_pop_event(e):
-            return ViewPopEvent(view=cast(View, self.get_control(e.data)))
+            # e.data contains route name
+            view = next((v for v in self.views if v.route == e.data), None)
+            return ViewPopEvent(view=view) if view in self.views else None
 
         self.__on_view_pop = EventHandler(convert_view_pop_event)
         self._add_event_handler("view_pop", self.__on_view_pop.get_handler())

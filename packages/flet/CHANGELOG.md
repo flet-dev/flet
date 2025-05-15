@@ -1,3 +1,8 @@
+# 0.28.3
+
+* Fixed: Local Images Not Rendering in Android App using Flet 0.27.6 ([#5198](https://github.com/flet-dev/flet/issues/5198))
+* Fixed: FilePicker.save_file() opens blank gray screen in APK build (works fine in VS) ([#5301](https://github.com/flet-dev/flet/issues/5301))
+
 # 0.28.2
 
 * Fixed missing imports in `__init__.py` ([#5292](https://github.com/flet-dev/flet/pull/5292)).
