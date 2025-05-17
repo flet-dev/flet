@@ -4,8 +4,8 @@ T = TypeVar("T")
 
 
 class Ref(Generic[T]):
-    def __init__(self):
-        self._current: T = None
+    def __init__(self, value: T = None):
+        self._current: T = value
 
     @property
     def current(self) -> T:
