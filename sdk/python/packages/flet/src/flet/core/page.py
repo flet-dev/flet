@@ -901,9 +901,9 @@ class Page(AdaptiveControl):
         return future
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
-        def wrapper(*args):
+        def wrapper(*args,**kwargs):
             _session_page.set(self)
-            handler(*args)
+            handler(*args,**kwargs)
 
         return wrapper
 
