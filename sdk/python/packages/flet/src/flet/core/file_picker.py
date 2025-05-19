@@ -9,11 +9,6 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 class FilePickerState(Enum):
     PICK_FILES = "pickFiles"

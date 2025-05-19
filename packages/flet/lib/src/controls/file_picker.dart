@@ -180,13 +180,17 @@ class _FilePickerControlState extends State<FilePickerControl>
         else if (state?.toLowerCase() == "savefile" && !kIsWeb) {
           FilePicker.platform
               .saveFile(
-            dialogTitle: dialogTitle,
-            fileName: fileName,
-            initialDirectory: initialDirectory,
-            lockParentWindow: true,
-            type: fileType,
-            allowedExtensions: allowedExtensions,
-          )
+                  dialogTitle: dialogTitle,
+                  fileName: fileName != null || !isiOSPlatform()
+                      ? fileName
+                      : "new-file",
+                  initialDirectory: initialDirectory,
+                  lockParentWindow: true,
+                  type: fileType,
+                  allowedExtensions: allowedExtensions,
+                  bytes: isAndroidPlatform() || isiOSPlatform()
+                      ? Uint8List(0)
+                      : null)
               .then((result) {
             debugPrint("saveFile() completed");
             _path = result;
