@@ -1,6 +1,5 @@
 import asyncio
 from dataclasses import dataclass, field
-from typing import Dict
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -31,8 +30,6 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     height (or width, depending on what is perpendicular to the `dismiss_direction`), gradually reducing it to zero
     over the specified `resize_duration`.
 
-    -------
-
     Online Docs: https://flet.dev/docs/controls/dismissible
     """
 
@@ -40,7 +37,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     background: Control = Container(bgcolor=Colors.TRANSPARENT)
     secondary_background: Control = Container(bgcolor=Colors.TRANSPARENT)
     dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
-    dismiss_thresholds: Dict[DismissDirection, OptionalNumber] = field(
+    dismiss_thresholds: dict[DismissDirection, OptionalNumber] = field(
         default_factory=dict
     )
     movement_duration: DurationValue = field(
