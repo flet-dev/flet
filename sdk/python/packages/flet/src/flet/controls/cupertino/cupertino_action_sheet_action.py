@@ -12,16 +12,39 @@ class CupertinoActionSheetAction(ConstrainedControl):
     """
     An action button typically used in a CupertinoActionSheet.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/cupertinoactionsheetaction
     """
 
     content: StrOrControl
+    """
+    The child control to be shown in this action button.
+
+    In case both `text` and `content` are provided, then `content` will be used.
+    """
+
     default: bool = False
+    """
+    Whether this action should receive the style of an emphasized, default action.
+
+    Defaults to `False`.
+    """
+
     destructive: bool = False
+    """
+    Whether this action should receive the style of a destructive action.
+
+    Defaults to `False`.
+    """
+
     mouse_cursor: Optional[MouseCursor] = None
+    """
+    TBD
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when this action button is clicked.
+    """
 
     def before_update(self):
         super().before_update()

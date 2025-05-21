@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import Border
@@ -21,46 +21,61 @@ class CupertinoNavigationBar(ConstrainedControl):
     """
     An iOS-styled bottom navigation tab bar.
 
-    Navigation bars offer a persistent and convenient way to switch between primary destinations in an app.
-
-    Example:
-
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.title = "CupertinoNavigationBar Example"
-        page.navigation_bar = ft.CupertinoNavigationBar(
-            bgcolor=ft.colors.AMBER_100,
-            inactive_color=ft.colors.GREY,
-            active_color=ft.colors.BLACK,
-            on_change=lambda e: print("Selected tab:", e.control.selected_index),
-            destinations=[
-                ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label="Explore"),
-                ft.NavigationBarDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationBarDestination(
-                    icon=ft.icons.BOOKMARK_BORDER,
-                    selected_icon=ft.icons.BOOKMARK,
-                    label="Explore",
-                ),
-            ]
-        )
-        page.add(ft.SafeArea(ft.Text("Body!")))
-
-
-    ft.app(target=main)
-    ```
-
-    -----
+    Navigation bars offer a persistent and convenient way to switch between primary
+    destinations in an app.
 
     Online docs: https://flet.dev/docs/controls/cupertinonavigationbar
     """
 
-    destinations: List[NavigationBarDestination] = field(default_factory=list)
+    destinations: list[NavigationBarDestination] = field(default_factory=list)
+    """
+    Defines the appearance of the button items that are arrayed within the navigation 
+    bar.
+
+    The value must be a list of two or more 
+    [`NavigationBarDestination`](https://flet.dev/docs/controls/navigationbar#navigationbardestination-properties) 
+    instances.
+    """
+
     selected_index: int = 0
+    """
+    The index into `destinations` for the current selected `NavigationBarDestination` 
+    or `None` if no destination is selected.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the navigation bar itself.
+    """
+
     active_color: OptionalColorValue = None
+    """
+    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and 
+    title of the selected destination.
+    """
+
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
+    """
+    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and 
+    title of the unselected destinations.
+    """
+
     border: Optional[Border] = None
+    """
+    Defines the border of this navigation bar.
+
+    The value is an instance of 
+    [`Border`](https://flet.dev/docs/reference/types/border) class.
+    """
+
     icon_size: Number = 30
+    """
+    The size of all destination icons.
+
+    Defaults to `30`.
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when selected destination changed.
+    """

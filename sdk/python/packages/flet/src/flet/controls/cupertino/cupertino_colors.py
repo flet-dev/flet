@@ -16,7 +16,7 @@ for line in __import__("sys").stdin:
 
 import random
 from enum import Enum
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
     from flet.controls.types import ColorValue
@@ -46,15 +46,16 @@ class CupertinoColors(str, Enum):
 
     @staticmethod
     def random(
-        exclude: Optional[List["CupertinoColors"]] = None,
-        weights: Optional[Dict["CupertinoColors", int]] = None,
+        exclude: Optional[list["CupertinoColors"]] = None,
+        weights: Optional[dict["CupertinoColors", int]] = None,
     ) -> Optional["CupertinoColors"]:
         """
         Selects a random color, with optional exclusions and weights.
 
         Args:
             exclude: A list of colors members to exclude from the selection.
-            weights: A dictionary mapping color members to their respective weights for weighted random selection.
+            weights: A dictionary mapping color members to their respective weights for
+            weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.

@@ -20,15 +20,15 @@ class CupertinoListTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoListTile build: ${control.id}");
 
-    var title = control.buildWidget("title");
+    var title = control.buildTextOrWidget("title");
     if (title == null) {
       return const ErrorControl(
           "CupertinoListTile.title must be provided and visible");
     }
-    var leading = control.buildWidget("leading");
-    var additionalInfo = control.buildWidget("additional_info");
-    var subtitle = control.buildWidget("subtitle");
-    var trailing = control.buildWidget("trailing");
+    var leading = control.buildIconOrWidget("leading");
+    var additionalInfo = control.buildTextOrWidget("additional_info");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
     var backgroundColor = control.getColor("bgcolor", context);
     var bgcolorActivated = control.getColor("bgcolor_activated", context);
     var padding = control.getPadding("content_padding");
