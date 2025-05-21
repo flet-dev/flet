@@ -79,7 +79,7 @@ def test_page_patch_dataclass():
 
     # 1 -calculate diff
     patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        None, page, in_place=True, control_cls=BaseControl
+        None, page, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -109,9 +109,7 @@ def test_page_patch_dataclass():
     assert page.platform == PagePlatform.MACOS
 
     # 1 -calculate diff
-    patch, _, _ = ObjectPatch.from_diff(
-        page, page, in_place=True, control_cls=BaseControl
-    )
+    patch, _, _ = ObjectPatch.from_diff(page, page, control_cls=BaseControl)
 
     # 2 - convert patch to hierarchy
     graph_patch = patch.to_graph()
@@ -125,9 +123,7 @@ def test_page_patch_dataclass():
     page.window.height = 768
 
     # 1 -calculate diff
-    patch, _, _ = ObjectPatch.from_diff(
-        page, page, in_place=True, control_cls=BaseControl
-    )
+    patch, _, _ = ObjectPatch.from_diff(page, page, control_cls=BaseControl)
 
     # 2 - convert patch to hierarchy
     graph_patch = patch.to_graph()

@@ -215,6 +215,7 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
+from flet.controls.data_view import data_view
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import (
     DateTimeValue,
@@ -720,6 +721,7 @@ __all__ = [
     "CupertinoTimerPicker",
     "CupertinoTimerPickerMode",
     "CupertinoTintedButton",
+    "data_view",
     "DialogControl",
     "DateTimeValue",
     "Duration",

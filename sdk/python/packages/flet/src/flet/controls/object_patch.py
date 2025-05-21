@@ -218,13 +218,11 @@ class ObjectPatch:
         cls,
         src,
         dst,
-        in_place=False,
         control_cls=None,
     ):
         builder = DiffBuilder(
             src,
             dst,
-            in_place=in_place,
             control_cls=control_cls,
         )
         builder._compare_values(None, [], None, src, dst)
@@ -271,10 +269,8 @@ class DiffBuilder:
         self,
         src_doc,
         dst_doc,
-        in_place=False,
         control_cls=None,
     ):
-        self.in_place = in_place
         self.added_controls = []
         self.removed_controls = []
         self.control_cls = control_cls
@@ -475,15 +471,17 @@ class DiffBuilder:
                 elif isinstance(old, list) and isinstance(new, list):
                     self._compare_lists(parent, _path_join(path, key), old, new)
 
-                elif (
-                    dataclasses.is_dataclass(old)
-                    and dataclasses.is_dataclass(new)
-                    and (
-                        (self.in_place and old == new)
-                        or (not self.in_place and type(old) is type(new))
+                elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
+                    frozen = (old is not None and hasattr(old, "_frozen")) or (
+                        new is not None and hasattr(new, "_frozen")
                     )
-                ):
-                    self._compare_dataclasses(parent, _path_join(path, key), old, new)
+
+                    if (not frozen and old == new) or (
+                        frozen and type(old) is type(new)
+                    ):
+                        self._compare_dataclasses(
+                            parent, _path_join(path, key), old, new
+                        )
 
                 elif type(old) is not type(new) or old != new:
                     self._item_removed(path, key, old)
@@ -576,15 +574,13 @@ class DiffBuilder:
             else:
                 self._compare_lists(parent, _path_join(path, key), src, dst)
 
-        elif (
-            dataclasses.is_dataclass(src)
-            and dataclasses.is_dataclass(dst)
-            and (
-                (self.in_place and src == dst)
-                or (not self.in_place and type(src) is type(dst))
+        elif dataclasses.is_dataclass(src) and dataclasses.is_dataclass(dst):
+            frozen = (src is not None and hasattr(src, "_frozen")) or (
+                dst is not None and hasattr(dst, "_frozen")
             )
-        ):
-            self._compare_dataclasses(parent, _path_join(path, key), src, dst)
+
+            if (not frozen and src == dst) or (frozen and type(src) is type(dst)):
+                self._compare_dataclasses(parent, _path_join(path, key), src, dst)
 
         elif type(src) is not type(dst) or src != dst:
             self._item_replaced(parent, path, key, dst)

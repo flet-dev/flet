@@ -226,7 +226,6 @@ class Session:
         patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
             control,
-            in_place=True,
             control_cls=BaseControl,
         )
 

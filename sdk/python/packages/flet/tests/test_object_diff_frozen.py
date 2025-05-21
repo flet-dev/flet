@@ -42,7 +42,7 @@ def update_page(new: Any, old: Any = None, show_details=True):
 
     # 1 -calculate diff
     patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        old, new, in_place=True, control_cls=BaseControl
+        old, new, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
