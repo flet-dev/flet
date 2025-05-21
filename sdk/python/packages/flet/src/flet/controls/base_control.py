@@ -29,7 +29,7 @@ __all__ = [
 
 
 def skip_field():
-    return field(default=None, repr=False, metadata={"skip": True})
+    return field(default=None, repr=False, compare=False, metadata={"skip": True})
 
 
 T = TypeVar("T", bound="BaseControl")
@@ -95,8 +95,8 @@ def _apply_control(
 
 @dataclass(kw_only=True)
 class BaseControl:
-    _i: int = field(init=False)
-    _c: str = field(init=False)
+    _i: int = field(init=False, compare=False)
+    _c: str = field(init=False, compare=False)
     data: Any = skip_field()
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
 

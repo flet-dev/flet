@@ -32,10 +32,10 @@ from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
 
-PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full"
+PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.5/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.29.2")
+MINIMAL_FLUTTER_VERSION = version.Version("3.32.0")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
