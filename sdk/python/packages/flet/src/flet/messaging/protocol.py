@@ -40,9 +40,10 @@ def configure_encode_object_for_msgpack(control_cls):
                 ):
                     r[field.name] = v
 
-            setattr(obj, "__prev_lists", prev_lists)
-            setattr(obj, "__prev_dicts", prev_dicts)
-            setattr(obj, "__prev_classes", prev_classes)
+            if not hasattr(obj, "_frozen"):
+                setattr(obj, "__prev_lists", prev_lists)
+                setattr(obj, "__prev_dicts", prev_dicts)
+                setattr(obj, "__prev_classes", prev_classes)
             # print("__prev_cols", obj.__class__.__name__, prev_cols.keys())
 
             return r

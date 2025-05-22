@@ -96,8 +96,9 @@ def _apply_control(
 @dataclass(kw_only=True)
 class BaseControl:
     _i: int = field(init=False, compare=False)
-    _c: str = field(init=False, compare=False)
+    _c: str = field(init=False)
     data: Any = skip_field()
+    list_key: Any = skip_field()  # a key that uniquily identifies control within a list
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):

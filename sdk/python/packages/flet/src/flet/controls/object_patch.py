@@ -218,14 +218,14 @@ class ObjectPatch:
         cls,
         src,
         dst,
-        control_cls=None,
+        control_cls,
     ):
         builder = DiffBuilder(
             src,
             dst,
             control_cls=control_cls,
         )
-        builder._compare_values(None, [], None, src, dst)
+        builder._compare_values(None, [], None, src, dst, False)
         ops = list(builder.execute())
         return cls(ops), builder.added_controls, builder.removed_controls
 
@@ -357,9 +357,11 @@ class DiffBuilder:
             yield curr[2].operation
             curr = curr[1]
 
-    def _item_added(self, parent, path, key, item):
+    def _item_added(self, parent, path, key, item, item_key=None):
+        # print("_item_added:", path, key, item, item_key)
         self._configure_dataclass(item, parent)
-        index = self.take_index(item, _ST_REMOVE)
+        index_key = item_key if item_key is not None else item
+        index = self.take_index(index_key, _ST_REMOVE)
         if index is not None:
             op = index[2]
             if isinstance(op.key, int) and isinstance(key, int):
@@ -385,17 +387,18 @@ class DiffBuilder:
                 }
             )
             new_index = self.insert(new_op)
-            self.store_index(item, new_index, _ST_ADD)
+            self.store_index(index_key, new_index, _ST_ADD)
 
-    def _item_removed(self, path, key, item):
-        # print("_item_removed:", path, key, item)
+    def _item_removed(self, path, key, item, item_key=None):
+        # print("_item_removed:", path, key, item, item_key)
         new_op = RemoveOperation(
             {
                 "op": "remove",
                 "path": _path_join(path, key),
             }
         )
-        index = self.take_index(item, _ST_ADD)
+        index_key = item_key if item_key is not None else item
+        index = self.take_index(index_key, _ST_ADD)
         new_index = self.insert(new_op)
         if index is not None:
             op = index[2]
@@ -423,7 +426,7 @@ class DiffBuilder:
                 self.remove(new_index)
 
         else:
-            self.store_index(item, new_index, _ST_REMOVE)
+            self.store_index(index_key, new_index, _ST_REMOVE)
             self._remove_control(item)
 
     def _item_replaced(self, parent, path, key, item):
@@ -438,7 +441,7 @@ class DiffBuilder:
             )
         )
 
-    def _compare_dicts(self, parent, path, src, dst):
+    def _compare_dicts(self, parent, path, src, dst, frozen):
         # print("\n_compare_dicts:", path, src, dst)
 
         src_keys = set(src.keys())
@@ -453,9 +456,9 @@ class DiffBuilder:
             self._item_added(parent, path, str(key), dst[key])
 
         for key in src_keys & dst_keys:
-            self._compare_values(parent, path, key, src[key], dst[key])
+            self._compare_values(parent, path, key, src[key], dst[key], frozen)
 
-    def _compare_lists(self, parent, path, src, dst):
+    def _compare_lists(self, parent, path, src, dst, frozen):
         # print("\n_compare_lists:", path, src, dst)
 
         len_src, len_dst = len(src), len(dst)
@@ -466,24 +469,51 @@ class DiffBuilder:
                 old, new = src[key], dst[key]
 
                 if isinstance(old, dict) and isinstance(new, dict):
-                    self._compare_dicts(parent, _path_join(path, key), old, new)
+                    self._compare_dicts(parent, _path_join(path, key), old, new, frozen)
 
                 elif isinstance(old, list) and isinstance(new, list):
-                    self._compare_lists(parent, _path_join(path, key), old, new)
+                    self._compare_lists(parent, _path_join(path, key), old, new, frozen)
 
                 elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
-                    frozen = (old is not None and hasattr(old, "_frozen")) or (
-                        new is not None and hasattr(new, "_frozen")
-                    )
+                    if not frozen:
+                        frozen = (old is not None and hasattr(old, "_frozen")) or (
+                            new is not None and hasattr(new, "_frozen")
+                        )
 
-                    if (not frozen and old == new) or (
-                        frozen and type(old) is type(new)
+                    old_list_key = getattr(old, "list_key", None)
+                    new_list_key = getattr(new, "list_key", None)
+
+                    if (not frozen and old is new) or (
+                        frozen
+                        and type(old) is type(new)
+                        and old_list_key == new_list_key
                     ):
+                        # print("\n\ncompare list dataclasses:", new)
                         self._compare_dataclasses(
-                            parent, _path_join(path, key), old, new
+                            parent, _path_join(path, key), old, new, frozen
+                        )
+                    else:
+                        # print("dataclass removed and added:", old, new)
+                        self._item_removed(
+                            path,
+                            key,
+                            old,
+                            item_key=(old_list_key, path)
+                            if old_list_key is not None
+                            else old,
+                        )
+                        self._item_added(
+                            parent,
+                            path,
+                            key,
+                            new,
+                            item_key=(new_list_key, path)
+                            if new_list_key is not None
+                            else new,
                         )
 
                 elif type(old) is not type(new) or old != new:
+                    # print("removed and added:", old, new)
                     self._item_removed(path, key, old)
                     self._item_added(parent, path, key, new)
 
@@ -493,8 +523,8 @@ class DiffBuilder:
             else:
                 self._item_added(parent, path, key, dst[key])
 
-    def _compare_dataclasses(self, parent, path, src, dst):
-        # print("\n_compare_dataclasses:", path, src, dst)
+    def _compare_dataclasses(self, parent, path, src, dst, frozen):
+        # print("\n_compare_dataclasses:", path, src, dst, frozen)
 
         if (
             self.control_cls
@@ -508,79 +538,91 @@ class DiffBuilder:
             parent = dst
             dst.before_update()
 
-        changes = getattr(dst, "__changes", {})
-        prev_lists = getattr(dst, "__prev_lists", {})
-        prev_dicts = getattr(dst, "__prev_dicts", {})
-        prev_classes = getattr(dst, "__prev_classes", {})
+        if not frozen:
+            # in-place comparison
+            changes = getattr(dst, "__changes", {})
+            prev_lists = getattr(dst, "__prev_lists", {})
+            prev_dicts = getattr(dst, "__prev_dicts", {})
+            prev_classes = getattr(dst, "__prev_classes", {})
 
-        for field_name, change in changes.items():
-            old = change[0]
-            new = change[1]
+            for field_name, change in changes.items():
+                old = change[0]
+                new = change[1]
 
-            self._compare_values(parent, path, field_name, old, new)
+                self._compare_values(parent, path, field_name, old, new, frozen)
 
-            # update prev value
-            if isinstance(new, list):
-                new = new[:]
-                prev_lists[field_name] = new
-            elif isinstance(new, dict):
-                new = new.copy()
-                prev_dicts[field_name] = new
-            elif dataclasses.is_dataclass(new):
+                # update prev value
+                if isinstance(new, list):
+                    new = new[:]
+                    prev_lists[field_name] = new
+                elif isinstance(new, dict):
+                    new = new.copy()
+                    prev_dicts[field_name] = new
+                elif dataclasses.is_dataclass(new):
+                    prev_classes[field_name] = new
+
+            # compare lists
+            for field_name, old in list(prev_lists.items()):
+                if field_name in changes:
+                    if new is None:
+                        del prev_lists[field_name]
+                    continue
+                new = getattr(dst, field_name)
+                self._compare_values(parent, path, field_name, old, new, frozen)
+                prev_lists[field_name] = new[:]
+
+            # compare dicts
+            for field_name, old in list(prev_dicts.items()):
+                if field_name in changes:
+                    if new is None:
+                        del prev_dicts[field_name]
+                    continue
+                new = getattr(dst, field_name)
+                self._compare_values(parent, path, field_name, old, new, frozen)
+                prev_dicts[field_name] = new.copy()
+
+            # compare dataclasses
+            for field_name, old in list(prev_classes.items()):
+                if field_name in changes:
+                    if new is None:
+                        del prev_classes[field_name]
+                    continue
+                new = getattr(dst, field_name)
+                self._compare_values(parent, path, field_name, old, new, frozen)
                 prev_classes[field_name] = new
 
-        # compare lists
-        for field_name, old in list(prev_lists.items()):
-            if field_name in changes:
-                if new is None:
-                    del prev_lists[field_name]
-                continue
-            new = getattr(dst, field_name)
-            self._compare_values(parent, path, field_name, old, new)
-            prev_lists[field_name] = new[:]
+            changes.clear()
+        else:
+            # frozen comparison
+            for field in dataclasses.fields(dst):
+                if field.compare:
+                    old = getattr(src, field.name)
+                    new = getattr(dst, field.name)
+                    self._compare_values(parent, path, field.name, old, new, frozen)
 
-        # compare dicts
-        for field_name, old in list(prev_dicts.items()):
-            if field_name in changes:
-                if new is None:
-                    del prev_dicts[field_name]
-                continue
-            new = getattr(dst, field_name)
-            self._compare_values(parent, path, field_name, old, new)
-            prev_dicts[field_name] = new.copy()
-
-        # compare dataclasses
-        for field_name, old in list(prev_classes.items()):
-            if field_name in changes:
-                if new is None:
-                    del prev_classes[field_name]
-                continue
-            new = getattr(dst, field_name)
-            self._compare_values(parent, path, field_name, old, new)
-            prev_classes[field_name] = new
-
-        changes.clear()
-
-    def _compare_values(self, parent, path, key, src, dst):
+    def _compare_values(self, parent, path, key, src, dst, frozen):
         # print("\n_compare_values:", path, key, src, dst)
 
         if isinstance(src, dict) and isinstance(dst, dict):
-            self._compare_dicts(parent, _path_join(path, key), src, dst)
+            self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
 
         elif isinstance(src, list) and isinstance(dst, list):
             if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):
                 self._item_replaced(parent, path, key, dst)
                 self._remove_control(src)
             else:
-                self._compare_lists(parent, _path_join(path, key), src, dst)
+                self._compare_lists(parent, _path_join(path, key), src, dst, frozen)
 
         elif dataclasses.is_dataclass(src) and dataclasses.is_dataclass(dst):
-            frozen = (src is not None and hasattr(src, "_frozen")) or (
-                dst is not None and hasattr(dst, "_frozen")
-            )
+            if not frozen:
+                frozen = (src is not None and hasattr(src, "_frozen")) or (
+                    dst is not None and hasattr(dst, "_frozen")
+                )
 
-            if (not frozen and src == dst) or (frozen and type(src) is type(dst)):
-                self._compare_dataclasses(parent, _path_join(path, key), src, dst)
+            if (not frozen and src is dst) or (frozen and type(src) is type(dst)):
+                self._compare_dataclasses(
+                    parent, _path_join(path, key), src, dst, frozen
+                )
 
         elif type(src) is not type(dst) or src != dst:
             self._item_replaced(parent, path, key, dst)
