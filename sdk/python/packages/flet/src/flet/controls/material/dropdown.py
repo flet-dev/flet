@@ -7,7 +7,7 @@ from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons
 from flet.controls.material.textfield import InputFilter, TextCapitalization
@@ -70,9 +70,9 @@ class Option(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.key is not None or self.text is not None
-        ), "key or text must be specified"
+        assert self.key is not None or self.text is not None, (
+            "key or text must be specified"
+        )
 
 
 @dataclass
@@ -114,7 +114,7 @@ class Dropdown(ConstrainedControl):
     defaults to `TextAlign.START`.
     """
 
-    elevation: OptionalControlStateValue[OptionalNumber] = 8
+    elevation: Optional[ControlStateValue[OptionalNumber]] = 8
     """
     The dropdown's menu elevation in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
     states.
@@ -200,7 +200,7 @@ class Dropdown(ConstrainedControl):
     Defaults to an Icon with `ft.Icons.ARROW_DROP_UP`.
     """
 
-    bgcolor: OptionalControlStateValue[ColorValue] = None
+    bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     The background [color](https://flet.dev/docs/reference/colors) of the dropdown menu 
     in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 

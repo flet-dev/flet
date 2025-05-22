@@ -7,7 +7,7 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -172,7 +172,7 @@ class Chip(ConstrainedControl):
     to indicate elevation.
     """
 
-    color: OptionalControlStateValue[ColorValue] = None
+    color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) that fills the chip in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
     """
@@ -281,12 +281,12 @@ class Chip(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.on_select is None or self.on_click is None
-        ), "on_select and on_click cannot be used together"
-        assert (
-            self.elevation is None or self.elevation >= 0.0
-        ), "elevation must be greater than or equal to 0"
-        assert (
-            self.click_elevation is None or self.click_elevation >= 0.0
-        ), "click_elevation must be greater than or equal to 0"
+        assert self.on_select is None or self.on_click is None, (
+            "on_select and on_click cannot be used together"
+        )
+        assert self.elevation is None or self.elevation >= 0.0, (
+            "elevation must be greater than or equal to 0"
+        )
+        assert self.click_elevation is None or self.click_elevation >= 0.0, (
+            "click_elevation must be greater than or equal to 0"
+        )

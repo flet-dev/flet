@@ -75,7 +75,6 @@ from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import (
     ControlState,
     ControlStateValue,
-    OptionalControlStateValue,
 )
 from flet.controls.core.animated_switcher import (
     AnimatedSwitcher,
@@ -612,7 +611,6 @@ __all__ = [
     "ControlEvent",
     "ControlState",
     "ControlStateValue",
-    "OptionalControlStateValue",
     "AnimatedSwitcher",
     "AnimatedSwitcherTransition",
     "AutofillGroup",

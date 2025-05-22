@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.alignment import OptionalAlignment
 from flet.controls.border import BorderSide, OptionalBorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
@@ -76,23 +76,23 @@ class ContinuousRectangleBorder(OutlinedBorder):
 
 @dataclass
 class ButtonStyle:
-    color: OptionalControlStateValue[ColorValue] = None
-    bgcolor: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    shadow_color: OptionalControlStateValue[ColorValue] = None
-    surface_tint_color: OptionalControlStateValue[ColorValue] = None
-    elevation: OptionalControlStateValue[OptionalNumber] = None
+    color: Optional[ControlStateValue[ColorValue]] = None
+    bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    shadow_color: Optional[ControlStateValue[ColorValue]] = None
+    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
+    elevation: Optional[ControlStateValue[OptionalNumber]] = None
     animation_duration: OptionalDurationValue = None
-    padding: OptionalControlStateValue[PaddingValue] = None
-    side: OptionalControlStateValue[BorderSide] = None
-    shape: OptionalControlStateValue[OutlinedBorder] = None
+    padding: Optional[ControlStateValue[PaddingValue]] = None
+    side: Optional[ControlStateValue[BorderSide]] = None
+    shape: Optional[ControlStateValue[OutlinedBorder]] = None
     alignment: OptionalAlignment = None
     enable_feedback: OptionalBool = None
-    text_style: OptionalControlStateValue[TextStyle] = None
-    icon_size: OptionalControlStateValue[OptionalNumber] = None
-    icon_color: OptionalControlStateValue[ColorValue] = None
+    text_style: Optional[ControlStateValue[TextStyle]] = None
+    icon_size: Optional[ControlStateValue[OptionalNumber]] = None
+    icon_color: Optional[ControlStateValue[ColorValue]] = None
     visual_density: Optional[VisualDensity] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 # Typing

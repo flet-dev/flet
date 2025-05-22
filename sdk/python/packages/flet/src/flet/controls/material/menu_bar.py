@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.padding import PaddingValue
 from flet.controls.types import ClipBehavior, ColorValue, MouseCursor, OptionalNumber
 
@@ -16,14 +16,14 @@ __all__ = ["MenuBar", "MenuStyle"]
 @dataclass
 class MenuStyle:
     alignment: Optional[Alignment] = None
-    bgcolor: OptionalControlStateValue[ColorValue] = None
-    shadow_color: OptionalControlStateValue[ColorValue] = None
-    surface_tint_color: OptionalControlStateValue[ColorValue] = None
-    elevation: OptionalControlStateValue[OptionalNumber] = None
-    padding: OptionalControlStateValue[PaddingValue] = None
-    side: OptionalControlStateValue[BorderSide] = None
-    shape: OptionalControlStateValue[OutlinedBorder] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    shadow_color: Optional[ControlStateValue[ColorValue]] = None
+    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
+    elevation: Optional[ControlStateValue[OptionalNumber]] = None
+    padding: Optional[ControlStateValue[PaddingValue]] = None
+    side: Optional[ControlStateValue[BorderSide]] = None
+    shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @control("MenuBar")
@@ -58,6 +58,6 @@ class MenuBar(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(
-            c.visible for c in self.controls
-        ), "MenuBar must have at minimum one visible control"
+        assert any(c.visible for c in self.controls), (
+            "MenuBar must have at minimum one visible control"
+        )

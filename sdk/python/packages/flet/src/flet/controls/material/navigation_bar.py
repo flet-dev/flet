@@ -7,7 +7,7 @@ from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import (
     ColorValue,
@@ -171,7 +171,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     The transition time for each destination as it goes between selected and unselected.
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight [color](https://flet.dev/docs/reference/colors) of the
     `NavigationDestination` in various

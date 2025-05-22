@@ -7,7 +7,7 @@ from flet.controls.border import BorderSide, OptionalBorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.menu_bar import MenuStyle
@@ -132,13 +132,13 @@ class TextTheme:
 
 @dataclass
 class ScrollbarTheme:
-    thumb_visibility: OptionalControlStateValue[bool] = None
-    thickness: OptionalControlStateValue[OptionalNumber] = None
-    track_visibility: OptionalControlStateValue[bool] = None
+    thumb_visibility: Optional[ControlStateValue[bool]] = None
+    thickness: Optional[ControlStateValue[OptionalNumber]] = None
+    track_visibility: Optional[ControlStateValue[bool]] = None
     radius: OptionalNumber = None
-    thumb_color: OptionalControlStateValue[ColorValue] = None
-    track_color: OptionalControlStateValue[ColorValue] = None
-    track_border_color: OptionalControlStateValue[ColorValue] = None
+    thumb_color: Optional[ControlStateValue[ColorValue]] = None
+    track_color: Optional[ControlStateValue[ColorValue]] = None
+    track_border_color: Optional[ControlStateValue[ColorValue]] = None
     cross_axis_margin: OptionalNumber = None
     main_axis_margin: OptionalNumber = None
     min_thumb_length: OptionalNumber = None
@@ -155,8 +155,8 @@ class TabsTheme:
     indicator_tab_size: OptionalBool = None
     label_color: OptionalColorValue = None
     unselected_label_color: OptionalColorValue = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     label_padding: OptionalPaddingValue = None
     label_text_style: OptionalTextStyle = None
     unselected_label_text_style: OptionalTextStyle = None
@@ -293,7 +293,7 @@ class CardTheme:
 
 @dataclass
 class ChipTheme:
-    color: OptionalControlStateValue[ColorValue] = None
+    color: Optional[ControlStateValue[ColorValue]] = None
     bgcolor: OptionalColorValue = None
     shadow_color: OptionalColorValue = None
     surface_tint_color: OptionalColorValue = None
@@ -386,24 +386,24 @@ class BottomAppBarTheme:
 
 @dataclass
 class RadioTheme:
-    fill_color: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     splash_radius: OptionalNumber = None
     height: OptionalNumber = None
     visual_density: Optional[VisualDensity] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @dataclass
 class CheckboxTheme:
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    check_color: OptionalControlStateValue[ColorValue] = None
-    fill_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    check_color: Optional[ControlStateValue[ColorValue]] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
     splash_radius: OptionalNumber = None
     border_side: OptionalBorderSide = None
     visual_density: Optional[VisualDensity] = None
     shape: Optional[OutlinedBorder] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @dataclass
@@ -420,14 +420,14 @@ class BadgeTheme:
 
 @dataclass
 class SwitchTheme:
-    thumb_color: OptionalControlStateValue[ColorValue] = None
-    track_color: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    track_outline_color: OptionalControlStateValue[ColorValue] = None
-    thumb_icon: OptionalControlStateValue[str] = None
-    track_outline_width: OptionalControlStateValue[OptionalNumber] = None
+    thumb_color: Optional[ControlStateValue[ColorValue]] = None
+    track_color: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    track_outline_color: Optional[ControlStateValue[ColorValue]] = None
+    thumb_icon: Optional[ControlStateValue[str]] = None
+    track_outline_width: Optional[ControlStateValue[OptionalNumber]] = None
     splash_radius: OptionalNumber = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     padding: OptionalPaddingValue = None
 
 
@@ -479,10 +479,10 @@ class DatePickerTheme:
     shadow_color: OptionalColorValue = None
     divider_color: OptionalColorValue = None
     header_bgcolor: OptionalColorValue = None
-    today_bgcolor: OptionalControlStateValue[ColorValue] = None
-    day_bgcolor: OptionalControlStateValue[ColorValue] = None
-    day_overlay_color: OptionalControlStateValue[ColorValue] = None
-    day_foreground_color: OptionalControlStateValue[ColorValue] = None
+    today_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    day_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    day_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    day_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: OptionalNumber = None
     range_picker_elevation: OptionalNumber = None
     day_text_style: OptionalTextStyle = None
@@ -497,18 +497,18 @@ class DatePickerTheme:
     range_picker_bgcolor: OptionalColorValue = None
     range_picker_header_bgcolor: OptionalColorValue = None
     range_picker_header_foreground_color: OptionalColorValue = None
-    today_foreground_color: OptionalControlStateValue[ColorValue] = None
+    today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     range_picker_shape: Optional[OutlinedBorder] = None
     range_picker_header_help_text_style: OptionalTextStyle = None
     range_picker_header_headline_text_style: OptionalTextStyle = None
     range_picker_surface_tint_color: OptionalColorValue = None
     range_selection_bgcolor: OptionalColorValue = None
-    range_selection_overlay_color: OptionalControlStateValue[ColorValue] = None
+    range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     today_border_side: OptionalBorderSide = None
-    year_bgcolor: OptionalControlStateValue[ColorValue] = None
-    year_foreground_color: OptionalControlStateValue[ColorValue] = None
-    year_overlay_color: OptionalControlStateValue[ColorValue] = None
-    day_shape: OptionalControlStateValue[OutlinedBorder] = None
+    year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    year_foreground_color: Optional[ControlStateValue[ColorValue]] = None
+    year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    day_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     locale: Optional[Locale] = None
 
 
@@ -536,8 +536,8 @@ class TimePickerTheme:
     hour_minute_shape: Optional[OutlinedBorder] = None
     day_period_border_side: OptionalBorderSide = None
     padding: OptionalPaddingValue = None
-    time_selector_separator_color: OptionalControlStateValue[ColorValue] = None
-    time_selector_separator_text_style: OptionalControlStateValue[TextStyle] = None
+    time_selector_separator_color: Optional[ControlStateValue[ColorValue]] = None
+    time_selector_separator_text_style: Optional[ControlStateValue[TextStyle]] = None
 
 
 @dataclass
@@ -565,7 +565,7 @@ class ListTileTheme:
     title_text_style: OptionalTextStyle = None
     subtitle_text_style: OptionalTextStyle = None
     leading_and_trailing_text_style: OptionalTextStyle = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     min_tile_height: OptionalNumber = None
 
 
@@ -610,7 +610,7 @@ class SliderTheme:
     value_indicator_color: OptionalColorValue = None
     disabled_thumb_color: OptionalColorValue = None
     value_indicator_text_style: OptionalTextStyle = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     active_tick_mark_color: OptionalColorValue = None
     disabled_active_tick_mark_color: OptionalColorValue = None
     disabled_active_track_color: OptionalColorValue = None
@@ -626,7 +626,7 @@ class SliderTheme:
     interaction: Optional[SliderInteraction] = None
     padding: OptionalPaddingValue = None
     track_gap: OptionalNumber = None
-    thumb_size: OptionalControlStateValue[Size] = None
+    thumb_size: Optional[ControlStateValue[Size]] = None
     year_2023: OptionalBool = None
 
 
@@ -662,7 +662,7 @@ class PopupMenuTheme:
     icon_size: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     menu_position: Optional[PopupMenuPosition] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     menu_padding: OptionalPaddingValue = None
 
 
@@ -670,16 +670,16 @@ class PopupMenuTheme:
 class SearchBarTheme:
     bgcolor: OptionalColorValue = None
     text_capitalization: Optional[TextCapitalization] = None
-    shadow_color: OptionalControlStateValue[ColorValue] = None
-    surface_tint_color: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    elevation: OptionalControlStateValue[OptionalNumber] = None
-    text_style: OptionalControlStateValue[TextStyle] = None
-    hint_style: OptionalControlStateValue[TextStyle] = None
-    shape: OptionalControlStateValue[OutlinedBorder] = None
-    padding: OptionalControlStateValue[PaddingValue] = None
+    shadow_color: Optional[ControlStateValue[ColorValue]] = None
+    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    elevation: Optional[ControlStateValue[OptionalNumber]] = None
+    text_style: Optional[ControlStateValue[TextStyle]] = None
+    hint_style: Optional[ControlStateValue[TextStyle]] = None
+    shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    padding: Optional[ControlStateValue[PaddingValue]] = None
     size_constraints: Optional[BoxConstraints] = None
-    border_side: OptionalControlStateValue[BorderSide] = None
+    border_side: Optional[ControlStateValue[BorderSide]] = None
 
 
 @dataclass
@@ -707,7 +707,7 @@ class NavigationDrawerTheme:
     indicator_color: OptionalColorValue = None
     elevation: OptionalNumber = None
     tile_height: OptionalNumber = None
-    label_text_style: OptionalControlStateValue[TextStyle] = None
+    label_text_style: Optional[ControlStateValue[TextStyle]] = None
     indicator_shape: Optional[OutlinedBorder] = None
     indicator_size: Optional[Size] = None
 
@@ -718,10 +718,10 @@ class NavigationBarTheme:
     shadow_color: OptionalColorValue = None
     surface_tint_color: OptionalColorValue = None
     indicator_color: OptionalColorValue = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: OptionalNumber = None
     height: OptionalNumber = None
-    label_text_style: OptionalControlStateValue[TextStyle] = None
+    label_text_style: Optional[ControlStateValue[TextStyle]] = None
     indicator_shape: Optional[OutlinedBorder] = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
     label_padding: OptionalPaddingValue = None
@@ -752,17 +752,17 @@ class DataTableTheme:
     column_spacing: OptionalNumber = None
     data_row_max_height: OptionalNumber = None
     data_row_min_height: OptionalNumber = None
-    data_row_color: OptionalControlStateValue[ColorValue] = None
+    data_row_color: Optional[ControlStateValue[ColorValue]] = None
     data_text_style: OptionalTextStyle = None
     divider_thickness: OptionalNumber = None
     horizontal_margin: OptionalNumber = None
     heading_text_style: OptionalTextStyle = None
-    heading_row_color: OptionalControlStateValue[ColorValue] = None
+    heading_row_color: Optional[ControlStateValue[ColorValue]] = None
     heading_row_height: OptionalNumber = None
-    data_row_cursor: OptionalControlStateValue[MouseCursor] = None
+    data_row_cursor: Optional[ControlStateValue[MouseCursor]] = None
     decoration: Optional[BoxDecoration] = None
     heading_row_alignment: Optional[MainAxisAlignment] = None
-    heading_cell_cursor: OptionalControlStateValue[MouseCursor] = None
+    heading_cell_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @dataclass
