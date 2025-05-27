@@ -19,7 +19,7 @@ from flet.controls.material.snack_bar import DismissDirection, SnackBarBehavior
 from flet.controls.material.textfield import TextCapitalization
 from flet.controls.material.tooltip import TooltipTriggerMode
 from flet.controls.padding import OptionalPaddingValue, PaddingValue
-from flet.controls.size import Size
+from flet.controls.geometry import Size
 from flet.controls.text_style import OptionalTextStyle, TextStyle
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
