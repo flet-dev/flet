@@ -181,8 +181,6 @@ class Text(ConstrainedControl):
     value: Optional[str] = ""
     """
     The text displayed.
-
-    Value is of type `str`.
     """
 
     spans: Optional[list[TextSpan]] = None
