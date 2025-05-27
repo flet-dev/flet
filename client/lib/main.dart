@@ -17,7 +17,7 @@ import 'package:flet_rive/flet_rive.dart' as flet_rive;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
-// import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -39,15 +39,15 @@ void main([List<String>? args]) async {
   extensions.add(flet_audio.Extension());
   extensions.add(flet_video.Extension());
   // --FAT_CLIENT_END--
-  // flet_audio_recorder.ensureInitialized();
-  // flet_geolocator.ensureInitialized();
-  // flet_permission_handler.ensureInitialized();
+  // extensions.add(flet_audio_recorder.Extension());
+  // extensions.add(flet_geolocator.Extension());
+  // extensions.add(flet_permission_handler.Extension());
   extensions.add(flet_lottie.Extension());
   extensions.add(flet_map.Extension());
-  // flet_ads.ensureInitialized();
+  // extensions.add(flet_ads.Extension());
   extensions.add(flet_rive.Extension());
-  // flet_webview.ensureInitialized();
-  // flet_flashlight.ensureInitialized();
+  extensions.add(flet_webview.Extension());
+  // extensions.add(flet_flashlight.Extension());
 
   // initialize extensions
   for (var extension in extensions) {
