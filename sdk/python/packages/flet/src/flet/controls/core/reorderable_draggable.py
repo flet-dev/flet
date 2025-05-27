@@ -6,8 +6,17 @@ from flet.controls.control import Control
 
 @control("ReorderableDraggable")
 class ReorderableDraggable(ConstrainedControl, AdaptiveControl):
+    """
+    TBD
+    """
     index: int
+    """
+    TBD
+    """
     content: Control
+    """
+    TBD
+    """
 
     def before_update(self):
         super().before_update()

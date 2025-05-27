@@ -38,7 +38,6 @@ class PlotlyChart(Container):
     `False` (default) to display a chart that fits configured bounds.
     """
 
-
     def init(self):
         self.alignment = Alignment.center()
         self.__img = Image(fit=BoxFit.FILL)
