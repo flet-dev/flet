@@ -1,5 +1,6 @@
 import functools
 import hashlib
+import weakref
 from typing import Callable
 
 
@@ -27,7 +28,7 @@ def _freeze_controls(control):
 
 # --- Main decorator ---
 def data_view(fn: Callable):
-    cache = {}
+    cache = weakref.WeakValueDictionary()
 
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):

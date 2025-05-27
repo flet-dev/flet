@@ -357,9 +357,19 @@ class DiffBuilder:
             yield curr[2].operation
             curr = curr[1]
 
-    def _item_added(self, parent, path, key, item, item_key=None):
+    def _item_added(
+        self,
+        parent,
+        path,
+        key,
+        item,
+        item_key=None,
+        configure_dataclass=True,
+        frozen=False,
+    ):
         # print("_item_added:", path, key, item, item_key)
-        self._configure_dataclass(item, parent)
+        if configure_dataclass:
+            self._configure_dataclass(item, parent, frozen)
         index_key = item_key if item_key is not None else item
         index = self.take_index(index_key, _ST_REMOVE)
         if index is not None:
@@ -389,7 +399,7 @@ class DiffBuilder:
             new_index = self.insert(new_op)
             self.store_index(index_key, new_index, _ST_ADD)
 
-    def _item_removed(self, path, key, item, item_key=None):
+    def _item_removed(self, path, key, item, item_key=None, frozen=False):
         # print("_item_removed:", path, key, item, item_key)
         new_op = RemoveOperation(
             {
@@ -427,10 +437,11 @@ class DiffBuilder:
 
         else:
             self.store_index(index_key, new_index, _ST_REMOVE)
-            self._remove_control(item)
+            self._remove_control(item, frozen)
 
-    def _item_replaced(self, parent, path, key, item):
-        self._configure_dataclass(item, parent)
+    def _item_replaced(self, parent, path, key, item, frozen=False):
+        print("_item_replaced:", path, key, item, frozen)
+        self._configure_dataclass(item, parent, frozen)
         self.insert(
             ReplaceOperation(
                 {
@@ -450,10 +461,10 @@ class DiffBuilder:
         removed_keys = src_keys - dst_keys
 
         for key in removed_keys:
-            self._item_removed(path, str(key), src[key])
+            self._item_removed(path, str(key), src[key], frozen=frozen)
 
         for key in added_keys:
-            self._item_added(parent, path, str(key), dst[key])
+            self._item_added(parent, path, str(key), dst[key], frozen=frozen)
 
         for key in src_keys & dst_keys:
             self._compare_values(parent, path, key, src[key], dst[key], frozen)
@@ -475,25 +486,37 @@ class DiffBuilder:
                     self._compare_lists(parent, _path_join(path, key), old, new, frozen)
 
                 elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
-                    if not frozen:
-                        frozen = (old is not None and hasattr(old, "_frozen")) or (
-                            new is not None and hasattr(new, "_frozen")
-                        )
+                    frozen = (
+                        (old is not None and hasattr(old, "_frozen"))
+                        or (new is not None and hasattr(new, "_frozen"))
+                        or frozen
+                    )
 
                     old_list_key = getattr(old, "list_key", None)
                     new_list_key = getattr(new, "list_key", None)
 
                     if (not frozen and old is new) or (
                         frozen
-                        and type(old) is type(new)
-                        and old_list_key == new_list_key
+                        and old is not new  # not a cached control tree
+                        and type(old) is type(new)  # iteams are of the same type
+                        and (
+                            old_list_key is None
+                            or new_list_key is None
+                            or old_list_key == new_list_key
+                        )  # same list key or both None
                     ):
                         # print("\n\ncompare list dataclasses:", new)
                         self._compare_dataclasses(
                             parent, _path_join(path, key), old, new, frozen
                         )
-                    else:
-                        # print("dataclass removed and added:", old, new)
+                    elif frozen and old is not new:
+                        # print(
+                        #     "\n\ndataclass removed and added:",
+                        #     "\n\nOLD:",
+                        #     old,
+                        #     "\n\nNEW:",
+                        #     new,
+                        # )
                         self._item_removed(
                             path,
                             key,
@@ -501,6 +524,7 @@ class DiffBuilder:
                             item_key=(old_list_key, path)
                             if old_list_key is not None
                             else old,
+                            frozen=frozen,
                         )
                         self._item_added(
                             parent,
@@ -510,18 +534,37 @@ class DiffBuilder:
                             item_key=(new_list_key, path)
                             if new_list_key is not None
                             else new,
+                            configure_dataclass=False,
+                            frozen=frozen,
                         )
 
                 elif type(old) is not type(new) or old != new:
                     # print("removed and added:", old, new)
-                    self._item_removed(path, key, old)
-                    self._item_added(parent, path, key, new)
+                    self._item_removed(path, key, old, frozen=frozen)
+                    self._item_added(
+                        parent, path, key, new, configure_dataclass=False, frozen=frozen
+                    )
 
             elif len_src > len_dst:
-                self._item_removed(path, len_dst, src[key])
+                list_key = getattr(src[key], "list_key", None)
+                self._item_removed(
+                    path,
+                    len_dst,
+                    src[key],
+                    item_key=(list_key, path) if list_key is not None else src[key],
+                    frozen=frozen,
+                )
 
             else:
-                self._item_added(parent, path, key, dst[key])
+                list_key = getattr(dst[key], "list_key", None)
+                self._item_added(
+                    parent,
+                    path,
+                    key,
+                    dst[key],
+                    item_key=(list_key, path) if list_key is not None else dst[key],
+                    frozen=frozen,
+                )
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
         # print("\n_compare_dataclasses:", path, src, dst, frozen)
@@ -548,6 +591,8 @@ class DiffBuilder:
             for field_name, change in changes.items():
                 old = change[0]
                 new = change[1]
+
+                # print("_compare_values:changes", old, new)
 
                 self._compare_values(parent, path, field_name, old, new, frozen)
 
@@ -594,42 +639,57 @@ class DiffBuilder:
             changes.clear()
         else:
             # frozen comparison
+            # print("\nfrozen dataclass compare:", src, dst)
             for field in dataclasses.fields(dst):
                 if field.compare:
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
                     self._compare_values(parent, path, field.name, old, new, frozen)
+            self._configure_dataclass(
+                dst, parent, frozen=frozen, configure_setattr_only=True
+            )
 
     def _compare_values(self, parent, path, key, src, dst, frozen):
-        # print("\n_compare_values:", path, key, src, dst)
+        # print("\n_compare_values:", path, key, src, dst, frozen)
 
         if isinstance(src, dict) and isinstance(dst, dict):
             self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
 
         elif isinstance(src, list) and isinstance(dst, list):
             if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):
-                self._item_replaced(parent, path, key, dst)
-                self._remove_control(src)
+                self._item_replaced(parent, path, key, dst, frozen=frozen)
+                self._remove_control(src, frozen)
             else:
                 self._compare_lists(parent, _path_join(path, key), src, dst, frozen)
 
         elif dataclasses.is_dataclass(src) and dataclasses.is_dataclass(dst):
-            if not frozen:
-                frozen = (src is not None and hasattr(src, "_frozen")) or (
-                    dst is not None and hasattr(dst, "_frozen")
-                )
+            frozen = (
+                (src is not None and hasattr(src, "_frozen"))
+                or (dst is not None and hasattr(dst, "_frozen"))
+                or frozen
+            )
 
-            if (not frozen and src is dst) or (frozen and type(src) is type(dst)):
+            # print("\n_compare_values:dataclasses", src, dst, frozen)
+
+            if (not frozen and src is dst) or (
+                frozen and src is not dst and type(src) is type(dst)
+            ):
                 self._compare_dataclasses(
                     parent, _path_join(path, key), src, dst, frozen
                 )
+            elif (not frozen and src is not dst) or (
+                frozen and type(src) is not type(dst)
+            ):
+                self._item_replaced(parent, path, key, dst, frozen=frozen)
+                self._remove_control(src, frozen)
 
         elif type(src) is not type(dst) or src != dst:
-            self._item_replaced(parent, path, key, dst)
-            self._remove_control(src)
+            self._item_replaced(parent, path, key, dst, frozen=frozen)
+            self._remove_control(src, frozen)
 
-    def _configure_dataclass(self, item, parent):
+    def _configure_dataclass(self, item, parent, frozen, configure_setattr_only=False):
         if dataclasses.is_dataclass(item):
+            # print("\n_configure_dataclass:", item, frozen)
             # set parent
             if parent:
                 # print(
@@ -643,80 +703,96 @@ class DiffBuilder:
                 #     )
                 item._parent = weakref.ref(parent)
 
+            if frozen:
+                item._frozen = frozen
+
             def control_setattr(obj, name, value):
-                if (
-                    not name.startswith("_")
-                    and (
-                        name != "data"
-                        or not self.control_cls
-                        or not isinstance(obj, self.control_cls)
-                    )
-                    and hasattr(obj, "__changes")
+                if not name.startswith("_") and (
+                    name != "data"
+                    or not self.control_cls
+                    or not isinstance(obj, self.control_cls)
                 ):
-                    old_value = getattr(obj, name, None)
-                    if name.startswith("on_"):
-                        old_value = old_value is not None
-                    new_value = (
-                        value if not name.startswith("on_") else value is not None
-                    )
-                    if old_value != new_value:
-                        # print(
-                        #     f"set_attr: {obj.__class__.__name__}.{name} = {new_value}"
-                        # )
-                        changes = getattr(obj, "__changes")
-                        changes[name] = (old_value, new_value)
+                    if hasattr(obj, "_frozen"):
+                        raise Exception(
+                            "Controls inside data view cannot be updated."
+                        ) from None
+
+                    if hasattr(obj, "__changes"):
+                        old_value = getattr(obj, name, None)
+                        if name.startswith("on_"):
+                            old_value = old_value is not None
+                        new_value = (
+                            value if not name.startswith("on_") else value is not None
+                        )
+                        if old_value != new_value:
+                            # print(
+                            #     f"set_attr: {obj.__class__.__name__}.{name} = "
+                            #     f"{new_value}, old: {old_value}"
+                            # )
+                            changes = getattr(obj, "__changes")
+                            changes[name] = (old_value, new_value)
                 object.__setattr__(obj, name, value)
 
             item.__class__.__setattr__ = control_setattr  # type: ignore
 
-            if self.control_cls and isinstance(item, self.control_cls):
-                item.init()
+            if not configure_setattr_only:
+                if self.control_cls and isinstance(item, self.control_cls):
+                    item.init()
 
-            # recurse through fields
-            for field in dataclasses.fields(item):
-                if "skip" not in field.metadata:
-                    self._configure_dataclass(getattr(item, field.name), item)
+                # recurse through fields
+                for field in dataclasses.fields(item):
+                    if "skip" not in field.metadata:
+                        self._configure_dataclass(
+                            getattr(item, field.name), item, frozen
+                        )
 
-            if self.control_cls and isinstance(item, self.control_cls):
-                # register new control
-                self.added_controls.append(item)
+                if self.control_cls and isinstance(item, self.control_cls):
+                    # register new control
+                    self.added_controls.append(item)
 
-                # call Control.before_update()
-                item.before_update()
+                    # call Control.before_update()
+                    item.before_update()
 
-            setattr(item, "__changes", {})
+                if not frozen:
+                    setattr(item, "__changes", {})
 
         elif isinstance(item, dict):
             for v in item.values():
-                self._configure_dataclass(v, parent)
+                self._configure_dataclass(v, parent, frozen)
 
         elif isinstance(item, list):
             for v in item:
-                self._configure_dataclass(v, parent)
+                self._configure_dataclass(v, parent, frozen)
 
-    def _remove_control(self, item):
+    def _remove_control(self, item, frozen):
         if self.control_cls and isinstance(item, self.control_cls):
-            # recurse through list props
-            for item_list in getattr(item, "__prev_lists", {}).values():
-                self._remove_control(item_list)
+            if not frozen:
+                # recurse through list props
+                for item_list in getattr(item, "__prev_lists", {}).values():
+                    self._remove_control(item_list, frozen)
 
-            # recurse through dict props
-            for item_dict in getattr(item, "__prev_dicts", {}).values():
-                self._remove_control(item_dict)
+                # recurse through dict props
+                for item_dict in getattr(item, "__prev_dicts", {}).values():
+                    self._remove_control(item_dict, frozen)
 
-            # recurse through dataclass props
-            for item_class in getattr(item, "__prev_classes", {}).values():
-                self._remove_control(item_class)
+                # recurse through dataclass props
+                for item_class in getattr(item, "__prev_classes", {}).values():
+                    self._remove_control(item_class, frozen)
+            else:
+                # recurse through fields
+                for field in dataclasses.fields(item):
+                    if "skip" not in field.metadata:
+                        self._remove_control(getattr(item, field.name), frozen)
 
             self.removed_controls.append(item)
 
         elif isinstance(item, dict):
             for v in item.values():
-                self._remove_control(v)
+                self._remove_control(v, frozen)
 
         elif isinstance(item, list):
             for v in item:
-                self._remove_control(v)
+                self._remove_control(v, frozen)
 
 
 def _path_join(path, key):
