@@ -86,13 +86,25 @@ class AutofillGroup(Control):
     """
     This control is used to group autofill controls together.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/autofillgroup
     """
 
     content: Control
+    """
+    The content control of this group.
+
+    Value is of type `Control`.
+    """
+
     dispose_action: Optional[AutofillGroupDisposeAction] = None
+    """
+    The action to be run when this `AutofillGroup` is the topmost `AutofillGroup`
+    and it's being disposed, in order to clean up the current autofill context.
+
+    Value is of type
+    [`AutofillGroupDisposeAction`](https://flet.dev/docs/reference/types/autofillgroupdisposeaction)
+    and defaults to `AutofillGroupDisposeAction.COMMIT`.
+    """
 
     def before_update(self):
         super().before_update()
