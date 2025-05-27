@@ -137,7 +137,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
     The interval (in milliseconds) at which the `on_interaction_update` event is fired.
 
-    Value is of type `int` and defaults to `0`.
+    Value is of type `int` and defaults to `200`.
     """
 
     on_interaction_start: OptionalEventCallable[InteractiveViewerInteractionStartEvent
