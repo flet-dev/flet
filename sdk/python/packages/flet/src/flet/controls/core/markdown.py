@@ -235,8 +235,6 @@ class Markdown(ConstrainedControl):
     """
     Control for rendering text in markdown format.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/markdown
     """
 
