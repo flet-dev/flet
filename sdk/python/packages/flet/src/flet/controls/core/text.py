@@ -179,25 +179,162 @@ class Text(ConstrainedControl):
     """
 
     value: Optional[str] = ""
+    """
+    The text displayed.
+
+    Value is of type `str`.
+    """
+
     spans: Optional[list[TextSpan]] = None
+    """
+    The list of [`TextSpan`](https://flet.dev/docs/reference/types/textspan)
+    objects to build a rich text paragraph.
+    """
+
     text_align: Optional[TextAlign] = None
+    """
+    Text horizontal align.
+
+    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign)
+    and defaults to `TextAlign.LEFT`.
+    """
+
     font_family: Optional[str] = None
+    """
+    System or custom font family to render text with. See
+    [`Fonts`](https://flet.dev/docs/controls/page#fonts) cookbook guide for
+    instructions on how to import and use custom fonts in your application.
+    """
+
     size: OptionalNumber = None
+    """
+    Text size in virtual pixels.
+
+    Value is of type `OptionalNumber` and defaults to `14`.
+    """
+
     weight: Optional[FontWeight] = None
+    """
+    Font weight.
+
+    Value is of type [`FontWeight`](https://flet.dev/docs/reference/types/fontweight)
+    and defaults to `FontWeight.NORMAL`.
+    """
+
     italic: Optional[bool] = None
+    """
+    `True` to use italic typeface.
+
+    Value is of type `bool` and defaults to `False`.
+    """
+
     style: Optional[TextStyle] = None
+    """
+    The text's style.
+
+    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    """
+
     theme_style: Optional[TextThemeStyle] = None
+    """
+    Pre-defined text style.
+
+    Value is of type [`TextThemeStyle`](https://flet.dev/docs/reference/types/textthemestyle).
+    """
+
     max_lines: Optional[int] = None
+    """
+    An optional maximum number of lines for the text to span, wrapping if necessary.
+
+    If the text exceeds the given number of lines, it will be truncated according to
+    `overflow`.
+
+    If this is 1, text will not wrap. Otherwise, text will be wrapped at the edge of
+    the box.
+    """
+
     overflow: Optional[TextOverflow] = None
+    """
+    Controls how text overflows.
+
+    Value is of type [`TextOverflow`](https://flet.dev/docs/reference/types/textoverflow)
+    and defaults to `TextOverflow.FADE`.
+    """
+
     selectable: Optional[bool] = None
+    """
+    Whether the text should be selectable.
+
+    Defaults to `False`.
+    """
+
     no_wrap: Optional[bool] = None
+    """
+    If `False` (default) the text should break at soft line breaks.
+
+    If `True`, the glyphs in the text will be positioned as if there was unlimited
+    horizontal space.
+
+    Value is of type `bool` and defaults to `False`.
+    """
+
     color: OptionalColorValue = None
+    """
+    Text foreground [color](https://flet.dev/docs/reference/colors).
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    Text background [color](https://flet.dev/docs/reference/colors).
+    """
+
     semantics_label: Optional[str] = None
+    """
+    An alternative semantics label for this text.
+
+    If present, the semantics of this control will contain this value instead of the
+    actual text. This will overwrite any of the `TextSpan.semantics_label`s.
+
+    This is useful for replacing abbreviations or shorthands with the full text value:
+
+    Value is of type `str`.
+
+    ```python
+    ft.Text("$$", semantics_label="Double dollars")
+    ```
+    """
+
     show_selection_cursor: Optional[bool] = None
+    """
+    TBD
+    """
+
     enable_interactive_selection: Optional[bool] = None
+    """
+    TBD
+    """
+
     selection_cursor_width: OptionalNumber = None
+    """
+    TBD
+    """
+
     selection_cursor_height: OptionalNumber = None
+    """
+    TBD
+    """
+
     selection_cursor_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     on_tap: OptionalControlEventCallable = None
+    """
+    TBD
+    """
+
     on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None
+    """
+    TBD
+    """
