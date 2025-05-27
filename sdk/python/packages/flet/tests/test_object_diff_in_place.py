@@ -2,6 +2,7 @@ import datetime
 from dataclasses import field
 from typing import Any, Optional
 
+import flet as ft
 import msgpack
 from flet.controls.base_control import BaseControl, control
 from flet.controls.buttons import ButtonStyle
@@ -66,6 +67,44 @@ def update_page(new: Any, old: Any = None, show_details=True):
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
     return msg
+
+
+def make_diff(new: Any, old: Any = None, show_details=True):
+    if old is None:
+        old = new
+    start = datetime.datetime.now()
+
+    # 1 -calculate diff
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl
+    )
+
+    # 2 - convert patch to hierarchy
+    graph_patch = patch.to_graph()
+    # print(graph_patch)
+
+    end = datetime.datetime.now()
+
+    if show_details:
+        print(f"\nPatch in {(end - start).total_seconds() * 1000} ms: {graph_patch}")
+
+    return graph_patch, added_controls, removed_controls
+
+
+def make_msg(new: Any, old: Any = None, show_details=True):
+    graph_patch, added_controls, removed_controls = make_diff(new, old, show_details)
+
+    # 3 - build msgpack message
+    msg = msgpack.packb(
+        graph_patch, default=configure_encode_object_for_msgpack(ft.BaseControl)
+    )
+
+    if show_details:
+        print("\nMessage:", msg)
+    else:
+        print("\nMessage length:", len(msg))
+
+    return msg, added_controls, removed_controls
 
 
 @control
@@ -263,6 +302,31 @@ def test_large_updates():
         )
 
     update_page(cp, show_details=True)
+
+
+def test_add_remove_lists():
+    data = [[(0, 1), (1, 2), (2, 3)]]
+    chart = ft.LineChart(
+        data_series=[
+            ft.LineChartData(
+                data_points=[
+                    ft.LineChartDataPoint(list_key=dp[0], x=dp[0], y=dp[1]) for dp in ds
+                ]
+            )
+            for ds in data
+        ]
+    )
+    msg, _, _ = make_msg(chart, {})
+
+    # add/remove
+    chart.data_series[0].data_points.pop(0)
+    chart.data_series[0].data_points.append(ft.LineChartDataPoint(x=3, y=4))
+
+    patch, _, _ = make_diff(chart, chart)
+    assert patch["data_series"][0]["data_points"]["$d"] == [0]
+    assert isinstance(
+        patch["data_series"][0]["data_points"][2]["$a"], ft.LineChartDataPoint
+    )
 
 
 # exit()

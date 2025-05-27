@@ -357,19 +357,8 @@ class DiffBuilder:
             yield curr[2].operation
             curr = curr[1]
 
-    def _item_added(
-        self,
-        parent,
-        path,
-        key,
-        item,
-        item_key=None,
-        configure_dataclass=True,
-        frozen=False,
-    ):
+    def _item_added(self, parent, path, key, item, item_key=None):
         # print("_item_added:", path, key, item, item_key)
-        if configure_dataclass:
-            self._configure_dataclass(item, parent, frozen)
         index_key = item_key if item_key is not None else item
         index = self.take_index(index_key, _ST_REMOVE)
         if index is not None:
@@ -440,7 +429,7 @@ class DiffBuilder:
             self._remove_control(item, frozen)
 
     def _item_replaced(self, parent, path, key, item, frozen=False):
-        print("_item_replaced:", path, key, item, frozen)
+        # print("_item_replaced:", path, key, item, frozen)
         self._configure_dataclass(item, parent, frozen)
         self.insert(
             ReplaceOperation(
@@ -464,7 +453,8 @@ class DiffBuilder:
             self._item_removed(path, str(key), src[key], frozen=frozen)
 
         for key in added_keys:
-            self._item_added(parent, path, str(key), dst[key], frozen=frozen)
+            self._item_added(parent, path, str(key), dst[key])
+            self._configure_dataclass(dst[key], parent, frozen)
 
         for key in src_keys & dst_keys:
             self._compare_values(parent, path, key, src[key], dst[key], frozen)
@@ -509,7 +499,7 @@ class DiffBuilder:
                         self._compare_dataclasses(
                             parent, _path_join(path, key), old, new, frozen
                         )
-                    elif frozen and old is not new:
+                    elif (not frozen and old is not new) or (frozen and old is not new):
                         # print(
                         #     "\n\ndataclass removed and added:",
                         #     "\n\nOLD:",
@@ -534,16 +524,12 @@ class DiffBuilder:
                             item_key=(new_list_key, path)
                             if new_list_key is not None
                             else new,
-                            configure_dataclass=False,
-                            frozen=frozen,
                         )
 
                 elif type(old) is not type(new) or old != new:
                     # print("removed and added:", old, new)
                     self._item_removed(path, key, old, frozen=frozen)
-                    self._item_added(
-                        parent, path, key, new, configure_dataclass=False, frozen=frozen
-                    )
+                    self._item_added(parent, path, key, new)
 
             elif len_src > len_dst:
                 list_key = getattr(src[key], "list_key", None)
@@ -563,8 +549,8 @@ class DiffBuilder:
                     key,
                     dst[key],
                     item_key=(list_key, path) if list_key is not None else dst[key],
-                    frozen=frozen,
                 )
+                self._configure_dataclass(dst[key], parent, frozen)
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
         # print("\n_compare_dataclasses:", path, src, dst, frozen)

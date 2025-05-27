@@ -302,8 +302,6 @@ def test_data_view_with_cache():
     users.append(User(4, name="Someone Else", age=99, verified=False))
     page.controls[0] = users_list(users)
     patch, added_controls, removed_controls = make_msg(page, page)
-    # for ac in added_controls:
-    #     print("\nADDED CONTROL:", ac)
     assert len(added_controls) == 5
     assert len(removed_controls) == 0
 
