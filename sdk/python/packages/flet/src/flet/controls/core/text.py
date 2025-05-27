@@ -41,7 +41,6 @@ class TextAffinity(Enum):
     """
 
 
-
 @dataclass
 class TextSelection:
     """
