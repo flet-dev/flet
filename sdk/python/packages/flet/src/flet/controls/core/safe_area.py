@@ -9,6 +9,19 @@ __all__ = ["SafeArea"]
 
 @control("SafeArea")
 class SafeArea(ConstrainedControl, AdaptiveControl):
+    """
+    A control that insets its `content` by sufficient padding to avoid intrusions by 
+    the operating system.
+
+    For example, this will indent the `content` by enough to avoid the status bar at 
+    the top of the screen.
+
+    It will also indent the `content` by the amount necessary to avoid The Notch on the 
+    iPhone X, or other similar creative physical features of the display.
+
+    When a `minimum_padding` is specified, the greater of the minimum padding or the 
+    safe area padding will be applied.
+    """
     content: Control
     avoid_intrusions_left: bool = True
     avoid_intrusions_top: bool = True
