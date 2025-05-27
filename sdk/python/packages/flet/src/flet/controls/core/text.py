@@ -100,11 +100,11 @@ class TextSelection:
     """
     Whether the start of this range precedes the end.
     """
-    
+
 
 class TextSelectionChangeCause(Enum):
     """
-    TBD
+    Indicates what triggered the change in selected text.
     """
 
     UNKNOWN = "unknown"
