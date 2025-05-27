@@ -60,11 +60,11 @@ dependencies:
 #       ref: 0.1.0
 #       path: src/flutter/flet_ads
 
-#   flet_rive:
-#     git:
-#       url: https://github.com/flet-dev/flet-rive.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_rive
+  flet_rive:
+    git:
+      url: https://github.com/flet-dev/flet-rive.git
+      ref: v1
+      path: src/flutter/flet_rive
 
 #   flet_audio_recorder:
 #     git:
