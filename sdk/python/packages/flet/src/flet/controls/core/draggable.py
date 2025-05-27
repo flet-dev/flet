@@ -56,7 +56,8 @@ class Draggable(Control):
     The axis to restrict this draggable's movement.
 
     When axis is set to `Axis.HORIZONTAL`, this control can only be dragged 
-    horizontally. When axis is set to `Axis.VERTICAL`, this control can only be dragged vertically.
+    horizontally. When axis is set to `Axis.VERTICAL`, this control can only be dragged 
+    vertically.
 
     Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis) and defaults
     to `None` - no restriction.

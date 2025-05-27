@@ -7,12 +7,12 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.events import (
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
 )
-from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import MarginValue
 from flet.controls.types import ClipBehavior, Number, OptionalEventCallable
 
@@ -43,8 +43,6 @@ class InteractiveViewerInteractionEndEvent(ScaleEndEvent):
 class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
     InteractiveViewer allows users to pan, zoom, and rotate content.
-
-    -----
 
     Online docs: https://flet.dev/docs/controls/interactiveviewer
     """

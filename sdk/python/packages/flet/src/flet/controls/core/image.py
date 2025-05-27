@@ -107,8 +107,8 @@ class Image(ConstrainedControl):
 
     gapless_playback: OptionalBool = None
     """
-    Whether to continue showing the old image (`True`), or briefly show nothing (`False`),
-    when the image provider changes.
+    Whether to continue showing the old image (`True`), or briefly show nothing 
+    (`False`), when the image provider changes.
 
     Defaults to `False`.
     """
