@@ -41,30 +41,126 @@ class TextAffinity(Enum):
     """
 
 
+
 @dataclass
 class TextSelection:
-    start: Optional[int] = None
-    end: Optional[int] = None
-    selection: Optional[str] = None
-    base_offset: Optional[int] = None
-    extent_offset: Optional[int] = None
-    affinity: Optional[TextAffinity] = None
-    directional: Optional[bool] = None
-    collapsed: Optional[bool] = None
-    valid: Optional[bool] = None
-    normalized: Optional[bool] = None
+    """
+    A range of text that represents a selection.
+    """
 
+    start: Optional[int] = None
+    """
+    The index of the first character in the range.
+    """
+
+    end: Optional[int] = None
+    """
+    The next index after the characters in this range.
+    """
+
+    selection: Optional[str] = None
+    """
+    The text string that is selected.
+    """
+
+    base_offset: Optional[int] = None
+    """
+    The offset at which the selection originates.
+    """
+
+    extent_offset: Optional[int] = None
+    """
+    The offset at which the selection terminates.
+    """
+
+    affinity: Optional["TextAffinity"] = None
+    """
+    If the text range is collapsed and has more than one visual location (e.g., occurs
+    at a line break), which of the two locations to use when painting the caret.
+
+    Value is of type [`TextAffinity`](https://flet.dev/docs/reference/types/textaffinity).
+    """
+
+    directional: Optional[bool] = None
+    """
+    Whether this selection has disambiguated its base and extent.
+    """
+
+    collapsed: Optional[bool] = None
+    """
+    Whether this range is empty (but still potentially placed inside the text).
+    """
+
+    valid: Optional[bool] = None
+    """
+    Whether this range represents a valid position in the text.
+    """
+
+    normalized: Optional[bool] = None
+    """
+    Whether the start of this range precedes the end.
+    """
+    
 
 class TextSelectionChangeCause(Enum):
+    """
+    TBD
+    """
+
     UNKNOWN = "unknown"
+    """
+    The cause of the selection change is unknown or could not be determined.
+    """
+
     TAP = "tap"
+    """
+    The user tapped on the text and that caused the selection (or the location of the
+    cursor) to change.
+    """
+
     DOUBLE_TAP = "doubleTap"
+    """
+    The user tapped twice in quick succession on the text and that caused the
+    selection (or the location of the cursor) to change.
+    """
+
     LONG_PRESS = "longPress"
+    """
+    The user long-pressed the text and that caused the selection (or the location of
+    the cursor) to change.
+    """
+
     FORCE_PRESS = "forcePress"
+    """
+    The user force-pressed the text and that caused the selection (or the location of
+    the cursor) to change.
+    """
+
     KEYBOARD = "keyboard"
+    """
+    The user used the keyboard to change the selection or the location of the cursor.
+
+    Keyboard-triggered selection changes may be caused by the IME as well as by
+    accessibility tools (e.g. TalkBack on Android).
+    """
+
     TOOLBAR = "toolbar"
+    """
+    The user used the selection toolbar to change the selection or the location of
+    the cursor.
+
+    An example is when the user taps on select all in the tool bar.
+    """
+
     DRAG = "drag"
+    """
+    The user used the mouse to change the selection by dragging over a piece of text.
+    """
+
     SCRIBBLE = "scribble"
+    """
+    The user used iPadOS 14+ Scribble to change the selection.
+    """
 
 
 @dataclass
@@ -78,28 +174,6 @@ class TextSelectionChangeEvent(ControlEvent):
 class Text(ConstrainedControl):
     """
     Text is a control for displaying text.
-
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.title = "Text examples"
-
-        page.add(
-            ft.Text("Size 10", size=10),
-            ft.Text("Size 30, Italic", size=20, color="pink600", italic=True),
-            ft.Text("Limit long text to 2 lines and fading", style=ft.TextThemeStyle.HEADLINE_SMALL),
-            ft.Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur quis nibh vitae purus consectetur facilisis sed vitae ipsum. Quisque faucibus sed nulla placerat sagittis. Phasellus condimentum risus vitae nulla vestibulum auctor. Curabitur scelerisque, nibh eget imperdiet consequat, odio ante tempus diam, sed volutpat nisl erat eget turpis. Sed viverra, diam sit amet blandit vulputate, mi tellus dapibus lorem, vitae vehicula diam mauris placerat diam. Morbi sit amet pretium turpis, et consequat ligula. Nulla velit sem, suscipit sit amet dictum non, tincidunt sed nulla. Aenean pellentesque odio porttitor sagittis aliquam. Nam varius at metus vitae vulputate. Praesent faucibus nibh lorem, eu pretium dolor dictum nec. Phasellus eget dui laoreet, viverra magna vitae, pellentesque diam.",
-                max_lines=2,
-            ),
-        )
-
-    ft.app(target=main)
-    ```
-
-    -----
 
     Online docs: https://flet.dev/docs/controls/text
     """
