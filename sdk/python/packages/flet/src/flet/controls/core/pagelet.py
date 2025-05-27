@@ -21,42 +21,85 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     """
     Pagelet implements the basic Material Design visual layout structure.
 
-    Use it for projects that require "page within a page" layouts with its own AppBar, BottomBar, Drawer, such as demos and galleries.
+    Use it for projects that require "page within a page" layouts with its own AppBar,
+    BottomBar, Drawer, such as demos and galleries.
 
-    Example:
-    ```
-    import flet as ft
-
-
-    def main(page: ft.Page):
-        page.add(
-            ft.Pagelet(
-                appbar=ft.CupertinoAppBar(middle=ft.Text("AppBar title")),
-                content=ft.Text("This is pagelet"),
-            )
-        )
-
-
-    ft.app(target=main)
-        ```
-
-        -----
-
-        Online docs: https://flet.dev/docs/controls/pagelet
+    Online docs: https://flet.dev/docs/controls/pagelet
     """
 
     content: Control
+    """
+    A child Control contained by the Pagelet.
+
+    The control in the content of the Pagelet is positioned at the top-left of the
+    available space between the app bar and the bottom of the Pagelet.
+    """
+
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
+    """
+    An [`AppBar`](https://flet.dev/docs/controls/appbar) control to display at the top
+    of the Pagelet.
+    """
+
     navigation_bar: Optional[Union[NavigationBar, CupertinoNavigationBar]] = None
+    """
+    [`NavigationBar`](https://flet.dev/docs/controls/navigationbar) control to display
+    at the bottom of the page.
+
+    If both [`bottom_appbar`](https://flet.dev/docs/controls/pagelet#bottom_appbar) and
+    [`navigation_bar`](https://flet.dev/docs/controls/pagelet#navigation_bar)
+    properties are provided, `NavigationBar` will be displayed.
+    """
+
     bottom_appbar: Optional[BottomAppBar] = None
+    """
+    [`BottomAppBar`](https://flet.dev/docs/controls/bottomappbar) control to display at
+    the bottom of the Pagelet.
+
+    If both [`bottom_appbar`](https://flet.dev/docs/controls/pagelet#bottom_appbar) and
+    [`navigation_bar`](https://flet.dev/docs/controls/pagelet#navigation_bar)
+    properties are provided, `NavigationBar` will be displayed.
+    """
+
     bottom_sheet: OptionalControl = None
+    """
+    The persistent bottom sheet to show information that supplements the primary
+    content of the Pagelet. Can be any control.
+    """
+
     drawer: Optional[NavigationDrawer] = None
+    """
+    A [`NavigationDrawer`](https://flet.dev/docs/controls/navigationdrawer) control to
+    display as a panel sliding from the start edge of the page.
+    """
+
     end_drawer: Optional[NavigationDrawer] = None
+    """
+    A [`NavigationDrawer`](https://flet.dev/docs/controls/navigationdrawer) control to
+    display as a panel sliding from the end edge of the page.
+    """
+
     floating_action_button: Optional[Control] = None
+    """
+    A [`FloatingActionButton`](https://flet.dev/docs/controls/floatingactionbutton)
+    control to display on top of Pagelet content.
+    """
+
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = None
+    """
+    Defines a position for the `FloatingActionButton`.
+
+    Value can be of type `OffsetValue` or
+    [`FloatingActionButtonLocation`](https://flet.dev/docs/reference/types/floatingactionbuttonlocation).
+    Defaults to `FloatingActionButtonLocation.END_FLOAT`.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    Background [color](https://flet.dev/docs/reference/colors) of the Pagelet.
+    """
 
     def before_update(self):
         super().before_update()
