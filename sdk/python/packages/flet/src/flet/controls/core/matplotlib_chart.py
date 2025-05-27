@@ -27,8 +27,23 @@ class MatplotlibChart(Container):
     """
 
     figure: Figure = field(metadata={"skip": True})
+    """
+    Matplotlib figure to draw - an instance of `matplotlib.figure.Figure` class.
+    """
+
     original_size: bool = False
+    """
+    Whether to display chart in original size.
+
+    Defaults to `False` - display a chart that fits configured bounds.
+    """
+
     transparent: bool = False
+    """
+    Whether to remove the background from the chart.
+
+    Defaults to `False` - display a chart with background.
+    """
 
     def init(self):
         self.alignment = Alignment.center()
