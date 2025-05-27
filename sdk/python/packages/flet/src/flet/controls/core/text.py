@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -26,8 +26,19 @@ __all__ = [
 
 
 class TextAffinity(Enum):
+    """
+    Defines the permissions which can be checked and requested.
+    """
     UPSTREAM = "upstream"
+    """
+    The position has affinity for the downstream side of the text position, i.e. in the 
+    direction of the end of the string.
+    """
     DOWNSTREAM = "downstream"
+    """
+    The position has affinity for the upstream side of the text position, i.e. in the 
+    direction of the beginning of the string.
+    """
 
 
 @dataclass
@@ -94,7 +105,7 @@ class Text(ConstrainedControl):
     """
 
     value: Optional[str] = ""
-    spans: Optional[List[TextSpan]] = None
+    spans: Optional[list[TextSpan]] = None
     text_align: Optional[TextAlign] = None
     font_family: Optional[str] = None
     size: OptionalNumber = None
