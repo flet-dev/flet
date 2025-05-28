@@ -7,6 +7,9 @@ from flet.controls.types import OptionalNumber
 
 @control("l")
 class ChartAxisLabel(Control):
+    """
+    Configures a custom label for specific value.
+    """
     value: OptionalNumber = None
     """
     A value to draw label for.

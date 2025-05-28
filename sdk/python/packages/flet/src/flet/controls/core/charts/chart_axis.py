@@ -9,6 +9,9 @@ from flet.controls.types import OptionalNumber
 
 @control("a")
 class ChartAxis(Control):
+    """
+    Configures chart axis.
+    """
     title: Optional[Control] = None
     """
     A `Control` to display as axis title.
