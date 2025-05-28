@@ -90,8 +90,19 @@ class FilePickerFile:
 @dataclass
 class FilePickerUploadEvent(ControlEvent):
     file_name: str
+    """
+    The name of the uploaded file.
+    """
+
     progress: Optional[float] = None
+    """
+    A value from `0.0` to `1.0` representing the progress of the upload.
+    """
+
     error: Optional[str] = None
+    """
+    An error message if the upload failed.
+    """
 
 
 @control("FilePicker")
