@@ -70,7 +70,8 @@ class ChartSquarePoint(ChartPointShape):
 class ChartCrossPoint(ChartPointShape):
     color: OptionalColorValue = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for the cross-mark(X).
+    The fill [color](https://flet.dev/docs/reference/colors) to use for the 
+    cross-mark(X).
     """
 
     size: Number = 8.0
