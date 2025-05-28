@@ -18,10 +18,41 @@ class Control(BaseControl):
     expand_loose: Optional[bool] = None
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     opacity: Number = 1.0
+    """
+    Defines the transparency of the control.
+    It's ranges from `0.0` (completely transparent) to 
+    `1.0` (completely opaque without any transparency).
+    
+    Defaults to `1.0´.
+    """
     tooltip: Optional[TooltipValue] = None
+    """
+    A tooltip message to show when the user hovers over the control.
+    
+    The tooltip can be of type `str` or `Tooltip`.
+    """
+
     badge: Optional[BadgeValue] = None
+    """
+    A badge to show on top of the control.
+    
+    The badge can be of type `str` or `Badge`.
+    """
+
     visible: bool = True
+    """
+    Whether the control is visible or not. 
+
+    Defaults to `True`.
+    """
+
     disabled: bool = False
+    """
+    Whether the control is disabled or not. 
+    
+    Defaults to `False`.
+    """
+
     rtl: bool = False
 
     def before_update(self):
