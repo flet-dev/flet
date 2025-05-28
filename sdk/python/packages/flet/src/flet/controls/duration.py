@@ -64,17 +64,6 @@ class Duration:
             days=d, hours=h, minutes=m, seconds=s, milliseconds=ms, microseconds=us
         )
 
-    @classmethod
-    def from_datetime(cls, dt: datetime) -> "Duration":
-        """Creates a Duration from a datetime object."""
-        return cls.from_unit(
-            days=dt.day,
-            hours=dt.hour,
-            minutes=dt.minute,
-            seconds=dt.second,
-            milliseconds=dt.microsecond // MICROSECONDS_PER_MILLISECOND,
-        )
-
     # Properties
 
     @property
