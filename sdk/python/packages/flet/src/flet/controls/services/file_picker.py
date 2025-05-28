@@ -37,9 +37,24 @@ class FilePickerUploadFile:
 @dataclass
 class FilePickerFile:
     id: int
+    """
+    TBD
+    """
+
     name: str
+    """
+    File name without a path.
+    """
+
     size: int
+    """
+    File size in bytes.
+    """
+
     path: Optional[str] = None
+    """
+    Full path to a file. Works for desktop and mobile only. `None` on web.
+    """
 
 
 @dataclass
