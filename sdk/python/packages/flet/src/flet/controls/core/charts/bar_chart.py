@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
@@ -34,7 +34,7 @@ class BarChartEvent(ControlEvent):
 
 @control("BarChart")
 class BarChart(ConstrainedControl):
-    bar_groups: List[BarChartGroup] = field(default_factory=list)
+    bar_groups: list[BarChartGroup] = field(default_factory=list)
     groups_space: OptionalNumber = None
     animate: Optional[AnimationValue] = None
     interactive: Optional[bool] = None

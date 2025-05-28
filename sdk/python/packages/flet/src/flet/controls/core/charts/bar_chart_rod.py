@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
@@ -13,7 +13,7 @@ from flet.controls.types import OptionalColorValue, OptionalNumber, TextAlign
 
 @control("r", kw_only=True)
 class BarChartRod(Control):
-    rod_stack_items: List[BarChartRodStackItem] = field(default_factory=list)
+    rod_stack_items: list[BarChartRodStackItem] = field(default_factory=list)
     from_y: OptionalNumber = None
     to_y: OptionalNumber = None
     width: OptionalNumber = None

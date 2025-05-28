@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -12,6 +12,6 @@ class ChartAxis(Control):
     title: Optional[Control] = None
     title_size: OptionalNumber = None
     show_labels: Optional[bool] = None
-    labels: List[ChartAxisLabel] = field(default_factory=list)
+    labels: list[ChartAxisLabel] = field(default_factory=list)
     labels_interval: OptionalNumber = None
     labels_size: OptionalNumber = None

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
@@ -39,7 +39,7 @@ class ScatterChartEvent(ControlEvent):
 
 @control("ScatterChart")
 class ScatterChart(ConstrainedControl):
-    scatter_spots: List[ScatterChartSpot] = field(default_factory=list)
+    scatter_spots: list[ScatterChartSpot] = field(default_factory=list)
     animate: Optional[AnimationValue] = None
     interactive: bool = True
     handle_built_in_touches: bool = True

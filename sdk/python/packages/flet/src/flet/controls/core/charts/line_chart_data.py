@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.box import BoxShadow
@@ -13,7 +13,7 @@ from flet.controls.types import OptionalColorValue, OptionalNumber
 
 @control("d")
 class LineChartData(Control):
-    data_points: List[LineChartDataPoint] = field(default_factory=list)
+    data_points: list[LineChartDataPoint] = field(default_factory=list)
     curved: Optional[bool] = None
     color: OptionalColorValue = None
     gradient: Optional[Gradient] = None
@@ -21,7 +21,7 @@ class LineChartData(Control):
     stroke_cap_round: Optional[bool] = None
     prevent_curve_over_shooting: Optional[bool] = None
     prevent_curve_over_shooting_threshold: OptionalNumber = None
-    dash_pattern: Optional[List[int]] = None
+    dash_pattern: Optional[list[int]] = None
     shadow: Optional[BoxShadow] = None
     above_line_bgcolor: OptionalColorValue = None
     above_line_gradient: Optional[Gradient] = None

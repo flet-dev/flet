@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.animation import OptionalAnimationValue
 from flet.controls.base_control import control
@@ -42,7 +42,7 @@ class PieChartEvent(ControlEvent):
 
 @control("PieChart")
 class PieChart(ConstrainedControl):
-    sections: List[PieChartSection] = field(default_factory=list)
+    sections: list[PieChartSection] = field(default_factory=list)
     center_space_color: OptionalColorValue = None
     center_space_radius: OptionalNumber = None
     sections_space: OptionalNumber = None
