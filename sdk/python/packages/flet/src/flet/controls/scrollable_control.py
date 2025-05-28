@@ -7,7 +7,7 @@ from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
-from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import (
     Number,
     OptionalEventCallable,
@@ -49,10 +49,36 @@ class OnScrollEvent(ControlEvent):
 @control(kw_only=True)
 class ScrollableControl(Control):
     scroll: Optional[ScrollMode] = None
+    """
+    Enables a vertical scrolling for the Column to prevent its content overflow.
+
+    Value is of type [`ScrollMode`](/docs/reference/types/scrollmode) and defaults to 
+    `ScrollMode.None`.
+    """
     auto_scroll: bool = False
+    """
+    `True` if scrollbar should automatically move its position to the end when children 
+    updated. Must be `False` for `scroll_to()` method to work.
+    """
     reverse: bool = False
+    """
+    Defines whether the scroll view scrolls in the reading direction.
+
+    Defaults to `False`.
+    """
     scroll_interval: Number = 10
+    """
+    Throttling in milliseconds for `on_scroll` event.
+
+    Defaults to `10`.
+    """
     on_scroll: OptionalEventCallable[OnScrollEvent] = None
+    """
+    Fires when scroll position is changed by a user.
+
+    Event handler argument is an instance of [`OnScrollEvent`](/docs/reference/types/onscrollevent) 
+    class.
+    """
 
     def scroll_to(
         self,
