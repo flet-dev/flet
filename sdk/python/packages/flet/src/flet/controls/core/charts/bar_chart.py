@@ -27,9 +27,25 @@ class TooltipDirection(Enum):
 @dataclass
 class BarChartEvent(ControlEvent):
     type: str
+    """
+    Event's type such as `PointerHoverEvent`, `PointerExitEvent`, etc.
+    """
+
     group_index: Optional[int] = None
+    """
+    Bar's index or `-1` if chart is hovered or clicked outside of any bar.
+    """
+
     rod_index: Optional[int] = None
+    """
+    Rod's index or `-1` if chart is hovered or clicked outside of any bar.
+    """
+
     stack_item_index: Optional[int] = None
+    """
+    Stack item's index or `-1` if chart is hovered or clicked outside of any bar.
+    """
+
 
 
 @control("BarChart")
