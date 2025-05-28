@@ -11,9 +11,26 @@ class ChartPointShape:
 @dataclass
 class ChartCirclePoint(ChartPointShape):
     color: OptionalColorValue = None
+    """
+    The fill [color](https://flet.dev/docs/reference/colors) to use for the circle.
+    """
+
     radius: OptionalNumber = None
+    """
+    The radius of the circle.
+    """
+
     stroke_color: OptionalColorValue = None
+    """
+    The stroke [color](https://flet.dev/docs/reference/colors) to use for the circle
+    """
+
     stroke_width: Number = 0
+    """
+    The stroke width to use for the circle.
+
+    Defaults to `1.0`.
+    """
 
     def __post_init__(self):
         self.type = "circle"
