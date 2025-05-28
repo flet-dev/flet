@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.types import OptionalColorValue
 
@@ -8,4 +8,4 @@ from flet.controls.types import OptionalColorValue
 class ChartPointLine:
     color: OptionalColorValue = None
     width: Optional[float] = None
-    dash_pattern: Optional[List[int]] = None
+    dash_pattern: Optional[list[int]] = None

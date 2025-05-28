@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
@@ -26,12 +26,12 @@ class LineChartEventSpot:
 @dataclass
 class LineChartEvent(ControlEvent):
     type: str
-    spots: List[LineChartEventSpot]
+    spots: list[LineChartEventSpot]
 
 
 @control("LineChart")
 class LineChart(ConstrainedControl):
-    data_series: List[LineChartData] = field(default_factory=list)
+    data_series: list[LineChartData] = field(default_factory=list)
     animate: Optional[AnimationValue] = None
     interactive: Optional[bool] = None
     point_line_start: OptionalNumber = None

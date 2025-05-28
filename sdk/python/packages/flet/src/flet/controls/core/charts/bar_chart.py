@@ -47,7 +47,6 @@ class BarChartEvent(ControlEvent):
     """
 
 
-
 @control("BarChart")
 class BarChart(ConstrainedControl):
     """

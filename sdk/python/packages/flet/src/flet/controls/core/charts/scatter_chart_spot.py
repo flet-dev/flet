@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -23,7 +23,7 @@ class ScatterChartSpot(Control):
     tooltip_text: Optional[str] = None
     tooltip_style: Optional[TextStyle] = None
     tooltip_align: Optional[TextAlign] = None
-    tooltip_spans: Optional[List[TextSpan]] = None
+    tooltip_spans: Optional[list[TextSpan]] = None
     tooltip_bgcolor: OptionalColorValue = None
     label_text: Optional[str] = None
     label_style: Optional[TextStyle] = None
