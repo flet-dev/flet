@@ -18,12 +18,42 @@ __all__ = [
 
 
 class FilePickerFileType(Enum):
+    """
+    Defines the file types that can be selected using the
+    [FilePicker](https://flet.dev/docs/controls/filepicker).
+    """
+
     ANY = "any"
+    """
+    Allows any file type.
+    """
+
     MEDIA = "media"
+    """
+    A combination of `VIDEO` and `IMAGE`.
+    """
+
     IMAGE = "image"
+    """
+    Allows only image files.
+    """
+
     VIDEO = "video"
+    """
+    Allows only video files.
+    """
+
     AUDIO = "audio"
+    """
+    Allows only audio files.
+    """
+
     CUSTOM = "custom"
+    """
+    Allows only the custom file types specified in the
+    [allowed_extensions](https://flet.dev/docs/controls/filepicker) list.
+    """
+
 
 
 @dataclass
