@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -17,7 +17,33 @@ class CanvasResizeEvent(ControlEvent):
 
 @control("Canvas")
 class Canvas(ConstrainedControl):
-    shapes: List[Shape] = field(default_factory=list)
+    """
+    Canvas is a control for drawing arbitrary graphics using a set of primitives or
+    "shapes" such as line, arc, path and text.
+    """
+
+    shapes: list[Shape] = field(default_factory=list)
+    """
+    The list of `Shape` objects (see below) to draw on the canvas.
+    """
+
     content: Optional[Control] = None
+    """
+    TBD
+    """
+
     resize_interval: OptionalNumber = None
+    """
+    Sampling interval in milliseconds for `on_resize` event.
+
+    Defaults to `0` - call `on_resize` immediately on every change.
+    """
+
     on_resize: OptionalEventCallable[CanvasResizeEvent] = None
+    """
+    Fires when the size of canvas has changed.
+
+    Event object `e` is an instance of
+    [CanvasResizeEvent](https://flet.dev/docs/reference/types/canvasresizeevent).
+    """
+
