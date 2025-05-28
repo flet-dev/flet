@@ -11,57 +11,67 @@ class HapticFeedback(Service):
     """
     Allows access to the haptic feedback interface on the device.
 
-    It is non-visual and should be added to `page.overlay` list.
-
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        hf = ft.HapticFeedback()
-        page.services.append(hf)
-
-        page.add(
-            ft.ElevatedButton("Heavy impact", on_click=lambda _: hf.heavy_impact()),
-            ft.ElevatedButton("Medium impact", on_click=lambda _: hf.medium_impact()),
-            ft.ElevatedButton("Light impact", on_click=lambda _: hf.light_impact()),
-            ft.ElevatedButton("Vibrate", on_click=lambda _: hf.vibrate()),
-        )
-
-    ft.run(main)
-    ```
-
-    -----
+    It is non-visual and should be added to `page.services` list.
 
     Online docs: https://flet.dev/docs/controls/hapticfeedback
     """
 
     async def heavy_impact_async(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a heavy mass.
+        """
         await self._invoke_method_async("heavy_impact")
 
     def heavy_impact(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a heavy mass.
+        """
         asyncio.create_task(self.heavy_impact_async())
 
     async def light_impact_async(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a light mass.
+        """
         await self._invoke_method_async("light_impact")
 
     def light_impact(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a light mass.
+        """
         asyncio.create_task(self.light_impact_async())
 
     async def medium_impact_async(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a medium mass.
+        """
         await self._invoke_method_async("medium_impact")
 
     def medium_impact(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a medium mass.
+        """
         asyncio.create_task(self.medium_impact_async())
 
     async def vibrate_async(self):
+        """
+        Provides vibration haptic feedback to the user for a short duration.
+        """
         await self._invoke_method_async("vibrate")
 
     def vibrate(self):
+        """
+        Provides vibration haptic feedback to the user for a short duration.
+        """
         asyncio.create_task(self.vibrate_async())
 
     async def selection_click_async(self):
+        """
+        TBD
+        """
         await self._invoke_method_async("selection_click")
 
     def selection_click(self):
+        """
+        TBD
+        """
         asyncio.create_task(self.selection_click_async())
