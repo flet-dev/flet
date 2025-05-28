@@ -17,6 +17,9 @@ class HapticFeedback(Service):
     """
 
     async def heavy_impact_async(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a heavy mass.
+        """
         await self._invoke_method_async("heavy_impact")
 
     def heavy_impact(self):
@@ -26,6 +29,9 @@ class HapticFeedback(Service):
         asyncio.create_task(self.heavy_impact_async())
 
     async def light_impact_async(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a light mass.
+        """
         await self._invoke_method_async("light_impact")
 
     def light_impact(self):
@@ -35,6 +41,9 @@ class HapticFeedback(Service):
         asyncio.create_task(self.light_impact_async())
 
     async def medium_impact_async(self):
+        """
+        Provides a haptic feedback corresponding a collision impact with a medium mass.
+        """
         await self._invoke_method_async("medium_impact")
 
     def medium_impact(self):
@@ -44,6 +53,9 @@ class HapticFeedback(Service):
         asyncio.create_task(self.medium_impact_async())
 
     async def vibrate_async(self):
+        """
+        Provides vibration haptic feedback to the user for a short duration.
+        """
         await self._invoke_method_async("vibrate")
 
     def vibrate(self):
@@ -53,6 +65,9 @@ class HapticFeedback(Service):
         asyncio.create_task(self.vibrate_async())
 
     async def selection_click_async(self):
+        """
+        TBD
+        """
         await self._invoke_method_async("selection_click")
 
     def selection_click(self):
