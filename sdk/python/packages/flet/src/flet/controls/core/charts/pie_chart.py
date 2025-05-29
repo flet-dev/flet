@@ -35,9 +35,26 @@ class PieChartEventType(Enum):
 @dataclass
 class PieChartEvent(ControlEvent):
     type: PieChartEventType
+    """
+    Type of the event.
+
+    Value is of type [`PieChartEventType`](https://flet.dev/docs/reference/types/piecharteventtype).
+    """
+
     section_index: Optional[int] = None
+    """
+    Section's index or `-1` if no section was hovered.
+    """
+
     local_x: Optional[float] = None
+    """
+    X coordinate of the local position where the event occurred.
+    """
+
     local_y: Optional[float] = None
+    """
+    Y coordinate of the local position where the event occurred.
+    """
 
 
 @control("PieChart")
