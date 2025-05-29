@@ -41,14 +41,15 @@ class PieChartSection(Control):
     """
     The style to draw `title` with.
 
-    The value is an instance of [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) class.
+    The value is an instance of [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) 
+    class.
     """
 
     title_position: OptionalNumber = None
     """
-    By default title is drawn in the middle of the section, but its position can be changed
-    with `title_position` property which value must be between `0.0` (near the center) and
-    `1.0`(near the outside of the pie chart).
+    By default title is drawn in the middle of the section, but its position can be 
+    changed with `title_position` property which value must be between `0.0` (near the 
+    center) and `1.0`(near the outside of the pie chart).
     """
 
     badge_content: Optional[Control] = None
@@ -59,7 +60,7 @@ class PieChartSection(Control):
     badge_position: OptionalNumber = None
     """
     By default the badge is drawn in the middle of the section, but its position can be
-    changed with `badge_position` property which value must be between `0.0` (near the center)
-    and `1.0`(near the outside of the pie chart).
+    changed with `badge_position` property which value must be between `0.0` (near the 
+    center) and `1.0`(near the outside of the pie chart).
     """
 
