@@ -20,13 +20,27 @@ from flet.controls.types import (
 @dataclass
 class LineChartEventSpot:
     bar_index: int
+    """
+    The line's index or `-1` if no line was hovered.
+    """
+
     spot_index: int
+    """
+    The line's point index or `-1` if no point was hovered.
+    """
 
 
 @dataclass
 class LineChartEvent(ControlEvent):
     type: str
+    """
+    An event type such as `PointerHoverEvent`, `PointerExitEvent`, etc.
+    """
+
     spots: list[LineChartEventSpot]
+    """
+    TBD
+    """
 
 
 @control("LineChart")
