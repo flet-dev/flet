@@ -64,7 +64,17 @@ class AnimationCurve(Enum):
 @dataclass
 class Animation:
     duration: OptionalDurationValue = None
+    """
+    Gives the duration of the animation.
+
+    Value is of type `int` and defaults to `1`.
+    """
+
     curve: "OptionalAnimationCurve" = None
+    """
+    Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
+    or `None` and defaults to `None`.
+    """
 
 
 @dataclass
