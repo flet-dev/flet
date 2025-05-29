@@ -36,15 +36,46 @@ class BorderSide:
 
 @dataclass
 class Border:
+    """
+    A border comprised of four sides: top, right, bottom, left.
+
+    Each side of the border is described by an instance of [`BorderSide`](https://flet.dev/docs/reference/types/borderside) 
+    class.
+
+    Usage example:
+    ```python
+    container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
+    container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
+    ```
+    """
+
     top: "OptionalBorderSide" = None
+    """
+    Top side of the border.
+    """
+    
     right: "OptionalBorderSide" = None
+    """
+    Right side of the border.
+    """
+
     bottom: "OptionalBorderSide" = None
+    """
+    Bottom side of the border.
+    """
+    
     left: "OptionalBorderSide" = None
+    """
+    Left side of the border.
+    """
 
     @classmethod
     def all(
         cls, width: OptionalNumber = None, color: OptionalColorValue = None
     ) -> "Border":
+        """
+        Sets the same border for all 4 sides of the rectangle.
+        """
         bs = BorderSide(width or 1.0, color or Colors.BLACK)
         return Border(left=bs, top=bs, right=bs, bottom=bs)
 
@@ -55,6 +86,10 @@ class Border:
         vertical: "OptionalBorderSide" = None,
         horizontal: "OptionalBorderSide" = None,
     ) -> "Border":
+        """
+        Sets `vertical` border for top and bottom sides and `horizontal` for the left 
+        and right sides of the rectangle.
+        """
         return Border(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 
     @classmethod
@@ -66,6 +101,9 @@ class Border:
         right: "OptionalBorderSide" = None,
         bottom: "OptionalBorderSide" = None,
     ) -> "Border":
+        """
+        Sets different borders for each side of the rectangle.
+        """
         return Border(left=left, top=top, right=right, bottom=bottom)
 
 
@@ -109,6 +147,9 @@ def only(
 
 # Typings
 OptionalBorder = Optional[Border]
+"""
+OptionalBorder type description
+"""
 OptionalBorderSide = Optional[BorderSide]
 OptionalBorderSideStrokeAlign = Optional[BorderSideStrokeAlign]
 BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
