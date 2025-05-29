@@ -15,42 +15,72 @@ class Icon(ConstrainedControl):
 
     Icon browser: https://flet-icons-browser.fly.dev/#/
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.add(
-            ft.Row(
-                [
-                    ft.Icon(name=ft.icons.FAVORITE, color=ft.colors.PINK),
-                    ft.Icon(name=ft.icons.AUDIOTRACK, color=ft.colors.GREEN_400, size=30),
-                    ft.Icon(name=ft.icons.BEACH_ACCESS, color=ft.colors.BLUE, size=50),
-                    ft.Icon(name="settings", color="#c1c1c1"),
-                ]
-            )
-        )
-
-    ft.app(target=main)
-
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/icon
     """
 
     name: IconValue
+    """
+    The name of the icon.
+
+    You can search through the list of all available icons using open-source
+    [Icons browser](https://gallery.flet.dev/icons-browser/) app
+    [written in Flet](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py).
+    """
+
     color: OptionalColorValue = None
+    """
+    Icon [color](https://flet.dev/docs/reference/colors).
+    """
+
     size: OptionalNumber = None
+    """
+    The icon's size.
+
+    Defaults to `24`.
+    """
+
     semantics_label: Optional[str] = None
+    """
+    The semantics label for this icon.
+
+    It is not shown to the in the UI, but is announced in accessibility modes
+    (e.g. TalkBack/VoiceOver).
+    """
+
     shadows: Optional[ShadowValue] = None
+    """
+    TBD
+    """
+
     fill: OptionalNumber = None
+    """
+    TBD
+    """
+
     apply_text_scaling: Optional[bool] = None
+    """
+    TBD
+    """
+
     grade: OptionalNumber = None
+    """
+    TBD
+    """
+
     weight: OptionalNumber = None
+    """
+    TBD
+    """
+
     optical_size: OptionalNumber = None
+    """
+    TBD
+    """
+
     blend_mode: Optional[BlendMode] = None
+    """
+    TBD
+    """
 
     def before_update(self):
         super().before_update()

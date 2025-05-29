@@ -87,7 +87,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       shadowColor: widget.control.getColor("shadow_color", context),
       elevation: widget.control.getDouble("elevation"),
       clipBehavior: clipBehavior,
-      icon: widget.control.buildWidget("icon"),
+      icon: widget.control.buildIconOrWidget("icon"),
       iconColor: widget.control.getColor("icon_color", context),
       scrollable: widget.control.getBool("scrollable", false)!,
       actionsOverflowButtonSpacing:

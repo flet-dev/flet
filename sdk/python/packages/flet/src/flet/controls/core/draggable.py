@@ -13,118 +13,90 @@ class Draggable(Control):
     """
     A control that can be dragged from to a `DragTarget`.
 
-    When a draggable control recognizes the start of a drag gesture, it displays a `content_feedback` control that tracks the user's finger across the screen. If the user lifts their finger while on top of a `DragTarget`, that target is given the opportunity to complete drag-and-drop flow.
-
-    Example:
-    ```
-    import flet
-    from flet import (
-        Column,
-        Container,
-        Draggable,
-        DragTarget,
-        DragTargetAcceptEvent,
-        Page,
-        Row,
-        border,
-        colors,
-    )
-
-
-    def main(page: Page):
-        page.title = "Drag and Drop example"
-
-        def drag_will_accept(e):
-            e.control.content.border = border.all(
-                2, colors.BLACK45 if e.data == "true" else colors.RED
-            )
-            e.control.update()
-
-        def drag_accept(e: DragTargetAcceptEvent):
-            src = page.get_control(e.src_id)
-            e.control.content.bgcolor = src.content.bgcolor
-            e.control.content.border = None
-            e.control.update()
-
-        def drag_leave(e):
-            e.control.content.border = None
-            e.control.update()
-
-        page.add(
-            Row(
-                [
-                    Column(
-                        [
-                            Draggable(
-                                group="color",
-                                content=Container(
-                                    width=50,
-                                    height=50,
-                                    bgcolor=colors.CYAN,
-                                    border_radius=5,
-                                ),
-                                content_feedback=Container(
-                                    width=20,
-                                    height=20,
-                                    bgcolor=colors.CYAN,
-                                    border_radius=3,
-                                ),
-                            ),
-                            Draggable(
-                                group="color",
-                                content=Container(
-                                    width=50,
-                                    height=50,
-                                    bgcolor=colors.YELLOW,
-                                    border_radius=5,
-                                ),
-                            ),
-                            Draggable(
-                                group="color1",
-                                content=Container(
-                                    width=50,
-                                    height=50,
-                                    bgcolor=colors.GREEN,
-                                    border_radius=5,
-                                ),
-                            ),
-                        ]
-                    ),
-                    Container(width=100),
-                    DragTarget(
-                        group="color",
-                        content=Container(
-                            width=50,
-                            height=50,
-                            bgcolor=colors.BLUE_GREY_100,
-                            border_radius=5,
-                        ),
-                        on_will_accept=drag_will_accept,
-                        on_accept=drag_accept,
-                        on_leave=drag_leave,
-                    ),
-                ]
-            )
-        )
-
-
-    flet.app(target=main)
-    ```
-
-    -----
+    When a draggable control recognizes the start of a drag gesture, it displays a
+    `content_feedback` control that tracks the user's finger across the screen. If the
+    user lifts their finger while on top of a `DragTarget`, that target is given the
+    opportunity to complete drag-and-drop flow.
 
     Online docs: https://flet.dev/docs/controls/draggable
     """
 
     content: Control
+    """
+    `Draggable` control displays [`content`](#content) when zero drags are under way.
+
+    If [`content_when_dragging`](#content_when_dragging) is not `None`, this control
+    instead displays `content_when_dragging` when one or more drags are underway.
+    Otherwise, this control always displays `content`.
+    """
+
     group: str = "default"
+    """
+    A group this draggable belongs to.
+
+    For [`DragTarget`](https://flet.dev/docs/controls/dragtarget) to accept incoming 
+    drag both `Draggable` and `DragTarget` must be in the same `group`.
+    """
+
     content_when_dragging: Optional[Control] = None
+    """
+    The `Control` to display instead of `content` when one or more drags are under way.
+
+    If this is `None`, then this widget will always display `content` (and so the drag
+    source representation will not change while a drag is under way).
+    """
+
     content_feedback: Optional[Control] = None
+    """
+    The `Control` to show under the pointer when a drag is under way.
+    """
+
     axis: Optional[Axis] = None
+    """
+    The axis to restrict this draggable's movement.
+
+    When axis is set to `Axis.HORIZONTAL`, this control can only be dragged 
+    horizontally. When axis is set to `Axis.VERTICAL`, this control can only be dragged 
+    vertically.
+
+    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis) and defaults
+    to `None` - no restriction.
+    """
+
     affinity: Optional[Axis] = None
+    """
+    Controls how this control competes with other gestures to initiate a drag.
+
+    If set to `None`, this widget initiates a drag as soon as it recognizes a tap down
+    gesture, regardless of any directionality.
+
+    If set to `Axis.HORIZONTAL` or `Axis.VERTICAL`, then this control will compete with
+    other horizontal (or vertical, respectively) gestures.
+
+    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis).
+    """
+
     max_simultaneous_drags: Optional[int] = None
+    """
+    The number of simultaneous drags to support.
+
+    - Set this to `0` if you want to prevent the draggable from actually being dragged.
+    - Set this to `1` if you want to only allow the drag source to have one item dragged
+      at a time. In this case, consider supplying an "empty" widget for
+      `content_when_dragging` to create the illusion of actually moving `content`.
+
+    Defaults to `None` - no limit.
+    """
+
     on_drag_start: OptionalControlEventCallable = None
+    """
+    Fires when this draggable starts being dragged.
+    """
+
     on_drag_complete: OptionalControlEventCallable = None
+    """
+    Fires when this draggable is dropped and accepted by a DragTarget.
+    """
 
     def before_update(self):
         super().before_update()

@@ -27,100 +27,52 @@ class DragTarget(Control):
     indicated that it will accept the draggable's data), then the drag target is
     asked to accept the draggable's data.
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.title = "Drag and Drop example"
-
-        def drag_will_accept(e):
-            e.control.content.border = ft.border.all(
-                2, ft.colors.BLACK45 if e.data == "true" else ft.colors.RED
-            )
-            e.control.update()
-
-        def drag_accept(e: ft.DragTargetEvent):
-            src = page.get_control(e.src_id)
-            e.control.content.bgcolor = src.content.bgcolor
-            e.control.content.border = None
-            e.control.update()
-
-        def drag_leave(e):
-            e.control.content.border = None
-            e.control.update()
-
-        page.add(
-            ft.Row(
-                [
-                    ft.Column(
-                        [
-                            ft.Draggable(
-                                group="color",
-                                content=ft.Container(
-                                    width=50,
-                                    height=50,
-                                    bgcolor=ft.colors.CYAN,
-                                    border_radius=5,
-                                ),
-                                content_feedback=ft.Container(
-                                    width=20,
-                                    height=20,
-                                    bgcolor=ft.colors.CYAN,
-                                    border_radius=3,
-                                ),
-                            ),
-                            ft.Draggable(
-                                group="color",
-                                content=ft.Container(
-                                    width=50,
-                                    height=50,
-                                    bgcolor=ft.colors.YELLOW,
-                                    border_radius=5,
-                                ),
-                            ),
-                            ft.Draggable(
-                                group="color1",
-                                content=ft.Container(
-                                    width=50,
-                                    height=50,
-                                    bgcolor=ft.colors.GREEN,
-                                    border_radius=5,
-                                ),
-                            ),
-                        ]
-                    ),
-                    ft.Container(width=100),
-                    ft.DragTarget(
-                        group="color",
-                        content=ft.Container(
-                            width=50,
-                            height=50,
-                            bgcolor=ft.colors.BLUE_GREY_100,
-                            border_radius=5,
-                        ),
-                        on_will_accept=drag_will_accept,
-                        on_accept=drag_accept,
-                        on_leave=drag_leave,
-                    ),
-                ]
-            )
-        )
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/dragtarget
     """
 
     content: Control
+    """
+    The `Control` that is a visual representation of the drag target.
+    """
+
     group: str = "default"
+    """
+    The group this target belongs to. Note that for this target to accept an
+    incoming drop from a [`Draggable`](https://flet.dev/docs/controls/draggable), they
+    must both be in the same group.
+    """
+
     on_will_accept: OptionalEventCallable["DragWillAcceptEvent"] = None
+    """
+    Fires when a draggable is dragged on this target.
+
+    `data` field of event details contains `true` (String) if both the draggable
+    and this target are in the same `group`; otherwise `false` (String).
+    """
+
     on_accept: OptionalEventCallable["DragTargetEvent"] = None
+    """
+    Fires when the user does drop an acceptable (same `group`) draggable on
+    this target.
+
+    Event handler argument is an instance of
+    [`DragTargetEvent`](https://flet.dev/docs/reference/types/dragtargetevent).
+
+    Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
+    """
+
     on_leave: OptionalEventCallable["DragTargetLeaveEvent"] = None
+    """
+    Fires when a draggable leaves this target.
+    """
+
     on_move: OptionalEventCallable["DragTargetEvent"] = None
+    """
+    Fires when a draggable moves within this target.
+
+    Event handler argument is of type
+    [`DragTargetEvent`](https://flet.dev/docs/reference/types/dragtargetevent).
+    """
 
     def before_update(self):
         super().before_update()

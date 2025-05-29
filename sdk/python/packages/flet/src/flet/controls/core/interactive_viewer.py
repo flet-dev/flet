@@ -7,12 +7,12 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.events import (
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
 )
-from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import MarginValue
 from flet.controls.types import ClipBehavior, Number, OptionalEventCallable
 
@@ -44,33 +44,128 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
     InteractiveViewer allows users to pan, zoom, and rotate content.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/interactiveviewer
     """
 
     content: Control
+    """
+    The `Control` to be transformed by the `InteractiveViewer`.
+    """
+
     pan_enabled: bool = True
+    """
+    Whether panning is enabled.
+
+    Value is of type `bool` and defaults to `True`.
+    """
+
     scale_enabled: bool = True
+    """
+    Whether scaling is enabled.
+
+    Value is of type `bool` and defaults to `True`.
+    """
+
     trackpad_scroll_causes_scale: bool = False
+    """
+    Whether scrolling up/down on a trackpad should cause scaling instead of panning.
+
+    Value is of type `bool` and defaults to `False`.
+    """
+
     constrained: bool = True
+    """
+    Whether the normal size constraints at this point in the widget tree are applied
+    to the child.
+    """
+
     max_scale: Number = 2.5
+    """
+    The maximum allowed scale. Must be greater than or equal to `min_scale`.
+
+    Value is of type `float` and defaults to `2.5`.
+    """
+
     min_scale: Number = 0.8
+    """
+    The minimum allowed scale. Must be greater than `0` and less than or equal to
+    `max_scale`.
+
+    Value is of type `float` and defaults to `0.8`.
+    """
+
     interaction_end_friction_coefficient: Number = 0.0000135
+    """
+    Changes the deceleration behavior after a gesture. Must be greater than `0`.
+
+    Value is of type `float` and defaults to `0.0000135`.
+    """
+
     scale_factor: Number = 200
+    """
+    The amount of scale to be performed per pointer scroll.
+
+    Value is of type `float` and defaults to `200.0`.
+    """
+
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    """
+    How to clip the `content`.
+
+    Value is of type
+    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
+    to `ClipBehavior.HARD_EDGE`.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Alignment of the `content` within.
+
+    Value is of type
+    [`Alignment`](https://flet.dev/docs/reference/types/alignment).
+    """
+
     boundary_margin: MarginValue = 0
+    """
+    A margin for the visible boundaries of the `content`.
+
+    Value is of type
+    [`Margin`](https://flet.dev/docs/reference/types/margin).
+    """
+
     interaction_update_interval: int = 200
-    on_interaction_start: OptionalEventCallable[
-        InteractiveViewerInteractionStartEvent
+    """
+    The interval (in milliseconds) at which the `on_interaction_update` event is fired.
+
+    Value is of type `int` and defaults to `200`.
+    """
+
+    on_interaction_start: OptionalEventCallable[InteractiveViewerInteractionStartEvent
     ] = None
-    on_interaction_update: OptionalEventCallable[
-        InteractiveViewerInteractionUpdateEvent
+    """
+    Fires when the user begins a pan or scale gesture.
+
+    Event handler argument is of type
+    [`InteractiveViewerInteractionStartEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionstartevent).
+    """
+
+    on_interaction_update: OptionalEventCallable[InteractiveViewerInteractionUpdateEvent
     ] = None
-    on_interaction_end: OptionalEventCallable[
-        InteractiveViewerInteractionEndEvent
+    """
+    Fires when the user updates a pan or scale gesture.
+
+    Event handler argument is of type
+    [`InteractiveViewerInteractionUpdateEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionupdateevent).
+    """
+
+    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent
     ] = None
+    """
+    Fires when the user ends a pan or scale gesture.
+
+    Event handler argument is of type
+    [`InteractiveViewerInteractionEndEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionendevent).
+    """
 
     def before_update(self):
         super().before_update()

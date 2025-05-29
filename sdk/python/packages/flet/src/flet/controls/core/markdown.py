@@ -235,23 +235,117 @@ class Markdown(ConstrainedControl):
     """
     Control for rendering text in markdown format.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/markdown
     """
 
     value: str = ""
+    """
+    Markdown content to render.
+    """
+
     selectable: bool = False
+    """
+    Whether rendered text is selectable or not.
+    """
+
     extension_set: MarkdownExtensionSet = MarkdownExtensionSet.NONE
+    """
+    The extensions to use when rendering the markdown content.
+
+    Value is of type
+    [`MarkdownExtensionSet`](https://flet.dev/docs/reference/types/markdownextensionset)
+    and defaults to `MarkdownExtensionSet.NONE`.
+    """
+
     code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None
+    """
+    A syntax highlighting theme for code blocks.
+
+    Value is of type
+    [`MarkdownCodeTheme`](https://flet.dev/docs/reference/types/markdowncodetheme)
+    and defaults to `MarkdownCodeTheme.GITHUB`.
+    """
+
     auto_follow_links: bool = False
+    """
+    Automatically open URLs in the document.
+
+    Default is `False`. If registered, `on_tap_link` event is fired after that.
+    """
+
     shrink_wrap: bool = True
+    """
+    Whether the extent of the scroll view in the scroll direction should be determined
+    by the contents being viewed.
+
+    Value is of type `bool` and defaults to `True`.
+    """
+
     fit_content: bool = True
+    """
+    Whether to allow the widget to fit the child content.
+
+    Value is of type `bool` and defaults to `True`.
+    """
+
     soft_line_break: bool = False
+    """
+    The soft line break is used to identify the spaces at the end of a line of text
+    and the leading spaces in the immediately following the line of text.
+
+    Value is of type `bool` and defaults to `False`.
+    """
+
     auto_follow_links_target: Optional[UrlTarget] = None
+    """
+    Where to open URL in the web mode.
+
+    Value is of type
+    [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget)
+    and defaults to `UrlTarget.SELF`.
+    """
+
     img_error_content: Optional[Control] = None
+    """
+    The `Control` to display when an image fails to load.
+    """
+
     code_style_sheet: Optional[MarkdownStyleSheet] = None
+    """
+    The styles to use when displaying the code blocks.
+
+    Value is of type
+    [`MarkdownStyleSheet`](https://flet.dev/docs/reference/types/markdownstylesheet).
+    """
+
     md_style_sheet: Optional[MarkdownStyleSheet] = None
+    """
+    The styles to use when displaying the markdown.
+
+    Value is of type
+    [`MarkdownStyleSheet`](https://flet.dev/docs/reference/types/markdownstylesheet).
+    """
+
     on_tap_text: OptionalControlEventCallable = None
+    """
+    Fires when some text is clicked/tapped.
+    """
+
     on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None
+    """
+    Fires when the text selection changes.
+
+    Event handler argument is of type
+    [`MarkdownSelectionChangeEvent`](https://flet.dev/docs/reference/types/markdownselectionchangeevent).
+    """
+
     on_tap_link: OptionalControlEventCallable = None
+    """
+    Fires when a link within Markdown document is clicked/tapped.
+
+    `data` property of event contains URL.
+
+    Example:
+    https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py
+    """
+
