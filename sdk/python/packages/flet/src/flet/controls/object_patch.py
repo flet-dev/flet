@@ -630,6 +630,9 @@ class DiffBuilder:
                 if field.compare:
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
+                    if field.name.startswith("on_"):
+                        old = old is not None
+                        new = new is not None
                     self._compare_values(parent, path, field.name, old, new, frozen)
             self._configure_dataclass(
                 dst, parent, frozen=frozen, configure_setattr_only=True
