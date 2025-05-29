@@ -78,3 +78,10 @@ def resolve_actual_type(tp: Any) -> Any:
 
 def is_enum(tp: Any) -> bool:
     return isinstance(tp, type) and issubclass(tp, Enum)
+
+
+def get_param_count(fn):
+    try:
+        return len(inspect.signature(fn).parameters)
+    except (ValueError, TypeError):
+        return None

@@ -20,7 +20,7 @@ from flet.messaging.protocol import (
 )
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils.from_dict import from_dict
-from flet.utils.patch_dataclass import patch_dataclass
+from flet.utils.object_model import get_param_count, patch_dataclass
 from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
@@ -174,9 +174,15 @@ class Session:
                 # Handle async and sync event handlers accordingly
                 event_handler = getattr(control, field_name)
                 if asyncio.iscoroutinefunction(event_handler):
-                    await event_handler(e)
+                    if get_param_count(event_handler) == 0:
+                        await event_handler()
+                    else:
+                        await event_handler(e)
                 elif callable(event_handler):
-                    event_handler(e)
+                    if get_param_count(event_handler) == 0:
+                        event_handler()
+                    else:
+                        event_handler(e)
 
                 if UpdateBehavior.auto_update_enabled():
                     self.auto_update(control)

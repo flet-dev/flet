@@ -62,8 +62,9 @@ class ControlEvent:
             if isinstance(annotation, ForwardRef):
                 annotation = _eval_type(annotation, globalns, localns)
 
-            clb = get_args(annotation)  # callable
-            event_type = get_args(clb[0])[0][0]
+            clbs = get_args(annotation)  # callable(s)
+            clb = clbs[1] if len(clbs) > 2 else clbs[0]
+            event_type = get_args(clb)[0][0]
 
             if isinstance(event_type, ForwardRef):
                 event_type = _eval_type(event_type, globalns, localns)
