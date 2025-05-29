@@ -319,6 +319,64 @@ def test_control_builder():
     assert patch["content"]["value"] == "Hello, world!"
 
 
+def test_nested_control_builders():
+    @dataclass
+    class AppState:
+        count: int
+
+    state = AppState(count=0)
+
+    cb = ft.ControlBuilder(
+        state,
+        lambda state: ft.SafeArea(
+            ft.Center(
+                ft.ControlBuilder(
+                    state,
+                    lambda state: ft.Text(
+                        value=f"{state.count}",
+                        spans=[
+                            ft.TextSpan(
+                                f"SPAN {state.count}",
+                                on_click=lambda: print("span clicked!"),
+                            )
+                        ]
+                        if state.count > 0
+                        else [],
+                        size=50,
+                    ),
+                )
+            ),
+            expand=True,
+        ),
+        expand=True,
+    )
+    patch, added_controls, removed_controls = make_msg(cb, {})
+    assert len(added_controls) == 5
+    assert len(removed_controls) == 0
+    assert not hasattr(patch[""], "_frozen")  # ControlBuilder
+    assert hasattr(patch[""].content, "_frozen")  # SafeArea
+    assert hasattr(patch[""].content.content, "_frozen")  # Center
+    assert hasattr(
+        patch[""].content.content.content, "_frozen"
+    )  # ControlBuilder (nested)
+    assert hasattr(patch[""].content.content.content.content, "_frozen")  # Text
+
+    state.count = 10
+    patch, added_controls, removed_controls = make_diff(cb, cb)
+    assert len(patch) == 1
+    assert len(added_controls) == 1
+    assert len(removed_controls) == 0
+    assert hasattr(
+        patch["content"]["content"]["content"]["content"]["spans"][0], "_frozen"
+    )  # TextSpan
+
+    state.count = 0
+    patch, added_controls, removed_controls = make_diff(cb, cb)
+    assert len(patch) == 1
+    assert len(added_controls) == 0
+    assert len(removed_controls) == 1
+
+
 def test_data_view_with_cache():
     @ft.data_view
     def user_details(user: User):

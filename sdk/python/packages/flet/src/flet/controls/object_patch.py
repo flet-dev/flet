@@ -692,7 +692,9 @@ class DiffBuilder:
                 #     )
                 item._parent = weakref.ref(parent)
 
-            if frozen:
+            if hasattr(item, "_frozen"):
+                frozen = item._frozen
+            elif frozen:
                 item._frozen = frozen
 
             def control_setattr(obj, name, value):
