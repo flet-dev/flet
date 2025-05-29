@@ -36,10 +36,31 @@ class BorderSide:
 
 @dataclass
 class Border:
+    """
+    A border comprised of four sides: top, right, bottom, left.
+
+    The sides are represented by BorderSide objects.
+    """
+
     top: "OptionalBorderSide" = None
+    """
+    Top side of the border.
+    """
+    
     right: "OptionalBorderSide" = None
+    """
+    Right side of the border.
+    """
+
     bottom: "OptionalBorderSide" = None
+    """
+    Bottom side of the border.
+    """
+    
     left: "OptionalBorderSide" = None
+    """
+    Left side of the border.
+    """
 
     @classmethod
     def all(
