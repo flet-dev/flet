@@ -71,6 +71,7 @@ from flet.controls.buttons import (
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
+from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import (
     ControlState,
@@ -85,6 +86,7 @@ from flet.controls.core.autofill_group import (
     AutofillGroupDisposeAction,
     AutofillHint,
 )
+from flet.controls.core.center import Center
 from flet.controls.core.charts.bar_chart import BarChart, BarChartEvent
 from flet.controls.core.charts.bar_chart_group import BarChartGroup
 from flet.controls.core.charts.bar_chart_rod import BarChartRod
@@ -616,6 +618,7 @@ __all__ = [
     "AutofillGroup",
     "AutofillGroupDisposeAction",
     "AutofillHint",
+    "Center",
     "BarChart",
     "BarChartEvent",
     "BarChartGroup",
@@ -642,6 +645,7 @@ __all__ = [
     "ScatterChartSpot",
     "ScatterShartTooltipAlignment",
     "Column",
+    "ControlBuilder",
     "Dismissible",
     "DismissibleDismissEvent",
     "DismissibleUpdateEvent",

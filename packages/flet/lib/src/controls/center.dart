@@ -1,5 +1,8 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
+
+import '../extensions/control.dart';
+import '../models/control.dart';
+import 'base_controls.dart';
 
 class CenterControl extends StatelessWidget {
   final Control control;
@@ -9,6 +12,7 @@ class CenterControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Center.build: ${control.id}");
-    return Center(child: control.buildWidget("content"));
+    return BaseControl(
+        control: control, child: Center(child: control.buildWidget("content")));
   }
 }

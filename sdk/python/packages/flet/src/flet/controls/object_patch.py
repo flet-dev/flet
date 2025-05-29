@@ -725,19 +725,18 @@ class DiffBuilder:
                 if self.control_cls and isinstance(item, self.control_cls):
                     item.init()
 
+                    # register new control
+                    self.added_controls.append(item)
+
+                    # call Control.before_update()
+                    item.before_update()
+
                 # recurse through fields
                 for field in dataclasses.fields(item):
                     if "skip" not in field.metadata:
                         self._configure_dataclass(
                             getattr(item, field.name), item, frozen
                         )
-
-                if self.control_cls and isinstance(item, self.control_cls):
-                    # register new control
-                    self.added_controls.append(item)
-
-                    # call Control.before_update()
-                    item.before_update()
 
                 if not frozen:
                     setattr(item, "__changes", {})

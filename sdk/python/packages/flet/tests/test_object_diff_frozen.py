@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 import flet as ft
 import msgpack
@@ -57,7 +57,7 @@ def make_msg(new: Any, old: Any = None, show_details=True):
     else:
         print("\nMessage length:", len(msg))
 
-    return msg, added_controls, removed_controls
+    return graph_patch, added_controls, removed_controls
 
 
 def test_compare_controls():
@@ -150,6 +150,7 @@ def test_lists_with_key_diff():
     patch, _, _ = make_diff(c2, c1)
     assert c2._frozen
     assert c2.data_series[0]._frozen
+    assert len(patch["data_series"][0]["data_points"]) == 2
     assert patch["data_series"][0]["data_points"]["$d"] == [0]
     assert isinstance(
         patch["data_series"][0]["data_points"][2]["$a"], ft.LineChartDataPoint
@@ -183,6 +184,7 @@ def test_lists_with_no_key_diff():
     patch, _, _ = make_diff(c2, c1)
     assert c2._frozen
     assert c2.data_series[0]._frozen
+    assert len(patch["data_series"][0]["data_points"]) == 3
     assert patch["data_series"][0]["data_points"][0]["x"] == 1
     assert patch["data_series"][0]["data_points"][0]["y"] == 2
     assert patch["data_series"][0]["data_points"][1]["x"] == 2
@@ -195,6 +197,7 @@ def test_simple_lists_diff():
     c2 = ft.LineChart(data_series=[ft.LineChartData(data_points=[2, 3, 4])])
     c1._frozen = True
     patch, _, _ = make_diff(c2, c1)
+    assert len(patch["data_series"][0]["data_points"]) == 2
     assert patch["data_series"][0]["data_points"]["$d"] == [0]
     assert patch["data_series"][0]["data_points"][2]["$a"] == 4
 
@@ -204,8 +207,7 @@ def test_simple_lists_diff_2():
     c2 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 3, 4])])
     c1._frozen = True
     patch, _, _ = make_diff(c2, c1)
-    # assert patch["data_series"][0]["data_points"]["$d"] == [0]
-    # assert patch["data_series"][0]["data_points"][2]["$a"] == 4
+    assert patch["data_series"][0]["data_points"]["$d"] == [1]
 
 
 def test_similar_lists_diff():
@@ -261,20 +263,63 @@ def test_both_frozen_hosted_by_in_place():
         ch.width = 100
 
 
-def test_data_view_with_cache():
+def test_larger_control_updates():
+    c1 = ft.Container(
+        content=ft.Row([ft.Text("Text 1")]),
+        bgcolor=ft.Colors.YELLOW,
+        width=200,
+        height=100,
+        scale=ft.Scale(1.0),
+    )
+    c1._frozen = True
+    c2 = ft.Container(
+        content=ft.Row([ft.Text("Text 2")]),
+        bgcolor=ft.Colors.RED,
+        width=200,
+        scale=ft.Scale(2.0),
+    )
+    c2._frozen = True
+    patch, added_controls, removed_controls = make_diff(c2, c1)
+
+
+@dataclass
+class User:
+    id: int
+    name: str
+    age: int
+    verified: bool
+
+
+users = [
+    User(1, "John Smith", 20, True),
+    User(2, "Alice Wong", 32, True),
+    User(3, "Bob Bar", 40, False),
+]
+
+
+def test_control_builder():
     @dataclass
-    class User:
-        id: int
-        name: str
-        age: int
-        verified: bool
+    class State:
+        msg: str
 
-    users = [
-        User(1, "John Smith", 20, True),
-        User(2, "Alice Wong", 32, True),
-        User(3, "Bob Bar", 40, False),
-    ]
+    state = State(msg="some text")
 
+    dv = ft.ControlBuilder(state, builder=lambda state: ft.Text(state.msg))
+    patch, added_controls, removed_controls = make_msg(dv, {})
+    assert len(added_controls) == 2
+    assert len(removed_controls) == 0
+    assert isinstance(patch[""], ft.ControlBuilder)
+    assert isinstance(patch[""].content, ft.Text)
+    assert hasattr(patch[""].content, "_frozen")
+    assert patch[""].content.value == "some text"
+
+    state.msg = "Hello, world!"
+    patch, added_controls, removed_controls = make_diff(dv, dv)
+    assert len(patch) == 1
+    assert patch["content"]["value"] == "Hello, world!"
+
+
+def test_data_view_with_cache():
     @ft.data_view
     def user_details(user: User):
         return ft.Card(
@@ -301,17 +346,61 @@ def test_data_view_with_cache():
     # add new user
     users.append(User(4, name="Someone Else", age=99, verified=False))
     page.controls[0] = users_list(users)
-    patch, added_controls, removed_controls = make_msg(page, page)
+    patch, added_controls, removed_controls = make_diff(page, page)
     assert len(added_controls) == 5
     assert len(removed_controls) == 0
 
     # remove user
     del users[1]
     page.controls[0] = users_list(users)
-    patch, added_controls, removed_controls = make_msg(page, page)
+    patch, added_controls, removed_controls = make_diff(page, page)
+    print(patch)
+    assert len(patch["controls"][0]["controls"]) == 1
+    assert patch["controls"][0]["controls"]["$d"] == [1]
     assert len(added_controls) == 0
     assert len(removed_controls) == 5
     # for ac in added_controls:
     #     print("\nADDED CONTROL:", ac)
     # for rc in removed_controls:
     #     print("\nREMOVED CONTROL:", rc)
+
+
+def test_empty_data_view():
+    @ft.data_view
+    def my_view():
+        return None
+
+    v = my_view()
+    assert v is None
+
+
+def test_login_logout_view():
+    class AppState:
+        logged_username: Optional[str] = None
+
+        def login(self, _):
+            self.logged_username = "John"
+
+        def logout(self, _):
+            self.logged_username = None
+
+    state = AppState()
+
+    @ft.data_view
+    def login_view(state: AppState):
+        return (
+            ft.Column(
+                [
+                    ft.Text(state.logged_username),
+                    ft.Button("Logout", on_click=state.logout),
+                ]
+            )
+            if state.logged_username
+            else ft.Column(
+                [
+                    ft.Button("Login", on_click=state.login),
+                ]
+            )
+        )
+
+    app = ft.View("/", [login_view(state)])

@@ -38,8 +38,11 @@ def data_view(fn: Callable):
             return cache[key]
 
         result = fn(*args, **kwargs)
-        _freeze_controls(result)
-        cache[key] = result
+        if result is not None:
+            _freeze_controls(result)
+            cache[key] = result
+        elif key in cache:
+            del cache[key]
         return result
 
     return wrapper
