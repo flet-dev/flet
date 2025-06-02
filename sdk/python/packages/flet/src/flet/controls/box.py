@@ -48,10 +48,33 @@ class ColorFilter:
 
 
 class FilterQuality(Enum):
+    """
+    Quality levels for image sampling in Image and DecorationImage objects.
+    """
+
     NONE = "none"
+    """
+    The fastest filtering method, albeit also the lowest quality.
+    """
+
     LOW = "low"
+    """
+    Better quality than none, faster than medium.
+    """
+
     MEDIUM = "medium"
+    """
+    The best all around filtering method that is only worse than high at extremely 
+    large scale factors.
+    """
+    
     HIGH = "high"
+    """
+    Best possible quality when scaling up images by scale factors larger than 5-10x.
+    When images are scaled down, this can be worse than medium for scales smaller than 
+    0.5x, or when animating the scale factor.
+    This option is also the slowest.
+    """
 
 
 class ShadowBlurStyle(Enum):
