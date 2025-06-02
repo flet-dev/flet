@@ -43,8 +43,22 @@ __all__ = [
 
 @dataclass
 class ColorFilter:
+    """
+    Defines a color filter that can be used with
+    [`Container.color_filter`](https://flet.dev/docs/controls/container#color_filter).
+    """
+
     color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use when applying the filter.
+    """
+
     blend_mode: Optional[BlendMode] = None
+    """
+    The blend mode to apply to the color filter.
+
+    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
+    """
 
 
 class FilterQuality(Enum):
@@ -67,7 +81,7 @@ class FilterQuality(Enum):
     The best all around filtering method that is only worse than high at extremely 
     large scale factors.
     """
-    
+
     HIGH = "high"
     """
     Best possible quality when scaling up images by scale factors larger than 5-10x.
