@@ -195,16 +195,16 @@ class DecorationImage:
     """
     The alignment of the image within its bounds.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and defaults to
-    `Alignment(0.0, 0.0)`.
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and 
+    defaults to `Alignment(0.0, 0.0)`.
     """
 
     repeat: Optional[ImageRepeat] = None
     """
     How the image should be repeated to fill the box.
 
-    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat) and defaults to
-    `ImageRepeat.NO_REPEAT`.
+    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat) 
+    and defaults to `ImageRepeat.NO_REPEAT`.
     """
 
     match_text_direction: OptionalBool = None
@@ -232,8 +232,8 @@ class DecorationImage:
     """
     The quality of the image filter.
 
-    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality) and defaults
-    to `FilterQuality.MEDIUM`.
+    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality) 
+    and defaults to `FilterQuality.MEDIUM`.
     """
 
     invert_colors: OptionalBool = None
@@ -253,14 +253,62 @@ class DecorationImage:
 
 @dataclass
 class BoxDecoration:
+    """
+    BoxDecoration provides a description of how to paint a box.
+    The box has a border, a body, and may cast a shadow.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to fill in the background of 
+    the box.
+    """
+
     image: Optional[DecorationImage] = None
+    """
+    An image to paint above the background `color` or `gradient`.
+
+    Value is of type [`DecorationImage`](https://flet.dev/docs/reference/types/decorationimage).
+    """
+
     border: Optional[Border] = None
+    """
+    A border to draw above the background `color`, `gradient`, or `image`.
+
+    Value is of type [`Border`](https://flet.dev/docs/reference/types/border).
+    """
+
     border_radius: OptionalBorderRadiusValue = None
+    """
+    The border radius of the box.
+
+    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
+    """
+
     shadow: Optional[ShadowValue] = None
+    """
+    A list of shadows cast by the box.
+
+    Value is of type [`List[BoxShadow]`](https://flet.dev/docs/reference/types/boxshadow).
+    """
+
     gradient: Optional[Gradient] = None
+    """
+    A gradient to use when filling the box.
+    """
+
     shape: Optional[BoxShape] = None
+    """
+    The shape to fill the `bgcolor`, `gradient`, and `image` into and to cast as the 
+    `shadow`.
+    """
+
     blend_mode: Optional[BlendMode] = None
+    """
+    The blend mode to apply to the background `color` or `gradient`.
+
+    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
+    """
 
 
 @dataclass
