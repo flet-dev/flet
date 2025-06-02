@@ -313,6 +313,18 @@ class BoxDecoration:
 
 @dataclass
 class BoxConstraints:
+    """
+    Constraints that must be respected by a size of a box.
+    
+    A Size respects a BoxConstraints if, and only if, all of the following relations 
+    hold:
+
+        min_width <= Size.width <= max_width
+        min_height <= Size.height <= max_height
+    
+    Read more about BoxConstraints [here](https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html).
+    """
+
     min_width: Number = 0
     """
     The minimum width that satisfies the constraints, such that
