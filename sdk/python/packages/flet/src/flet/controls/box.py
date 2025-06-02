@@ -158,19 +158,97 @@ class BoxFit(Enum):
 
 @dataclass
 class DecorationImage:
+    """
+    An image for a box decoration.
+    """
+
     src: Optional[str] = None
+    """
+    The image to paint.
+    """
+
     src_base64: Optional[str] = None
+    """
+    The base64-encoded image to paint.
+    """
+
     src_bytes: Optional[bytes] = None
+    """
+    TBD
+    """
+
     color_filter: Optional[ColorFilter] = None
+    """
+    A color filter to apply to the image before painting it.
+
+    Value is of type [`ColorFilter`](https://flet.dev/docs/reference/types/colorfilter).
+    """
+
     fit: Optional[ImageFit] = None
+    """
+    How the image should be inscribed into the box.
+
+    Value is of type [`ImageFit`](https://flet.dev/docs/reference/types/imagefit).
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    The alignment of the image within its bounds.
+
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and defaults to
+    `Alignment(0.0, 0.0)`.
+    """
+
     repeat: Optional[ImageRepeat] = None
+    """
+    How the image should be repeated to fill the box.
+
+    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat) and defaults to
+    `ImageRepeat.NO_REPEAT`.
+    """
+
     match_text_direction: OptionalBool = None
+    """
+    Whether to paint the image in the direction of the TextDirection.
+
+    Value is of type `bool` and defaults to `False`.
+    """
+
     scale: OptionalNumber = None
+    """
+    The scale(image pixels to be shown per logical pixels) to apply to the image.
+
+    Value is of type `float` and defaults to `1.0`.
+    """
+
     opacity: OptionalNumber = None
+    """
+    The opacity of the image.
+
+    Value is of type `float` and defaults to `1.0`.
+    """
+
     filter_quality: Optional[FilterQuality] = None
+    """
+    The quality of the image filter.
+
+    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality) and defaults
+    to `FilterQuality.MEDIUM`.
+    """
+
     invert_colors: OptionalBool = None
+    """
+    Whether to invert the colors of the image while drawing.
+
+    Value is of type `bool` and defaults to `False`.
+    """
+
     anti_alias: OptionalBool = None
+    """
+    Whether to paint the image in anti-aliased quality.
+
+    Value is of type `bool` and defaults to `False`.
+    """
 
 
 @dataclass
