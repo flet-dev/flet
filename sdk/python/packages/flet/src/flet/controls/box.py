@@ -314,9 +314,40 @@ class BoxDecoration:
 @dataclass
 class BoxConstraints:
     min_width: Number = 0
+    """
+    The minimum width that satisfies the constraints, such that
+    `0.0 <= min_width <= max_width`.
+
+    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
+    and defaults to `0.0`.
+    """
+
     min_height: Number = 0
+    """
+    The minimum height that satisfies the constraints, such that
+    `0.0 <= min_height <= max_height`.
+
+    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
+    and defaults to `0.0`.
+    """
+
     max_width: Number = float("inf")
+    """
+    The maximum width that satisfies the constraints, such that
+    `min_width <= max_width <= float("inf")`.
+
+    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
+    and defaults to `float("inf")` - infinity.
+    """
+
     max_height: Number = float("inf")
+    """
+    The maximum height that satisfies the constraints, such that
+    `min_height <= max_height <= float("inf")`.
+
+    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
+    and defaults to `float("inf")` - infinity.
+    """
 
     def __post_init__(self):
         assert 0 <= self.min_width <= self.max_width <= float("inf"), (
