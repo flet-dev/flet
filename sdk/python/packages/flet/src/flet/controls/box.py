@@ -64,10 +64,40 @@ class ShadowBlurStyle(Enum):
 @dataclass
 class BoxShadow:
     spread_radius: OptionalNumber = None
+    """
+    The amount the box should be inflated prior to applying the blur.
+
+    Defaults to `0.0.`
+    """
+
     blur_radius: OptionalNumber = None
+    """
+    The standard deviation of the Gaussian to convolve with the shadow's shape.
+
+    Defaults to `0.0.`
+    """
+
     color: OptionalColorValue = None
+    """
+    [Color](https://flet.dev/docs/reference/colors) used to draw the shadow.
+    """
+
     offset: Optional[OffsetValue] = None
+    """
+    An instance of `Offset` class - the displacement of the shadow from the casting
+    element. Positive x/y offsets will shift the shadow to the right and down, while
+    negative offsets shift the shadow to the left and up. The offsets are relative to
+    the position of the element that is casting it.
+
+    Value is of type [`Offset`](https://flet.dev/docs/reference/types/offset) and
+    defaults to `Offset(0,0)`.
+    """
+
     blur_style: ShadowBlurStyle = ShadowBlurStyle.NORMAL
+    """
+    Value is of type [`ShadowBlurStyle`](https://flet.dev/docs/reference/types/shadowblurstyle)
+    and defaults to `ShadowBlurStyle.NORMAL`.
+    """
 
 
 ShadowValue = Union[BoxShadow, list[BoxShadow]]
