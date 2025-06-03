@@ -17,10 +17,34 @@ from flet.controls.types import Number, OptionalNumber
 
 
 class GradientTileMode(Enum):
+    """
+    Defines what happens at the edge of a gradient.
+    More information about GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html).
+    """
+    
     CLAMP = "clamp"
+    """
+    Samples beyond the edge are clamped to the nearest color in the defined inner area.
+    More information on CLAMP GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#clamp).
+    """
+
     DECAL = "decal"
+    """
+    Samples beyond the edge are treated as transparent black.
+    More information on DECAL GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#decal).
+    """
+    
     MIRROR = "mirror"
+    """
+    Samples beyond the edge are mirrored back and forth across the defined area.
+    More information on MIRROR GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#mirror).
+    """
+    
     REPEATED = "repeated"
+    """
+    Samples beyond the edge are repeated from the far end of the defined area.
+    More information on REPEATED GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#repeated).
+    """
 
 
 @dataclass
