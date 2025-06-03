@@ -91,6 +91,7 @@ class Gradient:
     # type: str = ""
     type: str = field(default="", init=False, repr=False)
 
+
 @dataclass
 class LinearGradient(Gradient):
     """
