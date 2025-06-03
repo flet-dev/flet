@@ -64,8 +64,8 @@ class Gradient:
     and a color equal to the last color in `colors` is implied.
     """
 
-    type: str = ""
-
+    # type: str = ""
+    type: str = field(default="", init=False, repr=False)
 
 @dataclass
 class LinearGradient(Gradient):
