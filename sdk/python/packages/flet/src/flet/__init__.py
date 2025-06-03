@@ -23,6 +23,7 @@ from flet.controls.blur import (
 from flet.controls.border import (
     Border,
     BorderSide,
+    BorderStyle,
     BorderSideStrokeAlign,
     BorderSideStrokeAlignValue,
     OptionalBorder,
@@ -566,6 +567,7 @@ __all__ = [
     "OptionalBlurValue",
     "Border",
     "BorderSide",
+    "BorderStyle",
     "BorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
     "OptionalBorder",
