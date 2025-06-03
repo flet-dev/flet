@@ -172,7 +172,22 @@ class Control(BaseControl):
 
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     """
-    TBD
+    If a parent of the control is ResponsiveRow, `col` property is used to determine 
+    how many virtual columns of a screen the control will span. 
+    
+    Can be a number or a dictionary configured to have a different value for specific 
+    breakpoints, for example `col={"sm": 6}`. Breakpoints are named dimension ranges:
+
+    | Breakpoint | Dimension |
+    |---|---|
+    | xs | \<576px |
+    | sm | ≥576px |
+    | md | ≥768px |
+    | lg | ≥992px |
+    | xl | ≥1200px |
+    | xxl | ≥1400px |
+
+    If `col` property is not specified, it spans the maximum number of columns (12).
     """
     
     opacity: Number = 1.0
