@@ -15,13 +15,188 @@ __all__ = [
 @dataclass(kw_only=True)
 class Control(BaseControl):
     expand: Optional[Union[bool, int]] = None
+    """
+    When a child Control is placed into a [`Column`](https://flet.dev/docs/controls/column) 
+    or a [`Row`](https://flet.dev/docs/controls/row) you can "expand" it to fill the 
+    available space. 
+    `expand` property could be a boolean value (`True` - expand control to fill all 
+    available space) or an integer - an "expand factor" specifying how to divide a free 
+    space with other expanded child controls.
+
+    For more information and examples about `expand` property see "Expanding children" 
+    sections in [`Column`](https://flet.dev/docs/controls/column#expanding-children) or 
+    [`Row`](https://flet.dev/docs/controls/row#expanding-children).
+
+    Here is an example of expand being used in action for both [`Column`](https://flet.dev/docs/controls/column) 
+    and [`Row`](https://flet.dev/docs/controls/row):
+
+    ```pyhton
+    import flet as ft
+
+    def main(page: ft.Page):
+        page.spacing = 0
+        page.padding = 0
+        page.add(
+            ft.Column(
+                controls=[
+                    ft.Row(
+                        [
+                            ft.Card(
+                                content=ft.Text("Card_1"),
+                                color=ft.Colors.ORANGE_300,
+                                expand=True,
+                                height=page.height,
+                                margin=0,
+                            ),
+                            ft.Card(
+                                content=ft.Text("Card_2"),
+                                color=ft.Colors.GREEN_100,
+                                expand=True,
+                                height=page.height,
+                                margin=0,
+                            ),
+                        ],
+                        expand=True,
+                        spacing=0,
+                    ),
+                ],
+                expand=True,
+                spacing=0,
+            ),
+        )
+
+    ft.app(main)
+    ```
+    """
+
     expand_loose: Optional[bool] = None
+    """
+    Effective only if `expand` is `True`. 
+
+    If `expand_loose` is `True`, the child control of a 
+    [`Column`](https://flet.dev/docs/controls/column) or a [`Row`](https://flet.dev/docs/controls/row) 
+    will be given the flexibility to expand to fill the available space in the main 
+    axis (e.g., horizontally for a Row or vertically for a Column), but will not be 
+    required to fill the available space.
+
+    The default value is `False`.
+
+    Here is the example of Containers placed in Rows with `expand_loose = True`:
+    ```python
+    import flet as ft
+
+
+    class Message(ft.Container):
+        def __init__(self, author, body):
+            super().__init__()
+            self.content = ft.Column(
+                controls=[
+                    ft.Text(author, weight=ft.FontWeight.BOLD),
+                    ft.Text(body),
+                ],
+            )
+            self.border = ft.border.all(1, ft.Colors.BLACK)
+            self.border_radius = ft.border_radius.all(10)
+            self.bgcolor = ft.Colors.GREEN_200
+            self.padding = 10
+            self.expand = True
+            self.expand_loose = True
+
+
+    def main(page: ft.Page):
+        chat = ft.ListView(
+            padding=10,
+            spacing=10,
+            controls=[
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.START,
+                    controls=[
+                        Message(
+                            author="John",
+                            body="Hi, how are you?",
+                        ),
+                    ],
+                ),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.END,
+                    controls=[
+                        Message(
+                            author="Jake",
+                            body="Hi I am good thanks, how about you?",
+                        ),
+                    ],
+                ),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.START,
+                    controls=[
+                        Message(
+                            author="John",
+                            body="Lorem Ipsum is simply dummy text of the printing and 
+                            typesetting industry. Lorem Ipsum has been the industry's 
+                            standard dummy text ever since the 1500s, when an unknown 
+                            printer took a galley of type and scrambled it to make a 
+                            type specimen book.",
+                        ),
+                    ],
+                ),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.END,
+                    controls=[
+                        Message(
+                            author="Jake",
+                            body="Thank you!",
+                        ),
+                    ],
+                ),
+            ],
+        )
+
+        page.window.width = 393
+        page.window.height = 600
+        page.window.always_on_top = False
+
+        page.add(chat)
+
+
+    ft.run(main)
+
+    ``` 
+
+    <img src="https://flet.dev/img/docs/controls/overview/expand = True, 
+    expand_loose = True.png" className="screenshot-50" />
+    """
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     opacity: Number = 1.0
     tooltip: Optional[TooltipValue] = None
     badge: Optional[BadgeValue] = None
+    """
+    The `badge` property supports both strings and 
+    [`Badge`](https://flet.dev/docs/reference/types/badge.md) objects.
+    """
+
     visible: bool = True
     disabled: bool = False
+    """
+    Every control has `disabled` property which is `False` by default - control and all 
+    its children are enabled.
+    `disabled` property is mostly used with data entry controls like `TextField`, 
+    `Dropdown`, `Checkbox`, buttons.
+    However, `disabled` could be set to a parent control and its value will be 
+    propagated down to all children recursively.
+
+    For example, if you have a form with multiple entry controls you can disable them 
+    all together by disabling container:
+
+    ```python
+    c = ft.Column(controls=[
+        ft.TextField(),
+        ft.TextField()
+    ])
+    c.disabled = True
+    page.add(c)
+    ```
+    """
+
     rtl: bool = False
 
     def before_update(self):

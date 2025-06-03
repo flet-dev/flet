@@ -98,6 +98,10 @@ class BaseControl:
     _i: int = field(init=False)
     _c: str = field(init=False)
     data: Any = skip_field()
+    """
+    Arbitrary data that can be attached to a control.
+    """
+    
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
