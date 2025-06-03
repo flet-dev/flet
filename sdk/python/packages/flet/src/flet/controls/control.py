@@ -14,6 +14,10 @@ __all__ = [
 
 @dataclass(kw_only=True)
 class Control(BaseControl):
+    """
+    TBD
+    """
+    
     expand: Optional[Union[bool, int]] = None
     """
     When a child Control is placed into a [`Column`](https://flet.dev/docs/controls/column) 
@@ -165,8 +169,12 @@ class Control(BaseControl):
     <img src="https://flet.dev/img/docs/controls/overview/expand = True, 
     expand_loose = True.png" className="screenshot-50" />
     """
-    
+
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
+    """
+    TBD
+    """
+    
     opacity: Number = 1.0
     """
     Defines the transparency of the control.
@@ -218,8 +226,15 @@ class Control(BaseControl):
     """
 
     rtl: bool = False
+    """
+    TBD
+    """
 
     def before_update(self):
+        """
+        TBD
+        """
+        
         super().before_update()
         assert (
             0.0 <= self.opacity <= 1.0
