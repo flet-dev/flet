@@ -242,14 +242,10 @@ class Control(BaseControl):
 
     rtl: bool = False
     """
-    TBD
+    `True` to set text direction to right-to-left.
     """
 
     def before_update(self):
-        """
-        TBD
-        """
-        
         super().before_update()
         assert (
             0.0 <= self.opacity <= 1.0

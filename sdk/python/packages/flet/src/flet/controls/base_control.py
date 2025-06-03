@@ -134,7 +134,7 @@ class BaseControl:
         The `Page` control (which is the root of the tree) is an exception - it always 
         has `parent=None`.
         """
-        
+
         parent_ref = getattr(self, "_parent", None)
         return parent_ref() if parent_ref else None
 
@@ -156,6 +156,10 @@ class BaseControl:
         pass
 
     def before_update(self):
+        """
+        `before_update()` method is called every time when the control is being updated.
+        Make sure not to call `update()` method within `before_update()`.
+        """
         pass
 
     def before_event(self, e: ControlEvent):

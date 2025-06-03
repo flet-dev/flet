@@ -6,6 +6,7 @@ from flet.utils import deprecated
 
 __all__ = ["Margin", "MarginValue", "OptionalMarginValue"]
 
+
 @dataclass
 class Margin:
     """
@@ -55,7 +56,6 @@ class Margin:
         Applies margin to the specified sides.
         """
         return Margin(left=left, top=top, right=right, bottom=bottom)
-
 
 
 @deprecated(

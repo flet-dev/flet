@@ -32,26 +32,26 @@ class ConstrainedControl(Control):
     
     left: OptionalNumber = None
     """
-    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
-    child's left edge is inset from the left of the stack.
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance 
+    that the child's left edge is inset from the left of the stack.
     """
     
     top: OptionalNumber = None
     """
-    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
-    child's top edge is inset from the top of the stack.
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance 
+    that the child's top edge is inset from the top of the stack.
     """
 
     right: OptionalNumber = None
     """
-    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
-    child's right edge is inset from the right of the stack.
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance 
+    that the child's right edge is inset from the right of the stack.
     """
 
     bottom: OptionalNumber = None
     """
-    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
-    child's bottom edge is inset from the bottom of the stack.
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance 
+    that the child's bottom edge is inset from the bottom of the stack.
     """
 
     rotate: Optional[RotateValue] = None
@@ -275,7 +275,8 @@ class ConstrainedControl(Control):
     `animation.Animation` class enables implicit animation of [`Control.scale`](https://flet.dev/docs/controls#scale) 
     property.
 
-    <img src="https://flet.dev/img/docs/getting-started/animations/animate-scale.gif" className="screenshot-20" />
+    <img src="https://flet.dev/img/docs/getting-started/animations/animate-scale.gif" 
+    className="screenshot-20" />
 
     ```python
     import flet as ft
