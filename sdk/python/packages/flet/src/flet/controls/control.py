@@ -165,9 +165,22 @@ class Control(BaseControl):
     <img src="https://flet.dev/img/docs/controls/overview/expand = True, 
     expand_loose = True.png" className="screenshot-50" />
     """
+    
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     opacity: Number = 1.0
+    """
+    Defines the transparency of the control.
+
+    Value ranges from `0.0` (completely transparent) to `1.0` (completely opaque 
+    without any transparency) and defaults to `1.0`.
+    """
+
     tooltip: Optional[TooltipValue] = None
+    """
+    The `tooltip` property supports both strings 
+    and [`Tooltip`](https://flet.dev/docs/reference/types/tooltip.md) objects.
+    """
+
     badge: Optional[BadgeValue] = None
     """
     The `badge` property supports both strings and 
@@ -175,6 +188,13 @@ class Control(BaseControl):
     """
 
     visible: bool = True
+    """
+    Every control has `visible` property which is `True` by default - control is 
+    rendered on the page. Setting `visible` to `False` completely prevents control (and 
+    all its children if any) from rendering on a page canvas. Hidden controls cannot be 
+    focused or selected with a keyboard or mouse and they do not emit any events.
+    """
+    
     disabled: bool = False
     """
     Every control has `disabled` property which is `False` by default - control and all 

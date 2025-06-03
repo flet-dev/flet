@@ -47,7 +47,51 @@ class ConstrainedControl(Control):
     """
 
     rotate: Optional[RotateValue] = None
+    """
+    Transforms control using a rotation around the center.
+
+    The value of `rotate` property could be one of the following types:
+
+    * `number` - a rotation in clockwise radians. Full circle `360°` is `math.pi * 2` 
+    radians, `90°` is `pi / 2`, `45°` is `pi / 4`, etc.
+    * `transform.Rotate` - allows to specify rotation `angle` as well as `alignment` - 
+    the location of rotation center.
+
+    For example:
+
+    ```python
+    ft.Image(
+        src="https://picsum.photos/100/100",
+        width=100,
+        height=100,
+        border_radius=5,
+        rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.center_left())
+    )
+    ```
+    """
+    
     scale: Optional[ScaleValue] = None
+    """
+    Scale control along the 2D plane. Default scale factor is `1.0` - control is not 
+    scaled. `0.5` - the control is twice smaller, `2.0` - the control is twice larger.
+
+    Different scale multipliers can be specified for `x` and `y` axis, but setting 
+    `Control.scale` property to an instance of `transform.Scale` class.
+
+    Either `scale` or `scale_x` and `scale_y` could be specified, but not all of them, 
+    for example:
+
+    ```python
+    ft.Image(
+        src="https://picsum.photos/100/100",
+        width=100,
+        height=100,
+        border_radius=5,
+        scale=Scale(scale_x=2, scale_y=0.5)
+    )
+    ```
+    """
+    
     offset: Optional[OffsetValue] = None
     """
     Applies a translation transformation before painting the control.
