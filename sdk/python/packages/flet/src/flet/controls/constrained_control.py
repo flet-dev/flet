@@ -11,7 +11,15 @@ __all__ = ["ConstrainedControl"]
 
 @control(kw_only=True)
 class ConstrainedControl(Control):
+    """
+    TBD
+    """
+    
     scroll_key: Optional[str] = None
+    """
+    TBD
+    """
+    
     width: OptionalNumber = None
     """
     Imposed Control width in virtual pixels.
@@ -24,25 +32,25 @@ class ConstrainedControl(Control):
     
     left: OptionalNumber = None
     """
-    Effective inside [`Stack`](/docs/controls/stack) only. The distance that the 
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
     child's left edge is inset from the left of the stack.
     """
     
     top: OptionalNumber = None
     """
-    Effective inside [`Stack`](/docs/controls/stack) only. The distance that the 
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
     child's top edge is inset from the top of the stack.
     """
 
     right: OptionalNumber = None
     """
-    Effective inside [`Stack`](/docs/controls/stack) only. The distance that the 
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
     child's right edge is inset from the right of the stack.
     """
 
     bottom: OptionalNumber = None
     """
-    Effective inside [`Stack`](/docs/controls/stack) only. The distance that the 
+    Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance that the 
     child's bottom edge is inset from the bottom of the stack.
     """
 
@@ -130,10 +138,240 @@ class ConstrainedControl(Control):
     ```
     """
     aspect_ratio: OptionalNumber = None
+    """
+    TBD
+    """
+    
     animate_opacity: Optional[AnimationValue] = None
+    """
+    Setting control's `animate_opacity` to either `True`, number or an instance of 
+    `animation.Animation` class enables implicit animation of [`Control.opacity`](https://flet.dev/docs/controls#opacity) 
+    property.
+
+    <img src="https://flet.dev/img/docs/getting-started/animations/animate-opacity.gif" 
+    className="screenshot-20" />
+
+    ```python
+    import flet as ft
+
+    def main(page: ft.Page):
+
+        c = ft.Container(
+            width=150,
+            height=150,
+            bgcolor="blue",
+            border_radius=10,
+            animate_opacity=300,
+        )
+
+        def animate_opacity(e):
+            c.opacity = 0 if c.opacity == 1 else 1
+            c.update()
+
+        page.add(
+            c,
+            ft.ElevatedButton(
+                "Animate opacity",
+                on_click=animate_opacity,
+            ),
+        )
+
+    ft.app(main)
+    ```
+    """
+    
     animate_size: Optional[AnimationValue] = None
+    """
+    TBD
+    """
+    
     animate_position: Optional[AnimationValue] = None
+    """
+    Setting control's `animate_position` to either `True`, number or an instance of 
+    `animation.Animation` class (see above) enables implicit animation of [Control's 
+    `left`, `top`, `right` and `bottom` properties](https://flet.dev/docs/controls#left).
+
+    Please note Control position works inside `Stack` control only.
+
+    <img src="https://flet.dev/img/docs/getting-started/animations/animate-position.gif" 
+    className="screenshot-30" />
+
+    ```python
+    import flet as ft
+
+    def main(page: ft.Page):
+
+        c1 = ft.Container(width=50, height=50, bgcolor="red", animate_position=1000)
+
+        c2 = ft.Container(
+            width=50, height=50, bgcolor="green", top=60, left=0, animate_position=500
+        )
+
+        c3 = ft.Container(
+            width=50, height=50, bgcolor="blue", top=120, left=0, animate_position=1000
+        )
+
+        def animate_container(e):
+            c1.top = 20
+            c1.left = 200
+            c2.top = 100
+            c2.left = 40
+            c3.top = 180
+            c3.left = 100
+            page.update()
+
+        page.add(
+            ft.Stack([c1, c2, c3], height=250),
+            ft.ElevatedButton("Animate!", on_click=animate_container),
+        )
+
+    ft.run(main)
+    ```
+    """
+
     animate_rotation: Optional[AnimationValue] = None
+    """
+    Setting control's `animate_rotation` to either `True`, number or an instance of 
+    `animation.Animation` class enables implicit animation of [`Control.rotate`](https://flet.dev/docs/controls#rotate) 
+    property.
+
+    <img src="https://flet.dev/img/docs/getting-started/animations/animate-rotation.gif" 
+    className="screenshot-20" />
+
+    ```python
+    from math import pi
+    import flet as ft
+
+    def main(page: ft.Page):
+
+        c = ft.Container(
+            width=100,
+            height=70,
+            bgcolor="blue",
+            border_radius=5,
+            rotate=ft.transform.Rotate(0, alignment=ft.alignment.center),
+            animate_rotation=ft.animation.Animation(300, ft.AnimationCurve.BOUNCE_OUT),
+        )
+
+        def animate(e):
+            c.rotate.angle += pi / 2
+            page.update()
+
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.spacing = 30
+        page.add(
+            c,
+            ft.ElevatedButton("Animate!", on_click=animate),
+        )
+
+    ft.run(main)
+    ```
+    """
+    
     animate_scale: Optional[AnimationValue] = None
+    """
+    Setting control's `animate_scale` to either `True`, number or an instance of 
+    `animation.Animation` class enables implicit animation of [`Control.scale`](https://flet.dev/docs/controls#scale) 
+    property.
+
+    <img src="https://flet.dev/img/docs/getting-started/animations/animate-scale.gif" className="screenshot-20" />
+
+    ```python
+    import flet as ft
+
+    def main(page: ft.Page):
+
+        c = ft.Container(
+            width=100,
+            height=100,
+            bgcolor="blue",
+            border_radius=5,
+            scale=ft.transform.Scale(scale=1),
+            animate_scale=ft.animation.Animation(600, ft.AnimationCurve.BOUNCE_OUT),
+        )
+
+        def animate(e):
+            c.scale = 2
+            page.update()
+
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.spacing = 30
+        page.add(
+            c,
+            ft.ElevatedButton("Animate!", on_click=animate),
+        )
+
+    ft.run(main)
+    ```
+    """
+    
     animate_offset: Optional[AnimationValue] = None
+    """
+    Setting control's `animate_offset` to either `True`, number or an instance of 
+    `animation.Animation` class enables implicit animation of `Control.offset` property.
+
+    `offset` property is an instance of `transform.Offset` class which specifies 
+    horizontal `x` and vertical `y` offset of a control scaled to control's size. 
+    For example, an offset `transform.Offset(-0.25, 0)` will result in a horizontal 
+    translation of one quarter the width of the control.
+
+    Offset animation is used for various sliding effects:
+
+    <img src="https://flet.dev/img/docs/getting-started/animations/animate-offset.gif" 
+    className="screenshot-20" />
+
+    ```python
+    import flet as ft
+
+    def main(page: ft.Page):
+
+        c = ft.Container(
+            width=150,
+            height=150,
+            bgcolor="blue",
+            border_radius=10,
+            offset=ft.transform.Offset(-2, 0),
+            animate_offset=ft.animation.Animation(1000),
+        )
+
+        def animate(e):
+            c.offset = ft.transform.Offset(0, 0)
+            c.update()
+
+        page.add(
+            c,
+            ft.ElevatedButton("Reveal!", on_click=animate),
+        )
+
+    ft.run(main)
+    ```
+    """
+    
     on_animation_end: OptionalControlEventCallable = None
+    """
+    All controls with `animate_*` properties have `on_animation_end` event handler 
+    which is called when animation complete and can be used to chain multiple 
+    animations.
+
+    Event's object `data` field contains the name of animation:
+
+    * `opacity`
+    * `rotation`
+    * `scale`
+    * `offset`
+    * `position`
+    * `container`
+
+    For example:
+
+    ```python
+    c = ft.Container(
+            ft.Text("Animate me!"),
+            # ...
+            animate=ft.animation.Animation(1000, "bounceOut"),
+            on_animation_end=lambda e: print("Container animation end:", e.data)
+        )
+    ```
+    """
