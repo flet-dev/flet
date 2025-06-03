@@ -70,6 +70,8 @@ class Gradient:
 @dataclass
 class LinearGradient(Gradient):
     """
+    Creates a linear gradient from `begin` to `end`.
+    
     More information on Linear gradient [here](https://api.flutter.dev/flutter/painting/LinearGradient-class.html).
     """
 
@@ -89,13 +91,45 @@ class LinearGradient(Gradient):
         self.type = "linear"
 
 
-
 @dataclass
 class RadialGradient(Gradient):
+    """
+    Creates a radial gradient centered at center that ends at radius distance from the 
+    center.
+    
+    More information on Radial gradient [here](https://api.flutter.dev/flutter/painting/
+    RadialGradient-class.html)).
+    """
+
     center: Alignment = field(default_factory=lambda: Alignment.center())
+    """
+    An instance of [Alignment](https://flet.dev/docs/reference/types/alignment) class.
+    The center of the gradient, as an offset into the (-1.0, -1.0) x (1.0, 1.0) square
+    describing the gradient which will be mapped onto the paint box. For example, an
+    alignment of (0.0, 0.0) will place the radial gradient in the center of the box.
+    """
+
     radius: Number = 0.5
+    """
+    The radius of the gradient, as a fraction of the shortest side of the paint box.
+    For example, if a radial gradient is painted on a box that is 100.0 pixels wide and
+    200.0 pixels tall, then a radius of 1.0 will place the 1.0 stop at 100.0 pixels from
+    the `center`.
+    """
+
     focal: Optional[Alignment] = None
+    """
+    The focal point of the gradient. If specified, the gradient will appear to be
+    focused along the vector from `center` to focal.
+    """
+
     focal_radius: Number = 0.0
+    """
+    The radius of the focal point of gradient, as a fraction of the shortest side of the
+    paint box. For example, if a radial gradient is painted on a box that is 100.0
+    pixels wide and 200.0 pixels tall, then a radius of 1.0 will place the 1.0 stop at
+    100.0 pixels from the focal point.
+    """
 
     def __post_init__(self):
         self.type = "radial"
@@ -103,9 +137,33 @@ class RadialGradient(Gradient):
 
 @dataclass
 class SweepGradient(Gradient):
+    """
+    Creates a sweep gradient centered at center that starts at `start_angle` and ends 
+    at `end_angle`.
+    
+    More information on Sweep gradient [here](https://api.flutter.dev/flutter/painting/
+    SweepGradient-class.html).
+    """
+
     center: Alignment = field(default_factory=lambda: Alignment.center())
+    """
+    The center of the gradient, as an offset into the (-1.0, -1.0) x (1.0, 1.0) square
+    describing the gradient which will be mapped onto the paint box. For example, an
+    alignment of (0.0, 0.0) will place the sweep gradient in the center of the box.
+    """
+
     start_angle: Number = 0.0
+    """
+    The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop 0.0 of
+    the gradient is placed. Defaults to 0.0.
+    """
+
     end_angle: Number = math.pi * 2
+    """
+    The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop 1.0 of
+    the gradient is placed. Defaults to math.pi * 2.
+    """
 
     def __post_init__(self):
         self.type = "sweep"
+
