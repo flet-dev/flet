@@ -1,9 +1,8 @@
-import 'package:flet/src/controls/adaptive_checkbox.dart';
-import 'package:flet/src/services/storage_paths.dart';
 import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
 import 'controls/adaptive_button.dart';
+import 'controls/adaptive_checkbox.dart';
 import 'controls/adaptive_radio.dart';
 import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
@@ -114,6 +113,7 @@ import 'services/haptic_feedback.dart';
 import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
+import 'services/storage_paths.dart';
 import 'services/url_launcher.dart';
 
 class FletCoreExtension extends FletExtension {

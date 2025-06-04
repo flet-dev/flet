@@ -66,11 +66,11 @@ dependencies:
       ref: v1
       path: src/flutter/flet_rive
 
-#   flet_audio_recorder:
-#     git:
-#       url: https://github.com/flet-dev/flet-audio-recorder.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_audio_recorder
+  flet_audio_recorder:
+    git:
+      url: https://github.com/flet-dev/flet-audio-recorder.git
+      ref: v1
+      path: src/flutter/flet_audio_recorder
 
 #   flet_permission_handler:
 #     git:
