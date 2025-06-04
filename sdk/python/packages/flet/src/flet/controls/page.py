@@ -349,6 +349,22 @@ class Page(PageView):
         self.__authorization: Optional[Authorization] = None
 
     def get_control(self, id: int) -> Optional[BaseControl]:
+        """
+        Get a control by its `id`.
+
+        Example:
+
+        ```python
+        import flet as ft
+
+        def main(page: ft.Page):
+            x = ft.IconButton(ft.Icons.ADD)
+            page.add(x)
+            print(type(page.get_control(x.uid)))
+
+        ft.app(main)
+        ```
+        """
         return self.get_session().index.get(id)
 
     def update(self, *controls) -> None:
@@ -382,6 +398,10 @@ class Page(PageView):
         *args: InputT.args,
         **kwargs: InputT.kwargs,
     ) -> Future[RetT]:
+        """
+        Run `handler` coroutine as a new Task in the event loop associated with the 
+        current page.
+        """
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
@@ -414,6 +434,10 @@ class Page(PageView):
         *args: InputT.args,
         **kwargs: InputT.kwargs,
     ) -> None:
+        """
+        Run `handler` function as a new Thread in the executor associated with the 
+        current page.
+        """
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():
             handler_with_context(*args, **kwargs)
@@ -428,6 +452,11 @@ class Page(PageView):
     def go(
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
+        """
+        A helper method that updates [`page.route`](#route), calls 
+        [`page.on_route_change`](#on_route_change) event handler to update views and 
+        finally calls `page.update()`.
+        """
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
         if not skip_route_change_event:
@@ -444,6 +473,24 @@ class Page(PageView):
         self.query()  # Update query url (required when using go)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
+        """
+        Generates presigned upload URL for built-in upload storage:
+
+        * `file_name` - a relative to upload storage path.
+        * `expires` - a URL time-to-live in seconds.
+
+        For example:
+
+        ```python
+        upload_url = page.get_upload_url("dir/filename.ext", 60)
+        ```
+
+        To enable built-in upload storage provide `upload_dir` argument to `flet.app()` call:
+
+        ```python
+        ft.app(main, upload_dir="uploads")
+        ```
+        """
         return self.get_session().connection.get_upload_url(file_name, expires)
 
     async def login_async(
@@ -460,6 +507,10 @@ class Page(PageView):
         redirect_to_page: Optional[bool] = False,
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
+        """
+        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide 
+        for more information and examples.
+        """
         self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
@@ -529,6 +580,11 @@ class Page(PageView):
                 self.on_login(e)
 
     def logout(self) -> None:
+        """
+        Clears current authentication context. See 
+        [Authentication](/docs/cookbook/authentication#signing-out) guide for more 
+        information and examples.
+        """
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
@@ -545,6 +601,18 @@ class Page(PageView):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
+        """
+        Opens `url` in a new browser window.
+
+        Optional method arguments:
+
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        application on mobile device) or `<your name>` - a named tab.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `window_width` - optional, popup window width.
+        * `window_height` - optional, popup window height.
+        """
         self.url_launcher.launch_url(
             url,
             web_window_name=web_window_name,
@@ -561,6 +629,18 @@ class Page(PageView):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
+        """
+        Opens `url` in a new browser window.
+
+        Optional method arguments:
+
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        application on mobile device) or `<your name>` - a named tab.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `window_width` - optional, popup window width.
+        * `window_height` - optional, popup window height.
+        """
         await self.url_launcher.launch_url_async(
             url,
             web_window_name=web_window_name,
@@ -570,12 +650,37 @@ class Page(PageView):
         )
 
     def can_launch_url_async(self, url: str):
+        """
+        Checks whether the specified URL can be handled by some app installed on the 
+        device.
+
+        Returns `True` if it is possible to verify that there is a handler available. 
+        A `False` return value can indicate either that there is no handler available, 
+        or that the application does not have permission to check. For example:
+
+        * On recent versions of Android and iOS, this will always return `False` unless 
+        the application has been configuration to allow querying the system for launch 
+        support.
+        * On web, this will always return `False` except for a few specific schemes 
+        that are always assumed to be supported (such as http(s)), as web pages are 
+        never allowed to query installed applications.
+        """
         return self.url_launcher.can_launch_url_async(url)
 
     def close_in_app_web_view(self) -> None:
+        """
+        Closes in-app web view opened with `launch_url()`.
+
+        📱 Mobile only. 
+        """
         self.url_launcher.close_in_app_web_view()
 
     async def close_in_app_web_view_async(self) -> None:
+        """
+        Closes in-app web view opened with `launch_url()`.
+
+        📱 Mobile only. 
+        """
         await self.url_launcher.close_in_app_web_view_async()
 
     # query
