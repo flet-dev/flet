@@ -82,6 +82,12 @@ class PageView(AdaptiveControl):
     guide.
     """
     dark_theme: Optional[Theme] = None
+    """
+    Customizes the theme of the application when in dark theme mode.
+
+    Value is an instance of the `Theme()` class - more information in the 
+    [theming](https://flet.dev/docs/cookbook/theming) guide.
+    """
     locale_configuration: Optional[LocaleConfiguration] = None
     show_semantics_debugger: Optional[bool] = None
     """
