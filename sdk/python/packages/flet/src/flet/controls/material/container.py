@@ -46,6 +46,9 @@ class Container(ConstrainedControl, AdaptiveControl):
     Container allows to decorate a control with background color and border and
     position it with padding, margin and alignment.
 
+    <img src="https://flet.dev/img/docs/controls/container/container-diagram.png"
+    className="screenshot-50" />
+
     Online docs: https://flet.dev/docs/controls/container
     """
 

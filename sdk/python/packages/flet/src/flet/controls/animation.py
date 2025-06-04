@@ -64,16 +64,46 @@ class AnimationCurve(Enum):
 @dataclass
 class Animation:
     duration: OptionalDurationValue = None
+    """
+    The duration of the animation.
+    """
+
     curve: "OptionalAnimationCurve" = None
+    """
+    The curve to use for the animation.
+    """
 
 
 @dataclass
 class AnimationStyle:
     duration: OptionalDurationValue = None
-    reverse_duration: OptionalDurationValue = None
-    curve: "OptionalAnimationCurve" = None
-    reverse_curve: "OptionalAnimationCurve" = None
+    """
+    The duration of the animation.
 
+    Value is of type [`DurationValue`](https://flet.dev/docs/reference/types/aliases#durationvalue).
+    """
+
+    reverse_duration: OptionalDurationValue = None
+    """
+    The duration of the reverse animation.
+
+    Value is of type [`DurationValue`](https://flet.dev/docs/reference/types/aliases#durationvalue).
+    """
+
+    curve: "OptionalAnimationCurve" = None
+    """
+    The curve to use for the animation.
+
+    Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve).
+    """
+
+    reverse_curve: "OptionalAnimationCurve" = None
+    """
+    The curve to use for the reverse animation.
+
+    Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve).
+    """
+    
 
 AnimationValue = Union[bool, int, Animation]
 OptionalAnimationValue = Optional[AnimationValue]

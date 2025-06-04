@@ -18,16 +18,24 @@ __all__ = [
 @dataclasses.dataclass
 class BorderRadius:
     top_left: Number
-    """The top-left radius."""
+    """
+    Radius of the top left border corner.
+    """
 
     top_right: Number
-    """The top-right radius."""
+    """
+    Radius of the top right border corner.
+    """
 
     bottom_left: Number
-    """The bottom-left radius."""
+    """
+    Radius of the bottom left border corner.
+    """
 
     bottom_right: Number
-    """The bottom-right radius."""
+    """
+    Radius of the bottom right border corner.
+    """
 
     # Class Methods
 
@@ -43,6 +51,8 @@ class BorderRadius:
         """
         Creates a horizontally symmetrical `BorderRadius` where the `left` and `right`
         sides of the rectangle have the same radii.
+
+        Both `left` and `right` default to `0`.
         """
         return BorderRadius(
             top_left=left, top_right=right, bottom_left=left, bottom_right=right
@@ -53,6 +63,8 @@ class BorderRadius:
         """
         Creates a vertically symmetric `BorderRadius` where the `top` and `bottom`
         sides of the rectangle have the same radii.
+
+        Both `top` and `bottom` default to `0`.
         """
         return BorderRadius(
             top_left=top, top_right=top, bottom_left=bottom, bottom_right=bottom

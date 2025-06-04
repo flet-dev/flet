@@ -120,7 +120,7 @@ class BorderSide:
         `width` for a `stroke_align` of 0, and the `width` for a `stroke_align` of 1.
         """
         return self.width * (1 + self.stroke_align) / 2
-    
+
     @property
     def stroke_offset(self):
         """
@@ -164,35 +164,42 @@ class BorderSide:
 @dataclass
 class Border:
     """
-    Creates a border.
+    A border comprised of four sides: top, right, bottom, left.
 
-    All the sides of the border default to `BorderSide.none()`.
+    Each side of the border is an instance of
+    [`BorderSide`](https://flet.dev/docs/reference/types/borderside) class.
+
+    Example:
+    ```python
+    container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
+    container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
+    ```
     """
 
     top: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
-    The top side of this border.
+    Top side of the border.
     
     Defaults to `BorderSide.none()`
     """
 
     right: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
-    The right side of this border.
+    Right side of the border.
     
     Defaults to `BorderSide.none()`
     """
 
     bottom: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
-    The bottom side of this border.
+    Bottom side of the border.
     
     Defaults to `BorderSide.none()`
     """
 
     left: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
-    The left side of this border.
+    Left side of the border.
     
     Defaults to `BorderSide.none()`
     """
@@ -304,6 +311,9 @@ def only(
 
 # Typings
 OptionalBorder = Optional[Border]
+"""
+OptionalBorder type description
+"""
 OptionalBorderSide = Optional[BorderSide]
 OptionalBorderSideStrokeAlign = Optional[BorderSideStrokeAlign]
 BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
