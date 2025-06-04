@@ -98,48 +98,234 @@ class Page(PageView):
     """
 
     sess: InitVar["Session"]
+    """
+    TBD
+    """
 
     multi_views: list[MultiView] = field(default_factory=list)
+    """
+    TBD
+    """
+
     window: Window = field(default_factory=lambda: Window())
+    """
+    A class with properties/methods/events to control app's native OS window.
+
+    Value is of type [Window](https://flet.dev/docs/reference/types/window).
+    """
+
     browser_context_menu: BrowserContextMenu = field(
         default_factory=lambda: BrowserContextMenu()
     )
+    """
+    Used to enable or disable the context menu that appears when the user
+    right-clicks on the web page.
+
+    Value is of type
+    [BrowserContextMenu](https://flet.dev/docs/reference/types/browsercontextmenu).
+
+    🌎 Web only.
+    """
+
     shared_preferences: SharedPreferences = field(
         default_factory=lambda: SharedPreferences()
     )
+    """
+    TBD
+    """
+
     clipboard: Clipboard = field(default_factory=lambda: Clipboard())
+    """
+    TBD
+    """
+
     storage_paths: StoragePaths = field(default_factory=lambda: StoragePaths())
+    """
+    TBD
+    """
+
     url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
+    """
+    TBD
+    """
+
     _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    """
+    TBD
+    """
+
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    """
+    TBD
+    """
 
     route: Optional[str] = None
-    web: bool = field(default=False)
-    pwa: bool = field(default=False)
-    debug: bool = field(default=False)
-    wasm: bool = field(default=False)
-    multi_view: bool = field(default=False)
+    """
+    Get or sets page's navigation route. See
+    [Navigation and routing](https://flet.dev/docs/getting-started/navigation-and-routing)
+    section for more information and examples.
+    """
+
+    web: bool = False
+    """
+    `True` if the application is running in the web browser.
+    """
+
+    pwa: bool = False
+    """
+    `True` if the application is running as Progressive Web App (PWA).
+
+    Value is read-only.
+    """
+
+    debug: bool = False
+    """
+    `True` if Flutter client of Flet app is running in debug mode.
+    """
+
+    wasm: bool = False
+    """
+    TBD
+    """
+
+    multi_view: bool = False
+    """
+    TBD
+    """
+
     platform: Optional[PagePlatform] = None
+    """
+    Operating system the application is running on.
+
+    Value is of type [PagePlatform](https://flet.dev/docs/reference/types/pageplatform).
+    """
+
     platform_brightness: Optional[Brightness] = None
+    """
+    The current brightness mode of the host platform.
+
+    Value is read-only and of type
+    [Brightness](https://flet.dev/docs/reference/types/brightness).
+    """
+
     client_ip: Optional[str] = None
+    """
+    IP address of the connected user.
+
+    🌎 Web only.
+    """
+
     client_user_agent: Optional[str] = None
+    """
+    Browser details of the connected user.
+
+    🌎 Web only.
+    """
+
     fonts: Optional[dict[str, str]] = None
+    """
+    Defines the custom fonts to be used in the application.
+
+    Value is a dictionary, in which the keys represent the font family name
+    used for reference and the values:
+    - Key: The font family name used for reference.
+    - Value: The font source, either an absolute URL or a relative path to a
+      local asset. The following font file formats are supported `.ttc`, `.ttf`
+      and `.otf`.
+
+    Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
+    """
 
     on_platform_brightness_change: OptionalControlEventCallable = None
+    """
+    Fires when brightness of app host platform has changed.
+    """
+
     on_app_lifecycle_state_change: OptionalEventCallable[
         "AppLifecycleStateChangeEvent"
     ] = None
+    """
+    Triggers when app lifecycle state changes.
+
+    Event handler argument is of type
+    [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
+    """
+
     on_route_change: OptionalEventCallable["RouteChangeEvent"] = None
+    """
+    Fires when page route changes either programmatically, by editing
+    application URL or using browser Back/Forward buttons.
+
+    Event handler argument is of type
+    [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
+    """
+
     on_view_pop: OptionalEventCallable["ViewPopEvent"] = None
+    """
+    Fires when the user clicks automatic "Back" button in
+    [AppBar](https://flet.dev/docs/controls/appbar) control.
+
+    Event handler argument is of type
+    [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
+    """
+
     on_keyboard_event: OptionalEventCallable["KeyboardEvent"] = None
+    """
+    Fires when a keyboard key is pressed.
+
+    Event handler argument is of type
+    [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
+    """
+
     on_connect: OptionalControlEventCallable = None
+    """
+    Fires when a web user (re-)connects to a page session.
+
+    It is not triggered when an app page is first opened, but is triggered when
+    the page is refreshed, or Flet web client has re-connected after computer
+    was unlocked. This event could be used to detect when a web user becomes
+    "online".
+    """
+
     on_disconnect: OptionalControlEventCallable = None
+    """
+    Fires when a web user disconnects from a page session, i.e. closes browser
+    tab/window.
+    """
+
     on_close: OptionalControlEventCallable = None
+    """
+    Fires when a session has expired after configured amount of time
+    (60 minutes by default).
+    """
+
     on_login: OptionalEventCallable["LoginEvent"] = None
+    """
+    Fires upon successful or failed OAuth authorization flow.
+
+    See [Authentication](https://flet.dev/docs/cookbook/authentication#checking-authentication-results)
+    guide for more information and examples.
+    """
+
     on_logout: OptionalControlEventCallable = None
+    """
+    Fires after `page.logout()` call.
+    """
+
     on_error: OptionalControlEventCallable = None
+    """
+    Fires when unhandled exception occurs.
+    """
+
     on_multi_view_add: OptionalEventCallable["MultiViewAddEvent"] = None
+    """
+    TBD
+    """
+
     on_multi_view_remove: OptionalEventCallable["MultiViewRemoveEvent"] = None
+    """
+    TBD
+    """
 
     def __post_init__(
         self,
