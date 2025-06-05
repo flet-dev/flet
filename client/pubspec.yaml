@@ -72,11 +72,12 @@ dependencies:
       ref: v1
       path: src/flutter/flet_audio_recorder
 
-#   flet_permission_handler:
-#     git:
-#       url: https://github.com/flet-dev/flet-permission-handler.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_permission_handler
+  flet_permission_handler:
+    # path: /Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-permission-handler/src/flutter/flet_permission_handler
+    git:
+      url: https://github.com/flet-dev/flet-permission-handler.git
+      ref: v1
+      path: src/flutter/flet_permission_handler
 
 #   flet_geolocator:
 #     git:

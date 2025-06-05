@@ -11,8 +11,8 @@ import 'package:flet_audio_recorder/flet_audio_recorder.dart'
 // import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_map/flet_map.dart' as flet_map;
-// import 'package:flet_permission_handler/flet_permission_handler.dart'
-//     as flet_permission_handler;
+import 'package:flet_permission_handler/flet_permission_handler.dart'
+    as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
@@ -41,7 +41,7 @@ void main([List<String>? args]) async {
   // --FAT_CLIENT_END--
   extensions.add(flet_audio_recorder.Extension());
   // extensions.add(flet_geolocator.Extension());
-  // extensions.add(flet_permission_handler.Extension());
+  extensions.add(flet_permission_handler.Extension());
   extensions.add(flet_lottie.Extension());
   extensions.add(flet_map.Extension());
   // extensions.add(flet_ads.Extension());
