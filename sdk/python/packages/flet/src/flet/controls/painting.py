@@ -87,13 +87,62 @@ class PaintLinearGradient(PaintGradient):
 
 @dataclass
 class PaintRadialGradient(PaintGradient):
+    """
+    More information on Radial gradient
+    https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.radial.html
+    """
+
     center: Optional[OffsetValue]
+    """
+    An instance of https://flet.dev/docs/reference/types/offset class. The center of
+    the gradient.
+    """
+
     radius: Number
+    """
+    The radius of the gradient.
+    """
+
     colors: list[str]
+    """
+    The https://flet.dev/docs/reference/colors the gradient should obtain at each of
+    the stops. This list must contain at least two colors.
+
+    If `stops` is provided, this list must have the same length as `stops`.
+    """
+
     color_stops: Optional[list[float]] = None
+    """
+    A list of values from `0.0` to `1.0` that denote fractions along the gradient.
+
+    If provided, this list must have the same length as `colors`. If the first value
+    is not `0.0`, then a stop with position `0.0` and a color equal to the first color
+    in `colors` is implied. If the last value is not `1.0`, then a stop with position
+    `1.0` and a color equal to the last color in `colors` is implied.
+    """
+
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    """
+    How this gradient should tile the plane beyond in the region before `begin` and
+    after `end`. The value is of type
+    https://flet.dev/docs/reference/types/gradienttilemode.
+    """
+
     focal: Optional[OffsetValue] = None
+    """
+    The focal point of the gradient. If specified, the gradient will appear to be
+    focused along the vector from `center` to focal.
+    """
+
     focal_radius: Number = 0.0
+    """
+    The radius of the focal point of gradient, as a fraction of the shortest side of
+    the paint box.
+
+    For example, if a radial gradient is painted on a box that is `100.0` pixels wide
+    and `200.0` pixels tall, then a radius of `1.0` will place the `1.0` stop at
+    `100.0` pixels from the focal point.
+    """
 
     def __post_init__(self):
         self.type = "radial"
