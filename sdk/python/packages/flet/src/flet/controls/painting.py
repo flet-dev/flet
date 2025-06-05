@@ -38,11 +38,48 @@ class PaintGradient:
 
 @dataclass
 class PaintLinearGradient(PaintGradient):
+    """
+    More information on Linear gradient
+    https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.linear.html
+    """
+
     begin: Optional[OffsetValue]
+    """
+    An instance of https://flet.dev/docs/reference/types/offset. The offset at which
+    stop 0.0 of the gradient is placed.
+    """
+
     end: Optional[OffsetValue]
+    """
+    An instance of https://flet.dev/docs/reference/types/offset. The offset at which
+    stop 1.0 of the gradient is placed.
+    """
+
     colors: list[str]
+    """
+    The https://flet.dev/docs/reference/colors the gradient should obtain at each of
+    the stops. This list must contain at least two colors.
+
+    If `stops` is provided, this list must have the same length as `stops`.
+    """
+
     color_stops: Optional[list[Number]] = None
+    """
+    A list of values from `0.0` to `1.0` that denote fractions along the gradient.
+
+    If provided, this list must have the same length as `colors`. If the first value
+    is not `0.0`, then a stop with position `0.0` and a color equal to the first color
+    in `colors` is implied. If the last value is not `1.0`, then a stop with position
+    `1.0` and a color equal to the last color in `colors` is implied.
+    """
+
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    """
+    How this gradient should tile the plane beyond in the region before `begin` and
+    after `end`. The value is `GradientTileMode` enum with supported values: `CLAMP`
+    (default), `DECAL`, `MIRROR`, `REPEATED`. More info here:
+    https://api.flutter.dev/flutter/dart-ui/TileMode.html
+    """
 
     def __post_init__(self):
         self.type = "linear"
