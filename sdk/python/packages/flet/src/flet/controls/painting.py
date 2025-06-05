@@ -1,5 +1,5 @@
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
@@ -32,7 +32,8 @@ class PaintingStyle(Enum):
 
 @dataclass(kw_only=True)
 class PaintGradient:
-    type: str = ""
+    # type: str = ""
+    type: str = field(default="", init=False, repr=False)
 
 
 @dataclass
