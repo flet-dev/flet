@@ -55,10 +55,30 @@ class TextThemeStyle(Enum):
 
 
 class TextDecoration(IntFlag):
+    """
+    TBD
+    """
+
     NONE = 0
+    """
+    Do not draw a decoration.
+    """
+
     UNDERLINE = 1
+    """
+    Draw a line underneath each line of text.
+    """
+
     OVERLINE = 2
+    """
+    Draw a line above each line of text.
+    """
+
     LINE_THROUGH = 4
+    """
+    Draw a line through each line of text.
+    """
+
 
 
 class TextDecorationStyle(Enum):
