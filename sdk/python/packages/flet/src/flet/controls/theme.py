@@ -61,35 +61,103 @@ class PageTransitionsTheme:
 
 @dataclass
 class ColorScheme:
+    """
+    A set of more than 40 colors based on the [Material spec](https://m3.material.io/styles/color/the-color-system/color-roles) 
+    that can be used to configure the color properties of most components. 
+    Read more about color schemes in [here](https://api.flutter.dev/flutter/material/ColorScheme-class.html).
+    """
     primary: OptionalColorValue = None
+    """
+    The color displayed most frequently across your app’s screens and components.
+    """
     on_primary: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `primary`.
+    """
     primary_container: OptionalColorValue = None
     on_primary_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `primary_container`.
+    """
     secondary: OptionalColorValue = None
     on_secondary: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `secondary`.
+    """
     secondary_container: OptionalColorValue = None
     on_secondary_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `secondary_container`.
+    """
     tertiary: OptionalColorValue = None
     on_tertiary: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `tertiary`.
+    """
     tertiary_container: OptionalColorValue = None
     on_tertiary_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `tertiary_container`.
+    """
     error: OptionalColorValue = None
+    """
+    The color to use for input validation errors, e.g. for `TextField.error_text`.
+    """
     on_error: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `error`.
+    """
     error_container: OptionalColorValue = None
+    """
+    A color used for error elements needing less emphasis than `error`.
+    """
     on_error_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `error_container`.
+    """
     background: OptionalColorValue = None
+    """
+    A color that typically appears behind scrollable content.
+    """
     on_background: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `background`.
+    """
     surface: OptionalColorValue = None
     on_surface: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `surface`.
+    """
     surface_variant: OptionalColorValue = None
     on_surface_variant: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `surface_variant`.
+    """
     outline: OptionalColorValue = None
+    """
+    A utility color that creates boundaries and emphasis to improve usability.
+    """
     outline_variant: OptionalColorValue = None
+    """
+    A utility color that creates boundaries for decorative elements when a 3:1 contrast 
+    isn’t required, such as for dividers or decorative elements.
+    """
     shadow: OptionalColorValue = None
     scrim: OptionalColorValue = None
     inverse_surface: OptionalColorValue = None
+    """
+    A surface color used for displaying the reverse of what’s seen in the surrounding 
+    UI, for example in a `SnackBar` to bring attention to an alert.
+    """
     on_inverse_surface: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `inverse_surface`.
+    """
     inverse_primary: OptionalColorValue = None
+    """
+    An accent color used for displaying a highlight color on `inverse_surface` 
+    backgrounds, like button text in a `SnackBar`.
+    """
     surface_tint: OptionalColorValue = None
     on_primary_fixed: OptionalColorValue = None
     on_secondary_fixed: OptionalColorValue = None
