@@ -357,20 +357,88 @@ class NavigationRailTheme:
 
 @dataclass
 class AppBarTheme:
+    """
+    Customizes the appearance of https://flet.dev/docs/controls/appbar across the app.
+    """
+
     color: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.color` in all descendant `AppBar` controls.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.bgcolor` in all descendant `AppBar` controls.
+    """
+
     shadow_color: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.shadow_color` in all descendant `AppBar`
+    controls.
+    """
+
     surface_tint_color: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.surface_tint_color` in all descendant
+    `AppBar` controls.
+    """
+
     foreground_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     elevation: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.elevation` in all descendant `AppBar`
+    controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of `AppBar.shape` in all descendant `AppBar` controls.
+    """
+
     title_text_style: OptionalTextStyle = None
+    """
+    Overrides the default value of `AppBar.title_text_style` in all descendant
+    `AppBar` controls.
+    """
+
     toolbar_text_style: OptionalTextStyle = None
+    """
+    Overrides the default value of `AppBar.toolbar_text_style` in all descendant
+    `AppBar` controls.
+    """
+
     center_title: OptionalBool = None
+    """
+    Overrides the default value of `AppBar.center_title` in all descendant `AppBar`
+    controls.
+    """
+
     title_spacing: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.title_spacing` in all descendant `AppBar`
+    controls.
+    """
+
     scroll_elevation: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.scroll_elevation` in all descendant
+    `AppBar` controls.
+    """
+
     toolbar_height: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.toolbar_height` in all descendant `AppBar`
+    controls.
+    """
+
     actions_padding: OptionalPaddingValue = None
+    """
+    TBD
+    """
 
 
 @dataclass
