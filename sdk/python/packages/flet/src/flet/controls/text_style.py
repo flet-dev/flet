@@ -62,11 +62,34 @@ class TextDecoration(IntFlag):
 
 
 class TextDecorationStyle(Enum):
+    """
+    TBD
+    """
+
     SOLID = "solid"
+    """
+    Draw a solid line.
+    """
+
     DOUBLE = "double"
+    """
+    Draw two lines.
+    """
+
     DOTTED = "dotted"
+    """
+    Draw a dotted line.
+    """
+
     DASHED = "dashed"
+    """
+    Draw a dashed line.
+    """
+
     WAVY = "wavy"
+    """
+    Draw a sinusoidal line.
+    """
 
 
 @dataclass
@@ -181,7 +204,7 @@ class TextStyle:
 
     Value is of type https://flet.dev/docs/reference/types/textbaseline.
     """
-    
+
 
 @dataclass
 class StrutStyle:
