@@ -80,7 +80,6 @@ class TextDecoration(IntFlag):
     """
 
 
-
 class TextDecorationStyle(Enum):
     """
     TBD
