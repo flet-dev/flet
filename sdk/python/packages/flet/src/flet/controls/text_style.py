@@ -181,17 +181,62 @@ class TextStyle:
 
     Value is of type https://flet.dev/docs/reference/types/textbaseline.
     """
-
+    
 
 @dataclass
 class StrutStyle:
+    """
+    TBD
+    """
+
     size: OptionalNumber = None
+    """
+    The size of text (in logical pixels) to use when getting metrics from the font.
+
+    Defaults to `14`.
+    """
+
     height: OptionalNumber = None
+    """
+    The minimum height of the strut, as a multiple of `size`.
+
+    See detailed explanation here:
+    https://api.flutter.dev/flutter/painting/StrutStyle/height.html
+    """
+
     weight: Optional[FontWeight] = None
+    """
+    The typeface thickness to use when calculating the strut.
+
+    Value is of type https://flet.dev/docs/reference/types/fontweight and defaults to
+    `FontWeight.W_400`.
+    """
+
     italic: Optional[bool] = None
+    """
+    `True` to use italic typeface.
+
+    Defaults to `False`.
+    """
+
     font_family: Optional[str] = None
+    """
+    See https://flet.dev/docs/controls/text#font_family.
+    """
+
     leading: OptionalNumber = None
+    """
+    The amount of additional space to place between lines when rendering text.
+
+    Defaults to using the font-specified leading value.
+    """
+
     force_strut_height: Optional[bool] = None
+    """
+    Whether the strut height should be forced.
+
+    Defaults to `False`.
+    """
 
 
 # Typing
