@@ -75,26 +75,43 @@ class ColorScheme:
     A color that's clearly legible when drawn on `primary`.
     """
     primary_container: OptionalColorValue = None
+    """
+    A color used for elements needing less emphasis than `primary`.
+    """
     on_primary_container: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `primary_container`.
     """
     secondary: OptionalColorValue = None
+    """
+    An accent color used for less prominent components in the UI, such as filter chips, 
+    while expanding the opportunity for color expression.
+    """
     on_secondary: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `secondary`.
     """
     secondary_container: OptionalColorValue = None
+    """
+    A color used for elements needing less emphasis than `secondary`.
+    """
     on_secondary_container: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `secondary_container`.
     """
     tertiary: OptionalColorValue = None
+    """
+    A color used as a contrasting accent that can balance `primary` and `secondary` 
+    colors or bring heightened attention to an element, such as an input field.
+    """
     on_tertiary: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `tertiary`.
     """
     tertiary_container: OptionalColorValue = None
+    """
+    A color used for elements needing less emphasis than `tertiary`.
+    """
     on_tertiary_container: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `tertiary_container`.
@@ -124,11 +141,18 @@ class ColorScheme:
     A color that's clearly legible when drawn on `background`.
     """
     surface: OptionalColorValue = None
+    """
+    The background color for widgets like `Card`.
+    """
     on_surface: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `surface`.
     """
     surface_variant: OptionalColorValue = None
+    """
+    A color variant of `surface` that can be used for differentiation against a 
+    component using `surface`.
+    """
     on_surface_variant: OptionalColorValue = None
     """
     A color that's clearly legible when drawn on `surface_variant`.
@@ -143,7 +167,13 @@ class ColorScheme:
     isn’t required, such as for dividers or decorative elements.
     """
     shadow: OptionalColorValue = None
+    """
+    A color use to paint the drop shadows of elevated components.
+    """
     scrim: OptionalColorValue = None
+    """
+    A color use to paint the scrim around of modal components.
+    """
     inverse_surface: OptionalColorValue = None
     """
     A surface color used for displaying the reverse of what’s seen in the surrounding 
@@ -159,18 +189,66 @@ class ColorScheme:
     backgrounds, like button text in a `SnackBar`.
     """
     surface_tint: OptionalColorValue = None
+    """
+    A color used as an overlay on a surface color to indicate a component's elevation.
+    """
     on_primary_fixed: OptionalColorValue = None
+    """
+    A color that is used for text and icons that exist on top of elements having 
+    `primary_fixed` color.
+    """
     on_secondary_fixed: OptionalColorValue = None
+    """
+    A color that is used for text and icons that exist on top of elements having 
+    `secondary_fixed` color.
+    """
     on_tertiary_fixed: OptionalColorValue = None
+    """
+    A color that is used for text and icons that exist on top of elements having 
+    `tertiary_fixed` color.
+    """
     on_primary_fixed_variant: OptionalColorValue = None
+    """
+    A color that provides a lower-emphasis option for text and icons than 
+    `on_primary_fixed`.
+    """
     on_secondary_fixed_variant: OptionalColorValue = None
+    """
+    A color that provides a lower-emphasis option for text and icons than 
+    `on_secondary_fixed`.
+    """
     on_tertiary_fixed_variant: OptionalColorValue = None
+    """
+    A color that provides a lower-emphasis option for text and icons than 
+    `on_tertiary_fixed`.
+    """
     primary_fixed: OptionalColorValue = None
+    """
+    A substitute for `primary_container` that's the same color for the dark and light 
+    themes.
+    """
     secondary_fixed: OptionalColorValue = None
+    """
+    A substitute for `secondary_container` that's the same color for the dark and light 
+    themes.
+    """
     tertiary_fixed: OptionalColorValue = None
+    """
+    A substitute for `tertiary_container` that's the same color for dark and light 
+    themes.
+    """
     primary_fixed_dim: OptionalColorValue = None
+    """
+    A color used for elements needing more emphasis than `primary_fixed`.
+    """
     secondary_fixed_dim: OptionalColorValue = None
+    """
+    A color used for elements needing more emphasis than `secondary_fixed`.
+    """
     surface_bright: OptionalColorValue = None
+    """
+    A color that's always the lightest in the dark or light theme.
+    """
     surface_container: OptionalColorValue = None
     surface_container_high: OptionalColorValue = None
     surface_container_low: OptionalColorValue = None
