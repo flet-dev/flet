@@ -150,13 +150,59 @@ class PaintRadialGradient(PaintGradient):
 
 @dataclass
 class PaintSweepGradient(PaintGradient):
+    """
+    More information on Sweep gradient
+    https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.sweep.html
+    """
+
     center: Optional[OffsetValue]
+    """
+    An instance of https://flet.dev/docs/reference/types/offset class. The center of
+    the gradient.
+    """
+
     colors: list[str]
+    """
+    The https://flet.dev/docs/reference/colors the gradient should obtain at each of
+    the stops. This list must contain at least two colors.
+
+    If `stops` is provided, this list must have the same length as `stops`.
+    """
+
     color_stops: Optional[list[Number]] = None
+    """
+    A list of values from `0.0` to `1.0` that denote fractions along the gradient.
+
+    If provided, this list must have the same length as `colors`. If the first value
+    is not `0.0`, then a stop with position `0.0` and a color equal to the first color
+    in `colors` is implied. If the last value is not `1.0`, then a stop with position
+    `1.0` and a color equal to the last color in `colors` is implied.
+    """
+
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    """
+    How this gradient should tile the plane beyond in the region before `begin` and
+    after `end`. The value is of type
+    https://flet.dev/docs/reference/types/gradienttilemode.
+    """
+
     start_angle: Number = 0.0
+    """
+    The angle in https://en.wikipedia.org/wiki/Radian at which stop 0.0 of the
+    gradient is placed. Defaults to 0.0.
+    """
+
     end_angle: Number = math.pi * 2
+    """
+    The angle in radians at which stop 1.0 of the gradient is placed. Defaults to
+    math.pi * 2.
+    """
+
     rotation: OptionalNumber = None
+    """
+    The rotation of the gradient in https://en.wikipedia.org/wiki/Radian, around the
+    center-point of its bounding box.
+    """
 
     def __post_init__(self):
         self.type = "sweep"
