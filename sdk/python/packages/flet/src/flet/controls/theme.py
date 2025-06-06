@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.border import BorderSide, OptionalBorderSide
@@ -743,7 +743,7 @@ class IconTheme:
     optical_size: OptionalNumber = None
     grade: OptionalNumber = None
     weight: OptionalNumber = None
-    shadows: Optional[List[BoxShadow]] = None
+    shadows: Optional[list[BoxShadow]] = None
 
 
 @dataclass
