@@ -47,10 +47,7 @@
 		<false />
 		<key>ITSAppUsesNonExemptEncryption</key>
 		<false />
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>The app needs access to photo library, so that photos can be selected.</string>
-		<key>GADApplicationIdentifier</key>
-        <string>ca-app-pub-3940256099942544~1458002511</string>
+
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>NSAppTransportSecurity</key>
@@ -58,9 +55,23 @@
 			<key>NSAllowsArbitraryLoads</key>
 			<true />
 		</dict>
+
+		<!-- Permission options for the `photos` -->
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>The app needs access to photo library, so that photos can be selected.</string>
+
+		<!-- Needed by `flet-ads` -->
+		<key>GADApplicationIdentifier</key>
+        <string>ca-app-pub-3940256099942544~1458002511</string>
+
+		<!-- Permission options for the `microphone` -->
+		<!-- Needed by `flet-audio-recorder` -->
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Audio Recording</string>
+		<string>This app needs access to microphone.</string>
+
+		<!-- Permission options for the `location` -->
+		<!-- Needed by `flet-geolocator` -->
 		<key>NSLocationWhenInUseUsageDescription</key>
-        <string>This app needs access to location when open.</string>
+        <string>This app needs access to location.</string>
 	</dict>
 </plist>
