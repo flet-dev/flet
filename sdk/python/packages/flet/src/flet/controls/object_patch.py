@@ -714,15 +714,13 @@ class DiffBuilder:
             #     parent,
             # )
             for field in dataclasses.fields(dst):
-                if field.compare:
+                if "skip" not in field.metadata:
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
                     if field.name.startswith("on_"):
                         old = old is not None
                         new = new is not None
                     self._compare_values(dst, path, field.name, old, new, frozen)
-            if hasattr(src, "_i"):
-                dst._i = src._i  # patch replaced control ID with an old one
             self._dataclass_removed(src)
             self._dataclass_added(dst, parent, frozen)
 

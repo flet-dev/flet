@@ -33,7 +33,7 @@ __all__ = [
 
 
 def skip_field():
-    return field(default=None, compare=False, metadata={"skip": True})
+    return field(default=None, metadata={"skip": True})
 
 
 T = TypeVar("T", bound="BaseControl")
