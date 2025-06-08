@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
@@ -7,6 +8,9 @@ from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
 from flet.controls.ref import Ref
 from flet.utils.strings import random_string
+
+logger = logging.getLogger("flet")
+controls_log = logging.getLogger("flet_controls")
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
 if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
@@ -29,7 +33,7 @@ __all__ = [
 
 
 def skip_field():
-    return field(default=None, repr=False, compare=False, metadata={"skip": True})
+    return field(default=None, compare=False, metadata={"skip": True})
 
 
 T = TypeVar("T", bound="BaseControl")
@@ -116,6 +120,15 @@ class BaseControl:
 
         self.__method_calls: dict[str, asyncio.Event] = {}
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        # control_id = self._i
+        # object_id = id(self)
+        # ctrl_type = self._c
+        # weakref.finalize(
+        #     self,
+        #     lambda: controls_log.debug(
+        #         f"Control was garbage collected: {ctrl_type}({control_id} - {object_id})"
+        #     ),
+        # )
 
     def __hash__(self) -> int:
         return object.__hash__(self)
@@ -149,9 +162,11 @@ class BaseControl:
         return True
 
     def did_mount(self):
+        controls_log.debug(f"Control.did_mount: {self._i}")
         pass
 
     def will_unmount(self):
+        controls_log.debug(f"Control.will_unmount: {self._i}")
         pass
 
     # public methods

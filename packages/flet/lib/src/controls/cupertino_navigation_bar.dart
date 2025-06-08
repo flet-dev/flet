@@ -27,7 +27,8 @@ class _CupertinoNavigationBarControlState
 
   void _onTap(int index) {
     _selectedIndex = index;
-    widget.control.updateProperties({"selected_index": _selectedIndex});
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
     widget.control.triggerEvent("change", _selectedIndex);
   }
 

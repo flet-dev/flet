@@ -30,7 +30,8 @@ class _NavigationRailControlState extends State<NavigationRailControl>
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("NavigationRail selected_index: $_selectedIndex");
-    widget.control.updateProperties({"selected_index": _selectedIndex});
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
     widget.control.triggerEvent("change", _selectedIndex);
   }
 
@@ -88,7 +89,6 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           destinations:
               widget.control.children("destinations").map((destinationControl) {
             destinationControl.notifyParent = true;
-            var label = destinationControl.getString("label", "")!;
             var icon = destinationControl.buildWidget("icon") ??
                 Icon(parseIcon(destinationControl.getString("icon")));
             var selectedIcon = destinationControl

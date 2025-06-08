@@ -121,7 +121,7 @@ class NavigationRail(ConstrainedControl):
     Defaults to `0.0`.
     """
 
-    selected_index: int = 0
+    selected_index: Optional[int] = None
     """
     The index into `destinations` for the current selected `NavigationRailDestination`
     or `None` if no destination is selected.

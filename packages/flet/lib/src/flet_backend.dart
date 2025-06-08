@@ -210,7 +210,7 @@ class FletBackend extends ChangeNotifier {
       _reconnectDelayMs = 0;
       error = "";
 
-      page.applyPatch(resp.patch, this);
+      page.update(resp.patch);
 
       // drain send queue
       debugPrint("Send queue: ${_sendQueue.length}");
@@ -250,7 +250,7 @@ class FletBackend extends ChangeNotifier {
         }
 
         // update page details
-        page.applyPatch({"route": newRoute, "platform": platform}, this,
+        page.update({"route": newRoute, "platform": platform},
             shouldNotify: false);
 
         // connect to the server
@@ -362,7 +362,7 @@ class FletBackend extends ChangeNotifier {
     var control = controlsIndex.get(id);
     if (control != null) {
       if (dart) {
-        control.applyPatch(props, this, shouldNotify: notify);
+        control.update(props, shouldNotify: notify);
       }
       if (python) {
         _send(Message(
@@ -487,7 +487,7 @@ class FletBackend extends ChangeNotifier {
 
   _send(Message message, {bool unbuffered = false}) {
     if (unbuffered || !isLoading) {
-      debugPrint("_send: ${message.payload}");
+      debugPrint("_send: ${message.action} ${message.payload}");
       _backendChannel?.send(message);
     } else {
       _sendQueue.add(message);

@@ -1,10 +1,8 @@
-import datetime
 from dataclasses import field
 from typing import Any, Optional
 
 import flet as ft
-import msgpack
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
 from flet.controls.control import Control
@@ -17,94 +15,15 @@ from flet.controls.material.button import Button
 # import flet.canvas as cv
 from flet.controls.material.container import Container
 from flet.controls.material.elevated_button import ElevatedButton
-from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.controls.painting import Paint, PaintLinearGradient
 from flet.controls.ref import Ref
 from flet.controls.services.service import Service
 from flet.messaging.connection import Connection
-from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
-
-def b_pack(data):
-    return msgpack.packb(data, default=configure_encode_object_for_msgpack(BaseControl))
-
-
-def b_unpack(packed_data):
-    return msgpack.unpackb(packed_data)
-
-
-def update_page(new: Any, old: Any = None, show_details=True):
-    if old is None:
-        old = new
-    start = datetime.datetime.now()
-
-    # 1 -calculate diff
-    patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        old, new, control_cls=BaseControl
-    )
-
-    # 2 - convert patch to hierarchy
-    graph_patch = patch.to_graph()
-    # print(graph_patch)
-
-    # 3 - build msgpack message
-    msg = msgpack.packb(
-        graph_patch, default=configure_encode_object_for_msgpack(BaseControl)
-    )
-
-    end = datetime.datetime.now()
-
-    if show_details:
-        # print("\nPatch:", patch)
-        print("\nGraph patch:", graph_patch)
-        print("\nMessage:", msg)
-    else:
-        print("\nMessage length:", len(msg))
-
-    print("\nTotal:", (end - start).total_seconds() * 1000)
-
-    return msg
-
-
-def make_diff(new: Any, old: Any = None, show_details=True):
-    if old is None:
-        old = new
-    start = datetime.datetime.now()
-
-    # 1 -calculate diff
-    patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        old, new, control_cls=ft.BaseControl
-    )
-
-    # 2 - convert patch to hierarchy
-    graph_patch = patch.to_graph()
-    # print(graph_patch)
-
-    end = datetime.datetime.now()
-
-    if show_details:
-        print(f"\nPatch in {(end - start).total_seconds() * 1000} ms: {graph_patch}")
-
-    return graph_patch, added_controls, removed_controls
-
-
-def make_msg(new: Any, old: Any = None, show_details=True):
-    graph_patch, added_controls, removed_controls = make_diff(new, old, show_details)
-
-    # 3 - build msgpack message
-    msg = msgpack.packb(
-        graph_patch, default=configure_encode_object_for_msgpack(ft.BaseControl)
-    )
-
-    if show_details:
-        print("\nMessage:", msg)
-    else:
-        print("\nMessage length:", len(msg))
-
-    return msg, added_controls, removed_controls
+from .common import b_unpack, cmp_ops, make_diff, make_msg
 
 
 @control
@@ -186,8 +105,10 @@ def test_simple_page():
     assert page._i == 1
     assert page.window and page.window._i == 2
 
-    msg = update_page(page, {}, show_details=True)
+    msg, _, _, added_controls, removed_controls = make_msg(page, {}, show_details=True)
     u_msg = b_unpack(msg)
+    assert len(added_controls) == 19
+    assert len(removed_controls) == 0
 
     assert page.parent is None
     assert page.controls[0].parent == page.views[0]
@@ -197,12 +118,74 @@ def test_simple_page():
 
     print(u_msg)
 
-    assert isinstance(u_msg, dict)
-    assert "" in u_msg
-    assert u_msg[""]["_i"] > 0
-    assert u_msg[""]["on_login"]
-    assert len(u_msg[""]["views"]) > 0
-    assert "on_connect" not in u_msg[""]
+    assert isinstance(u_msg, list)
+    assert u_msg[0] == [0]
+    assert len(u_msg[1]) == 4
+    p = u_msg[1][3]
+    assert p["_i"] > 0
+    assert p["on_login"]
+    assert len(p["views"]) > 0
+    assert "on_connect" not in p
+    # assert u_msg == [
+    #     [0],
+    #     [
+    #         0,
+    #         0,
+    #         0,
+    #         {
+    #             "_i": 1,
+    #             "_c": "Page",
+    #             "views": [
+    #                 {
+    #                     "_i": 17,
+    #                     "_c": "View",
+    #                     "controls": [
+    #                         {
+    #                             "_i": 29,
+    #                             "_c": "Div",
+    #                             "cls": "div_1",
+    #                             "some_value": "Text",
+    #                         }
+    #                     ],
+    #                     "bgcolor": "green",
+    #                 }
+    #             ],
+    #             "_overlay": {"_i": 18, "_c": "Overlay"},
+    #             "_dialogs": {"_i": 19, "_c": "Dialogs"},
+    #             "window": {"_i": 2, "_c": "Window"},
+    #             "browser_context_menu": {"_i": 21, "_c": "BrowserContextMenu"},
+    #             "shared_preferences": {"_i": 22, "_c": "SharedPreferences"},
+    #             "clipboard": {"_i": 23, "_c": "Clipboard"},
+    #             "storage_paths": {"_i": 24, "_c": "StoragePaths"},
+    #             "url_launcher": {"_i": 25, "_c": "UrlLauncher"},
+    #             "_user_services": {
+    #                 "_i": 26,
+    #                 "_c": "ServiceRegistry",
+    #                 "services": [
+    #                     {
+    #                         "_i": 30,
+    #                         "_c": "MyService",
+    #                         "prop_1": "Hello",
+    #                         "prop_2": [1, 2, 3],
+    #                     }
+    #                 ],
+    #             },
+    #             "_page_services": {
+    #                 "_i": 27,
+    #                 "_c": "ServiceRegistry",
+    #                 "services": [
+    #                     {"_i": 21, "_c": "BrowserContextMenu"},
+    #                     {"_i": 22, "_c": "SharedPreferences"},
+    #                     {"_i": 23, "_c": "Clipboard"},
+    #                     {"_i": 25, "_c": "UrlLauncher"},
+    #                     {"_i": 24, "_c": "StoragePaths"},
+    #                 ],
+    #             },
+    #             "fonts": {"font1": "font_url_1", "font2": "font_url_2"},
+    #             "on_login": True,
+    #         },
+    #     ],
+    # ]
 
     # update sub-tree
     page.on_login = None
@@ -214,15 +197,159 @@ def test_simple_page():
             on_click=lambda e: print(e),
             opacity=1,
             ref=None,
-        )
+        ),
+        SuperElevatedButton("Another Button"),
     ]
     del page.fonts["font2"]
     assert page.controls[0].controls[0].page is None
 
     page.services[0].prop_2 = [2, 6]
 
-    update_page(page, show_details=True)
+    # add 2 new buttons to a list
+    _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
     assert hasattr(page.views[0], "__changes")
+    assert len(added_controls) == 2
+    assert len(removed_controls) == 0
+    assert len(patch) == 7
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["on_login"], "value": False},
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "some_value"],
+                "value": "Another text",
+            },
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "controls"],
+                # "value": [SuperElevatedButton, SuperElevatedButton],
+            },
+            {"op": "remove", "path": ["fonts", "font2"], "value": "font_url_2"},
+            {
+                "op": "remove",
+                "path": ["_user_services", "services", 0, "prop_2", 0],
+                "value": 1,
+            },
+            {
+                "op": "add",
+                "path": ["_user_services", "services", 0, "prop_2", 1],
+                "value": 6,
+            },
+            {
+                "op": "remove",
+                "path": ["_user_services", "services", 0, "prop_2", 2],
+                "value": 3,
+            },
+        ],
+    )
+    assert len(patch[2]["value"]) == 2
+    assert isinstance(patch[2]["value"][0], SuperElevatedButton)
+    assert isinstance(patch[2]["value"][1], SuperElevatedButton)
+
+    # replace control in a list
+    page.controls[0].controls[0] = SuperElevatedButton("Foo")
+    _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
+    # for ac in added_controls:
+    #     print("\nADDED CONTROL:", ac)
+    # for rc in removed_controls:
+    #     print("\nREMOVED CONTROL:", rc)
+    assert len(added_controls) == 1
+    assert len(removed_controls) == 1
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "controls", 0],
+                "value_type": SuperElevatedButton,
+            }
+        ],
+    )
+
+    # insert a new button to the start of a list
+    page.controls[0].controls.insert(0, SuperElevatedButton("Bar"))
+    page.controls[0].controls[1].content = "Baz"
+    _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
+    assert len(added_controls) == 1
+    assert len(removed_controls) == 0
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "add",
+                "path": ["views", 0, "controls", 0, "controls", 0],
+                "value_type": SuperElevatedButton,
+            },
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "controls", 1, "content"],
+                "value": "Baz",
+            },
+        ],
+    )
+
+    page.controls[0].controls.clear()
+    _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
+    assert len(added_controls) == 0
+    assert len(removed_controls) == 3
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "controls"],
+                "value": [],
+            }
+        ],
+    )
+
+
+def test_floating_action_button():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+
+    # initial update
+    make_msg(page, {}, show_details=True)
+
+    # second update
+    counter = ft.Text("0", size=50, data=0)
+
+    def btn_click(e):
+        counter.data += 1
+        counter.value = str(counter.data)
+        counter.update()
+
+    page.floating_action_button = ft.FloatingActionButton(
+        icon=ft.Icons.ADD, on_click=btn_click
+    )
+    page.controls.append(
+        ft.SafeArea(
+            ft.Container(
+                counter,
+                alignment=ft.Alignment.center(),
+                bgcolor=ft.Colors.YELLOW,
+                expand=True,
+            ),
+            expand=True,
+        ),
+    )
+
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["views", 0, "floating_action_button"],
+                "value_type": ft.FloatingActionButton,
+            },
+            {"op": "replace", "path": ["views", 0, "controls"]},
+        ],
+    )
+    assert len(patch[1]["value"]) == 1
+    assert isinstance(patch[1]["value"][0], ft.SafeArea)
 
 
 def test_changes_tracking():
@@ -234,7 +361,7 @@ def test_changes_tracking():
     )
 
     # initial update
-    update_page(page, {}, show_details=True)
+    make_msg(page, {}, show_details=True)
 
     # second update
     btn.content = Text("A new button content")
@@ -245,7 +372,28 @@ def test_changes_tracking():
     # t2 = Text("BBB")
     page.controls.append(Text("Line 2"))
 
-    update_page(page, show_details=True)
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "content"],
+                "value_type": ft.Text,
+            },
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "width"],
+                "value": 300,
+            },
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "height"],
+                "value": 100,
+            },
+            {"op": "add", "path": ["views", 0, "controls", 1], "value_type": ft.Text},
+        ],
+    )
 
 
 def test_large_updates():
@@ -283,7 +431,9 @@ def test_large_updates():
     )
 
     # initial update
-    update_page(page, {}, show_details=True)
+    _, patch, _, added_controls, removed_controls = make_msg(
+        page, {}, show_details=True
+    )
 
     # second update
     for i in range(1, 1000):
@@ -291,7 +441,7 @@ def test_large_updates():
             cv.Line(i + 1, i + 100, i + 10, i + 20, paint=Paint(stroke_width=3))
         )
 
-    update_page(cp, show_details=False)
+    make_msg(cp, show_details=False)
 
     cp.shapes[100].x1 = 12
 
@@ -301,7 +451,7 @@ def test_large_updates():
             cv.Line(i + 1, i + 100, i + 10, i + 20, paint=Paint(stroke_width=3))
         )
 
-    update_page(cp, show_details=True)
+    _, patch, _, added_controls, removed_controls = make_msg(cp, show_details=True)
 
 
 def test_add_remove_lists():
@@ -316,104 +466,39 @@ def test_add_remove_lists():
             for ds in data
         ]
     )
-    msg, _, _ = make_msg(chart, {})
+    _, patch, _, _, _ = make_msg(chart, {})
 
     # add/remove
     chart.data_series[0].data_points.pop(0)
     chart.data_series[0].data_points.append(ft.LineChartDataPoint(x=3, y=4))
 
-    patch, _, _ = make_diff(chart, chart)
-    assert patch["data_series"][0]["data_points"]["$d"] == [0]
-    assert isinstance(
-        patch["data_series"][0]["data_points"][2]["$a"], ft.LineChartDataPoint
+    patch, _, _, _ = make_diff(chart, chart)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["data_series", 0, "data_points", 0]},
+            {
+                "op": "add",
+                "path": ["data_series", 0, "data_points", 2],
+                "value_type": ft.LineChartDataPoint,
+            },
+        ],
     )
 
 
-# exit()
+def test_reverse_list():
+    col = ft.Column([ft.Text("Line 1"), ft.Text("Line 2"), ft.Text("Line 3")])
+    _, patch, _, _, _ = make_msg(col, {})
 
-
-# # initial update
-# # ==================
-# page_ref = Ref[Page]()
-
-# page = Page(
-#     url="http://aaa.com",
-#     controls=[Div(cls="div_1", some_value="Text")],
-#     prop_1="aaa",
-#     data=100000,
-#     ref=page_ref,
-# )
-
-# print("Page ref:", page_ref.current)
-
-# update_page(page, {})
-# print("page PARENT:", page.parent)
-# print("page.controls[0] PARENT:", page.controls[0].parent)
-
-# # update sub-tree
-# page.controls[0].some_value = "Another text"
-# page.controls[0].controls = [
-#     SuperElevatedButton(
-#         text="Button 😬",
-#         style=ButtonStyle(color=Colors.RED),
-#         on_click=lambda e: print(e),
-#         opacity=1,
-#         ref=None,
-#     )
-# ]
-# print("PAGE:", page.controls[0].controls[0].page)
-# update_page(page.controls[0])
-
-# # exit()
-
-# # check _prev
-# print("\nPrev:", page._prev_prop_1)
-
-# # 2nd update
-# # ==================
-# # page.url = "http://bbb.com"
-# page.prop_1 = None
-# page.controls[0].some_value = "Some value"
-# # del page.controls[0]
-# page.controls.append(Span(cls="span_1"))
-# page.controls.append(Span(cls="span_2"))
-# page.controls.append(Span(cls="span_3"))
-
-# btn = page.controls[0].controls[0]
-# print("PAGE:", btn.page)
-# btn.text = "Supper button"
-# btn.style = ButtonStyle(color=Colors.GREEN)
-# btn.on_click = None
-# update_page(page)
-
-# # exit()
-
-# # 3rd update
-# # ==================
-# ctrl = page.controls.pop()
-# page.controls[0].controls.append(ctrl)
-# update_page(page)
-
-# # exit()
-
-# # 4th update
-# # ==================
-# for i in range(1, 1000):
-#     page.controls.append(
-#         Div(cls=f"div_{i}", controls=[Span(cls=f"span_{i}", text=f"Span {i}")])
-#     )
-
-# update_page(page, show_details=False)
-
-# # exit()
-
-# # 5th update
-# # ==================
-# page.controls[3].controls.insert(0, ElevatedButton(text="Click me"))
-# page.controls[4].controls[0].text = "Hello world"
-# page.controls[20].controls.pop()
-# page.controls.pop()
-# for i in range(100, 300):
-#     page.controls[i].controls[0].text = f"Hello world {i}"
-
-# update_page(page, show_details=False)
+    # reverse
+    col.controls.reverse()
+    patch, _, _, _ = make_diff(col)
+    assert col.controls[0].value == "Line 3"
+    assert col.controls[2].value == "Line 1"
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+        ],
+    )

@@ -1,63 +1,211 @@
-import datetime
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Optional
 
 import flet as ft
-import msgpack
 import pytest
+from flet.controls.base_control import BaseControl, control
 
-# import flet as ft
-# import flet.canvas as cv
-from flet.controls.object_patch import ObjectPatch
-from flet.messaging.protocol import configure_encode_object_for_msgpack
+from .common import cmp_ops, make_diff, make_msg
 
 
-def b_pack(data):
-    return msgpack.packb(
-        data, default=configure_encode_object_for_msgpack(ft.BaseControl)
+def test_compare_roots():
+    c1 = {}
+    c2 = ft.Column()
+    c2._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert len(patch) == 1
+    assert cmp_ops(patch, [{"op": "replace", "path": [], "value_type": ft.Column}])
+
+
+def test_compare_literals_removed():
+    c1 = ft.Column([1, 2, 3, 4, 5, 6, 7, 8])
+    c2 = ft.Column([1, 4, 5, 5])
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["controls", 1], "value": 2},
+            {"op": "replace", "path": ["controls", 1], "value": 5},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {"op": "remove", "path": ["controls", 4], "value": 6},
+            {"op": "remove", "path": ["controls", 4], "value": 7},
+            {"op": "remove", "path": ["controls", 4], "value": 8},
+        ],
     )
 
 
-def b_unpack(packed_data):
-    return msgpack.unpackb(packed_data)
-
-
-def make_diff(new: Any, old: Any = None, show_details=True):
-    if old is None:
-        old = new
-    start = datetime.datetime.now()
-
-    # 1 -calculate diff
-    patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        old, new, control_cls=ft.BaseControl
+def test_compare_literals_added():
+    c1 = ft.Column([1, 2, 3, 4, 5])
+    c2 = ft.Column([1, 4, 5, 6, 7, 8, 9])
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["controls", 1], "value": 2},
+            {"op": "remove", "path": ["controls", 1], "value": 3},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 1]},
+            {"op": "add", "path": ["controls", 2], "value": 6},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+            {"op": "add", "path": ["controls", 4], "value": 7},
+            {"op": "add", "path": ["controls", 5], "value": 8},
+            {"op": "add", "path": ["controls", 6], "value": 9},
+        ],
     )
 
-    # 2 - convert patch to hierarchy
-    graph_patch = patch.to_graph()
-    # print(graph_patch)
 
-    end = datetime.datetime.now()
-
-    if show_details:
-        print(f"\nPatch in {(end - start).total_seconds() * 1000} ms: {graph_patch}")
-
-    return graph_patch, added_controls, removed_controls
-
-
-def make_msg(new: Any, old: Any = None, show_details=True):
-    graph_patch, added_controls, removed_controls = make_diff(new, old, show_details)
-
-    # 3 - build msgpack message
-    msg = msgpack.packb(
-        graph_patch, default=configure_encode_object_for_msgpack(ft.BaseControl)
+def test_compare_literals_replaced():
+    c1 = ft.Column([1, 2])
+    c2 = ft.Column([3, 4, 5])
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0], "value": 3},
+            {"op": "replace", "path": ["controls", 1], "value": 4},
+            {"op": "add", "path": ["controls", 2], "value": 5},
+        ],
     )
 
-    if show_details:
-        print("\nMessage:", msg)
-    else:
-        print("\nMessage length:", len(msg))
 
-    return graph_patch, added_controls, removed_controls
+def test_compare_objects_replaced_no_keys():
+    @dataclass
+    class Item:
+        x: int
+        y: int
+
+    c1 = ft.Column(
+        [
+            Item(3, 1),
+            Item(4, 1),
+        ],
+    )
+    c2 = ft.Column(
+        [
+            Item(1, 0),
+            Item(2, 0),
+            Item(3, 0),
+        ]
+    )
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0, "x"], "value": 1},
+            {"op": "replace", "path": ["controls", 0, "y"], "value": 0},
+            {"op": "replace", "path": ["controls", 1, "x"], "value": 2},
+            {"op": "replace", "path": ["controls", 1, "y"], "value": 0},
+            {"op": "add", "path": ["controls", 2], "value_type": Item},
+        ],
+    )
+
+
+def test_compare_objects_replaced_with_list_keys():
+    @dataclass
+    class Item:
+        list_key: int
+        y: int
+
+    c1 = ft.Column(
+        [
+            Item(3, 1),
+            Item(4, 1),
+        ],
+    )
+    c2 = ft.Column(
+        [
+            Item(1, 0),
+            Item(2, 0),
+        ]
+    )
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0], "value_type": Item},
+            {"op": "replace", "path": ["controls", 1], "value_type": Item},
+        ],
+    )
+    assert patch[0]["value"].list_key == 1
+    assert patch[0]["value"].y == 0
+    assert patch[1]["value"].list_key == 2
+    assert patch[1]["value"].y == 0
+
+
+def test_compare_objects_updated_and_moved_with_list_keys():
+    @control("Item")
+    class Item(BaseControl):
+        y: int
+
+    c1 = ft.Column(
+        [
+            Item(list_key=2, y=0),
+            Item(list_key=1, y=0),
+        ],
+    )
+    c2 = ft.Column(
+        [
+            Item(list_key=1, y=1),
+            Item(list_key=2, y=2),
+        ]
+    )
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0, "y"], "value": 1},
+            {"op": "replace", "path": ["controls", 1, "y"], "value": 2},
+            {"op": "move", "from": ["controls", 0], "path": ["controls", 1]},
+        ],
+    )
+
+
+def test_compare_objects_added():
+    @control("Item")
+    class Item(BaseControl):
+        y: int
+
+    c1 = ft.Column(
+        [
+            Item(list_key=3, y=1),
+            Item(list_key=4, y=1),
+            Item(list_key=5, y=1),
+            Item(list_key=6, y=1),
+        ],
+    )
+    c2 = ft.Column(
+        [
+            Item(list_key=1, y=0),
+            Item(list_key=2, y=0),
+            Item(list_key=4, y=0),
+            Item(list_key=3, y=0),
+            Item(list_key=5, y=0),
+            Item(list_key=6, y=0),
+            Item(list_key=7, y=0),
+            Item(list_key=8, y=0),
+        ]
+    )
+    c1._frozen = True
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "add", "path": ["controls", 0], "value_type": Item},
+            {"op": "add", "path": ["controls", 1], "value_type": Item},
+            {"op": "replace", "path": ["controls", 2, "y"], "value": 0},
+            {"op": "replace", "path": ["controls", 3, "y"], "value": 0},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
+            {"op": "replace", "path": ["controls", 4, "y"], "value": 0},
+            {"op": "replace", "path": ["controls", 5, "y"], "value": 0},
+            {"op": "add", "path": ["controls", 6], "value_type": Item},
+            {"op": "add", "path": ["controls", 7], "value_type": Item},
+        ],
+    )
 
 
 def test_compare_controls():
@@ -103,24 +251,34 @@ def test_button_basic_diff():
     b2._frozen = True
 
     # initial iteration
-    patch, _, _ = make_diff(b2, {})
+    patch, _, _, _ = make_diff(b2, {})
     assert not hasattr(b2, "__prev_classes")
-    assert isinstance(patch[""], ft.Button)
+    assert isinstance(patch[0]["value"], ft.Button)
 
     # 2nd iteration
-    patch, _, _ = make_diff(b2, b1)
+    patch, _, _, _ = make_diff(b2, b1)
     assert len(patch) == 3
-    assert patch["content"] == "Click me"
-    assert isinstance(patch["style"], ft.ButtonStyle)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["scale"], "value_type": ft.Scale},
+            {"op": "replace", "path": ["content"], "value": "Click me"},
+            {"op": "replace", "path": ["style"], "value_type": ft.ButtonStyle},
+        ],
+    )
 
     # 3rd iteration
     b3 = ft.Button(content=ft.Text("Text_1"), style=None, scale=ft.Scale(0.1))
     b3._frozen = True
-    patch, _, _ = make_diff(b3, b2)
-    assert len(patch) == 3
-    assert patch["scale"]["scale"] == 0.1
-    assert isinstance(patch["content"], ft.Text)
-    assert patch["style"] is None
+    patch, _, _, _ = make_diff(b3, b2)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
+            {"op": "replace", "path": ["content"], "value_type": ft.Text},
+            {"op": "replace", "path": ["style"], "value": None},
+        ],
+    )
 
 
 def test_lists_with_key_diff():
@@ -147,14 +305,28 @@ def test_lists_with_key_diff():
         ]
     )
     c1._frozen = True
-    patch, _, _ = make_diff(c2, c1)
+    patch, _, _, _ = make_diff(c2, c1)
     assert c2._frozen
     assert c2.data_series[0]._frozen
-    assert len(patch["data_series"][0]["data_points"]) == 2
-    assert patch["data_series"][0]["data_points"]["$d"] == [0]
-    assert isinstance(
-        patch["data_series"][0]["data_points"][2]["$a"], ft.LineChartDataPoint
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["data_series", 0, "data_points", 0]},
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 1, "y"],
+                "value": 2,
+            },
+            {
+                "op": "add",
+                "path": ["data_series", 0, "data_points", 2],
+                "value_type": ft.LineChartDataPoint,
+            },
+            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
+        ],
     )
+    assert patch[2]["value"].x == 3
+    assert patch[2]["value"].y == 5
 
 
 def test_lists_with_no_key_diff():
@@ -181,33 +353,69 @@ def test_lists_with_no_key_diff():
         ]
     )
     c1._frozen = True
-    patch, _, _ = make_diff(c2, c1)
+    patch, _, _, _ = make_diff(c2, c1)
     assert c2._frozen
     assert c2.data_series[0]._frozen
-    assert len(patch["data_series"][0]["data_points"]) == 3
-    assert patch["data_series"][0]["data_points"][0]["x"] == 1
-    assert patch["data_series"][0]["data_points"][0]["y"] == 2
-    assert patch["data_series"][0]["data_points"][1]["x"] == 2
-    assert patch["data_series"][0]["data_points"][2]["x"] == 3
-    assert patch["data_series"][0]["data_points"][2]["y"] == 5
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 0, "x"],
+                "value": 1,
+            },
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 0, "y"],
+                "value": 2,
+            },
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 1, "x"],
+                "value": 2,
+            },
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 2, "x"],
+                "value": 3,
+            },
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 2, "y"],
+                "value": 5,
+            },
+            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
+        ],
+    )
 
 
-def test_simple_lists_diff():
+def test_simple_lists_diff_1():
     c1 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 2, 3])])
     c2 = ft.LineChart(data_series=[ft.LineChartData(data_points=[2, 3, 4])])
     c1._frozen = True
-    patch, _, _ = make_diff(c2, c1)
-    assert len(patch["data_series"][0]["data_points"]) == 2
-    assert patch["data_series"][0]["data_points"]["$d"] == [0]
-    assert patch["data_series"][0]["data_points"][2]["$a"] == 4
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["data_series", 0, "data_points", 0], "value": 1},
+            {"op": "add", "path": ["data_series", 0, "data_points", 2], "value": 4},
+            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
+        ],
+    )
 
 
 def test_simple_lists_diff_2():
     c1 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 2, 3, 4])])
     c2 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 3, 4])])
     c1._frozen = True
-    patch, _, _ = make_diff(c2, c1)
-    assert patch["data_series"][0]["data_points"]["$d"] == [1]
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["data_series", 0, "data_points", 1], "value": 2},
+            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
+        ],
+    )
 
 
 def test_similar_lists_diff():
@@ -218,9 +426,68 @@ def test_similar_lists_diff():
         data_series=[ft.LineChartData(data_points=[ft.Scale(1), ft.Scale(2)])]
     )
     c1._frozen = True
-    patch, _, _ = make_diff(c2, c1)
-    assert patch["data_series"][0]["data_points"][0]["scale"] == 1
-    assert patch["data_series"][0]["data_points"][1]["scale"] == 2
+    patch, _, _, _ = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 0, "scale"],
+                "value": 1,
+            },
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 1, "scale"],
+                "value": 2,
+            },
+            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
+        ],
+    )
+
+
+def test_lists_in_place():
+    c1 = ft.LineChart(
+        data_series=[
+            ft.LineChartData(
+                data_points=[
+                    ft.LineChartDataPoint(x=0, y=1),
+                    ft.LineChartDataPoint(x=1, y=2),
+                    ft.LineChartDataPoint(x=2, y=3),
+                ]
+            )
+        ]
+    )
+    _, patch, _, _, _ = make_msg(c1, {})
+
+    # 1st change
+    c1.data_series[0].data_points.pop(0)
+    c1.data_series[0].data_points[1].y = 10
+    c1.data_series[0].data_points.append(ft.LineChartDataPoint(x=3, y=4))
+    c1.data_series.append(
+        ft.LineChartData(
+            data_points=[
+                ft.LineChartDataPoint(x=10, y=20),
+            ]
+        )
+    )
+    patch, msg, added_controls, removed_controls = make_diff(c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "remove", "path": ["data_series", 0, "data_points", 0]},
+            {
+                "op": "replace",
+                "path": ["data_series", 0, "data_points", 1, "y"],
+                "value": 10,
+            },
+            {
+                "op": "add",
+                "path": ["data_series", 0, "data_points", 2],
+                "value_type": ft.LineChartDataPoint,
+            },
+            {"op": "add", "path": ["data_series", 1], "value_type": ft.LineChartData},
+        ],
+    )
 
 
 def test_both_frozen_hosted_by_in_place():
@@ -241,7 +508,7 @@ def test_both_frozen_hosted_by_in_place():
 
     c = ft.Container(content=chart([[(0, 1), (1, 1), (2, 2)], [(10, 20), (20, 30)]]))
     assert not hasattr(c, "_frozen")
-    patch, added_controls, removed_controls = make_msg(c, {})
+    _, patch, _, added_controls, removed_controls = make_msg(c, {})
     assert len(added_controls) == 9
     assert len(removed_controls) == 0
     assert hasattr(c, "__changes")
@@ -251,13 +518,34 @@ def test_both_frozen_hosted_by_in_place():
     c.bgcolor = ft.Colors.AMBER
     ch = chart([[(1, 1), (2, 2), (3, 3)]])
     c.content = ch
-    patch, added_controls, removed_controls = make_msg(c, c)
+    patch, _, added_controls, removed_controls = make_diff(c, c)
     # for ac in added_controls:
     #     print("\nADDED CONTROL:", ac)
     # for rc in removed_controls:
     #     print("\nREMOVED CONTROL:", rc)
-    assert len(added_controls) == 0
-    assert len(removed_controls) == 4
+    # 5 x Added controls: LineChart + LineChartData +
+    # 3 x LineChartDataPoint (2 moved and 1 new)
+    assert len(added_controls) == 5
+    # 3 x Removed controls: LineChart + 2 x LineChartData + 5 x LineChartDataPoint
+    assert len(removed_controls) == 8
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["alignment"], "value": ft.Alignment(x=0, y=1)},
+            {"op": "replace", "path": ["bgcolor"], "value": ft.Colors.AMBER},
+            {"op": "remove", "path": ["content", "data_series", 0, "data_points", 0]},
+            {
+                "op": "add",
+                "path": ["content", "data_series", 0, "data_points", 2],
+                "value_type": ft.LineChartDataPoint,
+            },
+            {
+                "op": "remove",
+                "path": ["content", "data_series", 1],
+                "value_type": ft.LineChartData,
+            },
+        ],
+    )
     assert hasattr(ch, "_frozen")
     with pytest.raises(Exception, match="Controls inside data view cannot be updated."):
         ch.width = 100
@@ -279,7 +567,20 @@ def test_larger_control_updates():
         scale=ft.Scale(2.0),
     )
     c2._frozen = True
-    patch, added_controls, removed_controls = make_diff(c2, c1)
+    patch, msg, added_controls, removed_controls = make_diff(c2, c1)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["height"], "value": None},
+            {"op": "replace", "path": ["scale", "scale"], "value": 2.0},
+            {
+                "op": "replace",
+                "path": ["content", "controls", 0, "value"],
+                "value": "Text 2",
+            },
+            {"op": "replace", "path": ["bgcolor"], "value": ft.Colors.RED},
+        ],
+    )
 
 
 @dataclass
@@ -305,18 +606,24 @@ def test_control_builder():
     state = State(msg="some text")
 
     dv = ft.ControlBuilder(state, builder=lambda state: ft.Text(state.msg))
-    patch, added_controls, removed_controls = make_msg(dv, {})
+    _, patch, _, added_controls, removed_controls = make_msg(dv, {})
     assert len(added_controls) == 2
     assert len(removed_controls) == 0
-    assert isinstance(patch[""], ft.ControlBuilder)
-    assert isinstance(patch[""].content, ft.Text)
-    assert hasattr(patch[""].content, "_frozen")
-    assert patch[""].content.value == "some text"
+    assert cmp_ops(
+        patch,
+        [{"op": "replace", "path": [], "value_type": ft.ControlBuilder}],
+    )
+    assert isinstance(patch[0]["value"].content, ft.Text)
+    assert hasattr(patch[0]["value"].content, "_frozen")
+    assert patch[0]["value"].content.value == "some text"
 
     state.msg = "Hello, world!"
-    patch, added_controls, removed_controls = make_diff(dv, dv)
+    patch, msg, added_controls, removed_controls = make_diff(dv, dv)
     assert len(patch) == 1
-    assert patch["content"]["value"] == "Hello, world!"
+    assert cmp_ops(
+        patch,
+        [{"op": "replace", "path": ["content", "value"], "value": "Hello, world!"}],
+    )
 
 
 def test_nested_control_builders():
@@ -329,7 +636,7 @@ def test_nested_control_builders():
     cb = ft.ControlBuilder(
         state,
         lambda state: ft.SafeArea(
-            ft.Center(
+            ft.Container(
                 ft.ControlBuilder(
                     state,
                     lambda state: ft.Text(
@@ -344,37 +651,66 @@ def test_nested_control_builders():
                         else [],
                         size=50,
                     ),
-                )
+                ),
+                alignment=ft.Alignment.center(),
             ),
             expand=True,
         ),
         expand=True,
     )
-    patch, added_controls, removed_controls = make_msg(cb, {})
+    _, patch, _, added_controls, removed_controls = make_msg(cb, {})
     assert len(added_controls) == 5
     assert len(removed_controls) == 0
-    assert not hasattr(patch[""], "_frozen")  # ControlBuilder
-    assert hasattr(patch[""].content, "_frozen")  # SafeArea
-    assert hasattr(patch[""].content.content, "_frozen")  # Center
+    assert not hasattr(patch[0]["value"], "_frozen")  # ControlBuilder
+    assert hasattr(patch[0]["value"].content, "_frozen")  # SafeArea
+    assert hasattr(patch[0]["value"].content.content, "_frozen")  # Center
     assert hasattr(
-        patch[""].content.content.content, "_frozen"
+        patch[0]["value"].content.content.content, "_frozen"
     )  # ControlBuilder (nested)
-    assert hasattr(patch[""].content.content.content.content, "_frozen")  # Text
+    assert hasattr(patch[0]["value"].content.content.content.content, "_frozen")  # Text
 
     state.count = 10
-    patch, added_controls, removed_controls = make_diff(cb, cb)
-    assert len(patch) == 1
-    assert len(added_controls) == 1
-    assert len(removed_controls) == 0
-    assert hasattr(
-        patch["content"]["content"]["content"]["content"]["spans"][0], "_frozen"
-    )  # TextSpan
+    patch, msg, added_controls, removed_controls = make_diff(cb, cb)
+    assert len(added_controls) == 5
+    assert len(removed_controls) == 4
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["content", "content", "content", "content", "value"],
+                "value": "10",
+            },
+            {
+                "op": "replace",
+                "path": ["content", "content", "content", "content", "spans"],
+                "value_type": list,
+            },
+        ],
+    )
+    assert isinstance(patch[1]["value"][0], ft.TextSpan)
+    assert patch[1]["value"][0].text == "SPAN 10"
+    assert hasattr(patch[1]["value"][0], "_frozen")  # TextSpan
 
     state.count = 0
-    patch, added_controls, removed_controls = make_diff(cb, cb)
-    assert len(patch) == 1
-    assert len(added_controls) == 0
-    assert len(removed_controls) == 1
+    patch, msg, added_controls, removed_controls = make_diff(cb, cb)
+    assert len(added_controls) == 4
+    assert len(removed_controls) == 5
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["content", "content", "content", "content", "value"],
+                "value": "0",
+            },
+            {
+                "op": "replace",
+                "path": ["content", "content", "content", "content", "spans"],
+                "value": [],
+            },
+        ],
+    )
 
 
 def test_data_view_with_cache():
@@ -397,30 +733,41 @@ def test_data_view_with_cache():
 
     page = ft.Row([users_list(users)])
 
-    patch, added_controls, removed_controls = make_msg(page, {})
+    _, patch, _, added_controls, removed_controls = make_msg(page, {})
     assert len(added_controls) == 17
     assert len(removed_controls) == 0
 
     # add new user
     users.append(User(4, name="Someone Else", age=99, verified=False))
     page.controls[0] = users_list(users)
-    patch, added_controls, removed_controls = make_diff(page, page)
-    assert len(added_controls) == 5
-    assert len(removed_controls) == 0
+    patch, msg, added_controls, removed_controls = make_diff(page, page)
+    assert len(added_controls) == 6
+    assert len(removed_controls) == 1
+    assert cmp_ops(
+        patch,
+        [{"op": "add", "path": ["controls", 0, "controls", 3], "value_type": ft.Card}],
+    )
+
+    # Card ids: 9, 14, 19, 26
 
     # remove user
     del users[1]
     page.controls[0] = users_list(users)
-    patch, added_controls, removed_controls = make_diff(page, page)
-    print(patch)
-    assert len(patch["controls"][0]["controls"]) == 1
-    assert patch["controls"][0]["controls"]["$d"] == [1]
-    assert len(added_controls) == 0
-    assert len(removed_controls) == 5
+
+    # OLD: 9, 14, 19, 26
+    # NEW: 9, 19, 26
+
+    patch, msg, added_controls, removed_controls = make_diff(page, page)
+    assert cmp_ops(
+        patch,
+        [{"op": "remove", "path": ["controls", 0, "controls", 1]}],
+    )
     # for ac in added_controls:
     #     print("\nADDED CONTROL:", ac)
     # for rc in removed_controls:
     #     print("\nREMOVED CONTROL:", rc)
+    assert len(added_controls) == 1
+    assert len(removed_controls) == 6
 
 
 def test_empty_data_view():

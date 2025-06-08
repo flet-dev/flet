@@ -39,8 +39,7 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     selected_index: int = 0
     """
-    The index into `destinations` for the current selected `NavigationBarDestination` 
-    or `None` if no destination is selected.
+    The index into `destinations` for the current selected `NavigationBarDestination`.
     """
 
     bgcolor: OptionalColorValue = None

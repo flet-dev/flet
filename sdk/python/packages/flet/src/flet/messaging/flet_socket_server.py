@@ -25,6 +25,7 @@ from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
 logger = logging.getLogger("flet")
+transport_log = logging.getLogger("flet_transport")
 
 
 class FletSocketServer(Connection):
@@ -118,7 +119,7 @@ class FletSocketServer(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        # print(f"_on_message: {action} {body}")
+        transport_log.debug(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -179,7 +180,7 @@ class FletSocketServer(Connection):
             task.add_done_callback(self.__running_tasks.discard)
 
     def send_message(self, message: ClientMessage):
-        # print(f"Sending: {message}")
+        transport_log.debug(f"send_message: {message}")
         m = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),

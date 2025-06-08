@@ -86,7 +86,6 @@ from flet.controls.core.autofill_group import (
     AutofillGroupDisposeAction,
     AutofillHint,
 )
-from flet.controls.core.center import Center
 from flet.controls.core.charts.bar_chart import BarChart, BarChartEvent
 from flet.controls.core.charts.bar_chart_group import BarChartGroup
 from flet.controls.core.charts.bar_chart_rod import BarChartRod
@@ -618,7 +617,6 @@ __all__ = [
     "AutofillGroup",
     "AutofillGroupDisposeAction",
     "AutofillHint",
-    "Center",
     "BarChart",
     "BarChartEvent",
     "BarChartGroup",
