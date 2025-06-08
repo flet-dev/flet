@@ -1,4 +1,4 @@
-const defaultPyodideUrl = "https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js";
+const defaultPyodideUrl = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js";
 
 let _apps = {};
 let _documentUrl = document.URL;
