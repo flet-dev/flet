@@ -162,11 +162,11 @@ class BaseControl:
         return True
 
     def did_mount(self):
-        controls_log.debug(f"Control.did_mount: {self._i}")
+        controls_log.debug(f"{self._c}({self._i}).did_mount")
         pass
 
     def will_unmount(self):
-        controls_log.debug(f"Control.will_unmount: {self._i}")
+        controls_log.debug(f"{self._c}({self._i}).will_unmount")
         pass
 
     # public methods

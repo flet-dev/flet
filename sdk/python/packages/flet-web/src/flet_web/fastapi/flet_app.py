@@ -10,7 +10,7 @@ from typing import Any, Optional
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
 from flet.controls.base_control import BaseControl
-from flet.controls.page import PageDisconnectedException
+from flet.controls.page import PageDisconnectedException, _session_page
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -137,6 +137,7 @@ class FletApp(Connection):
         logger.info(f"Start session: {self.__session.id}")
         try:
             assert self.__main is not None
+            _session_page.set(self.__session.page)
             UpdateBehavior.reset()
 
             if asyncio.iscoroutinefunction(self.__main):
@@ -145,7 +146,7 @@ class FletApp(Connection):
                 self.__main(self.__session.page)
 
             if UpdateBehavior.auto_update_enabled():
-                self.__session.auto_update(self.__session.page)
+                await self.__session.auto_update(self.__session.page)
         except PageDisconnectedException:
             logger.debug(
                 "Session handler attempted to update disconnected page: "

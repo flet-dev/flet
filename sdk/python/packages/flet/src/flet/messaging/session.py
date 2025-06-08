@@ -183,6 +183,7 @@ class Session:
             handle_event = control.before_event(e)
 
             if handle_event is None or handle_event:
+                _session_page.set(self.__page)
                 UpdateBehavior.reset()
 
                 # Handle async and sync event handlers accordingly
@@ -199,7 +200,7 @@ class Session:
                         event_handler(e)
 
                 if UpdateBehavior.auto_update_enabled():
-                    self.auto_update(control)
+                    await self.auto_update(control)
 
         except Exception as ex:
             tb = traceback.format_exc()
@@ -228,7 +229,7 @@ class Session:
                 "is not registered."
             )
 
-    def auto_update(self, control: BaseControl):
+    async def auto_update(self, control: BaseControl):
         while control:
             if control.is_isolated():
                 control.update()
