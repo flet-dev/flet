@@ -7,7 +7,7 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
-// import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
+import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_map/flet_map.dart' as flet_map;
@@ -47,7 +47,7 @@ void main([List<String>? args]) async {
   // extensions.add(flet_ads.Extension());
   extensions.add(flet_rive.Extension());
   extensions.add(flet_webview.Extension());
-  // extensions.add(flet_flashlight.Extension());
+  extensions.add(flet_flashlight.Extension());
 
   // initialize extensions
   for (var extension in extensions) {
