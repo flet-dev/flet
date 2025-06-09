@@ -341,6 +341,7 @@ from flet.controls.material.snack_bar import (
     DismissDirection,
     SnackBar,
     SnackBarBehavior,
+    SnackBarAction,
 )
 from flet.controls.material.submenu_button import SubmenuButton
 from flet.controls.material.switch import Switch
@@ -830,6 +831,7 @@ __all__ = [
     "SliderInteraction",
     "DismissDirection",
     "SnackBar",
+    "SnackBarAction",
     "SnackBarBehavior",
     "SubmenuButton",
     "Switch",
