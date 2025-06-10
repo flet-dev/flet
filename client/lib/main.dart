@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
-// import 'package:flet_ads/flet_ads.dart' as flet_ads;
+import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
@@ -33,21 +33,22 @@ void main([List<String>? args]) async {
   await setupDesktop();
 
   WidgetsFlutterBinding.ensureInitialized();
-  List<FletExtension> extensions = [];
+  List<FletExtension> extensions = [
+    flet_audio_recorder.Extension(),
+    flet_geolocator.Extension(),
+    flet_permission_handler.Extension(),
+    flet_lottie.Extension(),
+    flet_map.Extension(),
+    flet_ads.Extension(),
+    flet_rive.Extension(),
+    flet_webview.Extension(),
+    flet_flashlight.Extension(),
+  ];
 
   // --FAT_CLIENT_START--
   extensions.add(flet_audio.Extension());
   extensions.add(flet_video.Extension());
   // --FAT_CLIENT_END--
-  extensions.add(flet_audio_recorder.Extension());
-  extensions.add(flet_geolocator.Extension());
-  extensions.add(flet_permission_handler.Extension());
-  extensions.add(flet_lottie.Extension());
-  extensions.add(flet_map.Extension());
-  // extensions.add(flet_ads.Extension());
-  extensions.add(flet_rive.Extension());
-  extensions.add(flet_webview.Extension());
-  extensions.add(flet_flashlight.Extension());
 
   // initialize extensions
   for (var extension in extensions) {

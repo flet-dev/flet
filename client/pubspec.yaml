@@ -54,11 +54,11 @@ dependencies:
       url: https://github.com/flet-dev/flet-map.git
       ref: v1
       path: src/flutter/flet_map
-#   flet_ads:
-#     git:
-#       url: https://github.com/flet-dev/flet-ads.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_ads
+  flet_ads:
+    git:
+      url: https://github.com/flet-dev/flet-ads.git
+      ref: 0.1.0
+      path: src/flutter/flet_ads
 
   flet_rive:
     git:
