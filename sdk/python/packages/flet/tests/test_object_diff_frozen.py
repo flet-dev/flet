@@ -103,10 +103,10 @@ def test_compare_objects_replaced_no_keys():
     )
 
 
-def test_compare_objects_replaced_with_list_keys():
+def test_compare_objects_replaced_with_control_keys():
     @dataclass
     class Item:
-        list_key: int
+        key: int
         y: int
 
     c1 = ft.Column(
@@ -130,27 +130,27 @@ def test_compare_objects_replaced_with_list_keys():
             {"op": "replace", "path": ["controls", 1], "value_type": Item},
         ],
     )
-    assert patch[0]["value"].list_key == 1
+    assert patch[0]["value"].key == 1
     assert patch[0]["value"].y == 0
-    assert patch[1]["value"].list_key == 2
+    assert patch[1]["value"].key == 2
     assert patch[1]["value"].y == 0
 
 
-def test_compare_objects_updated_and_moved_with_list_keys():
+def test_compare_objects_updated_and_moved_with_control_keys():
     @control("Item")
     class Item(BaseControl):
         y: int
 
     c1 = ft.Column(
         [
-            Item(list_key=2, y=0),
-            Item(list_key=1, y=0),
+            Item(key=2, y=0),
+            Item(key=1, y=0),
         ],
     )
     c2 = ft.Column(
         [
-            Item(list_key=1, y=1),
-            Item(list_key=2, y=2),
+            Item(key=1, y=1),
+            Item(key=2, y=2),
         ]
     )
     c1._frozen = True
@@ -172,22 +172,22 @@ def test_compare_objects_added():
 
     c1 = ft.Column(
         [
-            Item(list_key=3, y=1),
-            Item(list_key=4, y=1),
-            Item(list_key=5, y=1),
-            Item(list_key=6, y=1),
+            Item(key=3, y=1),
+            Item(key=4, y=1),
+            Item(key=5, y=1),
+            Item(key=6, y=1),
         ],
     )
     c2 = ft.Column(
         [
-            Item(list_key=1, y=0),
-            Item(list_key=2, y=0),
-            Item(list_key=4, y=0),
-            Item(list_key=3, y=0),
-            Item(list_key=5, y=0),
-            Item(list_key=6, y=0),
-            Item(list_key=7, y=0),
-            Item(list_key=8, y=0),
+            Item(key=1, y=0),
+            Item(key=2, y=0),
+            Item(key=4, y=0),
+            Item(key=3, y=0),
+            Item(key=5, y=0),
+            Item(key=6, y=0),
+            Item(key=7, y=0),
+            Item(key=8, y=0),
         ]
     )
     c1._frozen = True
@@ -286,9 +286,9 @@ def test_lists_with_key_diff():
         data_series=[
             ft.LineChartData(
                 data_points=[
-                    ft.LineChartDataPoint(list_key=0, x=0, y=1),
-                    ft.LineChartDataPoint(list_key=1, x=1, y=2),
-                    ft.LineChartDataPoint(list_key=2, x=2, y=3),
+                    ft.LineChartDataPoint(key=0, x=0, y=1),
+                    ft.LineChartDataPoint(key=1, x=1, y=2),
+                    ft.LineChartDataPoint(key=2, x=2, y=3),
                 ]
             )
         ]
@@ -297,9 +297,9 @@ def test_lists_with_key_diff():
         data_series=[
             ft.LineChartData(
                 data_points=[
-                    ft.LineChartDataPoint(list_key=1, x=1, y=2),
-                    ft.LineChartDataPoint(list_key=2, x=2, y=2),
-                    ft.LineChartDataPoint(list_key=3, x=3, y=5),
+                    ft.LineChartDataPoint(key=1, x=1, y=2),
+                    ft.LineChartDataPoint(key=2, x=2, y=2),
+                    ft.LineChartDataPoint(key=3, x=3, y=5),
                 ]
             )
         ]
@@ -496,8 +496,7 @@ def test_both_frozen_hosted_by_in_place():
             data_series=[
                 ft.LineChartData(
                     data_points=[
-                        ft.LineChartDataPoint(list_key=dp[0], x=dp[0], y=dp[1])
-                        for dp in ds
+                        ft.LineChartDataPoint(key=dp[0], x=dp[0], y=dp[1]) for dp in ds
                     ]
                 )
                 for ds in data
@@ -724,7 +723,7 @@ def test_data_view_with_cache():
                     ft.Checkbox(label="Verified", value=user.verified),
                 ]
             ),
-            list_key=user.id,
+            key=user.id,
         )
 
     @ft.data_view

@@ -1,18 +1,18 @@
 import asyncio
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.duration import OptionalDurationValue
+from flet.controls.keys import ScrollKey
 from flet.controls.types import (
     Number,
     OptionalEventCallable,
     OptionalNumber,
-    OptionalString,
     ScrollMode,
 )
 
@@ -84,7 +84,7 @@ class ScrollableControl(Control):
         self,
         offset: OptionalNumber = None,
         delta: OptionalNumber = None,
-        scroll_key: OptionalString = None,
+        scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
         duration: OptionalDurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ):
@@ -96,7 +96,7 @@ class ScrollableControl(Control):
         self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
-        scroll_key: Optional[str] = None,
+        scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
         duration: OptionalDurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ):

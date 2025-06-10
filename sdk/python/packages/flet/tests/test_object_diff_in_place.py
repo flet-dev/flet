@@ -460,7 +460,7 @@ def test_add_remove_lists():
         data_series=[
             ft.LineChartData(
                 data_points=[
-                    ft.LineChartDataPoint(list_key=dp[0], x=dp[0], y=dp[1]) for dp in ds
+                    ft.LineChartDataPoint(key=dp[0], x=dp[0], y=dp[1]) for dp in ds
                 ]
             )
             for ds in data

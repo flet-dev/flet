@@ -252,6 +252,7 @@ from flet.controls.gradients import (
     RadialGradient,
     SweepGradient,
 )
+from flet.controls.keys import ScrollKey, ValueKey
 from flet.controls.margin import Margin, MarginValue, OptionalMarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
@@ -1010,4 +1011,6 @@ __all__ = [
     "UpdateBehavior",
     "PubSubClient",
     "PubSubHub",
+    "ScrollKey",
+    "ValueKey",
 ]

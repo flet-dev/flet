@@ -33,6 +33,8 @@ import dataclasses
 import weakref
 from enum import Enum
 
+from flet.controls.keys import Key
+
 _ST_ADD = 0
 _ST_REMOVE = 1
 
@@ -556,17 +558,17 @@ class DiffBuilder:
                         or frozen
                     )
 
-                    old_list_key = getattr(old, "list_key", None)
-                    new_list_key = getattr(new, "list_key", None)
+                    old_control_key = get_control_key(old)
+                    new_control_key = get_control_key(new)
 
                     if (not frozen and old is new) or (
                         frozen
                         and old is not new  # not a cached control tree
                         and type(old) is type(new)  # iteams are of the same type
                         and (
-                            old_list_key is None
-                            or new_list_key is None
-                            or old_list_key == new_list_key
+                            old_control_key is None
+                            or new_control_key is None
+                            or old_control_key == new_control_key
                         )  # same list key or both None
                     ):
                         # print("\n\ncompare list dataclasses:", new)
@@ -585,8 +587,8 @@ class DiffBuilder:
                             path,
                             key,
                             old,
-                            item_key=(old_list_key, path)
-                            if old_list_key is not None
+                            item_key=(old_control_key, path)
+                            if old_control_key is not None
                             else old,
                             frozen=frozen,
                         )
@@ -595,8 +597,8 @@ class DiffBuilder:
                             path,
                             key,
                             new,
-                            item_key=(new_list_key, path)
-                            if new_list_key is not None
+                            item_key=(new_control_key, path)
+                            if new_control_key is not None
                             else new,
                             frozen=frozen,
                         )
@@ -607,23 +609,27 @@ class DiffBuilder:
                     self._item_added(parent, path, key, new, frozen=frozen)
 
             elif len_src > len_dst:
-                list_key = getattr(src[key], "list_key", None)
+                control_key = get_control_key(src[key])
                 self._item_removed(
                     path,
                     len_dst,
                     src[key],
-                    item_key=(list_key, path) if list_key is not None else src[key],
+                    item_key=(control_key, path)
+                    if control_key is not None
+                    else src[key],
                     frozen=frozen,
                 )
 
             else:
-                list_key = getattr(dst[key], "list_key", None)
+                control_key = get_control_key(dst[key])
                 self._item_added(
                     parent,
                     path,
                     key,
                     dst[key],
-                    item_key=(list_key, path) if list_key is not None else dst[key],
+                    item_key=(control_key, path)
+                    if control_key is not None
+                    else dst[key],
                     frozen=frozen,
                 )
 
@@ -914,6 +920,11 @@ class DiffBuilder:
         elif isinstance(item, list):
             for v in item:
                 yield from self._removed_controls(v, recurse)
+
+
+def get_control_key(obj):
+    key = getattr(obj, "key", None)
+    return key.value if isinstance(key, Key) else key
 
 
 def _path_join(path, key):

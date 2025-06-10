@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
+from flet.controls.keys import ScrollKey, ValueKey
 from flet.controls.ref import Ref
 from flet.utils.strings import random_string
 
@@ -102,7 +103,7 @@ class BaseControl:
     _i: int = field(init=False, compare=False)
     _c: str = field(init=False)
     data: Any = skip_field()
-    list_key: Any = skip_field()  # a key that uniquily identifies control within a list
+    key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
