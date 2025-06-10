@@ -98,6 +98,10 @@ class BaseControl:
     _i: int = field(init=False)
     _c: str = field(init=False)
     data: Any = skip_field()
+    """
+    Arbitrary data that can be attached to a control.
+    """
+
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
@@ -121,6 +125,16 @@ class BaseControl:
 
     @property
     def parent(self) -> Optional["BaseControl"]:
+        """
+        Points to the direct ancestor(parent) of this control.
+
+        It defaults to `None` and will only have a value when this control is mounted 
+        (added to the page tree).
+
+        The `Page` control (which is the root of the tree) is an exception - it always 
+        has `parent=None`.
+        """
+
         parent_ref = getattr(self, "_parent", None)
         return parent_ref() if parent_ref else None
 
@@ -142,6 +156,10 @@ class BaseControl:
         pass
 
     def before_update(self):
+        """
+        `before_update()` method is called every time when the control is being updated.
+        Make sure not to call `update()` method within `before_update()`.
+        """
         pass
 
     def before_event(self, e: ControlEvent):

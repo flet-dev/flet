@@ -55,7 +55,6 @@ class FilePickerFileType(Enum):
     """
 
 
-
 @dataclass
 class FilePickerUploadFile:
     upload_url: str
@@ -269,7 +268,8 @@ class FilePicker(Service):
         * `initial_directory` - the initial directory where the dialog should open.
         * `file_type` - the allowed 
         [`FilePickerFileType`](https://flet.dev/docs/reference/types/filepickerfiletype).
-        * `allowed_extensions` - the allowed file extensions. Has effect only if `file_type` is `FilePickerFileType.CUSTOM`.
+        * `allowed_extensions` - the allowed file extensions. Has effect only if 
+        `file_type` is `FilePickerFileType.CUSTOM`.
         * `allow_multiple` - allow selecting multiple files.
         """
         files = await self._invoke_method_async(

@@ -65,19 +65,68 @@ class PageView(AdaptiveControl):
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
-    theme_mode: Optional[ThemeMode] = field(default=ThemeMode.SYSTEM)
+    theme_mode: Optional[ThemeMode] = ThemeMode.SYSTEM
+    """
+    The page's theme mode.
+
+    Value is of type [`ThemeMode`](https://flet.dev/docs/reference/types/thememode) and 
+    defaults to `ThemeMode.SYSTEM`.
+    """
     theme: Optional[Theme] = None
+    """
+    Customizes the theme of the application when in light theme mode. Currently, a 
+    theme can only be automatically generated from a "seed" color. For example, to 
+    generate light theme from a green color.
+
+    Value is an instance of the `Theme()` class - more information in the [theming](https://flet.dev/docs/cookbook/theming) 
+    guide.
+    """
     dark_theme: Optional[Theme] = None
+    """
+    Customizes the theme of the application when in dark theme mode.
+
+    Value is an instance of the `Theme()` class - more information in the 
+    [theming](https://flet.dev/docs/cookbook/theming) guide.
+    """
     locale_configuration: Optional[LocaleConfiguration] = None
     show_semantics_debugger: Optional[bool] = None
+    """
+    `True` turns on an overlay that shows the accessibility information reported by the 
+    framework.
+    """
     width: OptionalNumber = None
     height: OptionalNumber = None
     title: Optional[str] = None
     media: Optional[PageMediaData] = None
     scroll_event_interval: OptionalNumber = None
     on_resized: OptionalEventCallable["PageResizeEvent"] = None
+    """
+    Fires when a user resizes a browser or native OS window containing Flet app, for 
+    example:
+
+    ```python
+    def page_resized(e):
+        print("New page size:", page.window.width, page.window_height)
+
+    page.on_resized = page_resized
+    ```
+
+    Event handler argument is of type [`WindowResizeEvent`](https://flet.dev/docs/reference/types/windowresizeevent).
+    """
     on_media_change: OptionalControlEventCallable = None
+    """
+    Fires when `page.media` has changed. 
+
+    Event handler argument is of type 
+    [`PageMediaData`](https://flet.dev/docs/docs/reference/types/pagemediadata).
+    """
     on_scroll: OptionalEventCallable["OnScrollEvent"] = None
+    """
+    Fires when page's scroll position is changed by a user.
+
+    Event handler argument is of type 
+    [`OnScrollEvent`](https://flet.dev/docs/reference/types/onscrollevent).
+    """
 
     def __default_view(self) -> View:
         assert len(self.views) > 0, "views list is empty."
@@ -90,10 +139,20 @@ class PageView(AdaptiveControl):
             self.page.update(*controls)
 
     def add(self, *controls: Control) -> None:
+        """
+        Adds controls to the page.
+
+        ```python
+        page.add(ft.Text("Hello!"), ft.FilledButton("Button"))
+        ```
+        """
         self.controls.extend(controls)
         self.update()
 
     def insert(self, at: int, *controls: Control) -> None:
+        """
+        Inserts controls at specific index of `page.controls` list.
+        """
         n = at
         for c in controls:
             self.controls.insert(n, c)
@@ -101,11 +160,17 @@ class PageView(AdaptiveControl):
         self.update()
 
     def remove(self, *controls: Control) -> None:
+        """
+        Removes specific controls from `page.controls` list.
+        """
         for c in controls:
             self.controls.remove(c)
         self.update()
 
     def remove_at(self, index: int) -> None:
+        """
+        Remove controls from `page.controls` list at specific index.
+        """
         self.controls.pop(index)
         self.update()
 
@@ -121,6 +186,13 @@ class PageView(AdaptiveControl):
         duration: OptionalDurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ) -> None:
+        """
+        Moves scroll position to either absolute `offset`, relative `delta` or jump to 
+        the control with specified `scroll_key`.
+
+        See [`Column.scroll_to()`](https://flet.dev/docs/controls/column#scroll_tooffset-delta-key-duration-curve) 
+        for method details and examples.
+        """
         self.__default_view().scroll_to(
             offset=offset,
             delta=delta,
@@ -139,6 +211,9 @@ class PageView(AdaptiveControl):
         self.show_dialog(control)
 
     def show_dialog(self, dialog: DialogControl) -> None:
+        """
+        TBD
+        """
         if dialog in self._dialogs.controls:
             raise Exception("Dialog is already opened")
 

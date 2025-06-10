@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Optional, TypeVar, Union
+from typing import Optional, TypeVar, Union
 
 __all__ = ["ControlState", "ControlStateValue", "OptionalControlStateValue"]
 
@@ -17,5 +17,5 @@ class ControlState(Enum):
 
 
 T = TypeVar("T")
-ControlStateValue = Union[T, Dict[ControlState, T]]
+ControlStateValue = Union[T, dict[ControlState, T]]
 OptionalControlStateValue = Optional[ControlStateValue]
