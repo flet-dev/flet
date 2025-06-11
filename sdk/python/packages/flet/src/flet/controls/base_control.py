@@ -1,12 +1,17 @@
 import asyncio
+import logging
 import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
+from flet.controls.keys import ScrollKey, ValueKey
 from flet.controls.ref import Ref
 from flet.utils.strings import random_string
+
+logger = logging.getLogger("flet")
+controls_log = logging.getLogger("flet_controls")
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
 if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
@@ -27,9 +32,12 @@ __all__ = [
     "skip_field",
 ]
 
+_method_calls: dict[str, asyncio.Event] = {}
+_method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+
 
 def skip_field():
-    return field(default=None, repr=False, metadata={"skip": True})
+    return field(default=None, metadata={"skip": True})
 
 
 T = TypeVar("T", bound="BaseControl")
@@ -95,13 +103,13 @@ def _apply_control(
 
 @dataclass(kw_only=True)
 class BaseControl:
-    _i: int = field(init=False)
+    _i: int = field(init=False, compare=False)
     _c: str = field(init=False)
     data: Any = skip_field()
     """
     Arbitrary data that can be attached to a control.
     """
-
+    key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
@@ -117,8 +125,15 @@ class BaseControl:
         if ref is not None:
             ref.current = self
 
-        self.__method_calls: dict[str, asyncio.Event] = {}
-        self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        # control_id = self._i
+        # object_id = id(self)
+        # ctrl_type = self._c
+        # weakref.finalize(
+        #     self,
+        #     lambda: controls_log.debug(
+        #         f"Control was garbage collected: {ctrl_type}({control_id} - {object_id})"
+        #     ),
+        # )
 
     def __hash__(self) -> int:
         return object.__hash__(self)
@@ -128,10 +143,10 @@ class BaseControl:
         """
         Points to the direct ancestor(parent) of this control.
 
-        It defaults to `None` and will only have a value when this control is mounted 
+        It defaults to `None` and will only have a value when this control is mounted
         (added to the page tree).
 
-        The `Page` control (which is the root of the tree) is an exception - it always 
+        The `Page` control (which is the root of the tree) is an exception - it always
         has `parent=None`.
         """
 
@@ -166,13 +181,17 @@ class BaseControl:
         return True
 
     def did_mount(self):
+        controls_log.debug(f"{self._c}({self._i}).did_mount")
         pass
 
     def will_unmount(self):
+        controls_log.debug(f"{self._c}({self._i}).will_unmount")
         pass
 
     # public methods
     def update(self) -> None:
+        if hasattr(self, "_frozen"):
+            raise Exception("Frozen control cannot be updated.")
         assert self.page, (
             f"{self.__class__.__qualname__} Control must be added to the page first"
         )
@@ -192,7 +211,7 @@ class BaseControl:
 
         # register callback
         evt = asyncio.Event()
-        self.__method_calls[call_id] = evt
+        _method_calls[call_id] = evt
 
         # call method
         result = self.page.get_session().invoke_method(
@@ -202,13 +221,13 @@ class BaseControl:
         try:
             await asyncio.wait_for(evt.wait(), timeout=timeout)
         except TimeoutError:
-            if call_id in self.__method_calls:
-                del self.__method_calls[call_id]
+            if call_id in _method_calls:
+                del _method_calls[call_id]
             raise TimeoutError(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             ) from None
 
-        result, err = self.__method_call_results.pop(evt)
+        result, err = _method_call_results.pop(evt)
         if err:
             raise Exception(err)
         return result
@@ -216,8 +235,8 @@ class BaseControl:
     def _handle_invoke_method_results(
         self, call_id: str, result: Any, error: Optional[str]
     ) -> None:
-        evt = self.__method_calls.pop(call_id, None)
+        evt = _method_calls.pop(call_id, None)
         if evt is None:
             return
-        self.__method_call_results[evt] = (result, error)
+        _method_call_results[evt] = (result, error)
         evt.set()

@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
@@ -108,7 +108,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     used instead of this color.
     """
 
-    thumb_color: OptionalControlStateValue[ColorValue] = None
+    thumb_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this switch's thumb
     in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
@@ -119,7 +119,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     `DEFAULT` (fallback).
     """
 
-    thumb_icon: OptionalControlStateValue[IconValue] = None
+    thumb_icon: Optional[ControlStateValue[IconValue]] = None
     """
     The icon of this Switch's thumb in various
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
@@ -129,7 +129,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     `DEFAULT` (fallback).
     """
 
-    track_color: OptionalControlStateValue[ColorValue] = None
+    track_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this switch's track
     in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
@@ -164,7 +164,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The radius of the splash effect when the switch is pressed.
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) for the switch's
     Material in various
@@ -175,7 +175,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     `DEFAULT`.
     """
 
-    track_outline_color: OptionalControlStateValue[ColorValue] = None
+    track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The outline [color](https://flet.dev/docs/reference/colors) of this switch's
     track in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
@@ -186,7 +186,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     `DEFAULT` (fallback).
     """
 
-    track_outline_width: OptionalControlStateValue[OptionalNumber] = None
+    track_outline_width: Optional[ControlStateValue[OptionalNumber]] = None
     """
     The outline width of this switch's track in all or specific
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
@@ -224,6 +224,6 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.splash_radius is None or self.splash_radius >= 0
-        ), "splash_radius cannot be negative"
+        assert self.splash_radius is None or self.splash_radius >= 0, (
+            "splash_radius cannot be negative"
+        )

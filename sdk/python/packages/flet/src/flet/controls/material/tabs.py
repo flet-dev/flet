@@ -7,7 +7,8 @@ from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_event import EventHandler
+from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
@@ -19,7 +20,6 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     TabAlignment,
@@ -61,9 +61,9 @@ class Tab(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (self.label is not None) or (
-            self.icon is not None
-        ), "Tab must have at least label or icon property set"
+        assert (self.label is not None) or (self.icon is not None), (
+            "Tab must have at least label or icon property set"
+        )
 
 
 @control("Tabs")
@@ -187,7 +187,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the ink response focus, hover, and splash
     [colors](https://flet.dev/docs/reference/colors) in various
@@ -251,12 +251,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: EventHandler["Tabs"] = None
     """
     Fires when a tab is clicked.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: EventHandler["Tabs"] = None
     """
     Fires when `selected_index` changes.
     """

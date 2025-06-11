@@ -11,31 +11,22 @@ __all__ = ["ConstrainedControl"]
 
 @control(kw_only=True)
 class ConstrainedControl(Control):
-    """
-    TBD
-    """
-    
-    scroll_key: Optional[str] = None
-    """
-    TBD
-    """
-    
     width: OptionalNumber = None
     """
     Imposed Control width in virtual pixels.
     """
-    
+
     height: OptionalNumber = None
     """
     Imposed Control height in virtual pixels.
     """
-    
+
     left: OptionalNumber = None
     """
     Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance 
     that the child's left edge is inset from the left of the stack.
     """
-    
+
     top: OptionalNumber = None
     """
     Effective inside [`Stack`](https://flet.dev/docs/controls/stack) only. The distance 
@@ -77,7 +68,7 @@ class ConstrainedControl(Control):
     )
     ```
     """
-    
+
     scale: Optional[ScaleValue] = None
     """
     Scale control along the 2D plane. Default scale factor is `1.0` - control is not 
@@ -99,7 +90,7 @@ class ConstrainedControl(Control):
     )
     ```
     """
-    
+
     offset: Optional[OffsetValue] = None
     """
     Applies a translation transformation before painting the control.
@@ -141,7 +132,7 @@ class ConstrainedControl(Control):
     """
     TBD
     """
-    
+
     animate_opacity: Optional[AnimationValue] = None
     """
     Setting control's `animate_opacity` to either `True`, number or an instance of 
@@ -179,12 +170,12 @@ class ConstrainedControl(Control):
     ft.app(main)
     ```
     """
-    
+
     animate_size: Optional[AnimationValue] = None
     """
     TBD
     """
-    
+
     animate_position: Optional[AnimationValue] = None
     """
     Setting control's `animate_position` to either `True`, number or an instance of 
@@ -268,7 +259,7 @@ class ConstrainedControl(Control):
     ft.run(main)
     ```
     """
-    
+
     animate_scale: Optional[AnimationValue] = None
     """
     Setting control's `animate_scale` to either `True`, number or an instance of 
@@ -307,7 +298,7 @@ class ConstrainedControl(Control):
     ft.run(main)
     ```
     """
-    
+
     animate_offset: Optional[AnimationValue] = None
     """
     Setting control's `animate_offset` to either `True`, number or an instance of 
@@ -349,7 +340,7 @@ class ConstrainedControl(Control):
     ft.run(main)
     ```
     """
-    
+
     on_animation_end: OptionalControlEventCallable = None
     """
     All controls with `animate_*` properties have `on_animation_end` event handler 

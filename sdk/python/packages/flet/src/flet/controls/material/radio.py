@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
@@ -57,7 +57,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     added to the page will get focus.
     """
 
-    fill_color: OptionalControlStateValue[ColorValue] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) that fills the radio, in all or
     specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
@@ -70,7 +70,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     is selected.
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The overlay [color](https://flet.dev/docs/reference/colors) of this radio in all or
     specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 

@@ -8,7 +8,7 @@ from flet.controls.box import OptionalBoxConstraints
 from flet.controls.buttons import OptionalOutlinedBorder, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import OptionalTextStyle, TextStyle
@@ -64,14 +64,14 @@ class SearchBar(ConstrainedControl):
     accepts.
     """
 
-    bar_bgcolor: OptionalControlStateValue[ColorValue] = None
+    bar_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the background [color](https://flet.dev/docs/reference/colors) of the
     search bar in all or specific
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
     """
 
-    bar_overlay_color: OptionalControlStateValue[ColorValue] = None
+    bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the highlight [color](https://flet.dev/docs/reference/colors) that's
     typically used to indicate that the search bar is in `FOCUSED`, `HOVERED`, or
@@ -79,42 +79,42 @@ class SearchBar(ConstrainedControl):
     states.
     """
 
-    bar_shadow_color: OptionalControlStateValue[ColorValue] = None
+    bar_shadow_color: Optional[ControlStateValue[ColorValue]] = None
     """
     TBD
     """
 
-    bar_surface_tint_color: OptionalControlStateValue[ColorValue] = None
+    bar_surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
     """
     TBD
     """
 
-    bar_elevation: OptionalControlStateValue[OptionalNumber] = None
+    bar_elevation: Optional[ControlStateValue[OptionalNumber]] = None
     """
     TBD
     """
 
-    bar_border_side: OptionalControlStateValue[BorderSide] = None
+    bar_border_side: Optional[ControlStateValue[BorderSide]] = None
     """
     TBD
     """
 
-    bar_shape: OptionalControlStateValue[OutlinedBorder] = None
+    bar_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
     TBD
     """
 
-    bar_text_style: OptionalControlStateValue[TextStyle] = None
+    bar_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
     TBD
     """
 
-    bar_hint_text_style: OptionalControlStateValue[TextStyle] = None
+    bar_hint_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
     TBD
     """
 
-    bar_padding: OptionalControlStateValue[PaddingValue] = None
+    bar_padding: Optional[ControlStateValue[PaddingValue]] = None
     """
     TBD
     """

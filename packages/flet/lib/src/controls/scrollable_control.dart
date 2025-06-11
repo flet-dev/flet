@@ -1,6 +1,8 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/keys.dart';
+
 class ScrollableControl extends StatefulWidget {
   final Control control;
   final Widget child;
@@ -40,15 +42,16 @@ class _ScrollableControlState extends State<ScrollableControl>
     debugPrint("ScrollableControl.$name($args)");
     var offset = parseDouble(args["offset"]);
     var delta = parseDouble(args["delta"]);
-    var scrollKey = args["scroll_key"] != null
-        ? widget.control.backend.globalKeys[args["scroll_key"]]
+    var scrollKey = parseKey(args["scroll_key"]);
+    var globalKey = scrollKey != null
+        ? widget.control.backend.globalKeys[scrollKey.toString()]
         : null;
     switch (name) {
       case "scroll_to":
         var duration = parseDuration(args["duration"], Duration.zero)!;
         var curve = parseCurve(args["curve"], Curves.ease)!;
-        if (scrollKey != null) {
-          var ctx = scrollKey.currentContext;
+        if (globalKey != null) {
+          var ctx = globalKey.currentContext;
           if (ctx != null) {
             Scrollable.ensureVisible(ctx, duration: duration, curve: curve);
           }

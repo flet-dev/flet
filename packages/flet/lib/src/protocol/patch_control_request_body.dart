@@ -1,6 +1,6 @@
 class PatchControlRequestBody {
   final int id;
-  final Map<String, dynamic> patch;
+  final List<dynamic> patch;
 
   PatchControlRequestBody({
     required this.id,
@@ -10,7 +10,7 @@ class PatchControlRequestBody {
   factory PatchControlRequestBody.fromJson(Map<dynamic, dynamic> json) {
     return PatchControlRequestBody(
       id: json["id"],
-      patch: Map<String, dynamic>.from(json['patch']),
+      patch: List<dynamic>.from(json['patch']),
     );
   }
 }

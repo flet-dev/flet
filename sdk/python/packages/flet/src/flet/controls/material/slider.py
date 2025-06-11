@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -138,7 +138,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     the slider track between the thumb and the `secondary_track_value`.
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight [color](https://flet.dev/docs/reference/colors) that's typically
     used to indicate that the range slider thumb is in `ControlState.HOVERED` or
@@ -204,12 +204,12 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.max is None or self.min <= self.max
-        ), "min must be less than or equal to max"
-        assert (
-            self.value is None or self.value >= self.min
-        ), "value must be greater than or equal to min"
-        assert (
-            self.value is None or self.value <= self.max
-        ), "value must be less than or equal to max"
+        assert self.max is None or self.min <= self.max, (
+            "min must be less than or equal to max"
+        )
+        assert self.value is None or self.value >= self.min, (
+            "value must be greater than or equal to min"
+        )
+        assert self.value is None or self.value <= self.max, (
+            "value must be less than or equal to max"
+        )

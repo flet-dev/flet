@@ -8,6 +8,32 @@ import '../flet_backend.dart';
 typedef InvokeControlMethodCallback = Future<dynamic> Function(
     String name, dynamic args);
 
+enum OperationType {
+  unknown(-1),
+  replace(0),
+  add(1),
+  remove(2),
+  move(3);
+
+  final int value;
+
+  const OperationType(this.value);
+
+  static OperationType? fromInt(int value) {
+    return OperationType.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => unknown, // return unknown if not found
+    );
+  }
+}
+
+class PatchTarget {
+  final dynamic obj;
+  final Control control;
+
+  const PatchTarget(this.obj, this.control);
+}
+
 /// Represents a node or control in the UI tree.
 ///
 /// This class extends `ChangeNotifier`, allowing it to notify listeners
@@ -133,64 +159,193 @@ class Control extends ChangeNotifier {
     return newControl;
   }
 
+  bool update(Map<dynamic, dynamic> props, {bool shouldNotify = false}) {
+    final changes = <String>[];
+    _mergeMaps(this, properties, props, changes, '');
+    if (changes.isNotEmpty) {
+      if (shouldNotify) {
+        notify();
+      }
+      if (changes.any((prop) => _notifyParentProperties.contains(prop))) {
+        _parent?.target?.notify();
+      }
+    }
+    return changes.isNotEmpty;
+  }
+
+  void _mergeMaps(
+    Control? parent,
+    Map<dynamic, dynamic> dst,
+    Map<dynamic, dynamic> src,
+    List<String> changes,
+    String prefix,
+  ) {
+    for (var entry in src.entries) {
+      final key = entry.key;
+      final fullKey = prefix.isEmpty ? key : '$prefix.$key';
+
+      if (dst[key] is Map && entry.value is Map) {
+        _mergeMaps(parent, dst[key], entry.value, changes, fullKey);
+      } else if (dst[key] is Control && entry.value is Map) {
+        _mergeMaps(parent, dst[key].properties, entry.value, changes, fullKey);
+      } else if (dst[key] != entry.value) {
+        dst[key] = _transformIfControl(entry.value, parent, backend);
+        changes.add(fullKey);
+      }
+    }
+  }
+
   ///
   /// Applies a patch (in MessagePack–decoded form) to this ControlNode.
   /// It updates nested ControlNodes or plain data structures accordingly.
   ///
-  void applyPatch(Map<dynamic, dynamic> patch, FletBackend backend,
+  /// Patch format:
+  /// patch := [[<tree_index>],<operation 1>, <operation 2>, ...]
+  ///
+  /// operation := <move_operation> | <remove_operation> | <other_operation>
+  /// move_operation := [3, <src_tree_node_index>, <src_index>,
+  ///      <dst_tree_node_index>, <dst_index>]
+  /// remove_operation := [2, <tree_node_index>, <index>]
+  /// other_operation := [0|1, <tree_node_index>, <property|index>, <value>]
+  ///
+  /// type:
+  ///   Replace = 0
+  ///   Add = 1
+  ///   Remove = 2
+  ///   Move = 3
+  ///
+  /// tree_index := [[0, {"property|position 1": [index, {"property|position 2"}], ...}]
+  ///
+  /// Example:
+  ///  [
+  ///     0,
+  ///     {
+  ///        "data_series":[
+  ///           1,
+  ///           {
+  ///              0:[
+  ///                 2,
+  ///                 {
+  ///                    "data_points":[
+  ///                       3,
+  ///                       {
+  ///                          1:[
+  ///                             4
+  ///                          ]
+  ///                       }
+  ///                    ]
+  ///                 }
+  ///              ]
+  ///           }
+  ///        ],
+  ///     }
+  ///  ]
+  ///
+  /// Tree is converted to a Map with index as a key and Control,
+  /// or other object, or map, or list, as a value:
+  ///
+  /// 0: <Control> # root control .applyPatch is called against
+  /// 1: <List>    # "data_series" collection
+  /// 2: <Control> # "data_series[0]" DataSeries control
+  /// 3: <List>    # "data_series[0]["data_points"]" list of datapoints
+  /// 4: <Control> # "data_series[0]["data_points"][1]" DataPoint control
+  void applyPatch(List<dynamic> patch, FletBackend backend,
       {bool shouldNotify = true}) {
     debugPrint("Control($id).applyPatch: $patch, shouldNotify = $shouldNotify");
-    bool changed = false;
-    bool notifyParentPropertyChanged = false;
-    patch.forEach((key, patchValue) {
-      if (patchValue is Map) {
-        if (properties.containsKey(key)) {
-          var current = properties[key];
-          if (current is Control &&
-              (!patchValue.containsKey("_i") ||
-                  patchValue["_i"] == current.id)) {
-            current.applyPatch(patchValue, backend, shouldNotify: shouldNotify);
-          } else if (current is List) {
-            var merged = mergeList(current, patchValue, backend, shouldNotify);
-            if (merged != current) {
-              properties[key] = merged;
-              changed = true;
-            }
-          } else if (current is Map) {
-            var merged = mergeMap(current, patchValue, backend, shouldNotify);
-            if (merged != current) {
-              properties[key] = merged;
-              changed = true;
-            }
-          } else {
-            properties[key] = _transformIfControl(patchValue, this, backend);
-            changed = true;
+
+    if (patch.length < 2) {
+      throw Exception(
+          "Patch must be a list with at least 2 elements: tree_index, operation");
+    }
+
+    // build map of "to-be-patched" tree nodes
+    Map<int, PatchTarget> treeIndex = {};
+    buildTreeIndex(Control control, dynamic obj, List<dynamic> node) {
+      // node[0] - index
+      // node[1] - map of child properties or indexes
+      treeIndex[node[0]] =
+          PatchTarget(obj is Control ? obj.properties : obj, control);
+      if (node.length > 1 && node[1] is Map) {
+        for (var entry in (node[1] as Map).entries) {
+          // key - property name or list index
+          // value - child node
+          dynamic child;
+          if (obj is Control) {
+            child = obj.properties[entry.key];
+          } else if (obj is Map) {
+            child = obj[entry.key];
+          } else if (obj is List) {
+            child = obj[entry.key];
           }
-        } else {
-          properties[key] = _transformIfControl(patchValue, this, backend);
-          changed = true;
+          if (child is Control) {
+            control = child;
+          }
+          buildTreeIndex(control, child, entry.value);
         }
-      } else if (patchValue is List) {
-        properties[key] = patchValue
-            .map((e) => _transformIfControl(e, this, backend))
-            .toList();
-        changed = true;
+      }
+    }
+
+    buildTreeIndex(this, this, patch[0]);
+    //debugPrint("TREE INDEX: $treeIndex");
+
+    // apply patch commands
+    for (int i = 1; i < patch.length; i++) {
+      var op = patch[i] as List<dynamic>;
+      var opType = OperationType.fromInt(op[0]);
+      if (opType == OperationType.replace) {
+        // REPLACE
+        var node = treeIndex[op[1]]!;
+        var key = op[2];
+        var value = op[3];
+        node.obj[key] = _transformIfControl(value, node.control, backend);
+        if (shouldNotify) {
+          node.control.notify();
+        }
+        if (key is String) {
+          node.control.notifyParentIfPropertyChanged(key);
+        }
+      } else if (opType == OperationType.add) {
+        // ADD
+        var node = treeIndex[op[1]]!;
+        var index = op[2];
+        var value = op[3];
+        if (node.obj is! List) {
+          throw Exception("Add operation can be applied to lists only: $op");
+        }
+        node.obj
+            .insert(index, _transformIfControl(value, node.control, backend));
+        if (shouldNotify) {
+          node.control.notify();
+        }
+      } else if (opType == OperationType.remove) {
+        // REMOVE
+        var node = treeIndex[op[1]]!;
+        var index = op[2];
+        if (node.obj is! List) {
+          throw Exception("Remove operation can be applied to lists only: $op");
+        }
+        node.obj.removeAt(index);
+        if (shouldNotify) {
+          node.control.notify();
+        }
+      } else if (opType == OperationType.move) {
+        // MOVE
+        var fromNode = treeIndex[op[1]]!;
+        var fromIndex = op[2];
+        var toNode = treeIndex[op[3]]!;
+        var toIndex = op[4];
+        if (fromNode.obj is! List || toNode.obj is! List) {
+          throw Exception("Move operation can be applied to lists only: $op");
+        }
+        toNode.obj.insert(toIndex, fromNode.obj.removeAt(fromIndex));
+        if (shouldNotify) {
+          fromNode.control.notify();
+        }
+        if (shouldNotify) {
+          toNode.control.notify();
+        }
       } else {
-        if (properties[key] != patchValue) {
-          properties[key] = patchValue;
-          changed = true;
-          if (_notifyParentProperties.contains(key)) {
-            notifyParentPropertyChanged = true;
-          }
-        }
-      }
-    });
-    if (changed) {
-      if (shouldNotify) {
-        notify();
-      }
-      if (notifyParentPropertyChanged) {
-        _parent?.target?.notify();
+        throw Exception("Unknown patch operation: ${op[0]}");
       }
     }
   }
@@ -201,6 +356,13 @@ class Control extends ChangeNotifier {
       _parent?.target?.notify();
     } else {
       notifyListeners();
+    }
+  }
+
+  void notifyParentIfPropertyChanged(String name) {
+    if (_notifyParentProperties.contains(name)) {
+      debugPrint("notifyParentIfPropertyChanged: $type($id).$name");
+      _parent?.target?.notify();
     }
   }
 
@@ -221,97 +383,6 @@ class Control extends ChangeNotifier {
       }).toList();
     }
     return value;
-  }
-
-  /// Helper: recursively merge a patch Map into a plain Map.
-  Map<dynamic, dynamic> mergeMap(Map<dynamic, dynamic> oldMap,
-      Map<dynamic, dynamic> patch, FletBackend backend, bool notify) {
-    //debugPrint("Merge map: $oldMap, $patch");
-    bool changed = false;
-    Map<dynamic, dynamic> newMap = Map<String, dynamic>.from(oldMap);
-    patch.forEach((k, v) {
-      if (k == "\$d" && v is List) {
-        for (var deleteKey in v) {
-          newMap.remove(deleteKey);
-        }
-      } else {
-        if (newMap.containsKey(k) && newMap[k] is Map && v is Map) {
-          var merged = mergeMap(newMap[k], v, backend, notify);
-          if (merged != newMap[k]) {
-            newMap[k] = merged;
-            changed = true;
-          }
-        } else if (newMap.containsKey(k) && newMap[k] is List && v is Map) {
-          var merged = mergeList(newMap[k], v, backend, notify);
-          if (merged != newMap[k]) {
-            newMap[k] = merged;
-            changed = true;
-          }
-        } else {
-          if (!newMap.containsKey(k) || newMap[k] != v) {
-            newMap[k] = _transformIfControl(v, this, backend);
-            changed = true;
-          }
-        }
-      }
-    });
-    return changed ? newMap : oldMap;
-  }
-
-  /// Helper: recursively merge a patch Map into a plain List.
-  List<dynamic> mergeList(
-      List<dynamic> oldList, Map patch, FletBackend backend, bool notify) {
-    //debugPrint("Merge list: $oldList, $patch");
-    bool changed = false;
-    List<dynamic> newList = List<dynamic>.from(oldList);
-    patch.forEach((k, v) {
-      if (k.toString() == "\$d") {
-        if (v is List) {
-          List<int> indices = List<int>.from(v);
-          for (int index in indices) {
-            if (index >= 0 && index < newList.length) {
-              newList.removeAt(index);
-              changed = true;
-            }
-          }
-        }
-      } else {
-        int index = int.tryParse(k.toString()) ?? -1;
-        if (v is Map && v.containsKey("\$a")) {
-          if (index < 0 || index > newList.length) {
-            throw Exception(("Index is out of range: $patch"));
-          }
-          newList.insert(index, _transformIfControl(v["\$a"], this, backend));
-          changed = true;
-        } else {
-          if (index < 0 || index >= newList.length) {
-            throw Exception(("Index is out of range: $patch"));
-          }
-          if (newList[index] is Map) {
-            var merged = mergeMap(newList[index], v, backend, notify);
-            if (merged != newList[index]) {
-              newList[index] = merged;
-              changed = true;
-            }
-          } else if (newList[index] is List) {
-            var merged = mergeList(newList[index], v, backend, notify);
-            if (merged != newList[index]) {
-              newList[index] = merged;
-              changed = true;
-            }
-          } else if (newList[index] is Control &&
-              v is Map &&
-              (!v.containsKey("_i") || v["_i"] == newList[index].id)) {
-            (newList[index] as Control)
-                .applyPatch(v, backend, shouldNotify: notify);
-          } else {
-            newList[index] = _transformIfControl(v, this, backend);
-            changed = true;
-          }
-        }
-      }
-    });
-    return changed ? newList : oldList;
   }
 
   addInvokeMethodListener(InvokeControlMethodCallback listener) {

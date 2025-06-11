@@ -20,7 +20,7 @@ from flet.messaging.protocol import (
 )
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils.from_dict import from_dict
-from flet.utils.patch_dataclass import patch_dataclass
+from flet.utils.object_model import get_param_count, patch_dataclass
 from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
@@ -95,19 +95,30 @@ class Session:
         patch, added_controls, removed_controls = self.__get_update_control_patch(
             control=control, prev_control=control
         )
-        if patch:
-            for removed_control in removed_controls:
-                removed_control.will_unmount()
-                self.__index.pop(removed_control._i, None)
 
+        # print(f"\n\nremoved_controls: ({len(removed_controls)})")
+        # for c in removed_controls:
+        #     print(f"\n\nremoved_control: {c._c}({c._i} - {id(c)})")
+
+        for removed_control in removed_controls:
+            if not any(added._i == removed_control._i for added in added_controls):
+                removed_control.will_unmount()
+            self.__index.pop(removed_control._i, None)
+
+        if len(patch) > 1:
             self.connection.send_message(
                 ClientMessage(
                     ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
                 )
             )
 
-            for added_control in added_controls:
-                self.__index[added_control._i] = added_control
+        # print(f"\n\nadded_controls: ({len(added_controls)})")
+        # for ac in added_controls:
+        #     print(f"\n\nadded_control: {ac._c}({ac._i} - {id(ac)})")
+
+        for added_control in added_controls:
+            self.__index[added_control._i] = added_control
+            if not any(removed._i == added_control._i for removed in removed_controls):
                 added_control.did_mount()
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
@@ -126,7 +137,10 @@ class Session:
             self.__index[added_control._i] = added_control
             added_control.did_mount()
 
-        return patch[""]
+        # patch format:
+        # [[<tree_index>], <operation_1>, <operation_2>, ...]
+        # <operation> := [<type>, <tree_node_index>, <property|index>, <value>]
+        return patch[1][3]  # [1] - 1st operation -> [3] - Page
 
     # optimizations:
     # - disable auto-update
@@ -142,7 +156,7 @@ class Session:
     ):
         control = self.__index.get(control_id)
         if not control:
-            # control not found
+            logger.debug(f"Control with ID {control_id} not found.")
             return
 
         field_name = f"on_{event_name}"
@@ -169,17 +183,25 @@ class Session:
             handle_event = control.before_event(e)
 
             if handle_event is None or handle_event:
+                _session_page.set(self.__page)
                 UpdateBehavior.reset()
 
                 # Handle async and sync event handlers accordingly
                 event_handler = getattr(control, field_name)
                 if asyncio.iscoroutinefunction(event_handler):
-                    await event_handler(e)
+                    if get_param_count(event_handler) == 0:
+                        await event_handler()
+                    else:
+                        await event_handler(e)
                 elif callable(event_handler):
-                    event_handler(e)
+                    if get_param_count(event_handler) == 0:
+                        event_handler()
+                    else:
+                        event_handler(e)
 
                 if UpdateBehavior.auto_update_enabled():
-                    self.auto_update(control)
+                    await self.auto_update(control)
+
         except Exception as ex:
             tb = traceback.format_exc()
             self.error(f"Exception in '{field_name}': {ex}\n{tb}")
@@ -207,9 +229,9 @@ class Session:
                 "is not registered."
             )
 
-    def auto_update(self, control: BaseControl):
+    async def auto_update(self, control: BaseControl):
         while control:
-            if control.is_isolated():
+            if control.is_isolated() and not hasattr(control, "_frozen"):
                 control.update()
                 break
             control = control.parent
@@ -226,17 +248,9 @@ class Session:
         patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
             control,
-            in_place=True,
             control_cls=BaseControl,
         )
 
         # print("\n\npatch:", patch)
-        # print(f"\n\nadded_controls: ({len(added_controls)})")
-        # for ac in added_controls:
-        #     print(f"added_control: {ac._c}({ac._i})")
 
-        # print(f"\n\nremoved_controls: ({len(removed_controls)})")
-        # for c in removed_controls:
-        #     print(f"removed_control: {c._c}({c._i})")
-
-        return patch.to_graph(), added_controls, removed_controls
+        return patch.to_message(), added_controls, removed_controls

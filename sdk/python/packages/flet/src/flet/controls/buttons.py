@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.alignment import OptionalAlignment
 from flet.controls.border import BorderSide, OptionalBorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
@@ -35,6 +35,7 @@ class OutlinedBorder:
     """
     An abstract class that can be used to create custom borders.
     """
+
     side: OptionalBorderSide = None
     """
     The border outline's color and weight.
@@ -123,33 +124,33 @@ class ButtonStyle:
     such as `HOVERED`, `FOCUSED`, `DISABLED` and others.
     """
 
-    color: OptionalControlStateValue[ColorValue] = None
+    color: Optional[ControlStateValue[ColorValue]] = None
     """
     The color for the button's Text and Icon control descendants.
     """
 
-    bgcolor: OptionalControlStateValue[ColorValue] = None
+    bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     The button's background fill color.
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color that's typically used to indicate that the button is
     focused, hovered, or pressed.
     """
 
-    shadow_color: OptionalControlStateValue[ColorValue] = None
+    shadow_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The shadow color of the button's Material.
     """
 
-    surface_tint_color: OptionalControlStateValue[ColorValue] = None
+    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The surface tint color of the button's Material.
     """
 
-    elevation: OptionalControlStateValue[OptionalNumber] = None
+    elevation: Optional[ControlStateValue[OptionalNumber]] = None
     """
     The elevation of the button's Material.
     """
@@ -160,20 +161,20 @@ class ButtonStyle:
     elevation.
     """
 
-    padding: OptionalControlStateValue[PaddingValue] = None
+    padding: Optional[ControlStateValue[PaddingValue]] = None
     """
     The padding between the button's boundary and its content.
 
     Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
-    side: OptionalControlStateValue[BorderSide] = None
+    side: Optional[ControlStateValue[BorderSide]] = None
     """
     An instance of [`BorderSide`](https://flet.dev/docs/reference/types/borderside)
     class, the color and weight of the button's outline.
     """
 
-    shape: OptionalControlStateValue[OutlinedBorder] = None
+    shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
     The shape of the button's underlying Material.
 
@@ -194,19 +195,19 @@ class ButtonStyle:
     Value is of type `bool`.
     """
 
-    text_style: OptionalControlStateValue[TextStyle] = None
+    text_style: Optional[ControlStateValue[TextStyle]] = None
     """
     The text style of the button's `Text` control descendants.
 
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    icon_size: OptionalControlStateValue[OptionalNumber] = None
+    icon_size: Optional[ControlStateValue[OptionalNumber]] = None
     """
     The icon's size inside of the button.
     """
 
-    icon_color: OptionalControlStateValue[ColorValue] = None
+    icon_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The icon's [color](https://flet.dev/docs/reference/colors) inside the button.
 
@@ -220,7 +221,7 @@ class ButtonStyle:
     Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
     """
 
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
     The cursor to be displayed when the mouse pointer enters or is hovering
     over the button.

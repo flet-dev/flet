@@ -71,11 +71,11 @@ from flet.controls.buttons import (
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_builder import ControlBuilder
+from flet.controls.control_event import ControlEvent, Event, EventHandler
 from flet.controls.control_state import (
     ControlState,
     ControlStateValue,
-    OptionalControlStateValue,
 )
 from flet.controls.core.animated_switcher import (
     AnimatedSwitcher,
@@ -215,6 +215,7 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
+from flet.controls.data_view import data_view
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import (
     DateTimeValue,
@@ -251,6 +252,7 @@ from flet.controls.gradients import (
     RadialGradient,
     SweepGradient,
 )
+from flet.controls.keys import ScrollKey, ValueKey
 from flet.controls.margin import Margin, MarginValue, OptionalMarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
@@ -611,7 +613,6 @@ __all__ = [
     "ControlEvent",
     "ControlState",
     "ControlStateValue",
-    "OptionalControlStateValue",
     "AnimatedSwitcher",
     "AnimatedSwitcherTransition",
     "AutofillGroup",
@@ -643,6 +644,7 @@ __all__ = [
     "ScatterChartSpot",
     "ScatterShartTooltipAlignment",
     "Column",
+    "ControlBuilder",
     "Dismissible",
     "DismissibleDismissEvent",
     "DismissibleUpdateEvent",
@@ -720,6 +722,7 @@ __all__ = [
     "CupertinoTimerPicker",
     "CupertinoTimerPickerMode",
     "CupertinoTintedButton",
+    "data_view",
     "DialogControl",
     "DateTimeValue",
     "Duration",
@@ -1008,4 +1011,8 @@ __all__ = [
     "UpdateBehavior",
     "PubSubClient",
     "PubSubHub",
+    "ScrollKey",
+    "ValueKey",
+    "Event",
+    "EventHandler",
 ]

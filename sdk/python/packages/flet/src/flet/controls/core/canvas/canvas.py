@@ -4,13 +4,13 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.types import OptionalEventCallable, OptionalNumber
 
 
 @dataclass
-class CanvasResizeEvent(ControlEvent):
+class CanvasResizeEvent(Event["Canvas"]):
     width: float = field(metadata={"data_field": "w"})
     """
     New width of the canvas.
@@ -53,4 +53,3 @@ class Canvas(ConstrainedControl):
     Event object `e` is an instance of
     [CanvasResizeEvent](https://flet.dev/docs/reference/types/canvasresizeevent).
     """
-

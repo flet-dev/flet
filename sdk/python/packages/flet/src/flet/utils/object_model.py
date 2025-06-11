@@ -10,11 +10,6 @@ from flet.utils.from_dict import from_dict
 def patch_dataclass(obj: Any, patch: dict):
     cls = obj.__class__
 
-    def setattr_with_no_changes(obj, name, value):
-        setattr(obj, name, value)
-        changes = getattr(obj, "__changes", {})
-        changes.pop(name, None)
-
     try:
         frame = inspect.currentframe().f_back
         globalns = sys.modules[cls.__module__].__dict__
@@ -37,9 +32,7 @@ def patch_dataclass(obj: Any, patch: dict):
             # Nested dataclass patching
             if dataclasses.is_dataclass(actual_type) and isinstance(value, dict):
                 if current_value is None:
-                    setattr_with_no_changes(
-                        obj, field_name, from_dict(actual_type, value)
-                    )
+                    object.__setattr__(obj, field_name, from_dict(actual_type, value))
                 else:
                     patch_dataclass(current_value, value)
 
@@ -47,20 +40,20 @@ def patch_dataclass(obj: Any, patch: dict):
             elif get_origin(actual_type) is list and isinstance(value, list):
                 item_type = get_args(actual_type)[0]
                 if dataclasses.is_dataclass(item_type):
-                    setattr_with_no_changes(
+                    object.__setattr__(
                         obj, field_name, [from_dict(item_type, item) for item in value]
                     )
                 else:
-                    setattr_with_no_changes(obj, field_name, value)
+                    object.__setattr__(obj, field_name, value)
 
             # Enum
             elif is_enum(actual_type):
                 enum_value = actual_type(value)
-                setattr_with_no_changes(obj, field_name, enum_value)
+                object.__setattr__(obj, field_name, enum_value)
 
             # Simple literal or other value
             else:
-                setattr_with_no_changes(obj, field_name, value)
+                object.__setattr__(obj, field_name, value)
         elif field_name.startswith("_"):
             setattr(obj, field_name, value)
 
@@ -78,3 +71,10 @@ def resolve_actual_type(tp: Any) -> Any:
 
 def is_enum(tp: Any) -> bool:
     return isinstance(tp, type) and issubclass(tp, Enum)
+
+
+def get_param_count(fn):
+    try:
+        return len(inspect.signature(fn).parameters)
+    except (ValueError, TypeError):
+        return None

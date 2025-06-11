@@ -6,10 +6,7 @@ from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
 from flet.controls.types import Number, ResponsiveNumber
 
-__all__ = [
-    "Control",
-    "OptionalControl"
-]
+__all__ = ["Control", "OptionalControl"]
 
 
 @dataclass(kw_only=True)
@@ -17,7 +14,7 @@ class Control(BaseControl):
     """
     TBD
     """
-    
+
     expand: Optional[Union[bool, int]] = None
     """
     When a child Control is placed into a [`Column`](https://flet.dev/docs/controls/column) 
@@ -180,7 +177,7 @@ class Control(BaseControl):
 
     | Breakpoint | Dimension |
     |---|---|
-    | xs | \<576px |
+    | xs | <576px |
     | sm | ≥576px |
     | md | ≥768px |
     | lg | ≥992px |
@@ -189,7 +186,7 @@ class Control(BaseControl):
 
     If `col` property is not specified, it spans the maximum number of columns (12).
     """
-    
+
     opacity: Number = 1.0
     """
     Defines the transparency of the control.
@@ -217,7 +214,7 @@ class Control(BaseControl):
     all its children if any) from rendering on a page canvas. Hidden controls cannot be 
     focused or selected with a keyboard or mouse and they do not emit any events.
     """
-    
+
     disabled: bool = False
     """
     Every control has `disabled` property which is `False` by default - control and all 
@@ -247,12 +244,12 @@ class Control(BaseControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            0.0 <= self.opacity <= 1.0
-        ), "opacity must be between 0.0 and 1.0 inclusive"
-        assert self.expand is None or isinstance(
-            self.expand, (bool, int)
-        ), "expand must be of bool or int type"
+        assert 0.0 <= self.opacity <= 1.0, (
+            "opacity must be between 0.0 and 1.0 inclusive"
+        )
+        assert self.expand is None or isinstance(self.expand, (bool, int)), (
+            "expand must be of bool or int type"
+        )
 
     def clean(self) -> None:
         raise Exception("Deprecated!")

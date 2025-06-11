@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     IconValue,
@@ -108,20 +108,20 @@ class CupertinoSwitch(ConstrainedControl):
     switch is off.
     """
 
-    track_outline_color: OptionalControlStateValue[ColorValue] = None
+    track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The outline [color](https://flet.dev/docs/reference/colors) of this switch's track 
     in various 
     [ControlState](https://flet.dev/docs/reference/types/controlstate) states.
     """
 
-    track_outline_width: OptionalControlStateValue[OptionalNumber] = None
+    track_outline_width: Optional[ControlStateValue[OptionalNumber]] = None
     """
     The outline width of this switch's track in all or specific 
     [ControlState](https://flet.dev/docs/reference/types/controlstate) states.
     """
 
-    thumb_icon: OptionalControlStateValue[IconValue] = None
+    thumb_icon: Optional[ControlStateValue[IconValue]] = None
     """
     The icon of this Switch's thumb in various 
     [ControlState](https://flet.dev/docs/reference/types/controlstate) states.

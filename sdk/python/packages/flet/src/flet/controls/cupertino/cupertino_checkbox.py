@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
@@ -80,7 +80,7 @@ class CupertinoCheckbox(ConstrainedControl):
     shadow when it has the input focus.
     """
 
-    fill_color: OptionalControlStateValue[ColorValue] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) used to fill the checkbox in 
     all or specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
@@ -117,7 +117,7 @@ class CupertinoCheckbox(ConstrainedControl):
     on the UI.
     """
 
-    border_side: OptionalControlStateValue[BorderSide] = None
+    border_side: Optional[ControlStateValue[BorderSide]] = None
     """
     Defines the checkbox's border sides in all or specific 
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
