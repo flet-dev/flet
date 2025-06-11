@@ -114,8 +114,12 @@ class BoxDecoration:
     border_radius: OptionalBorderRadiusValue = None
     shadow: Optional[ShadowValue] = None
     gradient: Optional[Gradient] = None
-    shape: Optional[BoxShape] = None
+    shape: Optional[BoxShape] = BoxShape.RECTANGLE
     blend_mode: Optional[BlendMode] = None
+
+    def __post_init__(self):
+        assert self.blend_mode is None or self.bgcolor is not None or self.gradient is not None, "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
+        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), "border_radius must be None when shape is BoxShape.CIRCLE"
 
 
 @dataclass

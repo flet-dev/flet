@@ -8,7 +8,7 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import OptionalControlStateValue
-from flet.controls.core.gesture_detector import TapEvent
+from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -30,7 +30,7 @@ class DataColumnSortEvent(ControlEvent):
     ascending: bool = field(metadata={"data_field": "asc"})
 
 
-@control("column")
+@control("DataColumn")
 class DataColumn(Control):
     """
     Column configuration for a `DataTable`.
@@ -68,7 +68,7 @@ class DataColumn(Control):
     """
     Defines the horizontal layout of the label and sort indicator in the heading row.
 
-    Value is of type [MainAxisAlignment](https://flet.dev/docs/reference/types/mainaxisalignment).
+    Value is of type [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment).
     """
 
     on_sort: OptionalEventCallable[DataColumnSortEvent] = None
@@ -85,7 +85,7 @@ class DataColumn(Control):
         ), "label must be visible"
 
 
-@control("cell")
+@control("DataCell")
 class DataCell(Control):
     """
     The data for a cell of a `DataTable`.
@@ -172,7 +172,7 @@ class DataCell(Control):
         assert self.content.visible, "content must be visible"
 
 
-@control("row")
+@control("DataRow")
 class DataRow(Control):
     """
     Row configuration and cell data for a DataTable.
@@ -226,7 +226,7 @@ class DataRow(Control):
     for that particular cell.
     """
 
-    on_select_changed: OptionalControlEventCallable = None
+    on_select_change: OptionalControlEventCallable = None
     """
     Called when the user selects or unselects a selectable row.
 
@@ -253,9 +253,6 @@ class DataRow(Control):
         assert any(
             cell.visible for cell in self.cells
         ), "cells must contain at minimum one visible DataCell"
-        assert all(
-            isinstance(cell, DataCell) for cell in self.cells
-        ), "cells must contain only DataCell instances"  # todo: is this needed?
 
 
 @control("DataTable")
@@ -266,7 +263,7 @@ class DataTable(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/datatable
     """
 
-    columns: list[DataColumn] = field(default_factory=list)
+    columns: list[DataColumn]
     """
     A list of [DataColumn](https://flet.dev/docs/controls/datatable#datacolumn) 
     controls describing table columns.
@@ -447,7 +444,7 @@ class DataTable(ConstrainedControl):
     content in the first data column.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option. 
 
@@ -480,8 +477,10 @@ class DataTable(ConstrainedControl):
             len(visible_columns) > 0
         ), "columns must contain at minimum one visible DataColumn"
         assert all(
-            len([c for c in row.cells if c.visible]) == len(visible_columns)
-            for row in visible_rows
+            [
+                len([c for c in row.cells if c.visible]) == len(visible_columns)
+                for row in visible_rows
+            ]
         ), (
             f"each visible DataRow must contain exactly as many visible DataCells as "
             f"there are visible DataColumns ({len(visible_columns)})"
@@ -498,11 +497,8 @@ class DataTable(ConstrainedControl):
             0 <= self.sort_column_index < len(visible_columns)
         ), (
             f"sort_column_index must be greater than or equal to 0 and less than the "
-            f"number of columns ({len(visible_columns)})"
+            f"number of visible columns ({len(visible_columns)})"
         )
         assert all(
             isinstance(column, DataColumn) for column in self.columns
         ), "columns must contain only DataColumn instances"
-        assert all(
-            isinstance(row, DataRow) for row in self.rows
-        ), "rows must contain only DataRow instances"  # todo: is this needed?
