@@ -4,13 +4,12 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, ControlEventHandler
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
     FontWeight,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
     TextAlign,
@@ -326,7 +325,7 @@ class Text(ConstrainedControl):
     TBD
     """
 
-    on_tap: OptionalControlEventCallable = None
+    on_tap: ControlEventHandler["Text"] = None
     """
     TBD
     """
