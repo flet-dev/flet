@@ -6,12 +6,12 @@ from flet.controls.alignment import OptionalAlignment
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValueOrControl,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     StrOrControl,
     UrlTarget,
 )
@@ -124,22 +124,22 @@ class CupertinoButton(ConstrainedControl):
     TBD
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["CupertinoButton"] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["CupertinoButton"] = None
     """
     Fires when a user long-presses the button.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["CupertinoButton"] = None
     """
     Fires when the button receives focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["CupertinoButton"] = None
     """
     Fires when the button loses focus.
     """

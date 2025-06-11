@@ -5,8 +5,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
-from flet.controls.types import Number, OptionalColorValue, OptionalControlEventCallable
+from flet.controls.types import Number, OptionalColorValue
 
 __all__ = [
     "CupertinoDatePicker",
@@ -151,7 +152,7 @@ class CupertinoDatePicker(ConstrainedControl):
     :::
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["CupertinoDatePicker"] = None
     """
     Fires when the selected date and/or time changes. Will not fire if the new 
     selected value is not valid, or is not in the range of `first_date` and `last_date`.

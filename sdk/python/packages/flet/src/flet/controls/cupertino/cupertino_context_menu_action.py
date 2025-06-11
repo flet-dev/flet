@@ -2,7 +2,8 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.types import IconValue, OptionalControlEventCallable, StrOrControl
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.types import IconValue, StrOrControl
 
 __all__ = ["CupertinoContextMenuAction"]
 
@@ -35,7 +36,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
     An optional icon to display at the right of the `text` or `content` control.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["CupertinoContextMenuAction"] = None
     """
     Fires when this action button is clicked.
     """
