@@ -5,12 +5,11 @@ from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import ControlEvent, Event, EventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.types import (
     Brightness,
     Number,
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalNumber,
 )
 
@@ -52,9 +51,10 @@ class WindowResizeEdge(Enum):
 @control("Window")
 class Window(BaseControl):
     """
-    All properties and methods of the `Window` class are available only on Desktop 🖥️ 
+    All properties and methods of the `Window` class are available only on Desktop 🖥️
     platforms.
     """
+
     bgcolor: OptionalColorValue = None
     """
     Sets background https://flet.dev/docs/reference/colors of an application window.
