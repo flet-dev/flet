@@ -5,7 +5,7 @@ from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, Event, EventHandler
 from flet.controls.types import (
     Brightness,
     Number,
@@ -245,7 +245,7 @@ class Window(BaseControl):
     below it. If this window has focus, it will still receive keyboard events.
     """
 
-    on_event: OptionalEventCallable["WindowEvent"] = None
+    on_event: EventHandler["WindowEvent"] = None
     """
     Fires when app window changes its state: position, size, maximized, minimized, etc.
     """
@@ -298,5 +298,5 @@ class Window(BaseControl):
 
 
 @dataclass
-class WindowEvent(ControlEvent):
+class WindowEvent(Event["Window"]):
     type: WindowEventType
