@@ -6,13 +6,12 @@ from flet.controls.base_control import control
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.material.container import Container
 from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
     Number,
-    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
 )
@@ -131,7 +130,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     See the example at the top of this page for a possible implementation.
     """
 
-    on_resize: OptionalControlEventCallable = None
+    on_resize: ControlEventHandler["Dismissible"] = None
     """
     Fires when this control changes size, for example, when contracting before
     being dismissed.

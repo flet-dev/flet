@@ -36,7 +36,7 @@ from flet.controls.session_storage import SessionStorage
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
-    OptionalControlEventCallable,
+    ControlEventHandler,
     OptionalEventCallable,
     PagePlatform,
     Wrapper,
@@ -236,7 +236,7 @@ class Page(PageView):
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
-    on_platform_brightness_change: OptionalControlEventCallable = None
+    on_platform_brightness_change: ControlEventHandler["Page"] = None
     """
     Fires when brightness of app host platform has changed.
     """
@@ -277,7 +277,7 @@ class Page(PageView):
     [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
     """
 
-    on_connect: OptionalControlEventCallable = None
+    on_connect: ControlEventHandler["Page"] = None
     """
     Fires when a web user (re-)connects to a page session.
 
@@ -287,13 +287,13 @@ class Page(PageView):
     "online".
     """
 
-    on_disconnect: OptionalControlEventCallable = None
+    on_disconnect: ControlEventHandler["Page"] = None
     """
     Fires when a web user disconnects from a page session, i.e. closes browser
     tab/window.
     """
 
-    on_close: OptionalControlEventCallable = None
+    on_close: ControlEventHandler["Page"] = None
     """
     Fires when a session has expired after configured amount of time
     (60 minutes by default).
@@ -307,12 +307,12 @@ class Page(PageView):
     guide for more information and examples.
     """
 
-    on_logout: OptionalControlEventCallable = None
+    on_logout: ControlEventHandler["Page"] = None
     """
     Fires after `page.logout()` call.
     """
 
-    on_error: OptionalControlEventCallable = None
+    on_error: ControlEventHandler["Page"] = None
     """
     Fires when unhandled exception occurs.
     """

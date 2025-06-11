@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.material.badge import BadgeValue
-from flet.controls.types import OptionalControlEventCallable, OptionalNumber
+from flet.controls.types import ControlEventHandler, OptionalNumber
 
 __all__ = ["Semantics"]
 
@@ -192,93 +192,93 @@ class Semantics(Control):
     Whether the node represents an image.
     """
 
-    on_tap: OptionalControlEventCallable = None
+    on_tap: ControlEventHandler["Semantics"] = None
     """
     Fires when this control is tapped.
     """
 
-    on_double_tap: OptionalControlEventCallable = None
+    on_double_tap: ControlEventHandler["Semantics"] = None
     """
     TBD
     """
 
-    on_increase: OptionalControlEventCallable = None
+    on_increase: ControlEventHandler["Semantics"] = None
     """
     Fires when the value represented by the semantics node is increased.
     """
 
-    on_decrease: OptionalControlEventCallable = None
+    on_decrease: ControlEventHandler["Semantics"] = None
     """
     Fires when the value represented by the semantics node is decreased.
     """
 
-    on_dismiss: OptionalControlEventCallable = None
+    on_dismiss: ControlEventHandler["Semantics"] = None
     """
     Fires when the node is dismissed.
     """
 
-    on_scroll_left: OptionalControlEventCallable = None
+    on_scroll_left: ControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from right to left.
     """
 
-    on_scroll_right: OptionalControlEventCallable = None
+    on_scroll_right: ControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from left to right.
     """
 
-    on_scroll_up: OptionalControlEventCallable = None
+    on_scroll_up: ControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from bottom to top.
     """
 
-    on_scroll_down: OptionalControlEventCallable = None
+    on_scroll_down: ControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from top to bottom.
     """
 
-    on_copy: OptionalControlEventCallable = None
+    on_copy: ControlEventHandler["Semantics"] = None
     """
     Fires when the current selection is copied to the clipboard.
     """
 
-    on_cut: OptionalControlEventCallable = None
+    on_cut: ControlEventHandler["Semantics"] = None
     """
     Fires when the current selection is cut to the clipboard.
     """
 
-    on_paste: OptionalControlEventCallable = None
+    on_paste: ControlEventHandler["Semantics"] = None
     """
     Fires when the current content of the clipboard is pasted.
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["Semantics"] = None
     """
     Fires when the node is long-pressed (pressing and holding the screen with the
     finger for a few seconds without moving it).
     """
 
-    on_move_cursor_forward_by_character: OptionalControlEventCallable = None
+    on_move_cursor_forward_by_character: ControlEventHandler["Semantics"] = None
     """
     Fires when the cursor is moved forward by one character.
     """
 
-    on_move_cursor_backward_by_character: OptionalControlEventCallable = None
+    on_move_cursor_backward_by_character: ControlEventHandler["Semantics"] = None
     """
     Fires when the cursor is moved backward by one character.
     """
 
-    on_did_gain_accessibility_focus: OptionalControlEventCallable = None
+    on_did_gain_accessibility_focus: ControlEventHandler["Semantics"] = None
     """
     Fires when the node has gained accessibility focus.
     """
 
-    on_did_lose_accessibility_focus: OptionalControlEventCallable = None
+    on_did_lose_accessibility_focus: ControlEventHandler["Semantics"] = None
     """
     Fires when the node has lost accessibility focus.
     """
 
-    on_set_text: OptionalControlEventCallable = None
+    on_set_text: ControlEventHandler["Semantics"] = None
     """
     Fires when a user wants to replace the current text in the text field with a new
     text.

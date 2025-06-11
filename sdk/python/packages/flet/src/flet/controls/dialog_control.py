@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.types import OptionalControlEventCallable
+from flet.controls.control_event import ControlEventHandler
 
 
 @dataclass(kw_only=True)
@@ -17,7 +17,7 @@ class DialogControl(AdaptiveControl):
     Value is of type `bool` and defaults to `False`.
     """
     
-    on_dismiss: OptionalControlEventCallable = None
+    on_dismiss: ControlEventHandler["DialogControl"] = None
     """
     Fires when dialog is dismissed.
     """

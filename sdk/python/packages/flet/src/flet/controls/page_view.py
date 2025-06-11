@@ -10,7 +10,11 @@ from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import (
+    ControlEventHandler,
+    Event,
+    EventHandler,
+)
 from flet.controls.core.view import View
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
@@ -32,8 +36,6 @@ from flet.controls.types import (
     LocaleConfiguration,
     MainAxisAlignment,
     OptionalColorValue,
-    OptionalControlEventCallable,
-    OptionalEventCallable,
     OptionalNumber,
     ScrollMode,
     ThemeMode,
@@ -51,7 +53,7 @@ class PageMediaData:
 
 
 @dataclass
-class PageResizeEvent(ControlEvent):
+class PageResizeEvent(Event["PageView"]):
     width: float
     height: float
 
@@ -100,7 +102,7 @@ class PageView(AdaptiveControl):
     title: Optional[str] = None
     media: Optional[PageMediaData] = None
     scroll_event_interval: OptionalNumber = None
-    on_resized: OptionalEventCallable["PageResizeEvent"] = None
+    on_resized: EventHandler["PageResizeEvent"] = None
     """
     Fires when a user resizes a browser or native OS window containing Flet app, for 
     example:
@@ -114,14 +116,14 @@ class PageView(AdaptiveControl):
 
     Event handler argument is of type [`WindowResizeEvent`](https://flet.dev/docs/reference/types/windowresizeevent).
     """
-    on_media_change: OptionalControlEventCallable = None
+    on_media_change: ControlEventHandler["PageView"] = None
     """
     Fires when `page.media` has changed. 
 
     Event handler argument is of type 
     [`PageMediaData`](https://flet.dev/docs/docs/reference/types/pagemediadata).
     """
-    on_scroll: OptionalEventCallable["OnScrollEvent"] = None
+    on_scroll: EventHandler["OnScrollEvent"] = None
     """
     Fires when page's scroll position is changed by a user.
 
