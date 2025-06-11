@@ -1,11 +1,11 @@
-from typing import Any, Dict, List
+from typing import Any
 
 __all__ = ["SessionStorage"]
 
 
 class SessionStorage:
     def __init__(self):
-        self.__store: Dict[str, Any] = {}
+        self.__store: dict[str, Any] = {}
 
     def set(self, key: str, value: Any):
         self.__store[key] = value
@@ -19,7 +19,7 @@ class SessionStorage:
     def remove(self, key: str):
         self.__store.pop(key)
 
-    def get_keys(self) -> List[str]:
+    def get_keys(self) -> list[str]:
         return list(self.__store.keys())
 
     def clear(self):

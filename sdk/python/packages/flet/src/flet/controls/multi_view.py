@@ -8,5 +8,15 @@ __all__ = ["MultiView"]
 
 @control()
 class MultiView(PageView):
+    """
+    TBD
+    """
+    
     view_id: int
+    """
+    TBD
+    """
     initial_data: dict[str, Any]
+    """
+    TBD
+    """
