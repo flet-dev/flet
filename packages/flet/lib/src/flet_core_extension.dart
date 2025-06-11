@@ -104,6 +104,7 @@ import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
+import 'controls/window_drag_area.dart';
 import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
@@ -331,7 +332,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoRadioControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
-
+      case "WindowDragArea":
+        return WindowDragAreaControl(key: key, control: control);
       case "Pagelet":
         return PageletControl(key: key, control: control);
       default:

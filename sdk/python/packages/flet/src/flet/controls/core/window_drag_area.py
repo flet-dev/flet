@@ -1,60 +1,59 @@
 from typing import Any
-
+from flet.controls.base_control import control
+from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.core.gesture_detector import (
-    DragStartEvent,
-    GestureDetector,
-    TapEvent,
-)
+from flet.controls.core.window import WindowEvent
+from flet.controls.events import DragStartEvent
+from flet.controls.events import DragEndEvent
 from flet.controls.types import OptionalEventCallable
 
 
-class WindowDragArea(GestureDetector):
+@control("WindowDragArea")
+class WindowDragArea(ConstrainedControl):
     """
     A control for drag to move, maximize and restore application window.
 
-    When you have hidden the title bar with `page.window_title_bar_hidden`, you can add 
+    When you have hidden the title bar with `page.window_title_bar_hidden`, you can add
     this control to move the window position.
 
     Online docs: https://flet.dev/docs/controls/windowdragarea
     """
 
-    def __init__(
-        self,
-        content: Control,
-        maximizable: bool = True,
-        on_double_tap: OptionalEventCallable["TapEvent"] = None,
-        on_pan_start: OptionalEventCallable["DragStartEvent"] = None,
-        **kwargs: Any,
-    ):
-        GestureDetector.__init__(
-            self,
-            content=content,
-            on_double_tap=self.handle_double_tap,
-            on_pan_start=self.handle_pan_start,
-            **kwargs,
-        )
+    content: Control
+    """
+    The content of this `WindowDragArea`.
+    """
 
-        self.maximizable = maximizable
-        self.on_double_tap = on_double_tap
-        self.on_pan_start = on_pan_start
+    maximizable: bool = True
+    """
+    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's window.
+    Defaults to `True`.
+    """
+
+    on_double_tap: OptionalEventCallable[WindowEvent] = None
+    """
+    Fires when the `WindowDragArea` is double-tapped and `maximizable=True`.
+    
+    Event handler argument is of type `WindowEvent`, 
+    with its `type` property being one of the following: `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`
+    """
+
+    on_drag_start: OptionalEventCallable[DragStartEvent] = None
+    """
+    Fires when a pointer has contacted the screen and has begun to move/drag.
+
+    Event handler argument is of type
+    [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
+    """
+
+    on_drag_end: OptionalEventCallable[DragEndEvent] = None
+    """
+    Fires when a pointer that was previously in contact with the screen and moving/dragging is no longer in contact with the screen.
+    
+    Event handler argument is of type
+    [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
+    """
 
     def before_update(self):
         super().before_update()
         assert self.content.visible, "content must be visible"
-
-    def handle_double_tap(self, e: TapEvent):
-        if self.maximizable and self.page.window.maximizable:
-            if not self.page.window.maximized:
-                self.page.window.maximized = True
-            else:
-                self.page.window.maximized = False
-            self.page.update()
-
-        if self.on_double_tap is not None and self.page.window.maximized:
-            self.on_double_tap(e)
-
-    def handle_pan_start(self, e: DragStartEvent):
-        self.page.window.start_dragging()
-        if self.on_pan_start is not None:
-            self.on_pan_start(e)
