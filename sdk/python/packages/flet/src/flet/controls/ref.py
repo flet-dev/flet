@@ -6,13 +6,13 @@ __all__ = ["Ref"]
 
 
 class Ref(Generic[T]):
-    def __init__(self, value: T = None):
-        self._current: Optional[weakref.ref[T]] = weakref.ref(value) if value is not None else None
+    def __init__(self, value: Optional[T] = None):
+        self.current = value
 
     @property
     def current(self) -> Optional[T]:
-        return self._current() if self._current is not None else None
+        return self._ref() if self._ref else None
 
     @current.setter
     def current(self, value: Optional[T]):
-        self._current = weakref.ref(value) if value is not None else None
+        self._ref = weakref.ref(value) if value is not None else None
