@@ -231,7 +231,7 @@ class Session:
 
     async def auto_update(self, control: BaseControl):
         while control:
-            if control.is_isolated():
+            if control.is_isolated() and not hasattr(control, "_frozen"):
                 control.update()
                 break
             control = control.parent

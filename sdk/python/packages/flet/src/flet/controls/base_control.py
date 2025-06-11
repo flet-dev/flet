@@ -190,7 +190,8 @@ class BaseControl:
 
     # public methods
     def update(self) -> None:
-        # TODO - frozen control cannot be updated
+        if hasattr(self, "_frozen"):
+            raise Exception("Frozen control cannot be updated.")
         assert self.page, (
             f"{self.__class__.__qualname__} Control must be added to the page first"
         )
