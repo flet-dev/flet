@@ -4,8 +4,11 @@ from dataclasses import InitVar, dataclass, field
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
     ForwardRef,
+    Generic,
     Optional,
+    TypeVar,
     Union,
     _eval_type,
     get_args,
@@ -16,14 +19,17 @@ if TYPE_CHECKING:
     from .base_control import BaseControl
     from .page import Page
     from .page_view import PageView
-__all__ = ["ControlEvent"]
+
+__all__ = ["ControlEvent", "EventHandler", "Event"]
+
+T = TypeVar("T", bound="BaseControl")
 
 
 @dataclass
-class ControlEvent:
+class Event(Generic[T]):
     name: str
     data: Optional[Any] = field(default=None, kw_only=True)
-    control: "BaseControl" = field(repr=False)
+    control: T = field(repr=False)
 
     @property
     def page(self) -> Optional[Union["Page", "PageView"]]:
@@ -72,3 +78,8 @@ class ControlEvent:
             return event_type
         except Exception as e:
             raise Exception(f"[resolve error] {field_name}: {e}") from e
+
+
+EventHandler = Union[Callable[[], None], Callable[[Event[T]], None], None]
+
+ControlEvent = Event["BaseControl"]

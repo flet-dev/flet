@@ -7,6 +7,7 @@ from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import EventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
@@ -19,7 +20,6 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     TabAlignment,
@@ -251,12 +251,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: EventHandler["Tabs"] = None
     """
     Fires when a tab is clicked.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: EventHandler["Tabs"] = None
     """
     Fires when `selected_index` changes.
     """

@@ -72,7 +72,7 @@ from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
 from flet.controls.control_builder import ControlBuilder
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, Event, EventHandler
 from flet.controls.control_state import (
     ControlState,
     ControlStateValue,
@@ -1013,4 +1013,6 @@ __all__ = [
     "PubSubHub",
     "ScrollKey",
     "ValueKey",
+    "Event",
+    "EventHandler",
 ]
