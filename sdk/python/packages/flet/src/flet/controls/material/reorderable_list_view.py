@@ -1,9 +1,9 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event
 from flet.controls.core.list_view import ListView
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
@@ -17,7 +17,8 @@ from flet.controls.types import (
 __all__ = ["ReorderableListView", "OnReorderEvent"]
 
 
-class OnReorderEvent(ControlEvent):
+@dataclass
+class OnReorderEvent(Event["ReorderableListView"]):
     new_index: Optional[int]
     old_index: Optional[int]
 

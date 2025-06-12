@@ -7,6 +7,7 @@ import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -53,7 +54,10 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var anchor = widget.control.getDouble("anchor", 0.0)!;
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
-    var controls = widget.control.buildWidgets("controls");
+    var controls = widget.control
+        .children("controls")
+        .map((child) => ControlWidget(key: ValueKey(child.id), control: child))
+        .toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
     var header = widget.control.buildWidget("header");
     var footer = widget.control.buildWidget("footer");
@@ -64,13 +68,6 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
 
     void onReorder(int oldIndex, int newIndex) {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      setState(() {
-        final movedControl = controls.removeAt(oldIndex);
-        controls.insert(newIndex, movedControl);
-      });
       widget.control.triggerEvent(
           "reorder", {"old_index": oldIndex, "new_index": newIndex});
     }
