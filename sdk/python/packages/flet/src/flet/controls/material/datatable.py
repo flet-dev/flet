@@ -7,7 +7,7 @@ from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.text_style import TextStyle
@@ -191,7 +191,7 @@ class DataRow(Control):
     There must be exactly as many cells as there are columns in the table.
     """
 
-    color: OptionalControlStateValue[ColorValue] = None
+    color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) for the row.
 
@@ -250,9 +250,9 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(
-            cell.visible for cell in self.cells
-        ), "cells must contain at minimum one visible DataCell"
+        assert any(cell.visible for cell in self.cells), (
+            "cells must contain at minimum one visible DataCell"
+        )
 
 
 @control("DataTable")
@@ -361,7 +361,7 @@ class DataTable(ConstrainedControl):
     The horizontal margin between the contents of each data column.
     """
 
-    data_row_color: OptionalControlStateValue[ColorValue] = None
+    data_row_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The background [color](https://flet.dev/docs/reference/colors) for the data rows.
 
@@ -414,7 +414,7 @@ class DataTable(ConstrainedControl):
     Defaults to 1.0.
     """
 
-    heading_row_color: OptionalControlStateValue[ColorValue] = None
+    heading_row_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The background [color](https://flet.dev/docs/reference/colors) for the heading row.
 
@@ -473,9 +473,9 @@ class DataTable(ConstrainedControl):
         super().before_update()
         visible_columns = list(filter(lambda column: column.visible, self.columns))
         visible_rows = list(filter(lambda row: row.visible, self.rows))
-        assert (
-            len(visible_columns) > 0
-        ), "columns must contain at minimum one visible DataColumn"
+        assert len(visible_columns) > 0, (
+            "columns must contain at minimum one visible DataColumn"
+        )
         assert all(
             [
                 len([c for c in row.cells if c.visible]) == len(visible_columns)
@@ -490,15 +490,12 @@ class DataTable(ConstrainedControl):
             or self.data_row_max_height is None
             or (self.data_row_min_height <= self.data_row_max_height)
         ), "data_row_min_height must be less than or equal to data_row_max_height"
-        assert (
-            self.divider_thickness is None or self.divider_thickness >= 0
-        ), "divider_thickness must be greater than or equal to 0"
+        assert self.divider_thickness is None or self.divider_thickness >= 0, (
+            "divider_thickness must be greater than or equal to 0"
+        )
         assert self.sort_column_index is None or (
             0 <= self.sort_column_index < len(visible_columns)
         ), (
             f"sort_column_index must be greater than or equal to 0 and less than the "
             f"number of visible columns ({len(visible_columns)})"
         )
-        assert all(
-            isinstance(column, DataColumn) for column in self.columns
-        ), "columns must contain only DataColumn instances"

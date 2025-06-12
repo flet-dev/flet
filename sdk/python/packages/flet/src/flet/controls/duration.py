@@ -26,12 +26,42 @@ MICROSECONDS_PER_DAY = 24 * MICROSECONDS_PER_HOUR
 
 @dataclass
 class Duration:
+    """
+    A span of time, such as 27 days, 4 hours, 12 minutes, and 3 seconds.
+
+    A Duration represents a difference from one point in time to another. The duration
+    may be "negative" if the difference is from a later time to an earlier.
+    """
+
     microseconds: int = 0
+    """
+    The number of microseconds in the duration.
+    """
+
     milliseconds: int = 0
+    """
+    The number of milliseconds in the duration.
+    """
+
     seconds: int = 0
+    """
+    The number of seconds in the duration.
+    """
+
     minutes: int = 0
+    """
+    The number of minutes in the duration.
+    """
+
     hours: int = 0
+    """
+    The number of hours in the duration.
+    """
+
     days: int = 0
+    """
+    The number of days in the duration.
+    """
 
     # Class methods
 

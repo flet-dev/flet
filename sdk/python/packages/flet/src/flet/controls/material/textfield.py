@@ -4,6 +4,7 @@ from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
+from flet.controls.control_event import EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import PaddingValue
@@ -14,7 +15,6 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     TextAlign,
 )
@@ -402,44 +402,44 @@ class TextField(FormFieldControl, AdaptiveControl):
     More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: EventHandler["TextField"] = None
     """
     Fires when the typed input for the TextField has changed.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: EventHandler["TextField"] = None
     """
     TBD
     """
 
-    on_submit: OptionalControlEventCallable = None
+    on_submit: EventHandler["TextField"] = None
     """
     Fires when user presses ENTER while focus is on TextField.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: EventHandler["TextField"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: EventHandler["TextField"] = None
     """
     Fires when the control has lost focus.
     """
 
-    on_tap_outside: OptionalControlEventCallable = None
+    on_tap_outside: EventHandler["TextField"] = None
     """
     TBD
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.min_lines is None or self.min_lines > 0
-        ), "min_lines must be greater than 0"
-        assert (
-            self.max_lines is None or self.max_lines > 0
-        ), "min_lines must be greater than 0"
+        assert self.min_lines is None or self.min_lines > 0, (
+            "min_lines must be greater than 0"
+        )
+        assert self.max_lines is None or self.max_lines > 0, (
+            "min_lines must be greater than 0"
+        )
         assert (
             self.max_lines is None
             or self.min_lines is None

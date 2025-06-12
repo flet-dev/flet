@@ -357,8 +357,18 @@ class LocaleConfiguration:
 
 # Events
 EventType = TypeVar("EventType", bound=ControlEvent)
-OptionalEventCallable = Optional[Callable[[EventType], Any]]
-OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
+OptionalEventCallable = Optional[
+    Union[
+        Callable[[], Any],
+        Callable[[EventType], Any],
+    ]
+]
+OptionalControlEventCallable = Optional[
+    Union[
+        Callable[[], Any],
+        Callable[[ControlEvent], Any],
+    ]
+]
 
 # Colors
 ColorEnums = (Colors, CupertinoColors)

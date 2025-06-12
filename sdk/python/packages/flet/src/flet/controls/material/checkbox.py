@@ -5,7 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
@@ -67,13 +67,13 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     get focus.
     """
 
-    fill_color: OptionalControlStateValue[ColorValue] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) that fills the checkbox in 
     various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
     """
 
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the checkbox's overlay in 
     various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
@@ -126,7 +126,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     Defaults to `20.0`.
     """
 
-    border_side: OptionalControlStateValue[BorderSide] = None
+    border_side: Optional[ControlStateValue[BorderSide]] = None
     """
     TBD
     """

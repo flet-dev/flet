@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/keys.dart';
 import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../widgets/control_inherited_notifier.dart';
@@ -15,21 +16,20 @@ class ControlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Key? controlKey;
-    var key = control.getString("scroll_key", "")!;
-    if (key != "") {
-      if (key.startsWith("test:")) {
-        controlKey = Key(key.substring(5));
-      } else {
-        var globalKey = controlKey = GlobalKey();
-        FletBackend.of(context).globalKeys[key] = globalKey;
-      }
+    ControlKey? controlKey = control.getKey("key");
+    Key? key;
+    if (controlKey is ControlScrollKey) {
+      key = GlobalKey();
+      FletBackend.of(context).globalKeys[controlKey.toString()] =
+          key as GlobalKey;
+    } else if (controlKey != null) {
+      key = ValueKey(controlKey.value);
     }
 
     Widget? widget;
     if (control.get("_skip_inherited_notifier") == true) {
       for (var extension in FletBackend.of(context).extensions) {
-        widget = extension.createWidget(controlKey, control);
+        widget = extension.createWidget(key, control);
         if (widget != null) return widget;
       }
       widget = ErrorControl("Unknown control: ${control.type}");
@@ -41,7 +41,7 @@ class ControlWidget extends StatelessWidget {
 
           Widget? cw;
           for (var extension in FletBackend.of(context).extensions) {
-            cw = extension.createWidget(controlKey, control);
+            cw = extension.createWidget(key, control);
             if (cw != null) return cw;
           }
 

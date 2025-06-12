@@ -57,7 +57,7 @@ dependencies:
   flet_ads:
     git:
       url: https://github.com/flet-dev/flet-ads.git
-      ref: 0.1.0
+      ref: v1
       path: src/flutter/flet_ads
 
   flet_rive:

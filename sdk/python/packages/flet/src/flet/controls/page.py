@@ -94,68 +94,238 @@ class Page(PageView):
     A page instance and the root view are automatically created when a new
     user session started.
 
-    Example:
-
-    ```
-    import flet as ft
-
-
-    def main(page: ft.Page):
-        page.title = "New page"
-        page.add(ft.Text("Hello"))
-
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/page
     """
 
     sess: InitVar["Session"]
+    """
+    TBD
+    """
 
     multi_views: list[MultiView] = field(default_factory=list)
+    """
+    TBD
+    """
+
     window: Window = field(default_factory=lambda: Window())
+    """
+    A class with properties/methods/events to control app's native OS window.
+
+    Value is of type [Window](https://flet.dev/docs/reference/types/window).
+    """
+
     browser_context_menu: BrowserContextMenu = field(
         default_factory=lambda: BrowserContextMenu()
     )
+    """
+    Used to enable or disable the context menu that appears when the user
+    right-clicks on the web page.
+
+    Value is of type
+    [BrowserContextMenu](https://flet.dev/docs/reference/types/browsercontextmenu).
+
+    🌎 Web only.
+    """
+
     shared_preferences: SharedPreferences = field(
         default_factory=lambda: SharedPreferences()
     )
+    """
+    TBD
+    """
+
     clipboard: Clipboard = field(default_factory=lambda: Clipboard())
+    """
+    TBD
+    """
+
     storage_paths: StoragePaths = field(default_factory=lambda: StoragePaths())
+    """
+    TBD
+    """
+
     url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
+    """
+    TBD
+    """
+
     _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    """
+    TBD
+    """
+
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    """
+    TBD
+    """
 
     route: Optional[str] = None
-    web: bool = field(default=False)
-    pwa: bool = field(default=False)
-    debug: bool = field(default=False)
-    wasm: bool = field(default=False)
-    multi_view: bool = field(default=False)
+    """
+    Get or sets page's navigation route. See
+    [Navigation and routing](https://flet.dev/docs/getting-started/navigation-and-routing)
+    section for more information and examples.
+    """
+
+    web: bool = False
+    """
+    `True` if the application is running in the web browser.
+    """
+
+    pwa: bool = False
+    """
+    `True` if the application is running as Progressive Web App (PWA).
+
+    Value is read-only.
+    """
+
+    debug: bool = False
+    """
+    `True` if Flutter client of Flet app is running in debug mode.
+    """
+
+    wasm: bool = False
+    """
+    TBD
+    """
+
+    multi_view: bool = False
+    """
+    TBD
+    """
+
     platform: Optional[PagePlatform] = None
+    """
+    Operating system the application is running on.
+
+    Value is of type [PagePlatform](https://flet.dev/docs/reference/types/pageplatform).
+    """
+
     platform_brightness: Optional[Brightness] = None
+    """
+    The current brightness mode of the host platform.
+
+    Value is read-only and of type
+    [Brightness](https://flet.dev/docs/reference/types/brightness).
+    """
+
     client_ip: Optional[str] = None
+    """
+    IP address of the connected user.
+
+    🌎 Web only.
+    """
+
     client_user_agent: Optional[str] = None
+    """
+    Browser details of the connected user.
+
+    🌎 Web only.
+    """
+
     fonts: Optional[dict[str, str]] = None
+    """
+    Defines the custom fonts to be used in the application.
+
+    Value is a dictionary, in which the keys represent the font family name
+    used for reference and the values:
+    - Key: The font family name used for reference.
+    - Value: The font source, either an absolute URL or a relative path to a
+      local asset. The following font file formats are supported `.ttc`, `.ttf`
+      and `.otf`.
+
+    Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
+    """
 
     on_platform_brightness_change: OptionalControlEventCallable = None
+    """
+    Fires when brightness of app host platform has changed.
+    """
+
     on_app_lifecycle_state_change: OptionalEventCallable[
         "AppLifecycleStateChangeEvent"
     ] = None
+    """
+    Triggers when app lifecycle state changes.
+
+    Event handler argument is of type
+    [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
+    """
+
     on_route_change: OptionalEventCallable["RouteChangeEvent"] = None
+    """
+    Fires when page route changes either programmatically, by editing
+    application URL or using browser Back/Forward buttons.
+
+    Event handler argument is of type
+    [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
+    """
+
     on_view_pop: OptionalEventCallable["ViewPopEvent"] = None
+    """
+    Fires when the user clicks automatic "Back" button in
+    [AppBar](https://flet.dev/docs/controls/appbar) control.
+
+    Event handler argument is of type
+    [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
+    """
+
     on_keyboard_event: OptionalEventCallable["KeyboardEvent"] = None
+    """
+    Fires when a keyboard key is pressed.
+
+    Event handler argument is of type
+    [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
+    """
+
     on_connect: OptionalControlEventCallable = None
+    """
+    Fires when a web user (re-)connects to a page session.
+
+    It is not triggered when an app page is first opened, but is triggered when
+    the page is refreshed, or Flet web client has re-connected after computer
+    was unlocked. This event could be used to detect when a web user becomes
+    "online".
+    """
+
     on_disconnect: OptionalControlEventCallable = None
+    """
+    Fires when a web user disconnects from a page session, i.e. closes browser
+    tab/window.
+    """
+
     on_close: OptionalControlEventCallable = None
+    """
+    Fires when a session has expired after configured amount of time
+    (60 minutes by default).
+    """
+
     on_login: OptionalEventCallable["LoginEvent"] = None
+    """
+    Fires upon successful or failed OAuth authorization flow.
+
+    See [Authentication](https://flet.dev/docs/cookbook/authentication#checking-authentication-results)
+    guide for more information and examples.
+    """
+
     on_logout: OptionalControlEventCallable = None
+    """
+    Fires after `page.logout()` call.
+    """
+
     on_error: OptionalControlEventCallable = None
+    """
+    Fires when unhandled exception occurs.
+    """
+
     on_multi_view_add: OptionalEventCallable["MultiViewAddEvent"] = None
+    """
+    TBD
+    """
+
     on_multi_view_remove: OptionalEventCallable["MultiViewRemoveEvent"] = None
+    """
+    TBD
+    """
 
     def __post_init__(
         self,
@@ -179,6 +349,22 @@ class Page(PageView):
         self.__authorization: Optional[Authorization] = None
 
     def get_control(self, id: int) -> Optional[BaseControl]:
+        """
+        Get a control by its `id`.
+
+        Example:
+
+        ```python
+        import flet as ft
+
+        def main(page: ft.Page):
+            x = ft.IconButton(ft.Icons.ADD)
+            page.add(x)
+            print(type(page.get_control(x.uid)))
+
+        ft.app(main)
+        ```
+        """
         return self.get_session().index.get(id)
 
     def update(self, *controls) -> None:
@@ -212,6 +398,10 @@ class Page(PageView):
         *args: InputT.args,
         **kwargs: InputT.kwargs,
     ) -> Future[RetT]:
+        """
+        Run `handler` coroutine as a new Task in the event loop associated with the 
+        current page.
+        """
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
@@ -244,6 +434,10 @@ class Page(PageView):
         *args: InputT.args,
         **kwargs: InputT.kwargs,
     ) -> None:
+        """
+        Run `handler` function as a new Thread in the executor associated with the 
+        current page.
+        """
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():
             handler_with_context(*args, **kwargs)
@@ -258,6 +452,11 @@ class Page(PageView):
     def go(
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
+        """
+        A helper method that updates [`page.route`](#route), calls 
+        [`page.on_route_change`](#on_route_change) event handler to update views and 
+        finally calls `page.update()`.
+        """
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
         if not skip_route_change_event:
@@ -274,6 +473,24 @@ class Page(PageView):
         self.query()  # Update query url (required when using go)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
+        """
+        Generates presigned upload URL for built-in upload storage:
+
+        * `file_name` - a relative to upload storage path.
+        * `expires` - a URL time-to-live in seconds.
+
+        For example:
+
+        ```python
+        upload_url = page.get_upload_url("dir/filename.ext", 60)
+        ```
+
+        To enable built-in upload storage provide `upload_dir` argument to `flet.app()` call:
+
+        ```python
+        ft.app(main, upload_dir="uploads")
+        ```
+        """
         return self.get_session().connection.get_upload_url(file_name, expires)
 
     async def login_async(
@@ -290,6 +507,10 @@ class Page(PageView):
         redirect_to_page: Optional[bool] = False,
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
+        """
+        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide 
+        for more information and examples.
+        """
         self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
@@ -359,6 +580,11 @@ class Page(PageView):
                 self.on_login(e)
 
     def logout(self) -> None:
+        """
+        Clears current authentication context. See 
+        [Authentication](/docs/cookbook/authentication#signing-out) guide for more 
+        information and examples.
+        """
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
@@ -375,6 +601,18 @@ class Page(PageView):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
+        """
+        Opens `url` in a new browser window.
+
+        Optional method arguments:
+
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        application on mobile device) or `<your name>` - a named tab.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `window_width` - optional, popup window width.
+        * `window_height` - optional, popup window height.
+        """
         self.url_launcher.launch_url(
             url,
             web_window_name=web_window_name,
@@ -391,6 +629,18 @@ class Page(PageView):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
+        """
+        Opens `url` in a new browser window.
+
+        Optional method arguments:
+
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        application on mobile device) or `<your name>` - a named tab.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `window_width` - optional, popup window width.
+        * `window_height` - optional, popup window height.
+        """
         await self.url_launcher.launch_url_async(
             url,
             web_window_name=web_window_name,
@@ -400,12 +650,37 @@ class Page(PageView):
         )
 
     def can_launch_url_async(self, url: str):
+        """
+        Checks whether the specified URL can be handled by some app installed on the 
+        device.
+
+        Returns `True` if it is possible to verify that there is a handler available. 
+        A `False` return value can indicate either that there is no handler available, 
+        or that the application does not have permission to check. For example:
+
+        * On recent versions of Android and iOS, this will always return `False` unless 
+        the application has been configuration to allow querying the system for launch 
+        support.
+        * On web, this will always return `False` except for a few specific schemes 
+        that are always assumed to be supported (such as http(s)), as web pages are 
+        never allowed to query installed applications.
+        """
         return self.url_launcher.can_launch_url_async(url)
 
     def close_in_app_web_view(self) -> None:
+        """
+        Closes in-app web view opened with `launch_url()`.
+
+        📱 Mobile only. 
+        """
         self.url_launcher.close_in_app_web_view()
 
     async def close_in_app_web_view_async(self) -> None:
+        """
+        Closes in-app web view opened with `launch_url()`.
+
+        📱 Mobile only. 
+        """
         await self.url_launcher.close_in_app_web_view_async()
 
     # query

@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.border import BorderSide, OptionalBorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
-from flet.controls.control_state import OptionalControlStateValue
+from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.menu_bar import MenuStyle
@@ -61,48 +61,194 @@ class PageTransitionsTheme:
 
 @dataclass
 class ColorScheme:
+    """
+    A set of more than 40 colors based on the [Material spec](https://m3.material.io/styles/color/the-color-system/color-roles) 
+    that can be used to configure the color properties of most components. 
+    Read more about color schemes in [here](https://api.flutter.dev/flutter/material/ColorScheme-class.html).
+    """
     primary: OptionalColorValue = None
+    """
+    The color displayed most frequently across your app’s screens and components.
+    """
     on_primary: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `primary`.
+    """
     primary_container: OptionalColorValue = None
+    """
+    A color used for elements needing less emphasis than `primary`.
+    """
     on_primary_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `primary_container`.
+    """
     secondary: OptionalColorValue = None
+    """
+    An accent color used for less prominent components in the UI, such as filter chips, 
+    while expanding the opportunity for color expression.
+    """
     on_secondary: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `secondary`.
+    """
     secondary_container: OptionalColorValue = None
+    """
+    A color used for elements needing less emphasis than `secondary`.
+    """
     on_secondary_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `secondary_container`.
+    """
     tertiary: OptionalColorValue = None
+    """
+    A color used as a contrasting accent that can balance `primary` and `secondary` 
+    colors or bring heightened attention to an element, such as an input field.
+    """
     on_tertiary: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `tertiary`.
+    """
     tertiary_container: OptionalColorValue = None
+    """
+    A color used for elements needing less emphasis than `tertiary`.
+    """
     on_tertiary_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `tertiary_container`.
+    """
     error: OptionalColorValue = None
+    """
+    The color to use for input validation errors, e.g. for `TextField.error_text`.
+    """
     on_error: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `error`.
+    """
     error_container: OptionalColorValue = None
+    """
+    A color used for error elements needing less emphasis than `error`.
+    """
     on_error_container: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `error_container`.
+    """
     background: OptionalColorValue = None
+    """
+    A color that typically appears behind scrollable content.
+    """
     on_background: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `background`.
+    """
     surface: OptionalColorValue = None
+    """
+    The background color for widgets like `Card`.
+    """
     on_surface: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `surface`.
+    """
     surface_variant: OptionalColorValue = None
+    """
+    A color variant of `surface` that can be used for differentiation against a 
+    component using `surface`.
+    """
     on_surface_variant: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `surface_variant`.
+    """
     outline: OptionalColorValue = None
+    """
+    A utility color that creates boundaries and emphasis to improve usability.
+    """
     outline_variant: OptionalColorValue = None
+    """
+    A utility color that creates boundaries for decorative elements when a 3:1 contrast 
+    isn’t required, such as for dividers or decorative elements.
+    """
     shadow: OptionalColorValue = None
+    """
+    A color use to paint the drop shadows of elevated components.
+    """
     scrim: OptionalColorValue = None
+    """
+    A color use to paint the scrim around of modal components.
+    """
     inverse_surface: OptionalColorValue = None
+    """
+    A surface color used for displaying the reverse of what’s seen in the surrounding 
+    UI, for example in a `SnackBar` to bring attention to an alert.
+    """
     on_inverse_surface: OptionalColorValue = None
+    """
+    A color that's clearly legible when drawn on `inverse_surface`.
+    """
     inverse_primary: OptionalColorValue = None
+    """
+    An accent color used for displaying a highlight color on `inverse_surface` 
+    backgrounds, like button text in a `SnackBar`.
+    """
     surface_tint: OptionalColorValue = None
+    """
+    A color used as an overlay on a surface color to indicate a component's elevation.
+    """
     on_primary_fixed: OptionalColorValue = None
+    """
+    A color that is used for text and icons that exist on top of elements having 
+    `primary_fixed` color.
+    """
     on_secondary_fixed: OptionalColorValue = None
+    """
+    A color that is used for text and icons that exist on top of elements having 
+    `secondary_fixed` color.
+    """
     on_tertiary_fixed: OptionalColorValue = None
+    """
+    A color that is used for text and icons that exist on top of elements having 
+    `tertiary_fixed` color.
+    """
     on_primary_fixed_variant: OptionalColorValue = None
+    """
+    A color that provides a lower-emphasis option for text and icons than 
+    `on_primary_fixed`.
+    """
     on_secondary_fixed_variant: OptionalColorValue = None
+    """
+    A color that provides a lower-emphasis option for text and icons than 
+    `on_secondary_fixed`.
+    """
     on_tertiary_fixed_variant: OptionalColorValue = None
+    """
+    A color that provides a lower-emphasis option for text and icons than 
+    `on_tertiary_fixed`.
+    """
     primary_fixed: OptionalColorValue = None
+    """
+    A substitute for `primary_container` that's the same color for the dark and light 
+    themes.
+    """
     secondary_fixed: OptionalColorValue = None
+    """
+    A substitute for `secondary_container` that's the same color for the dark and light 
+    themes.
+    """
     tertiary_fixed: OptionalColorValue = None
+    """
+    A substitute for `tertiary_container` that's the same color for dark and light 
+    themes.
+    """
     primary_fixed_dim: OptionalColorValue = None
+    """
+    A color used for elements needing more emphasis than `primary_fixed`.
+    """
     secondary_fixed_dim: OptionalColorValue = None
+    """
+    A color used for elements needing more emphasis than `secondary_fixed`.
+    """
     surface_bright: OptionalColorValue = None
+    """
+    A color that's always the lightest in the dark or light theme.
+    """
     surface_container: OptionalColorValue = None
     surface_container_high: OptionalColorValue = None
     surface_container_low: OptionalColorValue = None
@@ -132,13 +278,13 @@ class TextTheme:
 
 @dataclass
 class ScrollbarTheme:
-    thumb_visibility: OptionalControlStateValue[bool] = None
-    thickness: OptionalControlStateValue[OptionalNumber] = None
-    track_visibility: OptionalControlStateValue[bool] = None
+    thumb_visibility: Optional[ControlStateValue[bool]] = None
+    thickness: Optional[ControlStateValue[OptionalNumber]] = None
+    track_visibility: Optional[ControlStateValue[bool]] = None
     radius: OptionalNumber = None
-    thumb_color: OptionalControlStateValue[ColorValue] = None
-    track_color: OptionalControlStateValue[ColorValue] = None
-    track_border_color: OptionalControlStateValue[ColorValue] = None
+    thumb_color: Optional[ControlStateValue[ColorValue]] = None
+    track_color: Optional[ControlStateValue[ColorValue]] = None
+    track_border_color: Optional[ControlStateValue[ColorValue]] = None
     cross_axis_margin: OptionalNumber = None
     main_axis_margin: OptionalNumber = None
     min_thumb_length: OptionalNumber = None
@@ -155,8 +301,8 @@ class TabsTheme:
     indicator_tab_size: OptionalBool = None
     label_color: OptionalColorValue = None
     unselected_label_color: OptionalColorValue = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     label_padding: OptionalPaddingValue = None
     label_text_style: OptionalTextStyle = None
     unselected_label_text_style: OptionalTextStyle = None
@@ -293,7 +439,7 @@ class CardTheme:
 
 @dataclass
 class ChipTheme:
-    color: OptionalControlStateValue[ColorValue] = None
+    color: Optional[ControlStateValue[ColorValue]] = None
     bgcolor: OptionalColorValue = None
     shadow_color: OptionalColorValue = None
     surface_tint_color: OptionalColorValue = None
@@ -357,20 +503,88 @@ class NavigationRailTheme:
 
 @dataclass
 class AppBarTheme:
+    """
+    Customizes the appearance of https://flet.dev/docs/controls/appbar across the app.
+    """
+
     color: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.color` in all descendant `AppBar` controls.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.bgcolor` in all descendant `AppBar` controls.
+    """
+
     shadow_color: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.shadow_color` in all descendant `AppBar`
+    controls.
+    """
+
     surface_tint_color: OptionalColorValue = None
+    """
+    Overrides the default value of `AppBar.surface_tint_color` in all descendant
+    `AppBar` controls.
+    """
+
     foreground_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     elevation: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.elevation` in all descendant `AppBar`
+    controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of `AppBar.shape` in all descendant `AppBar` controls.
+    """
+
     title_text_style: OptionalTextStyle = None
+    """
+    Overrides the default value of `AppBar.title_text_style` in all descendant
+    `AppBar` controls.
+    """
+
     toolbar_text_style: OptionalTextStyle = None
+    """
+    Overrides the default value of `AppBar.toolbar_text_style` in all descendant
+    `AppBar` controls.
+    """
+
     center_title: OptionalBool = None
+    """
+    Overrides the default value of `AppBar.center_title` in all descendant `AppBar`
+    controls.
+    """
+
     title_spacing: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.title_spacing` in all descendant `AppBar`
+    controls.
+    """
+
     scroll_elevation: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.scroll_elevation` in all descendant
+    `AppBar` controls.
+    """
+
     toolbar_height: OptionalNumber = None
+    """
+    Overrides the default value of `AppBar.toolbar_height` in all descendant `AppBar`
+    controls.
+    """
+
     actions_padding: OptionalPaddingValue = None
+    """
+    TBD
+    """
 
 
 @dataclass
@@ -386,24 +600,24 @@ class BottomAppBarTheme:
 
 @dataclass
 class RadioTheme:
-    fill_color: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     splash_radius: OptionalNumber = None
     height: OptionalNumber = None
     visual_density: Optional[VisualDensity] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @dataclass
 class CheckboxTheme:
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    check_color: OptionalControlStateValue[ColorValue] = None
-    fill_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    check_color: Optional[ControlStateValue[ColorValue]] = None
+    fill_color: Optional[ControlStateValue[ColorValue]] = None
     splash_radius: OptionalNumber = None
     border_side: OptionalBorderSide = None
     visual_density: Optional[VisualDensity] = None
     shape: Optional[OutlinedBorder] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @dataclass
@@ -420,14 +634,14 @@ class BadgeTheme:
 
 @dataclass
 class SwitchTheme:
-    thumb_color: OptionalControlStateValue[ColorValue] = None
-    track_color: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    track_outline_color: OptionalControlStateValue[ColorValue] = None
-    thumb_icon: OptionalControlStateValue[str] = None
-    track_outline_width: OptionalControlStateValue[OptionalNumber] = None
+    thumb_color: Optional[ControlStateValue[ColorValue]] = None
+    track_color: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    track_outline_color: Optional[ControlStateValue[ColorValue]] = None
+    thumb_icon: Optional[ControlStateValue[str]] = None
+    track_outline_width: Optional[ControlStateValue[OptionalNumber]] = None
     splash_radius: OptionalNumber = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     padding: OptionalPaddingValue = None
 
 
@@ -479,10 +693,10 @@ class DatePickerTheme:
     shadow_color: OptionalColorValue = None
     divider_color: OptionalColorValue = None
     header_bgcolor: OptionalColorValue = None
-    today_bgcolor: OptionalControlStateValue[ColorValue] = None
-    day_bgcolor: OptionalControlStateValue[ColorValue] = None
-    day_overlay_color: OptionalControlStateValue[ColorValue] = None
-    day_foreground_color: OptionalControlStateValue[ColorValue] = None
+    today_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    day_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    day_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    day_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: OptionalNumber = None
     range_picker_elevation: OptionalNumber = None
     day_text_style: OptionalTextStyle = None
@@ -497,18 +711,18 @@ class DatePickerTheme:
     range_picker_bgcolor: OptionalColorValue = None
     range_picker_header_bgcolor: OptionalColorValue = None
     range_picker_header_foreground_color: OptionalColorValue = None
-    today_foreground_color: OptionalControlStateValue[ColorValue] = None
+    today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     range_picker_shape: Optional[OutlinedBorder] = None
     range_picker_header_help_text_style: OptionalTextStyle = None
     range_picker_header_headline_text_style: OptionalTextStyle = None
     range_picker_surface_tint_color: OptionalColorValue = None
     range_selection_bgcolor: OptionalColorValue = None
-    range_selection_overlay_color: OptionalControlStateValue[ColorValue] = None
+    range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     today_border_side: OptionalBorderSide = None
-    year_bgcolor: OptionalControlStateValue[ColorValue] = None
-    year_foreground_color: OptionalControlStateValue[ColorValue] = None
-    year_overlay_color: OptionalControlStateValue[ColorValue] = None
-    day_shape: OptionalControlStateValue[OutlinedBorder] = None
+    year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    year_foreground_color: Optional[ControlStateValue[ColorValue]] = None
+    year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    day_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     locale: Optional[Locale] = None
 
 
@@ -536,8 +750,8 @@ class TimePickerTheme:
     hour_minute_shape: Optional[OutlinedBorder] = None
     day_period_border_side: OptionalBorderSide = None
     padding: OptionalPaddingValue = None
-    time_selector_separator_color: OptionalControlStateValue[ColorValue] = None
-    time_selector_separator_text_style: OptionalControlStateValue[TextStyle] = None
+    time_selector_separator_color: Optional[ControlStateValue[ColorValue]] = None
+    time_selector_separator_text_style: Optional[ControlStateValue[TextStyle]] = None
 
 
 @dataclass
@@ -565,7 +779,7 @@ class ListTileTheme:
     title_text_style: OptionalTextStyle = None
     subtitle_text_style: OptionalTextStyle = None
     leading_and_trailing_text_style: OptionalTextStyle = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     min_tile_height: OptionalNumber = None
 
 
@@ -610,7 +824,7 @@ class SliderTheme:
     value_indicator_color: OptionalColorValue = None
     disabled_thumb_color: OptionalColorValue = None
     value_indicator_text_style: OptionalTextStyle = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     active_tick_mark_color: OptionalColorValue = None
     disabled_active_tick_mark_color: OptionalColorValue = None
     disabled_active_track_color: OptionalColorValue = None
@@ -626,7 +840,7 @@ class SliderTheme:
     interaction: Optional[SliderInteraction] = None
     padding: OptionalPaddingValue = None
     track_gap: OptionalNumber = None
-    thumb_size: OptionalControlStateValue[Size] = None
+    thumb_size: Optional[ControlStateValue[Size]] = None
     year_2023: OptionalBool = None
 
 
@@ -662,7 +876,7 @@ class PopupMenuTheme:
     icon_size: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     menu_position: Optional[PopupMenuPosition] = None
-    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     menu_padding: OptionalPaddingValue = None
 
 
@@ -670,16 +884,16 @@ class PopupMenuTheme:
 class SearchBarTheme:
     bgcolor: OptionalColorValue = None
     text_capitalization: Optional[TextCapitalization] = None
-    shadow_color: OptionalControlStateValue[ColorValue] = None
-    surface_tint_color: OptionalControlStateValue[ColorValue] = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
-    elevation: OptionalControlStateValue[OptionalNumber] = None
-    text_style: OptionalControlStateValue[TextStyle] = None
-    hint_style: OptionalControlStateValue[TextStyle] = None
-    shape: OptionalControlStateValue[OutlinedBorder] = None
-    padding: OptionalControlStateValue[PaddingValue] = None
+    shadow_color: Optional[ControlStateValue[ColorValue]] = None
+    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    elevation: Optional[ControlStateValue[OptionalNumber]] = None
+    text_style: Optional[ControlStateValue[TextStyle]] = None
+    hint_style: Optional[ControlStateValue[TextStyle]] = None
+    shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    padding: Optional[ControlStateValue[PaddingValue]] = None
     size_constraints: Optional[BoxConstraints] = None
-    border_side: OptionalControlStateValue[BorderSide] = None
+    border_side: Optional[ControlStateValue[BorderSide]] = None
 
 
 @dataclass
@@ -707,7 +921,7 @@ class NavigationDrawerTheme:
     indicator_color: OptionalColorValue = None
     elevation: OptionalNumber = None
     tile_height: OptionalNumber = None
-    label_text_style: OptionalControlStateValue[TextStyle] = None
+    label_text_style: Optional[ControlStateValue[TextStyle]] = None
     indicator_shape: Optional[OutlinedBorder] = None
     indicator_size: Optional[Size] = None
 
@@ -718,10 +932,10 @@ class NavigationBarTheme:
     shadow_color: OptionalColorValue = None
     surface_tint_color: OptionalColorValue = None
     indicator_color: OptionalColorValue = None
-    overlay_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: OptionalNumber = None
     height: OptionalNumber = None
-    label_text_style: OptionalControlStateValue[TextStyle] = None
+    label_text_style: Optional[ControlStateValue[TextStyle]] = None
     indicator_shape: Optional[OutlinedBorder] = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
     label_padding: OptionalPaddingValue = None
@@ -743,7 +957,7 @@ class IconTheme:
     optical_size: OptionalNumber = None
     grade: OptionalNumber = None
     weight: OptionalNumber = None
-    shadows: Optional[List[BoxShadow]] = None
+    shadows: Optional[list[BoxShadow]] = None
 
 
 @dataclass
@@ -752,17 +966,17 @@ class DataTableTheme:
     column_spacing: OptionalNumber = None
     data_row_max_height: OptionalNumber = None
     data_row_min_height: OptionalNumber = None
-    data_row_color: OptionalControlStateValue[ColorValue] = None
+    data_row_color: Optional[ControlStateValue[ColorValue]] = None
     data_text_style: OptionalTextStyle = None
     divider_thickness: OptionalNumber = None
     horizontal_margin: OptionalNumber = None
     heading_text_style: OptionalTextStyle = None
-    heading_row_color: OptionalControlStateValue[ColorValue] = None
+    heading_row_color: Optional[ControlStateValue[ColorValue]] = None
     heading_row_height: OptionalNumber = None
-    data_row_cursor: OptionalControlStateValue[MouseCursor] = None
+    data_row_cursor: Optional[ControlStateValue[MouseCursor]] = None
     decoration: Optional[BoxDecoration] = None
     heading_row_alignment: Optional[MainAxisAlignment] = None
-    heading_cell_cursor: OptionalControlStateValue[MouseCursor] = None
+    heading_cell_cursor: Optional[ControlStateValue[MouseCursor]] = None
 
 
 @dataclass

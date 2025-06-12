@@ -9,7 +9,7 @@ from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Optional, Union
 
-from flet.controls.page import Page
+from flet.controls.page import Page, _session_page
 from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
@@ -258,6 +258,7 @@ async def __run_socket_server(port=0, main=None, before_main=None, blocking=Fals
         logger.info("App session started")
         try:
             assert main is not None
+            _session_page.set(session.page)
             UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(main):
                 await main(session.page)
@@ -266,7 +267,7 @@ async def __run_socket_server(port=0, main=None, before_main=None, blocking=Fals
                 main(session.page)
 
             if UpdateBehavior.auto_update_enabled():
-                session.auto_update(session.page)
+                await session.auto_update(session.page)
 
         except Exception as e:
             print(
@@ -341,6 +342,7 @@ def __run_pyodide(main=None, before_main=None):
         logger.info("App session started")
         try:
             assert main is not None
+            _session_page.set(session.page)
             UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(main):
                 await main(session.page)
@@ -348,7 +350,7 @@ def __run_pyodide(main=None, before_main=None):
                 main(session.page)
 
             if UpdateBehavior.auto_update_enabled():
-                session.auto_update(session.page)
+                await session.auto_update(session.page)
         except Exception as e:
             print(
                 f"Unhandled error processing page session {session.id}:",

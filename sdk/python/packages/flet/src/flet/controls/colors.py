@@ -43,7 +43,7 @@ foreach($line in $lines) {
 
 import random
 from enum import Enum
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
     from flet.controls.types import ColorValue
@@ -59,15 +59,16 @@ class Colors(str, Enum):
 
     @staticmethod
     def random(
-        exclude: Optional[List["Colors"]] = None,
-        weights: Optional[Dict["Colors", int]] = None,
+        exclude: Optional[list["Colors"]] = None,
+        weights: Optional[dict["Colors", int]] = None,
     ) -> Optional["Colors"]:
         """
         Selects a random color, with optional exclusions and weights.
 
         Args:
             exclude: A list of colors members to exclude from the selection.
-            weights: A dictionary mapping color members to their respective weights for weighted random selection.
+            weights: A dictionary mapping color members to their respective weights for 
+            weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.

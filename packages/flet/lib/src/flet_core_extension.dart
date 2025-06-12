@@ -17,11 +17,11 @@ import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
 import 'controls/canvas.dart';
 import 'controls/card.dart';
-import 'controls/center.dart';
 import 'controls/chip.dart';
 import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/control_builder.dart';
 import 'controls/cupertino_action_sheet.dart';
 import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
@@ -103,6 +103,7 @@ import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
+import 'controls/window_drag_area.dart';
 import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
@@ -158,8 +159,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoBottomSheetControl(key: key, control: control);
       case "PopupMenuButton":
         return PopupMenuButtonControl(key: key, control: control);
-      case "Center":
-        return CenterControl(key: key, control: control);
+      case "ControlBuilder":
+        return ControlBuilderControl(key: key, control: control);
       case "CupertinoSlidingSegmentedButton":
         return CupertinoSlidingSegmentedButtonControl(
             key: key, control: control);
@@ -331,7 +332,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoRadioControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
-
+      case "WindowDragArea":
+        return WindowDragAreaControl(key: key, control: control);
       case "Pagelet":
         return PageletControl(key: key, control: control);
       default:
