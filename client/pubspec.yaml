@@ -94,6 +94,11 @@ dependencies:
       url: https://github.com/flet-dev/flet-flashlight.git
       ref: v1
       path: src/flutter/flet_flashlight
+  flet_datatable2:
+    git:
+      url: https://github.com/flet-dev/flet-datatable2.git
+      ref: v1
+      path: src/flutter/flet_datatable2
 
   cupertino_icons: ^1.0.6
 
