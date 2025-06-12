@@ -13,12 +13,12 @@ try:
 except ImportError as e:
     raise Exception(
         'Install "plotly" Python package to use PlotlyChart control.'
-        ) from e
+    ) from e
 
 __all__ = ["PlotlyChart"]
 
 
-@control
+@control(kw_only=True)
 class PlotlyChart(Container):
     """
     Displays Plotly(https://plotly.com/python/) chart.
