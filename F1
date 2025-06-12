@@ -1,0 +1,35 @@
+
+function doGet(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("F1");
+  const data = sheet.getDataRange().getValues();
+  const params = e.parameter;
+
+  const result = [];
+
+  for (let i = 1; i < data.length; i++) {
+    const row = {
+      team: data[i][0],
+      driver: data[i][1],
+      country: data[i][2],
+      car_number: data[i][3]
+    };
+
+    let match = true;
+
+    for (let key in params) {
+      if (row[key] && !row[key].toString().toLowerCase().includes(params[key].toLowerCase())) {
+        match = false;
+        break;
+      }
+    }
+
+    if (match) {
+      result.push(row);
+    }
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
