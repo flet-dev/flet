@@ -2,8 +2,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.material.badge import BadgeValue
-from flet.controls.types import ControlEventHandler, OptionalNumber
+from flet.controls.types import OptionalNumber
 
 __all__ = ["Semantics"]
 
@@ -286,4 +287,3 @@ class Semantics(Control):
     Voice access users can trigger this handler by speaking type `<text>` to their
     Android devices.
     """
-
