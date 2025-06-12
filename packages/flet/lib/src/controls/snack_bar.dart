@@ -78,7 +78,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
             widget.control.getDouble("action_overflow_threshold"),
         shape: widget.control.getOutlinedBorder("shape", Theme.of(context)),
         onVisible: () {
-          backend.triggerControlEvent(widget.control, "visible");
+          widget.control.triggerEvent("visible");
         },
         dismissDirection: parseDismissDirection(
             widget.control.getString("dismiss_direction")),
