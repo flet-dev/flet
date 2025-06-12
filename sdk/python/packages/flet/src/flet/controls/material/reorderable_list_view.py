@@ -42,6 +42,20 @@ class ReorderableListView(ListView):
     Defaults to `False`.
     """
 
+    reverse: bool = False
+    """
+    Whether the scroll view scrolls in the reading direction.
+
+    For example, if the reading direction is left-to-right and `horizontal` is `True`,
+    then the scroll view scrolls from left to right when `reverse` is `False`
+    and from right to left when `reverse` is `True`.
+
+    Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
+    to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
+
+    Defaults to `False`.
+    """
+
     item_extent: OptionalNumber = None
     """
     If non-null, forces the children to have the given extent in the scroll direction.
