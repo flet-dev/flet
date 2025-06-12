@@ -10,6 +10,7 @@ from flet.controls.events import (
     DragUpdateEvent,
     HoverEvent,
     LongPressEndEvent,
+    LongPressStartEvent,
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
@@ -143,7 +144,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_long_press_start: OptionalEventCallable[LongPressEndEvent] = None
+    on_long_press_start: OptionalEventCallable[LongPressStartEvent] = None
     """
     Called when a long press gesture with a primary button has been recognized.
 
@@ -163,7 +164,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressEndEvent`](https://flet.dev/docs/reference/types/longpressendevent).
     """
 
-    on_secondary_long_press_start: OptionalEventCallable[LongPressEndEvent] = None
+    on_secondary_long_press_start: OptionalEventCallable[LongPressStartEvent] = None
     """
     Called when a long press gesture with a secondary button has been recognized.
 
@@ -326,4 +327,3 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     Event handler argument is of type
     [`ScrollEvent`](https://flet.dev/docs/reference/types/scrollevent).
     """
-
