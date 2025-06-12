@@ -13,6 +13,7 @@ import 'buttons.dart';
 import 'colors.dart';
 import 'dismissible.dart';
 import 'edge_insets.dart';
+import 'geometry.dart';
 import 'icons.dart';
 import 'locale.dart';
 import 'material_state.dart';

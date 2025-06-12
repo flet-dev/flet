@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../models/control.dart';
-import 'numbers.dart';
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
   if (value == null) return defaultValue;
@@ -60,17 +59,6 @@ SliderInteraction? parseSliderInteraction(String? value,
   return SliderInteraction.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
-}
-
-Size? parseSize(dynamic value, [Size? defaultValue]) {
-  if (value == null) return defaultValue;
-
-  final width = parseDouble(value['width']);
-  final height = parseDouble(value['height']);
-
-  if (width == null || height == null) return defaultValue;
-
-  return Size(width, height);
 }
 
 SnackBarBehavior? parseSnackBarBehavior(String? value,
@@ -219,10 +207,6 @@ extension MiscParsers on Control {
   SliderInteraction? getSliderInteraction(String propertyName,
       [SliderInteraction? defaultValue]) {
     return parseSliderInteraction(get(propertyName), defaultValue);
-  }
-
-  Size? getSize(String propertyName, [Size? defaultValue]) {
-    return parseSize(get(propertyName), defaultValue);
   }
 
   SnackBarBehavior? getSnackBarBehavior(String propertyName,

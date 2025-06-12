@@ -1,11 +1,13 @@
+from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
+from flet.controls.control_state import ControlStateValue
 from flet.controls.dialog_control import DialogControl
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.duration import DurationValue, Duration
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
@@ -14,9 +16,11 @@ from flet.controls.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
+    ColorValue,
 )
 
-__all__ = ["SnackBar", "SnackBarBehavior", "DismissDirection"]
+__all__ = ["SnackBar", "SnackBarBehavior", "DismissDirection", "SnackBarAction"]
 
 
 class SnackBarBehavior(Enum):
@@ -35,6 +39,47 @@ class DismissDirection(Enum):
 
 
 @control("SnackBar")
+class SnackBarAction(Control):
+    """A button that can be used as an action in a `SnackBar`."""
+
+    label: str
+    """
+    The button's label.
+    """
+
+    text_color: OptionalColorValue = None
+    """
+    The button label color.
+    If not provided, defaults to `SnackBarTheme.action_text_color`.
+    """
+
+    disabled_text_color: OptionalColorValue = None
+    """
+    The button disabled label color. 
+    This color is shown after the action is dismissed.
+    """
+
+    bgcolor: OptionalColorValue = None
+    """
+    The button background fill color. 
+    If not provided, defaults to `SnackBarTheme.action_bgcolor`.
+    """
+
+    disabled_bgcolor: OptionalColorValue = None
+    """
+    The button disabled background color. 
+    This color is shown after the action is dismissed.
+    
+    If not provided, defaults to `SnackBarTheme.disabled_action_bgcolor`.
+    """
+
+    on_click: OptionalControlEventCallable = None
+    """
+    Fires when this action button is clicked.
+    """
+
+
+@control("SnackBar")
 class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
@@ -43,7 +88,7 @@ class SnackBar(DialogControl):
     Online docs: https://flet.dev/docs/controls/snackbar
     """
 
-    content: Control
+    content: StrOrControl
     """
     The primary content of the snack bar.
 
@@ -86,7 +131,7 @@ class SnackBar(DialogControl):
     Tapping the icon will close the snack bar.
     """
 
-    action: Optional[str] = None
+    action: Union[str, SnackBarAction, None] = None
     """
     An optional action that the user can take based on the snack bar.
 
@@ -94,12 +139,6 @@ class SnackBar(DialogControl):
     the snackbar. Snack bars can have at most one action.
 
     The action should not be "dismiss" or "cancel".
-    """
-
-    action_color: OptionalColorValue = None
-    """
-    The foreground [color](https://flet.dev/docs/reference/colors) of action
-    button.
     """
 
     close_icon_color: OptionalColorValue = None
@@ -112,7 +151,7 @@ class SnackBar(DialogControl):
     SnackBar background [color](https://flet.dev/docs/reference/colors).
     """
 
-    duration: OptionalDurationValue = None
+    duration: DurationValue = field(default_factory=lambda: Duration(milliseconds=4000))
     """
     The number of *milliseconds* that the SnackBar stays open for.
 
@@ -161,7 +200,7 @@ class SnackBar(DialogControl):
     [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The `content` will be clipped (or not) according to this option.
 
@@ -184,11 +223,6 @@ class SnackBar(DialogControl):
     Defaults to `0.25`.
     """
 
-    on_action: OptionalControlEventCallable = None
-    """
-    Fires when action button is clicked.
-    """
-
     on_visible: OptionalControlEventCallable = None
     """
     Fires the first time that the snackbar is visible within the page.
@@ -196,6 +230,9 @@ class SnackBar(DialogControl):
 
     def before_update(self):
         super().before_update()
+        assert isinstance(self.content, str) or (
+            isinstance(self.content, Control) and self.content.visible
+        ), "content must be a string or a visible control"
         assert (
             self.action_overflow_threshold is None
             or 0 <= self.action_overflow_threshold <= 1

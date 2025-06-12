@@ -89,16 +89,14 @@ BoxDecoration? boxDecorationFromDetails({
   Gradient? gradient,
   DecorationImage? image,
 }) {
-  bool hasCustomProperties = color != null ||
+  // If no custom properties are provided, return null
+  if (!(color != null ||
       border != null ||
       borderRadius != null ||
       gradient != null ||
       shape != null ||
       boxShadow != null ||
-      image != null;
-
-  // If no custom properties are provided, return null
-  if (!hasCustomProperties) {
+      image != null)) {
     return null;
   }
 

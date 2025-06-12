@@ -10,6 +10,7 @@ import '../utils/gradient.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../utils/tooltip.dart';
 import 'base_controls.dart';
 
 class DataTableControl extends StatelessWidget {
@@ -67,23 +68,21 @@ class DataTableControl extends StatelessWidget {
       sortAscending: control.getBool("sort_ascending", false)!,
       sortColumnIndex: control.getInt("sort_column_index"),
       onSelectAll: control.getBool("on_select_all", false)!
-          ? (bool? selected) {
-              control.triggerEvent("select_all", selected);
-            }
+          ? (bool? selected) => control.triggerEvent("select_all", selected)
           : null,
       columns: control.children("columns").map((column) {
         column.notifyParent = true;
+        var tooltip =
+            parseTooltip(column.get("tooltip"), context, const Placeholder());
         return DataColumn(
           numeric: column.getBool("numeric", false)!,
-          tooltip: column.getString("tooltip_text"),
+          tooltip: tooltip?.message,
           headingRowAlignment:
-              parseMainAxisAlignment(column.getString("heading_row_alignment")),
+              column.getMainAxisAlignment("heading_row_alignment"),
           mouseCursor: WidgetStateMouseCursor.clickable,
           onSort: column.getBool("on_sort", false)!
-              ? (columnIndex, ascending) {
-                  column.triggerEvent(
-                      "sort", {"ci": columnIndex, "asc": ascending});
-                }
+              ? (columnIndex, ascending) => column
+                  .triggerEvent("sort", {"ci": columnIndex, "asc": ascending})
               : null,
           label: column.buildTextOrWidget("label")!,
         );
@@ -93,9 +92,9 @@ class DataTableControl extends StatelessWidget {
         return DataRow(
           key: ValueKey(row.id),
           selected: row.getBool("selected", false)!,
-          color: parseWidgetStateColor(row.get("color"), theme),
-          onSelectChanged: row.getBool("on_select_changed", false)!
-              ? (selected) => row.triggerEvent("select_changed", selected)
+          color: row.getWidgetStateColor("color", theme),
+          onSelectChanged: row.getBool("on_select_change", false)!
+              ? (selected) => row.triggerEvent("select_change", selected)
               : null,
           onLongPress: row.getBool("on_long_press", false)!
               ? () => row.triggerEvent("long_press")

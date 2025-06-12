@@ -30,9 +30,13 @@
 		<string>MainMenu</string>
 		<key>NSPrincipalClass</key>
 		<string>NSApplication</string>
+
+		<!-- Needed by `flet-audio-recorder` -->
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Audio Recording</string>
-		<key>NSLocationUsageDescription</key>
-		<string>This app needs access to location.</string>
+		<string>This app needs access to microphone.</string>
+
+		<!-- Needed by `flet-geolocator` -->
+		<key>NSLocationWhenInUseUsageDescription</key>
+        <string>This app needs access to location.</string>
 	</dict>
 </plist>

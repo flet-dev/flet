@@ -64,6 +64,10 @@ class Padding:
         """
         return Padding(left=left, top=top, right=right, bottom=bottom)
 
+    @classmethod
+    def zero(cls) -> "Padding":
+        return Padding.only()
+
 
 @deprecated(
     reason="Use Padding.all() instead",
