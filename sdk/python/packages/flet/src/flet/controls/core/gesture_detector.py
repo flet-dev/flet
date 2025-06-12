@@ -4,6 +4,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import EventHandler
 from flet.controls.events import (
     DragEndEvent,
     DragStartEvent,
@@ -84,12 +85,12 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    on_tap: OptionalEventCallable[TapEvent] = None
+    on_tap: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A tap with a primary button has occurred.
     """
 
-    on_tap_down: OptionalEventCallable[TapEvent] = None
+    on_tap_down: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that might cause a tap with a primary button has contacted the screen
     at a particular location.
@@ -98,7 +99,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_tap_up: OptionalEventCallable[TapEvent] = None
+    on_tap_up: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that will trigger a tap with a primary button has stopped contacting the
     screen at a particular location.
@@ -107,7 +108,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_multi_tap: OptionalEventCallable[TapEvent] = None
+    on_multi_tap: EventHandler[TapEvent["GestureDetector"]] = None
     """
     Triggered when multiple pointers contacted the screen.
 
@@ -120,12 +121,12 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     Called when a long press gesture with multiple pointers has been recognized.
     """
 
-    on_secondary_tap: OptionalEventCallable[TapEvent] = None
+    on_secondary_tap: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A tap with a secondary button has occurred.
     """
 
-    on_secondary_tap_down: OptionalEventCallable[TapEvent] = None
+    on_secondary_tap_down: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that might cause a tap with a secondary button has contacted the screen
     at a particular location.
@@ -134,7 +135,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_secondary_tap_up: OptionalEventCallable[TapEvent] = None
+    on_secondary_tap_up: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that will trigger a tap with a secondary button has stopped contacting the
     screen at a particular location.
@@ -183,13 +184,13 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressEndEvent`](https://flet.dev/docs/reference/types/longpressendevent).
     """
 
-    on_double_tap: OptionalEventCallable[TapEvent] = None
+    on_double_tap: EventHandler[TapEvent["GestureDetector"]] = None
     """
     The user has tapped the screen with a primary button at the same location twice
     in quick succession.
     """
 
-    on_double_tap_down: OptionalEventCallable[TapEvent] = None
+    on_double_tap_down: EventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that might cause a double tap has contacted the screen at a particular
     location.
@@ -326,4 +327,3 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     Event handler argument is of type
     [`ScrollEvent`](https://flet.dev/docs/reference/types/scrollevent).
     """
-

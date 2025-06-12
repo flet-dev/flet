@@ -1,8 +1,8 @@
-from dataclasses import field, dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Optional, TypeVar
 
-from flet.controls.control_event import ControlEvent
-from flet.controls.duration import OptionalDuration, Duration
+from flet.controls.control_event import ControlEvent, Event
+from flet.controls.duration import Duration, OptionalDuration
 from flet.controls.types import PointerDeviceType
 
 __all__ = [
@@ -21,10 +21,14 @@ __all__ = [
     "PointerEvent",
 ]
 
+if TYPE_CHECKING:
+    from .base_control import BaseControl
+
+TapEventControlType = TypeVar("TapEventControlType", bound="BaseControl")
 
 
 @dataclass(kw_only=True)
-class TapEvent(ControlEvent):
+class TapEvent(Event[TapEventControlType]):
     kind: Optional[str] = field(default=None, metadata={"data_field": "k"})
     local_x: Optional[float] = field(default=None, metadata={"data_field": "lx"})
     local_y: Optional[float] = field(default=None, metadata={"data_field": "ly"})
@@ -85,7 +89,9 @@ class DragEndEvent(ControlEvent):
     global_y: float = field(metadata={"data_field": "gy"})
     velocity_x: float = field(metadata={"data_field": "vx"})
     velocity_y: float = field(metadata={"data_field": "vy"})
-    primary_velocity: Optional[float] = field(default=None, metadata={"data_field": "pv"})
+    primary_velocity: Optional[float] = field(
+        default=None, metadata={"data_field": "pv"}
+    )
 
 
 @dataclass(kw_only=True)
@@ -149,6 +155,7 @@ class PointerEvent(ControlEvent):
     delta_x: Optional[float] = field(metadata={"data_field": "dx"})
     delta_y: Optional[float] = field(metadata={"data_field": "dy"})
 
+
 @dataclass(kw_only=True)
 class ScrollEvent(ControlEvent):
     local_x: float = field(metadata={"data_field": "lx"})
@@ -159,8 +166,6 @@ class ScrollEvent(ControlEvent):
     scroll_delta_y: float = field(metadata={"data_field": "sdy"})
 
 
-
 @dataclass(kw_only=True)
 class HoverEvent(PointerEvent):
     pass
-

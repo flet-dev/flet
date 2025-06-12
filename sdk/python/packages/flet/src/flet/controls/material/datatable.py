@@ -6,9 +6,9 @@ from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.control_state import ControlStateValue
-from flet.controls.core.gesture_detector import TapEvent
+from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -25,7 +25,7 @@ from flet.controls.types import (
 
 
 @dataclass
-class DataColumnSortEvent(ControlEvent):
+class DataColumnSortEvent(Event["DataColumn"]):
     column_index: int = field(metadata={"data_field": "ci"})
     ascending: bool = field(metadata={"data_field": "asc"})
 
@@ -159,7 +159,7 @@ class DataCell(Control):
     provided).
     """
 
-    on_tap_down: OptionalEventCallable[TapEvent] = None
+    on_tap_down: EventHandler[TapEvent["DataCell"]] = None
     """
     Called if the cell is tapped down.
 
