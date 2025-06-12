@@ -151,10 +151,9 @@ class Option(Control):
             self._set_enum_attr("trailingIcon", value, IconEnums)
 
 
-class DropdownOption(Option):
-    """Alias for Option"""
-
-
+DropdownOption = Option
+    
+    
 class Dropdown(FormFieldControl):
     """
     A dropdown control that allows users to select a single option from a list of options.
