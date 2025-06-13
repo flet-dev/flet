@@ -7,6 +7,7 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
@@ -14,7 +15,6 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     VisualDensity,
@@ -252,29 +252,29 @@ class Chip(ConstrainedControl):
     Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["Chip"] = None
     """
     Fires when the user clicks on the chip. Cannot be specified together with 
     `on_select` event.
     """
 
-    on_delete: OptionalControlEventCallable = None
+    on_delete: ControlEventHandler["Chip"] = None
     """
     Fires when the user clicks on the `delete_icon`.
     """
 
-    on_select: OptionalControlEventCallable = None
+    on_select: ControlEventHandler["Chip"] = None
     """
     Fires when the user clicks on the chip. Changes `selected` property to the opposite 
     value. Cannot be specified together with `on_click` event.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["Chip"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["Chip"] = None
     """
     Fires when the control has lost focus.
     """

@@ -27,7 +27,6 @@ from flet.controls.types import (
     BlendMode,
     ClipBehavior,
     OptionalColorValue,
-    OptionalControlEventCallable,
     ThemeMode,
     UrlTarget,
 )
@@ -377,12 +376,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     ```
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["Container"] = None
     """
     Fires when the container is long-pressed.
     """
 
-    on_hover: OptionalControlEventCallable = None
+    on_hover: ControlEventHandler["Container"] = None
     """
     Fires when a mouse pointer enters or exists the container area. `data` property of 
     event object contains `true` (string) when cursor enters and `false` when it exits.

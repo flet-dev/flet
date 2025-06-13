@@ -3,6 +3,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
@@ -11,7 +12,6 @@ from flet.controls.types import (
     IconValueOrControl,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
 )
@@ -138,7 +138,7 @@ class Banner(DialogControl):
     Defaults to `52`.
     """
 
-    on_visible: OptionalControlEventCallable = None
+    on_visible: ControlEventHandler["Banner"] = None
     """
     Fires when the banner is shown or made visible for the first time.
     """
