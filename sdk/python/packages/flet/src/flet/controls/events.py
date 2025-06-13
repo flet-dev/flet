@@ -25,7 +25,26 @@ if TYPE_CHECKING:
     from .base_control import BaseControl
 
 TapEventControlType = TypeVar("TapEventControlType", bound="BaseControl")
-
+LongPressEndEventControlType = TypeVar("LongPressEndEventControlType", 
+                                       bound="BaseControl")
+LongPressStartEventControlType = TypeVar("LongPressStartEventControlType", 
+                                       bound="BaseControl")
+DragStartEventControlType = TypeVar("DragStartEventControlType", 
+                                       bound="BaseControl")
+DragUpdateEventControlType = TypeVar("DragUpdateEventControlType", 
+                                       bound="BaseControl")
+DragEndEventControlType = TypeVar("DragEndEventControlType", 
+                                       bound="BaseControl")
+ScaleStartEventControlType = TypeVar("ScaleStartEventControlType", 
+                                       bound="BaseControl")
+ScaleEndEventControlType = TypeVar("ScaleEndEventControlType", 
+                                       bound="BaseControl")
+ScaleUpdateEventControlType = TypeVar("ScaleUpdateEventControlType", 
+                                       bound="BaseControl")
+PointerEventControlType = TypeVar("PointerEventControlType", 
+                                       bound="BaseControl")
+ScrollEventControlType = TypeVar("PointerEventControlType", 
+                                       bound="BaseControl")
 
 @dataclass(kw_only=True)
 class TapEvent(Event[TapEventControlType]):
@@ -42,7 +61,7 @@ class MultiTapEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class LongPressStartEvent(ControlEvent):
+class LongPressStartEvent(Event[LongPressStartEventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -50,7 +69,7 @@ class LongPressStartEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class LongPressEndEvent(ControlEvent):
+class LongPressEndEvent(Event[LongPressEndEventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -60,7 +79,7 @@ class LongPressEndEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class DragStartEvent(ControlEvent):
+class DragStartEvent(Event[DragStartEventControlType]):
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
@@ -70,7 +89,7 @@ class DragStartEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class DragUpdateEvent(ControlEvent):
+class DragUpdateEvent(Event[DragUpdateEventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -82,7 +101,7 @@ class DragUpdateEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class DragEndEvent(ControlEvent):
+class DragEndEvent(Event[DragEndEventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -95,7 +114,7 @@ class DragEndEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class ScaleStartEvent(ControlEvent):
+class ScaleStartEvent(Event[ScaleStartEventControlType]):
     focal_point_x: float = field(metadata={"data_field": "fpx"})
     focal_point_y: float = field(metadata={"data_field": "fpy"})
     local_focal_point_x: float = field(metadata={"data_field": "lfpx"})
@@ -105,14 +124,14 @@ class ScaleStartEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class ScaleEndEvent(ControlEvent):
+class ScaleEndEvent(Event[ScaleEndEventControlType]):
     pointer_count: int = field(metadata={"data_field": "pc"})
     velocity_x: float = field(metadata={"data_field": "vx"})
     velocity_y: float = field(metadata={"data_field": "vy"})
 
 
 @dataclass(kw_only=True)
-class ScaleUpdateEvent(ControlEvent):
+class ScaleUpdateEvent(Event[ScaleUpdateEventControlType]):
     focal_point_x: float = field(metadata={"data_field": "fpx"})
     focal_point_y: float = field(metadata={"data_field": "fpy"})
     focal_point_delta_x: float = field(metadata={"data_field": "fpdx"})
@@ -128,7 +147,7 @@ class ScaleUpdateEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class PointerEvent(ControlEvent):
+class PointerEvent(Event[PointerEventControlType]):
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
@@ -157,7 +176,7 @@ class PointerEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class ScrollEvent(ControlEvent):
+class ScrollEvent(Event[ScrollEventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
