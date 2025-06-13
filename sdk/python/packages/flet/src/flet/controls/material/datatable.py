@@ -6,7 +6,7 @@ from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import Event, EventHandler
+from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
@@ -17,8 +17,6 @@ from flet.controls.types import (
     MainAxisAlignment,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
-    OptionalEventCallable,
     OptionalNumber,
     StrOrControl,
 )
@@ -71,7 +69,7 @@ class DataColumn(Control):
     Value is of type [MainAxisAlignment](https://flet.dev/docs/reference/types/mainaxisalignment).
     """
 
-    on_sort: OptionalEventCallable[DataColumnSortEvent] = None
+    on_sort: EventHandler[DataColumnSortEvent] = None
     """
     Called when the user asks to sort the table using this column.
 
@@ -126,7 +124,7 @@ class DataCell(Control):
     no effect.
     """
 
-    on_tap: OptionalControlEventCallable = None
+    on_tap: ControlEventHandler["DataCell"] = None
     """
     Called if the cell is tapped.
 
@@ -134,7 +132,7 @@ class DataCell(Control):
     attempt to select the row (if `DataRow.on_select_changed` is provided).
     """
 
-    on_double_tap: OptionalControlEventCallable = None
+    on_double_tap: ControlEventHandler["DataCell"] = None
     """
     Called when the cell is double tapped.
 
@@ -142,7 +140,7 @@ class DataCell(Control):
     attempt to select the row (if `DataRow.on_select_changed` is provided).
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["DataCell"] = None
     """
     Called if the cell is long-pressed.
 
@@ -150,7 +148,7 @@ class DataCell(Control):
     will attempt to select the row (if `DataRow.on_select_changed` is provided).
     """
 
-    on_tap_cancel: OptionalControlEventCallable = None
+    on_tap_cancel: ControlEventHandler["DataCell"] = None
     """
     Called if the user cancels a tap was started on cell.
 
@@ -216,7 +214,7 @@ class DataRow(Control):
     Otherwise, the checkbox, if present, will not be checked.
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["DataRow"] = None
     """
     Called if the row is long-pressed.
 
@@ -226,7 +224,7 @@ class DataRow(Control):
     for that particular cell.
     """
 
-    on_select_changed: OptionalControlEventCallable = None
+    on_select_changed: ControlEventHandler["DataRow"] = None
     """
     Called when the user selects or unselects a selectable row.
 
@@ -456,7 +454,7 @@ class DataTable(ConstrainedControl):
     `ClipBehavior.HARD_EDGE`.
     """
 
-    on_select_all: OptionalControlEventCallable = None
+    on_select_all: ControlEventHandler["DataTable"] = None
     """
     Invoked when the user selects or unselects every row, using the checkbox in the 
     heading row.
