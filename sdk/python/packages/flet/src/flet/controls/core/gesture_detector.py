@@ -166,7 +166,8 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     """
 
     on_secondary_long_press_start: EventHandler[
-        LongPressStartEvent["GestureDetector"]] = None
+        LongPressStartEvent["GestureDetector"]
+    ] = None
     """
     Called when a long press gesture with a secondary button has been recognized.
 
@@ -177,8 +178,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressStartEvent`](https://flet.dev/docs/reference/types/longpressstartevent).
     """
 
-    on_secondary_long_press_end: EventHandler[
-        LongPressEndEvent["GestureDetector"]] = None
+    on_secondary_long_press_end: EventHandler[LongPressEndEvent["GestureDetector"]] = (
+        None
+    )
     """
     A pointer that has triggered a long-press with a secondary button has stopped
     contacting the screen.

@@ -24,30 +24,27 @@ __all__ = [
 if TYPE_CHECKING:
     from .base_control import BaseControl
 
-TapEventControlType = TypeVar("TapEventControlType", bound="BaseControl")
-LongPressEndEventControlType = TypeVar("LongPressEndEventControlType", 
-                                       bound="BaseControl")
-LongPressStartEventControlType = TypeVar("LongPressStartEventControlType", 
-                                       bound="BaseControl")
-DragStartEventControlType = TypeVar("DragStartEventControlType", 
-                                       bound="BaseControl")
-DragUpdateEventControlType = TypeVar("DragUpdateEventControlType", 
-                                       bound="BaseControl")
-DragEndEventControlType = TypeVar("DragEndEventControlType", 
-                                       bound="BaseControl")
-ScaleStartEventControlType = TypeVar("ScaleStartEventControlType", 
-                                       bound="BaseControl")
-ScaleEndEventControlType = TypeVar("ScaleEndEventControlType", 
-                                       bound="BaseControl")
-ScaleUpdateEventControlType = TypeVar("ScaleUpdateEventControlType", 
-                                       bound="BaseControl")
-PointerEventControlType = TypeVar("PointerEventControlType", 
-                                       bound="BaseControl")
-ScrollEventControlType = TypeVar("ScrollEventControlType", 
-                                       bound="BaseControl")
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
+LongPressEndEventControlType = TypeVar(
+    "LongPressEndEventControlType", bound="BaseControl"
+)
+LongPressStartEventControlType = TypeVar(
+    "LongPressStartEventControlType", bound="BaseControl"
+)
+DragStartEventControlType = TypeVar("DragStartEventControlType", bound="BaseControl")
+DragUpdateEventControlType = TypeVar("DragUpdateEventControlType", bound="BaseControl")
+DragEndEventControlType = TypeVar("DragEndEventControlType", bound="BaseControl")
+ScaleStartEventControlType = TypeVar("ScaleStartEventControlType", bound="BaseControl")
+ScaleEndEventControlType = TypeVar("ScaleEndEventControlType", bound="BaseControl")
+ScaleUpdateEventControlType = TypeVar(
+    "ScaleUpdateEventControlType", bound="BaseControl"
+)
+PointerEventControlType = TypeVar("PointerEventControlType", bound="BaseControl")
+ScrollEventControlType = TypeVar("ScrollEventControlType", bound="BaseControl")
+
 
 @dataclass(kw_only=True)
-class TapEvent(Event[TapEventControlType]):
+class TapEvent(Event[EventControlType]):
     kind: Optional[str] = field(default=None, metadata={"data_field": "k"})
     local_x: Optional[float] = field(default=None, metadata={"data_field": "lx"})
     local_y: Optional[float] = field(default=None, metadata={"data_field": "ly"})
