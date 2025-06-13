@@ -2,11 +2,11 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     LabelPosition,
     MouseCursor,
     OptionalColorValue,
-    OptionalControlEventCallable,
 )
 
 __all__ = ["CupertinoRadio"]
@@ -92,12 +92,12 @@ class CupertinoRadio(ConstrainedControl):
     TBD
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["CupertinoRadio"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["CupertinoRadio"] = None
     """
     Fires when the control has lost focus.
     """

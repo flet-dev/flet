@@ -4,12 +4,12 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.types import (
     ColorValue,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
 )
 
 __all__ = ["CupertinoPicker"]
@@ -102,7 +102,7 @@ class CupertinoPicker(ConstrainedControl):
     Defaults to `CupertinoColors.TERTIARY_SYSTEM_FILL`.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["CupertinoPicker"] = None
     """
     Fires when the selection changes.
     """

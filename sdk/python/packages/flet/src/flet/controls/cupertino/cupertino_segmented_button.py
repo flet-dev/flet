@@ -3,8 +3,9 @@ from dataclasses import field
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.types import OptionalColorValue, OptionalControlEventCallable
+from flet.controls.types import OptionalColorValue
 
 __all__ = ["CupertinoSegmentedButton"]
 
@@ -70,7 +71,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     TBD
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["CupertinoSegmentedButton"] = None
     """
     Fires when the state of the button is changed - when one of the `controls` is 
     clicked.

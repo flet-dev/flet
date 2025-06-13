@@ -2,10 +2,10 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -78,27 +78,27 @@ class CupertinoSlider(ConstrainedControl):
     The [color](https://flet.dev/docs/reference/colors) of the thumb.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the state of the Slider is changed.
     """
 
-    on_change_start: OptionalControlEventCallable = None
+    on_change_start: ControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the user starts selecting a new value for the slider.
     """
 
-    on_change_end: OptionalControlEventCallable = None
+    on_change_end: ControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the user is done selecting a new value for the slider.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the control has lost focus.
     """
