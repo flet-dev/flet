@@ -20,7 +20,7 @@ from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent, ControlEventHandler
+from flet.controls.control_event import ControlEvent, ControlEventHandler, Event
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.multi_view import MultiView
@@ -36,7 +36,7 @@ from flet.controls.session_storage import SessionStorage
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
-    OptionalEventCallable,
+    EventHandler,
     PagePlatform,
     Wrapper,
 )
@@ -240,7 +240,7 @@ class Page(PageView):
     Fires when brightness of app host platform has changed.
     """
 
-    on_app_lifecycle_state_change: OptionalEventCallable[
+    on_app_lifecycle_state_change: EventHandler[
         "AppLifecycleStateChangeEvent"
     ] = None
     """
@@ -250,7 +250,7 @@ class Page(PageView):
     [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
     """
 
-    on_route_change: OptionalEventCallable["RouteChangeEvent"] = None
+    on_route_change: EventHandler["RouteChangeEvent"] = None
     """
     Fires when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
@@ -259,7 +259,7 @@ class Page(PageView):
     [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
     """
 
-    on_view_pop: OptionalEventCallable["ViewPopEvent"] = None
+    on_view_pop: EventHandler["ViewPopEvent"] = None
     """
     Fires when the user clicks automatic "Back" button in
     [AppBar](https://flet.dev/docs/controls/appbar) control.
@@ -268,7 +268,7 @@ class Page(PageView):
     [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
     """
 
-    on_keyboard_event: OptionalEventCallable["KeyboardEvent"] = None
+    on_keyboard_event: EventHandler["KeyboardEvent"] = None
     """
     Fires when a keyboard key is pressed.
 
@@ -298,7 +298,7 @@ class Page(PageView):
     (60 minutes by default).
     """
 
-    on_login: OptionalEventCallable["LoginEvent"] = None
+    on_login: EventHandler["LoginEvent"] = None
     """
     Fires upon successful or failed OAuth authorization flow.
 
@@ -316,12 +316,12 @@ class Page(PageView):
     Fires when unhandled exception occurs.
     """
 
-    on_multi_view_add: OptionalEventCallable["MultiViewAddEvent"] = None
+    on_multi_view_add: EventHandler["MultiViewAddEvent"] = None
     """
     TBD
     """
 
-    on_multi_view_remove: OptionalEventCallable["MultiViewRemoveEvent"] = None
+    on_multi_view_remove: EventHandler["MultiViewRemoveEvent"] = None
     """
     TBD
     """
@@ -770,7 +770,7 @@ class InvokeMethodResults:
 
 
 @dataclass
-class AppLifecycleStateChangeEvent(ControlEvent):
+class AppLifecycleStateChangeEvent(Event[""]):
     state: AppLifecycleState
 
 

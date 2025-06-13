@@ -6,13 +6,16 @@ from flet.controls.base_control import control
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent, ControlEventHandler
+from flet.controls.control_event import (
+    ControlEventHandler,
+    Event,
+    EventHandler,
+)
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.material.container import Container
 from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
     Number,
-    OptionalEventCallable,
     OptionalNumber,
 )
 
@@ -108,17 +111,17 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     it is positive or negative.
     """
 
-    on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None
+    on_update: EventHandler["DismissibleUpdateEvent"] = None
     """
     Fires when this control has been dragged.
     """
 
-    on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None
+    on_dismiss: EventHandler["DismissibleDismissEvent"] = None
     """
     Fires when this control has been dismissed, after finishing resizing.
     """
 
-    on_confirm_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None
+    on_confirm_dismiss: EventHandler["DismissibleDismissEvent"] = None
     """
     Gives the app an opportunity to confirm or veto a pending dismissal. The widget
     cannot be dragged again until the returned this pending dismissal is resolved.
@@ -148,12 +151,12 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
 
 @dataclass
-class DismissibleDismissEvent(ControlEvent):
+class DismissibleDismissEvent(Event["Dismissible"]):
     direction: DismissDirection
 
 
 @dataclass
-class DismissibleUpdateEvent(ControlEvent):
+class DismissibleUpdateEvent(Event["Dismissible"]):
     direction: DismissDirection
     progress: float
     reached: bool
