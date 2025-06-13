@@ -43,7 +43,7 @@ ScaleUpdateEventControlType = TypeVar("ScaleUpdateEventControlType",
                                        bound="BaseControl")
 PointerEventControlType = TypeVar("PointerEventControlType", 
                                        bound="BaseControl")
-ScrollEventControlType = TypeVar("PointerEventControlType", 
+ScrollEventControlType = TypeVar("ScrollEventControlType", 
                                        bound="BaseControl")
 
 @dataclass(kw_only=True)
@@ -185,6 +185,4 @@ class ScrollEvent(Event[ScrollEventControlType]):
     scroll_delta_y: float = field(metadata={"data_field": "sdy"})
 
 
-@dataclass(kw_only=True)
-class HoverEvent(PointerEvent):
-    pass
+HoverEvent = PointerEvent
