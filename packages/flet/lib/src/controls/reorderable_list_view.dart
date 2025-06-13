@@ -23,11 +23,19 @@ class ReorderableListViewControl extends StatefulWidget {
 
 class _ListViewControlState extends State<ReorderableListViewControl> {
   late final ScrollController _controller;
+  List<Control> _controls = [];
 
   @override
   void initState() {
     super.initState();
     _controller = ScrollController();
+    _controls = [...widget.control.children("controls")];
+  }
+
+  @override
+  void didUpdateWidget(covariant ReorderableListViewControl oldWidget) {
+    _controls = [...widget.control.children("controls")];
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -54,8 +62,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var anchor = widget.control.getDouble("anchor", 0.0)!;
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
-    var controls = widget.control
-        .children("controls")
+    var controls = _controls
         .map((child) => ControlWidget(key: ValueKey(child.id), control: child))
         .toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
@@ -68,6 +75,13 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
 
     void onReorder(int oldIndex, int newIndex) {
+      setState(() {
+        if (oldIndex < newIndex) {
+          newIndex -= 1;
+        }
+        final item = _controls.removeAt(oldIndex);
+        _controls.insert(newIndex, item);
+      });
       widget.control.triggerEvent(
           "reorder", {"old_index": oldIndex, "new_index": newIndex});
     }
