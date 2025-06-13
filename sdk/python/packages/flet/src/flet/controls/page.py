@@ -20,7 +20,12 @@ from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent, ControlEventHandler, Event
+from flet.controls.control_event import (
+    ControlEvent,
+    ControlEventHandler,
+    Event,
+    EventHandler,
+)
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.multi_view import MultiView
@@ -36,7 +41,6 @@ from flet.controls.session_storage import SessionStorage
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
-    EventHandler,
     PagePlatform,
     Wrapper,
 )
@@ -240,9 +244,7 @@ class Page(PageView):
     Fires when brightness of app host platform has changed.
     """
 
-    on_app_lifecycle_state_change: EventHandler[
-        "AppLifecycleStateChangeEvent"
-    ] = None
+    on_app_lifecycle_state_change: EventHandler["AppLifecycleStateChangeEvent"] = None
     """
     Triggers when app lifecycle state changes.
 
@@ -738,17 +740,17 @@ class ServiceRegistry(Service):
 
 
 @dataclass
-class RouteChangeEvent(ControlEvent):
+class RouteChangeEvent(Event["Page"]):
     route: str
 
 
 @dataclass
-class ViewPopEvent(ControlEvent):
+class ViewPopEvent(Event["Page"]):
     view: View
 
 
 @dataclass
-class KeyboardEvent(ControlEvent):
+class KeyboardEvent(Event["Page"]):
     key: str
     shift: bool
     ctrl: bool
@@ -757,7 +759,7 @@ class KeyboardEvent(ControlEvent):
 
 
 @dataclass
-class LoginEvent(ControlEvent):
+class LoginEvent(Event["Page"]):
     error: Optional[str]
     error_description: Optional[str]
 
@@ -770,16 +772,16 @@ class InvokeMethodResults:
 
 
 @dataclass
-class AppLifecycleStateChangeEvent(Event[""]):
+class AppLifecycleStateChangeEvent(Event["Page"]):
     state: AppLifecycleState
 
 
 @dataclass
-class MultiViewAddEvent(ControlEvent):
+class MultiViewAddEvent(Event["Page"]):
     view_id: int
     initial_data: Any
 
 
 @dataclass
-class MultiViewRemoveEvent(ControlEvent):
+class MultiViewRemoveEvent(Event["Page"]):
     view_id: int
