@@ -1,6 +1,6 @@
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.types import OptionalControlEventCallable
+from flet.controls.control_event import ControlEventHandler
 
 __all__ = ["SelectionArea"]
 
@@ -21,7 +21,7 @@ class SelectionArea(Control):
     property, and then provide multiple controls to that control.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["SelectionArea"] = None
     """
     Fires when the selected content changes.
     """

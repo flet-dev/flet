@@ -4,12 +4,12 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
     MouseCursor,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     UrlTarget,
@@ -152,7 +152,7 @@ class FloatingActionButton(ConstrainedControl):
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["FloatingActionButton"] = None
     """
     Fires when a user clicks the button.
     """

@@ -8,6 +8,7 @@ from flet.controls.box import OptionalBoxConstraints
 from flet.controls.buttons import OptionalOutlinedBorder, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
 from flet.controls.padding import PaddingValue
@@ -15,7 +16,6 @@ from flet.controls.text_style import OptionalTextStyle, TextStyle
 from flet.controls.types import (
     ColorValue,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     OptionalString,
 )
@@ -239,32 +239,32 @@ class SearchBar(ConstrainedControl):
     Defaults to `False`.
     """
 
-    on_tap: OptionalControlEventCallable = None
+    on_tap: ControlEventHandler["SearchBar"] = None
     """
     Fires when the search bar is tapped.
     """
 
-    on_tap_outside_bar: OptionalControlEventCallable = None
+    on_tap_outside_bar: ControlEventHandler["SearchBar"] = None
     """
     TBD
     """
 
-    on_submit: OptionalControlEventCallable = None
+    on_submit: ControlEventHandler["SearchBar"] = None
     """
     Fires when user presses ENTER while focus is on SearchBar.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["SearchBar"] = None
     """
     Fires when the typed input in the search bar has changed.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["SearchBar"] = None
     """
     TBD
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["SearchBar"] = None
     """
     TBD
     """

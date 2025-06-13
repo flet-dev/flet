@@ -3,6 +3,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -11,7 +12,6 @@ from flet.controls.types import (
     LabelPosition,
     MouseCursor,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
 )
@@ -204,12 +204,12 @@ class Switch(ConstrainedControl, AdaptiveControl):
     [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor) enum.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["Switch"] = None
     """
     Fires when the state of the Switch is changed.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["Switch"] = None
     """
     Fires when the control has received focus.
 
@@ -217,7 +217,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     [`OnFocusEvent`](https://flet.dev/docs/reference/types/onfocusevent).
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["Switch"] = None
     """
     Fires when the control has lost focus.
     """

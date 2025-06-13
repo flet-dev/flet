@@ -5,12 +5,12 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValueOrControl,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -157,7 +157,7 @@ class NavigationDrawer(DialogControl):
     and defaults to `NavigationDrawerPosition.START`.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["NavigationDrawer"] = None
     """
     Fires when selected destination changed.
     """

@@ -8,12 +8,12 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValueOrControl,
     MouseCursor,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     UrlTarget,
     VisualDensity,
@@ -217,17 +217,17 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["IconButton"] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["IconButton"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["IconButton"] = None
     """
     Fires when the control has lost focus.
     """

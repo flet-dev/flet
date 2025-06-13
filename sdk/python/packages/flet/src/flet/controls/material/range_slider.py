@@ -2,13 +2,13 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     MouseCursor,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -118,17 +118,17 @@ class RangeSlider(ConstrainedControl):
     [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["RangeSlider"] = None
     """
     Fires when the state of the Slider is changed.
     """
 
-    on_change_start: OptionalControlEventCallable = None
+    on_change_start: ControlEventHandler["RangeSlider"] = None
     """
     Fires when the user starts selecting a new value for the slider.
     """
 
-    on_change_end: OptionalControlEventCallable = None
+    on_change_end: ControlEventHandler["RangeSlider"] = None
     """
     Fires when the user is done selecting a new value for the slider.
     """

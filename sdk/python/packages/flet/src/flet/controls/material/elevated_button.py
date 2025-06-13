@@ -6,12 +6,12 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     StrOrControl,
     UrlTarget,
 )
@@ -97,17 +97,17 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     defaults to `UrlTarget.BLANK`.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["ElevatedButton"] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["ElevatedButton"] = None
     """
     Fires when the button is long-pressed.
     """
 
-    on_hover: OptionalControlEventCallable = None
+    on_hover: ControlEventHandler["ElevatedButton"] = None
     """
     Fires when a mouse pointer enters or exists the button response area. `data` 
     property of event object contains `true` (string) when cursor enters and `false` 
@@ -131,12 +131,12 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     ```
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: ControlEventHandler["ElevatedButton"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: ControlEventHandler["ElevatedButton"] = None
     """
     Fires when the control has lost focus.
     """

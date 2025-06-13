@@ -6,13 +6,13 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     MouseCursor,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     UrlTarget,
     VisualDensity,
@@ -275,12 +275,12 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     tile heights.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: ControlEventHandler["ListTile"] = None
     """
     Fires when a user clicks or taps the list tile.
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: ControlEventHandler["ListTile"] = None
     """
     Fires when the user long-presses on this list tile.
     """

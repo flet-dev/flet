@@ -363,12 +363,12 @@ OptionalEventCallable = Optional[
         Callable[[EventType], Any],
     ]
 ]
-OptionalControlEventCallable = Optional[
-    Union[
-        Callable[[], Any],
-        Callable[[ControlEvent], Any],
-    ]
-]
+# OptionalControlEventCallable = Optional[
+#     Union[
+#         Callable[[], Any],
+#         Callable[[ControlEvent], Any],
+#     ]
+# ]
 
 # Colors
 ColorEnums = (Colors, CupertinoColors)

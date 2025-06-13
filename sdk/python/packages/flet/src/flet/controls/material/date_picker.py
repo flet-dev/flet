@@ -4,14 +4,13 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, ControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DateTimeValue
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
     IconValue,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalEventCallable,
 )
 
@@ -185,7 +184,7 @@ class DatePicker(DialogControl):
     If it is also `None`, then `Colors.BLACK_54` is used.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["DatePicker"] = None
     """
     Fires when user clicks confirm button. `value` property is updated with selected 
     date. `e.data` also contains the selected date.

@@ -6,11 +6,11 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValue,
     IconValueOrControl,
-    OptionalControlEventCallable,
     StrOrControl,
 )
 
@@ -138,7 +138,7 @@ class SegmentedButton(ConstrainedControl):
     [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#paddingvalue).
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: ControlEventHandler["SegmentedButton"] = None
     """
     Fires when the selection changes.
     """

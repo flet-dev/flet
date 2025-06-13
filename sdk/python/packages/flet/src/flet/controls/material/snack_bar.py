@@ -4,6 +4,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
@@ -12,7 +13,6 @@ from flet.controls.types import (
     ClipBehavior,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -184,12 +184,12 @@ class SnackBar(DialogControl):
     Defaults to `0.25`.
     """
 
-    on_action: OptionalControlEventCallable = None
+    on_action: ControlEventHandler["SnackBar"] = None
     """
     Fires when action button is clicked.
     """
 
-    on_visible: OptionalControlEventCallable = None
+    on_visible: ControlEventHandler["SnackBar"] = None
     """
     Fires the first time that the snackbar is visible within the page.
     """
