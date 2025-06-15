@@ -5,7 +5,7 @@ bool isProgressiveWebApp() {
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  var pagePath = trim(uriPath, "/");
+  var pagePath = uriPath.trimSymbol("/");
   if (pagePath != "") {
     pagePath = "$pagePath/";
   }

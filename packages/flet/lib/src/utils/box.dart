@@ -40,10 +40,10 @@ List<BoxShadow>? parseBoxShadows(dynamic value, ThemeData theme,
   }
 }
 
-BoxShadow? parseBoxShadow(dynamic value, ThemeData theme) {
-  if (value == null) {
-    return null;
-  }
+BoxShadow? parseBoxShadow(dynamic value, ThemeData theme,
+    [BoxShadow? defaultValue]) {
+  if (value == null) return defaultValue;
+
   var offset = parseOffset(value["offset"]);
   return BoxShadow(
       color: parseColor(value["color"], theme, const Color(0xFF000000))!,
