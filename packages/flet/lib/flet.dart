@@ -30,6 +30,7 @@ export 'src/utils/drawing.dart';
 export 'src/utils/edge_insets.dart';
 export 'src/utils/events.dart';
 export 'src/utils/form_field.dart';
+export 'src/utils/geometry.dart';
 export 'src/utils/gesture_detector.dart';
 export 'src/utils/gradient.dart';
 export 'src/utils/icons.dart';

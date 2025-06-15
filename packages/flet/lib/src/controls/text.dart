@@ -26,10 +26,9 @@ class TextControl extends StatelessWidget {
         control.getBool("enable_interactive_selection", true)!;
 
     List<TextSpan>? spans = parseTextSpans(
-      Theme.of(context),
       control.children("spans"),
-      control.disabled,
-      (Control control, String eventName, String eventData) {
+      Theme.of(context),
+      (Control control, String eventName, [dynamic eventData]) {
         control.triggerEvent(eventName, eventData);
       },
     );

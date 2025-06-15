@@ -1,7 +1,7 @@
 import 'strings.dart';
 
 String getWebPageName(Uri uri) {
-  var urlPath = trim(uri.path, "/");
+  var urlPath = uri.path.trimSymbol("/");
   if (urlPath != "") {
     var pathParts = urlPath.split("/");
     if (pathParts.length > 1) {

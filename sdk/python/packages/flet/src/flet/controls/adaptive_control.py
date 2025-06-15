@@ -9,8 +9,8 @@ __all__ = ["AdaptiveControl"]
 @control(kw_only=True)
 class AdaptiveControl(Control):
     """
-    Adaptive controls are either Material design controls that have their Cupertino 
-    analogs or container controls. 
+    Adaptive controls are either Material design controls that have their Cupertino
+    analogs or container controls.
     """
     adaptive: Optional[bool] = None
     """

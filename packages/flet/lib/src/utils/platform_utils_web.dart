@@ -13,7 +13,7 @@ bool isProgressiveWebApp() {
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  return trim(fletJS?.webSocketEndpoint ?? "ws", "/");
+  return fletJS?.webSocketEndpoint.trimSymbol("/") ?? "ws";
 }
 
 String getFletRouteUrlStrategy() {

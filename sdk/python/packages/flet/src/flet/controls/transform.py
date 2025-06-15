@@ -36,6 +36,10 @@ class Offset:
     x: Number
     y: Number
 
+    @classmethod
+    def zero(cls):
+        return Offset(0, 0)
+
 
 # typing
 RotateValue = Union[Number, Rotate]

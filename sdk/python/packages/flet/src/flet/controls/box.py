@@ -297,7 +297,7 @@ class BoxDecoration:
     A gradient to use when filling the box.
     """
 
-    shape: Optional[BoxShape] = None
+    shape: BoxShape = BoxShape.RECTANGLE
     """
     The shape to fill the `bgcolor`, `gradient`, and `image` into and to cast as the 
     `shadow`.
@@ -310,18 +310,22 @@ class BoxDecoration:
     Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
     """
 
+    def __post_init__(self):
+        assert self.blend_mode is None or self.bgcolor is not None or self.gradient is not None, "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
+        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), "border_radius must be None when shape is BoxShape.CIRCLE"
+
 
 @dataclass
 class BoxConstraints:
     """
     Constraints that must be respected by a size of a box.
-    
-    A Size respects a BoxConstraints if, and only if, all of the following relations 
+
+    A Size respects a BoxConstraints if, and only if, all of the following relations
     hold:
 
         min_width <= Size.width <= max_width
         min_height <= Size.height <= max_height
-    
+
     Read more about BoxConstraints [here](https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html).
     """
 

@@ -23,6 +23,7 @@ from flet.controls.blur import (
 from flet.controls.border import (
     Border,
     BorderSide,
+    BorderStyle,
     BorderSideStrokeAlign,
     BorderSideStrokeAlignValue,
     OptionalBorder,
@@ -342,6 +343,7 @@ from flet.controls.material.snack_bar import (
     DismissDirection,
     SnackBar,
     SnackBarBehavior,
+    SnackBarAction,
 )
 from flet.controls.material.submenu_button import SubmenuButton
 from flet.controls.material.switch import Switch
@@ -404,7 +406,7 @@ from flet.controls.services.semantics_service import Assertiveness, SemanticsSer
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.size import Size
+from flet.controls.geometry import Size, Rect
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     OptionalStrutStyle,
@@ -568,6 +570,7 @@ __all__ = [
     "OptionalBlurValue",
     "Border",
     "BorderSide",
+    "BorderStyle",
     "BorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
     "OptionalBorder",
@@ -831,6 +834,7 @@ __all__ = [
     "SliderInteraction",
     "DismissDirection",
     "SnackBar",
+    "SnackBarAction",
     "SnackBarBehavior",
     "SubmenuButton",
     "Switch",
@@ -889,6 +893,7 @@ __all__ = [
     "ShakeDetector",
     "StoragePaths",
     "Size",
+    "Rect",
     "TemplateRoute",
     "OptionalStrutStyle",
     "OptionalTextBaseline",
