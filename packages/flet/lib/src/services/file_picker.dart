@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../flet_service.dart';
 import '../utils/file_picker.dart';
+import '../utils/platform.dart';
 
 class FilePickerService extends FletService {
   FilePickerService({required super.control});
@@ -69,14 +70,15 @@ class FilePickerService extends FletService {
           throw Exception("Save File dialog is not supported on web.");
         }
         return await FilePicker.platform.saveFile(
-          dialogTitle: dialogTitle,
-          fileName: args["file_name"],
-          initialDirectory: initialDirectory,
-          lockParentWindow: true,
-          type: fileType,
-          allowedExtensions: allowedExtensions,
-          // bytes:
-        );
+            dialogTitle: dialogTitle,
+            fileName: args["file_name"] != null || !isIOSMobile()
+                ? args["file_name"]
+                : "new-file",
+            initialDirectory: initialDirectory,
+            lockParentWindow: true,
+            type: fileType,
+            allowedExtensions: allowedExtensions,
+            bytes: isAndroidMobile() || isIOSMobile() ? Uint8List(0) : null);
       case "get_directory_path":
         if (kIsWeb) {
           throw Exception("Get Directory Path dialog is not supported on web.");
