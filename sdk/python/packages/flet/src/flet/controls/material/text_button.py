@@ -5,7 +5,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
@@ -77,17 +77,17 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     and defaults to `ClipBehavior.NONE`.
     """
 
-    on_click: ControlEventHandler["TextButton"] = None
+    on_click: OptionalControlEventHandler["TextButton"] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: ControlEventHandler["TextButton"] = None
+    on_long_press: OptionalControlEventHandler["TextButton"] = None
     """
     Fires when the button is long-pressed.
     """
 
-    on_hover: ControlEventHandler["TextButton"] = None
+    on_hover: OptionalControlEventHandler["TextButton"] = None
     """
     Fires when a mouse pointer enters or exists the button response area.
 
@@ -95,12 +95,12 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     `false` when it exits.
     """
 
-    on_focus: ControlEventHandler["TextButton"] = None
+    on_focus: OptionalControlEventHandler["TextButton"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: ControlEventHandler["TextButton"] = None
+    on_blur: OptionalControlEventHandler["TextButton"] = None
     """
     Fires when the control has lost focus.
     """

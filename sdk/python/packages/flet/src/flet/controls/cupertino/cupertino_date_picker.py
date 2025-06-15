@@ -5,7 +5,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.types import Number, OptionalColorValue
 
@@ -152,7 +152,7 @@ class CupertinoDatePicker(ConstrainedControl):
     :::
     """
 
-    on_change: ControlEventHandler["CupertinoDatePicker"] = None
+    on_change: OptionalControlEventHandler["CupertinoDatePicker"] = None
     """
     Fires when the selected date and/or time changes. Will not fire if the new 
     selected value is not valid, or is not in the range of `first_date` and `last_date`.
@@ -168,51 +168,51 @@ class CupertinoDatePicker(ConstrainedControl):
             value = self.value
 
         assert self.item_extent > 0, "item_extent must be strictly greater than 0"
-        assert (
-            self.minute_interval > 0 and 60 % self.minute_interval == 0
-        ), "minute_interval must be a positive integer factor of 60"
+        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
+            "minute_interval must be a positive integer factor of 60"
+        )
 
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
             if self.first_date:
-                assert (
-                    value >= self.first_date
-                ), f"value ({value}) can't be before first_date ({self.first_date})"
+                assert value >= self.first_date, (
+                    f"value ({value}) can't be before first_date ({self.first_date})"
+                )
             if self.last_date:
-                assert (
-                    value <= self.last_date
-                ), f"value ({value}) can't be after last_date ({self.last_date})"
+                assert value <= self.last_date, (
+                    f"value ({value}) can't be after last_date ({self.last_date})"
+                )
 
         if self.date_picker_mode in [
             CupertinoDatePickerMode.DATE,
             CupertinoDatePickerMode.MONTH_YEAR,
         ]:
-            assert (
-                1 <= self.minimum_year <= value.year
-            ), f"value.year ({value.year}) can't be less than minimum_year "
+            assert 1 <= self.minimum_year <= value.year, (
+                f"value.year ({value.year}) can't be less than minimum_year "
+            )
             f"({self.minimum_year})"
 
             if self.maximum_year:
-                assert (
-                    value.year <= self.maximum_year
-                ), f"value.year ({value.year}) can't be greater than maximum_year "
+                assert value.year <= self.maximum_year, (
+                    f"value.year ({value.year}) can't be greater than maximum_year "
+                )
                 f"({self.maximum_year})"
 
             if self.first_date:
-                assert (
-                    value >= self.first_date
-                ), f"value ({value}) can't be before first_date ({self.first_date})"
+                assert value >= self.first_date, (
+                    f"value ({value}) can't be before first_date ({self.first_date})"
+                )
 
             if self.last_date:
-                assert (
-                    value <= self.last_date
-                ), f"value ({value}) can't be after last_date ({self.last_date})"
+                assert value <= self.last_date, (
+                    f"value ({value}) can't be after last_date ({self.last_date})"
+                )
 
         if self.date_picker_mode != CupertinoDatePickerMode.DATE:
-            assert (
-                not self.show_day_of_week
-            ), "show_day_of_week is only supported in CupertinoDatePickerMode.DATE mode"
+            assert not self.show_day_of_week, (
+                "show_day_of_week is only supported in CupertinoDatePickerMode.DATE mode"
+            )
 
-        assert (
-            value.minute % self.minute_interval == 0
-        ), f"value.minute ({value.minute}) must be divisible by minute_interval "
+        assert value.minute % self.minute_interval == 0, (
+            f"value.minute ({value.minute}) must be divisible by minute_interval "
+        )
         f"({self.minute_interval})"

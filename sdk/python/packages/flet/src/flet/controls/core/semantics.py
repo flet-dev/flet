@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.material.badge import BadgeValue
 from flet.controls.types import OptionalNumber
 
@@ -193,93 +193,95 @@ class Semantics(Control):
     Whether the node represents an image.
     """
 
-    on_tap: ControlEventHandler["Semantics"] = None
+    on_tap: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when this control is tapped.
     """
 
-    on_double_tap: ControlEventHandler["Semantics"] = None
+    on_double_tap: OptionalControlEventHandler["Semantics"] = None
     """
     TBD
     """
 
-    on_increase: ControlEventHandler["Semantics"] = None
+    on_increase: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the value represented by the semantics node is increased.
     """
 
-    on_decrease: ControlEventHandler["Semantics"] = None
+    on_decrease: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the value represented by the semantics node is decreased.
     """
 
-    on_dismiss: ControlEventHandler["Semantics"] = None
+    on_dismiss: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the node is dismissed.
     """
 
-    on_scroll_left: ControlEventHandler["Semantics"] = None
+    on_scroll_left: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from right to left.
     """
 
-    on_scroll_right: ControlEventHandler["Semantics"] = None
+    on_scroll_right: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from left to right.
     """
 
-    on_scroll_up: ControlEventHandler["Semantics"] = None
+    on_scroll_up: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from bottom to top.
     """
 
-    on_scroll_down: ControlEventHandler["Semantics"] = None
+    on_scroll_down: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when a user moves their finger across the screen from top to bottom.
     """
 
-    on_copy: ControlEventHandler["Semantics"] = None
+    on_copy: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the current selection is copied to the clipboard.
     """
 
-    on_cut: ControlEventHandler["Semantics"] = None
+    on_cut: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the current selection is cut to the clipboard.
     """
 
-    on_paste: ControlEventHandler["Semantics"] = None
+    on_paste: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the current content of the clipboard is pasted.
     """
 
-    on_long_press: ControlEventHandler["Semantics"] = None
+    on_long_press: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the node is long-pressed (pressing and holding the screen with the
     finger for a few seconds without moving it).
     """
 
-    on_move_cursor_forward_by_character: ControlEventHandler["Semantics"] = None
+    on_move_cursor_forward_by_character: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the cursor is moved forward by one character.
     """
 
-    on_move_cursor_backward_by_character: ControlEventHandler["Semantics"] = None
+    on_move_cursor_backward_by_character: OptionalControlEventHandler["Semantics"] = (
+        None
+    )
     """
     Fires when the cursor is moved backward by one character.
     """
 
-    on_did_gain_accessibility_focus: ControlEventHandler["Semantics"] = None
+    on_did_gain_accessibility_focus: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the node has gained accessibility focus.
     """
 
-    on_did_lose_accessibility_focus: ControlEventHandler["Semantics"] = None
+    on_did_lose_accessibility_focus: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when the node has lost accessibility focus.
     """
 
-    on_set_text: ControlEventHandler["Semantics"] = None
+    on_set_text: OptionalControlEventHandler["Semantics"] = None
     """
     Fires when a user wants to replace the current text in the text field with a new
     text.

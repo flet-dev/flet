@@ -3,7 +3,7 @@ from dataclasses import field
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
@@ -59,7 +59,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     TBD
     """
 
-    on_change: ControlEventHandler["CupertinoSlidingSegmentedButton"] = None
+    on_change: OptionalControlEventHandler["CupertinoSlidingSegmentedButton"] = None
     """
     Fires when the state of the button is changed - when one of the `controls` is 
     clicked.
@@ -67,6 +67,6 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            sum(c.visible for c in self.controls) >= 2
-        ), "controls must have at minimum two visible Controls"
+        assert sum(c.visible for c in self.controls) >= 2, (
+            "controls must have at minimum two visible Controls"
+        )

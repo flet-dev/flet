@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
@@ -184,12 +184,12 @@ class SnackBar(DialogControl):
     Defaults to `0.25`.
     """
 
-    on_action: ControlEventHandler["SnackBar"] = None
+    on_action: OptionalControlEventHandler["SnackBar"] = None
     """
     Fires when action button is clicked.
     """
 
-    on_visible: ControlEventHandler["SnackBar"] = None
+    on_visible: OptionalControlEventHandler["SnackBar"] = None
     """
     Fires the first time that the snackbar is visible within the page.
     """
@@ -200,6 +200,6 @@ class SnackBar(DialogControl):
             self.action_overflow_threshold is None
             or 0 <= self.action_overflow_threshold <= 1
         ), "action_overflow_threshold must be between 0 and 1 inclusive"
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )

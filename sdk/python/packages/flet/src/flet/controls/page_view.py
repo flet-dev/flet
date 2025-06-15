@@ -11,9 +11,9 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
-    ControlEventHandler,
     Event,
-    EventHandler,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
 )
 from flet.controls.core.view import View
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
@@ -102,7 +102,7 @@ class PageView(AdaptiveControl):
     title: Optional[str] = None
     media: Optional[PageMediaData] = None
     scroll_event_interval: OptionalNumber = None
-    on_resized: EventHandler["PageResizeEvent"] = None
+    on_resized: OptionalEventHandler["PageResizeEvent"] = None
     """
     Fires when a user resizes a browser or native OS window containing Flet app, for 
     example:
@@ -116,14 +116,14 @@ class PageView(AdaptiveControl):
 
     Event handler argument is of type [`WindowResizeEvent`](https://flet.dev/docs/reference/types/windowresizeevent).
     """
-    on_media_change: ControlEventHandler["PageView"] = None
+    on_media_change: OptionalControlEventHandler["PageView"] = None
     """
     Fires when `page.media` has changed. 
 
     Event handler argument is of type 
     [`PageMediaData`](https://flet.dev/docs/docs/reference/types/pagemediadata).
     """
-    on_scroll: EventHandler["OnScrollEvent"] = None
+    on_scroll: OptionalEventHandler["OnScrollEvent"] = None
     """
     Fires when page's scroll position is changed by a user.
 
@@ -190,10 +190,10 @@ class PageView(AdaptiveControl):
         curve: Optional[AnimationCurve] = None,
     ) -> None:
         """
-        Moves scroll position to either absolute `offset`, relative `delta` or jump to 
+        Moves scroll position to either absolute `offset`, relative `delta` or jump to
         the control with specified `scroll_key`.
 
-        See [`Column.scroll_to()`](https://flet.dev/docs/controls/column#scroll_tooffset-delta-key-duration-curve) 
+        See [`Column.scroll_to()`](https://flet.dev/docs/controls/column#scroll_tooffset-delta-key-duration-curve)
         for method details and examples.
         """
         self.__default_view().scroll_to(

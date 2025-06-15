@@ -3,7 +3,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import Event, EventHandler
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.transform import Offset
 
 __all__ = [
@@ -41,7 +41,7 @@ class DragTarget(Control):
     must both be in the same group.
     """
 
-    on_will_accept: EventHandler["DragWillAcceptEvent"] = None
+    on_will_accept: OptionalEventHandler["DragWillAcceptEvent"] = None
     """
     Fires when a draggable is dragged on this target.
 
@@ -49,7 +49,7 @@ class DragTarget(Control):
     and this target are in the same `group`; otherwise `false` (String).
     """
 
-    on_accept: EventHandler["DragTargetEvent"] = None
+    on_accept: OptionalEventHandler["DragTargetEvent"] = None
     """
     Fires when the user does drop an acceptable (same `group`) draggable on
     this target.
@@ -60,12 +60,12 @@ class DragTarget(Control):
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """
 
-    on_leave: EventHandler["DragTargetLeaveEvent"] = None
+    on_leave: OptionalEventHandler["DragTargetLeaveEvent"] = None
     """
     Fires when a draggable leaves this target.
     """
 
-    on_move: EventHandler["DragTargetEvent"] = None
+    on_move: OptionalEventHandler["DragTargetEvent"] = None
     """
     Fires when a draggable moves within this target.
 

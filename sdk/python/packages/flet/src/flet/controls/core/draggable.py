@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 
 __all__ = ["Draggable"]
 
@@ -88,12 +88,12 @@ class Draggable(Control):
     Defaults to `None` - no limit.
     """
 
-    on_drag_start: ControlEventHandler["Draggable"] = None
+    on_drag_start: OptionalControlEventHandler["Draggable"] = None
     """
     Fires when this draggable starts being dragged.
     """
 
-    on_drag_complete: ControlEventHandler["Draggable"] = None
+    on_drag_complete: OptionalControlEventHandler["Draggable"] = None
     """
     Fires when this draggable is dropped and accepted by a DragTarget.
     """

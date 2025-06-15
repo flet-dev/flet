@@ -5,7 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.types import ClipBehavior, StrOrControl
 
 __all__ = ["MenuItemButton"]
@@ -91,22 +91,22 @@ class MenuItemButton(ConstrainedControl):
     Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis).
     """
 
-    on_click: ControlEventHandler["MenuItemButton"] = None
+    on_click: OptionalControlEventHandler["MenuItemButton"] = None
     """
     Fired when the button is clicked.
     """
 
-    on_hover: ControlEventHandler["MenuItemButton"] = None
+    on_hover: OptionalControlEventHandler["MenuItemButton"] = None
     """
     Fired when the button is hovered.
     """
 
-    on_focus: ControlEventHandler["MenuItemButton"] = None
+    on_focus: OptionalControlEventHandler["MenuItemButton"] = None
     """
     Fired when the button receives focus.
     """
 
-    on_blur: ControlEventHandler["MenuItemButton"] = None
+    on_blur: OptionalControlEventHandler["MenuItemButton"] = None
     """
     Fired when this button loses focus.
     """

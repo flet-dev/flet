@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.types import (
     ColorValue,
@@ -102,7 +102,7 @@ class CupertinoPicker(ConstrainedControl):
     Defaults to `CupertinoColors.TERTIARY_SYSTEM_FILL`.
     """
 
-    on_change: ControlEventHandler["CupertinoPicker"] = None
+    on_change: OptionalControlEventHandler["CupertinoPicker"] = None
     """
     Fires when the selection changes.
     """
@@ -111,6 +111,6 @@ class CupertinoPicker(ConstrainedControl):
         super().before_update()
         assert self.squeeze > 0, "squeeze must be strictly greater than 0"
         assert self.magnification > 0, "magnification must be strictly greater than 0"
-        assert (
-            self.item_extent is None or self.item_extent > 0
-        ), "item_extent must be strictly greater than 0"
+        assert self.item_extent is None or self.item_extent > 0, (
+            "item_extent must be strictly greater than 0"
+        )

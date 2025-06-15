@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from .page import Page
     from .page_view import PageView
 
-__all__ = ["ControlEvent", "ControlEventHandler", "Event"]
+__all__ = ["ControlEvent", "OptionalControlEventHandler", "Event"]
 
 ControlEventType = TypeVar("ControlEventType", bound="BaseControl")
 EventType = TypeVar("EventType", bound="Event")
@@ -82,9 +82,15 @@ class Event(Generic[ControlEventType]):
 
 
 ControlEventHandler = Union[
+    Callable[[], None], Callable[[Event[ControlEventType]], None]
+]
+
+OptionalControlEventHandler = Union[
     Callable[[], None], Callable[[Event[ControlEventType]], None], None
 ]
 
-EventHandler = Union[Callable[[], None], Callable[[EventType], None], None]
+EventHandler = Union[Callable[[], None], Callable[[EventType], None]]
+
+OptionalEventHandler = Union[Callable[[], None], Callable[[EventType], None], None]
 
 ControlEvent = Event["BaseControl"]

@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEvent, ControlEventHandler
+from flet.controls.control_event import ControlEvent, OptionalControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
     OptionalColorValue,
@@ -107,7 +107,7 @@ class TimePicker(DialogControl):
     TBD
     """
 
-    on_change: ControlEventHandler["TimePicker"] = None
+    on_change: OptionalControlEventHandler["TimePicker"] = None
     """
     Fires when user clicks confirm button. `value` property is updated with selected
     time. `e.data` also contains the selected time.

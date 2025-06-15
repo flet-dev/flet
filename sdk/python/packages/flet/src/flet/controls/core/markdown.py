@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxDecoration
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.core.text import TextSelectionChangeEvent
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import OptionalTextStyle
@@ -326,7 +326,7 @@ class Markdown(ConstrainedControl):
     [`MarkdownStyleSheet`](https://flet.dev/docs/reference/types/markdownstylesheet).
     """
 
-    on_tap_text: ControlEventHandler["Markdown"] = None
+    on_tap_text: OptionalControlEventHandler["Markdown"] = None
     """
     Fires when some text is clicked/tapped.
     """
@@ -339,7 +339,7 @@ class Markdown(ConstrainedControl):
     [`MarkdownSelectionChangeEvent`](https://flet.dev/docs/reference/types/markdownselectionchangeevent).
     """
 
-    on_tap_link: ControlEventHandler["Markdown"] = None
+    on_tap_link: OptionalControlEventHandler["Markdown"] = None
     """
     Fires when a link within Markdown document is clicked/tapped.
 
@@ -348,4 +348,3 @@ class Markdown(ConstrainedControl):
     Example:
     https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py
     """
-

@@ -4,7 +4,7 @@ from enum import Enum
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.types import Number, OptionalColorValue
 
@@ -78,7 +78,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     Defaults to `32`.
     """
 
-    on_change: ControlEventHandler["CupertinoTimerPicker"] = None
+    on_change: OptionalControlEventHandler["CupertinoTimerPicker"] = None
     """
     Fires when the timer duration changes.
     """
@@ -92,20 +92,20 @@ class CupertinoTimerPicker(ConstrainedControl):
         )
         assert value >= Duration(), "value must be a non-negative duration"
         assert value < Duration(hours=24), "value must be strictly less than 24 hours"
-        assert (
-            self.minute_interval > 0 and 60 % self.minute_interval == 0
-        ), f"minute_interval ({self.minute_interval}) must be a positive integer "
+        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
+            f"minute_interval ({self.minute_interval}) must be a positive integer "
+        )
         "factor of 60"
-        assert (
-            self.second_interval > 0 and 60 % self.second_interval == 0
-        ), f"second_interval ({self.second_interval}) must be a positive integer "
+        assert self.second_interval > 0 and 60 % self.second_interval == 0, (
+            f"second_interval ({self.second_interval}) must be a positive integer "
+        )
         "factor of 60"
-        assert (
-            value.in_minutes % self.minute_interval == 0
-        ), f"value ({value.in_minutes} minutes) must be a multiple of minute_interval "
+        assert value.in_minutes % self.minute_interval == 0, (
+            f"value ({value.in_minutes} minutes) must be a multiple of minute_interval "
+        )
         f"({self.minute_interval})"
-        assert (
-            value.in_seconds % self.second_interval == 0
-        ), f"value ({value.in_seconds} seconds) must be a multiple of second_interval "
+        assert value.in_seconds % self.second_interval == 0, (
+            f"value ({value.in_seconds} seconds) must be a multiple of second_interval "
+        )
         f"({self.second_interval})"
         assert self.item_extent > 0, "item_extent must be strictly greater than 0"

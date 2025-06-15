@@ -72,7 +72,14 @@ from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
 from flet.controls.control_builder import ControlBuilder
-from flet.controls.control_event import ControlEvent, ControlEventHandler, Event
+from flet.controls.control_event import (
+    ControlEvent,
+    ControlEventHandler,
+    Event,
+    EventHandler,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.control_state import (
     ControlState,
     ControlStateValue,
@@ -1012,5 +1019,8 @@ __all__ = [
     "ScrollKey",
     "ValueKey",
     "Event",
+    "OptionalControlEventHandler",
     "ControlEventHandler",
+    "EventHandler",
+    "OptionalEventHandler",
 ]

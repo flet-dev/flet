@@ -4,7 +4,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEvent, ControlEventHandler
+from flet.controls.control_event import ControlEvent, OptionalControlEventHandler
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
@@ -28,6 +28,7 @@ class TextAffinity(Enum):
     """
     Defines the permissions which can be checked and requested.
     """
+
     UPSTREAM = "upstream"
     """
     The position has affinity for the downstream side of the text position, i.e. in the 
@@ -325,7 +326,7 @@ class Text(ConstrainedControl):
     TBD
     """
 
-    on_tap: ControlEventHandler["Text"] = None
+    on_tap: OptionalControlEventHandler["Text"] = None
     """
     TBD
     """

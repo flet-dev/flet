@@ -3,7 +3,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
@@ -138,17 +138,17 @@ class Banner(DialogControl):
     Defaults to `52`.
     """
 
-    on_visible: ControlEventHandler["Banner"] = None
+    on_visible: OptionalControlEventHandler["Banner"] = None
     """
     Fires when the banner is shown or made visible for the first time.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )
         assert self.content.visible, "content must be visible"
-        assert any(
-            a.visible for a in self.actions
-        ), "actions must contain at minimum one visible action Control"
+        assert any(a.visible for a in self.actions), (
+            "actions must contain at minimum one visible action Control"
+        )

@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.types import (
     Number,
     OptionalColorValue,
@@ -78,27 +78,27 @@ class CupertinoSlider(ConstrainedControl):
     The [color](https://flet.dev/docs/reference/colors) of the thumb.
     """
 
-    on_change: ControlEventHandler["CupertinoSlider"] = None
+    on_change: OptionalControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the state of the Slider is changed.
     """
 
-    on_change_start: ControlEventHandler["CupertinoSlider"] = None
+    on_change_start: OptionalControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the user starts selecting a new value for the slider.
     """
 
-    on_change_end: ControlEventHandler["CupertinoSlider"] = None
+    on_change_end: OptionalControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the user is done selecting a new value for the slider.
     """
 
-    on_focus: ControlEventHandler["CupertinoSlider"] = None
+    on_focus: OptionalControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: ControlEventHandler["CupertinoSlider"] = None
+    on_blur: OptionalControlEventHandler["CupertinoSlider"] = None
     """
     Fires when the control has lost focus.
     """
@@ -107,9 +107,9 @@ class CupertinoSlider(ConstrainedControl):
         super().before_update()
         self.value = self.value if self.value is not None else self.min
         assert self.min <= self.max, "min must be less than or equal to max"
-        assert self.value is None or (
-            self.value >= self.min
-        ), "value must be greater than or equal to min"
-        assert self.value is None or (
-            self.value <= self.max
-        ), "value must be less than or equal to max"
+        assert self.value is None or (self.value >= self.min), (
+            "value must be greater than or equal to min"
+        )
+        assert self.value is None or (self.value <= self.max), (
+            "value must be less than or equal to max"
+        )

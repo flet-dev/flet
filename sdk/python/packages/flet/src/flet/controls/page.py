@@ -22,9 +22,9 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEvent,
-    ControlEventHandler,
     Event,
-    EventHandler,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
@@ -239,12 +239,14 @@ class Page(PageView):
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
-    on_platform_brightness_change: ControlEventHandler["Page"] = None
+    on_platform_brightness_change: OptionalControlEventHandler["Page"] = None
     """
     Fires when brightness of app host platform has changed.
     """
 
-    on_app_lifecycle_state_change: EventHandler["AppLifecycleStateChangeEvent"] = None
+    on_app_lifecycle_state_change: OptionalEventHandler[
+        "AppLifecycleStateChangeEvent"
+    ] = None
     """
     Triggers when app lifecycle state changes.
 
@@ -252,7 +254,7 @@ class Page(PageView):
     [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
     """
 
-    on_route_change: EventHandler["RouteChangeEvent"] = None
+    on_route_change: OptionalEventHandler["RouteChangeEvent"] = None
     """
     Fires when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
@@ -261,7 +263,7 @@ class Page(PageView):
     [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
     """
 
-    on_view_pop: EventHandler["ViewPopEvent"] = None
+    on_view_pop: OptionalEventHandler["ViewPopEvent"] = None
     """
     Fires when the user clicks automatic "Back" button in
     [AppBar](https://flet.dev/docs/controls/appbar) control.
@@ -270,7 +272,7 @@ class Page(PageView):
     [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
     """
 
-    on_keyboard_event: EventHandler["KeyboardEvent"] = None
+    on_keyboard_event: OptionalEventHandler["KeyboardEvent"] = None
     """
     Fires when a keyboard key is pressed.
 
@@ -278,7 +280,7 @@ class Page(PageView):
     [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
     """
 
-    on_connect: ControlEventHandler["Page"] = None
+    on_connect: OptionalControlEventHandler["Page"] = None
     """
     Fires when a web user (re-)connects to a page session.
 
@@ -288,19 +290,19 @@ class Page(PageView):
     "online".
     """
 
-    on_disconnect: ControlEventHandler["Page"] = None
+    on_disconnect: OptionalControlEventHandler["Page"] = None
     """
     Fires when a web user disconnects from a page session, i.e. closes browser
     tab/window.
     """
 
-    on_close: ControlEventHandler["Page"] = None
+    on_close: OptionalControlEventHandler["Page"] = None
     """
     Fires when a session has expired after configured amount of time
     (60 minutes by default).
     """
 
-    on_login: EventHandler["LoginEvent"] = None
+    on_login: OptionalEventHandler["LoginEvent"] = None
     """
     Fires upon successful or failed OAuth authorization flow.
 
@@ -308,22 +310,22 @@ class Page(PageView):
     guide for more information and examples.
     """
 
-    on_logout: ControlEventHandler["Page"] = None
+    on_logout: OptionalControlEventHandler["Page"] = None
     """
     Fires after `page.logout()` call.
     """
 
-    on_error: ControlEventHandler["Page"] = None
+    on_error: OptionalControlEventHandler["Page"] = None
     """
     Fires when unhandled exception occurs.
     """
 
-    on_multi_view_add: EventHandler["MultiViewAddEvent"] = None
+    on_multi_view_add: OptionalEventHandler["MultiViewAddEvent"] = None
     """
     TBD
     """
 
-    on_multi_view_remove: EventHandler["MultiViewRemoveEvent"] = None
+    on_multi_view_remove: OptionalEventHandler["MultiViewRemoveEvent"] = None
     """
     TBD
     """

@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.material.navigation_bar import NavigationBarDestination
 from flet.controls.types import (
@@ -74,7 +74,7 @@ class CupertinoNavigationBar(ConstrainedControl):
     Defaults to `30`.
     """
 
-    on_change: ControlEventHandler["CupertinoNavigationBar"] = None
+    on_change: OptionalControlEventHandler["CupertinoNavigationBar"] = None
     """
     Fires when selected destination changed.
     """

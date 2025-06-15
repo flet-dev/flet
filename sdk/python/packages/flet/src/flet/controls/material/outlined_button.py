@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
@@ -80,17 +80,17 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     defaults to `UrlTarget.BLANK`.
     """
 
-    on_click: ControlEventHandler["OutlinedButton"] = None
+    on_click: OptionalControlEventHandler["OutlinedButton"] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: ControlEventHandler["OutlinedButton"] = None
+    on_long_press: OptionalControlEventHandler["OutlinedButton"] = None
     """
     Fires when the button is long-pressed.
     """
 
-    on_hover: ControlEventHandler["OutlinedButton"] = None
+    on_hover: OptionalControlEventHandler["OutlinedButton"] = None
     """
     Fires when a mouse pointer enters or exists the button response area.
 
@@ -98,12 +98,12 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     `false` when it exits.
     """
 
-    on_focus: ControlEventHandler["OutlinedButton"] = None
+    on_focus: OptionalControlEventHandler["OutlinedButton"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: ControlEventHandler["OutlinedButton"] = None
+    on_blur: OptionalControlEventHandler["OutlinedButton"] = None
     """
     Fires when the control has lost focus.
     """

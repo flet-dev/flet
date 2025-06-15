@@ -8,7 +8,7 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue, PaddingValue
 from flet.controls.types import (
     ClipBehavior,
@@ -72,7 +72,7 @@ class PopupMenuItem(Control):
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_click: ControlEventHandler["PopupMenuItem"] = None
+    on_click: OptionalControlEventHandler["PopupMenuItem"] = None
     """
     Called when a user clicks on this menu item.
     """
@@ -202,17 +202,17 @@ class PopupMenuButton(ConstrainedControl):
     TBD
     """
 
-    on_open: ControlEventHandler["PopupMenuButton"] = None
+    on_open: OptionalControlEventHandler["PopupMenuButton"] = None
     """
     Called when the popup menu is shown.
     """
 
-    on_cancel: ControlEventHandler["PopupMenuButton"] = None
+    on_cancel: OptionalControlEventHandler["PopupMenuButton"] = None
     """
     Called when the user dismisses/cancels the popup menu without selecting an item.
     """
 
-    on_select: ControlEventHandler["PopupMenuButton"] = None
+    on_select: OptionalControlEventHandler["PopupMenuButton"] = None
     """
     TBD
     """

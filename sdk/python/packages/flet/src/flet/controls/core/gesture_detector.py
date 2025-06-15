@@ -4,7 +4,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import OptionalEventHandler
 from flet.controls.events import (
     DragEndEvent,
     DragStartEvent,
@@ -86,12 +86,12 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    on_tap: EventHandler[TapEvent["GestureDetector"]] = None
+    on_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A tap with a primary button has occurred.
     """
 
-    on_tap_down: EventHandler[TapEvent["GestureDetector"]] = None
+    on_tap_down: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that might cause a tap with a primary button has contacted the screen
     at a particular location.
@@ -100,7 +100,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_tap_up: EventHandler[TapEvent["GestureDetector"]] = None
+    on_tap_up: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that will trigger a tap with a primary button has stopped contacting the
     screen at a particular location.
@@ -109,7 +109,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_multi_tap: EventHandler[TapEvent["GestureDetector"]] = None
+    on_multi_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     Triggered when multiple pointers contacted the screen.
 
@@ -117,17 +117,19 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`MultiTapEvent`](https://flet.dev/docs/reference/types/multitapevent).
     """
 
-    on_multi_long_press: EventHandler[LongPressEndEvent["GestureDetector"]] = None
+    on_multi_long_press: OptionalEventHandler[LongPressEndEvent["GestureDetector"]] = (
+        None
+    )
     """
     Called when a long press gesture with multiple pointers has been recognized.
     """
 
-    on_secondary_tap: EventHandler[TapEvent["GestureDetector"]] = None
+    on_secondary_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A tap with a secondary button has occurred.
     """
 
-    on_secondary_tap_down: EventHandler[TapEvent["GestureDetector"]] = None
+    on_secondary_tap_down: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that might cause a tap with a secondary button has contacted the screen
     at a particular location.
@@ -136,7 +138,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_secondary_tap_up: EventHandler[TapEvent["GestureDetector"]] = None
+    on_secondary_tap_up: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that will trigger a tap with a secondary button has stopped contacting the
     screen at a particular location.
@@ -145,7 +147,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_long_press_start: EventHandler[LongPressStartEvent["GestureDetector"]] = None
+    on_long_press_start: OptionalEventHandler[
+        LongPressStartEvent["GestureDetector"]
+    ] = None
     """
     Called when a long press gesture with a primary button has been recognized.
 
@@ -156,7 +160,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressStartEvent`](https://flet.dev/docs/reference/types/longpressstartevent).
     """
 
-    on_long_press_end: EventHandler[LongPressEndEvent["GestureDetector"]] = None
+    on_long_press_end: OptionalEventHandler[LongPressEndEvent["GestureDetector"]] = None
     """
     A pointer that has triggered a long-press with a primary button has stopped
     contacting the screen.
@@ -165,7 +169,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressEndEvent`](https://flet.dev/docs/reference/types/longpressendevent).
     """
 
-    on_secondary_long_press_start: EventHandler[
+    on_secondary_long_press_start: OptionalEventHandler[
         LongPressStartEvent["GestureDetector"]
     ] = None
     """
@@ -178,9 +182,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressStartEvent`](https://flet.dev/docs/reference/types/longpressstartevent).
     """
 
-    on_secondary_long_press_end: EventHandler[LongPressEndEvent["GestureDetector"]] = (
-        None
-    )
+    on_secondary_long_press_end: OptionalEventHandler[
+        LongPressEndEvent["GestureDetector"]
+    ] = None
     """
     A pointer that has triggered a long-press with a secondary button has stopped
     contacting the screen.
@@ -189,13 +193,13 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`LongPressEndEvent`](https://flet.dev/docs/reference/types/longpressendevent).
     """
 
-    on_double_tap: EventHandler[TapEvent["GestureDetector"]] = None
+    on_double_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     The user has tapped the screen with a primary button at the same location twice
     in quick succession.
     """
 
-    on_double_tap_down: EventHandler[TapEvent["GestureDetector"]] = None
+    on_double_tap_down: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
     A pointer that might cause a double tap has contacted the screen at a particular
     location.
@@ -206,7 +210,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
     """
 
-    on_horizontal_drag_start: EventHandler[DragStartEvent["GestureDetector"]] = None
+    on_horizontal_drag_start: OptionalEventHandler[
+        DragStartEvent["GestureDetector"]
+    ] = None
     """
     A pointer has contacted the screen with a primary button and has begun to move
     horizontally.
@@ -215,7 +221,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
     """
 
-    on_horizontal_drag_update: EventHandler[DragUpdateEvent["GestureDetector"]] = None
+    on_horizontal_drag_update: OptionalEventHandler[
+        DragUpdateEvent["GestureDetector"]
+    ] = None
     """
     A pointer that is in contact with the screen and moving horizontally has moved in
     the horizontal direction.
@@ -224,7 +232,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragUpdateEvent`](https://flet.dev/docs/reference/types/dragupdateevent).
     """
 
-    on_horizontal_drag_end: EventHandler[DragEndEvent["GestureDetector"]] = None
+    on_horizontal_drag_end: OptionalEventHandler[DragEndEvent["GestureDetector"]] = None
     """
     A pointer moving horizontally is no longer in contact and was moving at a specific
     velocity.
@@ -233,7 +241,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
     """
 
-    on_vertical_drag_start: EventHandler[DragStartEvent["GestureDetector"]] = None
+    on_vertical_drag_start: OptionalEventHandler[DragStartEvent["GestureDetector"]] = (
+        None
+    )
     """
     A pointer has contacted the screen and has begun to move vertically.
 
@@ -241,7 +251,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
     """
 
-    on_vertical_drag_update: EventHandler[DragUpdateEvent["GestureDetector"]] = None
+    on_vertical_drag_update: OptionalEventHandler[
+        DragUpdateEvent["GestureDetector"]
+    ] = None
     """
     A pointer moving vertically has moved in the vertical direction.
 
@@ -249,7 +261,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragUpdateEvent`](https://flet.dev/docs/reference/types/dragupdateevent).
     """
 
-    on_vertical_drag_end: EventHandler[DragEndEvent["GestureDetector"]] = None
+    on_vertical_drag_end: OptionalEventHandler[DragEndEvent["GestureDetector"]] = None
     """
     A pointer moving vertically is no longer in contact and was moving at a specific
     velocity.
@@ -258,7 +270,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
     """
 
-    on_pan_start: EventHandler[DragStartEvent["GestureDetector"]] = None
+    on_pan_start: OptionalEventHandler[DragStartEvent["GestureDetector"]] = None
     """
     A pointer has contacted the screen and has begun to move.
 
@@ -266,7 +278,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
     """
 
-    on_pan_update: EventHandler[DragUpdateEvent["GestureDetector"]] = None
+    on_pan_update: OptionalEventHandler[DragUpdateEvent["GestureDetector"]] = None
     """
     A pointer that is in contact with the screen and moving has moved again.
 
@@ -274,7 +286,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragUpdateEvent`](https://flet.dev/docs/reference/types/dragupdateevent).
     """
 
-    on_pan_end: EventHandler[DragEndEvent["GestureDetector"]] = None
+    on_pan_end: OptionalEventHandler[DragEndEvent["GestureDetector"]] = None
     """
     A pointer is no longer in contact and was moving at a specific velocity.
 
@@ -282,7 +294,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
     """
 
-    on_scale_start: EventHandler[ScaleStartEvent["GestureDetector"]] = None
+    on_scale_start: OptionalEventHandler[ScaleStartEvent["GestureDetector"]] = None
     """
     The pointers in contact with the screen have established a focal point and initial
     scale of `1.0`.
@@ -291,19 +303,19 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`ScaleStartEvent`](https://flet.dev/docs/reference/types/scalestartevent).
     """
 
-    on_scale_update: EventHandler[ScaleUpdateEvent["GestureDetector"]] = None
+    on_scale_update: OptionalEventHandler[ScaleUpdateEvent["GestureDetector"]] = None
     """
     Event handler argument is of type
     [`ScaleUpdateEvent`](https://flet.dev/docs/reference/types/scaleupdateevent).
     """
 
-    on_scale_end: EventHandler[ScaleEndEvent["GestureDetector"]] = None
+    on_scale_end: OptionalEventHandler[ScaleEndEvent["GestureDetector"]] = None
     """
     Event handler argument is of type
     [`ScaleEndEvent`](https://flet.dev/docs/reference/types/scaleendevent).
     """
 
-    on_hover: EventHandler[HoverEvent["GestureDetector"]] = None
+    on_hover: OptionalEventHandler[HoverEvent["GestureDetector"]] = None
     """
     Triggered when a mouse pointer has entered this control.
 
@@ -311,7 +323,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`HoverEvent`](https://flet.dev/docs/reference/types/hoverevent).
     """
 
-    on_enter: EventHandler[HoverEvent["GestureDetector"]] = None
+    on_enter: OptionalEventHandler[HoverEvent["GestureDetector"]] = None
     """
     Triggered when a mouse pointer has entered this control.
 
@@ -319,7 +331,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`HoverEvent`](https://flet.dev/docs/reference/types/hoverevent).
     """
 
-    on_exit: EventHandler[HoverEvent["GestureDetector"]] = None
+    on_exit: OptionalEventHandler[HoverEvent["GestureDetector"]] = None
     """
     Triggered when a mouse pointer has exited this control.
 
@@ -327,7 +339,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     [`HoverEvent`](https://flet.dev/docs/reference/types/hoverevent).
     """
 
-    on_scroll: EventHandler[ScrollEvent["GestureDetector"]] = None
+    on_scroll: OptionalEventHandler[ScrollEvent["GestureDetector"]] = None
     """
     Event handler argument is of type
     [`ScrollEvent`](https://flet.dev/docs/reference/types/scrollevent).

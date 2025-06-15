@@ -5,7 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -152,17 +152,17 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_change: ControlEventHandler["Checkbox"] = None
+    on_change: OptionalControlEventHandler["Checkbox"] = None
     """
     Fires when the state of the Checkbox is changed.
     """
 
-    on_focus: ControlEventHandler["Checkbox"] = None
+    on_focus: OptionalControlEventHandler["Checkbox"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: ControlEventHandler["Checkbox"] = None
+    on_blur: OptionalControlEventHandler["Checkbox"] = None
     """
     Fires when the control has lost focus.
     """

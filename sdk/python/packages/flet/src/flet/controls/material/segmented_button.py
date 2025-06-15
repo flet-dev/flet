@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValue,
@@ -138,24 +138,24 @@ class SegmentedButton(ConstrainedControl):
     [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#paddingvalue).
     """
 
-    on_change: ControlEventHandler["SegmentedButton"] = None
+    on_change: OptionalControlEventHandler["SegmentedButton"] = None
     """
     Fires when the selection changes.
     """
 
     def before_update(self):
         super().before_update()
-        assert any(
-            segment.visible for segment in self.segments
-        ), "segments must have at minimum one visible Segment"
-        assert (
-            len(self.selected) > 0 or self.allow_empty_selection
-        ), "allow_empty_selection must be True for selected to be empty"
-        assert (
-            len(self.selected) < 2 or self.allow_multiple_selection
-        ), "allow_multiple_selection must be True for selected to have more than one "
+        assert any(segment.visible for segment in self.segments), (
+            "segments must have at minimum one visible Segment"
+        )
+        assert len(self.selected) > 0 or self.allow_empty_selection, (
+            "allow_empty_selection must be True for selected to be empty"
+        )
+        assert len(self.selected) < 2 or self.allow_multiple_selection, (
+            "allow_multiple_selection must be True for selected to have more than one "
+        )
         "item"
-        assert (
-            len(self.selected) < 2 or self.allow_multiple_selection
-        ), "allow_multiple_selection must be True for selected to have more than one "
+        assert len(self.selected) < 2 or self.allow_multiple_selection, (
+            "allow_multiple_selection must be True for selected to have more than one "
+        )
         "item"

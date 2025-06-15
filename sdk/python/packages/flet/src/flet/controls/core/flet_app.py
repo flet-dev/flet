@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 
 __all__ = ["FletApp"]
 
@@ -48,8 +48,7 @@ class FletApp(ConstrainedControl):
     TBD
     """
 
-    on_error: ControlEventHandler["FletApp"] = None
+    on_error: OptionalControlEventHandler["FletApp"] = None
     """
     Fires when a connection or any unhandled error occurs.
     """
-

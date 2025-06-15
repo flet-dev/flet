@@ -7,9 +7,9 @@ from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import (
-    ControlEventHandler,
     Event,
-    EventHandler,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
 )
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.material.container import Container
@@ -67,7 +67,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     """
 
     dismiss_thresholds: dict[DismissDirection, OptionalNumber] = field(
-        default_factory=dict)
+        default_factory=dict
+    )
 
     """
     The offset threshold the item has to be dragged in order to be considered dismissed.
@@ -90,15 +91,17 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     ```
     """
 
-    movement_duration: DurationValue = field(default_factory=lambda: Duration(
-        milliseconds=200))
+    movement_duration: DurationValue = field(
+        default_factory=lambda: Duration(milliseconds=200)
+    )
     """
     The duration for card to dismiss or to come back to original position if not 
     dismissed.
     """
 
-    resize_duration: DurationValue = field(default_factory=lambda: Duration(
-        milliseconds=300))
+    resize_duration: DurationValue = field(
+        default_factory=lambda: Duration(milliseconds=300)
+    )
     """
     The amount of time the control will spend contracting before `on_dismiss` is called.
     """
@@ -111,17 +114,17 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     it is positive or negative.
     """
 
-    on_update: EventHandler["DismissibleUpdateEvent"] = None
+    on_update: OptionalEventHandler["DismissibleUpdateEvent"] = None
     """
     Fires when this control has been dragged.
     """
 
-    on_dismiss: EventHandler["DismissibleDismissEvent"] = None
+    on_dismiss: OptionalEventHandler["DismissibleDismissEvent"] = None
     """
     Fires when this control has been dismissed, after finishing resizing.
     """
 
-    on_confirm_dismiss: EventHandler["DismissibleDismissEvent"] = None
+    on_confirm_dismiss: OptionalEventHandler["DismissibleDismissEvent"] = None
     """
     Gives the app an opportunity to confirm or veto a pending dismissal. The widget
     cannot be dragged again until the returned this pending dismissal is resolved.
@@ -133,7 +136,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     See the example at the top of this page for a possible implementation.
     """
 
-    on_resize: ControlEventHandler["Dismissible"] = None
+    on_resize: OptionalControlEventHandler["Dismissible"] = None
     """
     Fires when this control changes size, for example, when contracting before
     being dismissed.

@@ -1,5 +1,5 @@
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.services.service import Service
 from flet.controls.types import Number
 
@@ -44,7 +44,7 @@ class ShakeDetector(Service):
     Defaults to `2.7`.
     """
 
-    on_shake: ControlEventHandler["ShakeDetector"] = None
+    on_shake: OptionalControlEventHandler["ShakeDetector"] = None
     """
     Triggers when the shake detected.
     """

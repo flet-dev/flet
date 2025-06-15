@@ -5,7 +5,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     Number,
@@ -116,7 +116,7 @@ class ExpansionPanelList(ConstrainedControl):
     The size of the gap between the `ExpansionPanel`s when expanded.
     """
 
-    on_change: ControlEventHandler["ExpansionPanelList"] = None
+    on_change: OptionalControlEventHandler["ExpansionPanelList"] = None
     """
     Fires when an `ExpansionPanel` is expanded or collapsed. The event's data 
     (`e.data`), contains the index of the `ExpansionPanel` which triggered this event.
@@ -124,6 +124,6 @@ class ExpansionPanelList(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )
