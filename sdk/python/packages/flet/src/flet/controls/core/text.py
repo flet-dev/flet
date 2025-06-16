@@ -14,7 +14,6 @@ from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
     FontWeight,
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalNumber,
     TextAlign,
 )
