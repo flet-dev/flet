@@ -12,7 +12,6 @@ import 'controls/app_bar.dart';
 import 'controls/auto_complete.dart';
 import 'controls/autofill_group.dart';
 import 'controls/banner.dart';
-import 'controls/bar_chart.dart';
 import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
 import 'controls/canvas.dart';
@@ -62,7 +61,6 @@ import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/interactive_viewer.dart';
-import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/markdown.dart';
@@ -75,7 +73,6 @@ import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
 import 'controls/pagelet.dart';
-import 'controls/pie_chart.dart';
 import 'controls/placeholder.dart';
 import 'controls/popup_menu_button.dart';
 import 'controls/progress_bar.dart';
@@ -87,7 +84,6 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
-import 'controls/scatter_chart.dart';
 import 'controls/search_bar.dart';
 import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
@@ -135,8 +131,6 @@ class FletCoreExtension extends FletExtension {
         return CupertinoCheckboxControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
-      case "BarChart":
-        return BarChartControl(key: key, control: control);
       case "Draggable":
         return DraggableControl(key: key, control: control);
       case "DragTarget":
@@ -258,8 +252,6 @@ class FletCoreExtension extends FletExtension {
         return IconControl(key: key, control: control);
       case "Image":
         return ImageControl(key: key, control: control);
-      case "LineChart":
-        return LineChartControl(key: key, control: control);
       case "ListTile":
         return ListTileControl(key: key, control: control);
       case "ListView":
@@ -278,8 +270,6 @@ class FletCoreExtension extends FletExtension {
         return ReorderableListViewControl(key: key, control: control);
       case "Page":
         return PageControl(key: key, control: control);
-      case "PieChart":
-        return PieChartControl(key: key, control: control);
       case "ProgressBar":
         return ProgressBarControl(key: key, control: control);
       case "ProgressRing":
@@ -292,8 +282,6 @@ class FletCoreExtension extends FletExtension {
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
-      case "ScatterChart":
-        return ScatterChartControl(key: key, control: control);
       case "Slider":
         return AdaptiveSliderControl(key: key, control: control);
       case "SnackBar":
