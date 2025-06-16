@@ -1,5 +1,5 @@
 import asyncio
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
@@ -75,9 +75,7 @@ class Option(Control):
         )
 
 
-@dataclass
-class DropdownOption(Option):
-    """Alias for Option"""
+DropdownOption = Option
 
 
 @control("Dropdown")
