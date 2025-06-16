@@ -163,7 +163,13 @@ from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
-from flet.controls.core.text import Text, TextAffinity, TextSelection
+from flet.controls.core.text import (
+    Text,
+    TextAffinity,
+    TextSelection,
+    TextSelectionChangeCause,
+    TextSelectionChangeEvent,
+)
 from flet.controls.core.text_span import TextSpan
 from flet.controls.core.transparent_pointer import TransparentPointer
 from flet.controls.core.view import View

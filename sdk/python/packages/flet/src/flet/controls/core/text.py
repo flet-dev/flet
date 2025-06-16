@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, TypeVar
 
-from flet.controls.base_control import control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEvent, OptionalControlEventHandler
+from flet.controls.control_event import Event, OptionalControlEventHandler
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
@@ -162,8 +162,11 @@ class TextSelectionChangeCause(Enum):
     """
 
 
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
+
+
 @dataclass
-class TextSelectionChangeEvent(ControlEvent):
+class TextSelectionChangeEvent(Event[EventControlType]):
     text: str
     cause: TextSelectionChangeCause
     selection: TextSelection
