@@ -20,22 +20,22 @@ class Padding:
     Defines padding for all sides of a rectangle.
     """
 
-    left: Number
+    left: Number = 0
     """
     The padding value for the left side of the rectangle.
     """
 
-    top: Number
+    top: Number = 0
     """
     The padding value for the top side of the rectangle.
     """
 
-    right: Number
+    right: Number = 0
     """
     The padding value for the right side of the rectangle.
     """
 
-    bottom: Number
+    bottom: Number = 0
     """
     The padding value for the bottom side of the rectangle.
     """

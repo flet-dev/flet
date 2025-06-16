@@ -1,8 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.duration import OptionalDurationValue, DurationValue, Duration
 
 __all__ = [
     "Animation",
@@ -63,12 +63,12 @@ class AnimationCurve(Enum):
 
 @dataclass
 class Animation:
-    duration: OptionalDurationValue = None
+    duration: DurationValue = field(default_factory=lambda: Duration())
     """
     The duration of the animation.
     """
 
-    curve: "OptionalAnimationCurve" = None
+    curve: AnimationCurve = AnimationCurve.LINEAR
     """
     The curve to use for the animation.
     """

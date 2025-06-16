@@ -5,15 +5,15 @@ from flet.controls.border_radius import (
     BorderRadius,
 )
 from flet.controls.box import BoxDecoration
-from flet.controls.duration import OptionalDurationValue, Duration, DurationValue
+from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    MouseCursor,
     OptionalColorValue,
     OptionalNumber,
     TextAlign,
-    MouseCursor,
 )
 
 
