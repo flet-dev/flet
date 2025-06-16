@@ -4,7 +4,11 @@ from typing import Optional, TypeVar
 
 from flet.controls.base_control import BaseControl, control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import Event, OptionalControlEventHandler
+from flet.controls.control_event import (
+    Event,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
@@ -334,7 +338,8 @@ class Text(ConstrainedControl):
     TBD
     """
 
-    on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None
+    on_selection_change: OptionalEventHandler[
+        TextSelectionChangeEvent["Text"]] = None
     """
     TBD
     """
