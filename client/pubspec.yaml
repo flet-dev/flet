@@ -100,6 +100,12 @@ dependencies:
       ref: v1
       path: src/flutter/flet_datatable2
 
+  flet_charts:
+    git:
+      url: https://github.com/flet-dev/flet-charts.git
+      ref: v1
+      path: src/flutter/flet_charts
+
   cupertino_icons: ^1.0.6
 
   integration_test:
