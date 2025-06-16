@@ -29,14 +29,16 @@ class ConstrainedControl extends StatelessWidget {
   final Control control;
   final Widget child;
 
-  const ConstrainedControl(
-      {super.key, required this.control, required this.child});
+  const ConstrainedControl({
+    super.key,
+    required this.control,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
-    Widget w = _opacity(context, child, control);
-    w = _tooltip(context, w, control);
-    w = _directionality(w, control);
+    Widget w = BaseControl(control: control, child: child);
+
     w = _sizedControl(w, control);
     w = _rotatedControl(context, w, control);
     w = _scaledControl(context, w, control);
@@ -44,7 +46,8 @@ class ConstrainedControl extends StatelessWidget {
     w = _aspectRatio(w, control);
     w = _positionedControl(context, w, control);
     w = _badge(w, Theme.of(context), control);
-    return _expandable(w, control);
+
+    return w;
   }
 }
 
