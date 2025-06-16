@@ -72,8 +72,6 @@ class _ScrollableControlState extends State<ScrollableControl>
             _controller.animateTo(offset, duration: duration, curve: curve);
           }
         }
-      default:
-        throw Exception("Unknown ScrollableControl method: $name");
     }
   }
 

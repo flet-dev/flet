@@ -344,6 +344,7 @@ class Page(PageView):
             self.url_launcher,
             self.storage_paths,
         ]
+        self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
@@ -387,9 +388,16 @@ class Page(PageView):
 
     def before_event(self, e: ControlEvent):
         if isinstance(e, RouteChangeEvent):
-            if self.route == e.route:
+            if self.__last_route == e.route:
                 return False
+            self.__last_route = e.route
             self.query()
+        elif isinstance(e, ViewPopEvent):
+            view = next((v for v in self.views if v.route == e.data), None)
+            if view is None:
+                return False
+            e.view = view
+            return True
         return super().before_event(e)
 
     def run_task(
@@ -399,7 +407,7 @@ class Page(PageView):
         **kwargs: InputT.kwargs,
     ) -> Future[RetT]:
         """
-        Run `handler` coroutine as a new Task in the event loop associated with the 
+        Run `handler` coroutine as a new Task in the event loop associated with the
         current page.
         """
         _session_page.set(self)
@@ -435,7 +443,7 @@ class Page(PageView):
         **kwargs: InputT.kwargs,
     ) -> None:
         """
-        Run `handler` function as a new Thread in the executor associated with the 
+        Run `handler` function as a new Thread in the executor associated with the
         current page.
         """
         handler_with_context = self.__context_wrapper(handler)
@@ -453,8 +461,8 @@ class Page(PageView):
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
         """
-        A helper method that updates [`page.route`](#route), calls 
-        [`page.on_route_change`](#on_route_change) event handler to update views and 
+        A helper method that updates [`page.route`](#route), calls
+        [`page.on_route_change`](#on_route_change) event handler to update views and
         finally calls `page.update()`.
         """
         self.route = route if not kwargs else route + self.query.post(kwargs)
@@ -508,7 +516,7 @@ class Page(PageView):
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
         """
-        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide 
+        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide
         for more information and examples.
         """
         self.__authorization = authorization(
@@ -581,8 +589,8 @@ class Page(PageView):
 
     def logout(self) -> None:
         """
-        Clears current authentication context. See 
-        [Authentication](/docs/cookbook/authentication#signing-out) guide for more 
+        Clears current authentication context. See
+        [Authentication](/docs/cookbook/authentication#signing-out) guide for more
         information and examples.
         """
         self.__authorization = None
@@ -651,18 +659,18 @@ class Page(PageView):
 
     def can_launch_url_async(self, url: str):
         """
-        Checks whether the specified URL can be handled by some app installed on the 
+        Checks whether the specified URL can be handled by some app installed on the
         device.
 
-        Returns `True` if it is possible to verify that there is a handler available. 
-        A `False` return value can indicate either that there is no handler available, 
+        Returns `True` if it is possible to verify that there is a handler available.
+        A `False` return value can indicate either that there is no handler available,
         or that the application does not have permission to check. For example:
 
-        * On recent versions of Android and iOS, this will always return `False` unless 
-        the application has been configuration to allow querying the system for launch 
+        * On recent versions of Android and iOS, this will always return `False` unless
+        the application has been configuration to allow querying the system for launch
         support.
-        * On web, this will always return `False` except for a few specific schemes 
-        that are always assumed to be supported (such as http(s)), as web pages are 
+        * On web, this will always return `False` except for a few specific schemes
+        that are always assumed to be supported (such as http(s)), as web pages are
         never allowed to query installed applications.
         """
         return self.url_launcher.can_launch_url_async(url)
@@ -671,7 +679,7 @@ class Page(PageView):
         """
         Closes in-app web view opened with `launch_url()`.
 
-        📱 Mobile only. 
+        📱 Mobile only.
         """
         self.url_launcher.close_in_app_web_view()
 
@@ -679,7 +687,7 @@ class Page(PageView):
         """
         Closes in-app web view opened with `launch_url()`.
 
-        📱 Mobile only. 
+        📱 Mobile only.
         """
         await self.url_launcher.close_in_app_web_view_async()
 
@@ -745,7 +753,8 @@ class RouteChangeEvent(ControlEvent):
 
 @dataclass
 class ViewPopEvent(ControlEvent):
-    view: View
+    route: str
+    view: Optional[View] = None
 
 
 @dataclass

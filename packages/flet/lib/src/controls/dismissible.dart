@@ -89,7 +89,10 @@ class _DismissibleControlState extends State<DismissibleControl> {
                     .updateProperties({"_completer": completer}, python: false);
                 widget.control.triggerEvent(
                     "confirm_dismiss", {"direction": direction.name});
-                return completer.future;
+                return completer.future.timeout(
+                  const Duration(minutes: 5),
+                  onTimeout: () => false,
+                );
               }
             : null,
         movementDuration: widget.control

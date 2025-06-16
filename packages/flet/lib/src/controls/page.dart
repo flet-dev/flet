@@ -493,8 +493,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         pages: pages,
         onDidRemovePage: (page) {
           if (page.key != null) {
-            widget.control
-                .triggerEvent("view_pop", (page.key as ValueKey).value);
+            widget.control.triggerEvent(
+                "view_pop", {"route": (page.key as ValueKey).value});
           }
         });
   }
