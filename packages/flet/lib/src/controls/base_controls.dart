@@ -49,7 +49,12 @@ class ConstrainedControl extends StatelessWidget {
 }
 
 Widget _tooltip(BuildContext context, Widget widget, Control control) {
-  var tooltip = parseTooltip(control.get("tooltip"), context, widget);
+  final internals = control.get("_internals") as Map?;
+  final skipProps = internals?["skip_properties"] as List?;
+
+  if (skipProps?.contains("tooltip") == true) return widget;
+
+  final tooltip = parseTooltip(control.get("tooltip"), context, widget);
   return tooltip ?? widget;
 }
 

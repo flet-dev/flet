@@ -109,9 +109,13 @@ class BaseControl:
     """
     Arbitrary data of any type that can be attached to a control.
     """
+
     key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
+
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
+
+    _internals: dict = field(default_factory=dict, init=False, repr=False, compare=False)
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
