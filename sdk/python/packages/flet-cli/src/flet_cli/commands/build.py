@@ -9,10 +9,19 @@ from pathlib import Path
 from typing import Optional, cast
 
 import flet.version
+import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from packaging.requirements import Requirement
 from rich.console import Console, Group
@@ -23,20 +32,10 @@ from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
 
-import flet_cli.utils.processes as processes
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.hash_stamp import HashStamp
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
-
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.29.2")
+MINIMAL_FLUTTER_VERSION = version.Version("3.29.3")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -750,7 +749,7 @@ class Command(BaseCommand):
         if self.config_platform in ["macos", "windows", "linux"]:
             if self.verbose > 0:
                 console.log(
-                    f"Ensure Flutter has desktop support enabled",
+                    "Ensure Flutter has desktop support enabled",
                     style=verbose1_style,
                 )
             config_result = self.run(
@@ -778,14 +777,14 @@ class Command(BaseCommand):
     def install_jdk(self):
         from flet_cli.utils.jdk import install_jdk
 
-        self.update_status(f"[bold blue]Installing JDK...")
+        self.update_status("[bold blue]Installing JDK...")
         jdk_dir = install_jdk(self.log_stdout, progress=self.progress)
         self.env["JAVA_HOME"] = jdk_dir
 
         # config flutter's JDK dir
         if self.verbose > 0:
             console.log(
-                f"Configuring Flutter's path to JDK",
+                "Configuring Flutter's path to JDK",
                 style=verbose1_style,
             )
         config_result = self.run(
@@ -811,7 +810,7 @@ class Command(BaseCommand):
     def install_android_sdk(self):
         from flet_cli.utils.android_sdk import AndroidSDK
 
-        self.update_status(f"[bold blue]Installing Android SDK...")
+        self.update_status("[bold blue]Installing Android SDK...")
         self.env["ANDROID_HOME"] = AndroidSDK(
             self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
         ).install()
@@ -1249,7 +1248,7 @@ class Command(BaseCommand):
 
             if not second_pass:
                 console.log(
-                    f"Created Flutter bootstrap project from {template_url} with ref \"{template_ref}\" {self.emojis['checkmark']}"
+                    f'Created Flutter bootstrap project from {template_url} with ref "{template_ref}" {self.emojis["checkmark"]}'
                 )
 
         hash.commit()
@@ -1270,7 +1269,7 @@ class Command(BaseCommand):
             shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
-            self.update_status(f"[bold blue]Registering Flutter user extensions...")
+            self.update_status("[bold blue]Registering Flutter user extensions...")
 
             for fp in os.listdir(self.flutter_packages_dir):
                 if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
@@ -1327,7 +1326,6 @@ class Command(BaseCommand):
         copy_ops = []
         self.assets_path = self.package_app_path.joinpath("assets")
         if self.assets_path.exists():
-
             images_dir = "images"
             images_path = self.flutter_dir.joinpath(images_dir)
             images_path.mkdir(exist_ok=True)
@@ -1397,9 +1395,9 @@ class Command(BaseCommand):
             or self.get_pyproject("tool.flet.android.adaptive_icon_background")
         )
         if adaptive_icon_background:
-            pubspec["flutter_launcher_icons"][
-                "adaptive_icon_background"
-            ] = adaptive_icon_background
+            pubspec["flutter_launcher_icons"]["adaptive_icon_background"] = (
+                adaptive_icon_background
+            )
 
         # check if pubspec changed
         hash.update(Path(pubspec_origin_path).stat().st_mtime)
@@ -1407,9 +1405,8 @@ class Command(BaseCommand):
 
         # save pubspec.yaml
         if hash.has_changed():
-
             if copy_ops:
-                self.update_status(f"[bold blue]Customizing app icons...")
+                self.update_status("[bold blue]Customizing app icons...")
                 for op in copy_ops:
                     if self.verbose > 0:
                         console.log(
@@ -1424,7 +1421,7 @@ class Command(BaseCommand):
             ]
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
-            self.update_status(f"[bold blue]Generating app icons...")
+            self.update_status("[bold blue]Generating app icons...")
 
             # icons
             icons_result = self.run(
@@ -1455,7 +1452,7 @@ class Command(BaseCommand):
         assert self.pubspec_path
         assert self.build_dir
 
-        if not self.options.target_platform in ["web", "ipa", "apk", "aab"]:
+        if self.options.target_platform not in ["web", "ipa", "apk", "aab"]:
             return
 
         hash = HashStamp(self.build_dir / ".hash" / "splashes")
@@ -1467,7 +1464,6 @@ class Command(BaseCommand):
         copy_ops = []
         self.assets_path = self.package_app_path.joinpath("assets")
         if self.assets_path.exists():
-
             images_dir = "images"
             images_path = self.flutter_dir.joinpath(images_dir)
             images_path.mkdir(exist_ok=True)
@@ -1604,18 +1600,18 @@ class Command(BaseCommand):
         )
         if splash_dark_color:
             pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
-            pubspec["flutter_native_splash"]["android_12"][
-                "color_dark"
-            ] = splash_dark_color
+            pubspec["flutter_native_splash"]["android_12"]["color_dark"] = (
+                splash_dark_color
+            )
 
         splash_icon_bgcolor = self.get_pyproject(
             f"tool.flet.{self.config_platform}.splash.icon_bgcolor"
         ) or self.get_pyproject("tool.flet.splash.icon_bgcolor")
 
         if splash_icon_bgcolor:
-            pubspec["flutter_native_splash"]["android_12"][
-                "icon_background_color"
-            ] = splash_icon_bgcolor
+            pubspec["flutter_native_splash"]["android_12"]["icon_background_color"] = (
+                splash_icon_bgcolor
+            )
 
         splash_icon_dark_bgcolor = self.get_pyproject(
             f"tool.flet.{self.config_platform}.splash.icon_dark_bgcolor"
@@ -1661,9 +1657,8 @@ class Command(BaseCommand):
 
         # save pubspec.yaml
         if hash.has_changed():
-
             if copy_ops:
-                self.update_status(f"[bold blue]Customizing app splash images...")
+                self.update_status("[bold blue]Customizing app splash images...")
                 for op in copy_ops:
                     if self.verbose > 0:
                         console.log(
@@ -1677,7 +1672,7 @@ class Command(BaseCommand):
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
             # splash screens
-            self.update_status(f"[bold blue]Generating splash screens...")
+            self.update_status("[bold blue]Generating splash screens...")
             splash_result = self.run(
                 [
                     self.dart_exe,
@@ -1721,7 +1716,7 @@ class Command(BaseCommand):
 
         hash = HashStamp(self.build_dir / ".hash" / "package")
 
-        self.update_status(f"[bold blue]Packaging Python app...")
+        self.update_status("[bold blue]Packaging Python app...")
         package_args = [
             self.dart_exe,
             "run",
@@ -1759,7 +1754,7 @@ class Command(BaseCommand):
         if len(toml_dependencies) > 0:
             dev_packages = (
                 self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
-                or self.get_pyproject(f"tool.flet.dev_packages")
+                or self.get_pyproject("tool.flet.dev_packages")
                 or []
             )
             if len(dev_packages) > 0:
@@ -1779,7 +1774,7 @@ class Command(BaseCommand):
 
         elif requirements_txt.exists():
             if self.verbose > 1:
-                with open(requirements_txt, "r", encoding="utf-8") as f:
+                with open(requirements_txt, encoding="utf-8") as f:
                     reqs_txt_contents = f.read()
                     console.log(
                         f"Contents of requirements.txt: {reqs_txt_contents}",
@@ -2134,7 +2129,6 @@ class Command(BaseCommand):
         return batch_path
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
-
         if self.verbose > 0:
             console.log(f"Run subprocess: {args}", style=verbose1_style)
 
@@ -2164,7 +2158,7 @@ class Command(BaseCommand):
                 or self.skip_flutter_doctor
             ):
                 status = console.status(
-                    f"[bold blue]Running Flutter doctor...",
+                    "[bold blue]Running Flutter doctor...",
                     spinner="bouncingBall",
                 )
                 self.live.update(
