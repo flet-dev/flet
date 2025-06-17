@@ -53,14 +53,14 @@ class ConstrainedControl extends StatelessWidget {
 }
 
 Widget _tooltip(BuildContext context, Widget widget, Control control) {
-  final skipProps = control.internals["skip_properties"] as List?;
+  final skipProps = control.internals?["skip_properties"] as List?;
   if (skipProps?.contains("tooltip") == true) return widget;
 
   return parseTooltip(control.get("tooltip"), context, widget) ?? widget;
 }
 
 Widget _badge(Widget widget, ThemeData theme, Control control) {
-  final skipProps = control.internals["skip_properties"] as List?;
+  final skipProps = control.internals?["skip_properties"] as List?;
   if (skipProps?.contains("badge") == true) return widget;
 
   return control.wrapWithBadge("badge", widget, theme);

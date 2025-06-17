@@ -28,7 +28,7 @@ class ControlWidget extends StatelessWidget {
     }
 
     Widget? widget;
-    if (control.internals["skip_inherited_notifier"] == true) {
+    if (control.internals?["skip_inherited_notifier"] == true) {
       for (var extension in FletBackend.of(context).extensions) {
         widget = extension.createWidget(key, control);
         if (widget != null) return widget;
