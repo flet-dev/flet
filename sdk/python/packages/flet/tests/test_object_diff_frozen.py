@@ -5,7 +5,14 @@ import flet as ft
 import pytest
 from flet.controls.base_control import BaseControl, control
 
-from .common import cmp_ops, make_diff, make_msg
+from .common import (
+    LineChart,
+    LineChartData,
+    LineChartDataPoint,
+    cmp_ops,
+    make_diff,
+    make_msg,
+)
 
 
 def test_compare_roots():
@@ -228,8 +235,8 @@ def test_compare_controls():
     )
     assert r1 == r2
 
-    dp1 = ft.LineChartDataPoint(x=10, y=20)
-    dp2 = ft.LineChartDataPoint(x=10, y=20)
+    dp1 = LineChartDataPoint(x=10, y=20)
+    dp2 = LineChartDataPoint(x=10, y=20)
     assert dp1 == dp2
 
     dp3 = dp2
@@ -282,24 +289,24 @@ def test_button_basic_diff():
 
 
 def test_lists_with_key_diff():
-    c1 = ft.LineChart(
+    c1 = LineChart(
         data_series=[
-            ft.LineChartData(
-                data_points=[
-                    ft.LineChartDataPoint(key=0, x=0, y=1),
-                    ft.LineChartDataPoint(key=1, x=1, y=2),
-                    ft.LineChartDataPoint(key=2, x=2, y=3),
+            LineChartData(
+                points=[
+                    LineChartDataPoint(key=0, x=0, y=1),
+                    LineChartDataPoint(key=1, x=1, y=2),
+                    LineChartDataPoint(key=2, x=2, y=3),
                 ]
             )
         ]
     )
-    c2 = ft.LineChart(
+    c2 = LineChart(
         data_series=[
-            ft.LineChartData(
-                data_points=[
-                    ft.LineChartDataPoint(key=1, x=1, y=2),
-                    ft.LineChartDataPoint(key=2, x=2, y=2),
-                    ft.LineChartDataPoint(key=3, x=3, y=5),
+            LineChartData(
+                points=[
+                    LineChartDataPoint(key=1, x=1, y=2),
+                    LineChartDataPoint(key=2, x=2, y=2),
+                    LineChartDataPoint(key=3, x=3, y=5),
                 ]
             )
         ]
@@ -311,16 +318,16 @@ def test_lists_with_key_diff():
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["data_series", 0, "data_points", 0]},
+            {"op": "remove", "path": ["data_series", 0, "points", 0]},
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 1, "y"],
+                "path": ["data_series", 0, "points", 1, "y"],
                 "value": 2,
             },
             {
                 "op": "add",
-                "path": ["data_series", 0, "data_points", 2],
-                "value_type": ft.LineChartDataPoint,
+                "path": ["data_series", 0, "points", 2],
+                "value_type": LineChartDataPoint,
             },
             {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
@@ -330,24 +337,24 @@ def test_lists_with_key_diff():
 
 
 def test_lists_with_no_key_diff():
-    c1 = ft.LineChart(
+    c1 = LineChart(
         data_series=[
-            ft.LineChartData(
-                data_points=[
-                    ft.LineChartDataPoint(x=0, y=1),
-                    ft.LineChartDataPoint(x=1, y=2),
-                    ft.LineChartDataPoint(x=2, y=3),
+            LineChartData(
+                points=[
+                    LineChartDataPoint(x=0, y=1),
+                    LineChartDataPoint(x=1, y=2),
+                    LineChartDataPoint(x=2, y=3),
                 ]
             )
         ]
     )
-    c2 = ft.LineChart(
+    c2 = LineChart(
         data_series=[
-            ft.LineChartData(
-                data_points=[
-                    ft.LineChartDataPoint(x=1, y=2),
-                    ft.LineChartDataPoint(x=2, y=2),
-                    ft.LineChartDataPoint(x=3, y=5),
+            LineChartData(
+                points=[
+                    LineChartDataPoint(x=1, y=2),
+                    LineChartDataPoint(x=2, y=2),
+                    LineChartDataPoint(x=3, y=5),
                 ]
             )
         ]
@@ -361,27 +368,27 @@ def test_lists_with_no_key_diff():
         [
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 0, "x"],
+                "path": ["data_series", 0, "points", 0, "x"],
                 "value": 1,
             },
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 0, "y"],
+                "path": ["data_series", 0, "points", 0, "y"],
                 "value": 2,
             },
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 1, "x"],
+                "path": ["data_series", 0, "points", 1, "x"],
                 "value": 2,
             },
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 2, "x"],
+                "path": ["data_series", 0, "points", 2, "x"],
                 "value": 3,
             },
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 2, "y"],
+                "path": ["data_series", 0, "points", 2, "y"],
                 "value": 5,
             },
             {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
@@ -390,41 +397,37 @@ def test_lists_with_no_key_diff():
 
 
 def test_simple_lists_diff_1():
-    c1 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 2, 3])])
-    c2 = ft.LineChart(data_series=[ft.LineChartData(data_points=[2, 3, 4])])
+    c1 = LineChart(data_series=[LineChartData(points=[1, 2, 3])])
+    c2 = LineChart(data_series=[LineChartData(points=[2, 3, 4])])
     c1._frozen = True
     patch, _, _, _ = make_diff(c2, c1)
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["data_series", 0, "data_points", 0], "value": 1},
-            {"op": "add", "path": ["data_series", 0, "data_points", 2], "value": 4},
+            {"op": "remove", "path": ["data_series", 0, "points", 0], "value": 1},
+            {"op": "add", "path": ["data_series", 0, "points", 2], "value": 4},
             {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
 
 
 def test_simple_lists_diff_2():
-    c1 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 2, 3, 4])])
-    c2 = ft.LineChart(data_series=[ft.LineChartData(data_points=[1, 3, 4])])
+    c1 = LineChart(data_series=[LineChartData(points=[1, 2, 3, 4])])
+    c2 = LineChart(data_series=[LineChartData(points=[1, 3, 4])])
     c1._frozen = True
     patch, _, _, _ = make_diff(c2, c1)
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["data_series", 0, "data_points", 1], "value": 2},
+            {"op": "remove", "path": ["data_series", 0, "points", 1], "value": 2},
             {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
 
 
 def test_similar_lists_diff():
-    c1 = ft.LineChart(
-        data_series=[ft.LineChartData(data_points=[ft.Scale(0), ft.Scale(1)])]
-    )
-    c2 = ft.LineChart(
-        data_series=[ft.LineChartData(data_points=[ft.Scale(1), ft.Scale(2)])]
-    )
+    c1 = LineChart(data_series=[LineChartData(points=[ft.Scale(0), ft.Scale(1)])])
+    c2 = LineChart(data_series=[LineChartData(points=[ft.Scale(1), ft.Scale(2)])])
     c1._frozen = True
     patch, _, _, _ = make_diff(c2, c1)
     assert cmp_ops(
@@ -432,12 +435,12 @@ def test_similar_lists_diff():
         [
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 0, "scale"],
+                "path": ["data_series", 0, "points", 0, "scale"],
                 "value": 1,
             },
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 1, "scale"],
+                "path": ["data_series", 0, "points", 1, "scale"],
                 "value": 2,
             },
             {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
@@ -446,13 +449,13 @@ def test_similar_lists_diff():
 
 
 def test_lists_in_place():
-    c1 = ft.LineChart(
+    c1 = LineChart(
         data_series=[
-            ft.LineChartData(
-                data_points=[
-                    ft.LineChartDataPoint(x=0, y=1),
-                    ft.LineChartDataPoint(x=1, y=2),
-                    ft.LineChartDataPoint(x=2, y=3),
+            LineChartData(
+                points=[
+                    LineChartDataPoint(x=0, y=1),
+                    LineChartDataPoint(x=1, y=2),
+                    LineChartDataPoint(x=2, y=3),
                 ]
             )
         ]
@@ -460,13 +463,13 @@ def test_lists_in_place():
     _, patch, _, _, _ = make_msg(c1, {})
 
     # 1st change
-    c1.data_series[0].data_points.pop(0)
-    c1.data_series[0].data_points[1].y = 10
-    c1.data_series[0].data_points.append(ft.LineChartDataPoint(x=3, y=4))
+    c1.data_series[0].points.pop(0)
+    c1.data_series[0].points[1].y = 10
+    c1.data_series[0].points.append(LineChartDataPoint(x=3, y=4))
     c1.data_series.append(
-        ft.LineChartData(
-            data_points=[
-                ft.LineChartDataPoint(x=10, y=20),
+        LineChartData(
+            points=[
+                LineChartDataPoint(x=10, y=20),
             ]
         )
     )
@@ -474,29 +477,29 @@ def test_lists_in_place():
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["data_series", 0, "data_points", 0]},
+            {"op": "remove", "path": ["data_series", 0, "points", 0]},
             {
                 "op": "replace",
-                "path": ["data_series", 0, "data_points", 1, "y"],
+                "path": ["data_series", 0, "points", 1, "y"],
                 "value": 10,
             },
             {
                 "op": "add",
-                "path": ["data_series", 0, "data_points", 2],
-                "value_type": ft.LineChartDataPoint,
+                "path": ["data_series", 0, "points", 2],
+                "value_type": LineChartDataPoint,
             },
-            {"op": "add", "path": ["data_series", 1], "value_type": ft.LineChartData},
+            {"op": "add", "path": ["data_series", 1], "value_type": LineChartData},
         ],
     )
 
 
 def test_both_frozen_hosted_by_in_place():
     def chart(data):
-        r = ft.LineChart(
+        r = LineChart(
             data_series=[
-                ft.LineChartData(
-                    data_points=[
-                        ft.LineChartDataPoint(key=dp[0], x=dp[0], y=dp[1]) for dp in ds
+                LineChartData(
+                    points=[
+                        LineChartDataPoint(key=dp[0], x=dp[0], y=dp[1]) for dp in ds
                     ]
                 )
                 for ds in data
@@ -532,16 +535,16 @@ def test_both_frozen_hosted_by_in_place():
         [
             {"op": "replace", "path": ["alignment"], "value": ft.Alignment(x=0, y=1)},
             {"op": "replace", "path": ["bgcolor"], "value": ft.Colors.AMBER},
-            {"op": "remove", "path": ["content", "data_series", 0, "data_points", 0]},
+            {"op": "remove", "path": ["content", "data_series", 0, "points", 0]},
             {
                 "op": "add",
-                "path": ["content", "data_series", 0, "data_points", 2],
-                "value_type": ft.LineChartDataPoint,
+                "path": ["content", "data_series", 0, "points", 2],
+                "value_type": LineChartDataPoint,
             },
             {
                 "op": "remove",
                 "path": ["content", "data_series", 1],
-                "value_type": ft.LineChartData,
+                "value_type": LineChartData,
             },
         ],
     )
