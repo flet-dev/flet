@@ -35,10 +35,11 @@ class WindowDragArea(ConstrainedControl):
     Fires when the `WindowDragArea` is double-tapped and `maximizable=True`.
     
     Event handler argument is of type `WindowEvent`, 
-    with its `type` property being one of the following: `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`
+    with its `type` property being one of the following: `WindowEventType.MAXIMIZE`, 
+    `WindowEventType.UNMAXIMIZE`
     """
 
-    on_drag_start: OptionalEventHandler[DragStartEvent] = None
+    on_drag_start: OptionalEventHandler[DragStartEvent["WindowDragArea"]] = None
     """
     Fires when a pointer has contacted the screen and has begun to move/drag.
 
@@ -46,9 +47,10 @@ class WindowDragArea(ConstrainedControl):
     [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
     """
 
-    on_drag_end: OptionalEventHandler[DragEndEvent] = None
+    on_drag_end: OptionalEventHandler[DragEndEvent["WindowDragArea"]] = None
     """
-    Fires when a pointer that was previously in contact with the screen and moving/dragging is no longer in contact with the screen.
+    Fires when a pointer that was previously in contact with the screen and 
+    moving/dragging is no longer in contact with the screen.
     
     Event handler argument is of type
     [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
