@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/badge.dart';
@@ -52,16 +53,16 @@ class ConstrainedControl extends StatelessWidget {
 }
 
 Widget _tooltip(BuildContext context, Widget widget, Control control) {
-  final internals = control.get("_internals") as Map?;
-  final skipProps = internals?["skip_properties"] as List?;
-
+  final skipProps = control.internals["skip_properties"] as List?;
   if (skipProps?.contains("tooltip") == true) return widget;
 
-  final tooltip = parseTooltip(control.get("tooltip"), context, widget);
-  return tooltip ?? widget;
+  return parseTooltip(control.get("tooltip"), context, widget) ?? widget;
 }
 
 Widget _badge(Widget widget, ThemeData theme, Control control) {
+  final skipProps = control.internals["skip_properties"] as List?;
+  if (skipProps?.contains("badge") == true) return widget;
+
   return control.wrapWithBadge("badge", widget, theme);
 }
 

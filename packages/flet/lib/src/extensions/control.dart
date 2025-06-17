@@ -85,3 +85,10 @@ extension WidgetFromControl on Control {
     return null;
   }
 }
+
+extension InternalConfiguration on Control {
+  /// Returns the internal configuration of this control.
+  Map<String, dynamic> get internals {
+    return get("_internals") as Map<String, dynamic>;
+  }
+}
