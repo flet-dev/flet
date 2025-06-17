@@ -1,4 +1,3 @@
-from typing import Any
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -26,7 +25,8 @@ class WindowDragArea(ConstrainedControl):
 
     maximizable: bool = True
     """
-    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's window.
+    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's 
+    window.
     Defaults to `True`.
     """
 
