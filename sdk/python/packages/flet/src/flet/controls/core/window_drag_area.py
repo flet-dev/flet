@@ -1,11 +1,11 @@
 from typing import Any
+
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalEventHandler
 from flet.controls.core.window import WindowEvent
-from flet.controls.events import DragStartEvent
-from flet.controls.events import DragEndEvent
-from flet.controls.types import OptionalEventCallable
+from flet.controls.events import DragEndEvent, DragStartEvent
 
 
 @control("WindowDragArea")
@@ -30,7 +30,7 @@ class WindowDragArea(ConstrainedControl):
     Defaults to `True`.
     """
 
-    on_double_tap: OptionalEventCallable[WindowEvent] = None
+    on_double_tap: OptionalEventHandler[WindowEvent["WindowDragArea"]] = None
     """
     Fires when the `WindowDragArea` is double-tapped and `maximizable=True`.
     
@@ -38,7 +38,7 @@ class WindowDragArea(ConstrainedControl):
     with its `type` property being one of the following: `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`
     """
 
-    on_drag_start: OptionalEventCallable[DragStartEvent] = None
+    on_drag_start: OptionalEventHandler[DragStartEvent] = None
     """
     Fires when a pointer has contacted the screen and has begun to move/drag.
 
@@ -46,7 +46,7 @@ class WindowDragArea(ConstrainedControl):
     [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
     """
 
-    on_drag_end: OptionalEventCallable[DragEndEvent] = None
+    on_drag_end: OptionalEventHandler[DragEndEvent] = None
     """
     Fires when a pointer that was previously in contact with the screen and moving/dragging is no longer in contact with the screen.
     

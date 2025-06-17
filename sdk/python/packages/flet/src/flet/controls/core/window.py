@@ -1,7 +1,7 @@
 import asyncio
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, TypeVar
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import BaseControl, control
@@ -297,6 +297,8 @@ class Window(BaseControl):
         asyncio.create_task(self.start_resizing_async(edge))
 
 
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
+
 @dataclass
-class WindowEvent(Event["Window"]):
+class WindowEvent(Event[EventControlType]):
     type: WindowEventType
