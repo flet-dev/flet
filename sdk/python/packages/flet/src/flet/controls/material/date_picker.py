@@ -4,14 +4,17 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEvent, OptionalControlEventHandler
+from flet.controls.control_event import (
+    Event,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DateTimeValue
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
     IconValue,
     OptionalColorValue,
-    OptionalEventCallable,
 )
 
 __all__ = [
@@ -35,7 +38,7 @@ class DatePickerEntryMode(Enum):
 
 
 @dataclass
-class DatePickerEntryModeChangeEvent(ControlEvent):
+class DatePickerEntryModeChangeEvent(Event["DatePicker"]):
     entry_mode: Optional[DatePickerEntryMode]
 
 
@@ -190,7 +193,7 @@ class DatePicker(DialogControl):
     date. `e.data` also contains the selected date.
     """
 
-    on_entry_mode_change: OptionalEventCallable[DatePickerEntryModeChangeEvent] = None
+    on_entry_mode_change: OptionalEventHandler[DatePickerEntryModeChangeEvent] = None
     """
     Fires when the `date_picker_entry_mode` is changed.
 

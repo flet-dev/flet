@@ -488,7 +488,8 @@ class Page(PageView):
         upload_url = page.get_upload_url("dir/filename.ext", 60)
         ```
 
-        To enable built-in upload storage provide `upload_dir` argument to `flet.app()` call:
+        To enable built-in upload storage provide `upload_dir` argument to `flet.app()` 
+        call:
 
         ```python
         ft.app(main, upload_dir="uploads")
@@ -609,10 +610,13 @@ class Page(PageView):
 
         Optional method arguments:
 
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        * `web_window_name` - window tab/name to open URL in: 
+        [`UrlTarget.SELF`](https://flet.dev/docs/reference/types/urltarget#self) - the
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - 
+        a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup 
+        window. Defaults to `False`.
         * `window_width` - optional, popup window width.
         * `window_height` - optional, popup window height.
         """
@@ -637,10 +641,12 @@ class Page(PageView):
 
         Optional method arguments:
 
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](https://flet.dev//docs/reference/types/urltarget#self)
+        - the same browser tab, [`UrlTarget.BLANK`](https://flet.dev//docs/reference/types/urltarget#blank)
+        - a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup 
+        window. Defaults to `False`.
         * `window_width` - optional, popup window width.
         * `window_height` - optional, popup window height.
         """
