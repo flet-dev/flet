@@ -29,8 +29,6 @@ dev = [
     "pyinstaller >=6.6.0",
     "pillow >=10.3.0",
     "pre-commit >=2.21.0",
-    "hypercorn >=0.14.4",
-    "gunicorn >=21.2.0",
     "pypi-cleanup==0.1.4",
     "matplotlib >=3.10.1",
     "plotly >=6.0.1",
