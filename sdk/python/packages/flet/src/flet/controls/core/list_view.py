@@ -34,6 +34,20 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     `True` to layout ListView items horizontally.
     """
 
+    reverse: bool = False
+    """
+    Whether the scroll view scrolls in the reading direction.
+
+    For example, if the reading direction is left-to-right and `horizontal` is `True`,
+    then the scroll view scrolls from left to right when `reverse` is `False`
+    and from right to left when `reverse` is `True`.
+
+    Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
+    to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
+
+    Defaults to `False`.
+    """
+
     spacing: Number = 0
     """
     The height of Divider between ListView items.
@@ -103,4 +117,3 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     Defaults to `True`.
     """
-

@@ -5,19 +5,17 @@ from typing import Optional, Union
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
-from flet.controls.control_state import ControlStateValue
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.dialog_control import DialogControl
-from flet.controls.duration import DurationValue, Duration
+from flet.controls.duration import Duration, DurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     ClipBehavior,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
-    ColorValue,
 )
 
 __all__ = ["SnackBar", "SnackBarBehavior", "DismissDirection", "SnackBarAction"]
@@ -73,7 +71,7 @@ class SnackBarAction(Control):
     If not provided, defaults to `SnackBarTheme.disabled_action_bgcolor`.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["SnackBarAction"] = None
     """
     Fires when this action button is clicked.
     """
@@ -223,7 +221,12 @@ class SnackBar(DialogControl):
     Defaults to `0.25`.
     """
 
-    on_visible: OptionalControlEventCallable = None
+    on_action: OptionalControlEventHandler["SnackBar"] = None
+    """
+    Fires when action button is clicked.
+    """
+
+    on_visible: OptionalControlEventHandler["SnackBar"] = None
     """
     Fires the first time that the snackbar is visible within the page.
     """
@@ -237,6 +240,6 @@ class SnackBar(DialogControl):
             self.action_overflow_threshold is None
             or 0 <= self.action_overflow_threshold <= 1
         ), "action_overflow_threshold must be between 0 and 1 inclusive"
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )

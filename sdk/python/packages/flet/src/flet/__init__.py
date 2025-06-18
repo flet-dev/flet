@@ -73,7 +73,14 @@ from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, OptionalControl
 from flet.controls.control_builder import ControlBuilder
-from flet.controls.control_event import ControlEvent, Event, EventHandler
+from flet.controls.control_event import (
+    ControlEvent,
+    ControlEventHandler,
+    Event,
+    EventHandler,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.control_state import (
     ControlState,
     ControlStateValue,
@@ -128,7 +135,13 @@ from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
-from flet.controls.core.text import Text, TextAffinity, TextSelection
+from flet.controls.core.text import (
+    Text,
+    TextAffinity,
+    TextSelection,
+    TextSelectionChangeCause,
+    TextSelectionChangeEvent,
+)
 from flet.controls.core.text_span import TextSpan
 from flet.controls.core.transparent_pointer import TransparentPointer
 from flet.controls.core.view import View
@@ -480,7 +493,6 @@ from flet.controls.types import (
     Number,
     OptionalBool,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalFloat,
     OptionalInt,
@@ -934,7 +946,6 @@ __all__ = [
     "Number",
     "OptionalBool",
     "OptionalColorValue",
-    "OptionalControlEventCallable",
     "OptionalEventCallable",
     "OptionalFloat",
     "OptionalInt",
@@ -965,5 +976,8 @@ __all__ = [
     "ScrollKey",
     "ValueKey",
     "Event",
+    "OptionalControlEventHandler",
+    "ControlEventHandler",
     "EventHandler",
+    "OptionalEventHandler",
 ]

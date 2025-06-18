@@ -194,10 +194,6 @@ class FletSocketServer(Connection):
     async def close(self):
         logger.debug("Closing connection...")
 
-        logger.debug("Finishing all sessions...")
-        if self.session:
-            await self.session.disconnect(0)
-
         if self.executor:
             logger.debug("Shutting down thread pool...")
             self.executor.shutdown(wait=False, cancel_futures=True)

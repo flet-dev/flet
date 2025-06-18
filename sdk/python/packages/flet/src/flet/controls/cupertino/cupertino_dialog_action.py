@@ -2,8 +2,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.text_style import TextStyle
-from flet.controls.types import OptionalControlEventCallable, StrOrControl
+from flet.controls.types import StrOrControl
 
 __all__ = ["CupertinoDialogAction"]
 
@@ -44,13 +45,13 @@ class CupertinoDialogAction(Control):
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["CupertinoDialogAction"] = None
     """
     Fires when a user clicks the button.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            isinstance(self.content, str) or self.content.visible
-        ), "content must be a string or a visible Control"
+        assert isinstance(self.content, str) or self.content.visible, (
+            "content must be a string or a visible Control"
+        )

@@ -2,13 +2,13 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     IconValue,
     LabelPosition,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -129,22 +129,22 @@ class CupertinoSwitch(ConstrainedControl):
     Supported values: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED`, `DEFAULT`.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: OptionalControlEventHandler["CupertinoSwitch"] = None
     """
     Fires when the state of the switch is changed.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: OptionalControlEventHandler["CupertinoSwitch"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: OptionalControlEventHandler["CupertinoSwitch"] = None
     """
     Fires when the control has lost focus.
     """
 
-    on_image_error: OptionalControlEventCallable = None
+    on_image_error: OptionalControlEventHandler["CupertinoSwitch"] = None
     """
     Fires when the image (`active_thumb_image` or `inactive_thumb_image`) fails to 
     load.

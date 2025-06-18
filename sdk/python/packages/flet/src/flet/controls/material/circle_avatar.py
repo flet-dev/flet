@@ -2,9 +2,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.types import (
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     OptionalString,
     StrOrControl,
@@ -75,7 +75,7 @@ class CircleAvatar(ConstrainedControl):
     "infinity".
     """
 
-    on_image_error: OptionalControlEventCallable = None
+    on_image_error: OptionalControlEventHandler["CircleAvatar"] = None
     """
     Fires when an error occurs while loading the `background_image_src` or 
     `foreground_image_src`.
@@ -87,12 +87,12 @@ class CircleAvatar(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert self.radius is None or self.radius >= 0, "radius cannot be negative"
-        assert (
-            self.min_radius is None or self.min_radius >= 0
-        ), "min_radius cannot be negative"
-        assert (
-            self.max_radius is None or self.max_radius >= 0
-        ), "max_radius cannot be negative"
+        assert self.min_radius is None or self.min_radius >= 0, (
+            "min_radius cannot be negative"
+        )
+        assert self.max_radius is None or self.max_radius >= 0, (
+            "max_radius cannot be negative"
+        )
         assert self.radius is None or (
             self.min_radius is None and self.max_radius is None
         ), "If radius is set, min_radius and max_radius must be None"

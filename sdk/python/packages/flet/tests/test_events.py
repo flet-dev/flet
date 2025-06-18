@@ -1,7 +1,13 @@
-from flet.controls.control_event import ControlEvent
+from typing import ForwardRef, get_args, get_origin
+
+from flet.controls.control_event import ControlEvent, Event
 from flet.controls.core.column import Column
 from flet.controls.material.container import Container, ContainerTapEvent
 from flet.controls.material.elevated_button import ElevatedButton
+from flet.controls.material.reorderable_list_view import (
+    OnReorderEvent,
+    ReorderableListView,
+)
 from flet.controls.page import Page
 from flet.controls.page_view import PageResizeEvent
 from flet.controls.scrollable_control import OnScrollEvent
@@ -14,7 +20,8 @@ from flet.utils.from_dict import from_dict
 def test_get_event_field_type():
     btn = ElevatedButton()
     on_click_type = ControlEvent.get_event_field_type(btn, "on_click")
-    assert on_click_type == ControlEvent
+    assert get_origin(on_click_type) is Event
+    assert get_args(on_click_type)[0] == ForwardRef("ElevatedButton")
 
     c = Container()
     on_tap_down_type = ControlEvent.get_event_field_type(c, "on_tap_down")
@@ -48,6 +55,29 @@ def test_create_event_typed_data():
     assert isinstance(evt, ContainerTapEvent)
     assert evt.local_x == 1
     assert evt.global_y == 5
+    assert evt.control == c
+    assert evt.name == "some_event"
+
+
+def test_create_reorder_event():
+    c = ReorderableListView()
+    on_reorder_type = ControlEvent.get_event_field_type(c, "on_reorder")
+    assert on_reorder_type == OnReorderEvent
+
+    evt = from_dict(
+        on_reorder_type,
+        {
+            "control": c,
+            "name": "some_event",
+            "data": None,
+            "old_index": 0,
+            "new_index": 1,
+        },
+    )
+
+    assert isinstance(evt, OnReorderEvent)
+    assert evt.old_index == 0
+    assert evt.new_index == 1
     assert evt.control == c
     assert evt.name == "some_event"
 

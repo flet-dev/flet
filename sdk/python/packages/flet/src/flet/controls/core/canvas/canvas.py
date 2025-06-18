@@ -4,9 +4,9 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import Event
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.core.canvas.shape import Shape
-from flet.controls.types import OptionalEventCallable, OptionalNumber
+from flet.controls.types import OptionalNumber
 
 
 @dataclass
@@ -46,7 +46,7 @@ class Canvas(ConstrainedControl):
     Defaults to `0` - call `on_resize` immediately on every change.
     """
 
-    on_resize: OptionalEventCallable[CanvasResizeEvent] = None
+    on_resize: OptionalEventHandler[CanvasResizeEvent] = None
     """
     Fires when the size of canvas has changed.
 

@@ -20,16 +20,17 @@ if TYPE_CHECKING:
     from .page import Page
     from .page_view import PageView
 
-__all__ = ["ControlEvent", "EventHandler", "Event"]
+__all__ = ["ControlEvent", "OptionalControlEventHandler", "Event"]
 
-T = TypeVar("T", bound="BaseControl")
+ControlEventType = TypeVar("ControlEventType", bound="BaseControl")
+EventType = TypeVar("EventType", bound="Event")
 
 
 @dataclass
-class Event(Generic[T]):
+class Event(Generic[ControlEventType]):
     name: str
     data: Optional[Any] = field(default=None, kw_only=True)
-    control: T = field(repr=False)
+    control: ControlEventType = field(repr=False)
 
     @property
     def page(self) -> Optional[Union["Page", "PageView"]]:
@@ -80,6 +81,16 @@ class Event(Generic[T]):
             raise Exception(f"[resolve error] {field_name}: {e}") from e
 
 
-EventHandler = Union[Callable[[], None], Callable[[Event[T]], None], None]
+ControlEventHandler = Union[
+    Callable[[], None], Callable[[Event[ControlEventType]], None]
+]
+
+OptionalControlEventHandler = Union[
+    Callable[[], None], Callable[[Event[ControlEventType]], None], None
+]
+
+EventHandler = Union[Callable[[], None], Callable[[EventType], None]]
+
+OptionalEventHandler = Union[Callable[[], None], Callable[[EventType], None], None]
 
 ControlEvent = Event["BaseControl"]

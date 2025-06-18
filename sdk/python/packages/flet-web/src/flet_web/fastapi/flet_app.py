@@ -33,6 +33,7 @@ from flet_web.fastapi.oauth_state import OAuthState
 from flet_web.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
+transport_log = logging.getLogger("flet_transport")
 
 DEFAULT_FLET_SESSION_TIMEOUT = 3600
 DEFAULT_FLET_OAUTH_STATE_TIMEOUT = 600
@@ -199,7 +200,7 @@ class FletApp(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        print(f"_on_message: {action} {body}")
+        transport_log.debug(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -287,7 +288,7 @@ class FletApp(Connection):
             task.add_done_callback(self.__running_tasks.discard)
 
     def send_message(self, message: ClientMessage):
-        # print(f"Sending: {message}")
+        transport_log.debug(f"send_message: {message}")
         m = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),

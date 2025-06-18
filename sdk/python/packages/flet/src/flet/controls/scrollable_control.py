@@ -6,12 +6,11 @@ from typing import Optional, Union
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.keys import ScrollKey
 from flet.controls.types import (
     Number,
-    OptionalEventCallable,
     OptionalNumber,
     ScrollMode,
 )
@@ -34,7 +33,7 @@ class ScrollDirection(Enum):
 
 
 @dataclass
-class OnScrollEvent(ControlEvent):
+class OnScrollEvent(Event["ScrollableControl"]):
     event_type: ScrollType
     pixels: float
     min_scroll_extent: float
@@ -60,19 +59,13 @@ class ScrollableControl(Control):
     `True` if scrollbar should automatically move its position to the end when children 
     updated. Must be `False` for `scroll_to()` method to work.
     """
-    reverse: bool = False
-    """
-    Defines whether the scroll view scrolls in the reading direction.
-
-    Defaults to `False`.
-    """
     scroll_interval: Number = 10
     """
     Throttling in milliseconds for `on_scroll` event.
 
     Defaults to `10`.
     """
-    on_scroll: OptionalEventCallable[OnScrollEvent] = None
+    on_scroll: OptionalEventHandler[OnScrollEvent] = None
     """
     Fires when scroll position is changed by a user.
 
@@ -89,33 +82,33 @@ class ScrollableControl(Control):
         curve: Optional[AnimationCurve] = None,
     ):
         """
-        Moves scroll position to either absolute `offset`, relative `delta` or jump to 
+        Moves scroll position to either absolute `offset`, relative `delta` or jump to
         the control with specified `key`.
 
-        `offset` is an absolute value between minimum and maximum extents of a 
+        `offset` is an absolute value between minimum and maximum extents of a
         scrollable control, for example:
 
         ```python
         products.scroll_to(offset=100, duration=1000)
         ```
 
-        `offset` could be a negative to scroll from the end of a scrollable. For 
+        `offset` could be a negative to scroll from the end of a scrollable. For
         example, to scroll to the very end:
 
         ```python
         products.scroll_to(offset=-1, duration=1000)
         ```
 
-        `delta` allows moving scroll relatively to the current position. Use positive 
-        `delta` to scroll forward and negative `delta` to scroll backward. For example, 
+        `delta` allows moving scroll relatively to the current position. Use positive
+        `delta` to scroll forward and negative `delta` to scroll backward. For example,
         to move scroll on 50 pixels forward:
 
         ```python
         products.scroll_to(delta=50)
         ```
 
-        `key` allows moving scroll position to a control with specified `key`. Most of 
-        Flet controls have `key` property which is translated to Flutter as 
+        `key` allows moving scroll position to a control with specified `key`. Most of
+        Flet controls have `key` property which is translated to Flutter as
         "global key". `key` must be unique for the entire page/view. For example:
 
         ```python
@@ -143,14 +136,14 @@ class ScrollableControl(Control):
         ```
 
         :::note
-        `scroll_to()` method won't work with `ListView` and `GridView` controls 
+        `scroll_to()` method won't work with `ListView` and `GridView` controls
         building their items dynamically.
         :::
 
-        `duration` is scrolling animation duration in milliseconds. Defaults to `0` - 
+        `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve) 
+        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
         enum.
         Defaults to `AnimationCurve.EASE`.
         """
@@ -167,33 +160,33 @@ class ScrollableControl(Control):
         curve: Optional[AnimationCurve] = None,
     ):
         """
-        Moves scroll position to either absolute `offset`, relative `delta` or jump to 
+        Moves scroll position to either absolute `offset`, relative `delta` or jump to
         the control with specified `key`.
 
-        `offset` is an absolute value between minimum and maximum extents of a 
+        `offset` is an absolute value between minimum and maximum extents of a
         scrollable control, for example:
 
         ```python
         products.scroll_to(offset=100, duration=1000)
         ```
 
-        `offset` could be a negative to scroll from the end of a scrollable. For 
+        `offset` could be a negative to scroll from the end of a scrollable. For
         example, to scroll to the very end:
 
         ```python
         products.scroll_to(offset=-1, duration=1000)
         ```
 
-        `delta` allows moving scroll relatively to the current position. Use positive 
-        `delta` to scroll forward and negative `delta` to scroll backward. For example, 
+        `delta` allows moving scroll relatively to the current position. Use positive
+        `delta` to scroll forward and negative `delta` to scroll backward. For example,
         to move scroll on 50 pixels forward:
 
         ```python
         products.scroll_to(delta=50)
         ```
 
-        `key` allows moving scroll position to a control with specified `key`. Most of 
-        Flet controls have `key` property which is translated to Flutter as 
+        `key` allows moving scroll position to a control with specified `key`. Most of
+        Flet controls have `key` property which is translated to Flutter as
         "global key". `key` must be unique for the entire page/view. For example:
 
         ```python
@@ -221,18 +214,18 @@ class ScrollableControl(Control):
         ```
 
         :::note
-        `scroll_to()` method won't work with `ListView` and `GridView` controls 
+        `scroll_to()` method won't work with `ListView` and `GridView` controls
         building their items dynamically.
         :::
 
-        `duration` is scrolling animation duration in milliseconds. Defaults to `0` - 
+        `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve) 
+        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
         enum.
         Defaults to `AnimationCurve.EASE`.
         """
-        
+
         await self._invoke_method_async(
             "scroll_to",
             {

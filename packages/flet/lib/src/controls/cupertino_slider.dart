@@ -31,9 +31,11 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
 
   void onChange(double value) {
     _value = value;
+    var props = {"value": value};
+    widget.control.updateProperties(props, python: false, notify: true);
     _debouncer.run(() {
-      widget.control.updateProperties({"value": value}, notify: true);
-      widget.control.triggerEvent("change", value);
+      widget.control.updateProperties(props, notify: true);
+      widget.control.triggerEvent("change");
     });
   }
 
@@ -66,16 +68,14 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
             .getColor("thumb_color", context, CupertinoColors.white)!,
         onChanged:
             !widget.control.disabled ? (double value) => onChange(value) : null,
-        onChangeStart: widget.control.disabled
+        onChangeStart: !widget.control.disabled
             ? (double value) {
-                backend.triggerControlEvent(
-                    widget.control, "change_start", value);
+                widget.control.triggerEvent("change_start", value);
               }
             : null,
         onChangeEnd: !widget.control.disabled
             ? (double value) {
-                backend.triggerControlEvent(
-                    widget.control, "change_end", value);
+                widget.control.triggerEvent("change_end", value);
               }
             : null);
 

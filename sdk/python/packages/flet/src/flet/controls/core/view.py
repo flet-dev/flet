@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import field
 from typing import Optional, Union
 
@@ -5,6 +6,7 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
@@ -169,6 +171,15 @@ class View(ScrollableControl, ConstrainedControl):
     Value is of type [`BoxDecoration`](https://flet.dev/docs/reference/types/
     boxdecoration).
     """
+
+    can_pop: bool = True
+    on_confirm_pop: OptionalControlEventHandler["View"] = None
+
+    def confirm_pop(self, should_pop: bool) -> None:
+        asyncio.create_task(self.confirm_pop_async(should_pop))
+
+    async def confirm_pop_async(self, should_pop: bool) -> None:
+        await self._invoke_method_async("confirm_pop", {"should_pop": should_pop})
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

@@ -1,16 +1,15 @@
 import asyncio
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, TypeVar
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.types import (
     Brightness,
     Number,
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalNumber,
 )
 
@@ -52,9 +51,10 @@ class WindowResizeEdge(Enum):
 @control("Window")
 class Window(BaseControl):
     """
-    All properties and methods of the `Window` class are available only on Desktop 🖥️ 
+    All properties and methods of the `Window` class are available only on Desktop 🖥️
     platforms.
     """
+
     bgcolor: OptionalColorValue = None
     """
     Sets background https://flet.dev/docs/reference/colors of an application window.
@@ -245,7 +245,7 @@ class Window(BaseControl):
     below it. If this window has focus, it will still receive keyboard events.
     """
 
-    on_event: OptionalEventCallable["WindowEvent"] = None
+    on_event: OptionalEventHandler["WindowEvent"] = None
     """
     Fires when app window changes its state: position, size, maximized, minimized, etc.
     """
@@ -297,6 +297,8 @@ class Window(BaseControl):
         asyncio.create_task(self.start_resizing_async(edge))
 
 
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
+
 @dataclass
-class WindowEvent(ControlEvent):
+class WindowEvent(Event[EventControlType]):
     type: WindowEventType

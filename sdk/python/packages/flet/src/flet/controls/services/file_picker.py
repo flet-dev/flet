@@ -4,9 +4,8 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.services.service import Service
-from flet.controls.types import OptionalEventCallable
 
 __all__ = [
     "FilePicker",
@@ -87,7 +86,7 @@ class FilePickerFile:
 
 
 @dataclass
-class FilePickerUploadEvent(ControlEvent):
+class FilePickerUploadEvent(Event['FilePicker']):
     file_name: str
     """
     The name of the uploaded file.
@@ -113,7 +112,7 @@ class FilePicker(Service):
     Online docs: https://flet.dev/docs/controls/filepicker
     """
 
-    on_upload: OptionalEventCallable[FilePickerUploadEvent] = None
+    on_upload: OptionalEventHandler[FilePickerUploadEvent] = None
     """
     Fires when a file upload progress is updated.
 
@@ -182,6 +181,7 @@ class FilePicker(Service):
         initial_directory: Optional[str] = None,
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
+        src_bytes: Optional[bytes] = None,
     ) -> Optional[str]:
         """
         Opens a save file dialog which lets the user select a file path and a file name
@@ -246,6 +246,7 @@ class FilePicker(Service):
                 "initial_directory": initial_directory,
                 "file_type": file_type,
                 "allowed_extensions": allowed_extensions,
+                "src_bytes": src_bytes,
             },
             timeout=3600,
         )

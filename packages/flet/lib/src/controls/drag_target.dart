@@ -56,7 +56,8 @@ class DragTargetControl extends StatelessWidget {
       },
       onWillAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
         var groupMatch = details.data.group == group;
-        control.triggerEvent("will_accept", {"accept": groupMatch});
+        control.triggerEvent(
+            "will_accept", {"accept": groupMatch, "src_id": details.data.id});
         return groupMatch;
       },
       onAcceptWithDetails: (DragTargetDetails<DraggableData> details) {

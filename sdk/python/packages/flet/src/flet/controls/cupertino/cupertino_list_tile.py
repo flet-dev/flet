@@ -2,11 +2,11 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValueOrControl,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     UrlTarget,
@@ -120,13 +120,13 @@ class CupertinoListTile(ConstrainedControl):
     Defaults to `False`.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["CupertinoListTile"] = None
     """
     Fires when a user clicks or taps the list tile.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            isinstance(self.title, str) or self.title.visible
-        ), "title must be a string or a visible Control"
+        assert isinstance(self.title, str) or self.title.visible, (
+            "title must be a string or a visible Control"
+        )

@@ -6,12 +6,12 @@ from flet.controls.alignment import OptionalAlignment
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValueOrControl,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     StrOrControl,
     UrlTarget,
 )
@@ -124,31 +124,31 @@ class CupertinoButton(ConstrainedControl):
     TBD
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["CupertinoButton"] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: OptionalControlEventHandler["CupertinoButton"] = None
     """
     Fires when a user long-presses the button.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: OptionalControlEventHandler["CupertinoButton"] = None
     """
     Fires when the button receives focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: OptionalControlEventHandler["CupertinoButton"] = None
     """
     Fires when the button loses focus.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            0 <= self.opacity_on_click <= 1
-        ), "opacity_on_click must be between 0 and 1 inclusive"
+        assert 0 <= self.opacity_on_click <= 1, (
+            "opacity_on_click must be between 0 and 1 inclusive"
+        )
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

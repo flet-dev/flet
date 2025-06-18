@@ -1,12 +1,34 @@
 import dataclasses
 import sys
 from enum import Enum
-from typing import Any, Type, TypeVar, Union, get_args, get_origin, get_type_hints
+from typing import (
+    Any,
+    ForwardRef,
+    TypeVar,
+    Union,
+    _eval_type,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 
 T = TypeVar("T")
 
 
-def from_dict(cls: Type[T], data: Any) -> T:
+def from_dict(cls: type[T], data: Any) -> T:
+    # Handle generic types and ForwardRefs
+    origin = get_origin(cls) or cls
+    args = get_args(cls)
+
+    # If cls is a generic like Event[T], resolve T
+    if args:
+        cls = origin  # drop the generic info; dataclasses only apply to the base class
+
+    # If cls is a ForwardRef, resolve it
+    if isinstance(cls, ForwardRef):
+        globalns = sys.modules[cls.__module__].__dict__
+        cls = _eval_type(cls, globalns, None)
+
     if dataclasses.is_dataclass(cls):
         try:
             type_hints = get_type_hints(
@@ -34,7 +56,8 @@ def from_dict(cls: Type[T], data: Any) -> T:
         # First create the object using init-only fields
         instance = cls(**init_values)
 
-        # Now set the _prev_* fields via setattr (won’t raise errors if they're not declared)
+        # Now set the _prev_* fields via setattr (won’t raise errors
+        # if they're not declared)
         for k, v in post_values.items():
             setattr(instance, k, v)
 
@@ -44,7 +67,7 @@ def from_dict(cls: Type[T], data: Any) -> T:
         return convert_value(cls, data)
 
 
-def convert_value(field_type: Type, value: Any) -> Any:
+def convert_value(field_type: type, value: Any) -> Any:
     """
     Converts a value to its appropriate type based on the field_type.
     Handles nested dataclasses, enums, lists, dicts, and optionals.

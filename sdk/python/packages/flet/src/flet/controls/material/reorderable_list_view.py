@@ -1,23 +1,24 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import (
+    Event,
+    OptionalEventHandler,
+)
 from flet.controls.core.list_view import ListView
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     ClipBehavior,
     MouseCursor,
     Number,
-    OptionalEventCallable,
     OptionalNumber,
 )
 
-__all__ = ["ReorderableListView", "OnReorderEvent"]
 
-
-class OnReorderEvent(ControlEvent):
+@dataclass
+class OnReorderEvent(Event["ReorderableListView"]):
     new_index: Optional[int]
     old_index: Optional[int]
 
@@ -38,6 +39,20 @@ class ReorderableListView(ListView):
     horizontal: bool = False
     """
     Whether the `controls` should be laid out horizontally.
+
+    Defaults to `False`.
+    """
+
+    reverse: bool = False
+    """
+    Whether the scroll view scrolls in the reading direction.
+
+    For example, if the reading direction is left-to-right and `horizontal` is `True`,
+    then the scroll view scrolls from left to right when `reverse` is `False`
+    and from right to left when `reverse` is `True`.
+
+    Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
+    to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
 
     Defaults to `False`.
     """
@@ -143,13 +158,13 @@ class ReorderableListView(ListView):
     TBD
     """
 
-    on_reorder: OptionalEventCallable[OnReorderEvent] = None
+    on_reorder: OptionalEventHandler[OnReorderEvent] = None
     """
     Fires when a child control has been dragged to a new location in the list and the
     application should update the order of the items.
     """
 
-    on_reorder_start: OptionalEventCallable[OnReorderEvent] = None
+    on_reorder_start: OptionalEventHandler[OnReorderEvent] = None
     """
     Fires when an item drag has started.
 
@@ -157,7 +172,7 @@ class ReorderableListView(ListView):
     [`OnReorderEvent`](https://flet.dev/docs/reference/types/onreorderevent).
     """
 
-    on_reorder_end: OptionalEventCallable[OnReorderEvent] = None
+    on_reorder_end: OptionalEventHandler[OnReorderEvent] = None
     """
     Fires when the dragged item is dropped.
     """

@@ -3,8 +3,9 @@ from typing import Optional
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
-from flet.controls.types import OptionalControlEventCallable, OptionalNumber
+from flet.controls.types import OptionalNumber
 
 __all__ = ["ConstrainedControl"]
 
@@ -341,7 +342,7 @@ class ConstrainedControl(Control):
     ```
     """
 
-    on_animation_end: OptionalControlEventCallable = None
+    on_animation_end: OptionalControlEventHandler["ConstrainedControl"] = None
     """
     All controls with `animate_*` properties have `on_animation_end` event handler 
     which is called when animation complete and can be used to chain multiple 

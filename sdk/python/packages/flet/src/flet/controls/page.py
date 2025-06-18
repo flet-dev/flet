@@ -20,7 +20,12 @@ from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import (
+    ControlEvent,
+    Event,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.multi_view import MultiView
@@ -36,8 +41,6 @@ from flet.controls.session_storage import SessionStorage
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
-    OptionalControlEventCallable,
-    OptionalEventCallable,
     PagePlatform,
     Wrapper,
 )
@@ -236,12 +239,12 @@ class Page(PageView):
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
-    on_platform_brightness_change: OptionalControlEventCallable = None
+    on_platform_brightness_change: OptionalControlEventHandler["Page"] = None
     """
     Fires when brightness of app host platform has changed.
     """
 
-    on_app_lifecycle_state_change: OptionalEventCallable[
+    on_app_lifecycle_state_change: OptionalEventHandler[
         "AppLifecycleStateChangeEvent"
     ] = None
     """
@@ -251,7 +254,7 @@ class Page(PageView):
     [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
     """
 
-    on_route_change: OptionalEventCallable["RouteChangeEvent"] = None
+    on_route_change: OptionalEventHandler["RouteChangeEvent"] = None
     """
     Fires when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
@@ -260,7 +263,7 @@ class Page(PageView):
     [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
     """
 
-    on_view_pop: OptionalEventCallable["ViewPopEvent"] = None
+    on_view_pop: OptionalEventHandler["ViewPopEvent"] = None
     """
     Fires when the user clicks automatic "Back" button in
     [AppBar](https://flet.dev/docs/controls/appbar) control.
@@ -269,7 +272,7 @@ class Page(PageView):
     [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
     """
 
-    on_keyboard_event: OptionalEventCallable["KeyboardEvent"] = None
+    on_keyboard_event: OptionalEventHandler["KeyboardEvent"] = None
     """
     Fires when a keyboard key is pressed.
 
@@ -277,7 +280,7 @@ class Page(PageView):
     [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
     """
 
-    on_connect: OptionalControlEventCallable = None
+    on_connect: OptionalControlEventHandler["Page"] = None
     """
     Fires when a web user (re-)connects to a page session.
 
@@ -287,19 +290,19 @@ class Page(PageView):
     "online".
     """
 
-    on_disconnect: OptionalControlEventCallable = None
+    on_disconnect: OptionalControlEventHandler["Page"] = None
     """
     Fires when a web user disconnects from a page session, i.e. closes browser
     tab/window.
     """
 
-    on_close: OptionalControlEventCallable = None
+    on_close: OptionalControlEventHandler["Page"] = None
     """
     Fires when a session has expired after configured amount of time
     (60 minutes by default).
     """
 
-    on_login: OptionalEventCallable["LoginEvent"] = None
+    on_login: OptionalEventHandler["LoginEvent"] = None
     """
     Fires upon successful or failed OAuth authorization flow.
 
@@ -307,22 +310,22 @@ class Page(PageView):
     guide for more information and examples.
     """
 
-    on_logout: OptionalControlEventCallable = None
+    on_logout: OptionalControlEventHandler["Page"] = None
     """
     Fires after `page.logout()` call.
     """
 
-    on_error: OptionalControlEventCallable = None
+    on_error: OptionalControlEventHandler["Page"] = None
     """
     Fires when unhandled exception occurs.
     """
 
-    on_multi_view_add: OptionalEventCallable["MultiViewAddEvent"] = None
+    on_multi_view_add: OptionalEventHandler["MultiViewAddEvent"] = None
     """
     TBD
     """
 
-    on_multi_view_remove: OptionalEventCallable["MultiViewRemoveEvent"] = None
+    on_multi_view_remove: OptionalEventHandler["MultiViewRemoveEvent"] = None
     """
     TBD
     """
@@ -344,6 +347,7 @@ class Page(PageView):
             self.url_launcher,
             self.storage_paths,
         ]
+        self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
@@ -387,9 +391,16 @@ class Page(PageView):
 
     def before_event(self, e: ControlEvent):
         if isinstance(e, RouteChangeEvent):
-            if self.route == e.route:
+            if self.__last_route == e.route:
                 return False
+            self.__last_route = e.route
             self.query()
+        elif isinstance(e, ViewPopEvent):
+            view = next((v for v in self.views if v.route == e.data), None)
+            if view is None:
+                return False
+            e.view = view
+            return True
         return super().before_event(e)
 
     def run_task(
@@ -399,7 +410,7 @@ class Page(PageView):
         **kwargs: InputT.kwargs,
     ) -> Future[RetT]:
         """
-        Run `handler` coroutine as a new Task in the event loop associated with the 
+        Run `handler` coroutine as a new Task in the event loop associated with the
         current page.
         """
         _session_page.set(self)
@@ -435,7 +446,7 @@ class Page(PageView):
         **kwargs: InputT.kwargs,
     ) -> None:
         """
-        Run `handler` function as a new Thread in the executor associated with the 
+        Run `handler` function as a new Thread in the executor associated with the
         current page.
         """
         handler_with_context = self.__context_wrapper(handler)
@@ -453,8 +464,8 @@ class Page(PageView):
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
         """
-        A helper method that updates [`page.route`](#route), calls 
-        [`page.on_route_change`](#on_route_change) event handler to update views and 
+        A helper method that updates [`page.route`](#route), calls
+        [`page.on_route_change`](#on_route_change) event handler to update views and
         finally calls `page.update()`.
         """
         self.route = route if not kwargs else route + self.query.post(kwargs)
@@ -485,7 +496,8 @@ class Page(PageView):
         upload_url = page.get_upload_url("dir/filename.ext", 60)
         ```
 
-        To enable built-in upload storage provide `upload_dir` argument to `flet.app()` call:
+        To enable built-in upload storage provide `upload_dir` argument to `flet.app()`
+        call:
 
         ```python
         ft.app(main, upload_dir="uploads")
@@ -508,7 +520,7 @@ class Page(PageView):
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
         """
-        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide 
+        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide
         for more information and examples.
         """
         self.__authorization = authorization(
@@ -581,8 +593,8 @@ class Page(PageView):
 
     def logout(self) -> None:
         """
-        Clears current authentication context. See 
-        [Authentication](/docs/cookbook/authentication#signing-out) guide for more 
+        Clears current authentication context. See
+        [Authentication](/docs/cookbook/authentication#signing-out) guide for more
         information and examples.
         """
         self.__authorization = None
@@ -606,10 +618,13 @@ class Page(PageView):
 
         Optional method arguments:
 
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        * `web_window_name` - window tab/name to open URL in:
+        [`UrlTarget.SELF`](https://flet.dev/docs/reference/types/urltarget#self) - the
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) -
+        a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup
+        window. Defaults to `False`.
         * `window_width` - optional, popup window width.
         * `window_height` - optional, popup window height.
         """
@@ -634,10 +649,12 @@ class Page(PageView):
 
         Optional method arguments:
 
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - a new browser tab (or in external
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](https://flet.dev//docs/reference/types/urltarget#self)
+        - the same browser tab, [`UrlTarget.BLANK`](https://flet.dev//docs/reference/types/urltarget#blank)
+        - a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup window. Defaults to `False`.
+        * `web_popup_window` - set to `True` to display a URL in a browser popup
+        window. Defaults to `False`.
         * `window_width` - optional, popup window width.
         * `window_height` - optional, popup window height.
         """
@@ -651,18 +668,18 @@ class Page(PageView):
 
     def can_launch_url_async(self, url: str):
         """
-        Checks whether the specified URL can be handled by some app installed on the 
+        Checks whether the specified URL can be handled by some app installed on the
         device.
 
-        Returns `True` if it is possible to verify that there is a handler available. 
-        A `False` return value can indicate either that there is no handler available, 
+        Returns `True` if it is possible to verify that there is a handler available.
+        A `False` return value can indicate either that there is no handler available,
         or that the application does not have permission to check. For example:
 
-        * On recent versions of Android and iOS, this will always return `False` unless 
-        the application has been configuration to allow querying the system for launch 
+        * On recent versions of Android and iOS, this will always return `False` unless
+        the application has been configuration to allow querying the system for launch
         support.
-        * On web, this will always return `False` except for a few specific schemes 
-        that are always assumed to be supported (such as http(s)), as web pages are 
+        * On web, this will always return `False` except for a few specific schemes
+        that are always assumed to be supported (such as http(s)), as web pages are
         never allowed to query installed applications.
         """
         return self.url_launcher.can_launch_url_async(url)
@@ -671,7 +688,7 @@ class Page(PageView):
         """
         Closes in-app web view opened with `launch_url()`.
 
-        📱 Mobile only. 
+        📱 Mobile only.
         """
         self.url_launcher.close_in_app_web_view()
 
@@ -679,7 +696,7 @@ class Page(PageView):
         """
         Closes in-app web view opened with `launch_url()`.
 
-        📱 Mobile only. 
+        📱 Mobile only.
         """
         await self.url_launcher.close_in_app_web_view_async()
 
@@ -739,17 +756,18 @@ class ServiceRegistry(Service):
 
 
 @dataclass
-class RouteChangeEvent(ControlEvent):
+class RouteChangeEvent(Event["Page"]):
     route: str
 
 
 @dataclass
-class ViewPopEvent(ControlEvent):
-    view: View
+class ViewPopEvent(Event["Page"]):
+    route: str
+    view: Optional[View] = None
 
 
 @dataclass
-class KeyboardEvent(ControlEvent):
+class KeyboardEvent(Event["Page"]):
     key: str
     shift: bool
     ctrl: bool
@@ -758,7 +776,7 @@ class KeyboardEvent(ControlEvent):
 
 
 @dataclass
-class LoginEvent(ControlEvent):
+class LoginEvent(Event["Page"]):
     error: Optional[str]
     error_description: Optional[str]
 
@@ -771,16 +789,16 @@ class InvokeMethodResults:
 
 
 @dataclass
-class AppLifecycleStateChangeEvent(ControlEvent):
+class AppLifecycleStateChangeEvent(Event["Page"]):
     state: AppLifecycleState
 
 
 @dataclass
-class MultiViewAddEvent(ControlEvent):
+class MultiViewAddEvent(Event["Page"]):
     view_id: int
     initial_data: Any
 
 
 @dataclass
-class MultiViewRemoveEvent(ControlEvent):
+class MultiViewRemoveEvent(Event["Page"]):
     view_id: int

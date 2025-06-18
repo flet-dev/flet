@@ -7,13 +7,13 @@ from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import (
     ColorValue,
     IconValueOrControl,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -181,7 +181,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     values are supported: `PRESSED`, `HOVERED` and `FOCUSED`.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: OptionalControlEventHandler["NavigationBar"] = None
     """
     Fires when selected destination changed.
     """

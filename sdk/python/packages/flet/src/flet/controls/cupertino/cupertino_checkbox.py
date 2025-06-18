@@ -4,13 +4,13 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
     MouseCursor,
     OptionalColorValue,
-    OptionalControlEventCallable,
 )
 
 __all__ = ["CupertinoCheckbox"]
@@ -126,17 +126,17 @@ class CupertinoCheckbox(ConstrainedControl):
     `FOCUSED`, `DISABLED` and `ERROR`.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: OptionalControlEventHandler["CupertinoCheckbox"] = None
     """
     Fires when the state of the Checkbox is changed.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: OptionalControlEventHandler["CupertinoCheckbox"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: OptionalControlEventHandler["CupertinoCheckbox"] = None
     """
     Fires when the control has lost focus.
     """
