@@ -6,6 +6,7 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
@@ -22,7 +23,6 @@ from flet.controls.types import (
     MainAxisAlignment,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
 )
 
 __all__ = ["View"]
@@ -173,7 +173,7 @@ class View(ScrollableControl, ConstrainedControl):
     """
 
     can_pop: bool = True
-    on_confirm_pop: OptionalControlEventCallable = None
+    on_confirm_pop: OptionalControlEventHandler["View"] = None
 
     def confirm_pop(self, should_pop: bool) -> None:
         asyncio.create_task(self.confirm_pop_async(should_pop))
