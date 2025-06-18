@@ -6,14 +6,13 @@ from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import Event
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.core.charts.bar_chart_group import BarChartGroup
 from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalNumber,
 )
 
@@ -211,7 +210,7 @@ class BarChart(ConstrainedControl):
     Controls showing tooltip on top or bottom, default is auto.
     """
 
-    on_chart_event: OptionalEventCallable["BarChartEvent"] = None
+    on_chart_event: OptionalEventHandler["BarChartEvent"] = None
     """
     Fires when a bar is hovered or clicked.
 

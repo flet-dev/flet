@@ -2,7 +2,8 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.types import MouseCursor, OptionalControlEventCallable, StrOrControl
+from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.types import MouseCursor, StrOrControl
 
 __all__ = ["CupertinoActionSheetAction"]
 
@@ -41,13 +42,13 @@ class CupertinoActionSheetAction(ConstrainedControl):
     TBD
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["CupertinoActionSheetAction"] = None
     """
     Fires when this action button is clicked.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            isinstance(self.content, str) or self.content.visible
-        ), "content must be a string or a visible Control"
+        assert isinstance(self.content, str) or self.content.visible, (
+            "content must be a string or a visible Control"
+        )

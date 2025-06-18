@@ -2,8 +2,8 @@ from dataclasses import dataclass, field
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
-from flet.controls.types import Number, OptionalEventCallable
+from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.types import Number
 
 __all__ = ["AutoComplete", "AutoCompleteSuggestion", "AutoCompleteSelectEvent"]
 
@@ -15,7 +15,7 @@ class AutoCompleteSuggestion:
 
 
 @dataclass
-class AutoCompleteSelectEvent(ControlEvent):
+class AutoCompleteSelectEvent(Event["AutoComplete"]):
     selection: AutoCompleteSuggestion
 
 
@@ -51,7 +51,7 @@ class AutoComplete(Control):
     and defaults to `200`.
     """
 
-    on_select: OptionalEventCallable[AutoCompleteSelectEvent] = None
+    on_select: OptionalEventHandler[AutoCompleteSelectEvent] = None
     """
     Fires when a suggestion is selected.
 

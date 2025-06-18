@@ -6,12 +6,11 @@ from typing import Optional, Union
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.keys import ScrollKey
 from flet.controls.types import (
     Number,
-    OptionalEventCallable,
     OptionalNumber,
     ScrollMode,
 )
@@ -34,7 +33,7 @@ class ScrollDirection(Enum):
 
 
 @dataclass
-class OnScrollEvent(ControlEvent):
+class OnScrollEvent(Event["ScrollableControl"]):
     event_type: ScrollType
     pixels: float
     min_scroll_extent: float
@@ -66,7 +65,7 @@ class ScrollableControl(Control):
 
     Defaults to `10`.
     """
-    on_scroll: OptionalEventCallable[OnScrollEvent] = None
+    on_scroll: OptionalEventHandler[OnScrollEvent] = None
     """
     Fires when scroll position is changed by a user.
 

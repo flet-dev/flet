@@ -17,6 +17,10 @@ from flet.controls.box import (
 )
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import (
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.margin import OptionalMarginValue
@@ -26,8 +30,6 @@ from flet.controls.types import (
     BlendMode,
     ClipBehavior,
     OptionalColorValue,
-    OptionalControlEventCallable,
-    OptionalEventCallable,
     ThemeMode,
     UrlTarget,
 )
@@ -36,7 +38,7 @@ __all__ = ["Container", "ContainerTapEvent"]
 
 
 @dataclass
-class ContainerTapEvent(TapEvent):
+class ContainerTapEvent(TapEvent["Container"]):
     pass
 
 
@@ -46,7 +48,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     Container allows to decorate a control with background color and border and
     position it with padding, margin and alignment.
 
-    <img src="https://flet.dev/img/docs/controls/container/container-diagram.png" 
+    <img src="https://flet.dev/img/docs/controls/container/container-diagram.png"
     className="screenshot-50" />
 
     Online docs: https://flet.dev/docs/controls/container
@@ -324,12 +326,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     Value is of type [`BoxDecoration`](https://flet.dev/docs/reference/types/boxdecoration).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["Container"] = None
     """
     Fires when a user clicks the container. Will not be fired on long press.
     """
 
-    on_tap_down: OptionalEventCallable[ContainerTapEvent] = None
+    on_tap_down: OptionalEventHandler["ContainerTapEvent"] = None
     """
     Fires when a user clicks the container with or without a long press.
 
@@ -377,12 +379,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     ```
     """
 
-    on_long_press: OptionalControlEventCallable = None
+    on_long_press: OptionalControlEventHandler["Container"] = None
     """
     Fires when the container is long-pressed.
     """
 
-    on_hover: OptionalControlEventCallable = None
+    on_hover: OptionalControlEventHandler["Container"] = None
     """
     Fires when a mouse pointer enters or exists the container area. `data` property of 
     event object contains `true` (string) when cursor enters and `false` when it exits.

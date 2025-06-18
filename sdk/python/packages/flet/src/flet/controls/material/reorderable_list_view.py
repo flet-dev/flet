@@ -3,18 +3,18 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import Event
+from flet.controls.control_event import (
+    Event,
+    OptionalEventHandler,
+)
 from flet.controls.core.list_view import ListView
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     ClipBehavior,
     MouseCursor,
     Number,
-    OptionalEventCallable,
     OptionalNumber,
 )
-
-__all__ = ["ReorderableListView", "OnReorderEvent"]
 
 
 @dataclass
@@ -158,13 +158,13 @@ class ReorderableListView(ListView):
     TBD
     """
 
-    on_reorder: OptionalEventCallable[OnReorderEvent] = None
+    on_reorder: OptionalEventHandler[OnReorderEvent] = None
     """
     Fires when a child control has been dragged to a new location in the list and the
     application should update the order of the items.
     """
 
-    on_reorder_start: OptionalEventCallable[OnReorderEvent] = None
+    on_reorder_start: OptionalEventHandler[OnReorderEvent] = None
     """
     Fires when an item drag has started.
 
@@ -172,7 +172,7 @@ class ReorderableListView(ListView):
     [`OnReorderEvent`](https://flet.dev/docs/reference/types/onreorderevent).
     """
 
-    on_reorder_end: OptionalEventCallable[OnReorderEvent] = None
+    on_reorder_end: OptionalEventHandler[OnReorderEvent] = None
     """
     Fires when the dragged item is dropped.
     """

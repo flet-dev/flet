@@ -1,5 +1,4 @@
 import asyncio
-from dataclasses import dataclass
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -7,6 +6,7 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalEventHandler
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.events import (
     ScaleEndEvent,
@@ -14,7 +14,7 @@ from flet.controls.events import (
     ScaleUpdateEvent,
 )
 from flet.controls.margin import MarginValue
-from flet.controls.types import ClipBehavior, Number, OptionalEventCallable
+from flet.controls.types import ClipBehavior, Number
 
 __all__ = [
     "InteractiveViewer",
@@ -23,20 +23,11 @@ __all__ = [
     "InteractiveViewerInteractionEndEvent",
 ]
 
+InteractiveViewerInteractionStartEvent = ScaleStartEvent
 
-@dataclass
-class InteractiveViewerInteractionStartEvent(ScaleStartEvent):
-    pass
+InteractiveViewerInteractionUpdateEvent = ScaleUpdateEvent
 
-
-@dataclass
-class InteractiveViewerInteractionUpdateEvent(ScaleUpdateEvent):
-    pass
-
-
-@dataclass
-class InteractiveViewerInteractionEndEvent(ScaleEndEvent):
-    pass
+InteractiveViewerInteractionEndEvent = ScaleEndEvent
 
 
 @control("InteractiveViewer")
@@ -140,7 +131,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     Value is of type `int` and defaults to `200`.
     """
 
-    on_interaction_start: OptionalEventCallable[InteractiveViewerInteractionStartEvent
+    on_interaction_start: OptionalEventHandler[
+        InteractiveViewerInteractionStartEvent["InteractiveViewer"]
     ] = None
     """
     Fires when the user begins a pan or scale gesture.
@@ -149,7 +141,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     [`InteractiveViewerInteractionStartEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionstartevent).
     """
 
-    on_interaction_update: OptionalEventCallable[InteractiveViewerInteractionUpdateEvent
+    on_interaction_update: OptionalEventHandler[
+        InteractiveViewerInteractionUpdateEvent["InteractiveViewer"]
     ] = None
     """
     Fires when the user updates a pan or scale gesture.
@@ -158,7 +151,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     [`InteractiveViewerInteractionUpdateEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionupdateevent).
     """
 
-    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent
+    on_interaction_end: OptionalEventHandler[
+        InteractiveViewerInteractionEndEvent["InteractiveViewer"]
     ] = None
     """
     Fires when the user ends a pan or scale gesture.
@@ -172,9 +166,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         assert self.content.visible, "content must be visible"
         assert self.min_scale > 0, "min_scale must be greater than 0"
         assert self.max_scale > 0, "max_scale must be greater than 0"
-        assert (
-            self.max_scale >= self.min_scale
-        ), "max_scale must be greather than or equal to min_scale"
+        assert self.max_scale >= self.min_scale, (
+            "max_scale must be greather than or equal to min_scale"
+        )
         assert (
             self.interaction_end_friction_coefficient is None
             or self.interaction_end_friction_coefficient > 0
