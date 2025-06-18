@@ -4,11 +4,14 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEvent, OptionalControlEventHandler
+from flet.controls.control_event import (
+    Event,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
     OptionalColorValue,
-    OptionalEventCallable,
     Orientation,
 )
 
@@ -22,7 +25,7 @@ class TimePickerEntryMode(Enum):
     INPUT_ONLY = "inputOnly"
 
 
-class TimePickerEntryModeChangeEvent(ControlEvent):
+class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     entry_mode: Optional[TimePickerEntryMode]
 
 
@@ -113,7 +116,7 @@ class TimePicker(DialogControl):
     time. `e.data` also contains the selected time.
     """
 
-    on_entry_mode_change: OptionalEventCallable[TimePickerEntryModeChangeEvent] = None
+    on_entry_mode_change: OptionalEventHandler[TimePickerEntryModeChangeEvent] = None
     """
     Fires when the `time_picker_entry_mode` is changed.
 

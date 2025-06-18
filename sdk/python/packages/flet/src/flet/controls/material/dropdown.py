@@ -7,6 +7,7 @@ from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons
@@ -18,7 +19,6 @@ from flet.controls.types import (
     IconValueOrControl,
     Number,
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalNumber,
     StrOrControl,
     TextAlign,
@@ -207,17 +207,17 @@ class Dropdown(ConstrainedControl):
     states.
     """
 
-    on_change: OptionalEventCallable = None
+    on_change: OptionalControlEventHandler["Dropdown"] =None
     """
     Fires when the selected item of this dropdown has changed.
     """
 
-    on_focus: OptionalEventCallable = None
+    on_focus: OptionalControlEventHandler["Dropdown"] =None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalEventCallable = None
+    on_blur: OptionalControlEventHandler["Dropdown"] =None
     """
     Fires when the control has lost focus.
     """
