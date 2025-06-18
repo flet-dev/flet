@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,7 @@ class _ViewControlState extends State<ViewControl> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Control? _overlay;
   Control? _dialogs;
+  Completer<bool>? _popCompleter;
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _ViewControlState extends State<ViewControl> {
     _overlay?.addListener(_overlayOrDialogsChanged);
     _dialogs = widget.control.parent?.child("_dialogs");
     _dialogs?.addListener(_overlayOrDialogsChanged);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
@@ -61,7 +65,20 @@ class _ViewControlState extends State<ViewControl> {
   void dispose() {
     debugPrint("View.dispose: ${widget.control.id}");
     _overlay?.removeListener(_overlayOrDialogsChanged);
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("View.$name($args)");
+    switch (name) {
+      case "confirm_pop":
+        if (_popCompleter != null && !_popCompleter!.isCompleted) {
+          _popCompleter?.complete(args["should_pop"]);
+        }
+      default:
+        throw Exception("Unknown View method: $name");
+    }
   }
 
   void _overlayOrDialogsChanged() {
@@ -142,6 +159,8 @@ class _ViewControlState extends State<ViewControl> {
     Control? endDrawer = dialogControls?.firstWhereOrNull(
         (c) => c.type == "NavigationDrawer" && c.get("position") == "end");
 
+    var isRootView = control.id == pageViews.first.id;
+
     if (overlayControls != null && dialogControls != null) {
       if (control.id == pageViews.last.id) {
         overlayWidgets
@@ -153,9 +172,7 @@ class _ViewControlState extends State<ViewControl> {
       }
 
       var windowControl = control.parent?.get("window");
-      if (windowControl != null &&
-          control.id == pageViews.first.id &&
-          isDesktopPlatform()) {
+      if (windowControl != null && isRootView && isDesktopPlatform()) {
         overlayWidgets.add(ControlWidget(control: windowControl));
       }
     }
@@ -278,7 +295,7 @@ class _ViewControlState extends State<ViewControl> {
       );
     }
 
-    var result = Directionality(
+    Widget result = Directionality(
         textDirection: textDirection,
         child: loadingPage != null
             ? Stack(
@@ -290,12 +307,41 @@ class _ViewControlState extends State<ViewControl> {
     var foregroundDecoration =
         control.getBoxDecoration("foreground_decoration", context);
     if (backgroundDecoration != null || foregroundDecoration != null) {
-      return Container(
+      result = Container(
         decoration: backgroundDecoration,
         foregroundDecoration: foregroundDecoration,
         child: result,
       );
     }
+
+    result = PopScope(
+        canPop: control.getBool("can_pop", true)!,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop || !control.getBool("on_confirm_pop", false)!) {
+            return;
+          }
+          debugPrint("Page.onPopInvokedWithResult()");
+          if (_popCompleter != null && !_popCompleter!.isCompleted) {
+            _popCompleter!.completeError("Aborted");
+          }
+          _popCompleter = Completer<bool>();
+          control.triggerEvent("confirm_pop");
+          _popCompleter!.future
+              .timeout(
+            const Duration(minutes: 5),
+            onTimeout: () => false,
+          )
+              .then((shouldPop) {
+            if (context.mounted && shouldPop) {
+              if (isRootView) {
+                SystemNavigator.pop();
+              } else {
+                Navigator.pop(context);
+              }
+            }
+          }).onError((e, st) {/* do nothing */});
+        },
+        child: result);
     return result;
   }
 }

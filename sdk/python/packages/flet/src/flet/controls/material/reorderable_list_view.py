@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.base_control import control
@@ -17,6 +17,7 @@ from flet.controls.types import (
 )
 
 
+@dataclass
 class OnReorderEvent(Event["ReorderableListView"]):
     new_index: Optional[int]
     old_index: Optional[int]
@@ -38,6 +39,20 @@ class ReorderableListView(ListView):
     horizontal: bool = False
     """
     Whether the `controls` should be laid out horizontally.
+
+    Defaults to `False`.
+    """
+
+    reverse: bool = False
+    """
+    Whether the scroll view scrolls in the reading direction.
+
+    For example, if the reading direction is left-to-right and `horizontal` is `True`,
+    then the scroll view scrolls from left to right when `reverse` is `False`
+    and from right to left when `reverse` is `True`.
+
+    Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
+    to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
 
     Defaults to `False`.
     """

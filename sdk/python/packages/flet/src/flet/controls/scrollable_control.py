@@ -59,12 +59,6 @@ class ScrollableControl(Control):
     `True` if scrollbar should automatically move its position to the end when children 
     updated. Must be `False` for `scroll_to()` method to work.
     """
-    reverse: bool = False
-    """
-    Defines whether the scroll view scrolls in the reading direction.
-
-    Defaults to `False`.
-    """
     scroll_interval: Number = 10
     """
     Throttling in milliseconds for `on_scroll` event.

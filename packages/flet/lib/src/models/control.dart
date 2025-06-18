@@ -339,10 +339,12 @@ class Control extends ChangeNotifier {
         }
         toNode.obj.insert(toIndex, fromNode.obj.removeAt(fromIndex));
         if (shouldNotify) {
-          fromNode.control.notify();
-        }
-        if (shouldNotify) {
-          toNode.control.notify();
+          if (fromNode.control.id != toNode.control.id) {
+            fromNode.control.notify();
+            toNode.control.notify();
+          } else {
+            toNode.control.notify();
+          }
         }
       } else {
         throw Exception("Unknown patch operation: ${op[0]}");

@@ -210,7 +210,7 @@ class FletBackend extends ChangeNotifier {
       _reconnectDelayMs = 0;
       error = "";
 
-      page.update(resp.patch);
+      page.update(resp.patch, shouldNotify: true);
 
       // drain send queue
       debugPrint("Send queue: ${_sendQueue.length}");

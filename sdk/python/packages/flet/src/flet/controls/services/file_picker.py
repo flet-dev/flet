@@ -128,7 +128,7 @@ class FilePicker(Service):
         must be called, so the internal file picker selection is not empty.
 
         Method arguments:
-        - `files` - a list of 
+        - `files` - a list of
         [FilePickerUploadFile](https://flet.dev/docs/reference/types/filepickeruploadfile).
         Each item specifies which file to upload, and where (with PUT or POST).
         """
@@ -145,7 +145,7 @@ class FilePicker(Service):
         must be called, so the internal file picker selection is not empty.
 
         Method arguments:
-        - `files` - a list of 
+        - `files` - a list of
         [FilePickerUploadFile](https://flet.dev/docs/reference/types/filepickeruploadfile).
         Each item specifies which file to upload, and where (with PUT or POST).
         """
@@ -159,7 +159,7 @@ class FilePicker(Service):
         """
         Selects a directory and returns its absolute path.
 
-        You could either set the following file picker properties or provide their 
+        You could either set the following file picker properties or provide their
         values in the method call:
 
         * `dialog_title` - the title of the dialog window.
@@ -181,37 +181,38 @@ class FilePicker(Service):
         initial_directory: Optional[str] = None,
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
+        src_bytes: Optional[bytes] = None,
     ) -> Optional[str]:
         """
-        Opens a save file dialog which lets the user select a file path and a file name 
+        Opens a save file dialog which lets the user select a file path and a file name
         to save a file.
 
-        This function does not actually save a file. It only opens the dialog to let 
-        the user choose a location and file name. This function only returns the path 
+        This function does not actually save a file. It only opens the dialog to let
+        the user choose a location and file name. This function only returns the path
         to this (non-existing) file in `FilePicker.result.path` property.
 
         This method is only available on desktop platforms (Linux, macOS & Windows).
 
-        You could either set the following file picker properties or provide their 
+        You could either set the following file picker properties or provide their
         values in the method call:
 
         * `dialog_title` - the title of the dialog window.
         * `file_name` - the default file name.
         * `initial_directory` - the initial directory where the dialog should open.
-        * `file_type` - the allowed 
+        * `file_type` - the allowed
         [`FilePickerFileType`](https://flet.dev/docs/reference/types/filepickerfiletype).
-        * `allowed_extensions` - the allowed file extensions. Has effect only if 
+        * `allowed_extensions` - the allowed file extensions. Has effect only if
         `file_type` is `FilePickerFileType.CUSTOM`.
 
         :::info
         To save a file from the web, you don't need to use the FilePicker object.
 
-        You can instead provides an API endpoint `/download/:filename` that returns the 
-        file content, and then use 
-        [`page.launch_url`](/docs/controls/page#launch_urlurl) to open the url, which 
+        You can instead provides an API endpoint `/download/:filename` that returns the
+        file content, and then use
+        [`page.launch_url`](/docs/controls/page#launch_urlurl) to open the url, which
         will trigger the browser's save file dialog.
 
-        Take [FastAPI](https://flet.dev/docs/publish/web/dynamic-website#advanced-fastapi-scenarios) 
+        Take [FastAPI](https://flet.dev/docs/publish/web/dynamic-website#advanced-fastapi-scenarios)
         as an example, you can use the following code to implement the endpoint:
 
         ```python
@@ -226,12 +227,12 @@ class FilePicker(Service):
             return FileResponse(path)
         ```
 
-        and then use `page.launch_url("/download/myfile.txt")` to open the url, for 
+        and then use `page.launch_url("/download/myfile.txt")` to open the url, for
         instance, when a button is clicked.
 
         ```python
         ft.ElevatedButton(
-            "Download myfile", 
+            "Download myfile",
             on_click=lambda _: page.launch_url("/download/myfile.txt"),
         )
         ```
@@ -245,6 +246,7 @@ class FilePicker(Service):
                 "initial_directory": initial_directory,
                 "file_type": file_type,
                 "allowed_extensions": allowed_extensions,
+                "src_bytes": src_bytes,
             },
             timeout=3600,
         )
@@ -260,14 +262,14 @@ class FilePicker(Service):
         """
         Retrieves the file(s) from the underlying platform.
 
-        You could either set the following file picker properties or provide their 
+        You could either set the following file picker properties or provide their
         values in the method call:
 
         * `dialog_title` - the title of the dialog window.
         * `initial_directory` - the initial directory where the dialog should open.
-        * `file_type` - the allowed 
+        * `file_type` - the allowed
         [`FilePickerFileType`](https://flet.dev/docs/reference/types/filepickerfiletype).
-        * `allowed_extensions` - the allowed file extensions. Has effect only if 
+        * `allowed_extensions` - the allowed file extensions. Has effect only if
         `file_type` is `FilePickerFileType.CUSTOM`.
         * `allow_multiple` - allow selecting multiple files.
         """
@@ -283,4 +285,3 @@ class FilePicker(Service):
             timeout=3600,
         )
         return [FilePickerFile(**file) for file in files]
-

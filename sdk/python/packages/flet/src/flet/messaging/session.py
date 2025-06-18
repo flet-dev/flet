@@ -199,7 +199,7 @@ class Session:
                     else:
                         event_handler(e)
 
-                if UpdateBehavior.auto_update_enabled():
+                if UpdateBehavior.auto_update_enabled() and self.connection:
                     await self.auto_update(control)
 
         except Exception as ex:

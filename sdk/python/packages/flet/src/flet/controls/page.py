@@ -347,6 +347,7 @@ class Page(PageView):
             self.url_launcher,
             self.storage_paths,
         ]
+        self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
@@ -390,9 +391,16 @@ class Page(PageView):
 
     def before_event(self, e: ControlEvent):
         if isinstance(e, RouteChangeEvent):
-            if self.route == e.route:
+            if self.__last_route == e.route:
                 return False
+            self.__last_route = e.route
             self.query()
+        elif isinstance(e, ViewPopEvent):
+            view = next((v for v in self.views if v.route == e.data), None)
+            if view is None:
+                return False
+            e.view = view
+            return True
         return super().before_event(e)
 
     def run_task(
@@ -488,7 +496,7 @@ class Page(PageView):
         upload_url = page.get_upload_url("dir/filename.ext", 60)
         ```
 
-        To enable built-in upload storage provide `upload_dir` argument to `flet.app()` 
+        To enable built-in upload storage provide `upload_dir` argument to `flet.app()`
         call:
 
         ```python
@@ -610,12 +618,12 @@ class Page(PageView):
 
         Optional method arguments:
 
-        * `web_window_name` - window tab/name to open URL in: 
+        * `web_window_name` - window tab/name to open URL in:
         [`UrlTarget.SELF`](https://flet.dev/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) - 
+        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) -
         a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup 
+        * `web_popup_window` - set to `True` to display a URL in a browser popup
         window. Defaults to `False`.
         * `window_width` - optional, popup window width.
         * `window_height` - optional, popup window height.
@@ -645,7 +653,7 @@ class Page(PageView):
         - the same browser tab, [`UrlTarget.BLANK`](https://flet.dev//docs/reference/types/urltarget#blank)
         - a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup 
+        * `web_popup_window` - set to `True` to display a URL in a browser popup
         window. Defaults to `False`.
         * `window_width` - optional, popup window width.
         * `window_height` - optional, popup window height.
@@ -754,7 +762,8 @@ class RouteChangeEvent(Event["Page"]):
 
 @dataclass
 class ViewPopEvent(Event["Page"]):
-    view: View
+    route: str
+    view: Optional[View] = None
 
 
 @dataclass

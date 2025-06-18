@@ -81,6 +81,7 @@ class DragTarget(Control):
 @dataclass
 class DragWillAcceptEvent(Event["DragTarget"]):
     accept: bool
+    src_id: int
 
 
 @dataclass
