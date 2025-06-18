@@ -34,6 +34,7 @@ class FilePickerService extends FletService {
     var allowedExtensions = (args["allowed_extensions"] as List?)
         ?.map((e) => e.toString())
         .toList();
+    var srcBytes = args["src_bytes"];
 
     if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
       fileType = FileType.custom;
@@ -68,6 +69,9 @@ class FilePickerService extends FletService {
       case "save_file":
         if (kIsWeb) {
           throw Exception("Save File dialog is not supported on web.");
+        } else if ((isAndroidMobile() || isIOSMobile()) && srcBytes == null) {
+          throw Exception(
+              "\"src_bytes\" is required when saving a file on Android or iOS.");
         }
         return await FilePicker.platform.saveFile(
             dialogTitle: dialogTitle,
@@ -78,7 +82,7 @@ class FilePickerService extends FletService {
             lockParentWindow: true,
             type: fileType,
             allowedExtensions: allowedExtensions,
-            bytes: isAndroidMobile() || isIOSMobile() ? Uint8List(0) : null);
+            bytes: srcBytes);
       case "get_directory_path":
         if (kIsWeb) {
           throw Exception("Get Directory Path dialog is not supported on web.");
