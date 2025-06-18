@@ -3,6 +3,7 @@ from typing import Optional
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
@@ -10,7 +11,6 @@ from flet.controls.types import (
     IconValueOrControl,
     Number,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
 )
 
@@ -55,16 +55,16 @@ class Option(Control):
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["Option"] = None
     """
     Fires when this option is clicked.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.key is not None or self.text is not None
-        ), "key or text must be specified"
+        assert self.key is not None or self.text is not None, (
+            "key or text must be specified"
+        )
 
 
 @control("DropdownM2")
@@ -187,22 +187,22 @@ class DropdownM2(FormFieldControl):
     `None` and the dropdown is disabled.
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: OptionalControlEventHandler["DropdownM2"] = None
     """
     Fires when the selected item of this dropdown has changed.
     """
 
-    on_focus: OptionalControlEventCallable = None
+    on_focus: OptionalControlEventHandler["DropdownM2"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventCallable = None
+    on_blur: OptionalControlEventHandler["DropdownM2"] = None
     """
     Fires when the control has lost focus.
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["DropdownM2"] = None
     """
     Fires when this dropdown is clicked.
     """

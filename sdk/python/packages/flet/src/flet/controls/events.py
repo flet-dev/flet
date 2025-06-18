@@ -1,8 +1,8 @@
-from dataclasses import field, dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Optional, TypeVar
 
-from flet.controls.control_event import ControlEvent
-from flet.controls.duration import OptionalDuration, Duration
+from flet.controls.control_event import ControlEvent, Event
+from flet.controls.duration import Duration, OptionalDuration
 from flet.controls.types import PointerDeviceType
 
 __all__ = [
@@ -21,10 +21,14 @@ __all__ = [
     "PointerEvent",
 ]
 
+if TYPE_CHECKING:
+    from .base_control import BaseControl
+
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
 
 
 @dataclass(kw_only=True)
-class TapEvent(ControlEvent):
+class TapEvent(Event[EventControlType]):
     kind: Optional[str] = field(default=None, metadata={"data_field": "k"})
     local_x: Optional[float] = field(default=None, metadata={"data_field": "lx"})
     local_y: Optional[float] = field(default=None, metadata={"data_field": "ly"})
@@ -38,7 +42,7 @@ class MultiTapEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class LongPressStartEvent(ControlEvent):
+class LongPressStartEvent(Event[EventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -46,7 +50,7 @@ class LongPressStartEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class LongPressEndEvent(ControlEvent):
+class LongPressEndEvent(Event[EventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -56,7 +60,7 @@ class LongPressEndEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class DragStartEvent(ControlEvent):
+class DragStartEvent(Event[EventControlType]):
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
@@ -66,7 +70,7 @@ class DragStartEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class DragUpdateEvent(ControlEvent):
+class DragUpdateEvent(Event[EventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -78,18 +82,20 @@ class DragUpdateEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class DragEndEvent(ControlEvent):
+class DragEndEvent(Event[EventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
     global_y: float = field(metadata={"data_field": "gy"})
     velocity_x: float = field(metadata={"data_field": "vx"})
     velocity_y: float = field(metadata={"data_field": "vy"})
-    primary_velocity: Optional[float] = field(default=None, metadata={"data_field": "pv"})
+    primary_velocity: Optional[float] = field(
+        default=None, metadata={"data_field": "pv"}
+    )
 
 
 @dataclass(kw_only=True)
-class ScaleStartEvent(ControlEvent):
+class ScaleStartEvent(Event[EventControlType]):
     focal_point_x: float = field(metadata={"data_field": "fpx"})
     focal_point_y: float = field(metadata={"data_field": "fpy"})
     local_focal_point_x: float = field(metadata={"data_field": "lfpx"})
@@ -99,14 +105,14 @@ class ScaleStartEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class ScaleEndEvent(ControlEvent):
+class ScaleEndEvent(Event[EventControlType]):
     pointer_count: int = field(metadata={"data_field": "pc"})
     velocity_x: float = field(metadata={"data_field": "vx"})
     velocity_y: float = field(metadata={"data_field": "vy"})
 
 
 @dataclass(kw_only=True)
-class ScaleUpdateEvent(ControlEvent):
+class ScaleUpdateEvent(Event[EventControlType]):
     focal_point_x: float = field(metadata={"data_field": "fpx"})
     focal_point_y: float = field(metadata={"data_field": "fpy"})
     focal_point_delta_x: float = field(metadata={"data_field": "fpdx"})
@@ -122,7 +128,7 @@ class ScaleUpdateEvent(ControlEvent):
 
 
 @dataclass(kw_only=True)
-class PointerEvent(ControlEvent):
+class PointerEvent(Event[EventControlType]):
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
@@ -149,8 +155,9 @@ class PointerEvent(ControlEvent):
     delta_x: Optional[float] = field(metadata={"data_field": "dx"})
     delta_y: Optional[float] = field(metadata={"data_field": "dy"})
 
+
 @dataclass(kw_only=True)
-class ScrollEvent(ControlEvent):
+class ScrollEvent(Event[EventControlType]):
     local_x: float = field(metadata={"data_field": "lx"})
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
@@ -159,8 +166,4 @@ class ScrollEvent(ControlEvent):
     scroll_delta_y: float = field(metadata={"data_field": "sdy"})
 
 
-
-@dataclass(kw_only=True)
-class HoverEvent(PointerEvent):
-    pass
-
+HoverEvent = PointerEvent

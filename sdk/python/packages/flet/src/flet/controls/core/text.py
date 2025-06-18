@@ -1,17 +1,19 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, TypeVar
 
-from flet.controls.base_control import control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import (
+    Event,
+    OptionalControlEventHandler,
+    OptionalEventHandler,
+)
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
     FontWeight,
     OptionalColorValue,
-    OptionalControlEventCallable,
-    OptionalEventCallable,
     OptionalNumber,
     TextAlign,
 )
@@ -29,6 +31,7 @@ class TextAffinity(Enum):
     """
     Defines the permissions which can be checked and requested.
     """
+
     UPSTREAM = "upstream"
     """
     The position has affinity for the downstream side of the text position, i.e. in the 
@@ -162,8 +165,11 @@ class TextSelectionChangeCause(Enum):
     """
 
 
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
+
+
 @dataclass
-class TextSelectionChangeEvent(ControlEvent):
+class TextSelectionChangeEvent(Event[EventControlType]):
     text: str
     cause: TextSelectionChangeCause
     selection: TextSelection
@@ -326,12 +332,13 @@ class Text(ConstrainedControl):
     TBD
     """
 
-    on_tap: OptionalControlEventCallable = None
+    on_tap: OptionalControlEventHandler["Text"] = None
     """
     TBD
     """
 
-    on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None
+    on_selection_change: OptionalEventHandler[
+        TextSelectionChangeEvent["Text"]] = None
     """
     TBD
     """

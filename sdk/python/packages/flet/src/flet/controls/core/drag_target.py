@@ -3,9 +3,8 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import Event, OptionalEventHandler
 from flet.controls.transform import Offset
-from flet.controls.types import OptionalEventCallable
 
 __all__ = [
     "DragTarget",
@@ -42,7 +41,7 @@ class DragTarget(Control):
     must both be in the same group.
     """
 
-    on_will_accept: OptionalEventCallable["DragWillAcceptEvent"] = None
+    on_will_accept: OptionalEventHandler["DragWillAcceptEvent"] = None
     """
     Fires when a draggable is dragged on this target.
 
@@ -50,7 +49,7 @@ class DragTarget(Control):
     and this target are in the same `group`; otherwise `false` (String).
     """
 
-    on_accept: OptionalEventCallable["DragTargetEvent"] = None
+    on_accept: OptionalEventHandler["DragTargetEvent"] = None
     """
     Fires when the user does drop an acceptable (same `group`) draggable on
     this target.
@@ -61,12 +60,12 @@ class DragTarget(Control):
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """
 
-    on_leave: OptionalEventCallable["DragTargetLeaveEvent"] = None
+    on_leave: OptionalEventHandler["DragTargetLeaveEvent"] = None
     """
     Fires when a draggable leaves this target.
     """
 
-    on_move: OptionalEventCallable["DragTargetEvent"] = None
+    on_move: OptionalEventHandler["DragTargetEvent"] = None
     """
     Fires when a draggable moves within this target.
 
@@ -80,12 +79,12 @@ class DragTarget(Control):
 
 
 @dataclass
-class DragWillAcceptEvent(ControlEvent):
+class DragWillAcceptEvent(Event["DragTarget"]):
     accept: bool
 
 
 @dataclass
-class DragTargetEvent(ControlEvent):
+class DragTargetEvent(Event["DragTarget"]):
     src_id: int
     x: float
     y: float
@@ -96,5 +95,5 @@ class DragTargetEvent(ControlEvent):
 
 
 @dataclass
-class DragTargetLeaveEvent(ControlEvent):
+class DragTargetLeaveEvent(Event["DragTarget"]):
     src_id: Optional[int]

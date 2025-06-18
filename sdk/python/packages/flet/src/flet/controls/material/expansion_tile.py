@@ -7,13 +7,13 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     ClipBehavior,
     CrossAxisAlignment,
     IconValueOrControl,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     VisualDensity,
@@ -220,7 +220,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: OptionalControlEventHandler["ExpansionTile"] = None
     """
     Fires when a user clicks or taps the list tile.
     """

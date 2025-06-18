@@ -4,12 +4,12 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
     MouseCursor,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
     UrlTarget,
@@ -152,7 +152,7 @@ class FloatingActionButton(ConstrainedControl):
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_click: OptionalControlEventCallable = None
+    on_click: OptionalControlEventHandler["FloatingActionButton"] = None
     """
     Fires when a user clicks the button.
     """
@@ -164,18 +164,18 @@ class FloatingActionButton(ConstrainedControl):
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at minimum, icon or a visible content must be provided"
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
-        assert (
-            self.disabled_elevation is None or self.disabled_elevation >= 0
-        ), "disabled_elevation cannot be negative"
-        assert (
-            self.focus_elevation is None or self.focus_elevation >= 0
-        ), "focus_elevation cannot be negative"
-        assert (
-            self.highlight_elevation is None or self.highlight_elevation >= 0
-        ), "highlight_elevation cannot be negative"
-        assert (
-            self.hover_elevation is None or self.hover_elevation >= 0
-        ), "hover_elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )
+        assert self.disabled_elevation is None or self.disabled_elevation >= 0, (
+            "disabled_elevation cannot be negative"
+        )
+        assert self.focus_elevation is None or self.focus_elevation >= 0, (
+            "focus_elevation cannot be negative"
+        )
+        assert self.highlight_elevation is None or self.highlight_elevation >= 0, (
+            "highlight_elevation cannot be negative"
+        )
+        assert self.hover_elevation is None or self.hover_elevation >= 0, (
+            "hover_elevation cannot be negative"
+        )

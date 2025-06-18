@@ -3,8 +3,9 @@ from dataclasses import field
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.types import OptionalColorValue, OptionalControlEventCallable
+from flet.controls.types import OptionalColorValue
 
 __all__ = ["CupertinoSegmentedButton"]
 
@@ -70,7 +71,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     TBD
     """
 
-    on_change: OptionalControlEventCallable = None
+    on_change: OptionalControlEventHandler["CupertinoSegmentedButton"] = None
     """
     Fires when the state of the button is changed - when one of the `controls` is 
     clicked.
@@ -78,9 +79,9 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            len(self.controls) >= 2
-        ), "controls must contain minimum two visible controls"
+        assert len(self.controls) >= 2, (
+            "controls must contain minimum two visible controls"
+        )
         if not (0 <= self.selected_index < len(self.controls)):
             raise IndexError(
                 f"selected_index {self.selected_index} is out of range. "
