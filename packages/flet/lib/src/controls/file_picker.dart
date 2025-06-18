@@ -18,12 +18,15 @@ import 'flet_store_mixin.dart';
 class FilePickerResultEvent {
   final String? path;
   final List<FilePickerFile>? files;
+  final String? error;
 
-  FilePickerResultEvent({required this.path, required this.files});
+  FilePickerResultEvent(
+      {required this.path, required this.files, required this.error});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'path': path,
-        'files': files?.map((f) => f.toJson()).toList()
+        'files': files?.map((f) => f.toJson()).toList(),
+        'error': error
       };
 }
 
@@ -94,6 +97,7 @@ class _FilePickerControlState extends State<FilePickerControl>
   String? _upload;
   String? _path;
   List<PlatformFile>? _files;
+  String? _error;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +112,7 @@ class _FilePickerControlState extends State<FilePickerControl>
       var allowMultiple = widget.control.attrBool("allowMultiple", false)!;
       var allowedExtensions =
           parseStringList(widget.control, "allowedExtensions");
+      var srcBytesBase64 = widget.control.attrString("srcBytes");
       FileType fileType = FileType.values.firstWhere(
           (m) =>
               m.name.toLowerCase() ==
@@ -134,23 +139,24 @@ class _FilePickerControlState extends State<FilePickerControl>
           widget.control.id,
           "result",
           json.encode(FilePickerResultEvent(
-            path: _path,
-            files: _files?.asMap().entries.map((entry) {
-              PlatformFile f = entry.value;
-              return FilePickerFile(
-                id: entry.key, // use entry's index as id
-                name: f.name,
-                path: kIsWeb ? null : f.path,
-                size: f.size,
-              );
-            }).toList(),
-          )),
+              path: _path,
+              files: _files?.asMap().entries.map((entry) {
+                PlatformFile f = entry.value;
+                return FilePickerFile(
+                  id: entry.key, // use entry's index as id
+                  name: f.name,
+                  path: kIsWeb ? null : f.path,
+                  size: f.size,
+                );
+              }).toList(),
+              error: _error)),
         );
       }
 
       if (_state != state) {
         _path = null;
         _files = null;
+        _error = null;
         _state = state;
 
         if (isDesktopPlatform() &&
@@ -178,24 +184,31 @@ class _FilePickerControlState extends State<FilePickerControl>
         }
         // saveFile
         else if (state?.toLowerCase() == "savefile" && !kIsWeb) {
-          FilePicker.platform
-              .saveFile(
-                  dialogTitle: dialogTitle,
-                  fileName: fileName != null || !isiOSPlatform()
-                      ? fileName
-                      : "new-file",
-                  initialDirectory: initialDirectory,
-                  lockParentWindow: true,
-                  type: fileType,
-                  allowedExtensions: allowedExtensions,
-                  bytes: isAndroidPlatform() || isiOSPlatform()
-                      ? Uint8List(0)
-                      : null)
-              .then((result) {
-            debugPrint("saveFile() completed");
-            _path = result;
+          if ((isAndroidPlatform() || isiOSPlatform()) &&
+              srcBytesBase64 == null) {
+            _error =
+                '"src_bytes" is required on Android & iOS when saving a file.';
             sendEvent();
-          });
+          } else {
+            FilePicker.platform
+                .saveFile(
+                    dialogTitle: dialogTitle,
+                    fileName: fileName != null || !isiOSPlatform()
+                        ? fileName
+                        : "new-file",
+                    initialDirectory: initialDirectory,
+                    lockParentWindow: true,
+                    type: fileType,
+                    allowedExtensions: allowedExtensions,
+                    bytes: srcBytesBase64 != null
+                        ? base64Decode(srcBytesBase64)
+                        : null)
+                .then((result) {
+              debugPrint("saveFile() completed");
+              _path = result;
+              sendEvent();
+            });
+          }
         }
         // getDirectoryPath
         else if (state?.toLowerCase() == "getdirectorypath" && !kIsWeb) {
