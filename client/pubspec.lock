@@ -29,58 +29,58 @@ packages:
     dependency: transitive
     description:
       name: audioplayers
-      sha256: a5341380a4f1d3a10a4edde5bb75de5127fe31e0faa8c4d860e64d2f91ad84c7
+      sha256: e653f162ddfcec1da2040ba2d8553fff1662b5c2a5c636f4c21a3b11bee497de
       url: "https://pub.dev"
     source: hosted
-    version: "6.4.0"
+    version: "6.5.0"
   audioplayers_android:
     dependency: transitive
     description:
       name: audioplayers_android
-      sha256: f8c90823a45b475d2c129f85bbda9c029c8d4450b172f62e066564c6e170f69a
+      sha256: "60a6728277228413a85755bd3ffd6fab98f6555608923813ce383b190a360605"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.2.1"
   audioplayers_darwin:
     dependency: transitive
     description:
       name: audioplayers_darwin
-      sha256: "405cdbd53ebdb4623f1c5af69f275dad4f930ce895512d5261c07cd95d23e778"
+      sha256: "0811d6924904ca13f9ef90d19081e4a87f7297ddc19fc3d31f60af1aaafee333"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.0"
+    version: "6.3.0"
   audioplayers_linux:
     dependency: transitive
     description:
       name: audioplayers_linux
-      sha256: "7e0d081a6a527c53aef9539691258a08ff69a7dc15ef6335fbea1b4b03ebbef0"
+      sha256: f75bce1ce864170ef5e6a2c6a61cd3339e1a17ce11e99a25bae4474ea491d001
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "4.2.1"
   audioplayers_platform_interface:
     dependency: transitive
     description:
       name: audioplayers_platform_interface
-      sha256: "77e5fa20fb4a64709158391c75c1cca69a481d35dc879b519e350a05ff520373"
+      sha256: "0e2f6a919ab56d0fec272e801abc07b26ae7f31980f912f24af4748763e5a656"
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.0"
+    version: "7.1.1"
   audioplayers_web:
     dependency: transitive
     description:
       name: audioplayers_web
-      sha256: bd99d8821114747682a2be0adcdb70233d4697af989b549d3a20a0f49f6c9b13
+      sha256: "1c0f17cec68455556775f1e50ca85c40c05c714a99c5eb1d2d57cc17ba5522d7"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
   audioplayers_windows:
     dependency: transitive
     description:
       name: audioplayers_windows
-      sha256: "871d3831c25cd2408ddc552600fd4b32fba675943e319a41284704ee038ad563"
+      sha256: "4048797865105b26d47628e6abb49231ea5de84884160229251f37dfcbe52fd7"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "4.2.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -101,10 +101,10 @@ packages:
     dependency: transitive
     description:
       name: checked_yaml
-      sha256: feb6bed21949061731a7a75fc5d2aa727cf160b91af9a3e464c5e3a32e28b5ff
+      sha256: "959525d3162f249993882720d52b7e0c833978df229be20702b33d48d91de70f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   cli_util:
     dependency: transitive
     description:
@@ -181,18 +181,18 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: "306b78788d1bb569edb7c55d622953c2414ca12445b41c9117963e03afc5c513"
+      sha256: "98f28b42168cc509abc92f88518882fd58061ea372d7999aecc424345c7bff6a"
       url: "https://pub.dev"
     source: hosted
-    version: "11.3.3"
+    version: "11.5.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
-      sha256: "0b04e02b30791224b31969eb1b50d723498f402971bff3630bca2ba839bd1ed2"
+      sha256: e1ea89119e34903dca74b883d0dd78eb762814f97fb6c76f35e9ff74d261a18f
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.2"
+    version: "7.0.3"
   dio:
     dependency: transitive
     description:
@@ -277,7 +277,7 @@ packages:
     description:
       path: "src/flutter/flet_ads"
       ref: v1
-      resolved-ref: c0fd5acc0d8fa1481f71e69c2f72a10bac9bf5e5
+      resolved-ref: d52c10df46113a73669f0897cff1cc51f45c4df7
       url: "https://github.com/flet-dev/flet-ads.git"
     source: git
     version: "0.2.0"
@@ -286,16 +286,16 @@ packages:
     description:
       path: "src/flutter/flet_audio"
       ref: v1
-      resolved-ref: cb4cef7a4c35ae296278b0b9f43c2e8ebc41fd3f
+      resolved-ref: "35cffd36eb481ac4ac361d86a2d9ec1d8833804f"
       url: "https://github.com/flet-dev/flet-audio.git"
     source: git
-    version: "0.1.0"
+    version: "0.2.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_audio_recorder"
       ref: v1
-      resolved-ref: "93669ee266dab073afae800c73f002e3d9430ac4"
+      resolved-ref: "776e614815a581a49233fa4d799953d9f0279277"
       url: "https://github.com/flet-dev/flet-audio-recorder.git"
     source: git
     version: "0.2.0"
@@ -304,7 +304,7 @@ packages:
     description:
       path: "src/flutter/flet_charts"
       ref: v1
-      resolved-ref: b81079603b13b486aa2e310ed017e1cc29da7076
+      resolved-ref: cb3c7b56ea13e078526190b07be9bc113ce10ace
       url: "https://github.com/flet-dev/flet-charts.git"
     source: git
     version: "0.1.0"
@@ -313,7 +313,7 @@ packages:
     description:
       path: "src/flutter/flet_datatable2"
       ref: v1
-      resolved-ref: "20b866b581d456492b8a5584e718ea46efa66bcd"
+      resolved-ref: "98c2b38801ddc131e30d2082b4fc9271201384a8"
       url: "https://github.com/flet-dev/flet-datatable2.git"
     source: git
     version: "0.1.0"
@@ -322,7 +322,7 @@ packages:
     description:
       path: "src/flutter/flet_flashlight"
       ref: v1
-      resolved-ref: "9562ac58ee18821376d12490a99f202a00baa39f"
+      resolved-ref: ed8be1e10886a8e1cfffe444bff8c82999908125
       url: "https://github.com/flet-dev/flet-flashlight.git"
     source: git
     version: "0.2.0"
@@ -331,7 +331,7 @@ packages:
     description:
       path: "src/flutter/flet_geolocator"
       ref: v1
-      resolved-ref: "6a498cfb6d38aaa08d092fef0078e0fcafe60583"
+      resolved-ref: "9f7c54c0a66a910a3ba3e325b3fef132c930015a"
       url: "https://github.com/flet-dev/flet-geolocator.git"
     source: git
     version: "0.25.2"
@@ -340,7 +340,7 @@ packages:
     description:
       path: "src/flutter/flet_lottie"
       ref: v1
-      resolved-ref: "5d3fe6eaa8951891cfe2d6a343b79c4b69614f79"
+      resolved-ref: "46f622d6af9b62a7938f1bc87297fde756535c49"
       url: "https://github.com/flet-dev/flet-lottie.git"
     source: git
     version: "0.2.0"
@@ -349,7 +349,7 @@ packages:
     description:
       path: "src/flutter/flet_map"
       ref: v1
-      resolved-ref: cfcff6b4628bb172099e11caa28cd84f70aedb9f
+      resolved-ref: "163d73f4faa871acda0d2de20e454143ed4108d0"
       url: "https://github.com/flet-dev/flet-map.git"
     source: git
     version: "0.2.0"
@@ -358,7 +358,7 @@ packages:
     description:
       path: "src/flutter/flet_permission_handler"
       ref: v1
-      resolved-ref: "76d7f5ed947dd1d4f57b3b27f05f6561f7883403"
+      resolved-ref: "64e95b8eb66b516935383c1365e0d8470acfcc96"
       url: "https://github.com/flet-dev/flet-permission-handler.git"
     source: git
     version: "0.2.0"
@@ -367,7 +367,7 @@ packages:
     description:
       path: "src/flutter/flet_rive"
       ref: v1
-      resolved-ref: ca9a71a2391c1dcbf47d16795db9c0ac919ae602
+      resolved-ref: d62927ad51f16c39cd6592bad34e983aee0f4d61
       url: "https://github.com/flet-dev/flet-rive.git"
     source: git
     version: "0.2.0"
@@ -376,16 +376,16 @@ packages:
     description:
       path: "src/flutter/flet_video"
       ref: v1
-      resolved-ref: cc38d5e7c60382bca0d116f0d725f634bc745552
+      resolved-ref: "7c05efe78f0409b5b57dcfad13fa1ecafeb5788b"
       url: "https://github.com/flet-dev/flet-video.git"
     source: git
-    version: "0.1.0"
+    version: "0.2.0"
   flet_webview:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_webview"
       ref: v1
-      resolved-ref: "925c59f66af668fbdec2e308eaaaf7cb7f93b6e1"
+      resolved-ref: "8d592b0485e4c137fdd5eae14f9395bb75df5984"
       url: "https://github.com/flet-dev/flet-webview.git"
     source: git
     version: "0.2.0"
@@ -464,10 +464,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: "5a1e6fb2c0561958d7e4c33574674bda7b77caaca7a33b758876956f2902eea3"
+      sha256: f948e346c12f8d5480d2825e03de228d0eb8c3a737e4cdaa122267b89c022b5e
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.27"
+    version: "2.0.28"
   flutter_svg:
     dependency: transitive
     description:
@@ -543,10 +543,10 @@ packages:
     dependency: transitive
     description:
       name: google_mobile_ads
-      sha256: "0d4a3744b5e8ed1b8be6a1b452d309f811688855a497c6113fc4400f922db603"
+      sha256: a4f59019f2c32769fb6c60ed8aa321e9c21a36297e2c4f23452b3e779a3e7a26
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.1"
+    version: "6.0.0"
   graphs:
     dependency: transitive
     description:
@@ -844,10 +844,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_android
-      sha256: "0ca7359dad67fd7063cb2892ab0c0737b2daafd807cf1acecd62374c8fae6c12"
+      sha256: d0d310befe2c8ab9e7f393288ccbb11b60c019c6b5afc21973eeee4dda2b35e9
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.16"
+    version: "2.2.17"
   path_provider_foundation:
     dependency: transitive
     description:
@@ -980,10 +980,10 @@ packages:
     dependency: transitive
     description:
       name: provider
-      sha256: "489024f942069c2920c844ee18bb3d467c69e48955a4f32d1677f71be103e310"
+      sha256: "4abbd070a04e9ddc287673bf5a030c7ca8b685ff70218720abab8b092f53dd84"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.4"
+    version: "6.1.5"
   record:
     dependency: transitive
     description:
@@ -1156,10 +1156,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: "3ec7210872c4ba945e3244982918e502fa2bfb5230dff6832459ca0e1879b7ad"
+      sha256: "20cbd561f743a342c76c151d6ddb93a9ce6005751e7aa458baad3858bfbfb6ac"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.8"
+    version: "2.4.10"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -1329,10 +1329,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "1d0eae19bd7606ef60fe69ef3b312a437a16549476c42321d5dc1506c9ca3bf4"
+      sha256: "8582d7f6fe14d2652b4c45c9b6c14c0b678c2af2d083a11b604caeba51930d79"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.15"
+    version: "6.3.16"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1369,10 +1369,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_web
-      sha256: "3ba963161bd0fe395917ba881d320b9c4f6dd3c4a233da62ab18a5025c85f1e9"
+      sha256: "4bd2b7b4dc4d4d0b94e5babfffbca8eac1a126c7f3d6ecbc1a11013faa3abba2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.4.1"
   url_launcher_windows:
     dependency: transitive
     description:
@@ -1393,10 +1393,10 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics
-      sha256: "44cc7104ff32563122a929e4620cf3efd584194eec6d1d913eb5ba593dbcf6de"
+      sha256: a4f059dc26fc8295b5921376600a194c4ec7d55e72f2fe4c7d2831e103d461e6
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.18"
+    version: "1.1.19"
   vector_graphics_codec:
     dependency: transitive
     description:
@@ -1409,10 +1409,10 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics_compiler
-      sha256: "1b4b9e706a10294258727674a340ae0d6e64a7231980f9f9a3d12e4b42407aad"
+      sha256: "557a315b7d2a6dbb0aaaff84d857967ce6bdc96a63dc6ee2a57ce5a6ee5d3331"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.16"
+    version: "1.1.17"
   vector_math:
     dependency: transitive
     description:
@@ -1433,10 +1433,10 @@ packages:
     dependency: transitive
     description:
       name: volume_controller
-      sha256: e82fd689bb8e1fe8e64be3fa5946ff8699058f8cf9f4c1679acdba20cda7f5bd
+      sha256: d75039e69c0d90e7810bfd47e3eedf29ff8543ea7a10392792e81f9bded7edf5
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.3"
+    version: "3.4.0"
   wakelock_plus:
     dependency: transitive
     description:
@@ -1465,18 +1465,18 @@ packages:
     dependency: transitive
     description:
       name: web_socket
-      sha256: "3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83"
+      sha256: "34d64019aa8e36bf9842ac014bb5d2f5586ca73df5e4d9bf5c936975cae6982c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.6"
+    version: "1.0.1"
   web_socket_channel:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: "0b8e2457400d8a859b7b2030786835a28a8e80836ef64402abef392ff4f1d0e5"
+      sha256: d645757fb0f4773d602444000a8131ff5d48c9e47adfe9772652dd1a4f2d45c8
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   webdriver:
     dependency: transitive
     description:
@@ -1505,10 +1505,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
-      sha256: "7cb32b21825bd65569665c32bb00a34ded5779786d6201f5350979d2d529940d"
+      sha256: f0dc2dc3a2b1e3a6abdd6801b9355ebfeb3b8f6cde6b9dc7c9235909c4a1f147
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.0"
+    version: "2.13.1"
   webview_flutter_web:
     dependency: transitive
     description:
@@ -1529,10 +1529,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: dc6ecaa00a7c708e5b4d10ee7bec8c270e9276dfcab1783f57e9962d7884305f
+      sha256: "66814138c3562338d05613a6e368ed8cfb237ad6d64a9e9334be3f309acfca03"
       url: "https://pub.dev"
     source: hosted
-    version: "5.12.0"
+    version: "5.14.0"
   win32_registry:
     dependency: transitive
     description:
@@ -1590,5 +1590,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.7.0 <4.0.0"
-  flutter: ">=3.27.4"
+  dart: ">=3.8.0 <4.0.0"
+  flutter: ">=3.29.0"
