@@ -5,6 +5,7 @@ import logging
 import os
 import signal
 import traceback
+import warnings
 from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Optional, Union
@@ -27,6 +28,10 @@ from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
 )
+
+if os.getenv("FLET_FORCE_WEB_SERVER"):
+    warnings.filterwarnings("ignore", module=r"websockets")
+    warnings.filterwarnings("ignore", module=r"uvicorn")
 
 logger = logging.getLogger("flet")
 
