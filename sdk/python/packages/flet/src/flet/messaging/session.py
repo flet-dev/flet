@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import traceback
 import weakref
@@ -193,6 +194,27 @@ class Session:
                         await event_handler()
                     else:
                         await event_handler(e)
+
+                elif inspect.isasyncgenfunction(event_handler):
+                    if get_param_count(event_handler) == 0:
+                        async for _ in event_handler():
+                            if UpdateBehavior.auto_update_enabled() and self.connection:
+                                await self.auto_update(self.index[control._i])
+                    else:
+                        async for _ in event_handler(e):
+                            if UpdateBehavior.auto_update_enabled() and self.connection:
+                                await self.auto_update(self.index[control._i])
+
+                elif inspect.isgeneratorfunction(event_handler):
+                    if get_param_count(event_handler) == 0:
+                        for _ in event_handler():
+                            if UpdateBehavior.auto_update_enabled() and self.connection:
+                                await self.auto_update(self.index[control._i])
+                    else:
+                        for _ in event_handler(e):
+                            if UpdateBehavior.auto_update_enabled() and self.connection:
+                                await self.auto_update(self.index[control._i])
+
                 elif callable(event_handler):
                     if get_param_count(event_handler) == 0:
                         event_handler()
@@ -200,7 +222,7 @@ class Session:
                         event_handler(e)
 
                 if UpdateBehavior.auto_update_enabled() and self.connection:
-                    await self.auto_update(control)
+                    await self.auto_update(self.index[control._i])
 
         except Exception as ex:
             tb = traceback.format_exc()
