@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -34,12 +33,7 @@ from flet.controls.types import (
     UrlTarget,
 )
 
-__all__ = ["Container", "ContainerTapEvent"]
-
-
-@dataclass
-class ContainerTapEvent(TapEvent["Container"]):
-    pass
+__all__ = ["Container"]
 
 
 @control("Container")
@@ -331,11 +325,11 @@ class Container(ConstrainedControl, AdaptiveControl):
     Fires when a user clicks the container. Will not be fired on long press.
     """
 
-    on_tap_down: OptionalEventHandler["ContainerTapEvent"] = None
+    on_tap_down: OptionalEventHandler[TapEvent["Container"]] = None
     """
     Fires when a user clicks the container with or without a long press.
 
-    Event handler argument is of type [`ContainerTapEvent`](https://flet.dev/docs/reference/types/containertapevent).
+    Event handler argument is of type [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
 
     :::info
     If `ink` is `True`, `e` will be plain `ControlEvent` with empty `data` instead of 
@@ -396,7 +390,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     def main(page: ft.Page):
         def on_hover(e):
-            e.control.bgcolor = "blue" if e.data == "true" else "red"
+            e.control.bgcolor = "blue" if e.data == True else "red"
             e.control.update()
 
         page.add(

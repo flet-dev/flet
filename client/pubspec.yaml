@@ -44,56 +44,67 @@ dependencies:
       ref: v1
       path: src/flutter/flet_video
 # --FAT_CLIENT_END--
-#   flet_lottie:
-#     git:
-#       url: https://github.com/flet-dev/flet-lottie.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_lottie
-#   flet_map:
-#     git:
-#       url: https://github.com/flet-dev/flet-map.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_map
-#   flet_ads:
-#     git:
-#       url: https://github.com/flet-dev/flet-ads.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_ads
+  flet_lottie:
+    git:
+      url: https://github.com/flet-dev/flet-lottie.git
+      ref: v1
+      path: src/flutter/flet_lottie
+  flet_map:
+    git:
+      url: https://github.com/flet-dev/flet-map.git
+      ref: v1
+      path: src/flutter/flet_map
+  flet_ads:
+    git:
+      url: https://github.com/flet-dev/flet-ads.git
+      ref: v1
+      path: src/flutter/flet_ads
 
-#   flet_rive:
-#     git:
-#       url: https://github.com/flet-dev/flet-rive.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_rive
+  flet_rive:
+    git:
+      url: https://github.com/flet-dev/flet-rive.git
+      ref: v1
+      path: src/flutter/flet_rive
 
-#   flet_audio_recorder:
-#     git:
-#       url: https://github.com/flet-dev/flet-audio-recorder.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_audio_recorder
+  flet_audio_recorder:
+    git:
+      url: https://github.com/flet-dev/flet-audio-recorder.git
+      ref: v1
+      path: src/flutter/flet_audio_recorder
 
-#   flet_permission_handler:
-#     git:
-#       url: https://github.com/flet-dev/flet-permission-handler.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_permission_handler
+  flet_permission_handler:
+    git:
+      url: https://github.com/flet-dev/flet-permission-handler.git
+      ref: v1
+      path: src/flutter/flet_permission_handler
 
-#   flet_geolocator:
-#     git:
-#       url: https://github.com/flet-dev/flet-geolocator.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_geolocator
+  flet_geolocator:
+    git:
+      url: https://github.com/flet-dev/flet-geolocator.git
+      ref: v1
+      path: src/flutter/flet_geolocator
 
-#   flet_webview:
-#     git:
-#       url: https://github.com/flet-dev/flet-webview.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_webview
-#   flet_flashlight:
-#     git:
-#       url: https://github.com/flet-dev/flet-flashlight.git
-#       ref: 0.1.0
-#       path: src/flutter/flet_flashlight
+  flet_webview:
+    git:
+      url: https://github.com/flet-dev/flet-webview.git
+      ref: v1
+      path: src/flutter/flet_webview
+  flet_flashlight:
+    git:
+      url: https://github.com/flet-dev/flet-flashlight.git
+      ref: v1
+      path: src/flutter/flet_flashlight
+  flet_datatable2:
+    git:
+      url: https://github.com/flet-dev/flet-datatable2.git
+      ref: v1
+      path: src/flutter/flet_datatable2
+
+  flet_charts:
+    git:
+      url: https://github.com/flet-dev/flet-charts.git
+      ref: v1
+      path: src/flutter/flet_charts
 
   cupertino_icons: ^1.0.6
 
@@ -103,7 +114,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../packages/flet
-  webview_flutter_android: ^4.0.0
+  # webview_flutter_android: ^4.0.0
 
 dev_dependencies:
   flutter_test:

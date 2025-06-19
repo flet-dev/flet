@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Optional, Union
+from flet.controls.types import Number
 
 __all__ = [
     "Duration",
@@ -28,7 +29,7 @@ class Duration:
     """
     A span of time, such as 27 days, 4 hours, 12 minutes, and 3 seconds.
 
-    A Duration represents a difference from one point in time to another. The duration 
+    A Duration represents a difference from one point in time to another. The duration
     may be "negative" if the difference is from a later time to an earlier.
     """
 
@@ -92,17 +93,6 @@ class Duration:
 
         return cls(
             days=d, hours=h, minutes=m, seconds=s, milliseconds=ms, microseconds=us
-        )
-
-    @classmethod
-    def from_datetime(cls, dt: datetime) -> "Duration":
-        """Creates a Duration from a datetime object."""
-        return cls.from_unit(
-            days=dt.day,
-            hours=dt.hour,
-            minutes=dt.minute,
-            seconds=dt.second,
-            milliseconds=dt.microsecond // MICROSECONDS_PER_MILLISECOND,
         )
 
     # Properties
@@ -171,16 +161,16 @@ class Duration:
             microseconds=self.in_microseconds - other.in_microseconds
         )
 
-    def __mul__(self, factor: float) -> "Duration":
+    def __mul__(self, other: Number) -> "Duration":
         """Multiplies Duration by a scalar factor."""
-        if not isinstance(factor, (int, float)):
-            return NotImplemented
-        return Duration.from_unit(microseconds=round(self.in_microseconds * factor))
+        if not isinstance(other, Number):
+            return Duration.from_unit(microseconds=round(self.in_microseconds * other))
+        return NotImplemented
 
     def __floordiv__(self, quotient: int) -> "Duration":
         """Performs floor division on Duration."""
         if quotient == 0:
-            raise ZeroDivisionError("Division by zero")
+            raise ZeroDivisionError("Division by zero is not possible")
         return Duration.from_unit(microseconds=self.in_microseconds // quotient)
 
     # Comparisons
@@ -214,6 +204,31 @@ class Duration:
         if not isinstance(other, Duration):
             return False
         return self.in_microseconds >= other.in_microseconds
+
+    # Instance Methods
+
+    def copy_with(
+        self,
+        *,
+        microseconds: Optional[int] = None,
+        milliseconds: Optional[int] = None,
+        seconds: Optional[int] = None,
+        minutes: Optional[int] = None,
+        hours: Optional[int] = None,
+        days: Optional[int] = None,
+    ) -> "Duration":
+        """
+        Returns a copy of this `Duration` instance with the given fields replaced
+        with the new values.
+        """
+        return Duration(
+            microseconds=microseconds if microseconds is not None else self.microseconds,
+            milliseconds=milliseconds if milliseconds is not None else self.milliseconds,
+            seconds=seconds if seconds is not None else self.seconds,
+            minutes=minutes if minutes is not None else self.minutes,
+            hours=hours if hours is not None else self.hours,
+            days=days if days is not None else self.days,
+        )
 
 
 OptionalDuration = Optional[Duration]

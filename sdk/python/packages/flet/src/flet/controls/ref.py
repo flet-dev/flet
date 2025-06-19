@@ -6,6 +6,8 @@ __all__ = ["Ref"]
 
 
 class Ref(Generic[T]):
+    """Utility class which allows defining a reference to a control."""
+
     def __init__(self, value: Optional[T] = None):
         self.current = value
 

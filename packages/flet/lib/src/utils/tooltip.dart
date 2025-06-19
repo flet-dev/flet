@@ -2,35 +2,30 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'borders.dart';
 import 'box.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
-import 'gradient.dart';
-import 'images.dart';
-import 'misc.dart';
+import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'time.dart';
 
 TooltipTriggerMode? parseTooltipTriggerMode(String? value,
     [TooltipTriggerMode? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return TooltipTriggerMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
 
-Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
+Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
+  const defaultWaitDuration = Duration(milliseconds: 800);
   if (value == null) {
     return null;
   } else if (value is String) {
     return Tooltip(
       message: value,
-      padding: const EdgeInsets.all(4.0),
-      waitDuration: const Duration(milliseconds: 800),
+      waitDuration: defaultWaitDuration,
       child: widget,
     );
   }
@@ -39,18 +34,14 @@ Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
 
   /// The tooltip shape defaults to a rounded rectangle with a border radius of
   /// 4.0. Tooltips will also default to an opacity of 90%
-  var decoration = boxDecorationFromDetails(
-    gradient: parseGradient(value["gradient"], theme),
-    border: parseBorder(value["border"], theme),
-    borderRadius:
-        parseBorderRadius(value["border_radius"], BorderRadius.circular(4.0)),
-    shape: parseBoxShape(value["shape"]),
-    color: parseColor(value["bgcolor"], theme,
-        theme.brightness == Brightness.light ? Colors.grey[700] : Colors.white),
-    blendMode: parseBlendMode(value["blend_mode"]),
-    boxShadow: parseBoxShadows(value["box_shadow"], theme),
-    image: parseDecorationImage(value["image"], context),
-  );
+  var decoration = parseBoxDecoration(value["decoration"], context);
+  decoration?.copyWith(
+      color: parseColor(
+          value["bgcolor"],
+          theme,
+          theme.brightness == Brightness.light
+              ? Colors.grey[700]
+              : Colors.white)!);
   return Tooltip(
     message: value["message"],
     enableFeedback: parseBool(value["enable_feedback"]),
@@ -64,13 +55,15 @@ Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
     textStyle: parseTextStyle(value["text_style"], theme),
     verticalOffset: parseDouble(value["vertical_offset"]),
     margin: parseEdgeInsets(value["margin"]),
+    mouseCursor: parseMouseCursor(value["mouse_cursor"]),
     textAlign: parseTextAlign(value["text_align"]),
     showDuration: parseDuration(value["show_duration"]),
-    waitDuration: parseDuration(value["wait_duration"]),
+    waitDuration: parseDuration(value["wait_duration"], defaultWaitDuration)!,
     triggerMode: parseTooltipTriggerMode(value["trigger_mode"]),
     child: widget,
   );
 }
+
 extension TooltipParsers on Control {
   TooltipTriggerMode? getTooltipTriggerMode(String propertyName,
       [TooltipTriggerMode? defaultValue]) {

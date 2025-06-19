@@ -1,7 +1,7 @@
 import dataclasses
 from typing import Optional, Union
 
-from flet.controls.types import Number
+from flet.controls.types import Number, OptionalNumber
 from flet.utils import deprecated
 
 __all__ = [
@@ -21,7 +21,7 @@ class BorderRadius:
     """
     Radius of the top left border corner.
     """
-    
+
     top_right: Number
     """
     Radius of the top right border corner.
@@ -31,17 +31,17 @@ class BorderRadius:
     """
     Radius of the bottom left border corner.
     """
-    
+
     bottom_right: Number
     """
     Radius of the bottom right border corner.
     """
 
+    # Class Methods
+
     @classmethod
     def all(cls, value: Number) -> "BorderRadius":
-        """
-        Sets the same border radius of `value` for all 4 corners of the rectangle.
-        """
+        """Creates a `BorderRadius` where all radii are `radius`."""
         return BorderRadius(
             top_left=value, top_right=value, bottom_left=value, bottom_right=value
         )
@@ -49,8 +49,8 @@ class BorderRadius:
     @classmethod
     def horizontal(cls, *, left: Number = 0, right: Number = 0) -> "BorderRadius":
         """
-        Sets the border radius horizontally for the left and right corners of the 
-        rectangle.
+        Creates a horizontally symmetrical `BorderRadius` where the `left` and `right`
+        sides of the rectangle have the same radii.
 
         Both `left` and `right` default to `0`.
         """
@@ -61,8 +61,8 @@ class BorderRadius:
     @classmethod
     def vertical(cls, *, top: Number = 0, bottom: Number = 0) -> "BorderRadius":
         """
-        Sets the border radius vertically for the top and bottom corners of the 
-        rectangle.
+        Creates a vertically symmetric `BorderRadius` where the `top` and `bottom`
+        sides of the rectangle have the same radii.
 
         Both `top` and `bottom` default to `0`.
         """
@@ -80,13 +80,88 @@ class BorderRadius:
         bottom_right: Number = 0,
     ) -> "BorderRadius":
         """
-        Sets different border radius for each corner of the rectangle.
+        Creates a border radius with only the given values.
+        The other corners will be right angles.
         """
         return BorderRadius(
             top_left=top_left,
             top_right=top_right,
             bottom_left=bottom_left,
             bottom_right=bottom_right,
+        )
+
+    # Instance Methods
+
+    def copy_with(
+        self,
+        *,
+        top_left: OptionalNumber = None,
+        top_right: OptionalNumber = None,
+        bottom_left: OptionalNumber = None,
+        bottom_right: OptionalNumber = None,
+    ) -> "BorderRadius":
+        """
+        Returns a copy of this `BorderRadius` instance with the given fields replaced
+        with the new values.
+        """
+        return BorderRadius(
+            top_left=top_left if top_left is not None else self.top_left,
+            top_right=top_right if top_right is not None else self.top_right,
+            bottom_left=bottom_left if bottom_left is not None else self.bottom_left,
+            bottom_right=bottom_right if bottom_right is not None else self.bottom_right,
+        )
+
+    # Arithmetics
+
+    def __add__(self, other: "BorderRadius") -> "BorderRadius":
+        """Adds two `BorderRadius` instances."""
+        if not isinstance(other, BorderRadius):
+            return NotImplemented
+        return BorderRadius(
+            top_left=self.top_left + other.top_left,
+            top_right=self.top_right + other.top_right,
+            bottom_left=self.bottom_left + other.bottom_left,
+            bottom_right=self.bottom_right + other.bottom_right,
+        )
+
+    def __sub__(self, other: "BorderRadius") -> "BorderRadius":
+        """Subtracts one `BorderRadius` from another."""
+        if not isinstance(other, BorderRadius):
+            return NotImplemented
+        return BorderRadius(
+            top_left=self.top_left - other.top_left,
+            top_right=self.top_right - other.top_right,
+            bottom_left=self.bottom_left - other.bottom_left,
+            bottom_right=self.bottom_right - other.bottom_right,
+        )
+
+    def __mul__(self, other: Union["BorderRadius", Number]) -> "BorderRadius":
+        """Multiplies `BorderRadius` by a scalar factor."""
+        if isinstance(other, BorderRadius):
+            return BorderRadius(
+            top_left=self.top_left * other.top_left,
+            top_right=self.top_right * other.top_right,
+            bottom_left=self.bottom_left * other.bottom_left,
+            bottom_right=self.bottom_right * other.bottom_right,
+        )
+        elif isinstance(other, Number):
+            return BorderRadius(
+                top_left=self.top_left * other,
+                top_right=self.top_right * other,
+                bottom_left=self.bottom_left * other,
+                bottom_right=self.bottom_right * other,
+            )
+        return NotImplemented
+
+    def __floordiv__(self, quotient: int) -> "BorderRadius":
+        """Performs floor division on `BorderRadius`."""
+        if quotient == 0:
+            raise ZeroDivisionError("Division by zero is not possible")
+        return BorderRadius(
+            top_left=self.top_left // quotient,
+            top_right=self.top_right // quotient,
+            bottom_left=self.bottom_left // quotient,
+            bottom_right=self.bottom_right // quotient,
         )
 
 

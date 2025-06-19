@@ -20,22 +20,22 @@ class Padding:
     Defines padding for all sides of a rectangle.
     """
 
-    left: Number
+    left: Number = 0
     """
     The padding value for the left side of the rectangle.
     """
 
-    top: Number
+    top: Number = 0
     """
     The padding value for the top side of the rectangle.
     """
 
-    right: Number
+    right: Number = 0
     """
     The padding value for the right side of the rectangle.
     """
 
-    bottom: Number
+    bottom: Number = 0
     """
     The padding value for the bottom side of the rectangle.
     """
@@ -63,6 +63,10 @@ class Padding:
         Applies padding to the specified sides.
         """
         return Padding(left=left, top=top, right=right, bottom=bottom)
+
+    @classmethod
+    def zero(cls) -> "Padding":
+        return Padding.only()
 
 
 @deprecated(

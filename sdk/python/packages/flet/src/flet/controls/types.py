@@ -6,12 +6,10 @@ from typing import (
     Callable,
     Optional,
     Protocol,
-    TypeVar,
     Union,
 )
 
 from flet.controls.colors import Colors
-from flet.controls.control_event import ControlEvent
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.cupertino.cupertino_icons import CupertinoIcons
 from flet.controls.material.icons import Icons
@@ -354,15 +352,6 @@ class LocaleConfiguration:
     supported_locales: Optional[list[Locale]] = None
     current_locale: Optional[Locale] = None
 
-
-# Events
-EventType = TypeVar("EventType", bound=ControlEvent)
-OptionalEventCallable = Optional[
-    Union[
-        Callable[[], Any],
-        Callable[[EventType], Any],
-    ]
-]
 
 # Colors
 ColorEnums = (Colors, CupertinoColors)

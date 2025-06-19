@@ -85,3 +85,11 @@ extension WidgetFromControl on Control {
     return null;
   }
 }
+
+extension InternalConfiguration on Control {
+  /// The internal configuration of this control.
+  /// Represented on Python side by `BaseControl._internals` property.
+  Map<String, dynamic>? get internals {
+    return get("_internals") as Map<String, dynamic>?;
+  }
+}

@@ -4,7 +4,7 @@ from typing import Optional, Union
 from flet.controls.types import Number
 from flet.utils import deprecated
 
-__all__ = ["Margin", "MarginValue", "OptionalMarginValue"]
+__all__ = ["Margin", "MarginValue", "OptionalMarginValue", "all", "symmetric", "only"]
 
 
 @dataclass
@@ -13,22 +13,22 @@ class Margin:
     `Margin` class has the properties to set margins for all sides of the rectangle.
     """
 
-    left: Number
+    left: Number = 0
     """
     The margin applied to the left.
     """
 
-    top: Number
+    top: Number = 0
     """
     The margin applied to the top.
     """
 
-    right: Number
+    right: Number = 0
     """
     The margin applied to the right.
     """
 
-    bottom: Number
+    bottom: Number = 0
     """
     The margin applied to the bottom.
     """

@@ -76,59 +76,48 @@ FontWeight? getFontWeight(String? weightName, [FontWeight? defaultWeight]) {
   }
 }
 
-List<TextSpan> parseTextSpans(
-    ThemeData theme,
-    List<Control> spans,
-    bool parentDisabled,
-    void Function(Control, String, String)? sendControlEvent) {
+List<TextSpan> parseTextSpans(List<Control> spans, ThemeData theme,
+    [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
   return spans
-      .map((span) =>
-          parseInlineSpan(theme, span, parentDisabled, sendControlEvent))
+      .map((span) => parseInlineSpan(span, theme, sendControlEvent))
       .nonNulls
       .toList();
 }
 
-TextSpan? parseInlineSpan(ThemeData theme, Control span, bool parentDisabled,
-    void Function(Control, String, String)? sendControlEvent) {
+TextSpan? parseInlineSpan(Control span, ThemeData theme,
+    [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
   span.notifyParent = true;
-  bool disabled = span.disabled || parentDisabled;
   var onClick = span.getBool("on_click", false)!;
-  String url = span.getString("url", "")!;
-  String? urlTarget = span.getString("url_target");
+  var url = span.getString("url");
+  var urlTarget = span.getString("url_target");
+
   return TextSpan(
     text: span.getString("text"),
     style: parseTextStyle(span.get("style"), theme),
     spellOut: span.getBool("spell_out"),
     semanticsLabel: span.getString("semantics_label"),
-    children: parseTextSpans(
-        theme, span.children("spans"), parentDisabled, sendControlEvent),
-    mouseCursor: onClick && !disabled && sendControlEvent != null
+    children: parseTextSpans(span.children("spans"), theme, sendControlEvent),
+    mouseCursor: onClick && !span.disabled && sendControlEvent != null
         ? SystemMouseCursors.click
         : null,
-    recognizer: (onClick || url != "") && !disabled && sendControlEvent != null
-        ? (TapGestureRecognizer()
-          ..onTap = () {
-            if (url != "") {
-              openWebBrowser(url, webWindowName: urlTarget);
-            }
-            if (onClick) {
-              sendControlEvent(span, "click", "");
-            }
-          })
-        : null,
-    onEnter: span.getBool("on_enter", false)! &&
-            !disabled &&
-            sendControlEvent != null
-        ? (event) {
-            sendControlEvent(span, "enter", "");
-          }
-        : null,
-    onExit:
-        span.getBool("on_exit", false)! && !disabled && sendControlEvent != null
-            ? (event) {
-                sendControlEvent(span, "exit", "");
-              }
+    recognizer:
+        (onClick || url != null) && !span.disabled && sendControlEvent != null
+            ? (TapGestureRecognizer()
+              ..onTap = () {
+                if (url != null) openWebBrowser(url, webWindowName: urlTarget);
+                if (onClick) sendControlEvent(span, "click");
+              })
             : null,
+    onEnter: span.getBool("on_enter", false)! &&
+            !span.disabled &&
+            sendControlEvent != null
+        ? (event) => sendControlEvent(span, "enter")
+        : null,
+    onExit: span.getBool("on_exit", false)! &&
+            !span.disabled &&
+            sendControlEvent != null
+        ? (event) => sendControlEvent(span, "exit")
+        : null,
   );
 }
 

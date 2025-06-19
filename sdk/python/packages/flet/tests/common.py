@@ -1,5 +1,6 @@
 import datetime
-from typing import Any
+from dataclasses import field
+from typing import Any, Optional
 
 import flet as ft
 import msgpack
@@ -8,6 +9,41 @@ import msgpack
 # import flet.canvas as cv
 from flet.controls.object_patch import ObjectPatch
 from flet.messaging.protocol import configure_encode_object_for_msgpack
+
+
+@ft.control("LineChartDataPoint")
+class LineChartDataPoint(ft.BaseControl):
+    x: ft.Number
+    y: ft.Number
+    selected: bool = False
+
+
+@ft.control("LineChartData")
+class LineChartData(ft.BaseControl):
+    points: list[LineChartDataPoint] = field(default_factory=list)
+    curved: bool = False
+    color: ft.ColorValue = ft.Colors.CYAN
+    gradient: Optional[ft.Gradient] = None
+
+
+@ft.control("LineChart")
+class LineChart(ft.ConstrainedControl):
+    data_series: list[LineChartData] = field(default_factory=list)
+    animation: ft.AnimationValue = field(
+        default_factory=lambda: ft.Animation(
+            duration=ft.Duration(milliseconds=150), curve=ft.AnimationCurve.LINEAR
+        )
+    )
+    interactive: bool = True
+    _skip_inherited_notifier: Optional[bool] = None
+
+    def __post_init__(self, ref: Optional[ft.Ref[Any]]):
+        super().__post_init__(ref)
+        self._internals["skip_properties"] = ["tooltip"]
+
+    def init(self):
+        super().init()
+        self._skip_inherited_notifier = True
 
 
 def b_pack(data):

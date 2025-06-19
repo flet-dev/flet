@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -28,6 +29,13 @@ Radius? parseRadius(dynamic value, [Radius? defaultValue]) {
   return Radius.circular(radius);
 }
 
+BorderStyle? parseBorderStyle(String? value, [BorderStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+  return BorderStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
 Border? parseBorder(dynamic value, ThemeData? theme,
     {Color defaultSideColor = Colors.black,
     BorderSide? defaultBorderSide,
@@ -52,11 +60,12 @@ BorderSide? parseBorderSide(dynamic value, ThemeData? theme,
     {Color defaultSideColor = Colors.black, BorderSide? defaultValue}) {
   if (value == null) return defaultValue;
   return BorderSide(
-      color: parseColor(value['color'], theme, defaultSideColor)!,
-      width: parseDouble(value['width'], 1)!,
-      strokeAlign:
-          parseDouble(value['stroke_align'], BorderSide.strokeAlignInside)!,
-      style: BorderStyle.solid);
+    color: parseColor(value['color'], theme, defaultSideColor)!,
+    width: parseDouble(value['width'], 1)!,
+    strokeAlign:
+        parseDouble(value['stroke_align'], BorderSide.strokeAlignInside)!,
+    style: parseBorderStyle(value['style'], BorderStyle.solid)!,
+  );
 }
 
 OutlinedBorder? parseOutlinedBorder(dynamic value, ThemeData? theme,
@@ -167,6 +176,11 @@ extension BorderParsers on Control {
 
   Radius? getRadius(String propertyName, [Radius? defaultValue]) {
     return parseRadius(get(propertyName), defaultValue);
+  }
+
+  BorderStyle? getBorderStyle(String propertyName,
+      [BorderStyle? defaultValue]) {
+    return parseBorderStyle(get(propertyName), defaultValue);
   }
 
   Border? getBorder(String propertyName, ThemeData theme,

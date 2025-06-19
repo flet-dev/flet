@@ -1,19 +1,16 @@
-String trimStart(String str, String symbol) {
-  if (str.startsWith(symbol)) {
-    return str.substring(symbol.length);
-  } else {
-    return str;
+extension StringExtension on String {
+  /// Trims the [symbol] from the start of the string.
+  String trimStart(String symbol) {
+    return startsWith(symbol) ? substring(symbol.length) : this;
   }
-}
 
-String trimEnd(String str, String symbol) {
-  if (str.endsWith(symbol)) {
-    return str.substring(0, str.length - symbol.length);
-  } else {
-    return str;
+  /// Trims the [symbol] from the end of the string.
+  String trimEnd(String symbol) {
+    return endsWith(symbol) ? substring(0, length - symbol.length) : this;
   }
-}
 
-String trim(String str, String symbol) {
-  return trimEnd(trimStart(str, symbol), symbol);
+  /// Trims the [symbol] from both the start and end of the string.
+  String trimSymbol(String symbol) {
+    return trimStart(symbol).trimEnd(symbol);
+  }
 }

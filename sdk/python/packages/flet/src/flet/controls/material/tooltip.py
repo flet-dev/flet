@@ -1,21 +1,35 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Union
 
-from flet.controls.border import Border
-from flet.controls.border_radius import OptionalBorderRadiusValue
-from flet.controls.box import BoxShadow, BoxShape, DecorationImage
-from flet.controls.duration import OptionalDurationValue
-from flet.controls.gradients import Gradient
+from flet.controls.border_radius import (
+    BorderRadius,
+)
+from flet.controls.box import BoxDecoration
+from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
-from flet.controls.types import BlendMode, OptionalColorValue, OptionalNumber, TextAlign
+from flet.controls.types import (
+    MouseCursor,
+    OptionalColorValue,
+    OptionalNumber,
+    TextAlign,
+)
 
 
 class TooltipTriggerMode:
     MANUAL = "manual"
+    """"""
+
     TAP = "tap"
+    """
+    Tooltip will be shown after a single tap.
+    """
+
     LONG_PRESS = "long_press"
+    """
+    Tooltip will be shown after a long press.
+    """
 
 
 @dataclass
@@ -28,6 +42,13 @@ class Tooltip:
     message: str
     """
     The text to display in the tooltip.
+    """
+
+    decoration: Optional[BoxDecoration] = field(
+        default_factory=lambda: BoxDecoration(border_radius=BorderRadius.all(4.0))
+    )
+    """
+    The tooltip's background decoration.
     """
 
     enable_feedback: Optional[bool] = None
@@ -73,51 +94,6 @@ class Tooltip:
     Background [color](https://flet.dev/docs/reference/colors) of the tooltip.
     """
 
-    image: Optional[DecorationImage] = None
-    """
-    The background image of the tooltip.
-
-    Value is of type
-    [`DecorationImage`](https://flet.dev/docs/reference/types/decorationimage).
-    """
-
-    shadow: Optional[list[BoxShadow]] = None
-    """
-    A list of [BoxShadow](https://flet.dev/docs/reference/types/boxshadow) to cast
-    a shadow behind the tooltip.
-    """
-
-    blend_mode: Optional[BlendMode] = None
-    """
-    The blend mode to apply when painting the tooltip.
-
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
-    """
-
-    gradient: Optional[Gradient] = None
-    """
-    Background gradient of the tooltip.
-
-    Value is of type [`Gradient`](https://flet.dev/docs/reference/types/gradient).
-    """
-
-    border: Optional[Border] = None
-    """
-    [`Border`](https://flet.dev/docs/reference/types/border) around the tooltip.
-    """
-
-    border_radius: OptionalBorderRadiusValue = None
-    """
-    Tooltip's [`border radius`](https://flet.dev/docs/reference/types/borderradius).
-    """
-
-    shape: Optional[BoxShape] = None
-    """
-    The shape of the tooltip.
-
-    Value is of type [`BoxShape`](https://flet.dev/docs/reference/types/boxshape).
-    """
-
     text_style: Optional[TextStyle] = None
     """
     The [TextStyle](https://flet.dev/docs/reference/types/textstyle) to use for the
@@ -148,12 +124,14 @@ class Tooltip:
     long press is released or a tap is released or mouse pointer exits the control.
     """
 
-    wait_duration: OptionalDurationValue = None
+    wait_duration: DurationValue = field(
+        default_factory=lambda: Duration(milliseconds=800)
+    )
     """
     The length of time, in milliseconds, that a pointer must hover over a
     tooltip's control before the tooltip will be shown.
 
-    Defaults to 0 milliseconds (tooltips are shown immediately upon hover).
+    Defaults to 800 milliseconds.
     """
 
     exit_duration: OptionalDurationValue = None
@@ -162,7 +140,7 @@ class Tooltip:
     long press is released or a tap is released or mouse pointer exits the control.
     """
 
-    enable_tap_to_dismiss: Optional[bool] = None
+    enable_tap_to_dismiss: bool = True
     """
     Whether the tooltip can be dismissed by tapping on it.
 
@@ -182,6 +160,11 @@ class Tooltip:
 
     Value is of type
     [`TooltipTriggerMode`](https://flet.dev/docs/reference/types/tooltiptriggermode).
+    """
+
+    mouse_cursor: Optional[MouseCursor] = None
+    """
+    The cursor for a mouse pointer when it enters or is hovering over the content.
     """
 
 

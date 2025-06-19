@@ -23,7 +23,15 @@ from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
-from .common import b_unpack, cmp_ops, make_diff, make_msg
+from .common import (
+    LineChart,
+    LineChartData,
+    LineChartDataPoint,
+    b_unpack,
+    cmp_ops,
+    make_diff,
+    make_msg,
+)
 
 
 @control
@@ -456,12 +464,10 @@ def test_large_updates():
 
 def test_add_remove_lists():
     data = [[(0, 1), (1, 2), (2, 3)]]
-    chart = ft.LineChart(
+    chart = LineChart(
         data_series=[
-            ft.LineChartData(
-                data_points=[
-                    ft.LineChartDataPoint(key=dp[0], x=dp[0], y=dp[1]) for dp in ds
-                ]
+            LineChartData(
+                points=[LineChartDataPoint(key=dp[0], x=dp[0], y=dp[1]) for dp in ds]
             )
             for ds in data
         ]
@@ -469,18 +475,18 @@ def test_add_remove_lists():
     _, patch, _, _, _ = make_msg(chart, {})
 
     # add/remove
-    chart.data_series[0].data_points.pop(0)
-    chart.data_series[0].data_points.append(ft.LineChartDataPoint(x=3, y=4))
+    chart.data_series[0].points.pop(0)
+    chart.data_series[0].points.append(LineChartDataPoint(x=3, y=4))
 
     patch, _, _, _ = make_diff(chart, chart)
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["data_series", 0, "data_points", 0]},
+            {"op": "remove", "path": ["data_series", 0, "points", 0]},
             {
                 "op": "add",
-                "path": ["data_series", 0, "data_points", 2],
-                "value_type": ft.LineChartDataPoint,
+                "path": ["data_series", 0, "points", 2],
+                "value_type": LineChartDataPoint,
             },
         ],
     )

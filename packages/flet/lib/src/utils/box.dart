@@ -40,10 +40,10 @@ List<BoxShadow>? parseBoxShadows(dynamic value, ThemeData theme,
   }
 }
 
-BoxShadow? parseBoxShadow(dynamic value, ThemeData theme) {
-  if (value == null) {
-    return null;
-  }
+BoxShadow? parseBoxShadow(dynamic value, ThemeData theme,
+    [BoxShadow? defaultValue]) {
+  if (value == null) return defaultValue;
+
   var offset = parseOffset(value["offset"]);
   return BoxShadow(
       color: parseColor(value["color"], theme, const Color(0xFF000000))!,
@@ -89,16 +89,14 @@ BoxDecoration? boxDecorationFromDetails({
   Gradient? gradient,
   DecorationImage? image,
 }) {
-  bool hasCustomProperties = color != null ||
+  // If no custom properties are provided, return null
+  if (!(color != null ||
       border != null ||
       borderRadius != null ||
       gradient != null ||
       shape != null ||
       boxShadow != null ||
-      image != null;
-
-  // If no custom properties are provided, return null
-  if (!hasCustomProperties) {
+      image != null)) {
     return null;
   }
 

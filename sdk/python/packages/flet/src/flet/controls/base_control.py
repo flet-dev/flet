@@ -107,10 +107,15 @@ class BaseControl:
     _c: str = field(init=False)
     data: Any = skip_field()
     """
-    Arbitrary data that can be attached to a control.
+    Arbitrary data of any type that can be attached to a control.
     """
+
     key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
+
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
+    """A reference to this control."""
+
+    _internals: dict = field(default_factory=dict, init=False, repr=False, compare=False)
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
@@ -141,20 +146,18 @@ class BaseControl:
     @property
     def parent(self) -> Optional["BaseControl"]:
         """
-        Points to the direct ancestor(parent) of this control.
+        The direct ancestor(parent) of this control.
 
-        It defaults to `None` and will only have a value when this control is mounted
-        (added to the page tree).
+        It defaults to `None` and will only have a value when this control is mounted (added to the page tree).
 
-        The `Page` control (which is the root of the tree) is an exception - it always
-        has `parent=None`.
+        The `Page` control (which is the root of the tree) is an exception - it always has `parent=None`.
         """
-
         parent_ref = getattr(self, "_parent", None)
         return parent_ref() if parent_ref else None
 
     @property
     def page(self) -> Optional[Union["Page", "PageView"]]:
+        """The page (of type `Page` or `PageView`) to which this control belongs to."""
         from .page import Page, PageView
 
         parent = self.parent

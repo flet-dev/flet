@@ -203,20 +203,15 @@ class FletCustomPainter extends CustomPainter {
   void drawText(BuildContext context, Canvas canvas, Control shape) {
     var offset = Offset(shape.getDouble("x")!, shape.getDouble("y")!);
     var alignment = shape.getAlignment("alignment", Alignment.topLeft)!;
-    var text = shape.getString("text", "")!;
-    TextStyle style =
-        shape.getTextStyle("style", theme) ?? theme.textTheme.bodyMedium!;
-
+    var style =
+        shape.getTextStyle("style", theme, theme.textTheme.bodyMedium!)!;
     if (style.color == null) {
       style = style.copyWith(color: theme.textTheme.bodyMedium!.color);
     }
-
-    TextAlign? textAlign =
-        parseTextAlign(shape.getString("text_align"), TextAlign.start)!;
     TextSpan span = TextSpan(
-        text: text,
+        text: shape.getString("text", "")!,
         style: style,
-        children: parseTextSpans(theme, shape.children("spans"), false, null));
+        children: parseTextSpans(shape.children("spans"), theme));
 
     var maxLines = shape.getInt("max_lines");
     var maxWidth = shape.getDouble("max_width");
@@ -225,7 +220,8 @@ class FletCustomPainter extends CustomPainter {
     // paint
     TextPainter textPainter = TextPainter(
         text: span,
-        textAlign: textAlign,
+        textAlign:
+            parseTextAlign(shape.getString("text_align"), TextAlign.start)!,
         maxLines: maxLines,
         ellipsis: ellipsis,
         textDirection: Directionality.of(context));

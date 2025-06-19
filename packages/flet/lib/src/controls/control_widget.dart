@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/keys.dart';
@@ -27,7 +28,7 @@ class ControlWidget extends StatelessWidget {
     }
 
     Widget? widget;
-    if (control.get("_skip_inherited_notifier") == true) {
+    if (control.internals?["skip_inherited_notifier"] == true) {
       for (var extension in FletBackend.of(context).extensions) {
         widget = extension.createWidget(key, control);
         if (widget != null) return widget;

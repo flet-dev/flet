@@ -35,7 +35,6 @@ dependencies:
   http: 1.3.0
   shared_preferences: 2.5.2
   device_info_plus: ^11.2.0
-  fl_chart: 0.70.2
   flutter_markdown: 0.7.6+2
   flutter_highlight: 0.7.0
   markdown: 7.3.0

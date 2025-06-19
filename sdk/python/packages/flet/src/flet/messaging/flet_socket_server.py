@@ -40,6 +40,10 @@ class FletSocketServer(Connection):
         executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
+        self.__send_loop_task = None
+        self.__receive_loop_task = None
+        self.__connected = None
+        self.session = None
         self.__send_queue = asyncio.Queue()
         self.__port = port
         self.__uds_path = uds_path
@@ -124,10 +128,10 @@ class FletSocketServer(Connection):
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
-            try:
-                # create new session
-                self.session = Session(self)
+            # create new session
+            self.session = Session(self)
 
+            try:
                 # apply page patch
                 if not req.session_id:
                     self.session.apply_page_patch(req.page)

@@ -25,6 +25,7 @@ from flet.controls.border import (
     BorderSide,
     BorderSideStrokeAlign,
     BorderSideStrokeAlignValue,
+    BorderStyle,
     OptionalBorder,
     OptionalBorderSide,
     OptionalBorderSideStrokeAlign,
@@ -76,6 +77,7 @@ from flet.controls.control_event import (
     ControlEvent,
     ControlEventHandler,
     Event,
+    EventControlType,
     EventHandler,
     OptionalControlEventHandler,
     OptionalEventHandler,
@@ -92,35 +94,6 @@ from flet.controls.core.autofill_group import (
     AutofillGroup,
     AutofillGroupDisposeAction,
     AutofillHint,
-)
-from flet.controls.core.charts.bar_chart import BarChart, BarChartEvent
-from flet.controls.core.charts.bar_chart_group import BarChartGroup
-from flet.controls.core.charts.bar_chart_rod import BarChartRod
-from flet.controls.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
-from flet.controls.core.charts.chart_axis import ChartAxis
-from flet.controls.core.charts.chart_axis_label import ChartAxisLabel
-from flet.controls.core.charts.chart_grid_lines import ChartGridLines
-from flet.controls.core.charts.chart_point_line import ChartPointLine
-from flet.controls.core.charts.chart_point_shape import (
-    ChartCirclePoint,
-    ChartCrossPoint,
-    ChartPointShape,
-    ChartSquarePoint,
-)
-from flet.controls.core.charts.line_chart import (
-    LineChart,
-    LineChartEvent,
-    LineChartEventSpot,
-)
-from flet.controls.core.charts.line_chart_data import LineChartData
-from flet.controls.core.charts.line_chart_data_point import LineChartDataPoint
-from flet.controls.core.charts.pie_chart import PieChart, PieChartEvent
-from flet.controls.core.charts.pie_chart_section import PieChartSection
-from flet.controls.core.charts.scatter_chart import (
-    ScatterChart,
-    ScatterChartEvent,
-    ScatterChartSpot,
-    ScatterShartTooltipAlignment,
 )
 from flet.controls.core.column import Column
 from flet.controls.core.dismissible import (
@@ -140,12 +113,7 @@ from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
-from flet.controls.core.interactive_viewer import (
-    InteractiveViewer,
-    InteractiveViewerInteractionEndEvent,
-    InteractiveViewerInteractionStartEvent,
-    InteractiveViewerInteractionUpdateEvent,
-)
+from flet.controls.core.interactive_viewer import InteractiveViewer
 from flet.controls.core.list_view import ListView
 from flet.controls.core.markdown import (
     Markdown,
@@ -258,6 +226,7 @@ from flet.controls.exceptions import (
     FletUnimplementedPlatformEception,
     FletUnsupportedPlatformException,
 )
+from flet.controls.geometry import Rect, Size
 from flet.controls.gradients import (
     Gradient,
     GradientTileMode,
@@ -354,6 +323,7 @@ from flet.controls.material.slider import Slider, SliderInteraction
 from flet.controls.material.snack_bar import (
     DismissDirection,
     SnackBar,
+    SnackBarAction,
     SnackBarBehavior,
 )
 from flet.controls.material.submenu_button import SubmenuButton
@@ -417,7 +387,6 @@ from flet.controls.services.semantics_service import Assertiveness, SemanticsSer
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.size import Size
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     OptionalStrutStyle,
@@ -503,7 +472,6 @@ from flet.controls.types import (
     ColorEnums,
     ColorValue,
     CrossAxisAlignment,
-    EventType,
     FloatingActionButtonLocation,
     FontWeight,
     IconEnums,
@@ -520,7 +488,6 @@ from flet.controls.types import (
     Number,
     OptionalBool,
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalFloat,
     OptionalInt,
     OptionalNumber,
@@ -580,6 +547,7 @@ __all__ = [
     "OptionalBlurValue",
     "Border",
     "BorderSide",
+    "BorderStyle",
     "BorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
     "OptionalBorder",
@@ -630,31 +598,6 @@ __all__ = [
     "AutofillGroup",
     "AutofillGroupDisposeAction",
     "AutofillHint",
-    "BarChart",
-    "BarChartEvent",
-    "BarChartGroup",
-    "BarChartRod",
-    "BarChartRodStackItem",
-    "ChartAxis",
-    "ChartAxisLabel",
-    "ChartGridLines",
-    "ChartPointLine",
-    "ChartCirclePoint",
-    "ChartCrossPoint",
-    "ChartPointShape",
-    "ChartSquarePoint",
-    "LineChart",
-    "LineChartEvent",
-    "LineChartEventSpot",
-    "LineChartData",
-    "LineChartDataPoint",
-    "PieChart",
-    "PieChartEvent",
-    "PieChartSection",
-    "ScatterChart",
-    "ScatterChartEvent",
-    "ScatterChartSpot",
-    "ScatterShartTooltipAlignment",
     "Column",
     "ControlBuilder",
     "Dismissible",
@@ -671,9 +614,6 @@ __all__ = [
     "Icon",
     "Image",
     "InteractiveViewer",
-    "InteractiveViewerInteractionEndEvent",
-    "InteractiveViewerInteractionStartEvent",
-    "InteractiveViewerInteractionUpdateEvent",
     "ListView",
     "Markdown",
     "MarkdownCodeTheme",
@@ -843,6 +783,7 @@ __all__ = [
     "SliderInteraction",
     "DismissDirection",
     "SnackBar",
+    "SnackBarAction",
     "SnackBarBehavior",
     "SubmenuButton",
     "Switch",
@@ -901,6 +842,7 @@ __all__ = [
     "ShakeDetector",
     "StoragePaths",
     "Size",
+    "Rect",
     "TemplateRoute",
     "OptionalStrutStyle",
     "OptionalTextBaseline",
@@ -975,7 +917,6 @@ __all__ = [
     "ColorEnums",
     "ColorValue",
     "CrossAxisAlignment",
-    "EventType",
     "FLET_APP",
     "FLET_APP_HIDDEN",
     "FLET_APP_WEB",
@@ -995,7 +936,6 @@ __all__ = [
     "Number",
     "OptionalBool",
     "OptionalColorValue",
-    "OptionalEventCallable",
     "OptionalFloat",
     "OptionalInt",
     "OptionalNumber",
@@ -1029,4 +969,7 @@ __all__ = [
     "ControlEventHandler",
     "EventHandler",
     "OptionalEventHandler",
+    "EventControlType",
+    "TextSelectionChangeCause",
+    "TextSelectionChangeEvent",
 ]
