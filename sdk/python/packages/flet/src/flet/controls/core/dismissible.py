@@ -22,6 +22,19 @@ from flet.controls.types import (
 __all__ = ["Dismissible", "DismissibleDismissEvent", "DismissibleUpdateEvent"]
 
 
+@dataclass
+class DismissibleDismissEvent(Event["Dismissible"]):
+    direction: DismissDirection
+
+
+@dataclass
+class DismissibleUpdateEvent(Event["Dismissible"]):
+    direction: DismissDirection
+    progress: float
+    reached: bool
+    previous_reached: bool
+
+
 @control("Dismissible")
 class Dismissible(ConstrainedControl, AdaptiveControl):
     """
@@ -114,17 +127,17 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     it is positive or negative.
     """
 
-    on_update: OptionalEventHandler["DismissibleUpdateEvent"] = None
+    on_update: OptionalEventHandler[DismissibleUpdateEvent] = None
     """
     Fires when this control has been dragged.
     """
 
-    on_dismiss: OptionalEventHandler["DismissibleDismissEvent"] = None
+    on_dismiss: OptionalEventHandler[DismissibleDismissEvent] = None
     """
     Fires when this control has been dismissed, after finishing resizing.
     """
 
-    on_confirm_dismiss: OptionalEventHandler["DismissibleDismissEvent"] = None
+    on_confirm_dismiss: OptionalEventHandler[DismissibleDismissEvent] = None
     """
     Gives the app an opportunity to confirm or veto a pending dismissal. The widget
     cannot be dragged again until the returned this pending dismissal is resolved.
@@ -151,16 +164,3 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     def confirm_dismiss(self, dismiss: bool):
         asyncio.create_task(self.confirm_dismiss_async(dismiss))
-
-
-@dataclass
-class DismissibleDismissEvent(Event["Dismissible"]):
-    direction: DismissDirection
-
-
-@dataclass
-class DismissibleUpdateEvent(Event["Dismissible"]):
-    direction: DismissDirection
-    progress: float
-    reached: bool
-    previous_reached: bool

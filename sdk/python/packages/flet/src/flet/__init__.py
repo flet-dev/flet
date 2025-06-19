@@ -77,6 +77,7 @@ from flet.controls.control_event import (
     ControlEvent,
     ControlEventHandler,
     Event,
+    EventControlType,
     EventHandler,
     OptionalControlEventHandler,
     OptionalEventHandler,
@@ -112,12 +113,7 @@ from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
-from flet.controls.core.interactive_viewer import (
-    InteractiveViewer,
-    InteractiveViewerInteractionEndEvent,
-    InteractiveViewerInteractionStartEvent,
-    InteractiveViewerInteractionUpdateEvent,
-)
+from flet.controls.core.interactive_viewer import InteractiveViewer
 from flet.controls.core.list_view import ListView
 from flet.controls.core.markdown import (
     Markdown,
@@ -476,7 +472,6 @@ from flet.controls.types import (
     ColorEnums,
     ColorValue,
     CrossAxisAlignment,
-    EventType,
     FloatingActionButtonLocation,
     FontWeight,
     IconEnums,
@@ -493,7 +488,6 @@ from flet.controls.types import (
     Number,
     OptionalBool,
     OptionalColorValue,
-    OptionalEventCallable,
     OptionalFloat,
     OptionalInt,
     OptionalNumber,
@@ -620,9 +614,6 @@ __all__ = [
     "Icon",
     "Image",
     "InteractiveViewer",
-    "InteractiveViewerInteractionEndEvent",
-    "InteractiveViewerInteractionStartEvent",
-    "InteractiveViewerInteractionUpdateEvent",
     "ListView",
     "Markdown",
     "MarkdownCodeTheme",
@@ -926,7 +917,6 @@ __all__ = [
     "ColorEnums",
     "ColorValue",
     "CrossAxisAlignment",
-    "EventType",
     "FLET_APP",
     "FLET_APP_HIDDEN",
     "FLET_APP_WEB",
@@ -946,7 +936,6 @@ __all__ = [
     "Number",
     "OptionalBool",
     "OptionalColorValue",
-    "OptionalEventCallable",
     "OptionalFloat",
     "OptionalInt",
     "OptionalNumber",
@@ -980,4 +969,7 @@ __all__ = [
     "ControlEventHandler",
     "EventHandler",
     "OptionalEventHandler",
+    "EventControlType",
+    "TextSelectionChangeCause",
+    "TextSelectionChangeEvent",
 ]

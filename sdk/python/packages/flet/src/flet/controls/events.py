@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Optional, TypeVar
+from typing import Optional
 
-from flet.controls.control_event import ControlEvent, Event
+from flet.controls.control_event import ControlEvent, Event, EventControlType
 from flet.controls.duration import Duration, OptionalDuration
 from flet.controls.types import PointerDeviceType
 
@@ -20,11 +20,6 @@ __all__ = [
     "ScrollEvent",
     "PointerEvent",
 ]
-
-if TYPE_CHECKING:
-    from .base_control import BaseControl
-
-EventControlType = TypeVar("EventControlType", bound="BaseControl")
 
 
 @dataclass(kw_only=True)

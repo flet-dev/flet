@@ -20,17 +20,24 @@ if TYPE_CHECKING:
     from .page import Page
     from .page_view import PageView
 
-__all__ = ["ControlEvent", "OptionalControlEventHandler", "Event"]
+__all__ = [
+    "ControlEvent",
+    "OptionalControlEventHandler",
+    "Event",
+    "ControlEventHandler",
+    "EventHandler",
+    "OptionalEventHandler",
+    "EventControlType",
+]
 
-ControlEventType = TypeVar("ControlEventType", bound="BaseControl")
-EventType = TypeVar("EventType", bound="Event")
+EventControlType = TypeVar("EventControlType", bound="BaseControl")
 
 
 @dataclass
-class Event(Generic[ControlEventType]):
+class Event(Generic[EventControlType]):
     name: str
     data: Optional[Any] = field(default=None, kw_only=True)
-    control: ControlEventType = field(repr=False)
+    control: EventControlType = field(repr=False)
 
     @property
     def page(self) -> Optional[Union["Page", "PageView"]]:
@@ -81,16 +88,16 @@ class Event(Generic[ControlEventType]):
             raise Exception(f"[resolve error] {field_name}: {e}") from e
 
 
+EventType = TypeVar("EventType", bound=Event)
+
 ControlEventHandler = Union[
-    Callable[[], None], Callable[[Event[ControlEventType]], None]
+    Callable[[], None], Callable[[Event[EventControlType]], None]
 ]
 
-OptionalControlEventHandler = Union[
-    Callable[[], None], Callable[[Event[ControlEventType]], None], None
-]
+OptionalControlEventHandler = Optional[ControlEventHandler]
 
 EventHandler = Union[Callable[[], None], Callable[[EventType], None]]
 
-OptionalEventHandler = Union[Callable[[], None], Callable[[EventType], None], None]
+OptionalEventHandler = Optional[EventHandler]
 
 ControlEvent = Event["BaseControl"]

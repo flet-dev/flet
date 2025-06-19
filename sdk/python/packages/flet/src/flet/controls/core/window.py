@@ -1,11 +1,11 @@
 import asyncio
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, TypeVar
+from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventControlType, OptionalEventHandler
 from flet.controls.types import (
     Brightness,
     Number,
@@ -43,6 +43,11 @@ class WindowResizeEdge(Enum):
     BOTTOM_LEFT = "bottomLeft"
     TOP_RIGHT = "topRight"
     BOTTOM_RIGHT = "bottomRight"
+
+
+@dataclass
+class WindowEvent(Event[EventControlType]):
+    type: WindowEventType
 
 
 # todo: raise FletExceptions when a method cant be called on the running platform
@@ -245,7 +250,7 @@ class Window(BaseControl):
     below it. If this window has focus, it will still receive keyboard events.
     """
 
-    on_event: OptionalEventHandler["WindowEvent"] = None
+    on_event: OptionalEventHandler[WindowEvent] = None
     """
     Fires when app window changes its state: position, size, maximized, minimized, etc.
     """
@@ -295,10 +300,3 @@ class Window(BaseControl):
 
     def start_resizing(self, edge: WindowResizeEdge):
         asyncio.create_task(self.start_resizing_async(edge))
-
-
-EventControlType = TypeVar("EventControlType", bound="BaseControl")
-
-@dataclass
-class WindowEvent(Event[EventControlType]):
-    type: WindowEventType

@@ -28,6 +28,7 @@ from flet.controls.control_event import (
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
+from flet.controls.exceptions import FletException
 from flet.controls.multi_view import MultiView
 from flet.controls.page_view import PageView
 from flet.controls.query_string import QueryString
@@ -79,12 +80,65 @@ class context:
 
 
 AT = TypeVar("AT", bound=Authorization)
-
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
 
 
-class PageDisconnectedException(Exception):
+@control("ServiceRegistry")
+class ServiceRegistry(Service):
+    services: list[Service] = field(default_factory=list)
+
+
+@dataclass
+class RouteChangeEvent(Event["Page"]):
+    route: str
+
+
+@dataclass
+class ViewPopEvent(Event["Page"]):
+    route: str
+    view: Optional[View] = None
+
+
+@dataclass
+class KeyboardEvent(Event["Page"]):
+    key: str
+    shift: bool
+    ctrl: bool
+    alt: bool
+    meta: bool
+
+
+@dataclass
+class LoginEvent(Event["Page"]):
+    error: Optional[str]
+    error_description: Optional[str]
+
+
+@dataclass
+class InvokeMethodResults:
+    method_id: str
+    result: Optional[str]
+    error: Optional[str]
+
+
+@dataclass
+class AppLifecycleStateChangeEvent(Event["Page"]):
+    state: AppLifecycleState
+
+
+@dataclass
+class MultiViewAddEvent(Event["Page"]):
+    view_id: int
+    initial_data: Any
+
+
+@dataclass
+class MultiViewRemoveEvent(Event["Page"]):
+    view_id: int
+
+
+class PageDisconnectedException(FletException):
     def __init__(self, message):
         super().__init__(message)
 
@@ -152,12 +206,12 @@ class Page(PageView):
     TBD
     """
 
-    _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
     """
     TBD
     """
 
-    _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    _page_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
     """
     TBD
     """
@@ -245,7 +299,7 @@ class Page(PageView):
     """
 
     on_app_lifecycle_state_change: OptionalEventHandler[
-        "AppLifecycleStateChangeEvent"
+        AppLifecycleStateChangeEvent
     ] = None
     """
     Triggers when app lifecycle state changes.
@@ -254,7 +308,7 @@ class Page(PageView):
     [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
     """
 
-    on_route_change: OptionalEventHandler["RouteChangeEvent"] = None
+    on_route_change: OptionalEventHandler[RouteChangeEvent] = None
     """
     Fires when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
@@ -263,7 +317,7 @@ class Page(PageView):
     [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
     """
 
-    on_view_pop: OptionalEventHandler["ViewPopEvent"] = None
+    on_view_pop: OptionalEventHandler[ViewPopEvent] = None
     """
     Fires when the user clicks automatic "Back" button in
     [AppBar](https://flet.dev/docs/controls/appbar) control.
@@ -272,7 +326,7 @@ class Page(PageView):
     [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
     """
 
-    on_keyboard_event: OptionalEventHandler["KeyboardEvent"] = None
+    on_keyboard_event: OptionalEventHandler[KeyboardEvent] = None
     """
     Fires when a keyboard key is pressed.
 
@@ -302,7 +356,7 @@ class Page(PageView):
     (60 minutes by default).
     """
 
-    on_login: OptionalEventHandler["LoginEvent"] = None
+    on_login: OptionalEventHandler[LoginEvent] = None
     """
     Fires upon successful or failed OAuth authorization flow.
 
@@ -320,12 +374,12 @@ class Page(PageView):
     Fires when unhandled exception occurs.
     """
 
-    on_multi_view_add: OptionalEventHandler["MultiViewAddEvent"] = None
+    on_multi_view_add: OptionalEventHandler[MultiViewAddEvent] = None
     """
     TBD
     """
 
-    on_multi_view_remove: OptionalEventHandler["MultiViewRemoveEvent"] = None
+    on_multi_view_remove: OptionalEventHandler[MultiViewRemoveEvent] = None
     """
     TBD
     """
@@ -748,57 +802,3 @@ class Page(PageView):
     @services.setter
     def services(self, value: list[Service]):
         self._user_services.services = value
-
-
-@control("ServiceRegistry")
-class ServiceRegistry(Service):
-    services: list[Service] = field(default_factory=list)
-
-
-@dataclass
-class RouteChangeEvent(Event["Page"]):
-    route: str
-
-
-@dataclass
-class ViewPopEvent(Event["Page"]):
-    route: str
-    view: Optional[View] = None
-
-
-@dataclass
-class KeyboardEvent(Event["Page"]):
-    key: str
-    shift: bool
-    ctrl: bool
-    alt: bool
-    meta: bool
-
-
-@dataclass
-class LoginEvent(Event["Page"]):
-    error: Optional[str]
-    error_description: Optional[str]
-
-
-@dataclass
-class InvokeMethodResults:
-    method_id: str
-    result: Optional[str]
-    error: Optional[str]
-
-
-@dataclass
-class AppLifecycleStateChangeEvent(Event["Page"]):
-    state: AppLifecycleState
-
-
-@dataclass
-class MultiViewAddEvent(Event["Page"]):
-    view_id: int
-    initial_data: Any
-
-
-@dataclass
-class MultiViewRemoveEvent(Event["Page"]):
-    view_id: int

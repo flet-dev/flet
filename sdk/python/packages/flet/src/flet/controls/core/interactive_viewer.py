@@ -16,18 +16,7 @@ from flet.controls.events import (
 from flet.controls.margin import MarginValue
 from flet.controls.types import ClipBehavior, Number
 
-__all__ = [
-    "InteractiveViewer",
-    "InteractiveViewerInteractionStartEvent",
-    "InteractiveViewerInteractionUpdateEvent",
-    "InteractiveViewerInteractionEndEvent",
-]
-
-InteractiveViewerInteractionStartEvent = ScaleStartEvent
-
-InteractiveViewerInteractionUpdateEvent = ScaleUpdateEvent
-
-InteractiveViewerInteractionEndEvent = ScaleEndEvent
+__all__ = ["InteractiveViewer"]
 
 
 @control("InteractiveViewer")
@@ -131,34 +120,32 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     Value is of type `int` and defaults to `200`.
     """
 
-    on_interaction_start: OptionalEventHandler[
-        InteractiveViewerInteractionStartEvent["InteractiveViewer"]
-    ] = None
+    on_interaction_start: OptionalEventHandler[ScaleStartEvent["InteractiveViewer"]] = (
+        None
+    )
     """
     Fires when the user begins a pan or scale gesture.
 
     Event handler argument is of type
-    [`InteractiveViewerInteractionStartEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionstartevent).
+    [`ScaleStartEvent`](https://flet.dev/docs/reference/types/scalestartevent).
     """
 
     on_interaction_update: OptionalEventHandler[
-        InteractiveViewerInteractionUpdateEvent["InteractiveViewer"]
+        ScaleUpdateEvent["InteractiveViewer"]
     ] = None
     """
     Fires when the user updates a pan or scale gesture.
 
     Event handler argument is of type
-    [`InteractiveViewerInteractionUpdateEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionupdateevent).
+    [`ScaleUpdateEvent`](https://flet.dev/docs/reference/types/scaleupdateevent).
     """
 
-    on_interaction_end: OptionalEventHandler[
-        InteractiveViewerInteractionEndEvent["InteractiveViewer"]
-    ] = None
+    on_interaction_end: OptionalEventHandler[ScaleEndEvent["InteractiveViewer"]] = None
     """
     Fires when the user ends a pan or scale gesture.
 
     Event handler argument is of type
-    [`InteractiveViewerInteractionEndEvent`](https://flet.dev/docs/reference/types/interactiveviewerinteractionendevent).
+    [`ScaleEndEvent`](https://flet.dev/docs/reference/types/scaleendevent).
     """
 
     def before_update(self):
@@ -166,9 +153,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         assert self.content.visible, "content must be visible"
         assert self.min_scale > 0, "min_scale must be greater than 0"
         assert self.max_scale > 0, "max_scale must be greater than 0"
-        assert self.max_scale >= self.min_scale, (
-            "max_scale must be greather than or equal to min_scale"
-        )
+        assert (
+            self.max_scale >= self.min_scale
+        ), "max_scale must be greather than or equal to min_scale"
         assert (
             self.interaction_end_friction_coefficient is None
             or self.interaction_end_friction_coefficient > 0
