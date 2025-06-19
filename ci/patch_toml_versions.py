@@ -21,15 +21,16 @@ with open(toml_path, "r") as f:
 t["project"]["version"] = ver
 
 # patch dependencies
-deps = t["tool"]["poetry"]["dependencies"]
+deps: list[str] = t["project"]["dependencies"]
 
 
 def patch_dep(dep_name):
-    if deps.get(dep_name):
-        if isinstance(deps[dep_name], dict):
-            deps[dep_name]["version"] = ver
-        else:
-            deps[dep_name] = ver
+    for i in range(0, len(deps)):
+        dep = deps[i]
+        if dep == dep_name:
+            deps[i] = f"{dep_name}=={ver}"
+        elif dep.startswith(f"{dep_name};"):
+            deps[i] = dep.replace(f"{dep_name};", f"{dep_name}=={ver};")
 
 
 patch_dep("flet-cli")
