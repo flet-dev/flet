@@ -21,7 +21,8 @@ class CupertinoAppBarControl extends StatelessWidget
     debugPrint("CupertinoAppBar build: ${control.id}");
 
     // "title" if coming from material AppBar
-    var middle = control.buildWidget("middle") ?? control.buildWidget("title");
+    var middle = control.buildTextOrWidget("middle") ??
+        control.buildTextOrWidget("title");
 
     // "actions" if coming from material AppBar
     var trailing =
