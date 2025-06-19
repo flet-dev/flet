@@ -91,15 +91,15 @@ class Event(Generic[EventControlType]):
 EventType = TypeVar("EventType", bound=Event)
 
 ControlEventHandler = Union[
-    Callable[[], None], Callable[[Event[EventControlType]], None]
+    Callable[[], Any], Callable[[Event[EventControlType]], Any]
 ]
 
 OptionalControlEventHandler = Union[
-    None, Callable[[], None], Callable[[Event[EventControlType]], None]
+    Callable[[], Any], Callable[[Event[EventControlType]], Any], None, 
 ]
 
-EventHandler = Union[Callable[[], None], Callable[[EventType], None]]
+EventHandler = Union[Callable[[], Any], Callable[[EventType], Any]]
 
-OptionalEventHandler = Optional[EventHandler]
+OptionalEventHandler = Union[Callable[[], Any], Callable[[EventType], Any], None]
 
 ControlEvent = Event["BaseControl"]

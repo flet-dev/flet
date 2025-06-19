@@ -26,7 +26,7 @@ def test_get_event_field_type():
 
     c = Container()
     on_tap_down_type = ControlEvent.get_event_field_type(c, "on_tap_down")
-    assert on_tap_down_type == TapEvent
+    assert on_tap_down_type == TapEvent["Container"]
     assert on_tap_down_type != ControlEvent
 
     col = Column()
@@ -38,7 +38,7 @@ def test_get_event_field_type():
 def test_create_event_typed_data():
     c = Container()
     on_tap_down_type = ControlEvent.get_event_field_type(c, "on_tap_down")
-    assert on_tap_down_type == TapEvent
+    assert on_tap_down_type == TapEvent["Container"]
 
     evt = from_dict(
         on_tap_down_type,
