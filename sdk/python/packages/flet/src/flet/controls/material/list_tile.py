@@ -10,10 +10,12 @@ from flet.controls.control_event import OptionalControlEventHandler
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    IconValueOrControl,
     MouseCursor,
     Number,
     OptionalColorValue,
     OptionalNumber,
+    StrOrControl,
     UrlTarget,
     VisualDensity,
 )
@@ -43,7 +45,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/listtile
     """
 
-    title: Optional[Control] = None
+    title: Optional[StrOrControl] = None
     """
     A `Control` to display as primary content of the list tile.
 
@@ -51,7 +53,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     wrap. To enforce the single line limit, use [`Text.max_lines`](https://flet.dev/docs/controls/text#max_lines).
     """
 
-    subtitle: Optional[Control] = None
+    subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title. Typically a 
     [`Text`](https://flet.dev/docs/controls/text) widget.
@@ -76,12 +78,12 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     using [`Text.max_lines`](https://flet.dev/docs/controls/text#max_lines).
     """
 
-    leading: Optional[Control] = None
+    leading: Optional[IconValueOrControl] = None
     """
     A `Control` to display before the title.
     """
 
-    trailing: Optional[Control] = None
+    trailing: Optional[IconValueOrControl] = None
     """
     A `Control` to display after the title. Typically an [`Icon`](https://flet.dev/docs/controls/icon) 
     control.
