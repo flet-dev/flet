@@ -205,17 +205,17 @@ class Dropdown(ConstrainedControl):
     states.
     """
 
-    on_change: OptionalControlEventHandler["Dropdown"] =None
+    on_change: OptionalControlEventHandler["Dropdown"] = None
     """
     Fires when the selected item of this dropdown has changed.
     """
 
-    on_focus: OptionalControlEventHandler["Dropdown"] =None
+    on_focus: OptionalControlEventHandler["Dropdown"] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["Dropdown"] =None
+    on_blur: OptionalControlEventHandler["Dropdown"] = None
     """
     Fires when the control has lost focus.
     """
