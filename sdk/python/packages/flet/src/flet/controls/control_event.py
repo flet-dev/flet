@@ -94,7 +94,9 @@ ControlEventHandler = Union[
     Callable[[], None], Callable[[Event[EventControlType]], None]
 ]
 
-OptionalControlEventHandler = Optional[ControlEventHandler]
+OptionalControlEventHandler = Union[
+    None, Callable[[], None], Callable[[Event[EventControlType]], None]
+]
 
 EventHandler = Union[Callable[[], None], Callable[[EventType], None]]
 
