@@ -26,3 +26,4 @@
 *.bkp
 .python-version
 vendor/
+/client/android/app/.cxx
