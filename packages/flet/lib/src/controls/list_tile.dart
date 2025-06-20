@@ -41,10 +41,10 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
-    var leading = control.buildWidget("leading");
-    var title = control.buildWidget("title");
-    var subtitle = control.buildWidget("subtitle");
-    var trailing = control.buildWidget("trailing");
+    var leading = control.buildIconOrWidget("leading");
+    var title = control.buildTextOrWidget("title");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
     var onClick = control.getBool("on_click", false)!;
     var toggleInputs = control.getBool("toggle_inputs", false)!;
     var url = control.getString("url");

@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.control import Control
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.types import Brightness, OptionalColorValue
+from flet.controls.types import Brightness, OptionalColorValue, StrOrControl
 
 __all__ = ["CupertinoAppBar"]
 
@@ -27,13 +27,13 @@ class CupertinoAppBar(Control):
     automatically created.
     """
 
-    middle: Optional[Control] = None
+    middle: Optional[StrOrControl] = None
     """
     A `Control` to display in the middle of this app bar. Typically a 
     [`Text`](https://flet.dev/docs/controls/text) or a segmented control.
     """
 
-    title: Optional[Control] = None
+    title: Optional[StrOrControl] = None
     """
     TBD
     """
