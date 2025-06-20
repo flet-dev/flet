@@ -950,6 +950,7 @@ class Command(BaseCommand):
             "com.apple.security.cs.allow-jit": True,
             "com.apple.security.network.client": True,
             "com.apple.security.network.server": True,
+            "com.apple.security.files.user-selected.read-write": True,
         }
         android_permissions = {"android.permission.INTERNET": True}
         android_features = {
