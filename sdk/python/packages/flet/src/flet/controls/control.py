@@ -31,7 +31,7 @@ class Control(BaseControl):
     Here is an example of expand being used in action for both [`Column`](https://flet.dev/docs/controls/column) 
     and [`Row`](https://flet.dev/docs/controls/row):
 
-    ```pyhton
+    ```python
     import flet as ft
 
     def main(page: ft.Page):
