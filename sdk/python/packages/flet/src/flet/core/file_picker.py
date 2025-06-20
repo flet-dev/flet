@@ -1,3 +1,4 @@
+import base64
 import json
 from dataclasses import dataclass, field
 from enum import Enum
@@ -45,6 +46,7 @@ class FilePickerResultEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
+        self.error = d.get("error")
         self.path: Optional[str] = d.get("path")
         self.files: Optional[List[FilePickerFile]] = None
         files = d.get("files")
@@ -173,6 +175,7 @@ class FilePicker(Control):
         initial_directory: Optional[str] = None,
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
+        src_bytes: Optional[bytes] = None,
     ):
         self.state = FilePickerState.SAVE_FILE
         self.dialog_title = dialog_title
@@ -180,6 +183,7 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.file_type = file_type
         self.allowed_extensions = allowed_extensions
+        self.src_bytes = src_bytes
         self.update()
 
     def get_directory_path(
@@ -265,6 +269,18 @@ class FilePicker(Control):
     @allow_multiple.setter
     def allow_multiple(self, value: Optional[bool]):
         self._set_attr("allowMultiple", value)
+
+    # src_bytes
+    @property
+    def src_bytes(self) -> Optional[bytes]:
+        v = self._get_attr("srcBytes")
+        return base64.b64decode(v) if v else v
+
+    @src_bytes.setter
+    def src_bytes(self, value: Optional[bytes]):
+        self._set_attr(
+            "srcBytes", base64.b64encode(value).decode("utf-8") if value else value
+        )
 
     # on_result
     @property
