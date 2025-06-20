@@ -2,52 +2,46 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class CardControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
 
-  const CardControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive});
+  const CardControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Card build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    var content = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled,
-            parentAdaptive: adaptive)
+    var contentCtrl = control.child("content");
+    var contentWidget = contentCtrl != null
+        ? ControlWidget(
+            control: contentCtrl,
+          )
         : null;
-    var clipBehavior = parseClip(control.attrString("clipBehavior"));
-    var elevation = control.attrDouble("elevation");
-    var shape = parseOutlinedBorder(control, "shape");
-    var margin = parseEdgeInsets(control, "margin");
-    var isSemanticContainer = control.attrBool("isSemanticContainer", true)!;
+    var clipBehavior = control.getClipBehavior("clip_behavior");
+    var elevation = control.getDouble("elevation");
+    var shape = control.getShape("shape", Theme.of(context));
+    var margin = control.getMargin("margin");
+    var isSemanticContainer = control.getBool("is_semantic_container", true)!;
     var showBorderOnForeground =
-        control.attrBool("showBorderOnForeground", true)!;
-    var color = control.attrColor("color", context);
-    var shadowColor = control.attrColor("shadowColor", context);
-    var surfaceTintColor = control.attrColor("surfaceTintColor", context);
+        control.getBool("show_border_on_foreground", true)!;
+    var color = control.getColor("color", context);
+    var shadowColor = control.getColor("shadow_color", context);
+    var surfaceTintColor = control.getColor("surface_tint_color", context);
 
     Widget? card;
 
     CardVariant variant =
-        parseCardVariant(control.attrString("variant"), CardVariant.elevated)!;
+        control.getCardVariant("variant", CardVariant.elevated)!;
 
     if (variant == CardVariant.outlined) {
       card = Card.outlined(
@@ -60,7 +54,7 @@ class CardControl extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
-          child: content);
+          child: contentWidget);
     } else if (variant == CardVariant.filled) {
       card = Card.filled(
           elevation: elevation,
@@ -72,7 +66,7 @@ class CardControl extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
-          child: content);
+          child: contentWidget);
     } else {
       card = Card(
           elevation: elevation,
@@ -84,9 +78,9 @@ class CardControl extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
-          child: content);
+          child: contentWidget);
     }
 
-    return constrainedControl(context, card, parent, control);
+    return ConstrainedControl(control: control, child: card);
   }
 }

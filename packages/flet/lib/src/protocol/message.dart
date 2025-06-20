@@ -1,17 +1,13 @@
 enum MessageAction {
-  registerWebClient,
-  pageEventFromWeb,
-  updateControlProps,
-  appBecomeActive,
-  appBecomeInactive,
-  sessionCrashed,
-  invokeMethod,
-  addPageControls,
-  replacePageControls,
-  pageControlsBatch,
-  appendControlProps,
-  cleanControl,
-  removeControl
+  registerClient(1),
+  patchControl(2),
+  controlEvent(3),
+  updateControl(4),
+  invokeControlMethod(5),
+  sessionCrashed(6);
+
+  final int value;
+  const MessageAction(this.value);
 }
 
 class Message {
@@ -20,13 +16,11 @@ class Message {
 
   Message({required this.action, required this.payload});
 
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'action': action.name, 'payload': payload.toJson()};
+  dynamic toList() => [action.value, payload];
 
-  factory Message.fromJson(Map<String, dynamic> json) {
+  factory Message.fromList(List<dynamic> value) {
     return Message(
-        action: MessageAction.values
-            .firstWhere((e) => e.name == json['action'] as String),
-        payload: json['payload']);
+        action: MessageAction.values.firstWhere((e) => e.value == value[0]),
+        payload: value[1]);
   }
 }

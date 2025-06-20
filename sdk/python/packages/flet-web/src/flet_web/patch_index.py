@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from flet.core.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 
 def patch_index_html(
@@ -16,64 +16,54 @@ def patch_index_html(
     pyodide_pre: bool = False,
     pyodide_script_path: str = "",
     web_renderer: WebRenderer = WebRenderer.AUTO,
-    use_color_emoji: bool = False,
-    route_url_strategy: str = "path",
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: bool = False,
 ):
-    with open(index_path, "r", encoding="utf-8") as f:
+    with open(index_path, encoding="utf-8") as f:
         index = f.read()
+
+    app_config = []
 
     if pyodide and pyodide_script_path:
         module_name = Path(pyodide_script_path).stem
-        pyodideCode = f"""
-        <script>
-            var micropipIncludePre = {str(pyodide_pre).lower()};
-            var pythonModuleName = "{module_name}";
-        </script>
-        <script src="python.js"></script>
-        """
-        index = index.replace("<!-- pyodideCode -->", pyodideCode)
-    index = index.replace("%FLET_WEB_PYODIDE%", str(pyodide).lower())
+        app_config.append("flet.pyodide = true;")
+        app_config.append(f"flet.micropipIncludePre = {str(pyodide_pre).lower()};")
+        app_config.append(f'flet.pythonModuleName = "{module_name}";')
+
+    app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
+    app_config.append(f'flet.webRenderer="{web_renderer.value}";')
+    app_config.append(f'flet.routeUrlStrategy="{route_url_strategy.value}";')
+
+    if websocket_endpoint_path:
+        app_config.append(f'flet.webSocketEndpoint="{websocket_endpoint_path}";')
+
     index = index.replace(
-        "<!-- webRenderer -->",
-        f'<script>webRenderer="{web_renderer.value}";</script>',
+        "<!-- fletAppConfig -->",
+        "<script>\n{}\n</script>".format("\n".join(app_config)),
     )
-    index = index.replace(
-        "<!-- useColorEmoji -->",
-        f"<script>useColorEmoji={str(use_color_emoji).lower()};</script>",
-    )
-    index = index.replace("%FLET_ROUTE_URL_STRATEGY%", route_url_strategy)
 
     if base_href:
         base_url = base_href.strip("/").strip()
         index = index.replace(
             '<base href="/">',
-            '<base href="{}">'.format(
-                "/" if base_url == "" else "/{}/".format(base_url)
-            ),
+            '<base href="{}">'.format("/" if base_url == "" else f"/{base_url}/"),
         )
-    if websocket_endpoint_path:
-        index = re.sub(
-            r"\<meta name=\"flet-websocket-endpoint-path\" content=\"(.+)\">",
-            r'<meta name="flet-websocket-endpoint-path" content="{}">'.format(
-                websocket_endpoint_path
-            ),
-            index,
-        )
+
     if app_name:
         index = re.sub(
             r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",
-            r'<meta name="apple-mobile-web-app-title" content="{}">'.format(app_name),
+            rf'<meta name="apple-mobile-web-app-title" content="{app_name}">',
             index,
         )
         index = re.sub(
             r"\<title>(.+)</title>",
-            r"<title>{}</title>".format(app_name),
+            rf"<title>{app_name}</title>",
             index,
         )
     if app_description:
         index = re.sub(
             r"\<meta name=\"description\" content=\"(.+)\">",
-            r'<meta name="description" content="{}">'.format(app_description),
+            rf'<meta name="description" content="{app_description}">',
             index,
         )
 
@@ -89,7 +79,7 @@ def patch_manifest_json(
     background_color: Optional[str] = None,
     theme_color: Optional[str] = None,
 ):
-    with open(manifest_path, "r", encoding="utf-8") as f:
+    with open(manifest_path, encoding="utf-8") as f:
         manifest = json.loads(f.read())
 
     if app_name:
@@ -107,6 +97,16 @@ def patch_manifest_json(
 
     if theme_color:
         manifest["theme_color"] = theme_color
+
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        f.write(json.dumps(manifest, indent=2))
+
+
+def patch_font_manifest_json(manifest_path: str):
+    with open(manifest_path, encoding="utf-8") as f:
+        manifest = json.loads(f.read())
+
+    manifest.append({"family": "Roboto", "fonts": [{"asset": "fonts/roboto.woff2"}]})
 
     with open(manifest_path, "w", encoding="utf-8") as f:
         f.write(json.dumps(manifest, indent=2))

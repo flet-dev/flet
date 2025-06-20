@@ -1,70 +1,94 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'material_state.dart';
 
-double? parseDouble(dynamic v, [double? defValue]) {
-  if (v is double) {
-    return v;
-  } else if (v is String && v.toLowerCase() == "inf") {
+double? parseDouble(dynamic value, [double? defaultValue]) {
+  if (value is double) {
+    return value;
+  } else if (value is String && value.toLowerCase() == "inf") {
     return double.infinity;
-  } else if (v == null) {
-    return defValue;
+  } else if (value == null) {
+    return defaultValue;
+  } else if (value is int) {
+    return value.toDouble();
   } else {
-    return double.tryParse(v.toString()) ?? defValue;
+    return double.tryParse(value.toString()) ?? defaultValue;
   }
 }
 
-WidgetStateProperty<double?>? parseWidgetStateDouble(
-    Control control, String propName,
-    [double? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+WidgetStateProperty<double?>? parseWidgetStateDouble(dynamic value,
+    {double? defaultDouble, WidgetStateProperty<double?>? defaultValue}) {
+  if (value == null) return defaultValue;
   return getWidgetStateProperty<double?>(
-      jsonDecode(v), (jv) => parseDouble(jv), defaultValue);
+      value, (jv) => parseDouble(jv), defaultDouble);
 }
 
-int? parseInt(dynamic v, [int? defValue]) {
-  if (v is int) {
-    return v;
-  } else if (v == null) {
-    return defValue;
+int? parseInt(dynamic value, [int? defaultValue]) {
+  if (value is int) {
+    return value;
+  } else if (value == null) {
+    return defaultValue;
   } else {
-    return int.tryParse(v.toString()) ?? defValue;
+    return int.tryParse(value.toString()) ?? defaultValue;
   }
 }
 
-WidgetStateProperty<int?>? parseWidgetStateInt(Control control, String propName,
-    [int? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-  return getWidgetStateProperty<int?>(
-      jsonDecode(v), (jv) => parseInt(jv), defaultValue);
+WidgetStateProperty<int?>? parseWidgetStateInt(dynamic value,
+    {int? defaultInt, WidgetStateProperty<int?>? defaultValue}) {
+  if (value == null) return defaultValue;
+  return getWidgetStateProperty<int?>(value, (jv) => parseInt(jv), defaultInt);
 }
 
-bool? parseBool(dynamic v, [bool? defValue]) {
-  if (v is bool) {
-    return v;
-  } else if (v == null) {
-    return defValue;
+bool? parseBool(dynamic value, [bool? defaultValue]) {
+  if (value is bool) {
+    return value;
+  } else if (value == null) {
+    return defaultValue;
   } else {
-    return "true" == v.toString().toLowerCase();
+    return "true" == value.toString().toLowerCase();
   }
 }
 
-WidgetStateProperty<bool?>? parseWidgetStateBool(
-    Control control, String propName,
-    [bool? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+WidgetStateProperty<bool?>? parseWidgetStateBool(dynamic value,
+    {bool? defaultBool, WidgetStateProperty<bool?>? defaultValue}) {
+  if (value == null) return defaultValue;
   return getWidgetStateProperty<bool?>(
-      jsonDecode(v), (jv) => parseBool(jv), defaultValue);
+      value, (jv) => parseBool(jv), defaultBool);
+}
+
+extension LiteralParsers on Control {
+  bool? getBool(String propertyName, [bool? defaultValue]) {
+    return get<bool>(propertyName, defaultValue);
+  }
+
+  String? getString(String propertyName, [String? defaultValue]) {
+    return get<String>(propertyName, defaultValue);
+  }
+
+  int? getInt(String propertyName, [int? defaultValue]) {
+    return get<int>(propertyName, defaultValue);
+  }
+
+  double? getDouble(String propertyName, [double? defaultValue]) {
+    return get<double>(propertyName, defaultValue);
+  }
+
+  WidgetStateProperty<double?>? getWidgetStateDouble(String propertyName,
+      {double? defaultDouble, WidgetStateProperty<double?>? defaultValue}) {
+    return parseWidgetStateDouble(get(propertyName),
+        defaultDouble: defaultDouble, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<int?>? getWidgetStateInt(String propertyName,
+      {int? defaultInt, WidgetStateProperty<int?>? defaultValue}) {
+    return parseWidgetStateInt(get(propertyName),
+        defaultInt: defaultInt, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<bool?>? getWidgetStateBool(String propertyName,
+      {bool? defaultBool, WidgetStateProperty<bool?>? defaultValue}) {
+    return parseWidgetStateBool(get(propertyName),
+        defaultBool: defaultBool, defaultValue: defaultValue);
+  }
 }

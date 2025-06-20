@@ -1,15 +1,13 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
+import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../controls/create_control.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'edge_insets.dart';
-import 'icons.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'time.dart';
@@ -17,16 +15,15 @@ import 'time.dart';
 enum FormFieldInputBorder { outline, underline, none }
 
 FormFieldInputBorder? parseFormFieldInputBorder(String? value,
-    [FormFieldInputBorder? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+    [FormFieldInputBorder? defaultValue]) {
+  if (value == null) return defaultValue;
   return FormFieldInputBorder.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
+TextInputType? parseTextInputType(String? value,
+    [TextInputType? defaultValue]) {
   switch (value?.toLowerCase()) {
     case "datetime":
       return TextInputType.datetime;
@@ -51,67 +48,91 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
     case "visiblepassword":
       return TextInputType.visiblePassword;
     default:
-      return defValue;
+      return defaultValue;
   }
 }
 
-InputDecoration buildInputDecoration(BuildContext context, Control control,
-    {Control? prefix,
-    Control? prefixIcon,
-    Control? suffix,
-    Control? suffixIcon,
-    Control? icon,
-    Control? counter,
-    Control? error,
-    Control? helper,
-    Control? label,
-    Widget? customSuffix,
-    int? valueLength,
-    int? maxLength,
-    bool focused = false,
-    bool disabled = false,
-    bool? adaptive}) {
+InputDecoration buildInputDecoration(
+  BuildContext context,
+  Control control, {
+  Widget? customSuffix,
+  int? valueLength,
+  int? maxLength,
+  bool focused = false,
+}) {
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-    control.attrString("border"),
+    control.getString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var iconStr = parseIcon(control.attrString("icon"));
-  var prefixIconData = parseIcon(control.attrString("prefixIcon"));
-  var prefixIconWidget = prefixIcon != null
-      ? createControl(control, prefixIcon.id, control.isDisabled,
-          parentAdaptive: adaptive)
-      : (prefixIconData != null ? Icon(prefixIconData) : null);
-  var suffixIconData = parseIcon(control.attrString("suffixIcon"));
-  var suffixIconWidget = suffixIcon != null
-      ? createControl(control, suffixIcon.id, control.isDisabled,
-          parentAdaptive: adaptive)
-      : (suffixIconData != null ? Icon(suffixIconData) : null);
-  var prefixText = control.attrString("prefixText");
-  var suffixText = control.attrString("suffixText");
+  var bgcolor = control.getColor("bgcolor", context);
+  var focusedBgcolor = control.getColor("focused_bgcolor", context);
+  var fillColor = control.getColor("fill_color", context);
+  var hoverColor = control.getColor("hover_color", context);
+  var borderColor = control.getColor("border_color", context);
+  var borderRadius = control.getBorderRadius("border_radius");
+  var focusedBorderColor = control.getColor("focused_border_color", context);
+  var borderWidth = control.getDouble("border_width");
+  var focusedBorderWidth = control.getDouble("focused_border_width");
 
-  var bgcolor = control.attrColor("bgcolor", context);
-  var focusedBgcolor = control.attrColor("focusedBgcolor", context);
-  var fillColor = control.attrColor("fillColor", context);
-  var hoverColor = control.attrColor("hoverColor", context);
-  var borderColor = control.attrColor("borderColor", context);
+  //counter
+  String? counterText;
+  Widget? counterWidget;
+  var counter = control.get("counter");
+  if (counter is Control) {
+    counterWidget = control.buildWidget("counter");
+  } else {
+    counterText = control
+        .getString("counter")
+        ?.replaceAll("{value_length}", valueLength.toString())
+        .replaceAll("{max_length}", maxLength?.toString() ?? "None")
+        .replaceAll("{symbols_left}",
+                "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
+  }
 
-  var borderRadius = parseBorderRadius(control, "borderRadius");
-  var focusedBorderColor = control.attrColor("focusedBorderColor", context);
-  var borderWidth = control.attrDouble("borderWidth");
-  var focusedBorderWidth = control.attrDouble("focusedBorderWidth");
+  // error
+  String? errorText;
+  Widget? errorWidget;
+  var error = control.get("error");
+  if (error is Control) {
+    errorWidget = control.buildWidget("error");
+  } else {
+    errorText = control.getString("error");
+  }
+  // helper
+  String? helperText;
+  Widget? helperWidget;
+  var helper = control.get("helper");
+  if (helper is Control) {
+    helperWidget = control.buildWidget("helper");
+  } else {
+    helperText = control.getString("helper");
+  }
 
-  var counterText = control
-      .attrString("counterText", "")
-      ?.replaceAll("{value_length}", valueLength.toString())
-      .replaceAll("{max_length}", maxLength?.toString() ?? "None")
-      .replaceAll("{symbols_left}",
-          "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
+  // prefix
+  String? prefixText;
+  Widget? prefixWidget;
+  var prefix = control.get("prefix");
+  if (prefix is Control) {
+    prefixWidget = control.buildWidget("prefix");
+  } else {
+    prefixText = control.getString("prefix");
+  }
+
+  // suffix
+  String? suffixText;
+  Widget? suffixWidget;
+  var suffix = control.get("suffix");
+  if (suffix is Control) {
+    suffixWidget = control.buildWidget("suffix");
+  } else {
+    suffixText = control.getString("suffix");
+  }
 
   InputBorder? border;
   if (inputBorder == FormFieldInputBorder.underline) {
     border = UnderlineInputBorder(
         borderSide: BorderSide(
-            color: borderColor ?? Color(0xFF000000),
+            color: borderColor ?? const Color(0xFF000000),
             width: borderWidth ?? 1.0));
   } else if (inputBorder == FormFieldInputBorder.none) {
     border = InputBorder.none;
@@ -121,7 +142,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       borderWidth != null) {
     border = OutlineInputBorder(
         borderSide: BorderSide(
-            color: borderColor ?? Color(0xFF000000),
+            color: borderColor ?? const Color(0xFF000000),
             width: borderWidth ?? 1.0));
     if (borderRadius != null) {
       border =
@@ -133,7 +154,10 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
               ? BorderSide.none
               : BorderSide(
                   color: borderColor ??
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                      Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withAlpha((255.0 * 0.38).round()),
                   width: borderWidth ?? 1.0));
     }
   }
@@ -154,115 +178,96 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   }
 
   return InputDecoration(
-      enabled: !disabled,
-      contentPadding: parseEdgeInsets(control, "contentPadding"),
-      isDense: control.attrBool("dense"),
-      label: label != null
-          ? createControl(control, label.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : control.attrString("label") != null
-              ? Text(control.attrString("label")!)
-              : null,
-      labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
+      enabled: !control.disabled,
+      contentPadding: control.getEdgeInsets("content_padding"),
+      isDense: control.getBool("dense"),
+      label: control.buildTextOrWidget("label"),
+      labelStyle: control.getTextStyle("label_style", Theme.of(context)),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      icon: icon != null
-          ? createControl(control, icon.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : iconStr != null
-              ? Icon(iconStr)
-              : null,
-      filled: control.attrBool("filled", false)!,
-      fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
-      hintText: control.attrString("hintText"),
-      hintStyle: parseTextStyle(Theme.of(context), control, "hintStyle"),
-      helperText: control.attrString("helperText"),
-      helperStyle: parseTextStyle(Theme.of(context), control, "helperStyle"),
+      icon: control.buildIconOrWidget("icon"),
+      filled: control.getBool("filled", false)!,
+      fillColor: fillColor ?? (focused ? (focusedBgcolor ?? bgcolor) : bgcolor),
+      //hint
+      hintText: control.getString("hint_text"),
+      hintStyle: control.getTextStyle("hint_style", Theme.of(context)),
+      hintFadeDuration: control.getDuration("hint_fade_duration"),
+      hintMaxLines: control.getInt("hint_max_lines"),
+      //helper
+      helper: helperWidget,
+      helperText: helperText,
+      helperStyle: control.getTextStyle("helper_style", Theme.of(context)),
+      helperMaxLines: control.getInt("helper_max_lines"),
+      //counter
+      counter: counterWidget,
       counterText: counterText,
-      counterStyle: parseTextStyle(Theme.of(context), control, "counterStyle"),
-      counter: counter != null
-          ? createControl(control, counter.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      error: error != null
-          ? createControl(control, error.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      helper: helper != null
-          ? createControl(control, helper.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      constraints: parseBoxConstraints(control, "sizeConstraints"),
-      isCollapsed: control.attrBool("collapsed"),
+      counterStyle: control.getTextStyle("counter_style", Theme.of(context)),
+      //error
+      error: errorWidget,
+      errorText: errorText,
+      errorStyle: control.getTextStyle("error_style", Theme.of(context)),
+      errorMaxLines: control.getInt("error_max_lines"),
+      constraints: control.getBoxConstraints("size_constraints"),
+      isCollapsed: control.getBool("collapsed"),
       prefixIconConstraints:
-          parseBoxConstraints(control, "prefixIconConstraints"),
+          control.getBoxConstraints("prefix_icon_constraints"),
       suffixIconConstraints:
-          parseBoxConstraints(control, "suffixIconConstraints"),
-      focusColor: control.attrColor("focusColor", context),
-      errorMaxLines: control.attrInt("errorMaxLines"),
-      alignLabelWithHint: control.attrBool("alignLabelWithHint"),
-      errorText: control.attrString("errorText"),
-      errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
-      prefixIcon: prefixIconWidget,
-      prefixText:
-          prefix == null ? prefixText : null, // ignored if prefix is set
-      hintFadeDuration: parseDuration(control, "hintFadeDuration"),
-      hintMaxLines: control.attrInt("hintMaxLines"),
-      helperMaxLines: control.attrInt("helperMaxLines"),
-      prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
-      prefix: prefix != null
-          ? createControl(control, prefix.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      suffix: suffix != null
-          ? createControl(control, suffix.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      suffixIcon: suffixIconWidget ?? customSuffix,
-      suffixText:
-          suffix == null ? suffixText : null, // ignored if suffix is set
-      suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
+          control.getBoxConstraints("suffix_icon_constraints"),
+      focusColor: control.getColor("focus_color", context),
+      alignLabelWithHint: control.getBool("align_label_with_hint"),
+      prefixIcon: control.buildIconOrWidget("prefix_icon"),
+      //prefix
+      prefix: prefixWidget,
+      prefixText: prefixText,
+      prefixStyle: control.getTextStyle("prefix_style", Theme.of(context)),
+      suffixIcon: control.buildIconOrWidget("suffix_icon") ?? customSuffix,
+      //suffix
+      suffix: suffixWidget,
+      suffixText: suffixText,
+      suffixStyle: control.getTextStyle("suffix_style", Theme.of(context)));
 }
 
-OverlayVisibilityMode? parseVisibilityMode(String? value,
-    [OverlayVisibilityMode? defValue]) {
-  switch (value?.toLowerCase()) {
-    case "never":
-      return OverlayVisibilityMode.never;
-    case "notediting":
-      return OverlayVisibilityMode.notEditing;
-    case "editing":
-      return OverlayVisibilityMode.editing;
-    case "always":
-      return OverlayVisibilityMode.always;
-  }
-  return defValue;
+OverlayVisibilityMode? parseOverlayVisibilityMode(String? value,
+    [OverlayVisibilityMode? defaultValue]) {
+  if (value == null) return defaultValue;
+  return OverlayVisibilityMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
 }
 
-StrutStyle? parseStrutStyle(Control control, String propName) {
-  dynamic j;
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-  j = json.decode(v);
-  return strutStyleFromJson(j);
-}
-
-StrutStyle? strutStyleFromJson(Map<String, dynamic>? json) {
-  if (json == null) {
-    return null;
-  }
+StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return StrutStyle(
-    fontSize: parseDouble(json["size"]),
-    fontWeight: getFontWeight(json["weight"]),
-    fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
-    fontFamily: json["font_family"],
-    height: parseDouble(json["height"]),
-    leading: parseDouble(json["leading"]),
-    forceStrutHeight: parseBool(json["force_strut_height"]),
+    fontSize: parseDouble(value["size"]),
+    fontWeight: getFontWeight(value["weight"]),
+    fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
+    fontFamily: value["font_family"],
+    height: parseDouble(value["height"]),
+    leading: parseDouble(value["leading"]),
+    forceStrutHeight: parseBool(value["force_strut_height"]),
   );
+}
+
+extension FormFieldParsers on Control {
+  FormFieldInputBorder? getFormFieldInputBorder(String propertyName,
+      [FormFieldInputBorder? defaultValue]) {
+    return parseFormFieldInputBorder(get(propertyName), defaultValue);
+  }
+
+  TextInputType? getTextInputType(String propertyName,
+      [TextInputType? defaultValue]) {
+    return parseTextInputType(get(propertyName), defaultValue);
+  }
+
+  OverlayVisibilityMode? getOverlayVisibilityMode(String propertyName,
+      [OverlayVisibilityMode? defaultValue]) {
+    return parseOverlayVisibilityMode(get(propertyName), defaultValue);
+  }
+
+  StrutStyle? getStrutStyle(String propertyName, [StrutStyle? defaultValue]) {
+    return parseStrutStyle(get(propertyName), defaultValue);
+  }
 }

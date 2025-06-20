@@ -1,24 +1,24 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/locale.dart';
-import 'package:flet/src/utils/others.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/control.dart';
+import '../utils/transforms.dart';
 import 'alignment.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'buttons.dart';
 import 'colors.dart';
 import 'dismissible.dart';
-import 'drawing.dart';
 import 'edge_insets.dart';
+import 'geometry.dart';
 import 'icons.dart';
+import 'locale.dart';
 import 'material_state.dart';
 import 'menu.dart';
+import 'misc.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 import 'overlay_style.dart';
@@ -32,64 +32,71 @@ class SystemUiOverlayStyleTheme
   SystemUiOverlayStyleTheme(this.systemUiOverlayStyle);
 
   @override
-  ThemeExtension<SystemUiOverlayStyleTheme> copyWith() {
+  SystemUiOverlayStyleTheme copyWith() {
     return SystemUiOverlayStyleTheme(systemUiOverlayStyle);
   }
 
   @override
-  ThemeExtension<SystemUiOverlayStyleTheme> lerp(
-      covariant ThemeExtension<SystemUiOverlayStyleTheme>? other, double t) {
-    return this;
+  SystemUiOverlayStyleTheme lerp(
+      covariant SystemUiOverlayStyleTheme? other, double t) {
+    if (other is! SystemUiOverlayStyleTheme) {
+      return this;
+    }
+    return other;
   }
+
+  @override
+  bool operator ==(Object other) {
+    return systemUiOverlayStyle ==
+        (other as SystemUiOverlayStyleTheme).systemUiOverlayStyle;
+  }
+
+  @override
+  int get hashCode => systemUiOverlayStyle.hashCode;
 }
 
 CupertinoThemeData parseCupertinoTheme(
-    Control control, String propName, Brightness? brightness,
+    dynamic value, BuildContext context, Brightness? brightness,
     {ThemeData? parentTheme}) {
-  var theme = parseTheme(control, propName, brightness);
+  var theme = parseTheme(value, context, brightness);
   var cupertinoTheme = MaterialBasedCupertinoThemeData(materialTheme: theme);
   return fixCupertinoTheme(cupertinoTheme, theme);
 }
 
 CupertinoThemeData fixCupertinoTheme(
     CupertinoThemeData cupertinoTheme, ThemeData theme) {
-  return cupertinoTheme.copyWith(
+  var r = cupertinoTheme.copyWith(
       applyThemeToAll: true,
       barBackgroundColor: theme.colorScheme.surface,
       textTheme: cupertinoTheme.textTheme.copyWith(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
               .copyWith(color: theme.colorScheme.onSurface)));
+  return r;
 }
 
-ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+Brightness? parseBrightness(String? value, [Brightness? defaultValue]) {
+  if (value == null) return defaultValue;
+  return Brightness.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
+ThemeMode? parseThemeMode(String? value, [ThemeMode? defaultValue]) {
+  if (value == null) return defaultValue;
   return ThemeMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-ThemeData parseTheme(Control control, String propName, Brightness? brightness,
+ThemeData parseTheme(
+    dynamic value, BuildContext context, Brightness? brightness,
     {ThemeData? parentTheme}) {
-  dynamic j;
-  var v = control.attrString(propName);
-  if (v != null) {
-    j = json.decode(v);
-  }
-  return themeFromJson(j, brightness, parentTheme);
-}
-
-ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
-    ThemeData? parentTheme) {
   ThemeData? theme = parentTheme;
 
-  var primarySwatch = parseColor(theme, json?["primary_swatch"]);
-  var colorSchemeSeed = parseColor(theme, json?["color_scheme_seed"]);
+  var primarySwatch = parseColor(value?["primary_swatch"], theme);
+  var colorSchemeSeed = parseColor(value?["color_scheme_seed"], theme);
 
-  if (colorSchemeSeed != null) {
-    primarySwatch = null;
-  }
+  if (colorSchemeSeed != null) primarySwatch = null;
 
   if (colorSchemeSeed == null && primarySwatch == null) {
     colorSchemeSeed = Colors.blue;
@@ -97,515 +104,467 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
 
   // create new theme
   theme ??= ThemeData(
-      primarySwatch:
-          primarySwatch != null ? primarySwatch as MaterialColor : null,
-      colorSchemeSeed: colorSchemeSeed,
-      fontFamily: json?["font_family"],
-      brightness: brightness,
-      useMaterial3: json?["use_material3"] ?? primarySwatch == null);
-
-  theme = theme.copyWith(
-    visualDensity:
-        parseVisualDensity(json?["visual_density"], theme.visualDensity)!,
-    pageTransitionsTheme: parsePageTransitions(
-        json?["page_transitions"], theme.pageTransitionsTheme)!,
-    colorScheme: parseColorScheme(theme, json?["color_scheme"]),
-    textTheme: parseTextTheme(theme, theme.textTheme, json?["text_theme"]),
-    primaryTextTheme: parseTextTheme(
-        theme, theme.primaryTextTheme, json?["primary_text_theme"]),
-    scrollbarTheme: parseScrollBarTheme(theme, json?["scrollbar_theme"]),
-    tabBarTheme: parseTabBarTheme(theme, json?["tabs_theme"]),
-    splashColor: parseColor(theme, json?["splash_color"]),
-    highlightColor: parseColor(theme, json?["highlight_color"]),
-    hoverColor: parseColor(theme, json?["hover_color"]),
-    focusColor: parseColor(theme, json?["focus_color"]),
-    unselectedWidgetColor: parseColor(theme, json?["unselected_control_color"]),
-    disabledColor: parseColor(theme, json?["disabled_color"]),
-    canvasColor: parseColor(theme, json?["canvas_color"]),
-    scaffoldBackgroundColor: parseColor(theme, json?["scaffold_bgcolor"]),
-    cardColor: parseColor(theme, json?["card_color"]),
-    dividerColor: parseColor(theme, json?["divider_color"]),
-    // TODO: deprecated in v0.27.0, and to be removed in v0.30.0
-    dialogBackgroundColor: parseColor(theme, json?["dialog_bgcolor"]),
-    indicatorColor: parseColor(theme, json?["indicator_color"]),
-    hintColor: parseColor(theme, json?["hint_color"]),
-    shadowColor: parseColor(theme, json?["shadow_color"]),
-    secondaryHeaderColor: parseColor(theme, json?["secondary_header_color"]),
-    primaryColor: parseColor(theme, json?["primary_color"]),
-    primaryColorLight: parseColor(theme, json?["primary_color_light"]),
-    primaryColorDark: parseColor(theme, json?["primary_color_dark"]),
-    dialogTheme: parseDialogTheme(theme, json?["dialog_theme"]),
-    bottomSheetTheme: parseBottomSheetTheme(theme, json?["bottom_sheet_theme"]),
-    cardTheme: parseCardTheme(theme, json?["card_theme"]),
-    chipTheme: parseChipTheme(theme, json?["chip_theme"]),
-    floatingActionButtonTheme: parseFloatingActionButtonTheme(
-        theme, json?["floating_action_button_theme"]),
-    bottomAppBarTheme:
-        parseBottomAppBarTheme(theme, json?["bottom_app_bar_theme"]),
-    checkboxTheme: parseCheckboxTheme(theme, json?["checkbox_theme"]),
-    radioTheme: parseRadioTheme(theme, json?["radio_theme"]),
-    badgeTheme: parseBadgeTheme(theme, json?["badge_theme"]),
-    switchTheme: parseSwitchTheme(theme, json?["switch_theme"]),
-    dividerTheme: parseDividerTheme(theme, json?["divider_theme"]),
-    snackBarTheme: parseSnackBarTheme(theme, json?["snackbar_theme"]),
-    bannerTheme: parseBannerTheme(theme, json?["banner_theme"]),
-    datePickerTheme: parseDatePickerTheme(theme, json?["date_picker_theme"]),
-    navigationRailTheme:
-        parseNavigationRailTheme(theme, json?["navigation_rail_theme"]),
-    appBarTheme: parseAppBarTheme(theme, json?["appbar_theme"]),
-    dropdownMenuTheme:
-        parseDropdownMenuTheme(theme, json?["dropdown_menu_theme"]),
-    listTileTheme: parseListTileTheme(theme, json?["list_tile_theme"]),
-    tooltipTheme: parseTooltipTheme(theme, json?["tooltip_theme"]),
-    expansionTileTheme:
-        parseExpansionTileTheme(theme, json?["expansion_tile_theme"]),
-    sliderTheme: parseSliderTheme(theme, json?["slider_theme"]),
-    progressIndicatorTheme:
-        parseProgressIndicatorTheme(theme, json?["progress_indicator_theme"]),
-    popupMenuTheme: parsePopupMenuTheme(theme, json?["popup_menu_theme"]),
-    searchBarTheme: parseSearchBarTheme(theme, json?["search_bar_theme"]),
-    searchViewTheme: parseSearchViewTheme(theme, json?["search_view_theme"]),
-    navigationDrawerTheme:
-        parseNavigationDrawerTheme(theme, json?["navigation_drawer_theme"]),
-    navigationBarTheme: parseNavigationBarTheme(
-      theme,
-      json?["navigation_bar_theme"],
-    ),
-    dataTableTheme: parseDataTableTheme(theme, json?["data_table_theme"]),
-    buttonTheme: parseButtonTheme(theme, json?["button_theme"]),
-    elevatedButtonTheme:
-        parseElevatedButtonTheme(theme, json?["elevated_button_theme"]),
-    outlinedButtonTheme:
-        parseOutlinedButtonTheme(theme, json?["outlined_button_theme"]),
-    textButtonTheme: parseTextButtonTheme(theme, json?["text_button_theme"]),
-    filledButtonTheme:
-        parseFilledButtonTheme(theme, json?["filled_button_theme"]),
-    iconButtonTheme: parseIconButtonTheme(theme, json?["icon_button_theme"]),
-    segmentedButtonTheme: parseSegmentedButtonTheme(
-      theme,
-      json?["segmented_button_theme"],
-    ),
-    iconTheme: parseIconTheme(theme, json?["icon_theme"]),
-    timePickerTheme: parseTimePickerTheme(theme, json?["time_picker_theme"]),
+    primarySwatch:
+        primarySwatch != null ? primarySwatch as MaterialColor : null,
+    colorSchemeSeed: colorSchemeSeed,
+    fontFamily: value?["font_family"],
+    brightness: brightness,
+    useMaterial3: value?["use_material3"] ?? primarySwatch == null,
   );
 
-  var systemOverlayStyle = json?["system_overlay_style"] != null
-      ? overlayStyleFromJson(theme, json?["system_overlay_style"], brightness)
-      : null;
+  theme = theme.copyWith(
+    extensions: {
+      SystemUiOverlayStyleTheme(value?["system_overlay_style"] != null
+          ? parseSystemUiOverlayStyle(
+              value?["system_overlay_style"], theme, brightness)
+          : null)
+    },
+    visualDensity:
+        parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
+    pageTransitionsTheme: parsePageTransitions(
+        value?["page_transitions"], theme.pageTransitionsTheme)!,
+    colorScheme: parseColorScheme(value?["color_scheme"], theme),
+    textTheme: parseTextTheme(value?["text_theme"], theme, theme.textTheme),
+    primaryTextTheme: parseTextTheme(
+        value?["primary_text_theme"], theme, theme.primaryTextTheme),
+    scrollbarTheme: parseScrollBarTheme(value?["scrollbar_theme"], theme),
+    tabBarTheme: parseTabBarTheme(value?["tabs_theme"], theme),
+    splashColor: parseColor(value?["splash_color"], theme),
+    highlightColor: parseColor(value?["highlight_color"], theme),
+    hoverColor: parseColor(value?["hover_color"], theme),
+    focusColor: parseColor(value?["focus_color"], theme),
+    unselectedWidgetColor:
+        parseColor(value?["unselected_control_color"], theme),
+    disabledColor: parseColor(value?["disabled_color"], theme),
+    canvasColor: parseColor(value?["canvas_color"], theme),
+    scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
+    cardColor: parseColor(value?["card_color"], theme),
+    dividerColor: parseColor(value?["divider_color"], theme),
+    indicatorColor: parseColor(value?["indicator_color"], theme),
+    hintColor: parseColor(value?["hint_color"], theme),
+    shadowColor: parseColor(value?["shadow_color"], theme),
+    secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
+    primaryColor: parseColor(value?["primary_color"], theme),
+    primaryColorLight: parseColor(value?["primary_color_light"], theme),
+    primaryColorDark: parseColor(value?["primary_color_dark"], theme),
+    dialogTheme: parseDialogTheme(value?["dialog_theme"], theme),
+    bottomSheetTheme:
+        parseBottomSheetTheme(value?["bottom_sheet_theme"], theme),
+    cardTheme: parseCardTheme(value?["card_theme"], theme),
+    chipTheme: parseChipTheme(value?["chip_theme"], theme),
+    floatingActionButtonTheme: parseFloatingActionButtonTheme(
+        value?["floating_action_button_theme"], theme),
+    bottomAppBarTheme:
+        parseBottomAppBarTheme(value?["bottom_app_bar_theme"], theme),
+    checkboxTheme: parseCheckboxTheme(value?["checkbox_theme"], theme),
+    radioTheme: parseRadioTheme(value?["radio_theme"], theme),
+    badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
+    switchTheme: parseSwitchTheme(value?["switch_theme"], theme),
+    dividerTheme: parseDividerTheme(value?["divider_theme"], theme),
+    snackBarTheme: parseSnackBarTheme(value?["snackbar_theme"], theme),
+    bannerTheme: parseBannerTheme(value?["banner_theme"], theme),
+    datePickerTheme: parseDatePickerTheme(value?["date_picker_theme"], theme),
+    navigationRailTheme:
+        parseNavigationRailTheme(value?["navigation_rail_theme"], theme),
+    appBarTheme: parseAppBarTheme(value?["appbar_theme"], theme),
+    dropdownMenuTheme:
+        parseDropdownMenuTheme(value?["dropdown_menu_theme"], theme),
+    listTileTheme: parseListTileTheme(value?["list_tile_theme"], theme),
+    tooltipTheme: parseTooltipTheme(value?["tooltip_theme"], context),
+    expansionTileTheme:
+        parseExpansionTileTheme(value?["expansion_tile_theme"], theme),
+    sliderTheme: parseSliderTheme(value?["slider_theme"], theme),
+    progressIndicatorTheme:
+        parseProgressIndicatorTheme(value?["progress_indicator_theme"], theme),
+    popupMenuTheme: parsePopupMenuTheme(value?["popup_menu_theme"], theme),
+    searchBarTheme: parseSearchBarTheme(value?["search_bar_theme"], theme),
+    searchViewTheme: parseSearchViewTheme(value?["search_view_theme"], theme),
+    navigationDrawerTheme:
+        parseNavigationDrawerTheme(value?["navigation_drawer_theme"], theme),
+    navigationBarTheme:
+        parseNavigationBarTheme(value?["navigation_bar_theme"], theme),
+    dataTableTheme: parseDataTableTheme(value?["data_table_theme"], context),
+    buttonTheme: parseButtonTheme(value?["button_theme"], theme),
+    elevatedButtonTheme:
+        parseElevatedButtonTheme(value?["elevated_button_theme"], theme),
+    outlinedButtonTheme:
+        parseOutlinedButtonTheme(value?["outlined_button_theme"], theme),
+    textButtonTheme: parseTextButtonTheme(value?["text_button_theme"], theme),
+    filledButtonTheme:
+        parseFilledButtonTheme(value?["filled_button_theme"], theme),
+    iconButtonTheme: parseIconButtonTheme(value?["icon_button_theme"], theme),
+    segmentedButtonTheme:
+        parseSegmentedButtonTheme(value?["segmented_button_theme"], theme),
+    iconTheme: parseIconTheme(value?["icon_theme"], theme),
+    timePickerTheme: parseTimePickerTheme(value?["time_picker_theme"], theme),
+  );
 
   return theme.copyWith(
-      extensions: {SystemUiOverlayStyleTheme(systemOverlayStyle)},
       cupertinoOverrideTheme: fixCupertinoTheme(
           MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
 }
 
-ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+ColorScheme? parseColorScheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [ColorScheme? defaultValue]) {
+  if (value == null) return defaultValue;
   return theme.colorScheme.copyWith(
-    primary: parseColor(theme, j["primary"]),
-    onPrimary: parseColor(theme, j["on_primary"]),
-    primaryContainer: parseColor(theme, j["primary_container"]),
-    onPrimaryContainer: parseColor(theme, j["on_primary_container"]),
-    secondary: parseColor(theme, j["secondary"]),
-    onSecondary: parseColor(theme, j["on_secondary"]),
-    secondaryContainer: parseColor(theme, j["secondary_container"]),
-    onSecondaryContainer: parseColor(theme, j["on_secondary_container"]),
-    tertiary: parseColor(theme, j["tertiary"]),
-    onTertiary: parseColor(theme, j["on_tertiary"]),
-    tertiaryContainer: parseColor(theme, j["tertiary_container"]),
-    onTertiaryContainer: parseColor(theme, j["on_tertiary_container"]),
-    error: parseColor(theme, j["error"]),
-    onError: parseColor(theme, j["on_error"]),
-    errorContainer: parseColor(theme, j["error_container"]),
-    onErrorContainer: parseColor(theme, j["on_error_container"]),
-    surface: parseColor(theme, j["surface"]),
-    onSurface: parseColor(theme, j["on_surface"]),
-    surfaceContainerHighest: parseColor(theme, j["surface_variant"]),
-    onSurfaceVariant: parseColor(theme, j["on_surface_variant"]),
-    outline: parseColor(theme, j["outline"]),
-    outlineVariant: parseColor(theme, j["outline_variant"]),
-    shadow: parseColor(theme, j["shadow"]),
-    scrim: parseColor(theme, j["scrim"]),
-    inverseSurface: parseColor(theme, j["inverse_surface"]),
-    onInverseSurface: parseColor(theme, j["on_inverse_surface"]),
-    inversePrimary: parseColor(theme, j["inverse_primary"]),
-    surfaceTint: parseColor(theme, j["surface_tint"]),
-    onPrimaryFixed: parseColor(theme, j["on_primary_fixed"]),
-    onSecondaryFixed: parseColor(theme, j["on_secondary_fixed"]),
-    onTertiaryFixed: parseColor(theme, j["on_tertiary_fixed"]),
-    onPrimaryFixedVariant: parseColor(theme, j["on_primary_fixed_variant"]),
-    onSecondaryFixedVariant: parseColor(theme, j["on_secondary_fixed_variant"]),
-    onTertiaryFixedVariant: parseColor(theme, j["on_tertiary_fixed_variant"]),
-    primaryFixed: parseColor(theme, j["primary_fixed"]),
-    secondaryFixed: parseColor(theme, j["secondary_fixed"]),
-    tertiaryFixed: parseColor(theme, j["tertiary_fixed"]),
-    primaryFixedDim: parseColor(theme, j["primary_fixed_dim"]),
-    secondaryFixedDim: parseColor(theme, j["secondary_fixed_dim"]),
-    surfaceBright: parseColor(theme, j["surface_bright"]),
-    surfaceContainer: parseColor(theme, j["surface_container"]),
-    surfaceContainerHigh: parseColor(theme, j["surface_container_high"]),
-    surfaceContainerLow: parseColor(theme, j["surface_container_low"]),
-    surfaceContainerLowest: parseColor(theme, j["surface_container_lowest"]),
-    surfaceDim: parseColor(theme, j["surface_dim"]),
-    tertiaryFixedDim: parseColor(theme, j["tertiary_fixed_dim"]),
+    primary: parseColor(value["primary"], theme),
+    onPrimary: parseColor(value["on_primary"], theme),
+    primaryContainer: parseColor(value["primary_container"], theme),
+    onPrimaryContainer: parseColor(value["on_primary_container"], theme),
+    secondary: parseColor(value["secondary"], theme),
+    onSecondary: parseColor(value["on_secondary"], theme),
+    secondaryContainer: parseColor(value["secondary_container"], theme),
+    onSecondaryContainer: parseColor(value["on_secondary_container"], theme),
+    tertiary: parseColor(value["tertiary"], theme),
+    onTertiary: parseColor(value["on_tertiary"], theme),
+    tertiaryContainer: parseColor(value["tertiary_container"], theme),
+    onTertiaryContainer: parseColor(value["on_tertiary_container"], theme),
+    error: parseColor(value["error"], theme),
+    onError: parseColor(value["on_error"], theme),
+    errorContainer: parseColor(value["error_container"], theme),
+    onErrorContainer: parseColor(value["on_error_container"], theme),
+    surface: parseColor(value["surface"], theme),
+    onSurface: parseColor(value["on_surface"], theme),
+    surfaceContainerHighest: parseColor(value["surface_variant"], theme),
+    onSurfaceVariant: parseColor(value["on_surface_variant"], theme),
+    outline: parseColor(value["outline"], theme),
+    outlineVariant: parseColor(value["outline_variant"], theme),
+    shadow: parseColor(value["shadow"], theme),
+    scrim: parseColor(value["scrim"], theme),
+    inverseSurface: parseColor(value["inverse_surface"], theme),
+    onInverseSurface: parseColor(value["on_inverse_surface"], theme),
+    inversePrimary: parseColor(value["inverse_primary"], theme),
+    surfaceTint: parseColor(value["surface_tint"], theme),
+    onPrimaryFixed: parseColor(value["on_primary_fixed"], theme),
+    onSecondaryFixed: parseColor(value["on_secondary_fixed"], theme),
+    onTertiaryFixed: parseColor(value["on_tertiary_fixed"], theme),
+    onPrimaryFixedVariant: parseColor(value["on_primary_fixed_variant"], theme),
+    onSecondaryFixedVariant:
+        parseColor(value["on_secondary_fixed_variant"], theme),
+    onTertiaryFixedVariant:
+        parseColor(value["on_tertiary_fixed_variant"], theme),
+    primaryFixed: parseColor(value["primary_fixed"], theme),
+    secondaryFixed: parseColor(value["secondary_fixed"], theme),
+    tertiaryFixed: parseColor(value["tertiary_fixed"], theme),
+    primaryFixedDim: parseColor(value["primary_fixed_dim"], theme),
+    secondaryFixedDim: parseColor(value["secondary_fixed_dim"], theme),
+    surfaceBright: parseColor(value["surface_bright"], theme),
+    surfaceContainer: parseColor(value["surface_container"], theme),
+    surfaceContainerHigh: parseColor(value["surface_container_high"], theme),
+    surfaceContainerLow: parseColor(value["surface_container_low"], theme),
+    surfaceContainerLowest:
+        parseColor(value["surface_container_lowest"], theme),
+    surfaceDim: parseColor(value["surface_dim"], theme),
+    tertiaryFixedDim: parseColor(value["tertiary_fixed_dim"], theme),
   );
 }
 
 TextTheme? parseTextTheme(
-    ThemeData theme, TextTheme textTheme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme, TextTheme textTheme,
+    [TextTheme? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return textTheme.copyWith(
-    bodyLarge: parseTextStyle("body_large"),
-    bodyMedium: parseTextStyle("body_medium"),
-    bodySmall: parseTextStyle("body_small"),
-    displayLarge: parseTextStyle("display_large"),
-    displayMedium: parseTextStyle("display_medium"),
-    displaySmall: parseTextStyle("display_small"),
-    headlineLarge: parseTextStyle("headline_large"),
-    headlineMedium: parseTextStyle("headline_medium"),
-    headlineSmall: parseTextStyle("headline_small"),
-    labelLarge: parseTextStyle("label_large"),
-    labelMedium: parseTextStyle("label_medium"),
-    labelSmall: parseTextStyle("label_small"),
-    titleLarge: parseTextStyle("title_large"),
-    titleMedium: parseTextStyle("title_medium"),
-    titleSmall: parseTextStyle("title_small"),
+    bodyLarge: parseTextStyle(value["body_large"], theme),
+    bodyMedium: parseTextStyle(value["body_medium"], theme),
+    bodySmall: parseTextStyle(value["body_small"], theme),
+    displayLarge: parseTextStyle(value["display_large"], theme),
+    displayMedium: parseTextStyle(value["display_medium"], theme),
+    displaySmall: parseTextStyle(value["display_small"], theme),
+    headlineLarge: parseTextStyle(value["headline_large"], theme),
+    headlineMedium: parseTextStyle(value["headline_medium"], theme),
+    headlineSmall: parseTextStyle(value["headline_small"], theme),
+    labelLarge: parseTextStyle(value["label_large"], theme),
+    labelMedium: parseTextStyle(value["label_medium"], theme),
+    labelSmall: parseTextStyle(value["label_small"], theme),
+    titleLarge: parseTextStyle(value["title_large"], theme),
+    titleMedium: parseTextStyle(value["title_medium"], theme),
+    titleSmall: parseTextStyle(value["title_small"], theme),
   );
 }
 
-ButtonThemeData? parseButtonTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+ButtonThemeData? parseButtonTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [ButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.buttonTheme.copyWith(
-    buttonColor: parseColor(theme, j["button_color"]),
-    disabledColor: parseColor(theme, j["disabled_color"]),
-    hoverColor: parseColor(theme, j["hover_color"]),
-    focusColor: parseColor(theme, j["focus_color"]),
-    highlightColor: parseColor(theme, j["highlight_color"]),
-    splashColor: parseColor(theme, j["splash_color"]),
-    colorScheme: parseColorScheme(theme, j["color_scheme"]),
-    alignedDropdown: parseBool(j["aligned_dropdown"]),
-    height: parseDouble(j["height"]),
-    minWidth: parseDouble(j["min_width"]),
-    shape: outlinedBorderFromJSON(j["shape"]),
-    padding: edgeInsetsFromJson(j["padding"]),
+    buttonColor: parseColor(value["button_color"], theme),
+    disabledColor: parseColor(value["disabled_color"], theme),
+    hoverColor: parseColor(value["hover_color"], theme),
+    focusColor: parseColor(value["focus_color"], theme),
+    highlightColor: parseColor(value["highlight_color"], theme),
+    splashColor: parseColor(value["splash_color"], theme),
+    colorScheme: parseColorScheme(value["color_scheme"], theme),
+    alignedDropdown: parseBool(value["aligned_dropdown"]),
+    height: parseDouble(value["height"]),
+    minWidth: parseDouble(value["min_width"]),
+    shape: parseShape(value["shape"], theme),
+    padding: parsePadding(value["padding"]),
   );
 }
 
 ElevatedButtonThemeData? parseElevatedButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [ElevatedButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-    iconColor: parseColor(theme, j["icon_color"]),
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
-    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
-    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
-    overlayColor: parseColor(theme, j["overlay_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: parseDouble(j["elevation"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
-    shape: outlinedBorderFromJSON(j["shape"]),
-    textStyle: parseTextStyle("text_style"),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    side: borderSideFromJSON(theme, j["border_side"]),
-    animationDuration: durationFromJSON(j["animation_duration"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    iconSize: parseDouble(j["icon_size"]),
-    fixedSize: sizeFromJson(j["fixed_size"]),
-    maximumSize: sizeFromJson(j["maximum_size"]),
-    minimumSize: sizeFromJson(j["minimum_size"]),
+    iconColor: parseColor(value["icon_color"], theme),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
+    disabledForegroundColor:
+        parseColor(value["disabled_foreground_color"], theme),
+    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
+    overlayColor: parseColor(value["overlay_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    padding: parsePadding(value["padding"]),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    side: parseBorderSide(value["border_side"], theme),
+    animationDuration: parseDuration(value["animation_duration"]),
+    alignment: parseAlignment(value["alignment"]),
+    iconSize: parseDouble(value["icon_size"]),
+    fixedSize: parseSize(value["fixed_size"]),
+    maximumSize: parseSize(value["maximum_size"]),
+    minimumSize: parseSize(value["minimum_size"]),
   ));
 }
 
 OutlinedButtonThemeData? parseOutlinedButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [OutlinedButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-    iconColor: parseColor(theme, j["icon_color"]),
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
-    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
-    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
-    overlayColor: parseColor(theme, j["overlay_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: parseDouble(j["elevation"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
-    shape: outlinedBorderFromJSON(j["shape"]),
-    textStyle: parseTextStyle("text_style"),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    side: borderSideFromJSON(theme, j["border_side"]),
-    animationDuration: durationFromJSON(j["animation_duration"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    iconSize: parseDouble(j["icon_size"]),
-    fixedSize: sizeFromJson(j["fixed_size"]),
-    maximumSize: sizeFromJson(j["maximum_size"]),
-    minimumSize: sizeFromJson(j["minimum_size"]),
+    iconColor: parseColor(value["icon_color"], theme),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
+    disabledForegroundColor:
+        parseColor(value["disabled_foreground_color"], theme),
+    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
+    overlayColor: parseColor(value["overlay_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    padding: parsePadding(value["padding"]),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    side: parseBorderSide(value["border_side"], theme),
+    animationDuration: parseDuration(value["animation_duration"]),
+    alignment: parseAlignment(value["alignment"]),
+    iconSize: parseDouble(value["icon_size"]),
+    fixedSize: parseSize(value["fixed_size"]),
+    maximumSize: parseSize(value["maximum_size"]),
+    minimumSize: parseSize(value["minimum_size"]),
   ));
 }
 
 TextButtonThemeData? parseTextButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [TextButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return TextButtonThemeData(
       style: TextButton.styleFrom(
-    iconColor: parseColor(theme, j["icon_color"]),
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
-    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
-    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
-    overlayColor: parseColor(theme, j["overlay_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: parseDouble(j["elevation"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
-    shape: outlinedBorderFromJSON(j["shape"]),
-    textStyle: parseTextStyle("text_style"),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    side: borderSideFromJSON(theme, j["border_side"]),
-    animationDuration: durationFromJSON(j["animation_duration"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    iconSize: parseDouble(j["icon_size"]),
-    fixedSize: sizeFromJson(j["fixed_size"]),
-    maximumSize: sizeFromJson(j["maximum_size"]),
-    minimumSize: sizeFromJson(j["minimum_size"]),
+    iconColor: parseColor(value["icon_color"], theme),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
+    disabledForegroundColor:
+        parseColor(value["disabled_foreground_color"], theme),
+    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
+    overlayColor: parseColor(value["overlay_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    padding: parsePadding(value["padding"]),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    side: parseBorderSide(value["border_side"], theme),
+    animationDuration: parseDuration(value["animation_duration"]),
+    alignment: parseAlignment(value["alignment"]),
+    iconSize: parseDouble(value["icon_size"]),
+    fixedSize: parseSize(value["fixed_size"]),
+    maximumSize: parseSize(value["maximum_size"]),
+    minimumSize: parseSize(value["minimum_size"]),
   ));
 }
 
 FilledButtonThemeData? parseFilledButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [FilledButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return FilledButtonThemeData(
       style: FilledButton.styleFrom(
-    iconColor: parseColor(theme, j["icon_color"]),
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
-    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
-    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
-    overlayColor: parseColor(theme, j["overlay_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: parseDouble(j["elevation"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
-    shape: outlinedBorderFromJSON(j["shape"]),
-    textStyle: parseTextStyle("text_style"),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    side: borderSideFromJSON(theme, j["border_side"]),
-    animationDuration: durationFromJSON(j["animation_duration"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    iconSize: parseDouble(j["icon_size"]),
-    fixedSize: sizeFromJson(j["fixed_size"]),
-    maximumSize: sizeFromJson(j["maximum_size"]),
-    minimumSize: sizeFromJson(j["minimum_size"]),
+    iconColor: parseColor(value["icon_color"], theme),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
+    disabledForegroundColor:
+        parseColor(value["disabled_foreground_color"], theme),
+    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
+    overlayColor: parseColor(value["overlay_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    padding: parsePadding(value["padding"]),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    side: parseBorderSide(value["border_side"], theme),
+    animationDuration: parseDuration(value["animation_duration"]),
+    alignment: parseAlignment(value["alignment"]),
+    iconSize: parseDouble(value["icon_size"]),
+    fixedSize: parseSize(value["fixed_size"]),
+    maximumSize: parseSize(value["maximum_size"]),
+    minimumSize: parseSize(value["minimum_size"]),
   ));
 }
 
 IconButtonThemeData? parseIconButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [IconButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return IconButtonThemeData(
       style: IconButton.styleFrom(
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
-    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
-    overlayColor: parseColor(theme, j["overlay_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    focusColor: parseColor(theme, j["focus_color"]),
-    highlightColor: parseColor(theme, j["highlight_color"]),
-    hoverColor: parseColor(theme, j["hover_color"]),
-    elevation: parseDouble(j["elevation"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
-    shape: outlinedBorderFromJSON(j["shape"]),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    side: borderSideFromJSON(theme, j["border_side"]),
-    animationDuration: durationFromJSON(j["animation_duration"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    iconSize: parseDouble(j["icon_size"]),
-    fixedSize: sizeFromJson(j["fixed_size"]),
-    maximumSize: sizeFromJson(j["maximum_size"]),
-    minimumSize: sizeFromJson(j["minimum_size"]),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
+    disabledForegroundColor:
+        parseColor(value["disabled_foreground_color"], theme),
+    overlayColor: parseColor(value["overlay_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    focusColor: parseColor(value["focus_color"], theme),
+    highlightColor: parseColor(value["highlight_color"], theme),
+    hoverColor: parseColor(value["hover_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    padding: parsePadding(value["padding"]),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    side: parseBorderSide(value["border_side"], theme),
+    animationDuration: parseDuration(value["animation_duration"]),
+    alignment: parseAlignment(value["alignment"]),
+    iconSize: parseDouble(value["icon_size"]),
+    fixedSize: parseSize(value["fixed_size"]),
+    maximumSize: parseSize(value["maximum_size"]),
+    minimumSize: parseSize(value["minimum_size"]),
   ));
 }
 
 DataTableThemeData? parseDataTableTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, BuildContext context,
+    [DataTableThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
+  var theme = Theme.of(context);
 
   return theme.dataTableTheme.copyWith(
-    checkboxHorizontalMargin: parseDouble(j["checkbox_horizontal_margin"]),
-    columnSpacing: parseDouble(j["column_spacing"]),
-    dataRowMaxHeight: parseDouble(j["data_row_max_height"]),
-    dataRowMinHeight: parseDouble(j["data_row_min_height"]),
-    dataRowColor: getWidgetStateProperty<Color?>(
-        j["data_row_color"], (jv) => parseColor(theme, jv as String)),
-    dataTextStyle: parseTextStyle("data_text_style"),
-    dividerThickness: parseDouble(j["divider_thickness"]),
-    horizontalMargin: parseDouble(j["horizontal_margin"]),
-    headingTextStyle: parseTextStyle("heading_text_style"),
-    headingRowColor: getWidgetStateProperty<Color?>(
-        j["heading_row_color"], (jv) => parseColor(theme, jv as String)),
-    headingRowHeight: parseDouble(j["heading_row_height"]),
-    dataRowCursor: getWidgetStateProperty<MouseCursor?>(
-        j["data_row_cursor"], (jv) => parseMouseCursor(jv)),
-    decoration: boxDecorationFromJSON(theme, j["decoration"], null),
-    // TODO: replace null with a proper PageArgsModel
-    headingRowAlignment: parseMainAxisAlignment(j["heading_row_alignment"]),
-    headingCellCursor: getWidgetStateProperty<MouseCursor?>(
-        j["heading_cell_cursor"], (jv) => parseMouseCursor(jv)),
+    checkboxHorizontalMargin: parseDouble(value["checkbox_horizontal_margin"]),
+    columnSpacing: parseDouble(value["column_spacing"]),
+    dataRowMaxHeight: parseDouble(value["data_row_max_height"]),
+    dataRowMinHeight: parseDouble(value["data_row_min_height"]),
+    dataRowColor: parseWidgetStateColor(value["data_row_color"], theme),
+    dataTextStyle: parseTextStyle(value["data_text_style"], theme),
+    dividerThickness: parseDouble(value["divider_thickness"]),
+    horizontalMargin: parseDouble(value["horizontal_margin"]),
+    headingTextStyle: parseTextStyle(value["heading_text_style"], theme),
+    headingRowColor: parseWidgetStateColor(value["heading_row_color"], theme),
+    headingRowHeight: parseDouble(value["heading_row_height"]),
+    dataRowCursor: parseWidgetStateMouseCursor(value["data_row_cursor"]),
+    decoration: parseBoxDecoration(value["decoration"], context),
+    headingRowAlignment: parseMainAxisAlignment(value["heading_row_alignment"]),
+    headingCellCursor:
+        parseWidgetStateMouseCursor(value["heading_cell_cursor"]),
   );
 }
 
 ScrollbarThemeData? parseScrollBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [ScrollbarThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
   return theme.scrollbarTheme.copyWith(
-    trackVisibility: getWidgetStateProperty<bool?>(
-        j["track_visibility"], (jv) => parseBool(jv)),
-    trackColor: getWidgetStateProperty<Color?>(
-        j["track_color"], (jv) => parseColor(theme, jv as String)),
-    trackBorderColor: getWidgetStateProperty<Color?>(
-        j["track_border_color"], (jv) => parseColor(theme, jv as String)),
-    thumbVisibility: getWidgetStateProperty<bool?>(
-        j["thumb_visibility"], (jv) => parseBool(jv)),
-    thumbColor: getWidgetStateProperty<Color?>(
-        j["thumb_color"], (jv) => parseColor(theme, jv as String)),
-    thickness: getWidgetStateProperty<double?>(
-        j["thickness"], (jv) => parseDouble(jv, 0)!),
-    radius: j["radius"] != null
-        ? Radius.circular(parseDouble(j["radius"], 0)!)
-        : null,
-    crossAxisMargin: parseDouble(j["cross_axis_margin"]),
-    mainAxisMargin: parseDouble(j["main_axis_margin"]),
-    minThumbLength: parseDouble(j["min_thumb_length"]),
-    interactive: parseBool(j["interactive"]),
+    trackVisibility: parseWidgetStateBool(value["track_visibility"]),
+    trackColor: parseWidgetStateColor(value["track_color"], theme),
+    trackBorderColor: parseWidgetStateColor(value["track_border_color"], theme),
+    thumbVisibility: parseWidgetStateBool(value["thumb_visibility"]),
+    thumbColor: parseWidgetStateColor(value["thumb_color"], theme),
+    thickness: parseWidgetStateDouble(value["thickness"]),
+    radius: parseRadius(value["radius"]),
+    crossAxisMargin: parseDouble(value["cross_axis_margin"]),
+    mainAxisMargin: parseDouble(value["main_axis_margin"]),
+    minThumbLength: parseDouble(value["min_thumb_length"]),
+    interactive: parseBool(value["interactive"]),
   );
 }
 
-TabBarThemeData? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+TabBarThemeData? parseTabBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [TabBarThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  var indicatorColor = parseColor(theme, j["indicator_color"]);
+  var indicatorColor =
+      parseColor(value["indicator_color"], theme, theme.colorScheme.primary)!;
 
   return theme.tabBarTheme.copyWith(
-    overlayColor: getWidgetStateProperty<Color?>(
-        j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    dividerColor: parseColor(theme, j["divider_color"]),
-    indicatorColor: indicatorColor,
-    labelColor: parseColor(theme, j["label_color"]),
-    unselectedLabelColor: parseColor(theme, j["unselected_label_color"]),
-    indicatorSize: parseBool(j["indicator_tab_size"], false)!
-        ? TabBarIndicatorSize.tab
-        : TabBarIndicatorSize.label,
-    indicator: j["indicator_border_radius"] != null ||
-            j["indicator_border_side"] != null ||
-            j["indicator_padding"] != null
-        ? UnderlineTabIndicator(
-            borderRadius: borderRadiusFromJSON(
-                j["indicator_border_radius"],
-                const BorderRadius.only(
-                    topLeft: Radius.circular(2),
-                    topRight: Radius.circular(2)))!,
-            borderSide: borderSideFromJSON(
-                    theme, j["indicator_border_side"], indicatorColor) ??
-                BorderSide(
-                    width: 2.0,
-                    color: indicatorColor ?? theme.colorScheme.primary),
-            insets:
-                edgeInsetsFromJson(j["indicator_padding"]) ?? EdgeInsets.zero)
-        : null,
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    labelPadding: edgeInsetsFromJson(j["label_padding"]),
-    dividerHeight: parseDouble(j["divider_height"]),
-    labelStyle: j["label_text_style"] != null
-        ? textStyleFromJson(theme, j["label_text_style"])
-        : null,
-    unselectedLabelStyle: j["unselected_label_text_style"] != null
-        ? textStyleFromJson(theme, j["unselected_label_text_style"])
-        : null,
-  );
+      overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+      dividerColor: parseColor(value["divider_color"], theme),
+      indicatorColor: indicatorColor,
+      labelColor: parseColor(value["label_color"], theme),
+      unselectedLabelColor: parseColor(value["unselected_label_color"], theme),
+      indicatorSize: parseBool(value["indicator_tab_size"], false)!
+          ? TabBarIndicatorSize.tab
+          : TabBarIndicatorSize.label,
+      indicator: value["indicator_border_radius"] != null ||
+              value["indicator_border_side"] != null ||
+              value["indicator_padding"] != null
+          ? UnderlineTabIndicator(
+              borderRadius: parseBorderRadius(
+                  value["indicator_border_radius"],
+                  const BorderRadius.only(
+                      topLeft: Radius.circular(2),
+                      topRight: Radius.circular(2)))!,
+              borderSide: parseBorderSide(value["indicator_border_side"], theme,
+                  defaultSideColor: indicatorColor,
+                  defaultValue: BorderSide(width: 2.0, color: indicatorColor))!,
+              insets:
+                  parsePadding(value["indicator_padding"], EdgeInsets.zero)!)
+          : null,
+      mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+      labelPadding: parsePadding(value["label_padding"]),
+      dividerHeight: parseDouble(value["divider_height"]),
+      labelStyle: parseTextStyle(value["label_text_style"], theme),
+      unselectedLabelStyle:
+          parseTextStyle(value["unselected_label_text_style"], theme));
 }
 
-VisualDensity? parseVisualDensity(String? density, [VisualDensity? defValue]) {
+VisualDensity? parseVisualDensity(String? density,
+    [VisualDensity? defaultValue]) {
   switch (density?.toLowerCase()) {
     case "adaptiveplatformdensity":
       return VisualDensity.adaptivePlatformDensity;
@@ -616,883 +575,723 @@ VisualDensity? parseVisualDensity(String? density, [VisualDensity? defValue]) {
     case "standard":
       return VisualDensity.standard;
     default:
-      return defValue;
+      return defaultValue;
   }
 }
 
-PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? json,
-    [PageTransitionsTheme? defValue]) {
-  if (json == null) {
-    return defValue;
+PageTransitionsTheme? parsePageTransitions(Map<dynamic, dynamic>? value,
+    [PageTransitionsTheme? defaultValue]) {
+  if (value == null) {
+    return defaultValue;
   }
   return PageTransitionsTheme(builders: {
     TargetPlatform.android: parseTransitionsBuilder(
-        json["android"], const FadeUpwardsPageTransitionsBuilder()),
+        value["android"], const FadeUpwardsPageTransitionsBuilder())!,
     TargetPlatform.iOS: parseTransitionsBuilder(
-        json["ios"], const CupertinoPageTransitionsBuilder()),
+        value["ios"], const CupertinoPageTransitionsBuilder())!,
     TargetPlatform.linux: parseTransitionsBuilder(
-        json["linux"], const ZoomPageTransitionsBuilder()),
+        value["linux"], const ZoomPageTransitionsBuilder())!,
     TargetPlatform.macOS: parseTransitionsBuilder(
-        json["macos"], const ZoomPageTransitionsBuilder()),
+        value["macos"], const ZoomPageTransitionsBuilder())!,
     TargetPlatform.windows: parseTransitionsBuilder(
-        json["windows"], const ZoomPageTransitionsBuilder()),
+        value["windows"], const ZoomPageTransitionsBuilder())!,
   });
 }
 
-DialogThemeData? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+DialogThemeData? parseDialogTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [DialogThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.dialogTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    iconColor: parseColor(theme, j["icon_color"]),
-    elevation: parseDouble(j["elevation"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    titleTextStyle: parseTextStyle("title_text_style"),
-    contentTextStyle: parseTextStyle("content_text_style"),
-    alignment: alignmentFromJson(j["alignment"]),
-    actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
-    clipBehavior: parseClip(j["clip_behavior"]),
-    barrierColor: parseColor(theme, j["barrier_color"]),
-    insetPadding: edgeInsetsFromJson(j["inset_padding"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    iconColor: parseColor(value["icon_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    shape: parseShape(value["shape"], theme),
+    titleTextStyle: parseTextStyle(value["title_text_style"], theme),
+    contentTextStyle: parseTextStyle(value["content_text_style"], theme),
+    alignment: parseAlignment(value["alignment"]),
+    actionsPadding: parsePadding(value["actions_padding"]),
+    clipBehavior: parseClip(value["clip_behavior"]),
+    barrierColor: parseColor(value["barrier_color"], theme),
+    insetPadding: parsePadding(value["inset_padding"]),
   );
 }
 
 BottomSheetThemeData? parseBottomSheetTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [BottomSheetThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.bottomSheetTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    dragHandleColor: parseColor(theme, j["drag_handle_color"]),
-    elevation: parseDouble(j["elevation"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    showDragHandle: parseBool(j["show_drag_handle"]),
-    modalBackgroundColor: parseColor(theme, j["modal_bgcolor"]),
-    modalElevation: parseDouble(j["modal_elevation"]),
-    clipBehavior: parseClip(j["clip_behavior"]),
-    constraints: boxConstraintsFromJSON(j["size_constraints"]),
-    modalBarrierColor: parseColor(theme, j["modal_barrier_color"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    dragHandleColor: parseColor(value["drag_handle_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    shape: parseShape(value["shape"], theme),
+    showDragHandle: parseBool(value["show_drag_handle"]),
+    modalBackgroundColor: parseColor(value["modal_bgcolor"], theme),
+    modalElevation: parseDouble(value["modal_elevation"]),
+    clipBehavior: parseClip(value["clip_behavior"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
+    modalBarrierColor: parseColor(value["modal_barrier_color"], theme),
   );
 }
 
-CardThemeData? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+CardThemeData? parseCardTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [CardThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.cardTheme.copyWith(
-      color: parseColor(theme, j["color"]),
-      shadowColor: parseColor(theme, j["shadow_color"]),
-      surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-      elevation: parseDouble(j["elevation"]),
-      shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-      clipBehavior: parseClip(j["clip_behavior"]),
-      margin: edgeInsetsFromJson(j["margin"]));
+      color: parseColor(value["color"], theme),
+      shadowColor: parseColor(value["shadow_color"], theme),
+      surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+      elevation: parseDouble(value["elevation"]),
+      shape: parseShape(value["shape"], theme),
+      clipBehavior: parseClip(value["clip_behavior"]),
+      margin: parseMargin(value["margin"]));
 }
 
-ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [ChipThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.chipTheme.copyWith(
-    color: getWidgetStateProperty<Color?>(
-        j["color"], (jv) => parseColor(theme, jv as String)),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: parseDouble(j["elevation"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    padding: edgeInsetsFromJson(j["padding"]),
-    labelPadding: edgeInsetsFromJson(j["label_padding"]),
-    labelStyle: parseTextStyle("label_text_style"),
-    secondaryLabelStyle: parseTextStyle("secondary_label_text_style"),
-    disabledColor: parseColor(theme, j["disabled_color"]),
-    selectedColor: parseColor(theme, j["selected_color"]),
-    checkmarkColor: parseColor(theme, j["check_color"]),
-    deleteIconColor: parseColor(theme, j["delete_icon_color"]),
-    side: j["border_side"] != null
-        ? borderSideFromJSON(theme, j["border_side"], null)
-        : null,
-    secondarySelectedColor: parseColor(theme, j["secondary_selected_color"]),
-    brightness: j["brightness"] != null
-        ? Brightness.values.firstWhereOrNull(
-            (b) => b.name.toLowerCase() == j["brightness"].toLowerCase())
-        : null,
-    selectedShadowColor: parseColor(theme, j["selected_shadow_color"]),
-    showCheckmark: parseBool(j["show_checkmark"]),
-    pressElevation: parseDouble(j["click_elevation"]),
-    avatarBoxConstraints: boxConstraintsFromJSON(j["avatar_constraints"]),
+    color: parseWidgetStateColor(value["color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    shape: parseShape(value["shape"], theme),
+    padding: parsePadding(value["padding"]),
+    labelPadding: parsePadding(value["label_padding"]),
+    labelStyle: parseTextStyle(value["label_text_style"], theme),
+    secondaryLabelStyle:
+        parseTextStyle(value["secondary_label_text_style"], theme),
+    disabledColor: parseColor(value["disabled_color"], theme),
+    selectedColor: parseColor(value["selected_color"], theme),
+    checkmarkColor: parseColor(value["check_color"], theme),
+    deleteIconColor: parseColor(value["delete_icon_color"], theme),
+    side: parseBorderSide(value["border_side"], theme),
+    secondarySelectedColor:
+        parseColor(value["secondary_selected_color"], theme),
+    brightness: parseBrightness(value["brightness"]),
+    selectedShadowColor: parseColor(value["selected_shadow_color"], theme),
+    showCheckmark: parseBool(value["show_checkmark"]),
+    pressElevation: parseDouble(value["click_elevation"]),
+    avatarBoxConstraints: parseBoxConstraints(value["avatar_constraints"]),
     deleteIconBoxConstraints:
-        boxConstraintsFromJSON(j["delete_icon_size_constraints"]),
+        parseBoxConstraints(value["delete_icon_size_constraints"]),
   );
 }
 
 FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [FloatingActionButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.floatingActionButtonTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    hoverColor: parseColor(theme, j["hover_color"]),
-    focusColor: parseColor(theme, j["focus_color"]),
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    splashColor: parseColor(theme, j["splash_color"]),
-    elevation: parseDouble(j["elevation"]),
-    focusElevation: parseDouble(j["focus_elevation"]),
-    hoverElevation: parseDouble(j["hover_elevation"]),
-    highlightElevation: parseDouble(j["highlight_elevation"]),
-    disabledElevation: parseDouble(j["disabled_elevation"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    enableFeedback: parseBool(j["enable_feedback"]),
-    extendedPadding: edgeInsetsFromJson(j["extended_padding"]),
-    extendedTextStyle: parseTextStyle("extended_text_style"),
-    extendedIconLabelSpacing: parseDouble(j["extended_icon_label_spacing"]),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    iconSize: parseDouble(j["icon_size"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    hoverColor: parseColor(value["hover_color"], theme),
+    focusColor: parseColor(value["focus_color"], theme),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    splashColor: parseColor(value["splash_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    focusElevation: parseDouble(value["focus_elevation"]),
+    hoverElevation: parseDouble(value["hover_elevation"]),
+    highlightElevation: parseDouble(value["highlight_elevation"]),
+    disabledElevation: parseDouble(value["disabled_elevation"]),
+    shape: parseShape(value["shape"], theme),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    extendedPadding: parsePadding(value["extended_padding"]),
+    extendedTextStyle: parseTextStyle(value["extended_text_style"], theme),
+    extendedIconLabelSpacing: parseDouble(value["extended_icon_label_spacing"]),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    iconSize: parseDouble(value["icon_size"]),
     extendedSizeConstraints:
-        boxConstraintsFromJSON(j["extended_size_constraints"]),
-    sizeConstraints: boxConstraintsFromJSON(j["size_constraints"]),
-    smallSizeConstraints: boxConstraintsFromJSON(j["small_size_constraints"]),
-    largeSizeConstraints: boxConstraintsFromJSON(j["large_size_constraints"]),
+        parseBoxConstraints(value["extended_size_constraints"]),
+    sizeConstraints: parseBoxConstraints(value["size_constraints"]),
+    smallSizeConstraints: parseBoxConstraints(value["small_size_constraints"]),
+    largeSizeConstraints: parseBoxConstraints(value["large_size_constraints"]),
   );
 }
 
 NavigationRailThemeData? parseNavigationRailTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [NavigationRailThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.navigationRailTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: parseDouble(j["elevation"]),
-    indicatorColor: parseColor(theme, j["indicator_color"]),
-    unselectedLabelTextStyle: parseTextStyle("unselected_label_text_style"),
-    selectedLabelTextStyle: parseTextStyle("selected_label_text_style"),
-    minWidth: parseDouble(j["min_width"]),
-    labelType: j["label_type"] != null
-        ? NavigationRailLabelType.values
-            .firstWhereOrNull((c) => c.name == j["label_type"])
-        : null,
-    groupAlignment: parseDouble(j["group_alignment"]),
-    indicatorShape: j["indicator_shape"] != null
-        ? outlinedBorderFromJSON(j["indicator_shape"])
-        : null,
-    minExtendedWidth: parseDouble(j["min_extended_width"]),
-    useIndicator: parseBool(j["use_indicator"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    elevation: parseDouble(value["elevation"]),
+    indicatorColor: parseColor(value["indicator_color"], theme),
+    unselectedLabelTextStyle:
+        parseTextStyle(value["unselected_label_text_style"], theme),
+    selectedLabelTextStyle:
+        parseTextStyle(value["selected_label_text_style"], theme),
+    minWidth: parseDouble(value["min_width"]),
+    labelType: parseNavigationRailLabelType(value["label_type"]),
+    groupAlignment: parseDouble(value["group_alignment"]),
+    indicatorShape: parseShape(value["indicator_shape"], theme),
+    minExtendedWidth: parseDouble(value["min_extended_width"]),
+    useIndicator: parseBool(value["use_indicator"]),
   );
 }
 
-AppBarTheme? parseAppBarTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [AppBarTheme? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.appBarTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    color: parseColor(theme, j["color"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    foregroundColor: parseColor(theme, j["foreground_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    titleTextStyle: parseTextStyle("title_text_style"),
-    toolbarTextStyle: parseTextStyle("toolbar_text_style"),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    elevation: parseDouble(j["elevation"]),
-    centerTitle: parseBool(j["center_title"]),
-    titleSpacing: parseDouble(j["title_spacing"]),
-    scrolledUnderElevation: parseDouble(j["scroll_elevation"]),
-    toolbarHeight: parseDouble(j["toolbar_height"]),
-    actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    color: parseColor(value["color"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    foregroundColor: parseColor(value["foreground_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    titleTextStyle: parseTextStyle(value["title_text_style"], theme),
+    toolbarTextStyle: parseTextStyle(value["toolbar_text_style"], theme),
+    shape: parseShape(value["shape"], theme),
+    elevation: parseDouble(value["elevation"]),
+    centerTitle: parseBool(value["center_title"]),
+    titleSpacing: parseDouble(value["title_spacing"]),
+    scrolledUnderElevation: parseDouble(value["scroll_elevation"]),
+    toolbarHeight: parseDouble(value["toolbar_height"]),
+    actionsPadding: parsePadding(value["actions_padding"]),
   );
 }
 
 BottomAppBarTheme? parseBottomAppBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [BottomAppBarTheme? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.bottomAppBarTheme.copyWith(
-    color: parseColor(theme, j["color"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: parseDouble(j["elevation"]),
-    height: parseDouble(j["height"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    shape: parseNotchedShape(j["shape"]),
+    color: parseColor(value["color"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    height: parseDouble(value["height"]),
+    padding: parsePadding(value["padding"]),
+    shape: parseNotchedShape(value["shape"]),
   );
 }
 
-RadioThemeData? parseRadioTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+RadioThemeData? parseRadioTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [RadioThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.radioTheme.copyWith(
-    fillColor: getWidgetStateProperty<Color?>(
-        j["fill_color"], (jv) => parseColor(theme, jv as String)),
-    splashRadius: parseDouble(j["splash_radius"]),
-    overlayColor: getWidgetStateProperty<Color?>(
-        j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    fillColor: parseWidgetStateColor(value["fill_color"], theme),
+    splashRadius: parseDouble(value["splash_radius"]),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
   );
 }
 
 CheckboxThemeData? parseCheckboxTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [CheckboxThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.checkboxTheme.copyWith(
-    fillColor: getWidgetStateProperty<Color?>(
-        j["fill_color"], (jv) => parseColor(theme, jv as String)),
-    splashRadius: parseDouble(j["splash_radius"]),
-    overlayColor: getWidgetStateProperty<Color?>(
-        j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    checkColor: getWidgetStateProperty<Color?>(
-        j["check_color"], (jv) => parseColor(theme, jv as String)),
-    side: j["border_side"] != null
-        ? borderSideFromJSON(theme, j["border_side"], null)
-        : null,
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    fillColor: parseWidgetStateColor(value["fill_color"], theme),
+    splashRadius: parseDouble(value["splash_radius"]),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    checkColor: parseWidgetStateColor(value["check_color"], theme),
+    side: parseBorderSide(value["border_side"], theme),
+    shape: parseShape(value["shape"], theme),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
   );
 }
 
-BadgeThemeData? parseBadgeTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+BadgeThemeData? parseBadgeTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [BadgeThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.badgeTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    textStyle: parseTextStyle("text_style"),
-    padding: edgeInsetsFromJson(j["padding"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    textColor: parseColor(theme, j["text_color"]),
-    offset: j["offset"] != null ? offsetFromJson(j["offset"]) : null,
-    smallSize: parseDouble(j["small_size"]),
-    largeSize: parseDouble(j["large_size"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    padding: parsePadding(value["padding"]),
+    alignment: parseAlignment(value["alignment"]),
+    textColor: parseColor(value["text_color"], theme),
+    offset: parseOffset(value["offset"]),
+    smallSize: parseDouble(value["small_size"]),
+    largeSize: parseDouble(value["large_size"]),
   );
 }
 
-SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+SwitchThemeData? parseSwitchTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [SwitchThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.switchTheme.copyWith(
-    thumbColor: getWidgetStateProperty<Color?>(
-        j["thumb_color"], (jv) => parseColor(theme, jv as String)),
-    trackColor: getWidgetStateProperty<Color?>(
-        j["track_color"], (jv) => parseColor(theme, jv as String)),
-    overlayColor: getWidgetStateProperty<Color?>(
-        j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    splashRadius:
-        j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
-    thumbIcon: getWidgetStateProperty<Icon?>(
-        j["thumb_icon"], (jv) => Icon(parseIcon(jv as String))),
-    trackOutlineColor: getWidgetStateProperty<Color?>(j["track_outline_color"],
-        (jv) => parseColor(theme, jv as String), null),
-    trackOutlineWidth: getWidgetStateProperty<double?>(
-        j["track_outline_width"], (jv) => parseDouble(jv)),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    padding: edgeInsetsFromJson(j["padding"]),
+    thumbColor: parseWidgetStateColor(value["thumb_color"], theme),
+    trackColor: parseWidgetStateColor(value["track_color"], theme),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+    splashRadius: parseDouble(value["splash_radius"]),
+    thumbIcon: parseWidgetStateIcon(value["thumb_icon"], theme),
+    trackOutlineColor:
+        parseWidgetStateColor(value["track_outline_color"], theme),
+    trackOutlineWidth: parseWidgetStateDouble(value["track_outline_width"]),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    padding: parsePadding(value["padding"]),
   );
 }
 
-DividerThemeData? parseDividerTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+DividerThemeData? parseDividerTheme(
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [DividerThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.dividerTheme.copyWith(
-    color: parseColor(theme, j["color"]),
-    space: parseDouble(j["space"]),
-    thickness: parseDouble(j["thickness"]),
-    indent: parseDouble(j["leading_indent"]),
-    endIndent: parseDouble(j["trailing_indent"]),
+    color: parseColor(value["color"], theme),
+    space: parseDouble(value["space"]),
+    thickness: parseDouble(value["thickness"]),
+    indent: parseDouble(value["leading_indent"]),
+    endIndent: parseDouble(value["trailing_indent"]),
   );
 }
 
 SnackBarThemeData? parseSnackBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [SnackBarThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.snackBarTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    actionTextColor: parseColor(theme, j["action_text_color"]),
-    actionBackgroundColor: parseColor(theme, j["action_bgcolor"]),
-    closeIconColor: parseColor(theme, j["close_icon_color"]),
-    disabledActionTextColor: parseColor(theme, j["disabled_action_text_color"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    actionTextColor: parseColor(value["action_text_color"], theme),
+    actionBackgroundColor: parseColor(value["action_bgcolor"], theme),
+    closeIconColor: parseColor(value["close_icon_color"], theme),
+    disabledActionTextColor:
+        parseColor(value["disabled_action_text_color"], theme),
     disabledActionBackgroundColor:
-        parseColor(theme, j["disabled_action_bgcolor"]),
-    elevation: parseDouble(j["elevation"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    behavior: parseSnackBarBehavior(j["behavior"]),
-    contentTextStyle: parseTextStyle("content_text_style"),
-    width: parseDouble(j["width"]),
-    insetPadding: edgeInsetsFromJson(j["inset_padding"]),
-    dismissDirection: parseDismissDirection(j["dismiss_direction"]),
-    showCloseIcon: parseBool(j["show_close_icon"]),
-    actionOverflowThreshold: parseDouble(j["action_overflow_threshold"]),
+        parseColor(value["disabled_action_bgcolor"], theme),
+    elevation: parseDouble(value["elevation"]),
+    shape: parseShape(value["shape"], theme),
+    behavior: parseSnackBarBehavior(value["behavior"]),
+    contentTextStyle: parseTextStyle(value["content_text_style"], theme),
+    width: parseDouble(value["width"]),
+    insetPadding: parsePadding(value["inset_padding"]),
+    dismissDirection: parseDismissDirection(value["dismiss_direction"]),
+    showCloseIcon: parseBool(value["show_close_icon"]),
+    actionOverflowThreshold: parseDouble(value["action_overflow_threshold"]),
   );
 }
 
 MaterialBannerThemeData? parseBannerTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [MaterialBannerThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.bannerTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: parseDouble(j["elevation"]),
-    dividerColor: parseColor(theme, j["divider_color"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    leadingPadding: edgeInsetsFromJson(j["leading_padding"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    contentTextStyle: parseTextStyle("content_text_style"),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    elevation: parseDouble(value["elevation"]),
+    dividerColor: parseColor(value["divider_color"], theme),
+    padding: parsePadding(value["padding"]),
+    leadingPadding: parsePadding(value["leading_padding"]),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    contentTextStyle: parseTextStyle(value["content_text_style"], theme),
   );
 }
 
 DatePickerThemeData? parseDatePickerTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [DatePickerThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.datePickerTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: parseDouble(j["elevation"]),
-    dividerColor: parseColor(theme, j["divider_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
-    confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
-    dayBackgroundColor: getWidgetStateProperty<Color?>(
-        j["day_bgcolor"], (jv) => parseColor(theme, jv as String)),
-    yearStyle: parseTextStyle("year_text_style"),
-    dayStyle: parseTextStyle("day_text_style"),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    dayOverlayColor: getWidgetStateProperty<Color?>(
-        j["day_overlay_color"], (jv) => parseColor(theme, jv as String)),
-    headerBackgroundColor: parseColor(theme, j["header_bgcolor"]),
-    dayForegroundColor: getWidgetStateProperty<Color?>(
-        j["day_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    rangePickerElevation: parseDouble(j["range_picker_elevation"]),
-    todayBackgroundColor: getWidgetStateProperty<Color?>(
-        j["today_bgcolor"], (jv) => parseColor(theme, jv as String)),
-    headerForegroundColor: parseColor(theme, j["header_foreground_color"]),
-    headerHeadlineStyle: parseTextStyle("header_headline_text_style"),
-    headerHelpStyle: parseTextStyle("header_help_text_style"),
-    rangePickerBackgroundColor: parseColor(theme, j["range_picker_bgcolor"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    elevation: parseDouble(value["elevation"]),
+    dividerColor: parseColor(value["divider_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    cancelButtonStyle: parseButtonStyle(value["cancel_button_style"], theme),
+    confirmButtonStyle: parseButtonStyle(value["confirm_button_style"], theme),
+    dayBackgroundColor: parseWidgetStateColor(value["day_bgcolor"], theme),
+    yearStyle: parseTextStyle(value["year_text_style"], theme),
+    dayStyle: parseTextStyle(value["day_text_style"], theme),
+    shape: parseShape(value["shape"], theme),
+    dayOverlayColor: parseWidgetStateColor(value["day_overlay_color"], theme),
+    headerBackgroundColor: parseColor(value["header_bgcolor"], theme),
+    dayForegroundColor:
+        parseWidgetStateColor(value["day_foreground_color"], theme),
+    rangePickerElevation: parseDouble(value["range_picker_elevation"]),
+    todayBackgroundColor: parseWidgetStateColor(value["today_bgcolor"], theme),
+    headerForegroundColor: parseColor(value["header_foreground_color"], theme),
+    headerHeadlineStyle:
+        parseTextStyle(value["header_headline_text_style"], theme),
+    headerHelpStyle: parseTextStyle(value["header_help_text_style"], theme),
+    rangePickerBackgroundColor:
+        parseColor(value["range_picker_bgcolor"], theme),
     rangePickerHeaderBackgroundColor:
-        parseColor(theme, j["range_picker_header_bgcolor"]),
+        parseColor(value["range_picker_header_bgcolor"], theme),
     rangePickerHeaderForegroundColor:
-        parseColor(theme, j["range_picker_header_foreground_color"]),
-    rangePickerShadowColor: parseColor(theme, j["range_picker_shadow_color"]),
-    todayForegroundColor: getWidgetStateProperty<Color?>(
-        j["today_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    rangePickerShape: j["range_picker_shape"] != null
-        ? outlinedBorderFromJSON(j["range_picker_shape"])
-        : null,
+        parseColor(value["range_picker_header_foreground_color"], theme),
+    rangePickerShadowColor:
+        parseColor(value["range_picker_shadow_color"], theme),
+    todayForegroundColor:
+        parseWidgetStateColor(value["today_foreground_color"], theme),
+    rangePickerShape: parseShape(value["range_picker_shape"], theme),
     rangePickerHeaderHelpStyle:
-        parseTextStyle("range_picker_header_help_text_style"),
+        parseTextStyle(value["range_picker_header_help_text_style"], theme),
     rangePickerHeaderHeadlineStyle:
-        parseTextStyle("range_picker_header_headline_text_style"),
+        parseTextStyle(value["range_picker_header_headline_text_style"], theme),
     rangePickerSurfaceTintColor:
-        parseColor(theme, j["range_picker_surface_tint_color"]),
+        parseColor(value["range_picker_surface_tint_color"], theme),
     rangeSelectionBackgroundColor:
-        parseColor(theme, j["range_selection_bgcolor"]),
-    rangeSelectionOverlayColor: getWidgetStateProperty<Color?>(
-        j["range_selection_overlay_color"],
-        (jv) => parseColor(theme, jv as String)),
-    todayBorder: j["today_border_side"] != null
-        ? borderSideFromJSON(theme, j["today_border_side"])
-        : null,
-    yearBackgroundColor: getWidgetStateProperty<Color?>(
-        j["year_bgcolor"], (jv) => parseColor(theme, jv as String)),
-    yearForegroundColor: getWidgetStateProperty<Color?>(
-        j["year_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    yearOverlayColor: getWidgetStateProperty<Color?>(
-        j["year_overlay_color"], (jv) => parseColor(theme, jv as String)),
-    weekdayStyle: parseTextStyle("weekday_text_style"),
-    dayShape: getWidgetStateProperty<OutlinedBorder?>(
-        j["day_shape"], (jv) => outlinedBorderFromJSON(jv)),
-    locale: localeFromJSON(j["locale"]),
+        parseColor(value["range_selection_bgcolor"], theme),
+    rangeSelectionOverlayColor:
+        parseWidgetStateColor(value["range_selection_overlay_color"], theme),
+    todayBorder: parseBorderSide(value["today_border_side"], theme),
+    yearBackgroundColor: parseWidgetStateColor(value["year_bgcolor"], theme),
+    yearForegroundColor:
+        parseWidgetStateColor(value["year_foreground_color"], theme),
+    yearOverlayColor: parseWidgetStateColor(value["year_overlay_color"], theme),
+    weekdayStyle: parseTextStyle(value["weekday_text_style"], theme),
+    dayShape: parseWidgetStateOutlinedBorder(value["day_shape"], theme),
+    locale: parseLocale(value["locale"]),
   );
 }
 
 TimePickerThemeData? parseTimePickerTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [TimePickerThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.timePickerTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: parseDouble(j["elevation"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    dayPeriodBorderSide: j["day_period_border_side"] != null
-        ? borderSideFromJSON(theme, j["day_period_border_side"])
-        : null,
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    elevation: parseDouble(value["elevation"]),
+    padding: parsePadding(value["padding"]),
+    shape: parseShape(value["shape"], theme),
+    dayPeriodBorderSide:
+        parseBorderSide(value["day_period_border_side"], theme),
     dayPeriodButtonStyle:
-        buttonStyleFromJSON(theme, j["day_period_button_style"]),
-    dayPeriodColor: parseColor(theme, j["day_period_color"]),
-    dayPeriodShape: j["day_period_shape"] != null
-        ? outlinedBorderFromJSON(j["day_period_shape"])
-        : null,
-    dayPeriodTextColor: parseColor(theme, j["day_period_text_color"]),
-    dayPeriodTextStyle: parseTextStyle("day_period_text_style"),
-    dialBackgroundColor: parseColor(theme, j["dial_bgcolor"]),
-    dialHandColor: parseColor(theme, j["dial_hand_color"]),
-    dialTextColor: parseColor(theme, j["dial_text_color"]),
-    dialTextStyle: parseTextStyle("dial_text_style"),
-    entryModeIconColor: parseColor(theme, j["entry_mode_icon_color"]),
-    helpTextStyle: parseTextStyle("help_text_style"),
-    hourMinuteColor: parseColor(theme, j["hour_minute_color"]),
-    hourMinuteTextColor: parseColor(theme, j["hour_minute_text_color"]),
-    hourMinuteTextStyle: parseTextStyle("hour_minute_text_style"),
-    hourMinuteShape: j["hour_minute_shape"] != null
-        ? outlinedBorderFromJSON(j["hour_minute_shape"])
-        : null,
-    cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
-    confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
-    timeSelectorSeparatorColor: getWidgetStateProperty<Color?>(
-        j["time_selector_separator_color"],
-        (jv) => parseColor(theme, jv as String)),
-    timeSelectorSeparatorTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["time_selector_separator_text_style"],
-        (jv) => textStyleFromJson(theme, jv)),
+        parseButtonStyle(value["day_period_button_style"], theme),
+    dayPeriodColor: parseColor(value["day_period_color"], theme),
+    dayPeriodShape: parseShape(value["day_period_shape"], theme),
+    dayPeriodTextColor: parseColor(value["day_period_text_color"], theme),
+    dayPeriodTextStyle: parseTextStyle(value["day_period_text_style"], theme),
+    dialBackgroundColor: parseColor(value["dial_bgcolor"], theme),
+    dialHandColor: parseColor(value["dial_hand_color"], theme),
+    dialTextColor: parseColor(value["dial_text_color"], theme),
+    dialTextStyle: parseTextStyle(value["dial_text_style"], theme),
+    entryModeIconColor: parseColor(value["entry_mode_icon_color"], theme),
+    helpTextStyle: parseTextStyle(value["help_text_style"], theme),
+    hourMinuteColor: parseColor(value["hour_minute_color"], theme),
+    hourMinuteTextColor: parseColor(value["hour_minute_text_color"], theme),
+    hourMinuteTextStyle: parseTextStyle(value["hour_minute_text_style"], theme),
+    hourMinuteShape: parseShape(value["hour_minute_shape"], theme),
+    cancelButtonStyle: parseButtonStyle(value["cancel_button_style"], theme),
+    confirmButtonStyle: parseButtonStyle(value["confirm_button_style"], theme),
+    timeSelectorSeparatorColor:
+        parseWidgetStateColor(value["time_selector_separator_color"], theme),
+    timeSelectorSeparatorTextStyle: parseWidgetStateTextStyle(
+        value["time_selector_separator_text_style"], theme),
   );
 }
 
 DropdownMenuThemeData? parseDropdownMenuTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [DropdownMenuThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.dropdownMenuTheme.copyWith(
-    menuStyle: menuStyleFromJSON(theme, j["menu_style"]),
-    textStyle: parseTextStyle("text_style"),
+    menuStyle: parseMenuStyle(value["menu_style"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
   );
 }
 
 ListTileThemeData? parseListTileTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [ListTileThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.listTileTheme.copyWith(
-    iconColor: parseColor(theme, j["icon_color"]),
-    textColor: parseColor(theme, j["text_color"]),
-    tileColor: parseColor(theme, j["bgcolor"]),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    contentPadding: edgeInsetsFromJson(j["content_padding"]),
-    selectedColor: parseColor(theme, j["selected_color"]),
-    selectedTileColor: parseColor(theme, j["selected_tile_color"]),
-    isThreeLine: parseBool(j["is_three_line"]),
-    visualDensity: parseVisualDensity(j["visual_density"]),
-    titleTextStyle: parseTextStyle("title_text_style"),
-    subtitleTextStyle: parseTextStyle("subtitle_text_style"),
-    minVerticalPadding: parseDouble(j["min_vertical_padding"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    dense: parseBool(j["dense"]),
-    horizontalTitleGap: parseDouble(j["horizontal_spacing"]),
-    minLeadingWidth: parseDouble(j["min_leading_width"]),
+    iconColor: parseColor(value["icon_color"], theme),
+    textColor: parseColor(value["text_color"], theme),
+    tileColor: parseColor(value["bgcolor"], theme),
+    shape: parseShape(value["shape"], theme),
+    contentPadding: parsePadding(value["content_padding"]),
+    selectedColor: parseColor(value["selected_color"], theme),
+    selectedTileColor: parseColor(value["selected_tile_color"], theme),
+    isThreeLine: parseBool(value["is_three_line"]),
+    visualDensity: parseVisualDensity(value["visual_density"]),
+    titleTextStyle: parseTextStyle(value["title_text_style"], theme),
+    subtitleTextStyle: parseTextStyle(value["subtitle_text_style"], theme),
+    minVerticalPadding: parseDouble(value["min_vertical_padding"]),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    dense: parseBool(value["dense"]),
+    horizontalTitleGap: parseDouble(value["horizontal_spacing"]),
+    minLeadingWidth: parseDouble(value["min_leading_width"]),
     leadingAndTrailingTextStyle:
-        parseTextStyle("leading_and_trailing_text_style"),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    minTileHeight: parseDouble(j["min_tile_height"]),
+        parseTextStyle(value["leading_and_trailing_text_style"], theme),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    minTileHeight: parseDouble(value["min_tile_height"]),
   );
 }
 
-TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+TooltipThemeData? parseTooltipTheme(
+    Map<dynamic, dynamic>? value, BuildContext context,
+    [TooltipThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+  var theme = Theme.of(context);
 
   return theme.tooltipTheme.copyWith(
-    enableFeedback: parseBool(j["enable_feedback"]),
-    height: parseDouble(j["height"]),
-    excludeFromSemantics: parseBool(j["exclude_from_semantics"]),
-    textStyle: parseTextStyle("text_style"),
-    preferBelow: parseBool(j["prefer_below"]),
-    verticalOffset: parseDouble(j["vertical_offset"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    waitDuration: durationFromJSON(j["wait_duration"]),
-    exitDuration: durationFromJSON(j["exit_duration"]),
-    showDuration: durationFromJSON(j["show_duration"]),
-    margin: edgeInsetsFromJson(j["margin"]),
-    textAlign: parseTextAlign(j["text_align"]),
-    triggerMode: parseTooltipTriggerMode(j["trigger_mode"]),
-    // TODO: replace null with PageArgsModel
-    decoration: boxDecorationFromJSON(theme, j["decoration"], null),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    height: parseDouble(value["height"]),
+    excludeFromSemantics: parseBool(value["exclude_from_semantics"]),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    preferBelow: parseBool(value["prefer_below"]),
+    verticalOffset: parseDouble(value["vertical_offset"]),
+    padding: parsePadding(value["padding"]),
+    waitDuration: parseDuration(value["wait_duration"]),
+    exitDuration: parseDuration(value["exit_duration"]),
+    showDuration: parseDuration(value["show_duration"]),
+    margin: parseMargin(value["margin"]),
+    textAlign: parseTextAlign(value["text_align"]),
+    triggerMode: parseTooltipTriggerMode(value["trigger_mode"]),
+    decoration: parseBoxDecoration(value["decoration"], context),
   );
 }
 
 ExpansionTileThemeData? parseExpansionTileTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [ExpansionTileThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.expansionTileTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    iconColor: parseColor(theme, j["icon_color"]),
-    textColor: parseColor(theme, j["text_color"]),
-    collapsedBackgroundColor: parseColor(theme, j["collapsed_bgcolor"]),
-    collapsedIconColor: parseColor(theme, j["collapsed_icon_color"]),
-    clipBehavior: parseClip(j["clip_behavior"]),
-    collapsedTextColor: parseColor(theme, j["collapsed_text_color"]),
-    tilePadding: edgeInsetsFromJson(j["tile_padding"]),
-    expandedAlignment: alignmentFromJson(j["expanded_alignment"]),
-    childrenPadding: edgeInsetsFromJson(j["controls_padding"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    iconColor: parseColor(value["icon_color"], theme),
+    textColor: parseColor(value["text_color"], theme),
+    collapsedBackgroundColor: parseColor(value["collapsed_bgcolor"], theme),
+    collapsedIconColor: parseColor(value["collapsed_icon_color"], theme),
+    clipBehavior: parseClip(value["clip_behavior"]),
+    collapsedTextColor: parseColor(value["collapsed_text_color"], theme),
+    tilePadding: parsePadding(value["tile_padding"]),
+    expandedAlignment: parseAlignment(value["expanded_alignment"]),
+    childrenPadding: parsePadding(value["controls_padding"]),
   );
 }
 
-SliderThemeData? parseSliderTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+SliderThemeData? parseSliderTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [SliderThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.sliderTheme.copyWith(
-    activeTrackColor: parseColor(theme, j["active_track_color"]),
-    inactiveTrackColor: parseColor(theme, j["inactive_track_color"]),
-    thumbColor: parseColor(theme, j["thumb_color"]),
-    overlayColor: parseColor(theme, j["overlay_color"]),
-    valueIndicatorColor: parseColor(theme, j["value_indicator_color"]),
-    disabledThumbColor: parseColor(theme, j["disabled_thumb_color"]),
-    valueIndicatorTextStyle: parseTextStyle("value_indicator_text_style"),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    activeTickMarkColor: parseColor(theme, j["active_tick_mark_color"]),
+    activeTrackColor: parseColor(value["active_track_color"], theme),
+    inactiveTrackColor: parseColor(value["inactive_track_color"], theme),
+    thumbColor: parseColor(value["thumb_color"], theme),
+    overlayColor: parseColor(value["overlay_color"], theme),
+    valueIndicatorColor: parseColor(value["value_indicator_color"], theme),
+    disabledThumbColor: parseColor(value["disabled_thumb_color"], theme),
+    valueIndicatorTextStyle:
+        parseTextStyle(value["value_indicator_text_style"], theme),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    activeTickMarkColor: parseColor(value["active_tick_mark_color"], theme),
     disabledActiveTickMarkColor:
-        parseColor(theme, j["disabled_active_tick_mark_color"]),
+        parseColor(value["disabled_active_tick_mark_color"], theme),
     disabledActiveTrackColor:
-        parseColor(theme, j["disabled_active_track_color"]),
+        parseColor(value["disabled_active_track_color"], theme),
     disabledInactiveTickMarkColor:
-        parseColor(theme, j["disabled_inactive_tick_mark_color"]),
+        parseColor(value["disabled_inactive_tick_mark_color"], theme),
     disabledInactiveTrackColor:
-        parseColor(theme, j["disabled_inactive_track_color"]),
+        parseColor(value["disabled_inactive_track_color"], theme),
     disabledSecondaryActiveTrackColor:
-        parseColor(theme, j["disabled_secondary_active_track_color"]),
-    inactiveTickMarkColor: parseColor(theme, j["inactive_tick_mark_color"]),
+        parseColor(value["disabled_secondary_active_track_color"], theme),
+    inactiveTickMarkColor: parseColor(value["inactive_tick_mark_color"], theme),
     overlappingShapeStrokeColor:
-        parseColor(theme, j["overlapping_shape_stroke_color"]),
-    minThumbSeparation: parseDouble(j["min_thumb_separation"]),
+        parseColor(value["overlapping_shape_stroke_color"], theme),
+    minThumbSeparation: parseDouble(value["min_thumb_separation"]),
     secondaryActiveTrackColor:
-        parseColor(theme, j["secondary_active_track_color"]),
-    trackHeight: parseDouble(j["track_height"]),
+        parseColor(value["secondary_active_track_color"], theme),
+    trackHeight: parseDouble(value["track_height"]),
     valueIndicatorStrokeColor:
-        parseColor(theme, j["value_indicator_stroke_color"]),
-    allowedInteraction: parseSliderInteraction(j["interaction"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    trackGap: parseDouble(j["track_gap"]),
+        parseColor(value["value_indicator_stroke_color"], theme),
+    allowedInteraction: parseSliderInteraction(value["interaction"]),
+    padding: parsePadding(value["padding"]),
+    trackGap: parseDouble(value["track_gap"]),
     thumbSize: getWidgetStateProperty<Size?>(
-        j["thumb_size"], (jv) => sizeFromJson(jv)),
+        value["thumb_size"], (jv) => parseSize(jv)),
     // TODO: deprecated in v0.27.0, to be removed in future versions
-    year2023: parseBool(j["year_2023"]),
+    year2023: parseBool(value["year_2023"]),
   );
 }
 
 ProgressIndicatorThemeData? parseProgressIndicatorTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [ProgressIndicatorThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.progressIndicatorTheme.copyWith(
-    color: parseColor(theme, j["color"]),
-    circularTrackColor: parseColor(theme, j["circular_track_color"]),
-    linearTrackColor: parseColor(theme, j["linear_track_color"]),
-    refreshBackgroundColor: parseColor(theme, j["refresh_bgcolor"]),
-    linearMinHeight: parseDouble(j["linear_min_height"]),
-    borderRadius: borderRadiusFromJSON(j["border_radius"]),
-    trackGap: parseDouble(j["track_gap"]),
-    circularTrackPadding: edgeInsetsFromJson(j["circular_track_padding"]),
-    constraints: boxConstraintsFromJSON(j["size_constraints"]),
-    stopIndicatorColor: parseColor(theme, j["stop_indicator_color"]),
-    stopIndicatorRadius: parseDouble(j["stop_indicator_radius"]),
-    strokeAlign: parseDouble(j["stroke_align"]),
-    strokeCap: parseStrokeCap(j["stroke_cap"]),
-    strokeWidth: parseDouble(j["stroke_width"]),
-    year2023: parseBool(j["year_2023"]),
+    color: parseColor(value["color"], theme),
+    circularTrackColor: parseColor(value["circular_track_color"], theme),
+    linearTrackColor: parseColor(value["linear_track_color"], theme),
+    refreshBackgroundColor: parseColor(value["refresh_bgcolor"], theme),
+    linearMinHeight: parseDouble(value["linear_min_height"]),
+    borderRadius: parseBorderRadius(value["border_radius"]),
+    trackGap: parseDouble(value["track_gap"]),
+    circularTrackPadding: parsePadding(value["circular_track_padding"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
+    stopIndicatorColor: parseColor(value["stop_indicator_color"], theme),
+    stopIndicatorRadius: parseDouble(value["stop_indicator_radius"]),
+    strokeAlign: parseDouble(value["stroke_align"]),
+    strokeCap: parseStrokeCap(value["stroke_cap"]),
+    strokeWidth: parseDouble(value["stroke_width"]),
+    year2023: parseBool(value["year_2023"]),
   );
 }
 
 PopupMenuThemeData? parsePopupMenuTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [PopupMenuThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.popupMenuTheme.copyWith(
-    color: parseColor(theme, j["color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    iconColor: parseColor(theme, j["icon_color"]),
-    textStyle: parseTextStyle("text_style"),
-    labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    elevation: parseDouble(j["elevation"]),
-    iconSize: parseDouble(j["icon_size"]),
-    position: j["menu_position"] != null
-        ? PopupMenuPosition.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["menu_position"].toLowerCase())
-        : null,
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    menuPadding: edgeInsetsFromJson(j["menu_padding"]),
+    color: parseColor(value["color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    iconColor: parseColor(value["icon_color"], theme),
+    textStyle: parseTextStyle(value["text_style"], theme),
+    labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
+    enableFeedback: parseBool(value["enable_feedback"]),
+    elevation: parseDouble(value["elevation"]),
+    iconSize: parseDouble(value["icon_size"]),
+    position: parsePopupMenuPosition(value["menu_position"]),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    menuPadding: parsePadding(value["menu_padding"]),
   );
 }
 
 SearchBarThemeData? parseSearchBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [SearchBarThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: getWidgetStateProperty<Color?>(
-        j["surface_tint_color"], (jv) => parseColor(theme, jv as String)),
-    shadowColor: getWidgetStateProperty<Color?>(
-        j["shadow_color"], (jv) => parseColor(theme, jv as String)),
-    elevation: getWidgetStateProperty<double?>(
-        j["elevation"], (jv) => parseDouble(jv)),
-    backgroundColor: getWidgetStateProperty<Color?>(
-        j["bgcolor"], (jv) => parseColor(theme, jv as String)),
-    overlayColor: getWidgetStateProperty<Color?>(
-        j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    textStyle: getWidgetStateProperty<TextStyle?>(
-        j["text_style"], (jv) => textStyleFromJson(theme, jv)),
-    hintStyle: getWidgetStateProperty<TextStyle?>(
-        j["hint_style"], (jv) => textStyleFromJson(theme, jv)),
-    shape: getWidgetStateProperty<OutlinedBorder?>(
-        j["shape"], (jv) => outlinedBorderFromJSON(jv)),
-    textCapitalization: j["text_capitalization"] != null
-        ? TextCapitalization.values.firstWhereOrNull((c) =>
-            c.name.toLowerCase() == j["text_capitalization"].toLowerCase())
-        : null,
-    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
-        j["padding"], (jv) => edgeInsetsFromJson(jv)),
-    constraints: boxConstraintsFromJSON(j["size_constraints"]),
-    side: getWidgetStateProperty<BorderSide?>(
-        j["border_side"], (jv) => borderSideFromJSON(theme, jv)),
+    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme),
+    shadowColor: parseWidgetStateColor(value["shadow_color"], theme),
+    elevation: parseWidgetStateDouble(value["elevation"]),
+    backgroundColor: parseWidgetStateColor(value["bgcolor"], theme),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+    textStyle: parseWidgetStateTextStyle(value["text_style"], theme),
+    hintStyle: parseWidgetStateTextStyle(value["hint_style"], theme),
+    shape: parseWidgetStateOutlinedBorder(value["shape"], theme),
+    textCapitalization: parseTextCapitalization(value["text_capitalization"]),
+    padding: parseWidgetStatePadding(value["padding"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
+    side: parseWidgetStateBorderSide(value["border_side"], theme),
   );
 }
 
 SearchViewThemeData? parseSearchViewTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [SearchViewThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.searchViewTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    dividerColor: parseColor(theme, j["divider_color"]),
-    elevation: parseDouble(j["elevation"]),
-    headerHintStyle: parseTextStyle("header_hint_text_style"),
-    headerTextStyle: parseTextStyle("header_text_style"),
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    side: borderSideFromJSON(theme, j["border_side"]),
-    constraints: boxConstraintsFromJSON(j["size_constraints"]),
-    headerHeight: parseDouble(j["header_height"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    barPadding: edgeInsetsFromJson(j["bar_padding"]),
-    shrinkWrap: parseBool(j["shrink_wrap"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    dividerColor: parseColor(value["divider_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    headerHintStyle: parseTextStyle(value["header_hint_text_style"], theme),
+    headerTextStyle: parseTextStyle(value["header_text_style"], theme),
+    shape: parseShape(value["shape"], theme),
+    side: parseBorderSide(value["border_side"], theme),
+    constraints: parseBoxConstraints(value["size_constraints"]),
+    headerHeight: parseDouble(value["header_height"]),
+    padding: parsePadding(value["padding"]),
+    barPadding: parsePadding(value["bar_padding"]),
+    shrinkWrap: parseBool(value["shrink_wrap"]),
   );
 }
 
 NavigationDrawerThemeData? parseNavigationDrawerTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [NavigationDrawerThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.navigationDrawerTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    indicatorColor: parseColor(theme, j["indicator_color"]),
-    elevation: parseDouble(j["elevation"]),
-    indicatorSize: sizeFromJson(j["indicator_size"]),
-    tileHeight: parseDouble(j["tile_height"]),
-    labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
-    indicatorShape: j["indicator_shape"] != null
-        ? outlinedBorderFromJSON(j["indicator_shape"])
-        : null,
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    indicatorColor: parseColor(value["indicator_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    indicatorSize: parseSize(value["indicator_size"]),
+    tileHeight: parseDouble(value["tile_height"]),
+    labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
+    indicatorShape: parseShape(value["indicator_shape"], theme),
   );
 }
 
 NavigationBarThemeData? parseNavigationBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [NavigationBarThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.navigationBarTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    shadowColor: parseColor(theme, j["shadow_color"]),
-    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    indicatorColor: parseColor(theme, j["indicator_color"]),
-    overlayColor: getWidgetStateProperty<Color?>(
-        j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    elevation: parseDouble(j["elevation"]),
-    height: parseDouble(j["height"]),
-    labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
-    indicatorShape: j["indicator_shape"] != null
-        ? outlinedBorderFromJSON(j["indicator_shape"])
-        : null,
-    labelBehavior: j["label_behavior"] != null
-        ? NavigationDestinationLabelBehavior.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["label_behavior"].toLowerCase())
-        : null,
-    labelPadding: edgeInsetsFromJson(j["label_padding"]),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadowColor: parseColor(value["shadow_color"], theme),
+    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
+    indicatorColor: parseColor(value["indicator_color"], theme),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+    elevation: parseDouble(value["elevation"]),
+    height: parseDouble(value["height"]),
+    labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
+    indicatorShape: parseShape(value["indicator_shape"], theme),
+    labelBehavior:
+        parseNavigationDestinationLabelBehavior(value["label_behavior"]),
+    labelPadding: parsePadding(value["label_padding"]),
   );
 }
 
 SegmentedButtonThemeData? parseSegmentedButtonTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-  var selected_icon = parseIcon(j["selected_icon"]);
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [SegmentedButtonThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
+  var selectedIcon = parseIcon(value["selected_icon"]);
 
   return theme.segmentedButtonTheme.copyWith(
-    selectedIcon: selected_icon != null ? Icon(selected_icon) : null,
-    style: buttonStyleFromJSON(theme, j["style"]),
+    selectedIcon: selectedIcon != null ? Icon(selectedIcon) : null,
+    style: parseButtonStyle(value["style"], theme),
   );
 }
 
-IconThemeData? parseIconTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
+IconThemeData? parseIconTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [IconThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return theme.iconTheme.copyWith(
-    color: parseColor(theme, j["color"]),
-    applyTextScaling: parseBool(j["apply_text_scaling"]),
-    fill: parseDouble(j["fill"]),
-    opacity: parseDouble(j["opacity"]),
-    size: parseDouble(j["size"]),
-    opticalSize: parseDouble(j["optical_size"]),
-    grade: parseDouble(j["grade"]),
-    weight: parseDouble(j["weight"]),
-    shadows:
-        j["shadows"] != null ? boxShadowsFromJSON(theme, j["shadows"]) : null,
+    color: parseColor(value["color"], theme),
+    applyTextScaling: parseBool(value["apply_text_scaling"]),
+    fill: parseDouble(value["fill"]),
+    opacity: parseDouble(value["opacity"]),
+    size: parseDouble(value["size"]),
+    opticalSize: parseDouble(value["optical_size"]),
+    grade: parseDouble(value["grade"]),
+    weight: parseDouble(value["weight"]),
+    shadows: parseBoxShadows(value["shadows"], theme),
   );
 }
 
-PageTransitionsBuilder parseTransitionsBuilder(
-    String? tb, PageTransitionsBuilder defaultBuilder) {
-  switch (tb?.toLowerCase()) {
-    case "fadeupwards":
-      return const FadeUpwardsPageTransitionsBuilder();
-    case "openupwards":
-      return const OpenUpwardsPageTransitionsBuilder();
-    case "cupertino":
-      return const CupertinoPageTransitionsBuilder();
-    case "zoom":
-      return const ZoomPageTransitionsBuilder();
-    case "none":
-      return const NoPageTransitionsBuilder();
-    case "predictive":
-      return const PredictiveBackPageTransitionsBuilder();
-    case "fadeforwards":
-      return const FadeForwardsPageTransitionsBuilder();
-    default:
-      return defaultBuilder;
-  }
+PageTransitionsBuilder? parseTransitionsBuilder(String? value,
+    [PageTransitionsBuilder? defaultValue]) {
+  var buildersMap = {
+    "fadeupwards": const FadeUpwardsPageTransitionsBuilder(),
+    "openupwards": const OpenUpwardsPageTransitionsBuilder(),
+    "cupertino": const CupertinoPageTransitionsBuilder(),
+    "zoom": const ZoomPageTransitionsBuilder(),
+    "none": const NoPageTransitionsBuilder(),
+    "predictive": const PredictiveBackPageTransitionsBuilder(),
+    "fadeforwards": const FadeForwardsPageTransitionsBuilder(),
+  };
+  return buildersMap[value?.toLowerCase()] ?? defaultValue;
 }
 
 class NoPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -1500,13 +1299,363 @@ class NoPageTransitionsBuilder extends PageTransitionsBuilder {
 
   @override
   Widget buildTransitions<T>(
-    PageRoute<T>? route,
-    BuildContext? context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget? child,
-  ) {
+      PageRoute<T>? route,
+      BuildContext? context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget? child) {
     // only return the child without warping it with animations
     return child!;
+  }
+}
+
+// Trying to fix https://github.com/flutter/flutter/issues/165455
+// TODO: remove this when the fix is available
+bool themesEqual(ThemeData a, ThemeData b) {
+  return mapEquals(a.adaptationMap, b.adaptationMap) &&
+      a.applyElevationOverlayColor == b.applyElevationOverlayColor &&
+      //a.cupertinoOverrideTheme == b.cupertinoOverrideTheme &&
+      mapEquals(a.extensions, b.extensions) &&
+      a.inputDecorationTheme == b.inputDecorationTheme &&
+      a.materialTapTargetSize == b.materialTapTargetSize &&
+      a.pageTransitionsTheme == b.pageTransitionsTheme &&
+      a.platform == b.platform &&
+      a.scrollbarTheme == b.scrollbarTheme &&
+      a.splashFactory == b.splashFactory &&
+      a.useMaterial3 == b.useMaterial3 &&
+      a.visualDensity == b.visualDensity &&
+      // COLOR
+      a.canvasColor == b.canvasColor &&
+      a.cardColor == b.cardColor &&
+      a.colorScheme == b.colorScheme &&
+      a.disabledColor == b.disabledColor &&
+      a.dividerColor == b.dividerColor &&
+      a.focusColor == b.focusColor &&
+      a.highlightColor == b.highlightColor &&
+      a.hintColor == b.hintColor &&
+      a.hoverColor == b.hoverColor &&
+      a.indicatorColor == b.indicatorColor &&
+      a.primaryColor == b.primaryColor &&
+      a.primaryColorDark == b.primaryColorDark &&
+      a.primaryColorLight == b.primaryColorLight &&
+      a.scaffoldBackgroundColor == b.scaffoldBackgroundColor &&
+      a.secondaryHeaderColor == b.secondaryHeaderColor &&
+      a.shadowColor == b.shadowColor &&
+      a.splashColor == b.splashColor &&
+      a.unselectedWidgetColor == b.unselectedWidgetColor &&
+      // TYPOGRAPHY & ICONOGRAPHY
+      a.iconTheme == b.iconTheme &&
+      a.primaryIconTheme == b.primaryIconTheme &&
+      a.primaryTextTheme == b.primaryTextTheme &&
+      a.textTheme == b.textTheme &&
+      a.typography == b.typography &&
+      // COMPONENT THEMES
+      a.actionIconTheme == b.actionIconTheme &&
+      a.appBarTheme == b.appBarTheme &&
+      a.badgeTheme == b.badgeTheme &&
+      a.bannerTheme == b.bannerTheme &&
+      a.bottomAppBarTheme == b.bottomAppBarTheme &&
+      a.bottomNavigationBarTheme == b.bottomNavigationBarTheme &&
+      a.bottomSheetTheme == b.bottomSheetTheme &&
+      a.buttonTheme == b.buttonTheme &&
+      a.cardTheme == b.cardTheme &&
+      a.checkboxTheme == b.checkboxTheme &&
+      a.chipTheme == b.chipTheme &&
+      a.dataTableTheme == b.dataTableTheme &&
+      a.datePickerTheme == b.datePickerTheme &&
+      a.dialogTheme == b.dialogTheme &&
+      a.dividerTheme == b.dividerTheme &&
+      a.drawerTheme == b.drawerTheme &&
+      a.dropdownMenuTheme == b.dropdownMenuTheme &&
+      a.elevatedButtonTheme == b.elevatedButtonTheme &&
+      a.expansionTileTheme == b.expansionTileTheme &&
+      a.filledButtonTheme == b.filledButtonTheme &&
+      a.floatingActionButtonTheme == b.floatingActionButtonTheme &&
+      a.iconButtonTheme == b.iconButtonTheme &&
+      a.listTileTheme == b.listTileTheme &&
+      a.menuBarTheme == b.menuBarTheme &&
+      a.menuButtonTheme == b.menuButtonTheme &&
+      a.menuTheme == b.menuTheme &&
+      a.navigationBarTheme == b.navigationBarTheme &&
+      a.navigationDrawerTheme == b.navigationDrawerTheme &&
+      a.navigationRailTheme == b.navigationRailTheme &&
+      a.outlinedButtonTheme == b.outlinedButtonTheme &&
+      a.popupMenuTheme == b.popupMenuTheme &&
+      a.progressIndicatorTheme == b.progressIndicatorTheme &&
+      a.radioTheme == b.radioTheme &&
+      a.searchBarTheme == b.searchBarTheme &&
+      a.searchViewTheme == b.searchViewTheme &&
+      a.segmentedButtonTheme == b.segmentedButtonTheme &&
+      a.sliderTheme == b.sliderTheme &&
+      a.snackBarTheme == b.snackBarTheme &&
+      a.switchTheme == b.switchTheme &&
+      a.tabBarTheme == b.tabBarTheme &&
+      a.textButtonTheme == b.textButtonTheme &&
+      a.textSelectionTheme == b.textSelectionTheme &&
+      a.timePickerTheme == b.timePickerTheme &&
+      a.toggleButtonsTheme == b.toggleButtonsTheme &&
+      a.tooltipTheme == b.tooltipTheme;
+}
+
+extension ThemeParsers on Control {
+  Brightness? getBrightness(String propertyName, [Brightness? defaultValue]) {
+    return parseBrightness(get(propertyName), defaultValue);
+  }
+
+  ThemeData getTheme(
+      String propertyName, BuildContext context, Brightness? brightness,
+      {ThemeData? parentTheme}) {
+    return parseTheme(get(propertyName), context, brightness,
+        parentTheme: parentTheme);
+  }
+
+  ThemeMode? getThemeMode(String propertyName, [ThemeMode? defaultValue]) {
+    return parseThemeMode(get(propertyName), defaultValue);
+  }
+
+  CupertinoThemeData? getCupertinoTheme(
+      String propertyName, BuildContext context, Brightness? brightness,
+      {ThemeData? parentTheme}) {
+    return parseCupertinoTheme(get(propertyName), context, brightness,
+        parentTheme: parentTheme);
+  }
+
+  ColorScheme? getColorScheme(String propertyName, ThemeData theme,
+      [ColorScheme? defaultValue]) {
+    return parseColorScheme(get(propertyName), theme, defaultValue);
+  }
+
+  TextTheme? getTextTheme(
+      String propertyName, ThemeData theme, TextTheme textTheme,
+      [TextTheme? defaultValue]) {
+    return parseTextTheme(get(propertyName), theme, textTheme, defaultValue);
+  }
+
+  VisualDensity? getVisualDensity(String propertyName,
+      [VisualDensity? defaultValue]) {
+    return parseVisualDensity(get(propertyName), defaultValue);
+  }
+
+  PageTransitionsTheme? getPageTransitionsTheme(String propertyName,
+      [PageTransitionsTheme? defaultValue]) {
+    return parsePageTransitions(get(propertyName), defaultValue);
+  }
+
+  SystemUiOverlayStyleTheme getSystemUiOverlayStyleTheme(
+      String propertyName, ThemeData theme, Brightness? brightness) {
+    return SystemUiOverlayStyleTheme(
+      get(propertyName) != null
+          ? parseSystemUiOverlayStyle(get(propertyName), theme, brightness)
+          : null,
+    );
+  }
+
+  ButtonThemeData? getButtonTheme(String propertyName, ThemeData theme,
+      [ButtonThemeData? defaultValue]) {
+    return parseButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ElevatedButtonThemeData? getElevatedButtonTheme(
+      String propertyName, ThemeData theme,
+      [ElevatedButtonThemeData? defaultValue]) {
+    return parseElevatedButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  OutlinedButtonThemeData? getOutlinedButtonTheme(
+      String propertyName, ThemeData theme,
+      [OutlinedButtonThemeData? defaultValue]) {
+    return parseOutlinedButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TextButtonThemeData? getTextButtonTheme(String propertyName, ThemeData theme,
+      [TextButtonThemeData? defaultValue]) {
+    return parseTextButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  FilledButtonThemeData? getFilledButtonTheme(
+      String propertyName, ThemeData theme,
+      [FilledButtonThemeData? defaultValue]) {
+    return parseFilledButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  IconButtonThemeData? getIconButtonTheme(String propertyName, ThemeData theme,
+      [IconButtonThemeData? defaultValue]) {
+    return parseIconButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DataTableThemeData? getDataTableTheme(
+      String propertyName, BuildContext context,
+      [DataTableThemeData? defaultValue]) {
+    return parseDataTableTheme(get(propertyName), context, defaultValue);
+  }
+
+  ScrollbarThemeData? getScrollbarTheme(String propertyName, ThemeData theme,
+      [ScrollbarThemeData? defaultValue]) {
+    return parseScrollBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TabBarThemeData? getTabBarTheme(String propertyName, ThemeData theme,
+      [TabBarThemeData? defaultValue]) {
+    return parseTabBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DialogThemeData? getDialogTheme(String propertyName, ThemeData theme,
+      [DialogThemeData? defaultValue]) {
+    return parseDialogTheme(get(propertyName), theme, defaultValue);
+  }
+
+  BottomSheetThemeData? getBottomSheetTheme(
+      String propertyName, ThemeData theme,
+      [BottomSheetThemeData? defaultValue]) {
+    return parseBottomSheetTheme(get(propertyName), theme, defaultValue);
+  }
+
+  CardThemeData? getCardTheme(String propertyName, ThemeData theme,
+      [CardThemeData? defaultValue]) {
+    return parseCardTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ChipThemeData? getChipTheme(String propertyName, ThemeData theme,
+      [ChipThemeData? defaultValue]) {
+    return parseChipTheme(get(propertyName), theme, defaultValue);
+  }
+
+  FloatingActionButtonThemeData? getFloatingActionButtonTheme(
+      String propertyName, ThemeData theme,
+      [FloatingActionButtonThemeData? defaultValue]) {
+    return parseFloatingActionButtonTheme(
+        get(propertyName), theme, defaultValue);
+  }
+
+  NavigationRailThemeData? getNavigationRailTheme(
+      String propertyName, ThemeData theme,
+      [NavigationRailThemeData? defaultValue]) {
+    return parseNavigationRailTheme(get(propertyName), theme, defaultValue);
+  }
+
+  AppBarTheme? getAppBarTheme(String propertyName, ThemeData theme,
+      [AppBarTheme? defaultValue]) {
+    return parseAppBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  BottomAppBarTheme? getBottomAppBarTheme(String propertyName, ThemeData theme,
+      [BottomAppBarTheme? defaultValue]) {
+    return parseBottomAppBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  RadioThemeData? getRadioTheme(String propertyName, ThemeData theme,
+      [RadioThemeData? defaultValue]) {
+    return parseRadioTheme(get(propertyName), theme, defaultValue);
+  }
+
+  CheckboxThemeData? getCheckboxTheme(String propertyName, ThemeData theme,
+      [CheckboxThemeData? defaultValue]) {
+    return parseCheckboxTheme(get(propertyName), theme, defaultValue);
+  }
+
+  BadgeThemeData? getBadgeTheme(String propertyName, ThemeData theme,
+      [BadgeThemeData? defaultValue]) {
+    return parseBadgeTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SwitchThemeData? getSwitchTheme(String propertyName, ThemeData theme,
+      [SwitchThemeData? defaultValue]) {
+    return parseSwitchTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DividerThemeData? getDividerTheme(String propertyName, ThemeData theme,
+      [DividerThemeData? defaultValue]) {
+    return parseDividerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SnackBarThemeData? getSnackBarTheme(String propertyName, ThemeData theme,
+      [SnackBarThemeData? defaultValue]) {
+    return parseSnackBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  MaterialBannerThemeData? getBannerTheme(String propertyName, ThemeData theme,
+      [MaterialBannerThemeData? defaultValue]) {
+    return parseBannerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DatePickerThemeData? getDatePickerTheme(String propertyName, ThemeData theme,
+      [DatePickerThemeData? defaultValue]) {
+    return parseDatePickerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TimePickerThemeData? getTimePickerTheme(String propertyName, ThemeData theme,
+      [TimePickerThemeData? defaultValue]) {
+    return parseTimePickerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DropdownMenuThemeData? getDropdownMenuTheme(
+      String propertyName, ThemeData theme,
+      [DropdownMenuThemeData? defaultValue]) {
+    return parseDropdownMenuTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ListTileThemeData? getListTileTheme(String propertyName, ThemeData theme,
+      [ListTileThemeData? defaultValue]) {
+    return parseListTileTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TooltipThemeData? getTooltipTheme(String propertyName, BuildContext context,
+      [TooltipThemeData? defaultValue]) {
+    return parseTooltipTheme(get(propertyName), context, defaultValue);
+  }
+
+  ExpansionTileThemeData? getExpansionTileTheme(
+      String propertyName, ThemeData theme,
+      [ExpansionTileThemeData? defaultValue]) {
+    return parseExpansionTileTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SliderThemeData? getSliderTheme(String propertyName, ThemeData theme,
+      [SliderThemeData? defaultValue]) {
+    return parseSliderTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ProgressIndicatorThemeData? getProgressIndicatorTheme(
+      String propertyName, ThemeData theme,
+      [ProgressIndicatorThemeData? defaultValue]) {
+    return parseProgressIndicatorTheme(get(propertyName), theme, defaultValue);
+  }
+
+  PopupMenuThemeData? getPopupMenuTheme(String propertyName, ThemeData theme,
+      [PopupMenuThemeData? defaultValue]) {
+    return parsePopupMenuTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SearchBarThemeData? getSearchBarTheme(String propertyName, ThemeData theme,
+      [SearchBarThemeData? defaultValue]) {
+    return parseSearchBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SearchViewThemeData? getSearchViewTheme(String propertyName, ThemeData theme,
+      [SearchViewThemeData? defaultValue]) {
+    return parseSearchViewTheme(get(propertyName), theme, defaultValue);
+  }
+
+  NavigationDrawerThemeData? getNavigationDrawerTheme(
+      String propertyName, ThemeData theme,
+      [NavigationDrawerThemeData? defaultValue]) {
+    return parseNavigationDrawerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  NavigationBarThemeData? getNavigationBarTheme(
+      String propertyName, ThemeData theme,
+      [NavigationBarThemeData? defaultValue]) {
+    return parseNavigationBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SegmentedButtonThemeData? getSegmentedButtonTheme(
+      String propertyName, ThemeData theme,
+      [SegmentedButtonThemeData? defaultValue]) {
+    return parseSegmentedButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  IconThemeData? getIconTheme(String propertyName, ThemeData theme,
+      [IconThemeData? defaultValue]) {
+    return parseIconTheme(get(propertyName), theme, defaultValue);
   }
 }

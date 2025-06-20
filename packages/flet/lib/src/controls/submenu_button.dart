@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/transforms.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
-class SubMenuButtonControl extends StatefulWidget {
-  final Control? parent;
+class SubmenuButtonControl extends StatefulWidget {
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const SubMenuButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+  SubmenuButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
-  State<SubMenuButtonControl> createState() => _SubMenuButtonControlState();
+  State<SubmenuButtonControl> createState() => _SubmenuButtonControlState();
 }
 
-class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
+class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -46,26 +38,15 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
   }
 
   void _onFocusChange() {
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("SubMenuButton build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    var content =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
-    var ctrls =
-        widget.children.where((c) => c.name == "controls" && c.isVisible);
-    var leading =
-        widget.children.where((c) => c.name == "leading" && c.isVisible);
-    var trailing =
-        widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
     var theme = Theme.of(context);
-    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+    var style = widget.control.getButtonStyle("style", Theme.of(context),
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
         defaultOverlayColor: Colors.transparent,
@@ -78,53 +59,38 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool onOpen = widget.control.attrBool("onOpen", false)!;
-    bool onClose = widget.control.attrBool("onClose", false)!;
-    bool onHover = widget.control.attrBool("onHover", false)!;
+    bool onOpen = widget.control.getBool("on_open", false)!;
+    bool onClose = widget.control.getBool("on_close", false)!;
+    bool onHover = widget.control.getBool("on_hover", false)!;
 
-    var subMenu = SubmenuButton(
+    var subMenuButton = SubmenuButton(
       focusNode: _focusNode,
       clipBehavior:
-          parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+          widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
       style: style,
-      menuStyle: parseMenuStyle(Theme.of(context), widget.control, "menuStyle"),
-      alignmentOffset: parseOffset(widget.control, "alignmentOffset"),
-      onClose: onClose && !disabled
-          ? () {
-              widget.backend.triggerControlEvent(widget.control.id, "close");
-            }
+      menuStyle: widget.control.getMenuStyle("menu_style", Theme.of(context)),
+      alignmentOffset: widget.control.getOffset("alignment_offset"),
+      onClose: onClose && !widget.control.disabled
+          ? () => widget.control.triggerEvent("close")
           : null,
-      onHover: onHover && !disabled
-          ? (bool value) {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "hover", "$value");
-            }
+      onHover: onHover && !widget.control.disabled
+          ? (bool value) => widget.control.triggerEvent("hover", value)
           : null,
-      onOpen: onOpen && !disabled
-          ? () {
-              widget.backend.triggerControlEvent(widget.control.id, "open");
-            }
+      onOpen: onOpen && !widget.control.disabled
+          ? () => widget.control.triggerEvent("open")
           : null,
-      leadingIcon: leading.isNotEmpty
-          ? createControl(widget.control, leading.first.id, disabled)
-          : null,
-      trailingIcon: trailing.isNotEmpty
-          ? createControl(widget.control, trailing.first.id, disabled)
-          : null,
-      menuChildren: ctrls.map((c) {
-        return createControl(widget.control, c.id, disabled);
-      }).toList(),
-      child: content.isNotEmpty
-          ? createControl(widget.control, content.first.id, disabled)
-          : null,
+      leadingIcon: widget.control.buildWidget("leading"),
+      trailingIcon: widget.control.buildWidget("trailing"),
+      menuChildren: widget.control.buildWidgets("controls"),
+      child: widget.control.buildWidget("content"),
     );
 
-    var focusValue = widget.control.attrString("focus");
+    var focusValue = widget.control.getString("focus");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();
     }
 
-    return constrainedControl(context, subMenu, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: subMenuButton);
   }
 }

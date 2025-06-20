@@ -1,103 +1,61 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
-import '../utils/others.dart';
+import '../utils/colors.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
-import 'create_control.dart';
-import 'cupertino_app_bar.dart';
-import 'flet_store_mixin.dart';
+import 'base_controls.dart';
 
-class AppBarControl extends StatelessWidget
-    with FletStoreMixin
-    implements PreferredSizeWidget {
-  final Control? parent;
+class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   final Control control;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final List<Control> children;
-  final double height;
 
-  const AppBarControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.height});
+  const AppBarControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("AppBar build: ${control.id}");
 
-    return withPagePlatform((context, platform) {
-      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
-      if (adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
-        return CupertinoAppBarControl(
-            control: control,
-            parentDisabled: parentDisabled,
-            parentAdaptive: adaptive,
-            children: children);
-      }
+    var appBar = AppBar(
+      leading: control.buildWidget("leading"),
+      leadingWidth: control.getDouble("leading_width"),
+      automaticallyImplyLeading:
+          control.getBool("automatically_imply_leading", true)!,
+      title: control.buildTextOrWidget("title"),
+      centerTitle: control.getBool("center_title", false)!,
+      toolbarHeight: preferredSize.height,
+      foregroundColor: control.getColor("color", context),
+      backgroundColor: control.getColor("bgcolor", context),
+      elevation: control.getDouble("elevation"),
+      actions: control.buildWidgets("actions"),
+      systemOverlayStyle: Theme.of(context)
+          .extension<SystemUiOverlayStyleTheme>()
+          ?.systemUiOverlayStyle,
+      shadowColor: control.getColor("shadow_color", context),
+      surfaceTintColor: control.getColor("surface_tint_color", context),
+      scrolledUnderElevation: control.getDouble("elevation_on_scroll"),
+      forceMaterialTransparency:
+          control.getBool("force_material_transparency", false)!,
+      primary: !control.getBool("isSecondary", false)!,
+      titleSpacing: control.getDouble("title_spacing"),
+      excludeHeaderSemantics:
+          control.getBool("exclude_header_semantics", false)!,
+      clipBehavior: control.getClipBehavior("clip_behavior"),
+      titleTextStyle:
+          control.getTextStyle("title_text_style", Theme.of(context)),
+      shape: control.getShape("shape", Theme.of(context)),
+      toolbarOpacity: control.getDouble("toolbar_opacity", 1)!,
+      toolbarTextStyle:
+          parseTextStyle(control.get("toolbar_text_style"), Theme.of(context)),
+    );
 
-      var leadingCtrls =
-          children.where((c) => c.name == "leading" && c.isVisible);
-      var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-      var actionCtrls =
-          children.where((c) => c.name == "action" && c.isVisible);
-      var isSecondary = control.attrBool("isSecondary", false)!;
-
-      var appBar = AppBar(
-        leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, control.isDisabled,
-                parentAdaptive: adaptive)
-            : null,
-        leadingWidth: control.attrDouble("leadingWidth"),
-        automaticallyImplyLeading:
-            control.attrBool("automaticallyImplyLeading", true)!,
-        title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, control.isDisabled,
-                parentAdaptive: adaptive)
-            : null,
-        centerTitle: control.attrBool("centerTitle", false)!,
-        toolbarHeight: preferredSize.height,
-        foregroundColor: control.attrColor("color", context),
-        backgroundColor: control.attrColor("bgcolor", context),
-        elevation: control.attrDouble("elevation"),
-        actions: actionCtrls
-            .map((c) => createControl(control, c.id, control.isDisabled,
-                parentAdaptive: adaptive))
-            .toList(),
-        systemOverlayStyle: Theme.of(context)
-            .extension<SystemUiOverlayStyleTheme>()
-            ?.systemUiOverlayStyle,
-        shadowColor: control.attrColor("shadowColor", context),
-        surfaceTintColor: control.attrColor("surfaceTintColor", context),
-        scrolledUnderElevation: control.attrDouble("elevationOnScroll"),
-        forceMaterialTransparency:
-            control.attrBool("forceMaterialTransparency", false)!,
-        primary: !isSecondary,
-        titleSpacing: control.attrDouble("titleSpacing"),
-        excludeHeaderSemantics:
-            control.attrBool("excludeHeaderSemantics", false)!,
-        clipBehavior: parseClip(control.attrString("clipBehavior")),
-        titleTextStyle:
-            parseTextStyle(Theme.of(context), control, "titleTextStyle"),
-        shape: parseOutlinedBorder(control, "shape"),
-        toolbarOpacity: control.attrDouble("toolbarOpacity", 1)!,
-        toolbarTextStyle:
-            parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
-        actionsPadding: parseEdgeInsets(control, "actionsPadding"),
-      );
-      return baseControl(context, appBar, parent, control);
-    });
+    return BaseControl(control: control, child: appBar);
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(height);
+  Size get preferredSize =>
+      Size.fromHeight(control.getDouble("toolbar_height", kToolbarHeight)!);
 }

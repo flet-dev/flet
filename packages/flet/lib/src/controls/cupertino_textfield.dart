@@ -1,48 +1,20 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../flet_control_backend.dart';
-import '../models/control.dart';
-import '../utils/autofill.dart';
-import '../utils/borders.dart';
-import '../utils/box.dart';
-import '../utils/edge_insets.dart';
-import '../utils/form_field.dart';
-import '../utils/gradient.dart';
-import '../utils/images.dart';
-import '../utils/others.dart';
-import '../utils/overlay_style.dart';
-import '../utils/text.dart';
-import '../utils/textfield.dart';
-import 'create_control.dart';
-import 'flet_store_mixin.dart';
-import 'textfield.dart';
-
 class CupertinoTextFieldControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoTextFieldControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  CupertinoTextFieldControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoTextFieldControl> createState() =>
       _CupertinoTextFieldControlState();
 }
 
-class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
-    with FletStoreMixin {
+class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   String _value = "";
   bool _focused = false;
   bool _revealPassword = false;
@@ -61,7 +33,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
         if (!HardwareKeyboard.instance.isShiftPressed &&
             evt.logicalKey.keyLabel == 'Enter') {
           if (evt is KeyDownEvent) {
-            widget.backend.triggerControlEvent(widget.control.id, "submit");
+            widget.control.triggerEvent("submit");
           }
           return KeyEventResult.handled;
         } else {
@@ -88,93 +60,72 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(
-        widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
+    widget.control
+        .triggerEvent(_shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoTextField build: ${widget.control.id}");
 
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    debugPrint("CupertinoTextField StoreConnector build: ${widget.control.id}");
-
-    String value = widget.control.attrs["value"] ?? "";
+    var autofocus = widget.control.getBool("autofocus", false)!;
+    var value = widget.control.getString("value", "")!;
     if (_value != value) {
       _value = value;
       _controller.text = value;
     }
 
-    var prefixControls =
-        widget.children.where((c) => c.name == "prefix" && c.isVisible);
-    var suffixControls =
-        widget.children.where((c) => c.name == "suffix" && c.isVisible);
+    var shiftEnter = widget.control.getBool("shift_enter", false)!;
+    var multiline = widget.control.getBool("multiline", false)! || shiftEnter;
+    var minLines = widget.control.getInt("min_lines", 1)!;
+    var maxLines = widget.control.getInt("max_lines", multiline ? null : 1);
 
-    bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
-    bool multiline = widget.control.attrBool("multiline", false)! || shiftEnter;
-    int minLines = widget.control.attrInt("minLines", 1)!;
-    int? maxLines = widget.control.attrInt("maxLines", multiline ? null : 1);
+    var readOnly = widget.control.getBool("read_only", false)!;
+    var password = widget.control.getBool("password", false)!;
+    var onChange = widget.control.getBool("on_change", false)!;
 
-    bool readOnly = widget.control.attrBool("readOnly", false)!;
-    bool password = widget.control.attrBool("password", false)!;
-    bool onChange = widget.control.attrBool("onChange", false)!;
+    var cursorColor = widget.control.getColor("cursor_color", context);
+    var selectionColor = widget.control.getColor("selection_color", context);
 
-    var cursorColor = widget.control.attrColor("cursorColor", context);
-    var selectionColor = widget.control.attrColor("selectionColor", context);
+    var maxLength = widget.control.getInt("max_length");
 
-    int? maxLength = widget.control.attrInt("maxLength");
+    var textSize = widget.control.getDouble("text_size");
 
-    var textSize = widget.control.attrDouble("textSize");
+    var color = widget.control.getColor("color", context);
+    var focusedColor = widget.control.getColor("focused_color", context);
 
-    var color = widget.control.attrColor("color", context);
-    var focusedColor = widget.control.attrColor("focusedColor", context);
-
-    TextStyle? textStyle =
-        parseTextStyle(Theme.of(context), widget.control, "textStyle");
+    var textStyle =
+        widget.control.getTextStyle("text_style", Theme.of(context));
     if (textSize != null || color != null || focusedColor != null) {
       textStyle = (textStyle ?? const TextStyle()).copyWith(
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
-    TextCapitalization textCapitalization = parseTextCapitalization(
-        widget.control.attrString("textCapitalization"),
-        TextCapitalization.none)!;
-
-    FilteringTextInputFormatter? inputFilter =
-        parseInputFilter(widget.control, "inputFilter");
-
-    List<TextInputFormatter>? inputFormatters = [];
-    // add non-null input formatters
+    List<TextInputFormatter> inputFormatters = [];
+    var inputFilter = widget.control.getTextInputFormatter("input_filter");
     if (inputFilter != null) {
       inputFormatters.add(inputFilter);
     }
+    var textCapitalization = widget.control
+        .getTextCapitalization("capitalization", TextCapitalization.none)!;
     if (textCapitalization != TextCapitalization.none) {
       inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
     }
-
-    TextAlign textAlign = parseTextAlign(
-        widget.control.attrString("textAlign"), TextAlign.start)!;
-
-    double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
-
-    bool rtl = widget.control.attrBool("rtl", false)!;
-    bool autocorrect = widget.control.attrBool("autocorrect", true)!;
-    ;
-
+    var textAlign = widget.control.getTextAlign("text_align", TextAlign.start)!;
+    var textVerticalAlign = widget.control.getDouble("text_vertical_align");
+    var rtl = widget.control.getBool("rtl", false)!;
+    var autocorrect = widget.control.getBool("autocorrect", true)!;
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
-    var focusValue = widget.control.attrString("focus");
-    var blurValue = widget.control.attrString("blur");
+    var focusValue = widget.control.getString("focus");
+    var blurValue = widget.control.getString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       focusNode.requestFocus();
@@ -184,20 +135,19 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       _focusNode.unfocus();
     }
 
-    BorderRadius? borderRadius =
-        parseBorderRadius(widget.control, "borderRadius");
+    var borderRadius = widget.control.getBorderRadius("border_radius");
 
     BoxBorder? border;
-    double borderWidth = widget.control.attrDouble("borderWidth") ?? 1.0;
-    Color borderColor = widget.control.attrColor("borderColor", context) ??
+    var borderWidth = widget.control.getDouble("border_width", 1.0)!;
+    var borderColor = widget.control.getColor("border_color", context) ??
         const Color(0xFF000000);
 
     try {
-      border = parseBorder(Theme.of(context), widget.control, "border");
+      border = widget.control.getBorder("border", Theme.of(context));
       // adaptive TextField is being created
     } catch (e) {
       FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-        widget.control.attrString("border"),
+        widget.control.getString("border"),
         FormFieldInputBorder.outline,
       )!;
 
@@ -210,17 +160,17 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       }
     }
 
-    bool canRevealPassword =
-        widget.control.attrBool("canRevealPassword", false)!;
+    var canRevealPassword =
+        widget.control.getBool("can_reveal_password", false)!;
 
     Widget? revealPasswordIcon;
     if (password && canRevealPassword) {
       revealPasswordIcon = Padding(
         padding: const EdgeInsets.only(right: 15.0),
         child: GestureDetector(
-            child: Icon(
-              _revealPassword ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
-            ),
+            child: Icon(_revealPassword
+                ? CupertinoIcons.eye_slash
+                : CupertinoIcons.eye),
             onTap: () {
               setState(() {
                 _revealPassword = !_revealPassword;
@@ -228,145 +178,138 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
             }),
       );
     }
-    var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
-    BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
-    var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
-    var blendMode = parseBlendMode(widget.control.attrString("blendMode"));
+    var fitParentSize = widget.control.getBool("fit_parent_size", false)!;
+    var defaultDecoration = const CupertinoTextField().decoration;
+    var gradient = widget.control.getGradient("gradient", Theme.of(context));
+    var blendMode = widget.control.getBlendMode("blend_mode");
+    var bgcolor = widget.control.getColor("bgcolor", context);
+    var label = widget.control.get("label");
+    String? labelStr;
+    if (label is String) {
+      labelStr = widget.control.getString("label");
+    }
 
-    var bgColor = widget.control.attrColor("bgColor", context);
+    Widget textField = CupertinoTextField(
+        style: textStyle,
+        textAlignVertical: textVerticalAlign != null
+            ? TextAlignVertical(y: textVerticalAlign)
+            : null,
+        placeholder: widget.control.getString("placeholder_text") ?? labelStr,
+        placeholderStyle:
+            widget.control.getTextStyle("placeholder_style", Theme.of(context)) ??
+                widget.control.getTextStyle("label_style", Theme.of(context)),
+        // label_style for adaptive TextField
+        autofocus: autofocus,
+        enabled: !widget.control.disabled,
+        onSubmitted: !multiline
+            ? (String value) {
+                widget.control.triggerEvent("submit", value);
+              }
+            : null,
+        decoration: defaultDecoration?.copyWith(
+            color: bgcolor,
+            gradient: gradient,
+            image: widget.control.getDecorationImage("image", context),
+            backgroundBlendMode:
+                bgcolor != null || gradient != null ? blendMode : null,
+            border: border,
+            borderRadius: borderRadius,
+            boxShadow:
+                widget.control.getBoxShadows("shadow", Theme.of(context))),
+        cursorHeight: widget.control.getDouble("cursor_height"),
+        showCursor: widget.control.getBool("show_cursor"),
+        cursorWidth: widget.control.getDouble("cursor_width", 2.0)!,
+        cursorRadius: widget.control
+            .getRadius("cursor_radius", const Radius.circular(2.0))!,
+        keyboardType: multiline
+            ? TextInputType.multiline
+            : widget.control
+                .getTextInputType("keyboard_type", TextInputType.text)!,
+        clearButtonSemanticLabel:
+            widget.control.getString("clear_button_semantics_label"),
+        autocorrect: autocorrect,
+        enableSuggestions: widget.control.getBool("enable_suggestions", true)!,
+        smartDashesType: widget.control.getBool("smart_dashes_type", true)!
+            ? SmartDashesType.enabled
+            : SmartDashesType.disabled,
+        smartQuotesType: widget.control.getBool("smart_quotes_type", true)!
+            ? SmartQuotesType.enabled
+            : SmartQuotesType.disabled,
+        suffixMode: widget.control.getOverlayVisibilityMode(
+            "suffix_visibility_mode", OverlayVisibilityMode.always)!,
+        prefixMode: widget.control.getOverlayVisibilityMode(
+            "prefix_visibility_mode", OverlayVisibilityMode.always)!,
+        textAlign: textAlign,
+        minLines: fitParentSize ? null : minLines,
+        maxLines: fitParentSize ? null : maxLines,
+        maxLength: maxLength,
+        prefix: widget.control.buildTextOrWidget("prefix"),
+        suffix:
+            revealPasswordIcon ?? widget.control.buildTextOrWidget("suffix"),
+        readOnly: readOnly,
+        textDirection: rtl ? TextDirection.rtl : null,
+        inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
+        obscureText: password && !_revealPassword,
+        padding:
+            widget.control.getPadding("padding", const EdgeInsets.all(7.0))!,
+        stylusHandwritingEnabled:
+            widget.control.getBool("enable_stylus_handwriting", true)!,
+        scrollPadding: widget.control
+            .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
+        obscuringCharacter:
+            widget.control.getString("obscuring_character", '•')!,
+        cursorOpacityAnimates:
+            widget.control.getBool("animate_cursor_opacity", isIOSMobile())!,
+        expands: fitParentSize,
+        enableIMEPersonalizedLearning:
+            widget.control.getBool("enable_ime_personalized_learning", true)!,
+        clipBehavior:
+            widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+        cursorColor: cursorColor,
+        autofillHints: parseAutofillHints(widget.control.get("autofill_hints")),
+        keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
+        enableInteractiveSelection:
+            widget.control.getBool("enable_interactive_selection"),
+        clearButtonMode: widget.control.getOverlayVisibilityMode("clear_button_visibility_mode", OverlayVisibilityMode.never)!,
+        strutStyle: widget.control.getStrutStyle("strut_style"),
+        onTap: () => widget.control.triggerEvent("click"),
+        controller: _controller,
+        focusNode: focusNode,
+        onTapOutside: widget.control.getBool("on_tap_outside", false)!
+            ? (PointerDownEvent? event) {
+                widget.control.triggerEvent("tap_outside");
+              }
+            : null,
+        onChanged: (String value) {
+          _value = value;
+          widget.control.updateProperties({"value": value});
+          if (onChange) {
+            widget.control.triggerEvent("change", value);
+          }
+        });
 
-    return withPageArgs((context, pageArgs) {
-      Widget textField = CupertinoTextField(
-          style: textStyle,
-          textAlignVertical: textVerticalAlign != null
-              ? TextAlignVertical(y: textVerticalAlign)
-              : null,
-          placeholder: widget.control.attrString("placeholderText") ??
-              widget.control.attrString("label"),
-          // use label for adaptive TextField
-          placeholderStyle: parseTextStyle(Theme.of(context), widget.control, "placeholderStyle") ??
-              parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
-          // labelStyle for adaptive TextField
-          autofocus: autofocus,
-          enabled: !disabled,
-          onSubmitted: !multiline
-              ? (String value) {
-                  widget.backend
-                      .triggerControlEvent(widget.control.id, "submit", value);
-                }
-              : null,
-          decoration: defaultDecoration?.copyWith(
-              color: bgColor,
-              gradient: gradient,
-              image: parseDecorationImage(
-                  Theme.of(context), widget.control, "image", pageArgs),
-              backgroundBlendMode:
-                  bgColor != null || gradient != null ? blendMode : null,
-              border: border,
-              borderRadius: borderRadius,
-              boxShadow:
-                  parseBoxShadow(Theme.of(context), widget.control, "shadow")),
-          cursorHeight: widget.control.attrDouble("cursorHeight"),
-          showCursor: widget.control.attrBool("showCursor"),
-          cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
-          cursorRadius: parseRadius(
-              widget.control, "cursorRadius", const Radius.circular(2.0))!,
-          keyboardType: multiline
-              ? TextInputType.multiline
-              : parseTextInputType(widget.control.attrString("keyboardType"),
-                  TextInputType.text)!,
-          clearButtonSemanticLabel:
-              widget.control.attrString("clearButtonSemanticsLabel"),
-          autocorrect: autocorrect,
-          enableSuggestions:
-              widget.control.attrBool("enableSuggestions", true)!,
-          smartDashesType: widget.control.attrBool("smartDashesType", true)!
-              ? SmartDashesType.enabled
-              : SmartDashesType.disabled,
-          smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
-              ? SmartQuotesType.enabled
-              : SmartQuotesType.disabled,
-          suffixMode: parseVisibilityMode(
-              widget.control.attrString("suffixVisibilityMode"),
-              OverlayVisibilityMode.always)!,
-          prefixMode: parseVisibilityMode(
-              widget.control.attrString("prefixVisibilityMode"),
-              OverlayVisibilityMode.always)!,
-          textAlign: textAlign,
-          minLines: fitParentSize ? null : minLines,
-          maxLines: fitParentSize ? null : maxLines,
-          maxLength: maxLength,
-          prefix: prefixControls.isNotEmpty
-              ? createControl(widget.control, prefixControls.first.id, disabled,
-                  parentAdaptive: widget.parentAdaptive)
-              : null,
-          suffix: revealPasswordIcon ?? (suffixControls.isNotEmpty ? createControl(widget.control, suffixControls.first.id, disabled, parentAdaptive: widget.parentAdaptive) : null),
-          readOnly: readOnly,
-          textDirection: rtl ? TextDirection.rtl : null,
-          inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-          obscureText: password && !_revealPassword,
-          padding: parseEdgeInsets(widget.control, "padding", const EdgeInsets.all(7.0))!,
-          scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
-          scrollPadding: parseEdgeInsets(widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
-          obscuringCharacter: widget.control.attrString("obscuringCharacter", '•')!,
-          cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity", Theme.of(context).platform == TargetPlatform.iOS)!,
-          expands: fitParentSize,
-          enableIMEPersonalizedLearning: widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
-          clipBehavior: parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
-          cursorColor: cursorColor,
-          autofillHints: parseAutofillHints(widget.control, "autofillHints"),
-          keyboardAppearance: parseBrightness(widget.control.attrString("keyboardBrightness")),
-          enableInteractiveSelection: widget.control.attrBool("enableInteractiveSelection"),
-          clearButtonMode: parseVisibilityMode(widget.control.attrString("clearButtonVisibilityMode"), OverlayVisibilityMode.never)!,
-          strutStyle: parseStrutStyle(widget.control, "strutStyle"),
-          onTap: () {
-            widget.backend.triggerControlEvent(widget.control.id, "click");
-          },
-          controller: _controller,
-          focusNode: focusNode,
-          onTapOutside: widget.control.attrBool("onTapOutside", false)!
-              ? (PointerDownEvent? event) {
-                  widget.backend
-                      .triggerControlEvent(widget.control.id, "tapOutside");
-                }
-              : null,
-          onChanged: (String value) {
-            //debugPrint(value);
-            _value = value;
-            widget.backend
-                .updateControlState(widget.control.id, {"value": value});
-            if (onChange) {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "change", value);
-            }
-          });
+    if (cursorColor != null || selectionColor != null) {
+      textField = TextSelectionTheme(
+          data: TextSelectionTheme.of(context).copyWith(
+              cursorColor: cursorColor, selectionColor: selectionColor),
+          child: textField);
+    }
 
-      if (cursorColor != null || selectionColor != null) {
-        textField = TextSelectionTheme(
-            data: TextSelectionTheme.of(context).copyWith(
-                cursorColor: cursorColor, selectionColor: selectionColor),
-            child: textField);
-      }
+    if (widget.control.get("expand") == true ||
+        (widget.control.get("expand") is int &&
+            widget.control.getInt("expand", 0)! > 0)) {
+      return ConstrainedControl(control: widget.control, child: textField);
+    } else {
+      double? width = widget.control.getDouble("width");
 
-      if (widget.control.attrInt("expand", 0)! > 0) {
-        return constrainedControl(
-            context, textField, widget.parent, widget.control);
-      } else {
-        return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if (constraints.maxWidth == double.infinity &&
-                widget.control.attrDouble("width") == null) {
-              textField = ConstrainedBox(
+      return ConstrainedControl(
+        control: widget.control,
+        child: width == null
+            ? ConstrainedBox(
                 constraints: const BoxConstraints.tightFor(width: 300),
-                child: textField,
-              );
-            }
-
-            return constrainedControl(
-                context, textField, widget.parent, widget.control);
-          },
-        );
-      }
-    });
+                child: textField)
+            : textField,
+      );
+    }
   }
 }

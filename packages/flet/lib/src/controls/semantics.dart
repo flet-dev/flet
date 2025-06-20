@@ -1,165 +1,109 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
-import 'create_control.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 
 class SemanticsControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const SemanticsControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const SemanticsControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Semantics build: ${control.id}");
-
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
-
     Semantics semantics = Semantics(
-        label: control.attrString("label"),
-        enabled: !disabled,
-        expanded: control.attrBool("expanded"),
-        hidden: control.attrBool("hidden"),
-        selected: control.attrBool("selected"),
-        checked: control.attrBool("checked"),
-        button: control.attrBool("button"),
-        slider: control.attrBool("slider"),
-        value: control.attrString("value"),
-        textField: control.attrBool("textField"),
-        image: control.attrBool("image"),
-        link: control.attrBool("link"),
-        header: control.attrBool("header"),
-        increasedValue: control.attrString("increasedValue"),
-        decreasedValue: control.attrString("decreasedValue"),
-        hint: control.attrString("hint"),
-        onTapHint: control.attrString("onTapHint"),
-        onLongPressHint: control.attrString("onLongPressHint"),
-        container: control.attrBool("container")!,
-        liveRegion: control.attrBool("liveRegion"),
-        obscured: control.attrBool("obscured"),
-        multiline: control.attrBool("multiline"),
-        focused: control.attrBool("focused"),
-        readOnly: control.attrBool("readOnly"),
-        focusable: control.attrBool("focusable"),
-        tooltip: control.attrString("tooltip"),
-        toggled: control.attrBool("toggled"),
-        maxValueLength: control.attrInt("maxValueLength"),
-        currentValueLength: control.attrInt("currentValueLength"),
-        headingLevel: control.attrInt("headingLevel"),
-        excludeSemantics: control.attrBool("excludeSemantics", false)!,
-        mixed: control.attrBool("mixed"),
-        onTap: control.attrBool("onclick", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "click");
-              }
-            : null,
-        onIncrease: control.attrBool("onIncrease", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "increase");
-              }
-            : null,
-        onDecrease: control.attrBool("onDecrease", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "decrease");
-              }
-            : null,
-        onDismiss: control.attrBool("onDismiss", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "dismiss");
-              }
-            : null,
-        onScrollLeft: control.attrBool("onScrollLeft", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "scrollLeft");
-              }
-            : null,
-        onScrollRight: control.attrBool("onScrollRight", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "scrollRight");
-              }
-            : null,
-        onScrollUp: control.attrBool("onScrollUp", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "scrollUp");
-              }
-            : null,
-        onScrollDown: control.attrBool("onScrollDown", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "scrollDown");
-              }
-            : null,
-        onCopy: control.attrBool("onCopy", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "copy");
-              }
-            : null,
-        onCut: control.attrBool("onCut", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "cut");
-              }
-            : null,
-        onPaste: control.attrBool("onPaste", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "paste");
-              }
-            : null,
-        onLongPress: control.attrBool("onDismiss", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "dismiss");
-              }
-            : null,
-        onMoveCursorForwardByCharacter:
-            control.attrBool("onMoveCursorForwardByCharacter", false)!
-                ? (bool value) {
-                    backend.triggerControlEvent(control.id,
-                        "move_cursor_forward_by_character", value.toString());
-                  }
-                : null,
-        onMoveCursorBackwardByCharacter:
-            control.attrBool("onMoveCursorBackwardByCharacter", false)!
-                ? (bool value) {
-                    backend.triggerControlEvent(control.id,
-                        "move_cursor_backward_by_character", value.toString());
-                  }
-                : null,
-        onDidGainAccessibilityFocus:
-            control.attrBool("onDidGainAccessibilityFocus", false)!
-                ? () {
-                    backend.triggerControlEvent(
-                        control.id, "did_gain_accessibility_focus");
-                  }
-                : null,
-        onDidLoseAccessibilityFocus:
-            control.attrBool("onDidLoseAccessibilityFocus", false)!
-                ? () {
-                    backend.triggerControlEvent(
-                        control.id, "did_lose_accessibility_focus");
-                  }
-                : null,
-        onSetText: control.attrBool("onSetText", false)!
-            ? (String text) {
-                backend.triggerControlEvent(control.id, "set_text", text);
-              }
-            : null,
-        child: contentCtrls.isNotEmpty
-            ? createControl(control, contentCtrls.first.id, disabled,
-                parentAdaptive: parentAdaptive)
-            : null);
+      label: control.getString("label"),
+      enabled: !control.disabled,
+      expanded: control.getBool("expanded"),
+      hidden: control.getBool("hidden"),
+      selected: control.getBool("selected"),
+      checked: control.getBool("checked"),
+      button: control.getBool("button"),
+      slider: control.getBool("slider"),
+      value: control.getString("value"),
+      textField: control.getBool("text_field"),
+      image: control.getBool("image"),
+      link: control.getBool("link"),
+      header: control.getBool("header"),
+      increasedValue: control.getString("increased_value"),
+      decreasedValue: control.getString("decreased_value"),
+      hint: control.getString("hint"),
+      onTapHint: control.getString("on_tap_hint"),
+      onLongPressHint: control.getString("on_long_press_hint"),
+      container: control.getBool("container")!,
+      liveRegion: control.getBool("live_region"),
+      obscured: control.getBool("obscured"),
+      multiline: control.getBool("multiline"),
+      focused: control.getBool("focused"),
+      readOnly: control.getBool("read_only"),
+      focusable: control.getBool("focusable"),
+      tooltip: control.getString("tooltip"),
+      toggled: control.getBool("toggled"),
+      maxValueLength: control.getInt("max_value_length"),
+      currentValueLength: control.getInt("current_value_length"),
+      headingLevel: control.getInt("heading_level"),
+      excludeSemantics: control.getBool("exclude_semantics", false)!,
+      mixed: control.getBool("mixed"),
+      onTap: control.getBool("on_click", false)!
+          ? () => control.triggerEvent("click")
+          : null,
+      onIncrease: control.getBool("on_increase", false)!
+          ? () => control.triggerEvent("increase")
+          : null,
+      onDecrease: control.getBool("on_decrease", false)!
+          ? () => control.triggerEvent("decrease")
+          : null,
+      onDismiss: control.getBool("on_dismiss", false)!
+          ? () => control.triggerEvent("dismiss")
+          : null,
+      onScrollLeft: control.getBool("on_scroll_left", false)!
+          ? () => control.triggerEvent("scroll_left")
+          : null,
+      onScrollRight: control.getBool("on_scroll_right", false)!
+          ? () => control.triggerEvent("scroll_right")
+          : null,
+      onScrollUp: control.getBool("on_scroll_up", false)!
+          ? () => control.triggerEvent("scroll_up")
+          : null,
+      onScrollDown: control.getBool("on_scroll_down", false)!
+          ? () => control.triggerEvent("scroll_down")
+          : null,
+      onCopy: control.getBool("on_copy", false)!
+          ? () => control.triggerEvent("copy")
+          : null,
+      onCut: control.getBool("on_cut", false)!
+          ? () => control.triggerEvent("cut")
+          : null,
+      onPaste: control.getBool("on_paste", false)!
+          ? () => control.triggerEvent("paste")
+          : null,
+      onLongPress: control.getBool("on_dismiss", false)!
+          ? () => control.triggerEvent("dismiss")
+          : null,
+      onMoveCursorForwardByCharacter: control.getBool(
+              "on_move_cursor_forward_by_character", false)!
+          ? (bool value) =>
+              control.triggerEvent("move_cursor_forward_by_character", value)
+          : null,
+      onMoveCursorBackwardByCharacter: control.getBool(
+              "on_move_cursor_backward_by_character", false)!
+          ? (bool value) =>
+              control.triggerEvent("move_cursor_backward_by_character", value)
+          : null,
+      onDidGainAccessibilityFocus:
+          control.getBool("on_did_gain_accessibility_focus", false)!
+              ? () => control.triggerEvent("did_gain_accessibility_focus")
+              : null,
+      onDidLoseAccessibilityFocus:
+          control.getBool("on_did_lose_accessibility_focus", false)!
+              ? () => control.triggerEvent("did_lose_accessibility_focus")
+              : null,
+      onSetText: control.getBool("on_set_text", false)!
+          ? (String text) => control.triggerEvent("set_text", text)
+          : null,
+    );
 
-    return constrainedControl(context, semantics, parent, control);
+    return ConstrainedControl(control: control, child: semantics);
   }
 }

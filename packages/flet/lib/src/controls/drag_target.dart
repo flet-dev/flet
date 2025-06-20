@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import 'draggable.dart';
 
 class DragTargetEvent {
-  final String srcId;
+  final int srcId;
   final double x;
   final double y;
 
@@ -18,102 +17,60 @@ class DragTargetEvent {
     required this.y,
   });
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'src_id': srcId,
-        'x': x,
-        'y': y,
-      };
+  Map<String, dynamic> toMap() =>
+      <String, dynamic>{'src_id': srcId, 'x': x, 'y': y};
 }
 
 class DragTargetControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const DragTargetControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const DragTargetControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("DragTarget build: ${control.id}");
 
-    var group = control.attrString("group", "");
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var group = control.getString("group", "default")!;
+    var content = control.buildWidget("content");
 
-    Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
-
-    if (child == null) {
-      return const ErrorControl(
-          "DragTarget.content must be provided and visible");
+    if (content == null) {
+      return const ErrorControl("DragTarget.content must be visible");
     }
 
-    return DragTarget<String>(
+    return DragTarget<DraggableData>(
       builder: (
         BuildContext context,
         List<dynamic> accepted,
         List<dynamic> rejected,
       ) {
-        debugPrint(
-            "DragTarget.builder ${control.id}: accepted=${accepted.length}, rejected=${rejected.length}");
-        return child;
+        return content;
       },
-      onMove: (details) {
-        var data = details.data;
-        debugPrint("DragTarget.onMove ${control.id}: $data");
-        var jd = json.decode(data);
-        var srcId = jd["id"] as String;
-        backend.triggerControlEvent(
-            control.id,
+      onMove: (DragTargetDetails<DraggableData> details) {
+        control.triggerEvent(
             "move",
-            json.encode(DragTargetEvent(
-                    srcId: srcId, x: details.offset.dx, y: details.offset.dy)
-                .toJson()));
+            DragTargetEvent(
+                    srcId: details.data.id,
+                    x: details.offset.dx,
+                    y: details.offset.dy)
+                .toMap());
       },
-      onWillAcceptWithDetails: (details) {
-        var data = details.data;
-        debugPrint("DragTarget.onWillAcceptWithDetails ${control.id}: $data");
-        String srcGroup = "";
-        var jd = json.decode(data);
-        srcGroup = jd["group"] as String;
-        var groupsEqual = srcGroup == group;
-        backend.triggerControlEvent(
-            control.id, "will_accept", groupsEqual.toString());
-        return groupsEqual;
+      onWillAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
+        var groupMatch = details.data.group == group;
+        control.triggerEvent(
+            "will_accept", {"accept": groupMatch, "src_id": details.data.id});
+        return groupMatch;
       },
-      onAcceptWithDetails: (details) {
-        var data = details.data;
-        debugPrint("DragTarget.onAcceptWithDetails ${control.id}: $data");
-        var jd = json.decode(data);
-        var srcId = jd["id"] as String;
-        backend.triggerControlEvent(
-            control.id,
+      onAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
+        control.triggerEvent(
             "accept",
-            json.encode(DragTargetEvent(
-                    srcId: srcId, x: details.offset.dx, y: details.offset.dy)
-                .toJson()));
+            DragTargetEvent(
+                    srcId: details.data.id,
+                    x: details.offset.dx,
+                    y: details.offset.dy)
+                .toMap());
       },
-      onLeave: (data) {
-        debugPrint("DragTarget.onLeave ${control.id}: $data");
-        String srcId = "";
-        if (data != null) {
-          var jd = json.decode(data);
-          srcId = jd["id"] as String;
-        }
-        backend.triggerControlEvent(control.id, "leave", srcId);
+      onLeave: (DraggableData? data) {
+        control.triggerEvent("leave", {"src_id", data?.id});
       },
     );
   }

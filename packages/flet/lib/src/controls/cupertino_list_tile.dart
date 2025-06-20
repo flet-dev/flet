@@ -1,120 +1,84 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
-import 'create_control.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 import 'list_tile.dart';
 
 class CupertinoListTileControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
-  CupertinoListTileControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  CupertinoListTileControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoListTile build: ${control.id}");
 
-    var leadingCtrls =
-        children.where((c) => c.name == "leading" && c.isVisible);
-    var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-    var subtitleCtrls =
-        children.where((c) => c.name == "subtitle" && c.isVisible);
-    var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
-    var additionalInfoCtrls =
-        children.where((c) => c.name == "additionalInfo" && c.isVisible);
+    var title = control.buildTextOrWidget("title");
+    if (title == null) {
+      return const ErrorControl(
+          "CupertinoListTile.title must be provided and visible");
+    }
+    var leading = control.buildIconOrWidget("leading");
+    var additionalInfo = control.buildTextOrWidget("additional_info");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
+    var backgroundColor = control.getColor("bgcolor", context);
+    var bgcolorActivated = control.getColor("bgcolor_activated", context);
+    var padding = control.getPadding("content_padding");
+    var notched = control.getBool("notched", false)!;
+    var leadingSize = control.getDouble("leading_size", notched ? 30.0 : 28.0)!;
+    var leadingToTitle =
+        control.getDouble("leading_to_title", notched ? 12.0 : 16.0)!;
+    var onclick = control.getBool("on_click", false)!;
+    var toggleInputs = control.getBool("toggle_inputs", false)!;
+    var url = control.getString("url");
+    var urlTarget = control.getString("url_target");
 
-    bool notched = control.attrBool("notched", false)!;
-    bool onclick = control.attrBool("onclick", false)!;
-    bool toggleInputs = control.attrBool("toggleInputs", false)!;
-    String url = control.attrString("url", "")!;
-    String? urlTarget = control.attrString("urlTarget");
-    bool disabled = control.isDisabled || parentDisabled;
-
-    Widget? additionalInfo = additionalInfoCtrls.isNotEmpty
-        ? createControl(control, additionalInfoCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
-    Widget? leading = leadingCtrls.isNotEmpty
-        ? createControl(control, leadingCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
-
-    Widget? title = titleCtrls.isNotEmpty
-        ? createControl(control, titleCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : const Text("");
-
-    Widget? subtitle = subtitleCtrls.isNotEmpty
-        ? createControl(control, subtitleCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
-
-    Widget? trailing = trailingCtrls.isNotEmpty
-        ? createControl(control, trailingCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
-
-    Color? backgroundColor = control.attrColor("bgcolor", context);
-    Color? bgcolorActivated = control.attrColor("bgcolorActivated", context);
-
-    var padding = parseEdgeInsets(control, "contentPadding");
-    var leadingSize = control.attrDouble("leadingSize");
-    var leadingToTitle = control.attrDouble("leadingToTitle");
-
-    Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
-        ? () {
-            debugPrint("CupertinoListTile ${control.id} clicked!");
-            if (toggleInputs) {
-              _clickNotifier.onClick();
-            }
-            if (url != "") {
-              openWebBrowser(url, webWindowName: urlTarget);
-            }
-            if (onclick) {
-              backend.triggerControlEvent(control.id, "click");
-            }
-          }
-        : null;
+    Function()? onPressed =
+        (onclick || toggleInputs || url != "") && !control.disabled
+            ? () {
+                if (toggleInputs) {
+                  _clickNotifier.onClick();
+                }
+                if (url != null) {
+                  openWebBrowser(url, webWindowName: urlTarget);
+                }
+                if (onclick) {
+                  control.triggerEvent("click");
+                }
+              }
+            : null;
 
     Widget tile;
-    !notched
-        ? tile = CupertinoListTile(
+    notched
+        ? tile = CupertinoListTile.notched(
             onTap: onPressed,
             additionalInfo: additionalInfo,
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
-            leadingSize: leadingSize ?? 28.0,
-            leadingToTitle: leadingToTitle ?? 16.0,
+            leadingSize: leadingSize,
+            leadingToTitle: leadingToTitle,
             padding: padding,
             title: title,
             subtitle: subtitle,
             trailing: trailing,
           )
-        : tile = CupertinoListTile.notched(
+        : tile = CupertinoListTile(
             onTap: onPressed,
             additionalInfo: additionalInfo,
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
-            leadingSize: leadingSize ?? 30.0,
-            leadingToTitle: leadingToTitle ?? 12.0,
+            leadingSize: leadingSize,
+            leadingToTitle: leadingToTitle,
             padding: padding,
             title: title,
             subtitle: subtitle,
@@ -125,6 +89,6 @@ class CupertinoListTileControl extends StatelessWidget {
       tile = ListTileClicks(notifier: _clickNotifier, child: tile);
     }
 
-    return constrainedControl(context, tile, parent, control);
+    return ConstrainedControl(control: control, child: tile);
   }
 }

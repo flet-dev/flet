@@ -19,11 +19,10 @@ from flet.utils import (
     open_in_browser,
     random_string,
 )
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
-
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 
 class Command(BaseCommand):
@@ -128,7 +127,8 @@ class Command(BaseCommand):
             dest="ignore_dirs",
             type=str,
             default=None,
-            help="directories to ignore during watch. If more than one, separate with a comma.",
+            help="directories to ignore during watch. If more than one, separate"
+            "with a comma.",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -328,7 +328,6 @@ class Handler(FileSystemEventHandler):
         if (
             self.watch_directory or event.src_path == self.script_path
         ) and event.event_type in ["modified", "deleted", "created", "moved"]:
-
             current_time = time.time()
             if (current_time - self.last_time) > 0.5 and self.is_running:
                 self.last_time = current_time

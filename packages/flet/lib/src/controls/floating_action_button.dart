@@ -1,84 +1,77 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/icons.dart';
+import '../utils/colors.dart';
 import '../utils/launch_url.dart';
+import '../utils/misc.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class FloatingActionButtonControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const FloatingActionButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const FloatingActionButtonControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
-    String? text = control.attrString("text");
-    IconData? icon = parseIcon(control.attrString("icon"));
-    String url = control.attrString("url", "")!;
-    String? urlTarget = control.attrString("urlTarget");
-    double? disabledElevation = control.attrDouble("disabledElevation");
-    double? elevation = control.attrDouble("elevation");
-    double? hoverElevation = control.attrDouble("hoverElevation");
-    double? highlightElevation = control.attrDouble("highlightElevation");
-    double? focusElevation = control.attrDouble("focusElevation");
-    Color? bgColor = control.attrColor("bgColor", context);
-    Color? foregroundColor = control.attrColor("foregroundColor", context);
-    Color? splashColor = control.attrColor("splashColor", context);
-    Color? hoverColor = control.attrColor("hoverColor", context);
-    Color? focusColor = control.attrColor("focusColor", context);
-    OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
+    var content = control.buildTextOrWidget("content");
+    var icon = control.buildIconOrWidget("icon");
+    var url = control.getString("url");
+    var urlTarget = control.getString("url_target");
+    var disabledElevation = control.getDouble("disabled_elevation");
+    var elevation = control.getDouble("elevation");
+    var hoverElevation = control.getDouble("hover_elevation");
+    var highlightElevation = control.getDouble("highlight_elevation");
+    var focusElevation = control.getDouble("focus_elevation");
+    var bgcolor = control.getColor("bgcolor", context);
+    var foregroundColor = control.getColor("foreground_color", context);
+    var splashColor = control.getColor("splash_color", context);
+    var hoverColor = control.getColor("hover_color", context);
+    var focusColor = control.getColor("focus_color", context);
+    var shape = control.getShape("shape", Theme.of(context));
     var clipBehavior =
-        parseClip(control.attrString("clipBehavior"), Clip.none)!;
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool autofocus = control.attrBool("autofocus", false)!;
-    bool mini = control.attrBool("mini", false)!;
-    bool? enableFeedback = control.attrBool("enableFeedback");
-    var mouseCursor = parseMouseCursor(control.attrString("mouseCursor"));
-    bool disabled = control.isDisabled || parentDisabled;
+        parseClip(control.getString("clip_behavior"), Clip.none)!;
+    var autofocus = control.getBool("autofocus", false)!;
+    var mini = control.getBool("mini", false)!;
+    var enableFeedback = control.getBool("enable_feedback");
+    var mouseCursor = control.getMouseCursor("mouse_cursor");
 
-    Function()? onPressed = disabled
+    Function()? onPressed = control.disabled
         ? null
         : () {
-            debugPrint("FloatingActionButtonControl ${control.id} clicked!");
-            if (url != "") {
+            if (url != null) {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            backend.triggerControlEvent(control.id, "click");
+            control.triggerEvent("click");
           };
 
-    if (text == null && icon == null && contentCtrls.isEmpty) {
+    if (icon == null && content == null) {
       return const ErrorControl(
-          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content");
+          "FloatingActionButton has nothing to display. Provide at minimum one of these: icon, content");
     }
+    var child = icon != null
+        ? content == null
+            ? icon
+            : null
+        : content;
 
     Widget button;
-    if (contentCtrls.isNotEmpty) {
+    if (child != null) {
       button = FloatingActionButton(
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
           mouseCursor: mouseCursor,
-          backgroundColor: bgColor,
+          backgroundColor: bgcolor,
           foregroundColor: foregroundColor,
           hoverColor: hoverColor,
           splashColor: splashColor,
@@ -92,60 +85,16 @@ class FloatingActionButtonControl extends StatelessWidget {
           focusColor: focusColor,
           shape: shape,
           mini: mini,
-          child: createControl(control, contentCtrls.first.id, disabled,
-              parentAdaptive: parentAdaptive));
-    } else if (icon != null && text == null) {
-      button = FloatingActionButton(
-          heroTag: control.id,
-          autofocus: autofocus,
-          onPressed: onPressed,
-          mouseCursor: mouseCursor,
-          backgroundColor: bgColor,
-          foregroundColor: foregroundColor,
-          hoverColor: hoverColor,
-          splashColor: splashColor,
-          elevation: elevation,
-          disabledElevation: disabledElevation,
-          focusElevation: focusElevation,
-          hoverElevation: hoverElevation,
-          highlightElevation: highlightElevation,
-          enableFeedback: enableFeedback,
-          clipBehavior: clipBehavior,
-          focusColor: focusColor,
-          shape: shape,
-          mini: mini,
-          child: Icon(icon));
-    } else if (icon == null && text != null) {
-      button = FloatingActionButton(
-        heroTag: control.id,
-        autofocus: autofocus,
-        onPressed: onPressed,
-        mouseCursor: mouseCursor,
-        backgroundColor: bgColor,
-        foregroundColor: foregroundColor,
-        hoverColor: hoverColor,
-        splashColor: splashColor,
-        elevation: elevation,
-        disabledElevation: disabledElevation,
-        focusElevation: focusElevation,
-        hoverElevation: hoverElevation,
-        highlightElevation: highlightElevation,
-        enableFeedback: enableFeedback,
-        clipBehavior: clipBehavior,
-        focusColor: focusColor,
-        shape: shape,
-        mini: mini,
-        child: Text(text),
-      );
-    } else if (icon != null && text != null) {
+          child: child);
+    } else if (content != null) {
       button = FloatingActionButton.extended(
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
         mouseCursor: mouseCursor,
-        label: Text(text),
-        icon: Icon(icon),
-        backgroundColor: bgColor,
+        label: content,
+        icon: icon,
+        backgroundColor: bgcolor,
         foregroundColor: foregroundColor,
         hoverColor: hoverColor,
         splashColor: splashColor,
@@ -161,9 +110,9 @@ class FloatingActionButtonControl extends StatelessWidget {
       );
     } else {
       return const ErrorControl(
-          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content");
+          "FloatingActionButton has nothing to display. Provide at minimum icon or content.");
     }
 
-    return constrainedControl(context, button, parent, control);
+    return ConstrainedControl(control: control, child: button);
   }
 }

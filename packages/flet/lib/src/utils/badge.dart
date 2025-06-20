@@ -1,38 +1,28 @@
-import 'dart:convert';
-
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-Badge? parseBadge(
-    Control control, String propName, Widget widget, ThemeData theme) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
+extension BadgeParsers on Control {
+  Widget wrapWithBadge(String propertyName, Widget child, ThemeData theme) {
+    var badge = get(propertyName);
+    if (badge == null) {
+      return child;
+    } else if (badge is Control) {
+      badge.notifyParent = true;
+      return Badge(
+        label: badge.buildTextOrWidget("label"),
+        isLabelVisible: badge.getBool("label_visible", true)!,
+        offset: badge.getOffset("offset"),
+        alignment: badge.getAlignment("alignment"),
+        backgroundColor: parseColor(badge.get("bgcolor"), theme),
+        largeSize: badge.getDouble("large_size"),
+        padding: badge.getPadding("padding"),
+        smallSize: badge.getDouble("small_size"),
+        textColor: parseColor(badge.get("text_color"), theme),
+        textStyle: badge.getTextStyle("text_style", theme),
+        child: child,
+      );
+    } else {
+      return Badge(label: Text(badge.toString()), child: child);
+    }
   }
-  final j = json.decode(v);
-  return badgeFromJSON(j, widget, theme);
-}
-
-Badge? badgeFromJSON(dynamic j, Widget widget, ThemeData theme) {
-  if (j == null) {
-    return null;
-  } else if (j is String) {
-    return Badge(label: Text(j), child: widget);
-  }
-
-  String? label = j["text"];
-
-  return Badge(
-    label: label != null ? Text(label) : null,
-    isLabelVisible: parseBool(j["label_visible"]) ?? true,
-    offset: offsetFromJson(j["offset"]),
-    alignment: alignmentFromJson(j["alignment"]),
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    largeSize: parseDouble(j["large_size"]),
-    padding: edgeInsetsFromJson(j["padding"]),
-    smallSize: parseDouble(j["small_size"]),
-    textColor: parseColor(theme, j["text_color"]),
-    textStyle: textStyleFromJson(theme, j["text_style"]),
-    child: widget,
-  );
 }

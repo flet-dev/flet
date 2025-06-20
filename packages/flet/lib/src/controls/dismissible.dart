@@ -1,30 +1,20 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/dismissible.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import '../utils/time.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class DismissibleControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const DismissibleControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  DismissibleControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<DismissibleControl> createState() => _DismissibleControlState();
@@ -32,111 +22,90 @@ class DismissibleControl extends StatefulWidget {
 
 class _DismissibleControlState extends State<DismissibleControl> {
   @override
+  void initState() {
+    super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void dispose() {
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Dismissible.$name($args)");
+    switch (name) {
+      case "confirm_dismiss":
+        widget.control.properties
+            .remove("_completer")
+            ?.complete(args["dismiss"]);
+      default:
+        throw Exception("Unknown Dismissible method: $name");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugPrint("Dismissible build: ${widget.control.id}");
+    var content = widget.control.buildWidget("content");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
-
-    if (contentCtrls.isEmpty) {
-      return const ErrorControl(
-          "Dismissible.content must be provided and visible");
+    if (content == null) {
+      return const ErrorControl("Dismissible.content must be visible");
     }
 
-    var backgroundCtrls =
-        widget.children.where((c) => c.name == "background" && c.isVisible);
+    final dismissible = Dismissible(
+        key: ValueKey<int>(widget.control.id),
+        direction: widget.control.getDismissDirection(
+            "dismiss_direction", DismissDirection.horizontal)!,
+        background: widget.control.buildWidget("background") ??
+            Container(color: Colors.transparent),
+        secondaryBackground:
+            widget.control.buildWidget("secondary_background") ??
+                Container(color: Colors.transparent),
+        onDismissed: widget.control.getBool("on_dismiss", false)!
+            ? (DismissDirection direction) => widget.control
+                .triggerEvent("dismiss", {"direction": direction.name})
+            : null,
+        onResize: widget.control.getBool("on_resize", false)!
+            ? () => widget.control.triggerEvent("resize")
+            : null,
+        onUpdate: widget.control.getBool("on_update", false)!
+            ? (DismissUpdateDetails details) {
+                widget.control.triggerEvent(
+                    "update",
+                    DismissibleUpdateEvent(
+                            direction: details.direction.name,
+                            previousReached: details.previousReached,
+                            progress: details.progress,
+                            reached: details.reached)
+                        .toMap());
+              }
+            : null,
+        confirmDismiss: widget.control.getBool("on_confirm_dismiss", false)!
+            ? (DismissDirection direction) {
+                var completer = Completer<bool?>();
+                widget.control
+                    .updateProperties({"_completer": completer}, python: false);
+                widget.control.triggerEvent(
+                    "confirm_dismiss", {"direction": direction.name});
+                return completer.future.timeout(
+                  const Duration(minutes: 5),
+                  onTimeout: () => false,
+                );
+              }
+            : null,
+        movementDuration: widget.control
+            .getDuration("duration", const Duration(milliseconds: 200))!,
+        resizeDuration: widget.control
+            .getDuration("duration", const Duration(milliseconds: 300))!,
+        crossAxisEndOffset:
+            widget.control.getDouble("cross_axis_end_offset", 0.0)!,
+        dismissThresholds: widget.control
+            .getDismissThresholds("dismiss_thresholds", const {})!,
+        child: content);
 
-    var secondaryBackgroundCtrls = widget.children
-        .where((c) => c.name == "secondaryBackground" && c.isVisible);
-
-    var dismissThresholds =
-        parseDismissThresholds(widget.control, "dismissThresholds");
-
-    DismissDirection direction = parseDismissDirection(
-        widget.control.attrString("dismissDirection"),
-        DismissDirection.horizontal)!;
-
-    widget.backend.subscribeMethods(widget.control.id,
-        (methodName, args) async {
-      debugPrint("Dismissible.onMethod(${widget.control.id})");
-      if (methodName == "confirm_dismiss") {
-        widget.control.state["confirm_dismiss"]
-            ?.complete(bool.tryParse(args["dismiss"] ?? ""));
-        widget.backend.unsubscribeMethods(widget.control.id);
-      }
-
-      return null;
-    });
-
-    return constrainedControl(
-        context,
-        Dismissible(
-            key: ValueKey<String>(widget.control.id),
-            direction: direction,
-            background: backgroundCtrls.isNotEmpty
-                ? createControl(
-                    widget.control, backgroundCtrls.first.id, disabled,
-                    parentAdaptive: adaptive)
-                : Container(color: Colors.transparent),
-            secondaryBackground: secondaryBackgroundCtrls.isNotEmpty
-                ? createControl(
-                    widget.control, secondaryBackgroundCtrls.first.id, disabled,
-                    parentAdaptive: adaptive)
-                : Container(color: Colors.transparent),
-            onDismissed: widget.control.attrBool("onDismiss", false)!
-                ? (DismissDirection direction) {
-                    widget.backend.triggerControlEvent(
-                        widget.control.id, "dismiss", direction.name);
-                  }
-                : null,
-            onResize: widget.control.attrBool("onResize", false)!
-                ? () {
-                    widget.backend
-                        .triggerControlEvent(widget.control.id, "resize");
-                  }
-                : null,
-            onUpdate: widget.control.attrBool("onUpdate", false)!
-                ? (DismissUpdateDetails details) {
-                    widget.backend.triggerControlEvent(
-                        widget.control.id,
-                        "update",
-                        json.encode(DismissibleUpdateEvent(
-                                direction: details.direction.name,
-                                previousReached: details.previousReached,
-                                progress: details.progress,
-                                reached: details.reached)
-                            .toJson()));
-                  }
-                : null,
-            confirmDismiss: widget.control.attrBool("onConfirmDismiss", false)!
-                ? (DismissDirection direction) {
-                    debugPrint(
-                        "Dismissible.confirmDismiss(${widget.control.id})");
-                    var completer = Completer<bool?>();
-                    widget.control.state["confirm_dismiss"] = completer;
-                    widget.backend.triggerControlEvent(
-                        widget.control.id, "confirm_dismiss", direction.name);
-                    return completer.future.timeout(
-                      const Duration(minutes: 5),
-                      onTimeout: () => false,
-                    );
-                  }
-                : null,
-            movementDuration: Duration(
-                milliseconds: widget.control.attrInt("duration", 200)!),
-            resizeDuration: Duration(
-                milliseconds: widget.control.attrInt("resizeDuration", 300)!),
-            crossAxisEndOffset:
-                widget.control.attrDouble("crossAxisEndOffset", 0.0)!,
-            dismissThresholds: dismissThresholds ?? {},
-            child: createControl(
-                widget.control, contentCtrls.first.id, disabled,
-                parentAdaptive: adaptive)),
-        widget.parent,
-        widget.control);
+    return ConstrainedControl(control: widget.control, child: dismissible);
   }
 }
 
@@ -152,7 +121,7 @@ class DismissibleUpdateEvent {
       required this.previousReached,
       required this.reached});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'direction': direction,
         'progress': progress,
         'reached': reached,

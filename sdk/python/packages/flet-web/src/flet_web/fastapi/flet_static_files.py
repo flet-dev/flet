@@ -3,15 +3,21 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
+
+from fastapi.staticfiles import StaticFiles
+from flet.controls.types import RouteUrlStrategy, WebRenderer
+from flet.utils import Once, get_bool_env_var
+from starlette.types import Receive, Scope, Send
 
 import flet_web.fastapi as flet_fastapi
-from fastapi.staticfiles import StaticFiles
-from flet.core.types import WebRenderer
-from flet.utils import Once, get_bool_env_var
-from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
+from flet_web import (
+    get_package_web_dir,
+    patch_font_manifest_json,
+    patch_index_html,
+    patch_manifest_json,
+)
 from flet_web.fastapi.flet_app_manager import app_manager
-from starlette.types import Receive, Scope, Send
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -27,10 +33,11 @@ class FletStaticFiles(StaticFiles):
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
-    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.CANVAS_KIT`.
-    * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
+    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
-    * `websocket_endpoint_path` (str, optional) - absolute URL of Flet app WebSocket handler. Default is `{app_mount_path}/ws`.
+    * `no_cdn` - do not load CanvasKit, Pyodide and fonts from CDN
+    * `websocket_endpoint_path` (str, optional) - absolute URL of Flet app
+       WebSocket handler. Default is `{app_mount_path}/ws`.
     """
 
     def __init__(
@@ -40,21 +47,22 @@ class FletStaticFiles(StaticFiles):
         app_name: Optional[str] = None,
         app_short_name: Optional[str] = None,
         app_description: Optional[str] = None,
-        web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
-        use_color_emoji: bool = False,
-        route_url_strategy: str = "path",
+        web_renderer: WebRenderer = WebRenderer.AUTO,
+        route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+        no_cdn: bool = False,
         websocket_endpoint_path: Optional[str] = None,
     ) -> None:
-        self.index = "index.html"
-        self.manifest_json = "manifest.json"
+        self.index = ["index.html"]
+        self.manifest_json = ["manifest.json"]
+        self.font_manifest_json = ["assets", "FontManifest.json"]
         self.__proxy_path = proxy_path
         self.__assets_dir = assets_dir
         self.__app_name = app_name
         self.__app_short_name = app_short_name
         self.__app_description = app_description
         self.__web_renderer = web_renderer
-        self.__use_color_emoji = use_color_emoji
         self.__route_url_strategy = route_url_strategy
+        self.__no_cdn = no_cdn
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()
 
@@ -62,23 +70,23 @@ class FletStaticFiles(StaticFiles):
         if env_web_renderer:
             self.__web_renderer = WebRenderer(env_web_renderer)
 
-        env_use_color_emoji = get_bool_env_var("FLET_WEB_USE_COLOR_EMOJI")
-        if env_use_color_emoji is not None:
-            self.__use_color_emoji = env_use_color_emoji
-
         env_route_url_strategy = os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
         if env_route_url_strategy:
-            self.__route_url_strategy = env_route_url_strategy
+            self.__route_url_strategy = RouteUrlStrategy(env_route_url_strategy)
+
+        env_no_cdn = get_bool_env_var("FLET_WEB_NO_CDN")
+        if env_no_cdn is not None:
+            self.__no_cdn = env_no_cdn
 
         logger.info(f"Web renderer configured: {self.__web_renderer}")
-        logger.info(f"Use color emoji: {self.__use_color_emoji}")
         logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
+        logger.info(f"No CDN configured: {self.__no_cdn}")
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)
 
-    def lookup_path(self, path: str) -> Tuple[str, Optional[os.stat_result]]:
+    def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
         """Returns the index file when no match is found.
 
         Args:
@@ -92,7 +100,7 @@ class FletStaticFiles(StaticFiles):
 
         # if a file cannot be found
         if stat_result is None:
-            return super().lookup_path(self.index)
+            return super().lookup_path(self.index[0])
 
         return full_path, stat_result
 
@@ -125,33 +133,22 @@ class FletStaticFiles(StaticFiles):
 
         logger.info(f"Assets dir: {self.__assets_dir}")
 
+        def copy_temp_web_file(paths: list[str]):
+            if self.__assets_dir and os.path.exists(
+                p := os.path.join(self.__assets_dir, *paths)
+            ):
+                src_path = p
+            else:
+                src_path = os.path.join(web_dir, *paths)
+            dst_path = os.path.join(temp_dir, *paths)
+            Path(dst_path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(src_path, dst_path)
+
         # copy index.html from assets_dir or web_dir
-        if self.__assets_dir and os.path.exists(
-            os.path.join(self.__assets_dir, self.index)
-        ):
-            shutil.copyfile(
-                os.path.join(self.__assets_dir, self.index),
-                os.path.join(temp_dir, self.index),
-            )
-        else:
-            shutil.copyfile(
-                os.path.join(web_dir, self.index),
-                os.path.join(temp_dir, self.index),
-            )
+        copy_temp_web_file(self.index)
 
         # copy manifest.json from assets_dir or web_dir
-        if self.__assets_dir and os.path.exists(
-            os.path.join(self.__assets_dir, self.manifest_json)
-        ):
-            shutil.copyfile(
-                os.path.join(self.__assets_dir, self.manifest_json),
-                os.path.join(temp_dir, self.manifest_json),
-            )
-        else:
-            shutil.copyfile(
-                os.path.join(web_dir, self.manifest_json),
-                os.path.join(temp_dir, self.manifest_json),
-            )
+        copy_temp_web_file(self.manifest_json)
 
         ws_path = self.__websocket_endpoint_path
         if not ws_path:
@@ -160,22 +157,29 @@ class FletStaticFiles(StaticFiles):
 
         # replace variables in index.html and manifest.json
         patch_index_html(
-            index_path=os.path.join(temp_dir, self.index),
+            index_path=os.path.join(temp_dir, *self.index),
             base_href=self.__app_mount_path,
             websocket_endpoint_path=ws_path,
             app_name=self.__app_name,
             app_description=self.__app_description,
-            web_renderer=WebRenderer(self.__web_renderer),
-            use_color_emoji=self.__use_color_emoji,
+            web_renderer=self.__web_renderer,
             route_url_strategy=self.__route_url_strategy,
+            no_cdn=self.__no_cdn,
         )
 
         patch_manifest_json(
-            manifest_path=os.path.join(temp_dir, self.manifest_json),
+            manifest_path=os.path.join(temp_dir, *self.manifest_json),
             app_name=self.__app_name,
             app_short_name=self.__app_short_name,
             app_description=self.__app_description,
         )
+
+        if self.__no_cdn:
+            # copy FontManifest.json from assets_dir or web_dir
+            copy_temp_web_file(self.font_manifest_json)
+            patch_font_manifest_json(
+                manifest_path=os.path.join(temp_dir, *self.font_manifest_json)
+            )
 
         # set html=True to resolve the index even when no
         # the base path is passed in

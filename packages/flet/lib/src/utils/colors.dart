@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -239,18 +237,29 @@ extension ColorExtension on Color {
   }
 }
 
-WidgetStateProperty<Color?>? parseWidgetStateColor(ThemeData theme,
-    Control control, String propName,
-    [Color? defaultValue]) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return null;
-  }
+WidgetStateProperty<Color?>? parseWidgetStateColor(dynamic value,
+    ThemeData theme,
+    {Color? defaultColor, WidgetStateProperty<Color?>? defaultValue}) {
+  if (value == null) return defaultValue;
 
-  return getWidgetStateProperty<Color?>(jsonDecode(v),
-      (jv) => HexColor.fromString(theme, jv as String), defaultValue);
+  return getWidgetStateProperty<Color?>(
+      value, (jv) => HexColor.fromString(theme, jv as String), defaultColor);
 }
 
-Color? parseColor(ThemeData? theme, String? colorString,
-        [Color? defaultColor]) =>
-    HexColor.fromString(theme, colorString, defaultColor);
+Color? parseColor(String? value, ThemeData? theme, [Color? defaultColor]) =>
+    HexColor.fromString(theme, value, defaultColor);
+
+extension ColorParsers on Control {
+  Color? getColor(String propertyName, BuildContext? context,
+      [Color? defaultValue]) {
+    return parseColor(getString(propertyName),
+        context != null ? Theme.of(context) : null, defaultValue);
+  }
+
+  WidgetStateProperty<Color?>? getWidgetStateColor(
+      String propertyName, ThemeData theme,
+      {Color? defaultColor, WidgetStateProperty<Color?>? defaultValue}) {
+    return parseWidgetStateColor(get(propertyName), theme,
+        defaultColor: defaultColor, defaultValue: defaultValue);
+  }
+}

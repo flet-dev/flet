@@ -1,9 +1,7 @@
 import logging
 import os
 
-import flet
-
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
 
 
 logger.info("Running PyInstaller runtime hook for Flet...")

@@ -1,30 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 
 class SegmentedButtonControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const SegmentedButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+  SegmentedButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<SegmentedButtonControl> createState() => _SegmentedButtonControlState();
@@ -33,9 +23,9 @@ class SegmentedButtonControl extends StatefulWidget {
 class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     with FletStoreMixin {
   void onChange(Set<String> selection) {
-    var s = jsonEncode(selection.toList());
-    widget.backend.updateControlState(widget.control.id, {"selected": s});
-    widget.backend.triggerControlEvent(widget.control.id, "change", s);
+    var s = selection.toList(); // todo: support Sets on both ends (msgpack)
+    widget.control.updateProperties({"selected": s}, notify: true);
+    widget.control.triggerEvent("change", s);
   }
 
   @override
@@ -43,7 +33,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     debugPrint("SegmentedButtonControl build: ${widget.control.id}");
 
     var theme = Theme.of(context);
-    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+    var style = widget.control.getButtonStyle("style", Theme.of(context),
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: theme.colorScheme.surface,
         defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
@@ -55,36 +45,31 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool allowEmptySelection =
-        widget.control.attrBool("allowEmptySelection", false)!;
-
-    bool allowMultipleSelection =
-        widget.control.attrBool("allowMultipleSelection", false)!;
-
-    Set<String> selected =
-        (jsonDecode(widget.control.attrString("selected", "[]")!) as List)
-            .map((e) => e.toString())
-            .toSet();
-
-    List<Control> segments = widget.children
-        .where((c) => c.name == "segment" && c.isVisible)
-        .toList();
+    var allowEmptySelection =
+        widget.control.getBool("allow_empty_selection", false)!;
+    var allowMultipleSelection =
+        widget.control.getBool("allow_multiple_selection", false)!;
+    var selected = widget.control
+        .get<List>("selected", [])!
+        .map((e) => e.toString())
+        .toSet();
+    var segments = widget.control.children("segments");
 
     if (segments.isEmpty) {
       return const ErrorControl(
-          "SegmentedButton.segments must be provided and contain at minimum one visible segment");
+          "SegmentedButton.segments must be contain at least one visible segment");
     }
 
     if (selected.isEmpty && !allowEmptySelection) {
       return const ErrorControl(
-          "SegmentedButton.selected must be provided and contain at minimum one value because allow_empty_selection=False");
+          "SegmentedButton.selected must contain at least one value because allow_empty_selection=False");
     }
 
     if (!allowMultipleSelection &&
         selected.length != 1 &&
         !allowEmptySelection) {
       return const ErrorControl(
-          "SegmentedButton.selected must be provided and contain exactly one value because allow_multiple_selection=False");
+          "SegmentedButton.selected must contain exactly one value because allow_multiple_selection=False");
     }
 
     if (allowMultipleSelection && selected.length > segments.length) {
@@ -92,54 +77,27 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
           "The length of SegmentedButton.selected must be less than or equal to the number of visible segments");
     }
 
-    var selectedIcon =
-        widget.children.where((c) => c.name == "selectedIcon" && c.isVisible);
+    var segmentedButton = SegmentedButton<String>(
+        emptySelectionAllowed: allowEmptySelection,
+        multiSelectionEnabled: allowMultipleSelection,
+        selected: selected,
+        showSelectedIcon: widget.control.getBool("show_selected_icon", true)!,
+        style: style,
+        selectedIcon: widget.control.buildWidget("selected_icon"),
+        onSelectionChanged: !widget.control.disabled
+            ? (newSelection) => onChange(newSelection)
+            : null,
+        direction: widget.control.getAxis("direction", Axis.horizontal)!,
+        expandedInsets: widget.control.getPadding("padding"),
+        segments: segments.map((segment) {
+          return ButtonSegment(
+              value: segment.getString("value")!,
+              enabled: !segment.disabled,
+              tooltip: segment.disabled ? null : segment.getString("tooltip"),
+              icon: segment.buildIconOrWidget("icon"),
+              label: segment.buildTextOrWidget("label"));
+        }).toList());
 
-    bool showSelectedIcon = widget.control.attrBool("showSelectedIcon", true)!;
-
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    debugPrint("SegmentedButtonControl build: ${widget.control.id}");
-
-    var sb = withControls(segments.map((s) => s.id), (content, segmentViews) {
-      return SegmentedButton<String>(
-          emptySelectionAllowed: allowEmptySelection,
-          multiSelectionEnabled: allowMultipleSelection,
-          selected: selected.isNotEmpty ? selected : {},
-          showSelectedIcon: showSelectedIcon,
-          style: style,
-          selectedIcon: selectedIcon.isNotEmpty
-              ? createControl(widget.control, selectedIcon.first.id, disabled)
-              : null,
-          onSelectionChanged: !disabled
-              ? (newSelection) {
-                  onChange(newSelection.toSet());
-                }
-              : null,
-          direction: parseAxis(
-              widget.control.attrString("direction"), Axis.horizontal)!,
-          expandedInsets: parseEdgeInsets(widget.control, "padding"),
-          segments: segmentViews.controlViews.map((segmentView) {
-            var iconCtrls = segmentView.children
-                .where((c) => c.name == "icon" && c.isVisible);
-            var labelCtrls = segmentView.children
-                .where((c) => c.name == "label" && c.isVisible);
-            var segmentDisabled = segmentView.control.isDisabled || disabled;
-            var segmentTooltip = segmentView.control.attrString("tooltip");
-            return ButtonSegment(
-                value: segmentView.control.attrString("value")!,
-                enabled: !segmentDisabled,
-                tooltip: segmentDisabled ? null : segmentTooltip,
-                icon: iconCtrls.isNotEmpty
-                    ? createControl(segmentView.control, iconCtrls.first.id,
-                        segmentDisabled)
-                    : null,
-                label: labelCtrls.isNotEmpty
-                    ? createControl(segmentView.control, labelCtrls.first.id,
-                        segmentDisabled)
-                    : null);
-          }).toList());
-    });
-
-    return constrainedControl(context, sb, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: segmentedButton);
   }
 }

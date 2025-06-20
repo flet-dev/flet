@@ -1,41 +1,28 @@
-import 'dart:convert';
-
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/auto_complete.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
 class AutoCompleteControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final FletControlBackend backend;
 
-  const AutoCompleteControl(
-      {super.key,
-      required this.parent,
-      required this.control,
-      required this.backend});
+  const AutoCompleteControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("AutoComplete build: ${control.id}");
 
-    var suggestionsMaxHeight = control.attrDouble("suggestionsMaxHeight", 200)!;
-    var suggestions = parseAutoCompleteSuggestions(control, "suggestions");
+    var suggestions =
+        parseAutoCompleteSuggestions(control.get("suggestions"), const [])!;
 
-    var auto = Autocomplete(
-      optionsMaxHeight: suggestionsMaxHeight,
+    var autoComplete = Autocomplete(
+      optionsMaxHeight: control.getDouble("suggestions_max_height", 200)!,
       onSelected: (AutoCompleteSuggestion selection) {
-        backend.updateControlState(control.id,
-            {"selectedIndex": suggestions.indexOf(selection).toString()});
-        backend.triggerControlEvent(
-            control.id,
-            "select",
-            json.encode(AutoCompleteSuggestion(
-                    key: selection.key, value: selection.value)
-                .toJson()));
+        control.updateProperties(
+            {"_selected_index": suggestions.indexOf(selection)});
+        control.triggerEvent("select", {"selection": selection.toMap()});
       },
       // optionsViewBuilder: optionsViewBuilder,
       optionsBuilder: (TextEditingValue textEditingValue) {
@@ -51,6 +38,6 @@ class AutoCompleteControl extends StatelessWidget {
       },
     );
 
-    return baseControl(context, auto, parent, control);
+    return BaseControl(control: control, child: autoComplete);
   }
 }

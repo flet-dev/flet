@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../models/asset_src.dart';
+import '../models/asset_source.dart';
 
 SvgPicture getSvgPictureFromFile(
     {required String src,
@@ -14,8 +14,8 @@ SvgPicture getSvgPictureFromFile(
   return SvgPicture.string("<svg/>");
 }
 
-AssetSrc getAssetSrc(String src, Uri pageUri, String assetsDir) {
-  return AssetSrc(
+AssetSource getAssetSrc(String src, Uri pageUri, String assetsDir) {
+  return AssetSource(
       path: src.startsWith("/") ? src.substring(1) : src, isFile: false);
 }
 

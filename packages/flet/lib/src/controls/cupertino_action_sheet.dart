@@ -1,69 +1,25 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
-class CupertinoActionSheetControl extends StatefulWidget {
-  final Control? parent;
+class CupertinoActionSheetControl extends StatelessWidget {
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoActionSheetControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const CupertinoActionSheetControl({super.key, required this.control});
 
-  @override
-  State<CupertinoActionSheetControl> createState() =>
-      _CupertinoActionSheetControlState();
-}
-
-class _CupertinoActionSheetControlState
-    extends State<CupertinoActionSheetControl> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoActionSheetControl build: ${widget.control.id}");
-
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    var titleCtrls =
-        widget.children.where((c) => c.name == "title" && c.isVisible);
-    var messageCtrls =
-        widget.children.where((c) => c.name == "message" && c.isVisible);
-    var cancelButtonCtrls =
-        widget.children.where((c) => c.name == "cancel" && c.isVisible);
-    var actionCtrls =
-        widget.children.where((c) => c.name == "action" && c.isVisible);
+    debugPrint("CupertinoActionSheetControl build: ${control.id}");
 
     var sheet = CupertinoActionSheet(
-      title: titleCtrls.isNotEmpty
-          ? createControl(widget.control, titleCtrls.first.id, disabled,
-              parentAdaptive: widget.parentAdaptive)
-          : null,
-      message: messageCtrls.isNotEmpty
-          ? createControl(widget.control, messageCtrls.first.id, disabled,
-              parentAdaptive: widget.parentAdaptive)
-          : null,
-      cancelButton: cancelButtonCtrls.isNotEmpty
-          ? createControl(widget.control, cancelButtonCtrls.first.id, disabled,
-              parentAdaptive: widget.parentAdaptive)
-          : null,
-      actions: actionCtrls.isNotEmpty
-          ? actionCtrls
-              .map((c) => createControl(widget.control, c.id, disabled,
-                  parentAdaptive: widget.parentAdaptive))
-              .toList()
-          : null,
+      title: control.buildTextOrWidget("title"),
+      message: control.buildTextOrWidget("message"),
+      cancelButton: control.buildWidget("cancel"),
+      actions: control.buildWidgets("actions"),
     );
 
-    return constrainedControl(context, sheet, widget.parent, widget.control);
+    return ConstrainedControl(control: control, child: sheet);
   }
 }

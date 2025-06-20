@@ -1,5 +1,6 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
+
 from flet_web.fastapi.flet_app_manager import app_manager
 
 
@@ -33,7 +34,7 @@ class FletOAuth:
         if not session:
             raise HTTPException(status_code=500, detail="Session not found")
 
-        await session._authorize_callback_async(
+        await session.page._authorize_callback_async(
             {
                 "state": state_id,
                 "code": request.query_params.get("code"),

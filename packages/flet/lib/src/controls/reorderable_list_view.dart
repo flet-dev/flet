@@ -1,32 +1,21 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/misc.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class ReorderableListViewControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final List<Control> children;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const ReorderableListViewControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  ReorderableListViewControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ReorderableListViewControl> createState() => _ListViewControlState();
@@ -34,11 +23,19 @@ class ReorderableListViewControl extends StatefulWidget {
 
 class _ListViewControlState extends State<ReorderableListViewControl> {
   late final ScrollController _controller;
+  List<Control> _controls = [];
 
   @override
   void initState() {
     super.initState();
     _controller = ScrollController();
+    _controls = [...widget.control.children("controls")];
+  }
+
+  @override
+  void didUpdateWidget(covariant ReorderableListViewControl oldWidget) {
+    _controls = [...widget.control.children("controls")];
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -51,73 +48,53 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
   Widget build(BuildContext context) {
     debugPrint("ReorderableDraggableControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-
-    var horizontal = widget.control.attrBool("horizontal", false)!;
+    var horizontal = widget.control.getBool("horizontal", false)!;
     var buildControlsOnDemand =
-        widget.control.attrBool("buildControlsOnDemand", true)!;
-    var itemExtent = widget.control.attrDouble("itemExtent");
-    var cacheExtent = widget.control.attrDouble("cacheExtent");
+        widget.control.getBool("build_controls_on_demand", true)!;
+    var itemExtent = widget.control.getDouble("item_extent");
+    var cacheExtent = widget.control.getDouble("cache_extent");
     var firstItemPrototype =
-        widget.control.attrBool("firstItemPrototype", false)!;
-    var padding = parseEdgeInsets(widget.control, "padding");
-    var reverse = widget.control.attrBool("reverse", false)!;
+        widget.control.getBool("first_item_prototype", false)!;
+    var padding = widget.control.getPadding("padding");
+    var reverse = widget.control.getBool("reverse", false)!;
     var showDefaultDragHandles =
-        widget.control.attrBool("showDefaultDragHandles", true)!;
-    var anchor = widget.control.attrDouble("anchor", 0.0)!;
-    var mouseCursor =
-        parseMouseCursor(widget.control.attrString("mouseCursor"));
+        widget.control.getBool("show_default_drag_handles", true)!;
+    var anchor = widget.control.getDouble("anchor", 0.0)!;
     var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
-    List<Control> ctrls = widget.children
-        .where((c) => c.name != "header" && c.name != "footer" && c.isVisible)
+        widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
+    var controls = _controls
+        .map((child) => ControlWidget(key: ValueKey(child.id), control: child))
         .toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
-    var headerCtrls =
-        widget.children.where((c) => c.name == "header" && c.isVisible);
-    var header = headerCtrls.isNotEmpty
-        ? createControl(widget.control, headerCtrls.first.id, disabled,
-            parentAdaptive: adaptive)
-        : null;
-    var footerCtrls =
-        widget.children.where((c) => c.name == "footer" && c.isVisible);
-    var footer = footerCtrls.isNotEmpty
-        ? createControl(widget.control, footerCtrls.first.id, disabled,
-            parentAdaptive: adaptive)
-        : null;
-    var prototypeItem = firstItemPrototype && widget.children.isNotEmpty
-        ? createControl(widget.control, ctrls[0].id, disabled,
-            parentAdaptive: adaptive)
-        : null;
+    var header = widget.control.buildWidget("header");
+    var footer = widget.control.buildWidget("footer");
+    var prototypeItem =
+        firstItemPrototype && controls.isNotEmpty ? controls[0] : null;
     var autoScrollerVelocityScalar =
-        widget.control.attrDouble("autoScrollerVelocityScalar");
+        widget.control.getDouble("auto_scroller_velocity_scalar");
+    var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
 
     void onReorder(int oldIndex, int newIndex) {
-      debugPrint("onReorder: $oldIndex -> $newIndex");
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
       setState(() {
-        final Control movedControl = widget.children.removeAt(oldIndex);
-        widget.children.insert(newIndex, movedControl);
+        if (oldIndex < newIndex) {
+          newIndex -= 1;
+        }
+        final item = _controls.removeAt(oldIndex);
+        _controls.insert(newIndex, item);
       });
-      widget.backend.triggerControlEvent(widget.control.id, "reorder",
-          jsonEncode({"old": oldIndex, "new": newIndex}));
+      widget.control.triggerEvent(
+          "reorder", {"old_index": oldIndex, "new_index": newIndex});
     }
 
     void onReorderEnd(int newIndex) {
-      widget.backend.triggerControlEvent(
-          widget.control.id, "reorder_end", jsonEncode({"new": newIndex}));
+      widget.control.triggerEvent("reorder_end", {"new_index": newIndex});
     }
 
     void onReorderStart(int oldIndex) {
-      widget.backend.triggerControlEvent(
-          widget.control.id, "reorder_start", jsonEncode({"old": oldIndex}));
+      widget.control.triggerEvent("reorder_start", {"old_index": oldIndex});
     }
 
-    Widget listView = LayoutBuilder(
+    Widget result = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         var shrinkWrap =
             (!horizontal && constraints.maxHeight == double.infinity) ||
@@ -133,7 +110,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
-                itemCount: ctrls.length,
+                itemCount: controls.length,
                 itemExtent: itemExtent,
                 mouseCursor: mouseCursor,
                 anchor: anchor,
@@ -145,9 +122,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
                 itemBuilder: (context, index) {
-                  return createControl(
-                      widget.control, ctrls[index].id, disabled,
-                      parentAdaptive: adaptive);
+                  return controls[index];
                 },
               )
             : ReorderableListView(
@@ -169,29 +144,24 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
-                children: ctrls.map((c) {
-                  return createControl(widget.control, c.id, disabled,
-                      parentAdaptive: adaptive);
-                }).toList(),
+                children: controls,
               );
 
         child = ScrollableControl(
             control: widget.control,
             scrollDirection: scrollDirection,
             scrollController: _controller,
-            backend: widget.backend,
-            parentAdaptive: adaptive,
             child: child);
 
-        if (widget.control.attrBool("onScroll", false)!) {
-          child = ScrollNotificationControl(
-              control: widget.control, backend: widget.backend, child: child);
+        if (widget.control.getBool("on_scroll", false)!) {
+          child =
+              ScrollNotificationControl(control: widget.control, child: child);
         }
 
         return child;
       },
     );
 
-    return constrainedControl(context, listView, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: result);
   }
 }

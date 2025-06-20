@@ -1,67 +1,38 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class ShaderMaskControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
 
-  const ShaderMaskControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive});
+  const ShaderMaskControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ShaderMask build: ${control.id}");
-
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    var blendMode =
-        parseBlendMode(control.attrString("blendMode"), BlendMode.modulate)!;
-    bool disabled = control.isDisabled || parentDisabled;
-
-    var gradient = parseGradient(Theme.of(context), control, "shader");
+    var gradient = control.getGradient("shader", Theme.of(context));
     if (gradient == null) {
       return const ErrorControl("ShaderMask.shader must be provided");
     }
-
-    return constrainedControl(
-        context,
-        _clipCorners(
-            ShaderMask(
-                shaderCallback: (bounds) {
-                  debugPrint("shaderCallback: $bounds, $gradient");
-                  return gradient.createShader(bounds);
-                },
-                blendMode: blendMode,
-                child: contentCtrls.isNotEmpty
-                    ? createControl(control, contentCtrls.first.id, disabled,
-                        parentAdaptive: parentAdaptive)
-                    : null),
-            control),
-        parent,
-        control);
+    final shaderMask = ShaderMask(
+        shaderCallback: (bounds) => gradient.createShader(bounds),
+        blendMode: control.getBlendMode("blend_mode", BlendMode.modulate)!,
+        child: control.buildWidget("content"));
+    return ConstrainedControl(
+        control: control,
+        child: _clipCorners(shaderMask,
+            borderRadius: control.getBorderRadius("border_radius")));
   }
 
-  Widget _clipCorners(Widget widget, Control control) {
-    var borderRadius = parseBorderRadius(control, "borderRadius");
+  Widget _clipCorners(Widget widget, {BorderRadius? borderRadius}) {
     return borderRadius != null
-        ? ClipRRect(
-            borderRadius: borderRadius,
-            child: widget,
-          )
+        ? ClipRRect(borderRadius: borderRadius, child: widget)
         : widget;
   }
 }

@@ -1,111 +1,104 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
-import 'create_control.dart';
-import 'flet_store_mixin.dart';
+import '../utils/numbers.dart';
+import '../widgets/scaffold_key_provider.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const NavigationDrawerControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  NavigationDrawerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<NavigationDrawerControl> createState() =>
       _NavigationDrawerControlState();
 }
 
-class _NavigationDrawerControlState extends State<NavigationDrawerControl>
-    with FletStoreMixin {
+class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    widget.backend.updateControlState(
-        widget.control.id, {"selectedindex": _selectedIndex.toString()});
-    widget.backend.triggerControlEvent(
-        widget.control.id, "change", _selectedIndex.toString());
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
+    widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("NavigationDrawerControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
+    var selectedIndex = widget.control.getInt("selected_index", 0)!;
+    var endDrawer = widget.control.get("position") == "end";
 
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
     }
 
-    return withControls(
-        widget.children
-            .where((c) => c.isVisible && c.name == null)
-            .map((c) => c.id), (content, viewModel) {
-      List<Widget> children = viewModel.controlViews.map((destView) {
-        if (destView.control.type == "navigationdrawerdestination") {
-          var iconStr = parseIcon(destView.control.attrString("icon"));
-          var iconCtrls = destView.children
-                  .where((c) => c.name == "icon" && c.isVisible);
-          
-          var selectedIconStr =
-              parseIcon(destView.control.attrString("selectedIcon"));
-          var selectedIconCtrls = destView.children
-                  .where((c) => c.name == "selected_icon" && c.isVisible);
+    var drawer = NavigationDrawer(
+      elevation: widget.control.getDouble("elevation"),
+      indicatorColor: widget.control.getColor("indicator_color", context),
+      indicatorShape: widget.control
+          .getOutlinedBorder("indicator_shape", Theme.of(context)),
+      backgroundColor: widget.control.getColor("bgcolor", context),
+      selectedIndex: _selectedIndex,
+      shadowColor: widget.control.getColor("shadow_color", context),
+      surfaceTintColor: widget.control.getColor("surface_tint_color", context),
+      tilePadding: parseEdgeInsets(widget.control.get("tile_padding"),
+          const EdgeInsets.symmetric(horizontal: 12.0))!,
+      onDestinationSelected: _destinationChanged,
+      children: widget.control.children("controls").map((dest) {
+        dest.notifyParent = true;
+        if (dest.type == "NavigationDrawerDestination") {
+          var icon = dest.get("icon");
+          var selectedIcon = dest.get("selected_icon");
+
           return NavigationDrawerDestination(
-            enabled: !(disabled || destView.control.isDisabled),
-            backgroundColor: destView.control.attrColor("bgColor", context),
-            icon: iconCtrls.isNotEmpty
-                ? createControl(
-                    destView.control, iconCtrls.first.id, disabled,
-                    parentAdaptive: widget.parentAdaptive)
-                : Icon(iconStr),
-            label: Text(destView.control.attrString("label", "")!),
-            selectedIcon: selectedIconCtrls.isNotEmpty
-                ? createControl(destView.control,
-                    selectedIconCtrls.first.id, disabled,
-                    parentAdaptive: widget.parentAdaptive)
-                : selectedIconStr != null
-                    ? Icon(selectedIconStr)
+            enabled: !dest.disabled,
+            backgroundColor: dest.getColor("bgcolor", context),
+            icon: icon is Control
+                ? ControlWidget(
+                    control: icon,
+                  )
+                : Icon(parseIcon(icon)),
+            label: Text(dest.getString("label", "")!),
+            selectedIcon: selectedIcon is Control
+                ? ControlWidget(
+                    control: selectedIcon,
+                  )
+                : selectedIcon is String
+                    ? Icon(parseIcon(selectedIcon))
                     : null,
           );
         } else {
-          return createControl(widget.control, destView.control.id, disabled,
-              parentAdaptive: widget.parentAdaptive);
+          return ControlWidget(control: dest);
         }
-      }).toList();
+      }).toList(),
+    );
 
-      var drawer = NavigationDrawer(
-        elevation: widget.control.attrDouble("elevation"),
-        indicatorColor: widget.control.attrColor("indicatorColor", context),
-        indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
-        backgroundColor: widget.control.attrColor("bgColor", context),
-        selectedIndex: _selectedIndex,
-        shadowColor: widget.control.attrColor("shadowColor", context),
-        surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
-        tilePadding: parseEdgeInsets(widget.control, "tilePadding",
-            const EdgeInsets.symmetric(horizontal: 12.0))!,
-        onDestinationSelected: _destinationChanged,
-        children: children,
-      );
-
-      return baseControl(context, drawer, widget.parent, widget.control);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.control.getBool("open", false) == false) {
+        if (endDrawer &&
+            ScaffoldKeyProvider.of(context)?.currentState?.isEndDrawerOpen ==
+                true) {
+          ScaffoldKeyProvider.of(context)?.currentState?.closeEndDrawer();
+        } else if (ScaffoldKeyProvider.of(context)
+                ?.currentState
+                ?.isDrawerOpen ==
+            true) {
+          ScaffoldKeyProvider.of(context)?.currentState?.closeDrawer();
+        }
+      }
     });
+
+    return BaseControl(control: widget.control, child: drawer);
   }
 }

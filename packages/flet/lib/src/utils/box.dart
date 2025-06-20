@@ -5,111 +5,77 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../controls/error.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
-import '../models/page_args_model.dart';
+import '../widgets/error.dart';
 import 'alignment.dart';
 import 'borders.dart';
 import 'collections.dart';
 import 'colors.dart';
 import 'gradient.dart';
 import 'images.dart';
+import 'misc.dart';
 import 'numbers.dart';
-import 'others.dart';
 import 'transforms.dart';
 
-BoxConstraints? parseBoxConstraints(Control control, String propName) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return null;
-  }
+BoxConstraints? parseBoxConstraints(dynamic value,
+    [BoxConstraints? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return boxConstraintsFromJSON(j1);
-}
-
-BoxConstraints? boxConstraintsFromJSON(dynamic json,
-    [BoxConstraints? defValue]) {
-  if (json == null) {
-    return null;
-  }
   return BoxConstraints(
-    minHeight: parseDouble(json["min_height"], 0.0)!,
-    minWidth: parseDouble(json["min_width"], 0.0)!,
-    maxHeight: parseDouble(json["max_height"], double.infinity)!,
-    maxWidth: parseDouble(json["max_width"], double.infinity)!,
+    minHeight: parseDouble(value["min_height"], 0.0)!,
+    minWidth: parseDouble(value["min_width"], 0.0)!,
+    maxHeight: parseDouble(value["max_height"], double.infinity)!,
+    maxWidth: parseDouble(value["max_width"], double.infinity)!,
   );
 }
 
-List<BoxShadow>? parseBoxShadow(
-    ThemeData theme, Control control, String propName,
-    [List<BoxShadow>? defValue]) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return defValue;
-  }
-
-  final j1 = json.decode(v);
-  return boxShadowsFromJSON(theme, j1);
-}
-
-List<BoxShadow>? boxShadowsFromJSON(ThemeData theme, dynamic json,
-    [List<BoxShadow>? defValue]) {
-  if (json == null) {
-    return defValue;
-  }
-  if (json is List) {
-    return json.map((e) => boxShadowFromJSON(theme, e)).toList();
+List<BoxShadow>? parseBoxShadows(dynamic value, ThemeData theme,
+    [List<BoxShadow>? defaultValue]) {
+  if (value == null) return defaultValue;
+  if (value is List) {
+    return value.map((e) => parseBoxShadow(e, theme)!).toList();
   } else {
-    return [boxShadowFromJSON(theme, json)];
+    return [parseBoxShadow(value, theme)!];
   }
 }
 
-BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
-  var offset =
-      json["offset"] != null ? offsetDetailsFromJSON(json["offset"]) : null;
+BoxShadow? parseBoxShadow(dynamic value, ThemeData theme,
+    [BoxShadow? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  var offset = parseOffset(value["offset"]);
   return BoxShadow(
-      color: parseColor(theme, json["color"], const Color(0xFF000000))!,
-      offset: offset != null ? Offset(offset.x, offset.y) : Offset.zero,
-      blurStyle: json["blur_style"] != null
+      color: parseColor(value["color"], theme, const Color(0xFF000000))!,
+      offset: offset != null ? Offset(offset.dx, offset.dy) : Offset.zero,
+      blurStyle: value["blur_style"] != null
           ? BlurStyle.values
-              .firstWhere((e) => e.name.toLowerCase() == json["blur_style"])
+              .firstWhere((e) => e.name.toLowerCase() == value["blur_style"])
           : BlurStyle.normal,
-      blurRadius: parseDouble(json["blur_radius"], 0)!,
-      spreadRadius: parseDouble(json["spread_radius"], 0)!);
+      blurRadius: parseDouble(value["blur_radius"], 0)!,
+      spreadRadius: parseDouble(value["spread_radius"], 0)!);
 }
 
-BoxDecoration? parseBoxDecoration(ThemeData theme, Control control,
-    String propName, PageArgsModel? pageArgs) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return null;
-  }
+BoxDecoration? parseBoxDecoration(dynamic value, BuildContext context,
+    [BoxDecoration? defaultValue]) {
+  if (value == null) return defaultValue;
+  var theme = Theme.of(context);
 
-  final j1 = json.decode(v);
-  return boxDecorationFromJSON(theme, j1, pageArgs);
-}
-
-BoxDecoration? boxDecorationFromJSON(
-    ThemeData theme, dynamic json, PageArgsModel? pageArgs) {
-  if (json == null) {
-    return null;
-  }
-  var shape = parseBoxShape(json["shape"], BoxShape.rectangle)!;
-  var borderRadius = borderRadiusFromJSON(json["border_radius"]);
-  var color = parseColor(theme, json["color"]);
-  var gradient = gradientFromJSON(theme, json["gradient"]);
-  var blendMode = parseBlendMode(json["blend_mode"]);
+  var shape = parseBoxShape(value["shape"], BoxShape.rectangle)!;
+  var borderRadius = parseBorderRadius(value["border_radius"]);
+  var color = parseColor(value["color"], theme);
+  var gradient = parseGradient(value["gradient"], theme);
+  var blendMode = parseBlendMode(value["blend_mode"]);
 
   return BoxDecoration(
     color: color,
-    border: borderFromJSON(theme, json["border"]),
+    border: parseBorder(value["border"], theme),
     shape: shape,
     borderRadius: shape == BoxShape.circle ? null : borderRadius,
     backgroundBlendMode: color != null || gradient != null ? blendMode : null,
-    boxShadow: boxShadowsFromJSON(theme, json["shadow"]),
+    boxShadow: parseBoxShadows(value["shadow"], theme),
     gradient: gradient,
-    image: decorationImageFromJSON(theme, json["image"], pageArgs),
+    image: parseDecorationImage(value["image"], context),
   );
 }
 
@@ -123,16 +89,14 @@ BoxDecoration? boxDecorationFromDetails({
   Gradient? gradient,
   DecorationImage? image,
 }) {
-  bool hasCustomProperties = color != null ||
+  // If no custom properties are provided, return null
+  if (!(color != null ||
       border != null ||
       borderRadius != null ||
       gradient != null ||
       shape != null ||
       boxShadow != null ||
-      image != null;
-
-  // If no custom properties are provided, return null
-  if (!hasCustomProperties) {
+      image != null)) {
     return null;
   }
 
@@ -148,46 +112,35 @@ BoxDecoration? boxDecorationFromDetails({
   );
 }
 
-DecorationImage? parseDecorationImage(ThemeData theme, Control control,
-    String propName, PageArgsModel? pageArgs) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return null;
-  }
+DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
+    [DecorationImage? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return decorationImageFromJSON(theme, j1, pageArgs);
-}
-
-DecorationImage? decorationImageFromJSON(
-    ThemeData theme, dynamic json, PageArgsModel? pageArgs) {
-  if (json == null) {
-    return null;
-  }
-  var src = json["src"];
-  var srcBase64 = json["src_base64"];
-  ImageProvider? image = getImageProvider(src, srcBase64, pageArgs);
+  var src = value["src"];
+  var srcBase64 = value["src_base64"];
+  var srcBytes = value["src_bytes"];
+  ImageProvider? image = getImageProvider(context, src, srcBase64, srcBytes);
   if (image == null) {
-    return null;
+    return defaultValue;
   }
   return DecorationImage(
     image: image,
-    colorFilter: colorFilterFromJSON(json["color_filter"], theme),
-    fit: parseBoxFit(json["fit"]),
-    alignment: alignmentFromJson(json["alignment"], Alignment.center)!,
-    repeat: parseImageRepeat(json["repeat"], ImageRepeat.noRepeat)!,
-    matchTextDirection: parseBool(json["match_text_direction"], false)!,
-    scale: parseDouble(json["scale"], 1.0)!,
-    opacity: parseDouble(json["opacity"], 1.0)!,
+    colorFilter: parseColorFilter(value["color_filter"], Theme.of(context)),
+    fit: parseBoxFit(value["fit"]),
+    alignment: parseAlignment(value["alignment"], Alignment.center)!,
+    repeat: parseImageRepeat(value["repeat"], ImageRepeat.noRepeat)!,
+    matchTextDirection: parseBool(value["match_text_direction"], false)!,
+    scale: parseDouble(value["scale"], 1.0)!,
+    opacity: parseDouble(value["opacity"], 1.0)!,
     filterQuality:
-        parseFilterQuality(json["filter_quality"], FilterQuality.medium)!,
-    invertColors: parseBool(json["invert_colors"], false)!,
-    isAntiAlias: parseBool(json["anti_alias"], false)!,
+        parseFilterQuality(value["filter_quality"], FilterQuality.medium)!,
+    invertColors: parseBool(value["invert_colors"], false)!,
+    isAntiAlias: parseBool(value["anti_alias"], false)!,
   );
 }
 
 ImageProvider? getImageProvider(
-    String? src, String? srcBase64, PageArgsModel? pageArgs) {
+    BuildContext context, String? src, String? srcBase64, Uint8List? srcBytes) {
   src = src?.trim();
   srcBase64 = srcBase64?.trim();
 
@@ -196,14 +149,17 @@ ImageProvider? getImageProvider(
       Uint8List bytes = base64Decode(srcBase64);
       return MemoryImage(bytes);
     } catch (ex) {
-      debugPrint("getImageProvider failed decoding srcBase64");
+      debugPrint("getImageProvider failed decoding src_base64");
+    }
+  } else if (srcBytes != null && srcBytes.isNotEmpty) {
+    try {
+      return MemoryImage(srcBytes);
+    } catch (ex) {
+      debugPrint("getImageProvider failed decoding src_bytes");
     }
   }
   if (src != null && src != "") {
-    if (pageArgs == null) {
-      return null;
-    }
-    var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+    var assetSrc = FletBackend.of(context).getAssetSource(src);
 
     return assetSrc.isFile
         ? getFileImageProvider(assetSrc.path)
@@ -218,6 +174,7 @@ Widget buildImage({
   required Widget? errorCtrl,
   required String? src,
   required String? srcBase64,
+  required Uint8List srcBytes,
   double? width,
   double? height,
   ImageRepeat repeat = ImageRepeat.noRepeat,
@@ -232,14 +189,16 @@ Widget buildImage({
   bool excludeFromSemantics = false,
   FilterQuality filterQuality = FilterQuality.low,
   bool disabled = false,
-  required PageArgsModel pageArgs,
 }) {
   Widget? image;
   const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
-  if (srcBase64 != null && srcBase64.isNotEmpty) {
+  Uint8List bytes = srcBytes;
+  if (bytes.isEmpty && srcBase64 != null && srcBase64.isNotEmpty) {
+    bytes = base64Decode(srcBase64);
+  }
+  if (bytes.isNotEmpty) {
     try {
-      Uint8List bytes = base64Decode(srcBase64);
       if (arrayIndexOf(bytes, Uint8List.fromList(utf8.encode(svgTag))) != -1) {
         image = SvgPicture.memory(bytes,
             width: width,
@@ -279,7 +238,7 @@ Widget buildImage({
               : null,
           semanticsLabel: semanticsLabel);
     } else {
-      var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+      var assetSrc = FletBackend.of(context).getAssetSource(src);
 
       if (assetSrc.isFile) {
         // from File
@@ -353,4 +312,26 @@ Widget buildImage({
     return image;
   }
   return const ErrorControl("A valid src or src_base64 must be specified.");
+}
+
+extension BoxParsers on Control {
+  BoxConstraints? getBoxConstraints(String propertyName,
+      [BoxConstraints? defaultValue]) {
+    return parseBoxConstraints(get(propertyName), defaultValue);
+  }
+
+  List<BoxShadow>? getBoxShadows(String propertyName, ThemeData theme,
+      [List<BoxShadow>? defaultValue]) {
+    return parseBoxShadows(get(propertyName), theme, defaultValue);
+  }
+
+  BoxDecoration? getBoxDecoration(String propertyName, BuildContext context,
+      [BoxDecoration? defaultValue]) {
+    return parseBoxDecoration(get(propertyName), context, defaultValue);
+  }
+
+  DecorationImage? getDecorationImage(String propertyName, BuildContext context,
+      [DecorationImage? defaultValue]) {
+    return parseDecorationImage(get(propertyName), context, defaultValue);
+  }
 }

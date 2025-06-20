@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -11,7 +9,7 @@ import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 
-MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
+MenuStyle? parseMenuStyle(dynamic value, ThemeData theme,
     {Color? defaultBackgroundColor,
     Color? defaultShadowColor,
     Color? defaultSurfaceTintColor,
@@ -20,59 +18,56 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
     MouseCursor? defaultMouseCursor,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
-    OutlinedBorder? defaultShape}) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+    OutlinedBorder? defaultShape,
+    MenuStyle? defaultValue}) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return menuStyleFromJSON(
-      theme,
-      j1,
-      defaultBackgroundColor,
-      defaultShadowColor,
-      defaultSurfaceTintColor,
-      defaultElevation,
-      defaultAlignment,
-      defaultMouseCursor,
-      defaultPadding,
-      defaultBorderSide,
-      defaultShape);
+  return MenuStyle(
+    alignment: parseAlignment(value["alignment"], defaultAlignment)!,
+    backgroundColor: parseWidgetStateColor(value["bgcolor"], theme,
+        defaultColor: defaultBackgroundColor),
+    shadowColor: parseWidgetStateColor(value["shadow_color"], theme,
+        defaultColor: defaultShadowColor),
+    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme,
+        defaultColor: defaultSurfaceTintColor),
+    elevation: parseWidgetStateDouble(value["elevation"],
+        defaultDouble: defaultElevation),
+    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
+        value["padding"], (jv) => parseEdgeInsets(jv), defaultPadding),
+    side: getWidgetStateProperty<BorderSide?>(
+        value["side"],
+        (jv) => parseBorderSide(jv, theme,
+            defaultSideColor: theme.colorScheme.outline),
+        defaultBorderSide),
+    shape: parseWidgetStateOutlinedBorder(value["shape"], theme,
+        defaultOutlinedBorder: defaultShape),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"],
+        defaultMouseCursor: defaultMouseCursor),
+  );
 }
 
-MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
-    [Color? defaultBackgroundColor,
-    Color? defaultShadowColor,
-    Color? defaultSurfaceTintColor,
-    double? defaultElevation,
-    Alignment? defaultAlignment,
-    MouseCursor? defaultMouseCursor,
-    EdgeInsets? defaultPadding,
-    BorderSide? defaultBorderSide,
-    OutlinedBorder? defaultShape]) {
-  if (json == null) {
-    return null;
+extension MenuParsers on Control {
+  MenuStyle? getMenuStyle(String propertyName, ThemeData theme,
+      {Color? defaultBackgroundColor,
+      Color? defaultShadowColor,
+      Color? defaultSurfaceTintColor,
+      double? defaultElevation,
+      Alignment? defaultAlignment,
+      MouseCursor? defaultMouseCursor,
+      EdgeInsets? defaultPadding,
+      BorderSide? defaultBorderSide,
+      OutlinedBorder? defaultShape,
+      MenuStyle? defaultValue}) {
+    return parseMenuStyle(get(propertyName), theme,
+        defaultBackgroundColor: defaultBackgroundColor,
+        defaultShadowColor: defaultShadowColor,
+        defaultSurfaceTintColor: defaultSurfaceTintColor,
+        defaultElevation: defaultElevation,
+        defaultAlignment: defaultAlignment,
+        defaultMouseCursor: defaultMouseCursor,
+        defaultPadding: defaultPadding,
+        defaultBorderSide: defaultBorderSide,
+        defaultShape: defaultShape,
+        defaultValue: defaultValue);
   }
-  return MenuStyle(
-    alignment: alignmentFromJson(json["alignment"], defaultAlignment)!,
-    backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
-        (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
-    shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
-        (jv) => parseColor(theme, jv as String), defaultShadowColor),
-    surfaceTintColor: getWidgetStateProperty<Color?>(json["surface_tint_color"],
-        (jv) => parseColor(theme, jv as String), defaultSurfaceTintColor),
-    elevation: getWidgetStateProperty<double?>(
-        json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
-    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
-        json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
-    side: getWidgetStateProperty<BorderSide?>(
-        json["side"],
-        (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
-        defaultBorderSide),
-    shape: getWidgetStateProperty<OutlinedBorder?>(
-        json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(json["mouse_cursor"],
-        (jv) => parseMouseCursor(jv as String), defaultMouseCursor),
-  );
 }

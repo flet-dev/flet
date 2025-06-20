@@ -1,92 +1,77 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/images.dart';
-import 'create_control.dart';
-import 'flet_store_mixin.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 
-class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
+class CircleAvatarControl extends StatelessWidget {
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const CircleAvatarControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+  const CircleAvatarControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CircleAvatar build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
 
-    return withPageArgs((context, pageArgs) {
-      var foregroundImageSrc = control.attrString("foregroundImageSrc");
-      var backgroundImageSrc = control.attrString("backgroundImageSrc");
-      var contentCtrls =
-          children.where((c) => c.name == "content" && c.isVisible);
+    var foregroundImageSrc = control.getString("foreground_image_src");
+    var backgroundImageSrc = control.getString("background_image_src");
+    var content = control.buildTextOrWidget("content");
 
-      ImageProvider<Object>? backgroundImage;
-      ImageProvider<Object>? foregroundImage;
+    ImageProvider<Object>? backgroundImage;
+    ImageProvider<Object>? foregroundImage;
 
-      if (foregroundImageSrc != null || backgroundImageSrc != null) {
-        var assetSrc = getAssetSrc((foregroundImageSrc ?? backgroundImageSrc)!,
-            pageArgs.pageUri!, pageArgs.assetsDir);
+    if (foregroundImageSrc != null || backgroundImageSrc != null) {
+      var assetSrc = control.backend
+          .getAssetSource((foregroundImageSrc ?? backgroundImageSrc)!);
 
-        // foregroundImage
-        if (foregroundImageSrc != null) {
-          if (assetSrc.isFile) {
-            // from File
-            foregroundImage = AssetImage(assetSrc.path);
-          } else {
-            // URL
-            foregroundImage = NetworkImage(assetSrc.path);
-          }
-        }
-
-        // backgroundImage
-        if (backgroundImageSrc != null) {
-          if (assetSrc.isFile) {
-            // from File
-            backgroundImage = AssetImage(assetSrc.path);
-          } else {
-            // URL
-            backgroundImage = NetworkImage(assetSrc.path);
-          }
+      // foregroundImage
+      if (foregroundImageSrc != null) {
+        if (assetSrc.isFile) {
+          // from File
+          foregroundImage = AssetImage(assetSrc.path);
+        } else {
+          // URL
+          foregroundImage = NetworkImage(assetSrc.path);
         }
       }
 
-      var avatar = CircleAvatar(
-          foregroundImage: foregroundImage,
-          backgroundImage: backgroundImage,
-          backgroundColor: control.attrColor("bgColor", context),
-          foregroundColor: control.attrColor("color", context),
-          radius: control.attrDouble("radius"),
-          minRadius: control.attrDouble("minRadius"),
-          maxRadius: control.attrDouble("maxRadius"),
-          onBackgroundImageError: backgroundImage != null
-              ? (object, trace) {
-                  backend.triggerControlEvent(
-                      control.id, "imageError", "background");
-                }
-              : null,
-          onForegroundImageError: foregroundImage != null
-              ? (object, trace) {
-                  backend.triggerControlEvent(
-                      control.id, "imageError", "foreground");
-                }
-              : null,
-          child: contentCtrls.isNotEmpty
-              ? createControl(control, contentCtrls.first.id, disabled)
-              : null);
+      // backgroundImage
+      if (backgroundImageSrc != null) {
+        if (assetSrc.isFile) {
+          // from File
+          backgroundImage = AssetImage(assetSrc.path);
+        } else {
+          // URL
+          backgroundImage = NetworkImage(assetSrc.path);
+        }
+      }
+    }
 
-      return constrainedControl(context, avatar, parent, control);
-    });
+    var avatar = CircleAvatar(
+        foregroundImage: foregroundImage,
+        backgroundImage: backgroundImage,
+        backgroundColor: control.getColor("bgcolor", context),
+        foregroundColor: control.getColor("color", context),
+        radius: control.getDouble("radius"),
+        minRadius: control.getDouble("min_radius"),
+        maxRadius: control.getDouble("max_radius"),
+        onBackgroundImageError: backgroundImage != null
+            ? (object, trace) {
+                control.triggerEvent("image_error", "background");
+              }
+            : null,
+        onForegroundImageError: foregroundImage != null
+            ? (object, trace) {
+                control.triggerEvent("image_error", "foreground");
+              }
+            : null,
+        child: content);
+
+    return ConstrainedControl(control: control, child: avatar);
   }
 }

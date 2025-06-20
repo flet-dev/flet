@@ -1,37 +1,36 @@
-import 'package:flet/src/utils/box.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/box.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/images.dart';
-import 'create_control.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 
 class IconControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
 
-  const IconControl({super.key, required this.parent, required this.control});
+  const IconControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Icon build: ${control.id}");
 
-    return constrainedControl(
-        context,
-        Icon(
-          parseIcon(control.attrString("name", "")!),
-          size: control.attrDouble("size"),
-          color: control.attrColor("color", context),
-          blendMode: parseBlendMode(control.attrString("blendMode")),
-          semanticLabel: control.attrString("semanticsLabel"),
-          applyTextScaling: control.attrBool("applyTextScaling"),
-          fill: control.attrDouble("fill"),
-          grade: control.attrDouble("grade"),
-          weight: control.attrDouble("weight"),
-          opticalSize: control.attrDouble("opticalSize"),
-          shadows: parseBoxShadow(Theme.of(context), control, "shadows"),
-        ),
-        parent,
-        control);
+    return ConstrainedControl(
+        control: control,
+        child: Icon(
+          parseIcon(control.getString("name", "")!),
+          size: control.getDouble("size"),
+          color: control.getColor("color", context),
+          blendMode: control.getBlendMode("blend_mode"),
+          semanticLabel: control.getString("semantics_label"),
+          applyTextScaling: control.getBool("apply_text_scaling"),
+          fill: control.getDouble("fill"),
+          grade: control.getDouble("grade"),
+          weight: control.getDouble("weight"),
+          opticalSize: control.getDouble("optical_size"),
+          shadows: control.getBoxShadows("shadows", Theme.of(context)),
+        ));
   }
 }

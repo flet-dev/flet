@@ -1,5 +1,6 @@
-import 'package:flutter/widgets.dart';
 import 'dart:async';
+
+import 'package:flutter/widgets.dart';
 
 class Debouncer {
   final int milliseconds;

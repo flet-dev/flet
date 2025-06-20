@@ -1,10 +1,10 @@
-import 'package:flet/src/utils/platform.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_to_front/window_to_front.dart';
 
-import '../models/window_media_data.dart';
+import '../models/window_state.dart';
+import 'platform.dart';
 
 Future setWindowTitle(String title) async {
   if (isDesktopPlatform()) {
@@ -105,7 +105,7 @@ Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
 }
 
 Future setWindowAlwaysOnBottom(bool alwaysOnBottom) async {
-  if (isDesktopPlatform()) {
+  if (isLinuxDesktop() || isWindowsDesktop()) {
     debugPrint("setWindowAlwaysOnBottom($alwaysOnBottom)");
     await windowManager.setAlwaysOnBottom(alwaysOnBottom);
   }
@@ -178,6 +178,18 @@ Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
   }
 }
 
+Future setWindowAspectRatio(double value) async {
+  if (isDesktopPlatform()) {
+    await windowManager.setAspectRatio(value);
+  }
+}
+
+Future setWindowBrightness(Brightness value) async {
+  if (isDesktopPlatform()) {
+    await windowManager.setBrightness(value);
+  }
+}
+
 Future minimizeWindow() async {
   if (isDesktopPlatform() && !await windowManager.isMinimized()) {
     debugPrint("minimizeWindow()");
@@ -235,9 +247,15 @@ Future windowToFront() async {
   }
 }
 
-Future windowStartDragging() async {
+Future startDraggingWindow() async {
   if (isDesktopPlatform()) {
     await windowManager.startDragging();
+  }
+}
+
+Future startResizingWindow(ResizeEdge edge) async {
+  if (isWindowsDesktop() || isLinuxDesktop()) {
+    await windowManager.startResizing(edge);
   }
 }
 
@@ -296,22 +314,31 @@ Future setIgnoreMouseEvents(bool ignore) async {
   }
 }
 
-Future<WindowMediaData> getWindowMediaData() async {
-  var m = WindowMediaData();
+Future<WindowState> getWindowState() async {
   if (isDesktopPlatform()) {
-    m.isMaximized = await windowManager.isMaximized();
-    m.isMinimized = await windowManager.isMinimized();
-    m.isFocused = await isFocused();
-    m.isFullScreen = await windowManager.isFullScreen();
-    m.isVisible = await windowManager.isVisible();
-    var size = await windowManager.getSize();
-    m.width = size.width;
-    m.height = size.height;
-    var pos = await windowManager.getPosition();
-    m.left = pos.dx;
-    m.top = pos.dy;
-    return m;
+    final size = await windowManager.getSize();
+    final pos = await windowManager.getPosition();
+
+    return WindowState(
+      maximized: await windowManager.isMaximized(),
+      minimized: await windowManager.isMinimized(),
+      fullScreen: await windowManager.isFullScreen(),
+      alwaysOnTop: await windowManager.isAlwaysOnTop(),
+      focused: await isFocused(),
+      visible: await windowManager.isVisible(),
+      opacity: await windowManager.getOpacity(),
+      minimizable: await windowManager.isMinimizable(),
+      maximizable: await windowManager.isMaximizable(),
+      resizable: await windowManager.isResizable(),
+      preventClose: await windowManager.isPreventClose(),
+      skipTaskBar: await windowManager.isSkipTaskbar(),
+      width: size.width.toDouble(),
+      height: size.height.toDouble(),
+      top: pos.dy.toDouble(),
+      left: pos.dx.toDouble(),
+    );
   } else {
-    return Future.value(m);
+    throw Exception(
+        "getWindowState() can be called on desktop platforms only.");
   }
 }

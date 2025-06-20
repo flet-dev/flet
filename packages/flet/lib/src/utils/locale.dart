@@ -1,43 +1,40 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 
-Map<String, dynamic>? parseLocaleConfiguration(
-    Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+class LocaleConfiguration {
+  final List<Locale> supportedLocales;
+  final Locale? locale;
 
-  final j1 = json.decode(v);
-  return localeConfigurationFromJSON(j1);
+  const LocaleConfiguration(
+      {required this.supportedLocales, required this.locale});
 }
 
-Map<String, dynamic> localeConfigurationFromJSON(dynamic json) {
+LocaleConfiguration parseLocaleConfiguration(dynamic value) {
   List<Locale>? supportedLocales;
-  var sl = json["supported_locales"];
-  Locale? locale = json["current_locale"] != null
-      ? localeFromJSON(json["current_locale"])
-      : null;
-  if (sl != null) {
-    supportedLocales =
-        sl.map((e) => localeFromJSON(e)).whereType<Locale>().toList();
+  Locale? locale;
+
+  if (value != null) {
+    var sl = value["supported_locales"];
+    if (sl != null) {
+      supportedLocales =
+          sl.map((e) => parseLocale(e)).whereType<Locale>().toList();
+    }
+    locale = parseLocale(value["current_locale"]);
   }
 
-  return {
-    "supportedLocales": supportedLocales != null && supportedLocales.isNotEmpty
-        ? supportedLocales
-        : [const Locale("en", "US")], // American locale as fallback
-    "locale": locale
-  };
+  return LocaleConfiguration(
+      supportedLocales: supportedLocales != null && supportedLocales.isNotEmpty
+          ? supportedLocales
+          : [const Locale("en", "US")],
+      locale: locale);
 }
 
-Locale localeFromJSON(dynamic json) {
-  var languageCode = json["language_code"]?.trim();
-  var countryCode = json["country_code"]?.trim();
-  var scriptCode = json["script_code"]?.trim();
+Locale? parseLocale(dynamic value, [Locale? defaultValue]) {
+  if (value == null) return defaultValue;
+  var languageCode = value["language_code"]?.trim();
+  var countryCode = value["country_code"]?.trim();
+  var scriptCode = value["script_code"]?.trim();
   return Locale.fromSubtags(
       languageCode: (languageCode != null && languageCode.isNotEmpty)
           ? languageCode
@@ -46,4 +43,15 @@ Locale localeFromJSON(dynamic json) {
           (countryCode != null && countryCode.isNotEmpty) ? countryCode : null,
       scriptCode:
           (scriptCode != null && scriptCode.isNotEmpty) ? scriptCode : null);
+}
+
+extension LocaleParsers on Control {
+  LocaleConfiguration getLocaleConfiguration(String propertyName,
+      [LocaleConfiguration? defaultValue]) {
+    return parseLocaleConfiguration(get(propertyName));
+  }
+
+  Locale? getLocale(String propertyName, [Locale? defaultValue]) {
+    return parseLocale(get(propertyName), defaultValue);
+  }
 }
