@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import os
 import traceback
@@ -143,6 +144,16 @@ class FletApp(Connection):
 
             if asyncio.iscoroutinefunction(self.__main):
                 await self.__main(self.__session.page)
+
+            elif inspect.isasyncgenfunction(self.__main):
+                async for _ in self.__main(self.__session.page):
+                    if UpdateBehavior.auto_update_enabled():
+                        await self.__session.auto_update(self.__session.page)
+
+            elif inspect.isgeneratorfunction(self.__main):
+                for _ in self.__main(self.__session.page):
+                    if UpdateBehavior.auto_update_enabled():
+                        await self.__session.auto_update(self.__session.page)
             else:
                 self.__main(self.__session.page)
 

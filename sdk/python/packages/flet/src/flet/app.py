@@ -1,6 +1,7 @@
 import asyncio
 import concurrent.futures
 import contextlib
+import inspect
 import logging
 import os
 import signal
@@ -8,7 +9,7 @@ import traceback
 import warnings
 from collections.abc import Awaitable
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
 from flet.controls.page import Page, _session_page
 from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
@@ -56,7 +57,7 @@ def app_async(*args, **kwargs):
 
 
 def run(
-    main: Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]],
+    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
     before_main: Optional[
         Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
     ] = None,
@@ -115,7 +116,7 @@ def run(
 
 
 async def run_async(
-    main: Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]],
+    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
     before_main: Optional[
         Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
     ] = None,
@@ -252,13 +253,7 @@ async def run_async(
         await conn.close()
 
 
-async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
-    from flet.messaging.flet_socket_server import FletSocketServer
-
-    uds_path = os.getenv("FLET_SERVER_UDS_PATH")
-
-    executor = concurrent.futures.ThreadPoolExecutor()
-
+def __get_on_session_created(main):
     async def on_session_created(session: Session):
         logger.info("App session started")
         try:
@@ -267,6 +262,16 @@ async def __run_socket_server(port=0, main=None, before_main=None, blocking=Fals
             UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(main):
                 await main(session.page)
+
+            elif inspect.isasyncgenfunction(main):
+                async for _ in main(session.page):
+                    if UpdateBehavior.auto_update_enabled():
+                        await session.auto_update(session.page)
+
+            elif inspect.isgeneratorfunction(main):
+                for _ in main(session.page):
+                    if UpdateBehavior.auto_update_enabled():
+                        await session.auto_update(session.page)
             else:
                 # run synchronously
                 main(session.page)
@@ -281,11 +286,21 @@ async def __run_socket_server(port=0, main=None, before_main=None, blocking=Fals
             )
             session.error(f"The application encountered an error: {e}")
 
+    return on_session_created
+
+
+async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
+    from flet.messaging.flet_socket_server import FletSocketServer
+
+    uds_path = os.getenv("FLET_SERVER_UDS_PATH")
+
+    executor = concurrent.futures.ThreadPoolExecutor()
+
     conn = FletSocketServer(
         loop=asyncio.get_running_loop(),
         port=port,
         uds_path=uds_path,
-        on_session_created=on_session_created,
+        on_session_created=__get_on_session_created(main),
         before_main=before_main,
         blocking=blocking,
         executor=executor,
@@ -343,27 +358,9 @@ async def __run_web_server(
 def __run_pyodide(main=None, before_main=None):
     from flet.messaging.pyodide_connection import PyodideConnection
 
-    async def on_session_created(session: Session):
-        logger.info("App session started")
-        try:
-            assert main is not None
-            _session_page.set(session.page)
-            UpdateBehavior.reset()
-            if asyncio.iscoroutinefunction(main):
-                await main(session.page)
-            else:
-                main(session.page)
-
-            if UpdateBehavior.auto_update_enabled():
-                await session.auto_update(session.page)
-        except Exception as e:
-            print(
-                f"Unhandled error processing page session {session.id}:",
-                traceback.format_exc(),
-            )
-            session.error(f"There was an error while processing your request: {e}")
-
-    PyodideConnection(on_session_created=on_session_created, before_main=before_main)
+    PyodideConnection(
+        on_session_created=__get_on_session_created(main), before_main=before_main
+    )
 
 
 def __get_page_name(name: str):

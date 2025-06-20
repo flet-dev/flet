@@ -198,22 +198,22 @@ class Session:
                 elif inspect.isasyncgenfunction(event_handler):
                     if get_param_count(event_handler) == 0:
                         async for _ in event_handler():
-                            if UpdateBehavior.auto_update_enabled() and self.connection:
-                                await self.auto_update(self.index[control._i])
+                            if UpdateBehavior.auto_update_enabled():
+                                await self.auto_update(self.index.get(control._i))
                     else:
                         async for _ in event_handler(e):
-                            if UpdateBehavior.auto_update_enabled() and self.connection:
-                                await self.auto_update(self.index[control._i])
+                            if UpdateBehavior.auto_update_enabled():
+                                await self.auto_update(self.index.get(control._i))
 
                 elif inspect.isgeneratorfunction(event_handler):
                     if get_param_count(event_handler) == 0:
                         for _ in event_handler():
-                            if UpdateBehavior.auto_update_enabled() and self.connection:
-                                await self.auto_update(self.index[control._i])
+                            if UpdateBehavior.auto_update_enabled():
+                                await self.auto_update(self.index.get(control._i))
                     else:
                         for _ in event_handler(e):
-                            if UpdateBehavior.auto_update_enabled() and self.connection:
-                                await self.auto_update(self.index[control._i])
+                            if UpdateBehavior.auto_update_enabled():
+                                await self.auto_update(self.index.get(control._i))
 
                 elif callable(event_handler):
                     if get_param_count(event_handler) == 0:
@@ -221,8 +221,8 @@ class Session:
                     else:
                         event_handler(e)
 
-                if UpdateBehavior.auto_update_enabled() and self.connection:
-                    await self.auto_update(self.index[control._i])
+                if UpdateBehavior.auto_update_enabled():
+                    await self.auto_update(self.index.get(control._i))
 
         except Exception as ex:
             tb = traceback.format_exc()
@@ -251,9 +251,13 @@ class Session:
                 "is not registered."
             )
 
-    async def auto_update(self, control: BaseControl):
+    async def auto_update(self, control: BaseControl | None):
         while control:
-            if control.is_isolated() and not hasattr(control, "_frozen"):
+            if (
+                control.is_isolated()
+                and not hasattr(control, "_frozen")
+                and self.connection
+            ):
                 control.update()
                 break
             control = control.parent
