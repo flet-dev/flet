@@ -331,10 +331,9 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     Event handler argument is of type [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
 
-    :::info
-    If `ink` is `True`, `e` will be plain `ControlEvent` with empty `data` instead of 
-    `ContainerTapEvent`.
-    :::
+    Info:
+        If `ink` is `True`, `e` will be plain `ControlEvent` with empty `data` instead of 
+        `ContainerTapEvent`.
 
     A simple usage example:
 
