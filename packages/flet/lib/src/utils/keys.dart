@@ -34,7 +34,7 @@ ControlKey? parseKey(dynamic value) {
   if (value == null) return null;
 
   if (value is Map) {
-    String type = value["type"];
+    var type = value["_type"];
     if (type == "value") {
       return ControlValueKey(value["value"]);
     } else if (type == "scroll") {

@@ -266,7 +266,7 @@ class FletCustomPainter extends CustomPainter {
       return path;
     }
     for (var elem in (j as List)) {
-      var type = elem["type"];
+      var type = elem["_type"];
       if (type == "moveto") {
         path.moveTo(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!);
       } else if (type == "lineto") {

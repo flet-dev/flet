@@ -32,8 +32,7 @@ class PaintingStyle(Enum):
 
 @dataclass(kw_only=True)
 class PaintGradient:
-    # type: str = ""
-    type: str = field(default="", init=False, repr=False)
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
 @dataclass
@@ -82,7 +81,7 @@ class PaintLinearGradient(PaintGradient):
     """
 
     def __post_init__(self):
-        self.type = "linear"
+        self._type = "linear"
 
 
 @dataclass
@@ -145,7 +144,7 @@ class PaintRadialGradient(PaintGradient):
     """
 
     def __post_init__(self):
-        self.type = "radial"
+        self._type = "radial"
 
 
 @dataclass
@@ -205,7 +204,7 @@ class PaintSweepGradient(PaintGradient):
     """
 
     def __post_init__(self):
-        self.type = "sweep"
+        self._type = "sweep"
 
 
 @dataclass

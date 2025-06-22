@@ -8,10 +8,11 @@ import 'alignment.dart';
 import 'colors.dart';
 import 'numbers.dart';
 
-Gradient? parseGradient(dynamic value, ThemeData theme) {
-  if (value == null) return null;
+Gradient? parseGradient(dynamic value, ThemeData theme,
+    [Gradient? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  String type = value["type"];
+  var type = value["_type"];
   var colors = parseColors(value["colors"], theme);
   var stops = parseGradientStops(value["stops"]);
   var rotation = parseRotation(value["rotation"]);
@@ -43,7 +44,7 @@ Gradient? parseGradient(dynamic value, ThemeData theme) {
         tileMode: parseTileMode(value["tile_mode"], TileMode.clamp)!,
         transform: rotation);
   }
-  return null;
+  return defaultValue;
 }
 
 List<Color> parseColors(dynamic value, ThemeData? theme) {

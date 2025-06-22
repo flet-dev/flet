@@ -52,7 +52,7 @@ ui.Gradient? parsePaintGradient(Map<dynamic, dynamic>? value, ThemeData? theme,
     [ui.Gradient? defaultValue]) {
   if (value == null) return defaultValue;
 
-  String type = value["type"];
+  var type = value["_type"];
   var colorStops = parseGradientStops(value["color_stops"]);
   var colors = parseColors(value["colors"], theme);
   var tileMode = parseTileMode(value["tile_mode"], TileMode.clamp)!;

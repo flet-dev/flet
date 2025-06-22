@@ -19,37 +19,42 @@ class Path(Shape):
 
     @dataclass(kw_only=True)
     class PathElement:
-        type: str = ""
+        _type: Optional[str] = field(
+            init=False, repr=False, compare=False, default=None
+        )
 
     @dataclass
     class MoveTo(PathElement):
         """
         Starts a new sub-path at the given point (`x`,`y`).
         """
+
         x: float
         y: float
 
         def __post_init__(self):
-            self.type = "moveto"
+            self._type = "moveto"
 
     @dataclass
     class LineTo(PathElement):
         """
-        Adds a straight line segment from the current point to the given point 
+        Adds a straight line segment from the current point to the given point
         (`x`,`y`).
         """
+
         x: float
         y: float
 
         def __post_init__(self):
-            self.type = "lineto"
+            self._type = "lineto"
 
     @dataclass
     class QuadraticTo(PathElement):
         """
-        Adds a bezier segment that curves from the current point to the given point 
+        Adds a bezier segment that curves from the current point to the given point
         (`x`,`y`), using the control points (`cp1x`,`cp1y`) and the weight `w`.
         """
+
         cp1x: float
         cp1y: float
         x: float
@@ -62,14 +67,15 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self.type = "conicto"
+            self._type = "conicto"
 
     @dataclass
     class CubicTo(PathElement):
         """
-        Adds a cubic bezier segment that curves from the current point to the given 
+        Adds a cubic bezier segment that curves from the current point to the given
         point (`x`,`y`), using the control points (`cp1x`,`cp1y`) and (`cp2x`,`cp2y`).
         """
+
         cp1x: float
         cp1y: float
         cp2x: float
@@ -78,31 +84,33 @@ class Path(Shape):
         y: float
 
         def __post_init__(self):
-            self.type = "cubicto"
+            self._type = "cubicto"
 
     @dataclass
     class SubPath(PathElement):
         """
         Adds the sub-path described by `elements` to the given point (`x`,`y`).
         """
+
         elements: list["Path.PathElement"]
         x: float
         y: float
 
         def __post_init__(self):
-            self.type = "subpath"
+            self._type = "subpath"
 
     @dataclass
     class Arc(PathElement):
         """
-        Adds a new sub-path with one arc segment that consists of the arc that follows 
-        the edge of the oval bounded by the given rectangle with top left corner at `x` 
-        and `y` and dimensions `width` and `height`, from `start_angle` radians around 
-        the oval up to `start_angle` + `sweep_angle` radians around the oval, with zero 
-        radians being the point on the right hand side of the oval that crosses the 
-        horizontal line that intersects the center of the rectangle and with positive 
+        Adds a new sub-path with one arc segment that consists of the arc that follows
+        the edge of the oval bounded by the given rectangle with top left corner at `x`
+        and `y` and dimensions `width` and `height`, from `start_angle` radians around
+        the oval up to `start_angle` + `sweep_angle` radians around the oval, with zero
+        radians being the point on the right hand side of the oval that crosses the
+        horizontal line that intersects the center of the rectangle and with positive
         angles going clockwise around the oval.
         """
+
         x: float
         """
         Top-left corner `x` of the rectangle bounding the arc.
@@ -129,23 +137,24 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self.type = "arc"
+            self._type = "arc"
 
     @dataclass
     class ArcTo(PathElement):
         """
-        Appends up to four conic curves weighted to describe an oval of `radius` and 
+        Appends up to four conic curves weighted to describe an oval of `radius` and
         rotated by `rotation` (measured in degrees and clockwise).
 
-        The first curve begins from the last point in the path and the last ends at `x` 
-        and `y`. The curves follow a path in a direction determined by `clockwise` 
-        (bool) and `large_arc` (bool) in such a way that the sweep angle is always less 
+        The first curve begins from the last point in the path and the last ends at `x`
+        and `y`. The curves follow a path in a direction determined by `clockwise`
+        (bool) and `large_arc` (bool) in such a way that the sweep angle is always less
         than 360 degrees.
 
-        A simple line is appended if either either radii are zero or the last point in 
-        the path (`x`,`y`). The radii are scaled to fit the last path point if both are 
+        A simple line is appended if either either radii are zero or the last point in
+        the path (`x`,`y`). The radii are scaled to fit the last path point if both are
         greater than zero but too small to describe an arc.
         """
+
         x: float
         """
         Destination `x` coordinate of arc endpoint.
@@ -172,14 +181,15 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self.type = "arcto"
+            self._type = "arcto"
 
     @dataclass
     class Oval(PathElement):
         """
-        Adds a new sub-path that consists of a curve that forms the ellipse that fills 
+        Adds a new sub-path that consists of a curve that forms the ellipse that fills
         the given rectangle.
         """
+
         x: float
         """
         The x-axis coordinate of the top-left of the bounding rectangle.
@@ -198,13 +208,14 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self.type = "oval"
+            self._type = "oval"
 
     @dataclass
     class Rect(PathElement):
         """
         Adds a rectangle as a new sub-path.
         """
+
         x: float
         """
         The x-axis coordinate of the top-left of the rectangle.
@@ -227,7 +238,7 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self.type = "rect"
+            self._type = "rect"
 
     @dataclass
     class Close(PathElement):
@@ -237,7 +248,7 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self.type = "close"
+            self._type = "close"
 
     elements: list[PathElement] = field(default_factory=list)
     """
@@ -249,4 +260,3 @@ class Path(Shape):
     A style to draw a path with. The value of this property is the instance of
     [`Paint`](https://flet.dev/docs/reference/types/paint) class.
     """
-

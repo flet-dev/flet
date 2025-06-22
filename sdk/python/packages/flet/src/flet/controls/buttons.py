@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.alignment import OptionalAlignment
@@ -40,7 +40,8 @@ class OutlinedBorder:
     """
     The border outline's color and weight.
     """
-    type: str = ""
+
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
 @dataclass
@@ -50,7 +51,7 @@ class StadiumBorder(OutlinedBorder):
     """
 
     def __post_init__(self):
-        self.type = "stadium"
+        self._type = "stadium"
 
 
 @dataclass
@@ -66,7 +67,7 @@ class RoundedRectangleBorder(OutlinedBorder):
     """
 
     def __post_init__(self):
-        self.type = "roundedRectangle"
+        self._type = "roundedRectangle"
 
 
 @dataclass
@@ -78,7 +79,7 @@ class CircleBorder(OutlinedBorder):
     eccentricity: Number = 0.0
 
     def __post_init__(self):
-        self.type = "circle"
+        self._type = "circle"
 
 
 @dataclass
@@ -94,7 +95,7 @@ class BeveledRectangleBorder(OutlinedBorder):
     """
 
     def __post_init__(self):
-        self.type = "beveledRectangle"
+        self._type = "beveledRectangle"
 
 
 @dataclass
@@ -110,7 +111,7 @@ class ContinuousRectangleBorder(OutlinedBorder):
     """
 
     def __post_init__(self):
-        self.type = "continuousRectangle"
+        self._type = "continuousRectangle"
 
 
 @dataclass
