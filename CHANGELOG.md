@@ -1,5 +1,17 @@
 # Flet changelog
 
+## 0.70.0
+
+* Flet 1.0 Alpha release - [Announcement blog post](https://flet.dev/blog/introducing-flet-1-0-alpha)
+* NEW: Declarative approach
+* NEW: Auto-update
+* NEW: Services
+* NEW: WebAssembly support
+* NEW: Offline mode for web apps
+* NEW: Embedding Flet web apps
+* NEW: Improved future-proof architecture. 
+* [Breaking changes](https://github.com/flet-dev/flet/issues/5238)
+
 ## 0.28.3
 
 * New: Multiple subscribers can subscribe to a published topic by `send_all_on_topic` ([#5303](https://github.com/flet-dev/flet/issues/5303))

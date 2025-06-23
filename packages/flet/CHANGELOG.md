@@ -1,3 +1,15 @@
+# 0.70.0
+
+* Flet 1.0 Alpha release - [Announcement blog post](https://flet.dev/blog/introducing-flet-1-0-alpha)
+* NEW: Declarative approach
+* NEW: Auto-update
+* NEW: Services
+* NEW: WebAssembly support
+* NEW: Offline mode for web apps
+* NEW: Embedding Flet web apps
+* NEW: Improved future-proof architecture. 
+* [Breaking changes](https://github.com/flet-dev/flet/issues/5238)
+
 # 0.28.3
 
 * Fixed: Local Images Not Rendering in Android App using Flet 0.27.6 ([#5198](https://github.com/flet-dev/flet/issues/5198))
