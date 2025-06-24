@@ -1,5 +1,20 @@
 # Flet changelog
 
+## 0.70.0
+
+* **Flet 1.0 Alpha Released** – [Read the announcement](https://flet.dev/blog/introducing-flet-1-0-alpha)
+* **New:** Declarative and reactive programming style, alongside imperative
+* **New:** Automatic page updates after event handler completion
+* **New:** Service controls for non-visual functionality
+* **New:** WebAssembly support for running web apps in the browser
+* **New:** Offline mode support for web apps
+* **New:** Ability to embed Flet web apps into multiple HTML elements on a page
+* **New:** Modern, future-proof architecture:
+  * Controls in Python are now defined as plain dataclasses
+  * Unified diffing algorithm supports both imperative and declarative styles
+  * Refactored Flutter layer using inherited widgets and `Provider`
+* See the list of [breaking changes](https://github.com/flet-dev/flet/issues/5238)
+
 ## 0.28.3
 
 * New: Multiple subscribers can subscribe to a published topic by `send_all_on_topic` ([#5303](https://github.com/flet-dev/flet/issues/5303))
