@@ -337,10 +337,13 @@ class Handler(FileSystemEventHandler):
 
     def print_output(self, p):
         while True:
-            line = p.stdout.readline().decode("utf-8", errors="replace")
-            if not line:
+            raw = p.stdout.readline()
+            if not raw:
                 break
-            line = line.rstrip("\r\n")
+
+            line = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else raw
+            line = line.rstrip("\r\n")            
+
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
