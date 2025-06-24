@@ -337,7 +337,7 @@ class Handler(FileSystemEventHandler):
 
     def print_output(self, p):
         while True:
-            line = p.stdout.readline()
+            line = p.stdout.readline().decode("utf-8", errors="replace")
             if not line:
                 break
             line = line.rstrip("\r\n")
