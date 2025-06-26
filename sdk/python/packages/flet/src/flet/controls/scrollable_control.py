@@ -135,10 +135,9 @@ class ScrollableControl(Control):
         ft.app(main)
         ```
 
-        :::note
-        `scroll_to()` method won't work with `ListView` and `GridView` controls
-        building their items dynamically.
-        :::
+        Note:
+            `scroll_to()` method won't work with `ListView` and `GridView` controls
+            building their items dynamically.
 
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
@@ -213,10 +212,9 @@ class ScrollableControl(Control):
         ft.app(main)
         ```
 
-        :::note
-        `scroll_to()` method won't work with `ListView` and `GridView` controls
-        building their items dynamically.
-        :::
+        Note:
+            `scroll_to()` method won't work with `ListView` and `GridView` controls
+            building their items dynamically.
 
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.

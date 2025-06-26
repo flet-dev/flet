@@ -22,11 +22,11 @@ def test_controls_equality():
 def test_keys():
     k1 = ft.ValueKey(1)
     assert str(k1) == "1"
-    assert k1.type == "value"
+    assert k1._type == "value"
 
     k2 = ft.ScrollKey("section_a")
     assert str(k2) == "section_a"
-    assert k2.type == "scroll"
+    assert k2._type == "scroll"
 
     t1 = ft.Text("A", key=ft.ValueKey("1"))
     t2 = ft.Text("A", key=ft.ValueKey("1"))

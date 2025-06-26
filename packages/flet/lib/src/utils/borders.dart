@@ -77,7 +77,8 @@ OutlinedBorder? parseOutlinedBorder(dynamic value, ThemeData? theme,
   var borderSide =
       parseBorderSide(value["side"], theme, defaultValue: defaultBorderSide)!;
   var borderRadius = parseBorderRadius(value["radius"], defaultBorderRadius)!;
-  String type = value["type"];
+
+  var type = value["_type"];
   switch (type.toLowerCase()) {
     case "roundedrectangle":
       return RoundedRectangleBorder(

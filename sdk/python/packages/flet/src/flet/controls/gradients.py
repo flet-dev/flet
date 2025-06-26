@@ -88,8 +88,7 @@ class Gradient:
     and a color equal to the last color in `colors` is implied.
     """
 
-    # type: str = ""
-    type: str = field(default="", init=False, repr=False)
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
 @dataclass
@@ -113,7 +112,7 @@ class LinearGradient(Gradient):
     """
 
     def __post_init__(self):
-        self.type = "linear"
+        self._type = "linear"
 
 
 @dataclass
@@ -157,7 +156,7 @@ class RadialGradient(Gradient):
     """
 
     def __post_init__(self):
-        self.type = "radial"
+        self._type = "radial"
 
 
 @dataclass
@@ -190,5 +189,5 @@ class SweepGradient(Gradient):
     """
 
     def __post_init__(self):
-        self.type = "sweep"
+        self._type = "sweep"
 
