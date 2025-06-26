@@ -1,120 +1,84 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../controls/control_widget.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
 
-class CupertinoBottomSheetControl extends StatefulWidget {
-  final Control? parent;
+class CupertinoBottomSheetControl extends StatelessWidget {
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final Widget? nextChild;
-  final FletControlBackend backend;
 
-  const CupertinoBottomSheetControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentAdaptive,
-      required this.parentDisabled,
-      required this.nextChild,
-      required this.backend});
+  const CupertinoBottomSheetControl({
+    super.key,
+    required this.control,
+  });
 
-  @override
-  State<CupertinoBottomSheetControl> createState() =>
-      _CupertinoBottomSheetControlState();
-}
+  Widget _createDialog(BuildContext context) {
+    Control? content = control.child("content");
 
-class _CupertinoBottomSheetControlState
-    extends State<CupertinoBottomSheetControl> {
-  Widget _createDialog() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    if (content == null) {
+      return const ErrorControl("CupertinoButtomSheet.content is empty.");
+    }
 
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+    Widget child = ControlWidget(control: content);
 
-    Widget content = contentCtrls.isNotEmpty
-        ? createControl(widget.control, contentCtrls.first.id, disabled,
-            parentAdaptive: widget.parentAdaptive)
-        : const SizedBox.shrink();
-
-    if (contentCtrls.isNotEmpty &&
-        ["cupertinopicker", "cupertinotimerpicker", "cupertinodatepicker"]
-            .contains(contentCtrls.first.type)) {
-      content = Container(
-        height: widget.control.attrDouble("height", 220.0)!,
-        padding: parseEdgeInsets(widget.control, "padding"),
+    if (["CupertinoPicker", "CupertinoTimerPicker", "CupertinoDatePicker"]
+        .contains(content.type)) {
+      child = Container(
+        height: control.getDouble("height", 220.0)!,
+        padding: control.getPadding("padding"),
         // bottom margin is provided to align the popup above the system navigation bar
         margin:
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         // popup background color
-        color: widget.control.attrColor("bgcolor", context,
+        color: control.getColor("bgcolor", context,
             CupertinoColors.systemBackground.resolveFrom(context))!,
         // Use SafeArea to avoid system overlaps
         child: SafeArea(
           top: false,
-          child: content,
+          child: child,
         ),
       );
     }
 
-    return Material(child: content);
+    return Material(child: child);
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoBottomSheet build: ${widget.control.id}");
+    debugPrint("CupertinoBottomSheet build: ${control.id}");
 
-    bool lastOpen = widget.control.state["open"] ?? false;
+    bool lastOpen = control.getBool("_open", false)!;
 
-    var open = widget.control.attrBool("open", false)!;
-    var modal = widget.control.attrBool("modal", false)!;
-
-    debugPrint("Current open state: $lastOpen");
-    debugPrint("New open state: $open");
+    var open = control.getBool("open", false)!;
 
     if (open && (open != lastOpen)) {
-      var dialog = _createDialog();
+      var dialog = _createDialog(context);
       if (dialog is ErrorControl) {
         return dialog;
       }
 
-      // close previous dialog
-      if (ModalRoute.of(context)?.isCurrent != true) {
-        Navigator.of(context).pop();
-      }
-
-      widget.control.state["open"] = open;
+      control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCupertinoModalPopup(
-            barrierDismissible: !modal,
+            barrierDismissible: !control.getBool("modal", false)!,
             useRootNavigator: false,
             context: context,
-            builder: (context) => _createDialog()).then((value) {
-          lastOpen = widget.control.state["open"] ?? false;
-          debugPrint(
-              "CupertinoBottomSheet should be dismissed ($hashCode): $lastOpen");
-          bool shouldDismiss = lastOpen;
-          widget.control.state["open"] = false;
-
-          if (shouldDismiss) {
-            widget.backend
-                .updateControlState(widget.control.id, {"open": "false"});
-            widget.backend.triggerControlEvent(widget.control.id, "dismiss");
-          }
+            builder: (context) => dialog).then((value) {
+          debugPrint("Dismiss CupertinoBottomSheet: $lastOpen");
+          control.updateProperties({"_open": false}, python: false);
+          control.updateProperties({"open": false});
+          control.triggerEvent("dismiss");
         });
       });
-    } else if (open != lastOpen && lastOpen) {
+    } else if (open != lastOpen && lastOpen && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
 
-    return widget.nextChild ?? const SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }

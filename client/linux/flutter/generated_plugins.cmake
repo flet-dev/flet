@@ -10,12 +10,12 @@ list(APPEND FLUTTER_PLUGIN_LIST
   rive_common
   screen_retriever_linux
   url_launcher_linux
+  volume_controller
   window_manager
   window_to_front
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  media_kit_native_event_loop
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

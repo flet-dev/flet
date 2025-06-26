@@ -1,42 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
 class TransparentPointerControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
 
-  const TransparentPointerControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive});
+  const TransparentPointerControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TransparentPointer build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var pointer = TransparentPointer(
+        transparent: true, child: control.buildWidget("content"));
 
-    return constrainedControl(
-        context,
-        TransparentPointer(
-            transparent: true,
-            child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled,
-                    parentAdaptive: parentAdaptive)
-                : null),
-        parent,
-        control);
+    return ConstrainedControl(control: control, child: pointer);
   }
 }
 

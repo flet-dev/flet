@@ -1,33 +1,23 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'numbers.dart';
 import 'time.dart';
 
-ImplicitAnimationDetails? parseAnimation(Control control, String propName,
+ImplicitAnimationDetails? parseAnimation(dynamic value,
     [ImplicitAnimationDetails? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
+  if (value == null) {
     return defaultValue;
-  }
-
-  final j1 = json.decode(v);
-  return animationFromJSON(j1);
-}
-
-ImplicitAnimationDetails animationFromJSON(dynamic json) {
-  if (json is int) {
-    return ImplicitAnimationDetails(
-        duration: Duration(milliseconds: parseInt(json, 0)!),
-        curve: Curves.linear);
-  } else if (json is bool && json == true) {
+  } else if (value is bool && value == true) {
     return ImplicitAnimationDetails(
         duration: const Duration(milliseconds: 1000), curve: Curves.linear);
+  } else if (value is int) {
+    return ImplicitAnimationDetails(
+        duration: parseDuration(value, const Duration())!,
+        curve: Curves.linear);
   }
-
-  return ImplicitAnimationDetails.fromJson(json);
+  return ImplicitAnimationDetails(
+      duration: parseDuration(value["duration"], const Duration())!,
+      curve: parseCurve(value["curve"], Curves.linear)!);
 }
 
 class ImplicitAnimationDetails {
@@ -35,15 +25,9 @@ class ImplicitAnimationDetails {
   final Curve curve;
 
   ImplicitAnimationDetails({required this.duration, required this.curve});
-
-  factory ImplicitAnimationDetails.fromJson(Map<String, dynamic> json) {
-    return ImplicitAnimationDetails(
-        duration: Duration(milliseconds: json["duration"] as int),
-        curve: parseCurve(json["curve"], Curves.linear)!);
-  }
 }
 
-Curve? parseCurve(String? value, [Curve? defValue]) {
+Curve? parseCurve(String? value, [Curve? defaultValue]) {
   switch (value?.toLowerCase()) {
     case "bouncein":
       return Curves.bounceIn;
@@ -128,30 +112,33 @@ Curve? parseCurve(String? value, [Curve? defValue]) {
     case "slowmiddle":
       return Curves.slowMiddle;
     default:
-      return defValue;
+      return defaultValue;
   }
 }
 
-AnimationStyle? parseAnimationStyle(Control control, String propName,
+AnimationStyle? parseAnimationStyle(dynamic value,
     [AnimationStyle? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defaultValue;
-  }
-
-  final j1 = json.decode(v);
-  return animationStyleFromJSON(j1);
-}
-
-AnimationStyle animationStyleFromJSON(dynamic json,
-    [AnimationStyle? defaultValue]) {
-  if (json == null) {
-    return defaultValue!;
-  }
+  if (value == null) return defaultValue;
 
   return AnimationStyle(
-      curve: parseCurve(json["curve"]),
-      reverseCurve: parseCurve(json["reverse_curve"]),
-      duration: durationFromJSON(json["duration"]),
-      reverseDuration: durationFromJSON(json["reverse_duration"]));
+      curve: parseCurve(value["curve"]),
+      reverseCurve: parseCurve(value["reverse_curve"]),
+      duration: parseDuration(value["duration"]),
+      reverseDuration: parseDuration(value["reverse_duration"]));
+}
+
+extension AnimationParsers on Control {
+  ImplicitAnimationDetails? getAnimation(String propertyName,
+      [ImplicitAnimationDetails? defaultValue]) {
+    return parseAnimation(get(propertyName), defaultValue);
+  }
+
+  Curve? getCurve(String propertyName, [Curve? defaultValue]) {
+    return parseCurve(get(propertyName), defaultValue);
+  }
+
+  AnimationStyle? getAnimationStyle(String propertyName,
+      [AnimationStyle? defaultValue]) {
+    return parseAnimationStyle(get(propertyName), defaultValue);
+  }
 }

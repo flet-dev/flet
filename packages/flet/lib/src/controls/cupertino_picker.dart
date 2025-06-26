@@ -1,65 +1,30 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
-import 'create_control.dart';
-
-const double _kItemExtent = 32.0;
-const double _kDefaultDiameterRatio = 1.07;
-const double _kSqueeze = 1.45;
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class CupertinoPickerControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoPickerControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentAdaptive,
-      required this.parentDisabled,
-      required this.backend});
+  CupertinoPickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoPickerControl> createState() => _CupertinoPickerControlState();
 }
 
 class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
-  int _index = 0;
-  int previousIndex = 0;
-  bool isScrollUp = false;
-  bool isScrollDown = true;
   FixedExtentScrollController scrollController = FixedExtentScrollController();
 
   @override
   void initState() {
     super.initState();
     scrollController = FixedExtentScrollController(
-        initialItem: widget.control.attrInt("selectedIndex", _index)!);
-    scrollController.addListener(_manageScroll);
-  }
-
-  void _manageScroll() {
-    // https://stackoverflow.com/a/75283541
-    // Fixes https://github.com/flet-dev/flet/issues/3649
-    if (previousIndex != scrollController.selectedItem) {
-      isScrollDown = previousIndex < scrollController.selectedItem;
-      isScrollUp = previousIndex > scrollController.selectedItem;
-
-      var previousIndexTemp = previousIndex;
-      previousIndex = scrollController.selectedItem;
-
-      if (isScrollUp) {
-        scrollController.jumpToItem(previousIndexTemp - 1);
-      } else if (isScrollDown) {
-        scrollController.jumpToItem(previousIndexTemp + 1);
-      }
-    }
+        initialItem: widget.control.getInt("selected_index", 0)!);
   }
 
   @override
@@ -72,48 +37,32 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoPicker build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    List<Widget> ctrls = widget.children.where((c) => c.isVisible).map((c) {
-      return Center(
-          child: createControl(widget.control, c.id, disabled,
-              parentAdaptive: widget.parentAdaptive));
-    }).toList();
-
-    var selectionOverlayCtrl = widget.children
-        .where((c) => c.isVisible && c.name == "selection_overlay");
-
     Widget picker = CupertinoPicker(
       scrollController: scrollController,
-      backgroundColor: widget.control.attrColor("bgColor", context),
-      diameterRatio:
-          widget.control.attrDouble("diameterRatio", _kDefaultDiameterRatio)!,
-      magnification: widget.control.attrDouble("magnification", 1.0)!,
-      squeeze: widget.control.attrDouble("squeeze", _kSqueeze)!,
-      offAxisFraction: widget.control.attrDouble("offAxisFraction", 0.0)!,
-      itemExtent: widget.control.attrDouble("itemExtent", _kItemExtent)!,
-      useMagnifier: widget.control.attrBool("useMagnifier", false)!,
-      looping: widget.control.attrBool("looping", false)!,
-      selectionOverlay: selectionOverlayCtrl.isNotEmpty
-          ? createControl(
-              widget.control, selectionOverlayCtrl.first.id, disabled,
-              parentAdaptive: widget.parentAdaptive)
-          : CupertinoPickerDefaultSelectionOverlay(
-              background: widget.control.attrColor(
-                  "defaultSelectionOverlayBgcolor",
-                  context,
-                  CupertinoColors.tertiarySystemFill)!,
-            ),
+      backgroundColor: widget.control.getColor("bgcolor", context),
+      diameterRatio: widget.control.getDouble("diameter_ratio", 1.07)!,
+      magnification: widget.control.getDouble("magnification", 1.0)!,
+      squeeze: widget.control.getDouble("squeeze", 1.45)!,
+      offAxisFraction: widget.control.getDouble("off_axis_fraction", 0.0)!,
+      itemExtent: widget.control.getDouble("item_extent", 32.0)!,
+      useMagnifier: widget.control.getBool("use_magnifier", false)!,
+      looping: widget.control.getBool("looping", false)!,
+      selectionOverlay: widget.control.buildWidget("selection_overlay") ??
+          CupertinoPickerDefaultSelectionOverlay(
+            background: widget.control.getColor(
+                "default_selection_overlay_bgcolor",
+                context,
+                CupertinoColors.tertiarySystemFill)!,
+          ),
       onSelectedItemChanged: (int index) {
-        _index = index;
-        widget.backend.updateControlState(
-            widget.control.id, {"selectedIndex": index.toString()});
-        widget.backend
-            .triggerControlEvent(widget.control.id, "change", index.toString());
+        widget.control.updateProperties({"selected_index": index});
+        widget.control.triggerEvent("change", index);
       },
-      children: ctrls,
+      children: widget.control.children("controls").map((c) {
+        return Center(child: ControlWidget(control: c));
+      }).toList(),
     );
 
-    return constrainedControl(context, picker, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: picker);
   }
 }

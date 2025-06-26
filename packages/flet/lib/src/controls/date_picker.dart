@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
-import '../utils/others.dart';
+import '../utils/numbers.dart';
+import '../utils/time.dart';
 
 class DatePickerControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const DatePickerControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  DatePickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();
@@ -28,57 +22,47 @@ class _DatePickerControlState extends State<DatePickerControl> {
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
 
-    bool lastOpen = widget.control.state["open"] ?? false;
+    bool lastOpen = widget.control.getBool("_open", false)!;
 
-    var open = widget.control.attrBool("open", false)!;
-    DateTime? value = widget.control.attrDateTime("value");
-    DateTime? currentDate = widget.control.attrDateTime("currentDate");
-    IconData? switchToCalendarEntryModeIcon = parseIcon(
-        widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
-    IconData? switchToInputEntryModeIcon =
-        parseIcon(widget.control.attrString("switchToInputEntryModeIcon"));
+    var open = widget.control.getBool("open", false)!;
+    var value = widget.control.getDateTime("value");
+    var currentDate = widget.control.getDateTime("current_date");
+    var switchToCalendarEntryModeIcon =
+        parseIcon(widget.control.getString("switch_to_calendar_icon", "")!);
+    var switchToInputEntryModeIcon =
+        parseIcon(widget.control.getString("switch_to_input_icon"));
 
     void onClosed(DateTime? dateValue) {
-      String stringValue;
-      String eventName;
-      if (dateValue == null) {
-        stringValue =
-            value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
-        eventName = "dismiss";
-      } else {
-        stringValue = dateValue.toIso8601String();
-        eventName = "change";
+      widget.control.updateProperties({"_open": false}, python: false);
+      widget.control
+          .updateProperties({"value": dateValue ?? value, "open": false});
+      if (dateValue != null) {
+        widget.control.triggerEvent("change", dateValue);
       }
-      widget.control.state["open"] = false;
-      widget.backend.updateControlState(
-          widget.control.id, {"value": stringValue, "open": "false"});
-      widget.backend
-          .triggerControlEvent(widget.control.id, eventName, stringValue);
+      widget.control.triggerEvent("dismiss", dateValue == null);
     }
 
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
         initialDate: value ?? currentDate ?? DateTime.now(),
-        firstDate: widget.control.attrDateTime("firstDate", DateTime(1900))!,
-        lastDate: widget.control.attrDateTime("lastDate", DateTime(2050))!,
+        firstDate: widget.control.getDateTime("first_date", DateTime(1900))!,
+        lastDate: widget.control.getDateTime("last_date", DateTime(2050))!,
         currentDate: currentDate ?? DateTime.now(),
-        helpText: widget.control.attrString("helpText"),
-        cancelText: widget.control.attrString("cancelText"),
-        confirmText: widget.control.attrString("confirmText"),
-        errorFormatText: widget.control.attrString("errorFormatText"),
-        errorInvalidText: widget.control.attrString("errorInvalidText"),
+        helpText: widget.control.getString("help_text"),
+        cancelText: widget.control.getString("cancel_text"),
+        confirmText: widget.control.getString("confirm_text"),
+        errorFormatText: widget.control.getString("error_format_text"),
+        errorInvalidText: widget.control.getString("error_invalid_text"),
         keyboardType: parseTextInputType(
-            widget.control.attrString("keyboardType"), TextInputType.text)!,
-        initialCalendarMode: parseDatePickerMode(
-            widget.control.attrString("datePickerMode"), DatePickerMode.day)!,
-        initialEntryMode: parseDatePickerEntryMode(
-            widget.control.attrString("datePickerEntryMode"),
-            DatePickerEntryMode.calendar)!,
-        fieldHintText: widget.control.attrString("fieldHintText"),
-        fieldLabelText: widget.control.attrString("fieldLabelText"),
+            widget.control.getString("keyboard_type"), TextInputType.text)!,
+        initialCalendarMode: widget.control
+            .getDatePickerMode("date_picker_mode", DatePickerMode.day)!,
+        initialEntryMode: widget.control.getDatePickerEntryMode(
+            "date_picker_entry_mode", DatePickerEntryMode.calendar)!,
+        fieldHintText: widget.control.getString("field_hint_text"),
+        fieldLabelText: widget.control.getString("field_label_text"),
         onDatePickerModeChange: (DatePickerEntryMode mode) {
-          widget.backend.triggerControlEvent(
-              widget.control.id, "entryModeChange", mode.name);
+          widget.control.triggerEvent("entry_mode_change", mode.name);
         },
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)
@@ -92,11 +76,12 @@ class _DatePickerControlState extends State<DatePickerControl> {
     }
 
     if (open && (open != lastOpen)) {
-      widget.control.state["open"] = open;
+      widget.control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
-            barrierColor: widget.control.attrColor("barrierColor", context),
+            barrierDismissible: !widget.control.getBool("modal", false)!,
+            barrierColor: widget.control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectDateDialog()).then((result) {

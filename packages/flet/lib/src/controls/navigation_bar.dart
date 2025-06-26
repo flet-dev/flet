@@ -1,35 +1,22 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/time.dart';
-import 'create_control.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 import 'cupertino_navigation_bar.dart';
-import 'flet_store_mixin.dart';
 
 class NavigationBarControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const NavigationBarControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  NavigationBarControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();
@@ -41,11 +28,9 @@ class _NavigationBarControlState extends State<NavigationBarControl>
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
-    debugPrint("Selected index: $_selectedIndex");
-    widget.backend.updateControlState(
-        widget.control.id, {"selectedIndex": _selectedIndex.toString()});
-    widget.backend.triggerControlEvent(
-        widget.control.id, "change", _selectedIndex.toString());
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
+    widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override
@@ -53,81 +38,39 @@ class _NavigationBarControlState extends State<NavigationBarControl>
     debugPrint("NavigationBarControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool? adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
-      if (adaptive == true &&
+      if (widget.control.adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
-        return CupertinoNavigationBarControl(
-            control: widget.control,
-            children: widget.children,
-            parentDisabled: widget.parentDisabled,
-            parentAdaptive: adaptive,
-            backend: widget.backend);
+        return CupertinoNavigationBarControl(control: widget.control);
       }
 
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
-      var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
+      var selectedIndex = widget.control.getInt("selected_index", 0)!;
 
       if (_selectedIndex != selectedIndex) {
         _selectedIndex = selectedIndex;
       }
-      var navBar = withControls(
-          widget.children
-              .where((c) => c.isVisible && c.name == null)
-              .map((c) => c.id), (content, viewModel) {
-        return NavigationBar(
-            labelBehavior: parseNavigationDestinationLabelBehavior(
-                widget.control.attrString("labelBehavior")),
-            height: widget.control.attrDouble("height"),
-            animationDuration:
-                parseDuration(widget.control, "animationDuration"),
-            elevation: widget.control.attrDouble("elevation"),
-            labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
-            shadowColor: widget.control.attrColor("shadowColor", context),
-            surfaceTintColor:
-                widget.control.attrColor("surfaceTintColor", context),
-            overlayColor: parseWidgetStateColor(
-                Theme.of(context), widget.control, "overlayColor"),
-            indicatorColor: widget.control.attrColor("indicatorColor", context),
-            indicatorShape:
-                parseOutlinedBorder(widget.control, "indicatorShape"),
-            backgroundColor: widget.control.attrColor("bgColor", context),
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: disabled ? null : _destinationChanged,
-            destinations: viewModel.controlViews.map((destView) {
-              var label = destView.control.attrString("label", "")!;
-              var iconStr = parseIcon(destView.control.attrString("icon"));
-              var iconCtrls = destView.children
-                  .where((c) => c.name == "icon" && c.isVisible);
-              var selectedIconStr =
-                  parseIcon(destView.control.attrString("selectedIcon"));
-              var selectedIconCtrls = destView.children
-                  .where((c) => c.name == "selected_icon" && c.isVisible);
-              var destinationDisabled = disabled || destView.control.isDisabled;
-              var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
-              var destinationTooltip = destView.control.attrString("tooltip");
-              return NavigationDestination(
-                  enabled: !destinationDisabled,
-                  tooltip: !destinationDisabled && destinationTooltip != null
-                      ? jsonDecode(destinationTooltip)
-                      : null,
-                  icon: iconCtrls.isNotEmpty
-                      ? createControl(destView.control, iconCtrls.first.id,
-                          destinationDisabled,
-                          parentAdaptive: destinationAdaptive)
-                      : Icon(iconStr),
-                  selectedIcon: selectedIconCtrls.isNotEmpty
-                      ? createControl(destView.control,
-                          selectedIconCtrls.first.id, destinationDisabled,
-                          parentAdaptive: destinationAdaptive)
-                      : selectedIconStr != null
-                          ? Icon(selectedIconStr)
-                          : null,
-                  label: label);
-            }).toList());
-      });
+      var navBar = NavigationBar(
+          labelBehavior: widget.control
+              .getNavigationDestinationLabelBehavior("label_behavior"),
+          height: widget.control.getDouble("height"),
+          animationDuration: widget.control.getDuration("animation_duration"),
+          elevation: widget.control.getDouble("elevation"),
+          labelPadding: widget.control.getPadding("label_padding"),
+          shadowColor: widget.control.getColor("shadow_color", context),
+          surfaceTintColor:
+              widget.control.getColor("surface_tint_color", context),
+          overlayColor: widget.control
+              .getWidgetStateColor("overlay_color", Theme.of(context)),
+          indicatorColor: widget.control.getColor("indicator_color", context),
+          indicatorShape:
+              widget.control.getShape("indicator_shape", Theme.of(context)),
+          backgroundColor: widget.control.getColor("bgcolor", context),
+          selectedIndex: _selectedIndex,
+          onDestinationSelected:
+              widget.control.disabled ? null : _destinationChanged,
+          destinations: widget.control.buildWidgets("destinations"));
 
-      return constrainedControl(context, navBar, widget.parent, widget.control);
+      return ConstrainedControl(control: widget.control, child: navBar);
     });
   }
 }

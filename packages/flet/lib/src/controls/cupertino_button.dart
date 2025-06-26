@@ -1,188 +1,210 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  CupertinoButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
 }
 
 class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("CupertinoButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown CupertinoButton method: $name");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var theme = Theme.of(context);
+    Color? iconColor = widget.control.getColor("icon_color", context);
 
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+    Widget? icon = widget.control.buildIconOrWidget("icon", color: iconColor);
+    Widget? content = widget.control.buildTextOrWidget("content");
 
-    String? text = widget.control.attrString("text");
-    IconData? icon = parseIcon(widget.control.attrString("icon"));
-    Color? iconColor = widget.control.attrColor("iconColor", context);
-
-    // IconButton props below
-    double? iconSize = widget.control.attrDouble("iconSize");
-    bool selected = widget.control.attrBool("selected", false)!;
-    IconData? selectedIcon =
-        parseIcon(widget.control.attrString("selectedIcon"));
-    Color? selectedIconColor =
-        widget.control.attrColor("selectedIconColor", context);
-
-    Widget? content;
-    List<Widget> children = [];
+    Widget child;
     if (icon != null) {
-      children.add(Icon(
-        selected ? selectedIcon : icon,
-        color: selected
-            ? selectedIconColor
-            : disabled
-                ? theme.disabledColor
-                : iconColor,
-        size: iconSize,
-      ));
-    }
-    if (text != null) {
-      children.add(Text(text));
-    }
-
-    if (contentCtrls.isNotEmpty) {
-      content = createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: widget.parentAdaptive);
-    } else if (children.isNotEmpty) {
-      if (children.length == 2) {
-        children.insert(1, const SizedBox(width: 8));
-        content = Row(
+      if (content != null) {
+        child = Row(
           mainAxisSize: MainAxisSize.min,
-          children: children,
+          children: [icon, const SizedBox(width: 8), content],
         );
       } else {
-        content = children.first;
+        child = icon;
       }
+    } else {
+      child = content ?? const Text("");
     }
 
-    if (content == null) {
-      return const ErrorControl(
-        "CupertinoButton has nothing to display",
-        description: "Provide at minimum text or (visible) content",
-      );
-    }
+    double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
+    double? minSize = widget.control.getDouble("min_size");
+    bool autofocus = widget.control.getBool("autofocus", false)!;
+    Color? bgColor = widget.control.getColor("bgcolor", context);
+    Color? focusColor = widget.control.getColor("focus_color", context);
 
-    double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
-    double minSize = widget.control.attrDouble("minSize", 44.0)!;
-    String url = widget.control.attrString("url", "")!;
-    Color disabledColor =
-        widget.control.attrColor("disabledBgcolor", context) ??
-            CupertinoColors.quaternarySystemFill;
-    Color? bgColor = widget.control.attrColor("bgColor", context);
-    Color? color = widget.control.attrColor("color", context);
-    AlignmentGeometry alignment =
-        parseAlignment(widget.control, "alignment", Alignment.center)!;
-    BorderRadius borderRadius = parseBorderRadius(widget.control,
-        "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
+    CupertinoButtonSize sizeStyle = widget.control
+        .getCupertinoButtonSize("size_style", CupertinoButtonSize.large)!;
 
-    EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
+    var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
+    var borderRadius = widget.control.getBorderRadius(
+        "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
-    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
-        defaultForegroundColor: theme.colorScheme.primary,
-        defaultBackgroundColor: Colors.transparent,
-        defaultOverlayColor: Colors.transparent,
-        defaultShadowColor: Colors.transparent,
-        defaultSurfaceTintColor: Colors.transparent,
-        defaultElevation: 0,
-        defaultPadding: const EdgeInsets.all(8),
-        defaultBorderSide: BorderSide.none,
-        defaultShape: theme.useMaterial3
-            ? const StadiumBorder()
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+    var padding = widget.control.getPadding("padding");
+    bool isFilledButton =
+        {"CupertinoFilledButton", "FilledButton"}.contains(widget.control.type);
+    bool isTintedButton = {"CupertinoTintedButton", "FilledTonalButton"}
+        .contains(widget.control.type);
 
-    if (style != null) {
-      Set<WidgetState> widgetStates = selected ? {WidgetState.selected} : {};
+    // var style = widget.control.getButtonStyle("style", Theme.of(context),
+    //     defaultForegroundColor: theme.colorScheme.primary,
+    //     defaultBackgroundColor: Colors.transparent,
+    //     defaultOverlayColor: Colors.transparent,
+    //     defaultShadowColor: Colors.transparent,
+    //     defaultSurfaceTintColor: Colors.transparent,
+    //     defaultElevation: 0,
+    //     defaultPadding: const EdgeInsets.all(8),
+    //     defaultBorderSide: BorderSide.none,
+    //     defaultShape: theme.useMaterial3
+    //         ? const StadiumBorder()
+    //         : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-      // Check if the widget is disabled and update the foregroundColor accordingly
-      // backgroundColor is not updated here, as it is handled by disabledColor
-      if (disabled) {
-        style = style.copyWith(
-          foregroundColor: WidgetStatePropertyAll(theme.disabledColor),
-        );
-      }
+    // if (style != null) {
+    //   Set<WidgetState> widgetStates = selected ? {WidgetState.selected} : {};
 
-      // Resolve color, background color, and padding based on widget states
-      color = style.foregroundColor?.resolve(widgetStates);
-      bgColor = style.backgroundColor?.resolve(widgetStates);
-      padding = style.padding?.resolve({}) as EdgeInsets?;
-    }
+    //   // Check if the widget is disabled and update the foregroundColor accordingly
+    //   // backgroundColor is not updated here, as it is handled by disabledColor
+    //   if (control.disabled) {
+    //     style = style.copyWith(
+    //       foregroundColor: WidgetStatePropertyAll(theme.disabledColor),
+    //     );
+    //   }
 
+    //   // Resolve color, background color, and padding based on widget states
+    //   color = style.foregroundColor?.resolve(widgetStates);
+    //   bgColor = style.backgroundColor?.resolve(widgetStates);
+    //   padding = style.padding?.resolve({}) as EdgeInsets?;
+    // }
+    var color = widget.control.getColor("color", context);
+    var disabledColor = widget.control.getColor(
+        "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!;
     if (color != null) {
-      content = DefaultTextStyle(
+      child = DefaultTextStyle(
           style: CupertinoTheme.of(context)
               .textTheme
               .textStyle
               .copyWith(color: color),
-          child: content);
+          child: child);
     }
-
-    Function()? onPressed = !disabled
+    var url = widget.control.getString("url");
+    Function()? onPressed = !widget.control.disabled
         ? () {
-            debugPrint("CupertinoButton ${widget.control.id} clicked!");
-            if (url != "") {
+            if (url != null) {
               openWebBrowser(url,
-                  webWindowName: widget.control.attrString("urlTarget"));
+                  webWindowName: widget.control.getString("url_target"));
             }
-            widget.backend.triggerControlEvent(widget.control.id, "click");
+            widget.control.triggerEvent("click");
+          }
+        : null;
+    Function()? onLongPressed = !widget.control.disabled
+        ? () {
+            widget.control.triggerEvent("long_press");
           }
         : null;
 
-    CupertinoButton? button = CupertinoButton(
-      onPressed: onPressed,
-      disabledColor: disabledColor,
-      color: bgColor,
-      padding: padding,
-      borderRadius: borderRadius,
-      pressedOpacity: pressedOpacity,
-      alignment: alignment,
-      minSize: minSize,
-      autofocus: widget.control.attrBool("autofocus", false)!,
-      focusColor: widget.control.attrColor("focusColor", context),
-      onLongPress: !disabled
-          ? () {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "longPress");
-            }
-          : null,
-      onFocusChange: (focused) {
-        widget.backend
-            .triggerControlEvent(widget.control.id, focused ? "focus" : "blur");
-      },
-      child: content,
-    );
+    CupertinoButton? button;
+    if (isFilledButton) {
+      button = CupertinoButton.filled(
+        onPressed: onPressed,
+        disabledColor: disabledColor,
+        //color: widget.control.getColor("bgcolor", context),
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        sizeStyle: sizeStyle,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    } else if (isTintedButton) {
+      button = CupertinoButton.tinted(
+        onPressed: onPressed,
+        disabledColor: disabledColor,
+        color: bgColor,
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        sizeStyle: sizeStyle,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    } else {
+      button = CupertinoButton(
+        onPressed: onPressed,
+        disabledColor: disabledColor,
+        color: bgColor,
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        sizeStyle: sizeStyle,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    }
 
-    return constrainedControl(context, button, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: button);
   }
 }

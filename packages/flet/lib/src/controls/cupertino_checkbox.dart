@@ -1,27 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/misc.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
+import 'base_controls.dart';
 import 'list_tile.dart';
 
 class CupertinoCheckboxControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const CupertinoCheckboxControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  CupertinoCheckboxControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoCheckboxControl> createState() => _CheckboxControlState();
@@ -40,8 +35,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   }
 
   void _onFocusChange() {
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -64,68 +58,79 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   }
 
   void _onChange(bool? value) {
-    var svalue = value != null ? value.toString() : "";
     _value = value;
-    widget.backend.updateControlState(widget.control.id, {"value": svalue});
-    widget.backend.triggerControlEvent(widget.control.id, "change", svalue);
+    widget.control.updateProperties({"value": value}, notify: true);
+    widget.control.triggerEvent("change", value);
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoCheckBox build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    String label = widget.control.attrString("label", "")!;
-    LabelPosition labelPosition = parseLabelPosition(
-        widget.control.attrString("labelPosition"), LabelPosition.right)!;
-    _tristate = widget.control.attrBool("tristate", false)!;
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
-
-    bool? value = widget.control.attrBool("value", _tristate ? null : false);
+    _tristate = widget.control.getBool("tristate", false)!;
+    var value = widget.control.getBool("value", _tristate ? null : false);
     if (_value != value) {
       _value = value;
     }
 
     var cupertinoCheckbox = CupertinoCheckbox(
-        autofocus: autofocus,
+        autofocus: widget.control.getBool("autofocus", false)!,
         focusNode: _focusNode,
         value: _value,
-        activeColor: parseColor(Theme.of(context),
-            widget.control.attrString("activeColor", "primary")!),
-        checkColor: widget.control.attrColor("checkColor", context),
-        focusColor: widget.control.attrColor("focusColor", context),
-        shape: parseOutlinedBorder(widget.control, "shape"),
-        mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
-        semanticLabel: widget.control.attrString("semanticsLabel"),
-        side: parseWidgetStateBorderSide(
-            Theme.of(context), widget.control, "borderSide"),
-        fillColor: parseWidgetStateColor(
-            Theme.of(context), widget.control, "fillColor"),
+        activeColor: widget.control.getColor(
+            "active_color", context, Theme.of(context).colorScheme.primary)!,
+        checkColor: widget.control.getColor("check_color", context),
+        focusColor: widget.control.getColor("focus_color", context),
+        shape: widget.control.getShape("shape", Theme.of(context)),
+        mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
+        semanticLabel: widget.control.getString("semantics_label"),
+        side: widget.control
+            .getWidgetStateBorderSide("border_side", Theme.of(context)),
+        fillColor:
+            widget.control.getWidgetStateColor("fill_color", Theme.of(context)),
         tristate: _tristate,
-        onChanged: !disabled
-            ? (bool? value) {
-                _onChange(value);
-              }
+        onChanged: !widget.control.disabled
+            ? (bool? value) => _onChange(value)
             : null);
 
+    // Add listener to ListTile clicks
     ListTileClicks.of(context)?.notifier.addListener(() {
       _toggleValue();
     });
 
     Widget result = cupertinoCheckbox;
-    if (label != "") {
-      var labelWidget = disabled
-          ? Text(label,
-              style: TextStyle(color: Theme.of(context).disabledColor))
-          : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+
+    var labelStyle =
+        widget.control.getTextStyle("label_style", Theme.of(context));
+    if (widget.control.disabled && labelStyle != null) {
+      labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
+    }
+    var label =
+        widget.control.buildTextOrWidget("label", textStyle: labelStyle);
+    if (label != null) {
+      label = widget.control.disabled
+          ? label
+          : MouseRegion(cursor: SystemMouseCursors.click, child: label);
+      var labelPosition = widget.control
+          .getLabelPosition("label_position", LabelPosition.right)!;
       result = MergeSemantics(
           child: GestureDetector(
-              onTap: !disabled ? _toggleValue : null,
+              onTap: !widget.control.disabled ? _toggleValue : null,
               child: labelPosition == LabelPosition.right
-                  ? Row(children: [cupertinoCheckbox, labelWidget])
-                  : Row(children: [labelWidget, cupertinoCheckbox])));
+                  ? Row(children: [cupertinoCheckbox, label])
+                  : Row(children: [label, cupertinoCheckbox])));
     }
 
-    return constrainedControl(context, result, widget.parent, widget.control);
+    // Apply width and height if provided
+    var width = widget.control.getDouble("width");
+    var height = widget.control.getDouble("height");
+    if (width != null || height != null) {
+      result = SizedBox(
+          width: width,
+          height: height,
+          child: FittedBox(fit: BoxFit.fill, child: result));
+    }
+
+    return ConstrainedControl(control: widget.control, child: result);
   }
 }

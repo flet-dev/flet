@@ -17,23 +17,63 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
-  <!-- Flet specific -->
-  <meta name="flet-route-url-strategy" content="%FLET_ROUTE_URL_STRATEGY%">
-  <meta name="flet-web-pyodide" content="%FLET_WEB_PYODIDE%">
-  <meta name="flet-websocket-endpoint-path" content="/ws">
-
   <title>Flet</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
-    var webRenderer = "auto";
-    var useColorEmoji = false;
+    var flet = {
+      pyodide: false,
+      multiView: false,
+      noCdn: false,
+      webSocketEndpoint: "/ws",
+      assetBase: "/",
+      routeUrlStrategy: "path",
+      canvasKitBaseUrl: "/canvaskit/",
+      pyodideUrl: "/pyodide/pyodide.js",
+      webRenderer: "auto",
+      fontFallbackBaseUrl: "assets/fonts/", // for Noto Emoji, use Google CDN
+      appPackageUrl: "app.tar.gz"
+    }
+
+    flet.flutterAppLoaded = new Promise((resolve) => {
+      flet.flutterAppResolve = resolve;
+    });
+
+    flet.flutterAppLoaded.then((flutterApp) => {
+      console.log("Flutter app loaded");
+      if (flet.multiView) {
+        console.log(flutterApp.addView({
+          hostElement: document.querySelector('#view-1'),
+          initialData: {
+            greeting: 'Hello, world!',
+            randomValue: Math.floor(Math.random() * 100),
+          },
+          viewConstraints: {
+            //maxWidth: Infinity,
+            maxHeight: Infinity,
+            minHeight: 300,
+            minWidth: 620
+          }
+        }));
+        console.log(flutterApp.addView({
+          hostElement: document.querySelector('#view-2'),
+          initialData: {
+            bar: "baz"
+          },
+          viewConstraints: {
+            minWidth: 620,
+            //maxWidth: 320,
+            //minHeight: 400,
+            maxHeight: 400,
+          }
+        }));
+      }
+    });
   </script>
 
-  <!-- webRenderer -->
-  <!-- useColorEmoji -->
+  <!-- fletAppConfig -->
 
-  <!-- pyodideCode -->
+  <script src="python.js"></script>
 </head>
 
 <body>
@@ -95,5 +135,10 @@
     <img src="icons/loading-animation.png" alt="Loading..." />
   </div>
   <script src="flutter_bootstrap.js" async></script>
+
+  <h1>View 1</h1>
+  <div id="view-1" style="display: flex; justify-content: center;"></div>
+  <h1>View 2</h1>
+  <div id="view-2"></div>
 </body>
 </html>

@@ -1,28 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class CupertinoSegmentedButtonControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool? parentAdaptive;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const CupertinoSegmentedButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentAdaptive,
-      required this.parentDisabled,
-      required this.backend});
+  CupertinoSegmentedButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoSegmentedButtonControl> createState() =>
@@ -30,51 +20,41 @@ class CupertinoSegmentedButtonControl extends StatefulWidget {
 }
 
 class _CupertinoSegmentedButtonControlState
-    extends State<CupertinoSegmentedButtonControl> with FletStoreMixin {
+    extends State<CupertinoSegmentedButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoSegmentedButtonControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
-    int? selectedIndex = widget.control.attrInt("selectedIndex");
+    var controls = widget.control.buildWidgets("controls");
+    var selectedIndex = widget.control.getInt("selected_index");
 
-    if (ctrls.length < 2) {
+    if (controls.length < 2) {
       return const ErrorControl(
           "CupertinoSegmentedButton must have at minimum two visible controls");
     }
-    var children = ctrls.asMap().map((i, c) => MapEntry(
-        i,
-        createControl(widget.control, c.id, disabled,
-            parentAdaptive: adaptive)));
 
-    return constrainedControl(
-        context,
-        CupertinoSegmentedControl(
-          children: children,
-          groupValue: selectedIndex,
-          onValueChanged: (int index) {
-            if (!disabled) {
-              widget.backend.updateControlState(
-                  widget.control.id, {"selectedIndex": index.toString()});
-              widget.backend.triggerControlEvent(
-                  widget.control.id, "change", index.toString());
-              setState(() {
-                selectedIndex = index;
-              });
-            }
-          },
-          borderColor: widget.control.attrColor("borderColor", context),
-          selectedColor: widget.control.attrColor("selectedColor", context),
-          unselectedColor: widget.control.attrColor("unselectedColor", context),
-          pressedColor: widget.control.attrColor("clickColor", context),
-          disabledColor: widget.control.attrColor("disabledColor", context),
-          disabledTextColor: widget.control.attrColor("disabledTextColor", context),
-          padding: parseEdgeInsets(widget.control, "padding"),
-        ),
-        widget.parent,
-        widget.control);
+    var segmnetedButton = CupertinoSegmentedControl(
+      groupValue: selectedIndex,
+      borderColor: widget.control.getColor("border_color", context),
+      selectedColor: widget.control.getColor("selected_color", context),
+      unselectedColor: widget.control.getColor("unselected_color", context),
+      pressedColor: widget.control.getColor("click_color", context),
+      disabledColor: widget.control.getColor("disabled_color", context),
+      disabledTextColor:
+          widget.control.getColor("disabled_text_color", context),
+      padding: widget.control.getPadding("padding"),
+      children: controls.asMap().map((i, c) => MapEntry(i, c)),
+      onValueChanged: (int index) {
+        if (!widget.control.disabled) {
+          widget.control.updateProperties({"selected_index": index});
+          widget.control.triggerEvent("change", index);
+          setState(() {
+            selectedIndex = index;
+          });
+        }
+      },
+    );
+
+    return ConstrainedControl(control: widget.control, child: segmnetedButton);
   }
 }

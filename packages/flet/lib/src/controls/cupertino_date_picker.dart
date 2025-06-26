@@ -1,23 +1,17 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
+import '../utils/time.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class CupertinoDatePickerControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const CupertinoDatePickerControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  CupertinoDatePickerControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoDatePickerControl> createState() =>
@@ -26,8 +20,6 @@ class CupertinoDatePickerControl extends StatefulWidget {
 
 class _CupertinoDatePickerControlState
     extends State<CupertinoDatePickerControl> {
-  static const double _kItemExtent = 32.0;
-
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDatePicker build: ${widget.control.id}");
@@ -35,33 +27,28 @@ class _CupertinoDatePickerControlState
     Widget dialog;
     try {
       dialog = CupertinoDatePicker(
-        initialDateTime:  widget.control.attrDateTime("value"),
-        showDayOfWeek: widget.control.attrBool("showDayOfWeek", false)!,
-        minimumDate: widget.control.attrDateTime("firstDate"),
-        maximumDate: widget.control.attrDateTime("lastDate"),
-        backgroundColor: widget.control.attrColor("bgcolor", context),
-        minimumYear: widget.control.attrInt("minimumYear", 1)!,
-        maximumYear: widget.control.attrInt("maximumYear"),
-        itemExtent: widget.control.attrDouble("itemExtent", _kItemExtent)!,
-        minuteInterval: widget.control.attrInt("minuteInterval", 1)!,
-        use24hFormat: widget.control.attrBool("use24hFormat", false)!,
-        dateOrder:
-            parseDatePickerDateOrder(widget.control.attrString("dateOrder")),
-        mode: parseCupertinoDatePickerMode(
-            widget.control.attrString("datePickerMode"),
-            CupertinoDatePickerMode.dateAndTime)!,
+        initialDateTime: widget.control.getDateTime("value"),
+        showDayOfWeek: widget.control.getBool("show_day_of_week", false)!,
+        minimumDate: widget.control.getDateTime("first_date"),
+        maximumDate: widget.control.getDateTime("last_date"),
+        backgroundColor: widget.control.getColor("bgcolor", context),
+        minimumYear: widget.control.getInt("minimum_year", 1)!,
+        maximumYear: widget.control.getInt("maximum_year"),
+        itemExtent: widget.control.getDouble("item_extent", 32.0)!,
+        minuteInterval: widget.control.getInt("minute_interval", 1)!,
+        use24hFormat: widget.control.getBool("use_24h_format", false)!,
+        dateOrder: widget.control.getDatePickerDateOrder("date_order"),
+        mode: widget.control.getCupertinoDatePickerMode(
+            "date_picker_mode", CupertinoDatePickerMode.dateAndTime)!,
         onDateTimeChanged: (DateTime value) {
-          String stringValue = value.toIso8601String();
-          widget.backend
-              .updateControlState(widget.control.id, {"value": stringValue});
-          widget.backend
-              .triggerControlEvent(widget.control.id, "change", stringValue);
+          widget.control.updateProperties({"value": value});
+          widget.control.triggerEvent("change", value);
         },
       );
     } catch (e) {
       return ErrorControl("CupertinoDatePicker Error: ${e.toString()}");
     }
 
-    return constrainedControl(context, dialog, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: dialog);
   }
 }

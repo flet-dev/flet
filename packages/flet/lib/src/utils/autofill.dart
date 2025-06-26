@@ -1,35 +1,24 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 
-List<String>? parseAutofillHints(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return autofillHintsFromJson(j1);
-}
-
-List<String> autofillHintsFromJson(dynamic json) {
+List<String>? parseAutofillHints(dynamic value, [List<String>? defaultValue]) {
+  if (value == null) return defaultValue;
   List<String> hints = [];
-  if (json is List) {
-    hints = json
-        .map((e) => autofillHintFromString(e.toString()))
+  if (value is List) {
+    hints = value
+        .map((e) => parseAutofillHint(e.toString()))
         .whereType<String>()
         .toList();
-  } else if (json is String) {
-    hints = [autofillHintFromString(json)].whereType<String>().toList();
+  } else if (value is String) {
+    hints = [parseAutofillHint(value)].whereType<String>().toList();
   }
 
   return hints;
 }
 
-String? autofillHintFromString(String? hint, [String? defaultAutoFillHint]) {
-  switch (hint?.toLowerCase()) {
+String? parseAutofillHint(String? value, [String? defaultValue]) {
+  switch (value?.toLowerCase()) {
     case 'addresscity':
       return AutofillHints.addressCity;
     case 'addresscityandstate':
@@ -163,18 +152,34 @@ String? autofillHintFromString(String? hint, [String? defaultAutoFillHint]) {
     case 'username':
       return AutofillHints.username;
     default:
-      return defaultAutoFillHint;
+      return defaultValue;
   }
 }
 
-AutofillContextAction? parseAutofillContextAction(String? action,
-    [AutofillContextAction? defaultAction]) {
-  switch (action?.toLowerCase()) {
+AutofillContextAction? parseAutofillContextAction(String? value,
+    [AutofillContextAction? defaultValue]) {
+  switch (value?.toLowerCase()) {
     case 'commit':
       return AutofillContextAction.commit;
     case 'cancel':
       return AutofillContextAction.cancel;
     default:
-      return defaultAction;
+      return defaultValue;
+  }
+}
+
+extension AutofillParsers on Control {
+  List<String>? getAutofillHints(String propertyName,
+      [List<String>? defaultValue]) {
+    return parseAutofillHints(get(propertyName), defaultValue);
+  }
+
+  String? getAutofillHint(String propertyName, [String? defaultValue]) {
+    return parseAutofillHint(get(propertyName), defaultValue);
+  }
+
+  AutofillContextAction? getAutofillContextAction(String propertyName,
+      [AutofillContextAction? defaultValue]) {
+    return parseAutofillContextAction(get(propertyName), defaultValue);
   }
 }

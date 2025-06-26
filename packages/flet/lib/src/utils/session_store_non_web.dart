@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 
 class SessionStore {
-  static String? get sessionId {
-    return null;
+  static String? sessionId;
+
+  static String? getSessionId(String pageUrl) {
+    return get("sessionId");
   }
 
-  static set sessionId(String? value) {
-    // nothing to do
+  static setSessionId(String pageUrl, String? value) {
+    set("sessionId", value ?? "");
   }
 
   static String? get(String name) {

@@ -1,58 +1,39 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class CupertinoActionSheetActionControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoActionSheetActionControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const CupertinoActionSheetActionControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
 
-    var text = control.attrString("text");
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    if (contentCtrls.isEmpty && text == null) {
+    var content = control.buildTextOrWidget("content");
+    if (content == null) {
       return const ErrorControl(
-          "CupertinoActionSheetAction must have at minimum text or (visible) content provided");
+          "CupertinoActionSheetAction.content must be a string or visible Control");
     }
 
-    return constrainedControl(
-        context,
-        CupertinoActionSheetAction(
-          isDefaultAction: control.attrBool("isDefaultAction", false)!,
-          isDestructiveAction: control.attrBool("isDestructiveAction", false)!,
-          onPressed: () {
-            if (!disabled) {
-              backend.triggerControlEvent(control.id, "click");
-            }
-          },
-          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
-          child: contentCtrls.isNotEmpty
-              ? createControl(control, contentCtrls.first.id, disabled,
-                  parentAdaptive: parentAdaptive)
-              : Text(text!),
-        ),
-        parent,
-        control);
+    final actionSheet = CupertinoActionSheetAction(
+      isDefaultAction: control.getBool("default", false)!,
+      isDestructiveAction: control.getBool("destructive", false)!,
+      onPressed: () {
+        if (!control.disabled) {
+          control.triggerEvent("click");
+        }
+      },
+      mouseCursor: control.getMouseCursor("mouse_cursor"),
+      child: content,
+    );
+
+    return ConstrainedControl(control: control, child: actionSheet);
   }
 }

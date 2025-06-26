@@ -1,80 +1,54 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
-class CupertinoSlidingSegmentedButtonControl extends StatefulWidget {
-  final Control? parent;
+class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
   final Control control;
-  final List<Control> children;
-  final bool? parentAdaptive;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
   const CupertinoSlidingSegmentedButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentAdaptive,
-      required this.parentDisabled,
-      required this.backend});
+      {super.key, required this.control});
 
-  @override
-  State<CupertinoSlidingSegmentedButtonControl> createState() =>
-      _CupertinoSlidingSegmentedButtonControlState();
-}
-
-class _CupertinoSlidingSegmentedButtonControlState
-    extends State<CupertinoSlidingSegmentedButtonControl> with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "CupertinoSlidingSegmentedButtonControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+    debugPrint("CupertinoSlidingSegmentedButtonControl build: ${control.id}");
 
-    List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
+    var controls = control.buildWidgets("controls");
 
-    if (ctrls.length < 2) {
+    if (controls.length < 2) {
       return const ErrorControl(
           "CupertinoSlidingSegmentedButton must have at minimum two visible controls");
     }
-    Map<int, Widget> children = ctrls.asMap().map((i, c) => MapEntry(
-        i,
-        createControl(widget.control, c.id, disabled,
-            parentAdaptive: adaptive)));
 
     var button = CupertinoSlidingSegmentedControl(
-      children: children,
-      groupValue: widget.control.attrInt("selectedIndex"),
-      onValueChanged: (int? index) {
-        if (!disabled) {
-          widget.backend.updateControlState(widget.control.id,
-              {"selectedIndex": index != null ? index.toString() : ""});
-          widget.backend.triggerControlEvent(
-              widget.control.id, "change", index?.toString());
-        }
-      },
-      proportionalWidth: widget.control.attrBool("proportionalWidth", false)!,
-      thumbColor: widget.control.attrColor(
-          "thumbColor",
+      groupValue: control.getInt("selected_index"),
+      proportionalWidth: control.getBool("proportional_width", false)!,
+      backgroundColor: control.getColor(
+          "bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+      padding: control.getPadding(
+          "padding", const EdgeInsets.symmetric(vertical: 2, horizontal: 3))!,
+      thumbColor: control.getColor(
+          "thumb_color",
           context,
           const CupertinoDynamicColor.withBrightness(
             color: Color(0xFFFFFFFF),
             darkColor: Color(0xFF636366),
           ))!,
-      backgroundColor: widget.control
-          .attrColor("bgColor", context, CupertinoColors.tertiarySystemFill)!,
-      padding: parseEdgeInsets(widget.control, "padding",
-          const EdgeInsets.symmetric(vertical: 2, horizontal: 3))!,
+      children: controls.asMap().map((i, c) => MapEntry(i, c)),
+      onValueChanged: (int? index) {
+        if (!control.disabled) {
+          control
+              .updateProperties({"selected_index": index ?? 0}, notify: true);
+          control.triggerEvent("change", index);
+        }
+      },
     );
 
-    return constrainedControl(context, button, widget.parent, widget.control);
+    return ConstrainedControl(control: control, child: button);
   }
 }

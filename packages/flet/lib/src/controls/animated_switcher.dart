@@ -1,67 +1,52 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/numbers.dart';
+import '../utils/time.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class AnimatedSwitcherControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
 
-  const AnimatedSwitcherControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive});
+  const AnimatedSwitcherControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("AnimatedSwitcher build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var content =
+        control.buildWidget("content", notifyParent: true, key: UniqueKey());
 
-    var switchInCurve =
-        parseCurve(control.attrString("switchInCurve"), Curves.linear)!;
-    var switchOutCurve =
-        parseCurve(control.attrString("switchOutCurve"), Curves.linear)!;
-    var duration = control.attrInt("duration", 1000)!;
-    var reverseDuration = control.attrInt("reverseDuration", 1000)!;
-    bool disabled = control.isDisabled || parentDisabled;
-
-    if (contentCtrls.isEmpty) {
+    if (content == null) {
       return const ErrorControl(
           "AnimatedSwitcher.content must be provided and visible");
     }
-
-    var child = createControl(control, contentCtrls.first.id, disabled,
-        parentAdaptive: parentAdaptive);
-
-    return constrainedControl(
-        context,
-        AnimatedSwitcher(
-            duration: Duration(milliseconds: duration),
-            reverseDuration: Duration(milliseconds: reverseDuration),
-            switchInCurve: switchInCurve,
-            switchOutCurve: switchOutCurve,
-            transitionBuilder: (child, animation) {
-              switch (control.attrString("transition", "")!.toLowerCase()) {
-                case "rotation":
-                  return RotationTransition(turns: animation, child: child);
-                case "scale":
-                  return ScaleTransition(scale: animation, child: child);
-                default:
-                  return FadeTransition(opacity: animation, child: child);
-              }
-            },
-            child: child),
-        parent,
-        control);
+    final animatedSwitcher = AnimatedSwitcher(
+      duration: control.getDuration("duration", const Duration(seconds: 1))!,
+      reverseDuration: parseDuration(
+          control.get("reverse_duration"), const Duration(seconds: 1))!,
+      switchInCurve:
+          parseCurve(control.getString("switch_in_curve"), Curves.linear)!,
+      switchOutCurve:
+          parseCurve(control.getString("switch_out_curve"), Curves.linear)!,
+      transitionBuilder: (child, animation) {
+        switch (control.getString("transition")?.toLowerCase()) {
+          case "rotation":
+            return RotationTransition(turns: animation, child: child);
+          case "scale":
+            return ScaleTransition(scale: animation, child: child);
+          default:
+            return FadeTransition(opacity: animation, child: child);
+        }
+      },
+      child: content,
+    );
+    return ConstrainedControl(control: control, child: animatedSwitcher);
   }
 }

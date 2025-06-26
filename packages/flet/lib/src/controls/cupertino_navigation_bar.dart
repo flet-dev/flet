@@ -1,31 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
-import 'create_control.dart';
-import 'flet_store_mixin.dart';
+import '../utils/numbers.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 
 class CupertinoNavigationBarControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoNavigationBarControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  CupertinoNavigationBarControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoNavigationBarControl> createState() =>
@@ -36,72 +25,42 @@ class _CupertinoNavigationBarControlState
     extends State<CupertinoNavigationBarControl> with FletStoreMixin {
   int _selectedIndex = 0;
 
-  bool get disabled => widget.control.isDisabled || widget.parentDisabled;
-
   void _onTap(int index) {
     _selectedIndex = index;
-    debugPrint("Selected index: $_selectedIndex");
-    widget.backend.updateControlState(
-        widget.control.id, {"selectedindex": _selectedIndex.toString()});
-    widget.backend.triggerControlEvent(
-        widget.control.id, "change", _selectedIndex.toString());
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
+    widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoNavigationBarControl build: ${widget.control.id}");
 
-    var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
-
+    var selectedIndex = widget.control.getInt("selected_index", 0)!;
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
     }
-    var navBar = withControls(
-        widget.children
-            .where((c) => c.isVisible)
-            .map((c) => c.id), (content, viewModel) {
-      return CupertinoTabBar(
-          backgroundColor: widget.control.attrColor("bgColor", context),
-          activeColor: widget.control.attrColor("activeColor", context) ??
-              widget.control.attrColor("indicatorColor", context),
-          inactiveColor: widget.control.attrColor("inactiveColor", context) ??
-              CupertinoColors.inactiveGray,
-          iconSize: widget.control.attrDouble("iconSize", 30.0)!,
-          currentIndex: _selectedIndex,
-          border: parseBorder(Theme.of(context), widget.control, "border"),
-          onTap: disabled ? null : _onTap,
-          items: viewModel.controlViews.map((destView) {
-            var label = destView.control.attrString("label", "")!;
-            var iconStr = parseIcon(destView.control.attrString("icon"));
-            var iconCtrls =
-                destView.children.where((c) => c.name == "icon" && c.isVisible);
-            var selectedIconStr =
-                parseIcon(destView.control.attrString("selectedIcon"));
-            var selectedIconCtrls = destView.children
-                .where((c) => c.name == "selected_icon" && c.isVisible);
-            var destinationDisabled = disabled || destView.control.isDisabled;
-            var destinationTooltip = destView.control.attrString("tooltip");
-            return BottomNavigationBarItem(
-                tooltip: !destinationDisabled && destinationTooltip != null
-                    ? jsonDecode(destinationTooltip)
-                    : null,
-                backgroundColor: widget.control.attrColor("bgColor", context),
-                icon: iconCtrls.isNotEmpty
-                    ? createControl(destView.control, iconCtrls.first.id,
-                        destinationDisabled,
-                        parentAdaptive: widget.parentAdaptive)
-                    : Icon(iconStr),
-                activeIcon: selectedIconCtrls.isNotEmpty
-                    ? createControl(destView.control,
-                        selectedIconCtrls.first.id, destinationDisabled,
-                        parentAdaptive: widget.parentAdaptive)
-                    : selectedIconStr != null
-                        ? Icon(selectedIconStr)
-                        : null,
-                label: label);
-          }).toList());
-    });
+    var navBar = CupertinoTabBar(
+        backgroundColor: widget.control.getColor("bgcolor", context),
+        activeColor: widget.control.getColor("active_color", context) ??
+            widget.control.getColor("indicator_color", context),
+        // "indicator_color" from adaptive Material NavBar
+        inactiveColor: widget.control
+            .getColor("inactive_color", context, CupertinoColors.inactiveGray)!,
+        iconSize: widget.control.getDouble("icon_size", 30.0)!,
+        currentIndex: _selectedIndex,
+        border: widget.control.getBorder("border", Theme.of(context)),
+        onTap: widget.control.disabled ? null : _onTap,
+        items: widget.control.children("destinations").map((dest) {
+          var icon = parseIcon(dest.getString("icon"));
+          return BottomNavigationBarItem(
+              tooltip: !dest.disabled ? dest.getString("tooltip") : null,
+              backgroundColor: dest.getColor("bgcolor", context),
+              icon: dest.buildWidget("icon") ?? Icon(icon),
+              activeIcon: dest.buildIconOrWidget("selected_icon"),
+              label: dest.getString("label", "")!);
+        }).toList());
 
-    return constrainedControl(context, navBar, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: navBar);
   }
 }

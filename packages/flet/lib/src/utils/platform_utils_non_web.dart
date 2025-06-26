@@ -5,7 +5,7 @@ bool isProgressiveWebApp() {
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  var pagePath = trim(uriPath, "/");
+  var pagePath = uriPath.trimSymbol("/");
   if (pagePath != "") {
     pagePath = "$pagePath/";
   }
@@ -18,6 +18,14 @@ String getFletRouteUrlStrategy() {
 
 bool isFletWebPyodideMode() {
   return false;
+}
+
+bool isMultiView() {
+  return false;
+}
+
+Map<dynamic, dynamic> getViewInitialData(int viewId) {
+  return {};
 }
 
 void openPopupBrowserWindow(

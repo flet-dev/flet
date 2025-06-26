@@ -1,20 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 
 class ScrollNotificationControl extends StatefulWidget {
   final Widget child;
   final Control control;
-  final FletControlBackend backend;
 
-  const ScrollNotificationControl(
-      {super.key,
-      required this.child,
-      required this.control,
-      required this.backend});
+  ScrollNotificationControl(
+      {Key? key, required this.child, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<ScrollNotificationControl> createState() =>
@@ -27,7 +22,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
 
   @override
   Widget build(BuildContext context) {
-    _onScrollInterval = widget.control.attrInt("onScrollInterval", 10)!;
+    _onScrollInterval = widget.control.getInt("scroll_interval", 10)!;
 
     return NotificationListener<ScrollNotification>(
       child: widget.child,
@@ -36,52 +31,47 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
   }
 
   bool _onNotification(ScrollNotification notification, BuildContext context) {
-    void sendEvent(dynamic eventData) {
-      var d = "";
-      if (eventData is String) {
-        d = eventData;
-      } else if (eventData is Map) {
-        d = json.encode(eventData);
-      }
+    if (notification.depth != 0) return false;
 
-      debugPrint("ScrollNotification ${widget.control.id} event");
-      widget.backend.triggerControlEvent(widget.control.id, "onScroll", d);
+    final eventType = notification.runtimeType.toString();
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final lastEventTimestamp = _lastEventTimestamps[eventType];
+
+    if (lastEventTimestamp != null &&
+        now - lastEventTimestamp <= _onScrollInterval) {
+      return false;
     }
 
-    if (notification.depth == 0) {
-      var eventType = notification.runtimeType.toString();
-      var now = DateTime.now().millisecondsSinceEpoch;
-      var lastEventTimestamp = _lastEventTimestamps[eventType];
-      if (lastEventTimestamp == null ||
-          now - lastEventTimestamp > _onScrollInterval) {
-        _lastEventTimestamps[eventType] = now;
+    _lastEventTimestamps[eventType] = now;
 
-        Map<String, Object?> data = {
-          "p": notification.metrics.pixels,
-          "minse": notification.metrics.minScrollExtent,
-          "maxse": notification.metrics.maxScrollExtent,
-          "vd": notification.metrics.viewportDimension
-        };
-        if (notification is ScrollStartNotification) {
-          data["t"] = "start";
-        } else if (notification is ScrollUpdateNotification) {
-          data["t"] = "update";
-          data["sd"] = notification.scrollDelta;
-        } else if (notification is ScrollEndNotification) {
-          data["t"] = "end";
-        } else if (notification is UserScrollNotification) {
-          data["t"] = "user";
-          data["dir"] = notification.direction.name;
-        } else if (notification is OverscrollNotification) {
-          data["t"] = "over";
-          data["os"] = notification.overscroll;
-          data["v"] = notification.velocity;
-        }
+    final metrics = notification.metrics;
+    final Map<String, Object?> fields = {
+      "pixels": metrics.pixels,
+      "min_scroll_extent": metrics.minScrollExtent,
+      "max_scroll_extent": metrics.maxScrollExtent,
+      "viewport_dimension": metrics.viewportDimension,
+    };
 
-        if (data["t"] != null) {
-          sendEvent(data);
-        }
-      }
+    if (notification is ScrollStartNotification) {
+      fields["event_type"] = "start";
+    } else if (notification is ScrollUpdateNotification) {
+      fields["event_type"] = "update";
+      fields["scroll_delta"] = notification.scrollDelta;
+    } else if (notification is ScrollEndNotification) {
+      fields["event_type"] = "end";
+    } else if (notification is UserScrollNotification) {
+      fields["event_type"] = "user";
+      fields["direction"] = notification.direction.name;
+    } else if (notification is OverscrollNotification) {
+      fields["event_type"] = "overscroll";
+      fields["overscroll"] = notification.overscroll;
+      fields["velocity"] = notification.velocity;
+    }
+
+    // Check that event_type was set before triggering the event
+    if (fields["event_type"] != null) {
+      debugPrint("ScrollNotification ${widget.control.id} event");
+      widget.control.triggerEvent("scroll", fields);
     }
 
     return false;

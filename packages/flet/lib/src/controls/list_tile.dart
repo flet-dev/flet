@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
+import '../utils/misc.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
-import 'create_control.dart';
-import 'cupertino_list_tile.dart';
-import 'flet_store_mixin.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
@@ -31,141 +32,95 @@ class ListTileClicks extends InheritedWidget {
 }
 
 class ListTileControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
+
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
-  ListTileControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  ListTileControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
-    return withPagePlatform((context, platform) {
-      bool? adaptive = control.isAdaptive ?? parentAdaptive;
-      if (adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
-        return CupertinoListTileControl(
-            control: control,
-            parent: parent,
-            parentDisabled: parentDisabled,
-            parentAdaptive: adaptive,
-            children: children,
-            backend: backend);
-      }
+    var leading = control.buildIconOrWidget("leading");
+    var title = control.buildTextOrWidget("title");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
+    var onClick = control.getBool("on_click", false)!;
+    var toggleInputs = control.getBool("toggle_inputs", false)!;
+    var url = control.getString("url");
+    var urlTarget = control.getString("url_target");
 
-      var leadingCtrls =
-          children.where((c) => c.name == "leading" && c.isVisible);
-      var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-      var subtitleCtrls =
-          children.where((c) => c.name == "subtitle" && c.isVisible);
-      var trailingCtrls =
-          children.where((c) => c.name == "trailing" && c.isVisible);
-
-      bool onclick = control.attrBool("onclick", false)!;
-      bool toggleInputs = control.attrBool("toggleInputs", false)!;
-      bool onLongPressDefined = control.attrBool("onLongPress", false)!;
-      String url = control.attrString("url", "")!;
-      String? urlTarget = control.attrString("urlTarget");
-      bool disabled = control.isDisabled || parentDisabled;
-
-      Function()? onPressed =
-          (onclick || toggleInputs || url != "") && !disabled
-              ? () {
-                  debugPrint("ListTile ${control.id} clicked!");
-                  if (toggleInputs) {
-                    _clickNotifier.onClick();
-                  }
-                  if (url != "") {
-                    openWebBrowser(url, webWindowName: urlTarget);
-                  }
-                  if (onclick) {
-                    backend.triggerControlEvent(control.id, "click");
-                  }
+    Function()? onPressed =
+        (onClick || toggleInputs || url != "") && !control.disabled
+            ? () {
+                if (toggleInputs) {
+                  _clickNotifier.onClick();
                 }
-              : null;
+                if (url != null) {
+                  openWebBrowser(url, webWindowName: urlTarget);
+                }
+                if (onClick) {
+                  control.triggerEvent("click");
+                }
+              }
+            : null;
 
-      Function()? onLongPress = onLongPressDefined && !disabled
-          ? () {
-              debugPrint("Button ${control.id} clicked!");
-              backend.triggerControlEvent(control.id, "long_press");
-            }
-          : null;
+    Function()? onLongPress =
+        control.getBool("on_long_press", false)! && !control.disabled
+            ? () {
+                control.triggerEvent("long_press");
+              }
+            : null;
 
-      Widget tile = ListTile(
-        autofocus: control.attrBool("autofocus", false)!,
-        contentPadding: parseEdgeInsets(control, "contentPadding"),
-        isThreeLine: control.attrBool("isThreeLine", false)!,
-        selected: control.attrBool("selected", false)!,
-        dense: control.attrBool("dense", false)!,
-        onTap: onPressed,
-        onLongPress: onLongPress,
-        enabled: !disabled,
-        horizontalTitleGap: control.attrDouble("horizontalSpacing"),
-        enableFeedback: control.attrBool("enableFeedback"),
-        minLeadingWidth: control.attrDouble("minLeadingWidth"),
-        minVerticalPadding: control.attrDouble("minVerticalPadding"),
-        minTileHeight: control.attrDouble("minHeight"),
-        selectedTileColor: control.attrColor("selectedTileColor", context),
-        selectedColor: control.attrColor("selectedColor", context),
-        focusColor: control.attrColor("focusColor", context),
-        tileColor: control.attrColor("bgcolor", context),
-        splashColor: control.attrColor("bgcolorActivated", context),
-        hoverColor: control.attrColor("hoverColor", context),
-        iconColor: control.attrColor("iconColor", context),
-        textColor: control.attrColor("textColor", context),
-        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
-        visualDensity: parseVisualDensity(control.attrString("visualDensity")),
-        shape: parseOutlinedBorder(control, "shape"),
-        titleTextStyle:
-            parseTextStyle(Theme.of(context), control, "titleTextStyle"),
-        leadingAndTrailingTextStyle: parseTextStyle(
-            Theme.of(context), control, "leadingAndTrailingTextStyle"),
-        subtitleTextStyle:
-            parseTextStyle(Theme.of(context), control, "subtitleTextStyle"),
-        titleAlignment:
-            parseListTileTitleAlignment(control.attrString("titleAlignment")),
-        style: parseListTileStyle(control.attrString("style")),
-        onFocusChange: (bool hasFocus) {
-          backend.triggerControlEvent(control.id, hasFocus ? "focus" : "blur");
-        },
-        leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-        title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-        subtitle: subtitleCtrls.isNotEmpty
-            ? createControl(control, subtitleCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-        trailing: trailingCtrls.isNotEmpty
-            ? createControl(control, trailingCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-      );
+    Widget tile = ListTile(
+      autofocus: control.getBool("autofocus", false)!,
+      contentPadding: control.getPadding("content_padding"),
+      isThreeLine: control.getBool("is_three_line", false)!,
+      selected: control.getBool("selected", false)!,
+      dense: control.getBool("dense", false)!,
+      onTap: onPressed,
+      onLongPress: onLongPress,
+      enabled: !control.disabled,
+      horizontalTitleGap: control.getDouble("horizontal_spacing"),
+      enableFeedback: control.getBool("enable_feedback"),
+      minLeadingWidth: control.getDouble("min_leading_width"),
+      minVerticalPadding: control.getDouble("min_vertical_padding"),
+      minTileHeight: control.getDouble("min_height"),
+      selectedTileColor: control.getColor("selected_tile_color", context),
+      selectedColor: control.getColor("selected_color", context),
+      focusColor: control.getColor("focus_color", context),
+      tileColor: control.getColor("bgcolor", context),
+      splashColor: control.getColor("bgcolor_activated", context),
+      hoverColor: control.getColor("hover_color", context),
+      iconColor: control.getColor("icon_color", context),
+      textColor: control.getColor("text_color", context),
+      mouseCursor: control.getMouseCursor("mouse_cursor"),
+      visualDensity: control.getVisualDensity("visual_density"),
+      shape: control.getShape("shape", Theme.of(context)),
+      titleTextStyle:
+          control.getTextStyle("title_text_style", Theme.of(context)),
+      leadingAndTrailingTextStyle: control.getTextStyle(
+          "leading_and_trailing_text_style", Theme.of(context)),
+      subtitleTextStyle:
+          control.getTextStyle("subtitle_text_style", Theme.of(context)),
+      titleAlignment: control.getListTileTitleAlignment("title_alignment"),
+      style: control.getListTileStyle("style"),
+      onFocusChange: (bool hasFocus) {
+        control.triggerEvent(hasFocus ? "focus" : "blur");
+      },
+      leading: leading,
+      title: title,
+      subtitle: subtitle,
+      trailing: trailing,
+    );
 
-      if (toggleInputs) {
-        tile = ListTileClicks(notifier: _clickNotifier, child: tile);
-      }
+    if (toggleInputs) {
+      tile = ListTileClicks(notifier: _clickNotifier, child: tile);
+    }
 
-      tile = Material(color: Colors.transparent, child: tile);
+    tile = Material(type: MaterialType.transparency, child: tile);
 
-      return constrainedControl(context, tile, parent, control);
-    });
+    return ConstrainedControl(control: control, child: tile);
   }
 }
 

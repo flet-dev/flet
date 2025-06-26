@@ -1,114 +1,102 @@
-import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/others.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/numbers.dart';
+import '../utils/transforms.dart';
 import 'colors.dart';
 import 'gradient.dart';
 import 'images.dart';
+import 'misc.dart';
 
-Paint parsePaint(ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return Paint();
-  }
+Paint? parsePaint(dynamic value, ThemeData theme, [Paint? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-
-  return paintFromJSON(theme, j1);
+  var paint = Paint();
+  paint.color = parseColor(value["color"] as String?, theme, Colors.black)!;
+  paint.blendMode = parseBlendMode(value["blend_mode"], BlendMode.srcOver)!;
+  paint.isAntiAlias = parseBool(value["anti_alias"], true)!;
+  paint.imageFilter = parseBlur(value["blur_image"]);
+  paint.shader = parsePaintGradient(value["gradient"], theme);
+  paint.strokeMiterLimit = parseDouble(value["stroke_miter_limit"], 4)!;
+  paint.strokeWidth = parseDouble(value["stroke_width"], 0)!;
+  paint.strokeCap = parseStrokeCap(value["stroke_cap"], StrokeCap.butt)!;
+  paint.strokeJoin = parseStrokeJoin(value["stroke_join"], StrokeJoin.miter)!;
+  paint.style = parsePaintingStyle(value["style"], PaintingStyle.fill)!;
+  return paint;
 }
 
-PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+PaintingStyle? parsePaintingStyle(String? value,
+    [PaintingStyle? defaultValue]) {
+  if (value == null) return defaultValue;
   return PaintingStyle.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+List<double>? parsePaintStrokeDashPattern(dynamic value,
+    [List<double>? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-
-  return j1["stroke_dash_pattern"] != null
-      ? (j1["stroke_dash_pattern"] as List)
+  return value["stroke_dash_pattern"] != null
+      ? (value["stroke_dash_pattern"] as List)
           .map((e) => parseDouble(e))
-          .whereNotNull()
+          .nonNulls
           .toList()
       : null;
 }
 
-Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
-  var paint = Paint();
-  if (json["color"] != null) {
-    paint.color = parseColor(theme, json["color"] as String, Colors.black)!;
-  }
-  paint.blendMode = parseBlendMode(json["blend_mode"], BlendMode.srcOver)!;
-  paint.isAntiAlias = parseBool(json["anti_alias"], true)!;
-  paint.imageFilter = blurImageFilterFromJSON(json["blur_image"]);
-  paint.shader = paintGradientFromJSON(theme, json["gradient"]);
-  paint.strokeMiterLimit = parseDouble(json["stroke_miter_limit"], 4)!;
-  paint.strokeWidth = parseDouble(json["stroke_width"], 0)!;
-  paint.strokeCap = parseStrokeCap(json["stroke_cap"], StrokeCap.butt)!;
-  paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
-  paint.style = parsePaintingStyle(json["style"], PaintingStyle.fill)!;
-  return paint;
-}
+ui.Gradient? parsePaintGradient(Map<dynamic, dynamic>? value, ThemeData? theme,
+    [ui.Gradient? defaultValue]) {
+  if (value == null) return defaultValue;
 
-ui.Gradient? paintGradientFromJSON(
-    ThemeData? theme, Map<String, dynamic>? json) {
-  if (json == null) {
-    return null;
-  }
-  String type = json["type"];
+  var type = value["_type"];
+  var colorStops = parseGradientStops(value["color_stops"]);
+  var colors = parseColors(value["colors"], theme);
+  var tileMode = parseTileMode(value["tile_mode"], TileMode.clamp)!;
   if (type == "linear") {
-    return ui.Gradient.linear(
-        offsetFromJson(json["begin"])!,
-        offsetFromJson(json["end"])!,
-        parseColors(theme, json["colors"]),
-        parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"], TileMode.clamp)!);
+    return ui.Gradient.linear(parseOffset(value["begin"])!,
+        parseOffset(value["end"])!, colors, colorStops, tileMode);
   } else if (type == "radial") {
     return ui.Gradient.radial(
-      offsetFromJson(json["center"])!,
-      parseDouble(json["radius"], 0)!,
-      parseColors(theme, json["colors"]),
-      parseStops(json["color_stops"]),
-      parseTileMode(json["tile_mode"], TileMode.clamp)!,
+      parseOffset(value["center"])!,
+      parseDouble(value["radius"], 0)!,
+      colors,
+      colorStops,
+      tileMode,
       null,
-      offsetFromJson(json["focal"]),
-      parseDouble(json["focal_radius"], 0)!,
+      parseOffset(value["focal"]),
+      parseDouble(value["focal_radius"], 0)!,
     );
   } else if (type == "sweep") {
-    Offset center = offsetFromJson(json["center"])!;
+    Offset center = parseOffset(value["center"])!;
     return ui.Gradient.sweep(
         center,
-        parseColors(theme, json["colors"]),
-        parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"], TileMode.clamp)!,
-        parseDouble(json["start_angle"], 0)!,
-        parseDouble(json["end_angle"], 0)!,
+        colors,
+        colorStops,
+        tileMode,
+        parseDouble(value["start_angle"], 0)!,
+        parseDouble(value["end_angle"], 0)!,
         parseRotationToMatrix4(
-            json["rotation"], Rect.fromCircle(center: center, radius: 10)));
+            value["rotation"], Rect.fromCircle(center: center, radius: 10)));
   }
-  return null;
+  return defaultValue;
 }
 
-Offset? offsetFromJson(dynamic json) {
-  if (json == null) {
-    return null;
-  } else if (json is List && json.length > 1) {
-    return Offset(parseDouble(json[0], 0)!, parseDouble(json[1], 0)!);
-  } else {
-    return Offset(parseDouble(json["x"], 0)!, parseDouble(json["y"], 0)!);
+extension DrawingParsers on Control {
+  Paint? getPaint(String propertyName, ThemeData theme, [Paint? defaultValue]) {
+    return parsePaint(get(propertyName), theme, defaultValue);
+  }
+
+  PaintingStyle? getPaintingStyle(String propertyName,
+      [PaintingStyle? defaultValue]) {
+    return parsePaintingStyle(get(propertyName), defaultValue);
+  }
+
+  List<double>? getPaintStrokeDashPattern(String propertyName,
+      [List<double>? defaultValue]) {
+    return parsePaintStrokeDashPattern(get(propertyName), defaultValue);
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -7,22 +5,31 @@ import 'cupertino_icons.dart';
 import 'material_icons.dart';
 import 'material_state.dart';
 
-IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
-  if (iconName == null) {
-    return defaultIcon;
-  }
-  return materialIcons[iconName.toLowerCase()] ?? cupertinoIcons[iconName.toLowerCase()];
+IconData? parseIcon(String? value, [IconData? defaultValue]) {
+  if (value == null) return defaultValue;
+  return materialIcons[value.toLowerCase()] ??
+      cupertinoIcons[value.toLowerCase()];
 }
 
-WidgetStateProperty<Icon?>? parseWidgetStateIcon(
-    ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
+WidgetStateProperty<Icon?>? parseWidgetStateIcon(dynamic value,
+    ThemeData theme, {
+      Icon? defaultIcon,
+      WidgetStateProperty<Icon?>? defaultValue,
+    }) {
+  if (value == null) return defaultValue;
+  return getWidgetStateProperty<Icon?>(
+      value, (jv) => Icon(parseIcon(jv as String)), defaultIcon);
+}
+
+extension IconParsers on Control {
+  IconData? getIcon(String propertyName, [IconData? defaultValue]) {
+    return parseIcon(get(propertyName), defaultValue);
   }
 
-  final j1 = json.decode(v);
-
-  return getWidgetStateProperty<Icon?>(
-      j1, (jv) => Icon(parseIcon(jv as String)));
+  WidgetStateProperty<Icon?>? getWidgetStateIcon(
+      String propertyName, ThemeData theme,
+      {Icon? defaultIcon, WidgetStateProperty<Icon?>? defaultValue}) {
+    return parseWidgetStateIcon(get(propertyName), theme,
+        defaultIcon: defaultIcon, defaultValue: defaultValue);
+  }
 }

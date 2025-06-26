@@ -1,6 +1,6 @@
 import 'dart:collection';
-import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -8,156 +8,136 @@ import 'colors.dart';
 import 'material_state.dart';
 import 'numbers.dart';
 
-BorderRadius? parseBorderRadius(Control control, String propName,
-    [BorderRadius? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defaultValue;
-  }
+BorderRadius? parseBorderRadius(dynamic value, [BorderRadius? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return borderRadiusFromJSON(j1);
-}
-
-Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
-  var r = control.attrDouble(propName, null);
-  if (r == null) {
-    return defaultValue;
-  }
-
-  return Radius.circular(r);
-}
-
-Border? parseBorder(ThemeData theme, Control control, String propName,
-    [Color? defaultSideColor]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return borderFromJSON(theme, j1, defaultSideColor);
-}
-
-BorderSide? parseBorderSide(ThemeData theme, Control control, String propName,
-    {Color? defaultSideColor}) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return borderSideFromJSON(theme, j1, defaultSideColor);
-}
-
-OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return outlinedBorderFromJSON(j1);
-}
-
-BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defaultValue]) {
-  if (json == null) {
-    return defaultValue;
-  }
-  if (json is int || json is double) {
-    return BorderRadius.all(Radius.circular(parseDouble(json, 0)!));
+  if (value is int || value is double) {
+    return BorderRadius.all(parseRadius(value)!);
   }
   return BorderRadius.only(
-    topLeft: Radius.circular(parseDouble(json['tl'], 0)!),
-    topRight: Radius.circular(parseDouble(json['tr'], 0)!),
-    bottomLeft: Radius.circular(parseDouble(json['bl'], 0)!),
-    bottomRight: Radius.circular(parseDouble(json['br'], 0)!),
+    topLeft: parseRadius(value['top_left'], Radius.zero)!,
+    topRight: parseRadius(value['top_right'], Radius.zero)!,
+    bottomLeft: parseRadius(value['bottom_left'], Radius.zero)!,
+    bottomRight: parseRadius(value['bottom_right'], Radius.zero)!,
   );
 }
 
-Border? borderFromJSON(ThemeData? theme, Map<String, dynamic>? json,
-    [Color? defaultSideColor, Border? defaultBorder]) {
-  if (json == null) {
-    return defaultBorder;
-  }
+Radius? parseRadius(dynamic value, [Radius? defaultValue]) {
+  var radius = parseDouble(value);
+  if (radius == null) return defaultValue;
+
+  return Radius.circular(radius);
+}
+
+BorderStyle? parseBorderStyle(String? value, [BorderStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+  return BorderStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
+Border? parseBorder(dynamic value, ThemeData? theme,
+    {Color defaultSideColor = Colors.black,
+    BorderSide? defaultBorderSide,
+    Border? defaultValue}) {
+  if (value == null) return defaultValue;
   return Border(
-      top: borderSideFromJSON(theme, json['t'], defaultSideColor) ??
-          BorderSide.none,
-      right: borderSideFromJSON(theme, json['r'], defaultSideColor) ??
-          BorderSide.none,
-      bottom: borderSideFromJSON(theme, json['b'], defaultSideColor) ??
-          BorderSide.none,
-      left: borderSideFromJSON(theme, json['l'], defaultSideColor) ??
-          BorderSide.none);
+      top: parseBorderSide(value['top'], theme,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!,
+      right: parseBorderSide(value['right'], theme,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!,
+      bottom: parseBorderSide(value['bottom'], theme,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!,
+      left: parseBorderSide(value['left'], theme,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!);
 }
 
-BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
-    [Color? defaultSideColor]) {
-  return json != null
-      ? BorderSide(
-          color:
-              parseColor(theme, json['c'], defaultSideColor ?? Colors.black)!,
-          width: parseDouble(json['w'], 1)!,
-          strokeAlign: parseDouble(json['sa'], BorderSide.strokeAlignInside)!,
-          style: BorderStyle.solid)
-      : null;
+BorderSide? parseBorderSide(dynamic value, ThemeData? theme,
+    {Color defaultSideColor = Colors.black, BorderSide? defaultValue}) {
+  if (value == null) return defaultValue;
+  return BorderSide(
+    color: parseColor(value['color'], theme, defaultSideColor)!,
+    width: parseDouble(value['width'], 1)!,
+    strokeAlign:
+        parseDouble(value['stroke_align'], BorderSide.strokeAlignInside)!,
+    style: parseBorderStyle(value['style'], BorderStyle.solid)!,
+  );
 }
 
-OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic>? json) {
-  if (json == null) {
-    return null;
-  }
+OutlinedBorder? parseOutlinedBorder(dynamic value, ThemeData? theme,
+    {BorderSide defaultBorderSide = BorderSide.none,
+    BorderRadius defaultBorderRadius = BorderRadius.zero,
+    OutlinedBorder? defaultValue}) {
+  if (value == null) return defaultValue;
 
-  String type = json["type"];
-  if (type == "roundedRectangle") {
-    return RoundedRectangleBorder(
-        borderRadius: borderRadiusFromJSON(json["radius"], BorderRadius.zero)!);
-  } else if (type == "stadium") {
-    return const StadiumBorder();
-  } else if (type == "circle") {
-    return const CircleBorder();
-  } else if (type == "beveledRectangle") {
-    return BeveledRectangleBorder(
-        borderRadius: borderRadiusFromJSON(json["radius"], BorderRadius.zero)!);
-  } else if (type == "continuousRectangle") {
-    return ContinuousRectangleBorder(
-        borderRadius: borderRadiusFromJSON(json["radius"], BorderRadius.zero)!);
+  var borderSide =
+      parseBorderSide(value["side"], theme, defaultValue: defaultBorderSide)!;
+  var borderRadius = parseBorderRadius(value["radius"], defaultBorderRadius)!;
+
+  var type = value["_type"];
+  switch (type.toLowerCase()) {
+    case "roundedrectangle":
+      return RoundedRectangleBorder(
+          side: borderSide, borderRadius: borderRadius);
+    case "stadium":
+      return StadiumBorder(side: borderSide);
+    case "circle":
+      return CircleBorder(
+          side: borderSide,
+          eccentricity: parseDouble(value["eccentricity"], 0.0)!);
+    case "beveledrectangle":
+      return BeveledRectangleBorder(
+          side: borderSide, borderRadius: borderRadius);
+    case "continuousrectangle":
+      return ContinuousRectangleBorder(
+          side: borderSide, borderRadius: borderRadius);
+    default:
+      return defaultValue;
   }
-  return null;
+}
+
+OutlinedBorder? parseShape(dynamic value, ThemeData? theme,
+    {BorderSide defaultBorderSide = BorderSide.none,
+    BorderRadius defaultBorderRadius = BorderRadius.zero,
+    OutlinedBorder? defaultValue}) {
+  return parseOutlinedBorder(value, theme,
+      defaultBorderSide: defaultBorderSide,
+      defaultBorderRadius: defaultBorderRadius,
+      defaultValue: defaultValue);
 }
 
 WidgetStateBorderSide? parseWidgetStateBorderSide(
-    ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  var j = json.decode(v);
-  if (j is Map<String, dynamic> && (j.containsKey("w") || j.containsKey("c"))) {
-    j = {"default": j};
+    dynamic value, ThemeData theme,
+    {BorderSide? defaultBorderSide = BorderSide.none,
+    WidgetStateBorderSide? defaultValue}) {
+  if (value == null) return defaultValue;
+  if (value is Map &&
+      (value.containsKey("width") || value.containsKey("color"))) {
+    value = {"default": value};
   }
 
   return WidgetStateBorderSideFromJSON(
-      j, (jv) => borderSideFromJSON(theme, jv), BorderSide.none);
+      value, (jv) => parseBorderSide(jv, theme), defaultBorderSide);
 }
 
 class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
-  late final Map<String, BorderSide?> _states;
-  late final BorderSide _defaultValue;
+  late final Map<dynamic, BorderSide?> _states;
+  late final BorderSide? _defaultValue;
 
   WidgetStateBorderSideFromJSON(
-      Map<String, dynamic>? jsonDictValue,
+      Map<dynamic, dynamic>? jsonDictValue,
       BorderSide? Function(dynamic) converterFromJson,
-      BorderSide defaultValue) {
+      BorderSide? defaultValue) {
     _defaultValue = defaultValue;
 
     // preserve user-defined order
     _states = LinkedHashMap<String, BorderSide?>.from(
       jsonDictValue?.map((k, v) {
             var key = k.trim().toLowerCase();
-            // "" is deprecated and renamed to "default"
-            if (key == "") key = "default";
             return MapEntry(key, converterFromJson(v));
           }) ??
           {},
@@ -180,12 +160,80 @@ class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
 }
 
 WidgetStateProperty<OutlinedBorder?>? parseWidgetStateOutlinedBorder(
-    Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+    dynamic value, ThemeData? theme,
+    {OutlinedBorder? defaultOutlinedBorder,
+    WidgetStateProperty<OutlinedBorder?>? defaultValue}) {
+  if (value == null) return defaultValue;
 
   return getWidgetStateProperty<OutlinedBorder?>(
-      jsonDecode(v), (jv) => outlinedBorderFromJSON(jv), null);
+      value, (jv) => parseOutlinedBorder(jv, theme), defaultOutlinedBorder);
+}
+
+extension BorderParsers on Control {
+  BorderRadius? getBorderRadius(String propertyName,
+      [BorderRadius? defaultValue]) {
+    return parseBorderRadius(get(propertyName), defaultValue);
+  }
+
+  Radius? getRadius(String propertyName, [Radius? defaultValue]) {
+    return parseRadius(get(propertyName), defaultValue);
+  }
+
+  BorderStyle? getBorderStyle(String propertyName,
+      [BorderStyle? defaultValue]) {
+    return parseBorderStyle(get(propertyName), defaultValue);
+  }
+
+  Border? getBorder(String propertyName, ThemeData theme,
+      {Color defaultSideColor = Colors.black,
+      BorderSide? defaultBorderSide,
+      Border? defaultValue}) {
+    return parseBorder(get(propertyName), theme,
+        defaultSideColor: defaultSideColor,
+        defaultBorderSide: defaultBorderSide,
+        defaultValue: defaultValue);
+  }
+
+  BorderSide? getBorderSide(String propertyName, ThemeData theme,
+      {Color defaultSideColor = Colors.black, BorderSide? defaultValue}) {
+    return parseBorderSide(get(propertyName), theme,
+        defaultSideColor: defaultSideColor, defaultValue: defaultValue);
+  }
+
+  OutlinedBorder? getOutlinedBorder(String propertyName, ThemeData? theme,
+      {BorderSide defaultBorderSide = BorderSide.none,
+      BorderRadius defaultBorderRadius = BorderRadius.zero,
+      OutlinedBorder? defaultValue}) {
+    return parseOutlinedBorder(get(propertyName), theme,
+        defaultBorderSide: defaultBorderSide,
+        defaultBorderRadius: defaultBorderRadius,
+        defaultValue: defaultValue);
+  }
+
+  OutlinedBorder? getShape(String propertyName, ThemeData? theme,
+      {BorderSide defaultBorderSide = BorderSide.none,
+      BorderRadius defaultBorderRadius = BorderRadius.zero,
+      OutlinedBorder? defaultValue}) {
+    return parseOutlinedBorder(get(propertyName), theme,
+        defaultBorderSide: defaultBorderSide,
+        defaultBorderRadius: defaultBorderRadius,
+        defaultValue: defaultValue);
+  }
+
+  WidgetStateBorderSide? getWidgetStateBorderSide(
+      String propertyName, ThemeData theme,
+      {BorderSide defaultBorderSide = BorderSide.none,
+      WidgetStateBorderSide? defaultValue}) {
+    return parseWidgetStateBorderSide(get(propertyName), theme,
+        defaultBorderSide: defaultBorderSide, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<OutlinedBorder?>? getWidgetStateOutlinedBorder(
+      String propertyName, ThemeData? theme,
+      {OutlinedBorder? defaultOutlinedBorder,
+      WidgetStateProperty<OutlinedBorder?>? defaultValue}) {
+    return parseWidgetStateOutlinedBorder(get(propertyName), theme,
+        defaultOutlinedBorder: defaultOutlinedBorder,
+        defaultValue: defaultValue);
+  }
 }

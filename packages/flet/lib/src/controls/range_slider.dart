@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
 class RangeSliderControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const RangeSliderControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  RangeSliderControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<RangeSliderControl> createState() => _SliderControlState();
@@ -40,14 +33,11 @@ class _SliderControlState extends State<RangeSliderControl> {
   }
 
   void onChange(double startValue, double endValue) {
-    var props = {
-      "startvalue": startValue.toString(),
-      "endvalue": endValue.toString()
-    };
-    widget.backend.updateControlState(widget.control.id, props, server: false);
+    var props = {"start_value": startValue, "end_value": endValue};
+    widget.control.updateProperties(props, python: false, notify: true);
     _debouncer.run(() {
-      widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change");
+      widget.control.updateProperties(props, notify: true);
+      widget.control.triggerEvent("change");
     });
   }
 
@@ -55,15 +45,14 @@ class _SliderControlState extends State<RangeSliderControl> {
   Widget build(BuildContext context) {
     debugPrint("RangeSliderControl build: ${widget.control.id}");
 
-    double startValue = widget.control.attrDouble("startValue", 0)!;
-    double endValue = widget.control.attrDouble("endValue", 0)!;
-    String label = widget.control.attrString("label", "")!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    double startValue = widget.control.getDouble("start_value", 0)!;
+    double endValue = widget.control.getDouble("end_value", 0)!;
+    String label = widget.control.getString("label", "")!;
 
-    double min = widget.control.attrDouble("min", 0)!;
-    double max = widget.control.attrDouble("max", 1)!;
+    double min = widget.control.getDouble("min", 0)!;
+    double max = widget.control.getDouble("max", 1)!;
 
-    int round = widget.control.attrInt("round", 0)!;
+    int round = widget.control.getInt("round", 0)!;
 
     debugPrint("SliderControl build: ${widget.control.id}");
 
@@ -74,31 +63,28 @@ class _SliderControlState extends State<RangeSliderControl> {
             (label).replaceAll("{value}", endValue.toStringAsFixed(round))),
         min: min,
         max: max,
-        divisions: widget.control.attrInt("divisions"),
-        activeColor: widget.control.attrColor("activeColor", context),
-        inactiveColor: widget.control.attrColor("inactiveColor", context),
-        mouseCursor: parseWidgetStateMouseCursor(widget.control, "mouseCursor"),
-        overlayColor: parseWidgetStateColor(
-            Theme.of(context), widget.control, "overlayColor"),
-        onChanged: !disabled
+        divisions: widget.control.getInt("divisions"),
+        activeColor: widget.control.getColor("active_color", context),
+        inactiveColor: widget.control.getColor("inactive_color", context),
+        mouseCursor: widget.control.getWidgetStateMouseCursor("mouse_cursor"),
+        overlayColor: widget.control
+            .getWidgetStateColor("overlay_color", Theme.of(context)),
+        onChanged: !widget.control.disabled
             ? (RangeValues newValues) {
                 onChange(newValues.start, newValues.end);
               }
             : null,
-        onChangeStart: !disabled
+        onChangeStart: !widget.control.disabled
             ? (RangeValues newValues) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "change_start");
+                widget.control.triggerEvent("change_start");
               }
             : null,
-        onChangeEnd: !disabled
+        onChangeEnd: !widget.control.disabled
             ? (RangeValues newValues) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "change_end");
+                widget.control.triggerEvent("change_end");
               }
             : null);
 
-    return constrainedControl(
-        context, rangeSlider, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: rangeSlider);
   }
 }

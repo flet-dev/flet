@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 
 class MenuItemButtonControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const MenuItemButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  MenuItemButtonControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();
@@ -46,24 +36,15 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   }
 
   void _onFocusChange() {
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("MenuItemButton build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    var content =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
-    var leading =
-        widget.children.where((c) => c.name == "leading" && c.isVisible);
-    var trailing =
-        widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
     var theme = Theme.of(context);
-    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+    var style = widget.control.getButtonStyle("style", Theme.of(context),
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
         defaultOverlayColor: Colors.transparent,
@@ -76,53 +57,35 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool onClick = widget.control.attrBool("onClick", false)!;
-    bool onHover = widget.control.attrBool("onHover", false)!;
-
-    var adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
+    bool onClick = widget.control.getBool("on_click", false)!;
+    bool onHover = widget.control.getBool("on_hover", false)!;
 
     var menuItem = MenuItemButton(
       focusNode: _focusNode,
-      clipBehavior:
-          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!,
+      clipBehavior: widget.control.getClipBehavior("clip_behavior", Clip.none)!,
       style: style,
-      closeOnActivate: widget.control.attrBool("closeOnClick", true)!,
-      requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
-      semanticsLabel: widget.control.attrString("semanticsLabel"),
-      autofocus: widget.control.attrBool("autofocus", false)!,
-      overflowAxis: parseAxis(
-          widget.control.attrString("overflowAxis"), Axis.horizontal)!,
-      onHover: onHover && !disabled
-          ? (bool value) {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "hover", "$value");
-            }
+      closeOnActivate: widget.control.getBool("close_on_click", true)!,
+      requestFocusOnHover: widget.control.getBool("focus_on_hover", true)!,
+      semanticsLabel: widget.control.getString("semantics_label"),
+      autofocus: widget.control.getBool("autofocus", false)!,
+      overflowAxis: widget.control.getAxis("overflow_axis", Axis.horizontal)!,
+      onHover: onHover && !widget.control.disabled
+          ? (bool value) => widget.control.triggerEvent("hover", value)
           : null,
-      onPressed: onClick && !disabled
-          ? () {
-              widget.backend.triggerControlEvent(widget.control.id, "click");
-            }
+      onPressed: onClick && !widget.control.disabled
+          ? () => widget.control.triggerEvent("click")
           : null,
-      leadingIcon: leading.isNotEmpty
-          ? createControl(widget.control, leading.first.id, disabled,
-              parentAdaptive: adaptive)
-          : null,
-      trailingIcon: trailing.isNotEmpty
-          ? createControl(widget.control, trailing.first.id, disabled,
-              parentAdaptive: adaptive)
-          : null,
-      child: content.isNotEmpty
-          ? createControl(widget.control, content.first.id, disabled,
-              parentAdaptive: adaptive)
-          : null,
+      leadingIcon: widget.control.buildWidget("leading"),
+      trailingIcon: widget.control.buildWidget("trailing_icon"),
+      child: widget.control.buildTextOrWidget("content"),
     );
 
-    var focusValue = widget.control.attrString("focus");
+    var focusValue = widget.control.getString("focus");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();
     }
 
-    return constrainedControl(context, menuItem, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: menuItem);
   }
 }

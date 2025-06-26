@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'control_factory.dart';
+import 'controls/control_widget.dart';
 import 'flet_app_errors_handler.dart';
-import 'flet_app_main.dart';
-import 'flet_app_services.dart';
+import 'flet_backend.dart';
+import 'flet_extension.dart';
+import 'models/control.dart';
 
+/// FletApp - The top-level widget that initializes everything
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
   final bool? showAppStartupScreen;
   final String? appStartupScreenMessage;
-  final String? controlId;
+  final int? controlId;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
   final int? reconnectIntervalMs;
   final int? reconnectTimeoutMs;
-  final List<CreateControlFactory>? createControlFactories;
+  final List<FletExtension>? extensions;
+  final Map<String, dynamic>? args;
+  final bool? forcePyodide;
+  final bool multiView;
 
   const FletApp(
       {super.key,
@@ -28,39 +34,48 @@ class FletApp extends StatefulWidget {
       this.errorsHandler,
       this.reconnectIntervalMs,
       this.reconnectTimeoutMs,
-      this.createControlFactories});
+      this.extensions,
+      this.args,
+      this.forcePyodide,
+      this.multiView = false});
 
   @override
   State<FletApp> createState() => _FletAppState();
 }
 
 class _FletAppState extends State<FletApp> {
-  String? _pageUrl;
-  FletAppServices? _appServices;
+  FletBackend? backend;
 
   @override
   void deactivate() {
-    _appServices?.close();
+    backend?.dispose();
     super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.pageUrl != _pageUrl) {
-      _pageUrl = widget.pageUrl;
-      _appServices = FletAppServices(
-          parentAppServices: FletAppServices.maybeOf(context),
-          showAppStartupScreen: widget.showAppStartupScreen,
-          appStartupScreenMessage: widget.appStartupScreenMessage,
-          controlId: widget.controlId,
-          reconnectIntervalMs: widget.reconnectIntervalMs,
-          reconnectTimeoutMs: widget.reconnectTimeoutMs,
-          pageUrl: widget.pageUrl,
-          assetsDir: widget.assetsDir,
-          errorsHandler: widget.errorsHandler,
-          createControlFactories: widget.createControlFactories ?? [],
-          child: FletAppMain(title: widget.title ?? "Flet"));
-    }
-    return _appServices!;
+    return ChangeNotifierProvider<FletBackend>(
+      create: (context) {
+        return FletBackend(
+            showAppStartupScreen: widget.showAppStartupScreen,
+            appStartupScreenMessage: widget.appStartupScreenMessage,
+            controlId: widget.controlId,
+            reconnectIntervalMs: widget.reconnectIntervalMs,
+            reconnectTimeoutMs: widget.reconnectTimeoutMs,
+            pageUri: Uri.parse(widget.pageUrl),
+            assetsDir: widget.assetsDir,
+            errorsHandler: widget.errorsHandler,
+            extensions: widget.extensions ?? [],
+            args: widget.args,
+            forcePyodide: widget.forcePyodide,
+            multiView: widget.multiView,
+            parentFletBackend:
+                Provider.of<FletBackend?>(context, listen: false));
+      },
+      child: Selector<FletBackend, Control>(
+        selector: (_, backend) => backend.page,
+        builder: (_, page, __) => ControlWidget(control: page),
+      ),
+    );
   }
 }

@@ -1,70 +1,62 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/theme.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class ExpansionTileControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const ExpansionTileControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const ExpansionTileControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionTile build: ${control.id}");
 
-    var ctrls = children.where((c) => c.name == "controls" && c.isVisible);
-    var leadingCtrls =
-        children.where((c) => c.name == "leading" && c.isVisible);
-    var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-    var subtitleCtrls =
-        children.where((c) => c.name == "subtitle" && c.isVisible);
-    var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
+    var controls = control
+        .children("controls")
+        .map((child) => ControlWidget(control: child, key: ValueKey(child.id)))
+        .toList();
 
-    if (titleCtrls.isEmpty) {
+    var leading = control.buildIconOrWidget("leading");
+    var title = control.buildTextOrWidget("title");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
+
+    if (title == null) {
       return const ErrorControl(
           "ExpansionTile.title must be provided and visible");
     }
 
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
-    bool onchange = control.attrBool("onchange", false)!;
-    bool maintainState = control.attrBool("maintainState", false)!;
-    bool initiallyExpanded = control.attrBool("initiallyExpanded", false)!;
+    bool maintainState = control.getBool("maintain_state", false)!;
+    bool initiallyExpanded = control.getBool("initially_expanded", false)!;
 
-    var iconColor = control.attrColor("iconColor", context);
-    var textColor = control.attrColor("textColor", context);
-    var bgColor = control.attrColor("bgColor", context);
-    var collapsedBgColor = control.attrColor("collapsedBgColor", context);
-    var collapsedIconColor = control.attrColor("collapsedIconColor", context);
-    var collapsedTextColor = control.attrColor("collapsedTextColor", context);
+    var iconColor = control.getColor("icon_color", context);
+    var textColor = control.getColor("text_color", context);
+    var bgColor = control.getColor("bgcolor", context);
+    var collapsedBgColor = control.getColor("collapsed_bgcolor", context);
+    var collapsedIconColor = control.getColor("collapsed_icon_color", context);
+    var collapsedTextColor = control.getColor("collapsed_text_color", context);
 
-    var affinity = parseListTileControlAffinity(
-        control.attrString("affinity"), ListTileControlAffinity.platform)!;
+    var affinity = control.getListTileControlAffinity(
+        "affinity", ListTileControlAffinity.platform)!;
     var clipBehavior =
-        parseClip(control.attrString("clipBehavior"), Clip.none)!;
+        parseClip(control.getString("clip_behavior"), Clip.none)!;
 
-    var expandedCrossAxisAlignment = parseCrossAxisAlignment(
-        control.attrString("crossAxisAlignment"), CrossAxisAlignment.center)!;
+    var expandedCrossAxisAlignment = control.getCrossAxisAlignment(
+        "expanded_cross_axis_alignment", CrossAxisAlignment.center)!;
 
     if (expandedCrossAxisAlignment == CrossAxisAlignment.baseline) {
       return const ErrorControl(
@@ -73,21 +65,19 @@ class ExpansionTileControl extends StatelessWidget {
           'Try aligning the controls differently.');
     }
 
-    Function(bool)? onChange = (onchange) && !disabled
+    Function(bool)? onChange = !control.disabled
         ? (expanded) {
-            debugPrint(
-                "ExpansionTile ${control.id} was ${expanded ? "expanded" : "collapsed"}");
-            backend.triggerControlEvent(control.id, "change", "$expanded");
+            control.triggerEvent("change", expanded);
           }
         : null;
 
     Widget tile = ExpansionTile(
       controlAffinity: affinity,
-      childrenPadding: parseEdgeInsets(control, "controlsPadding"),
-      tilePadding: parseEdgeInsets(control, "tilePadding"),
-      expandedAlignment: parseAlignment(control, "expandedAlignment"),
+      childrenPadding: control.getPadding("controls_padding"),
+      tilePadding: control.getEdgeInsets("tile_padding"),
+      expandedAlignment: control.getAlignment("expanded_alignment"),
       expandedCrossAxisAlignment:
-          parseCrossAxisAlignment(control.attrString("crossAxisAlignment")),
+          control.getCrossAxisAlignment("expanded_cross_axis_alignment"),
       backgroundColor: bgColor,
       iconColor: iconColor,
       textColor: textColor,
@@ -97,35 +87,22 @@ class ExpansionTileControl extends StatelessWidget {
       maintainState: maintainState,
       initiallyExpanded: initiallyExpanded,
       clipBehavior: clipBehavior,
-      shape: parseOutlinedBorder(control, "shape"),
-      collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
+      shape: control.getShape("shape", Theme.of(context)),
+      collapsedShape: control.getShape("collapsed_shape", Theme.of(context)),
       onExpansionChanged: onChange,
-      visualDensity: parseVisualDensity(control.attrString("visualDensity")),
-      enableFeedback: control.attrBool("enableFeedback"),
-      showTrailingIcon: control.attrBool("showTrailingIcon", true)!,
-      enabled: !disabled,
-      minTileHeight: control.attrDouble("minTileHeight"),
-      dense: control.attrBool("dense"),
-      leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, disabled,
-              parentAdaptive: adaptive)
-          : null,
-      title: createControl(control, titleCtrls.first.id, disabled,
-          parentAdaptive: adaptive),
-      subtitle: subtitleCtrls.isNotEmpty
-          ? createControl(control, subtitleCtrls.first.id, disabled,
-              parentAdaptive: adaptive)
-          : null,
-      trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, disabled,
-              parentAdaptive: adaptive)
-          : null,
-      children: ctrls
-          .map((c) =>
-              createControl(control, c.id, disabled, parentAdaptive: adaptive))
-          .toList(),
+      visualDensity: control.getVisualDensity("visual_density"),
+      enableFeedback: control.getBool("enable_feedback"),
+      showTrailingIcon: control.getBool("show_trailing_icon", true)!,
+      enabled: !control.disabled,
+      minTileHeight: control.getDouble("min_tile_height"),
+      dense: control.getBool("dense"),
+      leading: leading,
+      title: title,
+      subtitle: subtitle,
+      trailing: trailing,
+      children: controls,
     );
 
-    return constrainedControl(context, tile, parent, control);
+    return ConstrainedControl(control: control, child: tile);
   }
 }

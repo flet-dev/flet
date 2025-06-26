@@ -1,37 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/edge_insets.dart';
+import '../utils/misc.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
-import 'create_control.dart';
-import 'cupertino_slider.dart';
-import 'flet_store_mixin.dart';
+import 'base_controls.dart';
 
 class SliderControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const SliderControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  SliderControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<SliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends State<SliderControl> with FletStoreMixin {
+class _SliderControlState extends State<SliderControl> {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
   late final FocusNode _focusNode;
@@ -52,97 +41,77 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
   }
 
   void _onFocusChange() {
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   void onChange(double value) {
-    var svalue = value.toString();
-    debugPrint(svalue);
     _value = value;
-    var props = {"value": svalue};
-    widget.backend.updateControlState(widget.control.id, props, server: false);
+    var props = {"value": value};
+    widget.control.updateProperties(props, python: false, notify: true);
     _debouncer.run(() {
-      widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change");
+      widget.control.updateProperties(props, notify: true);
+      widget.control.triggerEvent("change");
     });
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("SliderControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    return withPagePlatform((context, platform) {
-      bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-      if (adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
-        return CupertinoSliderControl(
-            control: widget.control,
-            parentDisabled: widget.parentDisabled,
-            backend: widget.backend);
+
+    var label = widget.control.getString("label");
+    var min = widget.control.getDouble("min", 0)!;
+    var max = widget.control.getDouble("max", 1)!;
+    var round = widget.control.getInt("round", 0)!;
+
+    double value = widget.control.getDouble("value", min)!;
+    if (_value != value) {
+      // verify limits
+      if (value < min) {
+        _value = min;
+      } else if (value > max) {
+        _value = max;
+      } else {
+        _value = value;
       }
+    }
 
-      String? label = widget.control.attrString("label");
+    var slider = Slider(
+        autofocus: widget.control.getBool("autofocus", false)!,
+        focusNode: _focusNode,
+        value: _value,
+        min: min,
+        max: max,
+        year2023: widget.control.getBool("year_2023"),
+        // todo: remove
+        divisions: widget.control.getInt("divisions"),
+        label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
+        activeColor: widget.control.getColor("active_color", context),
+        inactiveColor: widget.control.getColor("inactive_color", context),
+        overlayColor: widget.control
+            .getWidgetStateColor("overlay_color", Theme.of(context)),
+        allowedInteraction: widget.control.getSliderInteraction("interaction"),
+        thumbColor: widget.control.getColor("thumb_color", context),
+        padding: widget.control.getPadding("padding"),
+        onChanged: !widget.control.disabled
+            ? (double value) {
+                onChange(value);
+              }
+            : null,
+        mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
+        secondaryActiveColor:
+            widget.control.getColor("secondary_active_color", context),
+        secondaryTrackValue: widget.control.getDouble("secondary_track_value"),
+        onChangeStart: !widget.control.disabled
+            ? (double value) {
+                widget.control.triggerEvent("change_start", value);
+              }
+            : null,
+        onChangeEnd: !widget.control.disabled
+            ? (double value) {
+                widget.control.triggerEvent("change_end", value);
+              }
+            : null);
 
-      double min = widget.control.attrDouble("min", 0)!;
-      double max = widget.control.attrDouble("max", 1)!;
-      int round = widget.control.attrInt("round", 0)!;
-
-      double value = widget.control.attrDouble("value", min)!;
-      if (_value != value) {
-        // verify limits
-        if (value < min) {
-          _value = min;
-        } else if (value > max) {
-          _value = max;
-        } else {
-          _value = value;
-        }
-      }
-
-      var slider = Slider(
-          autofocus: widget.control.attrBool("autofocus", false)!,
-          focusNode: _focusNode,
-          value: _value,
-          min: min,
-          max: max,
-          year2023: widget.control.attrBool("year2023"),
-          divisions: widget.control.attrInt("divisions"),
-          label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-          activeColor: widget.control.attrColor("activeColor", context),
-          inactiveColor: widget.control.attrColor("inactiveColor", context),
-          overlayColor: parseWidgetStateColor(
-              Theme.of(context), widget.control, "overlayColor"),
-          allowedInteraction:
-              parseSliderInteraction(widget.control.attrString("interaction")),
-          thumbColor: widget.control.attrColor("thumbColor", context),
-          padding: parseEdgeInsets(widget.control, "padding"),
-          onChanged: !disabled
-              ? (double value) {
-                  onChange(value);
-                }
-              : null,
-          mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor")),
-          secondaryActiveColor:
-              widget.control.attrColor("secondaryActiveColor", context),
-          secondaryTrackValue: widget.control.attrDouble("secondaryTrackValue"),
-          onChangeStart: !disabled
-              ? (double value) {
-                  widget.backend.triggerControlEvent(
-                      widget.control.id, "change_start", value.toString());
-                }
-              : null,
-          onChangeEnd: !disabled
-              ? (double value) {
-                  widget.backend.triggerControlEvent(
-                      widget.control.id, "change_end", value.toString());
-                }
-              : null);
-
-      return constrainedControl(context, slider, widget.parent, widget.control);
-    });
+    return ConstrainedControl(control: widget.control, child: slider);
   }
 }

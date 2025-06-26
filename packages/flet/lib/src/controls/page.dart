@@ -1,185 +1,70 @@
-import 'dart:async';
-import 'dart:convert';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flet/src/models/page_args_model.dart';
-import 'package:flet/src/utils/locale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
+import 'package:provider/provider.dart';
 
-import '../actions.dart';
-import '../flet_app_context.dart';
-import '../flet_app_services.dart';
-import '../flet_control_backend.dart';
-import '../models/app_state.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
-import '../models/control_view_model.dart';
-import '../models/page_media_view_model.dart';
+import '../models/keyboard_event.dart';
+import '../models/multi_view.dart';
+import '../models/page_design.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
-import '../utils/alignment.dart';
-import '../utils/box.dart';
-import '../utils/buttons.dart';
-import '../utils/desktop.dart';
-import '../utils/edge_insets.dart';
-import '../utils/images.dart';
-import '../utils/platform.dart';
+import '../services/service_registry.dart';
+import '../utils/locale.dart';
+import '../utils/numbers.dart';
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) "../utils/platform_utils_non_web.dart";
+import '../utils/session_store_web.dart'
+    if (dart.library.io) "../utils/session_store_non_web.dart";
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
 import '../widgets/loading_page.dart';
+import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
-import '../widgets/window_media.dart';
-import 'app_bar.dart';
-import 'create_control.dart';
-import 'cupertino_app_bar.dart';
-import 'flet_store_mixin.dart';
-import 'navigation_drawer.dart';
-import 'scroll_notification_control.dart';
-import 'scrollable_control.dart';
-
-enum PageDesign { material, cupertino }
-
-class RoutesViewModel extends Equatable {
-  final Control page;
-  final bool isLoading;
-  final String error;
-  final List<Control> offstageControls;
-  final List<Control> views;
-
-  const RoutesViewModel(
-      {required this.page,
-      required this.isLoading,
-      required this.error,
-      required this.offstageControls,
-      required this.views});
-
-  static RoutesViewModel fromStore(Store<AppState> store) {
-    Control? offstageControl = store.state.controls["page"]!.childIds
-        .map((childId) => store.state.controls[childId]!)
-        .firstWhereOrNull((c) => c.type == "offstage");
-
-    return RoutesViewModel(
-        page: store.state.controls["page"]!,
-        isLoading: store.state.isLoading,
-        error: store.state.error,
-        offstageControls: offstageControl != null
-            ? store.state.controls[offstageControl.id]!.childIds
-                .map((childId) => store.state.controls[childId]!)
-                .where((c) => c.isVisible)
-                .toList()
-            : [],
-        views: store.state.controls["page"]!.childIds
-            .map((childId) => store.state.controls[childId]!)
-            .where((c) => c.type != "offstage" && c.isVisible)
-            .toList());
-  }
-
-  @override
-  List<Object?> get props => [page, isLoading, error, offstageControls, views];
-}
-
-class KeyboardEvent {
-  final String key;
-  final bool isShiftPressed;
-  final bool isControlPressed;
-  final bool isAltPressed;
-  final bool isMetaPressed;
-
-  KeyboardEvent(
-      {required this.key,
-      required this.isShiftPressed,
-      required this.isControlPressed,
-      required this.isAltPressed,
-      required this.isMetaPressed});
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'key': key,
-        'shift': isShiftPressed,
-        'ctrl': isControlPressed,
-        'alt': isAltPressed,
-        'meta': isMetaPressed
-      };
-}
+import 'control_widget.dart';
 
 class PageControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final dynamic dispatch;
-  final FletControlBackend backend;
 
-  const PageControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.dispatch,
-      required this.backend});
+  PageControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<PageControl> createState() => _PageControlState();
 }
 
-class _PageControlState extends State<PageControl> with FletStoreMixin {
-  bool? _adaptive;
-  PageDesign _widgetsDesign = PageDesign.material;
-  TargetPlatform _platform = defaultTargetPlatform;
-  Brightness? _brightness;
-  ThemeMode? _themeMode;
-  Map<String, dynamic>? _localeConfiguration;
-  String? _windowTitle;
-  Color? _windowBgcolor;
-  double? _windowWidth;
-  double? _windowHeight;
-  double? _windowMinWidth;
-  double? _windowMinHeight;
-  double? _windowMaxWidth;
-  double? _windowMaxHeight;
-  double? _windowTop;
-  double? _windowLeft;
-  double? _windowOpacity;
-  bool? _windowMinimizable;
-  bool? _windowMaximizable;
-  bool? _windowFullScreen;
-  bool? _windowMovable;
-  bool? _windowResizable;
-  bool? _windowAlwaysOnTop;
-  bool? _windowAlwaysOnBottom;
-  bool? _windowPreventClose;
-  bool? _windowMinimized;
-  bool? _windowMaximized;
-  Alignment? _windowAlignment;
-  String? _windowBadgeLabel;
-  String? _windowIcon;
-  bool? _windowHasShadow;
-  bool? _windowVisible;
-  bool? _windowFocused;
-  String? _windowCenter;
-  String? _windowClose;
-  bool? _windowFrameless;
-  bool? _windowTitleBarHidden;
-  bool? _windowSkipTaskBar;
-  double? _windowProgressBar;
-  bool? _windowIgnoreMouseEvents;
+class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
   late final AppLifecycleListener _appLifecycleListener;
-  String? _prevViewRoutes;
+  ServiceRegistry? _pageServices;
+  ServiceRegistry? _userServices;
+  bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
+
+  String? _prevViewRoutes;
+
+  final Map<int, MultiView> _multiViews = <int, MultiView>{};
+  bool _registeredFromMultiViews = false;
 
   @override
   void initState() {
+    debugPrint("Page.initState: ${widget.control.id}");
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+    _updateMultiViews();
+
     _routeParser = RouteParser();
 
     _routeState = RouteState(_routeParser);
@@ -199,22 +84,113 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         onPause: () => _handleAppLifecycleTransition('pause'),
         onDetach: () => _handleAppLifecycleTransition('detach'),
         onRestart: () => _handleAppLifecycleTransition('restart'));
+
+    _attachKeyboardListenerIfNeeded();
+  }
+
+  @override
+  void didChangeDependencies() {
+    debugPrint("Page.didChangeDependencies: ${widget.control.id}");
+    super.didChangeDependencies();
+
+    _loadFontsIfNeeded(FletBackend.of(context));
+  }
+
+  @override
+  void didUpdateWidget(covariant PageControl oldWidget) {
+    debugPrint("Page.didUpdateWidget: ${widget.control.id}");
+    super.didUpdateWidget(oldWidget);
+    _updateMultiViews();
+
+    // page services
+    var pageServicesControl = widget.control.child("_page_services");
+    if (_pageServices == null && pageServicesControl != null) {
+      _pageServices = ServiceRegistry(
+          control: pageServicesControl,
+          propertyName: "services",
+          backend: FletBackend.of(context));
+    }
+
+    // user services
+    var userServicesControl = widget.control.child("_user_services");
+    if (_userServices == null && userServicesControl != null) {
+      _userServices = ServiceRegistry(
+          control: userServicesControl,
+          propertyName: "services",
+          backend: FletBackend.of(context));
+    }
+
+    _attachKeyboardListenerIfNeeded();
+    _loadFontsIfNeeded(FletBackend.of(context));
+  }
+
+  @override
+  void didChangeMetrics() {
+    _updateMultiViews();
   }
 
   @override
   void dispose() {
+    debugPrint("Page.dispose: ${widget.control.id}");
+    WidgetsBinding.instance.removeObserver(this);
     _routeState.removeListener(_routeChanged);
-    _routeState.dispose();
+    _appLifecycleListener.dispose();
     if (_keyboardHandlerSubscribed) {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
-    _appLifecycleListener.dispose();
     super.dispose();
   }
 
+  void _updateMultiViews() {
+    if (!widget.control.backend.multiView) {
+      return;
+    }
+    bool changed = false;
+
+    bool triggerAddViewEvent = SessionStore.get("triggerAddViewEvent") == null;
+    for (final FlutterView view
+        in WidgetsBinding.instance.platformDispatcher.views) {
+      if (!_multiViews.containsKey(view.viewId)) {
+        var initialData = getViewInitialData(view.viewId);
+        debugPrint("View initial data ${view.viewId}: $initialData");
+        _multiViews[view.viewId] = MultiView(
+            viewId: view.viewId, flutterView: view, initialData: initialData);
+        if (triggerAddViewEvent) {
+          widget.control.backend.triggerControlEventById(
+              widget.control.id,
+              "multi_view_add",
+              {"view_id": view.viewId, "initial_data": initialData});
+        }
+        changed = true;
+      }
+    }
+    for (var viewId in _multiViews.keys.toList()) {
+      if (!WidgetsBinding.instance.platformDispatcher.views
+          .any((view) => view.viewId == viewId)) {
+        _multiViews.remove(viewId);
+        if (triggerAddViewEvent) {
+          widget.control.backend.triggerControlEventById(
+              widget.control.id, "multi_view_remove", viewId);
+        }
+        changed = true;
+      }
+    }
+    SessionStore.set("triggerAddViewEvent", "true");
+    if (changed && !_registeredFromMultiViews) {
+      _registeredFromMultiViews = true;
+      widget.control.backend.onRouteUpdated("/");
+    } else {
+      // re-draw
+      setState(() {});
+    }
+  }
+
   void _routeChanged() {
-    widget.dispatch(SetPageRouteAction(
-        _routeState.route, FletAppServices.of(context).server));
+    FletBackend.of(context).onRouteUpdated(_routeState.route);
+  }
+
+  void _handleAppLifecycleTransition(String state) {
+    widget.control.triggerEvent("app_lifecycle_state_change", state);
   }
 
   bool _handleKeyDown(KeyEvent e) {
@@ -234,994 +210,292 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        widget.backend.triggerControlEvent(
-            "page",
+        widget.control.triggerEvent(
             "keyboard_event",
-            json.encode(KeyboardEvent(
+            KeyboardEvent(
                     key: k.keyLabel,
                     isAltPressed: HardwareKeyboard.instance.isAltPressed,
                     isControlPressed:
                         HardwareKeyboard.instance.isControlPressed,
                     isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
                     isMetaPressed: HardwareKeyboard.instance.isMetaPressed)
-                .toJson()));
+                .toMap());
       }
     }
     return false;
   }
 
-  void _handleAppLifecycleTransition(String state) {
-    widget.backend
-        .triggerControlEvent("page", "app_lifecycle_state_change", state);
+  void _attachKeyboardListenerIfNeeded() {
+    var onKeyboardEvent = widget.control.getBool("on_keyboard_event", false);
+    if (onKeyboardEvent != _prevOnKeyboardEvent) {
+      if (onKeyboardEvent == true && !_keyboardHandlerSubscribed) {
+        HardwareKeyboard.instance.addHandler(_handleKeyDown);
+        _keyboardHandlerSubscribed = true;
+      } else if (onKeyboardEvent == false && _keyboardHandlerSubscribed) {
+        HardwareKeyboard.instance.removeHandler(_handleKeyDown);
+        _keyboardHandlerSubscribed = false;
+      }
+      _prevOnKeyboardEvent = onKeyboardEvent;
+    }
+  }
+
+  Future<void> _loadFontsIfNeeded(FletBackend backend) async {
+    final fonts = widget.control.getFonts("fonts", {})!;
+    for (final entry in fonts.entries) {
+      final fontFamily = entry.key;
+      final fontUrl = entry.value;
+      var assetSrc = backend.getAssetSource(fontUrl);
+      try {
+        if (assetSrc.isFile) {
+          await UserFonts.loadFontFromFile(fontFamily, fontUrl);
+        } else {
+          await UserFonts.loadFontFromUrl(fontFamily, fontUrl);
+        }
+      } catch (e) {
+        debugPrint("Error loading font $fontFamily: $e");
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Page build: ${widget.control.id}");
-
-    //debugDumpRenderTree();
+    debugPrint("Page.build: ${widget.control.id}");
 
     // clear hrefs index
-    FletAppServices.of(context).globalKeys.clear();
+    FletBackend.of(context).globalKeys.clear();
 
     // page route
-    var route = widget.control.attrString("route");
-    if (_routeState.route != route && route != null) {
-      // route updated
-      _routeState.route = route;
+    var route = widget.control.getString("route");
+    if (route != null && _routeState.route != route) {
+      // update route
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _routeState.route = route;
+      });
     }
 
-    _platform = TargetPlatform.values.firstWhere(
+    if (!widget.control.backend.multiView) {
+      // single page mode
+      return _buildApp(widget.control, null);
+    } else {
+      // multi-view mode
+      var appStatus = context
+          .select<FletBackend, ({bool isLoading, String error})>((backend) =>
+              (isLoading: backend.isLoading, error: backend.error));
+      var appStartupScreenMessage =
+          FletBackend.of(context).appStartupScreenMessage ?? "";
+
+      List<Widget> views = [];
+      for (var view in _multiViews.entries) {
+        var multiViewControl = widget.control
+            .children("multi_views")
+            .firstWhereOrNull((v) => v.get("view_id") == view.key);
+
+        var viewControl = multiViewControl?.children("views").firstOrNull;
+
+        Widget viewChild = SizedBox(
+          width: 100,
+          height: 100,
+          child: viewControl != null
+              ? ControlWidget(control: viewControl)
+              : Stack(children: [
+                  const PageMedia(),
+                  LoadingPage(
+                    isLoading: appStatus.isLoading,
+                    message: appStatus.isLoading
+                        ? appStartupScreenMessage
+                        : appStatus.error,
+                  )
+                ]),
+        );
+
+        viewChild = _buildApp(multiViewControl ?? widget.control, viewChild);
+        views.add(View(view: view.value.flutterView, child: viewChild));
+      }
+      return ViewCollection(views: views);
+    }
+  }
+
+  Widget _buildApp(Control control, Widget? home) {
+    var platform = TargetPlatform.values.firstWhere(
         (a) =>
             a.name.toLowerCase() ==
-            widget.control.attrString("platform", "")!.toLowerCase(),
+            control.getString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _adaptive = widget.control.attrBool("adaptive");
-
-    _widgetsDesign = _adaptive == true &&
-            (_platform == TargetPlatform.iOS ||
-                _platform == TargetPlatform.macOS)
+    var widgetsDesign = control.adaptive == true &&
+            (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)
         ? PageDesign.cupertino
         : PageDesign.material;
 
     // theme
-    _themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-            t.name.toLowerCase() ==
-            widget.control.attrString("themeMode", "")!.toLowerCase()) ??
-        FletAppContext.of(context)?.themeMode;
+    var themeMode = control.getThemeMode("theme_mode") ??
+        PageContext.of(context)?.themeMode;
 
-    _localeConfiguration =
-        parseLocaleConfiguration(widget.control, "localeConfiguration");
+    var localeConfiguration =
+        control.getLocaleConfiguration("locale_configuration");
 
-    // keyboard handler
-    var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
-    if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
-      HardwareKeyboard.instance.addHandler(_handleKeyDown);
-      _keyboardHandlerSubscribed = true;
+    var localizationsDelegates = const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ];
+
+    var brightness = context.select<FletBackend, Brightness>(
+        (backend) => backend.platformBrightness);
+
+    var windowTitle = control.getString("title", "")!;
+
+    var newLightTheme = control.getTheme("theme", context, Brightness.light);
+    var newDarkTheme = control.getString("dark_theme") == null
+        ? control.getTheme("theme", context, Brightness.dark)
+        : parseTheme(control.get("dark_theme"), context, Brightness.dark);
+
+    var lightTheme = control.get("_lightTheme");
+    if (lightTheme == null || !themesEqual(lightTheme!, newLightTheme)) {
+      control.updateProperties({"_lightTheme": newLightTheme}, python: false);
+      lightTheme = newLightTheme;
     }
 
-    // window params
-    var windowTitle = widget.control.attrString("title", "")!;
-    var windowBgcolor = widget.control.attrColor("windowBgcolor", context);
-    var windowWidth = widget.control.attrDouble("windowWidth");
-    var windowHeight = widget.control.attrDouble("windowHeight");
-    var windowMinWidth = widget.control.attrDouble("windowMinWidth");
-    var windowMinHeight = widget.control.attrDouble("windowMinHeight");
-    var windowMaxWidth = widget.control.attrDouble("windowMaxWidth");
-    var windowMaxHeight = widget.control.attrDouble("windowMaxHeight");
-    var windowTop = widget.control.attrDouble("windowTop");
-    var windowLeft = widget.control.attrDouble("windowLeft");
-    var windowCenter = widget.control.attrString("windowCenter");
-    var windowClose = widget.control.attrString("windowClose");
-    var windowFullScreen = widget.control.attrBool("windowFullScreen");
-    var windowMinimized = widget.control.attrBool("windowMinimized");
-    var windowMaximized = widget.control.attrBool("windowMaximized");
-    var windowAlignment = parseAlignment(widget.control, "windowAlignment");
-    var windowBadgeLabel = widget.control.attrString("windowBadgeLabel");
-    var windowIcon = widget.control.attrString("windowIcon");
-    var windowHasShadow = widget.control.attrBool("windowShadow");
-    var windowOpacity = widget.control.attrDouble("windowOpacity");
-    var windowMinimizable = widget.control.attrBool("windowMinimizable");
-    var windowMaximizable = widget.control.attrBool("windowMaximizable");
-    var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
-    var windowAlwaysOnBottom = widget.control.attrBool("windowAlwaysOnBottom");
-    var windowResizable = widget.control.attrBool("windowResizable");
-    var windowMovable = widget.control.attrBool("windowMovable");
-    var windowPreventClose = widget.control.attrBool("windowPreventClose");
-    var windowTitleBarHidden = widget.control.attrBool("windowTitleBarHidden");
-    var windowTitleBarButtonsHidden =
-        widget.control.attrBool("windowTitleBarButtonsHidden", false)!;
-    var windowVisible = widget.control.attrBool("windowVisible");
-    var windowFocused = widget.control.attrBool("windowFocused");
-    var windowDestroy = widget.control.attrBool("windowDestroy");
-    var windowWaitUntilReadyToShow =
-        widget.control.attrBool("windowWaitUntilReadyToShow");
-    var windowSkipTaskBar = widget.control.attrBool("windowSkipTaskBar");
-    var windowFrameless = widget.control.attrBool("windowFrameless");
-    var windowProgressBar = widget.control.attrDouble("windowProgressBar");
-    var windowIgnoreMouseEvents =
-        widget.control.attrBool("windowIgnoreMouseEvents");
-
-    updateWindow(PageArgsModel? pageArgs) async {
-      try {
-        // windowTitle
-        if (_windowTitle != windowTitle) {
-          setWindowTitle(windowTitle);
-          _windowTitle = windowTitle;
-        }
-
-        // windowBgcolor
-        if (_windowBgcolor != windowBgcolor && windowBgcolor != null) {
-          setWindowBackgroundColor(windowBgcolor);
-          _windowBgcolor = windowBgcolor;
-        }
-
-        // window size
-        if ((windowWidth != null || windowHeight != null) &&
-            (windowWidth != _windowWidth || windowHeight != _windowHeight) &&
-            windowFullScreen != true &&
-            (defaultTargetPlatform != TargetPlatform.macOS ||
-                (defaultTargetPlatform == TargetPlatform.macOS &&
-                    windowMaximized != true &&
-                    windowMinimized != true))) {
-          debugPrint("setWindowSize: $windowWidth, $windowHeight");
-          await setWindowSize(windowWidth, windowHeight);
-          _windowWidth = windowWidth;
-          _windowHeight = windowHeight;
-        }
-
-        // window min size
-        if ((windowMinWidth != null || windowMinHeight != null) &&
-            (windowMinWidth != _windowMinWidth ||
-                windowMinHeight != _windowMinHeight)) {
-          debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
-          await setWindowMinSize(windowMinWidth, windowMinHeight);
-          _windowMinWidth = windowMinWidth;
-          _windowMinHeight = windowMinHeight;
-        }
-
-        // window max size
-        if ((windowMaxWidth != null || windowMaxHeight != null) &&
-            (windowMaxWidth != _windowMaxWidth ||
-                windowMaxHeight != _windowMaxHeight)) {
-          debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
-          await setWindowMaxSize(windowMaxWidth, windowMaxHeight);
-          _windowMaxWidth = windowMaxWidth;
-          _windowMaxHeight = windowMaxHeight;
-        }
-
-        // window position
-        if ((windowTop != null || windowLeft != null) &&
-            (windowTop != _windowTop || windowLeft != _windowLeft) &&
-            windowFullScreen != true &&
-            (windowCenter == null || windowCenter == "") &&
-            (defaultTargetPlatform != TargetPlatform.macOS ||
-                (defaultTargetPlatform == TargetPlatform.macOS &&
-                    windowMaximized != true &&
-                    windowMinimized != true))) {
-          debugPrint("setWindowPosition: $windowTop, $windowLeft");
-          await setWindowPosition(windowTop, windowLeft);
-          _windowTop = windowTop;
-          _windowLeft = windowLeft;
-        }
-
-        // windowOpacity
-        if (windowOpacity != null && windowOpacity != _windowOpacity) {
-          await setWindowOpacity(windowOpacity);
-          _windowOpacity = windowOpacity;
-        }
-
-        // windowMinimizable
-        if (windowMinimizable != null &&
-            windowMinimizable != _windowMinimizable) {
-          await setWindowMinimizability(windowMinimizable);
-          _windowMinimizable = windowMinimizable;
-        }
-
-        // windowMinimized
-        if (windowMinimized != _windowMinimized) {
-          if (windowMinimized == true) {
-            await minimizeWindow();
-          } else if (windowMinimized == false && windowMaximized == false) {
-            await restoreWindow();
-          }
-          _windowMinimized = windowMinimized;
-        }
-
-        // windowMaximizable
-        if (windowMaximizable != null &&
-            windowMaximizable != _windowMaximizable) {
-          await setWindowMaximizability(windowMaximizable);
-          _windowMaximizable = windowMaximizable;
-        }
-
-        // windowMaximized
-        if (windowMaximized != _windowMaximized) {
-          if (windowMaximized == true) {
-            await maximizeWindow();
-          } else if (windowMaximized == false) {
-            await unmaximizeWindow();
-          }
-          _windowMaximized = windowMaximized;
-        }
-
-        // windowAlignment
-        if (windowAlignment != null && windowAlignment != _windowAlignment) {
-          await setWindowAlignment(windowAlignment);
-          _windowAlignment = windowAlignment;
-        }
-
-        // windowBadgeLabel
-        if (windowBadgeLabel != null && windowBadgeLabel != _windowBadgeLabel) {
-          await setWindowBadgeLabel(windowBadgeLabel);
-          _windowBadgeLabel = windowBadgeLabel;
-        }
-
-        // windowIcon
-        if (windowIcon != null && windowIcon != _windowIcon) {
-          if (pageArgs == null) {
-            await setWindowIcon(windowIcon);
-          } else {
-            var iconAssetSrc =
-                getAssetSrc(windowIcon, pageArgs.pageUri!, pageArgs.assetsDir);
-            await setWindowIcon(iconAssetSrc.path);
-          }
-          _windowIcon = windowIcon;
-        }
-
-        // windowHasShadow
-        if (windowHasShadow != null && windowHasShadow != _windowHasShadow) {
-          await setWindowShadow(windowHasShadow);
-          _windowHasShadow = windowHasShadow;
-        }
-
-        // windowResizable
-        if (windowResizable != null && windowResizable != _windowResizable) {
-          await setWindowResizability(windowResizable);
-          _windowResizable = windowResizable;
-        }
-
-        // windowMovable
-        if (windowMovable != null && windowMovable != _windowMovable) {
-          await setWindowMovability(windowMovable);
-          _windowMovable = windowMovable;
-        }
-
-        // windowFullScreen
-        if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
-          await setWindowFullScreen(windowFullScreen);
-          _windowFullScreen = windowFullScreen;
-        }
-
-        // windowAlwaysOnTop
-        if (windowAlwaysOnTop != null &&
-            windowAlwaysOnTop != _windowAlwaysOnTop) {
-          await setWindowAlwaysOnTop(windowAlwaysOnTop);
-          _windowAlwaysOnTop = windowAlwaysOnTop;
-        }
-
-        // windowAlwaysOnBottom
-        if (windowAlwaysOnBottom != null &&
-            windowAlwaysOnBottom != _windowAlwaysOnBottom) {
-          await setWindowAlwaysOnBottom(windowAlwaysOnBottom);
-          _windowAlwaysOnBottom = windowAlwaysOnBottom;
-        }
-
-        // windowPreventClose
-        if (windowPreventClose != null &&
-            windowPreventClose != _windowPreventClose) {
-          await setWindowPreventClose(windowPreventClose);
-          _windowPreventClose = windowPreventClose;
-        }
-
-        // windowTitleBarHidden
-        if (windowTitleBarHidden != null &&
-            windowTitleBarHidden != _windowTitleBarHidden) {
-          await setWindowTitleBarVisibility(
-              windowTitleBarHidden, windowTitleBarButtonsHidden);
-          _windowTitleBarHidden = windowTitleBarHidden;
-        }
-
-        // windowVisible
-        if (windowVisible != _windowVisible) {
-          if (windowVisible == true) {
-            await showWindow();
-          } else if (windowVisible == false) {
-            await hideWindow();
-          }
-          _windowVisible = windowVisible;
-        }
-
-        // windowFocused
-        if (windowFocused != _windowFocused) {
-          if (windowFocused == true) {
-            await focusWindow();
-          } else if (windowFocused == false) {
-            await blurWindow();
-          }
-          _windowFocused = windowFocused;
-        }
-
-        // windowCenter
-        if (windowCenter != _windowCenter && windowFullScreen != true) {
-          await centerWindow();
-          _windowCenter = windowCenter;
-        }
-
-        // windowFrameless
-        if (windowFrameless != _windowFrameless && windowFrameless == true) {
-          await setWindowFrameless();
-          _windowFrameless = windowFrameless;
-        }
-
-        // windowProgressBar
-        if (windowProgressBar != null &&
-            windowProgressBar != _windowProgressBar) {
-          await setWindowProgressBar(windowProgressBar);
-          _windowProgressBar = windowProgressBar;
-        }
-
-        // windowSkipTaskBar
-        if (windowSkipTaskBar != null &&
-            windowSkipTaskBar != _windowSkipTaskBar) {
-          await setWindowSkipTaskBar(windowSkipTaskBar);
-          _windowSkipTaskBar = windowSkipTaskBar;
-        }
-
-        // windowClose
-        if (windowClose != _windowClose) {
-          await closeWindow();
-          _windowClose = windowClose;
-        }
-
-        // windowDestroy
-        if (windowDestroy == true) {
-          await destroyWindow();
-        }
-
-        // window waitUntilReadyToShow
-        if (windowWaitUntilReadyToShow == true) {
-          await waitUntilReadyToShow();
-        }
-
-        // windowIgnoreMouseEvents
-        if (windowIgnoreMouseEvents != null &&
-            windowIgnoreMouseEvents != _windowIgnoreMouseEvents) {
-          await setIgnoreMouseEvents(windowIgnoreMouseEvents);
-          _windowIgnoreMouseEvents = windowIgnoreMouseEvents;
-        }
-      } catch (e) {
-        debugPrint("ERROR updating window: $e");
-      }
+    var darkTheme = control.get("_darkTheme");
+    if (darkTheme == null || !themesEqual(darkTheme!, newDarkTheme)) {
+      control.updateProperties({"_darkTheme": newDarkTheme}, python: false);
+      darkTheme = newDarkTheme;
     }
 
-    return withPageArgs((context, pageArgs) {
-      updateWindow(pageArgs);
-      debugPrint("Page fonts build: ${widget.control.id}");
+    var cupertinoTheme = themeMode == ThemeMode.light ||
+            ((themeMode == null || themeMode == ThemeMode.system) &&
+                brightness == Brightness.light)
+        ? parseCupertinoTheme(control.get("theme"), context, Brightness.light)
+        : control.getString("dark_theme") != null
+            ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
+            : control.getCupertinoTheme("theme", context, Brightness.dark);
 
-      // load custom fonts
-      parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
-        var assetSrc =
-            getAssetSrc(fontUrl, pageArgs.pageUri!, pageArgs.assetsDir);
+    var showSemanticsDebugger =
+        control.getBool("show_semantics_debugger", false)!;
 
-        if (assetSrc.isFile) {
-          UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
-        } else {
-          UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
-        }
-      });
-
-      return StoreConnector<AppState, PageMediaViewModel>(
-          distinct: true,
-          converter: (store) => PageMediaViewModel.fromStore(store),
-          builder: (context, media) {
-            debugPrint("MaterialApp.router build: ${widget.control.id}");
-
-            _brightness = media.displayBrightness;
-
-            return FletAppContext(
-                themeMode: _themeMode,
-                child: _widgetsDesign == PageDesign.cupertino
-                    ? CupertinoApp.router(
-                        debugShowCheckedModeBanner: false,
-                        showSemanticsDebugger: widget.control
-                            .attrBool("showSemanticsDebugger", false)!,
-                        routerDelegate: _routerDelegate,
-                        routeInformationParser: _routeParser,
-                        title: windowTitle,
-                        theme: _themeMode == ThemeMode.light ||
-                                ((_themeMode == null ||
-                                        _themeMode == ThemeMode.system) &&
-                                    _brightness == Brightness.light)
-                            ? parseCupertinoTheme(
-                                widget.control, "theme", Brightness.light)
-                            : widget.control.attrString("darkTheme") != null
-                                ? parseCupertinoTheme(widget.control,
-                                    "darkTheme", Brightness.dark)
-                                : parseCupertinoTheme(
-                                    widget.control, "theme", Brightness.dark),
-                        localizationsDelegates: const [
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                        ],
-                        supportedLocales: _localeConfiguration != null
-                            ? _localeConfiguration!["supportedLocales"]
-                            : [const Locale('en', 'US')],
-                        locale: _localeConfiguration != null
-                            ? (_localeConfiguration?["locale"])
-                            : null,
-                      )
-                    : MaterialApp.router(
-                        debugShowCheckedModeBanner: false,
-                        showSemanticsDebugger: widget.control
-                            .attrBool("showSemanticsDebugger", false)!,
-                        routerDelegate: _routerDelegate,
-                        routeInformationParser: _routeParser,
-                        title: windowTitle,
-                        localizationsDelegates: const [
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                        ],
-                        supportedLocales: _localeConfiguration != null
-                            ? _localeConfiguration!["supportedLocales"]
-                            : [const Locale('en', 'US')],
-                        locale: _localeConfiguration != null
-                            ? (_localeConfiguration?["locale"])
-                            : null,
-                        theme: parseTheme(
-                            widget.control, "theme", Brightness.light),
-                        darkTheme: widget.control.attrString("darkTheme") ==
-                                null
-                            ? parseTheme(
-                                widget.control, "theme", Brightness.dark)
-                            : parseTheme(
-                                widget.control, "darkTheme", Brightness.dark),
-                        themeMode: _themeMode,
-                      ));
-          });
-    });
+    var app = widgetsDesign == PageDesign.cupertino
+        ? home != null
+            ? CupertinoApp(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                title: windowTitle,
+                theme: cupertinoTheme,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+                localizationsDelegates: localizationsDelegates,
+                home: home,
+              )
+            : CupertinoApp.router(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                routerDelegate: _routerDelegate,
+                routeInformationParser: _routeParser,
+                title: windowTitle,
+                theme: cupertinoTheme,
+                localizationsDelegates: localizationsDelegates,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+              )
+        : home != null
+            ? MaterialApp(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                title: windowTitle,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+                localizationsDelegates: localizationsDelegates,
+                home: home,
+              )
+            : MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                showSemanticsDebugger: showSemanticsDebugger,
+                routerDelegate: _routerDelegate,
+                routeInformationParser: _routeParser,
+                title: windowTitle,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                localizationsDelegates: localizationsDelegates,
+                supportedLocales: localeConfiguration.supportedLocales,
+                locale: localeConfiguration.locale,
+              );
+    return PageContext(
+      themeMode: themeMode,
+      brightness: brightness,
+      widgetsDesign: widgetsDesign,
+      child: app,
+    );
   }
 
   Widget _buildNavigator(
       BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
     debugPrint("Page navigator build: ${widget.control.id}");
 
-    return StoreConnector<AppState, RoutesViewModel>(
-        distinct: true,
-        converter: (store) => RoutesViewModel.fromStore(store),
-        // onWillChange: (prev, next) {
-        //   debugPrint("Page navigator.onWillChange(): $prev, $next");
-        // },
-        builder: (context, routesView) {
-          debugPrint("_buildNavigator build");
+    var showAppStartupScreen =
+        FletBackend.of(context).showAppStartupScreen ?? false;
+    var appStartupScreenMessage =
+        FletBackend.of(context).appStartupScreenMessage ?? "";
 
-          var showAppStartupScreen =
-              FletAppServices.of(context).showAppStartupScreen ?? false;
-          var appStartupScreenMessage =
-              FletAppServices.of(context).appStartupScreenMessage ?? "";
+    var appStatus =
+        context.select<FletBackend, ({bool isLoading, String error})>(
+            (backend) => (isLoading: backend.isLoading, error: backend.error));
 
-          List<Page<dynamic>> pages = [];
-          if (routesView.views.isEmpty) {
-            pages.add(AnimatedTransitionPage(
+    var views = widget.control.children("views");
+    List<Page<dynamic>> pages = [];
+    if (views.isEmpty) {
+      pages.add(AnimatedTransitionPage(
+          fadeTransition: true,
+          duration: Duration.zero,
+          child: showAppStartupScreen
+              ? Stack(children: [
+                  const PageMedia(),
+                  LoadingPage(
+                    isLoading: appStatus.isLoading,
+                    message: appStatus.isLoading
+                        ? appStartupScreenMessage
+                        : appStatus.error,
+                  )
+                ])
+              : const Scaffold(
+                  body: PageMedia(),
+                )));
+    } else {
+      String viewRoutes =
+          views.map((v) => v.getString("route", v.id.toString())).join();
+
+      pages = views.map((view) {
+        var key = ValueKey(view.getString("route", view.id.toString()));
+        var child = ControlWidget(control: view);
+
+        //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
+
+        return _prevViewRoutes == null
+            ? AnimatedTransitionPage(
+                key: key,
+                child: child,
                 fadeTransition: true,
                 duration: Duration.zero,
-                child: showAppStartupScreen
-                    ? Stack(children: [
-                        const PageMedia(),
-                        LoadingPage(
-                          isLoading: routesView.isLoading,
-                          message: routesView.isLoading
-                              ? appStartupScreenMessage
-                              : routesView.error,
-                        )
-                      ])
-                    : const Scaffold(
-                        body: PageMedia(),
-                      )));
-          } else {
-            Widget? loadingPage;
-            // offstage
-            overlayWidgets(String viewId) {
-              List<Widget> overlayWidgets = [];
+              )
+            : AnimatedTransitionPage(
+                key: key,
+                child: child,
+                fullscreenDialog: view.getBool("fullscreen_dialog", false)!);
+      }).toList();
 
-              if (viewId == routesView.views.last.id) {
-                overlayWidgets.addAll(routesView.offstageControls
-                    .where((c) => !c.isNonVisual)
-                    .map((c) => createControl(
-                        routesView.page, c.id, routesView.page.isDisabled,
-                        parentAdaptive: _adaptive)));
-                overlayWidgets.add(const PageMedia());
-              }
+      _prevViewRoutes = viewRoutes;
+    }
 
-              if (viewId == routesView.views.first.id && isDesktopPlatform()) {
-                overlayWidgets.add(WindowMedia(dispatch: widget.dispatch));
-              }
-
-              return overlayWidgets;
-            }
-
-            if ((routesView.isLoading || routesView.error != "") &&
-                showAppStartupScreen) {
-              loadingPage = LoadingPage(
-                isLoading: routesView.isLoading,
-                message: routesView.isLoading
-                    ? appStartupScreenMessage
-                    : routesView.error,
-              );
-            }
-
-            String viewRoutes = routesView.views
-                .map((v) => v.attrString("route") ?? v.id)
-                .join();
-
-            pages = routesView.views.map((view) {
-              var key = ValueKey(view.attrString("route") ?? view.id);
-              var child = ViewControl(
-                parent: routesView.page,
-                viewId: view.id,
-                overlayWidgets: overlayWidgets(view.id),
-                loadingPage: loadingPage,
-                backend: widget.backend,
-                parentAdaptive: _adaptive,
-                widgetsDesign: _widgetsDesign,
-                brightness: _brightness,
-                themeMode: _themeMode,
-                isRootView: view.id == routesView.views.first.id,
-              );
-
-              //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
-
-              return _prevViewRoutes == null
-                  ? AnimatedTransitionPage(
-                      key: key,
-                      child: child,
-                      fadeTransition: true,
-                      duration: Duration.zero,
-                    )
-                  : AnimatedTransitionPage(
-                      key: key,
-                      child: child,
-                      fullscreenDialog:
-                          view.attrBool("fullscreenDialog", false)!);
-            }).toList();
-
-            _prevViewRoutes = viewRoutes;
+    return Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onDidRemovePage: (page) {
+          if (page.key != null) {
+            widget.control.triggerEvent(
+                "view_pop", {"route": (page.key as ValueKey).value});
           }
-
-          Widget nextChild = Navigator(
-              key: navigatorKey,
-              pages: pages,
-              onDidRemovePage: (page) {
-                if (page.key != null) {
-                  widget.backend.triggerControlEvent(
-                      "page", "view_pop", (page.key as ValueKey).value);
-                }
-              });
-
-          // wrap navigator into non-visual offstage controls
-          for (var c
-              in routesView.offstageControls.where((c) => c.isNonVisual)) {
-            nextChild = createControl(
-                routesView.page, c.id, routesView.page.isDisabled,
-                parentAdaptive: _adaptive, nextChild: nextChild);
-          }
-
-          return nextChild;
-        });
-  }
-}
-
-class ViewControl extends StatefulWidget {
-  final Control parent;
-  final String viewId;
-  final List<Widget> overlayWidgets;
-  final Widget? loadingPage;
-  final FletControlBackend backend;
-  final bool? parentAdaptive;
-  final PageDesign widgetsDesign;
-  final Brightness? brightness;
-  final ThemeMode? themeMode;
-  final bool isRootView;
-
-  ViewControl(
-      {Key? key,
-      required this.parent,
-      required this.viewId,
-      required this.overlayWidgets,
-      required this.loadingPage,
-      required this.backend,
-      required this.parentAdaptive,
-      required this.widgetsDesign,
-      required this.brightness,
-      required this.themeMode,
-      required this.isRootView})
-      : super(key: ValueKey("control_$viewId"));
-
-  @override
-  State<ViewControl> createState() => _ViewControlState();
-}
-
-class _ViewControlState extends State<ViewControl> with FletStoreMixin {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  Completer<bool>? _popCompleter;
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, ControlViewModel?>(
-        distinct: true,
-        converter: (store) {
-          return ControlViewModel.fromStore(store, widget.viewId);
-        },
-        ignoreChange: (state) {
-          return state.controls[widget.viewId] == null;
-        },
-        // onWillChange: (prev, next) {
-        //   debugPrint("View StoreConnector.onWillChange(): $prev, $next");
-        // },
-        builder: (context, controlView) {
-          debugPrint("View build");
-
-          if (controlView == null) {
-            return const SizedBox.shrink();
-          }
-
-          var control = controlView.control;
-          var children = controlView.children;
-
-          var adaptive = control.attrBool("adaptive") ?? widget.parentAdaptive;
-
-          final spacing = control.attrDouble("spacing", 10)!;
-          final mainAlignment = parseMainAxisAlignment(
-              control.attrString("verticalAlignment"),
-              MainAxisAlignment.start)!;
-          final crossAlignment = parseCrossAxisAlignment(
-              control.attrString("horizontalAlignment"),
-              CrossAxisAlignment.start)!;
-          final fabLocation = parseFloatingActionButtonLocation(
-              control, "floatingActionButtonLocation");
-          final canPop = control.attrBool("canPop", true)!;
-
-          widget.backend.subscribeMethods(control.id, (methodName, args) async {
-            debugPrint("View.onMethod(${control.id})");
-            if (methodName == "confirm_pop") {
-              _popCompleter?.complete(bool.tryParse(args["shouldPop"] ?? ""));
-              widget.backend.unsubscribeMethods(control.id);
-            }
-            return null;
-          });
-
-          Control? appBar;
-          Control? cupertinoAppBar;
-          Control? bottomAppBar;
-          Control? fab;
-          Control? navBar;
-          Control? drawer;
-          Control? endDrawer;
-          List<Widget> controls = [];
-          bool firstControl = true;
-
-          for (var ctrl in children.where((c) => c.isVisible)) {
-            if (ctrl.type == "appbar") {
-              appBar = ctrl;
-              continue;
-            } else if (ctrl.type == "cupertinoappbar") {
-              cupertinoAppBar = ctrl;
-              continue;
-            } else if (ctrl.type == "bottomappbar") {
-              bottomAppBar = ctrl;
-              continue;
-            } else if (ctrl.name == "fab") {
-              fab = ctrl;
-              continue;
-            } else if (ctrl.type == "navigationbar" ||
-                ctrl.type == "cupertinonavigationbar") {
-              navBar = ctrl;
-              continue;
-            } else if (ctrl.type == "navigationdrawer" &&
-                ctrl.name == "drawer_start") {
-              drawer = ctrl;
-              continue;
-            } else if (ctrl.type == "navigationdrawer" &&
-                ctrl.name == "drawer_end") {
-              endDrawer = ctrl;
-              continue;
-            }
-            // spacer between displayed controls
-            else if (spacing > 0 &&
-                !firstControl &&
-                mainAlignment != MainAxisAlignment.spaceAround &&
-                mainAlignment != MainAxisAlignment.spaceBetween &&
-                mainAlignment != MainAxisAlignment.spaceEvenly) {
-              controls.add(SizedBox(height: spacing));
-            }
-            firstControl = false;
-
-            // displayed control
-            controls.add(createControl(control, ctrl.id, control.isDisabled,
-                parentAdaptive: adaptive));
-          }
-
-          List<String> childIds = [
-            appBar?.id,
-            cupertinoAppBar?.id,
-            drawer?.id,
-            endDrawer?.id
-          ].nonNulls.toList();
-
-          final textDirection = widget.parent.attrBool("rtl", false)!
-              ? TextDirection.rtl
-              : TextDirection.ltr;
-
-          return withControls(childIds, (context, childrenViews) {
-            debugPrint("Route view build: ${widget.viewId}");
-
-            var appBarView = childrenViews.controlViews
-                .firstWhereOrNull((v) => v.control.id == (appBar?.id ?? ""));
-            var cupertinoAppBarView = childrenViews.controlViews
-                .firstWhereOrNull(
-                    (v) => v.control.id == (cupertinoAppBar?.id ?? ""));
-            var drawerView = childrenViews.controlViews
-                .firstWhereOrNull((v) => v.control.id == (drawer?.id ?? ""));
-            var endDrawerView = childrenViews.controlViews
-                .firstWhereOrNull((v) => v.control.id == (endDrawer?.id ?? ""));
-
-            var column = Column(
-                mainAxisAlignment: mainAlignment,
-                crossAxisAlignment: crossAlignment,
-                children: controls);
-
-            Widget child = ScrollableControl(
-                control: control,
-                scrollDirection: Axis.vertical,
-                backend: widget.backend,
-                parentAdaptive: adaptive,
-                child: column);
-
-            if (control.attrBool("onScroll", false)!) {
-              child = ScrollNotificationControl(
-                  control: control, backend: widget.backend, child: child);
-            }
-
-            final bool? drawerOpened = widget.parent.state["drawerOpened"];
-            final bool? endDrawerOpened =
-                widget.parent.state["endDrawerOpened"];
-
-            void dismissDrawer(String id) {
-              widget.backend.updateControlState(id, {"open": "false"});
-              widget.backend.triggerControlEvent(id, "dismiss");
-            }
-
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (drawerView != null) {
-                if (scaffoldKey.currentState?.isDrawerOpen == false &&
-                    drawerOpened == true) {
-                  widget.parent.state["drawerOpened"] = false;
-                  dismissDrawer(drawerView.control.id);
-                }
-                if (drawerView.control.attrBool("open", false)! &&
-                    drawerOpened != true) {
-                  if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
-                    scaffoldKey.currentState?.closeEndDrawer();
-                  }
-                  Future.delayed(const Duration(milliseconds: 1)).then((value) {
-                    scaffoldKey.currentState?.openDrawer();
-                    widget.parent.state["drawerOpened"] = true;
-                  });
-                } else if (!drawerView.control.attrBool("open", false)! &&
-                    drawerOpened == true) {
-                  scaffoldKey.currentState?.closeDrawer();
-                  widget.parent.state["drawerOpened"] = false;
-                }
-              }
-              if (endDrawerView != null) {
-                if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
-                    endDrawerOpened == true) {
-                  widget.parent.state["endDrawerOpened"] = false;
-                  dismissDrawer(endDrawerView.control.id);
-                }
-                if (endDrawerView.control.attrBool("open", false)! &&
-                    endDrawerOpened != true) {
-                  if (scaffoldKey.currentState?.isDrawerOpen == true) {
-                    scaffoldKey.currentState?.closeDrawer();
-                  }
-                  Future.delayed(const Duration(milliseconds: 1)).then((value) {
-                    scaffoldKey.currentState?.openEndDrawer();
-                    widget.parent.state["endDrawerOpened"] = true;
-                  });
-                } else if (!endDrawerView.control.attrBool("open", false)! &&
-                    endDrawerOpened == true) {
-                  scaffoldKey.currentState?.closeEndDrawer();
-                  widget.parent.state["endDrawerOpened"] = false;
-                }
-              }
-            });
-
-            var bnb = navBar ?? bottomAppBar;
-
-            var bar = appBarView != null
-                ? widget.widgetsDesign == PageDesign.cupertino
-                    ? CupertinoAppBarControl(
-                        parent: control,
-                        control: appBarView.control,
-                        children: appBarView.children,
-                        parentDisabled: control.isDisabled,
-                        parentAdaptive: adaptive)
-                    : AppBarControl(
-                        parent: control,
-                        control: appBarView.control,
-                        children: appBarView.children,
-                        parentDisabled: control.isDisabled,
-                        parentAdaptive: adaptive,
-                        height: appBarView.control
-                            .attrDouble("toolbarHeight", kToolbarHeight)!)
-                : cupertinoAppBarView != null
-                    ? CupertinoAppBarControl(
-                        parent: control,
-                        control: cupertinoAppBarView.control,
-                        children: cupertinoAppBarView.children,
-                        parentDisabled: control.isDisabled,
-                        parentAdaptive: adaptive,
-                      ) as ObstructingPreferredSizeWidget
-                    : null;
-
-            Widget body = Stack(children: [
-              SizedBox.expand(
-                  child: Container(
-                      padding: parseEdgeInsets(
-                          control, "padding", const EdgeInsets.all(10))!,
-                      child: child)),
-              ...widget.overlayWidgets
-            ]);
-
-            var materialTheme = widget.themeMode == ThemeMode.light ||
-                    ((widget.themeMode == null ||
-                            widget.themeMode == ThemeMode.system) &&
-                        widget.brightness == Brightness.light)
-                ? parseTheme(widget.parent, "theme", Brightness.light)
-                : widget.parent.attrString("darkTheme") != null
-                    ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
-                    : parseTheme(widget.parent, "theme", Brightness.dark);
-
-            Widget scaffold = Scaffold(
-              key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-              backgroundColor: control.attrColor("bgcolor", context) ??
-                  CupertinoTheme.of(context).scaffoldBackgroundColor,
-              appBar: bar is AppBarControl ? bar : null,
-              drawer: drawerView != null
-                  ? NavigationDrawerControl(
-                      control: drawerView.control,
-                      children: drawerView.children,
-                      parentDisabled: control.isDisabled,
-                      parentAdaptive: adaptive,
-                      backend: widget.backend)
-                  : null,
-              onDrawerChanged: (opened) {
-                if (drawerView != null && !opened) {
-                  widget.parent.state["drawerOpened"] = false;
-                  dismissDrawer(drawerView.control.id);
-                }
-              },
-              endDrawer: endDrawerView != null
-                  ? NavigationDrawerControl(
-                      control: endDrawerView.control,
-                      children: endDrawerView.children,
-                      parentDisabled: control.isDisabled,
-                      parentAdaptive: adaptive,
-                      backend: widget.backend)
-                  : null,
-              onEndDrawerChanged: (opened) {
-                if (endDrawerView != null && !opened) {
-                  widget.parent.state["endDrawerOpened"] = false;
-                  dismissDrawer(endDrawerView.control.id);
-                }
-              },
-              body: body,
-              bottomNavigationBar: bnb != null
-                  ? createControl(control, bnb.id, control.isDisabled,
-                      parentAdaptive: adaptive)
-                  : null,
-              floatingActionButton: fab != null
-                  ? createControl(control, fab.id, control.isDisabled,
-                      parentAdaptive: adaptive)
-                  : null,
-              floatingActionButtonLocation: fabLocation,
-            );
-
-            var systemOverlayStyle =
-                materialTheme.extension<SystemUiOverlayStyleTheme>();
-
-            if (systemOverlayStyle != null &&
-                systemOverlayStyle.systemUiOverlayStyle != null &&
-                bar == null) {
-              scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
-                value: systemOverlayStyle.systemUiOverlayStyle!,
-                child: scaffold,
-              );
-            }
-
-            if (bar is CupertinoAppBarControl) {
-              scaffold = CupertinoPageScaffold(
-                  key: scaffoldKey,
-                  backgroundColor: control.attrColor("bgcolor", context),
-                  navigationBar: bar as ObstructingPreferredSizeWidget,
-                  child: scaffold);
-            }
-
-            if (widget.widgetsDesign == PageDesign.material) {
-              scaffold = CupertinoTheme(
-                data: widget.themeMode == ThemeMode.light ||
-                        ((widget.themeMode == null ||
-                                widget.themeMode == ThemeMode.system) &&
-                            widget.brightness == Brightness.light)
-                    ? parseCupertinoTheme(
-                        widget.parent, "theme", Brightness.light)
-                    : widget.parent.attrString("darkTheme") != null
-                        ? parseCupertinoTheme(
-                            widget.parent, "darkTheme", Brightness.dark)
-                        : parseCupertinoTheme(
-                            widget.parent, "theme", Brightness.dark),
-                child: scaffold,
-              );
-            } else if (widget.widgetsDesign == PageDesign.cupertino) {
-              scaffold = Theme(
-                data: materialTheme,
-                child: scaffold,
-              );
-            }
-            Widget result = Directionality(
-                textDirection: textDirection,
-                child: widget.loadingPage != null
-                    ? Stack(
-                        children: [scaffold, widget.loadingPage!],
-                      )
-                    : scaffold);
-
-            result = PopScope(
-                canPop: canPop,
-                onPopInvokedWithResult: (didPop, result) {
-                  if (didPop || !control.attrBool("onConfirmPop", false)!) {
-                    return;
-                  }
-                  debugPrint("Page.onPopInvokedWithResult()");
-                  _popCompleter = Completer<bool>();
-                  widget.backend
-                      .triggerControlEvent(widget.viewId, "confirm_pop");
-                  _popCompleter!.future
-                      .timeout(
-                    const Duration(minutes: 5),
-                    onTimeout: () => false,
-                  )
-                      .then((shouldPop) {
-                    if (context.mounted && shouldPop) {
-                      if (widget.isRootView) {
-                        SystemNavigator.pop();
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    }
-                  });
-                },
-                child: result);
-
-            return withPageArgs((context, pageArgs) {
-              var backgroundDecoration = parseBoxDecoration(
-                  Theme.of(context), control, "decoration", pageArgs);
-              var foregroundDecoration = parseBoxDecoration(
-                  Theme.of(context), control, "foregroundDecoration", pageArgs);
-              if (backgroundDecoration != null ||
-                  foregroundDecoration != null) {
-                return Container(
-                  decoration: backgroundDecoration,
-                  foregroundDecoration: foregroundDecoration,
-                  child: result,
-                );
-              }
-              return result;
-            });
-          });
         });
   }
 }

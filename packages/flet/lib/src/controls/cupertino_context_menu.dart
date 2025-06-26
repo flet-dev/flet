@@ -1,27 +1,16 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
+import '../widgets/flet_store_mixin.dart';
 
 class CupertinoContextMenuControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoContextMenuControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  CupertinoContextMenuControl({Key? key, required this.control})
+      : super(key: ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoContextMenuControl> createState() =>
@@ -34,32 +23,22 @@ class _CupertinoContextMenuControlState
   Widget build(BuildContext context) {
     debugPrint("CupertinoContextMenu build ($hashCode): ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
-    var actionCtrls =
-        widget.children.where((c) => c.name == "action" && c.isVisible);
+    var content = widget.control.buildWidget("content");
+    var actions = widget.control.buildWidgets("actions");
 
-    if (actionCtrls.isEmpty) {
+    if (actions.isEmpty) {
       return const ErrorControl(
-          "CupertinoContextMenu.actions must be provided and at least one action must be visible");
+          "at least one action in CupertinoContextMenu.actions must be visible");
     }
-    if (contentCtrls.isEmpty) {
-      return const ErrorControl(
-          "CupertinoContextMenu.content must be provided and visible");
+    if (content == null) {
+      return const ErrorControl("CupertinoContextMenu.content must be visible");
     }
 
     return CupertinoContextMenu(
       enableHapticFeedback:
-          widget.control.attrBool("enableHapticFeedback", false)!,
-      actions: actionCtrls.map((c) {
-        return createControl(widget.control, c.id, disabled,
-            parentAdaptive: adaptive);
-      }).toList(),
-      child: createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: adaptive),
+          widget.control.getBool("enable_haptic_feedback", false)!,
+      actions: actions,
+      child: content,
     );
   }
 }

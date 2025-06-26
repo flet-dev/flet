@@ -1,9 +1,9 @@
 import asyncio
 import logging
-from typing import Optional
+from typing import Any, Optional, Union
 
 import uvicorn
-from flet.core.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 import flet_web.fastapi
 import flet_web.fastapi as flet_fastapi
@@ -22,25 +22,27 @@ class WebServerHandle:
 
 
 def get_fastapi_web_app(
-    session_handler,
+    main,
+    before_main,
     page_name: str,
-    assets_dir,
-    upload_dir,
-    web_renderer: Optional[WebRenderer],
-    use_color_emoji,
-    route_url_strategy,
+    assets_dir: str,
+    upload_dir: str,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: bool = False,
 ):
     web_path = f"/{page_name.strip('/')}"
     app = flet_web.fastapi.FastAPI()
     app.mount(
         web_path,
         flet_web.fastapi.app(
-            session_handler,
+            main,
+            before_main=before_main,
             upload_dir=upload_dir,
             assets_dir=assets_dir,
-            web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
-            use_color_emoji=use_color_emoji,
+            web_renderer=web_renderer,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         ),
     )
 
@@ -48,21 +50,21 @@ def get_fastapi_web_app(
 
 
 async def serve_fastapi_web_app(
-    session_handler,
-    host,
-    url_host,
-    port,
+    main,
+    before_main,
+    host: str,
+    url_host: str,
+    port: int,
     page_name: str,
-    assets_dir,
-    upload_dir,
-    web_renderer: Optional[WebRenderer],
-    use_color_emoji,
-    route_url_strategy,
-    blocking,
-    on_startup,
-    log_level,
+    assets_dir: str,
+    upload_dir: str,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: bool = False,
+    blocking: bool = False,
+    on_startup: Optional[Any] = None,
+    log_level: Optional[Union[str, int]] = None,
 ):
-
     web_path = f"/{page_name.strip('/')}"
     page_url = f"http://{url_host}:{port}{web_path if web_path != '/' else ''}"
 
@@ -75,12 +77,13 @@ async def serve_fastapi_web_app(
     app.mount(
         web_path,
         flet_web.fastapi.app(
-            session_handler,
+            main,
+            before_main=before_main,
             upload_dir=upload_dir,
             assets_dir=assets_dir,
-            web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
-            use_color_emoji=use_color_emoji,
+            web_renderer=web_renderer,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         ),
     )
     config = uvicorn.Config(app, host=host, port=port, log_level=log_level)

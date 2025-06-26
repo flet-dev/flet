@@ -1,16 +1,20 @@
 import asyncio
 import concurrent.futures
+import contextlib
+import inspect
 import logging
 import os
 import signal
 import traceback
+import warnings
+from collections.abc import Awaitable
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
-import flet.version
-from flet.core.event import Event
-from flet.core.page import Page
-from flet.core.types import AppView, WebRenderer
+from flet.controls.page import Page, _session_page
+from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
+from flet.controls.update_behavior import UpdateBehavior
+from flet.messaging.session import Session
 from flet.utils import (
     get_bool_env_var,
     get_current_script_dir,
@@ -20,31 +24,57 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
+from flet.utils.deprecated import deprecated
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
 )
 
-import flet
+if os.getenv("FLET_FORCE_WEB_SERVER"):
+    warnings.filterwarnings("ignore", module=r"websockets")
+    warnings.filterwarnings("ignore", module=r"uvicorn")
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
+
+if TYPE_CHECKING:
+    from flet.controls.page import Page
 
 
-def app(
-    target,
-    name="",
-    host=None,
-    port=0,
+@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+def app(*args, **kwargs):
+    new_args = list(args)
+    if "target" in kwargs:
+        new_args.insert(0, kwargs["target"])
+    return run(*new_args, **kwargs)
+
+
+@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+def app_async(*args, **kwargs):
+    new_args = list(args)
+    if "target" in kwargs:
+        new_args.insert(0, kwargs["target"])
+    return run_async(*new_args, **kwargs)
+
+
+def run(
+    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
+    before_main: Optional[
+        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
+    ] = None,
+    name: str = "",
+    host: Optional[str] = None,
+    port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
-    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
-    use_color_emoji=False,
-    route_url_strategy="path",
-    export_asgi_app=False,
+    assets_dir: Optional[str] = "assets",
+    upload_dir: Optional[str] = None,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: Optional[bool] = False,
+    export_asgi_app: Optional[bool] = False,
+    target=None,
 ):
     if is_pyodide():
-        __run_pyodide(target)
+        __run_pyodide(main=main or target, before_main=before_main)
         return
 
     if export_asgi_app:
@@ -52,18 +82,26 @@ def app(
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
-            session_handler=target,
+            main=main or target,
+            before_main=before_main,
             page_name=__get_page_name(name),
             assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
             upload_dir=__get_upload_dir_path(upload_dir, relative_to_cwd=True),
             web_renderer=web_renderer,
-            use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         )
 
+    if isinstance(web_renderer, str):
+        web_renderer = WebRenderer(web_renderer)
+
+    if isinstance(route_url_strategy, str):
+        route_url_strategy = RouteUrlStrategy(route_url_strategy)
+
     return asyncio.run(
-        app_async(
-            target=target,
+        run_async(
+            main=main or target,
+            before_main=before_main,
             name=name,
             host=host,
             port=port,
@@ -71,26 +109,30 @@ def app(
             assets_dir=assets_dir,
             upload_dir=upload_dir,
             web_renderer=web_renderer,
-            use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
         )
     )
 
 
-async def app_async(
-    target,
-    name="",
-    host=None,
-    port=0,
+async def run_async(
+    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
+    before_main: Optional[
+        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
+    ] = None,
+    name: str = "",
+    host: Optional[str] = None,
+    port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
-    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
-    use_color_emoji=False,
-    route_url_strategy="path",
+    assets_dir: Optional[str] = "assets",
+    upload_dir: Optional[str] = None,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
+    route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+    no_cdn: Optional[bool] = False,
+    target=None,
 ):
     if is_pyodide():
-        __run_pyodide(target)
+        __run_pyodide(main=main or target, before_main=before_main)
         return
 
     if isinstance(view, str):
@@ -98,6 +140,9 @@ async def app_async(
 
     if isinstance(web_renderer, str):
         web_renderer = WebRenderer(web_renderer)
+
+    if isinstance(route_url_strategy, str):
+        route_url_strategy = RouteUrlStrategy(route_url_strategy)
 
     force_web_server = get_bool_env_var("FLET_FORCE_WEB_SERVER") or is_linux_server()
     if force_web_server:
@@ -149,20 +194,22 @@ async def app_async(
     conn = (
         await __run_socket_server(
             port=port,
-            session_handler=target,
+            main=main or target,
+            before_main=before_main,
             blocking=is_embedded(),
         )
         if is_socket_server
         else await __run_web_server(
-            session_handler=target,
+            main=main or target,
+            before_main=before_main,
             host=host,
             port=port,
             page_name=page_name,
             assets_dir=assets_dir,
             upload_dir=upload_dir,
             web_renderer=web_renderer,
-            use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            no_cdn=no_cdn,
             blocking=(view == AppView.WEB_BROWSER or view is None or force_web_server),
             on_startup=on_app_startup,
         )
@@ -191,76 +238,70 @@ async def app_async(
                 assets_dir if view != AppView.FLET_APP_WEB else None,
                 view == AppView.FLET_APP_HIDDEN,
             )
-            try:
+            with contextlib.suppress(Exception):
                 await fvp.wait()
-            except:
-                pass
 
             close_flet_view(pid_file)
 
         elif url_prefix and is_socket_server:
             on_app_startup(conn.page_url)
 
-            try:
+            with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
-            except KeyboardInterrupt:
-                pass
 
     finally:
         await conn.close()
 
 
-async def __run_socket_server(port=0, session_handler=None, blocking=False):
-    from flet.flet_socket_server import FletSocketServer
+def __get_on_session_created(main):
+    async def on_session_created(session: Session):
+        logger.info("App session started")
+        try:
+            assert main is not None
+            _session_page.set(session.page)
+            UpdateBehavior.reset()
+            if asyncio.iscoroutinefunction(main):
+                await main(session.page)
+
+            elif inspect.isasyncgenfunction(main):
+                async for _ in main(session.page):
+                    if UpdateBehavior.auto_update_enabled():
+                        await session.auto_update(session.page)
+
+            elif inspect.isgeneratorfunction(main):
+                for _ in main(session.page):
+                    if UpdateBehavior.auto_update_enabled():
+                        await session.auto_update(session.page)
+            else:
+                # run synchronously
+                main(session.page)
+
+            if UpdateBehavior.auto_update_enabled():
+                await session.auto_update(session.page)
+
+        except Exception as e:
+            print(
+                f"Unhandled error processing page session {session.id}:",
+                traceback.format_exc(),
+            )
+            session.error(f"The application encountered an error: {e}")
+
+    return on_session_created
+
+
+async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
+    from flet.messaging.flet_socket_server import FletSocketServer
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     executor = concurrent.futures.ThreadPoolExecutor()
 
-    async def on_event(e):
-        if e.sessionID in conn.sessions:
-            await conn.sessions[e.sessionID].on_event_async(
-                Event(e.eventTarget, e.eventName, e.eventData)
-            )
-            if e.eventTarget == "page" and e.eventName == "close":
-                logger.info(f"Session closed: {e.sessionID}")
-                page = conn.sessions.pop(e.sessionID)
-                page._close()
-                del page
-
-    async def on_session_created(session_data):
-        page = Page(
-            conn,
-            session_data.sessionID,
-            executor=executor,
-            loop=asyncio.get_running_loop(),
-        )
-        await page.fetch_page_details_async()
-        conn.sessions[session_data.sessionID] = page
-        logger.info("App session started")
-        try:
-            assert session_handler is not None
-            if asyncio.iscoroutinefunction(session_handler):
-                await session_handler(page)
-            else:
-                # run in thread pool
-                await asyncio.get_running_loop().run_in_executor(
-                    executor, session_handler, page
-                )
-
-        except Exception as e:
-            print(
-                f"Unhandled error processing page session {page.session_id}:",
-                traceback.format_exc(),
-            )
-            page.error(f"There was an error while processing your request: {e}")
-
     conn = FletSocketServer(
         loop=asyncio.get_running_loop(),
         port=port,
         uds_path=uds_path,
-        on_event=on_event,
-        on_session_created=on_session_created,
+        on_session_created=__get_on_session_created(main),
+        before_main=before_main,
         blocking=blocking,
         executor=executor,
     )
@@ -269,15 +310,16 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
 
 
 async def __run_web_server(
-    session_handler,
+    main,
+    before_main,
     host,
     port,
     page_name,
     assets_dir,
     upload_dir,
     web_renderer: Optional[WebRenderer],
-    use_color_emoji,
     route_url_strategy,
+    no_cdn,
     blocking,
     on_startup,
 ):
@@ -291,12 +333,13 @@ async def __run_web_server(
 
     logger.info(f"Starting Flet web server on port {port}...")
 
-    log_level = logging.getLogger(flet.__name__).getEffectiveLevel()
+    log_level = logging.getLogger("flet").getEffectiveLevel()
     if log_level == logging.CRITICAL or log_level == logging.NOTSET:
         log_level = logging.FATAL
 
     return await serve_fastapi_web_app(
-        session_handler,
+        main,
+        before_main=before_main,
         host=host,
         url_host=url_host,
         port=port,
@@ -304,48 +347,19 @@ async def __run_web_server(
         assets_dir=assets_dir,
         upload_dir=upload_dir,
         web_renderer=web_renderer,
-        use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
+        no_cdn=no_cdn,
         blocking=blocking,
         on_startup=on_startup,
         log_level=logging.getLevelName(log_level).lower(),
     )
 
 
-def __run_pyodide(target):
-    import flet_js
-    from flet.pyodide_connection import PyodideConnection
+def __run_pyodide(main=None, before_main=None):
+    from flet.messaging.pyodide_connection import PyodideConnection
 
-    async def on_event(e):
-        if e.sessionID in conn.sessions:
-            await conn.sessions[e.sessionID].on_event_async(
-                Event(e.eventTarget, e.eventName, e.eventData)
-            )
-            if e.eventTarget == "page" and e.eventName == "close":
-                logger.info(f"Session closed: {e.sessionID}")
-                del conn.sessions[e.sessionID]
-
-    async def on_session_created(session_data):
-        page = Page(conn, session_data.sessionID, loop=asyncio.get_running_loop())
-        await page.fetch_page_details_async()
-        conn.sessions[session_data.sessionID] = page
-        logger.info("App session started")
-        try:
-            assert target is not None
-            if asyncio.iscoroutinefunction(target):
-                await target(page)
-            else:
-                target(page)
-        except Exception as e:
-            print(
-                f"Unhandled error processing page session {page.session_id}:",
-                traceback.format_exc(),
-            )
-            page.error(f"There was an error while processing your request: {e}")
-
-    conn = PyodideConnection(
-        on_event=on_event,
-        on_session_created=on_session_created,
+    PyodideConnection(
+        on_session_created=__get_on_session_created(main), before_main=before_main
     )
 
 
@@ -377,11 +391,10 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
 
 
 def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd=False):
-    if upload_dir:
-        if not Path(upload_dir).is_absolute():
-            upload_dir = str(
-                Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
-                .joinpath(upload_dir)
-                .resolve()
-            )
+    if upload_dir and not Path(upload_dir).is_absolute():
+        upload_dir = str(
+            Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
+            .joinpath(upload_dir)
+            .resolve()
+        )
     return upload_dir

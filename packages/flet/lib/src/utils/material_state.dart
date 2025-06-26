@@ -1,14 +1,23 @@
 import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
+
 WidgetStateProperty<T?>? getWidgetStateProperty<T>(
-    dynamic jsonDictValue, T Function(dynamic) converterFromJson,
+    dynamic value, T Function(dynamic) converterFromJson,
     [T? defaultValue]) {
-  if (jsonDictValue == null) {
-    return null;
+  if (value == null) return null;
+  var j = value;
+  if (j is! Map<dynamic, dynamic>) {
+    j = {"default": j};
   }
-  var j = jsonDictValue;
-  if (j is! Map<String, dynamic>) {
+  if (j.containsKey("")) {
+    j["default"] = j.remove("");
+  }
+  if (!j.keys.every(
+      (k) => k == "default" || WidgetState.values.any((v) => v.name == k))) {
+    // wrap into another dict
     j = {"default": j};
   }
   return WidgetStateFromJSON(j, converterFromJson, defaultValue);
@@ -18,7 +27,7 @@ class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
   late final LinkedHashMap<String, T> _states;
   late final T? _defaultValue;
 
-  WidgetStateFromJSON(Map<String, dynamic>? jsonDictValue,
+  WidgetStateFromJSON(Map<dynamic, dynamic>? jsonDictValue,
       T Function(dynamic) converterFromJson, T? defaultValue) {
     _defaultValue = defaultValue;
 
@@ -46,5 +55,14 @@ class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
 
     // Default state
     return _states["default"] ?? _defaultValue;
+  }
+}
+
+extension WidgetStatePropertyParsers on Control {
+  WidgetStateProperty<T?>? getWidgetStateProperty<T>(
+      String propertyName, T Function(dynamic) converterFromJson,
+      [T? defaultValue]) {
+    return getWidgetStateProperty<T>(
+        get(propertyName), converterFromJson, defaultValue);
   }
 }

@@ -2,8 +2,6 @@
 
 # Based on: https://pypi.org/project/toml-to-requirements/
 
-from __future__ import annotations
-
 from typing import Any, Optional
 
 

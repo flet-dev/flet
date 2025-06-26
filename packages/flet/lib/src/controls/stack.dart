@@ -1,51 +1,31 @@
 import 'package:flutter/widgets.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 
 class StackControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final List<Control> children;
 
-  const StackControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive});
+  const StackControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
-
-    var clipBehavior =
-        parseClip(control.attrString("clipBehavior"), Clip.hardEdge)!;
-
-    StackFit fit = parseStackFit(control.attrString("fit"), StackFit.loose)!;
-    var ctrls = children
-        .where((c) => c.isVisible)
-        .map((c) =>
-            createControl(control, c.id, disabled, parentAdaptive: adaptive))
-        .toList();
-
-    return constrainedControl(
-        context,
-        Stack(
-          clipBehavior: clipBehavior,
-          fit: fit,
-          alignment: parseAlignment(control, "alignment") ??
-              AlignmentDirectional.topStart,
-          children: ctrls,
-        ),
-        parent,
-        control);
+    final stack = Stack(
+      clipBehavior:
+          parseClip(control.getString("clipBehavior"), Clip.hardEdge)!,
+      fit: parseStackFit(control.getString("fit"), StackFit.loose)!,
+      alignment:
+          control.getAlignment("alignment") ?? AlignmentDirectional.topStart,
+      children: control.buildWidgets("controls"),
+    );
+    return ConstrainedControl(control: control, child: stack);
   }
 }

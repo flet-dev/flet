@@ -7,6 +7,7 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
+import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
@@ -18,42 +19,52 @@ import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import 'package:flet_charts/flet_charts.dart' as flet_charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_strategy/url_strategy.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
 void main([List<String>? args]) async {
-  if (isProduction) {
-    // ignore: avoid_returning_null_for_void
-    debugPrint = (String? message, {int? wrapWidth}) => null;
-  }
+  // if (isProduction) {
+  //   // ignore: avoid_returning_null_for_void
+  //   debugPrint = (String? message, {int? wrapWidth}) => null;
+  // }
 
   await setupDesktop();
 
   WidgetsFlutterBinding.ensureInitialized();
+  List<FletExtension> extensions = [
+    flet_audio_recorder.Extension(),
+    flet_geolocator.Extension(),
+    flet_permission_handler.Extension(),
+    flet_lottie.Extension(),
+    flet_map.Extension(),
+    flet_ads.Extension(),
+    flet_rive.Extension(),
+    flet_webview.Extension(),
+    flet_flashlight.Extension(),
+    flet_datatable2.Extension(),
+    flet_charts.Extension(),
+  ];
 
   // --FAT_CLIENT_START--
-  flet_audio.ensureInitialized();
-  flet_video.ensureInitialized();
+  extensions.add(flet_audio.Extension());
+  extensions.add(flet_video.Extension());
   // --FAT_CLIENT_END--
-  flet_audio_recorder.ensureInitialized();
-  flet_geolocator.ensureInitialized();
-  flet_permission_handler.ensureInitialized();
-  flet_lottie.ensureInitialized();
-  flet_map.ensureInitialized();
-  flet_ads.ensureInitialized();
-  flet_rive.ensureInitialized();
-  flet_webview.ensureInitialized();
-  flet_flashlight.ensureInitialized();
+
+  // initialize extensions
+  for (var extension in extensions) {
+    extension.ensureInitialized();
+  }
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    pageUrl = "tcp://localhost:8550";
   }
 
   if (kIsWeb) {
@@ -61,12 +72,12 @@ void main([List<String>? args]) async {
     var routeUrlStrategy = getFletRouteUrlStrategy();
     debugPrint("URL Strategy: $routeUrlStrategy");
     if (routeUrlStrategy == "path") {
-      setPathUrlStrategy();
+      usePathUrlStrategy();
     }
   } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
       !kDebugMode) {
     debugPrint("Flet View is running in Desktop mode");
-    // first argument must exist
+    // first argument must be
     if (args!.isEmpty) {
       throw Exception('Page URL must be provided as a first argument.');
     }
@@ -98,26 +109,21 @@ void main([List<String>? args]) async {
     };
   }
 
-  runApp(FletApp(
+  var app = FletApp(
     title: 'Flet',
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
     showAppStartupScreen: true,
-    createControlFactories: [
-// --FAT_CLIENT_START--
-      flet_audio.createControl,
-      flet_video.createControl,
-// --FAT_CLIENT_END--
-      flet_audio_recorder.createControl,
-      flet_geolocator.createControl,
-      flet_permission_handler.createControl,
-      flet_lottie.createControl,
-      flet_map.createControl,
-      flet_ads.createControl,
-      flet_rive.createControl,
-      flet_webview.createControl,
-      flet_flashlight.createControl,
-    ],
-  ));
+    appStartupScreenMessage: "Working...",
+    extensions: extensions,
+    multiView: isMultiView(),
+  );
+
+  if (app.multiView) {
+    debugPrint("Flet Web Multi-View mode");
+    runWidget(app);
+  } else {
+    runApp(app);
+  }
 }

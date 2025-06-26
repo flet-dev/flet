@@ -1,69 +1,102 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import 'material_state.dart';
 import 'numbers.dart';
 
-EdgeInsets? parseEdgeInsets(Control control, String propName,
-    [EdgeInsets? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defaultValue;
-  }
-
-  final j1 = json.decode(v);
-  return edgeInsetsFromJson(j1, defaultValue);
-}
-
-EdgeInsets? edgeInsetsFromJson(dynamic json, [EdgeInsets? defaultValue]) {
-  if (json == null) {
-    return defaultValue;
-  } else if (json is int || json is double) {
-    return EdgeInsets.all(parseDouble(json, 0)!);
+EdgeInsets? parseEdgeInsets(dynamic value, [EdgeInsets? defaultValue]) {
+  if (value == null) return defaultValue;
+  if (value is int || value is double) {
+    return EdgeInsets.all(parseDouble(value, 0)!);
   }
   return EdgeInsets.fromLTRB(
-      parseDouble(json['l'], 0)!,
-      parseDouble(json['t'], 0)!,
-      parseDouble(json['r'], 0)!,
-      parseDouble(json['b'], 0)!);
+      parseDouble(value['left'], 0)!,
+      parseDouble(value['top'], 0)!,
+      parseDouble(value['right'], 0)!,
+      parseDouble(value['bottom'], 0)!);
 }
 
-EdgeInsetsDirectional? parseEdgeInsetsDirectional(
-    Control control, String propName,
-    [EdgeInsetsDirectional? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return defaultValue;
-  }
-
-  final j1 = json.decode(v);
-  return edgeInsetsDirectionalFromJson(j1, defaultValue);
+EdgeInsets? parseMargin(dynamic value, [EdgeInsets? defaultValue]) {
+  return parseEdgeInsets(value, defaultValue);
 }
 
-EdgeInsetsDirectional? edgeInsetsDirectionalFromJson(dynamic json,
+EdgeInsets? parsePadding(dynamic value, [EdgeInsets? defaultValue]) {
+  return parseEdgeInsets(value, defaultValue);
+}
+
+EdgeInsetsDirectional? parseEdgeInsetsDirectional(dynamic value,
     [EdgeInsetsDirectional? defaultValue]) {
-  if (json == null) {
-    return defaultValue;
-  } else if (json is int || json is double) {
-    return EdgeInsetsDirectional.all(parseDouble(json, 0)!);
+  if (value == null) return defaultValue;
+  if (value is int || value is double) {
+    return EdgeInsetsDirectional.all(parseDouble(value, 0)!);
   }
   return EdgeInsetsDirectional.fromSTEB(
-      parseDouble(json['l'], 0)!,
-      parseDouble(json['t'], 0)!,
-      parseDouble(json['r'], 0)!,
-      parseDouble(json['b'], 0)!);
+      parseDouble(value['left'], 0)!,
+      parseDouble(value['top'], 0)!,
+      parseDouble(value['right'], 0)!,
+      parseDouble(value['bottom'], 0)!);
 }
 
-WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(
-    Control control, String propName,
-    [EdgeInsets? defaultValue]) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(dynamic value,
+    {EdgeInsets? defaultEdgeInsets,
+    WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+  if (value == null) return defaultValue;
 
   return getWidgetStateProperty<EdgeInsets?>(
-      jsonDecode(v), (jv) => edgeInsetsFromJson(jv), defaultValue);
+      value, (jv) => parseEdgeInsets(jv), defaultEdgeInsets);
+}
+
+WidgetStateProperty<EdgeInsets?>? parseWidgetStatePadding(dynamic value,
+    {EdgeInsets? defaultPadding,
+    WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+  return parseWidgetStateEdgeInsets(value,
+      defaultEdgeInsets: defaultPadding, defaultValue: defaultValue);
+}
+
+WidgetStateProperty<EdgeInsets?>? parseWidgetStateMargin(dynamic value,
+    {EdgeInsets? defaultEdgeInsets,
+    WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+  return parseWidgetStateEdgeInsets(value,
+      defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+}
+
+extension EdgeInsetsParsers on Control {
+  EdgeInsets? getEdgeInsets(String propertyName, [EdgeInsets? defaultValue]) {
+    return parseEdgeInsets(get(propertyName), defaultValue);
+  }
+
+  EdgeInsets? getMargin(String propertyName, [EdgeInsets? defaultValue]) {
+    return parseMargin(get(propertyName), defaultValue);
+  }
+
+  EdgeInsets? getPadding(String propertyName, [EdgeInsets? defaultValue]) {
+    return parsePadding(get(propertyName), defaultValue);
+  }
+
+  EdgeInsetsDirectional? getEdgeInsetsDirectional(String propertyName,
+      [EdgeInsetsDirectional? defaultValue]) {
+    return parseEdgeInsetsDirectional(get(propertyName), defaultValue);
+  }
+
+  WidgetStateProperty<EdgeInsets?>? getWidgetStateEdgeInsets(
+      String propertyName,
+      {EdgeInsets? defaultEdgeInsets,
+      WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+    return parseWidgetStateEdgeInsets(get(propertyName),
+        defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<EdgeInsets?>? getWidgetStatePadding(String propertyName,
+      {EdgeInsets? defaultPadding,
+      WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+    return parseWidgetStatePadding(get(propertyName),
+        defaultPadding: defaultPadding, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<EdgeInsets?>? getWidgetStateMargin(String propertyName,
+      {EdgeInsets? defaultEdgeInsets,
+      WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+    return parseWidgetStateMargin(get(propertyName),
+        defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+  }
 }

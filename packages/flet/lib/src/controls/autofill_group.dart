@@ -1,41 +1,28 @@
-import 'package:flet/src/utils/autofill.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../utils/autofill.dart';
+import '../widgets/error.dart';
 
 class AutofillGroupControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
 
-  const AutofillGroupControl(
-      {super.key,
-      required this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      this.parentAdaptive});
+  const AutofillGroupControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("AutofillGroup build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var content = control.buildWidget("content");
 
-    if (contentCtrls.isEmpty) {
+    if (content == null) {
       return const ErrorControl("AutofillGroup control has no content.");
     }
 
     return AutofillGroup(
-        onDisposeAction: parseAutofillContextAction(
-            control.attrString("disposeAction"), AutofillContextAction.commit)!,
-        child: createControl(control, contentCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive));
+        onDisposeAction: control.getAutofillContextAction(
+            "dispose_action", AutofillContextAction.commit)!,
+        child: content);
   }
 }

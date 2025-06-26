@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -7,57 +5,37 @@ import '../models/control.dart';
 import '../utils/numbers.dart';
 
 DismissDirection? parseDismissDirection(String? value,
-    [DismissDirection? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+    [DismissDirection? defaultValue]) {
+  if (value == null) return defaultValue;
   return DismissDirection.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-Map<DismissDirection, double>? parseDismissThresholds(
-    Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
+Map<DismissDirection, double>? parseDismissThresholds(dynamic value,
+    [Map<DismissDirection, double>? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  final j1 = json.decode(v);
-  return getDismissThresholds(j1, (jv) => parseDouble(jv, 0)!);
+  Map<DismissDirection, double> result = {};
+  value.forEach((d, t) {
+    var direction = parseDismissDirection(d, DismissDirection.none)!;
+    if (direction != DismissDirection.none) {
+      var threshold = parseDouble(t, 0.0)!;
+      result[direction] = threshold;
+    }
+  });
+
+  return result;
 }
 
-Map<DismissDirection, double>? getDismissThresholds<T>(
-    dynamic jsonDictValue, T Function(dynamic) converterFromJson) {
-  if (jsonDictValue == null) {
-    return null;
-  }
-  var j = jsonDictValue;
-  if (j is! Map<String, dynamic>) {
-    j = {"": j};
+extension DismissibleParsers on Control {
+  DismissDirection? getDismissDirection(String propertyName,
+      [DismissDirection? defaultValue]) {
+    return parseDismissDirection(get(propertyName), defaultValue);
   }
 
-  return getDismissThresholdsFromJSON(j, converterFromJson);
-}
-
-Map<DismissDirection, double> getDismissThresholdsFromJSON(
-    Map<String, dynamic>? jsonDictValue, Function(dynamic) converterFromJson) {
-  Map<DismissDirection, double> dismissDirectionMap = {};
-
-  if (jsonDictValue != null) {
-    jsonDictValue.forEach((directionStr, jv) {
-      directionStr
-          .split(",")
-          .map((s) => s.trim().toLowerCase())
-          .forEach((state) {
-        DismissDirection d =
-            parseDismissDirection(state, DismissDirection.none)!;
-        if (d != DismissDirection.none) {
-          dismissDirectionMap[d] = converterFromJson(jv);
-        }
-      });
-    });
+  Map<DismissDirection, double>? getDismissThresholds(String propertyName,
+      [Map<DismissDirection, double>? defaultValue]) {
+    return parseDismissThresholds(get(propertyName), defaultValue);
   }
-
-  return dismissDirectionMap;
 }
