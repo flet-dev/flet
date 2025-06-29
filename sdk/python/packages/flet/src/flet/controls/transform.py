@@ -33,12 +33,8 @@ class Rotate:
 
 @dataclass
 class Offset:
-    x: Number
-    y: Number
-
-    @classmethod
-    def zero(cls):
-        return Offset(0, 0)
+    x: Number = 0
+    y: Number = 0
 
 
 # typing

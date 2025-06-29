@@ -44,14 +44,10 @@ BoxShadow? parseBoxShadow(dynamic value, ThemeData theme,
     [BoxShadow? defaultValue]) {
   if (value == null) return defaultValue;
 
-  var offset = parseOffset(value["offset"]);
   return BoxShadow(
-      color: parseColor(value["color"], theme, const Color(0xFF000000))!,
-      offset: offset != null ? Offset(offset.dx, offset.dy) : Offset.zero,
-      blurStyle: value["blur_style"] != null
-          ? BlurStyle.values
-              .firstWhere((e) => e.name.toLowerCase() == value["blur_style"])
-          : BlurStyle.normal,
+      color: parseColor(value["color"], theme, Colors.black)!,
+      offset: parseOffset(value["offset"], Offset.zero)!,
+      blurStyle: parseBlurStyle(value["blur_style"], BlurStyle.normal)!,
       blurRadius: parseDouble(value["blur_radius"], 0)!,
       spreadRadius: parseDouble(value["spread_radius"], 0)!);
 }

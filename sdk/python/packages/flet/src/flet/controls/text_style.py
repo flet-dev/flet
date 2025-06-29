@@ -138,7 +138,7 @@ class TextStyle:
     `FontWeight.NORMAL`.
     """
 
-    italic: Optional[bool] = None
+    italic: bool = False
     """
     `True` to use italic typeface.
     """
@@ -223,6 +223,47 @@ class TextStyle:
 
     Value is of type https://flet.dev/docs/reference/types/textbaseline.
     """
+
+    def copy_with(
+        self,
+        *,
+        size: OptionalNumber = None,
+        height: OptionalNumber = None,
+        weight: Optional[FontWeight] = None,
+        italic: Optional[bool] = None,
+        decoration: Optional[TextDecoration] = None,
+        decoration_color: OptionalColorValue = None,
+        decoration_thickness: OptionalNumber = None,
+        decoration_style: Optional[TextDecorationStyle] = None,
+        font_family: Optional[str] = None,
+        color: OptionalColorValue = None,
+        bgcolor: OptionalColorValue = None,
+        shadow: Optional[ShadowValue] = None,
+        foreground: Optional[Paint] = None,
+        letter_spacing: OptionalNumber = None,
+        word_spacing: OptionalNumber = None,
+        overflow: Optional[TextOverflow] = None,
+        baseline: Optional[TextBaseline] = None
+    ):
+        return TextStyle(
+            size=size if size is not None else self.size,
+            height=height if height is not None else self.height,
+            weight=weight if weight is not None else self.weight,
+            italic=italic if italic is not None else self.italic,
+            decoration=decoration if decoration is not None else self.decoration,
+            decoration_color=decoration_color if decoration_color is not None else self.decoration_color,
+            decoration_thickness=decoration_thickness if decoration_thickness is not None else self.decoration_thickness,
+            decoration_style=decoration_style if decoration_style is not None else self.decoration_style,
+            font_family=font_family if font_family is not None else self.font_family,
+            color=color if color is not None else self.color,
+            bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
+            shadow=shadow if shadow is not None else self.shadow,
+            foreground=foreground if foreground is not None else self.foreground,
+            letter_spacing=letter_spacing if letter_spacing is not None else self.letter_spacing,
+            word_spacing=word_spacing if word_spacing is not None else self.word_spacing,
+            overflow=overflow if overflow is not None else self.overflow,
+            baseline=baseline if baseline is not None else self.baseline,
+        )
 
 
 @dataclass

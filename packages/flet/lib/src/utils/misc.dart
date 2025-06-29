@@ -177,6 +177,21 @@ NavigationRailLabelType? parseNavigationRailLabelType(String? value,
       defaultValue;
 }
 
+BlurStyle? parseBlurStyle(String? value, [BlurStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+  return BlurStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
+FloatingLabelBehavior? parseFloatingLabelBehavior(String? value,
+    [FloatingLabelBehavior? defaultValue]) {
+  if (value == null) return defaultValue;
+  return FloatingLabelBehavior.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
 extension MiscParsers on Control {
   Clip? getClipBehavior(String propertyName, [Clip? defaultValue]) {
     return parseClip(get(propertyName), defaultValue);
@@ -277,5 +292,14 @@ extension MiscParsers on Control {
   NavigationRailLabelType? getNavigationRailLabelType(String propertyName,
       [NavigationRailLabelType? defaultValue]) {
     return parseNavigationRailLabelType(get(propertyName), defaultValue);
+  }
+
+  BlurStyle? getBlurStyle(String propertyName, [BlurStyle? defaultValue]) {
+    return parseBlurStyle(get(propertyName), defaultValue);
+  }
+
+  FloatingLabelBehavior? getFloatingLabelBehavior(String propertyName,
+      [FloatingLabelBehavior? defaultValue]) {
+    return parseFloatingLabelBehavior(get(propertyName), defaultValue);
   }
 }

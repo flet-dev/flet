@@ -53,9 +53,9 @@ from flet.controls.box import (
     OptionalColorFilter,
     OptionalDecorationImage,
     OptionalFilterQuality,
-    OptionalShadowBlurStyle,
+    OptionalBlurStyle,
     OptionalShadowValue,
-    ShadowBlurStyle,
+    BlurStyle,
     ShadowValue,
 )
 from flet.controls.buttons import (
@@ -573,9 +573,9 @@ __all__ = [
     "OptionalColorFilter",
     "OptionalDecorationImage",
     "OptionalFilterQuality",
-    "OptionalShadowBlurStyle",
+    "OptionalBlurStyle",
     "OptionalShadowValue",
-    "ShadowBlurStyle",
+    "BlurStyle",
     "ShadowValue",
     "BeveledRectangleBorder",
     "ButtonStyle",

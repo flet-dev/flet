@@ -7,8 +7,15 @@ from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_state import ControlStateValue
+from flet.controls.geometry import Size
 from flet.controls.padding import PaddingValue
-from flet.controls.types import ClipBehavior, ColorValue, MouseCursor, OptionalNumber
+from flet.controls.types import (
+    ClipBehavior,
+    ColorValue,
+    MouseCursor,
+    OptionalNumber,
+    VisualDensity,
+)
 
 __all__ = ["MenuBar", "MenuStyle"]
 
@@ -24,6 +31,10 @@ class MenuStyle:
     side: Optional[ControlStateValue[BorderSide]] = None
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    fixed_size: Optional[ControlStateValue[Size]] = None
+    max_size: Optional[ControlStateValue[Size]] = None
+    min_size: Optional[ControlStateValue[Size]] = None
+    visual_density: Optional[VisualDensity] = None
 
 
 @control("MenuBar")
@@ -58,6 +69,6 @@ class MenuBar(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(c.visible for c in self.controls), (
-            "MenuBar must have at minimum one visible control"
-        )
+        assert any(
+            c.visible for c in self.controls
+        ), "MenuBar must have at minimum one visible control"

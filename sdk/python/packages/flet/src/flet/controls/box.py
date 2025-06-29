@@ -1,20 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
 from flet.controls.border import Border
 from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.colors import Colors
 from flet.controls.gradients import Gradient
-from flet.controls.transform import OffsetValue
+from flet.controls.transform import Offset, OffsetValue
 from flet.controls.types import (
     BlendMode,
+    ColorValue,
     ImageFit,
     ImageRepeat,
     Number,
-    OptionalBool,
     OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = [
@@ -23,7 +23,7 @@ __all__ = [
     "DecorationImage",
     "ColorFilter",
     "FilterQuality",
-    "ShadowBlurStyle",
+    "BlurStyle",
     "BoxShape",
     "BoxConstraints",
     "BoxFit",
@@ -34,7 +34,7 @@ __all__ = [
     "OptionalDecorationImage",
     "OptionalColorFilter",
     "OptionalFilterQuality",
-    "OptionalShadowBlurStyle",
+    "OptionalBlurStyle",
     "OptionalBoxShape",
     "OptionalBoxConstraints",
     "OptionalBoxFit",
@@ -91,7 +91,7 @@ class FilterQuality(Enum):
     """
 
 
-class ShadowBlurStyle(Enum):
+class BlurStyle(Enum):
     NORMAL = "normal"
     SOLID = "solid"
     OUTER = "outer"
@@ -100,26 +100,26 @@ class ShadowBlurStyle(Enum):
 
 @dataclass
 class BoxShadow:
-    spread_radius: OptionalNumber = None
+    spread_radius: Number = 0.0
     """
     The amount the box should be inflated prior to applying the blur.
 
     Defaults to `0.0.`
     """
 
-    blur_radius: OptionalNumber = None
+    blur_radius: Number = 0.0
     """
     The standard deviation of the Gaussian to convolve with the shadow's shape.
 
     Defaults to `0.0.`
     """
 
-    color: OptionalColorValue = None
+    color: ColorValue = Colors.BLACK
     """
     [Color](https://flet.dev/docs/reference/colors) used to draw the shadow.
     """
 
-    offset: Optional[OffsetValue] = None
+    offset: OffsetValue = field(default_factory=lambda: Offset())
     """
     An instance of `Offset` class - the displacement of the shadow from the casting
     element. Positive x/y offsets will shift the shadow to the right and down, while
@@ -130,10 +130,10 @@ class BoxShadow:
     defaults to `Offset(0,0)`.
     """
 
-    blur_style: ShadowBlurStyle = ShadowBlurStyle.NORMAL
+    blur_style: BlurStyle = BlurStyle.NORMAL
     """
-    Value is of type [`ShadowBlurStyle`](https://flet.dev/docs/reference/types/shadowblurstyle)
-    and defaults to `ShadowBlurStyle.NORMAL`.
+    Value is of type [`BlurStyle`](https://flet.dev/docs/reference/types/blurstyle)
+    and defaults to `BlurStyle.NORMAL`.
     """
 
 
@@ -191,7 +191,7 @@ class DecorationImage:
     Value is of type [`ImageFit`](https://flet.dev/docs/reference/types/imagefit).
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Alignment = field(default_factory=lambda: Alignment.center())
     """
     The alignment of the image within its bounds.
 
@@ -199,7 +199,7 @@ class DecorationImage:
     defaults to `Alignment(0.0, 0.0)`.
     """
 
-    repeat: Optional[ImageRepeat] = None
+    repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
     How the image should be repeated to fill the box.
 
@@ -207,28 +207,28 @@ class DecorationImage:
     and defaults to `ImageRepeat.NO_REPEAT`.
     """
 
-    match_text_direction: OptionalBool = None
+    match_text_direction: bool = False
     """
     Whether to paint the image in the direction of the TextDirection.
 
     Value is of type `bool` and defaults to `False`.
     """
 
-    scale: OptionalNumber = None
+    scale: Number = 1.0
     """
     The scale(image pixels to be shown per logical pixels) to apply to the image.
 
     Value is of type `float` and defaults to `1.0`.
     """
 
-    opacity: OptionalNumber = None
+    opacity: Number = 1.0
     """
     The opacity of the image.
 
     Value is of type `float` and defaults to `1.0`.
     """
 
-    filter_quality: Optional[FilterQuality] = None
+    filter_quality: FilterQuality = FilterQuality.MEDIUM
     """
     The quality of the image filter.
 
@@ -236,14 +236,14 @@ class DecorationImage:
     and defaults to `FilterQuality.MEDIUM`.
     """
 
-    invert_colors: OptionalBool = None
+    invert_colors: bool = False
     """
     Whether to invert the colors of the image while drawing.
 
     Value is of type `bool` and defaults to `False`.
     """
 
-    anti_alias: OptionalBool = None
+    anti_alias: bool = False
     """
     Whether to paint the image in anti-aliased quality.
 
@@ -314,6 +314,31 @@ class BoxDecoration:
         assert self.blend_mode is None or self.bgcolor is not None or self.gradient is not None, "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
         assert not (self.shape == BoxShape.CIRCLE and self.border_radius), "border_radius must be None when shape is BoxShape.CIRCLE"
 
+    def copy_with(
+        self,
+        *,
+        bgcolor: OptionalColorValue = None,
+        image: Optional[DecorationImage] = None,
+        border: Optional[Border] = None,
+        border_radius: OptionalBorderRadiusValue = None,
+        shadow: Optional[ShadowValue] = None,
+        gradient: Optional[Gradient] = None,
+        shape: Optional[BoxShape] = None,
+        blend_mode: Optional[BlendMode] = None,
+    ):
+        return BoxDecoration(
+            bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
+            image=image if image is not None else self.image,
+            border=border if border is not None else self.border,
+            border_radius=border_radius
+            if border_radius is not None
+            else self.border_radius,
+            shadow=shadow if shadow is not None else self.shadow,
+            gradient=gradient if gradient is not None else self.gradient,
+            shape=shape if shape is not None else self.shape,
+            blend_mode=blend_mode if blend_mode is not None else self.blend_mode,
+        )
+
 
 @dataclass
 class BoxConstraints:
@@ -382,7 +407,7 @@ OptionalBoxShadow = Optional[BoxShadow]
 OptionalDecorationImage = Optional[DecorationImage]
 OptionalColorFilter = Optional[ColorFilter]
 OptionalFilterQuality = Optional[FilterQuality]
-OptionalShadowBlurStyle = Optional[ShadowBlurStyle]
+OptionalBlurStyle = Optional[BlurStyle]
 OptionalBoxShape = Optional[BoxShape]
 OptionalBoxConstraints = Optional[BoxConstraints]
 OptionalBoxFit = Optional[BoxFit]
