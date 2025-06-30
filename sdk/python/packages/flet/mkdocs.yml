@@ -1,0 +1,252 @@
+# Project information
+site_name: "flet"
+site_url: https://docs.flet.dev/
+site_author: Flet
+site_description: Build multi-platform Python apps powered by Flutter.
+
+# Repository
+edit_uri: edit/main/docs/
+repo_name: flet-dev/flet
+repo_url: https://github.com/flet-dev/flet
+
+# Copyright
+copyright: Copyright &copy; 2025 Flet
+
+# Theme
+theme:
+  name: "material"
+  favicon: 'images/favicon.ico'
+  logo: 'images/logo.svg'
+  icon:
+    annotation: material/plus-circle
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: pink
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+    - scheme: slate
+      primary: indigo
+      accent: pink
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.action.annotate
+    - content.action.copy
+    - content.tooltips
+    - content.action.tooltips
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - navigation.tabs
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - navigation.indexes
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/flet-dev
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/bCFXYgZR3b
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/fletdev
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/fletdev.bsky.social
+
+# Navigation
+nav:
+  - Getting Started:
+      - Overview: index.md
+      - Installation: getting-started/installation.md
+      - Creating a new Flet app: getting-started/create-flet-app.md
+      - Running a Flet app (Hot Reload): getting-started/running-app.md
+      - Testing on Android: getting-started/testing-on-android.md
+      - Testing on iOS: getting-started/testing-on-ios.md
+      - Navigation and Routing: getting-started/navigation-and-routing.md
+      - Flet Controls: getting-started/flet-controls.md
+      - Custom Controls: getting-started/custom-controls.md
+      - Adaptive apps: getting-started/adaptive-apps.md
+      - Async apps: getting-started/async-apps.md
+      - Changelog: getting-started/changelog.md
+      - License: getting-started/license.md
+  - Cookbook:
+      - Accessibility: cookbook/accessibility.md
+      - Animations: cookbook/animations.md
+      - Assets: cookbook/assets.md
+      - Authentication: cookbook/authentication.md
+      - Client Storage: cookbook/client-storage.md
+      - Control Refs: cookbook/control-refs.md
+      - Drag and Drop: cookbook/drag-and-drop.md
+      - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
+      - File picker: cookbook/file-picker.md
+      - Fonts: cookbook/fonts.md
+      - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
+      - Large Lists: cookbook/large-lists.md
+      - Logging: cookbook/logging.md
+      - PubSub: cookbook/pubsub.md
+      - Read and Write Files: cookbook/read-and-write-files.md
+      - Session Storage: cookbook/session-storage.md
+      - Theming: cookbook/theming.md
+  - API Reference:
+      - Controls:
+          - api/controls/index.md
+          - Animations:
+              - AnimatedSwitcher: api/controls/animations/animatedswitcher.md
+          - Dialogs, Alerts and Panels:
+              - AlertDialog: api/controls/dialogs/alertdialog.md
+              - CupertinoActionSheet: api/controls/dialogs/cupertinoactionsheet.md
+          - Navigation:
+              - AppBar: api/controls/navigation/appbar.md
+          - Buttons:
+              - CupertinoActionSheetAction: api/controls/buttons/cupertinoactionsheetaction.md
+  - Tutorials:
+      - Calculator: tutorials/calculator.md
+      - Chat: tutorials/chat.md
+      - Solitaire: tutorials/solitaire.md
+      - ToDo: tutorials/todo.md
+      - Trolli: tutorials/trolli.md
+  - Blog:
+      - blog/index.md
+
+# Validation
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+# Watch
+watch:
+  - docs
+  - src
+  - ../../../../CHANGELOG.md
+  - ../../../../LICENSE
+
+# Plugins
+plugins:
+  # - footnotes
+  - search:
+      lang: en
+  - mike:
+      alias_type: symlink
+  - glightbox:
+      background: none
+  # - section-index
+  - markdown-exec
+  - blog:
+      blog_dir: blog
+      blog_toc: true
+      archive_toc: true
+      categories_toc: true
+      post_url_format: "{slug}"
+      draft: true
+      draft_if_future_date: true
+  - mkdocstrings:
+      default_handler: python_xref
+      handlers:
+        python_xref:
+          options:
+            relative_crossrefs: true
+            docstring_style: google
+            show_signature_annotations: true
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_bases: true
+            show_source: false
+            group_by_category: true
+            show_category_heading: false
+            show_labels: false
+            show_if_no_docstring: true
+            docstring_section_style: spacy
+            inherited_members: true
+            filters:
+              - "!^_"   # Exclude private members starting with only one underscore
+              - "!before_update"
+              - "!before_event"
+              - "!clean"
+              - "!did_mount"
+              - "!init"
+              - "!is_isolated"
+              - "!update"
+              - "!will_unmount"
+            extensions:
+              - griffe_modernized_annotations
+          inventories:
+            - url: https://docs.python.org/3/objects.inv
+              domains: [ py, std ]
+            - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
+
+# Markdown Extensions
+markdown_extensions:
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: "#"
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: python
+          class: python
+          validator: !!python/name:markdown_exec.validator
+          format: !!python/name:markdown_exec.formatter
+  - pymdownx.snippets:
+      restrict_base_path: False
+      url_download: True
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.blocks.caption
+  - pymdownx.blocks.admonition
+  - pymdownx.blocks.details
+  - pymdownx.blocks.tab:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  # - meta

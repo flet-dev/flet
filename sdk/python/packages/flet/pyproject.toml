@@ -7,28 +7,44 @@ license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "flet-cli; extra == 'cli'",
-    "flet-desktop; extra == 'desktop' and (platform_system == 'Darwin' or platform_system == 'Windows')",
-    "flet-web; extra == 'web'",
+    #    "flet-cli; extra == 'cli'",
+    #    "flet-desktop; extra == 'desktop' and (platform_system == 'Darwin' or platform_system == 'Windows')",
+    #    "flet-web; extra == 'web'",
     "oauthlib >=3.2.2; platform_system != 'Pyodide'",
     "httpx >=0.28.1; platform_system != 'Pyodide'",
     "repath >=0.9.0",
     "msgpack >=1.1.0"
 ]
 
-[project.optional-dependencies]
-all = ["flet-cli", "flet-desktop", "flet-web"]
-cli = ["flet-cli"]
-desktop = ["flet-desktop"]
-web = ["flet-web"]
-
-[project.scripts]
-flet = "flet.cli:main"
-
 [project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
+
+#[project.optional-dependencies]
+#all = ["flet-cli", "flet-desktop", "flet-web"]
+#cli = ["flet-cli"]
+#desktop = ["flet-desktop"]
+#web = ["flet-web"]
+
+[project.scripts]
+flet = "flet.cli:main"
+
+[dependency-groups]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings-python",
+    "mkdocstrings-python-xref",
+    "mike",
+    "markdown>=3.6",
+    "pymdown-extensions",
+    "mkdocs-glightbox",
+    "mkdocs-section-index",
+    "griffe-modernized-annotations",
+    "pygments>=2.16",
+    "markdown-exec[ansi]",
+]
 
 [build-system]
 requires = ["setuptools"]

@@ -12,8 +12,6 @@ __all__ = ["CupertinoActionSheet"]
 class CupertinoActionSheet(ConstrainedControl):
     """
     An iOS-style action sheet.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoactionsheet
     """
 
     title: Optional[StrOrControl] = None

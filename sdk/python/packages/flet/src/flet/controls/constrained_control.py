@@ -57,8 +57,9 @@ class ConstrainedControl(Control):
     * `transform.Rotate` - allows to specify rotation `angle` as well as `alignment` - 
     the location of rotation center.
 
+    /// details | Example
+        type: example
     For example:
-
     ```python
     ft.Image(
         src="https://picsum.photos/100/100",
@@ -68,6 +69,7 @@ class ConstrainedControl(Control):
         rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.center_left())
     )
     ```
+    ///
     """
 
     scale: Optional[ScaleValue] = None
@@ -78,9 +80,10 @@ class ConstrainedControl(Control):
     Different scale multipliers can be specified for `x` and `y` axis, but setting 
     `Control.scale` property to an instance of `transform.Scale` class.
 
-    Either `scale` or `scale_x` and `scale_y` could be specified, but not all of them, 
-    for example:
-
+    Either `scale` or `scale_x` and `scale_y` could be specified, but not all of them.
+    
+    /// details | Example
+        type: example
     ```python
     ft.Image(
         src="https://picsum.photos/100/100",
@@ -90,6 +93,7 @@ class ConstrainedControl(Control):
         scale=Scale(scale_x=2, scale_y=0.5)
     )
     ```
+    ///
     """
 
     offset: Optional[OffsetValue] = None
@@ -100,6 +104,8 @@ class ConstrainedControl(Control):
     For example, an `Offset` with a `x` of `0.25` will result in a horizontal 
     translation of one quarter the width of the control.
 
+    /// details | Example
+        type: example
     The following example displays container at `0, 0` top left corner of a stack as 
     transform applies `-1 * 100, -1 * 100` (`offset * control_size`) horizontal and 
     vertical translations to the control:
@@ -111,7 +117,9 @@ class ConstrainedControl(Control):
 
         page.add(
             ft.Stack(
-                [
+                width=1000,
+                height=1000,
+                controls=[
                     ft.Container(
                         bgcolor="red",
                         width=100,
@@ -121,13 +129,12 @@ class ConstrainedControl(Control):
                         offset=ft.transform.Offset(-1, -1),
                     )
                 ],
-                width=1000,
-                height=1000,
             )
         )
 
     ft.run(main)
     ```
+    ///
     """
     aspect_ratio: OptionalNumber = None
     """
@@ -140,14 +147,12 @@ class ConstrainedControl(Control):
     `animation.Animation` class enables implicit animation of [`Control.opacity`](https://flet.dev/docs/controls#opacity) 
     property.
 
-    <img src="https://flet.dev/img/docs/getting-started/animations/animate-opacity.gif" 
-    className="screenshot-20" />
-
+    /// details | Example
+        type: example
     ```python
     import flet as ft
 
     def main(page: ft.Page):
-
         c = ft.Container(
             width=150,
             height=150,
@@ -168,8 +173,13 @@ class ConstrainedControl(Control):
             ),
         )
 
-    ft.app(main)
+    ft.run(main)
     ```
+    
+    ![animate_opacity](../../../assets/controls/constrained-control/animate-opacity.gif){width="80%"}
+    /// caption
+    ///
+    ///
     """
 
     animate_size: Optional[AnimationValue] = None
@@ -185,14 +195,12 @@ class ConstrainedControl(Control):
 
     Please note Control position works inside `Stack` control only.
 
-    <img src="https://flet.dev/img/docs/getting-started/animations/animate-position.gif" 
-    className="screenshot-30" />
-
+    /// details | Example
+        type: example
     ```python
     import flet as ft
 
     def main(page: ft.Page):
-
         c1 = ft.Container(width=50, height=50, bgcolor="red", animate_position=1000)
 
         c2 = ft.Container(
@@ -219,6 +227,11 @@ class ConstrainedControl(Control):
 
     ft.run(main)
     ```
+    
+    ![animate_position](../../../assets/controls/constrained-control/animate-position.gif){width="80%"}
+    /// caption
+    ///
+    ///
     """
 
     animate_rotation: Optional[AnimationValue] = None
@@ -226,16 +239,14 @@ class ConstrainedControl(Control):
     Setting control's `animate_rotation` to either `True`, number or an instance of 
     `animation.Animation` class enables implicit animation of [`Control.rotate`](https://flet.dev/docs/controls#rotate) 
     property.
-
-    <img src="https://flet.dev/img/docs/getting-started/animations/animate-rotation.gif" 
-    className="screenshot-20" />
-
+    
+    /// details | Example
+        type: example
     ```python
     from math import pi
     import flet as ft
 
     def main(page: ft.Page):
-
         c = ft.Container(
             width=100,
             height=70,
@@ -259,6 +270,11 @@ class ConstrainedControl(Control):
 
     ft.run(main)
     ```
+    
+    ![animate_rotation](../../../assets/controls/constrained-control/animate-rotation.gif){width="80%"}
+    /// caption
+    ///
+    ///
     """
 
     animate_scale: Optional[AnimationValue] = None
@@ -267,9 +283,8 @@ class ConstrainedControl(Control):
     `animation.Animation` class enables implicit animation of [`Control.scale`](https://flet.dev/docs/controls#scale) 
     property.
 
-    <img src="https://flet.dev/img/docs/getting-started/animations/animate-scale.gif" 
-    className="screenshot-20" />
-
+    /// details | Example
+        type: example
     ```python
     import flet as ft
 
@@ -298,6 +313,11 @@ class ConstrainedControl(Control):
 
     ft.run(main)
     ```
+    
+    ![animate_scale](../../../assets/controls/constrained-control/animate-scale.gif){width="80%"}
+    /// caption
+    ///
+    ///
     """
 
     animate_offset: Optional[AnimationValue] = None
@@ -307,19 +327,17 @@ class ConstrainedControl(Control):
 
     `offset` property is an instance of `transform.Offset` class which specifies 
     horizontal `x` and vertical `y` offset of a control scaled to control's size. 
-    For example, an offset `transform.Offset(-0.25, 0)` will result in a horizontal 
+    For example, an offset `Offset(-0.25, 0)` will result in a horizontal 
     translation of one quarter the width of the control.
 
+    /// details | Example
+        type: example
     Offset animation is used for various sliding effects:
-
-    <img src="https://flet.dev/img/docs/getting-started/animations/animate-offset.gif" 
-    className="screenshot-20" />
 
     ```python
     import flet as ft
 
     def main(page: ft.Page):
-
         c = ft.Container(
             width=150,
             height=150,
@@ -340,6 +358,11 @@ class ConstrainedControl(Control):
 
     ft.run(main)
     ```
+    
+    ![animate_offset](../../../assets/controls/constrained-control/animate-offset.gif){width="80%"}
+    /// caption
+    ///
+    ///
     """
 
     on_animation_end: OptionalControlEventHandler["ConstrainedControl"] = None
@@ -357,14 +380,16 @@ class ConstrainedControl(Control):
     * `position`
     * `container`
 
+    /// details | Example
+        type: example
     For example:
 
     ```python
-    c = ft.Container(
-            ft.Text("Animate me!"),
-            # ...
-            animate=ft.animation.Animation(1000, "bounceOut"),
-            on_animation_end=lambda e: print("Container animation end:", e.data)
-        )
+    ft.Container(
+        ft.Text("Animate me!"),
+        animate=ft.animation.Animation(1000, ft.AnimationCurve.BOUNCE_OUT),
+        on_animation_end=lambda e: print("Container animation end:", e.data)
+    )
     ```
+    ///
     """

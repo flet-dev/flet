@@ -19,7 +19,12 @@ class AppBar(AdaptiveControl):
     """
     A material design app bar.
 
-    Online docs: https://flet.dev/docs/controls/appbar
+
+    Raises:
+        AssertionError: If
+
+    Note:
+        This control is non-visual and should be added to `Page.services` list before it can be used.
     """
 
     leading: Optional[Control] = None
@@ -28,16 +33,11 @@ class AppBar(AdaptiveControl):
 
     Typically the leading control is an [`Icon`](https://flet.dev/docs/controls/icon) 
     or an [`IconButton`](https://flet.dev/docs/controls/iconbutton).
-
-    Value is of type `Control`.
     """
 
     leading_width: OptionalNumber = None
     """
     Defines the width of leading control.
-
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
-    and defaults to `56.0`.
     """
 
     automatically_imply_leading: bool = True
@@ -47,8 +47,6 @@ class AppBar(AdaptiveControl):
     If `True` and `leading` is null, automatically try to deduce what the leading 
     widget should be. If `False` and `leading` is null, leading space is given to 
     title. If leading widget is not null, this parameter has no effect.
-
-    Value is of type `bool`.
     """
 
     title: Optional[StrOrControl] = None
@@ -58,23 +56,16 @@ class AppBar(AdaptiveControl):
 
     **Note** that, if `AppBar.adaptive=True` and the app is opened on an iOS or macOS 
     device, this control will be automatically centered.
-
-    Value is of type `Control`.
     """
 
     center_title: bool = False
     """
     Whether the title should be centered.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     toolbar_height: OptionalNumber = None
     """
     Defines the height of the toolbar component of an AppBar.
-
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
-    and defaults to `56.0`.
     """
 
     color: OptionalColorValue = None
@@ -103,8 +94,6 @@ class AppBar(AdaptiveControl):
     elevation_on_scroll: OptionalNumber = None
     """
     The elevation to be used if this app bar has something scrolled underneath it.
-
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber).
     """
 
     shadow_color: OptionalColorValue = None
@@ -125,8 +114,6 @@ class AppBar(AdaptiveControl):
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
-
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
     force_material_transparency: bool = False
@@ -135,8 +122,6 @@ class AppBar(AdaptiveControl):
 
     This will also remove the visual display of `bgcolor` and `elevation`, and affect 
     other characteristics of this app bar.
-
-    Value is of type `bool`.
     """
 
     is_secondary: bool = False
@@ -152,15 +137,11 @@ class AppBar(AdaptiveControl):
     no `leading` or `actions` controls.
 
     If you want `title` to take all the space available, set this value to `0.0`.
-
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber).
     """
 
     exclude_header_semantics: bool = False
     """
     Whether the `title` should be wrapped with header [`Semantics`](https://flet.dev/docs/controls/semantics).
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     actions: Optional[list[Control]] = None
@@ -182,31 +163,22 @@ class AppBar(AdaptiveControl):
     """
     The opacity of the toolbar. Value ranges from `0.0` (transparent) to `1.0` (fully 
     opaque).
-
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) 
-    and defaults to `1.0`.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
     The style to be used for the `Text` controls in the `title`.
-
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
     toolbar_text_style: Optional[TextStyle] = None
     """
     The style to be used for the `Text` controls in the app bar's `leading` and 
     `actions` (but not `title`).
-
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
     shape: Optional[OutlinedBorder] = None
     """
     The shape of the app bar's Material as well as its shadow.
-
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
     def before_update(self):

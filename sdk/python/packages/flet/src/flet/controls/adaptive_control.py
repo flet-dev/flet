@@ -17,11 +17,12 @@ class AdaptiveControl(Control):
     `adaptive` property can be specified for a control in the following cases:
     
     * A control has matching Cupertino control with similar functionality/presentation 
-    and graphics as expected on iOS/macOS. In this case, if `adaptive` is `True`, 
-    either Material or Cupertino control will be created depending on the target 
-    platform.  
-
-    These controls have their Cupertino analogs and `adaptive` property:    
+        and graphics as expected on iOS/macOS. In this case, if `adaptive` is `True`, 
+        either Material or Cupertino control will be created depending on the target 
+        platform.  
+    
+        These controls have their Cupertino analogs and `adaptive` property:
+        
         * [`AlertDialog`](https://flet.dev/docs/controls/alertdialog)
         * [`AppBar`](https://flet.dev/docs/controls/appbar)
         * [`Checkbox`](https://flet.dev/docs/controls/checkbox)
@@ -32,9 +33,10 @@ class AdaptiveControl(Control):
         * [`Switch`](https://flet.dev/docs/controls/switch)
 
     * A control has child controls. In this case `adaptive` property value is passed on 
-    to its children that don't have their `adaptive` property set. 
-
-    The following container controls have `adaptive` property: 
+        to its children that don't have their `adaptive` property set. 
+    
+        The following container controls have `adaptive` property:
+        
         * [`Card`](https://flet.dev/docs/controls/card)
         * [`Column`](https://flet.dev/docs/controls/column)
         * [`Container`](https://flet.dev/docs/controls/container)

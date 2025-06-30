@@ -12,7 +12,7 @@ __all__ = ["Control", "OptionalControl"]
 @dataclass(kw_only=True)
 class Control(BaseControl):
     """
-    TBD
+    Base class for all controls.
     """
 
     expand: Optional[Union[bool, int]] = None
@@ -28,6 +28,8 @@ class Control(BaseControl):
     sections in [`Column`](https://flet.dev/docs/controls/column#expanding-children) or 
     [`Row`](https://flet.dev/docs/controls/row#expanding-children).
 
+    /// details | Example
+        type: example
     Here is an example of expand being used in action for both [`Column`](https://flet.dev/docs/controls/column) 
     and [`Row`](https://flet.dev/docs/controls/row):
 
@@ -66,8 +68,9 @@ class Control(BaseControl):
             ),
         )
 
-    ft.app(main)
+    ft.run(main)
     ```
+    ///
     """
 
     expand_loose: Optional[bool] = None
@@ -82,6 +85,8 @@ class Control(BaseControl):
 
     The default value is `False`.
 
+    /// details | Example
+        type: example
     Here is the example of Containers placed in Rows with `expand_loose = True`:
     ```python
     import flet as ft
@@ -160,11 +165,12 @@ class Control(BaseControl):
 
 
     ft.run(main)
-
     ``` 
-
-    <img src="https://flet.dev/img/docs/controls/overview/expand = True, 
-    expand_loose = True.png" className="screenshot-50" />
+    
+    ![expand_loose](../../../assets/controls/control/expand-loose.png){width="65%"}
+    /// caption
+    ///
+    ///
     """
 
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
@@ -219,27 +225,33 @@ class Control(BaseControl):
     """
     Every control has `disabled` property which is `False` by default - control and all 
     its children are enabled.
-    `disabled` property is mostly used with data entry controls like `TextField`, 
+    This property is mostly used with data entry controls like `TextField`, 
     `Dropdown`, `Checkbox`, buttons.
-    However, `disabled` could be set to a parent control and its value will be 
-    propagated down to all children recursively.
+    
+    Note:
+        The value of this property will be propagated down to all children controls recursively.
 
+    /// details | Example
+        type: example
     For example, if you have a form with multiple entry controls you can disable them 
     all together by disabling container:
 
     ```python
-    c = ft.Column(controls=[
-        ft.TextField(),
-        ft.TextField()
-    ])
-    c.disabled = True
+    c = ft.Column(
+        disabled = True,
+        controls=[
+            ft.TextField(),
+            ft.TextField()
+        ]
+    )
     page.add(c)
     ```
+    ///
     """
 
     rtl: bool = False
     """
-    `True` to set text direction to right-to-left.
+    Whether the text direction of the control should be right-to-left (RTL).
     """
 
     def before_update(self):
