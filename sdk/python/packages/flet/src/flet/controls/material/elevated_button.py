@@ -148,6 +148,15 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at least icon or content (string or visible Control) must be provided"
+        if self.style is None and (self.color is not None or self.bgcolor is not None 
+                                   or self.elevation is not None):
+            self.style = ButtonStyle()
+        if self.color is not None:
+            self.style.color = self.color
+        if self.bgcolor is not None:
+            self.style.bgcolor = self.bgcolor
+        if self.elevation is not None:
+            self.style.elevation = self.elevation
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
