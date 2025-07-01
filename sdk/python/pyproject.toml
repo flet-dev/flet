@@ -10,19 +10,6 @@ dependencies = [
     "flet-cli",
     "flet-desktop",
     "flet-web",
-    #    "flet-ads",
-    "flet-audio",
-    #    "flet-audio-recorder",
-    #    "flet-datatable2",
-    #    "flet-flashlight",
-    #    "flet-geolocator",
-    #    "flet-lottie",
-    #    "flet-map",
-    #    "flet-permission-handler",
-    #    "flet-rive",
-    #    "flet-video",
-    #    "flet-webview",
-    #    "flet-charts",
 ]
 
 [tool.uv.sources]
@@ -30,25 +17,9 @@ flet = { workspace = true }
 flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
 flet-web = { workspace = true }
-#flet-ads = { workspace = true }
-flet-audio = { workspace = true }
-#flet-audio-recorder = { workspace = true }
-#flet-datatable2 = { workspace = true }
-#flet-flashlight = { workspace = true }
-#flet-geolocator = { workspace = true }
-#flet-lottie = { workspace = true }
-#flet-map = { workspace = true }
-#flet-permission-handler = { workspace = true }
-#flet-rive = { workspace = true }
-#flet-video = { workspace = true }
-#flet-webview = { workspace = true }
-#flet-charts = { workspace = true }
 
 [tool.uv.workspace]
-members = [
-    "packages/*",
-    "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/*"
-]
+members = ["packages/*"]
 
 [dependency-groups]
 dev = [
@@ -67,7 +38,7 @@ dev = [
 docs = [
     "mkdocs",
     "mkdocs-material",
-    # "mkdocstrings-python",
+    "mkdocstrings-python",
     "mkdocstrings-python-xref",
     "mike",
     "markdown>=3.6",
