@@ -549,7 +549,7 @@ def test_both_frozen_hosted_by_in_place():
         ],
     )
     assert hasattr(ch, "_frozen")
-    with pytest.raises(Exception, match="Controls inside data view cannot be updated."):
+    with pytest.raises(Exception, match="Frozen controls cannot be updated."):
         ch.width = 100
 
 
