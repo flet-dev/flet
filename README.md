@@ -22,10 +22,6 @@ To start developing with Flet, you just need your favorite IDE or text editor. N
 
 Flet UI is built with [Flutter](https://flutter.dev/), so your app looks professional and could be delivered to any platform. Flet simplifies the Flutter model by combining smaller "widgets" to ready-to-use "controls" with an imperative programming model.
 
-### 🌐 Speaks your language
-
-Flet is language-agnostic, so anyone on your team could develop Flet apps in their favorite language. [Python](https://flet.dev/docs/guides/python/getting-started) is already supported, Go, C# and others are [coming next](https://flet.dev/roadmap).
-
 ### 📱 Deliver to any device
 
 Deploy Flet app as a web app and view it in a browser. Package it as a standalone desktop app for Windows, macOS, and Linux. Install it on mobile as [PWA](https://web.dev/what-are-pwas/) or view via Flet app for iOS and Android.
