@@ -270,10 +270,6 @@ class ConstrainedControl(Control):
 
     ft.run(main)
     ```
-    
-    ![animate_rotation](../../../assets/controls/constrained-control/animate-rotation.gif){width="80%"}
-    /// caption
-    ///
     ///
     """
 

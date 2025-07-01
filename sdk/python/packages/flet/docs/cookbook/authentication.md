@@ -1,8 +1,3 @@
----
-title: Authentication
-sidebar_label: Authentication
----
-
 You can implement user authentication ("Login with X" buttons) in your Flet app using 
 3rd-party identity providers such as GitHub, Google, Azure, Auth0, LinkedIn and others.
 

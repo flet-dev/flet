@@ -1,8 +1,3 @@
----
-title: Theming
-sidebar_label: Theming
----
-
 It is possible to configure your application and/or the containing controls to follow a particular themes.
 
 ### App-wide themes

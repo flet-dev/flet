@@ -1,8 +1,3 @@
----
-title: Control Refs
-sidebar_label: Control Refs
----
-
 Flet controls are objects and to access their properties we need to keep references (variables) to those objects.
 
 Consider the following example:

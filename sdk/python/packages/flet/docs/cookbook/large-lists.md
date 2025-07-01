@@ -1,8 +1,3 @@
----
-title: Large lists
-sidebar_label: Large lists
----
-
 You can use [`Column`](/docs/controls/column) and [`Row`](/docs/controls/row) controls to display lists in the most cases, but if the list contains hundreds or thousands of items `Column` and `Row` will be ineffective with lagging UI as they render all items at once even they are not visible at the current scrolling position.
 
 In the following example we are adding 5,000 text controls to a page. Page uses `Column` as a default layout container:

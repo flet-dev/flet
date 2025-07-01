@@ -1,8 +1,3 @@
----
-title: File picker and uploads
-sidebar_label: File picker and uploads
----
-
 [File picker](/docs/controls/filepicker) control opens a native OS dialog for selecting files and directories.
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.

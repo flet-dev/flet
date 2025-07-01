@@ -13,6 +13,7 @@ from flet.controls.animation import (
     OptionalAnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
+from flet.controls.core.merge_semantics import MergeSemantics
 from flet.controls.blur import (
     Blur,
     BlurTileMode,

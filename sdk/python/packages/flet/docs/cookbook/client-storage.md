@@ -1,8 +1,3 @@
----
-title: Client storage
-sidebar_label: Client storage
----
-
 Flet's client storage API allows storing key-value data on a client side in a persistent storage. 
 Flet implementation uses [`shared_preferences`](https://pub.dev/packages/shared_preferences) Flutter package.
 

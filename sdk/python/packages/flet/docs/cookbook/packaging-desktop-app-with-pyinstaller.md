@@ -1,8 +1,3 @@
----
-title: Packaging desktop app
-sidebar_label: Packaging desktop app
----
-
 /// admonition | A better way to package is here
     type: danger
 

@@ -1,8 +1,3 @@
----
-title: Assets
-sidebar_label: Assets
----
-
 Flet apps can include both code and assets/resources. 
 An asset is a file that is bundled and deployed with your app and is accessible at runtime. 
 Common types of assets include static data (e.g., JSON files), configuration files, icons, images, videos, etc.

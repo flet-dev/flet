@@ -1,8 +1,3 @@
----
-title: PubSub
-sidebar_label: PubSub
----
-
 If you build a chat app using Flet you need somehow to pass user messages between sessions. When a user sends a message it should be broadcasted to all other app sessions and displayed on their pages.
 
 Flet provides a simple built-in PubSub mechanism for asynchronous communication between page sessions.

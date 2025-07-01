@@ -1,8 +1,3 @@
----
-title: Session storage
-sidebar_label: Session storage
----
-
 Flet provides an API for storing key-value data in user's session on a server side.
 
 Writing data to the session:

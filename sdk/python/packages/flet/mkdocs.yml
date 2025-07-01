@@ -90,6 +90,127 @@ nav:
       - Async apps: getting-started/async-apps.md
       - Changelog: getting-started/changelog.md
       - License: getting-started/license.md
+  - API Reference:
+      - Controls:
+          - controls/overview.md
+          - Control: controls/control.md
+          - ConstrainedControl: controls/constrainedcontrol.md
+          - Animations:
+              - AnimatedSwitcher: controls/animatedswitcher.md
+          - Buttons:
+              - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
+              - CupertinoButton: controls/cupertinobutton.md
+              - CupertinoContextmenuaction: controls/cupertinocontextmenuaction.md
+              - CupertinoDialogaction: controls/cupertinodialogaction.md
+              - CupertinoFilledButton: controls/cupertinofilledbutton.md
+              - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
+              - CupertinoSlidingsegmentedButton: controls/cupertinoslidingsegmentedbutton.md
+              - ElevatedButton: controls/elevatedbutton.md
+              - FilledButton: controls/filledbutton.md
+              - FilledTonalButton: controls/filledtonalbutton.md
+              - FloatingActionButton: controls/floatingactionbutton.md
+              - IconButton: controls/iconbutton.md
+              - MenuitemButton: controls/menuitembutton.md
+              - OutlinedButton: controls/outlinedbutton.md
+              - PopupMenuButton: controls/popupmenubutton.md
+              - SegmentedButton: controls/segmentedbutton.md
+              - SubmenuButton: controls/submenubutton.md
+              - TextButton: controls/textbutton.md
+          - Dialogs, Alerts and Panels:
+              - AlertDialog: controls/alertdialog.md
+              - Banner: controls/banner.md
+              - Bottomsheet: controls/bottomsheet.md
+              - CupertinoActionSheet: controls/cupertinoactionsheet.md
+              - CupertinoAlertDialog: controls/cupertinoalertdialog.md
+              - CupertinoBottomSheet: controls/cupertinobottomsheet.md
+              - CupertinoContextMenu: controls/cupertinocontextmenu.md
+              - CupertinoDatePicker: controls/cupertinodatepicker.md
+              - CupertinoPicker: controls/cupertinopicker.md
+              - CupertinoTimerPicker: controls/cupertinotimerpicker.md
+              - DatePicker: controls/datepicker.md
+              - SnackBar: controls/snackbar.md
+              - TimePicker: controls/timepicker.md
+          - Information Displays:
+              - Canvas: controls/canvas.md
+              - Circleavatar: controls/circleavatar.md
+              - Cupertinoactivityindicator: controls/cupertinoactivityindicator.md
+              - Icon: controls/icon.md
+              - Image: controls/image.md
+              - Markdown: controls/markdown.md
+              - Text: controls/text.md
+              - Progressbar: controls/progressbar.md
+              - Progressring: controls/progressring.md
+          - Inputs and Selections:
+              - AutoComplete: controls/autocomplete.md
+              - AutofillGroup: controls/autofillgroup.md
+              - Checkbox: controls/checkbox.md
+              - Chip: controls/chip.md
+              - CupertinoCheckbox: controls/cupertinocheckbox.md
+              - CupertinoRadio: controls/cupertinoradio.md
+              - CupertinoSlider: controls/cupertinoslider.md
+              - CupertinoSwitch: controls/cupertinoswitch.md
+              - CupertinoTextfield: controls/cupertinotextfield.md
+              - Dropdown: controls/dropdown.md
+              - DropdownM2: controls/dropdownm2.md
+              - Radio: controls/radio.md
+              - RangeSlider: controls/rangeslider.md
+              - SearchBar: controls/searchbar.md
+              - Slider: controls/slider.md
+              - Switch: controls/switch.md
+              - Textfield: controls/textfield.md
+          - Layout:
+              - Card: controls/card.md
+              - Column: controls/column.md
+              - Container: controls/container.md
+              - Cupertinolisttile: controls/cupertinolisttile.md
+              - Datatable: controls/datatable.md
+              - Dismissible: controls/dismissible.md
+              - Divider: controls/divider.md
+              - Expansionpanel: controls/expansionpanel.md
+              - Expansiontile: controls/expansiontile.md
+              - Gridview: controls/gridview.md
+              - Listtile: controls/listtile.md
+              - Listview: controls/listview.md
+              - Page: controls/page.md
+              - Pagelet: controls/pagelet.md
+              - Placeholder: controls/placeholder.md
+              - Reorderablelistview: controls/reorderablelistview.md
+              - Responsiverow: controls/responsiverow.md
+              - Row: controls/row.md
+              - Safearea: controls/safearea.md
+              - Stack: controls/stack.md
+              - Tabs: controls/tabs.md
+              - Verticaldivider: controls/verticaldivider.md
+              - View: controls/view.md
+          - Navigation:
+              - AppBar: controls/appbar.md
+              - bottomappbar: controls/bottomappbar.md
+              - cupertinoappbar: controls/cupertinoappbar.md
+              - cupertinonavigationbar: controls/cupertinonavigationbar.md
+              - menubar: controls/menubar.md
+              - navigationbar: controls/navigationbar.md
+              - navigationdrawer: controls/navigationdrawer.md
+              - navigationrail: controls/navigationrail.md
+  - Publish:
+      - publish/overview.md
+      - Android: publish/android.md
+      - iOS: publish/ios
+      - Linux: publish/linux
+      - macOS: publish/macos
+      - Web:
+          - publish/web/index.md
+          - Dynamic Website:
+              - publish/web/dynamic-website/index.md
+              - Hosting:
+                  - publish/web/dynamic-website/hosting/index.md
+                  - Fly.io: publish/web/dynamic-website/hosting/fly-io.md
+                  - Replit: publish/web/dynamic-website/hosting/replit.md
+                  - Self-Hosting: publish/web/dynamic-website/hosting/self-hosting.md
+          - Static Website:
+              - publish/web/static-website/index.md
+              - Hosting:
+                  - Cloudflare: publish/web/static-website/hosting/cloudflare.md
+      - Windows: publish/windows
   - Cookbook:
       - Accessibility: cookbook/accessibility.md
       - Animations: cookbook/animations.md
@@ -108,26 +229,12 @@ nav:
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
       - Theming: cookbook/theming.md
-  - API Reference:
-      - Controls:
-          - api/controls/index.md
-          - Animations:
-              - AnimatedSwitcher: api/controls/animations/animatedswitcher.md
-          - Dialogs, Alerts and Panels:
-              - AlertDialog: api/controls/dialogs/alertdialog.md
-              - CupertinoActionSheet: api/controls/dialogs/cupertinoactionsheet.md
-          - Navigation:
-              - AppBar: api/controls/navigation/appbar.md
-          - Buttons:
-              - CupertinoActionSheetAction: api/controls/buttons/cupertinoactionsheetaction.md
   - Tutorials:
       - Calculator: tutorials/calculator.md
       - Chat: tutorials/chat.md
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
-  - Blog:
-      - blog/index.md
 
 # Validation
 validation:
@@ -154,14 +261,6 @@ plugins:
       background: none
   # - section-index
   - markdown-exec
-  - blog:
-      blog_dir: blog
-      blog_toc: true
-      archive_toc: true
-      categories_toc: true
-      post_url_format: "{slug}"
-      draft: true
-      draft_if_future_date: true
   - mkdocstrings:
       default_handler: python_xref
       handlers:

@@ -1,8 +1,3 @@
----
-title: Fonts
-sidebar_label: Fonts
----
-
 ## System fonts
 
 You can use the (system) fonts installed on your computer, e.g. "Consolas", "Arial", "Verdana", "Tahoma", etc.

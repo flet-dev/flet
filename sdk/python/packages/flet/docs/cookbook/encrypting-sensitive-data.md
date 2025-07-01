@@ -1,8 +1,3 @@
----
-title: Encrypting sensitive data
-sidebar_label: Encrypting sensitive data
----
-
 Sensitive data such as tokens, keys, credit card numbers and other "secrets" must be stored at rest (database, files, [client storage](/docs/cookbook/client-storage)) in encrypted form to avoid data breaches.
 
 Flet includes utility methods to encrypt and decrypt sensitive text data using symmetric algorithm (where the same key is used for encryption and decryption). They use [Fernet](https://github.com/fernet/spec/blob/master/Spec.md) implementation from [cryptography](https://pypi.org/project/cryptography/) package, which is AES 128 with some additional hardening, plus PBKDF2 to derive encryption key from a user passphrase.

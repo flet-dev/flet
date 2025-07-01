@@ -1,8 +1,3 @@
----
-title: Read and write files
-sidebar_label: Read and write files
----
-
 In some cases, you need to read and write files to disk. 
 For example, you might need to persist data across app launches, or download data from the internet and save it for later offline use.
 
