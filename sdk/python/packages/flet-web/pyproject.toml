@@ -9,7 +9,7 @@ requires-python = ">=3.10"
 dependencies = [
     "flet",
     "fastapi >=0.115.12",
-    "uvicorn[standard] >=0.34.2"
+    "uvicorn[standard] >=0.35.0"
 ]
 
 [project.urls]

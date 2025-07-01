@@ -86,7 +86,9 @@ async def serve_fastapi_web_app(
             no_cdn=no_cdn,
         ),
     )
-    config = uvicorn.Config(app, host=host, port=port, log_level=log_level)
+    config = uvicorn.Config(
+        app, host=host, port=port, log_level=log_level, ws="websockets-sansio"
+    )
     server = uvicorn.Server(config)
 
     if blocking:
