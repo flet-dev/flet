@@ -23,8 +23,6 @@ class CupertinoSlider(ConstrainedControl):
     Use a slider when you want people to set defined values (such as volume or
     brightness), or when people would benefit from instant feedback on the effect of
     setting changes.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoslider
     """
 
     value: OptionalNumber = None
@@ -38,7 +36,7 @@ class CupertinoSlider(ConstrainedControl):
     """
     The minimum value the user can select.
 
-    Defaults to `0.0`. Must be less than or equal to `max`.
+    Must be less than or equal to `max`.
 
     If the `max` is equal to the `min`, then the slider is disabled.
     """
@@ -47,7 +45,7 @@ class CupertinoSlider(ConstrainedControl):
     """
     The maximum value the user can select.
 
-    Defaults to `1.0`. Must be greater than or equal to `min`.
+    Must be greater than or equal to `min`.
 
     If the `max` is equal to the `min`, then the slider is disabled.
     """

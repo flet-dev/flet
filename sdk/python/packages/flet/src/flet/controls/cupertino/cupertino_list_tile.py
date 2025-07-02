@@ -20,8 +20,6 @@ class CupertinoListTile(ConstrainedControl):
     """
     An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material
     ListTile.
-
-    Online docs: https://flet.dev/docs/controls/cupertinolisttile
     """
 
     title: StrOrControl
@@ -76,18 +74,15 @@ class CupertinoListTile(ConstrainedControl):
     event is fired after that.
     """
 
-    url_target: Optional[UrlTarget] = None
+    url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
-
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget)
-    and defaults to `UrlTarget.BLANK`.
     """
 
     toggle_inputs: bool = False
     """
     Whether clicking on a list tile should toggle the state of `Radio`, `Checkbox`
-    or `Switch` inside the tile. Default is `False`.
+    or `Switch` inside the tile.
     """
 
     additional_info: Optional[StrOrControl] = None
@@ -116,8 +111,6 @@ class CupertinoListTile(ConstrainedControl):
     """
     If `True`, list tile will be created in an "Inset Grouped" form, known from
     either iOS Notes or Reminders app.
-
-    Defaults to `False`.
     """
 
     on_click: OptionalControlEventHandler["CupertinoListTile"] = None

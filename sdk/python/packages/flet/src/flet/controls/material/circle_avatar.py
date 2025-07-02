@@ -20,8 +20,6 @@ class CircleAvatar(ConstrainedControl):
 
     If `foreground_image_src` fails then `background_image_src` is used. If
     `background_image_src` fails too, then `bgcolor` is used.
-
-    Online docs: https://flet.dev/docs/controls/circleavatar
     """
 
     content: Optional[StrOrControl] = None

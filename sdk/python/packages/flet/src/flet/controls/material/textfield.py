@@ -136,8 +136,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
-
-    Online docs: https://flet.dev/docs/controls/textfield
     """
 
     value: str = ""

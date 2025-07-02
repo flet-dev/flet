@@ -19,8 +19,6 @@ __all__ = ["CupertinoSwitch"]
 class CupertinoSwitch(ConstrainedControl):
     """
     An iOS-style switch. Used to toggle the on/off state of a single setting.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoswitch
     """
 
     label: Optional[str] = None

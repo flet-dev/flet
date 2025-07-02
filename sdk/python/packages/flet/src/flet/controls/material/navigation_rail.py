@@ -102,8 +102,6 @@ class NavigationRail(ConstrainedControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to
     navigate between a small number of views, typically between three and five.
-
-    Online docs: https://flet.dev/docs/controls/navigationrail
     """
 
     destinations: list[NavigationRailDestination] = field(default_factory=list)

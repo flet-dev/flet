@@ -19,8 +19,6 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     GridView is very effective for large lists (thousands of items). Prefer it over
     wrapping `Column` or `Row` for smooth scrolling.
-
-    Online docs: https://flet.dev/docs/controls/gridview
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -43,8 +41,6 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
-
-    Defaults to `False`.
     """
 
     runs_count: int = 1

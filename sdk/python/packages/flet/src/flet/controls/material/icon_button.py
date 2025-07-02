@@ -31,8 +31,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
-
-    Online docs: https://flet.dev/docs/controls/iconbutton
     """
 
     def __setattr__(self, name, value):

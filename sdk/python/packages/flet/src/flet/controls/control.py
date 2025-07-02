@@ -198,7 +198,7 @@ class Control(BaseControl):
     Defines the transparency of the control.
 
     Value ranges from `0.0` (completely transparent) to `1.0` (completely opaque 
-    without any transparency) and defaults to `1.0`.
+    without any transparency).
     """
 
     tooltip: Optional[TooltipValue] = None

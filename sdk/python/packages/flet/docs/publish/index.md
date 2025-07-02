@@ -1,6 +1,5 @@
 ---
 title: Publishing Flet app to multiple platforms
-slug: /publish
 ---
 
 ## Introduction

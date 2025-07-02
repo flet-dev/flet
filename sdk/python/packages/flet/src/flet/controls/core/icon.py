@@ -14,8 +14,6 @@ class Icon(ConstrainedControl):
     Displays a Material icon.
 
     Icon browser: https://flet-icons-browser.fly.dev/#/
-
-    Online docs: https://flet.dev/docs/controls/icon
     """
 
     name: IconValue

@@ -23,8 +23,6 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     Use it for projects that require "page within a page" layouts with its own AppBar,
     BottomBar, Drawer, such as demos and galleries.
-
-    Online docs: https://flet.dev/docs/controls/pagelet
     """
 
     content: Control

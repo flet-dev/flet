@@ -50,8 +50,6 @@ class Segment(Control):
 class SegmentedButton(ConstrainedControl):
     """
     A segmented button control.
-
-    Online docs: https://flet.dev/docs/controls/segmentedbutton
     """
 
     segments: list[Segment]

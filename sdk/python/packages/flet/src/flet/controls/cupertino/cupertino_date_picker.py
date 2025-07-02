@@ -34,8 +34,6 @@ class CupertinoDatePickerDateOrder(Enum):
 class CupertinoDatePicker(ConstrainedControl):
     """
     An iOS-styled date picker.
-
-    Online docs: https://flet.dev/docs/controls/cupertinodatepicker
     """
 
     value: DateTimeValue = field(default_factory=lambda: datetime.now())
@@ -87,17 +85,16 @@ class CupertinoDatePicker(ConstrainedControl):
     minute_interval: int = 1
     """
     The granularity of the minutes spinner, if it is shown in the current 
-    `date_picker_mode`. Must be an integer factor of 60.
-  
-    Defaults to `1`.
+    `date_picker_mode`. 
+    
+    Note:
+        Must be an integer factor of `60`.
     """
 
     minimum_year: int = 1
     """
     Minimum year to which the picker can be scrolled when in 
     `CupertinoDatePickerMode.DATE` mode.
-  
-    Defaults to `1`.
     """
 
     maximum_year: Optional[int] = None
@@ -111,30 +108,23 @@ class CupertinoDatePicker(ConstrainedControl):
     item_extent: Number = 32.0
     """
     The uniform height of all children.
-  
-    Defaults to `32`.
     """
 
     use_24h_format: bool = False
     """
     If `True`, 24-hour time format is used else 12-hour time format is used.
-  
-    Defaults to `False`.
     """
 
     show_day_of_week: bool = False
     """
     Whether to show day of week alongside day.
-  
-    Defaults to `False`.
     """
 
     date_picker_mode: CupertinoDatePickerMode = CupertinoDatePickerMode.DATE_AND_TIME
     """
     The mode of the date picker.
   
-    Value is of type [`CupertinoDatePickerMode`](https://flet.dev/docs/reference/types/cupertinodatepickermode) 
-    and defaults to `CupertinoDatePickerMode.DATE_AND_TIME`.
+    Value is of type [`CupertinoDatePickerMode`](https://flet.dev/docs/reference/types/cupertinodatepickermode).
     """
 
     date_order: Optional[CupertinoDatePickerDateOrder] = None

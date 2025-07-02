@@ -18,8 +18,6 @@ __all__ = ["CupertinoSlidingSegmentedButton"]
 class CupertinoSlidingSegmentedButton(ConstrainedControl):
     """
     A CupertinoSlidingSegmentedButton.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoslidingsegmentedbutton
     """
 
     controls: list[Control] = field(default_factory=list)

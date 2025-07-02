@@ -14,8 +14,6 @@ __all__ = ["CupertinoSegmentedButton"]
 class CupertinoSegmentedButton(ConstrainedControl):
     """
     An iOS-style segmented button.
-
-    Online docs: https://flet.dev/docs/controls/cupertinosegmentedbutton
     """
 
     controls: list[Control] = field(default_factory=list)

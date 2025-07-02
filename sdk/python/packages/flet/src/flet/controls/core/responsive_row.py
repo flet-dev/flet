@@ -25,8 +25,6 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
 
     Similar to `expand` property, every control now has `col` property which allows
     specifying how many columns a control should span.
-
-    Online docs: https://flet.dev/docs/controls/responsiverow
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -37,8 +35,6 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     columns: ResponsiveNumber = 12
     """
     The number of virtual columns to layout children.
-
-    Defaults to `12`.
     """
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
@@ -46,8 +42,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     How the child Controls should be placed horizontally.
 
     Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment)
-    and defaults to `MainAxisAlignment.START`.
+    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment).
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
@@ -55,8 +50,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     How the child Controls should be placed vertically.
 
     Value is of type
-    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment)
-    and defaults to `CrossAxisAlignment.START`.
+    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment).
     """
 
     spacing: ResponsiveNumber = 10
@@ -65,15 +59,11 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
 
     It is applied only when `alignment` is set to `MainAxisAlignment.START`,
     `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
-
-    Defaults to `10`.
     """
 
     run_spacing: ResponsiveNumber = 10
     """
     Spacing between runs when row content is wrapped on multiple lines.
-
-    Defaults to `10`.
     """
 
     breakpoints: dict[Union[ResponsiveRowBreakpoint, str], Number] = field(

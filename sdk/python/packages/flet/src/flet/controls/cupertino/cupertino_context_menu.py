@@ -11,8 +11,6 @@ __all__ = ["CupertinoContextMenu"]
 class CupertinoContextMenu(AdaptiveControl):
     """
     A full-screen modal route that opens up when the content is long-pressed.
-
-    Online docs: https://flet.dev/docs/controls/cupertinocontextmenu
     """
 
     content: Control

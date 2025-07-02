@@ -52,8 +52,6 @@ class DatePicker(DialogControl):
 
     Depending on the `date_picker_entry_mode`, it will show either a Calendar or an
     Input (TextField) for picking a date.
-
-    Online docs: https://flet.dev/docs/controls/datepicker
     """
 
     value: Optional[DateTimeValue] = None

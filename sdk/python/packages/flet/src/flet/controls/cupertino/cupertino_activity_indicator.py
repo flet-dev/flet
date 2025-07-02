@@ -9,8 +9,6 @@ __all__ = ["CupertinoActivityIndicator"]
 class CupertinoActivityIndicator(ConstrainedControl):
     """
     An iOS-style activity indicator that spins clockwise.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoactivityindicator
     """
 
     radius: Number = 10

@@ -28,8 +28,6 @@ class SearchBar(ConstrainedControl):
     """
     Manages a "search view" route that allows the user to select one of the suggested
     completions for a search query.
-
-    Online docs: https://flet.dev/docs/controls/searchbar
     """
 
     controls: list[Control] = field(default_factory=list)

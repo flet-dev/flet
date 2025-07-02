@@ -190,7 +190,10 @@ Setting control's `animate_position` to either `True`, number or an instance of 
 
 /// admonition | Note
     type: note
-Control positioning works for childrens of the following:`[Stack`](/docs/controls/stack.md) control, [`Page.overlay`](/docs/controls/page.md#overlay) list.
+Positioning is effective only if the control is a descendant of one of the following:
+
+- [`Stack`](/docs/controls/stack.md) control
+- [`Page.overlay`](/docs/controls/page.md#overlay) list
 ///
 
 ```python

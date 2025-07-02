@@ -16,8 +16,6 @@ class Assertiveness(Enum):
 class SemanticsService(Service):
     """
     Allows access to the platform's accessibility services.
-
-    Online docs: https://flet.dev/docs/controls/semanticsservice
     """
 
     async def announce_tooltip_async(self, message: str):

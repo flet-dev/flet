@@ -11,8 +11,6 @@ __all__ = ["RadioGroup"]
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.
-
-    Online docs: https://flet.dev/docs/controls/radio
     """
 
     content: Control

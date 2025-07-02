@@ -19,7 +19,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
-Documentation = "https://flet.dev/docs"
+Documentation = "https://docs.flet.dev/"
 
 [project.optional-dependencies]
 all = ["flet-cli", "flet-desktop", "flet-web"]

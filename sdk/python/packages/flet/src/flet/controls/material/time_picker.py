@@ -38,8 +38,6 @@ class TimePicker(DialogControl):
 
     Depending on the `time_picker_entry_mode`, it will show either a Dial or
     an Input (hour and minute text fields) for picking a time.
-
-    Online docs: https://flet.dev/docs/controls/time_picker
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())

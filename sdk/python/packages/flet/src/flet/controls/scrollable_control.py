@@ -62,8 +62,6 @@ class ScrollableControl(Control):
     scroll_interval: Number = 10
     """
     Throttling in milliseconds for `on_scroll` event.
-
-    Defaults to `10`.
     """
     on_scroll: OptionalEventHandler[OnScrollEvent] = None
     """

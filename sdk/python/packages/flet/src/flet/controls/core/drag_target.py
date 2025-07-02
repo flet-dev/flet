@@ -47,8 +47,6 @@ class DragTarget(Control):
     does drop the draggable on top of the drag target (and the drag target has
     indicated that it will accept the draggable's data), then the drag target is
     asked to accept the draggable's data.
-
-    Online docs: https://flet.dev/docs/controls/dragtarget
     """
 
     content: Control

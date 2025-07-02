@@ -22,8 +22,6 @@ class RangeSlider(ConstrainedControl):
     A range slider can be used to select from either a continuous or a discrete
     set of values.
     The default is to use a continuous range of values from min to max.
-
-    Online docs: https://flet.dev/docs/controls/rangeslider
     """
 
     start_value: Number

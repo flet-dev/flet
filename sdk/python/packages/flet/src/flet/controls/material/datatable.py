@@ -261,8 +261,6 @@ class DataRow(Control):
 class DataTable(ConstrainedControl):
     """
     A Material Design data table.
-
-    Online docs: https://flet.dev/docs/controls/datatable
     """
 
     columns: list[DataColumn]

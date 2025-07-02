@@ -16,8 +16,6 @@ __all__ = ["CupertinoRadio"]
 class CupertinoRadio(ConstrainedControl):
     """
     Radio buttons let people select a single option from two or more choices.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoradio
     """
 
     label: Optional[str] = None
@@ -35,8 +33,7 @@ class CupertinoRadio(ConstrainedControl):
     The position of the label relative to the radio.
 
     Value is of type 
-    [LabelPosition](https://flet.dev/docs/reference/types/labelposition) and 
-    defaults to `LabelPosition.RIGHT`.
+    [LabelPosition](https://flet.dev/docs/reference/types/labelposition).
     """
 
     fill_color: OptionalColorValue = None
@@ -69,16 +66,12 @@ class CupertinoRadio(ConstrainedControl):
     use_checkmark_style: bool = False
     """
     Defines whether the radio displays in a checkbox style or the default radio style.
-
-    Defaults to `False`.
     """
 
     toggleable: bool = False
     """
     Set to `True` if this radio button is allowed to be returned to an indeterminate 
     state by selecting it again when selected.
-
-    Defaults to `False`.
     """
 
     focus_color: OptionalColorValue = None

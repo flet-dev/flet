@@ -103,15 +103,11 @@ class BoxShadow:
     spread_radius: Number = 0.0
     """
     The amount the box should be inflated prior to applying the blur.
-
-    Defaults to `0.0.`
     """
 
     blur_radius: Number = 0.0
     """
     The standard deviation of the Gaussian to convolve with the shadow's shape.
-
-    Defaults to `0.0.`
     """
 
     color: ColorValue = Colors.BLACK
@@ -126,14 +122,12 @@ class BoxShadow:
     negative offsets shift the shadow to the left and up. The offsets are relative to
     the position of the element that is casting it.
 
-    Value is of type [`Offset`](https://flet.dev/docs/reference/types/offset) and
-    defaults to `Offset(0,0)`.
+    Value is of type [`Offset`](https://flet.dev/docs/reference/types/offset).
     """
 
     blur_style: BlurStyle = BlurStyle.NORMAL
     """
-    Value is of type [`BlurStyle`](https://flet.dev/docs/reference/types/blurstyle)
-    and defaults to `BlurStyle.NORMAL`.
+    Value is of type [`BlurStyle`](https://flet.dev/docs/reference/types/blurstyle).
     """
 
 
@@ -195,59 +189,46 @@ class DecorationImage:
     """
     The alignment of the image within its bounds.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and 
-    defaults to `Alignment(0.0, 0.0)`.
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).
     """
 
     repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
     How the image should be repeated to fill the box.
 
-    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat) 
-    and defaults to `ImageRepeat.NO_REPEAT`.
+    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat).
     """
 
     match_text_direction: bool = False
     """
     Whether to paint the image in the direction of the TextDirection.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     scale: Number = 1.0
     """
     The scale(image pixels to be shown per logical pixels) to apply to the image.
-
-    Value is of type `float` and defaults to `1.0`.
     """
 
     opacity: Number = 1.0
     """
     The opacity of the image.
-
-    Value is of type `float` and defaults to `1.0`.
     """
 
     filter_quality: FilterQuality = FilterQuality.MEDIUM
     """
     The quality of the image filter.
 
-    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality) 
-    and defaults to `FilterQuality.MEDIUM`.
+    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality).
     """
 
     invert_colors: bool = False
     """
     Whether to invert the colors of the image while drawing.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     anti_alias: bool = False
     """
     Whether to paint the image in anti-aliased quality.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
 
@@ -359,8 +340,7 @@ class BoxConstraints:
     The minimum width that satisfies the constraints, such that
     `0.0 <= min_width <= max_width`.
 
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `0.0`.
+    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number).
     """
 
     min_height: Number = 0
@@ -368,8 +348,7 @@ class BoxConstraints:
     The minimum height that satisfies the constraints, such that
     `0.0 <= min_height <= max_height`.
 
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `0.0`.
+    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number).
     """
 
     max_width: Number = float("inf")
@@ -378,7 +357,7 @@ class BoxConstraints:
     `min_width <= max_width <= float("inf")`.
 
     Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `float("inf")` - infinity.
+    and defaults to infinity.
     """
 
     max_height: Number = float("inf")
@@ -387,7 +366,7 @@ class BoxConstraints:
     `min_height <= max_height <= float("inf")`.
 
     Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `float("inf")` - infinity.
+    and defaults to infinity.
     """
 
     def __post_init__(self):

@@ -15,8 +15,6 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     Container allows to decorate a control with background color and border and
     position it with padding, margin and alignment.
-
-    Online docs: https://flet.dev/docs/controls/column
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -37,8 +35,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     How the child Controls should be placed horizontally.
 
     Value is of type
-    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment)
-    and defaults to `CrossAxisAlignment.START`.
+    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment).
     """
 
     spacing: Number = 10
@@ -47,8 +44,6 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     It is applied only when `alignment` is set to `MainAxisAlignment.START`,
     `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
-
-    Default value is `10` virtual pixels.
     """
 
     tight: bool = False

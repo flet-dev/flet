@@ -19,8 +19,6 @@ __all__ = ["CupertinoPicker"]
 class CupertinoPicker(ConstrainedControl):
     """
     An iOS-styled picker.
-
-    Online docs: https://flet.dev/docs/controls/cupertinopicker
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -31,8 +29,6 @@ class CupertinoPicker(ConstrainedControl):
     item_extent: Number = 32.0
     """
     The uniform height of all children.
-
-    Defaults to `32`.
     """
 
     selected_index: int = 0
@@ -53,8 +49,6 @@ class CupertinoPicker(ConstrainedControl):
     looping: bool = False
     """
     If `True`, children on a wheel can be scrolled in a loop.
-
-    Defaults to `False`.
     """
 
     magnification: Number = 1.0
@@ -98,8 +92,6 @@ class CupertinoPicker(ConstrainedControl):
     """
     The default background [color](https://flet.dev/docs/reference/colors) of the 
     `selection_overlay`.
-
-    Defaults to `CupertinoColors.TERTIARY_SYSTEM_FILL`.
     """
 
     on_change: OptionalControlEventHandler["CupertinoPicker"] = None

@@ -41,8 +41,6 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     """
     A single fixed-height row that typically contains some text as well as a leading or
     trailing icon.
-
-    Online docs: https://flet.dev/docs/controls/listtile
     """
 
     title: Optional[StrOrControl] = None

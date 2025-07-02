@@ -21,8 +21,6 @@ class CupertinoCheckbox(ConstrainedControl):
     """
     A macOS style checkbox. Checkbox allows to select one or more items from a group,
     or switch between two mutually exclusive options (checked or unchecked, on or off).
-
-    Online docs: https://flet.dev/docs/controls/cupertinocheckbox
     """
 
     label: Optional[str] = None
@@ -34,8 +32,7 @@ class CupertinoCheckbox(ConstrainedControl):
     """
     Defines on which side of the checkbox the `label` should be shown.
 
-    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition) 
-    and defaults to `RIGHT`.
+    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition).
     """
 
     value: Optional[bool] = None

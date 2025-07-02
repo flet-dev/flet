@@ -17,8 +17,6 @@ class Draggable(Control):
     `content_feedback` control that tracks the user's finger across the screen. If the
     user lifts their finger while on top of a `DragTarget`, that target is given the
     opportunity to complete drag-and-drop flow.
-
-    Online docs: https://flet.dev/docs/controls/draggable
     """
 
     content: Control

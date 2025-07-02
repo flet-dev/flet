@@ -14,8 +14,6 @@ class WindowDragArea(ConstrainedControl):
 
     When you have hidden the title bar with `page.window_title_bar_hidden`, you can add
     this control to move the window position.
-
-    Online docs: https://flet.dev/docs/controls/windowdragarea
     """
 
     content: Control

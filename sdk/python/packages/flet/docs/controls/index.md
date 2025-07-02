@@ -1,7 +1,5 @@
 ---
-title: Controls reference
-sidebar_label: Controls reference
-slug: /controls
+title: Overview
 ---
 
 Flet UI is built of controls. Controls are organized into hierarchy, or a tree, where each control has a parent (except [Page](/docs/controls/page)) and container controls like [Column](/docs/controls/column), [Dropdown](/docs/controls/dropdown) can contain child controls, for example:
@@ -18,15 +16,6 @@ Page
 ```
 
 [Control gallery live demo](https://flet-controls-gallery.fly.dev/layout)
-
-## Controls by categories
-
-```mdx-code-block
-import DocCardList from '@theme/DocCardList';
-import {useCurrentSidebarCategory} from '@docusaurus/theme-common';
-
-<DocCardList items={useCurrentSidebarCategory().items}/>
-```
 
 ## Common control properties
 
@@ -71,14 +60,6 @@ Flet controls have the following properties:
 ### `badge`
 
 The `badge` property (available in almost all controls) supports both strings and [`Badge`](/docs/reference/types/badge.md) objects.
-
-### `bottom`
-
-Effective inside [`Stack`](/docs/controls/stack) only. The distance that the child's bottom edge is inset from the bottom of the stack.
-
-### `data`
-
-Arbitrary data that can be attached to a control.
 
 ### `disabled`
 
@@ -230,14 +211,6 @@ ft.run(main)
 
 <img src="/img/docs/controls/overview/expand = True, expand_loose = True.png" className="screenshot-50" />
 
-### `height`
-
-Imposed Control height in virtual pixels.
-
-### `left`
-
-Effective inside [`Stack`](/docs/controls/stack) only. The distance that the child's left edge is inset from the left of the stack.
-
 ### `parent`
 
 Points to the direct ancestor(parent) of this control.
@@ -246,24 +219,10 @@ It defaults to `None` and will only have a value when this control is mounted (a
 
 The `Page` control (which is the root of the tree) is an exception - it always has `parent=None`.
 
-### `right`
-
-Effective inside [`Stack`](/docs/controls/stack) only. The distance that the child's right edge is inset from the right of the stack.
-
 ### `tooltip`
 
 The `tooltip` property (available in almost all controls) now supports both strings and [`Tooltip`](/docs/reference/types/tooltip.md) objects.
-### `top`
 
-Effective inside [`Stack`](/docs/controls/stack) only. The distance that the child's top edge is inset from the top of the stack.
-
-### `visible`
-
-Every control has `visible` property which is `True` by default - control is rendered on the page. Setting `visible` to `False` completely prevents control (and all its children if any) from rendering on a page canvas. Hidden controls cannot be focused or selected with a keyboard or mouse and they do not emit any events.
-
-### `width`
-
-Imposed Control width in virtual pixels.
 
 ## Transformations
 
@@ -299,13 +258,6 @@ def main(page: ft.Page):
 
 ft.run(main)
 ```
-
-### `opacity`
-
-Defines the transparency of the control.
-
-Value ranges from `0.0` (completely transparent) to `1.0` (completely opaque without any transparency) and defaults
-to `1.0`.
 
 ### `rotate`
 

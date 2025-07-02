@@ -13,8 +13,6 @@ class DialogControl(AdaptiveControl):
     open: bool = False
     """
     Set to `True` to display a dialog.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     on_dismiss: OptionalControlEventHandler["DialogControl"] = None

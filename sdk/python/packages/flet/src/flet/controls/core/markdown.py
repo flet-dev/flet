@@ -236,8 +236,6 @@ class MarkdownCustomCodeTheme:
 class Markdown(ConstrainedControl):
     """
     Control for rendering text in markdown format.
-
-    Online docs: https://flet.dev/docs/controls/markdown
     """
 
     value: str = ""
@@ -272,30 +270,24 @@ class Markdown(ConstrainedControl):
     """
     Automatically open URLs in the document.
 
-    Default is `False`. If registered, `on_tap_link` event is fired after that.
+    If registered, `on_tap_link` event is fired after that.
     """
 
     shrink_wrap: bool = True
     """
     Whether the extent of the scroll view in the scroll direction should be determined
     by the contents being viewed.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     fit_content: bool = True
     """
     Whether to allow the widget to fit the child content.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     soft_line_break: bool = False
     """
     The soft line break is used to identify the spaces at the end of a line of text
     and the leading spaces in the immediately following the line of text.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     auto_follow_links_target: Optional[UrlTarget] = None

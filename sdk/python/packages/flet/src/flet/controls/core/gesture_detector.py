@@ -32,8 +32,6 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     If this control has a content, it defers to that child control for its sizing
     behavior. If it does not have a content, it grows to fit the parent instead.
-
-    Online docs: https://flet.dev/docs/controls/gesturedetector
     """
 
     content: Optional[Control] = None

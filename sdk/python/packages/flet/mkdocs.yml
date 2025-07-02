@@ -92,12 +92,15 @@ nav:
       - License: getting-started/license.md
   - API Reference:
       - Controls:
-          - controls/overview.md
-          - Control: controls/control.md
-          - ConstrainedControl: controls/constrainedcontrol.md
+          - controls/index.md
           - Animations:
               - AnimatedSwitcher: controls/animatedswitcher.md
+          - Base:
+              - AdaptiveControl: controls/adaptivecontrol.md
+              - ConstrainedControl: controls/constrainedcontrol.md
+              - Control: controls/control.md
           - Buttons:
+              - controls/buttons.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
               - CupertinoButton: controls/cupertinobutton.md
               - CupertinoContextmenuaction: controls/cupertinocontextmenuaction.md
@@ -137,9 +140,9 @@ nav:
               - Icon: controls/icon.md
               - Image: controls/image.md
               - Markdown: controls/markdown.md
-              - Text: controls/text.md
               - Progressbar: controls/progressbar.md
               - Progressring: controls/progressring.md
+              - Text: controls/text.md
           - Inputs and Selections:
               - AutoComplete: controls/autocomplete.md
               - AutofillGroup: controls/autofillgroup.md
@@ -184,19 +187,36 @@ nav:
               - View: controls/view.md
           - Navigation:
               - AppBar: controls/appbar.md
-              - bottomappbar: controls/bottomappbar.md
-              - cupertinoappbar: controls/cupertinoappbar.md
-              - cupertinonavigationbar: controls/cupertinonavigationbar.md
-              - menubar: controls/menubar.md
-              - navigationbar: controls/navigationbar.md
-              - navigationdrawer: controls/navigationdrawer.md
-              - navigationrail: controls/navigationrail.md
+              - BottomAppBar: controls/bottomappbar.md
+              - CupertinoAppBar: controls/cupertinoappbar.md
+              - CupertinoNavigationBar: controls/cupertinonavigationbar.md
+              - MenuBar: controls/menubar.md
+              - NavigationBar: controls/navigationbar.md
+              - NavigationDrawer: controls/navigationdrawer.md
+              - NavigationRail: controls/navigationrail.md
+          - Services:
+              - FilePicker: controls/filepicker.md
+              - SemanticsService: controls/semanticsservice.md
+              - ShakeDetector: controls/shakedetector.md
+              - TransparentPointer: controls/transparentpointer.md
+              - HapticFeedback: controls/hapticfeedback.md
+          - Utility:
+              - Draggable: controls/draggable.md
+              - DragTarget: controls/dragtarget.md
+              - FletApp: controls/fletapp.md
+              - GestureDetector: controls/gesturedetector.md
+              - InteractiveViewer: controls/interactiveviewer.md
+              - MergeSemantics: controls/mergesemantics.md
+              - SelectionArea: controls/selectionarea.md
+              - Semantics: controls/semantics.md
+              - ShaderMask: controls/shadermask.md
+              - WindowDragArea: controls/windowdragarea.md
   - Publish:
-      - publish/overview.md
+      - publish/index.md
       - Android: publish/android.md
-      - iOS: publish/ios
-      - Linux: publish/linux
-      - macOS: publish/macos
+      - iOS: publish/ios.md
+      - Linux: publish/linux.md
+      - macOS: publish/macos.md
       - Web:
           - publish/web/index.md
           - Dynamic Website:
@@ -210,7 +230,7 @@ nav:
               - publish/web/static-website/index.md
               - Hosting:
                   - Cloudflare: publish/web/static-website/hosting/cloudflare.md
-      - Windows: publish/windows
+      - Windows: publish/windows.md
   - Cookbook:
       - Accessibility: cookbook/accessibility.md
       - Animations: cookbook/animations.md
@@ -220,16 +240,17 @@ nav:
       - Control Refs: cookbook/control-refs.md
       - Drag and Drop: cookbook/drag-and-drop.md
       - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
-      - File picker: cookbook/file-picker.md
+      - File Picker and Uploads: cookbook/file-picker-and-uploads.md
       - Fonts: cookbook/fonts.md
       - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
       - Large Lists: cookbook/large-lists.md
       - Logging: cookbook/logging.md
-      - PubSub: cookbook/pubsub.md
+      - PubSub: cookbook/pub-sub.md
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
       - Theming: cookbook/theming.md
   - Tutorials:
+      - tutorials/index.md
       - Calculator: tutorials/calculator.md
       - Chat: tutorials/chat.md
       - Solitaire: tutorials/solitaire.md

@@ -11,9 +11,7 @@ __all__ = ["CupertinoContextMenuAction"]
 @control("CupertinoContextMenuAction")
 class CupertinoContextMenuAction(AdaptiveControl):
     """
-    An action that can be added to a CupertinoContextMenu.
-
-    Online docs: https://flet.dev/docs/controls/cupertinocontextmenuaction
+    An action that can be added to a `CupertinoContextMenu`.
     """
 
     content: StrOrControl

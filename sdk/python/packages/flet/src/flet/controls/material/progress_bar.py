@@ -14,8 +14,6 @@ class ProgressBar(ConstrainedControl):
     A material design linear progress indicator, also known as a progress bar.
 
     A control that shows progress along a line.
-
-    Online docs: https://flet.dev/docs/controls/progressbar
     """
 
     value: OptionalNumber = None

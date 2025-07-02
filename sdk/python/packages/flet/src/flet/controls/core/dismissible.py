@@ -46,8 +46,6 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     control further animates its height (or width, depending on what is perpendicular
     to the `dismiss_direction`), gradually reducing it to zero over the specified
     `resize_duration`.
-
-    Online Docs: https://flet.dev/docs/controls/dismissible
     """
 
     content: Control
@@ -92,7 +90,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     It is specified as a dictionary where the key is of type
     [`DismissDirection`](https://flet.dev/docs/reference/types/dismissdirection) and
     the value is the threshold (fractional/decimal value between `0.0` and `1.0`):
-    
+
     ```python
     ft.Dismissible(
         # ...

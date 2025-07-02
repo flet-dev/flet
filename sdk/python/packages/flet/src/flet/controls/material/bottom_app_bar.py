@@ -19,8 +19,6 @@ __all__ = ["BottomAppBar"]
 class BottomAppBar(ConstrainedControl):
     """
     A material design bottom app bar.
-
-    Online docs: https://flet.dev/docs/controls/bottomappbar
     """
 
     content: Optional[Control] = None

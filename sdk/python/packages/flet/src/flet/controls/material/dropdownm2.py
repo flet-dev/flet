@@ -73,8 +73,6 @@ class DropdownM2(FormFieldControl):
     A dropdown lets the user select from a number of items. The dropdown shows the
     currently selected item as well as an arrow that opens a menu for selecting another
     item.
-
-    Online docs: https://flet.dev/docs/controls/dropdown
     """
 
     value: Optional[str] = None

@@ -127,8 +127,6 @@ class AppBar(AdaptiveControl):
     is_secondary: bool = False
     """
     Whether this app bar is not being displayed at the top of the screen.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     title_spacing: OptionalNumber = None

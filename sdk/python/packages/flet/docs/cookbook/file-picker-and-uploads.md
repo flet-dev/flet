@@ -1,4 +1,4 @@
-[File picker](/docs/controls/filepicker) control opens a native OS dialog for selecting files and directories.
+[`FilePicker`](/docs/controls/filepicker) control opens a native OS dialog for selecting files and directories.
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
@@ -28,13 +28,13 @@ sudo apt-get install zenity
 
 ## Using file picker in your app
 
-It is recommended to add file picker to [`page.overlay.controls`](/docs/controls/page#overlay) collection, so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
+It is recommended to add file picker to [`page.services`](/docs/controls/page#services) collection, so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
 
 ```python
 import flet as ft
 
 file_picker = ft.FilePicker()
-page.overlay.append(file_picker)
+page.services.append(file_picker)
 page.update()
 ```
 
@@ -47,8 +47,10 @@ To open file picker dialog call one of the three methods:
 Lambda works pretty nice for that:
 
 ```python
-ft.ElevatedButton("Choose files...",
-    on_click=lambda _: file_picker.pick_files(allow_multiple=True))
+ft.ElevatedButton(
+    content="Choose files...",
+    on_click=lambda _: file_picker.pick_files(allow_multiple=True)
+)
 ```
 
 When dialog is closed `FilePicker.on_result` event handler is called which event object has one of the following properties set:

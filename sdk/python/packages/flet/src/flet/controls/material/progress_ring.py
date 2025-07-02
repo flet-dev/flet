@@ -16,8 +16,6 @@ class ProgressRing(ConstrainedControl):
     application is busy.
 
     A control that shows progress along a circle.
-
-    Online docs: https://flet.dev/docs/controls/progressring
     """
 
     value: OptionalNumber = None

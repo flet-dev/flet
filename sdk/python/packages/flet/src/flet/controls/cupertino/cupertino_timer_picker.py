@@ -24,37 +24,32 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     It can show a countdown duration with hour, minute and second spinners. The
     duration is bound between 0 and 23 hours 59 minutes 59 seconds.
-
-    Online docs: https://flet.dev/docs/controls/cupertinotimerpicker
     """
 
     value: DurationValue = field(default_factory=lambda: Duration())
     """
     The initial duration in seconds of the countdown timer.
-
-    Defaults to `0`.
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.center())
     """
     Defines how the timer picker should be positioned within its parent.
 
-    Value is of type [Alignment](https://flet.dev/docs/reference/types/alignment) and 
-    defaults to `alignment.center`.
+    Value is of type [Alignment](https://flet.dev/docs/reference/types/alignment).
     """
 
     second_interval: int = 1
     """
     The granularity of the second spinner.
 
-    Must be a positive integer factor of 60. Defaults to `1`.
+    Must be a positive integer factor of 60.
     """
 
     minute_interval: int = 1
     """
     The granularity of the minute spinner.
 
-    Must be a positive integer factor of 60. Defaults to `1`.
+    Must be a positive integer factor of 60.
     """
 
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
@@ -62,8 +57,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     The mode of the timer picker.
 
     Value is of type 
-    [CupertinoTimerPickerMode](https://flet.dev/docs/reference/types/cupertinotimerpickermode) 
-    and defaults to `CupertinoTimerPickerMode.HOUR_MINUTE_SECOND`.
+    [CupertinoTimerPickerMode](https://flet.dev/docs/reference/types/cupertinotimerpickermode).
     """
 
     bgcolor: OptionalColorValue = None
@@ -74,8 +68,6 @@ class CupertinoTimerPicker(ConstrainedControl):
     item_extent: Number = 32.0
     """
     The uniform height of all children.
-
-    Defaults to `32`.
     """
 
     on_change: OptionalControlEventHandler["CupertinoTimerPicker"] = None

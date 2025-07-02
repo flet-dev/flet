@@ -33,6 +33,4 @@ class Shadow(Shape):
     transparent_occluder: bool = False
     """
     `True` if the occluding object is not opaque.
-
-    Defaults to `False`.
     """

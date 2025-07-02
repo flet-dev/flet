@@ -15,10 +15,6 @@ T = TypeVar("T")
 class ControlBuilder(Control, Generic[T]):
     """
     Builds control tree on every update based on data.
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/controlbuilder
     """
 
     state: InitVar[T]

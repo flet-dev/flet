@@ -72,8 +72,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     The Tabs control is used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
     on text headers to articulate the different sections of content.
-
-    Online docs: https://flet.dev/docs/controls/tabs
     """
 
     tabs: list[Tab] = field(default_factory=list)

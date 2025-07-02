@@ -41,12 +41,11 @@ class TextSpan(Control):
     after that.
     """
 
-    url_target: Optional[UrlTarget] = None
+    url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
 
     Value is of [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) enum.
-    Defaults to `UrlTarget.BLANK`.
     """
 
     semantics_label: Optional[str] = None

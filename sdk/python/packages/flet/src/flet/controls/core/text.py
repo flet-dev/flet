@@ -177,8 +177,6 @@ class TextSelectionChangeEvent(Event[EventControlType]):
 class Text(ConstrainedControl):
     """
     Text is a control for displaying text.
-
-    Online docs: https://flet.dev/docs/controls/text
     """
 
     value: Optional[str] = ""

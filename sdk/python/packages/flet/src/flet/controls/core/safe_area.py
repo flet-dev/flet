@@ -31,38 +31,28 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     avoid_intrusions_left: bool = True
     """
     Whether to avoid system intrusions on the left.
-
-    Defaults to `True`.
     """
 
     avoid_intrusions_top: bool = True
     """
     Whether to avoid system intrusions at the top of the screen, typically the system
     status bar.
-
-    Defaults to `True`.
     """
 
     avoid_intrusions_right: bool = True
     """
     Whether to avoid system intrusions on the right.
-
-    Defaults to `True`.
     """
 
     avoid_intrusions_bottom: bool = True
     """
     Whether to avoid system intrusions on the bottom side of the screen.
-
-    Defaults to `True`.
     """
 
     maintain_bottom_view_padding: bool = False
     """
     Specifies whether the `SafeArea` should maintain the bottom
     `MediaQueryData.viewPadding` instead of the bottom `MediaQueryData.padding`.
-
-    Defaults to `False`.
 
     This avoids layout shifts caused by keyboard overlays, useful when flexible
     controls are used.

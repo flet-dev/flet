@@ -13,8 +13,6 @@ __all__ = ["CupertinoAppBar"]
 class CupertinoAppBar(Control):
     """
     An iOS-styled application bar.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoappbar
     """
 
     leading: Optional[Control] = None
@@ -129,8 +127,6 @@ class CupertinoAppBar(Control):
     it.
 
     If `False`, the navigation bar will display its `bgcolor`.
-
-    Defaults to `True`.
     """
 
     enable_background_filter_blur: Optional[bool] = None
@@ -139,8 +135,6 @@ class CupertinoAppBar(Control):
 
     This will only be respected when `automatic_background_visibility` is `False` or 
     until content scrolls under the navbar.
-
-    Defaults to `True`.
     """
 
     large: Optional[bool] = None

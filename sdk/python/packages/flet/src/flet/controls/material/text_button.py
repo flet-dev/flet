@@ -23,8 +23,6 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Text buttons are used for the lowest priority actions, especially when presenting
     multiple options. Text buttons can be placed on a variety of backgrounds. Until the
     button is interacted with, its container isn’t visible.
-
-    Online docs: https://flet.dev/docs/controls/textbutton
     """
 
     content: Optional[StrOrControl] = None

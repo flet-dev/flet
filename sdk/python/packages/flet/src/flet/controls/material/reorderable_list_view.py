@@ -27,8 +27,6 @@ class OnReorderEvent(Event["ReorderableListView"]):
 class ReorderableListView(ListView):
     """
     A scrollable list of controls that can be reordered.
-
-    Online docs: https://flet.dev/docs/controls/reorderablelistview
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -39,8 +37,6 @@ class ReorderableListView(ListView):
     horizontal: bool = False
     """
     Whether the `controls` should be laid out horizontally.
-
-    Defaults to `False`.
     """
 
     reverse: bool = False
@@ -53,8 +49,6 @@ class ReorderableListView(ListView):
 
     Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
-
-    Defaults to `False`.
     """
 
     item_extent: OptionalNumber = None
@@ -71,8 +65,6 @@ class ReorderableListView(ListView):
     """
     `True` if the dimensions of the first item should be used as a "prototype" for all
     other items, i.e. their height or width will be the same as the first item.
-
-    Defaults to `False`.
     """
 
     padding: OptionalPaddingValue = None
@@ -87,8 +79,7 @@ class ReorderableListView(ListView):
     The content will be clipped (or not) according to this option.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
-    to `ClipBehavior.HARD_EDGE`.
+    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
     cache_extent: OptionalNumber = None
@@ -113,8 +104,6 @@ class ReorderableListView(ListView):
     anchor: Number = 0.0
     """
     The relative position of the zero scroll offset.
-
-    Defaults to `0.0`.
     """
 
     auto_scroller_velocity_scalar: OptionalNumber = None
@@ -144,8 +133,6 @@ class ReorderableListView(ListView):
     about to become visible.
 
     This is particularly useful when dealing with a large number of controls.
-
-    Defaults to `True`.
     """
 
     show_default_drag_handles: bool = True

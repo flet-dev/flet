@@ -15,8 +15,6 @@ class ShaderMask(ConstrainedControl):
 
     For example, ShaderMask can be used to gradually fade out the edge of a child by
     using a `LinearGradient` mask.
-
-    Online docs: https://flet.dev/docs/controls/shadermask
     """
 
     shader: Gradient
@@ -35,8 +33,7 @@ class ShaderMask(ConstrainedControl):
     """
     The blend mode to use when applying the shader to the `content`.
 
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode) and
-    defaults to `BlendMode.MODULATE`.
+    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
     """
 
     border_radius: OptionalBorderRadiusValue = None

@@ -29,8 +29,6 @@ class CupertinoButtonSize(Enum):
 class CupertinoButton(ConstrainedControl):
     """
     An iOS-style button.
-
-    Online docs: https://flet.dev/docs/controls/cupertinobutton
     """
 
     content: Optional[StrOrControl] = None
@@ -68,15 +66,11 @@ class CupertinoButton(ConstrainedControl):
     """
     Defines the opacity of the button when it is clicked. When not pressed, 
     the button has an opacity of `1.0`.
-
-    Defaults to `0.4`.
     """
 
     min_size: Number = None
     """
     The minimum size of the button.
-
-    Defaults to `44.0`.
     """
 
     size_style: CupertinoButtonSize = CupertinoButtonSize.LARGE
@@ -106,12 +100,11 @@ class CupertinoButton(ConstrainedControl):
     fired after that.
     """
 
-    url_target: Optional[UrlTarget] = None
+    url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
-    defaults to `UrlTarget.BLANK`.
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget).
     """
 
     autofocus: bool = False

@@ -27,8 +27,6 @@ __all__ = ["Chip"]
 class Chip(ConstrainedControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
-
-    Online docs: https://flet.dev/docs/controls/chip
     """
 
     label: StrOrControl

@@ -11,8 +11,6 @@ class Divider(Control):
     A thin horizontal line, with padding on either side.
 
     In the material design language, this represents a divider.
-
-    Online docs: https://flet.dev/docs/controls/divider
     """
 
     color: OptionalColorValue = None

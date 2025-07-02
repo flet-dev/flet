@@ -23,8 +23,6 @@ class VisibilityMode(Enum):
 class CupertinoTextField(TextField):
     """
     An iOS-style text field.
-
-    Online docs: https://flet.dev/docs/controls/cupertinotextfield
     """
 
     placeholder_text: Optional[str] = None
@@ -52,8 +50,7 @@ class CupertinoTextField(TextField):
     """
     The blend mode applied to the `color` or `gradient` background.
 
-    Value is of type [BlendMode](https://flet.dev/docs/reference/types/blendmode) and 
-    defaults to `BlendMode.MODULATE`.
+    Value is of type [BlendMode](https://flet.dev/docs/reference/types/blendmode).
     """
 
     shadow: OptionalShadowValue = None
@@ -68,8 +65,7 @@ class CupertinoTextField(TextField):
     Has no effect if `prefix` is not specified.
 
     Value is of type 
-    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode) and 
-    defaults to `VisibilityMode.ALWAYS`.
+    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
     """
 
     suffix_visibility_mode: VisibilityMode = VisibilityMode.ALWAYS
@@ -79,8 +75,7 @@ class CupertinoTextField(TextField):
     Has no effect if `suffix` is not specified.
 
     Value is of type 
-    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode) and 
-    defaults to `VisibilityMode.ALWAYS`.
+    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
     """
 
     clear_button_visibility_mode: VisibilityMode = VisibilityMode.NEVER
@@ -90,8 +85,7 @@ class CupertinoTextField(TextField):
     Will appear only if no `suffix` is provided.
 
     Value is of type 
-    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode) and 
-    defaults to `VisibilityMode.NEVER`.
+    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
     """
 
     clear_button_semantics_label: Optional[str] = None

@@ -82,8 +82,6 @@ class PopupMenuItem(Control):
 class PopupMenuButton(ConstrainedControl):
     """
     An icon button which displays a menu when clicked.
-
-    Online docs: https://flet.dev/docs/controls/popupmenubutton
     """
 
     content: Optional[StrOrControl] = None

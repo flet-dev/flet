@@ -30,8 +30,6 @@ class Stack(ConstrainedControl, AdaptiveControl):
     Stack is also useful if you want to implement implicit animations
     (https://flet.dev/docs/guides/python/animations/) that require knowing absolute
     position of a target value.
-
-    Online docs: https://flet.dev/docs/controls/stack
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -44,8 +42,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
-    and defaults to `ClipBehavior.HARD_EDGE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
     alignment: Optional[Alignment] = None
@@ -58,6 +55,5 @@ class Stack(ConstrainedControl, AdaptiveControl):
     """
     How to size the non-positioned `controls`.
 
-    Value is of type [`StackFit`](https://flet.dev/docs/reference/types/stackfit) and
-    defaults to `StackFit.LOOSE`.
+    Value is of type [`StackFit`](https://flet.dev/docs/reference/types/stackfit).
     """

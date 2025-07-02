@@ -13,8 +13,6 @@ __all__ = ["CupertinoDialogAction"]
 class CupertinoDialogAction(Control):
     """
     A button typically used in a CupertinoAlertDialog.
-
-    Online docs: https://flet.dev/docs/controls/cupertinodialogaction
     """
 
     content: StrOrControl
@@ -26,23 +24,17 @@ class CupertinoDialogAction(Control):
     """
     If set to True, the button will have bold text. More than one action can have 
     this property set to True in CupertinoAlertDialog.
-
-    Defaults to `False`.
     """
 
     destructive: bool = False
     """
     If set to True, the button's text color will be red. Use it for actions that 
     destroy objects, such as an delete that deletes an email etc.
-
-    Defaults to `False`.
     """
 
     text_style: Optional[TextStyle] = None
     """
     The text style to use for text on the button.
-
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
     on_click: OptionalControlEventHandler["CupertinoDialogAction"] = None

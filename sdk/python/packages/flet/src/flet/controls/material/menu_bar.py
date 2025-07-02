@@ -45,8 +45,6 @@ class MenuBar(Control):
     It could be placed anywhere but typically resides above the main body of the
     application and defines a menu system for invoking callbacks in response to user
     selection of a menu item.
-
-    Online docs: https://flet.dev/docs/controls/menubar
     """
 
     controls: list[Control] = field(default_factory=list)

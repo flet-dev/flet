@@ -97,8 +97,6 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     Navigation bars offer a persistent and convenient way to switch between primary
     destinations in an app.
-
-    Online docs: https://flet.dev/docs/controls/navigationbar
     """
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)

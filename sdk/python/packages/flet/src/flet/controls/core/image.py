@@ -21,8 +21,6 @@ __all__ = ["Image"]
 class Image(ConstrainedControl):
     """
     A control that displays an image.
-
-    Online docs: https://flet.dev/docs/controls/image
     """
 
     src: OptionalString = None

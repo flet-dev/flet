@@ -82,8 +82,6 @@ class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
     bottom of the screen.
-
-    Online docs: https://flet.dev/docs/controls/snackbar
     """
 
     content: StrOrControl

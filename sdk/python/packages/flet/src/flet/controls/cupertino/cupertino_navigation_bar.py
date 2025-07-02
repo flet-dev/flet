@@ -23,8 +23,6 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     Navigation bars offer a persistent and convenient way to switch between primary
     destinations in an app.
-
-    Online docs: https://flet.dev/docs/controls/cupertinonavigationbar
     """
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)
@@ -70,8 +68,6 @@ class CupertinoNavigationBar(ConstrainedControl):
     icon_size: Number = 30
     """
     The size of all destination icons.
-
-    Defaults to `30`.
     """
 
     on_change: OptionalControlEventHandler["CupertinoNavigationBar"] = None

@@ -11,8 +11,6 @@ class VerticalDivider(Control):
     A thin vertical line, with padding on either side.
 
     In the material design language, this represents a divider.
-
-    Online docs: https://flet.dev/docs/controls/verticaldivider
     """
 
     width: OptionalNumber = None

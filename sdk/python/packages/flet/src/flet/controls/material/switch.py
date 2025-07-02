@@ -26,9 +26,6 @@ class Switch(ConstrainedControl, AdaptiveControl):
     two mutually exclusive options.
 
     For example, "On/Off", "Show/Hide". Choosing an option should produce
-    an immediate result.
-
-    Online docs: https://flet.dev/docs/controls/switch
     """
 
     label: Optional[StrOrControl] = None

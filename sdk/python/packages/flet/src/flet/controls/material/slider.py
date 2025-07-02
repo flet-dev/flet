@@ -34,8 +34,6 @@ class Slider(ConstrainedControl, AdaptiveControl):
     Use a slider when you want people to set defined values (such as volume or
     brightness), or when people would benefit from instant feedback on the effect
     of setting changes.
-
-    Online docs: https://flet.dev/docs/controls/slider
     """
 
     value: OptionalNumber = None

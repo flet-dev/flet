@@ -11,8 +11,6 @@ __all__ = ["CupertinoBottomSheet"]
 class CupertinoBottomSheet(DialogControl):
     """
     A Cupertino version of modal bottom sheet.
-
-    Online docs: https://flet.dev/docs/controls/cupertinobottomsheet
     """
 
     content: Control

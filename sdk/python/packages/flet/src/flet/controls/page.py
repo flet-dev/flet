@@ -150,8 +150,6 @@ class Page(PageView):
 
     A page instance and the root view are automatically created when a new
     user session started.
-
-    Online docs: https://flet.dev/docs/controls/page
     """
 
     sess: InitVar["Session"]

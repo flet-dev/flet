@@ -10,8 +10,6 @@ class SelectionArea(Control):
     """
     Flet controls are not selectable by default. SelectionArea is used to enable
     selection for its child control.
-
-    Online docs: https://flet.dev/docs/controls/selectionarea
     """
 
     content: Control

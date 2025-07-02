@@ -20,8 +20,6 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     ListView is the most commonly used scrolling control. It displays its children one
     after another in the scroll direction. In the cross axis, the children are required
     to fill the ListView.
-
-    Online docs: https://flet.dev/docs/controls/listview
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -44,8 +42,6 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
-
-    Defaults to `False`.
     """
 
     spacing: Number = 0
@@ -65,8 +61,6 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     `True` if the dimensions of the first item should be used as a "prototype" for all
     other items, i.e. their height or width will be the same as the first item.
-
-    Defaults to `False`.
     """
 
     divider_thickness: Number = 0
@@ -87,8 +81,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     The content will be clipped (or not) according to this option.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
-    to `ClipBehavior.HARD_EDGE`.
+    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
     semantic_child_count: Optional[int] = None
@@ -114,6 +107,4 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     Whether the `controls` should be built lazily/on-demand.
 
     This is particularly useful when dealing with a large number of controls.
-
-    Defaults to `True`.
     """

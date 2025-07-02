@@ -66,23 +66,17 @@ class BorderSide:
     double-hit pixels, giving it a slightly darker/lighter result.
     
     To omit the border entirely, set the `style` to `BorderStyle.NONE`.
-    
-    Defaults to `1.0`.
     """
 
     color: ColorValue = Colors.BLACK
     """
     The color of this side of the border.
-    
-    Defaults to `Colors.BLACK`.
     """
 
     stroke_align: "BorderSideStrokeAlignValue" = BorderSideStrokeAlign.INSIDE
     """
     The relative position of the stroke on a `BorderSide` in an
     `OutlinedBorder` or `Border`.
-    
-    Defaults to `BorderSideStrokeAlign.INSIDE`.
     """
 
     style:BorderStyle = BorderStyle.SOLID
@@ -91,8 +85,6 @@ class BorderSide:
     
     To omit a side, set `style` to `BorderStyle.NONE`. 
     This skips painting the border, but the border still has a `width`.
-    
-    Defaults to `BorderStyle.SOLID`.
     """
 
 
@@ -179,29 +171,21 @@ class Border:
     top: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Top side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     right: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Right side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     bottom: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Bottom side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     left: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Left side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     # Class Methods

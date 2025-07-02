@@ -108,8 +108,6 @@ class FilePicker(Service):
     """
     A control that allows you to use the native file explorer to pick single
     or multiple files, with extensions filtering support and upload.
-
-    Online docs: https://flet.dev/docs/controls/filepicker
     """
 
     on_upload: OptionalEventHandler[FilePickerUploadEvent] = None

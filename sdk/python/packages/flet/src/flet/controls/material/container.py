@@ -44,8 +44,6 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     <img src="https://flet.dev/img/docs/controls/container/container-diagram.png"
     className="screenshot-50" />
-
-    Online docs: https://flet.dev/docs/controls/container
     """
 
     content: Optional[Control] = None

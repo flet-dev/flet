@@ -23,8 +23,6 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
     A material design card: a panel with slightly rounded corners and an elevation
     shadow.
-
-    Online docs: https://flet.dev/docs/controls/card
     """
 
     content: Optional[Control] = None

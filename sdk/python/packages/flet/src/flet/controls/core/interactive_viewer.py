@@ -23,8 +23,6 @@ __all__ = ["InteractiveViewer"]
 class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
     InteractiveViewer allows users to pan, zoom, and rotate content.
-
-    Online docs: https://flet.dev/docs/controls/interactiveviewer
     """
 
     content: Control
@@ -35,22 +33,16 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     pan_enabled: bool = True
     """
     Whether panning is enabled.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     scale_enabled: bool = True
     """
     Whether scaling is enabled.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     trackpad_scroll_causes_scale: bool = False
     """
     Whether scrolling up/down on a trackpad should cause scaling instead of panning.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
     constrained: bool = True
@@ -62,30 +54,23 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     max_scale: Number = 2.5
     """
     The maximum allowed scale. Must be greater than or equal to `min_scale`.
-
-    Value is of type `float` and defaults to `2.5`.
     """
 
     min_scale: Number = 0.8
     """
     The minimum allowed scale. Must be greater than `0` and less than or equal to
     `max_scale`.
-
-    Value is of type `float` and defaults to `0.8`.
     """
 
     interaction_end_friction_coefficient: Number = 0.0000135
     """
-    Changes the deceleration behavior after a gesture. Must be greater than `0`.
-
-    Value is of type `float` and defaults to `0.0000135`.
+    Changes the deceleration behavior after a gesture. 
+    Must be greater than `0`.
     """
 
     scale_factor: Number = 200
     """
     The amount of scale to be performed per pointer scroll.
-
-    Value is of type `float` and defaults to `200.0`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -93,8 +78,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     How to clip the `content`.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
-    to `ClipBehavior.HARD_EDGE`.
+    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
     alignment: Optional[Alignment] = None
@@ -116,8 +100,6 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     interaction_update_interval: int = 200
     """
     The interval (in milliseconds) at which the `on_interaction_update` event is fired.
-
-    Value is of type `int` and defaults to `200`.
     """
 
     on_interaction_start: OptionalEventHandler[ScaleStartEvent["InteractiveViewer"]] = (

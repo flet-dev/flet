@@ -85,8 +85,6 @@ class AutofillGroupDisposeAction(Enum):
 class AutofillGroup(Control):
     """
     This control is used to group autofill controls together.
-
-    Online docs: https://flet.dev/docs/controls/autofillgroup
     """
 
     content: Control
@@ -96,14 +94,13 @@ class AutofillGroup(Control):
     Value is of type `Control`.
     """
 
-    dispose_action: Optional[AutofillGroupDisposeAction] = None
+    dispose_action: AutofillGroupDisposeAction = AutofillGroupDisposeAction.COMMIT
     """
     The action to be run when this `AutofillGroup` is the topmost `AutofillGroup`
     and it's being disposed, in order to clean up the current autofill context.
 
     Value is of type
-    [`AutofillGroupDisposeAction`](https://flet.dev/docs/reference/types/autofillgroupdisposeaction)
-    and defaults to `AutofillGroupDisposeAction.COMMIT`.
+    [`AutofillGroupDisposeAction`](https://flet.dev/docs/reference/types/autofillgroupdisposeaction).
     """
 
     def before_update(self):

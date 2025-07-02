@@ -86,8 +86,6 @@ class NavigationDrawer(DialogControl):
 
     Navigation Drawer is a panel slides in horizontally from the left or right edge of
     a page to show primary destinations in an app.
-
-    Online docs: https://flet.dev/docs/controls/navigationdrawer
     """
 
     controls: list[Control] = field(default_factory=list)
