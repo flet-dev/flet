@@ -17,18 +17,18 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     A scrollable, 2D array of controls.
 
-    GridView is very effective for large lists (thousands of items). Prefer it over
-    wrapping `Column` or `Row` for smooth scrolling.
+    It is very effective for large lists (thousands of items).
+    Prefer it over wrapping [`Column`][flet.Column]s or [`Row`][flet.Row]s for smooth scrolling.
     """
 
     controls: list[Control] = field(default_factory=list)
     """
-    A list of `Control`s to display inside GridView.
+    A list of controls to display inside grid.
     """
 
     horizontal: bool = False
     """
-    `True` to layout GridView items horizontally.
+    Whether to layout the grid items horizontally.
     """
 
     reverse: bool = False
@@ -71,18 +71,13 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     padding: OptionalPaddingValue = None
     """
     The amount of space by which to inset the children.
-
-    Padding is an instance of
-    [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
-    to `ClipBehavior.HARD_EDGE`.
+    Type: [`ClipBehavior`][flet.ClipBehavior].
     """
 
     semantic_child_count: Optional[int] = None

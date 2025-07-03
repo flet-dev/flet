@@ -11,79 +11,82 @@ __all__ = ["Draggable"]
 @control("Draggable")
 class Draggable(Control):
     """
-    A control that can be dragged from to a `DragTarget`.
+    A control that can be dragged from to a [`DragTarget`][flet.DragTarget].
 
-    When a draggable control recognizes the start of a drag gesture, it displays a
-    `content_feedback` control that tracks the user's finger across the screen. If the
-    user lifts their finger while on top of a `DragTarget`, that target is given the
+    When a draggable control recognizes the start of a drag gesture, it displays the
+    [`content_feedback`][(c).] control that tracks the user's finger across the screen. If the
+    user lifts their finger while on top of a `DragTarget`, this target is given the
     opportunity to complete drag-and-drop flow.
+
+    Raises:
+        AssertionError: If [`content`][(c).] is not visible.
+        AssertionError: If [`max_simultaneous_drags`][(c.)] is set to a negative value.
     """
 
     content: Control
     """
-    `Draggable` control displays [`content`](#content) when zero drags are under way.
+    The control to display when the draggable is not being dragged.
 
-    If [`content_when_dragging`](#content_when_dragging) is not `None`, this control
-    instead displays `content_when_dragging` when one or more drags are underway.
-    Otherwise, this control always displays `content`.
+    If the draggable is being dragged, the 
+    [`content_when_dragging`][flet.Draggable.content_when_dragging] is displayed instead.
     """
 
     group: str = "default"
     """
-    A group this draggable belongs to.
+    The group this draggable belongs to.
 
-    For [`DragTarget`](https://flet.dev/docs/controls/dragtarget) to accept incoming 
-    drag both `Draggable` and `DragTarget` must be in the same `group`.
+    Note:
+        For a [`DragTarget`][flet.DragTarget] to accept an incoming drop from a `Draggable`, 
+        they must both be in the same `group`.
     """
 
     content_when_dragging: Optional[Control] = None
     """
-    The `Control` to display instead of `content` when one or more drags are under way.
+    The control to display instead of [`content`][flet.Draggable.content] when this draggable is being dragged.
 
-    If this is `None`, then this widget will always display `content` (and so the drag
-    source representation will not change while a drag is under way).
+    If set, this control visually replaces `content` during an active drag operation, 
+    allowing you to show a different appearance or an "empty" placeholder. 
+    If `None`, the original `content` remains visible while dragging.
     """
 
     content_feedback: Optional[Control] = None
     """
-    The `Control` to show under the pointer when a drag is under way.
+    The control to show under the pointer when a drag is under way.
     """
 
     axis: Optional[Axis] = None
     """
-    The axis to restrict this draggable's movement.
+    Restricts the draggable's movement to a specific axis.
 
-    When axis is set to `Axis.HORIZONTAL`, this control can only be dragged 
-    horizontally. When axis is set to `Axis.VERTICAL`, this control can only be dragged 
-    vertically.
+    - `Axis.HORIZONTAL`: Only allows horizontal dragging.
+    - `Axis.VERTICAL`: Only allows vertical dragging.
+    - `None`: Allows dragging in any direction.
 
-    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis) and defaults
-    to `None` - no restriction.
+    Type: [`Axis`][flet.Axis]
     """
 
     affinity: Optional[Axis] = None
     """
-    Controls how this control competes with other gestures to initiate a drag.
+    Specifies the axis along which this control competes with other gestures to initiate a drag.
 
-    If set to `None`, this widget initiates a drag as soon as it recognizes a tap down
-    gesture, regardless of any directionality.
+    - If `None`, the drag starts as soon as a tap down gesture is recognized, regardless of direction.
+    - If set to `Axis.HORIZONTAL` or `Axis.VERTICAL`, the control will only initiate a drag 
+    when the gesture matches the specified axis, allowing it to compete with other gestures in that direction.
 
-    If set to `Axis.HORIZONTAL` or `Axis.VERTICAL`, then this control will compete with
-    other horizontal (or vertical, respectively) gestures.
-
-    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis).
+    Type: [`Axis`][flet.Axis]
     """
 
     max_simultaneous_drags: Optional[int] = None
     """
-    The number of simultaneous drags to support.
-
-    - Set this to `0` if you want to prevent the draggable from actually being dragged.
-    - Set this to `1` if you want to only allow the drag source to have one item dragged
-      at a time. In this case, consider supplying an "empty" widget for
-      `content_when_dragging` to create the illusion of actually moving `content`.
-
-    Defaults to `None` - no limit.
+    Specifies how many simultaneous drag operations are allowed for this draggable.
+    
+    - `0` - disables dragging entirely.
+    - `1` - allows only one drag at a time. 
+     For a better user experience, you may want to provide an "empty" widget for 
+     [`content_when_dragging`][flet.Draggable.content_when_dragging] 
+     to visually indicate the item is being moved.
+    - Set to any positive integer to allow that many concurrent drags.
+    - If `None`, there is no limit on the number of simultaneous drags.
     """
 
     on_drag_start: OptionalControlEventHandler["Draggable"] = None
@@ -93,7 +96,7 @@ class Draggable(Control):
 
     on_drag_complete: OptionalControlEventHandler["Draggable"] = None
     """
-    Fires when this draggable is dropped and accepted by a DragTarget.
+    Fires when this draggable is dropped and accepted by a [`DragTarget`][flet.DragTarget].
     """
 
     def before_update(self):
@@ -101,4 +104,4 @@ class Draggable(Control):
         assert self.content.visible, "content must be visible"
         assert self.max_simultaneous_drags is None or (
             self.max_simultaneous_drags >= 0
-        ), "max_simultaneous_drags must be greater than or equal to 0"
+        ), f"max_simultaneous_drags must be greater than or equal to 0, got {self.max_simultaneous_drags}"

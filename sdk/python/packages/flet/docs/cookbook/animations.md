@@ -21,20 +21,20 @@ animation of its appearance:
 * `animate_scale`
 * `animate_offset`
 * `animate_position`
-* `animate` (Container)
+* `animate` (`Container`)
 
 `animate_*` properties could have one of the following values:
 
 * Instance of `Animation` class - allows configuring the duration (in milliseconds) and the curve of the 
 * animation, for example `animate_rotation=Animation(duration=300, curve=AnimationCurve.BOUNCE_OUT)`. 
-  See [Curves](https://api.flutter.dev/flutter/animation/Curves-class.html) in Flutter docs for possible values. Default is `linear`.
+  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is `linear`.
 * `int` value - enables animation with specified duration in milliseconds and `linear` curve.
 * `bool` value - enables animation with the duration of 1000 milliseconds and `linear` curve.
 
 ### Opacity animation
 
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above) 
-enables implicit animation of [`ConstrainedControl.opacity`](/docs/controls/control.md#opacity) property.
+enables implicit animation of [`ConstrainedControl.opacity`][flet.ConstrainedControl.opacity] property.
 
 ```python
 import flet as ft
@@ -63,14 +63,14 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![animate_opacity](../assets/controls/constrained-control/animate-opacity.gif){width="80%"}
+![animate_opacity](../assets/cookbook/animations/animate-opacity.gif){width="80%"}
 /// caption
 ///
 
 ### Rotation animation
 
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above) 
-enables implicit animation of [`ConstrainedControl.rotate`](/docs/controls/constrainedcontrol.md#rotate) property.
+enables implicit animation of [`ConstrainedControl.rotate`][flet.ConstrainedControl.rotate] property.
 
 ```python
 from math import pi
@@ -101,14 +101,14 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![animate_rotation](../assets/controls/constrained-control/animate-rotation.gif){width="80%"}
+![animate_rotation](../assets/cookbook/animations/animate-rotation.gif){width="80%"}
 /// caption
 ///
 
 ### Scale animation
 
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above) 
-enables implicit animation of [`ConstrainedControl.scale`](/docs/controls/constrainedcontrol.md#scale) property.
+enables implicit animation of [`ConstrainedControl.scale`][flet.ConstrainedControl.scale] property.
 
 ```python
 import flet as ft
@@ -138,24 +138,20 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![animate_scale](../assets/controls/constrained-control/animate-scale.gif){width="80%"}
+![animate_scale](../assets/cookbook/animations/animate-scale.gif){width="80%"}
 /// caption
 ///
 
 ### Offset animation
 
 Setting control's `animate_offset` to either `True`, number or an instance of `Animation` class (see above) 
-enables implicit animation of `ConstrainedControl.offset` property.
+enables implicit animation of [`ConstrainedControl.offset`][flet.ConstrainedControl.offset] property.
 
 `offset` property is an instance of `Offset` class which specifies horizontal `x` and vertical `y` 
 offset of a control scaled to control's size. For example, an offset `Offset(-0.25, 0)` will result in 
 a horizontal translation of one quarter the width of the control.
 
 Offset animation is used for various sliding effects:
-
-![animate_offset](../assets/controls/constrained-control/animate-offset.gif){width="80%"}
-/// caption
-///
 
 ```python
 import flet as ft
@@ -182,18 +178,24 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
+![animate_offset](../assets/cookbook/animations/animate-offset.gif){width="80%"}
+/// caption
+///
+
 ### Position animation
 
 Setting control's `animate_position` to either `True`, number or an instance of `Animation` class 
-(see above) enables implicit animation of the following `ConstrainedControl` properties: [`left`](/docs/controls/constrainedcontrol.md#left), `right`, `bottom`, `top`
+(see above) enables implicit animation of the following `ConstrainedControl` properties: 
+[`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right], 
+[`bottom`][flet.ConstrainedControl.bottom], [`top`][flet.ConstrainedControl.top].
 
 
 /// admonition | Note
     type: note
 Positioning is effective only if the control is a descendant of one of the following:
 
-- [`Stack`](/docs/controls/stack.md) control
-- [`Page.overlay`](/docs/controls/page.md#overlay) list
+- [`Stack`][flet.Stack] control
+- [`Page.overlay`][flet.Page.overlay] list
 ///
 
 ```python
@@ -227,19 +229,15 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![animate_position](../assets/controls/constrained-control/animate-position.gif){width="80%"}
+![animate_position](../assets/cookbook/animations/animate-position.gif){width="80%"}
 /// caption
 ///
 
-### Animated container
+### Animate
 
-Setting [`Container.animate`](/docs/controls/container.md#animate) to either `True`, number or an 
+Setting [`Container.animate`][flet.Container.animate] to either `True`, number or an 
 instance of `Animation` class (see above) enables implicit animation of container properties such as size, 
 background color, border style, gradient.
-
-![animate_rotation](../assets/controls/constrained-control/animate-rotation.gif){width="80%"}
-/// caption
-///
 
 ```python
 import flet as ft
@@ -263,14 +261,15 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-### Animated content switcher
-
-[`AnimatedSwitcher`](/docs/controls/animatedswitcher.md) allows animated transition between a new control and 
-the control previously set on the AnimatedSwitcher as a `content`.
-
-![animate_rotation](../assets/cookbook/animations/animated-switcher-images.gif){width="80%"}
+![animate-container](../assets/cookbook/animations/animate-container.gif){width="80%"}
 /// caption
 ///
+
+
+### Animated content switcher
+
+[`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between a new control and 
+the control previously set on the `AnimatedSwitcher` as a `content`.
 
 ```python
 import time
@@ -303,9 +302,13 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
+![animated-switcher](../assets/cookbook/animations/animated-switcher.gif){width="80%"}
+/// caption
+///
+
 ### Animation end callback
 
-`ConstrainedControl` also has an [`on_animation_end`](/docs/controls/constrainedcontrol.md#on_animation_end) event handler, which is called
+`ConstrainedControl` also has an [`on_animation_end`][flet.ConstrainedControl.on_animation_end] event handler, which is called
 when an animation is complete. It can be used to chain multiple animations.
 
 Event's `data` field/property contains the name of animation:

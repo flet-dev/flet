@@ -27,7 +27,7 @@ This is the recommended publishing method for static website.
 
 ### Prerequisites
 
-Flutter SDK [must be installed](/docs/publish#flutter-sdk) on your computer for `flet build web` command to work.
+Flutter SDK [must be installed](../../../publish/index.md#flutter-sdk) on your computer for `flet build web` command to work.
 
 ### Building website
 
@@ -70,7 +70,7 @@ Use `--route-url-strategy` argument to change URL strategy.
 
 ### Web renderer
 
-You can change default "canvaskit" web renderer ([more about renderers here](/docs/cookbook/fonts) to "html" with `--web-renderer` option:
+You can change default "canvaskit" web renderer ([more about renderers here](../../../cookbook/fonts.md) to "html" with `--web-renderer` option:
 
 ```
 flet build web --web-renderer html

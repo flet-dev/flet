@@ -1,9 +1,14 @@
-User interface is made of **Controls** (aka widgets). To make controls visible to a user they must be added to a `Page` or inside other controls. Page is the top-most control. Nesting controls into each other could be represented as a tree with Page as a root.
+User interface is made of **Controls** (aka widgets).
 
-Controls are just regular Python classes. Create control instances via constructors with parameters matching their properties, for example:
+To make controls visible to a user they must be added to a [`Page`][flet.Page] (the top-most control in the tree) 
+or inside other controls. 
+Nesting controls into each other could be represented as a tree with [`Page`][flet.Page] as a root.
+
+Controls are just regular Python classes. Create control instances via constructors with parameters matching 
+their properties, for example:
 
 ```python
-t = ft.Text(value="Hello, world!", color="green")
+ft.Text(value="Hello, world!", color="green")
 ```
 
 To display control on a page add it to `controls` list of a Page and call `page.update()` to send page changes to a browser or desktop client:
@@ -40,11 +45,13 @@ Some controls are "container" controls (like Page) which could contain other con
 
 ```python
 page.add(
-    ft.Row(controls=[
-        ft.Text("A"),
-        ft.Text("B"),
-        ft.Text("C")
-    ])
+    ft.Row(
+        controls=[
+            ft.Text("A"),
+            ft.Text("B"),
+            ft.Text("C")
+        ]
+    )
 )
 ```
 
@@ -52,10 +59,12 @@ or `TextField` and `ElevatedButton` next to it:
 
 ```python
 page.add(
-    ft.Row(controls=[
-        ft.TextField(label="Your name"),
-        ft.ElevatedButton(text="Say my name!")
-    ])
+    ft.Row(
+        controls=[
+            ft.TextField(label="Your name"),
+            ft.ElevatedButton(text="Say my name!")
+        ]
+    )
 )
 ```
 
@@ -103,10 +112,6 @@ ft.run(main)
 Flet implements *imperative* UI model where you "manually" build application UI with stateful controls and then mutate it by updating control properties. Flutter implements *declarative* model where UI is automatically re-built on application data changes.
 Managing application state in modern frontend applications is inherently complex task and Flet's "old-school" approach could be more attractive to programmers without frontend experience.
 ::
-
-### `visible` property
-
-Every control has `visible` property which is `true` by default - control is rendered on the page. Setting `visible` to `false` completely prevents control (and all its children if any) from rendering on a page canvas. Hidden controls cannot be focused or selected with a keyboard or mouse and they do not emit any events.
 
 ### `disabled` property
 
@@ -189,7 +194,9 @@ ft.run(main)
 
 ## Textbox
 
-Flet provides a number of [controls](/docs/controls) for building forms: [TextField](/docs/controls/textfield), [Checkbox](/docs/controls/checkbox), [Dropdown](/docs/controls/dropdown), [ElevatedButton](/docs/controls/elevatedbutton).
+Flet provides a number of [controls](../controls/index.md) for building forms: 
+[`TextField`][flet.TextField], [`Checkbox`][flet.Checkbox], [`Dropdown`][flet.Dropdown], 
+[`ElevatedButton`][flet.ElevatedButton].
 
 Let's ask a user for a name:
 
@@ -217,7 +224,7 @@ ft.run(main)
 
 ## Checkbox
 
-The [Checkbox](/docs/controls/checkbox) control provides you with various properties and events emmiters for ease of use.
+The [`Checkbox`][flet.Checkbox] control provides you with various properties and events emmiters for ease of use.
 
 Let's create a one checkbox ToDo:
 

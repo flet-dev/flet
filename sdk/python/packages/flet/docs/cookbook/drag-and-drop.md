@@ -1,6 +1,9 @@
-The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`](/docs/controls/draggable) control and "drops" it on [`DragTarget`](/docs/controls/dragtarget). If both draggable and drag target has the same `group` a drag target will call `on_accept` event handler and pass draggable control ID as event data. In this case draggable serves as a source "data" for drag-and-drop operation.
+The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`][flet.Draggable] 
+control and "drops" it on [`DragTarget`][flet.DragTarget]. If both draggable and drag target has the same `group` a 
+drag target will call `on_accept` event handler and pass draggable control ID as event data. In this case draggable serves as a source "data" for drag-and-drop operation.
 
-Let's take a look at the following example. In the program below you can drag left control displaying "1" on top of the right control displaying "0" and when drag operation completes left control is replaced with "0" and the right control becomes "1":
+Let's take a look at the following example. In the program below you can drag left control displaying "1" on top of 
+the right control displaying "0" and when drag operation completes left control is replaced with "0" and the right control becomes "1":
 
 ```python
 import flet as ft
@@ -51,18 +54,25 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Drag and drop number](../assets/getting-started/drag-and-drop-number.gif)
+![Drag and drop number](../assets/cookbook/drag-and-drop/image-1.gif)
+/// caption
+///
 
-So, it's developer's responsibility to determine what happens with "source" (draggable) and "destination" (drag target) controls when `on_accept` event occurs.
+So, it's developer's responsibility to determine what happens with "source" (draggable) and "destination" (drag target) 
+controls when `on_accept` event occurs.
 
 /// admonition | Try something
     type: note
 Change DragTarget's group property to `number1` and note `on_accept` is not called any more when you drop "1" on the target.
 ///
 
-There are additional properties and event handlers to make drag-and-drop operation even more interactive. For example, draggable has `content_when_dragging` property to display a different control instead of `content` when drag operation is under way. There is also `content_feedback` property to show a different control under the pointer. By default, the same `content` control, but with 50% opacity is displayed under cursor when dragging.
+There are additional properties and event handlers to make drag-and-drop operation even more interactive. 
+For example, draggable has `content_when_dragging` property to display a different control instead of `content` 
+when drag operation is under way. There is also `content_feedback` property to show a different control 
+under the pointer. By default, the same `content` control, but with 50% opacity is displayed under cursor when dragging.
 
-Let's modify Draggable in our example to display a "hole" in place of dragged control and just "1" under cursor while dragging:
+Let's modify Draggable in our example to display a "hole" in place of dragged control and 
+just "1" under cursor while dragging:
 
 ```python
 ...
@@ -87,9 +97,13 @@ Let's modify Draggable in our example to display a "hole" in place of dragged co
 ...
 ```
 
-![Drag and drop number 2](../assets/getting-started/drag-and-drop-number-2.gif)
+![Drag and drop number 2](../assets/cookbook/drag-and-drop/image-2.gif)
+/// caption
+///
 
-Drag target control additionally has `on_will_accept` and `on_leave` event handlers which help better visualize when it's a good time to "drop" something on the target. Let's modify DragTarget in our example to draw a border around target control when it's ready to accept incoming drag:
+Drag target control additionally has `on_will_accept` and `on_leave` event handlers which help better 
+visualize when it's a good time to "drop" something on the target. Let's modify DragTarget in our example 
+to draw a border around target control when it's ready to accept incoming drag:
 
 ```python
 import flet as ft
@@ -164,6 +178,6 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Drag and drop number 3](../assets/getting-started/drag-and-drop-number-3.gif)
+![Drag and drop number 3](../assets/cookbook/drag-and-drop/image-3.gif)
 /// caption
 ///

@@ -1,4 +1,4 @@
-You can use [`Column`](/docs/controls/column) and [`Row`](/docs/controls/row) controls to display lists in the most cases, but if the list contains hundreds or thousands of items `Column` and `Row` will be ineffective with lagging UI as they render all items at once even they are not visible at the current scrolling position.
+You can use [`Column`][flet.Column] and [`Row`][flet.Row] controls to display lists in the most cases, but if the list contains hundreds or thousands of items `Column` and `Row` will be ineffective with lagging UI as they render all items at once even they are not visible at the current scrolling position.
 
 In the following example we are adding 5,000 text controls to a page. Page uses `Column` as a default layout container:
 
@@ -18,11 +18,11 @@ Run the program and notice that it's not just it takes a couple of seconds to in
 
 ![Scroll column](../assets/getting-started/scroll-column.gif)
 
-For displaying lists with a lot of items use [`ListView`](/docs/controls/listview) and [`GridView`](/docs/controls/gridview) controls which render items on demand, visible at the current scrolling position only.
+For displaying lists with a lot of items use [`ListView`][flet.ListView] and [`GridView`][flet.GridView] controls which render items on demand, visible at the current scrolling position only.
 
 ## ListView
 
-[`ListView`](/docs/controls/listview) could be either vertical (default) or horizontal. ListView items are displayed one after another in the scroll direction.
+[`ListView`][flet.ListView] could be either vertical (default) or horizontal. ListView items are displayed one after another in the scroll direction.
 
 ListView already implements effective on demand rendering of its children, but scrolling performance could be further improved if you can set the same fixed height or width (for `horizontal` ListView) for all items ("extent"). This could be done by either setting absolute extent with `item_extent` property or making the extent of all children equal to the extent of the first child by setting `first_item_prototype` to `True`.
 
@@ -51,7 +51,7 @@ We used `expand=True` in ListView constructor. In order to function properly, Li
 
 ## GridView
 
-[`GridView`](/docs/controls/gridview) allows arranging controls into a scrollable grid.
+[`GridView`][flet.GridView] allows arranging controls into a scrollable grid.
 
 You can make a "grid" with `ft.Column(wrap=True)` or `ft.Row(wrap=True)`, for example:
 

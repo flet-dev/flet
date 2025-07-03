@@ -2,7 +2,9 @@
 title: Overview
 ---
 
-Flet UI is built of controls. Controls are organized into hierarchy, or a tree, where each control has a parent (except [Page](/docs/controls/page)) and container controls like [Column](/docs/controls/column), [Dropdown](/docs/controls/dropdown) can contain child controls, for example:
+Flet UI is built of controls. Controls are organized into hierarchy, or a tree, 
+where each control has a parent (except [`Page`][flet.Page]) and container controls 
+like [`Column`][flet.Column], [Dropdown][flet.Dropdown] can contain child controls, for example:
 
 ```
 Page
@@ -25,37 +27,39 @@ Flet controls have the following properties:
 
 `adaptive` property can be specified for a control in the following cases:
 
-* A control has matching Cupertino control with similar functionality/presentation and graphics as expected on iOS/macOS. In this case, if `adaptive` is `True`, either Material or Cupertino control will be created depending on the target platform.  
+* A control has matching Cupertino control with similar functionality/presentation and graphics as expected on iOS/macOS. 
+* In this case, if `adaptive` is `True`, either Material or Cupertino control will be created depending on the target platform.  
 
     These controls have their Cupertino analogs and `adaptive` property:
     
-    * [`AlertDialog`](/docs/controls/alertdialog)
-    * [`AppBar`](/docs/controls/appbar)
-    * [`Checkbox`](/docs/controls/checkbox)
-    * [`ListTile`](/docs/controls/listtile)
-    * [`NavigationBar`](/docs/controls/navigationbar)
-    * [`Radio`](/docs/controls/radio)
-    * [`Slider`](/docs/controls/slider)
-    * [`Switch`](/docs/controls/switch)
+    * [`AlertDialog`][flet.AlertDialog]
+    * [`AppBar`][flet.AppBar]
+    * [`Checkbox`][flet.Checkbox]
+    * [`ListTile`][flet.ListTile]
+    * [`NavigationBar`][flet.NavigationBar]
+    * [`Radio`][flet.Radio]
+    * [`Slider`][flet.Slider]
+    * [`Switch`][flet.Switch]
 
-* A control has child controls. In this case `adaptive` property value is passed on to its children that don't have their `adaptive` property set. 
+* A control has child controls. In this case `adaptive` property value is passed on to its children that don't have 
+* their `adaptive` property set. 
 
     The following container controls have `adaptive` property: 
-    * [`Card`](/docs/controls/card)
-    * [`Column`](/docs/controls/column)
-    * [`Container`](/docs/controls/container)
-    * [`Dismissible`](/docs/controls/dismissible)
-    * [`ExpansionPanel`](/docs/controls/expansionpanel)
-    * [`FletApp`](/docs/controls/fletapp)
-    * [`GestureDetector`](/docs/controls/gesturedetector)
-    * [`GridView`](/docs/controls/gridview)
-    * [`ListView`](/docs/controls/listview)
-    * [`Page`](/docs/controls/page)
-    * [`Row`](/docs/controls/row)
-    * [`SafeArea`](/docs/controls/safearea)
-    * [`Stack`](/docs/controls/stack)
-    * [`Tabs`](/docs/controls/tabs)
-    * [`View`](/docs/controls/view)
+    * [`Card`][flet.Card]
+    * [`Column`][flet.Column]
+    * [`Container`][flet.Container]
+    * [`Dismissible`][flet.Dismissible]
+    * [`ExpansionPanel`][flet.ExpansionPanel]
+    * [`FletApp`][flet.FletApp]
+    * [`GestureDetector`][flet.GestureDetector]
+    * [`GridView`][flet.GridView]
+    * [`ListView`][flet.ListView]
+    * [`Page`][flet.Page]
+    * [`Row`][flet.Row]
+    * [`SafeArea`][flet.SafeArea]
+    * [`Stack`][flet.Stack]
+    * [`Tabs`][flet.Tabs]
+    * [`View`][flet.View]
 
 ### `badge`
 
@@ -80,11 +84,13 @@ page.add(c)
 
 ### `expand`
 
-When a child Control is placed into a [`Column`](/docs/controls/column) or a [`Row`](/docs/controls/row) you can "expand" it to fill the available space. `expand` property could be a boolean value (`True` - expand control to fill all available space) or an integer - an "expand factor" specifying how to divide a free space with other expanded child controls.
+When a child Control is placed into a [`Column`][flet.Column] or a [`Row`][flet.Row] you can "expand" it to fill 
+the available space. `expand` property could be a boolean value (`True` - expand control to fill all available space) 
+or an integer - an "expand factor" specifying how to divide a free space with other expanded child controls.
 
 For more information and examples about `expand` property see "Expanding children" sections in [`Column`](/docs/controls/column#expanding-children) or [`Row`](/docs/controls/row#expanding-children).
 
-Here is an example of expand being used in action for both [`Column`](/docs/controls/column) and [`Row`](/docs/controls/row):
+Here is an example of expand being used in action for both [`Column`][flet.Column] and [`Row`][flet.Row]:
 
 ```pyhton
 import flet as ft
@@ -128,7 +134,8 @@ ft.run(main)
 
 Effective only if `expand` is `True`. 
 
-If `expand_loose` is `True`, the child control of a [`Column`](/docs/controls/column) or a [`Row`](/docs/controls/row) will be given the flexibility to expand to fill the available space in the main axis (e.g., horizontally for a Row or vertically for a Column), but will not be required to fill the available space.
+If `expand_loose` is `True`, the child control of a [`Column`][flet.Column] or a [`Row`][flet.Row] will be 
+given the flexibility to expand to fill the available space in the main axis (e.g., horizontally for a Row or vertically for a Column), but will not be required to fill the available space.
 
 The default value is `False`.
 

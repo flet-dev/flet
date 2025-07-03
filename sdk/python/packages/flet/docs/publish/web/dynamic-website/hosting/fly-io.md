@@ -47,7 +47,7 @@ By default, Flet web app will be running on port `8000`, but you can change that
 
 `FLET_SESSION_TIMEOUT` is a user session lifetime, in seconds.
 
-[Complete list of environment variables](/docs/publish/web/dynamic-website#environment-variables) supported by a web app.
+[Complete list of environment variables](../../../../publish/web/dynamic-website/index.md#environment-variables) supported by a web app.
 
 Create `Dockerfile` containing the commands to build your application container:
 

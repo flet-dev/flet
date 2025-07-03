@@ -29,9 +29,9 @@ It's a tradition to start with "Hello, world!" app!
 
 To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
 
-Before you can create your first Flet app, you need to [setup your development environment](/docs/getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
+Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
 
-Once you have Flet installed, let's [create](/docs/getting-started/create-flet-app.md) a hello-world app.
+Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a hello-world app.
 
 Create `hello.py` with the following contents:
 
@@ -59,11 +59,11 @@ To start, we want to be able to take user input (chat message) and show messages
 ///
 
 To implement this layout, we will be using these Flet controls:
-* [Column](/docs/controls/column) - a container to display chat messages (Text controls) vertically.
-* [Text](/docs/controls/text) - chat message displayed in the chat Column.
-* [TextField](/docs/controls/textfield) - input control used for taking new message input from the user.
-* [ElevatedButton](/docs/controls/elevatedbutton) - "Send" button that will add new message to the chat Column.
-* [Row](/docs/controls/row) - a container to display TextField and ElevatedButton horizontally.
+* [Column](../controls/column.md) - a container to display chat messages (Text controls) vertically.
+* [Text](../controls/text.md) - chat message displayed in the chat Column.
+* [TextField](../controls/textfield.md) - input control used for taking new message input from the user.
+* [ElevatedButton](../controls/elevatedbutton.md) - "Send" button that will add new message to the chat Column.
+* [Row](../controls/row.md) - a container to display TextField and ElevatedButton horizontally.
 
 Create `chat.py` with the following contents:
 
@@ -114,7 +114,7 @@ Once it is opened, copy the url and paste it into a new tab.
 
 To build a realtime chat app, you need to somehow pass the messages between chat app sessions. When a user sends a message, it should be broadcasted to all other app sessions and displayed on their pages.
 
-Flet provides a simple built-in [PubSub](/docs/cookbook/pub-sub) mechanism for asynchronous communication between page sessions.
+Flet provides a simple built-in [PubSub](../cookbook/pub-sub.md) mechanism for asynchronous communication between page sessions.
 
 First, we need subscribe the user to receive broadcast messages:
 ```python
@@ -181,7 +181,7 @@ ft.run(main)
 
 Chat app that you have created in the previous step has basic functionality needed to exchange messages between user sessions. It is not very user-friendly though, since it shows `session_id` that sent a message, which doesn't tell much about who you are communicating with. 
 
-Let's improve our app to show user name instead of `session_id` for each message. To capture user name, we will be using [`AlertDialog`](/docs/controls/alertdialog) control. Let's add it to the page:
+Let's improve our app to show user name instead of `session_id` for each message. To capture user name, we will be using [`AlertDialog`](../controls/alertdialog.md) control. Let's add it to the page:
 
 ```python
     user_name = ft.TextField(label="Enter your name")
@@ -250,7 +250,7 @@ def join_click(e):
         page.update()
 ```
 
-We used [page session storage](/docs/cookbook/session-storage) to store user_name for its future use in 
+We used [page session storage](../cookbook/session-storage.md) to store user_name for its future use in 
 `send_click` method to send chat messages.
 
 /// admonition | Note
@@ -288,11 +288,11 @@ You may want to show messages in a different format, like this:
 /// caption
 ///
 
-Chat message will now be a `Row` containing [`CircleAvatar`](/docs/controls/circleavatar) with username initials and 
+Chat message will now be a `Row` containing [`CircleAvatar`](../controls/circleavatar.md) with username initials and 
 `Column` that contains two `Text` controls: user name and message text.
 
 We will need to show quite a few chat messages in the chat app, so it makes sense to create 
-your own [reusable control](/docs/getting-started/custom-controls). Lets create a new `ChatMessage` class that will inherit from `Row`.
+your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage` class that will inherit from `Row`.
 
 When creating an instance of `ChatMessage` class, we will pass a `Message` object as an 
 argument and then `ChatMessage` will display itself based on `message.user_name` and `message.text`:
@@ -365,10 +365,10 @@ Instances of `ChatMessage` will be created instead of plain `Text` chat messages
 
 Other improvements suggested with the new layout are:
 
-* [`ListView`](/docs/controls/listview) instead of `Column` for displaying messages, to be able to scroll through the messages later
+* [`ListView`](../controls/listview.md) instead of `Column` for displaying messages, to be able to scroll through the messages later
 * `Container` for displaying border around `ListView`
-* [`IconButton`](/docs/controls/iconbutton) instead of `ElevatedButton` to send messages
-* Use of [`expand`](/docs/controls#expand) property for controls to fill available space
+* [`IconButton`](../controls/iconbutton.md) instead of `ElevatedButton` to send messages
+* Use of [`expand`](../controls/index.md#expand) property for controls to fill available space
 
 Here is how you can implement this layout:
 
@@ -431,7 +431,7 @@ We set `autofocus=True` on a username TextField inside a dialog and then on a Te
 for entering chat message to set initial focus on it when the dialog is closed.
 
 When a user click "Send" button or presses Enter to submit a chat message, TextField loses focus.
-To programmatically set control focus we used [`TextField.focus()`](/docs/controls/textfield#focus) method.
+To programmatically set control focus we used [`TextField.focus()`][flet.TextField.focus] method.
 
 #### Submitting forms on `Enter`
 
@@ -439,21 +439,21 @@ It's so tempting to submit forms with just pushing `Enter` button on the keyboar
 Type your name in the dialog, hit `Enter`, type a new message, hit `Enter`, type another, 
 hit `Enter` - no mouse involved at all! 🚀
 
-Flet has support for that by providing [`TextField.on_submit`](/docs/controls/textfield#on_submit) event handler which fires 
+Flet has support for that by providing [`TextField.on_submit`][flet.TextField.on_submit] event handler which fires 
 when a user press `Enter` button while the focus is on the TextField.
 
 #### Entering multiline messages
 
 What about multiline TextFields where `Enter` must advance a cursor to the next line? 
-We've got that covered too! `TextField` control has [`shift_enter`](/docs/controls/textfield#shift_enter) property which when set 
+We've got that covered too! `TextField` control has [`shift_enter`][flet.TextField.shift_enter] property which when set 
 to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while 
 hitting just `Enter` submits a form.
 
 ### Animated scrolling to the last message
 
 Noticed a nice animation of scrolling to the last message in a chat window? 
-It could be enabled by setting [`ListView.auto_scroll`](/docs/controls/listview#auto_scroll) property to `True`. 
-The top most `Page` class, being a scrollable container itself, also supports [`auto_scroll`](/docs/controls/page#auto_scroll).
+It could be enabled by setting [`ListView.auto_scroll`][flet.ListView.auto_scroll] property to `True`. 
+The top most `Page` class, being a scrollable container itself, also supports [`auto_scroll`][flet.Page.auto_scroll].
 
 ### Page title
 
@@ -470,7 +470,7 @@ Congratulations! You have created your Chat app in Python with Flet, and it look
 
 Now it's time to share your app with the world!
 
-[Follow these instructions](/docs/publish/web/dynamic-website/hosting) to deploy your Flet app as a web app to Fly.io or Replit.
+[Follow these instructions](../publish/web/dynamic-website/hosting/index.md) to deploy your Flet app as a web app to Fly.io or Replit.
 
 ## What's next
 
@@ -499,6 +499,4 @@ In this tutorial, you have learnt how to:
 * Build page layout with reusable controls;
 * Deploy your Flet app to the web;
 
-For further reading you can explore [controls](/docs/controls) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).
-
-We would love to hear your feedback! Please drop us an [email](mailto:hello@flet.dev), join the discussion on [Discord](https://discord.gg/dzWXP8SHG8).
+For further reading you can explore [controls](../controls/index.md) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).

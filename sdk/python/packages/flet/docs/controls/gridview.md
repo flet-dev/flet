@@ -1,7 +1,10 @@
 ::: flet.GridView
 
 ::info
-GridView is very effective for large lists (thousands of items). Prefer it over wrapping [`Column`](/docs/controls/column) or [`Row`](/docs/controls/row) for smooth scrolling. See [Flet Icons Browser](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py) for GridView usage example.
+GridView is very effective for large lists (thousands of items). #
+Prefer it over wrapping [`Column`][flet.Column] or [`Row`][flet.Row] for smooth scrolling. 
+See [Flet Icons Browser](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py) 
+for GridView usage example.
 ::
 
 

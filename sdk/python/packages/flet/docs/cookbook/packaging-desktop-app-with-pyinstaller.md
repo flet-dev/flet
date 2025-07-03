@@ -6,7 +6,7 @@ macOS, Windows and Linux.
 
 `flet build` does not longer rely on PyInstaller like `flet pack` does, but uses Flutter SDK to produce a fast, offline, fully customizable (your own icons, about dialog and metadata) executable for Windows, Linux and macOS with Python runtime embedded into executable and running in-process.
 
-[Follow this guide for desktop packaging](/docs/publish)
+[Follow this guide for desktop packaging](../publish/index.md)
 ///
 
 Flet Python app and all its dependencies can be packaged into an executable and user can run it on their computer without installing a Python interpreter or any modules.
@@ -71,7 +71,7 @@ pip install pillow
 
 ## Packaging assets
 
-Your Flet app can include [assets](/docs/controls/image#src). Provided app assets are in `assets` folder next to `your_program.py` they can be added to an application package with `--add-data` argument, on macOS/Linux:
+Your Flet app can include [assets](assets.md). Provided app assets are in `assets` folder next to `your_program.py` they can be added to an application package with `--add-data` argument, on macOS/Linux:
 
 ```
 flet pack your_program.py --add-data "assets:assets"

@@ -1,4 +1,7 @@
-Flet framework allows you to develop adaptive apps which means having a single codebase that will deliver different look depending on the device's platform.
+Flet framework allows you to develop adaptive apps which means having a single codebase that will deliver 
+
+
+different look depending on the device's platform.
 
 Below is the example of a very simple app that has a different look on iOS and Android platforms:
 
@@ -83,10 +86,10 @@ be created depending on the platform, for example:
 ft.Checkbox(adaptive=True, value=True, label="Adaptive Checkbox")
 ```
 
-Flet checks the value of [`page.platform`](/docs/controls/page#platform) property and if it is `ft.PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created; in all other cases Material control will be created. 
+Flet checks the value of [`Page.platform`][flet.Page.platform] property and if it is `ft.PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created; in all other cases Material control will be created. 
 
 ::note
-[`adaptive`](/docs/controls#adaptive) property can be set for an individual control or a container control such as `Row`, `Column` or any other control that has `content` or `controls` property. If container control is adaptive, all its child controls will be adaptive, unless `adaptive` property is explicitly set to `False` for a child control.
+[`adaptive`][flet.Control.adaptive] property can be set for an individual control or a container control such as `Row`, `Column` or any other control that has `content` or `controls` property. If container control is adaptive, all its child controls will be adaptive, unless `adaptive` property is explicitly set to `False` for a child control.
 ::
 
 Below is the list of adaptive Material controls and their matching Cupertino controls:
@@ -266,9 +269,15 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 
 ## Custom adaptive controls
 
-While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform automatically using their [`adaptive`](/docs/controls#adaptive) property, there will be cases when you need more specific adaptive UI presentation, for example, using different icon, background color, padding etc. depending on the platform.
+While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform 
 
-With Flet, you can create your own reusable custom controls in Python that will inherit from a Flet control and implement specific properties you need. In the example below, we are creating a new `AdaptiveNavigationBarDestination` control that will be displaying different icon on iOS and Android:
+automatically using their [`adaptive`](/docs/controls#adaptive) property, there will be cases when you need more specific adaptive UI 
+presentation, for example, using different icon, background color, padding etc. depending on the platform.
+
+With Flet, you can create your own reusable custom controls in Python that will inherit from a Flet control 
+
+and implement specific properties you need. In the example below, we are creating a new 
+`AdaptiveNavigationBarDestination` control that will be displaying different icon on iOS and Android:
 
 ```python
 class AdaptiveNavigationBarDestination(ft.NavigationBarDestination):
@@ -324,7 +333,8 @@ def main(page):
 
 ft.run(main)
 ```
-Now the NavigationBar and icons within it will look like different on Android and iOS:
+
+Now the `NavigationBar` and icons within it will look like different on Android and iOS:
 
 <div className="row">
   <div className="col col--6" style={{textAlign: 'center'}}>
@@ -337,9 +347,13 @@ Now the NavigationBar and icons within it will look like different on Android an
   </div>  
 </div>
 
-::note
-You may utilise [reusable controls approach](custom-controls) to adapt your app not only depending on the [`platform`](/docs/controls/page#platform) but also use [`page.web`](/docs/controls/page#web) property to have different UI depending on wether the app is running in a browser or not, or even combine `platform` and `web` properties to have specific UI for your MACOS or Windows desktop apps.
-::
+/// admonition | Note
+You may utilise [reusable controls approach](../cookbook/custom-controls.md) to 
+adapt your app not only depending on the [`Page.platform`][flet.Page.platform],
+but also use [`Page.web`][flet.Page.web] property to have different UI depending on whether the 
+app is running in a browser or not, or even combine the usage of both properties to have specific 
+UI for your apps.
+///
 
 
 

@@ -34,7 +34,7 @@ Having intimated that Flet is designed with simple GUIs in mind, lets nonetheles
 tad more complicated than, for example, a simple dashboard with some filters, and shoot for something like a 
 minimal version of Trello - and bestow upon it the totally-independently-arrived-at-name, _Trolli_.  
 For the purposes of this tutorial I'll assume the reader is familiar with the basic concept and setup of a 
-Flet project (read [the tutorials](https://flet.dev/docs/tutorials) and the [docs](https://flet.dev/docs) if not), and instead focus more on aspects 
+Flet project (read [the tutorials](https://flet.dev../tutorials) and the [docs](https://flet.dev/docs) if not), and instead focus more on aspects 
 that are not part of the existing tutorials.
 
 ## Defining Entities and Layout
@@ -227,7 +227,7 @@ class Sidebar(ft.Container):
         self.update()
 ```
 
-If we [run](/docs/getting-started/running-app.md) the main app with
+If we [run](../getting-started/running-app.md) the main app with
 ```
 flet run
 ```
@@ -629,7 +629,7 @@ Next, we'll wrap the `board_list` view in a `DragTarget` object, all of which we
 `Draggable` object. Both of these will be passed a `group` parameter of "lists". This will be important since later 
 we will want to add the ability to drag and drop individual items between different lists so for that function 
 we'll specify a different group. If anything is unclear in the previous sentence. , have a look at the 
-relevant [documentation](https://flet.dev/docs/controls/draggable).
+relevant [documentation](https://flet.dev../controls/draggable).
 
 Now the composition of the view should look something like this.
 

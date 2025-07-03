@@ -39,7 +39,7 @@ storage
 ```
 
 1. Contains a simple Flet program. 
-    It has `main()` function where you would add UI elements ([controls](flet-controls)) to a page or a window. 
+    It has `main()` function where you would add UI elements ([controls](flet-controls.md)) to a page or a window. 
     The application ends with a `ft.run()` function which initializes the Flet app and [runs](running-app.md) `main()`.
 
 You can find more information about `flet create` command [here](TBA).

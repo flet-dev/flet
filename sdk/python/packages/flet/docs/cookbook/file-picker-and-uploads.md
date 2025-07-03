@@ -1,4 +1,4 @@
-[`FilePicker`](/docs/controls/filepicker) control opens a native OS dialog for selecting files and directories.
+[`FilePicker`][flet.FilePicker] control opens a native OS dialog for selecting files and directories.
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
@@ -12,13 +12,16 @@ File picker allows opening three dialogs:
 * **Save file** - choose directory and file name.
 * **Get directory** - select directory.
 
-When running Flet app in a browser only "Pick files" option is available and it's used for uploads only as it, obviously, doesn't return a full path to a selected file.
+When running Flet app in a browser only "Pick files" option is available and it's used for 
+uploads only as it, obviously, doesn't return a full path to a selected file.
 
-Where file picker really shines is a desktop! All three dialogs return full paths to selected files and directories - great assistance to your users!
+Where file picker really shines is a desktop! All three dialogs return full paths to selected 
+files and directories - great assistance to your users!
 
 /// admonition
     type: info
-In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)  when running Flet as an app. This is not a requirement when running Flet in a browser.
+In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)  when running Flet as an app. 
+This is not a requirement when running Flet in a browser.
 
 To install Zenity on Ubuntu/Debian run the following commands:
 ```bash
@@ -28,7 +31,8 @@ sudo apt-get install zenity
 
 ## Using file picker in your app
 
-It is recommended to add file picker to [`page.services`](/docs/controls/page#services) collection, so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
+Add file picker to [`Page.services`][flet.Page.services] collection, 
+so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
 
 ```python
 import flet as ft
@@ -70,7 +74,7 @@ file_picker = ft.FilePicker(on_result=on_dialog_result)
 
 The last result is always available in `FilePicker.result` property.
 
-Check [File picker](/docs/controls/filepicker) control docs for all available dialog methods and their parameters.
+Check [`FilePicker`][flet.FilePicker] control docs for all available dialog methods and their parameters.
 
 ## Uploading files
 
@@ -155,4 +159,4 @@ Check that [example](https://github.com/flet-dev/examples/blob/main/python/contr
 
 ![File picker multiple uploads](../assets/docs/controls/file-picker/file-picker-multiple-uploads.png)
 
-See [File picker](/docs/controls/filepicker) control docs for all its properties and examples.
+See [`FilePicker`][flet.FilePicker] control docs for all its properties and examples.

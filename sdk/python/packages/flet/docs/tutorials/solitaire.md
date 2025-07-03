@@ -22,15 +22,18 @@ We have broken down the game implementation into the following steps:
 * [Winning the game](#winning-the-game)
 * [Deploying the app](#deploying-the-app)
 
-In the Part 2 (will be covered in the next tutorial) we'll be adding Appbar with options to start new game, view game rules and change game settings.
+In the Part 2 (will be covered in the next tutorial) we'll be adding Appbar with options to start new game, 
+view game rules and change game settings.
 
 ## Getting started with Flet
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, 
+but you do need a basic knowledge of Python and object-oriented programming.
 
-Before you can create your first Flet app, you need to [setup your development environment](/docs/getting-started/), which requires Python 3.9 or above and `flet` package.
+Before you can create your first Flet app, you need to 
+[setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
 
-Once you have Flet installed, let's [create](/docs/getting-started/create-flet-app) a simple hello-world app.
+Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
 
 Create `hello.py` with the following contents:
 
@@ -53,9 +56,9 @@ Run this app and you will see a new window with a greeting:
 
 For the proof of concept, we will only be using three types of controls:
 
-* [`Stack`](/docs/controls/stack) - will be used as a parent control for absolute positioning of slots and cards
-* [`GestureDetector`](/docs/controls/gesturedetector) - the card that will be moved within the `Stack`
-* [`Container`](/docs/controls/container) - the slot where the card will be dropped. Will also be used as `content` for the `GestureDetector`.
+* [`Stack`](../controls/stack.md) - will be used as a parent control for absolute positioning of slots and cards
+* [`GestureDetector`](../controls/gesturedetector.md) - the card that will be moved within the `Stack`
+* [`Container`](../controls/container.md) - the slot where the card will be dropped. Will also be used as `content` for the `GestureDetector`.
 
 We have broken down the proof of concept app into four easy steps, so that after each step you have 
 a complete short program to run and test.
@@ -135,7 +138,7 @@ After any properties of a control are updated, an `update()` method of the contr
 ### Step 2: Drop the card in the slot or bounce it back
 
 The goal of this step is to be able to drop a card into a slot if it is close enough and bounce it back if it’s not.
-<img src="/img/docs/solitaire-tutorial/drag-and-drop3.gif" className="screenshot-50" />
+<img src="/img../solitaire-tutorial/drag-and-drop3.gif" className="screenshot-50" />
 
 Let’s create a `Container` control that will represent a slot to which we’ll be dropping the card:
 ```python
@@ -158,7 +161,8 @@ card = ft.GestureDetector(
 )
 ```
 
-On this event, we’ll call `drop` method to check if the card is close enough to the slot (let’s say it’s closer than 20px to the slot), and `place` it there:
+On this event, we’ll call `drop` method to check if the card is close enough to the slot 
+(let’s say it’s closer than 20px to the slot), and `place` it there:
 
 ```python
 def drop(e: ft.DragEndEvent):
@@ -176,9 +180,11 @@ def place(card, slot):
     page.update()
 ```
 
-Now, if the card is not close enough, we need to bounce it back to its original position. Unfortunately, we don’t know the original position coordinates, since the card’s `top` and `left` properties were changed on `on_pan_update` event.
+Now, if the card is not close enough, we need to bounce it back to its original position. 
+Unfortunately, we don’t know the original position coordinates, since the card’s `top` and `left` properties were changed on `on_pan_update` event.
 
-To solve this problem, let’s create a `Solitaire` class object to keep track of the original position of the card when `on_pan_start` event of the card is called:
+To solve this problem, let’s create a `Solitaire` class object to keep track of the original position of 
+the card when `on_pan_start` event of the card is called:
 ```python
 class Solitaire:
    def __init__(self):
@@ -369,7 +375,8 @@ class Slot(ft.Container):
        self.border=ft.border.all(1)
 ```
 
-Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides. It will inherit from `GestureDetector` and we’ll move all card-related methods to it:
+Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides. 
+It will inherit from `GestureDetector` and we’ll move all card-related methods to it:
 ```python
 CARD_WIDTH = 70
 CARD_HEIGTH = 100
@@ -641,7 +648,8 @@ We will now work on this setup step by step.
 
 ### Create card deck
 
-The first step is to create a full deck of cards in Solitaire class. Each card should have a `suit` property (hearts, diamonds, clubs and spades) and a `rank` property (from Ace to King). 
+The first step is to create a full deck of cards in Solitaire class. Each card should have a `suit` property 
+(hearts, diamonds, clubs and spades) and a `rank` property (from Ace to King). 
 For the suit, its `color` is important, because tableau piles are built by alternate colors.
 
 For the rank, its `value` is important, because foundations are built from the lowest (Ace) to the highest (King) rank value.
@@ -658,7 +666,8 @@ class Rank:
         self.name = card_name
         self.value = card_value
 ```
-Now, in the `Card` class, instead of accepting the color as an argument, we’ll be accepting `suite` and `rank` in `__init__()`. Additionally, we’ll add `face_up` property to the card and the Container will now has image of the back of the card as its `content`:
+Now, in the `Card` class, instead of accepting the color as an argument, we’ll be accepting `suite` and 
+`rank` in `__init__()`. Additionally, we’ll add `face_up` property to the card and the Container will now has image of the back of the card as its `content`:
 ```python
 class Card(ft.GestureDetector):
     def __init__(self, solitaire, suite, rank):
@@ -771,7 +780,8 @@ def deal_cards(self):
     self.update()
 ```
 
-Then we'll deal the cards to the tableau piles from left to right so that each pile contains one more card than the last, and place the remaining cards to the stock pile:
+Then we'll deal the cards to the tableau piles from left to right so that each pile contains one more card 
+than the last, and place the remaining cards to the stock pile:
 ```python
 def deal_cards(self):
     random.shuffle(self.cards)
@@ -878,12 +888,13 @@ Let’s see how it looks now:
 
 The full source code for this step can be found [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-game-setup).
 
-Congratulations on completing the Solitaire game setup! You’ve created a full 52-card deck, built layout with stock, waste, foundations and tableau piles, dealt the cards and revealed the top cards in tableau. Let’s move on to the next item on our todo list, which is Solitaire Rules.
+Congratulations on completing the Solitaire game setup! You’ve created a full 52-card deck, 
+built layout with stock, waste, foundations and tableau piles, dealt the cards and revealed the top cards in tableau. Let’s move on to the next item on our todo list, which is Solitaire Rules.
 
 ## Solitaire rules
 
 If you run your current version of Solitaire, you’ll notice that you can do some crazy things with your cards:
-<img src="/img/docs/solitaire-tutorial/game-rules1.gif" className="screenshot-50" />
+<img src="/img../solitaire-tutorial/game-rules1.gif" className="screenshot-50" />
 
 Now it is time to implement some rules.
 
@@ -968,7 +979,8 @@ def drop(self, e: ft.DragEndEvent):
     self.bounce_back()
 ```
 
-Then, of course, not any card can be placed to a foundation. According to the rules, a foundation should start with an Ace and then the cards of the same suite can be placed on top of it to build a pile form Ace to King.
+Then, of course, not any card can be placed to a foundation. According to the rules, a foundation should 
+start with an Ace and then the cards of the same suite can be placed on top of it to build a pile form Ace to King.
 
 Let’s add this rule to Solitaire class:
 ```python
@@ -1176,7 +1188,7 @@ def place(self, slot):
     self.solitaire.update()
 ```
 
-Finally, if the winning condition is met, it will trigger a winning sequence involving [position animation](https://flet.dev/docs/cookbook/animations#position-animation):
+Finally, if the winning condition is met, it will trigger a winning sequence involving [position animation](https://flet.dev../cookbook/animations#position-animation):
 ```python
 def winning_sequence(self):
     for slot in self.foundations:   
@@ -1203,19 +1215,19 @@ Congratulations! You have created your Solitaire game app in Python with Flet, a
 
 Now it's time to share your app with the world!
 
-[Follow these instructions](/docs/publish/web) to deploy your Flet app as a web app to Fly.io or Replit.
+[Follow these instructions](../publish/web/index.md) to deploy your Flet app as a web app to Fly.io or Replit.
 
 ## Summary
 
 In this tutorial, you have learnt how to:
 
-* [Create](/docs/getting-started/create-flet-app) a simple Flet app;
-* Drag and drop cards with [GestureDetector](/docs/controls/gesturedetector);
-* [Create your own classes](/docs/getting-started/custom-controls) that inherit from Flet controls;
-* Design UI layout using absolute positioning of controls in [Stack](/docs/controls/stack);
-* Implement [implicit animations](/docs/cookbook/animations);
-* [Deploy](/docs/publish/web) your Flet app to the web;
+* [Create](../getting-started/create-flet-app.md) a simple Flet app;
+* Drag and drop cards with [GestureDetector](../controls/gesturedetector.md);
+* [Create your own classes](../cookbook/custom-controls.md) that inherit from Flet controls;
+* Design UI layout using absolute positioning of controls in [Stack](../controls/stack.md);
+* Implement [implicit animations](../cookbook/animations.md);
+* [Deploy](../publish/web/index.md) your Flet app to the web;
 
-For further reading you can explore [controls](/docs/controls) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).
+For further reading you can explore [controls](../controls/index.md) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).
 
 We would love to hear your feedback! Please drop us an [email](mailto:hello@flet.dev), join the discussion on [Discord](https://discord.gg/dzWXP8SHG8).

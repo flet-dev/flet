@@ -18,9 +18,9 @@ The tutorial consists of the following steps:
 
 To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
 
-Before you can create your first Flet app, you need to [setup your development environment](/docs/getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
+Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
 
-Once you have Flet installed, let's [create](/docs/getting-started/create-flet-app.md) a simple hello-world app.
+Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
 
 Create `hello.py` with the following contents:
 
@@ -43,7 +43,7 @@ Run this app and you will see a new window with a greeting:
 
 Now you are ready to create a calculator app.
 
-To start, you'll need a [Text](/docs/controls/text) control for showing the result of calculation, and a few [ElevatedButtons](/docs/controls/elevatedbutton) with all the numbers and actions on them.
+To start, you'll need a [`Text`](../controls/text.md) control for showing the result of calculation, and a few [ElevatedButton](../controls/elevatedbutton.md)s with all the numbers and actions on them.
 
 Create `calc.py` with the following contents:
 
@@ -88,7 +88,7 @@ Run the app and you should see a page like this:
 
 ## Building page layout
 
-Now let's arrange the text and buttons in 6 horizontal [rows](/docs/controls/row).
+Now let's arrange the text and buttons in 6 horizontal [rows](../controls/row.md).
 
 Replace `calc.py` contents with the following:
 
@@ -154,9 +154,9 @@ Run the app and you should see a page like this:
 
 ### Using Container for decoration
 
-To add a black background with rounded border around the calculator, we will be using [`Container`](/docs/controls/container) control. 
+To add a black background with rounded border around the calculator, we will be using [`Container`](../controls/container.md) control. 
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical 
-[`Column`](/docs/controls/column) that will be used as the container's `content`:
+[`Column`](../controls/column.md) that will be used as the container's `content`:
 
 ![container-layout](../assets/tutorials/calculator/container-layout.svg){width="80%"}
 /// caption
@@ -195,7 +195,7 @@ For the buttons, if we look again at the UI we are aiming to achieve, there are 
 3. **Extra action buttons**. They have light grey background color and dark text, size is the same for all.
 
 The buttons will be used multiple time in the program, so we will be creating
-custom [Styled Controls](/docs/getting-started/custom-controls.md#styled-controls) to reuse the code.
+custom [Styled Controls](../cookbook/custom-controls.md#styled-controls) to reuse the code.
 
 Since all those types should inherit from `ElevatedButton` class and have common `text` and `expand` properties, let's create a parent `CalcButton` class:
 ```python
@@ -289,7 +289,7 @@ Just what we wanted!
 ## Reusable UI components
 
 While you can continue writing your app in the `main` function, the best practice
-would be to create a [reusable UI component](/docs/getting-started/custom-controls#composite-controls). 
+would be to create a [reusable UI component](../cookbook/custom-controls.md#composite-controls). 
 
 Imagine you are working on an app header, a side menu, or UI that will be a part 
 of a larger project (for example, at Flet we will be using this Calculator app in a bigger "Gallery" app that will show all the examples for Flet framework). 
@@ -357,17 +357,17 @@ Flet Python app and all its dependencies can be packaged into a standalone execu
 package for distribution using `flet build` command.
 
 
-[Follow these instructions](/docs/publish) to package your Calculator app into a desktop executable, 
+[Follow these instructions](../publish/index.md) to package your Calculator app into a desktop executable, 
 mobile app bundle or web app.
 
 ## Summary
 
 In this tutorial you have learned how to:
 
-* [Create](/docs/getting-started/create-flet-app) a simple Flet app;
-* Work with [Reusable UI components](/docs/getting-started/custom-controls);
+* [Create](../getting-started/create-flet-app.md) a simple Flet app;
+* Work with [Reusable UI components](../cookbook/custom-controls.md);
 * Design UI layout using `Column`, `Row` and `Container` controls;
 * Handle events;
-* [Publish](/docs/publish/) your Flet app to multiple platforms;
+* [Publish](../publish/index.md) your Flet app to multiple platforms;
 
-For further reading you can explore [controls](/docs/controls) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).
+For further reading you can explore [controls](../controls/index.md) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).

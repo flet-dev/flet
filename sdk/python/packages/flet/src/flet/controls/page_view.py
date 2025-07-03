@@ -424,7 +424,7 @@ class PageView(AdaptiveControl):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> bool:
         return self.__default_view().auto_scroll
 
     @auto_scroll.setter

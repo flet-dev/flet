@@ -19,7 +19,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     controls: list[Control] = field(default_factory=list)
     """
-    A list of Controls to display inside the Column.
+    A list of controls to display.
     """
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
@@ -32,7 +32,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    How the child Controls should be placed horizontally.
+    Defines how the [`controls`][flet.Column.controls] should be placed horizontally.
 
     Value is of type
     [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment).
@@ -42,33 +42,33 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     Spacing between the `controls`.
 
-    It is applied only when `alignment` is set to `MainAxisAlignment.START`,
+    It is applied only when [`alignment`][flet.Column.alignment] is `MainAxisAlignment.START`,
     `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
     """
 
     tight: bool = False
     """
-    Specifies how much space should be occupied vertically.
-
-    Defaults to `False` - allocate all space to children.
+    Determines how vertical space is allocated.
+    
+    If `False` (default), children expand to fill the available vertical space.
+    If `True`, only the minimum vertical space required by the children is used.
     """
 
     wrap: bool = False
     """
-    When set to `True` the Column will put child controls into additional columns
-    (runs) if they don't fit a single column.
+    Whether the [`controls`][flet.Column.controls] should wrap into additional columns (runs)
+    when they don't fit in a single vertical column.
     """
 
     run_spacing: Number = 10
     """
-    Spacing between runs when `wrap=True`. Default value is 10.
+    The spacing between runs when [`wrap`][flet.Column.wrap] is `True`.
     """
 
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the runs should be placed in the cross-axis when `wrap=True`.
+    How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap] is `True`.
 
     Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment)
-    and defaults to `MainAxisAlignment.START`.
+    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment).
     """

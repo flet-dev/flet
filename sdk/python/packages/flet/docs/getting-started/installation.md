@@ -121,4 +121,4 @@ poetry run flet --version # (1)!
 1. You can use the shorthand `-V` instead of `--version` to print the version of Flet installed.
 ///
 
-Now you are ready to [create your first Flet app](create-flet-app).
+Now you are ready to [create your first Flet app](create-flet-app.md).

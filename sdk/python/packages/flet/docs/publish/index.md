@@ -123,51 +123,28 @@ When you run `flet build <target_platform>` command it:
 * Runs `flutter build <target_platform>` command to produce an executable or an install package.
 * Copies build results to `{flet_app_directory}/build/<target_platform>` directory.
 
-## Including optional controls
+## Including Flet Extensions
 
-If your app uses the following controls their packages must be added to a build command:
+If your app uses a Flet extension such as [`flet_video`](https://pypi.org/project/flet-video), [`flet_audio`](https://pypi.org/project/flet-audio), 
+or any other, simply add it to your project's dependencies—just like you would with any standard Python package.
 
-* Ad controls (`BannerAd` and `InterstitialAd`) implemented in `flet_ads` package.
-* [`Audio`](/docs/controls/audio) control implemented in `flet_audio` package.
-* [`AudioRecorder`](/docs/controls/audiorecorder) control implemented in `flet_audio_recorder` package.
-* [`Flashlight`](/docs/controls/flashlight) control implemented in `flet_flashlight` package.
-* [`Geolocator`](/docs/controls/geolocator) control implemented in `flet_geolocator` package.
-* [`Lottie`](/docs/controls/lottie) control implemented in `flet_lottie` package.
-* [`Map`](/docs/controls/map) control implemented in `flet_map` package.
-* [`PermissionHandler`](/docs/controls/permissionhandler) control implemented in `flet_permission_handler` package.
-* [`Rive`](/docs/controls/rive) control implemented in `flet_rive` package.
-* [`Video`](/docs/controls/video) control implemented in `flet_video` package.
-* [`WebView`](/docs/controls/webview) control implemented in `flet_webview` package.
-
-Use `--include-packages <package_1> <package_2> ...` option to add Flutter packages with optional
-Flet controls or use `tool.flet.flutter.dependencies` section in `pyproject.toml`.
-
-For example, to build your Flet app with `Video` and `Audio` controls add `--include-packages flet_video flet_audio` to your `flet build` command:
-
-```
-flet build apk --include-packages flet_video flet_audio
-```
-
-or the same in `pyproject.toml`:
-
+/// tab | pyproject.toml
 ```toml
-flutter.dependencies = ["flet_video", "flet_audio"]
+dependencies = [
+  "flet",
+  "flet_video",
+  "flet_audio"
+]
 ```
-
-or an alternative syntax with versions:
-
-```toml
-[tool.flet.flutter.dependencies]
-flet_video = "1.0.0"
-flet_audio = "2.0.0"
+///
+/// tab | requirements.txt
+```requirements
+flet
+flet_video
+flet_audio
 ```
+///
 
-or with path to the package on your disk:
-
-```toml
-[tool.flet.flutter.dependencies.my_package]
-path = "/path/to/my_package"
-```
 
 ## Icons
 
@@ -241,7 +218,7 @@ compile.cleanup = true # --cleanup-on-compile
 
 `flet build` command allows granular control over permissions, features and entitlements embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
-See platform guides for setting specific [iOS](/docs/publish/ios), [Android](/docs/publish/android) and [macOS](/docs/publish/macos) permissions.
+See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
 
 ### Cross-platform permissions
 
@@ -340,7 +317,9 @@ description = "My Flet app"
 authors = [
   {name = "John Smith", email = "john@email.com"}
 ]
-dependencies = ["flet==0.25.0"]
+dependencies = [
+  "flet==0.25.0",
+]
 
 [tool.flet]
 build_number = 1

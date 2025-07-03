@@ -28,10 +28,10 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     """
     A control that detects gestures.
 
-    Attempts to recognize gestures that correspond to its non-null callbacks.
+    Attempts to recognize gestures that correspond to its non-None callbacks.
 
-    If this control has a content, it defers to that child control for its sizing
-    behavior. If it does not have a content, it grows to fit the parent instead.
+    If this control has a [`content´][(c).], it defers to that child control for its sizing
+    behavior, else it grows to fit the parent instead.
     """
 
     content: Optional[Control] = None
@@ -43,8 +43,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     """
     The mouse cursor for mouse pointers that are hovering over the control.
 
-    Value is of type
-    [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     drag_interval: int = 0
@@ -86,12 +85,12 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    A tap with a primary button has occurred.
+    Called when a tap with a primary button has occurred.
     """
 
     on_tap_down: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    A pointer that might cause a tap with a primary button has contacted the screen
+    Called when a pointer that might cause a tap with a primary button has contacted the screen
     at a particular location.
 
     Event handler argument is of type
@@ -100,19 +99,17 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_tap_up: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    A pointer that will trigger a tap with a primary button has stopped contacting the
+    Called when a pointer that will trigger a tap with a primary button has stopped contacting the
     screen at a particular location.
 
-    Event handler argument is of type
-    [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
+    Event handler argument is of type [`TapEvent`][flet.TapEvent].
     """
 
     on_multi_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    Triggered when multiple pointers contacted the screen.
+    Called when multiple pointers contacted the screen.
 
-    Event handler argument is of type
-    [`MultiTapEvent`](https://flet.dev/docs/reference/types/multitapevent).
+    Event handler argument is of type [`TapEvent`][flet.TapEvent].
     """
 
     on_multi_long_press: OptionalEventHandler[LongPressEndEvent["GestureDetector"]] = (
@@ -129,20 +126,18 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_secondary_tap_down: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    A pointer that might cause a tap with a secondary button has contacted the screen
+    Called when a pointer that might cause a tap with a secondary button has contacted the screen
     at a particular location.
 
-    Event handler argument is of type
-    [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
+    Event handler argument is of type [`TapEvent`][flet.TapEvent].
     """
 
     on_secondary_tap_up: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    A pointer that will trigger a tap with a secondary button has stopped contacting the
+    Called when a pointer that will trigger a tap with a secondary button has stopped contacting the
     screen at a particular location.
 
-    Event handler argument is of type
-    [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
+    Event handler argument is of type [`TapEvent`][flet.TapEvent].
     """
 
     on_long_press_start: OptionalEventHandler[
@@ -154,17 +149,15 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     Triggered when a pointer has remained in contact with the screen at the same
     location for a long period of time.
 
-    Event handler argument is of type
-    [`LongPressStartEvent`](https://flet.dev/docs/reference/types/longpressstartevent).
+    Event handler argument is of type [`LongPressStartEvent`][flet.LongPressStartEvent].
     """
 
     on_long_press_end: OptionalEventHandler[LongPressEndEvent["GestureDetector"]] = None
     """
-    A pointer that has triggered a long-press with a primary button has stopped
+    Called when a pointer that has triggered a long-press with a primary button has stopped
     contacting the screen.
 
-    Event handler argument is of type
-    [`LongPressEndEvent`](https://flet.dev/docs/reference/types/longpressendevent).
+    Event handler argument is of type [`LongPressEndEvent`][flet.LongPressEndEvent].
     """
 
     on_secondary_long_press_start: OptionalEventHandler[
@@ -176,19 +169,17 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     Triggered when a pointer has remained in contact with the screen at the same
     location for a long period of time.
 
-    Event handler argument is of type
-    [`LongPressStartEvent`](https://flet.dev/docs/reference/types/longpressstartevent).
+    Event handler argument is of type [`LongPressStartEvent`][flet.LongPressStartEvent].
     """
 
     on_secondary_long_press_end: OptionalEventHandler[
         LongPressEndEvent["GestureDetector"]
     ] = None
     """
-    A pointer that has triggered a long-press with a secondary button has stopped
+    Called when a pointer that has triggered a long-press with a secondary button has stopped
     contacting the screen.
 
-    Event handler argument is of type
-    [`LongPressEndEvent`](https://flet.dev/docs/reference/types/longpressendevent).
+    Event handler argument is of type [`LongPressEndEvent`][flet.LongPressEndEvent].
     """
 
     on_double_tap: OptionalEventHandler[TapEvent["GestureDetector"]] = None
@@ -199,54 +190,49 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_double_tap_down: OptionalEventHandler[TapEvent["GestureDetector"]] = None
     """
-    A pointer that might cause a double tap has contacted the screen at a particular
+    Called when a pointer that might cause a double tap has contacted the screen at a particular
     location.
 
     Triggered immediately after the down event of the second tap.
 
-    Event handler argument is of type
-    [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
+    Event handler argument is of type [`TapEvent`][flet.TapEvent].
     """
 
     on_horizontal_drag_start: OptionalEventHandler[
         DragStartEvent["GestureDetector"]
     ] = None
     """
-    A pointer has contacted the screen with a primary button and has begun to move
+    Called when a pointer has contacted the screen with a primary button and has begun to move
     horizontally.
 
-    Event handler argument is of type
-    [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
+    Event handler argument is of type [`DragStartEvent`][flet.DragStartEvent].
     """
 
     on_horizontal_drag_update: OptionalEventHandler[
         DragUpdateEvent["GestureDetector"]
     ] = None
     """
-    A pointer that is in contact with the screen and moving horizontally has moved in
+    Called when a pointer that is in contact with the screen and moving horizontally has moved in
     the horizontal direction.
 
-    Event handler argument is of type
-    [`DragUpdateEvent`](https://flet.dev/docs/reference/types/dragupdateevent).
+    Event handler argument is of type [`DragUpdateEvent`][flet.DragUpdateEvent].
     """
 
     on_horizontal_drag_end: OptionalEventHandler[DragEndEvent["GestureDetector"]] = None
     """
-    A pointer moving horizontally is no longer in contact and was moving at a specific
+    Called when a pointer moving horizontally is no longer in contact and was moving at a specific
     velocity.
 
-    Event handler argument is of type
-    [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
+    Event handler argument is of type [`DragEndEvent`][flet.DragEndEvent].
     """
 
     on_vertical_drag_start: OptionalEventHandler[DragStartEvent["GestureDetector"]] = (
         None
     )
     """
-    A pointer has contacted the screen and has begun to move vertically.
+    Called when a pointer has contacted the screen and has begun to move vertically.
 
-    Event handler argument is of type
-    [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
+    Event handler argument is of type [`DragStartEvent`][flet.DragStartEvent].
     """
 
     on_vertical_drag_update: OptionalEventHandler[
@@ -255,90 +241,78 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     """
     A pointer moving vertically has moved in the vertical direction.
 
-    Event handler argument is of type
-    [`DragUpdateEvent`](https://flet.dev/docs/reference/types/dragupdateevent).
+    Event handler argument is of type [`DragUpdateEvent`][flet.DragUpdateEvent].
     """
 
     on_vertical_drag_end: OptionalEventHandler[DragEndEvent["GestureDetector"]] = None
     """
-    A pointer moving vertically is no longer in contact and was moving at a specific
+    Called when a pointer moving vertically is no longer in contact and was moving at a specific
     velocity.
 
-    Event handler argument is of type
-    [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
+    Event handler argument is of type [`DragEndEvent`][flet.DragEndEvent].
     """
 
     on_pan_start: OptionalEventHandler[DragStartEvent["GestureDetector"]] = None
     """
-    A pointer has contacted the screen and has begun to move.
+    Called when a pointer has contacted the screen and has begun to move.
 
-    Event handler argument is of type
-    [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
+    Event handler argument is of type [`DragStartEvent`][flet.DragStartEvent].
     """
 
     on_pan_update: OptionalEventHandler[DragUpdateEvent["GestureDetector"]] = None
     """
-    A pointer that is in contact with the screen and moving has moved again.
+    Called when a pointer that is in contact with the screen and moving has moved again.
 
-    Event handler argument is of type
-    [`DragUpdateEvent`](https://flet.dev/docs/reference/types/dragupdateevent).
+    Event handler argument is of type [`DragUpdateEvent`][flet.DragUpdateEvent].
     """
 
     on_pan_end: OptionalEventHandler[DragEndEvent["GestureDetector"]] = None
     """
-    A pointer is no longer in contact and was moving at a specific velocity.
+    Called when a pointer is no longer in contact and was moving at a specific velocity.
 
-    Event handler argument is of type
-    [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
+    Event handler argument is of type [`DragEndEvent`][flet.DragEndEvent].
     """
 
     on_scale_start: OptionalEventHandler[ScaleStartEvent["GestureDetector"]] = None
     """
-    The pointers in contact with the screen have established a focal point and initial
+    Called when the pointers in contact with the screen have established a focal point and initial
     scale of `1.0`.
 
-    Event handler argument is of type
-    [`ScaleStartEvent`](https://flet.dev/docs/reference/types/scalestartevent).
+    Event handler argument is of type [`ScaleStartEvent`][flet.ScaleStartEvent].
     """
 
     on_scale_update: OptionalEventHandler[ScaleUpdateEvent["GestureDetector"]] = None
     """
-    Event handler argument is of type
-    [`ScaleUpdateEvent`](https://flet.dev/docs/reference/types/scaleupdateevent).
+    Event handler argument is of type [`ScaleUpdateEvent`][flet.ScaleUpdateEvent].
     """
 
     on_scale_end: OptionalEventHandler[ScaleEndEvent["GestureDetector"]] = None
     """
-    Event handler argument is of type
-    [`ScaleEndEvent`](https://flet.dev/docs/reference/types/scaleendevent).
+    Event handler argument is of type [`ScaleEndEvent`][flet.ScaleEndEvent].
     """
 
     on_hover: OptionalEventHandler[HoverEvent["GestureDetector"]] = None
     """
-    Triggered when a mouse pointer has entered this control.
+    Called when a mouse pointer has entered this control.
 
-    Event handler argument is of type
-    [`HoverEvent`](https://flet.dev/docs/reference/types/hoverevent).
+    Event handler argument is of type [`HoverEvent`][flet.HoverEvent].
     """
 
     on_enter: OptionalEventHandler[HoverEvent["GestureDetector"]] = None
     """
-    Triggered when a mouse pointer has entered this control.
+    Called when a mouse pointer has entered this control.
 
-    Event handler argument is of type
-    [`HoverEvent`](https://flet.dev/docs/reference/types/hoverevent).
+    Event handler argument is of type [`HoverEvent`][flet.HoverEvent].
     """
 
     on_exit: OptionalEventHandler[HoverEvent["GestureDetector"]] = None
     """
-    Triggered when a mouse pointer has exited this control.
+    Called when a mouse pointer has exited this control.
 
-    Event handler argument is of type
-    [`HoverEvent`](https://flet.dev/docs/reference/types/hoverevent).
+    Event handler argument is of type [`HoverEvent`][flet.HoverEvent].
     """
 
     on_scroll: OptionalEventHandler[ScrollEvent["GestureDetector"]] = None
     """
-    Event handler argument is of type
-    [`ScrollEvent`](https://flet.dev/docs/reference/types/scrollevent).
+    Event handler argument is of type [`ScrollEvent`][flet.ScrollEvent].
     """

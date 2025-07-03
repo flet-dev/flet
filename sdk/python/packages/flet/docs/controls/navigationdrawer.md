@@ -171,7 +171,7 @@ If `selected_icon` is provided, this will only be displayed when the destination
 
 ### ~~`icon_content`~~
 
-The icon `Control` of the destination. Typically the icon is an [`Icon`](/docs/controls/icon) control. Used instead of `icon` property.
+The icon `Control` of the destination. Typically the icon is an [`Icon`][flet.Icon] control. Used instead of `icon` property.
 
 **Deprecated in v0.25.0 and will be removed in v0.28.0. Use [`icon`](#icon)
 instead.**

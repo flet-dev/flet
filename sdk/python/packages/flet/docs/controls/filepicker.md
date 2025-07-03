@@ -1,16 +1,5 @@
 ::: flet.FilePicker
 
-/// admonition | Important
-    type: danger
-In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)  when running 
-Flet as an app. This is not a requirement when running Flet in a browser.
-
-To install Zenity on Ubuntu/Debian run the following commands:
-```bash
-sudo apt-get install zenity
-```
-///
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/filepicker)

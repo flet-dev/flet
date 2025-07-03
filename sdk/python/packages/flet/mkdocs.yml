@@ -81,11 +81,8 @@ nav:
       - Installation: getting-started/installation.md
       - Creating a new Flet app: getting-started/create-flet-app.md
       - Running a Flet app (Hot Reload): getting-started/running-app.md
-      - Testing on Android: getting-started/testing-on-android.md
-      - Testing on iOS: getting-started/testing-on-ios.md
-      - Navigation and Routing: getting-started/navigation-and-routing.md
+      - Testing on Mobile: getting-started/testing-on-mobile.md
       - Flet Controls: getting-started/flet-controls.md
-      - Custom Controls: getting-started/custom-controls.md
       - Adaptive apps: getting-started/adaptive-apps.md
       - Async apps: getting-started/async-apps.md
       - Changelog: getting-started/changelog.md
@@ -99,6 +96,7 @@ nav:
               - AdaptiveControl: controls/adaptivecontrol.md
               - ConstrainedControl: controls/constrainedcontrol.md
               - Control: controls/control.md
+              - ScrollableControl: controls/scrollablecontrol.md
           - Buttons:
               - controls/buttons.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
@@ -198,7 +196,6 @@ nav:
               - FilePicker: controls/filepicker.md
               - SemanticsService: controls/semanticsservice.md
               - ShakeDetector: controls/shakedetector.md
-              - TransparentPointer: controls/transparentpointer.md
               - HapticFeedback: controls/hapticfeedback.md
           - Utility:
               - Draggable: controls/draggable.md
@@ -210,7 +207,10 @@ nav:
               - SelectionArea: controls/selectionarea.md
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
+              - TransparentPointer: controls/transparentpointer.md
               - WindowDragArea: controls/windowdragarea.md
+      - Types:
+          - Alignment: types/alignment.md
   - Publish:
       - publish/index.md
       - Android: publish/android.md
@@ -238,6 +238,7 @@ nav:
       - Authentication: cookbook/authentication.md
       - Client Storage: cookbook/client-storage.md
       - Control Refs: cookbook/control-refs.md
+      - Custom Controls: cookbook/custom-controls.md
       - Drag and Drop: cookbook/drag-and-drop.md
       - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
       - File Picker and Uploads: cookbook/file-picker-and-uploads.md
@@ -245,6 +246,7 @@ nav:
       - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
       - Large Lists: cookbook/large-lists.md
       - Logging: cookbook/logging.md
+      - Navigation and Routing: cookbook/navigation-and-routing.md
       - PubSub: cookbook/pub-sub.md
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md

@@ -1,9 +1,9 @@
 import asyncio
 from dataclasses import dataclass, field
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -12,7 +12,6 @@ from flet.controls.control_event import (
     OptionalEventHandler,
 )
 from flet.controls.duration import Duration, DurationValue
-from flet.controls.material.container import Container
 from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
     Number,
@@ -38,91 +37,94 @@ class DismissibleUpdateEvent(Event["Dismissible"]):
 @control("Dismissible")
 class Dismissible(ConstrainedControl, AdaptiveControl):
     """
-    A control that can be dismissed by dragging in the indicated `dismiss_direction`.
-    When dragged or flung in the specified `dismiss_direction`, its content smoothly
+    A control that can be dismissed by dragging in the indicated [`dismiss_direction`][(c).].
+    When dragged or flung in the specified [`dismiss_direction`][(c).], its [`content`][(c).] smoothly
     slides out of view.
 
-    After completing the sliding animation, if a `resize_duration` is provided, this
+    After completing the sliding animation, if a [`resize_duration`][(c).] is provided, this
     control further animates its height (or width, depending on what is perpendicular
-    to the `dismiss_direction`), gradually reducing it to zero over the specified
-    `resize_duration`.
+    to the [`dismiss_direction`][(c).]), gradually reducing it to zero over the specified
+    [`resize_duration`][(c).].
+
+    Raises:
+        AssertionError: If the [`content`][(c.)] is not visible.
+        AssertionError: If the [`secondary_background`][(c.)] is specified but the
+        [`background`][(c.)] is not specified/visible.
     """
 
     content: Control
     """
-    A child Control contained by the Dismissible.
+    The control that is being dismissed.
     """
 
-    background: Control = Container(bgcolor=Colors.TRANSPARENT)
+    background: Optional[Control] = None
     """
-    A Control that is stacked behind the `content`.
+    A control that is stacked behind the [`content`][flet.Dismissible.content].
 
-    If `secondary_background` is also specified, then this control only appears when
+    If [`secondary_background`][flet.Dismissible.secondary_background] is also specified, 
+    then this control only appears when
     the content has been dragged down or to the right.
     """
 
-    secondary_background: Control = Container(bgcolor=Colors.TRANSPARENT)
+    secondary_background: Optional[Control] = None
     """
-    A control that is stacked behind the `content` and is exposed when the `content`
-    has been dragged up or to the left.
+    A control that is stacked behind the [`content`][flet.Dismissible.content] and is 
+    exposed when it has been dragged up or to the left.
 
-    Has no effect if `background` is not specified.
+    Note:
+        Can only be specified if [`background`][flet.Dismissible.background] is also specified/visible.
     """
 
     dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
     """
     The direction in which the control can be dismissed.
 
-    Value is of type
-    [`DismissDirection`](https://flet.dev/docs/reference/types/dismissdirection).
+    Value is of type [`DismissDirection`][flet.DismissDirection].
     """
 
     dismiss_thresholds: dict[DismissDirection, OptionalNumber] = field(
         default_factory=dict
     )
-
     """
-    The offset threshold the item has to be dragged in order to be considered dismissed.
-
-    Ex: a threshold of `0.4` (the default) means that the item has to be dragged
-    _at least_ 40% in order for it to be dismissed.
-
-    It is specified as a dictionary where the key is of type
-    [`DismissDirection`](https://flet.dev/docs/reference/types/dismissdirection) and
-    the value is the threshold (fractional/decimal value between `0.0` and `1.0`):
-
-    ```python
-    ft.Dismissible(
-        # ...
-        dismiss_thresholds={
-            ft.DismissDirection.VERTICAL: 0.1,
-            ft.DismissDirection.START_TO_END: 0.7
-        }
-    )
-    ```
+    The offset threshold the item has to be dragged in order to be considered as dismissed.
+    This is specified as a dictionary where the key is of type [`DismissDirection`][flet.DismissDirection] 
+    and the value is the threshold (a fractional/decimal value between `0.0` and `1.0`, inclusive).
+    
+    Example:
+        ```python
+        ft.Dismissible(
+            # ...
+            dismiss_thresholds={
+                ft.DismissDirection.VERTICAL: 0.1,
+                ft.DismissDirection.START_TO_END: 0.7
+            }
+        )
+        ```
     """
 
     movement_duration: DurationValue = field(
         default_factory=lambda: Duration(milliseconds=200)
     )
     """
-    The duration for card to dismiss or to come back to original position if not 
-    dismissed.
+    The duration for [`content`][flet.Dismissible.content] to dismiss or 
+    to come back to original position if not dismissed.
     """
 
     resize_duration: DurationValue = field(
         default_factory=lambda: Duration(milliseconds=300)
     )
     """
-    The amount of time the control will spend contracting before `on_dismiss` is called.
+    The amount of time the control will spend contracting 
+    before [`on_dismiss`][flet.Dismissible.on_dismiss] is called.
     """
 
     cross_axis_end_offset: Number = 0.0
     """
-    Specifies the end offset along the main axis once the card has been dismissed.
+    Specifies the end offset along the main axis once the 
+    [`content`][flet.Dismissible.content] has been dismissed.
 
-    If non-zero value is given then widget moves in cross direction depending on whether
-    it is positive or negative.
+    If set to a non-zero value, then this dismissible moves in cross direction 
+    depending on whether it is positive or negative.
     """
 
     on_update: OptionalEventHandler[DismissibleUpdateEvent] = None
@@ -137,25 +139,28 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     on_confirm_dismiss: OptionalEventHandler[DismissibleDismissEvent] = None
     """
-    Gives the app an opportunity to confirm or veto a pending dismissal. The widget
-    cannot be dragged again until the returned this pending dismissal is resolved.
+    Gives the app an opportunity to confirm or veto a pending dismissal. This dismissible
+    cannot be dragged again until this pending dismissal is resolved.
 
-    To resolve the pending dismissal, call the `confirm_dismiss(dismiss)` method
+    To resolve the pending dismissal, call the [`confirm_dismiss()`][flet.Dismissible.confirm_dismiss] method
     passing it a boolean representing the decision. If `True`, then the control will be
     dismissed, otherwise it will be moved back to its original location.
-
-    See the example at the top of this page for a possible implementation.
     """
 
     on_resize: OptionalControlEventHandler["Dismissible"] = None
     """
-    Fires when this control changes size, for example, when contracting before
+    Fires when this dismissible changes size, for example, when contracting before
     being dismissed.
     """
 
     def before_update(self):
         super().before_update()
         assert self.content.visible, "content must be visible"
+        assert not (
+            self.secondary_background and self.secondary_background.visible
+        ) or (self.background and self.background.visible), (
+            "secondary_background can only be specified if background is also specified/visible"
+        )
 
     async def confirm_dismiss_async(self, dismiss: bool):
         await self._invoke_method_async("confirm_dismiss", {"dismiss": dismiss})

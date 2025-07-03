@@ -125,7 +125,7 @@ To make the NavigationBar more accessible, consider choosing an icon with a stro
 
 ### ~~`icon_content`~~
 
-The icon `Control` of the destination. Typically the icon is an [`Icon`](/docs/controls/icon) control. Used instead of `icon` property.
+The icon `Control` of the destination. Typically the icon is an [`Icon`][flet.Icon] control. Used instead of `icon` property.
 
 **Deprecated in v0.25.0 and will be removed in v0.28.0. Use [`icon`](#icon)
 instead.**

@@ -6,10 +6,10 @@ Flet PubSub allows broadcasting messages to all app sessions or sending only to 
 
 A typical PubSub usage would be:
 
-* [subscribe](/docs/controls/page#subscribehandler) to broadcast messages or [subscribe to a topic](/docs/controls/page#subscribe_topictopic-handler) on app session start.
-* [send](/docs/controls/page#send_allmessage) broadcast message or [send to a topic](/docs/controls/page#send_all_on_topictopic-message) on some event, like "Send" button click.
-* [unsubscribe](/docs/controls/page#unsubscribe) from broadcast messages or [unsubscribe from a topic](/docs/controls/page#unsubscribe_topictopic) on some event, like "Leave" button click.
-* [unsubscribe](/docs/controls/page#unsubscribe_all) from everything on [`page.on_close`](/docs/controls/page#on_close).
+* [subscribe][flet.Page.subscribe] to broadcast messages or [subscribe to a topic][flet.Page.subscribe_topic] on app session start.
+* [send][flet.Page.send_all] broadcast message or [send to a topic][flet.Page.send_all_on_topic] on some event, like "Send" button click.
+* [unsubscribe][flet.Page.subscribe] from broadcast messages or [unsubscribe from a topic][flet.Page.unsubscribe_topic] on some event, like "Leave" button click.
+* [unsubscribe_all][flet.Page.unsubscribe_all] from everything on [`page.on_close`][flet.Page.on_close].
 
 This is an example of a simple chat application:
 
@@ -41,4 +41,6 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-![Chat app example](../assets/getting-started/chat-app-example.gif)
+![Chat app example](../assets/cookbook/pub-sub/chat-app-example.gif)
+/// caption
+///

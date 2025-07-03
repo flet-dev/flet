@@ -38,7 +38,7 @@ to serve beneath the root e.g. `/apps/myapp`.
 
 By default, Flet web app will be running on port `8000`, but you can change that by setting up `FLET_SERVER_PORT` environment variable.
 
-[Complete list of environment variables](/docs/publish/web/dynamic-website#environment-variables) supported by a web app.
+[Complete list of environment variables](../../../../publish/web/dynamic-website/index.md#environment-variables) supported by a web app.
 
 ## Automatically start Flet app
 

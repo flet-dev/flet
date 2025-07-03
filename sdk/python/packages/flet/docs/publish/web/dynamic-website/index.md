@@ -377,7 +377,8 @@ async def flet_app(websocket: WebSocket):
 
 #### Uploads handler
 
-Handles file uploads by [FilePicker](/docs/controls/filepicker) control. This endpoint is optional - if your app doesn't use [FilePicker](/docs/controls/filepicker) then it's not needed.
+Handles file uploads by [`FilePicker`][flet.FilePicker] control. 
+This endpoint is optional - if your app doesn't use [`FilePicker`][flet.FilePicker] then it's not needed.
 
 ```python
 from flet.fastapi import FletUpload

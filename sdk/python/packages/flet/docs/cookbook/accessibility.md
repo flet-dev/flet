@@ -34,7 +34,7 @@ Use `TextField.label` and `Dropdown.label` properties to add screen reader seman
 
 ### Custom semantics
 
-For any specific requirements use [`Semantics`](/docs/controls/semantics) control.
+For any specific requirements use [`Semantics`][flet.Semantics] control.
 
 ### Debugging semantics
 

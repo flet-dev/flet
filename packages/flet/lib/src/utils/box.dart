@@ -199,6 +199,7 @@ Widget buildImage({
         image = SvgPicture.memory(bytes,
             width: width,
             height: height,
+            excludeFromSemantics: excludeFromSemantics,
             fit: fit ?? BoxFit.contain,
             colorFilter: color != null
                 ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
@@ -216,7 +217,8 @@ Widget buildImage({
             filterQuality: filterQuality,
             isAntiAlias: antiAlias,
             colorBlendMode: colorBlendMode,
-            gaplessPlayback: gaplessPlayback ?? true,
+            gaplessPlayback: gaplessPlayback ?? false,
+            excludeFromSemantics: excludeFromSemantics,
             semanticLabel: semanticsLabel);
       }
       return image;
@@ -229,6 +231,7 @@ Widget buildImage({
           width: width,
           height: height,
           fit: fit ?? BoxFit.contain,
+          excludeFromSemantics: excludeFromSemantics,
           colorFilter: color != null
               ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
               : null,

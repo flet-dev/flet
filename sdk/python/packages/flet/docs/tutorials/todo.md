@@ -2,7 +2,10 @@
 title: ToDo Tutorial
 ---
 
-In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and then publish it as a desktop, mobile or web app. The app is a single-file console program of just [172 lines (formatted!) of Python code](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py), yet it is a multi-platform application with rich, responsive UI:
+In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and 
+
+then publish it as a desktop, mobile or web app. The app is a single-file console program of just 
+[172 lines (formatted!) of Python code](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py), yet it is a multi-platform application with rich, responsive UI:
 
 ![complete-demo-web.gif](../assets/tutorials/todo/complete-demo-web.gif){width="80%"}
 /// caption
@@ -10,7 +13,10 @@ In this tutorial we will show you, step-by-step, how to create a To-Do app in Py
 
 You can see the live demo [here](https://gallery.flet.dev/todo/).
 
-We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a Flet app: building a page layout, adding controls, handling events, displaying and editing lists, making reusable UI components, and publishing options.
+We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a 
+
+Flet app: building a page layout, adding controls, handling events, displaying and editing lists, 
+making reusable UI components, and publishing options.
 
 The tutorial consists of the following steps:
 
@@ -23,11 +29,14 @@ The tutorial consists of the following steps:
 
 ## Getting started with Flet
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but 
 
-Before you can create your first Flet app, you need to [setup your development environment](/docs/getting-started/), which requires Python 3.9 or above and `flet` package.
+you do need a basic knowledge of Python and object-oriented programming.
 
-Once you have Flet installed, let's [create](/docs/getting-started/create-flet-app) a simple hello-world app.
+Before you can create your first Flet app, you need to 
+[setup your development environment](../getting-started/installation.md).
+
+Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
 
 Create `hello.py` with the following contents:
 
@@ -40,7 +49,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-Run this app and you will see a new window with a greeting:
+Run this app, and you will see a new window with a greeting:
 
 ![hello-world](../assets/tutorials/todo/hello-world.png){width="80%"}
 /// caption
@@ -50,7 +59,9 @@ Run this app and you will see a new window with a greeting:
 
 Now we're ready to create a multi-user To-Do app.
 
-To start, we'll need a [TextField](/docs/controls/textfield) for entering a task name, and an "+" [FloatingActionButton](/docs/controls/floatingactionbutton) with an event handler that will display a [Checkbox](/docs/controls/checkbox) with a new task.
+To start, we'll need a [`TextField`](../controls/textfield.md) for entering a task name, and an "+" 
+[`FloatingActionButton`](../controls/floatingactionbutton.md) with an event handler that will display
+a [`Checkbox`](../controls/checkbox.md) with a new task.
 
 Create `todo.py` with the following contents:
 
@@ -85,8 +96,8 @@ taking up 600 px width. The TextField and the "+" button should be aligned horiz
 /// caption
 ///
 
-[`Row`](/docs/controls/row)  is a control that is used to lay its children controls out horizontally on a page. 
-[`Column`](/docs/controls/column) is a control that is used to lay its children controls out vertically on a page.
+[`Row`](../controls/row.md)  is a control that is used to lay its children controls out horizontally on a page. 
+[`Column`](../controls/column.md) is a control that is used to lay its children controls out vertically on a page.
 
 Replace `todo.py` contents with the following:
 
@@ -129,7 +140,7 @@ Run the app and you should see a page like this:
 ### Reusable UI components
 
 While we could continue writing our app in the `main` function, the best practice would be to 
-create a [reusable UI component](/docs/getting-started/custom-controls). Imagine you are working on an app header, a side menu, 
+create a [reusable UI component](../cookbook/custom-controls.md). Imagine you are working on an app header, a side menu, 
 or UI that will be a part of a larger project. Even if you can't think of such uses right now, 
 we still recommend creating all your Flet apps with composability and reusability in mind.
 
@@ -356,8 +367,8 @@ To display different lists of tasks depending on their statuses, we could mainta
 lists with "All", "Active" and "Completed" tasks. We, however, chose an easier approach 
 where we maintain the same list and only change a task's visibility depending on its status.
 
-In `TodoApp` class we overrided [`before_update()`](/docs/getting-started/custom-controls#before_update) method alled every time when the 
-control is being updated. It iterates through all the tasks and updates their `visible` 
+In `TodoApp` class we overrided [`before_update()`](../cookbook/custom-controls.md#before_update) 
+method alled every time when the control is being updated. It iterates through all the tasks and updates their `visible` 
 property depending on the status of the task:
 
 ```python title="todo.py"
@@ -375,7 +386,8 @@ class TodoApp(ft.Column):
             )
 ```
 
-Filtering should occur when we click on a tab or change a task status. `TodoApp.before_update()` method is called when Tabs selected value is changed or Task item checkbox is clicked:
+Filtering should occur when we click on a tab or change a task status. `TodoApp.before_update()` method 
+is called when Tabs selected value is changed or Task item checkbox is clicked:
 
 ```python title="todo.py"
 class TodoApp(ft.Column):
@@ -495,18 +507,16 @@ Congratulations! You have created your first Python app with Flet, and it looks 
 
 Now it's time to share your app with the world!
 
-[Follow these instructions](/docs/publish) to publish your Flet app as a mobile, desktop or web app.
+[Follow these instructions](../publish/index.md) to publish your Flet app as a mobile, desktop or web app.
 
 ## Summary
 
 In this tutorial, you have learnt how to:
 
 * Create a simple Flet app;
-* Work with [Reusable UI components](/docs/getting-started/custom-controls);
-* Design UI layout using `Column` and `Row` controls;
+* Work with [Reusable UI components](../cookbook/custom-controls.md);
+* Design UI layout using [`Column`](../controls/column.md) and [`Row`](../controls/row.md) controls;
 * Work with lists: view, edit and delete items, filtering;
-* [Publish](/docs/publish/) your Flet app to multiple platforms;
+* [Publish](../publish/index.md) your Flet app to multiple platforms;
 
-For further reading you can explore [controls](/docs/controls) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).
-
-We would love to hear your feedback! Please drop us an [email](mailto:hello@flet.dev), join the discussion on [Discord](https://discord.gg/dzWXP8SHG8).
+For further reading you can explore [controls](../controls/index.md) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).

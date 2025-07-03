@@ -20,39 +20,46 @@ class AnimatedSwitcherTransition(Enum):
 class AnimatedSwitcher(ConstrainedControl):
     """
     Used to switch between controls with an animation.
+
+    Raises:
+        AssertionError: The [`content`][(c).] must be provided and visible.
     """
 
     content: Control
     """
-    The content to display. When the `content` changes, the AnimatedSwitcher will
-    animate the transition from the old `content` to the new one.
+    The content to display. When the [`content`][flet.AnimatedSwitcher.content] changes, 
+    this switcher will animate the transition from the old/previous 
+    [`content`][flet.AnimatedSwitcher.content] to the new one.
     """
 
     duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))
     """
-    The duration, in milliseconds, of the transition from the old `content` value
+    The duration of the transition from the old [`content`][flet.AnimatedSwitcher.content]
     to the new one.
     """
 
     reverse_duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))
     """
-    The duration, in milliseconds, of the transition from the new `content` value
+    The duration of the transition from the new [`content`][flet.AnimatedSwitcher.content]
     to the old one.
     """
 
     switch_in_curve: AnimationCurve = AnimationCurve.LINEAR
     """
-    The animation curve to use when transitioning in a new `content`.
+    The animation curve to use when transitioning in a 
+    new [`content`][flet.AnimatedSwitcher.content].
     """
 
     switch_out_curve: AnimationCurve = AnimationCurve.LINEAR
     """
-    The animation curve to use when transitioning a previous `content` out.
+    The animation curve to use when transitioning an old 
+    [`content`][flet.AnimatedSwitcher.content] out.
     """
 
     transition: AnimatedSwitcherTransition = AnimatedSwitcherTransition.FADE
     """
-    An animation type to transition between new and old `content`.
+    An animation type to transition between new and old 
+    [`content`][flet.AnimatedSwitcher.content].
     """
 
     def before_update(self):
