@@ -1,11 +1,11 @@
 from enum import Enum
 from typing import Optional
 
+from flet import PaddingValue
 from flet.controls.base_control import control
-from flet.controls.box import DecorationImage, OptionalShadowValue
+from flet.controls.box import DecorationImage, ShadowValue
 from flet.controls.gradients import Gradient
 from flet.controls.material.textfield import TextField
-from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import BlendMode
 
@@ -27,7 +27,7 @@ class CupertinoTextField(TextField):
 
     placeholder_text: Optional[str] = None
     """
-    A lighter colored placeholder hint that appears on the first line of the text 
+    A lighter colored placeholder hint that appears on the first line of the text
     field when the text entry is empty.
 
     Defaults to an empty string.
@@ -35,7 +35,7 @@ class CupertinoTextField(TextField):
 
     placeholder_style: Optional[TextStyle] = None
     """
-    The [TextStyle](https://flet.dev/docs/reference/types/textstyle) to use for 
+    The [TextStyle](https://flet.dev/docs/reference/types/textstyle) to use for
     `placeholder_text`.
     """
 
@@ -53,7 +53,7 @@ class CupertinoTextField(TextField):
     Value is of type [BlendMode](https://flet.dev/docs/reference/types/blendmode).
     """
 
-    shadow: OptionalShadowValue = None
+    shadow: Optional[ShadowValue] = None
     """
     A list of shadows behind the text field.
     """
@@ -64,7 +64,7 @@ class CupertinoTextField(TextField):
 
     Has no effect if `prefix` is not specified.
 
-    Value is of type 
+    Value is of type
     [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
     """
 
@@ -74,7 +74,7 @@ class CupertinoTextField(TextField):
 
     Has no effect if `suffix` is not specified.
 
-    Value is of type 
+    Value is of type
     [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
     """
 
@@ -84,7 +84,7 @@ class CupertinoTextField(TextField):
 
     Will appear only if no `suffix` is provided.
 
-    Value is of type 
+    Value is of type
     [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
     """
 
@@ -101,16 +101,16 @@ class CupertinoTextField(TextField):
     """
     An image to paint above the `bgcolor` or `gradient`.
 
-    Value is of type 
+    Value is of type
     [DecorationImage](https://flet.dev/docs/reference/types/decorationimage).
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
-    The padding around the text entry area between the `prefix` and `suffix` or the 
+    The padding around the text entry area between the `prefix` and `suffix` or the
     clear button when `clear_button_mode` is not `VisibilityMode.NEVER`.
 
-    Value is of type 
-    [Padding](https://flet.dev/docs/reference/types/padding) and defaults to padding 
+    Value is of type
+    [Padding](https://flet.dev/docs/reference/types/padding) and defaults to padding
     of `7` pixels on all sides.
     """

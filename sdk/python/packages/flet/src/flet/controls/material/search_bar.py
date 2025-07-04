@@ -3,21 +3,19 @@ from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.border import BorderSide, OptionalBorderSide
-from flet.controls.box import OptionalBoxConstraints
-from flet.controls.buttons import OptionalOutlinedBorder, OutlinedBorder
+from flet.controls.border import BorderSide
+from flet.controls.box import BoxConstraints
+from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, OptionalControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control import Control
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
 from flet.controls.padding import PaddingValue
-from flet.controls.text_style import OptionalTextStyle, TextStyle
+from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    OptionalColorValue,
-    OptionalNumber,
-    OptionalString,
+    Number,
 )
 
 __all__ = ["SearchBar"]
@@ -41,7 +39,7 @@ class SearchBar(ConstrainedControl):
     The text in the search bar.
     """
 
-    bar_leading: OptionalControl = None
+    bar_leading: Optional[Control] = None
     """
     A `Control` to display before the text input field when the search view is close.
     This is typically an `Icon` or an `IconButton`.
@@ -55,7 +53,7 @@ class SearchBar(ConstrainedControl):
     an avatar, or an overflow menu and are usually not more than two.
     """
 
-    bar_hint_text: OptionalString = None
+    bar_hint_text: Optional[str] = None
     """
     Defines the text to be shown in the search bar when it is empty and the search
     view is close. Usually some text that suggests what sort of input the field
@@ -87,7 +85,7 @@ class SearchBar(ConstrainedControl):
     TBD
     """
 
-    bar_elevation: Optional[ControlStateValue[OptionalNumber]] = None
+    bar_elevation: Optional[ControlStateValue[Optional[Number]]] = None
     """
     TBD
     """
@@ -128,7 +126,7 @@ class SearchBar(ConstrainedControl):
     Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
-    view_leading: OptionalControl = None
+    view_leading: Optional[Control] = None
     """
     A `Control` to display before the text input field when the search view is open.
     Typically an `Icon` or an `IconButton`.
@@ -144,30 +142,30 @@ class SearchBar(ConstrainedControl):
     Defaults to a close button which closes/pops the search view.
     """
 
-    view_elevation: OptionalNumber = None
+    view_elevation: Optional[Number] = None
     """
     Defines the elevation of the search view.
     """
 
-    view_bgcolor: OptionalColorValue = None
+    view_bgcolor: Optional[ColorValue] = None
     """
     Defines the background [color](https://flet.dev/docs/reference/colors) of the
     search view.
     """
 
-    view_hint_text: OptionalString = None
+    view_hint_text: Optional[str] = None
     """
     Defines the text to be displayed when the search bar's input field is empty.
     """
 
-    view_side: OptionalBorderSide = None
+    view_side: Optional[BorderSide] = None
     """
     Defines the color and weight of the search view's outline.
 
     Value is of type [`BorderSide`](https://flet.dev/docs/reference/types/borderside).
     """
 
-    view_shape: OptionalOutlinedBorder = None
+    view_shape: Optional[OutlinedBorder] = None
     """
     Defines the shape of the search view.
 
@@ -175,29 +173,29 @@ class SearchBar(ConstrainedControl):
     [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
-    view_header_text_style: OptionalTextStyle = None
+    view_header_text_style: Optional[TextStyle] = None
     """
     Defines the [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of the
     text being edited on the search view.
     """
 
-    view_hint_text_style: OptionalTextStyle = None
+    view_hint_text_style: Optional[TextStyle] = None
     """
     Defines the [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of
     `view_hint_text`.
     """
 
-    view_size_constraints: OptionalBoxConstraints = None
+    view_size_constraints: Optional[BoxConstraints] = None
     """
     TBD
     """
 
-    view_header_height: OptionalNumber = None
+    view_header_height: Optional[Number] = None
     """
     TBD
     """
 
-    divider_color: OptionalColorValue = None
+    divider_color: Optional[ColorValue] = None
     """
     The color of the divider when in search view.
     """
@@ -225,7 +223,7 @@ class SearchBar(ConstrainedControl):
     to `KeyboardType TEXT`.
     """
 
-    view_surface_tint_color: OptionalColorValue = None
+    view_surface_tint_color: Optional[ColorValue] = None
     """
     Defines the color of the search view's surface tint.
     """
@@ -237,32 +235,32 @@ class SearchBar(ConstrainedControl):
     Defaults to `False`.
     """
 
-    on_tap: OptionalControlEventHandler["SearchBar"] = None
+    on_tap: Optional[ControlEventHandler["SearchBar"]] = None
     """
     Fires when the search bar is tapped.
     """
 
-    on_tap_outside_bar: OptionalControlEventHandler["SearchBar"] = None
+    on_tap_outside_bar: Optional[ControlEventHandler["SearchBar"]] = None
     """
     TBD
     """
 
-    on_submit: OptionalControlEventHandler["SearchBar"] = None
+    on_submit: Optional[ControlEventHandler["SearchBar"]] = None
     """
     Fires when user presses ENTER while focus is on SearchBar.
     """
 
-    on_change: OptionalControlEventHandler["SearchBar"] = None
+    on_change: Optional[ControlEventHandler["SearchBar"]] = None
     """
     Fires when the typed input in the search bar has changed.
     """
 
-    on_focus: OptionalControlEventHandler["SearchBar"] = None
+    on_focus: Optional[ControlEventHandler["SearchBar"]] = None
     """
     TBD
     """
 
-    on_blur: OptionalControlEventHandler["SearchBar"] = None
+    on_blur: Optional[ControlEventHandler["SearchBar"]] = None
     """
     TBD
     """

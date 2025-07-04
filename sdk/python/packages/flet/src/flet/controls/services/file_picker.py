@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.services.service import Service
 
 __all__ = [
@@ -121,11 +121,11 @@ class FilePicker(Service):
     ///
     """
 
-    on_upload: OptionalEventHandler[FilePickerUploadEvent] = None
+    on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
     Fires when a file upload progress is updated.
 
-    Event object is an instance of 
+    Event object is an instance of
     [FilePickerUploadEvent](https://flet.dev/docs/reference/types/filepickeruploadevent).
     """
 

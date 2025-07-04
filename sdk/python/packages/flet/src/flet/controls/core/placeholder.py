@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.types import ColorValue, Number, OptionalNumber
+from flet.controls.types import ColorValue, Number
 
 __all__ = ["Placeholder"]
 
@@ -35,8 +35,7 @@ class Placeholder(ConstrainedControl):
     The width to use when the placeholder is in a situation with an unbounded width.
     """
 
-    stroke_width: OptionalNumber = 2.0
+    stroke_width: Optional[Number] = 2.0
     """
     The width of the lines in the placeholder box.
     """
-

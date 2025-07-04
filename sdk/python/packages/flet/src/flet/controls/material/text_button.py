@@ -5,11 +5,11 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
+    ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
     StrOrControl,
     UrlTarget,
 )
@@ -35,7 +35,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Icon shown in the button.
     """
 
-    icon_color: OptionalColorValue = None
+    icon_color: Optional[ColorValue] = None
     """
     Icon [color](https://flet.dev/docs/reference/colors).
     """
@@ -75,17 +75,17 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     and defaults to `ClipBehavior.NONE`.
     """
 
-    on_click: OptionalControlEventHandler["TextButton"] = None
+    on_click: Optional[ControlEventHandler["TextButton"]] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: OptionalControlEventHandler["TextButton"] = None
+    on_long_press: Optional[ControlEventHandler["TextButton"]] = None
     """
     Fires when the button is long-pressed.
     """
 
-    on_hover: OptionalControlEventHandler["TextButton"] = None
+    on_hover: Optional[ControlEventHandler["TextButton"]] = None
     """
     Fires when a mouse pointer enters or exists the button response area.
 
@@ -93,12 +93,12 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     `false` when it exits.
     """
 
-    on_focus: OptionalControlEventHandler["TextButton"] = None
+    on_focus: Optional[ControlEventHandler["TextButton"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["TextButton"] = None
+    on_blur: Optional[ControlEventHandler["TextButton"]] = None
     """
     Fires when the control has lost focus.
     """

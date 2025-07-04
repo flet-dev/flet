@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.box import ShadowValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.types import BlendMode, IconValue, OptionalColorValue, OptionalNumber
+from flet.controls.types import BlendMode, ColorValue, IconValue, Number
 
 __all__ = ["Icon"]
 
@@ -28,19 +28,19 @@ class Icon(ConstrainedControl):
     [written in Flet](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py).
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     Icon [color](https://flet.dev/docs/reference/colors).
     """
 
-    size: OptionalNumber = None
+    size: Optional[Number] = None
     """
     The icon's size.
 
     Icons occupy a square with width and height equal to `size`.
 
     Defaults to the nearest [`IconTheme.size`][flet.IconTheme.size].
-    
+
     If this `Icon` is being placed inside an [`IconButton`][flet.IconButton], then use
     [`IconButton.icon_size`][flet.IconButton.icon_size] instead, so that the `IconButton` can make the splash
     area the appropriate size as well. The `IconButton` uses an [`IconTheme`][flet.IconTheme] to
@@ -60,7 +60,7 @@ class Icon(ConstrainedControl):
     TBD
     """
 
-    fill: OptionalNumber = None
+    fill: Optional[Number] = None
     """
     TBD
     """
@@ -70,17 +70,17 @@ class Icon(ConstrainedControl):
     TBD
     """
 
-    grade: OptionalNumber = None
+    grade: Optional[Number] = None
     """
     TBD
     """
 
-    weight: OptionalNumber = None
+    weight: Optional[Number] = None
     """
     TBD
     """
 
-    optical_size: OptionalNumber = None
+    optical_size: Optional[Number] = None
     """
     TBD
     """
@@ -92,12 +92,12 @@ class Icon(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert self.fill is None or (
-            0.0 <= self.fill <= 1.0
-        ), f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
-        assert self.weight is None or (
-            self.weight > 0.0
-        ), f"weight must be strictly greater than 0.0, got {self.weight}"
-        assert self.optical_size is None or (
-            self.optical_size > 0.0
-        ), f"optical_size must be strictly greater than 0.0, got {self.optical_size}"
+        assert self.fill is None or (0.0 <= self.fill <= 1.0), (
+            f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
+        )
+        assert self.weight is None or (self.weight > 0.0), (
+            f"weight must be strictly greater than 0.0, got {self.weight}"
+        )
+        assert self.optical_size is None or (self.optical_size > 0.0), (
+            f"optical_size must be strictly greater than 0.0, got {self.optical_size}"
+        )

@@ -1,14 +1,14 @@
 from dataclasses import field
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoSlidingSegmentedButton"]
@@ -36,7 +36,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     The background [color](https://flet.dev/docs/reference/colors) of the button.
     """
 
-    thumb_color: OptionalColorValue = None
+    thumb_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the button when it is not
     selected.
@@ -57,9 +57,9 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     TBD
     """
 
-    on_change: OptionalControlEventHandler["CupertinoSlidingSegmentedButton"] = None
+    on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
     """
-    Fires when the state of the button is changed - when one of the `controls` is 
+    Fires when the state of the button is changed - when one of the `controls` is
     clicked.
     """
 

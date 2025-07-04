@@ -1,8 +1,9 @@
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalEventHandler
+from flet.controls.control_event import EventHandler
 from flet.controls.core.window import WindowEvent
 from flet.controls.events import DragEndEvent, DragStartEvent
 
@@ -23,21 +24,21 @@ class WindowDragArea(ConstrainedControl):
 
     maximizable: bool = True
     """
-    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's 
+    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's
     window.
     Defaults to `True`.
     """
 
-    on_double_tap: OptionalEventHandler[WindowEvent["WindowDragArea"]] = None
+    on_double_tap: Optional[EventHandler[WindowEvent["WindowDragArea"]]] = None
     """
     Fires when the `WindowDragArea` is double-tapped and `maximizable=True`.
-    
-    Event handler argument is of type `WindowEvent`, 
-    with its `type` property being one of the following: `WindowEventType.MAXIMIZE`, 
+
+    Event handler argument is of type `WindowEvent`,
+    with its `type` property being one of the following: `WindowEventType.MAXIMIZE`,
     `WindowEventType.UNMAXIMIZE`
     """
 
-    on_drag_start: OptionalEventHandler[DragStartEvent["WindowDragArea"]] = None
+    on_drag_start: Optional[EventHandler[DragStartEvent["WindowDragArea"]]] = None
     """
     Fires when a pointer has contacted the screen and has begun to move/drag.
 
@@ -45,11 +46,11 @@ class WindowDragArea(ConstrainedControl):
     [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
     """
 
-    on_drag_end: OptionalEventHandler[DragEndEvent["WindowDragArea"]] = None
+    on_drag_end: Optional[EventHandler[DragEndEvent["WindowDragArea"]]] = None
     """
-    Fires when a pointer that was previously in contact with the screen and 
+    Fires when a pointer that was previously in contact with the screen and
     moving/dragging is no longer in contact with the screen.
-    
+
     Event handler argument is of type
     [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
     """

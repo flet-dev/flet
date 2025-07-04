@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Union
 
 from flet.controls.types import Number
 from flet.utils import deprecated
@@ -7,7 +7,6 @@ from flet.utils import deprecated
 __all__ = [
     "Padding",
     "PaddingValue",
-    "OptionalPaddingValue",
     "all",
     "symmetric",
     "only",
@@ -102,4 +101,3 @@ def only(
 
 
 PaddingValue = Union[Number, Padding]
-OptionalPaddingValue = Optional[PaddingValue]

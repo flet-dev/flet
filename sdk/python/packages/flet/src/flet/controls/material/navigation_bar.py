@@ -7,14 +7,13 @@ from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.duration import DurationValue
 from flet.controls.types import (
     ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
 )
 
 __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehavior"]
@@ -47,7 +46,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     icon: Optional[IconValueOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the 
+    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
     destination.
 
     Example with icon name:
@@ -59,11 +58,11 @@ class NavigationBarDestination(AdaptiveControl):
     icon=ft.Icon(ft.Icons.BOOKMARK)
     ```
 
-    If `selected_icon` is provided, this will only be displayed when the destination is 
+    If `selected_icon` is provided, this will only be displayed when the destination is
     not selected.
 
-    To make the NavigationBar more accessible, consider choosing an icon with a stroked 
-    and filled version, such as `ft.Icons.CLOUD` and `ft.Icons.CLOUD_QUEUE`. The icon 
+    To make the NavigationBar more accessible, consider choosing an icon with a stroked
+    and filled version, such as `ft.Icons.CLOUD` and `ft.Icons.CLOUD_QUEUE`. The icon
     should be set to the stroked version and `selected_icon` to the filled version.
     """
 
@@ -84,7 +83,7 @@ class NavigationBarDestination(AdaptiveControl):
     If this icon is not provided, the NavigationBar will display `icon` in either state.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this destination.
     """
@@ -101,7 +100,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)
     """
-    Defines the appearance of the button items that are arrayed within the navigation 
+    Defines the appearance of the button items that are arrayed within the navigation
     bar.
 
     The value must be a list of two or more `NavigationBarDestination` instances.
@@ -113,7 +112,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     `None` if no destination is selected.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the navigation bar itself.
     """
@@ -129,20 +128,20 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     and defaults to `NavigationBarLabelBehavior.ALWAYS_SHOW`.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     The elevation of the navigation bar itself.
     """
 
-    shadow_color: OptionalColorValue = None
+    shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the drop shadow to 
+    The [color](https://flet.dev/docs/reference/colors) used for the drop shadow to
     indicate `elevation`.
     """
 
-    indicator_color: OptionalColorValue = None
+    indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the selected destination 
+    The [color](https://flet.dev/docs/reference/colors) of the selected destination
     indicator.
     """
 
@@ -154,7 +153,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
-    surface_tint_color: OptionalColorValue = None
+    surface_tint_color: Optional[ColorValue] = None
     """
     The surface tint of the Material that holds the NavigationDrawer's contents.
     """
@@ -164,7 +163,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    animation_duration: OptionalDurationValue = None
+    animation_duration: Optional[DurationValue] = None
     """
     The transition time for each destination as it goes between selected and unselected.
     """
@@ -175,11 +174,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     `NavigationDestination` in various
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
+    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
     values are supported: `PRESSED`, `HOVERED` and `FOCUSED`.
     """
 
-    on_change: OptionalControlEventHandler["NavigationBar"] = None
+    on_change: Optional[ControlEventHandler["NavigationBar"]] = None
     """
     Fires when selected destination changed.
     """

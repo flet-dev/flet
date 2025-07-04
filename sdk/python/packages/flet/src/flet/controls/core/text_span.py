@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import UrlTarget
 
@@ -61,17 +61,17 @@ class TextSpan(Control):
     TBD
     """
 
-    on_click: OptionalControlEventHandler["TextSpan"] = None
+    on_click: Optional[ControlEventHandler["TextSpan"]] = None
     """
     Fires when the span is clicked.
     """
 
-    on_enter: OptionalControlEventHandler["TextSpan"] = None
+    on_enter: Optional[ControlEventHandler["TextSpan"]] = None
     """
     Triggered when a mouse pointer has entered the span.
     """
 
-    on_exit: OptionalControlEventHandler["TextSpan"] = None
+    on_exit: Optional[ControlEventHandler["TextSpan"]] = None
     """
     Triggered when a mouse pointer has exited the span.
     """

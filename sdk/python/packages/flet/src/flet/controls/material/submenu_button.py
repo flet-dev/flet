@@ -5,7 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.transform import OffsetValue
 from flet.controls.types import ClipBehavior
@@ -81,27 +81,27 @@ class SubmenuButton(ConstrainedControl):
     `MenuStyle.alignment` on the `style` attribute.
     """
 
-    on_open: OptionalControlEventHandler["SubmenuButton"] = None
+    on_open: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
     Fired when the menu is opened.
     """
 
-    on_close: OptionalControlEventHandler["SubmenuButton"] = None
+    on_close: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
     Fired when the menu is closed.
     """
 
-    on_hover: OptionalControlEventHandler["SubmenuButton"] = None
+    on_hover: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
     Fired when the button is hovered.
     """
 
-    on_focus: OptionalControlEventHandler["SubmenuButton"] = None
+    on_focus: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
     Fired when the button receives focus.
     """
 
-    on_blur: OptionalControlEventHandler["SubmenuButton"] = None
+    on_blur: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
     Fired when this button loses focus.
     """

@@ -5,16 +5,16 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import (
+    ControlEventHandler,
     Event,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DateTimeValue
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
+    ColorValue,
     IconValue,
-    OptionalColorValue,
 )
 
 __all__ = [
@@ -89,7 +89,7 @@ class DatePicker(DialogControl):
     """
     The type of keyboard to use for editing the text.
 
-    Value is of type [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) 
+    Value is of type [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype)
     and defaults to `KeyboardType.DATETIME`.
     """
 
@@ -97,7 +97,7 @@ class DatePicker(DialogControl):
     """
     Initial display of a calendar date picker.
 
-    Value is of type [`DatePickerMode`](https://flet.dev/docs/reference/types/datepickermode) 
+    Value is of type [`DatePickerMode`](https://flet.dev/docs/reference/types/datepickermode)
     and defaults to `DatePickerMode.DAY`.
     """
 
@@ -105,7 +105,7 @@ class DatePicker(DialogControl):
     """
     The initial mode of date entry method for the date picker dialog.
 
-    Value is of type [`DatePickerEntryMode`](https://flet.dev/docs/reference/types/datepickerentrymode) 
+    Value is of type [`DatePickerEntryMode`](https://flet.dev/docs/reference/types/datepickerentrymode)
     and defaults to `DatePickerEntryMode.CALENDAR`.
     """
 
@@ -130,7 +130,7 @@ class DatePicker(DialogControl):
 
     error_format_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the entered date is not in the 
+    The error message displayed below the TextField if the entered date is not in the
     correct format.
 
     Defaults to `"Invalid format"`.
@@ -138,7 +138,7 @@ class DatePicker(DialogControl):
 
     error_invalid_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the date is earlier than 
+    The error message displayed below the TextField if the date is earlier than
     `first_date` or later than `last_date`.
 
     Defaults to `"Out of range"`.
@@ -148,7 +148,7 @@ class DatePicker(DialogControl):
     """
     The hint text displayed in the text field.
 
-    The default value is the date format string that depends on your locale. For 
+    The default value is the date format string that depends on your locale. For
     example, 'mm/dd/yyyy' for en_US.
     """
 
@@ -161,37 +161,37 @@ class DatePicker(DialogControl):
 
     switch_to_calendar_icon: Optional[IconValue] = None
     """
-    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode` 
+    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode`
     is `DatePickerEntryMode.INPUT`.
-    Clicking on icon changes the `DatePickerEntryMode` to 
+    Clicking on icon changes the `DatePickerEntryMode` to
     `DatePickerEntryMode.CALENDAR`. If `None`, `icons.CALENDAR_TODAY` is used.
     """
 
     switch_to_input_icon: Optional[IconValue] = None
     """
-    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode` 
+    Name of the icon displayed in the corner of the dialog when `DatePickerEntryMode`
     is `DatePickerEntryMode.CALENDAR`.
-    Clicking on icon changes the `DatePickerEntryMode` to `DatePickerEntryMode.INPUT`. 
+    Clicking on icon changes the `DatePickerEntryMode` to `DatePickerEntryMode.INPUT`.
     If `None`, `icons.EDIT_OUTLINED` is used.
     """
 
-    barrier_color: OptionalColorValue = None
+    barrier_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the modal barrier that 
+    The [color](https://flet.dev/docs/reference/colors) of the modal barrier that
     darkens everything below the date picker.
 
-    If `None`, the [`DialogTheme.barrier_color`](https://flet.dev/docs/reference/types/dialogtheme#barrier_color) 
-    is used. 
+    If `None`, the [`DialogTheme.barrier_color`](https://flet.dev/docs/reference/types/dialogtheme#barrier_color)
+    is used.
     If it is also `None`, then `Colors.BLACK_54` is used.
     """
 
-    on_change: OptionalControlEventHandler["DatePicker"] = None
+    on_change: Optional[ControlEventHandler["DatePicker"]] = None
     """
-    Fires when user clicks confirm button. `value` property is updated with selected 
+    Fires when user clicks confirm button. `value` property is updated with selected
     date. `e.data` also contains the selected date.
     """
 
-    on_entry_mode_change: OptionalEventHandler[DatePickerEntryModeChangeEvent] = None
+    on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
     Fires when the `date_picker_entry_mode` is changed.
 

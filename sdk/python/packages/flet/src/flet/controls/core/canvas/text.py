@@ -5,7 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextStyle
-from flet.controls.types import OptionalNumber, TextAlign
+from flet.controls.types import Number, TextAlign
 
 __all__ = ["Text"]
 
@@ -16,12 +16,12 @@ class Text(Shape):
     Draws `text` with `style` in the given point (`x`, `y`).
     """
 
-    x: OptionalNumber = None
+    x: Optional[Number] = None
     """
     The x-axis coordinate of the text's `alignment` point.
     """
 
-    y: OptionalNumber = None
+    y: Optional[Number] = None
     """
     The y-axis coordinate of the text's `alignment` point.
     """
@@ -67,7 +67,7 @@ class Text(Shape):
     that overflows the width constraints are dropped.
     """
 
-    max_width: OptionalNumber = None
+    max_width: Optional[Number] = None
     """
     The maximum width of the painted text.
 
@@ -79,10 +79,9 @@ class Text(Shape):
     String used to ellipsize overflowing text.
     """
 
-    rotate: OptionalNumber = None
+    rotate: Optional[Number] = None
     """
     Text rotation in radians. Text is rotated around the point determined by
     `alignment`. See code examples above.
     ```
-    """  
-
+    """

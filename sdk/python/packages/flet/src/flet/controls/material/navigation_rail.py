@@ -6,13 +6,13 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     StrOrControl,
 )
 
@@ -34,7 +34,7 @@ class NavigationRailDestination(Control):
     icon: Optional[IconValueOrControl] = None
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
-    destination. 
+    destination.
 
     Example with icon name:
     ```
@@ -56,7 +56,7 @@ class NavigationRailDestination(Control):
     selected_icon: Optional[IconValueOrControl] = None
     """
     The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
-    displayed when this destination is selected. 
+    displayed when this destination is selected.
 
     Example with icon name:
     ```
@@ -76,7 +76,7 @@ class NavigationRailDestination(Control):
     A string or Control representing the destination's label.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space to inset the destination item.
 
@@ -84,7 +84,7 @@ class NavigationRailDestination(Control):
     [`Padding`](https://flet.dev/docs/reference/types/padding) class.
     """
 
-    indicator_color: OptionalColorValue = None
+    indicator_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the `indicator_shape` when
     this destination is selected.
@@ -112,7 +112,7 @@ class NavigationRail(ConstrainedControl):
     The value must be a list of two or more `NavigationRailDestination` instances.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     Controls the size of the shadow below the NavigationRail.
 
@@ -153,13 +153,13 @@ class NavigationRail(ConstrainedControl):
     and defaults to `None` - no labels are shown.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Sets the [color](https://flet.dev/docs/reference/colors) of the Container that holds
     all of the NavigationRail's contents.
     """
 
-    indicator_color: OptionalColorValue = None
+    indicator_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the navigation rail's
     indicator.
@@ -195,7 +195,7 @@ class NavigationRail(ConstrainedControl):
     rendered when `extended=True`.
     """
 
-    min_width: OptionalNumber = None
+    min_width: Optional[Number] = None
     """
     The smallest possible width for the rail regardless of the destination's icon or
     label size.
@@ -207,14 +207,14 @@ class NavigationRail(ConstrainedControl):
     To make a compact rail, set this to `56` and use `label_type='none'`.
     """
 
-    min_extended_width: OptionalNumber = None
+    min_extended_width: Optional[Number] = None
     """
     The final width when the animation is complete for setting `extended` to `True`.
 
     Defaults to `256`.
     """
 
-    group_alignment: OptionalNumber = None
+    group_alignment: Optional[Number] = None
     """
     The vertical alignment for the group of destinations within the rail.
 
@@ -247,7 +247,7 @@ class NavigationRail(ConstrainedControl):
     When a destination is selected, `selected_label_text_style` will instead be used.
     """
 
-    on_change: OptionalControlEventHandler["NavigationRail"] = None
+    on_change: Optional[ControlEventHandler["NavigationRail"]] = None
     """
     Fires when selected destination changed.
     """

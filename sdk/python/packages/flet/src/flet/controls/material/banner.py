@@ -3,16 +3,15 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
-from flet.controls.margin import OptionalMarginValue
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.margin import MarginValue
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     StrOrControl,
 )
 
@@ -41,7 +40,7 @@ class Banner(DialogControl):
     """
     The set of actions that are displayed at the bottom or trailing side of the Banner.
 
-    Typically this is a list of [`TextButton`](https://flet.dev/docs/controls/textbutton) 
+    Typically this is a list of [`TextButton`](https://flet.dev/docs/controls/textbutton)
     controls.
     """
 
@@ -52,73 +51,73 @@ class Banner(DialogControl):
     Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
     """
 
-    leading_padding: OptionalPaddingValue = None
+    leading_padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the leading control.
 
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding) 
+    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding)
     class or a number.
 
     Defaults to `16` virtual pixels.
     """
 
-    content_padding: OptionalPaddingValue = None
+    content_padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the content.
 
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding) 
+    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding)
     class or a number.
 
-    If the actions are below the content, this defaults to 
+    If the actions are below the content, this defaults to
     `padding.only(left=16.0, top=24.0, right=16.0, bottom=4.0)`.
 
-    If the actions are trailing the content, this defaults to 
+    If the actions are trailing the content, this defaults to
     `padding.only(left=16.0, top=2.0)`.
     """
 
     force_actions_below: bool = False
     """
-    An override to force the actions to be below the content regardless of how many 
+    An override to force the actions to be below the content regardless of how many
     there are.
 
-    If this is `True`, the actions will be placed below the content. If this is 
-    `False`, the actions will be placed on the trailing side of the content if 
+    If this is `True`, the actions will be placed below the content. If this is
+    `False`, the actions will be placed on the trailing side of the content if
     `actions` length is `1` and below the content if greater than `1`.
 
     Defaults to `False`.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the surface of this Banner.
     """
 
-    surface_tint_color: OptionalColorValue = None
+    surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor` 
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor`
     to indicate elevation.
     """
 
-    shadow_color: OptionalColorValue = None
+    shadow_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the shadow below the banner.
     """
 
-    divider_color: OptionalColorValue = None
+    divider_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the divider.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     The elevation of the banner.
     """
 
-    margin: OptionalMarginValue = None
+    margin: Optional[MarginValue] = None
     """
     The amount of space surrounding the banner.
 
-    The value is an instance of [`Margin`](https://flet.dev/docs/reference/types/margin) 
+    The value is an instance of [`Margin`](https://flet.dev/docs/reference/types/margin)
     class or a number.
     """
 
@@ -136,7 +135,7 @@ class Banner(DialogControl):
     Defaults to `52`.
     """
 
-    on_visible: OptionalControlEventHandler["Banner"] = None
+    on_visible: Optional[ControlEventHandler["Banner"]] = None
     """
     Fires when the banner is shown or made visible for the first time.
     """

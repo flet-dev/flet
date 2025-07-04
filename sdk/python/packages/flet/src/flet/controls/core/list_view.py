@@ -5,9 +5,9 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
-from flet.controls.types import ClipBehavior, Number, OptionalNumber
+from flet.controls.types import ClipBehavior, Number
 
 __all__ = ["ListView"]
 
@@ -51,9 +51,9 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     No spacing between items if not specified.
     """
 
-    item_extent: OptionalNumber = None
+    item_extent: Optional[Number] = None
     """
-    A fixed height or width (for `horizontal` ListView) of an item to optimize 
+    A fixed height or width (for `horizontal` ListView) of an item to optimize
     rendering.
     """
 
@@ -68,7 +68,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     If greater than `0` then Divider is used as a spacing between list view items.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the children.
 
@@ -89,7 +89,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     The number of children that will contribute semantic information.
     """
 
-    cache_extent: OptionalNumber = None
+    cache_extent: Optional[Number] = None
     """
     Items that fall in the cache area (before or after the visible area that are about
     to become visible when the user scrolls) are laid out even though they are not

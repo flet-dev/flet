@@ -1,9 +1,9 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.types import OptionalColorValue, OptionalNumber
+from flet.controls.types import ColorValue, Number
 
 __all__ = ["ProgressBar"]
 
@@ -16,7 +16,7 @@ class ProgressBar(ConstrainedControl):
     A control that shows progress along a line.
     """
 
-    value: OptionalNumber = None
+    value: Optional[Number] = None
     """
     The value of this progress indicator.
 
@@ -28,25 +28,23 @@ class ProgressBar(ConstrainedControl):
     is being made.
     """
 
-    bar_height: OptionalNumber = 4.0
+    bar_height: Optional[Number] = 4.0
     """
     The minimum height of the line used to draw the linear indicator.
-
-    Defaults to `4`.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     The progress indicator's [color](https://flet.dev/docs/reference/colors).
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     [Color](https://flet.dev/docs/reference/colors) of the track being filled by the
     linear indicator.
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of both the indicator and the track.
 
@@ -62,23 +60,23 @@ class ProgressBar(ConstrainedControl):
     progress indicator.
     """
 
-    semantics_value: OptionalNumber = None
+    semantics_value: Optional[Number] = None
     """
     The [`Semantics.value`](https://flet.dev/docs/controls/semantics#value) for this
     progress indicator.
     """
 
-    stop_indicator_color: OptionalColorValue = None
+    stop_indicator_color: Optional[ColorValue] = None
     """
     TBD
     """
 
-    stop_indicator_radius: OptionalNumber = None
+    stop_indicator_radius: Optional[Number] = None
     """
     TBD
     """
 
-    track_gap: OptionalNumber = None
+    track_gap: Optional[Number] = None
     """
     TBD
     """
@@ -91,9 +89,9 @@ class ProgressBar(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert self.value is None or self.value >= 0, "value cannot be negative"
-        assert (
-            self.bar_height is None or self.bar_height >= 0
-        ), "bar_height cannot be negative"
-        assert (
-            self.semantics_value is None or self.semantics_value >= 0
-        ), "semantics_value cannot be negative"
+        assert self.bar_height is None or self.bar_height >= 0, (
+            "bar_height cannot be negative"
+        )
+        assert self.semantics_value is None or self.semantics_value >= 0, (
+            "semantics_value cannot be negative"
+        )

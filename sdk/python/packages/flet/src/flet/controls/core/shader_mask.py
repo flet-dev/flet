@@ -1,7 +1,9 @@
+from typing import Optional
+
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import OptionalControl
+from flet.controls.control import Control
 from flet.controls.gradients import Gradient
 from flet.controls.types import BlendMode
 
@@ -24,7 +26,7 @@ class ShaderMask(ConstrainedControl):
     Value is of type [`Gradient`](https://flet.dev/docs/reference/types/gradient).
     """
 
-    content: OptionalControl = None
+    content: Optional[Control] = None
     """
     A child `Control` to apply a shader to.
     """
@@ -36,10 +38,9 @@ class ShaderMask(ConstrainedControl):
     Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     """
     The radius of the mask.
 
     Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
     """
-

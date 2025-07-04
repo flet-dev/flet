@@ -1,19 +1,17 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from flet.controls.alignment import OptionalAlignment
-from flet.controls.border import BorderSide, OptionalBorderSide
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.alignment import Alignment
+from flet.controls.border import BorderSide
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control_state import ControlStateValue
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.duration import DurationValue
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
     MouseCursor,
     Number,
-    OptionalBool,
-    OptionalNumber,
     VisualDensity,
 )
 
@@ -25,8 +23,6 @@ __all__ = [
     "OutlinedBorder",
     "RoundedRectangleBorder",
     "StadiumBorder",
-    "OptionalButtonStyle",
-    "OptionalOutlinedBorder",
 ]
 
 
@@ -36,7 +32,7 @@ class OutlinedBorder:
     An abstract class that can be used to create custom borders.
     """
 
-    side: OptionalBorderSide = None
+    side: Optional[BorderSide] = None
     """
     The border outline's color and weight.
     """
@@ -60,9 +56,9 @@ class RoundedRectangleBorder(OutlinedBorder):
     Creates a border with rounded rectangle corners.
     """
 
-    radius: OptionalBorderRadiusValue = None
+    radius: Optional[BorderRadiusValue] = None
     """
-    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius) 
+    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius)
     or a number.
     """
 
@@ -88,9 +84,9 @@ class BeveledRectangleBorder(OutlinedBorder):
     Creates a border with beveled rectangle corners.
     """
 
-    radius: OptionalBorderRadiusValue = None
+    radius: Optional[BorderRadiusValue] = None
     """
-    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius) 
+    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius)
     or a number.
     """
 
@@ -104,9 +100,9 @@ class ContinuousRectangleBorder(OutlinedBorder):
     Creates a border with continuous rectangle corners.
     """
 
-    radius: OptionalBorderRadiusValue = None
+    radius: Optional[BorderRadiusValue] = None
     """
-    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius) 
+    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius)
     or a number.
     """
 
@@ -151,12 +147,12 @@ class ButtonStyle:
     The surface tint color of the button's Material.
     """
 
-    elevation: Optional[ControlStateValue[OptionalNumber]] = None
+    elevation: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The elevation of the button's Material.
     """
 
-    animation_duration: OptionalDurationValue = None
+    animation_duration: Optional[DurationValue] = None
     """
     Defines the duration in milliseconds of animated changes for shape and
     elevation.
@@ -182,14 +178,14 @@ class ButtonStyle:
     Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
-    alignment: OptionalAlignment = None
+    alignment: Optional[Alignment] = None
     """
     The alignment of the button's content.
 
     Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).
     """
 
-    enable_feedback: OptionalBool = None
+    enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback.
 
@@ -203,7 +199,7 @@ class ButtonStyle:
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    icon_size: Optional[ControlStateValue[OptionalNumber]] = None
+    icon_size: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The icon's size inside of the button.
     """
@@ -227,8 +223,3 @@ class ButtonStyle:
     The cursor to be displayed when the mouse pointer enters or is hovering
     over the button.
     """
-
-
-# Typing
-OptionalButtonStyle = Optional[ButtonStyle]
-OptionalOutlinedBorder = Optional[OutlinedBorder]

@@ -3,7 +3,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.transform import Offset
 
 __all__ = [
@@ -59,21 +59,21 @@ class DragTarget(Control):
 
     group: str = "default"
     """
-    The group this target belongs to. 
-    
+    The group this target belongs to.
+
     Note:
-        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.Draggable], 
+        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.Draggable],
         they must both be in the same `group`.
     """
 
-    on_will_accept: OptionalEventHandler[DragWillAcceptEvent] = None
+    on_will_accept: Optional[EventHandler[DragWillAcceptEvent]] = None
     """
     Fires when a draggable is dragged on this target.
 
     Event handler argument is an instance of [`DragWillAcceptEvent`][flet.DragWillAcceptEvent].
     """
 
-    on_accept: OptionalEventHandler[DragTargetEvent] = None
+    on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
     Fires when the user does drop an acceptable (same [`group`][flet.DragTarget.group]) draggable on
     this target.
@@ -83,14 +83,14 @@ class DragTarget(Control):
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """
 
-    on_leave: OptionalEventHandler[DragTargetLeaveEvent] = None
+    on_leave: Optional[EventHandler[DragTargetLeaveEvent]] = None
     """
     Fires when a draggable leaves this target.
-    
+
     Event handler argument is an instance of [`DragTargetLeaveEvent`][flet.DragTargetLeaveEvent].
     """
 
-    on_move: OptionalEventHandler[DragTargetEvent] = None
+    on_move: Optional[EventHandler[DragTargetEvent]] = None
     """
     Fires when a draggable moves within this target.
 

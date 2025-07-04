@@ -1,15 +1,14 @@
-from numbers import Number
 from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
+    ColorValue,
     NotchShape,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
 )
 
 __all__ = ["BottomAppBar"]
@@ -26,33 +25,33 @@ class BottomAppBar(ConstrainedControl):
     A child Control contained by the BottomAppBar.
     """
 
-    surface_tint_color: OptionalColorValue = None
+    surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor` 
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor`
     to indicate elevation.
 
-    If this is `None`, no overlay will be applied. Otherwise this color will be 
-    composited on top of `bgcolor` with an opacity related to `elevation` and used to 
+    If this is `None`, no overlay will be applied. Otherwise this color will be
+    composited on top of `bgcolor` with an opacity related to `elevation` and used to
     paint the BottomAppBar's background.
 
     Defaults to `None`.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for the 
+    The fill [color](https://flet.dev/docs/reference/colors) to use for the
     BottomAppBar. Default color is defined by current theme.
     """
 
-    shadow_color: OptionalColorValue = None
+    shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below the 
+    The [color](https://flet.dev/docs/reference/colors) of the shadow below the
     BottomAppBar.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
-    Empty space to inscribe inside a container decoration (background, border). Padding 
+    Empty space to inscribe inside a container decoration (background, border). Padding
     is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding) class.
 
     Defaults to `padding.symmetric(vertical=12.0, horizontal=16.0)`.
@@ -62,7 +61,7 @@ class BottomAppBar(ConstrainedControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
     and defaults to `ClipBehavior.NONE`.
     """
 
@@ -80,13 +79,13 @@ class BottomAppBar(ConstrainedControl):
     Can be visible only if `shape=None`.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     This property controls the size of the shadow below the BottomAppBar.
     """
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )

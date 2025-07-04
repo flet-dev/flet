@@ -5,9 +5,9 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
-from flet.controls.types import ClipBehavior, Number, OptionalNumber
+from flet.controls.types import ClipBehavior, Number
 
 __all__ = ["GridView"]
 
@@ -68,7 +68,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     The ratio of the cross-axis to the main-axis extent of each child.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the children.
     """
@@ -85,7 +85,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     The number of children that will contribute semantic information.
     """
 
-    cache_extent: OptionalNumber = None
+    cache_extent: Optional[Number] = None
     """
     Items that fall in the cache area (area before or after the visible area that are
     about to become visible when the user scrolls) are laid out even though they are

@@ -31,6 +31,16 @@ web = ["flet-web"]
 flet = "flet.cli:main"
 
 [dependency-groups]
+dev = [
+    "pytest >=7.2.0",
+    "tomlkit >=0.11.6",
+    "cryptography >=39.0.0",
+    "pillow >=10.3.0",
+    "pre-commit >=2.21.0",
+    "pypi-cleanup==0.1.4",
+    "pandas >=2.2.3",
+    "ruff>=0.11.7",
+]
 docs = [
     "mkdocs",
     "mkdocs-material",

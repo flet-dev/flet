@@ -5,12 +5,11 @@ from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import Event, EventControlType, OptionalEventHandler
+from flet.controls.control_event import Event, EventControlType, EventHandler
 from flet.controls.types import (
     Brightness,
+    ColorValue,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = ["Window", "WindowEvent", "WindowEventType", "WindowResizeEdge"]
@@ -60,51 +59,51 @@ class Window(BaseControl):
     platforms.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Sets background https://flet.dev/docs/reference/colors of an application window.
 
     Use together with `page.bgcolor` to make a window transparent.
     """
 
-    width: OptionalNumber = None
+    width: Optional[Number] = None
     """
     Defines the width of the app window.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     Defines the height of the app window.
     """
 
-    top: OptionalNumber = None
+    top: Optional[Number] = None
     """
     Defines the vertical position of a native OS window - a distance in virtual
     pixels from the top edge of the screen.
     """
 
-    left: OptionalNumber = None
+    left: Optional[Number] = None
     """
     Defines the horizontal position of the app window - a distance in virtual
     pixels from the left edge of the screen.
     """
 
-    max_width: OptionalNumber = None
+    max_width: Optional[Number] = None
     """
     Defines the maximum width of the app window.
     """
 
-    max_height: OptionalNumber = None
+    max_height: Optional[Number] = None
     """
     Defines the maximum height of the app window.
     """
 
-    min_width: OptionalNumber = None
+    min_width: Optional[Number] = None
     """
     Defines the minimum width of the app window.
     """
 
-    min_height: OptionalNumber = None
+    min_height: Optional[Number] = None
     """
     Defines the minimum height of the app window.
     """
@@ -116,7 +115,7 @@ class Window(BaseControl):
     Value must be between `0.0` and `1.0`.
     """
 
-    aspect_ratio: OptionalNumber = None
+    aspect_ratio: Optional[Number] = None
     """
     TBD
     """
@@ -203,7 +202,7 @@ class Window(BaseControl):
     Whether the app window should be frameless.
     """
 
-    progress_bar: OptionalNumber = None
+    progress_bar: Optional[Number] = None
     """
     The value from `0.0` to `1.0` to display a progress bar on Task Bar or Dock.
     """
@@ -250,7 +249,7 @@ class Window(BaseControl):
     below it. If this window has focus, it will still receive keyboard events.
     """
 
-    on_event: OptionalEventHandler[WindowEvent] = None
+    on_event: Optional[EventHandler[WindowEvent]] = None
     """
     Fires when app window changes its state: position, size, maximized, minimized, etc.
     """

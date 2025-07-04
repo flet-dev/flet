@@ -8,8 +8,6 @@ __all__ = [
     "Blur",
     "BlurTileMode",
     "BlurValue",
-    "OptionalBlurValue",
-    "OptionalBlurTileMode",
 ]
 
 
@@ -41,5 +39,3 @@ class Blur:
 
 
 BlurValue = Union[Number, tuple[Number, Number], Blur]
-OptionalBlurValue = Optional[BlurValue]
-OptionalBlurTileMode = Optional[BlurTileMode]

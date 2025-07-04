@@ -1,25 +1,18 @@
 from flet.app import app, app_async, run, run_async
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
+from flet.controls.alignment import Alignment, Axis
 from flet.controls.animation import (
     Animation,
     AnimationCurve,
     AnimationStyle,
     AnimationValue,
-    OptionalAnimation,
-    OptionalAnimationCurve,
-    OptionalAnimationStyle,
-    OptionalAnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
-from flet.controls.core.merge_semantics import MergeSemantics
 from flet.controls.blur import (
     Blur,
     BlurTileMode,
     BlurValue,
-    OptionalBlurTileMode,
-    OptionalBlurValue,
 )
 from flet.controls.border import (
     Border,
@@ -27,17 +20,13 @@ from flet.controls.border import (
     BorderSideStrokeAlign,
     BorderSideStrokeAlignValue,
     BorderStyle,
-    OptionalBorder,
-    OptionalBorderSide,
-    OptionalBorderSideStrokeAlign,
-    OptionalBorderSideStrokeAlignValue,
 )
 from flet.controls.border_radius import (
     BorderRadius,
     BorderRadiusValue,
-    OptionalBorderRadiusValue,
 )
 from flet.controls.box import (
+    BlurStyle,
     BoxConstraints,
     BoxDecoration,
     BoxFit,
@@ -46,17 +35,6 @@ from flet.controls.box import (
     ColorFilter,
     DecorationImage,
     FilterQuality,
-    OptionalBoxConstraints,
-    OptionalBoxDecoration,
-    OptionalBoxFit,
-    OptionalBoxShadow,
-    OptionalBoxShape,
-    OptionalColorFilter,
-    OptionalDecorationImage,
-    OptionalFilterQuality,
-    OptionalBlurStyle,
-    OptionalShadowValue,
-    BlurStyle,
     ShadowValue,
 )
 from flet.controls.buttons import (
@@ -64,15 +42,13 @@ from flet.controls.buttons import (
     ButtonStyle,
     CircleBorder,
     ContinuousRectangleBorder,
-    OptionalButtonStyle,
-    OptionalOutlinedBorder,
     OutlinedBorder,
     RoundedRectangleBorder,
     StadiumBorder,
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, OptionalControl
+from flet.controls.control import Control
 from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import (
     ControlEvent,
@@ -80,8 +56,6 @@ from flet.controls.control_event import (
     Event,
     EventControlType,
     EventHandler,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
 )
 from flet.controls.control_state import (
     ControlState,
@@ -123,6 +97,7 @@ from flet.controls.core.markdown import (
     MarkdownExtensionSet,
     MarkdownStyleSheet,
 )
+from flet.controls.core.merge_semantics import MergeSemantics
 from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_draggable import ReorderableDraggable
@@ -203,9 +178,6 @@ from flet.controls.duration import (
     DateTimeValue,
     Duration,
     DurationValue,
-    OptionalDateTimeValue,
-    OptionalDuration,
-    OptionalDurationValue,
 )
 from flet.controls.events import (
     DragEndEvent,
@@ -236,7 +208,7 @@ from flet.controls.gradients import (
     SweepGradient,
 )
 from flet.controls.keys import ScrollKey, ValueKey
-from flet.controls.margin import Margin, MarginValue, OptionalMarginValue
+from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
 from flet.controls.material.app_bar import AppBar
@@ -347,7 +319,7 @@ from flet.controls.material.time_picker import (
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode
 from flet.controls.material.vertical_divider import VerticalDivider
 from flet.controls.multi_view import MultiView
-from flet.controls.padding import OptionalPaddingValue, Padding, PaddingValue
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
@@ -390,13 +362,6 @@ from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
-    OptionalStrutStyle,
-    OptionalTextBaseline,
-    OptionalTextDecoration,
-    OptionalTextDecorationStyle,
-    OptionalTextOverflow,
-    OptionalTextStyle,
-    OptionalTextThemeStyle,
     TextBaseline,
     TextDecoration,
     TextDecorationStyle,
@@ -452,9 +417,6 @@ from flet.controls.theme import (
 from flet.controls.transform import (
     Offset,
     OffsetValue,
-    OptionalOffsetValue,
-    OptionalRotateValue,
-    OptionalScaleValue,
     Rotate,
     RotateValue,
     Scale,
@@ -478,7 +440,6 @@ from flet.controls.types import (
     IconEnums,
     IconValue,
     IconValueOrControl,
-    ImageFit,
     ImageRepeat,
     LabelPosition,
     Locale,
@@ -487,12 +448,6 @@ from flet.controls.types import (
     MouseCursor,
     NotchShape,
     Number,
-    OptionalBool,
-    OptionalColorValue,
-    OptionalFloat,
-    OptionalInt,
-    OptionalNumber,
-    OptionalString,
     Orientation,
     PagePlatform,
     PointerDeviceType,
@@ -529,35 +484,22 @@ __all__ = [
     "AdaptiveControl",
     "Alignment",
     "Axis",
-    "OptionalAlignment",
-    "OptionalAxis",
     "Animation",
     "AnimationCurve",
     "AnimationStyle",
     "AnimationValue",
-    "OptionalAnimation",
-    "OptionalAnimationCurve",
-    "OptionalAnimationStyle",
-    "OptionalAnimationValue",
     "BaseControl",
     "control",
     "Blur",
     "BlurTileMode",
     "BlurValue",
-    "OptionalBlurTileMode",
-    "OptionalBlurValue",
     "Border",
     "BorderSide",
     "BorderStyle",
     "BorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
-    "OptionalBorder",
-    "OptionalBorderSide",
-    "OptionalBorderSideStrokeAlign",
-    "OptionalBorderSideStrokeAlignValue",
     "BorderRadius",
     "BorderRadiusValue",
-    "OptionalBorderRadiusValue",
     "BoxConstraints",
     "BoxDecoration",
     "BoxFit",
@@ -566,31 +508,18 @@ __all__ = [
     "ColorFilter",
     "DecorationImage",
     "FilterQuality",
-    "OptionalBoxConstraints",
-    "OptionalBoxDecoration",
-    "OptionalBoxFit",
-    "OptionalBoxShadow",
-    "OptionalBoxShape",
-    "OptionalColorFilter",
-    "OptionalDecorationImage",
-    "OptionalFilterQuality",
-    "OptionalBlurStyle",
-    "OptionalShadowValue",
     "BlurStyle",
     "ShadowValue",
     "BeveledRectangleBorder",
     "ButtonStyle",
     "CircleBorder",
     "ContinuousRectangleBorder",
-    "OptionalButtonStyle",
-    "OptionalOutlinedBorder",
     "OutlinedBorder",
     "RoundedRectangleBorder",
     "StadiumBorder",
     "Colors",
     "ConstrainedControl",
     "Control",
-    "OptionalControl",
     "ControlEvent",
     "ControlState",
     "ControlStateValue",
@@ -680,9 +609,6 @@ __all__ = [
     "DateTimeValue",
     "Duration",
     "DurationValue",
-    "OptionalDateTimeValue",
-    "OptionalDuration",
-    "OptionalDurationValue",
     "DragEndEvent",
     "DragStartEvent",
     "DragUpdateEvent",
@@ -706,7 +632,6 @@ __all__ = [
     "SweepGradient",
     "Margin",
     "MarginValue",
-    "OptionalMarginValue",
     "dropdown",
     "dropdownm2",
     "icons",
@@ -804,7 +729,6 @@ __all__ = [
     "TooltipTriggerMode",
     "VerticalDivider",
     "MultiView",
-    "OptionalPaddingValue",
     "Padding",
     "PaddingValue",
     "AppLifecycleStateChangeEvent",
@@ -845,13 +769,6 @@ __all__ = [
     "Size",
     "Rect",
     "TemplateRoute",
-    "OptionalStrutStyle",
-    "OptionalTextBaseline",
-    "OptionalTextDecoration",
-    "OptionalTextDecorationStyle",
-    "OptionalTextOverflow",
-    "OptionalTextStyle",
-    "OptionalTextThemeStyle",
     "TextBaseline",
     "TextDecoration",
     "TextDecorationStyle",
@@ -903,9 +820,6 @@ __all__ = [
     "TooltipTheme",
     "Offset",
     "OffsetValue",
-    "OptionalOffsetValue",
-    "OptionalRotateValue",
-    "OptionalScaleValue",
     "Rotate",
     "RotateValue",
     "Scale",
@@ -926,7 +840,6 @@ __all__ = [
     "IconEnums",
     "IconValue",
     "IconValueOrControl",
-    "ImageFit",
     "ImageRepeat",
     "LabelPosition",
     "Locale",
@@ -935,12 +848,6 @@ __all__ = [
     "MouseCursor",
     "NotchShape",
     "Number",
-    "OptionalBool",
-    "OptionalColorValue",
-    "OptionalFloat",
-    "OptionalInt",
-    "OptionalNumber",
-    "OptionalString",
     "Orientation",
     "PagePlatform",
     "PointerDeviceType",
@@ -966,11 +873,10 @@ __all__ = [
     "ScrollKey",
     "ValueKey",
     "Event",
-    "OptionalControlEventHandler",
     "ControlEventHandler",
     "EventHandler",
-    "OptionalEventHandler",
     "EventControlType",
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
+    "MergeSemantics",
 ]

@@ -6,8 +6,8 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     IconValue,
     IconValueOrControl,
@@ -125,7 +125,7 @@ class SegmentedButton(ConstrainedControl):
     to `Axis.HORIZONTAL`.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     Defines the button's size and padding. If specified, the button expands to fill its
     parent's space with this padding.
@@ -136,7 +136,7 @@ class SegmentedButton(ConstrainedControl):
     [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#paddingvalue).
     """
 
-    on_change: OptionalControlEventHandler["SegmentedButton"] = None
+    on_change: Optional[ControlEventHandler["SegmentedButton"]] = None
     """
     Fires when the selection changes.
     """

@@ -5,7 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import ClipBehavior, StrOrControl
 
 __all__ = ["MenuItemButton"]
@@ -28,15 +28,11 @@ class MenuItemButton(ConstrainedControl):
     close_on_click: bool = True
     """
     Defines if the menu will be closed when the `MenuItemButton` is clicked.
-
-    Defaults to `True`.
     """
 
     focus_on_hover: bool = True
     """
     Determine if hovering can request focus.
-
-    Defaults to `True`.
     """
 
     leading: Optional[Control] = None
@@ -57,8 +53,7 @@ class MenuItemButton(ConstrainedControl):
     """
     Whether to clip the content of this control or not.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
-    and defaults to `ClipBehavior.NONE`.
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
     style: Optional[ButtonStyle] = None
@@ -89,22 +84,22 @@ class MenuItemButton(ConstrainedControl):
     Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis).
     """
 
-    on_click: OptionalControlEventHandler["MenuItemButton"] = None
+    on_click: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
     Fired when the button is clicked.
     """
 
-    on_hover: OptionalControlEventHandler["MenuItemButton"] = None
+    on_hover: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
     Fired when the button is hovered.
     """
 
-    on_focus: OptionalControlEventHandler["MenuItemButton"] = None
+    on_focus: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
     Fired when the button receives focus.
     """
 
-    on_blur: OptionalControlEventHandler["MenuItemButton"] = None
+    on_blur: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
     Fired when this button loses focus.
     """

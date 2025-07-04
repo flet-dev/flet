@@ -5,13 +5,13 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import (
+    ControlEventHandler,
     Event,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
-    OptionalColorValue,
+    ColorValue,
     Orientation,
 )
 
@@ -103,18 +103,18 @@ class TimePicker(DialogControl):
     enum which has the following possible values: `PORTRAIT` and `LANDSCAPE`.
     """
 
-    barrier_color: OptionalColorValue = None
+    barrier_color: Optional[ColorValue] = None
     """
     TBD
     """
 
-    on_change: OptionalControlEventHandler["TimePicker"] = None
+    on_change: Optional[ControlEventHandler["TimePicker"]] = None
     """
     Fires when user clicks confirm button. `value` property is updated with selected
     time. `e.data` also contains the selected time.
     """
 
-    on_entry_mode_change: OptionalEventHandler[TimePickerEntryModeChangeEvent] = None
+    on_entry_mode_change: Optional[EventHandler[TimePickerEntryModeChangeEvent]] = None
     """
     Fires when the `time_picker_entry_mode` is changed.
 

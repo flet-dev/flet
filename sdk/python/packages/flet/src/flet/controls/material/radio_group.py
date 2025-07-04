@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 
 __all__ = ["RadioGroup"]
 
@@ -26,7 +26,7 @@ class RadioGroup(Control):
     Current value of the RadioGroup.
     """
 
-    on_change: OptionalControlEventHandler["RadioGroup"] = None
+    on_change: Optional[ControlEventHandler["RadioGroup"]] = None
     """
     Fires when the state of the RadioGroup is changed.
     """

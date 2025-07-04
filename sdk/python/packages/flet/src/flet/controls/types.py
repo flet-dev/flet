@@ -15,7 +15,7 @@ from flet.controls.cupertino.cupertino_icons import CupertinoIcons
 from flet.controls.material.icons import Icons
 
 if TYPE_CHECKING:
-    from flet.controls.control import Control
+    from flet.controls.control import Control  # noqa
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -82,13 +82,6 @@ class ResponsiveRowBreakpoint(Enum):
 
 Number = Union[int, float]
 ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
-OptionalNumber = Optional[Number]
-
-# literal type alias
-OptionalString = Optional[str]
-OptionalBool = Optional[bool]
-OptionalInt = Optional[int]
-OptionalFloat = Optional[float]
 
 
 class MainAxisAlignment(Enum):
@@ -181,17 +174,6 @@ class ClipBehavior(Enum):
     ANTI_ALIAS = "antiAlias"
     ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
     HARD_EDGE = "hardEdge"
-
-
-# todo: deprecate and remove in favor of BoxFit
-class ImageFit(Enum):
-    NONE = "none"
-    CONTAIN = "contain"
-    COVER = "cover"
-    FILL = "fill"
-    FIT_HEIGHT = "fitHeight"
-    FIT_WIDTH = "fitWidth"
-    SCALE_DOWN = "scaleDown"
 
 
 class ImageRepeat(Enum):
@@ -356,7 +338,6 @@ class LocaleConfiguration:
 # Colors
 ColorEnums = (Colors, CupertinoColors)
 ColorValue = Union[str, Colors, CupertinoColors]
-OptionalColorValue = Optional[ColorValue]
 
 # Icons
 IconEnums = (Icons, CupertinoIcons)

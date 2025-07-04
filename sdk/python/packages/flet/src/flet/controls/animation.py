@@ -2,17 +2,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
-from flet.controls.duration import OptionalDurationValue, DurationValue, Duration
+from flet.controls.duration import Duration, DurationValue
 
 __all__ = [
     "Animation",
     "AnimationCurve",
     "AnimationStyle",
     "AnimationValue",
-    "OptionalAnimation",
-    "OptionalAnimationCurve",
-    "OptionalAnimationStyle",
-    "OptionalAnimationValue",
 ]
 
 
@@ -76,37 +72,33 @@ class Animation:
 
 @dataclass
 class AnimationStyle:
-    duration: OptionalDurationValue = None
+    duration: Optional[DurationValue] = None
     """
     The duration of the animation.
 
     Value is of type [`DurationValue`](https://flet.dev/docs/reference/types/aliases#durationvalue).
     """
 
-    reverse_duration: OptionalDurationValue = None
+    reverse_duration: Optional[DurationValue] = None
     """
     The duration of the reverse animation.
 
     Value is of type [`DurationValue`](https://flet.dev/docs/reference/types/aliases#durationvalue).
     """
 
-    curve: "OptionalAnimationCurve" = None
+    curve: Optional[AnimationCurve] = None
     """
     The curve to use for the animation.
 
     Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve).
     """
 
-    reverse_curve: "OptionalAnimationCurve" = None
+    reverse_curve: Optional[AnimationCurve] = None
     """
     The curve to use for the reverse animation.
 
     Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve).
     """
-    
+
 
 AnimationValue = Union[bool, int, Animation]
-OptionalAnimationValue = Optional[AnimationValue]
-OptionalAnimationStyle = Optional[AnimationStyle]
-OptionalAnimation = Optional[Animation]
-OptionalAnimationCurve = Optional[AnimationCurve]

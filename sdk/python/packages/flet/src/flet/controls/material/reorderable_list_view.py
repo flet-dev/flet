@@ -1,19 +1,18 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+from flet import PaddingValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import (
     Event,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.core.list_view import ListView
-from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     ClipBehavior,
     MouseCursor,
     Number,
-    OptionalNumber,
 )
 
 
@@ -51,7 +50,7 @@ class ReorderableListView(ListView):
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
     """
 
-    item_extent: OptionalNumber = None
+    item_extent: Optional[Number] = None
     """
     If non-null, forces the children to have the given extent in the scroll direction.
 
@@ -67,7 +66,7 @@ class ReorderableListView(ListView):
     other items, i.e. their height or width will be the same as the first item.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the `controls`.
 
@@ -82,7 +81,7 @@ class ReorderableListView(ListView):
     [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
-    cache_extent: OptionalNumber = None
+    cache_extent: Optional[Number] = None
     """
     The viewport has an area before and after the visible area to cache items that are
     about to become visible when the user scrolls.
@@ -106,7 +105,7 @@ class ReorderableListView(ListView):
     The relative position of the zero scroll offset.
     """
 
-    auto_scroller_velocity_scalar: OptionalNumber = None
+    auto_scroller_velocity_scalar: Optional[Number] = None
     """
     The velocity scalar per pixel over scroll. It represents how the velocity scale
     with the over scroll distance. The auto-scroll velocity = (distance of overscroll)
@@ -145,13 +144,13 @@ class ReorderableListView(ListView):
     TBD
     """
 
-    on_reorder: OptionalEventHandler[OnReorderEvent] = None
+    on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
     Fires when a child control has been dragged to a new location in the list and the
     application should update the order of the items.
     """
 
-    on_reorder_start: OptionalEventHandler[OnReorderEvent] = None
+    on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
     Fires when an item drag has started.
 
@@ -159,7 +158,7 @@ class ReorderableListView(ListView):
     [`OnReorderEvent`](https://flet.dev/docs/reference/types/onreorderevent).
     """
 
-    on_reorder_end: OptionalEventHandler[OnReorderEvent] = None
+    on_reorder_end: Optional[EventHandler[OnReorderEvent]] = None
     """
     Fires when the dragged item is dropped.
     """

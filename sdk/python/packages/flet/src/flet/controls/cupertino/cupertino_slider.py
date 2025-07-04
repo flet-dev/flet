@@ -2,11 +2,10 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
+    ColorValue,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = ["CupertinoSlider"]
@@ -25,7 +24,7 @@ class CupertinoSlider(ConstrainedControl):
     setting changes.
     """
 
-    value: OptionalNumber = None
+    value: Optional[Number] = None
     """
     The currently selected value for this slider.
 
@@ -62,41 +61,41 @@ class CupertinoSlider(ConstrainedControl):
     TBD
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of the 
+    The [color](https://flet.dev/docs/reference/colors) to use for the portion of the
     slider track that is active.
 
-    The "active" side of the slider is the side between the thumb and the minimum 
+    The "active" side of the slider is the side between the thumb and the minimum
     value.
     """
 
-    thumb_color: OptionalColorValue = None
+    thumb_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the thumb.
     """
 
-    on_change: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_change: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
     Fires when the state of the Slider is changed.
     """
 
-    on_change_start: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_change_start: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
     Fires when the user starts selecting a new value for the slider.
     """
 
-    on_change_end: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_change_end: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
     Fires when the user is done selecting a new value for the slider.
     """
 
-    on_focus: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_focus: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_blur: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
     Fires when the control has lost focus.
     """

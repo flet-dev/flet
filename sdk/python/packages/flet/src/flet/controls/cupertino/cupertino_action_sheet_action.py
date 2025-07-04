@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import MouseCursor, StrOrControl
 
 __all__ = ["CupertinoActionSheetAction"]
@@ -36,7 +36,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
     TBD
     """
 
-    on_click: OptionalControlEventHandler["CupertinoActionSheetAction"] = None
+    on_click: Optional[ControlEventHandler["CupertinoActionSheetAction"]] = None
     """
     Fires when this action button is clicked.
     """

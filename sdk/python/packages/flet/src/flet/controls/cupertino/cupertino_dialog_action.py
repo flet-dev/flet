@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import StrOrControl
 
@@ -22,13 +22,13 @@ class CupertinoDialogAction(Control):
 
     default: bool = False
     """
-    If set to True, the button will have bold text. More than one action can have 
+    If set to True, the button will have bold text. More than one action can have
     this property set to True in CupertinoAlertDialog.
     """
 
     destructive: bool = False
     """
-    If set to True, the button's text color will be red. Use it for actions that 
+    If set to True, the button's text color will be red. Use it for actions that
     destroy objects, such as an delete that deletes an email etc.
     """
 
@@ -37,7 +37,7 @@ class CupertinoDialogAction(Control):
     The text style to use for text on the button.
     """
 
-    on_click: OptionalControlEventHandler["CupertinoDialogAction"] = None
+    on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None
     """
     Fires when a user clicks the button.
     """

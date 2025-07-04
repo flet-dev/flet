@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -11,8 +11,7 @@ from flet.controls.types import (
     IconValue,
     LabelPosition,
     MouseCursor,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     StrOrControl,
 )
 
@@ -60,13 +59,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
     the page will get focus.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use when this switch
     is on.
     """
 
-    active_track_color: OptionalColorValue = None
+    active_track_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use on the track when
     this switch is on.
@@ -75,13 +74,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
     be used instead of this color.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use for the focus
     highlight for keyboard interactions.
     """
 
-    inactive_thumb_color: OptionalColorValue = None
+    inactive_thumb_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use on the thumb when
     this switch is off.
@@ -93,7 +92,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     used instead of this color.
     """
 
-    inactive_track_color: OptionalColorValue = None
+    inactive_track_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use on the track when
     this switch is off.
@@ -150,13 +149,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
     [here](https://flet.dev/docs/controls/cupertinoswitch#cupertinoswitch-and-adaptive-switch).
     """
 
-    hover_color: OptionalColorValue = None
+    hover_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to be used when it is
     being hovered over by the mouse pointer.
     """
 
-    splash_radius: OptionalNumber = None
+    splash_radius: Optional[Number] = None
     """
     The radius of the splash effect when the switch is pressed.
     """
@@ -183,7 +182,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     `DEFAULT` (fallback).
     """
 
-    track_outline_width: Optional[ControlStateValue[OptionalNumber]] = None
+    track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The outline width of this switch's track in all or specific
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
@@ -201,12 +200,12 @@ class Switch(ConstrainedControl, AdaptiveControl):
     [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor) enum.
     """
 
-    on_change: OptionalControlEventHandler["Switch"] = None
+    on_change: Optional[ControlEventHandler["Switch"]] = None
     """
     Fires when the state of the Switch is changed.
     """
 
-    on_focus: OptionalControlEventHandler["Switch"] = None
+    on_focus: Optional[ControlEventHandler["Switch"]] = None
     """
     Fires when the control has received focus.
 
@@ -214,7 +213,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     [`OnFocusEvent`](https://flet.dev/docs/reference/types/onfocusevent).
     """
 
-    on_blur: OptionalControlEventHandler["Switch"] = None
+    on_blur: Optional[ControlEventHandler["Switch"]] = None
     """
     Fires when the control has lost focus.
     """

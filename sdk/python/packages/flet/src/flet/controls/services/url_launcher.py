@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
@@ -17,7 +17,6 @@ class UrlLauncher(Service):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
-
         await self._invoke_method_async(
             "launch_url",
             {

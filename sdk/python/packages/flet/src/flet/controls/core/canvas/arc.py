@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
 
 
 @control("Arc")
@@ -22,32 +22,32 @@ class Arc(Shape):
     https://api.flutter.dev/flutter/dart-ui/Canvas/drawArc.html
     """
 
-    x: OptionalNumber = None
+    x: Optional[Number] = None
     """
     The x-axis coordinate of the arc's top left point.
     """
 
-    y: OptionalNumber = None
+    y: Optional[Number] = None
     """
     The y-axis coordinate of the arc's top left point.
     """
 
-    width: OptionalNumber = None
+    width: Optional[Number] = None
     """
     Width of the rectangle containing the arc's oval.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     Height of the rectangle containing the arc's oval.
     """
 
-    start_angle: OptionalNumber = None
+    start_angle: Optional[Number] = None
     """
     Starting angle in radians to draw arc from.
     """
 
-    sweep_angle: OptionalNumber = None
+    sweep_angle: Optional[Number] = None
     """
     The length of the arc in radians.
     """

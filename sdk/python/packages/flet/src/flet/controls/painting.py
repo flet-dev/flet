@@ -8,9 +8,8 @@ from flet.controls.gradients import GradientTileMode
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
     BlendMode,
+    ColorValue,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     StrokeCap,
     StrokeJoin,
 )
@@ -197,7 +196,7 @@ class PaintSweepGradient(PaintGradient):
     math.pi * 2.
     """
 
-    rotation: OptionalNumber = None
+    rotation: Optional[Number] = None
     """
     The rotation of the gradient in https://en.wikipedia.org/wiki/Radian, around the
     center-point of its bounding box.
@@ -213,7 +212,7 @@ class Paint:
     A description of the style to use when drawing a shape on the canvas.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     The https://flet.dev/docs/reference/colors to use when stroking or filling a shape.
     Defaults to opaque black.
@@ -260,12 +259,12 @@ class Paint:
     TBD
     """
 
-    stroke_miter_limit: OptionalNumber = None
+    stroke_miter_limit: Optional[Number] = None
     """
     TBD
     """
 
-    stroke_width: OptionalNumber = None
+    stroke_width: Optional[Number] = None
     """
     TBD
     """

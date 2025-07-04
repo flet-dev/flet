@@ -3,7 +3,7 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, OptionalControl
+from flet.controls.control import Control
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
@@ -11,7 +11,7 @@ from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.transform import OffsetValue
-from flet.controls.types import FloatingActionButtonLocation, OptionalColorValue
+from flet.controls.types import ColorValue, FloatingActionButtonLocation
 
 __all__ = ["Pagelet"]
 
@@ -59,7 +59,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     properties are provided, `NavigationBar` will be displayed.
     """
 
-    bottom_sheet: OptionalControl = None
+    bottom_sheet: Optional[Control] = None
     """
     The persistent bottom sheet to show information that supplements the primary
     content of the Pagelet. Can be any control.
@@ -94,7 +94,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     Defaults to `FloatingActionButtonLocation.END_FLOAT`.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Background [color](https://flet.dev/docs/reference/colors) of the Pagelet.
     """

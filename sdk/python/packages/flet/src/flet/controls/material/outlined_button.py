@@ -6,11 +6,11 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
+    ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
     StrOrControl,
     UrlTarget,
 )
@@ -36,14 +36,14 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     Icon shown in the button.
     """
 
-    icon_color: OptionalColorValue = None
+    icon_color: Optional[ColorValue] = None
     """
     Icon [color](https://flet.dev/docs/reference/colors).
     """
 
     style: Optional[ButtonStyle] = None
     """
-    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle) 
+    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle)
     class.
     """
 
@@ -59,7 +59,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) 
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
     and defaults to `ClipBehavior.NONE`.
     """
 
@@ -74,21 +74,21 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and 
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and
     defaults to `UrlTarget.BLANK`.
     """
 
-    on_click: OptionalControlEventHandler["OutlinedButton"] = None
+    on_click: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_long_press: OptionalControlEventHandler["OutlinedButton"] = None
+    on_long_press: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
     Fires when the button is long-pressed.
     """
 
-    on_hover: OptionalControlEventHandler["OutlinedButton"] = None
+    on_hover: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
     Fires when a mouse pointer enters or exists the button response area.
 
@@ -96,12 +96,12 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     `false` when it exits.
     """
 
-    on_focus: OptionalControlEventHandler["OutlinedButton"] = None
+    on_focus: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["OutlinedButton"] = None
+    on_blur: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
     Fires when the control has lost focus.
     """

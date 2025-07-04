@@ -4,17 +4,15 @@ from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
 from flet.controls.border import Border
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
 from flet.controls.gradients import Gradient
 from flet.controls.transform import Offset, OffsetValue
 from flet.controls.types import (
     BlendMode,
     ColorValue,
-    ImageFit,
     ImageRepeat,
     Number,
-    OptionalColorValue,
 )
 
 __all__ = [
@@ -28,16 +26,6 @@ __all__ = [
     "BoxConstraints",
     "BoxFit",
     "ShadowValue",
-    "OptionalShadowValue",
-    "OptionalBoxDecoration",
-    "OptionalBoxShadow",
-    "OptionalDecorationImage",
-    "OptionalColorFilter",
-    "OptionalFilterQuality",
-    "OptionalBlurStyle",
-    "OptionalBoxShape",
-    "OptionalBoxConstraints",
-    "OptionalBoxFit",
 ]
 
 
@@ -48,7 +36,7 @@ class ColorFilter:
     [`Container.color_filter`](https://flet.dev/docs/controls/container#color_filter).
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use when applying the filter.
     """
@@ -78,14 +66,14 @@ class FilterQuality(Enum):
 
     MEDIUM = "medium"
     """
-    The best all around filtering method that is only worse than high at extremely 
+    The best all around filtering method that is only worse than high at extremely
     large scale factors.
     """
 
     HIGH = "high"
     """
     Best possible quality when scaling up images by scale factors larger than 5-10x.
-    When images are scaled down, this can be worse than medium for scales smaller than 
+    When images are scaled down, this can be worse than medium for scales smaller than
     0.5x, or when animating the scale factor.
     This option is also the slowest.
     """
@@ -132,7 +120,6 @@ class BoxShadow:
 
 
 ShadowValue = Union[BoxShadow, list[BoxShadow]]
-OptionalShadowValue = Union[BoxShadow, list[BoxShadow]]
 
 
 class BoxShape(Enum):
@@ -178,11 +165,11 @@ class DecorationImage:
     Value is of type [`ColorFilter`](https://flet.dev/docs/reference/types/colorfilter).
     """
 
-    fit: Optional[ImageFit] = None
+    fit: Optional[BoxFit] = None
     """
     How the image should be inscribed into the box.
 
-    Value is of type [`ImageFit`](https://flet.dev/docs/reference/types/imagefit).
+    Value is of type [`BoxFit`](https://flet.dev/docs/reference/types/imagefit).
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.center())
@@ -239,9 +226,9 @@ class BoxDecoration:
     The box has a border, a body, and may cast a shadow.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to fill in the background of 
+    The [color](https://flet.dev/docs/reference/colors) to fill in the background of
     the box.
     """
 
@@ -259,7 +246,7 @@ class BoxDecoration:
     Value is of type [`Border`](https://flet.dev/docs/reference/types/border).
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of the box.
 
@@ -280,7 +267,7 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the `bgcolor`, `gradient`, and `image` into and to cast as the 
+    The shape to fill the `bgcolor`, `gradient`, and `image` into and to cast as the
     `shadow`.
     """
 
@@ -292,16 +279,24 @@ class BoxDecoration:
     """
 
     def __post_init__(self):
-        assert self.blend_mode is None or self.bgcolor is not None or self.gradient is not None, "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
-        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), "border_radius must be None when shape is BoxShape.CIRCLE"
+        assert (
+            self.blend_mode is None
+            or self.bgcolor is not None
+            or self.gradient is not None
+        ), (
+            "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
+        )
+        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), (
+            "border_radius must be None when shape is BoxShape.CIRCLE"
+        )
 
     def copy_with(
         self,
         *,
-        bgcolor: OptionalColorValue = None,
+        bgcolor: Optional[ColorValue] = None,
         image: Optional[DecorationImage] = None,
         border: Optional[Border] = None,
-        border_radius: OptionalBorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         shadow: Optional[ShadowValue] = None,
         gradient: Optional[Gradient] = None,
         shape: Optional[BoxShape] = None,
@@ -378,15 +373,3 @@ class BoxConstraints:
             "min_height and max_height must be between 0 and infinity "
             "and min_height must be less than or equal to max_height"
         )
-
-
-# typing
-OptionalBoxDecoration = Optional[BoxDecoration]
-OptionalBoxShadow = Optional[BoxShadow]
-OptionalDecorationImage = Optional[DecorationImage]
-OptionalColorFilter = Optional[ColorFilter]
-OptionalFilterQuality = Optional[FilterQuality]
-OptionalBlurStyle = Optional[BlurStyle]
-OptionalBoxShape = Optional[BoxShape]
-OptionalBoxConstraints = Optional[BoxConstraints]
-OptionalBoxFit = Optional[BoxFit]

@@ -5,17 +5,17 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import (
+    ControlEventHandler,
     Event,
     EventControlType,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
+    ColorValue,
     FontWeight,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     TextAlign,
 )
 
@@ -35,12 +35,12 @@ class TextAffinity(Enum):
 
     UPSTREAM = "upstream"
     """
-    The position has affinity for the downstream side of the text position, i.e. in the 
+    The position has affinity for the downstream side of the text position, i.e. in the
     direction of the end of the string.
     """
     DOWNSTREAM = "downstream"
     """
-    The position has affinity for the upstream side of the text position, i.e. in the 
+    The position has affinity for the upstream side of the text position, i.e. in the
     direction of the beginning of the string.
     """
 
@@ -205,11 +205,11 @@ class Text(ConstrainedControl):
     instructions on how to import and use custom fonts in your application.
     """
 
-    size: OptionalNumber = None
+    size: Optional[Number] = None
     """
     Text size in virtual pixels.
 
-    Value is of type `OptionalNumber` and defaults to `14`.
+    Defaults to `14`.
     """
 
     weight: Optional[FontWeight] = None
@@ -277,12 +277,12 @@ class Text(ConstrainedControl):
     Value is of type `bool` and defaults to `False`.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     Text foreground [color](https://flet.dev/docs/reference/colors).
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Text background [color](https://flet.dev/docs/reference/colors).
     """
@@ -313,27 +313,27 @@ class Text(ConstrainedControl):
     TBD
     """
 
-    selection_cursor_width: OptionalNumber = None
+    selection_cursor_width: Optional[Number] = None
     """
     TBD
     """
 
-    selection_cursor_height: OptionalNumber = None
+    selection_cursor_height: Optional[Number] = None
     """
     TBD
     """
 
-    selection_cursor_color: OptionalColorValue = None
+    selection_cursor_color: Optional[ColorValue] = None
     """
     TBD
     """
 
-    on_tap: OptionalControlEventHandler["Text"] = None
+    on_tap: Optional[ControlEventHandler["Text"]] = None
     """
     TBD
     """
 
-    on_selection_change: OptionalEventHandler[TextSelectionChangeEvent["Text"]] = None
+    on_selection_change: Optional[EventHandler[TextSelectionChangeEvent["Text"]]] = None
     """
     TBD
     """

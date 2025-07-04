@@ -5,14 +5,14 @@ from flet.controls.border_radius import (
     BorderRadius,
 )
 from flet.controls.box import BoxDecoration
-from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
-from flet.controls.margin import OptionalMarginValue
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.duration import Duration, DurationValue
+from flet.controls.margin import MarginValue
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    ColorValue,
     MouseCursor,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     TextAlign,
 )
 
@@ -60,17 +60,17 @@ class Tooltip:
     will produce a short vibration, when feedback is enabled.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     The height of the tooltip's content.
     """
 
-    vertical_offset: OptionalNumber = None
+    vertical_offset: Optional[Number] = None
     """
     The vertical gap between the control and the displayed tooltip.
     """
 
-    margin: OptionalMarginValue = None
+    margin: Optional[MarginValue] = None
     """
     The empty space that surrounds the tooltip.
 
@@ -78,7 +78,7 @@ class Tooltip:
     or a number.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the tooltip's content.
 
@@ -89,7 +89,7 @@ class Tooltip:
     On desktop, defaults to `8.0` logical pixels horizontally and `4.0` vertically.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Background [color](https://flet.dev/docs/reference/colors) of the tooltip.
     """
@@ -118,7 +118,7 @@ class Tooltip:
     Defaults to `True`.
     """
 
-    show_duration: OptionalDurationValue = None
+    show_duration: Optional[DurationValue] = None
     """
     The length of time, in milliseconds, that the tooltip will be shown after a
     long press is released or a tap is released or mouse pointer exits the control.
@@ -134,7 +134,7 @@ class Tooltip:
     Defaults to 800 milliseconds.
     """
 
-    exit_duration: OptionalDurationValue = None
+    exit_duration: Optional[DurationValue] = None
     """
     The length of time, in milliseconds, that the tooltip will be shown after a
     long press is released or a tap is released or mouse pointer exits the control.

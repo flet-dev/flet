@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.core.canvas.path import Path
 from flet.controls.core.canvas.shape import Shape
-from flet.controls.types import OptionalColorValue, OptionalNumber
+from flet.controls.types import ColorValue, Number
 
 
 @control("Shadow")
@@ -20,12 +20,12 @@ class Shadow(Shape):
     The list of `Path.PathElement` objects describing the path.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     Shadow [color](https://flet.dev/docs/reference/colors).
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     Shadow elevation.
     """

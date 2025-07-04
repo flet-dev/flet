@@ -5,15 +5,14 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
     MouseCursor,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     StrOrControl,
     VisualDensity,
 )
@@ -42,7 +41,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     """
     Defines on which side of the checkbox the `label` should be shown.
 
-    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition) 
+    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition)
     and defaults to `LabelPosition.RIGHT`.
     """
 
@@ -60,64 +59,64 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than 
-    one control on a page with autofocus set, then the first one added to the page will 
+    True if the control will be selected as the initial focus. If there is more than
+    one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the checkbox in 
+    The [color](https://flet.dev/docs/reference/colors) that fills the checkbox in
     various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the checkbox's overlay in 
+    The [color](https://flet.dev/docs/reference/colors) of the checkbox's overlay in
     various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
 
-    This property supports the following `ControlState` values: `PRESSED`, `SELECTED`, 
+    This property supports the following `ControlState` values: `PRESSED`, `SELECTED`,
     `HOVERED` and `FOCUSED`.
     """
 
-    check_color: OptionalColorValue = None
+    check_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the check icon when 
+    The [color](https://flet.dev/docs/reference/colors) to use for the check icon when
     this checkbox is checked.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is 
+    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is
     checked.
     """
 
-    hover_color: OptionalColorValue = None
+    hover_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is 
+    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is
     hovered.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
     TBD
     """
 
     semantics_label: Optional[str] = None
     """
-    The semantic label for the checkbox that is not shown in the UI, but will be 
+    The semantic label for the checkbox that is not shown in the UI, but will be
     announced by screen readers in accessibility modes (e.g TalkBack/VoiceOver).
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    The shape of the checkbox. The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) 
+    The shape of the checkbox. The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
     class.
 
     Defaults to `RoundedRectangleBorder(radius=2)`.
     """
 
-    splash_radius: OptionalNumber = None
+    splash_radius: Optional[Number] = None
     """
     The radius of the circular Material ink response (ripple) in logical pixels.
 
@@ -131,7 +130,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     is_error: bool = False
     """
-    Whether this checkbox wants to show an error state. When `True` this checkbox will 
+    Whether this checkbox wants to show an error state. When `True` this checkbox will
     have a different default container color and check color.
 
     Defaults to `False`.
@@ -144,23 +143,23 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this 
+    The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_change: OptionalControlEventHandler["Checkbox"] = None
+    on_change: Optional[ControlEventHandler["Checkbox"]] = None
     """
     Fires when the state of the Checkbox is changed.
     """
 
-    on_focus: OptionalControlEventHandler["Checkbox"] = None
+    on_focus: Optional[ControlEventHandler["Checkbox"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["Checkbox"] = None
+    on_blur: Optional[ControlEventHandler["Checkbox"]] = None
     """
     Fires when the control has lost focus.
     """

@@ -4,7 +4,7 @@ from typing import Optional
 
 from flet.controls.box import ShadowValue
 from flet.controls.painting import Paint
-from flet.controls.types import FontWeight, OptionalColorValue, OptionalNumber
+from flet.controls.types import ColorValue, FontWeight, Number
 
 __all__ = [
     "TextOverflow",
@@ -14,13 +14,6 @@ __all__ = [
     "TextDecorationStyle",
     "TextStyle",
     "StrutStyle",
-    "OptionalTextStyle",
-    "OptionalStrutStyle",
-    "OptionalTextOverflow",
-    "OptionalTextBaseline",
-    "OptionalTextThemeStyle",
-    "OptionalTextDecoration",
-    "OptionalTextDecorationStyle",
 ]
 
 
@@ -117,14 +110,14 @@ class TextStyle:
     A style describing how to format and paint text. It has the following properties:
     """
 
-    size: OptionalNumber = None
+    size: Optional[Number] = None
     """
     The size of glyphs (in logical pixels) to use when painting the text.
 
     Defaults to `14`.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     The height of this text span, as a multiple of the font size.
 
@@ -150,18 +143,18 @@ class TextStyle:
     Value is of type https://flet.dev/docs/reference/types/textdecoration.
     """
 
-    decoration_color: OptionalColorValue = None
+    decoration_color: Optional[ColorValue] = None
     """
     The https://flet.dev/docs/reference/colors in which to paint the text decorations.
     """
 
-    decoration_thickness: OptionalNumber = None
+    decoration_thickness: Optional[Number] = None
     """
     The thickness of the decoration stroke as a multiplier of the thickness defined by
     the font.
     """
 
-    decoration_style: "OptionalTextDecorationStyle" = None
+    decoration_style: Optional[TextDecorationStyle] = None
     """
     The style in which to paint the text decorations (e.g., dashed).
 
@@ -174,12 +167,12 @@ class TextStyle:
     See https://flet.dev/docs/controls/text#font_family.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     Text foreground https://flet.dev/docs/reference/colors.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Text background https://flet.dev/docs/reference/colors.
     """
@@ -197,13 +190,13 @@ class TextStyle:
     Value is of type https://flet.dev/docs/reference/types/paint.
     """
 
-    letter_spacing: OptionalNumber = None
+    letter_spacing: Optional[Number] = None
     """
     The amount of space (in logical pixels) to add between each letter. A negative
     value can be used to bring the letters closer.
     """
 
-    word_spacing: OptionalNumber = None
+    word_spacing: Optional[Number] = None
     """
     The amount of space (in logical pixels) to add at each sequence of white-space
     (i.e. between each word). A negative value can be used to bring the words closer.
@@ -227,23 +220,23 @@ class TextStyle:
     def copy_with(
         self,
         *,
-        size: OptionalNumber = None,
-        height: OptionalNumber = None,
+        size: Optional[Number] = None,
+        height: Optional[Number] = None,
         weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
         decoration: Optional[TextDecoration] = None,
-        decoration_color: OptionalColorValue = None,
-        decoration_thickness: OptionalNumber = None,
+        decoration_color: Optional[ColorValue] = None,
+        decoration_thickness: Optional[Number] = None,
         decoration_style: Optional[TextDecorationStyle] = None,
         font_family: Optional[str] = None,
-        color: OptionalColorValue = None,
-        bgcolor: OptionalColorValue = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         shadow: Optional[ShadowValue] = None,
         foreground: Optional[Paint] = None,
-        letter_spacing: OptionalNumber = None,
-        word_spacing: OptionalNumber = None,
+        letter_spacing: Optional[Number] = None,
+        word_spacing: Optional[Number] = None,
         overflow: Optional[TextOverflow] = None,
-        baseline: Optional[TextBaseline] = None
+        baseline: Optional[TextBaseline] = None,
     ):
         return TextStyle(
             size=size if size is not None else self.size,
@@ -251,16 +244,26 @@ class TextStyle:
             weight=weight if weight is not None else self.weight,
             italic=italic if italic is not None else self.italic,
             decoration=decoration if decoration is not None else self.decoration,
-            decoration_color=decoration_color if decoration_color is not None else self.decoration_color,
-            decoration_thickness=decoration_thickness if decoration_thickness is not None else self.decoration_thickness,
-            decoration_style=decoration_style if decoration_style is not None else self.decoration_style,
+            decoration_color=decoration_color
+            if decoration_color is not None
+            else self.decoration_color,
+            decoration_thickness=decoration_thickness
+            if decoration_thickness is not None
+            else self.decoration_thickness,
+            decoration_style=decoration_style
+            if decoration_style is not None
+            else self.decoration_style,
             font_family=font_family if font_family is not None else self.font_family,
             color=color if color is not None else self.color,
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
             shadow=shadow if shadow is not None else self.shadow,
             foreground=foreground if foreground is not None else self.foreground,
-            letter_spacing=letter_spacing if letter_spacing is not None else self.letter_spacing,
-            word_spacing=word_spacing if word_spacing is not None else self.word_spacing,
+            letter_spacing=letter_spacing
+            if letter_spacing is not None
+            else self.letter_spacing,
+            word_spacing=word_spacing
+            if word_spacing is not None
+            else self.word_spacing,
             overflow=overflow if overflow is not None else self.overflow,
             baseline=baseline if baseline is not None else self.baseline,
         )
@@ -272,14 +275,14 @@ class StrutStyle:
     TBD
     """
 
-    size: OptionalNumber = None
+    size: Optional[Number] = None
     """
     The size of text (in logical pixels) to use when getting metrics from the font.
 
     Defaults to `14`.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     The minimum height of the strut, as a multiple of `size`.
 
@@ -307,7 +310,7 @@ class StrutStyle:
     See https://flet.dev/docs/controls/text#font_family.
     """
 
-    leading: OptionalNumber = None
+    leading: Optional[Number] = None
     """
     The amount of additional space to place between lines when rendering text.
 
@@ -320,13 +323,3 @@ class StrutStyle:
 
     Defaults to `False`.
     """
-
-
-# Typing
-OptionalTextStyle = Optional[TextStyle]
-OptionalStrutStyle = Optional[StrutStyle]
-OptionalTextOverflow = Optional[TextOverflow]
-OptionalTextBaseline = Optional[TextBaseline]
-OptionalTextThemeStyle = Optional[TextThemeStyle]
-OptionalTextDecoration = Optional[TextDecoration]
-OptionalTextDecorationStyle = Optional[TextDecorationStyle]

@@ -5,13 +5,13 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
 )
 
 __all__ = [
@@ -46,7 +46,7 @@ class NavigationDrawerDestination(Control):
     icon=ft.Icon(ft.Icons.BOOKMARK)
     ```
 
-    If `selected_icon` is provided, this will only be displayed when the destination is 
+    If `selected_icon` is provided, this will only be displayed when the destination is
     not selected.
     """
 
@@ -64,11 +64,11 @@ class NavigationDrawerDestination(Control):
     selected_icon=ft.Icon(ft.Icons.BOOKMARK)
     ```
 
-    If this icon is not provided, the NavigationDrawer will display `icon` in either 
+    If this icon is not provided, the NavigationDrawer will display `icon` in either
     state.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this destination.
     """
@@ -106,17 +106,17 @@ class NavigationDrawer(DialogControl):
     unselected.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the navigation drawer itself.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     The elevation of the navigation drawer itself.
     """
 
-    indicator_color: OptionalColorValue = None
+    indicator_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the selected destination
     indicator.
@@ -130,18 +130,18 @@ class NavigationDrawer(DialogControl):
     [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
-    shadow_color: OptionalColorValue = None
+    shadow_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) used for the drop shadow to
     indicate `elevation`.
     """
 
-    surface_tint_color: OptionalColorValue = None
+    surface_tint_color: Optional[ColorValue] = None
     """
     The surface tint of the Material that holds the NavigationDrawer's contents.
     """
 
-    tile_padding: OptionalPaddingValue = None
+    tile_padding: Optional[PaddingValue] = None
     """
     Defines the padding for `NavigationDrawerDestination` controls.
     """
@@ -155,7 +155,7 @@ class NavigationDrawer(DialogControl):
     and defaults to `NavigationDrawerPosition.START`.
     """
 
-    on_change: OptionalControlEventHandler["NavigationDrawer"] = None
+    on_change: Optional[ControlEventHandler["NavigationDrawer"]] = None
     """
     Fires when selected destination changed.
     """

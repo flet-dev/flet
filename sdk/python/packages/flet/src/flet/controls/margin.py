@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Union
 
 from flet.controls.types import Number
 from flet.utils import deprecated
 
-__all__ = ["Margin", "MarginValue", "OptionalMarginValue", "all", "symmetric", "only"]
+__all__ = ["Margin", "MarginValue", "all", "symmetric", "only"]
 
 
 @dataclass
@@ -91,4 +91,3 @@ def only(
 
 
 MarginValue = Union[Number, Margin]
-OptionalMarginValue = Optional[MarginValue]

@@ -6,8 +6,8 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalEventHandler
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.control_event import EventHandler
+from flet.controls.duration import DurationValue
 from flet.controls.events import (
     ScaleEndEvent,
     ScaleStartEvent,
@@ -64,7 +64,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     interaction_end_friction_coefficient: Number = 0.0000135
     """
-    Changes the deceleration behavior after a gesture. 
+    Changes the deceleration behavior after a gesture.
     Must be greater than `0`.
     """
 
@@ -102,9 +102,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     The interval (in milliseconds) at which the `on_interaction_update` event is fired.
     """
 
-    on_interaction_start: OptionalEventHandler[ScaleStartEvent["InteractiveViewer"]] = (
-        None
-    )
+    on_interaction_start: Optional[
+        EventHandler[ScaleStartEvent["InteractiveViewer"]]
+    ] = None
     """
     Fires when the user begins a pan or scale gesture.
 
@@ -112,8 +112,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     [`ScaleStartEvent`](https://flet.dev/docs/reference/types/scalestartevent).
     """
 
-    on_interaction_update: OptionalEventHandler[
-        ScaleUpdateEvent["InteractiveViewer"]
+    on_interaction_update: Optional[
+        EventHandler[ScaleUpdateEvent["InteractiveViewer"]]
     ] = None
     """
     Fires when the user updates a pan or scale gesture.
@@ -122,7 +122,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     [`ScaleUpdateEvent`](https://flet.dev/docs/reference/types/scaleupdateevent).
     """
 
-    on_interaction_end: OptionalEventHandler[ScaleEndEvent["InteractiveViewer"]] = None
+    on_interaction_end: Optional[EventHandler[ScaleEndEvent["InteractiveViewer"]]] = (
+        None
+    )
     """
     Fires when the user ends a pan or scale gesture.
 
@@ -135,18 +137,18 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         assert self.content.visible, "content must be visible"
         assert self.min_scale > 0, "min_scale must be greater than 0"
         assert self.max_scale > 0, "max_scale must be greater than 0"
-        assert (
-            self.max_scale >= self.min_scale
-        ), "max_scale must be greather than or equal to min_scale"
+        assert self.max_scale >= self.min_scale, (
+            "max_scale must be greather than or equal to min_scale"
+        )
         assert (
             self.interaction_end_friction_coefficient is None
             or self.interaction_end_friction_coefficient > 0
         ), "interaction_end_friction_coefficient must be greater than 0"
 
-    def reset(self, animation_duration: OptionalDurationValue = None):
+    def reset(self, animation_duration: Optional[DurationValue] = None):
         asyncio.create_task(self.reset_async(animation_duration))
 
-    async def reset_async(self, animation_duration: OptionalDurationValue = None):
+    async def reset_async(self, animation_duration: Optional[DurationValue] = None):
         await self._invoke_method_async(
             "reset", arguments={"animation_duration": animation_duration}
         )

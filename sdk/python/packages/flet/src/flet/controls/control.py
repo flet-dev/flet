@@ -6,7 +6,7 @@ from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
 from flet.controls.types import Number, ResponsiveNumber
 
-__all__ = ["Control", "OptionalControl"]
+__all__ = ["Control"]
 
 
 @dataclass(kw_only=True)
@@ -17,20 +17,20 @@ class Control(BaseControl):
 
     expand: Optional[Union[bool, int]] = None
     """
-    When a child Control is placed into a [`Column`](https://flet.dev/docs/controls/column) 
-    or a [`Row`](https://flet.dev/docs/controls/row) you can "expand" it to fill the 
-    available space. 
-    `expand` property could be a boolean value (`True` - expand control to fill all 
-    available space) or an integer - an "expand factor" specifying how to divide a free 
+    When a child Control is placed into a [`Column`](https://flet.dev/docs/controls/column)
+    or a [`Row`](https://flet.dev/docs/controls/row) you can "expand" it to fill the
+    available space.
+    `expand` property could be a boolean value (`True` - expand control to fill all
+    available space) or an integer - an "expand factor" specifying how to divide a free
     space with other expanded child controls.
 
-    For more information and examples about `expand` property see "Expanding children" 
-    sections in [`Column`](https://flet.dev/docs/controls/column#expanding-children) or 
+    For more information and examples about `expand` property see "Expanding children"
+    sections in [`Column`](https://flet.dev/docs/controls/column#expanding-children) or
     [`Row`](https://flet.dev/docs/controls/row#expanding-children).
 
     /// details | Example
         type: example
-    Here is an example of expand being used in action for both [`Column`](https://flet.dev/docs/controls/column) 
+    Here is an example of expand being used in action for both [`Column`](https://flet.dev/docs/controls/column)
     and [`Row`](https://flet.dev/docs/controls/row):
 
     ```python
@@ -75,12 +75,12 @@ class Control(BaseControl):
 
     expand_loose: Optional[bool] = None
     """
-    Effective only if `expand` is `True`. 
+    Effective only if `expand` is `True`.
 
-    If `expand_loose` is `True`, the child control of a 
-    [`Column`](https://flet.dev/docs/controls/column) or a [`Row`](https://flet.dev/docs/controls/row) 
-    will be given the flexibility to expand to fill the available space in the main 
-    axis (e.g., horizontally for a Row or vertically for a Column), but will not be 
+    If `expand_loose` is `True`, the child control of a
+    [`Column`](https://flet.dev/docs/controls/column) or a [`Row`](https://flet.dev/docs/controls/row)
+    will be given the flexibility to expand to fill the available space in the main
+    axis (e.g., horizontally for a Row or vertically for a Column), but will not be
     required to fill the available space.
 
     The default value is `False`.
@@ -137,10 +137,10 @@ class Control(BaseControl):
                     controls=[
                         Message(
                             author="John",
-                            body="Lorem Ipsum is simply dummy text of the printing and 
-                            typesetting industry. Lorem Ipsum has been the industry's 
-                            standard dummy text ever since the 1500s, when an unknown 
-                            printer took a galley of type and scrambled it to make a 
+                            body="Lorem Ipsum is simply dummy text of the printing and
+                            typesetting industry. Lorem Ipsum has been the industry's
+                            standard dummy text ever since the 1500s, when an unknown
+                            printer took a galley of type and scrambled it to make a
                             type specimen book.",
                         ),
                     ],
@@ -165,8 +165,8 @@ class Control(BaseControl):
 
 
     ft.run(main)
-    ``` 
-    
+    ```
+
     ![expand_loose](../../../assets/controls/control/expand-loose.png){width="65%"}
     /// caption
     ///
@@ -175,10 +175,10 @@ class Control(BaseControl):
 
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     """
-    If a parent of the control is ResponsiveRow, `col` property is used to determine 
-    how many virtual columns of a screen the control will span. 
-    
-    Can be a number or a dictionary configured to have a different value for specific 
+    If a parent of the control is ResponsiveRow, `col` property is used to determine
+    how many virtual columns of a screen the control will span.
+
+    Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`. Breakpoints are named dimension ranges:
 
     | Breakpoint | Dimension |
@@ -197,43 +197,43 @@ class Control(BaseControl):
     """
     Defines the transparency of the control.
 
-    Value ranges from `0.0` (completely transparent) to `1.0` (completely opaque 
+    Value ranges from `0.0` (completely transparent) to `1.0` (completely opaque
     without any transparency).
     """
 
     tooltip: Optional[TooltipValue] = None
     """
-    The `tooltip` property supports both strings 
+    The `tooltip` property supports both strings
     and [`Tooltip`](https://flet.dev/docs/reference/types/tooltip.md) objects.
     """
 
     badge: Optional[BadgeValue] = None
     """
-    The `badge` property supports both strings and 
+    The `badge` property supports both strings and
     [`Badge`](https://flet.dev/docs/reference/types/badge.md) objects.
     """
 
     visible: bool = True
     """
-    Every control has `visible` property which is `True` by default - control is 
-    rendered on the page. Setting `visible` to `False` completely prevents control (and 
-    all its children if any) from rendering on a page canvas. Hidden controls cannot be 
+    Every control has `visible` property which is `True` by default - control is
+    rendered on the page. Setting `visible` to `False` completely prevents control (and
+    all its children if any) from rendering on a page canvas. Hidden controls cannot be
     focused or selected with a keyboard or mouse and they do not emit any events.
     """
 
     disabled: bool = False
     """
-    Every control has `disabled` property which is `False` by default - control and all 
+    Every control has `disabled` property which is `False` by default - control and all
     its children are enabled.
-    This property is mostly used with data entry controls like `TextField`, 
+    This property is mostly used with data entry controls like `TextField`,
     `Dropdown`, `Checkbox`, buttons.
-    
+
     Note:
         The value of this property will be propagated down to all children controls recursively.
 
     /// details | Example
         type: example
-    For example, if you have a form with multiple entry controls you can disable them 
+    For example, if you have a form with multiple entry controls you can disable them
     all together by disabling container:
 
     ```python
@@ -265,7 +265,3 @@ class Control(BaseControl):
 
     def clean(self) -> None:
         raise Exception("Deprecated!")
-
-
-# Typing
-OptionalControl = Optional[Control]

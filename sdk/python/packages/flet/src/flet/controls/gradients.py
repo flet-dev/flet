@@ -13,7 +13,7 @@ __all__ = [
     "GradientTileMode",
 ]
 
-from flet.controls.types import Number, OptionalNumber
+from flet.controls.types import Number
 
 
 class GradientTileMode(Enum):
@@ -21,7 +21,7 @@ class GradientTileMode(Enum):
     Defines what happens at the edge of a gradient.
     More information about GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html).
     """
-    
+
     CLAMP = "clamp"
     """
     Samples beyond the edge are clamped to the nearest color in the defined inner area.
@@ -33,13 +33,13 @@ class GradientTileMode(Enum):
     Samples beyond the edge are treated as transparent black.
     More information on DECAL GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#decal).
     """
-    
+
     MIRROR = "mirror"
     """
     Samples beyond the edge are mirrored back and forth across the defined area.
     More information on MIRROR GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#mirror).
     """
-    
+
     REPEATED = "repeated"
     """
     Samples beyond the edge are repeated from the far end of the defined area.
@@ -52,13 +52,13 @@ class Gradient:
     """
     A shader that renders a color gradient.
 
-    There are several types of gradients: `LinearGradient`, `RadialGradient` and 
+    There are several types of gradients: `LinearGradient`, `RadialGradient` and
     `SweepGradient`.
     """
 
     colors: list[str]
     """
-    The [colors](https://flet.dev/docs/reference/colors) the gradient should obtain at 
+    The [colors](https://flet.dev/docs/reference/colors) the gradient should obtain at
     each of the stops. This list must contain at least two colors.
 
     If `stops` is provided, this list must have the same length as `stops`.
@@ -66,12 +66,12 @@ class Gradient:
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the region before `begin` and 
+    How this gradient should tile the plane beyond in the region before `begin` and
     after `end`. The value is of type
     [GradientTileMode](https://flet.dev/docs/reference/types/gradienttilemode).
     """
 
-    rotation: OptionalNumber = None
+    rotation: Optional[Number] = None
     """
     The rotation of the gradient in
     [radians](https://en.wikipedia.org/wiki/Radian), around the center-point of its
@@ -95,7 +95,7 @@ class Gradient:
 class LinearGradient(Gradient):
     """
     Creates a linear gradient from `begin` to `end`.
-    
+
     More information on Linear gradient [here](https://api.flutter.dev/flutter/painting/LinearGradient-class.html).
     """
 
@@ -118,11 +118,11 @@ class LinearGradient(Gradient):
 @dataclass
 class RadialGradient(Gradient):
     """
-    Creates a radial gradient centered at center that ends at radius distance from the 
+    Creates a radial gradient centered at center that ends at radius distance from the
     center.
-    
+
     More information on Radial gradient [here](https://api.flutter.dev/flutter/painting/
-    RadialGradient-class.html)).
+    RadialGradient-class.html).
     """
 
     center: Alignment = field(default_factory=lambda: Alignment.center())
@@ -162,9 +162,9 @@ class RadialGradient(Gradient):
 @dataclass
 class SweepGradient(Gradient):
     """
-    Creates a sweep gradient centered at center that starts at `start_angle` and ends 
+    Creates a sweep gradient centered at center that starts at `start_angle` and ends
     at `end_angle`.
-    
+
     More information on Sweep gradient [here](https://api.flutter.dev/flutter/painting/
     SweepGradient-class.html).
     """
@@ -190,4 +190,3 @@ class SweepGradient(Gradient):
 
     def __post_init__(self):
         self._type = "sweep"
-

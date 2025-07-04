@@ -1,10 +1,10 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
 
 
 @control("Rect")
@@ -13,27 +13,27 @@ class Rect(Shape):
     Draws a rectangle.
     """
 
-    x: OptionalNumber = None
+    x: Optional[Number] = None
     """
     The x-axis coordinate of the rectangle's top left point.
     """
 
-    y: OptionalNumber = None
+    y: Optional[Number] = None
     """
     The y-axis coordinate of the rectangle's top left point.
     """
 
-    width: OptionalNumber = None
+    width: Optional[Number] = None
     """
     Width of the rectangle.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     Height of the rectangle.
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     """
     Border radius of the rectangle.
 
@@ -45,4 +45,3 @@ class Rect(Shape):
     A style to draw a rectangle with. The value of this property is the instance of
     [`Paint`](https://flet.dev/docs/reference/types/paint) class.
     """
-

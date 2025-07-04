@@ -1,17 +1,14 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxFit, FilterQuality
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import OptionalControl
+from flet.controls.control import Control
 from flet.controls.types import (
     BlendMode,
+    ColorValue,
     ImageRepeat,
-    OptionalBool,
-    OptionalColorValue,
-    OptionalInt,
-    OptionalString,
 )
 
 __all__ = ["Image"]
@@ -29,7 +26,7 @@ class Image(ConstrainedControl):
     - [`src`][(c).]
     """
 
-    src: OptionalString = None
+    src: Optional[str] = None
     """
     The image source.
 
@@ -37,13 +34,13 @@ class Image(ConstrainedControl):
     [asset file](https://flet.dev/docs/cookbook/assets).
     """
 
-    src_base64: OptionalString = None
+    src_base64: Optional[str] = None
     """
     A string representing an image encoded in Base64 format.
-    
-    [Here](https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/image/image-base64.py) 
+
+    [Here](https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/image/image-base64.py)
     is an example.
-    
+
     /// details | Tip
         type: tip
 
@@ -64,9 +61,9 @@ class Image(ConstrainedControl):
     A byte array representing an image.
     """
 
-    error_content: OptionalControl = None
+    error_content: Optional[Control] = None
     """
-    Fallback control to display if the image cannot be loaded 
+    Fallback control to display if the image cannot be loaded
     from the provided sources (`src` or `src_base64`).
     """
 
@@ -84,12 +81,12 @@ class Image(ConstrainedControl):
     Type: [`BoxFit`][flet.BoxFit]
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     """
     Clip image to have rounded corners.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     If set, this [color](https://flet.dev/docs/reference/colors) is blended with each
     image pixel using [`color_blend_mode`][flet.Image.color_blend_mode].
@@ -106,13 +103,13 @@ class Image(ConstrainedControl):
 
     gapless_playback: bool = False
     """
-    Whether to continue showing the old image (`True`), or briefly show nothing 
+    Whether to continue showing the old image (`True`), or briefly show nothing
     (`False`), when the image provider changes.
 
     Has no effect on svg images.
     """
 
-    semantics_label: OptionalString = None
+    semantics_label: Optional[str] = None
     """
     A semantic description of the image.
 
@@ -132,7 +129,7 @@ class Image(ConstrainedControl):
     Type: [`FilterQuality`][flet.FilterQuality]
     """
 
-    cache_width: OptionalInt = None
+    cache_width: Optional[int] = None
     """
     The size at which the image should be decoded.
 
@@ -140,7 +137,7 @@ class Image(ConstrainedControl):
     of this parameter.
     """
 
-    cache_height: OptionalInt = None
+    cache_height: Optional[int] = None
     """
     The size at which the image should be decoded.
 
@@ -154,4 +151,3 @@ class Image(ConstrainedControl):
 
     Anti-aliasing alleviates the sawtooth artifact when the image is rotated.
     """
-

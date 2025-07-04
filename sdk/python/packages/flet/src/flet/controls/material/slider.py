@@ -4,15 +4,13 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
     MouseCursor,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = ["Slider", "SliderInteraction"]
@@ -36,7 +34,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     of setting changes.
     """
 
-    value: OptionalNumber = None
+    value: Optional[Number] = None
     """
     The currently selected value for this slider.
 
@@ -100,7 +98,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     page will get focus.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use for the portion of
     the slider track that is active.
@@ -109,7 +107,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     value.
     """
 
-    inactive_color: OptionalColorValue = None
+    inactive_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) for the inactive portion of
     the slider track.
@@ -118,7 +116,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     value.
     """
 
-    thumb_color: OptionalColorValue = None
+    thumb_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the thumb.
     """
@@ -130,7 +128,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     and defaults to `SliderInteraction.TAP_AND_SLIDE`.
     """
 
-    secondary_active_color: OptionalColorValue = None
+    secondary_active_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use for the portion of
     the slider track between the thumb and the `secondary_track_value`.
@@ -144,7 +142,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
     """
 
-    secondary_track_value: OptionalNumber = None
+    secondary_track_value: Optional[Number] = None
     """
     The secondary track value for this slider.
 
@@ -175,27 +173,27 @@ class Slider(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    on_change: OptionalControlEventHandler["Slider"] = None
+    on_change: Optional[ControlEventHandler["Slider"]] = None
     """
     Fires when the state of the Slider is changed.
     """
 
-    on_change_start: OptionalControlEventHandler["Slider"] = None
+    on_change_start: Optional[ControlEventHandler["Slider"]] = None
     """
     Fires when the user starts selecting a new value for the slider.
     """
 
-    on_change_end: OptionalControlEventHandler["Slider"] = None
+    on_change_end: Optional[ControlEventHandler["Slider"]] = None
     """
     Fires when the user is done selecting a new value for the slider.
     """
 
-    on_focus: OptionalControlEventHandler["Slider"] = None
+    on_focus: Optional[ControlEventHandler["Slider"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["Slider"] = None
+    on_blur: Optional[ControlEventHandler["Slider"]] = None
     """
     Fires when the control has lost focus.
     """

@@ -4,13 +4,12 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.material.navigation_bar import NavigationBarDestination
 from flet.controls.types import (
     ColorValue,
     Number,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoNavigationBar"]
@@ -27,11 +26,11 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)
     """
-    Defines the appearance of the button items that are arrayed within the navigation 
+    Defines the appearance of the button items that are arrayed within the navigation
     bar.
 
-    The value must be a list of two or more 
-    [`NavigationBarDestination`](https://flet.dev/docs/controls/navigationbar#navigationbardestination-properties) 
+    The value must be a list of two or more
+    [`NavigationBarDestination`](https://flet.dev/docs/controls/navigationbar#navigationbardestination-properties)
     instances.
     """
 
@@ -40,20 +39,20 @@ class CupertinoNavigationBar(ConstrainedControl):
     The index into `destinations` for the current selected `NavigationBarDestination`.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the navigation bar itself.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and 
+    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and
     title of the selected destination.
     """
 
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
     """
-    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and 
+    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and
     title of the unselected destinations.
     """
 
@@ -61,7 +60,7 @@ class CupertinoNavigationBar(ConstrainedControl):
     """
     Defines the border of this navigation bar.
 
-    The value is an instance of 
+    The value is an instance of
     [`Border`](https://flet.dev/docs/reference/types/border) class.
     """
 
@@ -70,7 +69,7 @@ class CupertinoNavigationBar(ConstrainedControl):
     The size of all destination icons.
     """
 
-    on_change: OptionalControlEventHandler["CupertinoNavigationBar"] = None
+    on_change: Optional[ControlEventHandler["CupertinoNavigationBar"]] = None
     """
     Fires when selected destination changed.
     """

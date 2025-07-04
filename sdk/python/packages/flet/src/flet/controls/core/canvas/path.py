@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
 
@@ -232,7 +232,7 @@ class Path(Shape):
         """
         Height of the rectangle.
         """
-        border_radius: OptionalBorderRadiusValue = None
+        border_radius: Optional[BorderRadiusValue] = None
         """
         Optional border radius to round rectangle corners.
         """

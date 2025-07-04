@@ -4,23 +4,21 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
-from flet.controls.duration import OptionalDurationValue
-from flet.controls.margin import OptionalMarginValue
+from flet.controls.duration import DurationValue
+from flet.controls.margin import MarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
-from flet.controls.padding import OptionalPaddingValue, PaddingValue
-from flet.controls.text_style import OptionalTextStyle
+from flet.controls.padding import PaddingValue
+from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     MouseCursor,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     StrOrControl,
     TabAlignment,
 )
@@ -49,12 +47,12 @@ class Tab(AdaptiveControl):
     An icon to display on the left of Tab text.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     TBD
     """
 
-    icon_margin: OptionalMarginValue = None
+    icon_margin: Optional[MarginValue] = None
     """
     TBD
     """
@@ -102,25 +100,25 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     `TabAlignment.FILL`, if `scrollable=False`.
     """
 
-    animation_duration: OptionalDurationValue = None
+    animation_duration: Optional[DurationValue] = None
     """
     Duration of animation in milliseconds of switching between tabs.
 
     Defaults to `50`.
     """
 
-    divider_color: OptionalColorValue = None
+    divider_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the divider.
     """
 
-    indicator_color: OptionalColorValue = None
+    indicator_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of the indicator(line that
     appears below the selected tab).
     """
 
-    indicator_border_radius: OptionalBorderRadiusValue = None
+    indicator_border_radius: Optional[BorderRadiusValue] = None
     """
     The radius of the indicator's corners.
     """
@@ -159,26 +157,26 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     The [color](https://flet.dev/docs/reference/colors) of selected tab labels.
     """
 
-    label_padding: OptionalPaddingValue = None
+    label_padding: Optional[PaddingValue] = None
     """
     The padding around the tab label.
 
     Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
-    label_text_style: OptionalTextStyle = None
+    label_text_style: Optional[TextStyle] = None
     """
     The text style of the tab labels.
 
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    unselected_label_color: OptionalColorValue = None
+    unselected_label_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of unselected tab labels.
     """
 
-    unselected_label_text_style: OptionalTextStyle = None
+    unselected_label_text_style: Optional[TextStyle] = None
     """
     The text style of the unselected tab labels.
 
@@ -195,7 +193,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     `FOCUSED`.
     """
 
-    divider_height: OptionalNumber = None
+    divider_height: Optional[Number] = None
     """
     The height of the divider.
 
@@ -228,14 +226,14 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     enum.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The padding around the Tabs control.
 
     Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
-    splash_border_radius: OptionalBorderRadiusValue = None
+    splash_border_radius: Optional[BorderRadiusValue] = None
     """
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
 
@@ -249,12 +247,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
-    on_click: OptionalControlEventHandler["Tabs"] = None
+    on_click: Optional[ControlEventHandler["Tabs"]] = None
     """
     Fires when a tab is clicked.
     """
 
-    on_change: OptionalControlEventHandler["Tabs"] = None
+    on_change: Optional[ControlEventHandler["Tabs"]] = None
     """
     Fires when `selected_index` changes.
     """

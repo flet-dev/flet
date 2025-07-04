@@ -3,15 +3,14 @@ from typing import Optional
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.material.form_field_control import FormFieldControl
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = ["DropdownM2", "Option"]
@@ -36,7 +35,7 @@ class Option(Control):
 
     content: Optional[Control] = None
     """
-    A `Control` to display in this option. If not specified, `text` will be used as 
+    A `Control` to display in this option. If not specified, `text` will be used as
     fallback, else `text` will be ignored.
     """
 
@@ -44,7 +43,7 @@ class Option(Control):
     """
     Defines the alignment of this option in it's container.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and 
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and
     defaults to `Alignment.center_left()`.
     """
 
@@ -55,7 +54,7 @@ class Option(Control):
     Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    on_click: OptionalControlEventHandler["Option"] = None
+    on_click: Optional[ControlEventHandler["Option"]] = None
     """
     Fires when this option is clicked.
     """
@@ -89,27 +88,27 @@ class DropdownM2(FormFieldControl):
     """
     Defines how the `hint` or the selected item is positioned within this dropdown.
 
-    Alignment is an instance of [`Alignment`](https://flet.dev/docs/reference/types/alignment) 
+    Alignment is an instance of [`Alignment`](https://flet.dev/docs/reference/types/alignment)
     class.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than 
-    one control on a page with autofocus set, then the first one added to the page will 
+    True if the control will be selected as the initial focus. If there is more than
+    one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
 
     hint_content: Optional[Control] = None
     """
-    A placeholder `Control` for the dropdown's value that is displayed when `value` is 
+    A placeholder `Control` for the dropdown's value that is displayed when `value` is
     `None`.
     """
 
     select_icon: Optional[IconValueOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use 
-    for the drop-down select button's icon. Defaults to an 
+    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use
+    for the drop-down select button's icon. Defaults to an
     `Icon(ft.Icons.ARROW_DROP_DOWN)`.
 
     Example with icon name:
@@ -129,12 +128,12 @@ class DropdownM2(FormFieldControl):
     Defaults to `8`.
     """
 
-    item_height: OptionalNumber = None
+    item_height: Optional[Number] = None
     """
     The height of the items/options in the dropdown menu.
     """
 
-    max_menu_height: OptionalNumber = None
+    max_menu_height: Optional[Number] = None
     """
     The maximum height of the dropdown menu.
     """
@@ -148,23 +147,23 @@ class DropdownM2(FormFieldControl):
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. On 
-    Android, for example, setting this to `True` produce a click sound and a long-press 
+    Whether detected gestures should provide acoustic and/or haptic feedback. On
+    Android, for example, setting this to `True` produce a click sound and a long-press
     will produce a short vibration.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
-    The [padding](https://flet.dev/docs/reference/types/padding) around the visible 
+    The [padding](https://flet.dev/docs/reference/types/padding) around the visible
     portion of this dropdown.
     """
 
-    select_icon_enabled_color: OptionalColorValue = None
+    select_icon_enabled_color: Optional[ColorValue] = None
     """
     The color of any `Icon` descendant of `select_icon` if this button is enabled.
     """
 
-    select_icon_disabled_color: OptionalColorValue = None
+    select_icon_disabled_color: Optional[ColorValue] = None
     """
     The color of any `Icon` descendant of `select_icon` if this button is disabled.
     """
@@ -172,7 +171,7 @@ class DropdownM2(FormFieldControl):
     options_fill_horizontally: bool = True
     """
     Whether the dropdown's inner contents to horizontally fill its parent.
-    By default this button's inner width is the minimum size of its content. 
+    By default this button's inner width is the minimum size of its content.
 
     If `True`, the inner width is expanded to fill its surrounding container.
 
@@ -181,26 +180,26 @@ class DropdownM2(FormFieldControl):
 
     disabled_hint_content: Optional[Control] = None
     """
-    A placeholder `Control` for the dropdown's value that is displayed when `value` is 
+    A placeholder `Control` for the dropdown's value that is displayed when `value` is
     `None` and the dropdown is disabled.
     """
 
-    on_change: OptionalControlEventHandler["DropdownM2"] = None
+    on_change: Optional[ControlEventHandler["DropdownM2"]] = None
     """
     Fires when the selected item of this dropdown has changed.
     """
 
-    on_focus: OptionalControlEventHandler["DropdownM2"] = None
+    on_focus: Optional[ControlEventHandler["DropdownM2"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["DropdownM2"] = None
+    on_blur: Optional[ControlEventHandler["DropdownM2"]] = None
     """
     Fires when the control has lost focus.
     """
 
-    on_click: OptionalControlEventHandler["DropdownM2"] = None
+    on_click: Optional[ControlEventHandler["DropdownM2"]] = None
     """
     Fires when this dropdown is clicked.
     """

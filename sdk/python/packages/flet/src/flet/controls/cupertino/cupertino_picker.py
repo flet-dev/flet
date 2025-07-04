@@ -4,12 +4,11 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.types import (
     ColorValue,
     Number,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoPicker"]
@@ -36,7 +35,7 @@ class CupertinoPicker(ConstrainedControl):
     The index (starting from 0) of the selected item in the `controls` list.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The background [color](https://flet.dev/docs/reference/colors) of the timer picker.
     """
@@ -56,7 +55,7 @@ class CupertinoPicker(ConstrainedControl):
     The zoomed-in rate of the magnifier, if it is used.
 
     If the value is greater than `1.0`, the item in the center will be zoomed in by that
-    rate, and it will also be rendered as flat, not cylindrical like the rest of the 
+    rate, and it will also be rendered as flat, not cylindrical like the rest of the
     list. The item will be zoomed-out if magnification is less than `1.0`.
 
     Defaults to `1.0` - normal.
@@ -81,20 +80,20 @@ class CupertinoPicker(ConstrainedControl):
 
     selection_overlay: Optional[Control] = None
     """
-    A control overlaid on the picker to highlight the selected entry, centered and 
+    A control overlaid on the picker to highlight the selected entry, centered and
     matching the height of the center row.
 
-    Defaults to a rounded rectangle in iOS 14 style with 
+    Defaults to a rounded rectangle in iOS 14 style with
     `default_selection_overlay_bgcolor` as background color.
     """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The default background [color](https://flet.dev/docs/reference/colors) of the 
+    The default background [color](https://flet.dev/docs/reference/colors) of the
     `selection_overlay`.
     """
 
-    on_change: OptionalControlEventHandler["CupertinoPicker"] = None
+    on_change: Optional[ControlEventHandler["CupertinoPicker"]] = None
     """
     Fires when the selection changes.
     """

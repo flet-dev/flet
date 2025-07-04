@@ -13,7 +13,7 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     MouseCursor,
-    OptionalNumber,
+    Number,
     VisualDensity,
 )
 
@@ -26,7 +26,7 @@ class MenuStyle:
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
     surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
-    elevation: Optional[ControlStateValue[OptionalNumber]] = None
+    elevation: Optional[ControlStateValue[Optional[Number]]] = None
     padding: Optional[ControlStateValue[PaddingValue]] = None
     side: Optional[ControlStateValue[BorderSide]] = None
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
@@ -67,6 +67,6 @@ class MenuBar(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(
-            c.visible for c in self.controls
-        ), "MenuBar must have at minimum one visible control"
+        assert any(c.visible for c in self.controls), (
+            "MenuBar must have at minimum one visible control"
+        )

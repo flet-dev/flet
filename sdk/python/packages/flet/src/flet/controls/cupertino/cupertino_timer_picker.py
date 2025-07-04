@@ -1,12 +1,13 @@
 from dataclasses import field
 from enum import Enum
+from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
-from flet.controls.types import Number, OptionalColorValue
+from flet.controls.types import ColorValue, Number
 
 __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
@@ -56,11 +57,11 @@ class CupertinoTimerPicker(ConstrainedControl):
     """
     The mode of the timer picker.
 
-    Value is of type 
+    Value is of type
     [CupertinoTimerPickerMode](https://flet.dev/docs/reference/types/cupertinotimerpickermode).
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The background [color](https://flet.dev/docs/reference/colors) of the timer picker.
     """
@@ -70,7 +71,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     The uniform height of all children.
     """
 
-    on_change: OptionalControlEventHandler["CupertinoTimerPicker"] = None
+    on_change: Optional[ControlEventHandler["CupertinoTimerPicker"]] = None
     """
     Fires when the timer duration changes.
     """

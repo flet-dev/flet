@@ -11,32 +11,32 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
+    ControlEventHandler,
     Event,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.core.view import View
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.dialog_control import DialogControl
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.duration import DurationValue
 from flet.controls.keys import ScrollKey
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
-from flet.controls.padding import OptionalPaddingValue, Padding
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.scrollable_control import OnScrollEvent
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
+    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     LocaleConfiguration,
     MainAxisAlignment,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     ScrollMode,
     ThemeMode,
 )
@@ -72,39 +72,39 @@ class PageView(AdaptiveControl):
     """
     The page's theme mode.
 
-    Value is of type [`ThemeMode`](https://flet.dev/docs/reference/types/thememode) and 
+    Value is of type [`ThemeMode`](https://flet.dev/docs/reference/types/thememode) and
     defaults to `ThemeMode.SYSTEM`.
     """
     theme: Optional[Theme] = None
     """
-    Customizes the theme of the application when in light theme mode. Currently, a 
-    theme can only be automatically generated from a "seed" color. For example, to 
+    Customizes the theme of the application when in light theme mode. Currently, a
+    theme can only be automatically generated from a "seed" color. For example, to
     generate light theme from a green color.
 
-    Value is an instance of the `Theme()` class - more information in the [theming](https://flet.dev/docs/cookbook/theming) 
+    Value is an instance of the `Theme()` class - more information in the [theming](https://flet.dev/docs/cookbook/theming)
     guide.
     """
     dark_theme: Optional[Theme] = None
     """
     Customizes the theme of the application when in dark theme mode.
 
-    Value is an instance of the `Theme()` class - more information in the 
+    Value is an instance of the `Theme()` class - more information in the
     [theming](https://flet.dev/docs/cookbook/theming) guide.
     """
     locale_configuration: Optional[LocaleConfiguration] = None
     show_semantics_debugger: Optional[bool] = None
     """
-    `True` turns on an overlay that shows the accessibility information reported by the 
+    `True` turns on an overlay that shows the accessibility information reported by the
     framework.
     """
-    width: OptionalNumber = None
-    height: OptionalNumber = None
+    width: Optional[Number] = None
+    height: Optional[Number] = None
     title: Optional[str] = None
     media: Optional[PageMediaData] = None
-    scroll_event_interval: OptionalNumber = None
-    on_resized: OptionalEventHandler["PageResizeEvent"] = None
+    scroll_event_interval: Optional[Number] = None
+    on_resized: Optional[EventHandler["PageResizeEvent"]] = None
     """
-    Fires when a user resizes a browser or native OS window containing Flet app, for 
+    Fires when a user resizes a browser or native OS window containing Flet app, for
     example:
 
     ```python
@@ -116,18 +116,18 @@ class PageView(AdaptiveControl):
 
     Event handler argument is of type [`WindowResizeEvent`](https://flet.dev/docs/reference/types/windowresizeevent).
     """
-    on_media_change: OptionalControlEventHandler["PageView"] = None
+    on_media_change: Optional[ControlEventHandler["PageView"]] = None
     """
-    Fires when `page.media` has changed. 
+    Fires when `page.media` has changed.
 
-    Event handler argument is of type 
+    Event handler argument is of type
     [`PageMediaData`](https://flet.dev/docs/docs/reference/types/pagemediadata).
     """
-    on_scroll: OptionalEventHandler["OnScrollEvent"] = None
+    on_scroll: Optional[EventHandler["OnScrollEvent"]] = None
     """
     Fires when page's scroll position is changed by a user.
 
-    Event handler argument is of type 
+    Event handler argument is of type
     [`OnScrollEvent`](https://flet.dev/docs/reference/types/onscrollevent).
     """
 
@@ -183,10 +183,10 @@ class PageView(AdaptiveControl):
 
     def scroll_to(
         self,
-        offset: Optional[float] = None,
-        delta: Optional[float] = None,
+        offset: Optional[Number] = None,
+        delta: Optional[Number] = None,
         scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
-        duration: OptionalDurationValue = None,
+        duration: Optional[DurationValue] = None,
         curve: Optional[AnimationCurve] = None,
     ) -> None:
         """
@@ -388,29 +388,29 @@ class PageView(AdaptiveControl):
 
     # spacing
     @property
-    def spacing(self) -> OptionalNumber:
+    def spacing(self) -> Optional[Number]:
         return self.__default_view().spacing
 
     @spacing.setter
-    def spacing(self, value: OptionalNumber):
+    def spacing(self, value: Optional[Number]):
         self.__default_view().spacing = value
 
     # padding
     @property
-    def padding(self) -> OptionalPaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__default_view().padding
 
     @padding.setter
-    def padding(self, value: OptionalPaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__default_view().padding = value
 
     # bgcolor
     @property
-    def bgcolor(self) -> OptionalColorValue:
+    def bgcolor(self) -> Optional[ColorValue]:
         return self.__default_view().bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: OptionalColorValue):
+    def bgcolor(self, value: Optional[ColorValue]):
         self.__default_view().bgcolor = value
 
     # scroll

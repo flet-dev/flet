@@ -1,14 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 from flet.controls.types import Number
 
 __all__ = [
     "Alignment",
     "Axis",
-    "OptionalAlignment",
-    "OptionalAxis",
 ]
 
 
@@ -97,8 +94,3 @@ class Alignment:
         Represents the top right corner and is equivalent to `Alignment(1.0, -1.0)`.
         """
         return Alignment(1, -1)
-    
-
-# Typing
-OptionalAlignment = Optional[Alignment]
-OptionalAxis = Optional[Axis]

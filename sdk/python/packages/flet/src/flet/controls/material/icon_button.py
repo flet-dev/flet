@@ -8,13 +8,13 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
     MouseCursor,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     UrlTarget,
     VisualDensity,
 )
@@ -48,12 +48,12 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Icon shown in the button.
     """
 
-    icon_color: OptionalColorValue = None
+    icon_color: Optional[ColorValue] = None
     """
     Icon [color](https://flet.dev/docs/reference/colors).
     """
 
-    icon_size: OptionalNumber = None
+    icon_size: Optional[Number] = None
     """
     Icon size in virtual pixels.
 
@@ -64,10 +64,10 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
     The optional selection state of the icon button.
 
-    If this property is not set, the button will behave as a normal push button, 
+    If this property is not set, the button will behave as a normal push button,
     otherwise, the button will toggle between showing `icon` and `selected_icon` based
-    on the value of `selected`. 
-    
+    on the value of `selected`.
+
     If True, it will show `selected_icon`, if False it will show `icon`.
     """
 
@@ -76,7 +76,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Icon shown in the button in selected state.
     """
 
-    selected_icon_color: OptionalColorValue = None
+    selected_icon_color: Optional[ColorValue] = None
     """
     Icon [color](https://flet.dev/docs/reference/colors) for the selected state.
 
@@ -108,14 +108,14 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     ```
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     TBD
     """
 
-    highlight_color: OptionalColorValue = None
+    highlight_color: Optional[ColorValue] = None
     """
-    The button's [color](https://flet.dev/docs/reference/colors) when the button is 
+    The button's [color](https://flet.dev/docs/reference/colors) when the button is
     pressed. The highlight fades in quickly as the button is held down.
     """
 
@@ -126,34 +126,34 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than 
-    one control on a page with autofocus set, then the first one added to the page will 
+    True if the control will be selected as the initial focus. If there is more than
+    one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
 
-    disabled_color: OptionalColorValue = None
+    disabled_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use for the icon inside the
       button when disabled.
     """
 
-    hover_color: OptionalColorValue = None
+    hover_color: Optional[ColorValue] = None
     """
     The button's [color](https://flet.dev/docs/reference/colors) when hovered.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
     The button's [color](https://flet.dev/docs/reference/colors) when in focus.
     """
 
-    splash_color: OptionalColorValue = None
+    splash_color: Optional[ColorValue] = None
     """
-    The primary [color](https://flet.dev/docs/reference/colors) of the button when the 
+    The primary [color](https://flet.dev/docs/reference/colors) of the button when the
     button is in the down (pressed) state.
     """
 
-    splash_radius: OptionalNumber = None
+    splash_radius: Optional[Number] = None
     """
     The splash radius. Honoured only when in Material 2.
     """
@@ -166,20 +166,20 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Defaults to `alignment.center`.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
-    Defines the padding around this button. The entire padded icon will react to input 
+    Defines the padding around this button. The entire padded icon will react to input
     gestures.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and 
+    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and
     defaults to `Padding.all(8)`.
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. 
-    On Android, for example, setting this to `True` produce a click sound and a 
-    long-press will produce a short vibration. 
+    Whether detected gestures should provide acoustic and/or haptic feedback.
+    On Android, for example, setting this to `True` produce a click sound and a
+    long-press will produce a short vibration.
     """
 
     url: Optional[str] = None
@@ -197,7 +197,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this 
+    The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
@@ -215,17 +215,17 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    on_click: OptionalControlEventHandler["IconButton"] = None
+    on_click: Optional[ControlEventHandler["IconButton"]] = None
     """
     Fires when a user clicks the button.
     """
 
-    on_focus: OptionalControlEventHandler["IconButton"] = None
+    on_focus: Optional[ControlEventHandler["IconButton"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["IconButton"] = None
+    on_blur: Optional[ControlEventHandler["IconButton"]] = None
     """
     Fires when the control has lost focus.
     """

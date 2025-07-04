@@ -8,15 +8,14 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue, PaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
+    ColorValue,
     IconValueOrControl,
     MouseCursor,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     StrOrControl,
 )
 
@@ -50,7 +49,7 @@ class PopupMenuItem(Control):
     Defaults to `48`.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The padding of this menu item.
 
@@ -58,7 +57,7 @@ class PopupMenuItem(Control):
     For example, if a `height` greater than the height of the sum of the padding and a
     `content` is provided, then the padding's effect will not be visible.
 
-    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding) 
+    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding)
     class.
 
     Defaults to `padding.symmetric(horizontal=12)`.
@@ -72,7 +71,7 @@ class PopupMenuItem(Control):
     Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_click: OptionalControlEventHandler["PopupMenuItem"] = None
+    on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None
     """
     Called when a user clicks on this menu item.
     """
@@ -99,39 +98,39 @@ class PopupMenuButton(ConstrainedControl):
     If provided, an icon to draw on the button.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The menu's background [color](https://flet.dev/docs/reference/colors).
     """
 
-    icon_color: OptionalColorValue = None
+    icon_color: Optional[ColorValue] = None
     """
     The `icon`'s [color](https://flet.dev/docs/reference/colors).
     """
 
-    shadow_color: OptionalColorValue = None
+    shadow_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) used to paint the shadow below
     the menu.
     """
 
-    surface_tint_color: OptionalColorValue = None
+    surface_tint_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) used as an overlay on color to
     indicate elevation.
     """
 
-    icon_size: OptionalNumber = None
+    icon_size: Optional[Number] = None
     """
     The `icon`'s size.
     """
 
-    splash_radius: OptionalNumber = None
+    splash_radius: Optional[Number] = None
     """
     The splash radius.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     The menu's elevation when opened.
 
@@ -170,7 +169,7 @@ class PopupMenuButton(ConstrainedControl):
     """
     The menu's shape.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) 
+    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
     and defaults to `CircleBorder(radius=10.0)`.
     """
 
@@ -180,7 +179,7 @@ class PopupMenuButton(ConstrainedControl):
     defaults to `Padding.all(8.0)`.
     """
 
-    menu_padding: OptionalPaddingValue = None
+    menu_padding: Optional[PaddingValue] = None
     """
     TBD
     """
@@ -200,17 +199,17 @@ class PopupMenuButton(ConstrainedControl):
     TBD
     """
 
-    on_open: OptionalControlEventHandler["PopupMenuButton"] = None
+    on_open: Optional[ControlEventHandler["PopupMenuButton"]] = None
     """
     Called when the popup menu is shown.
     """
 
-    on_cancel: OptionalControlEventHandler["PopupMenuButton"] = None
+    on_cancel: Optional[ControlEventHandler["PopupMenuButton"]] = None
     """
     Called when the user dismisses/cancels the popup menu without selecting an item.
     """
 
-    on_select: OptionalControlEventHandler["PopupMenuButton"] = None
+    on_select: Optional[ControlEventHandler["PopupMenuButton"]] = None
     """
     TBD
     """

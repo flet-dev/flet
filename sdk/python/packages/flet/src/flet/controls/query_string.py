@@ -54,11 +54,11 @@ class QueryString(UrlComponents):
         called from `page` object\n
 
     Constructor:
-            `page` takes `Page` class an an argument and extracts URL automatically\n
+            `page` takes `Page` class an argument and extracts URL automatically\n
 
     Methods:
             Public:
-                `get()` method takes `key` an an argument and returns value according to key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
+                `get()` method takes `key` an argument and returns value according to key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
                 `to_dict` returns all the key-value pairs of querystring as a `dict`\n
                 `path` returns url path (Ex: .../products?id=1 -> /products)
 
@@ -97,7 +97,7 @@ class QueryString(UrlComponents):
             self.url = page.url + page.route
 
             # Checking if self.url is encoded and decoding it accordingly
-            if self._is_encoded() is True:
+            if self._is_encoded():
                 self.url = (
                     page.url
                     + urllib.parse.urlparse(self.url).path

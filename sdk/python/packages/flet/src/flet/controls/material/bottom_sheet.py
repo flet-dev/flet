@@ -6,7 +6,7 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
-from flet.controls.types import ClipBehavior, OptionalColorValue, OptionalNumber
+from flet.controls.types import ClipBehavior, ColorValue, Number
 
 
 @control("BottomSheet")
@@ -21,12 +21,12 @@ class BottomSheet(DialogControl):
     The content `Control` of the bottom sheet.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     Controls the size of the shadow below the BottomSheet.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     The sheet's background [color](https://flet.dev/docs/reference/colors).
     """
@@ -38,7 +38,7 @@ class BottomSheet(DialogControl):
 
     enable_drag: bool = False
     """
-    Specifies whether the bottom sheet can be dragged up and down and dismissed by 
+    Specifies whether the bottom sheet can be dragged up and down and dismissed by
     swiping downwards.
     """
 
@@ -49,7 +49,7 @@ class BottomSheet(DialogControl):
 
     use_safe_area: bool = True
     """
-    Specifies whether the sheet will avoid system intrusions on the top, left, and 
+    Specifies whether the sheet will avoid system intrusions on the top, left, and
     right.
 
     Defaults to `False`.
@@ -57,7 +57,7 @@ class BottomSheet(DialogControl):
 
     is_scroll_controlled: bool = False
     """
-    Specifies if the bottom sheet contains scrollable content, such as ListView or 
+    Specifies if the bottom sheet contains scrollable content, such as ListView or
     GridView.
 
     Defaults to `False`.
@@ -65,7 +65,7 @@ class BottomSheet(DialogControl):
 
     maintain_bottom_view_insets_padding: bool = True
     """
-    Adds a padding at the bottom to avoid obstructing bottom sheet content with 
+    Adds a padding at the bottom to avoid obstructing bottom sheet content with
     on-screen keyboard or other system elements.
     """
 
@@ -101,6 +101,6 @@ class BottomSheet(DialogControl):
         self,
     ):
         super().before_update()
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        assert self.elevation is None or self.elevation >= 0, (
+            "elevation cannot be negative"
+        )

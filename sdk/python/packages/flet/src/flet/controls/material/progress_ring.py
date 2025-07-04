@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.padding import PaddingValue
-from flet.controls.types import Number, OptionalColorValue, OptionalNumber, StrokeCap
+from flet.controls.types import ColorValue, Number, StrokeCap
 
 __all__ = ["ProgressRing"]
 
@@ -18,7 +18,7 @@ class ProgressRing(ConstrainedControl):
     A control that shows progress along a circle.
     """
 
-    value: OptionalNumber = None
+    value: Optional[Number] = None
     """
     The value of this progress indicator.
 
@@ -34,12 +34,12 @@ class ProgressRing(ConstrainedControl):
     The width of the line used to draw the circle.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
     The progress indicator's [color](https://flet.dev/docs/reference/colors).
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     [Color](https://flet.dev/docs/reference/colors) of the circular track being filled
     by the circular indicator.
@@ -66,12 +66,12 @@ class ProgressRing(ConstrainedControl):
     The `Semantics.label` for this progress indicator.
     """
 
-    semantics_value: OptionalNumber = None
+    semantics_value: Optional[Number] = None
     """
     The `Semantics.value` for this progress indicator.
     """
 
-    track_gap: OptionalNumber = None
+    track_gap: Optional[Number] = None
     """
     TBD
     """

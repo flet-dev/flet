@@ -5,16 +5,15 @@ from typing import Optional, Union
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration, DurationValue
-from flet.controls.margin import OptionalMarginValue
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.margin import MarginValue
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
+    ColorValue,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     StrOrControl,
 )
 
@@ -45,33 +44,33 @@ class SnackBarAction(Control):
     The button's label.
     """
 
-    text_color: OptionalColorValue = None
+    text_color: Optional[ColorValue] = None
     """
     The button label color.
     If not provided, defaults to `SnackBarTheme.action_text_color`.
     """
 
-    disabled_text_color: OptionalColorValue = None
+    disabled_text_color: Optional[ColorValue] = None
     """
-    The button disabled label color. 
+    The button disabled label color.
     This color is shown after the action is dismissed.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The button background fill color. 
+    The button background fill color.
     If not provided, defaults to `SnackBarTheme.action_bgcolor`.
     """
 
-    disabled_bgcolor: OptionalColorValue = None
+    disabled_bgcolor: Optional[ColorValue] = None
     """
-    The button disabled background color. 
+    The button disabled background color.
     This color is shown after the action is dismissed.
-    
+
     If not provided, defaults to `SnackBarTheme.disabled_action_bgcolor`.
     """
 
-    on_click: OptionalControlEventHandler["SnackBarAction"] = None
+    on_click: Optional[ControlEventHandler["SnackBarAction"]] = None
     """
     Fires when this action button is clicked.
     """
@@ -137,12 +136,12 @@ class SnackBar(DialogControl):
     The action should not be "dismiss" or "cancel".
     """
 
-    close_icon_color: OptionalColorValue = None
+    close_icon_color: Optional[ColorValue] = None
     """
     An optional color for the close icon, if `show_close_icon=True`.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     SnackBar background [color](https://flet.dev/docs/reference/colors).
     """
@@ -155,7 +154,7 @@ class SnackBar(DialogControl):
     ([4 seconds](https://api.flutter.dev/flutter/material/SnackBar/duration.html)).
     """
 
-    margin: OptionalMarginValue = None
+    margin: Optional[MarginValue] = None
     """
     Empty space to surround the snack bar.
 
@@ -163,7 +162,7 @@ class SnackBar(DialogControl):
     if `width` is specified.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of padding to apply to the snack bar's content and optional action.
 
@@ -171,7 +170,7 @@ class SnackBar(DialogControl):
     [`Padding`](https://flet.dev/docs/reference/types/padding) or a number.
     """
 
-    width: OptionalNumber = None
+    width: Optional[Number] = None
     """
     The width of the snack bar.
 
@@ -182,7 +181,7 @@ class SnackBar(DialogControl):
     if `margin` is specified.
     """
 
-    elevation: OptionalNumber = None
+    elevation: Optional[Number] = None
     """
     The z-coordinate at which to place the snack bar. This controls the size of the
     shadow below the snack bar.
@@ -219,12 +218,12 @@ class SnackBar(DialogControl):
     Defaults to `0.25`.
     """
 
-    on_action: OptionalControlEventHandler["SnackBar"] = None
+    on_action: Optional[ControlEventHandler["SnackBar"]] = None
     """
     Fires when action button is clicked.
     """
 
-    on_visible: OptionalControlEventHandler["SnackBar"] = None
+    on_visible: Optional[ControlEventHandler["SnackBar"]] = None
     """
     Fires the first time that the snackbar is visible within the page.
     """

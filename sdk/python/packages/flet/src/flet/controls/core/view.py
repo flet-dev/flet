@@ -6,7 +6,7 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
@@ -14,15 +14,15 @@ from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
+    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
     Number,
-    OptionalColorValue,
 )
 
 __all__ = ["View"]
@@ -40,8 +40,8 @@ class View(ScrollableControl, ConstrainedControl):
 
     route: Optional[str] = None
     """
-    View's route - not currently used by Flet framework, but can be used in a user 
-    program to update [`page.route`](https://flet.dev/docs/controls/page#route) when a 
+    View's route - not currently used by Flet framework, but can be used in a user
+    program to update [`page.route`](https://flet.dev/docs/controls/page#route) when a
     view popped.
     """
 
@@ -135,13 +135,13 @@ class View(ScrollableControl, ConstrainedControl):
     spacing: Number = 10
     """
     Vertical spacing between controls on the Page. Default value is 10 virtual pixels.
-    Spacing is applied only when `vertical_alignment` is set to 
+    Spacing is applied only when `vertical_alignment` is set to
     `MainAxisAlignment.START`, `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
 
     Value is of type `Number` and defaults to `10`
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     A space between page contents and its edges.
 
@@ -149,7 +149,7 @@ class View(ScrollableControl, ConstrainedControl):
     paddingvalue) and defaults to `padding.all(10)`.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     Background [color](https://flet.dev/docs/reference/colors) of the view.
     """
@@ -171,7 +171,7 @@ class View(ScrollableControl, ConstrainedControl):
     """
 
     can_pop: bool = True
-    on_confirm_pop: OptionalControlEventHandler["View"] = None
+    on_confirm_pop: Optional[ControlEventHandler["View"]] = None
 
     def confirm_pop(self, should_pop: bool) -> None:
         asyncio.create_task(self.confirm_pop_async(should_pop))

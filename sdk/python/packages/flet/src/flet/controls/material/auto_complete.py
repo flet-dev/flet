@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.types import Number
 
 __all__ = ["AutoComplete", "AutoCompleteSuggestion", "AutoCompleteSelectEvent"]
@@ -44,12 +45,9 @@ class AutoComplete(Control):
     suggestions_max_height: Number = 200
     """
     The maximum - visual - height of the suggestions list.
-
-    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber)
-    and defaults to `200`.
     """
 
-    on_select: OptionalEventHandler[AutoCompleteSelectEvent] = None
+    on_select: Optional[EventHandler[AutoCompleteSelectEvent]] = None
     """
     Fires when a suggestion is selected.
 
@@ -58,4 +56,4 @@ class AutoComplete(Control):
 
     @property
     def selected_index(self):
-        return self._selected_index
+        return self._selected_index  # todo: add a check for it's availability

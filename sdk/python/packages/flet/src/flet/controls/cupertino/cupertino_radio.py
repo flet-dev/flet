@@ -2,11 +2,11 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
+    ColorValue,
     LabelPosition,
     MouseCursor,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoRadio"]
@@ -32,24 +32,24 @@ class CupertinoRadio(ConstrainedControl):
     """
     The position of the label relative to the radio.
 
-    Value is of type 
+    Value is of type
     [LabelPosition](https://flet.dev/docs/reference/types/labelposition).
     """
 
-    fill_color: OptionalColorValue = None
+    fill_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) that fills the radio.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio 
+    The [color](https://flet.dev/docs/reference/colors) used to fill this radio
     when it is selected.
     """
 
-    inactive_color: OptionalColorValue = None
+    inactive_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio 
+    The [color](https://flet.dev/docs/reference/colors) used to fill this radio
     when it is not selected.
 
     Defaults to `colors.WHITE`.
@@ -59,7 +59,7 @@ class CupertinoRadio(ConstrainedControl):
     """
     True if the control will be selected as the initial focus.
 
-    If there is more than one control on a page with autofocus set, then the first 
+    If there is more than one control on a page with autofocus set, then the first
     one added to the page will get focus.
     """
 
@@ -70,13 +70,13 @@ class CupertinoRadio(ConstrainedControl):
 
     toggleable: bool = False
     """
-    Set to `True` if this radio button is allowed to be returned to an indeterminate 
+    Set to `True` if this radio button is allowed to be returned to an indeterminate
     state by selecting it again when selected.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the radio's border 
+    The [color](https://flet.dev/docs/reference/colors) for the radio's border
     when it has the input focus.
     """
 
@@ -85,12 +85,12 @@ class CupertinoRadio(ConstrainedControl):
     TBD
     """
 
-    on_focus: OptionalControlEventHandler["CupertinoRadio"] = None
+    on_focus: Optional[ControlEventHandler["CupertinoRadio"]] = None
     """
     Fires when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["CupertinoRadio"] = None
+    on_blur: Optional[ControlEventHandler["CupertinoRadio"]] = None
     """
     Fires when the control has lost focus.
     """

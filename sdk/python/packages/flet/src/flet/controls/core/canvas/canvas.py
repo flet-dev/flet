@@ -4,9 +4,9 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.canvas.shape import Shape
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
 
 
 @dataclass
@@ -39,14 +39,14 @@ class Canvas(ConstrainedControl):
     TBD
     """
 
-    resize_interval: OptionalNumber = None
+    resize_interval: Optional[Number] = None
     """
     Sampling interval in milliseconds for `on_resize` event.
 
     Defaults to `0` - call `on_resize` immediately on every change.
     """
 
-    on_resize: OptionalEventHandler[CanvasResizeEvent] = None
+    on_resize: Optional[EventHandler[CanvasResizeEvent]] = None
     """
     Fires when the size of canvas has changed.
 
