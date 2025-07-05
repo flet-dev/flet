@@ -34,22 +34,35 @@ class FletOAuth:
         if not session:
             raise HTTPException(status_code=500, detail="Session not found")
 
-        await session.page._authorize_callback_async(
-            {
-                "state": state_id,
-                "code": request.query_params.get("code"),
-                "error": request.query_params.get("error"),
-                "error_description": request.query_params.get("error_description"),
-            }
-        )
+        state.code = request.query_params.get("code")
+        state.error = request.query_params.get("error")
+        state.error_description = request.query_params.get("error_description")
 
         if state.complete_page_url:
-            return RedirectResponse(state.complete_page_url)
+            app_manager.store_state(state_id, state)
+            response = RedirectResponse(state.complete_page_url)
+            response.set_cookie(
+                "flet_oauth_state",
+                state_id,
+                max_age=300,
+                httponly=True,
+                secure=False,
+                samesite="strict",
+            )
+            return response
         else:
+            await session.page._authorize_callback_async(
+                {
+                    "state": state_id,
+                    "code": state.code,
+                    "error": state.error,
+                    "error_description": state.error_description,
+                }
+            )
             html_content = (
                 state.complete_page_html
                 if state.complete_page_html
-                else f"""
+                else """
             <!DOCTYPE html>
             <html>
             <head>

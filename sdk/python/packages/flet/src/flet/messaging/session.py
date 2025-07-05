@@ -32,6 +32,7 @@ __all__ = ["Session"]
 class Session:
     def __init__(self, conn: Connection):
         self.__conn = conn
+        self.__send_buffer: list[ClientMessage] = []
         self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, BaseControl] = (
@@ -75,6 +76,9 @@ class Session:
         _session_page.set(self.__page)
         self.__conn = conn
         self.__expires_at = None
+        for message in self.__send_buffer:
+            self.__send_message(message)
+        self.__send_buffer.clear()
         await self.dispatch_event(self.__page._i, "connect", None)
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
@@ -107,7 +111,7 @@ class Session:
             self.__index.pop(removed_control._i, None)
 
         if len(patch) > 1:
-            self.connection.send_message(
+            self.__send_message(
                 ClientMessage(
                     ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
                 )
@@ -229,7 +233,7 @@ class Session:
             self.error(f"Exception in '{field_name}': {ex}\n{tb}")
 
     def invoke_method(self, control_id: int, call_id: str, method_name: str, args: Any):
-        self.connection.send_message(
+        self.__send_message(
             ClientMessage(
                 ClientAction.INVOKE_METHOD,
                 InvokeMethodRequestBody(
@@ -256,16 +260,22 @@ class Session:
             if (
                 control.is_isolated()
                 and not hasattr(control, "_frozen")
-                and self.connection
+                and self.__conn
             ):
                 control.update()
                 break
             control = control.parent
 
     def error(self, message: str):
-        self.connection.send_message(
+        self.__send_message(
             ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody(message))
         )
+
+    def __send_message(self, message: ClientMessage):
+        if self.__conn:
+            self.__conn.send_message(message)
+        else:
+            self.__send_buffer.append(message)
 
     def __get_update_control_patch(
         self, control: BaseControl, prev_control: Optional[BaseControl]

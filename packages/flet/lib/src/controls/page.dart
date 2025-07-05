@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/keyboard_event.dart';
@@ -104,20 +105,29 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     // page services
     var pageServicesControl = widget.control.child("_page_services");
-    if (_pageServices == null && pageServicesControl != null) {
-      _pageServices = ServiceRegistry(
-          control: pageServicesControl,
-          propertyName: "services",
-          backend: FletBackend.of(context));
+    if (pageServicesControl != null) {
+      if (_pageServices == null ||
+          (_pageServices != null &&
+              _pageServices?.control.internals?["ts"] !=
+                  pageServicesControl.internals?["ts"])) {
+        _pageServices = ServiceRegistry(
+            control: pageServicesControl,
+            propertyName: "services",
+            backend: FletBackend.of(context));
+      }
     }
 
     // user services
     var userServicesControl = widget.control.child("_user_services");
-    if (_userServices == null && userServicesControl != null) {
-      _userServices = ServiceRegistry(
-          control: userServicesControl,
-          propertyName: "services",
-          backend: FletBackend.of(context));
+    if (userServicesControl != null) {
+      if (_userServices == null ||
+          _userServices?.control.internals?["ts"] !=
+              userServicesControl.internals?["ts"]) {
+        _userServices = ServiceRegistry(
+            control: userServicesControl,
+            propertyName: "services",
+            backend: FletBackend.of(context));
+      }
     }
 
     _attachKeyboardListenerIfNeeded();
@@ -190,7 +200,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _handleAppLifecycleTransition(String state) {
-    widget.control.triggerEvent("app_lifecycle_state_change", state);
+    widget.control.triggerEvent("app_lifecycle_state_change", {"state": state});
   }
 
   bool _handleKeyDown(KeyEvent e) {

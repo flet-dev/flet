@@ -115,7 +115,9 @@ class BaseControl:
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
 
-    _internals: dict = field(default_factory=dict, init=False, repr=False, compare=False)
+    _internals: dict = field(
+        default_factory=dict, init=False, repr=False, compare=False
+    )
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
