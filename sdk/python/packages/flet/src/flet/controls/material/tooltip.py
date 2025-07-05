@@ -73,9 +73,6 @@ class Tooltip:
     margin: Optional[MarginValue] = None
     """
     The empty space that surrounds the tooltip.
-
-    Value is of type [`Margin`](https://flet.dev/docs/reference/types/margin)
-    or a number.
     """
 
     padding: Optional[PaddingValue] = None
@@ -83,7 +80,7 @@ class Tooltip:
     The amount of space by which to inset the tooltip's content.
 
     The value is an instance of
-    [`Padding`](https://flet.dev/docs/reference/types/padding) class or a number.
+    [`Padding`][flet.Padding] class or a number.
 
     On mobile, defaults to `16.0` logical pixels horizontally and `4.0` vertically.
     On desktop, defaults to `8.0` logical pixels horizontally and `4.0` vertically.
@@ -96,7 +93,7 @@ class Tooltip:
 
     text_style: Optional[TextStyle] = None
     """
-    The [TextStyle](https://flet.dev/docs/reference/types/textstyle) to use for the
+    The [`TextStyle`][flet.TextStyle] to use for the
     message of the tooltip.
     """
 
@@ -104,7 +101,7 @@ class Tooltip:
     """
     How the message of the tooltip is aligned horizontally.
 
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign)
+    Value is of type [`TextAlign`][flet.TextAlign]
     and defaults to `TextAlign.LEFT`.
     """
 
@@ -143,8 +140,6 @@ class Tooltip:
     enable_tap_to_dismiss: bool = True
     """
     Whether the tooltip can be dismissed by tapping on it.
-
-    Defaults to `True`.
     """
 
     exclude_from_semantics: Optional[bool] = None
@@ -157,9 +152,6 @@ class Tooltip:
     trigger_mode: Optional[TooltipTriggerMode] = None
     """
     The mode of the tooltip's trigger.
-
-    Value is of type
-    [`TooltipTriggerMode`](https://flet.dev/docs/reference/types/tooltiptriggermode).
     """
 
     mouse_cursor: Optional[MouseCursor] = None

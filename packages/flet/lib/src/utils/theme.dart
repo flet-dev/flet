@@ -140,7 +140,6 @@ ThemeData parseTheme(
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
     cardColor: parseColor(value?["card_color"], theme),
     dividerColor: parseColor(value?["divider_color"], theme),
-    indicatorColor: parseColor(value?["indicator_color"], theme),
     hintColor: parseColor(value?["hint_color"], theme),
     shadowColor: parseColor(value?["shadow_color"], theme),
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),

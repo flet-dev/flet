@@ -91,12 +91,12 @@ class Draggable(Control):
 
     on_drag_start: Optional[ControlEventHandler["Draggable"]] = None
     """
-    Fires when this draggable starts being dragged.
+    Called when this draggable starts being dragged.
     """
 
     on_drag_complete: Optional[ControlEventHandler["Draggable"]] = None
     """
-    Fires when this draggable is dropped and accepted by a [`DragTarget`][flet.DragTarget].
+    Called when this draggable is dropped and accepted by a [`DragTarget`][flet.DragTarget].
     """
 
     def before_update(self):

@@ -124,7 +124,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     interaction: Optional[SliderInteraction] = None
     """
     The allowed way for the user to interact with this slider. Value is a
-    [`SliderInteraction`](https://flet.dev/docs/reference/types/sliderinteraction)
+    [`SliderInteraction`][flet.SliderInteraction]
     and defaults to `SliderInteraction.TAP_AND_SLIDE`.
     """
 
@@ -139,7 +139,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     The highlight [color](https://flet.dev/docs/reference/colors) that's typically
     used to indicate that the range slider thumb is in `ControlState.HOVERED` or
     `DRAGGED`
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
+    [`ControlState`][flet.ControlState] .
     """
 
     secondary_track_value: Optional[Number] = None
@@ -160,7 +160,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     control.
 
     Value is of type
-    [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    [`MouseCursor`][flet.MouseCursor]
     """
 
     padding: Optional[PaddingValue] = None
@@ -175,27 +175,27 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     on_change: Optional[ControlEventHandler["Slider"]] = None
     """
-    Fires when the state of the Slider is changed.
+    Called when the state of the Slider is changed.
     """
 
     on_change_start: Optional[ControlEventHandler["Slider"]] = None
     """
-    Fires when the user starts selecting a new value for the slider.
+    Called when the user starts selecting a new value for the slider.
     """
 
     on_change_end: Optional[ControlEventHandler["Slider"]] = None
     """
-    Fires when the user is done selecting a new value for the slider.
+    Called when the user is done selecting a new value for the slider.
     """
 
     on_focus: Optional[ControlEventHandler["Slider"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Slider"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     def before_update(self):

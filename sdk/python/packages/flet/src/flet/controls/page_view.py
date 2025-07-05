@@ -72,7 +72,7 @@ class PageView(AdaptiveControl):
     """
     The page's theme mode.
 
-    Value is of type [`ThemeMode`](https://flet.dev/docs/reference/types/thememode) and
+    Type: [`ThemeMode`][flet.ThemeMode] and
     defaults to `ThemeMode.SYSTEM`.
     """
     theme: Optional[Theme] = None
@@ -104,7 +104,7 @@ class PageView(AdaptiveControl):
     scroll_event_interval: Optional[Number] = None
     on_resized: Optional[EventHandler["PageResizeEvent"]] = None
     """
-    Fires when a user resizes a browser or native OS window containing Flet app, for
+    Called when a user resizes a browser or native OS window containing Flet app, for
     example:
 
     ```python
@@ -114,21 +114,21 @@ class PageView(AdaptiveControl):
     page.on_resized = page_resized
     ```
 
-    Event handler argument is of type [`WindowResizeEvent`](https://flet.dev/docs/reference/types/windowresizeevent).
+    Event type: [`PageResizeEvent`][flet.PageResizeEvent]
     """
     on_media_change: Optional[ControlEventHandler["PageView"]] = None
     """
-    Fires when `page.media` has changed.
+    Called when `page.media` has changed.
 
     Event handler argument is of type
     [`PageMediaData`](https://flet.dev/docs/docs/reference/types/pagemediadata).
     """
     on_scroll: Optional[EventHandler["OnScrollEvent"]] = None
     """
-    Fires when page's scroll position is changed by a user.
+    Called when page's scroll position is changed by a user.
 
     Event handler argument is of type
-    [`OnScrollEvent`](https://flet.dev/docs/reference/types/onscrollevent).
+    [`OnScrollEvent`][flet.OnScrollEvent]
     """
 
     def __default_view(self) -> View:

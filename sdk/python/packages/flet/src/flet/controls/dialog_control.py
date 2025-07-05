@@ -18,5 +18,5 @@ class DialogControl(AdaptiveControl):
 
     on_dismiss: Optional[ControlEventHandler["DialogControl"]] = None
     """
-    Fires when dialog is dismissed.
+    Called when dialog is dismissed.
     """

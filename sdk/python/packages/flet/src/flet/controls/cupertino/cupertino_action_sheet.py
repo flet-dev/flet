@@ -18,7 +18,7 @@ class CupertinoActionSheet(ConstrainedControl):
     """
     A control containing the title of the action sheet.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     message: Optional[StrOrControl] = None
@@ -26,14 +26,14 @@ class CupertinoActionSheet(ConstrainedControl):
     A control containing a descriptive message that provides more details about the
     reason for the alert.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     actions: Optional[list[Control]] = None
     """
     A list of action buttons to be shown in the sheet.
 
-    These actions are typically [`CupertinoActionSheetAction`](https://flet.dev/docs/controls/cupertinoactionsheetaction)s.
+    These actions are typically [`CupertinoActionSheetAction`][flet.CupertinoActionSheetAction]s.
 
     This list must have at least one action.
     """
@@ -42,6 +42,6 @@ class CupertinoActionSheet(ConstrainedControl):
     """
     An optional control to be shown below the actions but grouped separately from them.
 
-    Typically a [`CupertinoActionSheetAction`](https://flet.dev/docs/controls/cupertinoactionsheetaction) 
+    Typically a [`CupertinoActionSheetAction`][flet.CupertinoActionSheetAction]
     button.
     """

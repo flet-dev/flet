@@ -23,34 +23,32 @@ class CupertinoAlertDialog(DialogControl):
 
     modal: bool = False
     """
-    If set to True, dialog cannot be dismissed by clicking the area outside of it.
-    The default value is False.
+    Whether this dialog cannot be dismissed by clicking the area outside of it.
     """
 
     title: Optional[StrOrControl] = None
     """
-    The (optional) title of the dialog is displayed in a large font at the top of the 
+    The (optional) title of the dialog is displayed in a large font at the top of the
     dialog.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     content: Optional[Control] = None
     """
-    The (optional) content of the dialog is displayed in the center of the dialog in a 
+    The (optional) content of the dialog is displayed in the center of the dialog in a
     lighter font.
 
-    Typically this is a [`Column`](https://flet.dev/docs/controls/column) that contains 
-    the dialog's [`Text`](https://flet.dev/docs/controls/text) message.
+    Typically this is a [`Column`][flet.Column] that contains
+    the dialog's [`Text`][flet.Text] message.
     """
 
     actions: list[Control] = field(default_factory=list)
     """
     The (optional) set of actions that are displayed at the bottom of the dialog.
 
-    Typically this is a list of 
-    [`CupertinoDialogAction`](https://flet.dev/docs/controls/cupertinodialogaction) 
-    controls.
+    Typically this is a list of
+    [`CupertinoDialogAction`][flet.CupertinoDialogAction] controls.
     """
 
     inset_animation: Animation = field(
@@ -59,11 +57,10 @@ class CupertinoAlertDialog(DialogControl):
         )
     )
     """
-    The animation style to be used when the system keyboard intrudes into the space 
+    The animation style to be used when the system keyboard intrudes into the space
     that the dialog is placed in.
 
-    Value is of type 
-    [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     def before_update(self):

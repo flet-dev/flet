@@ -293,7 +293,7 @@ class Page(PageView):
 
     on_platform_brightness_change: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when brightness of app host platform has changed.
+    Called when brightness of app host platform has changed.
     """
 
     on_app_lifecycle_state_change: Optional[
@@ -308,7 +308,7 @@ class Page(PageView):
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
-    Fires when page route changes either programmatically, by editing
+    Called when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
 
     Event handler argument is of type
@@ -317,7 +317,7 @@ class Page(PageView):
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
-    Fires when the user clicks automatic "Back" button in
+    Called when the user clicks automatic "Back" button in
     [AppBar](https://flet.dev/docs/controls/appbar) control.
 
     Event handler argument is of type
@@ -326,7 +326,7 @@ class Page(PageView):
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
     """
-    Fires when a keyboard key is pressed.
+    Called when a keyboard key is pressed.
 
     Event handler argument is of type
     [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
@@ -334,7 +334,7 @@ class Page(PageView):
 
     on_connect: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when a web user (re-)connects to a page session.
+    Called when a web user (re-)connects to a page session.
 
     It is not triggered when an app page is first opened, but is triggered when
     the page is refreshed, or Flet web client has re-connected after computer
@@ -344,13 +344,13 @@ class Page(PageView):
 
     on_disconnect: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when a web user disconnects from a page session, i.e. closes browser
+    Called when a web user disconnects from a page session, i.e. closes browser
     tab/window.
     """
 
     on_close: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when a session has expired after configured amount of time
+    Called when a session has expired after configured amount of time
     (60 minutes by default).
     """
 
@@ -369,7 +369,7 @@ class Page(PageView):
 
     on_error: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when unhandled exception occurs.
+    Called when unhandled exception occurs.
     """
 
     on_multi_view_add: Optional[EventHandler[MultiViewAddEvent]] = None
@@ -418,7 +418,7 @@ class Page(PageView):
             page.add(x)
             print(type(page.get_control(x.uid)))
 
-        ft.app(main)
+        ft.run(main)
         ```
         """
         return self.get_session().index.get(id)
@@ -552,7 +552,7 @@ class Page(PageView):
         call:
 
         ```python
-        ft.app(main, upload_dir="uploads")
+        ft.run(main, upload_dir="uploads")
         ```
         """
         return self.get_session().connection.get_upload_url(file_name, expires)

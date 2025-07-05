@@ -50,12 +50,11 @@ class Points(Shape):
     """
     Defines how a list of points is interpreted when drawing a set of points.
 
-    Value is of type [`PointMode`](https://flet.dev/docs/reference/types/pointmode).
+    Type: [`PointMode`][flet.PointMode]
     """
 
     paint: Optional[Paint] = None
     """
     A style to draw points with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    [`Paint`][flet.Paint] class.
     """
-

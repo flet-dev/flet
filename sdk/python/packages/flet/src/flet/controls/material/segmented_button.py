@@ -26,13 +26,13 @@ class Segment(Control):
 
     icon: Optional[IconValueOrControl] = None
     """
-    The icon (typically an [`Icon`](https://flet.dev/docs/controls/icon)) to be
+    The icon (typically an [`Icon`][flet.Icon]) to be
     displayed in the segment.
     """
 
     label: Optional[StrOrControl] = None
     """
-    The label (usually a [`Text`](https://flet.dev/docs/controls/text)) to be
+    The label (usually a [`Text`][flet.Text]) to be
     displayed in the segment.
     """
 
@@ -62,7 +62,7 @@ class SegmentedButton(ConstrainedControl):
     """
     Customizes this button's appearance.
 
-    Value is of type [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
+    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     allow_empty_selection: bool = False
@@ -121,7 +121,7 @@ class SegmentedButton(ConstrainedControl):
     """
     The orientation of the button's `segments`.
 
-    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis) and defaults
+    Type: [`Axis`][flet.Axis] and defaults
     to `Axis.HORIZONTAL`.
     """
 
@@ -138,7 +138,7 @@ class SegmentedButton(ConstrainedControl):
 
     on_change: Optional[ControlEventHandler["SegmentedButton"]] = None
     """
-    Fires when the selection changes.
+    Called when the selection changes.
     """
 
     def before_update(self):

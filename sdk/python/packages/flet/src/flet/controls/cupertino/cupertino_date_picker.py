@@ -51,8 +51,8 @@ class CupertinoDatePicker(ConstrainedControl):
 
     Defaults to `None` - no limit.
 
-    When not `None`, one can still scroll the picker to dates earlier than
-    `first_date`, with the exception that the `on_change` will not be called.
+    When not `None` (no limit), one can still scroll the picker to dates earlier than
+    `first_date`, with the exception that the [`on_change`][flet.CupertinoDatePicker.on_change] will not be called.
     Once let go, the picker will scroll back to `first_date`.
 
     In `CupertinoDatePickerMode.TIME` mode, a time becomes unselectable if the
@@ -69,7 +69,7 @@ class CupertinoDatePicker(ConstrainedControl):
     `last_date`, with the exception that the `on_change` will not be called.
     Once let go, the picker will scroll back to `last_date`.
 
-    In `CupertinoDatePickerMode.TIME` mode, a time becomes unselectable if the
+    In [`CupertinoDatePickerMode.TIME`][flet.CupertinoDatePickerMode.TIME] mode, a time becomes unselectable if the
     datetime produced by combining that particular time and the date part of
     initialDateTime is later than `last_date`. So typically `last_date` needs to
     be set to a datetime that is on the same date as initialDateTime.
@@ -85,7 +85,7 @@ class CupertinoDatePicker(ConstrainedControl):
     minute_interval: int = 1
     """
     The granularity of the minutes spinner, if it is shown in the current
-    `date_picker_mode`.
+    [`date_picker_mode`][flet.CupertinoDatePicker.date_picker_mode].
 
     Note:
         Must be an integer factor of `60`.
@@ -100,7 +100,7 @@ class CupertinoDatePicker(ConstrainedControl):
     maximum_year: Optional[int] = None
     """
     Maximum year to which the picker can be scrolled when in
-    `CupertinoDatePickerMode.DATE` mode.
+    [`CupertinoDatePickerMode.DATE`][flet.CupertinoDatePickerMode.DATE] mode.
 
     Defaults to `None` - no limit.
     """
@@ -112,7 +112,9 @@ class CupertinoDatePicker(ConstrainedControl):
 
     use_24h_format: bool = False
     """
-    If `True`, 24-hour time format is used else 12-hour time format is used.
+    Whether to use the 24-hour time format.
+    
+    If `False`, the 12-hour time format is used.
     """
 
     show_day_of_week: bool = False
@@ -124,27 +126,30 @@ class CupertinoDatePicker(ConstrainedControl):
     """
     The mode of the date picker.
 
-    Value is of type [`CupertinoDatePickerMode`](https://flet.dev/docs/reference/types/cupertinodatepickermode).
+    Type: [`CupertinoDatePickerMode`][flet.CupertinoDatePickerMode]
     """
 
     date_order: Optional[CupertinoDatePickerDateOrder] = None
     """
     The order in which the columns inside this picker are displayed.
 
-    Value is of type [`CupertinoDatePickerDateOrder`](https://flet.dev/docs/reference/types/cupertinodatepickerdateorder).
+    Type: [`CupertinoDatePickerDateOrder`][flet.CupertinoDatePickerDateOrder].
 
     Note:
         The final order in which the columns are displayed is also influenced by
-        the `date_picker_mode`. For example, when using
-        `date_picker_mode=CupertinoDatePickerMode.MONTH_YEAR`,
-        both `CupertinoDatePickerDateOrder.DAY_MONTH_YEAR` and
-        `CupertinoDatePickerDateOrder.MONTH_DAY_YEAR` will result in the month|year order.
+        the [`date_picker_mode`][flet.CupertinoDatePicker.date_picker_mode]. For example, if
+        `date_picker_mode` is [`CupertinoDatePickerMode.MONTH_YEAR`][flet.CupertinoDatePickerMode.MONTH_YEAR]
+        both [`CupertinoDatePickerDateOrder.DAY_MONTH_YEAR`][flet.CupertinoDatePickerDateOrder.DAY_MONTH_YEAR] and
+        [`CupertinoDatePickerDateOrder.MONTH_DAY_YEAR`][flet.CupertinoDatePickerDateOrder.MONTH_DAY_YEAR] will result in the month|year order.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoDatePicker"]] = None
     """
-    Fires when the selected date and/or time changes. Will not fire if the new
-    selected value is not valid, or is not in the range of `first_date` and `last_date`.
+    Called when the selected date and/or time changes.
+
+    Will not fire if the new
+    selected value is not valid, or is not in the range of [`first_date`][flet.CupertinoDatePicker.first_date] and
+    [`last_date`][flet.CupertinoDatePicker.last_date].
     """
 
     def before_update(self):
@@ -156,52 +161,54 @@ class CupertinoDatePicker(ConstrainedControl):
         else:
             value = self.value
 
-        assert self.item_extent > 0, "item_extent must be strictly greater than 0"
-        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
-            "minute_interval must be a positive integer factor of 60"
-        )
+        assert (
+            self.item_extent > 0
+        ), f"item_extent must be strictly greater than 0, got {self.item_extent}"
+        assert (
+            self.minute_interval > 0 and 60 % self.minute_interval == 0
+        ), f"minute_interval must be a positive integer factor of 60, got {self.minute_interval}"
 
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
             if self.first_date:
-                assert value >= self.first_date, (
-                    f"value ({value}) can't be before first_date ({self.first_date})"
-                )
+                assert (
+                    value >= self.first_date
+                ), f"value ({value}) can't be before first_date ({self.first_date})"
             if self.last_date:
-                assert value <= self.last_date, (
-                    f"value ({value}) can't be after last_date ({self.last_date})"
-                )
+                assert (
+                    value <= self.last_date
+                ), f"value ({value}) can't be after last_date ({self.last_date})"
 
         if self.date_picker_mode in [
             CupertinoDatePickerMode.DATE,
             CupertinoDatePickerMode.MONTH_YEAR,
         ]:
-            assert 1 <= self.minimum_year <= value.year, (
-                f"value.year ({value.year}) can't be less than minimum_year "
-            )
+            assert (
+                1 <= self.minimum_year <= value.year
+            ), f"value.year ({value.year}) can't be less than minimum_year "
             f"({self.minimum_year})"
 
             if self.maximum_year:
-                assert value.year <= self.maximum_year, (
-                    f"value.year ({value.year}) can't be greater than maximum_year "
-                )
+                assert (
+                    value.year <= self.maximum_year
+                ), f"value.year ({value.year}) can't be greater than maximum_year "
                 f"({self.maximum_year})"
 
             if self.first_date:
-                assert value >= self.first_date, (
-                    f"value ({value}) can't be before first_date ({self.first_date})"
-                )
+                assert (
+                    value >= self.first_date
+                ), f"value ({value}) can't be before first_date ({self.first_date})"
 
             if self.last_date:
-                assert value <= self.last_date, (
-                    f"value ({value}) can't be after last_date ({self.last_date})"
-                )
+                assert (
+                    value <= self.last_date
+                ), f"value ({value}) can't be after last_date ({self.last_date})"
 
         if self.date_picker_mode != CupertinoDatePickerMode.DATE:
-            assert not self.show_day_of_week, (
-                "show_day_of_week is only supported in CupertinoDatePickerMode.DATE mode"
-            )
+            assert (
+                not self.show_day_of_week
+            ), "show_day_of_week is only supported when date_picker_mode is CupertinoDatePickerMode.DATE"
 
-        assert value.minute % self.minute_interval == 0, (
-            f"value.minute ({value.minute}) must be divisible by minute_interval "
-        )
+        assert (
+            value.minute % self.minute_interval == 0
+        ), f"value.minute ({value.minute}) must be divisible by minute_interval "
         f"({self.minute_interval})"

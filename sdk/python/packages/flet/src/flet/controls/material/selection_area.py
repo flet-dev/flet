@@ -23,7 +23,7 @@ class SelectionArea(Control):
 
     on_change: Optional[ControlEventHandler["SelectionArea"]] = None
     """
-    Fires when the selected content changes.
+    Called when the selected content changes.
     """
 
     def before_update(self):

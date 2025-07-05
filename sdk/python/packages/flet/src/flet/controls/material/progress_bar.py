@@ -49,7 +49,7 @@ class ProgressBar(ConstrainedControl):
     The border radius of both the indicator and the track.
 
     Border radius is an instance of
-    [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius) class.
+    [`BorderRadius`][flet.BorderRadius] class.
 
     Defaults to `border_radius.all(0)` - rectangular shape.
     """

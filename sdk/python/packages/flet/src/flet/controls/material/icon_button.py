@@ -104,7 +104,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
             )
         )
 
-    ft.app(main)
+    ft.run(main)
     ```
     """
 
@@ -121,7 +121,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     style: Optional[ButtonStyle] = None
     """
-    Value is of type [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
+    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     autofocus: bool = False
@@ -161,7 +161,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     alignment: Optional[Alignment] = None
     """
     Defines how the icon is positioned within the IconButton. Alignment is an instance
-    of [`Alignment`](https://flet.dev/docs/reference/types/alignment) class.
+    of [`Alignment`][flet.Alignment] class.
 
     Defaults to `alignment.center`.
     """
@@ -171,7 +171,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Defines the padding around this button. The entire padded icon will react to input
     gestures.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and
+    Type: [`Padding`][flet.Padding] and
     defaults to `Padding.all(8)`.
     """
 
@@ -192,7 +192,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget).
+    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     mouse_cursor: Optional[MouseCursor] = None
@@ -200,14 +200,14 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the control's layout will be.
 
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
+    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     size_constraints: Optional[BoxConstraints] = None
@@ -217,17 +217,17 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     on_click: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Fires when a user clicks the button.
+    Called when a user clicks the button.
     """
 
     on_focus: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     content: Optional[Control] = None  # todo(0.70.3): remove in favor of icon

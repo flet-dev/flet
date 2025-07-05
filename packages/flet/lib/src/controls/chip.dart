@@ -87,7 +87,8 @@ class _ChipControlState extends State<ChipControl> {
       isEnabled: !disabled,
       padding: widget.control.getPadding("padding"),
       labelPadding: widget.control.getPadding("label_padding"),
-      labelStyle: widget.control.getTextStyle("label_style", Theme.of(context)),
+      labelStyle:
+          widget.control.getTextStyle("label_text_style", Theme.of(context)),
       selectedColor: widget.control.getColor("selected_color", context),
       selectedShadowColor:
           widget.control.getColor("selected_shadow_color", context),
@@ -95,7 +96,7 @@ class _ChipControlState extends State<ChipControl> {
       shape: widget.control.getShape("shape", Theme.of(context)),
       color: widget.control.getWidgetStateColor("color", Theme.of(context)),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
-      pressElevation: widget.control.getDouble("click_elevation"),
+      pressElevation: widget.control.getDouble("elevation_on_click"),
       side: widget.control.getBorderSide("border_side", Theme.of(context)),
       clipBehavior:
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!,

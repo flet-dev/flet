@@ -43,7 +43,7 @@ class Option(Control):
     """
     Defines the alignment of this option in it's container.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and
+    Type: [`Alignment`][flet.Alignment]and
     defaults to `Alignment.center_left()`.
     """
 
@@ -51,12 +51,12 @@ class Option(Control):
     """
     Defines the style of the `text`.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     on_click: Optional[ControlEventHandler["Option"]] = None
     """
-    Fires when this option is clicked.
+    Called when this option is clicked.
     """
 
     def before_update(self):
@@ -87,9 +87,6 @@ class DropdownM2(FormFieldControl):
     alignment: Optional[Alignment] = None
     """
     Defines how the `hint` or the selected item is positioned within this dropdown.
-
-    Alignment is an instance of [`Alignment`](https://flet.dev/docs/reference/types/alignment)
-    class.
     """
 
     autofocus: bool = False
@@ -186,22 +183,22 @@ class DropdownM2(FormFieldControl):
 
     on_change: Optional[ControlEventHandler["DropdownM2"]] = None
     """
-    Fires when the selected item of this dropdown has changed.
+    Called when the selected item of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["DropdownM2"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["DropdownM2"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     on_click: Optional[ControlEventHandler["DropdownM2"]] = None
     """
-    Fires when this dropdown is clicked.
+    Called when this dropdown is clicked.
     """
 
     def before_update(self):

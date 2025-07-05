@@ -62,8 +62,6 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     style: Optional[ButtonStyle] = None
     """
-    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle)
-    class.
     """
 
     autofocus: Optional[bool] = None
@@ -77,7 +75,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     and defaults to `ClipBehavior.NONE`.
     """
 
@@ -91,23 +89,23 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and
+    Type: [`UrlTarget`][flet.UrlTarget] and
     defaults to `UrlTarget.BLANK`.
     """
 
     on_click: Optional[ControlEventHandler["ElevatedButton"]] = None
     """
-    Fires when a user clicks the button.
+    Called when a user clicks the button.
     """
 
     on_long_press: Optional[ControlEventHandler["ElevatedButton"]] = None
     """
-    Fires when the button is long-pressed.
+    Called when the button is long-pressed.
     """
 
     on_hover: Optional[ControlEventHandler["ElevatedButton"]] = None
     """
-    Fires when a mouse pointer enters or exists the button response area. `data`
+    Called when a mouse pointer enters or exists the button response area. `data`
     property of event object contains `true` (string) when cursor enters and `false`
     when it exits.
 
@@ -131,12 +129,12 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     on_focus: Optional[ControlEventHandler["ElevatedButton"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["ElevatedButton"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     def before_update(self):

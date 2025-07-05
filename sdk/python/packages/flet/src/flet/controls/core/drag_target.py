@@ -68,31 +68,31 @@ class DragTarget(Control):
 
     on_will_accept: Optional[EventHandler[DragWillAcceptEvent]] = None
     """
-    Fires when a draggable is dragged on this target.
+    Called when a draggable is dragged on this target.
 
-    Event handler argument is an instance of [`DragWillAcceptEvent`][flet.DragWillAcceptEvent].
+    Event type: [`DragWillAcceptEvent`][flet.DragWillAcceptEvent]
     """
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Fires when the user does drop an acceptable (same [`group`][flet.DragTarget.group]) draggable on
+    Called when the user does drop an acceptable (same [`group`][flet.DragTarget.group]) draggable on
     this target.
 
-    Event handler argument is an instance of [`DragTargetEvent`][flet.DragTargetEvent].
+    Event type: [`DragTargetEvent`][flet.DragTargetEvent]
 
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """
 
     on_leave: Optional[EventHandler[DragTargetLeaveEvent]] = None
     """
-    Fires when a draggable leaves this target.
+    Called when a draggable leaves this target.
 
-    Event handler argument is an instance of [`DragTargetLeaveEvent`][flet.DragTargetLeaveEvent].
+    Event type: [`DragTargetLeaveEvent`][flet.DragTargetLeaveEvent].
     """
 
     on_move: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Fires when a draggable moves within this target.
+    Called when a draggable moves within this target.
 
     Event handler argument is of type [`DragTargetEvent`][flet.DragTargetEvent].
     """

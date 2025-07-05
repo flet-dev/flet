@@ -39,28 +39,28 @@ class MenuItemButton(ConstrainedControl):
     """
     An optional control to display before the `content`.
 
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    Typically an [`Icon`][flet.Icon] control.
     """
 
     trailing: Optional[Control] = None
     """
     An optional control to display after the `content`.
 
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    Typically an [`Icon`][flet.Icon] control.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     Whether to clip the content of this control or not.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     style: Optional[ButtonStyle] = None
     """
     Customizes this button's appearance.
 
-    Value is of type [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
+    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     semantic_label: Optional[str] = None
@@ -81,7 +81,7 @@ class MenuItemButton(ConstrainedControl):
 
     If the menu item button is a descendent of `MenuBar`, then this property is ignored.
 
-    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis).
+    Type: [`Axis`][flet.Axis]
     """
 
     on_click: Optional[ControlEventHandler["MenuItemButton"]] = None

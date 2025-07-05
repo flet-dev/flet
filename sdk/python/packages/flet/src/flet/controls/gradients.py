@@ -101,14 +101,12 @@ class LinearGradient(Gradient):
 
     begin: Alignment = field(default_factory=lambda: Alignment.center_left())
     """
-    An instance of [Alignment](https://flet.dev/docs/reference/types/alignment). The
-    offset at which stop `0.0` of the gradient is placed.
+    The offset at which stop `0.0` of the gradient is placed.
     """
 
     end: Alignment = field(default_factory=lambda: Alignment.center_right())
     """
-    An instance of [Alignment](https://flet.dev/docs/reference/types/alignment). The
-    offset at which stop `1.0` of the gradient is placed.
+    The offset at which stop `1.0` of the gradient is placed.
     """
 
     def __post_init__(self):
@@ -127,7 +125,6 @@ class RadialGradient(Gradient):
 
     center: Alignment = field(default_factory=lambda: Alignment.center())
     """
-    An instance of [Alignment](https://flet.dev/docs/reference/types/alignment) class.
     The center of the gradient, as an offset into the (-1.0, -1.0) x (1.0, 1.0) square
     describing the gradient which will be mapped onto the paint box. For example, an
     alignment of (0.0, 0.0) will place the radial gradient in the center of the box.

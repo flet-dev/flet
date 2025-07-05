@@ -29,17 +29,16 @@ class AutoComplete(Control):
 
     suggestions: list[AutoCompleteSuggestion] = field(default_factory=list)
     """
-    A list of [`AutoCompleteSuggestion`](https://flet.dev/docs/reference/types/autocompletesuggestion)
+    A list of [`AutoCompleteSuggestion`][flet.AutoCompleteSuggestion]
     controls representing the suggestions to be displayed.
 
-    **Note:**
-
-    - The internal filtration process of the suggestions (based on their `key`s) with
-      respect to the user's input is case-insensitive because the comparison is done
-      in lowercase.
-    - A valid `AutoCompleteSuggestion` must have at least a `key` or `value` specified,
-      else it will be ignored. If only `key` is provided, `value` will be set to `key`
-      as fallback and vice versa.
+    Note:
+        - The internal filtration process of the suggestions (based on their `key`s) with
+          respect to the user's input is case-insensitive because the comparison is done
+          in lowercase.
+        - A valid `AutoCompleteSuggestion` must have at least a `key` or `value` specified,
+          else it will be ignored. If only `key` is provided, `value` will be set to `key`
+          as fallback and vice versa.
     """
 
     suggestions_max_height: Number = 200
@@ -49,11 +48,12 @@ class AutoComplete(Control):
 
     on_select: Optional[EventHandler[AutoCompleteSelectEvent]] = None
     """
-    Fires when a suggestion is selected.
+    Called when a suggestion is selected.
 
-    Event handler is of type [`AutoCompleteSelectEvent`](https://flet.dev/docs/reference/types/autocompleteselectevent).
+    Event type: [`AutoCompleteSelectEvent`][flet.AutoCompleteSelectEvent]
     """
 
     @property
     def selected_index(self):
-        return self._selected_index  # todo: add a check for it's availability
+        # TODO: check availability of _selected_index + a default if not yet available
+        return self._selected_index

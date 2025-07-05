@@ -21,5 +21,5 @@ class Color(Shape):
     """
     Blend mode to apply.
 
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
+    Type: [`BlendMode`][flet.BlendMode]
     """

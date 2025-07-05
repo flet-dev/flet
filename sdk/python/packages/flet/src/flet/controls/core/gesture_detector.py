@@ -94,7 +94,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     at a particular location.
 
     Event handler argument is of type
-    [`TapEvent`](https://flet.dev/docs/reference/types/tapevent).
+    [`TapEvent`][flet.TapEvent]
     """
 
     on_tap_up: Optional[EventHandler[TapEvent["GestureDetector"]]] = None

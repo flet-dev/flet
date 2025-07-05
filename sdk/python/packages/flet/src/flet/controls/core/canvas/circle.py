@@ -30,5 +30,5 @@ class Circle(Shape):
     paint: Optional[Paint] = None
     """
     A style to draw a circle with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    [`Paint`][flet.Paint] class.
     """

@@ -27,7 +27,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     How the child Controls should be placed vertically.
 
     Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment).
+    [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
@@ -35,7 +35,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     Defines how the [`controls`][flet.Column.controls] should be placed horizontally.
 
     Value is of type
-    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment).
+    [`CrossAxisAlignment`][flet.CrossAxisAlignment]
     """
 
     spacing: Number = 10
@@ -49,7 +49,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     tight: bool = False
     """
     Determines how vertical space is allocated.
-    
+
     If `False` (default), children expand to fill the available vertical space.
     If `True`, only the minimum vertical space required by the children is used.
     """
@@ -70,5 +70,5 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap] is `True`.
 
     Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment).
+    [`MainAxisAlignment`][flet.MainAxisAlignment]
     """

@@ -25,7 +25,7 @@ class CupertinoIcons(str, Enum):
         Args:
             exclude: A list of icons members to exclude from the selection.
             weights: A dictionary mapping icon members to their respective weights for
-            weighted random selection.
+                weighted random selection.
 
         Returns:
             A randomly selected icon, or None if all members are excluded.

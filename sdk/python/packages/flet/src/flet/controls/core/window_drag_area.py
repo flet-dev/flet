@@ -11,48 +11,51 @@ from flet.controls.events import DragEndEvent, DragStartEvent
 @control("WindowDragArea")
 class WindowDragArea(ConstrainedControl):
     """
-    A control for drag to move, maximize and restore application window.
+    It mimics the behavior (drag, move, maximize, restore) of a native OS window
+    title bar on the [`content`][(c).] control.
 
-    When you have hidden the title bar with `page.window_title_bar_hidden`, you can add
-    this control to move the window position.
+    Raises:
+        AssertionError: If [`content`][(c).] is not visible.
     """
 
     content: Control
     """
-    The content of this `WindowDragArea`.
+    The content of this drag area.
+
+    Must be visible.
     """
 
     maximizable: bool = True
     """
     Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's
     window.
-    Defaults to `True`.
     """
 
     on_double_tap: Optional[EventHandler[WindowEvent["WindowDragArea"]]] = None
     """
-    Fires when the `WindowDragArea` is double-tapped and `maximizable=True`.
+    Called when the `WindowDragArea` is double-tapped and `maximizable=True`.
 
-    Event handler argument is of type `WindowEvent`,
-    with its `type` property being one of the following: `WindowEventType.MAXIMIZE`,
-    `WindowEventType.UNMAXIMIZE`
+    Event type: [`WindowEvent`][flet.WindowEvent]
+
+    Info:
+        When a double-tap event is fired, the [`type`][flet.WindowEvent.type] property of the
+        event handler argument can only be one of the following: `WindowEventType.MAXIMIZE`,
+        `WindowEventType.UNMAXIMIZE`.
     """
 
     on_drag_start: Optional[EventHandler[DragStartEvent["WindowDragArea"]]] = None
     """
-    Fires when a pointer has contacted the screen and has begun to move/drag.
+    Called when a pointer has contacted the screen and has begun to move/drag.
 
-    Event handler argument is of type
-    [`DragStartEvent`](https://flet.dev/docs/reference/types/dragstartevent).
+    Event type: [`DragStartEvent`][flet.DragStartEvent]
     """
 
     on_drag_end: Optional[EventHandler[DragEndEvent["WindowDragArea"]]] = None
     """
-    Fires when a pointer that was previously in contact with the screen and
+    Called when a pointer that was previously in contact with the screen and
     moving/dragging is no longer in contact with the screen.
 
-    Event handler argument is of type
-    [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
+    Event type: [`DragEndEvent`][flet.DragEndEvent]
     """
 
     def before_update(self):

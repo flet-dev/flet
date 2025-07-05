@@ -43,13 +43,13 @@ class PaintLinearGradient(PaintGradient):
 
     begin: Optional[OffsetValue]
     """
-    An instance of https://flet.dev/docs/reference/types/offset. The offset at which
+    The offset at which
     stop 0.0 of the gradient is placed.
     """
 
     end: Optional[OffsetValue]
     """
-    An instance of https://flet.dev/docs/reference/types/offset. The offset at which
+    The offset at which
     stop 1.0 of the gradient is placed.
     """
 
@@ -92,8 +92,7 @@ class PaintRadialGradient(PaintGradient):
 
     center: Optional[OffsetValue]
     """
-    An instance of https://flet.dev/docs/reference/types/offset class. The center of
-    the gradient.
+    The center of the gradient.
     """
 
     radius: Number
@@ -155,8 +154,7 @@ class PaintSweepGradient(PaintGradient):
 
     center: Optional[OffsetValue]
     """
-    An instance of https://flet.dev/docs/reference/types/offset class. The center of
-    the gradient.
+    The center of the gradient.
     """
 
     colors: list[str]

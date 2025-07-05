@@ -503,7 +503,7 @@ class NavigationRailTheme:
 @dataclass
 class AppBarTheme:
     """
-    Customizes the appearance of https://flet.dev/docs/controls/appbar across the app.
+    Customizes the appearance of [`AppBar`][flet.AppBar] controls across the app.
     """
 
     color: Optional[ColorValue] = None
@@ -754,7 +754,7 @@ class TimePickerTheme:
 
 
 @dataclass
-class DropdownMenuTheme:
+class DropdownTheme:
     menu_style: Optional[MenuStyle] = None
     text_style: Optional[TextStyle] = None
 
@@ -997,7 +997,7 @@ class Theme:
     date_picker_theme: Optional[DatePickerTheme] = None
     dialog_theme: Optional[DialogTheme] = None
     divider_theme: Optional[DividerTheme] = None
-    # dropdown_menu_theme: Optional[DropdownMenuTheme] = None
+    dropdown_theme: Optional[DropdownTheme] = None
     elevated_button_theme: Optional[ElevatedButtonTheme] = None
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
     text_button_theme: Optional[TextButtonTheme] = None
@@ -1022,7 +1022,6 @@ class Theme:
     scaffold_bgcolor: Optional[ColorValue] = None
     card_color: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
-    indicator_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
     secondary_header_color: Optional[ColorValue] = None

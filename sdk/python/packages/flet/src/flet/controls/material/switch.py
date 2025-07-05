@@ -35,7 +35,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     label_position: Optional[LabelPosition] = None
     """
     Value is of type
-    [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition) and
+    [`LabelPosition`][flet.LabelPosition] and
     defaults to `LabelPosition.RIGHT`.
     """
 
@@ -44,7 +44,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The label's style.
 
     Value is of type
-    [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    [`TextStyle`][flet.TextStyle]
     """
 
     value: bool = False
@@ -107,10 +107,10 @@ class Switch(ConstrainedControl, AdaptiveControl):
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this switch's thumb
-    in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    in various [`ControlState`][flet.ControlState]
     states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The following [`ControlState`][flet.ControlState]
     values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
     `DEFAULT` (fallback).
     """
@@ -118,9 +118,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
     thumb_icon: Optional[ControlStateValue[IconValue]] = None
     """
     The icon of this Switch's thumb in various
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    [`ControlState`][flet.ControlState] states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The following [`ControlState`][flet.ControlState]
     values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
     `DEFAULT` (fallback).
     """
@@ -128,10 +128,10 @@ class Switch(ConstrainedControl, AdaptiveControl):
     track_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this switch's track
-    in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    in various [`ControlState`][flet.ControlState]
     states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The following [`ControlState`][flet.ControlState]
     values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
     `DEFAULT` (fallback).
     """
@@ -164,9 +164,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
     """
     The [color](https://flet.dev/docs/reference/colors) for the switch's
     Material in various
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    [`ControlState`][flet.ControlState] states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The following [`ControlState`][flet.ControlState]
     values are supported: `PRESSED`, `SELECTED`, `HOVERED`, `FOCUSED` and
     `DEFAULT`.
     """
@@ -174,10 +174,10 @@ class Switch(ConstrainedControl, AdaptiveControl):
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The outline [color](https://flet.dev/docs/reference/colors) of this switch's
-    track in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    track in various [`ControlState`][flet.ControlState]
     states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The following [`ControlState`][flet.ControlState]
     values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
     `DEFAULT` (fallback).
     """
@@ -185,7 +185,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The outline width of this switch's track in all or specific
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    [`ControlState`][flet.ControlState] states.
 
     The following states are supported: `SELECTED`, `HOVERED`, `DISABLED`,
     `FOCUSED` and `DEFAULT` (fallback).
@@ -197,29 +197,26 @@ class Switch(ConstrainedControl, AdaptiveControl):
     this control.
 
     The value is
-    [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor) enum.
+    [`MouseCursor`][flet.MouseCursor] enum.
     """
 
     on_change: Optional[ControlEventHandler["Switch"]] = None
     """
-    Fires when the state of the Switch is changed.
+    Called when the state of the Switch is changed.
     """
 
     on_focus: Optional[ControlEventHandler["Switch"]] = None
     """
-    Fires when the control has received focus.
-
-    Event handler argument is of type
-    [`OnFocusEvent`](https://flet.dev/docs/reference/types/onfocusevent).
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Switch"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.splash_radius is None or self.splash_radius >= 0, (
-            "splash_radius cannot be negative"
-        )
+        assert (
+            self.splash_radius is None or self.splash_radius >= 0
+        ), f"splash_radius must be greater than or equal to 0, got {self.splash_radius}"

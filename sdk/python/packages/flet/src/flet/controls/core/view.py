@@ -14,7 +14,7 @@ from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
-from flet.controls.padding import PaddingValue
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -34,21 +34,22 @@ class View(ScrollableControl, ConstrainedControl):
     View is the top most container for all other controls.
 
     A root view is automatically created when a new user session started. From layout
-    perspective the View represents a `Column`(https://flet.dev/docs/controls/column/)
+    perspective the View represents a [`Column`][flet.Column]
     control, so it has a similar behavior and shares same properties.
     """
 
     route: Optional[str] = None
     """
     View's route - not currently used by Flet framework, but can be used in a user
-    program to update [`page.route`](https://flet.dev/docs/controls/page#route) when a
-    view popped.
+    program to update [`Page.route`][flet.Page.route] when a view popped.
     """
 
     controls: list[BaseControl] = field(default_factory=list)
     """
-    A list of `Control`s to display on the Page.
+    A list of controls to display.
 
+    /// details | Example
+        type: example
     For example, to add a new control to a page:
 
     ```python
@@ -68,85 +69,84 @@ class View(ScrollableControl, ConstrainedControl):
     page.controls.pop()
     page.update()
     ```
-
-    Value is of a list of `Control`s.
+    ///
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    A [`AppBar`](https://flet.dev/docs/controls/appbar) control to display at the top of
-    the Page.
+    An [`AppBar`][flet.AppBar] control to display at the top of
+    the `Page`.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    TBD
+    A [`BottomAppBar`][flet.BottomAppBar] control to display at the bottom of
+    the `Page`.
     """
 
     floating_action_button: Optional[FloatingActionButton] = None
     """
-    A [`FloatingActionButton`](https://flet.dev/docs/controls/floatingactionbutton)
-    control to display on top of Page content.
+    A [`FloatingActionButton`][flet.FloatingActionButton] control to display on top of `Page` content.
     """
 
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = None
     """
-    Describes position of [`floating_action_button`](#floating_action_button)
+    Describes position of [`floating_action_button`][flet.View.floating_action_button]
 
-    Value is of type [`FloatingActionButtonLocation`](https://flet.dev/docs/controls/
-    floatingactionbutton)
+    Type: [`FloatingActionButtonLocation`][flet.FloatingActionButtonLocation]
     """
 
     navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None
     """
-    TBD
+    A navigation bar ([`NavigationBar`][flet.NavigationBar] or
+    [`CupertinoNavigationBar`][flet.CupertinoNavigationBar]) control to display
+    at the bottom of the `Page`.
     """
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`](https://flet.dev/docs/controls/navigationdrawer) control to
+    A [`NavigationDrawer`][flet.NavigationDrawer] control to
     display as a panel sliding from the start edge of the view.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`](https://flet.dev/docs/controls/navigationdrawer) control to
+    A [`NavigationDrawer`][flet.NavigationDrawer] control to
     display as a panel sliding from the end edge of the view.
     """
 
-    vertical_alignment: Optional[MainAxisAlignment] = None
+    vertical_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the child Controls should be placed vertically.
+    Defines how the child [`controls´][flet.View.controls] should be placed vertically.
 
-    Value is of type [`MainAxisAlignment`](https://flet.dev/docs/reference/types/
-    mainaxisalignment) and defaults to `MainAxisAlignment.START`.
+    Type: [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
-    horizontal_alignment: Optional[CrossAxisAlignment] = None
+    horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
     How the child Controls should be placed horizontally.
 
-    Value is of type [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/
-    crossaxisalignment) and defaults to `CrossAxisAlignment.START`.
+    Type: [`CrossAxisAlignment`][flet.CrossAxisAlignment]
     """
 
     spacing: Number = 10
     """
-    Vertical spacing between controls on the Page. Default value is 10 virtual pixels.
-    Spacing is applied only when `vertical_alignment` is set to
-    `MainAxisAlignment.START`, `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
+    The vertical spacing between [`controls`][flet.View.controls] on the `Page`.
 
-    Value is of type `Number` and defaults to `10`
+    Note:
+        Has effect only when [`vertical_alignment`][flet.View.vertical_alignment] is set to
+        [`MainAxisAlignment.START`][flet.MainAxisAlignment.START],
+        [`MainAxisAlignment.END`][flet.MainAxisAlignment.END],
+        or [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER].
     """
 
-    padding: Optional[PaddingValue] = None
+    padding: Optional[PaddingValue] = field(default_factory=lambda: Padding.all(10))
     """
     A space between page contents and its edges.
 
-    Value is of type [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#
-    paddingvalue) and defaults to `padding.all(10)`.
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -158,16 +158,14 @@ class View(ScrollableControl, ConstrainedControl):
     """
     The background decoration.
 
-    Value is of type [`BoxDecoration`](https://flet.dev/docs/reference/types/
-    boxdecoration).
+    Type: [`BoxDecoration`][flet.BoxDecoration]
     """
 
     foreground_decoration: Optional[BoxDecoration] = None
     """
     The foreground decoration.
 
-    Value is of type [`BoxDecoration`](https://flet.dev/docs/reference/types/
-    boxdecoration).
+    Type: [`BoxDecoration`][flet.BoxDecoration]
     """
 
     can_pop: bool = True

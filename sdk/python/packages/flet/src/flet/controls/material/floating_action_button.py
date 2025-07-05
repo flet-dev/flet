@@ -45,9 +45,6 @@ class FloatingActionButton(ConstrainedControl):
     shape: Optional[OutlinedBorder] = None
     """
     The shape of the FAB's border.
-
-    The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
-    class.
     """
 
     autofocus: bool = False
@@ -82,7 +79,7 @@ class FloatingActionButton(ConstrainedControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     elevation: Optional[Number] = None
@@ -137,7 +134,7 @@ class FloatingActionButton(ConstrainedControl):
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and
+    Type: [`UrlTarget`][flet.UrlTarget] and
     defaults to `UrlTarget.BLANK`.
     """
 
@@ -146,12 +143,12 @@ class FloatingActionButton(ConstrainedControl):
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_click: Optional[ControlEventHandler["FloatingActionButton"]] = None
     """
-    Fires when a user clicks the button.
+    Called when a user clicks the button.
     """
 
     def before_update(self):

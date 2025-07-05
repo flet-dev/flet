@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
@@ -27,80 +26,82 @@ class Banner(DialogControl):
     Banners are displayed at the top of the screen, below a top app bar. They are
     persistent and non-modal, allowing the user to either ignore them or interact with
     them at any time.
+
+    Raises:
+        AssertionError: if [`content`][(c).] is not visible.
+        AssertionError: if [`elevation`][(c).] is negative.
+        AssertionError: if [`actions`][(c).] does not contain at least one visible action Control.
     """
 
     content: StrOrControl
     """
-    The content of the Banner.
+    The content of this banner.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
-    actions: list[Control] = field(default_factory=list)
+    actions: list[Control]
     """
-    The set of actions that are displayed at the bottom or trailing side of the Banner.
+    The set of actions that are displayed at the bottom or trailing side of this banner.
 
-    Typically this is a list of [`TextButton`](https://flet.dev/docs/controls/textbutton)
+    Typically this is a list of [`TextButton`][flet.TextButton]
     controls.
     """
 
     leading: Optional[IconValueOrControl] = None
     """
-    The (optional) leading `Control` of the Banner.
+    The leading Control of this banner.
 
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    Typically an [`Icon`][flet.Icon] control.
     """
 
     leading_padding: Optional[PaddingValue] = None
     """
-    The amount of space by which to inset the leading control.
+    The amount of space by which to inset the [`leading`][flet.Banner.leading] control.
 
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding)
-    class or a number.
+    Defaults to [`BannerTheme.leading_padding`][flet.BannerTheme.leading_padding], or if that is `None`,
+    falls back to `Padding.only(end=16)`.
 
-    Defaults to `16` virtual pixels.
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     content_padding: Optional[PaddingValue] = None
     """
-    The amount of space by which to inset the content.
-
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding)
-    class or a number.
+    The amount of space by which to inset the [`content`][flet.Banner.content].
 
     If the actions are below the content, this defaults to
-    `padding.only(left=16.0, top=24.0, right=16.0, bottom=4.0)`.
+    `Padding.only(left=16.0, top=24.0, right=16.0, bottom=4.0)`.
 
-    If the actions are trailing the content, this defaults to
-    `padding.only(left=16.0, top=2.0)`.
+    If the actions are trailing the `content`, this defaults to
+    `Padding.only(left=16.0, top=2.0)`.
+
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     force_actions_below: bool = False
     """
-    An override to force the actions to be below the content regardless of how many
-    there are.
+    An override to force the [`actions`][flet.Banner.actions] to be below the [`content`][flet.Banner.content]
+    regardless of how many there are.
 
-    If this is `True`, the actions will be placed below the content. If this is
-    `False`, the actions will be placed on the trailing side of the content if
-    `actions` length is `1` and below the content if greater than `1`.
-
-    Defaults to `False`.
+    If this is `True`, the `actions` will be placed below the content. If this is
+    `False`, the `actions` will be placed on the trailing side of the `content` if
+    `actions` length is `1` and below the `content` if greater than `1`.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the surface of this Banner.
+    The [color](https://flet.dev/docs/reference/colors) of the surface of this banner.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor`
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on [`bgcolor`][flet.Banner.bgcolor]
     to indicate elevation.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below the banner.
+    The [color](https://flet.dev/docs/reference/colors) of the shadow below this banner.
     """
 
     divider_color: Optional[ColorValue] = None
@@ -110,40 +111,37 @@ class Banner(DialogControl):
 
     elevation: Optional[Number] = None
     """
-    The elevation of the banner.
+    The elevation of this banner.
     """
 
     margin: Optional[MarginValue] = None
     """
-    The amount of space surrounding the banner.
+    The amount of space surrounding this banner.
 
-    The value is an instance of [`Margin`](https://flet.dev/docs/reference/types/margin)
-    class or a number.
+    Type: [`MarginValue`][flet.MarginValue]
     """
 
     content_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the `Text` controls in the `content`.
+    The style to be used for the [`Text`][flet.Text] controls in the [`content`][flet.Banner.content].
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     min_action_bar_height: Number = 52.0
     """
     The optional minimum action bar height.
-
-    Defaults to `52`.
     """
 
     on_visible: Optional[ControlEventHandler["Banner"]] = None
     """
-    Fires when the banner is shown or made visible for the first time.
+    Called when this banner is shown or made visible for the first time.
     """
 
     def before_update(self):
         super().before_update()
         assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
+            f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
         assert self.content.visible, "content must be visible"
         assert any(a.visible for a in self.actions), (

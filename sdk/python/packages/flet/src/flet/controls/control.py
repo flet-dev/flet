@@ -17,8 +17,8 @@ class Control(BaseControl):
 
     expand: Optional[Union[bool, int]] = None
     """
-    When a child Control is placed into a [`Column`](https://flet.dev/docs/controls/column)
-    or a [`Row`](https://flet.dev/docs/controls/row) you can "expand" it to fill the
+    When a child Control is placed into a [`Column`][flet.Column]
+    or a [`Row`][flet.Row] you can "expand" it to fill the
     available space.
     `expand` property could be a boolean value (`True` - expand control to fill all
     available space) or an integer - an "expand factor" specifying how to divide a free
@@ -30,8 +30,8 @@ class Control(BaseControl):
 
     /// details | Example
         type: example
-    Here is an example of expand being used in action for both [`Column`](https://flet.dev/docs/controls/column)
-    and [`Row`](https://flet.dev/docs/controls/row):
+    Here is an example of expand being used in action for both [`Column`][flet.Column]
+    and [`Row`][flet.Row]:
 
     ```python
     import flet as ft
@@ -78,7 +78,7 @@ class Control(BaseControl):
     Effective only if `expand` is `True`.
 
     If `expand_loose` is `True`, the child control of a
-    [`Column`](https://flet.dev/docs/controls/column) or a [`Row`](https://flet.dev/docs/controls/row)
+    [`Column`][flet.Column] or a [`Row`][flet.Row]
     will be given the flexibility to expand to fill the available space in the main
     axis (e.g., horizontally for a Row or vertically for a Column), but will not be
     required to fill the available space.

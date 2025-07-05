@@ -45,14 +45,14 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     """
     A `Control` to display as primary content of the list tile.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control. This should not
+    Typically a [`Text`][flet.Text] control. This should not
     wrap. To enforce the single line limit, use [`Text.max_lines`](https://flet.dev/docs/controls/text#max_lines).
     """
 
     subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title. Typically a
-    [`Text`](https://flet.dev/docs/controls/text) widget.
+    [`Text`][flet.Text] widget.
 
     If `is_three_line` is `False`, this should not wrap. If `is_three_line` is `True`,
     this should be configured to take a maximum of two lines. For example, you can use
@@ -81,7 +81,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     trailing: Optional[IconValueOrControl] = None
     """
-    A `Control` to display after the title. Typically an [`Icon`](https://flet.dev/docs/controls/icon)
+    A `Control` to display after the title. Typically an [`Icon`][flet.Icon]
     control.
     """
 
@@ -90,7 +90,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     The tile's internal padding. Insets a ListTile's contents: its `leading`, `title`,
     `subtitle`, and `trailing` controls.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and
+    Type: [`Padding`][flet.Padding] and
     defaults to `padding.symmetric(horizontal=16)`.
     """
 
@@ -153,7 +153,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     """
     Defines the font used for the title.
 
-    Value is of type [`ListTileStyle`](https://flet.dev/docs/reference/types/listtilestyle)
+    Value is of type [`ListTileStyle`][flet.ListTileStyle]
     and defaults to `ListTileStyle.LIST`.
     """
 
@@ -197,7 +197,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     """
     Where to open URL in the web mode.
 
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget).
+    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     title_alignment: Optional[ListTileTitleAlignment] = None
@@ -205,7 +205,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     Defines how `leading` and `trailing` are vertically aligned relative to the titles
     (`title` and `subtitle`).
 
-    Value is of type [`ListTileAlignment`](https://flet.dev/docs/reference/types/listtilealignment)
+    Value is of type [`ListTileAlignment`][flet.ListTileAlignment]
     and defaults to `ListTileAlignment.THREE_LINE` in Material 3 or
     `ListTileAlignment.TITLE_HEIGHT` in Material 2.
     """
@@ -224,39 +224,38 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     shape: Optional[OutlinedBorder] = None
     """
-    The tile's shape. The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
-    class.
+    The tile's shape.
     """
 
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the control's layout will be.
 
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
+    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
-    control. The value is [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor)
+    control. The value is [`MouseCursor`][flet.MouseCursor]
     enum.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the `title`
+    The [`TextStyle`][flet.TextStyle] for the `title`
     control.
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the
+    The [`TextStyle`][flet.TextStyle] for the
     `subtitle` control.
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) for the
+    The [`TextStyle`][flet.TextStyle] for the
     `leading` and `trailing` controls.
     """
 
@@ -275,10 +274,10 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     on_click: Optional[ControlEventHandler["ListTile"]] = None
     """
-    Fires when a user clicks or taps the list tile.
+    Called when a user clicks or taps the list tile.
     """
 
     on_long_press: Optional[ControlEventHandler["ListTile"]] = None
     """
-    Fires when the user long-presses on this list tile.
+    Called when the user long-presses on this list tile.
     """

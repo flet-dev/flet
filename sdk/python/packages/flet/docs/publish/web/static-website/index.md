@@ -202,7 +202,7 @@ flet publish <your-flet-app.py> --route-url-strategy hash
 
 ### Web renderer
 
-You can change default "canvaskit" web renderer ([more about renderers here](/docs/reference/types/webrenderer)) to "html" with `--web-renderer` option:
+You can change default "canvaskit" web renderer ([more about renderers here][flet.WebRenderer]) to "html" with `--web-renderer` option:
 
 ```
 flet publish <your-flet-app.py> --web-renderer html

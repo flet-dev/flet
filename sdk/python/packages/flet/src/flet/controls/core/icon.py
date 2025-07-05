@@ -1,7 +1,7 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.box import ShadowValue
+from flet.controls.box import BoxShadowValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.types import BlendMode, ColorValue, IconValue, Number
 
@@ -55,7 +55,7 @@ class Icon(ConstrainedControl):
     (e.g. TalkBack/VoiceOver).
     """
 
-    shadows: Optional[ShadowValue] = None
+    shadows: Optional[BoxShadowValue] = None
     """
     TBD
     """
@@ -92,12 +92,12 @@ class Icon(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert self.fill is None or (0.0 <= self.fill <= 1.0), (
-            f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
-        )
-        assert self.weight is None or (self.weight > 0.0), (
-            f"weight must be strictly greater than 0.0, got {self.weight}"
-        )
-        assert self.optical_size is None or (self.optical_size > 0.0), (
-            f"optical_size must be strictly greater than 0.0, got {self.optical_size}"
-        )
+        assert self.fill is None or (
+            0.0 <= self.fill <= 1.0
+        ), f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
+        assert self.weight is None or (
+            self.weight > 0.0
+        ), f"weight must be strictly greater than 0.0, got {self.weight}"
+        assert self.optical_size is None or (
+            self.optical_size > 0.0
+        ), f"optical_size must be strictly greater than 0.0, got {self.optical_size}"

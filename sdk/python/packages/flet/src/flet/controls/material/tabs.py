@@ -95,7 +95,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
     Specifies the horizontal alignment of the tabs within the Tabs control.
 
-    Value is of type [`TabAlignment`](https://flet.dev/docs/reference/types/tabalignment)
+    Value is of type [`TabAlignment`][flet.TabAlignment]
     and defaults to `TabAlignment.START`, if `scrollable=True`, and to
     `TabAlignment.FILL`, if `scrollable=False`.
     """
@@ -161,14 +161,14 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
     The padding around the tab label.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
+    Type: [`Padding`][flet.Padding]
     """
 
     label_text_style: Optional[TextStyle] = None
     """
     The text style of the tab labels.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     unselected_label_color: Optional[ColorValue] = None
@@ -180,14 +180,14 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
     The text style of the unselected tab labels.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the ink response focus, hover, and splash
     [colors](https://flet.dev/docs/reference/colors) in various
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    [`ControlState`][flet.ControlState] states.
 
     The following `ControlState` values are supported: `PRESSED`, `HOVERED` and
     `FOCUSED`.
@@ -222,7 +222,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
-    The value is [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor)
+    The value is [`MouseCursor`][flet.MouseCursor]
     enum.
     """
 
@@ -230,31 +230,31 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
     The padding around the Tabs control.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
+    Type: [`Padding`][flet.Padding]
     """
 
     splash_border_radius: Optional[BorderRadiusValue] = None
     """
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
 
-    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
+    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     on_click: Optional[ControlEventHandler["Tabs"]] = None
     """
-    Fires when a tab is clicked.
+    Called when a tab is clicked.
     """
 
     on_change: Optional[ControlEventHandler["Tabs"]] = None
     """
-    Fires when `selected_index` changes.
+    Called when `selected_index` changes.
     """
 
     def __contains__(self, item):

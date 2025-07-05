@@ -12,13 +12,14 @@ __all__ = ["CupertinoActionSheetAction"]
 class CupertinoActionSheetAction(ConstrainedControl):
     """
     An action button typically used in a CupertinoActionSheet.
+
+    Raises:
+        AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
     The child control to be shown in this action button.
-
-    In case both `text` and `content` are provided, then `content` will be used.
     """
 
     default: bool = False
@@ -33,12 +34,12 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    TBD
+    Defines the mouse cursor for this action button.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoActionSheetAction"]] = None
     """
-    Fires when this action button is clicked.
+    Called when this action button is clicked.
     """
 
     def before_update(self):

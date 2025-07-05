@@ -34,7 +34,7 @@ class FormFieldControl(ConstrainedControl):
 
     text_style: TextStyle = field(default_factory=lambda: TextStyle())
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for the
+    The [`TextStyle`][flet.TextStyle] to use for the
     text being edited.
     """
 
@@ -43,7 +43,7 @@ class FormFieldControl(ConstrainedControl):
     Defines how the text should be aligned vertically.
 
     Value can either be a number ranging from `-1.0` (topmost location) to `1.0`
-    (bottommost location) or of type [`VerticalAlignment`](https://flet.dev/docs/reference/types/verticalalignment).
+    (bottommost location) or of type [`VerticalAlignment`][flet.VerticalAlignment]
     Defaults to `VerticalAlignment.CENTER`.
     """
 
@@ -60,7 +60,7 @@ class FormFieldControl(ConstrainedControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `label`.
     """
 
@@ -74,7 +74,7 @@ class FormFieldControl(ConstrainedControl):
     """
     Border around input.
 
-    Value is of type [`InputBorder`](https://flet.dev/docs/reference/types/inputborder)
+    Value is of type [`InputBorder`][flet.InputBorder]
     and defaults to `InputBorder.OUTLINE`.
     """
 
@@ -91,8 +91,6 @@ class FormFieldControl(ConstrainedControl):
 
     border_radius: Optional[BorderRadiusValue] = None
     """
-    Border radius is an instance of [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius)
-    class.
     """
 
     border_width: Optional[Number] = None
@@ -133,9 +131,6 @@ class FormFieldControl(ConstrainedControl):
     content_padding: Optional[PaddingValue] = None
     """
     The padding for the input decoration's container.
-
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding)
-    class or a number.
     """
 
     dense: Optional[bool] = None
@@ -184,7 +179,7 @@ class FormFieldControl(ConstrainedControl):
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `hint_text`.
     """
 
@@ -210,7 +205,7 @@ class FormFieldControl(ConstrainedControl):
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `helper_text`.
     """
 
@@ -229,7 +224,7 @@ class FormFieldControl(ConstrainedControl):
 
     counter_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `counter_text`.
     """
 
@@ -242,7 +237,7 @@ class FormFieldControl(ConstrainedControl):
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `error_text`.
     """
 
@@ -278,7 +273,7 @@ class FormFieldControl(ConstrainedControl):
 
     prefix_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `prefix_text`.
     """
 
@@ -324,7 +319,7 @@ class FormFieldControl(ConstrainedControl):
 
     suffix_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
+    The [`TextStyle`][flet.TextStyle] to use for
     `suffix_text`.
     """
 

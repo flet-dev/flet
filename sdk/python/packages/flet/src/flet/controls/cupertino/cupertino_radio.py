@@ -1,6 +1,7 @@
 from typing import Optional
 
 from flet.controls.base_control import control
+from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
@@ -15,7 +16,7 @@ __all__ = ["CupertinoRadio"]
 @control("CupertinoRadio")
 class CupertinoRadio(ConstrainedControl):
     """
-    Radio buttons let people select a single option from two or more choices.
+    A macOS-styled radio button, allowing the user to select a single option from two or more choices.
     """
 
     label: Optional[str] = None
@@ -25,15 +26,14 @@ class CupertinoRadio(ConstrainedControl):
 
     value: str = ""
     """
-    The value to set to containing `RadioGroup` when the radio is selected.
+    The value to set to [`RadioGroup`][flet.RadioGroup] ancestor/parent when the radio is selected.
     """
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     The position of the label relative to the radio.
 
-    Value is of type
-    [LabelPosition](https://flet.dev/docs/reference/types/labelposition).
+    Type: [`LabelPosition`][flet.LabelPosition].
     """
 
     fill_color: Optional[ColorValue] = None
@@ -41,7 +41,7 @@ class CupertinoRadio(ConstrainedControl):
     The [color](https://flet.dev/docs/reference/colors) that fills the radio.
     """
 
-    active_color: Optional[ColorValue] = None
+    active_color: Optional[ColorValue] = Colors.PRIMARY
     """
     The [color](https://flet.dev/docs/reference/colors) used to fill this radio
     when it is selected.
@@ -51,13 +51,11 @@ class CupertinoRadio(ConstrainedControl):
     """
     The [color](https://flet.dev/docs/reference/colors) used to fill this radio
     when it is not selected.
-
-    Defaults to `colors.WHITE`.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus.
+    Whether this radio will be selected as the initial focus.
 
     If there is more than one control on a page with autofocus set, then the first
     one added to the page will get focus.
@@ -65,7 +63,7 @@ class CupertinoRadio(ConstrainedControl):
 
     use_checkmark_style: bool = False
     """
-    Defines whether the radio displays in a checkbox style or the default radio style.
+    Whether the radio displays in a checkbox style or the default radio style.
     """
 
     toggleable: bool = False
@@ -82,15 +80,15 @@ class CupertinoRadio(ConstrainedControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    TBD
+    The cursor for a mouse pointer when it enters or is hovering over this radio.
     """
 
     on_focus: Optional[ControlEventHandler["CupertinoRadio"]] = None
     """
-    Fires when the control has received focus.
+    Called when this radio has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["CupertinoRadio"]] = None
     """
-    Fires when the control has lost focus.
+    Called when this radio has lost focus.
     """

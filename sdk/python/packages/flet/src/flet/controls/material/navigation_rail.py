@@ -81,7 +81,7 @@ class NavigationRailDestination(Control):
     The amount of space to inset the destination item.
 
     Padding is an instance of
-    [`Padding`](https://flet.dev/docs/reference/types/padding) class.
+    [`Padding`][flet.Padding] class.
     """
 
     indicator_color: Optional[ColorValue] = None
@@ -93,7 +93,7 @@ class NavigationRailDestination(Control):
     indicator_shape: Optional[OutlinedBorder] = None
     """
     The shape of the selection indicator. The value is an instance of
-    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) class.
+    [`OutlinedBorder`][flet.OutlinedBorder] class.
     """
 
 
@@ -149,7 +149,7 @@ class NavigationRail(ConstrainedControl):
     When a navigation rail is extended, the labels are always shown.
 
     Value is of type
-    [`NavigationRailLabelType`](https://flet.dev/docs/reference/types/navigationraillabeltype)
+    [`NavigationRailLabelType`][flet.NavigationRailLabelType]
     and defaults to `None` - no labels are shown.
     """
 
@@ -170,7 +170,7 @@ class NavigationRail(ConstrainedControl):
     The shape of the navigation rail's indicator.
 
     Value is of type
-    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) and
+    [`OutlinedBorder`][flet.OutlinedBorder] and
     defaults to `StadiumBorder()`.
     """
 
@@ -181,7 +181,7 @@ class NavigationRail(ConstrainedControl):
     Its location is not affected by `group_alignment`.
 
     This is commonly a
-    [`FloatingActionButton`](https://flet.dev/docs/controls/floatingactionbutton), but
+    [`FloatingActionButton`][flet.FloatingActionButton], but
     may also be a non-button, such as a logo.
     """
 
@@ -232,7 +232,7 @@ class NavigationRail(ConstrainedControl):
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of a
+    The [`TextStyle`][flet.TextStyle] of a
     destination's label when it is selected.
 
     When a destination is not selected, `unselected_label_text_style` will instead be
@@ -241,7 +241,7 @@ class NavigationRail(ConstrainedControl):
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of a
+    The [`TextStyle`][flet.TextStyle] of a
     destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
@@ -249,7 +249,7 @@ class NavigationRail(ConstrainedControl):
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None
     """
-    Fires when selected destination changed.
+    Called when selected destination changed.
     """
 
     def before_update(self):

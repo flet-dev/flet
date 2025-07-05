@@ -26,28 +26,31 @@ __all__ = ["Chip"]
 class Chip(ConstrainedControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
+
+    Raises:
+        AssertionError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is negative.
+        AssertionError: If callback for both [`on_click`][(c).] and [`on_select`][(c).] are specified.
     """
 
     label: StrOrControl
     """
-    A `Control` that represents primary content of the chip, typically a [`Text`](https://flet.dev/docs/controls/text).
-    Label is a required property.
+    The primary content of the chip. Can be a string or a control.
+
+    Typically a [`Text`][flet.Text] control.
     """
 
     leading: Optional[Control] = None
     """
-    A `Control` to display to the left of the chip's `label`.
+    A `Control` to display to the left of the chip's [`label`][flet.Chip.label].
 
-    Typically the leading control is an [`Icon`](https://flet.dev/docs/controls/icon)
-    or a [`CircleAvatar`](https://flet.dev/docs/controls/circleavatar).
+    Typically the leading control is an [`Icon`][flet.Icon]
+    or a [`CircleAvatar`][flet.CircleAvatar].
     """
 
     selected: bool = False
     """
     If `on_select` event is specified, `selected` property is used to determine whether
     the chip is selected or not.
-
-    Defaults to `False`.
     """
 
     selected_color: Optional[ColorValue] = None
@@ -73,8 +76,6 @@ class Chip(ConstrainedControl):
     """
     If `on_select` event is specified and chip is selected, `show_checkmark` is used to
     determine whether or not to show a checkmark.
-
-    Defaults to `True`.
     """
 
     check_color: Optional[ColorValue] = None
@@ -92,27 +93,22 @@ class Chip(ConstrainedControl):
     shape: Optional[OutlinedBorder] = None
     """
     The shape of the border around the chip.
-
-    The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
-    class.
-
-    The default shape is a `StadiumBorder`.
+    
+    Defaults to [`ChipTheme.shape`][flet.ChipTheme.shape], or if that is resolves to `None`,
+    falls back to `RoundedRectangleBorder(radius=8)`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The padding between the `label` and the outside shape.
+    The padding between the [`label`][flet.Chip.label] and the outside shape.
 
-    The value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding)
-    class or a number.
-
-    By default, this is 4 logical pixels on all sides.
+    Defaults to `8` logical pixels on all sides.
     """
 
     delete_icon: Optional[Control] = None
     """
-    A `Control` to display to the right of the chip's `label` in case `on_delete` event
-    is specified.
+    A `Control` to display to the right of the chip's [`label`][flet.Chip.label] 
+    in case [`on_delete`][flet.Chip.on_delete] event is specified.
     """
 
     delete_icon_tooltip: Optional[str] = None
@@ -123,7 +119,7 @@ class Chip(ConstrainedControl):
 
     delete_icon_color: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) of the `delete_icon`.
+    The [color](https://flet.dev/docs/reference/colors) of the [`delete_icon`][flet.Chip.delete_icon].
     """
 
     disabled_color: Optional[ColorValue] = None
@@ -134,20 +130,17 @@ class Chip(ConstrainedControl):
 
     label_padding: Optional[PaddingValue] = None
     """
-    Padding around the `label`.
+    The padding around the [`label`][flet.Chip.label].
 
-    The value is an instance of [`padding.Padding`](https://flet.dev/docs/reference/types/padding)
-    class or a number.
-
-    By default, this is 4 logical pixels at the beginning and the end of the label, and
-    zero on top and bottom.
+    By default, this is `4` logical pixels at the beginning and the end of the `label`, and
+    zero on `top` and `bottom`.
     """
 
-    label_style: Optional[TextStyle] = None
+    label_text_style: Optional[TextStyle] = None
     """
-    The style to be applied to the chip's `label`.
+    The style to be applied to the chip's [`label`][flet.Chip.label].
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     selected_shadow_color: Optional[ColorValue] = None
@@ -158,35 +151,39 @@ class Chip(ConstrainedControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    Whether this chip will be selected as the initial focus.
+
+    If there is more than one control on a page with autofocus set,
+    then the first one added to the page will get focus.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor`
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay on [`bgcolor`][flet.Chip.bgcolor]
     to indicate elevation.
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the chip in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
+    The [color](https://flet.dev/docs/reference/colors) that fills the chip in various [`ControlState`][flet.ControlState].
     """
 
-    click_elevation: Optional[Number] = None
+    elevation_on_click: Optional[Number] = None
     """
-    A non-negative value which defines the elevation of the chip when clicked/pressed.
+    The elevation to be applied on the chip relative to its parent during the press motion.
+    This controls the size of the shadow below the chip.
 
     Defaults to `8.0`.
+    
+    Note:
+        Must be non-negative.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
-    and defaults to `ClipBehavior.NONE`.
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     visual_density: Optional[VisualDensity] = None
@@ -198,7 +195,7 @@ class Chip(ConstrainedControl):
     """
     Defines the color and weight of the chip's outline.
 
-    Value is of type [`BorderSide`](https://flet.dev/docs/reference/types/borderside).
+    Type: [`BorderSide`][flet.BorderSide]
     """
 
     leading_size_constraints: Optional[BoxConstraints] = None
@@ -206,84 +203,88 @@ class Chip(ConstrainedControl):
     The size constraints for the `leading` control.
 
     When unspecified, it defaults to a minimum size of chip height or label height
-    (whichever is greater) and a padding of 8.0 pixels on all sides.
+    (whichever is greater) and a padding of `8.0` pixels on all sides.
 
-    Value is of type [`BoxConstraints`](https://flet.dev/docs/reference/types/boxconstraints).
+    Type: [`BoxConstraints`][flet.BoxConstraints]
     """
 
     delete_icon_size_constraints: Optional[BoxConstraints] = None
     """
-    The size constraints for the `delete_icon` control.
+    The size constraints for the [`delete_icon`][flet.Chip.delete_icon] control.
 
     When unspecified, it defaults to a minimum size of chip height or label height
     (whichever is greater) and a padding of 8.0 pixels on all sides.
 
-    Value is of type [`BoxConstraints`](https://flet.dev/docs/reference/types/boxconstraints).
+    Type: [`BoxConstraints`][flet.BoxConstraints]
     """
 
     enable_animation_style: Optional[AnimationStyle] = None
     """
     The animation style for the enable and disable animations.
 
-    Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     select_animation_style: Optional[AnimationStyle] = None
     """
     The animation style for the select and unselect animations.
 
-    Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     leading_drawer_animation_style: Optional[AnimationStyle] = None
     """
-    The animation style for the `leading` control's animations.
+    The animation style for the [`leading`][flet.Chip.leading]csx control's animations.
 
-    Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     delete_drawer_animation_style: Optional[AnimationStyle] = None
     """
-    The animation style for the `delete_icon`'s animations.
+    The animation style for the [`delete_icon`][flet.Chip.delete_icon]'s animations.
 
-    Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     on_click: Optional[ControlEventHandler["Chip"]] = None
     """
-    Fires when the user clicks on the chip. Cannot be specified together with
-    `on_select` event.
+    Called when the user clicks on this chip.
+
+    Note:
+        Cannot be specified together with [`on_select`][flet.Chip.on_select] event.
     """
 
     on_delete: Optional[ControlEventHandler["Chip"]] = None
     """
-    Fires when the user clicks on the `delete_icon`.
+    Called when the user clicks on the [`delete_icon`][flet.Chip.delete_icon].
     """
 
     on_select: Optional[ControlEventHandler["Chip"]] = None
     """
-    Fires when the user clicks on the chip. Changes `selected` property to the opposite
-    value. Cannot be specified together with `on_click` event.
+    Called when the user clicks on the chip.
+
+    It internally changes [`selected`][flet.Chip.selected] property to the opposite
+    value. Cannot be specified together with [`on_click`][flet.Chip.on_click] event.
     """
 
     on_focus: Optional[ControlEventHandler["Chip"]] = None
     """
-    Fires when the control has received focus.
+    Called when this chip has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Chip"]] = None
     """
-    Fires when the control has lost focus.
+    Called when this chip has lost focus.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.on_select is None or self.on_click is None, (
-            "on_select and on_click cannot be used together"
-        )
-        assert self.elevation is None or self.elevation >= 0.0, (
-            "elevation must be greater than or equal to 0"
-        )
-        assert self.click_elevation is None or self.click_elevation >= 0.0, (
-            "click_elevation must be greater than or equal to 0"
-        )
+        assert (
+            self.on_select is None or self.on_click is None
+        ), "on_select and on_click cannot be used together"
+        assert (
+            self.elevation is None or self.elevation >= 0.0
+        ), f"elevation must be greater than or equal to 0, got {self.elevation}"
+        assert (
+            self.elevation_on_click is None or self.elevation_on_click >= 0.0
+        ), f"elevation_on_click must be greater than or equal to 0, got {self.elevation_on_click}"

@@ -81,7 +81,7 @@ class TextSelection:
     If the text range is collapsed and has more than one visual location (e.g., occurs
     at a line break), which of the two locations to use when painting the caret.
 
-    Value is of type [`TextAffinity`](https://flet.dev/docs/reference/types/textaffinity).
+    Type: [`TextAffinity`][flet.TextAffinity]
     """
 
     directional: Optional[bool] = None
@@ -176,26 +176,28 @@ class TextSelectionChangeEvent(Event[EventControlType]):
 @control("Text")
 class Text(ConstrainedControl):
     """
-    Text is a control for displaying text.
+    Display text.
+
+    It consists of two sources combined to produce the final text:
+    [`value`][(c).] and [`spans`][(c)].
     """
 
-    value: Optional[str] = ""
+    value: str = ""
     """
     The text displayed.
     """
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`](https://flet.dev/docs/reference/types/textspan)
+    The list of [`TextSpan`][flet.TextSpan]
     objects to build a rich text paragraph.
     """
 
-    text_align: Optional[TextAlign] = None
+    text_align: TextAlign = TextAlign.START
     """
     Text horizontal align.
 
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign)
-    and defaults to `TextAlign.LEFT`.
+    Type: [`TextAlign`][flet.TextAlign]
     """
 
     font_family: Optional[str] = None
@@ -216,29 +218,27 @@ class Text(ConstrainedControl):
     """
     Font weight.
 
-    Value is of type [`FontWeight`](https://flet.dev/docs/reference/types/fontweight)
+    Type: [`FontWeight`][flet.FontWeight]
     and defaults to `FontWeight.NORMAL`.
     """
 
-    italic: Optional[bool] = None
+    italic: bool = False
     """
-    `True` to use italic typeface.
-
-    Value is of type `bool` and defaults to `False`.
+    Whether to use italic typeface.
     """
 
     style: Optional[TextStyle] = None
     """
     The text's style.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     theme_style: Optional[TextThemeStyle] = None
     """
     Pre-defined text style.
 
-    Value is of type [`TextThemeStyle`](https://flet.dev/docs/reference/types/textthemestyle).
+    Type: [`TextThemeStyle`][flet.TextThemeStyle]
     """
 
     max_lines: Optional[int] = None
@@ -252,12 +252,11 @@ class Text(ConstrainedControl):
     the box.
     """
 
-    overflow: Optional[TextOverflow] = None
+    overflow: TextOverflow = TextOverflow.CLIP
     """
-    Controls how text overflows.
+    Defines how the text overflows.
 
-    Value is of type [`TextOverflow`](https://flet.dev/docs/reference/types/textoverflow)
-    and defaults to `TextOverflow.FADE`.
+    Type: [`TextOverflow`][flet.TextOverflow]
     """
 
     selectable: Optional[bool] = None
@@ -279,12 +278,12 @@ class Text(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    Text foreground [color](https://flet.dev/docs/reference/colors).
+    The text's foreground [color](https://flet.dev/docs/reference/colors).
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Text background [color](https://flet.dev/docs/reference/colors).
+    The text's background [color](https://flet.dev/docs/reference/colors).
     """
 
     semantics_label: Optional[str] = None
@@ -296,44 +295,75 @@ class Text(ConstrainedControl):
 
     This is useful for replacing abbreviations or shorthands with the full text value:
 
-    Value is of type `str`.
-
+    /// details | Example
+        type: example
     ```python
     ft.Text("$$", semantics_label="Double dollars")
     ```
+    ///
     """
 
-    show_selection_cursor: Optional[bool] = None
+    show_selection_cursor: bool = False
     """
-    TBD
+    Whether to show cursor (blinking caret) when the text is selected.
+
+    Note:
+        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
     """
 
-    enable_interactive_selection: Optional[bool] = None
+    enable_interactive_selection: bool = True
     """
-    TBD
+    Whether to enable user interface affordances for changing the text selection.
+
+    For example, setting this to `True` will enable features such as long-pressing to
+    select text and show the cut/copy/paste menu, and tapping to move the text caret.
+    On the other hand, when this is `False`, the text selection cannot be adjusted by
+    the user, text cannot be copied.
+
+    Note:
+        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
     """
 
-    selection_cursor_width: Optional[Number] = None
+    selection_cursor_width: Number = 2.0
     """
-    TBD
+    Defines how thick the cursor should be.
+
+    The cursor will be drawn under the text.
+    The cursor width will extend to the right of the boundary between characters for
+    left-to-right text and to the left for right-to-left text. This corresponds to extending
+    downstream relative to the selected position.
+    Negative values may be used to reverse this behavior.
+
+    Note:
+        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
     """
 
     selection_cursor_height: Optional[Number] = None
     """
-    TBD
+    Defines how tall the cursor should be.
     """
 
     selection_cursor_color: Optional[ColorValue] = None
     """
-    TBD
+    The color of the cursor.
+
+    The cursor indicates the current text insertion point.
     """
 
     on_tap: Optional[ControlEventHandler["Text"]] = None
     """
-    TBD
+    Called when the user taps on this selectable text.
+
+    Note:
+        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
     """
 
     on_selection_change: Optional[EventHandler[TextSelectionChangeEvent["Text"]]] = None
     """
-    TBD
+    Called when the user changes the selection of text (including the cursor location).
+
+    Event type: [`TextSelectionChangeEvent`][flet.TextSelectionChangeEvent]
+
+    Note:
+        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
     """

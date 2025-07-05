@@ -29,14 +29,14 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     horizontal: bool = False
     """
-    `True` to layout ListView items horizontally.
+    Whether to layout the [`controls`][flet.ListView.controls] horizontally.
     """
 
     reverse: bool = False
     """
     Whether the scroll view scrolls in the reading direction.
 
-    For example, if the reading direction is left-to-right and `horizontal` is `True`,
+    For example, if the reading direction is left-to-right and [`horizontal`][flet.ListView.horizontal] is `True`,
     then the scroll view scrolls from left to right when `reverse` is `False`
     and from right to left when `reverse` is `True`.
 
@@ -46,42 +46,39 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     spacing: Number = 0
     """
-    The height of Divider between ListView items.
-
-    No spacing between items if not specified.
+    The height of divider between the [`controls`][flet.ListView.controls].
     """
 
     item_extent: Optional[Number] = None
     """
-    A fixed height or width (for `horizontal` ListView) of an item to optimize
-    rendering.
+    A fixed height or width (when [`horizontal`][flet.ListView.horizontal] is `True`)
+    of an item to optimize rendering.
     """
 
     first_item_prototype: bool = False
     """
-    `True` if the dimensions of the first item should be used as a "prototype" for all
-    other items, i.e. their height or width will be the same as the first item.
+    Whether the dimensions of the first item of [`controls`][flet.ListView.controls]
+    should be used as a "prototype" for all other items,
+    i.e. their `height` or `width` will be the same as the first item.
     """
 
     divider_thickness: Number = 0
     """
-    If greater than `0` then Divider is used as a spacing between list view items.
+    If greater than `0` then `Divider` is used as a spacing between list view items.
     """
 
     padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the children.
 
-    Value is of type
-    [`Padding`](https://flet.dev/docs/reference/types/padding).
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    The content will be clipped (or not) according to this option.
+    How to clip the [`controls`][flet.ListView.controls]
 
-    Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     semantic_child_count: Optional[int] = None
@@ -104,7 +101,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     build_controls_on_demand: bool = True
     """
-    Whether the `controls` should be built lazily/on-demand.
+    Whether the [`controls`][flet.ListView.controls] should be built lazily/on-demand.
 
     This is particularly useful when dealing with a large number of controls.
     """

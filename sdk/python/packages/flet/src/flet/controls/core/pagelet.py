@@ -19,10 +19,13 @@ __all__ = ["Pagelet"]
 @control("Pagelet")
 class Pagelet(ConstrainedControl, AdaptiveControl):
     """
-    Pagelet implements the basic Material Design visual layout structure.
+    Implements the basic Material Design visual layout structure.
 
-    Use it for projects that require "page within a page" layouts with its own AppBar,
-    BottomBar, Drawer, such as demos and galleries.
+    Use it for projects that require a "page within a page" layouts with its own [`AppBar`][(p).],
+    [`BottomAppBar`][(p).], [`Drawer`][(p).], such as demos and galleries.
+
+    Raises:
+        AssertionError: If [`content`][flet.Pagelet.content] is not visible.
     """
 
     content: Control
@@ -35,28 +38,29 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    An [`AppBar`](https://flet.dev/docs/controls/appbar) control to display at the top
+    An [`AppBar`][flet.AppBar] control to display at the top
     of the Pagelet.
     """
 
     navigation_bar: Optional[Union[NavigationBar, CupertinoNavigationBar]] = None
     """
-    [`NavigationBar`](https://flet.dev/docs/controls/navigationbar) control to display
-    at the bottom of the page.
+    A navigation bar ([`NavigationBar`][flet.NavigationBar] or
+    [`CupertinoNavigationBar`][flet.CupertinoNavigationBar]) control to display
+    at the bottom of the `Pagelet`.
 
-    If both [`bottom_appbar`](https://flet.dev/docs/controls/pagelet#bottom_appbar) and
-    [`navigation_bar`](https://flet.dev/docs/controls/pagelet#navigation_bar)
-    properties are provided, `NavigationBar` will be displayed.
+    Note:
+        If both the `navigation_bar` and [`bottom_appbar`][flet.Pagelet.bottom_appbar]
+        properties are specified, `navigation_bar` takes precedence and will be displayed.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    [`BottomAppBar`](https://flet.dev/docs/controls/bottomappbar) control to display at
-    the bottom of the Pagelet.
+    A [`BottomAppBar`][flet.BottomAppBar] control to display at
+    the bottom of the `Pagelet`.
 
-    If both [`bottom_appbar`](https://flet.dev/docs/controls/pagelet#bottom_appbar) and
-    [`navigation_bar`](https://flet.dev/docs/controls/pagelet#navigation_bar)
-    properties are provided, `NavigationBar` will be displayed.
+    Note:
+        If both the `bottom_appbar` and [`navigation_bar`][flet.Pagelet.navigation_bar]
+        properties are specified, `bottom_appbar` takes precedence and will be displayed.
     """
 
     bottom_sheet: Optional[Control] = None
@@ -67,31 +71,30 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`](https://flet.dev/docs/controls/navigationdrawer) control to
+    A [`NavigationDrawer`][flet.NavigationDrawer] control to
     display as a panel sliding from the start edge of the page.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`](https://flet.dev/docs/controls/navigationdrawer) control to
+    A [`NavigationDrawer`][flet.NavigationDrawer] control to
     display as a panel sliding from the end edge of the page.
     """
 
     floating_action_button: Optional[Control] = None
     """
-    A [`FloatingActionButton`](https://flet.dev/docs/controls/floatingactionbutton)
+    A [`FloatingActionButton`][flet.FloatingActionButton]
     control to display on top of Pagelet content.
     """
 
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
-    ] = None
+    ] = FloatingActionButtonLocation.END_FLOAT
     """
     Defines a position for the `FloatingActionButton`.
 
-    Value can be of type `OffsetValue` or
-    [`FloatingActionButtonLocation`](https://flet.dev/docs/reference/types/floatingactionbuttonlocation).
-    Defaults to `FloatingActionButtonLocation.END_FLOAT`.
+    Type: [`OffsetValue`][flet.OffsetValue] or
+    [`FloatingActionButtonLocation`][flet.FloatingActionButtonLocation]
     """
 
     bgcolor: Optional[ColorValue] = None

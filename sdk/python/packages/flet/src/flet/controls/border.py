@@ -153,16 +153,16 @@ class BorderSide:
 @dataclass
 class Border:
     """
-    A border comprised of four sides: top, right, bottom, left.
+    A border comprised of four sides: `top`, `right`, ´bottom`, `left`.
 
     Each side of the border is an instance of
-    [`BorderSide`](https://flet.dev/docs/reference/types/borderside) class.
+    [`BorderSide`][flet.BorderSide] class.
 
     Example:
-    ```python
-    container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
-    container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
-    ```
+        ```python
+        container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
+        container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
+        ```
     """
 
     top: BorderSide = field(default_factory=lambda: BorderSide.none())

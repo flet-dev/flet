@@ -57,9 +57,6 @@ class PopupMenuItem(Control):
     For example, if a `height` greater than the height of the sum of the padding and a
     `content` is provided, then the padding's effect will not be visible.
 
-    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding)
-    class.
-
     Defaults to `padding.symmetric(horizontal=12)`.
     """
 
@@ -68,7 +65,7 @@ class PopupMenuItem(Control):
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None
@@ -142,7 +139,7 @@ class PopupMenuButton(ConstrainedControl):
     Defines position of the popup menu relative to the button.
 
     Value is of type
-    [`PopupMenuPosition`](https://flet.dev/docs/reference/types/popupmenuposition) and
+    [`PopupMenuPosition`][flet.PopupMenuPosition] and
     defaults to `PopupMenuPosition.OVER`.
     """
 
@@ -151,7 +148,7 @@ class PopupMenuButton(ConstrainedControl):
     The `content` will be clipped (or not) according to this option.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to
+    [`ClipBehavior`][flet.ClipBehavior] and defaults to
     `ClipBehavior.NONE`.
     """
 
@@ -169,13 +166,13 @@ class PopupMenuButton(ConstrainedControl):
     """
     The menu's shape.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)
+    Value is of type [`OutlinedBorder`][flet.OutlinedBorder]
     and defaults to `CircleBorder(radius=10.0)`.
     """
 
     padding: PaddingValue = 8
     """
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and
+    Type: [`Padding`][flet.Padding] and
     defaults to `Padding.all(8.0)`.
     """
 

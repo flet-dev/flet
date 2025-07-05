@@ -39,21 +39,21 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     """
     A `Control` to display as primary content of the tile.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     controls: Optional[list[Control]] = None
     """
     The controls to be displayed when the tile expands.
 
-    Typically a list of [`ListTile`](https://flet.dev/docs/controls/listtile) controls.
+    Typically a list of [`ListTile`][flet.ListTile] controls.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     leading: Optional[IconValueOrControl] = None
@@ -65,22 +65,17 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     """
     A `Control` to display after the title.
 
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    Typically an [`Icon`][flet.Icon] control.
     """
 
     controls_padding: Optional[PaddingValue] = None
     """
     Defines the padding around the `controls`.
-
-    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
     tile_padding: Optional[PaddingValue] = None
     """
-    Defines the tile's padding. Default value is `padding.symmetric(horizontal=16.0)`.
-
-    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding)
-    class.
+    Defines the tile's padding. Default value is `Padding.symmetric(horizontal=16.0)`.
     """
 
     affinity: Optional[TileAffinity] = None
@@ -88,7 +83,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Typically used to force the expansion arrow icon to the tile's `leading` or
     `trailing` edge.
 
-    Value is of type [`TileAffinity`](https://flet.dev/docs/reference/types/tileaffinity)
+    Type: [`TileAffinity`][flet.TileAffinity]
     and defaults to `TileAffinity.PLATFORM`.
     """
 
@@ -97,7 +92,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Defines the alignment of children, which are arranged in a column when the tile is
     expanded.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).
+    Type: [`Alignment`][flet.Alignment].
     """
 
     expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
@@ -105,7 +100,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Defines the alignment of each child control within `controls` when the tile is
     expanded.
 
-    Value is of type [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment)
+    Value is of type [`CrossAxisAlignment`][flet.CrossAxisAlignment]
     and defaults to `CrossAxisAlignment.CENTER`.
     """
 
@@ -113,7 +108,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
+    Value is of type [`ClipBehavior`][flet.ClipBehavior]
     and defaults to `ClipBehavior.NONE`.
     """
 
@@ -148,7 +143,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     """
     The tile's border shape when the sublist is expanded.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -178,7 +173,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     collapsed_shape: Optional[OutlinedBorder] = None
     """
     The tile's border shape when the sublist is collapsed. The value is an instance
-    of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    of [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     dense: Optional[bool] = None
@@ -215,12 +210,12 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     """
     Defines how compact the control's layout will be.
 
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
+    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     on_change: Optional[ControlEventHandler["ExpansionTile"]] = None
     """
-    Fires when a user clicks or taps the list tile.
+    Called when a user clicks or taps the list tile.
     """
 
     def before_update(self):

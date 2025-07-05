@@ -1,1 +1,1 @@
-::: flet.CardVariantr.
+::: flet.CardVariant

@@ -28,7 +28,7 @@ class RadioGroup(Control):
 
     on_change: Optional[ControlEventHandler["RadioGroup"]] = None
     """
-    Fires when the state of the RadioGroup is changed.
+    Called when the state of the RadioGroup is changed.
     """
 
     def before_update(self):

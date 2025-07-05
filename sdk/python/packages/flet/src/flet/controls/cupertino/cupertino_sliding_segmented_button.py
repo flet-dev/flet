@@ -17,13 +17,19 @@ __all__ = ["CupertinoSlidingSegmentedButton"]
 @control("CupertinoSlidingSegmentedButton")
 class CupertinoSlidingSegmentedButton(ConstrainedControl):
     """
-    A CupertinoSlidingSegmentedButton.
+    A cupertino sliding segmented button.
+
+    Raises:
+        AssertionError: If [`controls`][(c).] does not contain at least two visible controls.
+        IndexError: If [`selected_index`][flet.CupertinoSlidingSegmentedButton.selected_index] is out of range.
     """
 
-    controls: list[Control] = field(default_factory=list)
+    controls: list[Control]
     """
-    A list of `Control`s to display as segments inside the CupertinoSegmentedButton.
-    Must have at least 2 items.
+    The list of segments to be displayed.
+
+    Note:
+        Must contain at least two visible Controls.
     """
 
     selected_index: int = 0
@@ -46,25 +52,41 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         default_factory=lambda: Padding.symmetric(vertical=2, horizontal=3)
     )
     """
-    The button's padding.
+    The amount of space by which to inset the [`controls`][flet.CupertinoSlidingSegmentedButton.controls].
 
-    Padding value is an instance of
-    [Padding](https://flet.dev/docs/reference/types/padding) class.
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     proportional_width: bool = False
     """
-    TBD
+    Determine whether segments have proportional widths based on their content.
+
+    If false, all segments will have the same width, determined by the longest
+    segment. If true, each segment's width will be determined by its individual
+    content.
+
+    If the max width of parent constraints is smaller than the width that the
+    segmented control needs, The segment widths will scale down proportionally
+    to ensure the segment control fits within the boundaries; similarly, if
+    the min width of parent constraints is larger, the segment width will scales
+    up to meet the min width requirement.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
     """
-    Fires when the state of the button is changed - when one of the `controls` is
+    Called when the state of the button is changed - when one of the `controls` is
     clicked.
     """
 
     def before_update(self):
         super().before_update()
-        assert sum(c.visible for c in self.controls) >= 2, (
-            "controls must have at minimum two visible Controls"
+        visible_controls_count = len([c for c in self.controls if c.visible])
+        assert visible_controls_count >= 2, (
+            f"controls must contain at minimum two visible Controls, "
+            f"got {visible_controls_count}"
         )
+        if not (0 <= self.selected_index < visible_controls_count):
+            raise IndexError(
+                f"selected_index ({self.selected_index}) is out of range. "
+                f"Expected a value between 0 and {visible_controls_count - 1}, inclusive."
+            )

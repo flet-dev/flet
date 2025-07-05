@@ -100,7 +100,7 @@ class RangeSlider(ConstrainedControl):
     """
     The highlight [color](https://flet.dev/docs/reference/colors) that's typically
     used to indicate that the range slider thumb is in `HOVERED` or `DRAGGED`
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
+    [`ControlState`][flet.ControlState] .
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
@@ -108,25 +108,25 @@ class RangeSlider(ConstrainedControl):
     The cursor for a mouse pointer entering or hovering over this control.
 
     It's value can be made to depend on the slider's
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate).
+    [`ControlState`][flet.ControlState]
 
     Value is of type
-    [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    [`MouseCursor`][flet.MouseCursor]
     """
 
     on_change: Optional[ControlEventHandler["RangeSlider"]] = None
     """
-    Fires when the state of the Slider is changed.
+    Called when the state of the Slider is changed.
     """
 
     on_change_start: Optional[ControlEventHandler["RangeSlider"]] = None
     """
-    Fires when the user starts selecting a new value for the slider.
+    Called when the user starts selecting a new value for the slider.
     """
 
     on_change_end: Optional[ControlEventHandler["RangeSlider"]] = None
     """
-    Fires when the user is done selecting a new value for the slider.
+    Called when the user is done selecting a new value for the slider.
     """
 
     def before_update(self):

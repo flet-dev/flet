@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, IntFlag
 from typing import Optional
 
-from flet.controls.box import ShadowValue
+from flet.controls.box import BoxShadowValue
 from flet.controls.painting import Paint
 from flet.controls.types import ColorValue, FontWeight, Number
 
@@ -140,7 +140,7 @@ class TextStyle:
     """
     The decorations to paint near the text (e.g., an underline).
 
-    Value is of type https://flet.dev/docs/reference/types/textdecoration.
+    Type: [`TextDecoration`][flet.TextDecoration]
     """
 
     decoration_color: Optional[ColorValue] = None
@@ -177,7 +177,7 @@ class TextStyle:
     Text background https://flet.dev/docs/reference/colors.
     """
 
-    shadow: Optional[ShadowValue] = None
+    shadow: Optional[BoxShadowValue] = None
     """
     The value of this property is a single instance or a list of
     https://flet.dev/docs/reference/types/boxshadow class instances.
@@ -231,7 +231,7 @@ class TextStyle:
         font_family: Optional[str] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
-        shadow: Optional[ShadowValue] = None,
+        shadow: Optional[BoxShadowValue] = None,
         foreground: Optional[Paint] = None,
         letter_spacing: Optional[Number] = None,
         word_spacing: Optional[Number] = None,
@@ -298,11 +298,9 @@ class StrutStyle:
     `FontWeight.W_400`.
     """
 
-    italic: Optional[bool] = None
+    italic: bool = False
     """
-    `True` to use italic typeface.
-
-    Defaults to `False`.
+    Whether to use italic typeface.
     """
 
     font_family: Optional[str] = None

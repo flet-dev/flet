@@ -30,7 +30,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition)
+    Value is of type [`LabelPosition`][flet.LabelPosition]
     and defaults to `LabelPosition.RIGHT`.
     """
 
@@ -38,7 +38,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     """
     The label's style.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     value: Optional[str] = None
@@ -57,7 +57,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) that fills the radio, in all or
-    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    specific [`ControlState`][flet.ControlState]
     states.
     """
 
@@ -70,7 +70,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The overlay [color](https://flet.dev/docs/reference/colors) of this radio in all or
-    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    specific [`ControlState`][flet.ControlState]
     states.
     """
 
@@ -99,22 +99,22 @@ class Radio(ConstrainedControl, AdaptiveControl):
     """
     Defines how compact the radio's layout will be.
 
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
+    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
 
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_focus: Optional[ControlEventHandler["Radio"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Radio"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """

@@ -33,8 +33,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     var enableDrag = widget.control.getBool("enable_drag", false)!;
     var showDragHandle = widget.control.getBool("show_drag_handle", false)!;
     var useSafeArea = widget.control.getBool("use_safe_area", true)!;
-    var isScrollControlled =
-        widget.control.getBool("is_scroll_controlled", false)!;
+    var scrollControlled = widget.control.getBool("scroll_controlled", false)!;
     var maintainBottomViewInsetsPadding =
         widget.control.getBool("maintain_bottom_view_insets_padding", true)!;
 
@@ -65,7 +64,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                 isDismissible: dismissible,
                 backgroundColor: widget.control.getColor("bgcolor", context),
                 elevation: widget.control.getDouble("elevation"),
-                isScrollControlled: isScrollControlled,
+                isScrollControlled: scrollControlled,
                 enableDrag: enableDrag,
                 barrierColor: widget.control.getColor("barrier_color", context),
                 sheetAnimationStyle:

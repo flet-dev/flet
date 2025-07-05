@@ -31,11 +31,11 @@ from flet.controls.box import (
     BoxDecoration,
     BoxFit,
     BoxShadow,
+    BoxShadowValue,
     BoxShape,
     ColorFilter,
     DecorationImage,
     FilterQuality,
-    ShadowValue,
 )
 from flet.controls.buttons import (
     BeveledRectangleBorder,
@@ -165,7 +165,7 @@ from flet.controls.cupertino.cupertino_sliding_segmented_button import (
 from flet.controls.cupertino.cupertino_switch import CupertinoSwitch
 from flet.controls.cupertino.cupertino_textfield import (
     CupertinoTextField,
-    VisibilityMode,
+    OverlayVisibilityMode,
 )
 from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPicker,
@@ -351,6 +351,7 @@ from flet.controls.scrollable_control import (
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.file_picker import (
     FilePicker,
+    FilePickerFile,
     FilePickerFileType,
     FilePickerUploadEvent,
     FilePickerUploadFile,
@@ -362,6 +363,7 @@ from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
+    StrutStyle,
     TextBaseline,
     TextDecoration,
     TextDecorationStyle,
@@ -383,6 +385,7 @@ from flet.controls.theme import (
     DatePickerTheme,
     DialogTheme,
     DividerTheme,
+    DropdownTheme,
     ElevatedButtonTheme,
     ExpansionTileTheme,
     FilledButtonTheme,
@@ -600,7 +603,7 @@ __all__ = [
     "CupertinoSlidingSegmentedButton",
     "CupertinoSwitch",
     "CupertinoTextField",
-    "VisibilityMode",
+    "OverlayVisibilityMode",
     "CupertinoTimerPicker",
     "CupertinoTimerPickerMode",
     "CupertinoTintedButton",
@@ -757,6 +760,7 @@ __all__ = [
     "ScrollableControl",
     "BrowserContextMenu",
     "FilePicker",
+    "FilePickerFile",
     "FilePickerFileType",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
@@ -879,4 +883,6 @@ __all__ = [
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
     "MergeSemantics",
+    "DropdownMenuTheme",
+    "DropdownTheme", "BoxShadowValue", "StrutStyle",
 ]

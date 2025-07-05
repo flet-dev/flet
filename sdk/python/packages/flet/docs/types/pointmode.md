@@ -1,1 +1,1 @@
-::: flet.PointMode
+::: flet.canvas.PointMode

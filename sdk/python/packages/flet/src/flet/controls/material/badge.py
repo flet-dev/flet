@@ -20,99 +20,100 @@ class Badge(BaseControl):
 
     label: Optional[StrOrControl] = None
     """
+    The label of this badge Can be a string or a control.
 
-    The text or Control shown on badge's label, typically a 1 to 4 characters text.
+    Typically a 1 to 4 characters text.
 
     If the label is not provided, the badge is shown as a filled circle of
-    [`small_size`](#small_size) diameter.
+    [`small_size`][flet.Badge.small_size] diameter.
 
-    If `label` is provided, the label is a StadiumBorder shaped badge with height equal
-    to [`large_size`](#large_size).
-
-    Value is of type `str` or `Control`.
+    If `label` is provided, the label is a `StadiumBorder` shaped badge with height equal
+    to [`large_size`][flet.Badge.large_size].
     """
 
     offset: Optional[OffsetValue] = None
     """
-    Combined with `alignment` to determine the location of the label relative to the
-    content.
+    Combined with `alignment` to determine the location of the
+    [`label`][flet.Badge.label] relative to the content.
 
     Has effect only used if `label` is also provided.
 
-    Value is of type [`OffsetValue`](https://flet.dev/docs/reference/types/aliases#offsetvalue).
+    Type: [`OffsetValue`][flet.OffsetValue]
     """
 
     alignment: Optional[Alignment] = None
     """
-    Aligns the label relative to the content of the badge.
+    Aligns the [`label][flet.Badge.label] relative to the content of the badge.
 
-    The alignment positions the label in similar way content of a container is
-    positioned using its [`alignment`](https://flet.dev/docs/controls/container#alignment),
-    except that the badge alignment is resolved as if the label was a [`large_size`](https://flet.dev/docs/reference/types/badge#large_size)
-    square and `offset` is added to the result.
+    The alignment positions the label in similar way [`Container.content`][flet.Container.content] is
+    positioned using [`Container.alignment`][flet.Container.alignment],
+    except that the badge alignment is resolved as if the label was a [`large_size`][flet.Badge.large_size]
+    square and [`offset`][flet.Badge.offset] is added to the result.
 
     This value is only used if `label` property is provided.
 
-    For example:
+    Example:
+        ```python
+        badge.alignment = ft.Alignment.top_left()
+        ```
 
-    ```python
-    badge.alignment = ft.Alignment.top_left()
-    ```
-
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).
+    Type: [`Alignment`][flet.Alignment]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of the label.
+    The background [color](https://flet.dev/docs/reference/colors) of the [`label`][flet.Badge.label].
     """
 
     label_visible: bool = True
     """
-    If `False`, the `label` is not displayed. By default, `label_visible` is True. It
-    can be used to create a badge only shown under certain conditions.
+    If `False`, the [`label`][flet.Badge.label] is not displayed.
 
-    Value is of type `bool`.
+    It can be used to create a badge only shown under certain conditions.
     """
 
     large_size: Optional[Number] = None
     """
-    The badge's label height if `label` is provided.
+    The badge's label height if [`label`][flet.Badge.label] is provided.
 
     If the default value is overridden then it may be useful to also override `padding`
     and `alignment`.
 
-    Defaults to `16`.
+    Defaults to [`BadgeTheme.large_size`][flet.BadgeTheme.large_size], or if that is `None`,
+    falls back to `16`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The padding added to the badge's label.
+    The padding added to the [`label`][flet.Badge.label].
 
-    This value is only used if `text` is provided. Defaults to 4 pixels on the left and
-    right.
+    Has effect only if `label` is not `None`.
 
-    Value is of type [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#paddingvalue).
+    Defaults to [`BadgeTheme.padding`][flet.BadgeTheme.padding], or if that is `None`,
+    falls back to `4` pixels on the left and right.
+
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     small_size: Optional[Number] = None
     """
-    The badge's label diameter if `label` is not provided.
+    The badge's label diameter if [`label`][flet.Badge.label] is not provided.
 
-    Defaults to `6`.
+    Defaults to [`BadgeTheme.small_size`][flet.BadgeTheme.small_size], or if that is `None`,
+    falls back to `6`.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) of the text shown in the label.
-    This color overrides the color of the label's `text_style`.
+    The [color](https://flet.dev/docs/reference/colors) of the text shown in the label.
+    This color overrides the color of the [`label`][flet.Badge.label]'s `text_style`.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    The text style to use for text in the label.
+    The text style to use for text in the [`label`][flet.Badge.label].
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
 

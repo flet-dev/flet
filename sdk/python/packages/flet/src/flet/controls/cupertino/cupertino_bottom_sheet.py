@@ -17,7 +17,7 @@ class CupertinoBottomSheet(DialogControl):
 
     content: Control
     """
-    The content of the bottom sheet.
+    The control to be displayed.
     """
 
     modal: bool = False
@@ -33,11 +33,12 @@ class CupertinoBottomSheet(DialogControl):
 
     height: Optional[Number] = None
     """
-    The height of the bottom sheet.
+    The height of this bottom sheet.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The sheet's padding. The value is an instance of
-    [`Padding`](https://flet.dev/docs/reference/types/padding) class or a number.
+    The sheet's padding.
+
+    Type: [`Padding`][flet.PaddingValue]
     """

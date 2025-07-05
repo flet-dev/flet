@@ -50,5 +50,5 @@ class FletApp(ConstrainedControl):
 
     on_error: Optional[ControlEventHandler["FletApp"]] = None
     """
-    Fires when a connection or any unhandled error occurs.
+    Called when a connection or any unhandled error occurs.
     """

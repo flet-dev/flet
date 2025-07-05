@@ -40,14 +40,14 @@ class SubmenuButton(ConstrainedControl):
     """
     An optional control to display before the `content`.
 
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    Typically an [`Icon`][flet.Icon] control.
     """
 
     trailing: Optional[Control] = None
     """
     An optional control to display after the `content`.
 
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    Typically an [`Icon`][flet.Icon] control.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -55,7 +55,7 @@ class SubmenuButton(ConstrainedControl):
     Whether to clip the content of this control or not.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and
+    [`ClipBehavior`][flet.ClipBehavior] and
     defaults to `ClipBehavior.HARD_EDGE`.
     """
 
@@ -64,7 +64,7 @@ class SubmenuButton(ConstrainedControl):
     Customizes this menu's appearance.
 
     Value is of type
-    [`MenuStyle`](https://flet.dev/docs/reference/types/menustyle).
+    [`MenuStyle`][flet.MenuStyle]
     """
 
     style: Optional[ButtonStyle] = None
@@ -72,7 +72,7 @@ class SubmenuButton(ConstrainedControl):
     Customizes this button's appearance.
 
     Value is of type
-    [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
+    [`ButtonStyle`][flet.ButtonStyle]
     """
 
     alignment_offset: Optional[OffsetValue] = None

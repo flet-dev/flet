@@ -250,7 +250,7 @@ class Markdown(ConstrainedControl):
     The extensions to use when rendering the markdown content.
 
     Value is of type
-    [`MarkdownExtensionSet`](https://flet.dev/docs/reference/types/markdownextensionset)
+    [`MarkdownExtensionSet`][flet.MarkdownExtensionSet]
     and defaults to `MarkdownExtensionSet.NONE`.
     """
 
@@ -259,7 +259,7 @@ class Markdown(ConstrainedControl):
     A syntax highlighting theme for code blocks.
 
     Value is of type
-    [`MarkdownCodeTheme`](https://flet.dev/docs/reference/types/markdowncodetheme)
+    [`MarkdownCodeTheme`][flet.MarkdownCodeTheme]
     and defaults to `MarkdownCodeTheme.GITHUB`.
     """
 
@@ -291,52 +291,47 @@ class Markdown(ConstrainedControl):
     """
     Where to open URL in the web mode.
 
-    Value is of type
-    [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget)
-    and defaults to `UrlTarget.SELF`.
+    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
-    img_error_content: Optional[Control] = None
+    image_error_content: Optional[Control] = None
     """
-    The `Control` to display when an image fails to load.
+    The control to display when an image fails to load.
     """
 
     code_style_sheet: Optional[MarkdownStyleSheet] = None
     """
     The styles to use when displaying the code blocks.
 
-    Value is of type
-    [`MarkdownStyleSheet`](https://flet.dev/docs/reference/types/markdownstylesheet).
+    Type: [`MarkdownStyleSheet`][flet.MarkdownStyleSheet]
     """
 
     md_style_sheet: Optional[MarkdownStyleSheet] = None
     """
     The styles to use when displaying the markdown.
 
-    Value is of type
-    [`MarkdownStyleSheet`](https://flet.dev/docs/reference/types/markdownstylesheet).
+    Type: [`MarkdownStyleSheet`][flet.MarkdownStyleSheet]
     """
 
     on_tap_text: Optional[ControlEventHandler["Markdown"]] = None
     """
-    Fires when some text is clicked/tapped.
+    Called when some text is clicked/tapped.
     """
 
     on_selection_change: Optional[
         EventHandler[TextSelectionChangeEvent["Markdown"]]
     ] = None
     """
-    Fires when the text selection changes.
+    Called when the text selection changes.
 
-    Event handler argument is of type
-    [`MarkdownSelectionChangeEvent`](https://flet.dev/docs/reference/types/markdownselectionchangeevent).
+    Event Type: [`TextSelectionChangeEvent`][flet.TextSelectionChangeEvent]
     """
 
     on_tap_link: Optional[ControlEventHandler["Markdown"]] = None
     """
-    Fires when a link within Markdown document is clicked/tapped.
+    Called when a link within Markdown document is clicked/tapped.
 
-    `data` property of event contains URL.
+    The [`data`][flet.Event.data] property of the event handler argument contains the clickedURL.
 
     Example:
     https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py

@@ -72,7 +72,7 @@ class SnackBarAction(Control):
 
     on_click: Optional[ControlEventHandler["SnackBarAction"]] = None
     """
-    Fires when this action button is clicked.
+    Called when this action button is clicked.
     """
 
 
@@ -87,7 +87,7 @@ class SnackBar(DialogControl):
     """
     The primary content of the snack bar.
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     behavior: Optional[SnackBarBehavior] = None
@@ -99,7 +99,7 @@ class SnackBar(DialogControl):
     `NavigationBar`.
 
     Value is of type
-    [`SnackBarBehavior`](https://flet.dev/docs/reference/types/snackbarbehavior)
+    [`SnackBarBehavior`][flet.SnackBarBehavior]
     and defaults to `SnackBarBehavior.FIXED`.
 
     **Note:**
@@ -115,7 +115,7 @@ class SnackBar(DialogControl):
     The direction in which the SnackBar can be dismissed.
 
     Value is of type
-    [`DismissDirection`](https://flet.dev/docs/reference/types/dismissdirection)
+    [`DismissDirection`][flet.DismissDirection]
     and defaults to `DismissDirection.DOWN`.
     """
 
@@ -167,7 +167,7 @@ class SnackBar(DialogControl):
     The amount of padding to apply to the snack bar's content and optional action.
 
     Value is of type
-    [`Padding`](https://flet.dev/docs/reference/types/padding) or a number.
+    [`Padding`][flet.Padding] or a number.
     """
 
     width: Optional[Number] = None
@@ -192,7 +192,7 @@ class SnackBar(DialogControl):
     The shape of the snack bar's.
 
     Value is of type
-    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -200,7 +200,7 @@ class SnackBar(DialogControl):
     The `content` will be clipped (or not) according to this option.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and
+    [`ClipBehavior`][flet.ClipBehavior] and
     defaults to `ClipBehavior.HARD_EDGE`.
     """
 
@@ -220,7 +220,7 @@ class SnackBar(DialogControl):
 
     on_action: Optional[ControlEventHandler["SnackBar"]] = None
     """
-    Fires when action button is clicked.
+    Called when action button is clicked.
     """
 
     on_visible: Optional[ControlEventHandler["SnackBar"]] = None

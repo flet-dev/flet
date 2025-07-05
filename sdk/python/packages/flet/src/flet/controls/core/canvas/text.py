@@ -34,12 +34,12 @@ class Text(Shape):
     style: Optional[TextStyle] = None
     """
     A text style to draw `text` and `spans` with. The value is the instance of
-    [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) class.
+    [`TextStyle`][flet.TextStyle] class.
     """
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`](https://flet.dev/docs/reference/types/textspan)
+    The list of [`TextSpan`][flet.TextSpan]
     objects to build a rich text paragraph.
     """
 
@@ -47,7 +47,7 @@ class Text(Shape):
     """
     A point within a text rectangle to determine its position and rotation center.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment)
+    Value is of type [`Alignment`][flet.Alignment]
     and defaults to `alignment.top_left`.
     """
 
@@ -55,7 +55,7 @@ class Text(Shape):
     """
     Text horizontal align.
 
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign)
+    Value is of type [`TextAlign`][flet.TextAlign]
     and defaults to `TextAlign.LEFT`.
     """
 

@@ -124,7 +124,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     Can be used to show all labels, show only the selected label, or hide all labels.
 
     Value is of type
-    [`NavigationBarLabelBehavior`](https://flet.dev/docs/reference/types/navigationbarlabelbehavior)
+    [`NavigationBarLabelBehavior`][flet.NavigationBarLabelBehavior]
     and defaults to `NavigationBarLabelBehavior.ALWAYS_SHOW`.
     """
 
@@ -150,7 +150,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     The shape of the selected destination indicator.
 
     Value is of type
-    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     surface_tint_color: Optional[ColorValue] = None
@@ -172,13 +172,13 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
     The highlight [color](https://flet.dev/docs/reference/colors) of the
     `NavigationDestination` in various
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    [`ControlState`][flet.ControlState] states.
 
-    The following [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The following [`ControlState`][flet.ControlState]
     values are supported: `PRESSED`, `HOVERED` and `FOCUSED`.
     """
 
     on_change: Optional[ControlEventHandler["NavigationBar"]] = None
     """
-    Fires when selected destination changed.
+    Called when selected destination changed.
     """

@@ -21,10 +21,10 @@ class StackFit(Enum):
 @control("Stack")
 class Stack(ConstrainedControl, AdaptiveControl):
     """
-    A control that positions its children on top of each other.
+    Positions its children on top of each other, following a LIFO (Last In First Out) order.
 
-    This control is useful if you want to overlap several children in a simple way,
-    for example having some text and an image, overlaid with a gradient and a button
+    This control is useful if you want to overlap several children in a simple way.
+    For example having some text and an image, overlaid with a gradient and a button
     attached to the bottom.
 
     Stack is also useful if you want to implement implicit animations
@@ -34,26 +34,30 @@ class Stack(ConstrainedControl, AdaptiveControl):
 
     controls: list[Control] = field(default_factory=list)
     """
-    A list of Controls to display inside the Stack. The last control in the list is
-    displayed on top.
+    A list of Controls to display.
+
+    For the display order, it follows the order of the list,
+    so the last control in the list will be displayed on top (LIFO - Last In First Out).
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     alignment: Optional[Alignment] = None
     """
-    The alignment of the non-positioned (those that do not specify an alignment - ex
-    neither top nor bottom - in a particular axis and partially-positioned `controls`.
+    Specifies the alignment for non-positioned (those without explicit
+    alignment properties such as [`top`][flet.ConstrainedControl.top]
+    or [`bottom`][flet.ConstrainedControl.bottom]) and
+    partially-positioned [`controls`][flet.Stack.controls].
     """
 
     fit: StackFit = StackFit.LOOSE
     """
-    How to size the non-positioned `controls`.
+    How to size the non-positioned [`controls`][flet.Stack.controls].
 
-    Value is of type [`StackFit`](https://flet.dev/docs/reference/types/stackfit).
+    Type: [`StackFit`][flet.StackFit]
     """

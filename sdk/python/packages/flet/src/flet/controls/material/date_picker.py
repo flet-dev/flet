@@ -47,8 +47,8 @@ class DatePicker(DialogControl):
     """
     A Material-style date picker dialog.
 
-    It is added to [`page.overlay`](https://flet.dev/page#overlay) and can be opened by
-    calling `Page.open_dialog()` method.
+    It is added to [`Page.overlay`][(p).] and can be opened by
+    calling [`Page.open_dialog()`][flet.Page.open_dialog] method.
 
     Depending on the `date_picker_entry_mode`, it will show either a Calendar or an
     Input (TextField) for picking a date.
@@ -58,12 +58,12 @@ class DatePicker(DialogControl):
     """
     The selected date that the picker should display.
 
-    Defaults to `current_date`.
+    Defaults to [`current_date`][flet.DatePicker.current_date].
     """
 
     modal: bool = False
     """
-    TBD
+    Whether this date picker cannot be dismissed by clicking the area outside of it.
     """
 
     first_date: DateTimeValue = field(
@@ -89,7 +89,7 @@ class DatePicker(DialogControl):
     """
     The type of keyboard to use for editing the text.
 
-    Value is of type [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype)
+    Type: [`KeyboardType`][flet.KeyboardType]
     and defaults to `KeyboardType.DATETIME`.
     """
 
@@ -97,7 +97,7 @@ class DatePicker(DialogControl):
     """
     Initial display of a calendar date picker.
 
-    Value is of type [`DatePickerMode`](https://flet.dev/docs/reference/types/datepickermode)
+    Type: [`DatePickerMode`][flet.DatePickerMode]
     and defaults to `DatePickerMode.DAY`.
     """
 
@@ -105,7 +105,7 @@ class DatePicker(DialogControl):
     """
     The initial mode of date entry method for the date picker dialog.
 
-    Value is of type [`DatePickerEntryMode`](https://flet.dev/docs/reference/types/datepickerentrymode)
+    Type: [`DatePickerEntryMode`][flet.DatePickerEntryMode]
     and defaults to `DatePickerEntryMode.CALENDAR`.
     """
 
@@ -187,14 +187,14 @@ class DatePicker(DialogControl):
 
     on_change: Optional[ControlEventHandler["DatePicker"]] = None
     """
-    Fires when user clicks confirm button. `value` property is updated with selected
+    Called when user clicks confirm button. `value` property is updated with selected
     date. `e.data` also contains the selected date.
     """
 
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
-    Fires when the `date_picker_entry_mode` is changed.
+    Called when the `date_picker_entry_mode` is changed.
 
     Event handler argument is of
-    type [`DatePickerEntryModeChangeEvent`](https://flet.dev/docs/reference/types/datepickerentrymodechangeevent).
+    type [`DatePickerEntryModeChangeEvent`][flet.DatePickerEntryModeChangeEvent]
     """

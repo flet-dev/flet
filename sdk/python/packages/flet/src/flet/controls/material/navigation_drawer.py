@@ -127,7 +127,7 @@ class NavigationDrawer(DialogControl):
     The shape of the selected destination indicator.
 
     Value is of type
-    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -151,11 +151,11 @@ class NavigationDrawer(DialogControl):
     The position of this drawer.
 
     Value is of type
-    [`NavigationDrawerPosition`](https://flet.dev/docs/reference/types/navigationdrawerposition)
+    [`NavigationDrawerPosition`][flet.NavigationDrawerPosition]
     and defaults to `NavigationDrawerPosition.START`.
     """
 
     on_change: Optional[ControlEventHandler["NavigationDrawer"]] = None
     """
-    Fires when selected destination changed.
+    Called when selected destination changed.
     """

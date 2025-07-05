@@ -55,7 +55,7 @@ class TimePicker(DialogControl):
     """
     The initial mode of time entry method for the time picker dialog.
 
-    Value is of type [`TimePickerEntryMode`](https://flet.dev/docs/reference/types/timepickerentrymode)
+    Value is of type [`TimePickerEntryMode`][flet.TimePickerEntryMode]
     and defaults to `TimePickerEntryMode.DIAL`.
     """
 
@@ -110,14 +110,14 @@ class TimePicker(DialogControl):
 
     on_change: Optional[ControlEventHandler["TimePicker"]] = None
     """
-    Fires when user clicks confirm button. `value` property is updated with selected
+    Called when user clicks confirm button. `value` property is updated with selected
     time. `e.data` also contains the selected time.
     """
 
     on_entry_mode_change: Optional[EventHandler[TimePickerEntryModeChangeEvent]] = None
     """
-    Fires when the `time_picker_entry_mode` is changed.
+    Called when the `time_picker_entry_mode` is changed.
 
     Event handler argument is of type
-    [`TimePickerEntryModeChangeEvent`](https://flet.dev/docs/reference/types/timepickerentrymodechangeevent).
+    [`TimePickerEntryModeChangeEvent`][flet.TimePickerEntryModeChangeEvent]
     """

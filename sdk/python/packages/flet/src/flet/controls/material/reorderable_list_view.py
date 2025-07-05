@@ -70,7 +70,7 @@ class ReorderableListView(ListView):
     """
     The amount of space by which to inset the `controls`.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
+    Type: [`Padding`][flet.Padding]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -78,7 +78,7 @@ class ReorderableListView(ListView):
     The content will be clipped (or not) according to this option.
 
     Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    [`ClipBehavior`][flet.ClipBehavior]
     """
 
     cache_extent: Optional[Number] = None
@@ -146,19 +146,19 @@ class ReorderableListView(ListView):
 
     on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Fires when a child control has been dragged to a new location in the list and the
+    Called when a child control has been dragged to a new location in the list and the
     application should update the order of the items.
     """
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Fires when an item drag has started.
+    Called when an item drag has started.
 
     Event handler argument is of type
-    [`OnReorderEvent`](https://flet.dev/docs/reference/types/onreorderevent).
+    [`OnReorderEvent`][flet.OnReorderEvent]
     """
 
     on_reorder_end: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Fires when the dragged item is dropped.
+    Called when the dragged item is dropped.
     """

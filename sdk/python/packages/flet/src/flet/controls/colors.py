@@ -68,7 +68,7 @@ class Colors(str, Enum):
         Args:
             exclude: A list of colors members to exclude from the selection.
             weights: A dictionary mapping color members to their respective weights for 
-            weighted random selection.
+                weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.

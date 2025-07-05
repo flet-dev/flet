@@ -22,12 +22,19 @@ __all__ = ["InteractiveViewer"]
 @control("InteractiveViewer")
 class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
-    InteractiveViewer allows users to pan, zoom, and rotate content.
+    Allows you to pan, zoom, and rotate its [`content`][(c).].
+
+    Raises:
+        AssertionError: If [`content`][(c).] is not visible.
+        AssertionError: If [`min_scale`][(c).] is not greater than `0`.
+        AssertionError: If [`max_scale`][(c).] is not greater than `0`.
+        AssertionError: If [`max_scale`][(c).] is less than `min_scale`.
+        AssertionError: If [`interaction_end_friction_coefficient`][(c).] is not greater than `0`.
     """
 
     content: Control
     """
-    The `Control` to be transformed by the `InteractiveViewer`.
+    The `Control` to be transformed.
     """
 
     pan_enabled: bool = True
@@ -53,19 +60,26 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     max_scale: Number = 2.5
     """
-    The maximum allowed scale. Must be greater than or equal to `min_scale`.
+    The maximum allowed scale.
+
+    Note:
+        Must be greater than or equal to [`min_scale`][flet.InteractiveViewer.min_scale].
     """
 
     min_scale: Number = 0.8
     """
-    The minimum allowed scale. Must be greater than `0` and less than or equal to
-    `max_scale`.
+    The minimum allowed scale.
+
+    Note:
+        Must be greater than `0` and less than or equal to [`max_scale`][flet.InteractiveViewer.max_scale].
     """
 
     interaction_end_friction_coefficient: Number = 0.0000135
     """
     Changes the deceleration behavior after a gesture.
-    Must be greater than `0`.
+
+    Note:
+        Must be greater than `0`.
     """
 
     scale_factor: Number = 200
@@ -77,24 +91,21 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
     How to clip the `content`.
 
-    Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     alignment: Optional[Alignment] = None
     """
     Alignment of the `content` within.
 
-    Value is of type
-    [`Alignment`](https://flet.dev/docs/reference/types/alignment).
+    Type: [`Alignment`][flet.Alignment]
     """
 
     boundary_margin: MarginValue = 0
     """
     A margin for the visible boundaries of the `content`.
 
-    Value is of type
-    [`Margin`](https://flet.dev/docs/reference/types/margin).
+    Type: [`MarginValue`][flet.MarginValue]
     """
 
     interaction_update_interval: int = 200
@@ -106,44 +117,47 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         EventHandler[ScaleStartEvent["InteractiveViewer"]]
     ] = None
     """
-    Fires when the user begins a pan or scale gesture.
+    Called when the user begins a pan or scale gesture.
 
-    Event handler argument is of type
-    [`ScaleStartEvent`](https://flet.dev/docs/reference/types/scalestartevent).
+    Event handler argument is of type [`ScaleStartEvent`][flet.ScaleStartEvent].
     """
 
     on_interaction_update: Optional[
         EventHandler[ScaleUpdateEvent["InteractiveViewer"]]
     ] = None
     """
-    Fires when the user updates a pan or scale gesture.
+    Called when the user updates a pan or scale gesture.
 
-    Event handler argument is of type
-    [`ScaleUpdateEvent`](https://flet.dev/docs/reference/types/scaleupdateevent).
+    Event handler argument is of type [`ScaleUpdateEvent`][flet.ScaleUpdateEvent].
     """
 
     on_interaction_end: Optional[EventHandler[ScaleEndEvent["InteractiveViewer"]]] = (
         None
     )
     """
-    Fires when the user ends a pan or scale gesture.
+    Called when the user ends a pan or scale gesture.
 
-    Event handler argument is of type
-    [`ScaleEndEvent`](https://flet.dev/docs/reference/types/scaleendevent).
+    Event handler argument is of type [`ScaleEndEvent`][flet.ScaleEndEvent].
     """
 
     def before_update(self):
         super().before_update()
         assert self.content.visible, "content must be visible"
-        assert self.min_scale > 0, "min_scale must be greater than 0"
-        assert self.max_scale > 0, "max_scale must be greater than 0"
+        assert self.min_scale > 0, (
+            f"min_scale must be greater than 0, got {self.min_scale}"
+        )
+        assert self.max_scale > 0, (
+            f"max_scale must be greater than 0, got {self.max_scale}"
+        )
         assert self.max_scale >= self.min_scale, (
-            "max_scale must be greather than or equal to min_scale"
+            f"max_scale must be greater than or equal to min_scale, got max_scale={self.max_scale}, min_scale={self.min_scale}"
         )
         assert (
             self.interaction_end_friction_coefficient is None
             or self.interaction_end_friction_coefficient > 0
-        ), "interaction_end_friction_coefficient must be greater than 0"
+        ), (
+            f"interaction_end_friction_coefficient must be greater than 0, got {self.interaction_end_friction_coefficient}"
+        )
 
     def reset(self, animation_duration: Optional[DurationValue] = None):
         asyncio.create_task(self.reset_async(animation_duration))

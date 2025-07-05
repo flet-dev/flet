@@ -97,7 +97,7 @@ class AutofillGroup(Control):
     and it's being disposed, in order to clean up the current autofill context.
 
     Value is of type
-    [`AutofillGroupDisposeAction`](https://flet.dev/docs/reference/types/autofillgroupdisposeaction).
+    [`AutofillGroupDisposeAction`][flet.AutofillGroupDisposeAction]
     """
 
     def before_update(self):

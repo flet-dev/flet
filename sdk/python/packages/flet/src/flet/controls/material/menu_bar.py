@@ -56,13 +56,13 @@ class MenuBar(Control):
     """
     Whether to clip the content of this control or not.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
+    Value is of type [`ClipBehavior`][flet.ClipBehavior]
     and defaults to `ClipBehavior.NONE`.
     """
 
     style: Optional[MenuStyle] = None
     """
-    Value is of type [`MenuStyle`](https://flet.dev/docs/reference/types/menustyle).
+    Type: [`MenuStyle`][flet.MenuStyle]
     """
 
     def before_update(self):

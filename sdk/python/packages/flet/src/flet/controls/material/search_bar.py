@@ -64,14 +64,14 @@ class SearchBar(ConstrainedControl):
     """
     Defines the background [color](https://flet.dev/docs/reference/colors) of the
     search bar in all or specific
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    [`ControlState`][flet.ControlState] states.
     """
 
     bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the highlight [color](https://flet.dev/docs/reference/colors) that's
     typically used to indicate that the search bar is in `FOCUSED`, `HOVERED`, or
-    `PRESSED` [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    `PRESSED` [`ControlState`][flet.ControlState]
     states.
     """
 
@@ -123,7 +123,7 @@ class SearchBar(ConstrainedControl):
     keyboard), it scrolls into view, ensuring it is positioned at the specified
     distance from the Scrollable edges.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
+    Type: [`Padding`][flet.Padding]
     """
 
     view_leading: Optional[Control] = None
@@ -162,7 +162,7 @@ class SearchBar(ConstrainedControl):
     """
     Defines the color and weight of the search view's outline.
 
-    Value is of type [`BorderSide`](https://flet.dev/docs/reference/types/borderside).
+    Type: [`BorderSide`][flet.BorderSide]
     """
 
     view_shape: Optional[OutlinedBorder] = None
@@ -170,18 +170,18 @@ class SearchBar(ConstrainedControl):
     Defines the shape of the search view.
 
     Value is of type
-    [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     view_header_text_style: Optional[TextStyle] = None
     """
-    Defines the [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of the
+    Defines the [`TextStyle`][flet.TextStyle] of the
     text being edited on the search view.
     """
 
     view_hint_text_style: Optional[TextStyle] = None
     """
-    Defines the [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) of
+    Defines the [`TextStyle`][flet.TextStyle] of
     `view_hint_text`.
     """
 
@@ -205,7 +205,7 @@ class SearchBar(ConstrainedControl):
     Enables automatic on-the-fly capitalization of entered text.
 
     Value is of type
-    [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization).
+    [`TextCapitalization`][flet.TextCapitalization]
     """
 
     full_screen: bool = False
@@ -219,7 +219,7 @@ class SearchBar(ConstrainedControl):
     The type of action button to use for the keyboard.
 
     Value is of type
-    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults
+    [`KeyboardType`][flet.KeyboardType] and defaults
     to `KeyboardType TEXT`.
     """
 
@@ -237,7 +237,7 @@ class SearchBar(ConstrainedControl):
 
     on_tap: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    Fires when the search bar is tapped.
+    Called when the search bar is tapped.
     """
 
     on_tap_outside_bar: Optional[ControlEventHandler["SearchBar"]] = None
@@ -247,12 +247,12 @@ class SearchBar(ConstrainedControl):
 
     on_submit: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    Fires when user presses ENTER while focus is on SearchBar.
+    Called when user presses ENTER while focus is on SearchBar.
     """
 
     on_change: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    Fires when the typed input in the search bar has changed.
+    Called when the typed input in the search bar has changed.
     """
 
     on_focus: Optional[ControlEventHandler["SearchBar"]] = None

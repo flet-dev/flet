@@ -123,7 +123,7 @@ class FilePicker(Service):
 
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
-    Fires when a file upload progress is updated.
+    Called when a file upload progress is updated.
 
     Event object is an instance of
     [FilePickerUploadEvent](https://flet.dev/docs/reference/types/filepickeruploadevent).
@@ -209,7 +209,7 @@ class FilePicker(Service):
         * `file_name` - the default file name.
         * `initial_directory` - the initial directory where the dialog should open.
         * `file_type` - the allowed
-        [`FilePickerFileType`](https://flet.dev/docs/reference/types/filepickerfiletype).
+        [`FilePickerFileType`][flet.FilePickerFileType]
         * `allowed_extensions` - the allowed file extensions. Has effect only if
         `file_type` is `FilePickerFileType.CUSTOM`.
 
@@ -276,7 +276,7 @@ class FilePicker(Service):
         * `dialog_title` - the title of the dialog window.
         * `initial_directory` - the initial directory where the dialog should open.
         * `file_type` - the allowed
-        [`FilePickerFileType`](https://flet.dev/docs/reference/types/filepickerfiletype).
+        [`FilePickerFileType`][flet.FilePickerFileType]
         * `allowed_extensions` - the allowed file extensions. Has effect only if
         `file_type` is `FilePickerFileType.CUSTOM`.
         * `allow_multiple` - allow selecting multiple files.

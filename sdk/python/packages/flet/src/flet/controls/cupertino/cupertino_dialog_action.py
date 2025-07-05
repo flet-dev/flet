@@ -12,18 +12,26 @@ __all__ = ["CupertinoDialogAction"]
 @control("CupertinoDialogAction")
 class CupertinoDialogAction(Control):
     """
-    A button typically used in a CupertinoAlertDialog.
+    A dialog action button.
+
+    Typically used as a child of [`CupertinoAlertDialog.actions`][flet.CupertinoAlertDialog.actions].
+
+    Raises:
+        AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
-    A Control representing custom button content.
+    The content of this action button. Can be a string or a Control.
     """
 
     default: bool = False
     """
-    If set to True, the button will have bold text. More than one action can have
-    this property set to True in CupertinoAlertDialog.
+    Whether this action is a default action. In this case, the button will have bold text.
+
+    Info:
+        More than one action can have
+        this property set to `True` in [`CupertinoAlertDialog`][flet.CupertinoAlertDialog].
     """
 
     destructive: bool = False
@@ -34,12 +42,14 @@ class CupertinoDialogAction(Control):
 
     text_style: Optional[TextStyle] = None
     """
-    The text style to use for text on the button.
+    The text style to use for text in the button.
+
+    Can be useful when [`content`][flet.CupertinoDialogAction.content] is a string.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None
     """
-    Fires when a user clicks the button.
+    Called when a user clicks the button.
     """
 
     def before_update(self):

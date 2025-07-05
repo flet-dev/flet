@@ -49,21 +49,22 @@ class WindowEvent(Event[EventControlType]):
     type: WindowEventType
 
 
-# todo: raise FletExceptions when a method cant be called on the running platform
-
-
+# TODO: raise FletExceptions when a method cant be called on the running platform
 @control("Window")
 class Window(BaseControl):
     """
-    All properties and methods of the `Window` class are available only on Desktop 🖥️
-    platforms.
+    Controls the app window.
+
+    Note:
+        This control is for Desktop platforms (macOS, Windows, Linux) only.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets background https://flet.dev/docs/reference/colors of an application window.
+    Sets background [color](https://flet.dev/docs/reference/colors) of an application window.
 
-    Use together with `page.bgcolor` to make a window transparent.
+    Tip:
+        Can be used together with [`Page.bgcolor`][flet.Page.bgcolor] to make a window transparent.
     """
 
     width: Optional[Number] = None
@@ -110,29 +111,34 @@ class Window(BaseControl):
 
     opacity: Number = 1.0
     """
-    Defines the opacity of a native OS window.
+    Defines the opacity of the app window.
 
-    Value must be between `0.0` and `1.0`.
+    Note:
+        Must be between `0.0` and `1.0`.
     """
 
     aspect_ratio: Optional[Number] = None
     """
-    TBD
+    Defines the aspect ratio of the app window.
     """
 
     brightness: Optional[Brightness] = None
     """
-    TBD
+    The brightness of a app window.
     """
 
     maximized: bool = False
     """
-    Whether the app window is maximized. Set to `True` to maximize programmatically.
+    Whether the app window is maximized.
+
+    Set to `True` to maximize programmatically.
     """
 
     minimized: bool = False
     """
-    Whether the app window is minimized. Set to `True` to minimize programmatically.
+    Whether the app window is minimized.
+
+    Set to `True` to minimize programmatically.
     """
 
     minimizable: bool = True
@@ -142,7 +148,7 @@ class Window(BaseControl):
 
     maximizable: bool = True
     """
-    Whether to hide/disable native OS window's "Maximize" button.
+    Whether to hide/disable app window's "Maximize" button.
     """
 
     resizable: bool = True
@@ -154,35 +160,38 @@ class Window(BaseControl):
     """
     Whether the app window can be moved.
 
-    Has effect on macOS only.
+    Note:
+        Has effect on macOS only.
     """
 
     full_screen: bool = False
     """
-    Whether to switch app's native OS window to a fullscreen mode.
+    Whether to switch the app's window to fullscreen mode.
     """
 
     always_on_top: bool = False
     """
-    Whether the app window should always be displayed on top of other windows.
+    Whether the app window should always be displayed on top of other windows/apps.
     """
 
     always_on_bottom: bool = False
     """
     Whether the app window should always be displayed below other windows.
 
-    Has effect on Linux and Windows only.
+    Note:
+        Has effect on Linux and Windows only.
     """
 
     prevent_close: bool = False
     """
-    Set to `True` to intercept the native close signal. Could be used to implement
-    app exit confirmation logic.
+    Set to `True` to intercept the native close signal.
+
+    Could be used to implement app exit confirmation logic.
     """
 
     skip_task_bar: bool = False
     """
-    Set to `True` to hide application from the Task Bar (Windows) or Dock (macOS).
+    Whether the app window should be hidden from the Task Bar (on Windows) or Dock (on macOS).
     """
 
     title_bar_hidden: bool = False
@@ -194,7 +203,8 @@ class Window(BaseControl):
     """
     Whether to hide the app window's title bar buttons.
 
-    Has effect on macOS only.
+    Note:
+        Has effect on macOS only.
     """
 
     frameless: bool = False
@@ -209,12 +219,16 @@ class Window(BaseControl):
 
     focused: bool = True
     """
-    Set to `True` to focus a native OS window.
+    Whether the app window should be focused.
+
+    Set to `True` to focus programmatically.
     """
 
     visible: bool = True
     """
-    Whether to make the app window visible. Used when the app starts hidden.
+    Whether to make the app window visible.
+
+    Can be of use when the app starts as hidden.
     """
 
     shadow: bool = True
@@ -226,21 +240,25 @@ class Window(BaseControl):
     """
     Defines the alignment of the app window.
 
-    Value is of type https://flet.dev/docs/reference/types/alignment.
+    Type: [`Alignment`][flet.Alignment]
     """
 
     badge_label: Optional[str] = None
     """
     Sets a badge label on the app window.
 
-    Has effect on macOS only.
+    Note:
+        Has effect on macOS only.
     """
 
     icon: Optional[str] = None
     """
     The icon of the app window.
 
-    Has effect on Windows only.
+    The file should have the `.ico` extension.
+
+    Note:
+        Has effect on Windows only.
     """
 
     ignore_mouse_events: bool = False
@@ -251,7 +269,10 @@ class Window(BaseControl):
 
     on_event: Optional[EventHandler[WindowEvent]] = None
     """
-    Fires when app window changes its state: position, size, maximized, minimized, etc.
+    Called when app window changes its state.
+    For example, when the window is maximized or minimized.
+
+    Event Type: [`WindowEvent`][flet.WindowEvent]
     """
 
     def __post_init__(self, ref) -> None:
@@ -259,21 +280,39 @@ class Window(BaseControl):
         self._i = 2
 
     async def wait_until_ready_to_show_async(self):
+        """
+        Waits until the app window is ready to show.
+        """
         await self._invoke_method_async("wait_until_ready_to_show")
 
     def wait_until_ready_to_show(self):
+        """
+        Waits until the app window is ready to show.
+        """
         asyncio.create_task(self.wait_until_ready_to_show_async())
 
     async def destroy_async(self):
+        """
+        Destroys the app window.
+        """
         await self._invoke_method_async("destroy")
 
     def destroy(self):
+        """
+        Destroys the app window.
+        """
         asyncio.create_task(self.destroy_async())
 
     async def center_async(self):
+        """
+        Centers the app window.
+        """
         await self._invoke_method_async("center")
 
     def center(self):
+        """
+        Centers the app window.
+        """
         asyncio.create_task(self.center_async())
 
     async def close_async(self):
@@ -283,19 +322,37 @@ class Window(BaseControl):
         asyncio.create_task(self.close_async())
 
     async def to_front_async(self):
+        """
+        Brings the app window to the front.
+        """
         await self._invoke_method_async("to_front")
 
     def to_front(self):
+        """
+        Brings the app window to the front.
+        """
         asyncio.create_task(self.to_front_async())
 
     async def start_dragging_async(self):
+        """
+        Starts dragging the app window.
+        """
         await self._invoke_method_async("start_dragging")
 
     def start_dragging(self):
+        """
+        Starts dragging the app window.
+        """
         asyncio.create_task(self.start_dragging_async())
 
     async def start_resizing_async(self, edge: WindowResizeEdge):
+        """
+        Starts resizing the app window.
+        """
         await self._invoke_method_async("start_resizing", {"edge": edge})
 
     def start_resizing(self, edge: WindowResizeEdge):
+        """
+        Starts resizing the app window.
+        """
         asyncio.create_task(self.start_resizing_async(edge))

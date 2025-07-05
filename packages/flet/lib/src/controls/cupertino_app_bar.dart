@@ -20,40 +20,64 @@ class CupertinoAppBarControl extends StatelessWidget
   Widget build(BuildContext context) {
     debugPrint("CupertinoAppBar build: ${control.id}");
 
-    // "title" if coming from material AppBar
-    var middle = control.buildTextOrWidget("middle") ??
-        control.buildTextOrWidget("title");
+    var title = control.buildTextOrWidget("title");
+
+    var leading = control.buildWidget("leading");
+    var automaticallyImplyLeading =
+        control.getBool("automatically_imply_leading", true)!;
+    var automaticallyImplyTitle =
+        control.getBool("automatically_imply_title", true)!;
+    var transitionBetweenRoutes =
+        control.getBool("transition_between_routes", true)!;
+    var border = control.getBorder("border", Theme.of(context));
+    var previousPageTitle = control.getString("previous_page_title");
+    var padding = control.getEdgeInsetsDirectional("padding");
+    var backgroundColor = control.getColor("bgcolor", context);
+    var automaticBackgroundVisibility =
+        control.getBool("automatic_background_visibility", true)!;
+    var enableBackgroundFilterBlur =
+        control.getBool("background_filter_blur", true)!;
+    var brightness = control.getBrightness("brightness");
 
     // "actions" if coming from material AppBar
     var trailing =
         control.buildWidget("trailing") ?? control.buildWidgets("actions");
+    var trailingWidget = trailing is Widget
+        ? trailing
+        : trailing is List<Widget>
+            ? Row(mainAxisSize: MainAxisSize.min, children: trailing)
+            : null;
 
-    var bar = CupertinoNavigationBar(
-        leading: control.buildWidget("leading"),
-        automaticallyImplyLeading:
-            control.getBool("automatically_imply_leading", true)!,
-        automaticallyImplyMiddle:
-            control.getBool("automatically_imply_middle", true)!,
-        transitionBetweenRoutes:
-            control.getBool("transition_between_routes", true)!,
-        border: control.getBorder("border", Theme.of(context)),
-        previousPageTitle: control.getString("previous_page_title"),
-        padding: control.getEdgeInsetsDirectional("padding"),
-        backgroundColor: control.getColor("bgcolor", context),
-        automaticBackgroundVisibility:
-            control.getBool("automatic_background_visibility", true)!,
-        enableBackgroundFilterBlur:
-            control.getBool("background_filter_blur", true)!,
-        brightness: control.getBrightness("brightness"),
-        middle: middle,
-        trailing: trailing is Widget
-            ? trailing
-            : trailing is List<Widget>
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: trailing,
-                  )
-                : null);
+    var bar = control.getBool("large", false)!
+        ? CupertinoNavigationBar.large(
+            leading: leading,
+            automaticallyImplyLeading: automaticallyImplyLeading,
+            automaticallyImplyTitle: automaticallyImplyTitle,
+            transitionBetweenRoutes: transitionBetweenRoutes,
+            border: border,
+            previousPageTitle: previousPageTitle,
+            padding: padding,
+            backgroundColor: backgroundColor,
+            automaticBackgroundVisibility: automaticBackgroundVisibility,
+            enableBackgroundFilterBlur: enableBackgroundFilterBlur,
+            brightness: brightness,
+            largeTitle: title,
+            trailing: trailingWidget)
+        : CupertinoNavigationBar(
+            leading: leading,
+            automaticallyImplyLeading: automaticallyImplyLeading,
+            automaticallyImplyMiddle: automaticallyImplyTitle,
+            transitionBetweenRoutes: transitionBetweenRoutes,
+            border: border,
+            previousPageTitle: previousPageTitle,
+            padding: padding,
+            backgroundColor: backgroundColor,
+            automaticBackgroundVisibility: automaticBackgroundVisibility,
+            enableBackgroundFilterBlur: enableBackgroundFilterBlur,
+            brightness: brightness,
+            middle: title,
+            trailing: trailingWidget);
+
     return BaseControl(control: control, child: bar);
   }
 

@@ -145,7 +145,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
     The type of keyboard to use for editing the text. The property value is
-    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults
+    [`KeyboardType`][flet.KeyboardType] and defaults
     to `KeyboardType.TEXT`.
     """
 
@@ -218,7 +218,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign) and
+    Type: [`TextAlign`][flet.TextAlign] and
     defaults to `TextAlign.LEFT`.
     """
 
@@ -233,7 +233,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Value is of type [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization)
+    Value is of type [`TextCapitalization`][flet.TextCapitalization]
     and defaults to `TextCapitalization.NONE`.
     """
 
@@ -322,7 +322,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     content of the field is changed programmatically.
 
     Value is of type
-    [`InputFilter`](https://flet.dev/docs/reference/types/inputfilter) class.
+    [`InputFilter`][flet.InputFilter] class.
     """
 
     obscuring_character: str = "•"
@@ -393,7 +393,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
     """
     Helps the autofill service identify the type of this text input. Value can either
-    be a single [`AutoFillHint`](https://flet.dev/docs/reference/types/autofillhint)
+    be a single [`AutoFillHint`][flet.AutoFillHint]
     enum item or a list of them.
 
     More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
@@ -401,7 +401,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     on_change: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when the typed input for the TextField has changed.
+    Called when the typed input for the TextField has changed.
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
@@ -411,17 +411,17 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     on_submit: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when user presses ENTER while focus is on TextField.
+    Called when user presses ENTER while focus is on TextField.
     """
 
     on_focus: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     on_tap_outside: Optional[ControlEventHandler["TextField"]] = None

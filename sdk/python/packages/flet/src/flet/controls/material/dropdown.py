@@ -25,8 +25,8 @@ from flet.controls.types import (
 __all__ = ["Dropdown", "DropdownOption"]
 
 
-@control("Option")
-class Option(Control):
+@control("DropdownOption")
+class DropdownOption(Control):
     """
     Represents an item in a dropdown. Either `key` or `text` must be specified, else an
     `AssertionError` will be raised.
@@ -34,7 +34,7 @@ class Option(Control):
 
     key: Optional[str] = None
     """
-    Option's key. If not specified `text` will be used as fallback.
+    Option's key. If not specified [`text`][flet.Option.text] will be used as fallback.
     """
 
     text: Optional[str] = None
@@ -61,19 +61,16 @@ class Option(Control):
     style: Optional[ButtonStyle] = None
     """
     Customizes this menu item's appearance.
-
-    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle)
-    class.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.key is not None or self.text is not None, (
-            "key or text must be specified"
-        )
+        assert (
+            self.key is not None or self.text is not None
+        ), "key or text must be specified"
 
 
-DropdownOption = Option
+Option = DropdownOption
 
 
 @control("Dropdown")
@@ -85,17 +82,17 @@ class Dropdown(ConstrainedControl):
 
     value: Optional[str] = None
     """
-    `key` value of the selected option.
+    [`key`][flet.DropdownOption.key] value of the selected option.
     """
 
-    options: list[Option] = field(default_factory=list)
+    options: list[DropdownOption] = field(default_factory=list)
     """
-    A list of `DropdownOption` controls representing items in this dropdown.
+    A list of options to display in the dropdown.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
+    Whether the control will be selected as the initial focus. If there is more than
     one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
@@ -104,16 +101,13 @@ class Dropdown(ConstrainedControl):
     """
     The text align for the TextField of the Dropdown.
 
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign) and
-    defaults to `TextAlign.START`.
+    Type: [`TextAlign`][flet.TextAlign]
     """
 
     elevation: Optional[ControlStateValue[Optional[Number]]] = 8
     """
-    The dropdown's menu elevation in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    The dropdown's menu elevation in various [`ControlState`][flet.ControlState]
     states.
-
-    Defaults to `8`.
     """
 
     enable_filter: bool = False
@@ -128,8 +122,6 @@ class Dropdown(ConstrainedControl):
     enable_search: bool = True
     """
     Determine if the first item that matches the text input can be highlighted.
-
-    Defaults to true as the search function could be commonly used.
     """
 
     editable: bool = False
@@ -139,13 +131,17 @@ class Dropdown(ConstrainedControl):
 
     menu_height: Optional[Number] = None
     """
-    The height of the dropdown menu. If this is null, the menu will display as many
+    The height of the dropdown menu. 
+    
+    If this is `None`, the menu will display as many
     items as possible on the screen.
     """
 
     menu_width: Optional[Number] = None
     """
-    The width of the dropdown menu. If this is null, the menu width will be the same as
+    The width of the dropdown menu. 
+    
+    If this is `None`, the menu width will be the same as
     input textfield width.
     """
 
@@ -171,18 +167,14 @@ class Dropdown(ConstrainedControl):
 
     trailing_icon: IconValueOrControl = Icons.ARROW_DROP_DOWN
     """
-    An optional icon at the end of the text field (previously,
-    [`select_icon`](#select_icon)).
-
-    Defaults to an Icon with `ft.Icons.ARROW_DROP_DOWN`.
+    An icon to display at the end of the text field.
     """
 
     leading_icon: Optional[IconValueOrControl] = None
     """
-    An optional Icon at the front of the text input field inside the decoration box
-    (previously, [`prefix_icon`](#prefix_icon)).
+    An optional Icon at the front of the text input field inside the decoration box.
 
-    Defaults to null. If this is not null, the menu items will have extra paddings to
+    If this is not null, the menu items will have extra paddings to
     be aligned with the text in the text field.
     """
 
@@ -190,38 +182,36 @@ class Dropdown(ConstrainedControl):
     """
     An optional icon at the end of the text field to indicate that the text field is
     pressed.
-
-    Defaults to an Icon with `ft.Icons.ARROW_DROP_UP`.
     """
 
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     The background [color](https://flet.dev/docs/reference/colors) of the dropdown menu
-    in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate)
+    in various [`ControlState`][flet.ControlState]
     states.
     """
 
     on_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Fires when the selected item of this dropdown has changed.
+    Called when the selected item of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """
 
     # From FormField
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
-    `error_text`.
+    The [`TextStyle`][flet.TextStyle] to use for
+    [`error_text`][flet.Dropdown.error_text].
     """
 
     error_text: Optional[str] = None
@@ -238,7 +228,7 @@ class Dropdown(ConstrainedControl):
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for text
+    The [`TextStyle`][flet.TextStyle] to use for text
     in input text field.
     """
 
@@ -255,15 +245,15 @@ class Dropdown(ConstrainedControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
-    `label`.
+    The [`TextStyle`][flet.TextStyle] to use for
+    [`label`][flet.Dropddown.label].
     """
 
     border: Optional[InputBorder] = None
     """
     Border around input.
 
-    Value is of type [`InputBorder`](https://flet.dev/docs/reference/types/inputborder)
+    Type: [`InputBorder`][flet.InputBorder]
     and defaults to `InputBorder.OUTLINE`.
     """
 
@@ -275,8 +265,6 @@ class Dropdown(ConstrainedControl):
     border_width: Number = 1
     """
     The width of the border in virtual pixels. Set to `0` to completely remove border.
-
-    Defaults to `1`.
     """
 
     border_color: Optional[ColorValue] = None
@@ -287,8 +275,6 @@ class Dropdown(ConstrainedControl):
 
     border_radius: Optional[BorderRadiusValue] = None
     """
-    Border radius is an instance of [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius)
-    class.
     """
 
     focused_border_width: Optional[Number] = None
@@ -303,30 +289,34 @@ class Dropdown(ConstrainedControl):
 
     content_padding: Optional[PaddingValue] = None
     """
-    The [padding](https://flet.dev/docs/reference/types/padding) for the input
-    decoration's container.
+    The padding for the input decoration's container.
+    
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     dense: bool = False
     """
-    Whether the TextField is part of a dense form (ie, uses less vertical space).
+    Whether the TextField is part of a dense form (i.e., uses less vertical space).
     """
 
     filled: bool = False
     """
-    If `True` the decoration's container is filled with theme `fill_color`. The default
-    is `False`.
+    Whether the decoration's container is filled with theme [`fill_color`][flet.Dropdown.fill_color]. 
     """
 
     fill_color: Optional[ColorValue] = None
     """
     Background [color](https://flet.dev/docs/reference/colors) of the dropdown input
-    text field. Will not be visible if `filled=False`.
+    text field. 
+    
+    Note:
+        Will not be visible if `filled=False`.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    TBD
+    The [color](https://flet.dev/docs/reference/colors) of the dropdown input text
+    field when hovered.
     """
 
     hint_text: Optional[str] = None
@@ -339,8 +329,8 @@ class Dropdown(ConstrainedControl):
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
-    `hint_text`.
+    The [`TextStyle`][flet.TextStyle] to use for
+    [`hint_text`][flet.Dropdown.hint_text].
     """
 
     helper_text: Optional[str] = None
@@ -355,8 +345,8 @@ class Dropdown(ConstrainedControl):
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to use for
-    `helper_text`.
+    The [`TextStyle`][flet.TextStyle] to use for
+    [`helper_text`][flet.Dropdown.helper_text].
     """
 
     def before_update(self):

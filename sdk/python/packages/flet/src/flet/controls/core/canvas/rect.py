@@ -37,11 +37,11 @@ class Rect(Shape):
     """
     Border radius of the rectangle.
 
-    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
+    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
     paint: Optional[Paint] = None
     """
     A style to draw a rectangle with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    [`Paint`][flet.Paint] class.
     """

@@ -50,7 +50,7 @@ class ScrollableControl(Control):
     """
     Enables a vertical scrolling for the Column to prevent its content overflow.
 
-    Value is of type [`ScrollMode`](https://flet.dev/docs/reference/types/scrollmode)
+    Value is of type [`ScrollMode`][flet.ScrollMode]
     and defaults to `ScrollMode.None`.
     """
     auto_scroll: bool = False
@@ -64,9 +64,9 @@ class ScrollableControl(Control):
     """
     on_scroll: Optional[EventHandler[OnScrollEvent]] = None
     """
-    Fires when scroll position is changed by a user.
+    Called when scroll position is changed by a user.
 
-    Event handler argument is an instance of [`OnScrollEvent`](https://flet.dev/docs/reference/types/onscrollevent)
+    Event type: [`OnScrollEvent`][flet.OnScrollEvent]
     class.
     """
 
@@ -129,7 +129,7 @@ class ScrollableControl(Control):
                 ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
             )
 
-        ft.app(main)
+        ft.run(main)
         ```
 
         Note:
@@ -139,7 +139,7 @@ class ScrollableControl(Control):
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
+        `curve` configures animation curve. Property value is [`AnimationCurve`][flet.AnimationCurve]
         enum.
         Defaults to `AnimationCurve.EASE`.
         """
@@ -206,7 +206,7 @@ class ScrollableControl(Control):
                 ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
             )
 
-        ft.app(main)
+        ft.run(main)
         ```
 
         Note:
@@ -216,7 +216,7 @@ class ScrollableControl(Control):
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
+        `curve` configures animation curve. Property value is [`AnimationCurve`][flet.AnimationCurve]
         enum.
         Defaults to `AnimationCurve.EASE`.
         """

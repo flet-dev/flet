@@ -58,8 +58,6 @@ class RoundedRectangleBorder(OutlinedBorder):
 
     radius: Optional[BorderRadiusValue] = None
     """
-    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius)
-    or a number.
     """
 
     def __post_init__(self):
@@ -86,8 +84,6 @@ class BeveledRectangleBorder(OutlinedBorder):
 
     radius: Optional[BorderRadiusValue] = None
     """
-    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius)
-    or a number.
     """
 
     def __post_init__(self):
@@ -102,8 +98,6 @@ class ContinuousRectangleBorder(OutlinedBorder):
 
     radius: Optional[BorderRadiusValue] = None
     """
-    Border radius, an instance of [`BorderRadius`](/docs/reference/types/borderradius)
-    or a number.
     """
 
     def __post_init__(self):
@@ -117,7 +111,7 @@ class ButtonStyle:
     background and shadow colors, content padding, border width and radius.
 
     Most of these style attributes could be configured for all or particular
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) of a button,
+    [`ControlState`][flet.ControlState] of a button,
     such as `HOVERED`, `FOCUSED`, `DISABLED` and others.
     """
 
@@ -162,12 +156,12 @@ class ButtonStyle:
     """
     The padding between the button's boundary and its content.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
+    Type: [`Padding`][flet.Padding]
     """
 
     side: Optional[ControlStateValue[BorderSide]] = None
     """
-    An instance of [`BorderSide`](https://flet.dev/docs/reference/types/borderside)
+    An instance of [`BorderSide`][flet.BorderSide]
     class, the color and weight of the button's outline.
     """
 
@@ -175,14 +169,14 @@ class ButtonStyle:
     """
     The shape of the button's underlying Material.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     alignment: Optional[Alignment] = None
     """
     The alignment of the button's content.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).
+    Type: [`Alignment`][flet.Alignment]
     """
 
     enable_feedback: Optional[bool] = None
@@ -196,7 +190,7 @@ class ButtonStyle:
     """
     The text style of the button's `Text` control descendants.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Type: [`TextStyle`][flet.TextStyle]
     """
 
     icon_size: Optional[ControlStateValue[Optional[Number]]] = None
@@ -215,7 +209,7 @@ class ButtonStyle:
     """
     Defines how compact the button's layout will be.
 
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
+    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None

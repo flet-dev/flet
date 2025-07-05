@@ -18,74 +18,79 @@ __all__ = ["BottomAppBar"]
 class BottomAppBar(ConstrainedControl):
     """
     A material design bottom app bar.
+
+    Raises:
+        AssertionError: If [`elevation`][(c).] is negative.
     """
 
     content: Optional[Control] = None
     """
-    A child Control contained by the BottomAppBar.
+    The content of this bottom app bar.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `bgcolor`
-    to indicate elevation.
+    The [color](https://flet.dev/docs/reference/colors) used as an overlay
+    on [`bgcolor`][flet.BottomAppBar.bgcolor] to indicate elevation.
 
     If this is `None`, no overlay will be applied. Otherwise this color will be
-    composited on top of `bgcolor` with an opacity related to `elevation` and used to
-    paint the BottomAppBar's background.
-
-    Defaults to `None`.
+    composited on top of `bgcolor` with an opacity related
+    to [`elevation`][flet.BottomAppBar.elevation] and used to
+    paint this app bar's background.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for the
-    BottomAppBar. Default color is defined by current theme.
+    The fill [color](https://flet.dev/docs/reference/colors) to use for this
+    app bar.
+
+    Defaults to [`BottomAppBarTheme.bgcolor`][flet.BottomAppBarTheme.bgcolor], or if that is `None`,
+    falls back to [`ColorScheme.surface`][flet.ColorScheme.surface].
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below the
-    BottomAppBar.
+    The [color](https://flet.dev/docs/reference/colors) of the shadow below this app bar.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Empty space to inscribe inside a container decoration (background, border). Padding
-    is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding) class.
+    Empty space to inscribe inside a container decoration (background, border).
 
-    Defaults to `padding.symmetric(vertical=12.0, horizontal=16.0)`.
+    Defaults to [`BottomAppBarTheme.padding`][flet.BottomAppBarTheme.padding], or if that is `None`,
+    falls back to `Padding.symmetric(vertical=12.0, horizontal=16.0)`.
+
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    The content will be clipped (or not) according to this option.
+    Defines how the [`content`][flet.BottomAppBar.content] of this app bar should be clipped.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
-    and defaults to `ClipBehavior.NONE`.
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     shape: Optional[NotchShape] = None
     """
     The notch that is made for the floating action button.
 
-    Value is of type [`NotchShape`](https://flet.dev/docs/reference/types/notchshape).
+    Type: [`NotchShape`][flet.NotchShape]
     """
 
     notch_margin: Number = 4.0
     """
-    The margin between the `FloatingActionButton` and the BottomAppBar's notch.
+    The margin between the [`FloatingActionButton`][flet.FloatingActionButton] and this app bar's notch.
 
     Can be visible only if `shape=None`.
     """
 
     elevation: Optional[Number] = None
     """
-    This property controls the size of the shadow below the BottomAppBar.
+    This property controls the size of the shadow below this app bar.
     """
 
     def before_update(self):
         super().before_update()
         assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
+            f"elevation must be greater than or equal to 0, got {self.elevation}"
         )

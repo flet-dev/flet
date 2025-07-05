@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
@@ -22,21 +21,28 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     Navigation bars offer a persistent and convenient way to switch between primary
     destinations in an app.
+
+    Raises:
+        AssertionError: If [`destinations`][(c).] does not contain at least two visible [`NavigationBarDestination`][flet.NavigationBarDestination]s.
+        IndexError: If `selected_index` is out of range.
     """
 
-    destinations: list[NavigationBarDestination] = field(default_factory=list)
+    destinations: list[NavigationBarDestination]
     """
     Defines the appearance of the button items that are arrayed within the navigation
     bar.
 
-    The value must be a list of two or more
-    [`NavigationBarDestination`](https://flet.dev/docs/controls/navigationbar#navigationbardestination-properties)
-    instances.
+    Note:
+        Must be a list of two or more [`NavigationBarDestination`][flet.NavigationBarDestination]s.
     """
 
     selected_index: int = 0
     """
-    The index into `destinations` for the current selected `NavigationBarDestination`.
+    The index into [`destinations`][flet.CupertinoNavigationBar.destinations] for the currently
+    selected [`NavigationBarDestination`][flet.NavigationBarDestination].
+
+    Note:
+        Must be a value between 0 and the length of visible [`destinations`][(c).], inclusive.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -60,8 +66,7 @@ class CupertinoNavigationBar(ConstrainedControl):
     """
     Defines the border of this navigation bar.
 
-    The value is an instance of
-    [`Border`](https://flet.dev/docs/reference/types/border) class.
+    Type: [`Border`][flet.Border]
     """
 
     icon_size: Number = 30
@@ -71,5 +76,18 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     on_change: Optional[ControlEventHandler["CupertinoNavigationBar"]] = None
     """
-    Fires when selected destination changed.
+    Called when selected destination changed.
     """
+
+    def before_update(self):
+        super().before_update()
+        visible_destinations_count = len([d for d in self.destinations if d.visible])
+        assert visible_destinations_count >= 2, (
+            f"destinations must contain at minimum two visible controls, "
+            f"got {visible_destinations_count}"
+        )
+        if not (0 <= self.selected_index < visible_destinations_count):
+            raise IndexError(
+                f"selected_index ({self.selected_index}) is out of range. "
+                f"Expected a value between 0 and {visible_destinations_count - 1} inclusive."
+            )

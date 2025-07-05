@@ -128,12 +128,12 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     on_update: Optional[EventHandler[DismissibleUpdateEvent]] = None
     """
-    Fires when this control has been dragged.
+    Called when this control has been dragged.
     """
 
     on_dismiss: Optional[EventHandler[DismissibleDismissEvent]] = None
     """
-    Fires when this control has been dismissed, after finishing resizing.
+    Called when this control has been dismissed, after finishing resizing.
     """
 
     on_confirm_dismiss: Optional[EventHandler[DismissibleDismissEvent]] = None
@@ -148,7 +148,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     on_resize: Optional[ControlEventHandler["Dismissible"]] = None
     """
-    Fires when this dismissible changes size, for example, when contracting before
+    Called when this dismissible changes size, for example, when contracting before
     being dismissed.
     """
 

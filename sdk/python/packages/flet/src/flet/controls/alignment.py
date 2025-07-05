@@ -17,19 +17,21 @@ class Axis(Enum):
 @dataclass
 class Alignment:
     """
-    Used to define an alignment relative to the center.
+    Defines an alignment relative to the center.
     """
 
     x: Number
     """
-    Represents the horizontal distance from the center. It's value ranges between
-    `-1.0` and `1.0`.
+    Represents the horizontal distance from the center.
+
+    It's value ranges between `-1.0` and `1.0` inclusive.
     """
 
     y: Number
     """
-    Represents the vertical distance from the center. It's value ranges between
-    `-1.0` and `1.0`.
+    Represents the vertical distance from the center.
+
+    It's value ranges between `-1.0` and `1.0` inclusive.
     """
 
     @classmethod

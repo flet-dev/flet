@@ -34,7 +34,7 @@ class Blur:
     """
     The tile mode for the blur.
 
-    Value is of type [`BlurTileMode`](https://flet.dev/docs/reference/types/blurtilemode).
+    Type: [`BlurTileMode`][flet.BlurTileMode]
     """
 
 

@@ -18,6 +18,9 @@ __all__ = ["CupertinoPicker"]
 class CupertinoPicker(ConstrainedControl):
     """
     An iOS-styled picker.
+
+    Raises:
+        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c.)], or [`magnification`][(c.)] is not strictly greater than `0.0`.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -27,12 +30,12 @@ class CupertinoPicker(ConstrainedControl):
 
     item_extent: Number = 32.0
     """
-    The uniform height of all children.
+    The uniform height of all [`controls`][flet.CupertinoPicker.controls].
     """
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected item in the `controls` list.
+    The index (starting from `0`) of the selected item in the [`controls`][flet.CupertinoPicker.controls] list.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -57,8 +60,6 @@ class CupertinoPicker(ConstrainedControl):
     If the value is greater than `1.0`, the item in the center will be zoomed in by that
     rate, and it will also be rendered as flat, not cylindrical like the rest of the
     list. The item will be zoomed-out if magnification is less than `1.0`.
-
-    Defaults to `1.0` - normal.
     """
 
     squeeze: Number = 1.45
@@ -84,24 +85,28 @@ class CupertinoPicker(ConstrainedControl):
     matching the height of the center row.
 
     Defaults to a rounded rectangle in iOS 14 style with
-    `default_selection_overlay_bgcolor` as background color.
+    [`default_selection_overlay_bgcolor`][flet.CupertinoPicker.default_selection_overlay_bgcolor] as background color.
     """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
     The default background [color](https://flet.dev/docs/reference/colors) of the
-    `selection_overlay`.
+    [`selection_overlay`][flet.CupertinoPicker.selection_overlay].
     """
 
     on_change: Optional[ControlEventHandler["CupertinoPicker"]] = None
     """
-    Fires when the selection changes.
+    Called when the selection changes.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.squeeze > 0, "squeeze must be strictly greater than 0"
-        assert self.magnification > 0, "magnification must be strictly greater than 0"
-        assert self.item_extent is None or self.item_extent > 0, (
-            "item_extent must be strictly greater than 0"
+        assert self.squeeze > 0.0, (
+            f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
+        )
+        assert self.magnification > 0.0, (
+            f"magnification must be strictly greater than 0.0, got {self.magnification}"
+        )
+        assert self.item_extent > 0.0, (
+            f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
         )

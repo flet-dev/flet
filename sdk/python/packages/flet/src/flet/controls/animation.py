@@ -76,28 +76,28 @@ class AnimationStyle:
     """
     The duration of the animation.
 
-    Value is of type [`DurationValue`](https://flet.dev/docs/reference/types/aliases#durationvalue).
+    Type: [`DurationValue`][flet.DurationValue]
     """
 
     reverse_duration: Optional[DurationValue] = None
     """
     The duration of the reverse animation.
 
-    Value is of type [`DurationValue`](https://flet.dev/docs/reference/types/aliases#durationvalue).
+    Type: [`DurationValue`][flet.DurationValue]
     """
 
     curve: Optional[AnimationCurve] = None
     """
     The curve to use for the animation.
 
-    Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve).
+    Type: [`AnimationCurve`][flet.AnimationCurve]
     """
 
     reverse_curve: Optional[AnimationCurve] = None
     """
     The curve to use for the reverse animation.
 
-    Value is of type [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve).
+    Type: [`AnimationCurve`][flet.AnimationCurve]
     """
 
 

@@ -8,22 +8,27 @@ from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import ClipBehavior, ColorValue, Number
 
+__all__ = ["BottomSheet"]
+
 
 @control("BottomSheet")
 class BottomSheet(DialogControl):
     """
     A modal bottom sheet is an alternative to a menu or a dialog and prevents the user
     from interacting with the rest of the app.
+
+    Raises:
+        AssertionError: If [`elevation`][(c).] is negative.
     """
 
     content: Control
     """
-    The content `Control` of the bottom sheet.
+    The content of this bottom sheet.
     """
 
     elevation: Optional[Number] = None
     """
-    Controls the size of the shadow below the BottomSheet.
+    Defines the size of the shadow below the bottom sheet.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -51,16 +56,12 @@ class BottomSheet(DialogControl):
     """
     Specifies whether the sheet will avoid system intrusions on the top, left, and
     right.
-
-    Defaults to `False`.
     """
 
-    is_scroll_controlled: bool = False
+    scroll_controlled: bool = False
     """
     Specifies if the bottom sheet contains scrollable content, such as ListView or
     GridView.
-
-    Defaults to `False`.
     """
 
     maintain_bottom_view_insets_padding: bool = True
@@ -73,34 +74,32 @@ class BottomSheet(DialogControl):
     """
     The sheet's animation style.
 
-    Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     The size constraints to apply to the bottom sheet.
 
-    Value is of type [`BoxConstraints`](https://flet.dev/docs/reference/types/boxconstraints).
+    Type: [`BoxConstraints`][flet.BoxConstraints]
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    The sheet's clip behavior.
+    Defines how the content of the bottom sheet should be clipped.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     shape: Optional[OutlinedBorder] = None
     """
     Defines the shape of the bottom sheet.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
-    def before_update(
-        self,
-    ):
+    def before_update(self):
         super().before_update()
         assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
+            f"elevation must be greater than or equal to zero, got {self.elevation}"
         )

@@ -1,18 +1,19 @@
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
-from flet import PaddingValue
 from flet.controls.base_control import control
-from flet.controls.box import DecorationImage, ShadowValue
+from flet.controls.box import BoxShadowValue, DecorationImage
 from flet.controls.gradients import Gradient
 from flet.controls.material.textfield import TextField
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import BlendMode
 
-__all__ = ["CupertinoTextField", "VisibilityMode"]
+__all__ = ["CupertinoTextField", "OverlayVisibilityMode"]
 
 
-class VisibilityMode(Enum):
+class OverlayVisibilityMode(Enum):
     NEVER = "never"
     EDITING = "editing"
     NOT_EDITING = "notEditing"
@@ -35,82 +36,80 @@ class CupertinoTextField(TextField):
 
     placeholder_style: Optional[TextStyle] = None
     """
-    The [TextStyle](https://flet.dev/docs/reference/types/textstyle) to use for
-    `placeholder_text`.
+    The [`TextStyle`][flet.TextStyle] to use for
+    [`placeholder_text`][flet.CupertinoTextField.placeholder_text].
     """
 
     gradient: Optional[Gradient] = None
     """
-    Configures gradient background.
+    Configures the gradient background.
 
-    Value is of type [Gradient](https://flet.dev/docs/reference/types/gradient).
+    Type: [`Gradient`][flet.Gradient]
     """
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode applied to the `color` or `gradient` background.
+    The blend mode applied to the [`bgcolor`][flet.CupertinoTextField.bgcolor] or
+    [`gradient`][flet.CupertinoTextField.gradient] background.
 
-    Value is of type [BlendMode](https://flet.dev/docs/reference/types/blendmode).
+    Type: [`BlendMode`][flet.BlendMode]
     """
 
-    shadow: Optional[ShadowValue] = None
+    shadows: Optional[BoxShadowValue] = None
     """
     A list of shadows behind the text field.
     """
 
-    prefix_visibility_mode: VisibilityMode = VisibilityMode.ALWAYS
+    prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the `prefix` control based on the state of text entry.
+    Defines the visibility of the [`prefix`][flet.CupertinoTextField.prefix] control
+    based on the state of text entry.
 
     Has no effect if `prefix` is not specified.
 
-    Value is of type
-    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
+    Type: [`OverlayVisibilityMode`][flet.OverlayVisibilityMode]
     """
 
-    suffix_visibility_mode: VisibilityMode = VisibilityMode.ALWAYS
+    suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the `suffix` control based on the state of text entry.
+    Defines the visibility of the [`suffix`][flet.CupertinoTextField.suffix] control
+    based on the state of text entry.
 
     Has no effect if `suffix` is not specified.
 
-    Value is of type
-    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
+    Type: [`OverlayVisibilityMode`][flet.OverlayVisibilityMode]
     """
 
-    clear_button_visibility_mode: VisibilityMode = VisibilityMode.NEVER
+    clear_button_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.NEVER
     """
     Defines the visibility of the clear button based on the state of text entry.
 
-    Will appear only if no `suffix` is provided.
+    Will appear only if no [`suffix`][flet.CupertinoTextField.suffix] is provided.
 
-    Value is of type
-    [VisibilityMode](https://flet.dev/docs/reference/types/visibilitymode).
+    Type: [`OverlayVisibilityMode`][flet.OverlayVisibilityMode]
     """
 
-    clear_button_semantics_label: Optional[str] = None
+    clear_button_semantics_label: Optional[str] = "Clear"
     """
     The semantic label for the clear button used by screen readers.
 
     This will be used by screen reading software to identify the clear button widget.
-
-    Defaults to `"Clear"`.
     """
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the `bgcolor` or `gradient`.
+    An image to paint above the [`bgcolor`][flet.CupertinoTextField.bgcolor] or
+    [`gradient`][flet.CupertinoTextField.gradient] background.
 
-    Value is of type
-    [DecorationImage](https://flet.dev/docs/reference/types/decorationimage).
+    Type: [`DecorationImage`][flet.DecorationImage]
     """
 
-    padding: Optional[PaddingValue] = None
+    padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
-    The padding around the text entry area between the `prefix` and `suffix` or the
-    clear button when `clear_button_mode` is not `VisibilityMode.NEVER`.
+    The padding around the text entry area between the [`prefix`][flet.CupertinoTextField.prefix]
+    and [`suffix`][flet.CupertinoTextField.suffix] or the
+    clear button when [`clear_button_mode`][flet.CupertinoTextField.clear_button_mode]
+    is not `OverlayVisibilityMode.NEVER`.
 
-    Value is of type
-    [Padding](https://flet.dev/docs/reference/types/padding) and defaults to padding
-    of `7` pixels on all sides.
+    Type: [`PaddingValue`][flet.PaddingValue]
     """

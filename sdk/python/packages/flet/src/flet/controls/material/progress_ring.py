@@ -58,12 +58,12 @@ class ProgressRing(ConstrainedControl):
     """
     The progress indicator's line ending.
 
-    Value is of type [`StrokeCap`](https://flet.dev/docs/reference/types/strokecap).
+    Type: [`StrokeCap`][flet.StrokeCap]
     """
 
     semantics_label: Optional[str] = None
     """
-    The `Semantics.label` for this progress indicator.
+    The semantics label for this progress indicator.
     """
 
     semantics_value: Optional[Number] = None

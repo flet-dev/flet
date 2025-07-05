@@ -95,9 +95,6 @@ class ExpansionPanelList(ConstrainedControl):
     )
     """
     Defines the padding around the header when expanded.
-
-    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding)
-    class. Default value is `padding.symmetric(vertical=16.0)`.
     """
 
     expand_icon_color: Optional[ColorValue] = None
@@ -113,7 +110,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     on_change: Optional[ControlEventHandler["ExpansionPanelList"]] = None
     """
-    Fires when an `ExpansionPanel` is expanded or collapsed. The event's data
+    Called when an `ExpansionPanel` is expanded or collapsed. The event's data
     (`e.data`), contains the index of the `ExpansionPanel` which triggered this event.
     """
 

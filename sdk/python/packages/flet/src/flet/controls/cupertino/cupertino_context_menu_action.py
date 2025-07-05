@@ -11,12 +11,17 @@ __all__ = ["CupertinoContextMenuAction"]
 @control("CupertinoContextMenuAction")
 class CupertinoContextMenuAction(AdaptiveControl):
     """
-    An action that can be added to a `CupertinoContextMenu`.
+    A cupertino context menu action.
+
+    Typically used as a child of [`CupertinoContextMenu.actions`][flet.CupertinoContextMenu.actions].
+
+    Raises:
+        AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
-    String or Control to be shown in this action button.
+    The content of this action button. Can be a string or a Control.
     """
 
     default: bool = False
@@ -31,12 +36,12 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     trailing_icon: Optional[IconValue] = None
     """
-    An optional icon to display at the right of the `text` or `content` control.
+    An optional icon to display at the right of the [`content`][flet.CupertinoContextMenuAction.content] control.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoContextMenuAction"]] = None
     """
-    Fires when this action button is clicked.
+    Called when this action button is clicked.
     """
 
     def before_update(self):

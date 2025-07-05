@@ -77,8 +77,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
         autofocus: widget.control.getBool("autofocus", false)!,
         focusNode: _focusNode,
         value: _value,
-        activeColor: widget.control.getColor(
-            "active_color", context, Theme.of(context).colorScheme.primary)!,
+        activeColor: widget.control.getColor("active_color", context),
         checkColor: widget.control.getColor("check_color", context),
         focusColor: widget.control.getColor("focus_color", context),
         shape: widget.control.getShape("shape", Theme.of(context)),

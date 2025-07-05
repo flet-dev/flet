@@ -25,7 +25,7 @@ __all__ = [
     "BoxShape",
     "BoxConstraints",
     "BoxFit",
-    "ShadowValue",
+    "BoxShadowValue",
 ]
 
 
@@ -45,7 +45,7 @@ class ColorFilter:
     """
     The blend mode to apply to the color filter.
 
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
+    Type: [`BlendMode`][flet.BlendMode]
     """
 
 
@@ -105,21 +105,21 @@ class BoxShadow:
 
     offset: OffsetValue = field(default_factory=lambda: Offset())
     """
-    An instance of `Offset` class - the displacement of the shadow from the casting
+    The displacement of the shadow from the casting
     element. Positive x/y offsets will shift the shadow to the right and down, while
     negative offsets shift the shadow to the left and up. The offsets are relative to
     the position of the element that is casting it.
 
-    Value is of type [`Offset`](https://flet.dev/docs/reference/types/offset).
+    Type: [`Offset`][flet.Offset]
     """
 
     blur_style: BlurStyle = BlurStyle.NORMAL
     """
-    Value is of type [`BlurStyle`](https://flet.dev/docs/reference/types/blurstyle).
+    Type: [`BlurStyle`][flet.BlurStyle]
     """
 
 
-ShadowValue = Union[BoxShadow, list[BoxShadow]]
+BoxShadowValue = Union[BoxShadow, list[BoxShadow]]
 
 
 class BoxShape(Enum):
@@ -162,7 +162,7 @@ class DecorationImage:
     """
     A color filter to apply to the image before painting it.
 
-    Value is of type [`ColorFilter`](https://flet.dev/docs/reference/types/colorfilter).
+    Type: [`ColorFilter`][flet.ColorFilter]
     """
 
     fit: Optional[BoxFit] = None
@@ -176,14 +176,14 @@ class DecorationImage:
     """
     The alignment of the image within its bounds.
 
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment).
+    Type: [`Alignment`][flet.Alignment]
     """
 
     repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
     How the image should be repeated to fill the box.
 
-    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat).
+    Type: [`ImageRepeat`][flet.ImageRepeat]
     """
 
     match_text_direction: bool = False
@@ -205,7 +205,7 @@ class DecorationImage:
     """
     The quality of the image filter.
 
-    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality).
+    Type: [`FilterQuality`][flet.FilterQuality]
     """
 
     invert_colors: bool = False
@@ -236,24 +236,24 @@ class BoxDecoration:
     """
     An image to paint above the background `color` or `gradient`.
 
-    Value is of type [`DecorationImage`](https://flet.dev/docs/reference/types/decorationimage).
+    Type: [`DecorationImage`][flet.DecorationImage]
     """
 
     border: Optional[Border] = None
     """
     A border to draw above the background `color`, `gradient`, or `image`.
 
-    Value is of type [`Border`](https://flet.dev/docs/reference/types/border).
+    Type: [`Border`][flet.Border]
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of the box.
 
-    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
+    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
-    shadow: Optional[ShadowValue] = None
+    shadow: Optional[BoxShadowValue] = None
     """
     A list of shadows cast by the box.
 
@@ -275,7 +275,7 @@ class BoxDecoration:
     """
     The blend mode to apply to the background `color` or `gradient`.
 
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
+    Type: [`BlendMode`][flet.BlendMode]
     """
 
     def __post_init__(self):
@@ -297,7 +297,7 @@ class BoxDecoration:
         image: Optional[DecorationImage] = None,
         border: Optional[Border] = None,
         border_radius: Optional[BorderRadiusValue] = None,
-        shadow: Optional[ShadowValue] = None,
+        shadow: Optional[BoxShadowValue] = None,
         gradient: Optional[Gradient] = None,
         shape: Optional[BoxShape] = None,
         blend_mode: Optional[BlendMode] = None,

@@ -1,1 +1,1 @@
-::: flet.CanvasResizeEvent
+::: flet.canvas.CanvasResizeEvent

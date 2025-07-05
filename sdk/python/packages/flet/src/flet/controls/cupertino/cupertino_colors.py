@@ -31,14 +31,14 @@ class CupertinoColors(str, Enum):
         Returns the color with the specified opacity.
 
         Args:
-            opacity: The opacity value, which must be between 0 and 1.
+            opacity: The opacity value, which must be between `0` and `1`.
             color: The color value.
 
         Returns:
             A string representing the color value with the specified opacity appended.
 
         Raises:
-            AssertionError: If the opacity is not between 0 and 1 (inclusive).
+            AssertionError: If the opacity is not between `0` and `1` (inclusive).
         """
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
         color_str = color.value if isinstance(color, Enum) else color
@@ -55,7 +55,7 @@ class CupertinoColors(str, Enum):
         Args:
             exclude: A list of colors members to exclude from the selection.
             weights: A dictionary mapping color members to their respective weights for
-            weighted random selection.
+                weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.
