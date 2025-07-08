@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import sys
 from dataclasses import InitVar, dataclass, field
@@ -8,7 +7,6 @@ from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
 from flet.controls.keys import ScrollKey, ValueKey
 from flet.controls.ref import Ref
-from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
@@ -31,9 +29,6 @@ __all__ = [
     "control",
     "skip_field",
 ]
-
-_method_calls: dict[str, asyncio.Event] = {}
-_method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
 
 
 def skip_field():
@@ -206,42 +201,12 @@ class BaseControl:
         self,
         method_name: str,
         arguments: Optional[dict[str, Any]] = None,
-        timeout: Optional[float] = 10,
+        timeout: Optional[float] = None,
     ) -> Any:
         assert self.page, (
             f"{self.__class__.__qualname__} Control must be added to the page first"
         )
 
-        call_id = random_string(10)
-
-        # register callback
-        evt = asyncio.Event()
-        _method_calls[call_id] = evt
-
-        # call method
-        result = self.page.get_session().invoke_method(
-            self._i, call_id, method_name, arguments
+        return await self.page.get_session().invoke_method(
+            self._i, method_name, arguments, timeout
         )
-
-        try:
-            await asyncio.wait_for(evt.wait(), timeout=timeout)
-        except TimeoutError:
-            if call_id in _method_calls:
-                del _method_calls[call_id]
-            raise TimeoutError(
-                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
-            ) from None
-
-        result, err = _method_call_results.pop(evt)
-        if err:
-            raise Exception(err)
-        return result
-
-    def _handle_invoke_method_results(
-        self, call_id: str, result: Any, error: Optional[str]
-    ) -> None:
-        evt = _method_calls.pop(call_id, None)
-        if evt is None:
-            return
-        _method_call_results[evt] = (result, error)
-        evt.set()

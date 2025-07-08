@@ -164,16 +164,20 @@ class FletApp(Connection):
                 f"{self.__session.id}"
             )
         except BrokenPipeError:
-            logger.info(f"Session handler terminated: {self.__session.id}")
+            logger.info(
+                "Session handler terminated: "
+                f"{self.__session.id if self.__session else ''}"
+            )
         except Exception as e:
             print(
-                f"Unhandled error processing page session {self.__session.id}:",
+                "Unhandled error processing page session: "
+                f"{self.__session.id if self.__session else ''}",
                 traceback.format_exc(),
             )
-            assert self.__session
-            self.__session.error(
-                f"There was an error while processing your request: {e}"
-            )
+            if self.__session:
+                self.__session.error(
+                    f"There was an error while processing your request: {e}"
+                )
 
     async def __send_loop(self):
         assert self.__websocket
