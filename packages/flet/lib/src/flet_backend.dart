@@ -311,7 +311,7 @@ class FletBackend extends ChangeNotifier {
     pageSize = newSize;
     var newProps = {"width": newSize.width, "height": newSize.height};
     updateControl(page.id, newProps);
-    triggerControlEvent(page, "resized", newProps);
+    triggerControlEvent(page, "resize", newProps);
 
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
