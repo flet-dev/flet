@@ -257,9 +257,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       var assetSrc = backend.getAssetSource(fontUrl);
       try {
         if (assetSrc.isFile) {
-          await UserFonts.loadFontFromFile(fontFamily, fontUrl);
+          await UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
         } else {
-          await UserFonts.loadFontFromUrl(fontFamily, fontUrl);
+          await UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
         }
       } catch (e) {
         debugPrint("Error loading font $fontFamily: $e");
