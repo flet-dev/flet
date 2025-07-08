@@ -144,10 +144,10 @@ class AuthorizationService(Authorization):
                 self.__token = self.__convert_token(t)
 
     async def __get_user_async(self):
-        assert self.token is not None
+        assert self.__token is not None
         assert self.provider.user_endpoint is not None
         headers = self.__get_default_headers()
-        headers["Authorization"] = f"Bearer {self.token.access_token}"
+        headers["Authorization"] = f"Bearer {self.__token.access_token}"
         user_req = httpx.Request("GET", self.provider.user_endpoint, headers=headers)
         async with httpx.AsyncClient(follow_redirects=True) as client:
             user_resp = await client.send(user_req)
