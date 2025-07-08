@@ -336,7 +336,7 @@ def test_floating_action_button():
         ft.SafeArea(
             ft.Container(
                 counter,
-                alignment=ft.Alignment.center(),
+                alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.YELLOW,
                 expand=True,
             ),
