@@ -138,11 +138,6 @@ class MultiViewRemoveEvent(Event["Page"]):
     view_id: int
 
 
-class PageDisconnectedException(FletException):
-    def __init__(self, message):
-        super().__init__(message)
-
-
 @control("Page", isolated=True, post_init_args=2)
 class Page(PageView):
     """

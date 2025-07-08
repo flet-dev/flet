@@ -1,4 +1,5 @@
 ::: flet.PopupMenuButton
+::: flet.PopupMenuItem
 
 ## Examples
 

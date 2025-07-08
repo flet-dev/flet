@@ -1,4 +1,5 @@
 ::: flet.Tabs
+::: flet.Tab
 
 ## Examples
 

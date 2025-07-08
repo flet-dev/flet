@@ -2,7 +2,7 @@
 
 ## Examples
 
-### Haptic feedback sample
+### Example 1
 
 ```python
 import flet as ft
@@ -20,21 +20,3 @@ def main(page: ft.Page):
 
 ft.run(main)
 ```
-
-## Methods
-
-### `heavy_impact()`
-
-Provides a haptic feedback corresponding a collision impact with a heavy mass.
-
-### `light_impact()`
-
-Provides a haptic feedback corresponding a collision impact with a light mass.
-
-### `medium_impact()`
-
-Provides a haptic feedback corresponding a collision impact with a medium mass.
-
-### `vibrate()`
-
-Provides vibration haptic feedback to the user for a short duration.

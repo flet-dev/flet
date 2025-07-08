@@ -1,4 +1,5 @@
 ::: flet.SegmentedButton
+::: flet.Segment
 
 ## Examples
 

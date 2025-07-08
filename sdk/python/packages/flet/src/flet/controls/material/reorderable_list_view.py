@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from flet import PaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import (

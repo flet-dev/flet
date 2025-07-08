@@ -1,6 +1,6 @@
 from typing import Optional
 
-from flet import PaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.control import Control

@@ -102,3 +102,6 @@ class AnimationStyle:
 
 
 AnimationValue = Union[bool, int, Animation]
+"""
+Test string
+"""

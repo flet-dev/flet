@@ -225,28 +225,24 @@ class Control(BaseControl):
     """
     Every control has `disabled` property which is `False` by default - control and all
     its children are enabled.
-    This property is mostly used with data entry controls like `TextField`,
-    `Dropdown`, `Checkbox`, buttons.
 
     Note:
         The value of this property will be propagated down to all children controls recursively.
 
-    /// details | Example
-        type: example
-    For example, if you have a form with multiple entry controls you can disable them
-    all together by disabling container:
-
-    ```python
-    c = ft.Column(
-        disabled = True,
-        controls=[
-            ft.TextField(),
-            ft.TextField()
-        ]
-    )
-    page.add(c)
-    ```
-    ///
+    Example:
+        For example, if you have a form with multiple entry controls you can disable them
+        all together by disabling container:
+        
+        ```python
+        c = ft.Column(
+            disabled = True,
+            controls=[
+                ft.TextField(),
+                ft.TextField()
+            ]
+        )
+        page.add(c)
+        ```
     """
 
     rtl: bool = False

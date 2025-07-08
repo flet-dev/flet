@@ -97,10 +97,14 @@ nav:
               - BaseControl: controls/basecontrol.md
               - ConstrainedControl: controls/constrainedcontrol.md
               - Control: controls/control.md
-              - Control: controls/dialogcontrol.md
+              - ControlBuilder: controls/controlbuilder.md
+              - DialogControl: controls/dialogcontrol.md
+              - MultiView: controls/multiview.md
+              - PageView: controls/pageview.md
               - ScrollableControl: controls/scrollablecontrol.md
           - Buttons:
               - controls/buttons.md
+              - Button: controls/button.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
               - CupertinoButton: controls/cupertinobutton.md
               - CupertinoContextmenuaction: controls/cupertinocontextmenuaction.md
@@ -108,6 +112,7 @@ nav:
               - CupertinoFilledButton: controls/cupertinofilledbutton.md
               - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
               - CupertinoSlidingsegmentedButton: controls/cupertinoslidingsegmentedbutton.md
+              - CupertinoTintedButton: controls/cupertinotintedbutton.md
               - ElevatedButton: controls/elevatedbutton.md
               - FilledButton: controls/filledbutton.md
               - FilledTonalButton: controls/filledtonalbutton.md
@@ -122,7 +127,7 @@ nav:
           - Dialogs, Alerts and Panels:
               - AlertDialog: controls/alertdialog.md
               - Banner: controls/banner.md
-              - Bottomsheet: controls/bottomsheet.md
+              - BottomSheet: controls/bottomsheet.md
               - CupertinoActionSheet: controls/cupertinoactionsheet.md
               - CupertinoAlertDialog: controls/cupertinoalertdialog.md
               - CupertinoBottomSheet: controls/cupertinobottomsheet.md
@@ -135,13 +140,13 @@ nav:
               - TimePicker: controls/timepicker.md
           - Information Displays:
               - Canvas: controls/canvas.md
-              - Circleavatar: controls/circleavatar.md
-              - Cupertinoactivityindicator: controls/cupertinoactivityindicator.md
+              - CircleAvatar: controls/circleavatar.md
+              - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
               - Icon: controls/icon.md
               - Image: controls/image.md
               - Markdown: controls/markdown.md
-              - Progressbar: controls/progressbar.md
-              - Progressring: controls/progressring.md
+              - ProgressBar: controls/progressbar.md
+              - ProgressRing: controls/progressring.md
               - Text: controls/text.md
           - Inputs and Selections:
               - AutoComplete: controls/autocomplete.md
@@ -154,8 +159,10 @@ nav:
               - CupertinoSwitch: controls/cupertinoswitch.md
               - CupertinoTextfield: controls/cupertinotextfield.md
               - Dropdown: controls/dropdown.md
+              - DropdownOption: controls/dropdownoption.md
               - DropdownM2: controls/dropdownm2.md
               - Radio: controls/radio.md
+              - RadioGroup: controls/radiogroup.md
               - RangeSlider: controls/rangeslider.md
               - SearchBar: controls/searchbar.md
               - Slider: controls/slider.md
@@ -166,24 +173,30 @@ nav:
               - Column: controls/column.md
               - Container: controls/container.md
               - Cupertinolisttile: controls/cupertinolisttile.md
-              - Datatable: controls/datatable.md
+              - Datatable:
+                  - controls/datatable/index.md
+                  - DataCell: controls/datatable/datacell.md
+                  - DataColumn: controls/datatable/datacolumn.md
+                  - DataRow: controls/datatable/datarow.md
               - Dismissible: controls/dismissible.md
               - Divider: controls/divider.md
-              - Expansionpanel: controls/expansionpanel.md
-              - Expansiontile: controls/expansiontile.md
-              - Gridview: controls/gridview.md
-              - Listtile: controls/listtile.md
-              - Listview: controls/listview.md
+              - ExpansionPanel: controls/expansionpanel.md
+              - ExpansionPanelList: controls/expansionpanellist.md
+              - ExpansionTile: controls/expansiontile.md
+              - GridView: controls/gridview.md
+              - ListTile: controls/listtile.md
+              - ListView: controls/listview.md
               - Page: controls/page.md
               - Pagelet: controls/pagelet.md
               - Placeholder: controls/placeholder.md
-              - Reorderablelistview: controls/reorderablelistview.md
-              - Responsiverow: controls/responsiverow.md
+              - ReorderableDraggable: controls/reorderabledraggable.md
+              - ReorderableListView: controls/reorderablelistview.md
+              - ResponsiveRow: controls/responsiverow.md
               - Row: controls/row.md
-              - Safearea: controls/safearea.md
+              - SafeArea: controls/safearea.md
               - Stack: controls/stack.md
               - Tabs: controls/tabs.md
-              - Verticaldivider: controls/verticaldivider.md
+              - VerticalDivider: controls/verticaldivider.md
               - View: controls/view.md
           - Navigation:
               - AppBar: controls/appbar.md
@@ -192,12 +205,16 @@ nav:
               - CupertinoNavigationBar: controls/cupertinonavigationbar.md
               - MenuBar: controls/menubar.md
               - NavigationBar: controls/navigationbar.md
+              - NavigationBarDestination: controls/navigationbardestination.md
               - NavigationDrawer: controls/navigationdrawer.md
+              - NavigationDrawerDestination: controls/navigationdrawerdestination.md
               - NavigationRail: controls/navigationrail.md
+              - NavigationRailDestination: controls/navigationraildestination.md
           - Services:
               - FilePicker: controls/filepicker.md
               - SemanticsService: controls/semanticsservice.md
               - ShakeDetector: controls/shakedetector.md
+              - StoragePaths: controls/storagepaths.md
               - HapticFeedback: controls/hapticfeedback.md
           - Utility:
               - Draggable: controls/draggable.md
@@ -213,7 +230,246 @@ nav:
               - WindowDragArea: controls/windowdragarea.md
       - Types:
           - types/index.md
-          - Alignment: types/alignment.md
+          - Aliases: types/aliases.md
+          - Enums:
+              - AnimationCurve: types/animationcurve.md
+              - AppLifecycleState: types/applifecyclestate.md
+              - AppView: types/appview.md
+              - Assertiveness: types/assertiveness.md
+              - Axis: types/axis.md
+              - BlendMode: types/blendmode.md
+              - BlurStyle: types/blurstyle.md
+              - BlurTileMode: types/blurtilemode.md
+              - BorderStyle: types/borderstyle.md
+              - BoxFit: types/boxfit.md
+              - BoxShape: types/boxshape.md
+              - Brightness: types/brightness.md
+              - CardVariant: types/cardvariant.md
+              - ClipBehavior: types/clipbehavior.md
+              - Colors: types/colors.md
+              - CrossAxisAlignment: types/crossaxisalignment.md
+              - CupertinoButtonSize: types/cupertinobuttonsize.md
+              - CupertinoColors: types/cupertinocolors.md
+              - CupertinoDatePickerDateOrder: types/cupertinodatepickerdateorder.md
+              - CupertinoDatePickerMode: types/cupertinodatepickermode.md
+              - CupertinoIcons: types/cupertinoicons.md
+              - CupertinoTimerPickerMode: types/cupertinotimerpickermode.md
+              - DatePickerEntryMode: types/datepickerentrymode.md
+              - DatePickerMode: types/datepickermode.md
+              - DismissDirection: types/dismissdirection.md
+              - FilterQuality: types/filterquality.md
+              - FloatingActionButtonLocation: types/floatingactionbuttonlocation.md
+              - FontWeight: types/fontweight.md
+              - GradientTileMode: types/gradienttilemode.md
+              - Icons: types/icons.md
+              - ImageRepeat: types/imagerepeat.md
+              - KeyboardType: types/keyboardtype.md
+              - LabelPosition: types/labelposition.md
+              - ListTileTitleAlignment: types/listtiletitlealignment.md
+              - MainAxisAlignment: types/mainaxisalignment.md
+              - MouseCursor: types/mousecursor.md
+              - NavigationBarLabelBehavior: types/navigationbarlabelbehavior.md
+              - NavigationDrawerPosition: types/navigationdrawerposition.md
+              - NavigationRailLabelType: types/navigationraillabeltype.md
+              - Orientation: types/orientation.md
+              - OverlayVisibilityMode: types/overlayvisibilitymode.md
+              - PagePlatform: types/pageplatform.md
+              - PointerDeviceType: types/pointerdevicetype.md
+              - PointMode: types/pointmode.md
+              - PopupMenuPosition: types/popupmenuposition.md
+              - ScrollDirection: types/scrolldirection.md
+              - ScrollMode: types/scrollmode.md
+              - ScrollType: types/scrolltype.md
+              - SnackBarBehavior: types/snackbarbehavior.md
+              - StackFit: types/stackfit.md
+              - StrokeCap: types/strokecap.md
+              - StrokeJoin: types/strokejoin.md
+              - TabAlignment: types/tabalignment.md
+              - TextAffinity: types/textaffinity.md
+              - TextAlign: types/textalign.md
+              - TextBaseline: types/textbaseline.md
+              - TextCapitalization: types/textcapitalization.md
+              - TextDecorationStyle: types/textdecorationstyle.md
+              - TextOverflow: types/textoverflow.md
+              - TextSelectionChangeCause: types/textselectionchangecause.md
+              - ThemeMode: types/thememode.md
+              - TimePickerEntryMode: types/timepickerentrymode.md
+              - TooltipTriggerMode: types/tooltiptriggermode.md
+              - VerticalAlignment: types/verticalalignment.md
+              - VisualDensity: types/visualdensity.md
+              - WebRenderer: types/webrenderer.md
+              - WindowEventType: types/windoweventtype.md
+              - WindowResizeEdge: types/windowresizeedge.md
+          - Events:
+              - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
+              - AutoCompleteSelectEvent: types/autocompleteselectevent.md
+              - CanvasResizeEvent: types/canvasresizeevent.md
+              - DataColumnSortEvent: types/datacolumnsortevent.md
+              - DatePickerEntryModeChangeEvent: types/datepickerentrymodechangeevent.md
+              - DismissibleDismissEvent: types/dismissibledismissevent.md
+              - DismissibleUpdateEvent: types/dismissibleupdateevent.md
+              - DragEndEvent: types/dragendevent.md
+              - DragStartEvent: types/dragstartevent.md
+              - DragTargetEvent: types/dragtargetevent.md
+              - DragTargetLeaveEvent: types/dragtargetleaveevent.md
+              - DragUpdateEvent: types/dragupdateevent.md
+              - DragWillAcceptEvent: types/dragwillacceptevent.md
+              - Event: types/event.md
+              - FilePickerUploadEvent: types/filepickeruploadevent.md
+              - HoverEvent: types/hoverevent.md
+              - KeyboardEvent: types/keyboardevent.md
+              - LoginEvent: types/loginevent.md
+              - LongPressEndEvent: types/longpressendevent.md
+              - LongPressStartEvent: types/longpressstartevent.md
+              - MultiTapEvent: types/multitapevent.md
+              - MultiViewAddEvent: types/multiviewaddevent.md
+              - MultiViewRemoveEvent: types/multiviewremoveevent.md
+              - OnReorderEvent: types/onreorderevent.md
+              - OnScrollEvent: types/onscrollevent.md
+              - PageMediaData: types/pagemediadata.md
+              - PageResizeEvent: types/pageresizeevent.md
+              - PointerEvent: types/pointerevent.md
+              - RouteChangeEvent: types/routechangeevent.md
+              - ScaleEndEvent: types/scaleendevent.md
+              - ScaleStartEvent: types/scalestartevent.md
+              - ScaleUpdateEvent: types/scaleupdateevent.md
+              - ScrollEvent: types/scrollevent.md
+              - TapEvent: types/tapevent.md
+              - TextSelectionChangeEvent: types/textselectionchangeevent.md
+              - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md
+              - ViewPopEvent: types/viewpopevent.md
+              - WindowEvent: types/windowevent.md
+          - Exceptions:
+              - FletException: types/fletexception.md
+              - FletPageDisconnectedException: types/fletpagedisconnectedexception.md
+              - FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
+              - FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
+          - Dataclasses:
+              - Alignment: types/alignment.md
+              - AnimatedSwitcherTransition: types/animatedswitchertransition.md
+              - Animation: types/animation.md
+              - AnimationStyle: types/animationstyle.md
+              - AutoCompleteSuggestion: types/autocompletesuggestion.md
+              - AutoFillGroupDisposeAction: types/autofillgroupdisposeaction.md
+              - AutoFillHint: types/autofillhint.md
+              - Badge: types/badge.md
+              - Blur: types/blur.md
+              - Border: types/border.md
+              - BorderRadius: types/borderradius.md
+              - BorderSide: types/borderside.md
+              - BorderSideStrokeAlign: types/bordersidestrokealign.md
+              - BoxConstraints: types/boxconstraints.md
+              - BoxDecoration: types/boxdecoration.md
+              - BoxShadow: types/boxshadow.md
+              - BrowserContextMenu: types/browsercontextmenu.md
+              - ColorFilter: types/colorfilter.md
+              - ControlEvent: types/controlevent.md
+              - ControlState: types/controlstate.md
+              - DecorationImage: types/decorationimage.md
+              - Duration: types/duration.md
+              - FilePickerFile: types/filepickerfile.md
+              - FilePickerFileType: types/filepickerfiletype.md
+              - FilePickerUploadFile: types/filepickeruploadfile.md
+              - Gradient:
+                  - types/gradient/index.md
+                  - LinearGradient: types/gradient/lineargradient.md
+                  - RadialGradient: types/gradient/radialgradient.md
+                  - SweepGradient: types/gradient/sweepgradient.md
+              - InputBorder: types/inputborder.md
+              - InputFilter: types/inputfilter.md
+              - ListTileStyle: types/listtilestyle.md
+              - Locale: types/locale.md
+              - LocaleConfiguration: types/localeconfiguration.md
+              - Margin: types/margin.md
+              - MarkdownCodeTheme: types/markdowncodetheme.md
+              - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
+              - MarkdownExtensionSet: types/markdownextensionset.md
+              - MarkdownStyleSheet: types/markdownstylesheet.md
+              - MenuStyle: types/menustyle.md
+              - NotchShape: types/notchshape.md
+              - Offset: types/offset.md
+              - OutlinedBorder:
+                  - types/outlinedborder/index.md
+                  - BeveledRectangleBorder: types/outlinedborder/beveledrectangleborder.md
+                  - CircleBorder: types/outlinedborder/circleborder.md
+                  - ContinuousRectangleBorder: types/continuousrectangleborder.md
+                  - RoundedRectangleBorder: types/outlinedborder/roundedrectangleborder.md
+                  - StadiumBorder: types/outlinedborder/stadiumborder.md
+              - Padding: types/padding.md
+              - Paint: types/paint.md
+              - PaintingStyle: types/paintingstyle.md
+              - PaintLinearGradient: types/paintlineargradient.md
+              - PaintRadialGradient: types/paintradialgradient.md
+              - PaintSweepGradient: types/paintsweepgradient.md
+              - QueryString: types/querystring.md
+              - Rect: types/rect.md
+              - Ref: types/ref.md
+              - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
+              - Rotate: types/rotate.md
+              - RouteUrlStrategy: types/routeurlstrategy.md
+              - Scale: types/scale.md
+              - ScrollKey: types/scrollkey.md
+              - Size: types/size.md
+              - SliderInteraction: types/sliderinteraction.md
+              - StrutStyle: types/strutstyle.md
+              - TemplateRoute: types/templateroute.md
+              - TextDecoration: types/textdecoration.md
+              - TextSelection: types/textselection.md
+              - TextSpan: types/textspan.md
+              - TextStyle: types/textstyle.md
+              - TextThemeStyle: types/textthemestyle.md
+              - Theme:
+                  - types/theme/index.md
+                  - AppBarTheme: types/theme/appbartheme.md
+                  - BadgeTheme: types/theme/badgetheme.md
+                  - BannerTheme: types/theme/bannertheme.md
+                  - BottomAppBarTheme: types/theme/bottomappbartheme.md
+                  - BottomSheetTheme: types/theme/bottomsheettheme.md
+                  - ButtonStyle: types/theme/buttonstyle.md
+                  - CardTheme: types/theme/cardtheme.md
+                  - CheckboxTheme: types/theme/checkboxtheme.md
+                  - ChipTheme: types/theme/chiptheme.md
+                  - ColorScheme: types/theme/colorscheme.md
+                  - DataTableTheme: types/theme/datatabletheme.md
+                  - DatePickerTheme: types/theme/datepickertheme.md
+                  - DialogTheme: types/theme/dialogtheme.md
+                  - DividerTheme: types/theme/dividertheme.md
+                  - DropdownTheme: types/theme/dropdowntheme.md
+                  - ElevatedButtonTheme: types/theme/elevatedbuttontheme.md
+                  - ExpansionTileTheme: types/theme/expansiontiletheme.md
+                  - FilledButtonTheme: types/theme/filledbuttontheme.md
+                  - FloatingActionButtonTheme: types/theme/floatingactionbuttontheme.md
+                  - IconButtonTheme: types/theme/iconbuttontheme.md
+                  - IconTheme: types/theme/icontheme.md
+                  - ListTileTheme: types/theme/listtiletheme.md
+                  - NavigationBarTheme: types/theme/navigationbartheme.md
+                  - NavigationDrawerTheme: types/theme/navigationdrawertheme.md
+                  - NavigationRailTheme: types/theme/navigationrailtheme.md
+                  - OutlinedButtonTheme: types/theme/outlinedbuttontheme.md
+                  - PageTransitionsTheme: types/theme/pagetransitionstheme.md
+                  - PageTransitionTheme: types/theme/pagetransitiontheme.md
+                  - PopupMenuTheme: types/theme/popupmenutheme.md
+                  - ProgressIndicatorTheme: types/theme/progressindicatortheme.md
+                  - RadioTheme: types/theme/radiotheme.md
+                  - ScrollBarTheme: types/theme/scrollbartheme.md
+                  - SearchBarTheme: types/theme/searchbartheme.md
+                  - SearchViewTheme: types/theme/searchviewtheme.md
+                  - SegmentedButtonTheme: types/theme/segmentedbuttontheme.md
+                  - SliderTheme: types/theme/slidertheme.md
+                  - SnackBarTheme: types/theme/snackbartheme.md
+                  - SwitchTheme: types/theme/switchtheme.md
+                  - SystemOverlayStyle: types/theme/systemoverlaystyle.md
+                  - TabsTheme: types/theme/tabstheme.md
+                  - TextButtonTheme: types/theme/textbuttontheme.md
+                  - TextTheme: types/theme/texttheme.md
+                  - TimePickerTheme: types/theme/timepickertheme.md
+                  - TooltipTheme: types/theme/tooltiptheme.md
+              - TileAffinity: types/tileaffinity.md
+              - Tooltip: types/tooltip.md
+              - UpdateBehavior: types/updatebehavior.md
+              - UrlTarget: types/urltarget.md
+              - ValueKey: types/valuekey.md
+              - Window: types/window.md
   - Publish:
       - publish/index.md
       - Android: publish/android.md

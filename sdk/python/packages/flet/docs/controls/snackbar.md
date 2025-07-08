@@ -1,4 +1,5 @@
 ::: flet.SnackBar
+::: flet.SnackBarAction
 
 ## Examples
 

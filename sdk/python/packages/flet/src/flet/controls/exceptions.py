@@ -2,6 +2,7 @@ __all__ = [
     "FletException",
     "FletUnsupportedPlatformException",
     "FletUnimplementedPlatformEception",
+    "FletPageDisconnectedException",
 ]
 
 class FletException(Exception):
@@ -22,4 +23,7 @@ class FletUnimplementedPlatformEception(FletUnsupportedPlatformException):
     Thrown by operations that have not been implemented yet.
     """
 
+    pass
+
+class FletPageDisconnectedException(FletException):
     pass

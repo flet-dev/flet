@@ -1,5 +1,10 @@
 ::: flet.InputFilter
 
+## Predefined filters
+
+::: flet.NumbersOnlyInputFilter
+::: flet.TextOnlyInputFilter
+
 ## Usage example
 
 ```python

@@ -46,26 +46,3 @@ ft.run(main)
 
 
 <img src="/img/docs/controls/cupertinoswitch/cupertino-switch.gif" className="screenshot-70"/>
-
-
-### `value`
-
-Current value of the switch.
-
-## Events
-
-### `on_blur`
-
-Fires when the control has lost focus.
-
-### `on_change`
-
-Fires when the state of the switch is changed.
-
-### `on_image_error`
-
-Fires when the image (`active_thumb_image` or `inactive_thumb_image`) fails to load.
-
-### `on_focus`
-
-Fires when the control has received focus.

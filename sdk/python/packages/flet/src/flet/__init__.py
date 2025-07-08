@@ -198,6 +198,7 @@ from flet.controls.exceptions import (
     FletException,
     FletUnimplementedPlatformEception,
     FletUnsupportedPlatformException,
+    FletPageDisconnectedException,
 )
 from flet.controls.geometry import Rect, Size
 from flet.controls.gradients import (
@@ -327,7 +328,6 @@ from flet.controls.page import (
     MultiViewAddEvent,
     MultiViewRemoveEvent,
     Page,
-    PageDisconnectedException,
     RouteChangeEvent,
     ViewPopEvent,
     context,
@@ -512,7 +512,7 @@ __all__ = [
     "DecorationImage",
     "FilterQuality",
     "BlurStyle",
-    "ShadowValue",
+    "BoxShadowValue",
     "BeveledRectangleBorder",
     "ButtonStyle",
     "CircleBorder",
@@ -740,7 +740,7 @@ __all__ = [
     "MultiViewAddEvent",
     "MultiViewRemoveEvent",
     "Page",
-    "PageDisconnectedException",
+    "FletPageDisconnectedException",
     "RouteChangeEvent",
     "ViewPopEvent",
     "context",
@@ -883,6 +883,7 @@ __all__ = [
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
     "MergeSemantics",
-    "DropdownMenuTheme",
-    "DropdownTheme", "BoxShadowValue", "StrutStyle",
+    "DropdownTheme",
+    "DropdownTheme",
+    "StrutStyle",
 ]

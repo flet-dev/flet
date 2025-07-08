@@ -36,15 +36,6 @@ class NavigationRailDestination(Control):
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
     destination.
 
-    Example with icon name:
-    ```
-    icon=ft.Icons.BOOKMARK
-    ```
-    Example with Control:
-    ```
-    icon=ft.Icon(ft.Icons.BOOKMARK)
-    ```
-
     If `selected_icon` is provided, this will only be displayed when the destination is
     not selected.
 
@@ -57,15 +48,6 @@ class NavigationRailDestination(Control):
     """
     The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
     displayed when this destination is selected.
-
-    Example with icon name:
-    ```
-    selected_icon=ft.Icons.BOOKMARK
-    ```
-    Example with Control:
-    ```
-    selected_icon=ft.Icon(ft.Icons.BOOKMARK)
-    ```
 
     If this icon is not provided, the NavigationRail will display `icon` in either
     state.
@@ -85,14 +67,16 @@ class NavigationRailDestination(Control):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the `indicator_shape` when
+    The [color](https://flet.dev/docs/reference/colors) of the 
+    [`indicator_shape`][flet.NavigationRailDestination.indicator_shape] when
     this destination is selected.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
-    The shape of the selection indicator. The value is an instance of
-    [`OutlinedBorder`][flet.OutlinedBorder] class.
+    The shape of the selection indicator. 
+    
+    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
 
