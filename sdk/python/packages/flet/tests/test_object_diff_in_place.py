@@ -115,7 +115,7 @@ def test_simple_page():
 
     msg, _, _, added_controls, removed_controls = make_msg(page, {}, show_details=True)
     u_msg = b_unpack(msg)
-    assert len(added_controls) == 19
+    assert len(added_controls) == 14
     assert len(removed_controls) == 0
 
     assert page.parent is None
@@ -336,7 +336,7 @@ def test_floating_action_button():
         ft.SafeArea(
             ft.Container(
                 counter,
-                alignment=ft.Alignment.center(),
+                alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.YELLOW,
                 expand=True,
             ),

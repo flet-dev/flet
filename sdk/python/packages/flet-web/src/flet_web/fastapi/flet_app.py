@@ -108,10 +108,9 @@ class FletApp(Connection):
         """
         self.__websocket = websocket
 
-        self.client_ip = (
-            self.__websocket.client.host if self.__websocket.client else ""
-        ).split(":")[0]
+        self.client_ip = self.__websocket.client.host if self.__websocket.client else ""
         self.client_user_agent = self.__websocket.headers.get("user-agent", "")
+        self.__oauth_state_id = self.__websocket.cookies.get("flet_oauth_state")
 
         self.pubsubhub = app_manager.get_pubsubhub(self.__main, loop=self.loop)
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
@@ -165,16 +164,20 @@ class FletApp(Connection):
                 f"{self.__session.id}"
             )
         except BrokenPipeError:
-            logger.info(f"Session handler terminated: {self.__session.id}")
+            logger.info(
+                "Session handler terminated: "
+                f"{self.__session.id if self.__session else ''}"
+            )
         except Exception as e:
             print(
-                f"Unhandled error processing page session {self.__session.id}:",
+                "Unhandled error processing page session: "
+                f"{self.__session.id if self.__session else ''}",
                 traceback.format_exc(),
             )
-            assert self.__session
-            self.__session.error(
-                f"There was an error while processing your request: {e}"
-            )
+            if self.__session:
+                self.__session.error(
+                    f"There was an error while processing your request: {e}"
+                )
 
     async def __send_loop(self):
         assert self.__websocket
@@ -223,6 +226,14 @@ class FletApp(Connection):
                 self.__session = await app_manager.get_session(
                     self.__get_unique_session_id(req.session_id)
                 )
+
+            oauth_state = None
+            if self.__oauth_state_id:
+                oauth_state = app_manager.retrieve_state(self.__oauth_state_id)
+                if oauth_state:
+                    self.__session = await app_manager.get_session(
+                        oauth_state.session_id
+                    )
 
             # re-create session
             if self.__session is None:
@@ -273,6 +284,16 @@ class FletApp(Connection):
                     and self.__session.page.route != original_route
                 ):
                     self.__session.page.go(self.__session.page.route)
+
+                if oauth_state:
+                    await self.__session.page._authorize_callback_async(
+                        {
+                            "state": self.__oauth_state_id,
+                            "code": oauth_state.code,
+                            "error": oauth_state.error,
+                            "error_description": oauth_state.error_description,
+                        }
+                    )
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
@@ -329,7 +350,10 @@ class FletApp(Connection):
         app_manager.store_state(state_id, state)
 
     def __get_unique_session_id(self, session_id: str):
-        client_hash = sha1(f"{self.client_ip}{self.client_user_agent}")
+        ip = self.client_ip
+        if ip in ["127.0.0.1", "::1"]:
+            ip = ""
+        client_hash = sha1(f"{ip}{self.client_user_agent}")
         return f"{self.page_name}_{session_id}_{client_hash}"
 
     def dispose(self):

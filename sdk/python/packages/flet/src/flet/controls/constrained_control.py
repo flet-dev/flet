@@ -65,7 +65,7 @@ class ConstrainedControl(Control):
         width=100,
         height=100,
         border_radius=5,
-        rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.center_left())
+        rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.CENTER_LEFT)
     )
     ```
     """
@@ -241,7 +241,7 @@ class ConstrainedControl(Control):
             height=70,
             bgcolor="blue",
             border_radius=5,
-            rotate=ft.transform.Rotate(0, alignment=ft.alignment.center),
+            rotate=ft.transform.Rotate(0, alignment=ft.Alignment.CENTER),
             animate_rotation=ft.animation.Animation(300, ft.AnimationCurve.BOUNCE_OUT),
         )
 
