@@ -223,25 +223,80 @@ class CrossAxisAlignment(Enum):
 
 
 class VerticalAlignment(Enum):
+    """
+    The vertical alignment of text within an input box.
+    """
+
     NONE = None
+    
     START = -1.0
+    """
+    Aligns the text vertically at the topmost location of the TextField.
+    """
+    
     END = 1.0
+    """
+    Aligns the text vertically at the bottommost location of the TextField.
+    """
+    
     CENTER = 0.0
+    """
+    Aligns the text vertically in the center of the TextField.
+    """
 
 
 class TabAlignment(Enum):
+    """
+    Defines how tabs are aligned horizontally in a [`Tabs`][flet.Tabs].
+    """
+
     START = "start"
+    """
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the `Tabs`. 
+    Otherwise throws an exception.
+    """
+
     START_OFFSET = "startOffset"
+    """
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the `Tabs` with an 
+    offset of 52.0 pixels. Otherwise throws an exception.
+    """
+
     FILL = "fill"
+    """
+    If `Tabs.scrollable` is `False`, tabs are stretched to fill the `Tabs`. Otherwise 
+    throws an exception.
+    """
+    
     CENTER = "center"
+    """
+    Tabs are aligned to the center of the `Tabs`.
+    """
 
 
 class LabelPosition(Enum):
+    """
+    Position of label in a [`Checkbox`][flet.Checkbox], [`Radio`][flet.Radio] or 
+    [`Switch`][flet.Switch]
+    """
+
     RIGHT = "right"
+    """
+    The label is positioned to the right of the control.
+    """
+
     LEFT = "left"
+    """
+    The label is positioned to the left of the control.
+    """
 
 
 class BlendMode(Enum):
+    """
+    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from 
+    Flutter documentation for blend mode examples.
+    """
+
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"
@@ -275,29 +330,110 @@ class BlendMode(Enum):
 
 
 class TextAlign(Enum):
+    """
+    The horizontal alignment of text within an input box.
+    """
+
     LEFT = "left"
+    """
+    Align the text on the left edge of the container.
+    """
+    
     RIGHT = "right"
+    """
+    Align the text on the right edge of the container.
+    """
+
     CENTER = "center"
+    """
+    Align the text in the center of the container.
+    """
+
     JUSTIFY = "justify"
+    """
+    Stretch lines of text that end with a soft line break to fill the width of the 
+    container.
+    """
+
     START = "start"
+    """
+    Align the text on the leading edge of the container.
+    """
+
     END = "end"
+    """
+    Align the text on the trailing edge of the container.
+    """
 
 
 class ScrollMode(Enum):
+    """
+    Weather scrolling is enabled and visibility of scroll bar options.
+    """
+    
     AUTO = "auto"
+    """
+    Scrolling is enabled and scroll bar is only shown when scrolling occurs.
+    """
+
     ADAPTIVE = "adaptive"
+    """
+    Scrolling is enabled and scroll bar is always shown when running app as web or 
+    desktop.
+    """
+    
     ALWAYS = "always"
+    """
+    Scrolling is enabled and scroll bar is always shown.
+    """
+
     HIDDEN = "hidden"
+    """
+    Scrolling is enabled, but scroll bar is always hidden.
+    """
 
 
 class ClipBehavior(Enum):
+    """
+    Different ways to clip content. See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html) 
+    from Flutter documentation for ClipBehavior examples.
+    """
+
     NONE = "none"
+    """
+    No clip at all.
+
+    This is the default option for most widgets: if the content does not overflow the 
+    widget boundary, don't pay any performance cost for clipping.
+    """
+
     ANTI_ALIAS = "antiAlias"
+    """
+    Clip with anti-aliasing.
+
+    This mode has anti-aliased clipping edges, which reduces jagged edges when the clip 
+    shape itself has edges that are diagonal, curved, or otherwise not axis-aligned.
+    """
+
     ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
+    """
+    Clip with anti-aliasing and saveLayer immediately following the clip.
+    """
+    
     HARD_EDGE = "hardEdge"
+    """
+    Clip, but do not apply anti-aliasing.
+
+    This mode enables clipping, but curves and non-axis-aligned straight lines will be 
+    jagged as no effort is made to anti-alias.
+    """
 
 
 class ImageRepeat(Enum):
+    """
+    How to paint any portions of a box not covered by an image.
+    """
+
     NO_REPEAT = "noRepeat"
     REPEAT = "repeat"
     REPEAT_X = "repeatX"
