@@ -24,6 +24,9 @@ FLET_APP_HIDDEN = "flet_app_hidden"
 
 
 class AppView(Enum):
+    """
+    TBD
+    """
     WEB_BROWSER = "web_browser"
     FLET_APP = "flet_app"
     FLET_APP_WEB = "flet_app_web"
@@ -31,17 +34,26 @@ class AppView(Enum):
 
 
 class WebRenderer(Enum):
+    """
+    TBD
+    """
     AUTO = "auto"
     CANVAS_KIT = "canvaskit"
     SKWASM = "skwasm"
 
 
 class RouteUrlStrategy(Enum):
+    """
+    TBD
+    """
     PATH = "path"
     HASH = "hash"
 
 
 class UrlTarget(Enum):
+    """
+    TBD
+    """
     BLANK = "blank"
     SELF = "_self"
     PARENT = "_parent"
@@ -49,22 +61,78 @@ class UrlTarget(Enum):
 
 
 class FontWeight(Enum):
+    """
+    The thickness of the glyphs used to draw the text.
+    """
+    
     NORMAL = "normal"
+    """
+    The default font weight, equal to `w400`.
+    """
+    
     BOLD = "bold"
+    """
+    A commonly used font weight that is heavier than normal, equal to `w700`.
+    """
+    
     W_100 = "w100"
+    """
+    Thin, the least thick.
+    """
+    
     W_200 = "w200"
+    """
+    Extra-light.
+    """
+    
     W_300 = "w300"
+    """
+    Light.
+    """
+    
     W_400 = "w400"
+    """
+    Normal / regular / plain.
+    """
+    
     W_500 = "w500"
+    """
+    Medium.
+    """
+    
     W_600 = "w600"
+    """
+    Semi-bold.
+    """
+    
     W_700 = "w700"
+    """
+    Bold.
+    """
+    
     W_800 = "w800"
+    """
+    Extra-bold.
+    """
+    
     W_900 = "w900"
+    """
+    Black, the most thick.
+    """
 
 
 class NotchShape(Enum):
+    """
+    A shape with a notch in its outline.
+    """
     AUTO = "auto"
+    """
+    A NotchShape created with continuous rectangle border.
+    """
     CIRCULAR = "circular"
+    """
+    A rectangle with a smooth circular notch.
+    """
 
 
 class ResponsiveRowBreakpoint(Enum):
@@ -85,20 +153,73 @@ ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Numb
 
 
 class MainAxisAlignment(Enum):
+    """
+    How the children should be placed along the main axis.
+    """
+    
     START = "start"
+    """
+    Place the children as close to the start of the main axis as possible.
+    """
+
     END = "end"
+    """
+    Place the children as close to the end of the main axis as possible.
+    """
+    
     CENTER = "center"
+    """
+    Place the children as close to the middle of the main axis as possible.
+    """
+
     SPACE_BETWEEN = "spaceBetween"
+    """
+    Place the free space evenly between the children.
+    """
+
     SPACE_AROUND = "spaceAround"
+    """
+    Place the free space evenly between the children as well as half of that space 
+    before and after the first and last child.
+    """
+    
     SPACE_EVENLY = "spaceEvenly"
+    """
+    Place the free space evenly between the children as well as before and after the 
+    first and last child.
+    """
 
 
 class CrossAxisAlignment(Enum):
+    """
+    How the children should be placed along the cross axis
+    """
+
     START = "start"
+    """
+    Place the children with their start edge aligned with the start side of the cross 
+    axis.
+    """
+
     END = "end"
+    """
+    Place the children as close to the end of the cross axis as possible.
+    """
+
     CENTER = "center"
+    """
+    Place the children so that their centers align with the middle of the cross axis.
+    """
+
     STRETCH = "stretch"
+    """
+    Require the children to fill the cross axis.
+    """
+
     BASELINE = "baseline"
+    """
+    Place the children along the cross axis such that their baselines match.
+    """
 
 
 class VerticalAlignment(Enum):
