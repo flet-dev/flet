@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 import logging
 import weakref
 from collections.abc import Awaitable, Coroutine
@@ -48,6 +47,7 @@ from flet.controls.types import (
     Wrapper,
 )
 from flet.utils import classproperty, is_pyodide
+from flet.utils.strings import random_string
 
 if not is_pyodide():
     from flet.auth.authorization_service import AuthorizationService
@@ -92,7 +92,7 @@ class ServiceRegistry(Service):
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
-        self._internals["ts"] = str(datetime.datetime.now())
+        self._internals["uid"] = random_string(10)
 
 
 @dataclass

@@ -108,8 +108,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     if (pageServicesControl != null) {
       if (_pageServices == null ||
           (_pageServices != null &&
-              _pageServices?.control.internals?["ts"] !=
-                  pageServicesControl.internals?["ts"])) {
+              _pageServices?.control.internals?["uid"] !=
+                  pageServicesControl.internals?["uid"])) {
         _pageServices = ServiceRegistry(
             control: pageServicesControl,
             propertyName: "services",
@@ -121,8 +121,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var userServicesControl = widget.control.child("_user_services");
     if (userServicesControl != null) {
       if (_userServices == null ||
-          _userServices?.control.internals?["ts"] !=
-              userServicesControl.internals?["ts"]) {
+          _userServices?.control.internals?["uid"] !=
+              userServicesControl.internals?["uid"]) {
         _userServices = ServiceRegistry(
             control: userServicesControl,
             propertyName: "services",
