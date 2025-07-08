@@ -24,6 +24,9 @@ FLET_APP_HIDDEN = "flet_app_hidden"
 
 
 class AppView(Enum):
+    """
+    TBD
+    """
     WEB_BROWSER = "web_browser"
     FLET_APP = "flet_app"
     FLET_APP_WEB = "flet_app_web"
@@ -31,17 +34,26 @@ class AppView(Enum):
 
 
 class WebRenderer(Enum):
+    """
+    TBD
+    """
     AUTO = "auto"
     CANVAS_KIT = "canvaskit"
     SKWASM = "skwasm"
 
 
 class RouteUrlStrategy(Enum):
+    """
+    TBD
+    """
     PATH = "path"
     HASH = "hash"
 
 
 class UrlTarget(Enum):
+    """
+    TBD
+    """
     BLANK = "blank"
     SELF = "_self"
     PARENT = "_parent"
@@ -49,22 +61,78 @@ class UrlTarget(Enum):
 
 
 class FontWeight(Enum):
+    """
+    The thickness of the glyphs used to draw the text.
+    """
+    
     NORMAL = "normal"
+    """
+    The default font weight, equal to `w400`.
+    """
+    
     BOLD = "bold"
+    """
+    A commonly used font weight that is heavier than normal, equal to `w700`.
+    """
+    
     W_100 = "w100"
+    """
+    Thin, the least thick.
+    """
+    
     W_200 = "w200"
+    """
+    Extra-light.
+    """
+    
     W_300 = "w300"
+    """
+    Light.
+    """
+    
     W_400 = "w400"
+    """
+    Normal / regular / plain.
+    """
+    
     W_500 = "w500"
+    """
+    Medium.
+    """
+    
     W_600 = "w600"
+    """
+    Semi-bold.
+    """
+    
     W_700 = "w700"
+    """
+    Bold.
+    """
+    
     W_800 = "w800"
+    """
+    Extra-bold.
+    """
+    
     W_900 = "w900"
+    """
+    Black, the most thick.
+    """
 
 
 class NotchShape(Enum):
+    """
+    A shape with a notch in its outline.
+    """
     AUTO = "auto"
+    """
+    A NotchShape created with continuous rectangle border.
+    """
     CIRCULAR = "circular"
+    """
+    A rectangle with a smooth circular notch.
+    """
 
 
 class ResponsiveRowBreakpoint(Enum):
@@ -85,42 +153,150 @@ ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Numb
 
 
 class MainAxisAlignment(Enum):
+    """
+    How the children should be placed along the main axis.
+    """
+    
     START = "start"
+    """
+    Place the children as close to the start of the main axis as possible.
+    """
+
     END = "end"
+    """
+    Place the children as close to the end of the main axis as possible.
+    """
+    
     CENTER = "center"
+    """
+    Place the children as close to the middle of the main axis as possible.
+    """
+
     SPACE_BETWEEN = "spaceBetween"
+    """
+    Place the free space evenly between the children.
+    """
+
     SPACE_AROUND = "spaceAround"
+    """
+    Place the free space evenly between the children as well as half of that space 
+    before and after the first and last child.
+    """
+    
     SPACE_EVENLY = "spaceEvenly"
+    """
+    Place the free space evenly between the children as well as before and after the 
+    first and last child.
+    """
 
 
 class CrossAxisAlignment(Enum):
+    """
+    How the children should be placed along the cross axis
+    """
+
     START = "start"
+    """
+    Place the children with their start edge aligned with the start side of the cross 
+    axis.
+    """
+
     END = "end"
+    """
+    Place the children as close to the end of the cross axis as possible.
+    """
+
     CENTER = "center"
+    """
+    Place the children so that their centers align with the middle of the cross axis.
+    """
+
     STRETCH = "stretch"
+    """
+    Require the children to fill the cross axis.
+    """
+
     BASELINE = "baseline"
+    """
+    Place the children along the cross axis such that their baselines match.
+    """
 
 
 class VerticalAlignment(Enum):
+    """
+    The vertical alignment of text within an input box.
+    """
+
     NONE = None
+    
     START = -1.0
+    """
+    Aligns the text vertically at the topmost location of the TextField.
+    """
+    
     END = 1.0
+    """
+    Aligns the text vertically at the bottommost location of the TextField.
+    """
+    
     CENTER = 0.0
+    """
+    Aligns the text vertically in the center of the TextField.
+    """
 
 
 class TabAlignment(Enum):
+    """
+    Defines how tabs are aligned horizontally in a [`Tabs`][flet.Tabs].
+    """
+
     START = "start"
+    """
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the `Tabs`. 
+    Otherwise throws an exception.
+    """
+
     START_OFFSET = "startOffset"
+    """
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the `Tabs` with an 
+    offset of 52.0 pixels. Otherwise throws an exception.
+    """
+
     FILL = "fill"
+    """
+    If `Tabs.scrollable` is `False`, tabs are stretched to fill the `Tabs`. Otherwise 
+    throws an exception.
+    """
+    
     CENTER = "center"
+    """
+    Tabs are aligned to the center of the `Tabs`.
+    """
 
 
 class LabelPosition(Enum):
+    """
+    Position of label in a [`Checkbox`][flet.Checkbox], [`Radio`][flet.Radio] or 
+    [`Switch`][flet.Switch]
+    """
+
     RIGHT = "right"
+    """
+    The label is positioned to the right of the control.
+    """
+
     LEFT = "left"
+    """
+    The label is positioned to the left of the control.
+    """
 
 
 class BlendMode(Enum):
+    """
+    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from 
+    Flutter documentation for blend mode examples.
+    """
+
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"
@@ -154,29 +330,110 @@ class BlendMode(Enum):
 
 
 class TextAlign(Enum):
+    """
+    The horizontal alignment of text within an input box.
+    """
+
     LEFT = "left"
+    """
+    Align the text on the left edge of the container.
+    """
+    
     RIGHT = "right"
+    """
+    Align the text on the right edge of the container.
+    """
+
     CENTER = "center"
+    """
+    Align the text in the center of the container.
+    """
+
     JUSTIFY = "justify"
+    """
+    Stretch lines of text that end with a soft line break to fill the width of the 
+    container.
+    """
+
     START = "start"
+    """
+    Align the text on the leading edge of the container.
+    """
+
     END = "end"
+    """
+    Align the text on the trailing edge of the container.
+    """
 
 
 class ScrollMode(Enum):
+    """
+    Weather scrolling is enabled and visibility of scroll bar options.
+    """
+    
     AUTO = "auto"
+    """
+    Scrolling is enabled and scroll bar is only shown when scrolling occurs.
+    """
+
     ADAPTIVE = "adaptive"
+    """
+    Scrolling is enabled and scroll bar is always shown when running app as web or 
+    desktop.
+    """
+    
     ALWAYS = "always"
+    """
+    Scrolling is enabled and scroll bar is always shown.
+    """
+
     HIDDEN = "hidden"
+    """
+    Scrolling is enabled, but scroll bar is always hidden.
+    """
 
 
 class ClipBehavior(Enum):
+    """
+    Different ways to clip content. See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html) 
+    from Flutter documentation for ClipBehavior examples.
+    """
+
     NONE = "none"
+    """
+    No clip at all.
+
+    This is the default option for most widgets: if the content does not overflow the 
+    widget boundary, don't pay any performance cost for clipping.
+    """
+
     ANTI_ALIAS = "antiAlias"
+    """
+    Clip with anti-aliasing.
+
+    This mode has anti-aliased clipping edges, which reduces jagged edges when the clip 
+    shape itself has edges that are diagonal, curved, or otherwise not axis-aligned.
+    """
+
     ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
+    """
+    Clip with anti-aliasing and saveLayer immediately following the clip.
+    """
+    
     HARD_EDGE = "hardEdge"
+    """
+    Clip, but do not apply anti-aliasing.
+
+    This mode enables clipping, but curves and non-axis-aligned straight lines will be 
+    jagged as no effort is made to anti-alias.
+    """
 
 
 class ImageRepeat(Enum):
+    """
+    How to paint any portions of a box not covered by an image.
+    """
+
     NO_REPEAT = "noRepeat"
     REPEAT = "repeat"
     REPEAT_X = "repeatX"
