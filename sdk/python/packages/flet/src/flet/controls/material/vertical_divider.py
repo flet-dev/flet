@@ -19,38 +19,46 @@ class VerticalDivider(Control):
     """
     The divider's width. The divider itself is always drawn as a vertical line
     that is centered within the width specified by this value.
-
-    Defaults to `16.0`.
+    
+    If `None`, [`DividerTheme.space`][flet.DividerTheme.space] is used.
+    If that's is also `None`, defaults to `16.0`.
     """
 
     thickness: Optional[Number] = None
     """
-    The thickness of the line drawn within the divider.
+    The thickness of this divider.
 
-    A divider with a thickness of `0.0` is always drawn as a line with a width of
-    exactly one device pixel.
+    Note:
+        A divider with a thickness of `0.0` is always drawn as a line with a width of
+        exactly one device pixel.
 
-    Defaults to `0.0`.
+    If `None`, [`DividerTheme.thickness`][flet.DividerTheme.thickness] is used.
+    If that's is also `None`, defaults to `0.0`.
     """
 
     color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use when painting the
     line.
+    
+    If `None`, [`DividerTheme.color`][flet.DividerTheme.color] is used.
+    If that's is also `None`, defaults to [`Theme.divider_color`][flet.Theme.divider_color].
     """
 
     leading_indent: Optional[Number] = None
     """
     The amount of empty space to the leading edge of the divider.
-
-    Defaults to `0.0`.
+    
+    If `None`, [`DividerTheme.leading_indent`][flet.DividerTheme.leading_indent] is used.
+    If that's is also `None`, defaults to `0.0`.
     """
 
     trailing_indent: Optional[Number] = None
     """
     The amount of empty space to the trailing edge of the divider.
-
-    Defaults to `0.0`.
+    
+    If `None`, [`DividerTheme.trailing_indent`][flet.DividerTheme.trailing_indent] is used.
+    If that's is also `None`, defaults to `0.0`.
     """
 
     def before_update(self):

@@ -94,8 +94,10 @@ nav:
               - AnimatedSwitcher: controls/animatedswitcher.md
           - Base:
               - AdaptiveControl: controls/adaptivecontrol.md
+              - BaseControl: controls/basecontrol.md
               - ConstrainedControl: controls/constrainedcontrol.md
               - Control: controls/control.md
+              - Control: controls/dialogcontrol.md
               - ScrollableControl: controls/scrollablecontrol.md
           - Buttons:
               - controls/buttons.md
@@ -210,6 +212,7 @@ nav:
               - TransparentPointer: controls/transparentpointer.md
               - WindowDragArea: controls/windowdragarea.md
       - Types:
+          - types/index.md
           - Alignment: types/alignment.md
   - Publish:
       - publish/index.md

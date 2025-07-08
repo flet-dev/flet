@@ -1,8 +1,9 @@
 ::: flet.ListView
 
 ::info
-ListView is very effective for large lists (thousands of items). Prefer it over [`Column`](/docs/controls/column.md) 
-or [`Row`](/docs/controls/row.md) for smooth scrolling.
+ListView is very effective for large lists (thousands of items). 
+Prefer it over [`Column`][flet.Column] 
+or [`Row`][flet.Row] for smooth scrolling.
 ::
 
 

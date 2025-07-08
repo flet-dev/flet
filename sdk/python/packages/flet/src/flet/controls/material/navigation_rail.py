@@ -80,8 +80,7 @@ class NavigationRailDestination(Control):
     """
     The amount of space to inset the destination item.
 
-    Padding is an instance of
-    [`Padding`][flet.Padding] class.
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     indicator_color: Optional[ColorValue] = None

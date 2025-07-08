@@ -24,9 +24,9 @@ class CupertinoSlider(ConstrainedControl):
     setting changes.
 
     Raises:
-        AssertionError: If [`min`][(c).] is greater than or equal to [`max`][(c.)].
-        AssertionError: If [`min`][(c).] is greater than or equal to [`value`][(c.)].
-        AssertionError: If [`max`][(c).] is less than or equal to [`value`][(c.)].
+        AssertionError: If [`min`][(c).] is greater than or equal to [`max`][(c).].
+        AssertionError: If [`min`][(c).] is greater than or equal to [`value`][(c).].
+        AssertionError: If [`max`][(c).] is less than or equal to [`value`][(c).].
     """
 
     value: Optional[Number] = None

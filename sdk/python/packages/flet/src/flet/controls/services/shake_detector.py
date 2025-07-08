@@ -13,7 +13,8 @@ class ShakeDetector(Service):
     """
     Detects phone shakes.
 
-    It is non-visual and should be added to `page.services` list.
+    It is non-visual and should be added to
+    [`Page.services`][flet.Page.services] list before it can be used.
     """
 
     minimum_shake_count: int = 1
@@ -34,11 +35,9 @@ class ShakeDetector(Service):
     shake_threshold_gravity: Number = 2.7
     """
     Shake detection threshold, in Gs.
-
-    Defaults to `2.7`.
     """
 
     on_shake: Optional[ControlEventHandler["ShakeDetector"]] = None
     """
-    Triggers when the shake detected.
+    Called when a shake is detected.
     """

@@ -151,8 +151,9 @@ class DropdownM2(FormFieldControl):
 
     padding: Optional[PaddingValue] = None
     """
-    The [padding](https://flet.dev/docs/reference/types/padding) around the visible
-    portion of this dropdown.
+    The padding around the visible portion of this dropdown.
+    
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     select_icon_enabled_color: Optional[ColorValue] = None

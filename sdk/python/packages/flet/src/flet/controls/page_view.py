@@ -120,8 +120,7 @@ class PageView(AdaptiveControl):
     """
     Called when `page.media` has changed.
 
-    Event handler argument is of type
-    [`PageMediaData`](https://flet.dev/docs/docs/reference/types/pagemediadata).
+    Event type: [`PageMediaData`][flet.PageMediaData]
     """
     on_scroll: Optional[EventHandler["OnScrollEvent"]] = None
     """
@@ -193,8 +192,7 @@ class PageView(AdaptiveControl):
         Moves scroll position to either absolute `offset`, relative `delta` or jump to
         the control with specified `scroll_key`.
 
-        See [`Column.scroll_to()`](https://flet.dev/docs/controls/column#scroll_tooffset-delta-key-duration-curve)
-        for method details and examples.
+        See [`Column.scroll_to()`][flet.Column.scroll_to] for method details and examples.
         """
         self.__default_view().scroll_to(
             offset=offset,

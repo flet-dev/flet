@@ -20,7 +20,7 @@ class CupertinoPicker(ConstrainedControl):
     An iOS-styled picker.
 
     Raises:
-        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c.)], or [`magnification`][(c.)] is not strictly greater than `0.0`.
+        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c).], or [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
     controls: list[Control] = field(default_factory=list)

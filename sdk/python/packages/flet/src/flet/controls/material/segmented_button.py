@@ -54,8 +54,7 @@ class SegmentedButton(ConstrainedControl):
 
     segments: list[Segment]
     """
-    A required parameter that describes the segments in the button. It's a list of
-    `Segment` objects.
+    The segments of this button.
     """
 
     style: Optional[ButtonStyle] = None
@@ -85,7 +84,7 @@ class SegmentedButton(ConstrainedControl):
     other `selected` segments will stay selected. Selecting an already selected segment
     will unselect it.
 
-    If `False`(the default), only one segment may be selected at a time. When a segment
+    If `False` (the default), only one segment may be selected at a time. When a segment
     is selected, any previously selected segment will be unselected.
     """
 
@@ -132,8 +131,7 @@ class SegmentedButton(ConstrainedControl):
 
     When `None`, the button adopts its intrinsic content size.
 
-    Value is of type
-    [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#paddingvalue).
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     on_change: Optional[ControlEventHandler["SegmentedButton"]] = None

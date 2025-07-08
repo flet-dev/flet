@@ -32,6 +32,11 @@ class Slider(ConstrainedControl, AdaptiveControl):
     Use a slider when you want people to set defined values (such as volume or
     brightness), or when people would benefit from instant feedback on the effect
     of setting changes.
+
+    Raises:
+        AssertionError: If [`min`][(c).] is greater than or equal to [`max`][(c).].
+        AssertionError: If [`min`][(c).] is greater than or equal to [`value`][(c).].
+        AssertionError: If [`max`][(c).] is less than or equal to [`value`][(c)].
     """
 
     value: Optional[Number] = None
@@ -40,16 +45,14 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     The slider's thumb is drawn at a position that corresponds to this value.
 
-    Defaults to value of `min` property.
+    Defaults to value of [`min`][flet.Slider.min].
     """
 
     label: Optional[str] = None
     """
-    Format with `{value}`.
-
     A label to show above the slider when the slider is active. The value of
-    `label` may contain `{value}` which will be replaced with a current slider
-    value.
+    `label` may contain `{value}` which will be dynamicly replaced with a current slider
+    value. For example, `"Volume: {value}"`.
 
     It is used to display the value of a discrete slider, and it is displayed as
     part of the value indicator shape.
@@ -59,34 +62,35 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     min: Number = 0.0
     """
-    The minimum value the user can select. Must be less than or equal to `max`.
+    The minimum value the user can select.
 
-    If the `max` is equal to the `min`, then the slider is disabled.
-
-    Defaults to `0.0`.
+    Note:
+        - Must be less than or equal to [`max`][flet.Slider.max].
+        - If the [`max`][flet.Slider.max] is equal to the `min`, then this slider is disabled.
     """
 
     max: Number = 1.0
     """
-    The maximum value the user can select. Must be greater than or equal to `min`.
-
-    If the `max` is equal to the `min`, then the slider is disabled.
-
-    Defaults to `1.0`.
+    The maximum value the user can select.
+    
+    Note:
+        - Must be greater than or equal to [`min`][flet.Slider.min].
+        - If the [`min`][flet.Slider.min] is equal to the `max`, then this slider is disabled.
     """
 
     divisions: Optional[int] = None
     """
     The number of discrete divisions.
 
-    Typically used with `label` to show the current discrete value.
+    Typically used with [`label`][flet.Slider.label] to show the current discrete value.
 
-    If not set, the slider is continuous.
+    If `None`, this slider is continuous.
     """
 
     round: int = 0
     """
-    The number of decimals displayed on the `label` containing `value`.
+    The number of decimals displayed on the [`label`][flet.Slider.label] 
+    containing [`value`][flet.Slider.value].
 
     Defaults to `0`, which displays value rounded to the nearest integer.
     """
@@ -123,23 +127,25 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     interaction: Optional[SliderInteraction] = None
     """
-    The allowed way for the user to interact with this slider. Value is a
-    [`SliderInteraction`][flet.SliderInteraction]
-    and defaults to `SliderInteraction.TAP_AND_SLIDE`.
+    The allowed way for the user to interact with this slider. 
+    
+    If `None`, [`SliderTheme.interaction`][flet.SliderTheme.interaction] is used.
+    If that's is also `None`, defaults to 
+    [`SliderInteraction.TAP_AND_SLIDE`][flet.SliderInteraction.TAP_AND_SLIDE].
     """
 
     secondary_active_color: Optional[ColorValue] = None
     """
     The [color](https://flet.dev/docs/reference/colors) to use for the portion of
-    the slider track between the thumb and the `secondary_track_value`.
+    the slider track between the thumb and 
+    the [`secondary_track_value`][flet.Slider.secondary_track_value].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight [color](https://flet.dev/docs/reference/colors) that's typically
-    used to indicate that the range slider thumb is in `ControlState.HOVERED` or
-    `DRAGGED`
-    [`ControlState`][flet.ControlState] .
+    used to indicate that the range slider thumb is in [`ControlState.HOVERED`][flet.ControlState.HOVERED]
+    or [`ControlState.DRAGGED`][flet.ControlState.DRAGGED] states.
     """
 
     secondary_track_value: Optional[Number] = None
@@ -159,53 +165,58 @@ class Slider(ConstrainedControl, AdaptiveControl):
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
 
-    Value is of type
-    [`MouseCursor`][flet.MouseCursor]
+    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     padding: Optional[PaddingValue] = None
     """
-    TBD
+    Determines the padding around this slider.
     """
 
     year_2023: Optional[bool] = None
     """
-    TBD
+    Whether to use the 2023 Material Design 3 appearance.
+    
+    If this is set to `False`, this slider will use the latest 
+    Material Design 3 appearance, which was introduced in December 2023.
+    
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, 
+    then this property is ignored.
     """
 
     on_change: Optional[ControlEventHandler["Slider"]] = None
     """
-    Called when the state of the Slider is changed.
+    Called when the state of this slider is changed.
     """
 
     on_change_start: Optional[ControlEventHandler["Slider"]] = None
     """
-    Called when the user starts selecting a new value for the slider.
+    Called when the user starts selecting a new value for this slider.
     """
 
     on_change_end: Optional[ControlEventHandler["Slider"]] = None
     """
-    Called when the user is done selecting a new value for the slider.
+    Called when the user is done selecting a new value for this slider.
     """
 
     on_focus: Optional[ControlEventHandler["Slider"]] = None
     """
-    Called when the control has received focus.
+    Called when this slider has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Slider"]] = None
     """
-    Called when the control has lost focus.
+    Called when this slider has lost focus.
     """
 
     def before_update(self):
         super().before_update()
         assert self.max is None or self.min <= self.max, (
-            "min must be less than or equal to max"
+            f"min ({self.min}) must be less than or equal to max ({self.max})"
         )
         assert self.value is None or self.value >= self.min, (
-            "value must be greater than or equal to min"
+            f"value ({self.value}) must be greater than or equal to min ({self.min})"
         )
         assert self.value is None or self.value <= self.max, (
-            "value must be less than or equal to max"
+            f"value ({self.value}) must be less than or equal to max ({self.max})"
         )

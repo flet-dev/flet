@@ -25,25 +25,25 @@ class GradientTileMode(Enum):
     CLAMP = "clamp"
     """
     Samples beyond the edge are clamped to the nearest color in the defined inner area.
-    More information on CLAMP GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#clamp).
+    More information [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#clamp).
     """
 
     DECAL = "decal"
     """
     Samples beyond the edge are treated as transparent black.
-    More information on DECAL GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#decal).
+    More information [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#decal).
     """
 
     MIRROR = "mirror"
     """
     Samples beyond the edge are mirrored back and forth across the defined area.
-    More information on MIRROR GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#mirror).
+    More information [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#mirror).
     """
 
     REPEATED = "repeated"
     """
     Samples beyond the edge are repeated from the far end of the defined area.
-    More information on REPEATED GradientTileMode [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#repeated).
+    More information [here](https://api.flutter.dev/flutter/dart-ui/TileMode.html#repeated).
     """
 
 
@@ -67,8 +67,9 @@ class Gradient:
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and
-    after `end`. The value is of type
-    [GradientTileMode](https://flet.dev/docs/reference/types/gradienttilemode).
+    after `end`. 
+    
+    Type: [`GradientTileMode`][flet.GradientTileMode]
     """
 
     rotation: Optional[Number] = None
@@ -170,19 +171,19 @@ class SweepGradient(Gradient):
     """
     The center of the gradient, as an offset into the (-1.0, -1.0) x (1.0, 1.0) square
     describing the gradient which will be mapped onto the paint box. For example, an
-    alignment of (0.0, 0.0) will place the sweep gradient in the center of the box.
+    `Alignment.center()` will place the sweep gradient in the center of the box.
     """
 
     start_angle: Number = 0.0
     """
     The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop 0.0 of
-    the gradient is placed. Defaults to 0.0.
+    the gradient is placed. 
     """
 
     end_angle: Number = math.pi * 2
     """
     The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop 1.0 of
-    the gradient is placed. Defaults to math.pi * 2.
+    the gradient is placed.
     """
 
     def __post_init__(self):

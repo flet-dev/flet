@@ -54,7 +54,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more
+    Whether this switch will be selected as the initial focus. If there is more
     than one control on a page with autofocus set, then the first one added to
     the page will get focus.
     """
@@ -70,7 +70,8 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The [color](https://flet.dev/docs/reference/colors) to use on the track when
     this switch is on.
 
-    If `track_color` returns a non-null color in the `SELECTED` state, it will
+    If [`track_color`][flet.Switch.track_color] returns a non-none color in 
+    the `ControlState.SELECTED` state, it will
     be used instead of this color.
     """
 
@@ -88,7 +89,8 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
 
-    If `thumb_color` returns a non-null color in the `DEFAULT` state, it will be
+    If [`thumb_color`][flet.Switch.thumb_color] returns a non-none color 
+    in the `ControlState.DEFAULT` state, it will be
     used instead of this color.
     """
 
@@ -100,7 +102,8 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
 
-    If `track_color` returns a non-null color in the `DEFAULT` state, it will be
+    If [`track_color`][flet.Switch.track_color] returns a non-none color 
+    in the `ControlState.DEFAULT` state, it will be
     used instead of this color.
     """
 
@@ -110,9 +113,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
     in various [`ControlState`][flet.ControlState]
     states.
 
-    The following [`ControlState`][flet.ControlState]
-    values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
-    `DEFAULT` (fallback).
+    The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`, 
+    `ControlState.DISABLED`, `ControlState.FOCUSED` and
+    `ControlState.DEFAULT` (fallback).
     """
 
     thumb_icon: Optional[ControlStateValue[IconValue]] = None
@@ -120,28 +123,26 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The icon of this Switch's thumb in various
     [`ControlState`][flet.ControlState] states.
 
-    The following [`ControlState`][flet.ControlState]
-    values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
-    `DEFAULT` (fallback).
+    The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`, 
+    `ControlState.DISABLED`, `ControlState.FOCUSED` and
+    `ControlState.DEFAULT` (fallback).
     """
 
     track_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The [color](https://flet.dev/docs/reference/colors) of this switch's track
-    in various [`ControlState`][flet.ControlState]
-    states.
+    in various [`ControlState`][flet.ControlState]  states.
 
-    The following [`ControlState`][flet.ControlState]
-    values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
-    `DEFAULT` (fallback).
+    The following states are supported: `ControlState.SELECTED`, 
+    `ControlState.HOVERED`, `ControlState.DISABLED`, `ControlState.FOCUSED` and
+    `ControlState.DEFAULT` (fallback).
     """
 
     adaptive: Optional[bool] = None
     """
-    If the value is `True`, an adaptive Switch is created based on whether the
-    target platform is iOS/macOS.
+    Whether an adaptive Switch should be created based on the target platform.
 
-    On iOS and macOS, a `CupertinoSwitch` is created, which has matching
+    On iOS and macOS, a [`CupertinoSwitch`][flet.CupertinoSwitch] is created, which has matching
     functionality and presentation as `Switch`, and the graphics as expected on
     iOS. On other platforms, a Material Switch is created.
 
@@ -166,9 +167,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Material in various
     [`ControlState`][flet.ControlState] states.
 
-    The following [`ControlState`][flet.ControlState]
-    values are supported: `PRESSED`, `SELECTED`, `HOVERED`, `FOCUSED` and
-    `DEFAULT`.
+    The following states are supported: `ControlState.PRESSED`, 
+    `ControlState.SELECTED`, `ControlState.HOVERED`, `ControlState.FOCUSED` and
+    `ControlState.DEFAULT`.
     """
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
@@ -177,9 +178,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
     track in various [`ControlState`][flet.ControlState]
     states.
 
-    The following [`ControlState`][flet.ControlState]
-    values are supported: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED` and
-    `DEFAULT` (fallback).
+    The following states are supported: `ControlState.SELECTED`, `
+    ControlState.HOVERED`, `ControlState.DISABLED`, `ControlState.FOCUSED` and
+    `ControlState.DEFAULT` (fallback).
     """
 
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
@@ -187,8 +188,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The outline width of this switch's track in all or specific
     [`ControlState`][flet.ControlState] states.
 
-    The following states are supported: `SELECTED`, `HOVERED`, `DISABLED`,
-    `FOCUSED` and `DEFAULT` (fallback).
+    The following states are supported: `ControlState.SELECTED`, 
+    `ControlState.HOVERED`, `ControlState.DISABLED`,
+    `ControlState.FOCUSED` and `ControlState.DEFAULT` (fallback).
     """
 
     mouse_cursor: Optional[MouseCursor] = None

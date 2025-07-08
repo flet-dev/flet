@@ -153,10 +153,10 @@ class BorderSide:
 @dataclass
 class Border:
     """
-    A border comprised of four sides: `top`, `right`, ´bottom`, `left`.
+    A border comprised of four sides: `top`, `right`, `bottom`, `left`.
 
     Each side of the border is an instance of
-    [`BorderSide`][flet.BorderSide] class.
+    [`BorderSide`][flet.BorderSide].
 
     Example:
         ```python

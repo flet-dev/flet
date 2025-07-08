@@ -16,36 +16,38 @@ __all__ = ["SubmenuButton"]
 @control("SubmenuButton")
 class SubmenuButton(ConstrainedControl):
     """
-    A menu button that displays a cascading menu. It can be used as part of
-    a MenuBar, or as a standalone control.
+    A menu button that displays a cascading menu.
+
+    Typically used in a [`MenuBar`][flet.MenuBar] control.
     """
 
     content: Optional[Control] = None
     """
     The child control to be displayed in the middle portion of this button.
 
-    Typically this is the button's label, using a `Text` control.
+    Typically this is the button's label, using a [`Text`][flet.Text] control.
     """
 
     controls: list[Control] = field(default_factory=list)
     """
     A list of controls that appear in the menu when it is opened.
 
-    Typically either `MenuItemButton` or `SubMenuButton` controls.
+    Typically either [`MenuItemButton`][flet.MenuItemButton] or 
+    `SubMenuButton` controls.
 
     If this list is empty, then the button for this menu item will be disabled.
     """
 
     leading: Optional[Control] = None
     """
-    An optional control to display before the `content`.
+    An optional control to display before the [`content`][flet.SubmenuButton.content].
 
     Typically an [`Icon`][flet.Icon] control.
     """
 
     trailing: Optional[Control] = None
     """
-    An optional control to display after the `content`.
+    An optional control to display after the [`content`][flet.SubmenuButton.content].
 
     Typically an [`Icon`][flet.Icon] control.
     """
@@ -54,54 +56,51 @@ class SubmenuButton(ConstrainedControl):
     """
     Whether to clip the content of this control or not.
 
-    Value is of type
-    [`ClipBehavior`][flet.ClipBehavior] and
-    defaults to `ClipBehavior.HARD_EDGE`.
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     menu_style: Optional[MenuStyle] = None
     """
     Customizes this menu's appearance.
 
-    Value is of type
-    [`MenuStyle`][flet.MenuStyle]
+    Type: [`MenuStyle`][flet.MenuStyle]
     """
 
     style: Optional[ButtonStyle] = None
     """
     Customizes this button's appearance.
 
-    Value is of type
-    [`ButtonStyle`][flet.ButtonStyle]
+    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     alignment_offset: Optional[OffsetValue] = None
     """
     The offset of the menu relative to the alignment origin determined by
-    `MenuStyle.alignment` on the `style` attribute.
+    [`MenuStyle.alignment`][flet.MenuStyle.alignment] on the 
+    [`style`][flet.SubmenuButton.style] attribute.
     """
 
     on_open: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
-    Fired when the menu is opened.
+    Called when the menu is opened.
     """
 
     on_close: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
-    Fired when the menu is closed.
+    Called when the menu is closed.
     """
 
     on_hover: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
-    Fired when the button is hovered.
+    Called when the button is hovered.
     """
 
     on_focus: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
-    Fired when the button receives focus.
+    Called when the button receives focus.
     """
 
     on_blur: Optional[ControlEventHandler["SubmenuButton"]] = None
     """
-    Fired when this button loses focus.
+    Called when this button loses focus.
     """

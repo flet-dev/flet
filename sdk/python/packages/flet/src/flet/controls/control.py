@@ -203,14 +203,14 @@ class Control(BaseControl):
 
     tooltip: Optional[TooltipValue] = None
     """
-    The `tooltip` property supports both strings
-    and [`Tooltip`](https://flet.dev/docs/reference/types/tooltip.md) objects.
+    The tooltip ot show when this control is hovered over.
+    
+    Type: [`TooltipValue`][flet.TooltipValue]
     """
 
     badge: Optional[BadgeValue] = None
     """
-    The `badge` property supports both strings and
-    [`Badge`](https://flet.dev/docs/reference/types/badge.md) objects.
+    Type: [`BadgeValue`][flet.BadgeValue]
     """
 
     visible: bool = True

@@ -45,8 +45,6 @@ class PopupMenuItem(Control):
     height: Number = 48.0
     """
     The minimum height of this menu item.
-
-    Defaults to `48`.
     """
 
     padding: Optional[PaddingValue] = None
@@ -138,18 +136,14 @@ class PopupMenuButton(ConstrainedControl):
     """
     Defines position of the popup menu relative to the button.
 
-    Value is of type
-    [`PopupMenuPosition`][flet.PopupMenuPosition] and
-    defaults to `PopupMenuPosition.OVER`.
+    Defaults to `PopupMenuPosition.OVER`.
+    
+    Type: [`PopupMenuPosition`][flet.PopupMenuPosition]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The `content` will be clipped (or not) according to this option.
-
-    Value is of type
-    [`ClipBehavior`][flet.ClipBehavior] and defaults to
-    `ClipBehavior.NONE`.
     """
 
     enable_feedback: Optional[bool] = None
@@ -172,8 +166,7 @@ class PopupMenuButton(ConstrainedControl):
 
     padding: PaddingValue = 8
     """
-    Type: [`Padding`][flet.Padding] and
-    defaults to `Padding.all(8.0)`.
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     menu_padding: Optional[PaddingValue] = None

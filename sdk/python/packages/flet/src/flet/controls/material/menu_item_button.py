@@ -86,20 +86,20 @@ class MenuItemButton(ConstrainedControl):
 
     on_click: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
-    Fired when the button is clicked.
+    Called when the button is clicked.
     """
 
     on_hover: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
-    Fired when the button is hovered.
+    Called when the button is hovered.
     """
 
     on_focus: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
-    Fired when the button receives focus.
+    Called when the button receives focus.
     """
 
     on_blur: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
-    Fired when this button loses focus.
+    Called when this button loses focus.
     """

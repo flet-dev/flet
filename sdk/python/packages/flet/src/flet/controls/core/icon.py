@@ -14,9 +14,9 @@ class Icon(ConstrainedControl):
     Displays a Material icon.
 
     Raises:
-        AssertionError: If [`fill`][(c.)] is less than `0.0` or greater than `1.0`.
-        AssertionError: If [`weight`][(c.)] is less than or equal to `0.0`.
-        AssertionError: If [`optical_size`][(c.)] is less than or equal to `0.0`.
+        AssertionError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
+        AssertionError: If [`weight`][(c).] is less than or equal to `0.0`.
+        AssertionError: If [`optical_size`][(c).] is less than or equal to `0.0`.
     """
 
     name: IconValue

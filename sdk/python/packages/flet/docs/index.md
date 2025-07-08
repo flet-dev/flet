@@ -51,7 +51,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-To run the app install `flet` module ([create a new Flet environment](TBA)):
+To get started, read ([this guide](getting-started/create-flet-app.md)).
 
 /// tab | uv
 ```bash

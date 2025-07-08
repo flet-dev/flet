@@ -51,19 +51,17 @@ class ProgressBar(ConstrainedControl):
     Border radius is an instance of
     [`BorderRadius`][flet.BorderRadius] class.
 
-    Defaults to `border_radius.all(0)` - rectangular shape.
+    Defaults to `BorderRadius.all(0)` - rectangular shape.
     """
 
     semantics_label: Optional[str] = None
     """
-    The [`Semantics.label`](https://flet.dev/docs/controls/semantics#label) for this
-    progress indicator.
+    The semantics label for this progress indicator.
     """
 
     semantics_value: Optional[Number] = None
     """
-    The [`Semantics.value`](https://flet.dev/docs/controls/semantics#value) for this
-    progress indicator.
+    The semantics label for this progress indicator.
     """
 
     stop_indicator_color: Optional[ColorValue] = None

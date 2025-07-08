@@ -21,11 +21,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     """
     Implements the basic Material Design visual layout structure.
 
-    Use it for projects that require a "page within a page" layouts with its own [`AppBar`][(p).],
-    [`BottomAppBar`][(p).], [`Drawer`][(p).], such as demos and galleries.
+    Use it for projects that require a "page within a page" layouts with its own [`AppBar`][flet..],
+    [`BottomAppBar`][flet..], [`NavigationDrawer`][flet..], such as demos and galleries.
 
     Raises:
-        AssertionError: If [`content`][flet.Pagelet.content] is not visible.
+        AssertionError: If [`content`][(c).] is not visible.
     """
 
     content: Control

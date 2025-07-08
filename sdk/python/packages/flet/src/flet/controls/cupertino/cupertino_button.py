@@ -134,7 +134,7 @@ class CupertinoButton(ConstrainedControl):
     If `bgcolor` is `None`, defaults to a slightly transparent
     [`CupertinoColors.ACTIVE_BLUE`][flet.CupertinoColors.ACTIVE_BLUE].
     'Slightly transparent' in this context means the color is used with an opacity
-    of `0.80`, a brightness of `0.69` and a saturation of `0.835´.
+    of `0.80`, a brightness of `0.69` and a saturation of `0.835`.
     """
 
     mouse_cursor: Optional[MouseCursor] = None

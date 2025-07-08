@@ -146,7 +146,7 @@ class PageDisconnectedException(FletException):
 @control("Page", isolated=True, post_init_args=2)
 class Page(PageView):
     """
-    Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
+    Page is a container for [`View`][flet.View] controls.
 
     A page instance and the root view are automatically created when a new
     user session started.
@@ -166,7 +166,7 @@ class Page(PageView):
     """
     A class with properties/methods/events to control app's native OS window.
 
-    Value is of type [Window](https://flet.dev/docs/reference/types/window).
+    Type: [`Window`][flet.Window]
     """
 
     browser_context_menu: BrowserContextMenu = field(
@@ -176,10 +176,10 @@ class Page(PageView):
     Used to enable or disable the context menu that appears when the user
     right-clicks on the web page.
 
-    Value is of type
-    [BrowserContextMenu](https://flet.dev/docs/reference/types/browsercontextmenu).
+    Event type: [`BrowserContextMenu`][flet.BrowserContextMenu]
 
-    🌎 Web only.
+    Note:
+        Web only.
     """
 
     shared_preferences: SharedPreferences = field(
@@ -252,15 +252,14 @@ class Page(PageView):
     """
     Operating system the application is running on.
 
-    Value is of type [PagePlatform](https://flet.dev/docs/reference/types/pageplatform).
+    Type: [`PagePlatform`][flet.PagePlatform]
     """
 
     platform_brightness: Optional[Brightness] = None
     """
-    The current brightness mode of the host platform.
+    The current brightness mode of the host platform. (readonly)
 
-    Value is read-only and of type
-    [Brightness](https://flet.dev/docs/reference/types/brightness).
+    Type: [`Brightness`][flet.Brightness]
     """
 
     client_ip: Optional[str] = None
@@ -302,8 +301,7 @@ class Page(PageView):
     """
     Triggers when app lifecycle state changes.
 
-    Event handler argument is of type
-    [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
+    Event type: [`AppLifecycleStateChangeEvent`][flet.AppLifecycleStateChangeEvent]
     """
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
@@ -311,25 +309,22 @@ class Page(PageView):
     Called when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
 
-    Event handler argument is of type
-    [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
+    Event type: [`RouteChangeEvent`][flet.RouteChangeEvent]
     """
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
     Called when the user clicks automatic "Back" button in
-    [AppBar](https://flet.dev/docs/controls/appbar) control.
+    [`AppBar`][flet.AppBar] control.
 
-    Event handler argument is of type
-    [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
+    Event type: [`ViewPopEvent`][flet.ViewPopEvent]
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
     """
     Called when a keyboard key is pressed.
 
-    Event handler argument is of type
-    [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
+    Event type: [`KeyboardEvent`][flet.KeyboardEvent]
     """
 
     on_connect: Optional[ControlEventHandler["Page"]] = None
@@ -356,15 +351,15 @@ class Page(PageView):
 
     on_login: Optional[EventHandler[LoginEvent]] = None
     """
-    Fires upon successful or failed OAuth authorization flow.
+    Called upon successful or failed OAuth authorization flow.
 
-    See [Authentication](https://flet.dev/docs/cookbook/authentication#checking-authentication-results)
+    See [Authentication](../cookbook/authentication.md#checking-authentication-results)
     guide for more information and examples.
     """
 
     on_logout: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires after `page.logout()` call.
+    Called after `page.logout()` call.
     """
 
     on_error: Optional[ControlEventHandler["Page"]] = None
@@ -572,7 +567,7 @@ class Page(PageView):
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
         """
-        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide
+        Starts OAuth flow. See [Authentication](../cookbook/authentication.md) guide
         for more information and examples.
         """
         self.__authorization = authorization(
@@ -646,7 +641,7 @@ class Page(PageView):
     def logout(self) -> None:
         """
         Clears current authentication context. See
-        [Authentication](/docs/cookbook/authentication#signing-out) guide for more
+        [Authentication](../cookbook/authentication.md#signing-out) guide for more
         information and examples.
         """
         self.__authorization = None
@@ -671,8 +666,8 @@ class Page(PageView):
         Optional method arguments:
 
         * `web_window_name` - window tab/name to open URL in:
-        [`UrlTarget.SELF`](https://flet.dev/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) -
+        [`UrlTarget.SELF`][flet.UrlTarget.SELF] - the
+        same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] -
         a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
         * `web_popup_window` - set to `True` to display a URL in a browser popup
@@ -701,8 +696,8 @@ class Page(PageView):
 
         Optional method arguments:
 
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](https://flet.dev//docs/reference/types/urltarget#self)
-        - the same browser tab, [`UrlTarget.BLANK`](https://flet.dev//docs/reference/types/urltarget#blank)
+        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`][UrlTarget.SELF]
+        - the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
         - a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
         * `web_popup_window` - set to `True` to display a URL in a browser popup

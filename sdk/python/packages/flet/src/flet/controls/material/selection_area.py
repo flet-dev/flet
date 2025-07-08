@@ -12,13 +12,17 @@ class SelectionArea(Control):
     """
     Flet controls are not selectable by default. SelectionArea is used to enable
     selection for its child control.
+
+    Raises:
+        AssertionError: If [`content`][(c).] is not visible
     """
 
     content: Control
     """
-    A child Control contained by the SelectionArea. If you need to have multiple
-    selectable controls, use `Row`, `Column`, or `Stack`, which have a `controls`
-    property, and then provide multiple controls to that control.
+    The child control this selection area applies to.
+    
+    If you need to have multiple selectable controls, use container-like controls 
+    like [`Row`][flet.Row] or [`Column`][flet.Column], which have a `controls` property for this purpose.
     """
 
     on_change: Optional[ControlEventHandler["SelectionArea"]] = None

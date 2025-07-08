@@ -155,8 +155,6 @@ class ButtonStyle:
     padding: Optional[ControlStateValue[PaddingValue]] = None
     """
     The padding between the button's boundary and its content.
-
-    Type: [`Padding`][flet.Padding]
     """
 
     side: Optional[ControlStateValue[BorderSide]] = None
@@ -182,8 +180,6 @@ class ButtonStyle:
     enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback.
-
-    Value is of type `bool`.
     """
 
     text_style: Optional[ControlStateValue[TextStyle]] = None

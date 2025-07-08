@@ -25,7 +25,7 @@ class CupertinoDatePickerMode(Enum):
 
 class CupertinoDatePickerDateOrder(Enum):
     DAY_MONTH_YEAR = "dmy"
-    MONTH_YEAR_DAY = "myd"
+    MONTH_DAY_YEAR = "mdy"
     YEAR_MONTH_DAY = "ymd"
     YEAR_DAY_MONTH = "ydm"
 

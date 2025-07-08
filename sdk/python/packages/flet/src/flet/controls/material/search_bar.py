@@ -31,7 +31,7 @@ class SearchBar(ConstrainedControl):
     controls: list[Control] = field(default_factory=list)
     """
     The list of controls to be displayed below the search bar when in search view.
-    These controls are usually `ListTile`s and will be displayed in a `ListView`.
+    These controls are usually [`ListTile`][flet.ListTile]s and will be displayed in a [`ListView`][flet.ListView].
     """
 
     value: str = ""
@@ -41,13 +41,13 @@ class SearchBar(ConstrainedControl):
 
     bar_leading: Optional[Control] = None
     """
-    A `Control` to display before the text input field when the search view is close.
+    A control to display before the text input field when the search view is close.
     This is typically an `Icon` or an `IconButton`.
     """
 
     bar_trailing: Optional[list[Control]] = None
     """
-    A `Control` to display after the text input field when the search view is close.
+    A list of controls to display after the text input field when the search view is close.
 
     These controls can represent additional modes of searching (e.g voice search),
     an avatar, or an overflow menu and are usually not more than two.
@@ -123,7 +123,7 @@ class SearchBar(ConstrainedControl):
     keyboard), it scrolls into view, ensuring it is positioned at the specified
     distance from the Scrollable edges.
 
-    Type: [`Padding`][flet.Padding]
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     view_leading: Optional[Control] = None

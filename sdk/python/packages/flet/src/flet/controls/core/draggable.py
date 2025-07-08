@@ -20,7 +20,7 @@ class Draggable(Control):
 
     Raises:
         AssertionError: If [`content`][(c).] is not visible.
-        AssertionError: If [`max_simultaneous_drags`][(c.)] is set to a negative value.
+        AssertionError: If [`max_simultaneous_drags`][(c).] is set to a negative value.
     """
 
     content: Control

@@ -217,7 +217,7 @@ from flet.controls.material.auto_complete import (
     AutoCompleteSelectEvent,
     AutoCompleteSuggestion,
 )
-from flet.controls.material.badge import Badge
+from flet.controls.material.badge import Badge, BadgeValue
 from flet.controls.material.banner import Banner
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.bottom_sheet import BottomSheet
@@ -316,7 +316,7 @@ from flet.controls.material.time_picker import (
     TimePickerEntryMode,
     TimePickerEntryModeChangeEvent,
 )
-from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode
+from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
 from flet.controls.multi_view import MultiView
 from flet.controls.padding import Padding, PaddingValue

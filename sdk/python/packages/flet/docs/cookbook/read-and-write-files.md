@@ -158,9 +158,9 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-- `Counter` class is a custom control, which is a subclass/extension of the `Text` control. More information [here](/docs/getting-started/custom-controls).
+- `Counter` class is a custom control, which is a subclass/extension of the [`Text`][flet.Text] control. More information [here](../cookbook/custom-controls.md).
 - [`FLET_APP_CONSOLE`](/docs/reference/environment-variables/#flet_app_console) is an environment variable that points to the application's console log file (`console.log`) which contains the app's [console output](https://flet.dev/docs/publish#console-output) (ex: `print()` statements). Its value is set in production mode.
 - If you have an android emulator or physical device, you can download and install this [apk](https://github.com/ndonkoHenri/flet-storage-cookbook/releases). 
-- Follow [this](/docs/publish) guide to package your app for all platforms.
+- Follow [this](../publish/index.md) guide to package your app for all platforms.
 
 

@@ -10,17 +10,15 @@ __all__ = ["Divider"]
 @control("Divider")
 class Divider(Control):
     """
-    A thin horizontal line, with padding on either side.
-
-    In the material design language, this represents a divider.
+    A thin horizontal line (divider), with padding on either side.
     """
 
     color: Optional[ColorValue] = None
     """
     The color to use when painting the line.
 
-    Defaults to [`DividerTheme.color`][flet.DividerTheme.color], or if that is also `None`,
-    falls back to `Theme.divider_color`.
+    If `None`, [`DividerTheme.color`][flet.DividerTheme.color] is used.
+    If that's is also `None`, defaults to [`Theme.divider_color`][flet.Theme.divider_color].
     """
 
     height: Optional[Number] = None
@@ -28,16 +26,16 @@ class Divider(Control):
     The divider's height extent. The divider itself is always drawn as a horizontal
     line that is centered within the height specified by this value.
 
-    Defaults to [`DividerTheme.height`][flet.DividerTheme.height], or if that is also `None`,
-    falls back to `16.0`.
+    If `None`, [`DividerTheme.space`][flet.DividerTheme.space] is used.
+    If that's is also `None`, defaults to `16.0`.
     """
 
     leading_indent: Optional[Number] = None
     """
     The amount of empty space to the leading edge of the divider.
 
-    Defaults to [`DividerTheme.leading_indent`][flet.DividerTheme.leading_indent], or if that is also `None`,
-    falls back to `0.0`.
+    If `None`, [`DividerTheme.leading_indent`][flet.DividerTheme.leading_indent] is used.
+    If that's is also `None`, defaults to `0.0`.
     """
 
     thickness: Optional[Number] = None
@@ -47,16 +45,16 @@ class Divider(Control):
     A divider with a thickness of `0.0` is always drawn as a line with a 
     height of exactly one device pixel.
 
-    Defaults to [`DividerTheme.thickness`][flet.DividerTheme.thickness], or if that is also `None`,
-    falls back to `0.0`.
+    If `None`, [`DividerTheme.thickness`][flet.DividerTheme.thickness] is used.
+    If that's is also `None`, defaults to `0.0`.
     """
 
     trailing_indent: Optional[Number] = None
     """
     The amount of empty space to the trailing edge of the divider.
 
-    Defaults to [`DividerTheme.thickness`][flet.DividerTheme.trailing_indent], or if that is also `None`,
-    falls back to `0.0`.
+    If `None`, [`DividerTheme.trailing_indent`][flet.DividerTheme.trailing_indent] is used.
+    If that's is also `None`, defaults to `0.0`.
     """
 
     def before_update(self):

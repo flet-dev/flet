@@ -36,20 +36,19 @@ class Canvas(ConstrainedControl):
 
     content: Optional[Control] = None
     """
-    TBD
+    The content of this canvas.
     """
 
     resize_interval: Optional[Number] = None
     """
     Sampling interval in milliseconds for `on_resize` event.
 
-    Defaults to `0` - call `on_resize` immediately on every change.
+    Defaults to `0` - calls [`on_resize`][flet.canvas.Canvas.on_resize] immediately on every change.
     """
 
     on_resize: Optional[EventHandler[CanvasResizeEvent]] = None
     """
     Called when the size of canvas has changed.
 
-    Event object `e` is an instance of
-    [CanvasResizeEvent](https://flet.dev/docs/reference/types/canvasresizeevent).
+    Event type: [`CanvasResizeEvent`][flet.CanvasResizeEvent]
     """

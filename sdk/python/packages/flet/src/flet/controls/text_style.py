@@ -121,19 +121,19 @@ class TextStyle:
     """
     The height of this text span, as a multiple of the font size.
 
-    See detailed explanation here:
-    https://api.flutter.dev/flutter/painting/TextStyle/height.html
+    See detailed explanation [here](https://api.flutter.dev/flutter/painting/TextStyle/height.html).
     """
 
     weight: Optional[FontWeight] = None
     """
-    Value is of type https://flet.dev/docs/reference/types/fontweight and defaults to
-    `FontWeight.NORMAL`.
+    Defaults to `FontWeight.NORMAL`.
+    
+    Type: [`FontWeight`][flet.FontWeight]
     """
 
     italic: bool = False
     """
-    `True` to use italic typeface.
+    Whether to use italic typeface.
     """
 
     decoration: Optional[TextDecoration] = None
@@ -158,8 +158,9 @@ class TextStyle:
     """
     The style in which to paint the text decorations (e.g., dashed).
 
-    Value is of type https://flet.dev/docs/reference/types/textdecorationstyle and
-    defaults to `TextDecorationStyle.SOLID`.
+    Defaults to `TextDecorationStyle.SOLID`.
+    
+    Type: [`TextDecorationStyle`][flet.TextDecorationStyle]
     """
 
     font_family: Optional[str] = None
@@ -179,15 +180,14 @@ class TextStyle:
 
     shadow: Optional[BoxShadowValue] = None
     """
-    The value of this property is a single instance or a list of
-    https://flet.dev/docs/reference/types/boxshadow class instances.
+    Type: [`BoxShadowValue`][flet.BoxShadowValue]
     """
 
     foreground: Optional[Paint] = None
     """
     The paint drawn as a foreground for the text.
 
-    Value is of type https://flet.dev/docs/reference/types/paint.
+    Type: [`Paint`][flet.Paint]
     """
 
     letter_spacing: Optional[Number] = None
@@ -206,7 +206,7 @@ class TextStyle:
     """
     How visual text overflow should be handled.
 
-    Value is of type https://flet.dev/docs/reference/types/textoverflow.
+    Type: [`TextOverflow`][flet.TextOverflow]
     """
 
     baseline: Optional[TextBaseline] = None
@@ -214,7 +214,7 @@ class TextStyle:
     The common baseline that should be aligned between this text span and its parent
     text span, or, for the root text spans, with the line box.
 
-    Value is of type https://flet.dev/docs/reference/types/textbaseline.
+    Type: [`TextBaseline`][flet.TextBaseline]
     """
 
     def copy_with(
@@ -294,8 +294,9 @@ class StrutStyle:
     """
     The typeface thickness to use when calculating the strut.
 
-    Value is of type https://flet.dev/docs/reference/types/fontweight and defaults to
-    `FontWeight.W_400`.
+    Defaults to `FontWeight.W_400`.
+    
+    Type: [`FontWeight`][flet.FontWeight]
     """
 
     italic: bool = False

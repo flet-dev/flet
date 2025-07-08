@@ -40,5 +40,5 @@ class CupertinoBottomSheet(DialogControl):
     """
     The sheet's padding.
 
-    Type: [`Padding`][flet.PaddingValue]
+    Type: [`PaddingValue`][flet.PaddingValue]
     """

@@ -63,27 +63,41 @@ class ProgressRing(ConstrainedControl):
 
     semantics_label: Optional[str] = None
     """
-    The semantics label for this progress indicator.
+    Used to identify the purpose of this progress bar for screen reading software. 
     """
 
     semantics_value: Optional[Number] = None
     """
-    The `Semantics.value` for this progress indicator.
+    Used for determinate progress indicators to indicate how much progress has been made.
     """
 
     track_gap: Optional[Number] = None
     """
-    TBD
+    The gap between the active indicator and the background track.
+    If [`year_2023`][flet.ProgressRing.year_2023] is `False` or `Theme.use_material3` is `False`, 
+    then no track gap will be drawn.
+    Set `track_gap` to `0` to hide this track gap.
+
+    If `None`, [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] is used.
+    If that's is also `None`, defaults to `4.0`.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    TBD
+    Defines the minimum and maximum size of the progress indicator.
+    
+    If `None`, [`ProgressIndicatorTheme.size_constraints`][flet.ProgressIndicatorTheme.size_constraints] is used.
+    If that's is also `None`, defaults to a minimum width and height of `36`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    TBD
+    The padding around the indicator track.
+    
+    If `None`, [`ProgressIndicatorTheme.circular_track_padding`][flet.ProgressIndicatorTheme.circular_track_padding] 
+    is used.
+    If that's is also `None` and [`year_2023`][flet.ProgressRing.year_2023] is `False`, defaults to `Padding.all(4.0)`.
+    Otherwise, defaults to `Padding.all(0.0)`.
     """
 
     year_2023: Optional[bool] = None

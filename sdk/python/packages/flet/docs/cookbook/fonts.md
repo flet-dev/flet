@@ -4,7 +4,7 @@ You can use the (system) fonts installed on your computer, e.g. "Consolas", "Ari
 
 /// admonition | Limitation
     type: note
-System fonts cannot be used in Flet web apps rendered with [canvas kit](/docs/reference/types/webrenderer#canvas_kit).
+System fonts cannot be used in Flet web apps rendered with [canvas kit][flet.WebRenderer.CANVAS_KIT] web renderer.
 ///
 
 ### Usage Example

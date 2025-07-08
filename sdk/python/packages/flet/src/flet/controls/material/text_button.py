@@ -57,7 +57,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     """
     The URL to open when the button is clicked.
 
-    If registered, `on_click` event is fired after that.
+    If registered, [`on_click`][flet.TextButton.on_click] event is fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
@@ -71,8 +71,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`][flet.ClipBehavior]
-    and defaults to `ClipBehavior.NONE`.
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     on_click: Optional[ControlEventHandler["TextButton"]] = None
@@ -89,8 +88,8 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists the button response area.
 
-    `data` property of event object contains `true` (string) when cursor enters and
-    `false` when it exits.
+    `data` property of event object is `True` when cursor enters and
+    `False` when it exits.
     """
 
     on_focus: Optional[ControlEventHandler["TextButton"]] = None

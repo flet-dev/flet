@@ -37,7 +37,7 @@ class DismissDirection(Enum):
 
 @control("SnackBar")
 class SnackBarAction(Control):
-    """A button that can be used as an action in a `SnackBar`."""
+    """A button that can be used as an action in a [`SnackBar`][flet.SnackBar]."""
 
     label: str
     """
@@ -47,7 +47,8 @@ class SnackBarAction(Control):
     text_color: Optional[ColorValue] = None
     """
     The button label color.
-    If not provided, defaults to `SnackBarTheme.action_text_color`.
+    
+    If `None`, [`SnackBarTheme.action_text_color`][flet.SnackBarTheme.action_text_color] is used.
     """
 
     disabled_text_color: Optional[ColorValue] = None
@@ -59,7 +60,8 @@ class SnackBarAction(Control):
     bgcolor: Optional[ColorValue] = None
     """
     The button background fill color.
-    If not provided, defaults to `SnackBarTheme.action_bgcolor`.
+    
+    If `None`, [`SnackBarTheme.action_bgcolor`][flet.SnackBarTheme.action_bgcolor] is used.
     """
 
     disabled_bgcolor: Optional[ColorValue] = None
@@ -67,7 +69,7 @@ class SnackBarAction(Control):
     The button disabled background color.
     This color is shown after the action is dismissed.
 
-    If not provided, defaults to `SnackBarTheme.disabled_action_bgcolor`.
+    If `None`, [`SnackBarTheme.disabled_action_bgcolor`][flet.SnackBarTheme.disabled_action_bgcolor] is used.
     """
 
     on_click: Optional[ControlEventHandler["SnackBarAction"]] = None
@@ -95,28 +97,26 @@ class SnackBar(DialogControl):
     This defines the behavior and location of the snack bar.
 
     Defines where a SnackBar should appear within a page and how its location
-    should be adjusted when the page also includes a `FloatingActionButton` or a
-    `NavigationBar`.
+    should be adjusted when the page also includes a [`FloatingActionButton`][flet.FloatingActionButton] or a
+    [`NavigationBar`][flet.NavigationBar].
 
-    Value is of type
-    [`SnackBarBehavior`][flet.SnackBarBehavior]
-    and defaults to `SnackBarBehavior.FIXED`.
+    If `None`, [`SnackBarTheme.behavior`][flet.SnackBarTheme.behavior] is used.
+    If that's is also `None`, defaults to [`SnackBarBehavior.FIXED`][flet.SnackBarBehavior.FIXED].
 
-    **Note:**
-
-    * If `behavior=SnackBarBehavior.FLOATING`, the length of the bar is defined
-      by either `width` or `margin`, and if both are specified, `width` takes
-      precedence over `margin`.
-    * `width` and `margin` are ignored if `behavior!=SnackBarBehavior.FLOATING`.
+    Note:
+        - If [`behavior`][flet.SnackBar.behavior] is [`SnackBarBehavior.FLOATING`][flet.SnackBarBehavior.FLOATING], 
+          the length of the bar is defined by either [`width`][flet.SnackBar.width] and 
+          [`margin`][flet.SnackBar.margin], and if both are specified, `width` takes precedence over `margin`.
+        - [`width`][flet.SnackBar.width] and [`margin`][flet.SnackBar.margin] 
+          are ignored if `behavior!=SnackBarBehavior.FLOATING`.
     """
 
     dismiss_direction: Optional[DismissDirection] = None
     """
     The direction in which the SnackBar can be dismissed.
 
-    Value is of type
-    [`DismissDirection`][flet.DismissDirection]
-    and defaults to `DismissDirection.DOWN`.
+    If `None`, [`SnackBarTheme.dismiss_direction`][flet.SnackBarTheme.dismiss_direction] is used.
+    If that's is also `None`, defaults to [`DismissDirection.DOWN`][flet.DismissDirection.DOWN].
     """
 
     show_close_icon: bool = False
@@ -138,7 +138,7 @@ class SnackBar(DialogControl):
 
     close_icon_color: Optional[ColorValue] = None
     """
-    An optional color for the close icon, if `show_close_icon=True`.
+    The color of the close icon, if [`show_close_icon`][flet.SnackBar.show_close_icon] is `True`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -148,10 +148,7 @@ class SnackBar(DialogControl):
 
     duration: DurationValue = field(default_factory=lambda: Duration(milliseconds=4000))
     """
-    The number of *milliseconds* that the SnackBar stays open for.
-
-    Defaults to `4000`
-    ([4 seconds](https://api.flutter.dev/flutter/material/SnackBar/duration.html)).
+    The amount of time this snack bar should stay open for.
     """
 
     margin: Optional[MarginValue] = None
@@ -165,9 +162,6 @@ class SnackBar(DialogControl):
     padding: Optional[PaddingValue] = None
     """
     The amount of padding to apply to the snack bar's content and optional action.
-
-    Value is of type
-    [`Padding`][flet.Padding] or a number.
     """
 
     width: Optional[Number] = None
@@ -177,8 +171,9 @@ class SnackBar(DialogControl):
     If width is specified, the snack bar will be centered horizontally in the
     available space.
 
-    Has effect only when `behavior=SnackBarBehavior.FLOATING`. It can not be used
-    if `margin` is specified.
+    Note:
+        Has effect only when [`behavior`][flet.SnackBar.behavior] is [`SnackBarBehavior.FLOATING`][flet.SnackBarBehavior.FLOATING]. 
+        It can not be used if `margin` is specified.
     """
 
     elevation: Optional[Number] = None
@@ -189,33 +184,29 @@ class SnackBar(DialogControl):
 
     shape: Optional[OutlinedBorder] = None
     """
-    The shape of the snack bar's.
+    The shape of this snack bar.
 
-    Value is of type
-    [`OutlinedBorder`][flet.OutlinedBorder]
+    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    The `content` will be clipped (or not) according to this option.
-
-    Value is of type
-    [`ClipBehavior`][flet.ClipBehavior] and
-    defaults to `ClipBehavior.HARD_EDGE`.
+    The [`content`][flet.SnackBar.content] will be clipped (or not) according to this option.
     """
 
     action_overflow_threshold: Number = 0.25
     """
-    The percentage (between `0.0` and `1.0`) threshold for `action`'s width before
+    The percentage threshold for [`action`][flet.SnackBar.action]'s width before
     it overflows to a new line.
 
-    If the width of the snackbar's `content` is greater than this percentage of the
+    If the width of the snackbar's [`content`][flet.SnackBar.content] is greater than this percentage of the
     width of the snackbar minus the width of its `action`, then the `action` will
     appear below the `content`.
 
     At a value of `0.0`, the `action` will not overflow to a new line.
-
-    Defaults to `0.25`.
+    
+    Note:
+        Must be between `0.0` and `1.0` inclusive.
     """
 
     on_action: Optional[ControlEventHandler["SnackBar"]] = None
@@ -225,7 +216,7 @@ class SnackBar(DialogControl):
 
     on_visible: Optional[ControlEventHandler["SnackBar"]] = None
     """
-    Fires the first time that the snackbar is visible within the page.
+    Called the first time that the snackbar is visible within the page.
     """
 
     def before_update(self):

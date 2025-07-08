@@ -33,7 +33,7 @@ ft.run(main)
 /// caption
 ///
 
-See example of using styled controls in [Calculator App tutorial](/docs/tutorials/python-calculator#styled-controls).
+See example of using styled controls in [Calculator App tutorial](../tutorials/calculator.md#styled-controls).
 
 ### Handling events
 

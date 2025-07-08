@@ -39,7 +39,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     Allows to decorate a control with background color and border and
     position it with padding, margin and alignment.
 
-    ![diagram]("https://flet.dev/img/docs/controls/container/container-diagram.png")
+    ![diagram](https://flet.dev/img/docs/controls/container/container-diagram.png)
     /// caption
     ///
     """
@@ -54,7 +54,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     Empty space to inscribe inside a container decoration (background, border). The
     child control is placed inside this padding.
 
-    Type: [`Padding`][flet.Padding]
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     margin: Optional[MarginValue] = None

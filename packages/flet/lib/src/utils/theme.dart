@@ -1043,7 +1043,7 @@ TooltipThemeData? parseTooltipTheme(
 
   return theme.tooltipTheme.copyWith(
     enableFeedback: parseBool(value["enable_feedback"]),
-    height: parseDouble(value["height"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
     excludeFromSemantics: parseBool(value["exclude_from_semantics"]),
     textStyle: parseTextStyle(value["text_style"], theme),
     preferBelow: parseBool(value["prefer_below"]),

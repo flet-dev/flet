@@ -54,8 +54,8 @@ class CupertinoAppBar(Control):
 
     automatically_imply_leading: Optional[bool] = None
     """
-    Whether we should try to imply the [`leading´][flet.CupertinoAppBar.leading]
-    control if `None´.
+    Whether we should try to imply the [`leading`][flet.CupertinoAppBar.leading]
+    control if `None`.
 
     - If `True` and `leading` is `None`, the app bar will automatically determine an appropriate leading control.
     - If `False` and `leading` is `None`, the space is allocated to the `title`.
@@ -82,9 +82,6 @@ class CupertinoAppBar(Control):
     padding: Optional[PaddingValue] = None
     """
     Defines the padding for the contents of the app bar.
-
-    Padding is an instance of
-    [`Padding`][flet.Padding] class.
 
     If `None`, the app bar will adopt the following defaults:
 

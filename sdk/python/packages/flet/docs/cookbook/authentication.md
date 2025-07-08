@@ -147,7 +147,7 @@ page.login(
 * `fetch_user` (bool) - whether to fetch user details into `page.auth.user`. Default is `True`.
 * `fetch_groups` (bool) - whether to fetch user groups into `page.auth.user.groups`. Default is `False`.
 * `scope` - a list of scopes to request.
-* `saved_token` - a JSON snapshot of `page.auth.token` to restore authorization from. Token can be serialized with `page.auth.token.to_json()`, encrypted and saved in [`page.client_storage`](/docs/cookbook/client-storage). See below.
+* `saved_token` - a JSON snapshot of `page.auth.token` to restore authorization from. Token can be serialized with `page.auth.token.to_json()`, encrypted and saved in [`page.client_storage`](../cookbook/client-storage.md). See below.
 * `on_open_authorization_url` - a callback to open a browser with authorization URL. See below.
 * `complete_page_html` - a custom HTML contents of "You've been successfully authenticated. Close this page now" page.
 * `redirect_to_page` (bool) - used with Flet web app only when authorization page is opened in the same browser tab.
@@ -286,7 +286,7 @@ access_token = token.access_token # token could expire by this moment
 
 ## Saving and restoring an auth token
 
-To implement persistent login ("Remember me" checkbox on login page) you can save auth token in a [client storage](/docs/cookbook/client-storage) and use it to login next time a user opens your Flet app.
+To implement persistent login ("Remember me" checkbox on login page) you can save auth token in a [client storage](../cookbook/client-storage.md) and use it to login next time a user opens your Flet app.
 
 To serialize auth token to JSON:
 

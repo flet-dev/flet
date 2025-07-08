@@ -46,9 +46,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     [`resize_duration`][(c).].
 
     Raises:
-        AssertionError: If the [`content`][(c.)] is not visible.
-        AssertionError: If the [`secondary_background`][(c.)] is specified but the
-        [`background`][(c.)] is not specified/visible.
+        AssertionError: If the [`content`][(c).] is not visible.
+        AssertionError: If the [`secondary_background`][(c).] is specified but the
+        [`background`][(c).] is not specified/visible.
     """
 
     content: Control

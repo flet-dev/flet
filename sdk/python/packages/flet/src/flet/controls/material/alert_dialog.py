@@ -25,7 +25,7 @@ class AlertDialog(DialogControl):
     Can be used to inform the user about situations that require acknowledgement.
 
     It has an optional [`title`][(c).] and an optional list of [`actions`][(c).] . The `title` is
-    displayed above the [`content`][(c).] and the `actions` are displayed below the `content´.
+    displayed above the [`content`][(c).] and the `actions` are displayed below the `content`.
 
     Raises:
         AssertionError: If none of [`title`][(c).], [`content`][(c).], or [`actions`][(c).]

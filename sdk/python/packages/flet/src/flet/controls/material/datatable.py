@@ -273,7 +273,7 @@ class DataTable(ConstrainedControl):
 
     Raises:
         AssertionError: If there are no visible [`columns`][(c).].
-        AssertionError: If any visible row does not contain exactly as many visible [`cells`][(c).] as there are visible [`columns`][(c).].
+        AssertionError: If any visible row does not contain exactly as many visible [`cells`][flet.DataRow.cells] as there are visible [`columns`][(c).].
         AssertionError: If [`data_row_min_height`][(c).] is greater than [`data_row_max_height`][(c).].
         AssertionError: If [`divider_thickness`][(c).] is negative.
         AssertionError: If [`sort_column_index`][(c).] is out of range.

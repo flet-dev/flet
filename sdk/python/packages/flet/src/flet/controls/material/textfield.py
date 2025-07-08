@@ -393,7 +393,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
     """
     Helps the autofill service identify the type of this text input. Value can either
-    be a single [`AutoFillHint`][flet.AutoFillHint]
+    be a single [`AutofillHint`][flet.AutofillHint]
     enum item or a list of them.
 
     More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).

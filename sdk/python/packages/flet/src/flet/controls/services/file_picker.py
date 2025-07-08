@@ -18,8 +18,7 @@ __all__ = [
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the
-    [FilePicker](https://flet.dev/docs/controls/filepicker).
+    Defines the file types that can be selected using the [`FilePicker`][flet.FilePicker].
     """
 
     ANY = "any"
@@ -29,7 +28,7 @@ class FilePickerFileType(Enum):
 
     MEDIA = "media"
     """
-    A combination of `VIDEO` and `IMAGE`.
+    A combination of [`VIDEO`][flet.FilePickerFileType.VIDEO] and [`IMAGE`][flet.FilePickerFileType.IMAGE].
     """
 
     IMAGE = "image"
@@ -49,8 +48,7 @@ class FilePickerFileType(Enum):
 
     CUSTOM = "custom"
     """
-    Allows only the custom file types specified in the
-    [allowed_extensions](https://flet.dev/docs/controls/filepicker) list.
+    Allows only the custom file types specified in the `allowed_extensions` list.
     """
 
 
@@ -125,21 +123,19 @@ class FilePicker(Service):
     """
     Called when a file upload progress is updated.
 
-    Event object is an instance of
-    [FilePickerUploadEvent](https://flet.dev/docs/reference/types/filepickeruploadevent).
+    Event Type: [`FilePickerUploadEvent`][flet.FilePickerUploadEvent]
     """
 
     async def upload_async(self, files: list[FilePickerUploadFile]):
         """
         Uploads selected files to specified upload URLs.
 
-        Before calling `upload()` [pick_files()](https://flet.dev/docs/controls/filepicker#pick_files)
+        Before calling this method, [`pick_files()`][flet.FilePicker.pick_files]
         must be called, so the internal file picker selection is not empty.
 
-        Method arguments:
-        - `files` - a list of
-        [FilePickerUploadFile](https://flet.dev/docs/reference/types/filepickeruploadfile).
-        Each item specifies which file to upload, and where (with PUT or POST).
+        Args:
+            files: A list of [`FilePickerUploadFile`][flet.FilePickerUploadFile].
+                Each item specifies which file to upload, and where (with PUT or POST).
         """
         await self._invoke_method_async(
             "upload",
@@ -150,12 +146,11 @@ class FilePicker(Service):
         """
         Uploads selected files to specified upload URLs.
 
-        Before calling `upload()` [pick_files()](https://flet.dev/docs/controls/filepicker#pick_files)
+        Before calling `upload()` [pick_files()][flet.FilePicker.pick_files]
         must be called, so the internal file picker selection is not empty.
 
         Method arguments:
-        - `files` - a list of
-        [FilePickerUploadFile](https://flet.dev/docs/reference/types/filepickeruploadfile).
+        - `files` - a list of [`FilePickerUploadFile`][FilePickerUploadFile].
         Each item specifies which file to upload, and where (with PUT or POST).
         """
         asyncio.create_task(self.upload_async(files))
@@ -218,7 +213,7 @@ class FilePicker(Service):
 
             You can instead provides an API endpoint `/download/:filename` that returns the
             file content, and then use
-            [`page.launch_url`](/docs/controls/page#launch_urlurl) to open the url, which
+            [`page.launch_url`][flet.Page.launch_url] to open the url, which
             will trigger the browser's save file dialog.
 
             Take [FastAPI](https://flet.dev/docs/publish/web/dynamic-website#advanced-fastapi-scenarios)

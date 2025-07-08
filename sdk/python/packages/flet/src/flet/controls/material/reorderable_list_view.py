@@ -70,7 +70,7 @@ class ReorderableListView(ListView):
     """
     The amount of space by which to inset the `controls`.
 
-    Type: [`Padding`][flet.Padding]
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE

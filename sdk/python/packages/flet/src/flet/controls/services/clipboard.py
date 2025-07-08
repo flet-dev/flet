@@ -18,22 +18,28 @@ class Clipboard(Service):
 
     async def set_async(self, value: str, timeout: Optional[Number] = None) -> None:
         """
-        Set clipboard data on a client side (user's web browser or a desktop), for
-        example:
+        Set clipboard data on a client side (user's web browser or a desktop).
+
+        /// details | Example
+            type: example
 
         ```python
         Example - TBD
         ```
+        ///
         """
         await self._invoke_method_async("set", {"data": value}, timeout=timeout)
 
     async def get_async(self, timeout: Optional[Number] = None) -> Optional[str]:
         """
-        Set clipboard data on a client side (user's web browser or a desktop), for
-        example:
+        Set clipboard data on a client side (user's web browser or a desktop).
+
+        /// details | Example
+            type: example
 
         ```python
         Example - TBD
         ```
+        ///
         """
         return await self._invoke_method_async("get", timeout=timeout)

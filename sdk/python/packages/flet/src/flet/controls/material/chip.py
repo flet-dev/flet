@@ -132,8 +132,8 @@ class Chip(ConstrainedControl):
     """
     The padding around the [`label`][flet.Chip.label].
 
-    By default, this is `4` logical pixels at the beginning and the end of the `label`, and
-    zero on `top` and `bottom`.
+    By default, this is `4` logical pixels at the beginning and the end of 
+    the [`label`][flet.Chip.label], and zero on `top` and `bottom`.
     """
 
     label_text_style: Optional[TextStyle] = None
@@ -234,7 +234,7 @@ class Chip(ConstrainedControl):
 
     leading_drawer_animation_style: Optional[AnimationStyle] = None
     """
-    The animation style for the [`leading`][flet.Chip.leading]csx control's animations.
+    The animation style for the [`leading`][flet.Chip.leading] control's animations.
 
     Type: [`AnimationStyle`][flet.AnimationStyle]
     """

@@ -271,7 +271,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 
 While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform 
 
-automatically using their [`adaptive`](/docs/controls#adaptive) property, there will be cases when you need more specific adaptive UI 
+automatically using their [`adaptive`][flet.Control.adaptive] property, there will be cases when you need more specific adaptive UI 
 presentation, for example, using different icon, background color, padding etc. depending on the platform.
 
 With Flet, you can create your own reusable custom controls in Python that will inherit from a Flet control 

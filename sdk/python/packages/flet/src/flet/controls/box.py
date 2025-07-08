@@ -32,8 +32,7 @@ __all__ = [
 @dataclass
 class ColorFilter:
     """
-    Defines a color filter that can be used with
-    [`Container.color_filter`](https://flet.dev/docs/controls/container#color_filter).
+    Defines a color filter.
     """
 
     color: Optional[ColorValue] = None
@@ -169,7 +168,7 @@ class DecorationImage:
     """
     How the image should be inscribed into the box.
 
-    Value is of type [`BoxFit`](https://flet.dev/docs/reference/types/imagefit).
+    Type: [`BoxFit`][flet.BoxFit]
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.center())
@@ -234,14 +233,17 @@ class BoxDecoration:
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the background `color` or `gradient`.
+    An image to paint above the background [`bgcolor`][flet.BoxDecoration.bgcolor] 
+    or [`gradient`][flet.BoxDecoration.gradient].
 
     Type: [`DecorationImage`][flet.DecorationImage]
     """
 
     border: Optional[Border] = None
     """
-    A border to draw above the background `color`, `gradient`, or `image`.
+    A border to draw above the background 
+    [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient], 
+    and [`image`][flet.BoxDecoration.image].
 
     Type: [`Border`][flet.Border]
     """
@@ -253,11 +255,11 @@ class BoxDecoration:
     Type: [`BorderRadius`][flet.BorderRadius]
     """
 
-    shadow: Optional[BoxShadowValue] = None
+    shadows: Optional[BoxShadowValue] = None
     """
     A list of shadows cast by the box.
 
-    Value is of type [`List[BoxShadow]`](https://flet.dev/docs/reference/types/boxshadow).
+    Type: [`BoxShadowValue`][flet.BoxShadowValue]
     """
 
     gradient: Optional[Gradient] = None
@@ -267,13 +269,14 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the `bgcolor`, `gradient`, and `image` into and to cast as the
-    `shadow`.
+    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient], 
+    and [`image`][flet.BoxDecoration.image] into and to cast as the [`shadows`][flet.BoxDecoration.shadows].
     """
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode to apply to the background `color` or `gradient`.
+    The blend mode to apply to the background [`bgcolor`][flet.BoxDecoration.bgcolor] 
+    or [`gradient`][flet.BoxDecoration.gradient].
 
     Type: [`BlendMode`][flet.BlendMode]
     """
@@ -297,7 +300,7 @@ class BoxDecoration:
         image: Optional[DecorationImage] = None,
         border: Optional[Border] = None,
         border_radius: Optional[BorderRadiusValue] = None,
-        shadow: Optional[BoxShadowValue] = None,
+        shadows: Optional[BoxShadowValue] = None,
         gradient: Optional[Gradient] = None,
         shape: Optional[BoxShape] = None,
         blend_mode: Optional[BlendMode] = None,
@@ -309,7 +312,7 @@ class BoxDecoration:
             border_radius=border_radius
             if border_radius is not None
             else self.border_radius,
-            shadow=shadow if shadow is not None else self.shadow,
+            shadows=shadows if shadows is not None else self.shadows,
             gradient=gradient if gradient is not None else self.gradient,
             shape=shape if shape is not None else self.shape,
             blend_mode=blend_mode if blend_mode is not None else self.blend_mode,
@@ -335,7 +338,7 @@ class BoxConstraints:
     The minimum width that satisfies the constraints, such that
     `0.0 <= min_width <= max_width`.
 
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number).
+    Type: [`Number`][flet.Number]
     """
 
     min_height: Number = 0
@@ -343,7 +346,7 @@ class BoxConstraints:
     The minimum height that satisfies the constraints, such that
     `0.0 <= min_height <= max_height`.
 
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number).
+    Type: [`Number`][flet.Number]
     """
 
     max_width: Number = float("inf")
@@ -351,8 +354,7 @@ class BoxConstraints:
     The maximum width that satisfies the constraints, such that
     `min_width <= max_width <= float("inf")`.
 
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to infinity.
+    Type: [`Number`][flet.Number]
     """
 
     max_height: Number = float("inf")
@@ -360,8 +362,7 @@ class BoxConstraints:
     The maximum height that satisfies the constraints, such that
     `min_height <= max_height <= float("inf")`.
 
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to infinity.
+    Type: [`Number`][flet.Number]
     """
 
     def __post_init__(self):

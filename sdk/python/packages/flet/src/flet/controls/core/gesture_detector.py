@@ -30,7 +30,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     Attempts to recognize gestures that correspond to its non-None callbacks.
 
-    If this control has a [`content´][(c).], it defers to that child control for its sizing
+    If this control has a [`content`][(c).], it defers to that child control for its sizing
     behavior, else it grows to fit the parent instead.
     """
 

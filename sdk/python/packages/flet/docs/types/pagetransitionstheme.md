@@ -1,1 +1,1 @@
-::: flet.PageTransitionTheme
+::: flet.PageTransitionsTheme

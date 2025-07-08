@@ -121,8 +121,9 @@ class PaintRadialGradient(PaintGradient):
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and
-    after `end`. The value is of type
-    https://flet.dev/docs/reference/types/gradienttilemode.
+    after `end`. 
+    
+    Type: [`GradientTileMode`][flet.GradientTileMode]
     """
 
     focal: Optional[OffsetValue] = None
@@ -178,8 +179,9 @@ class PaintSweepGradient(PaintGradient):
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and
-    after `end`. The value is of type
-    https://flet.dev/docs/reference/types/gradienttilemode.
+    after `end`.
+    
+    Type: [`GradientTileMode`][flet.GradientTileMode]
     """
 
     start_angle: Number = 0.0
@@ -220,15 +222,16 @@ class Paint:
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
 
-    Value is of type https://flet.dev/docs/reference/types/blendmode and defaults to
-    `BlendMode.SRC_OVER`.
+    Defaults to `BlendMode.SRC_OVER`.
+    
+    Type: [`BlendMode`][flet.BlendMode]
     """
 
     blur_image: Optional[BlurValue] = None
     """
     Blur image when drawing it on a canvas.
 
-    See https://flet.dev/docs/controls/container#blur for more information.
+    Type: [`BlurValue`][flet.BlurValue]
     """
 
     anti_alias: Optional[bool] = None
@@ -242,9 +245,9 @@ class Paint:
     """
     Configures gradient paint. Value is an instance of one of the following classes:
 
-    * https://flet.dev/docs/reference/types/paintlineargradient
-    * https://flet.dev/docs/reference/types/paintradialgradient
-    * https://flet.dev/docs/reference/types/paintsweepgradient
+    * [`PaintLinearGradient`][flet.PaintLinearGradient]
+    * [`PaintRadialGradient`][flet.PaintRadialGradient]
+    * [`PaintSweepGradient`][flet.PaintSweepGradient]
     """
 
     stroke_cap: Optional[StrokeCap] = None

@@ -588,7 +588,7 @@ class AppBarTheme:
 
 @dataclass
 class BottomAppBarTheme:
-    color: Optional[ColorValue] = None
+    bgcolor: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
     surface_tint_color: Optional[ColorValue] = None
     elevation: Optional[Number] = None
@@ -784,7 +784,6 @@ class ListTileTheme:
 
 @dataclass
 class TooltipTheme:
-    height: Optional[Number] = None
     text_style: Optional[TextStyle] = None
     enable_feedback: Optional[bool] = None
     exclude_from_semantics: Optional[bool] = None
@@ -798,6 +797,7 @@ class TooltipTheme:
     trigger_mode: Optional[TooltipTriggerMode] = None
     decoration: Optional[BoxDecoration] = None
     text_align: Optional[TextAlign] = None
+    size_constraints: Optional[BoxConstraints] = None
 
 
 @dataclass

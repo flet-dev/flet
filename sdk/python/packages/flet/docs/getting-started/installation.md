@@ -18,8 +18,6 @@ Flet supports 64-bit version of Microsoft Windows 10 or later.
 
 Flet supports Debian Linux 11 or later and Ubuntu Linux 20.04 LTS or later.
 
-There are additional [prerequisites](/docs/publish/linux#prerequisites) when developing and running Flet apps on Linux.
-
 /// details | Windows Subsystem for Linux (WSL)
     type: note
 

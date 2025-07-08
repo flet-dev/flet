@@ -42,7 +42,8 @@ class CupertinoNavigationBar(ConstrainedControl):
     selected [`NavigationBarDestination`][flet.NavigationBarDestination].
 
     Note:
-        Must be a value between 0 and the length of visible [`destinations`][(c).], inclusive.
+        Must be a value between `0` and the length of visible 
+        [`destinations`][flet.CupertinoNavigationBar.destinations], inclusive.
     """
 
     bgcolor: Optional[ColorValue] = None

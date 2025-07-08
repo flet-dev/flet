@@ -4,7 +4,7 @@ from typing import Optional, Union
 from flet.controls.border_radius import (
     BorderRadius,
 )
-from flet.controls.box import BoxDecoration
+from flet.controls.box import BoxDecoration, BoxConstraints
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.margin import MarginValue
 from flet.controls.padding import PaddingValue
@@ -60,30 +60,34 @@ class Tooltip:
     will produce a short vibration, when feedback is enabled.
     """
 
-    height: Optional[Number] = None
-    """
-    The height of the tooltip's content.
-    """
-
     vertical_offset: Optional[Number] = None
     """
     The vertical gap between the control and the displayed tooltip.
+    
+    When [`prefer_below`][flet.Tooltip.prefer_below] is set to `True` 
+    and tooltips have sufficient space to
+    display themselves, this property defines how much vertical space
+    tooltips will position themselves under their corresponding controls.
+    Otherwise, tooltips will position themselves above their corresponding
+    controls with the given offset.
     """
 
     margin: Optional[MarginValue] = None
     """
     The empty space that surrounds the tooltip.
+    
+    If `None`, [`TooltipTheme.margin`][flet.TooltipTheme.margin] is used.
+    If that's is also `None`, defaults to `Margin.all(0.0)`.
     """
 
     padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the tooltip's content.
 
-    The value is an instance of
-    [`Padding`][flet.Padding] class or a number.
-
-    On mobile, defaults to `16.0` logical pixels horizontally and `4.0` vertically.
-    On desktop, defaults to `8.0` logical pixels horizontally and `4.0` vertically.
+    It has the following default values based on the current platform:
+    
+    - On mobile platforms: `Padding.symmetric(horizontal=16.0, vertical=4.0)`
+    - On desktop platforms: `Padding.symmetric(horizontal=8.0, vertical=4.0)`
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -101,8 +105,8 @@ class Tooltip:
     """
     How the message of the tooltip is aligned horizontally.
 
-    Value is of type [`TextAlign`][flet.TextAlign]
-    and defaults to `TextAlign.LEFT`.
+    If `None`, [`TooltipTheme.text_align`][flet.TooltipTheme.text_align] is used.
+    If that's is also `None`, defaults to [`TextAlign.START`][flet.TextAlign.START].
     """
 
     prefer_below: Optional[bool] = None
@@ -112,51 +116,72 @@ class Tooltip:
     If there is insufficient space to display the tooltip in the preferred
     direction, the tooltip will be displayed in the opposite direction.
 
-    Defaults to `True`.
+    If `None`, [`TooltipTheme.prefer_below`][flet.TooltipTheme.prefer_below] is used.
+    If that's is also `None`, defaults to `True`.
     """
 
     show_duration: Optional[DurationValue] = None
     """
-    The length of time, in milliseconds, that the tooltip will be shown after a
-    long press is released or a tap is released or mouse pointer exits the control.
+    The length of time that the tooltip will be shown after a long press is released 
+    (if triggerMode is [`TooltipTriggerMode.LONG_PRESS`][flet.TooltipTriggerMode.LONG_PRESS]) or a tap is released 
+    (if triggerMode is [`TooltipTriggerMode.TAP`][flet.TooltipTriggerMode.TAP]). 
+    This property does not affect mouse pointer devices.
+    
+    If `None`, [`TooltipTheme.show_duration`][flet.TooltipTheme.show_duration] is used.
+    If that's is also `None`, defaults to `1.5` seconds for long press and tap released
     """
 
-    wait_duration: DurationValue = field(
-        default_factory=lambda: Duration(milliseconds=800)
-    )
+    wait_duration: Optional[DurationValue] = None
     """
     The length of time, in milliseconds, that a pointer must hover over a
     tooltip's control before the tooltip will be shown.
-
-    Defaults to 800 milliseconds.
+    
+    If `None`, [`TooltipTheme.wait_duration`][flet.TooltipTheme.wait_duration] is used.
+    If that's is also `None`, defaults to `100` milliseconds.
     """
 
     exit_duration: Optional[DurationValue] = None
     """
-    The length of time, in milliseconds, that the tooltip will be shown after a
+    The length of time that the tooltip will be shown after a
     long press is released or a tap is released or mouse pointer exits the control.
+    
+    If `None`, [`TooltipTheme.exit_duration`][flet.TooltipTheme.exit_duration] is used.
+    If that's is also `None`, defaults to 0 milliseconds - no delay.
     """
 
-    enable_tap_to_dismiss: bool = True
+    tap_to_dismiss: bool = True
     """
     Whether the tooltip can be dismissed by tapping on it.
     """
 
-    exclude_from_semantics: Optional[bool] = None
+    exclude_from_semantics: Optional[bool] = False
     """
     Whether the tooltip's message should be excluded from the semantics tree.
-
-    Defaults to `False`.
     """
 
     trigger_mode: Optional[TooltipTriggerMode] = None
     """
     The mode of the tooltip's trigger.
+    
+    If `None`, [`TooltipTheme.trigger_mode`][flet.TooltipTheme.trigger_mode] is used.
+    If that's is also `None`, defaults to 
+    [`TooltipTriggerMode.LONG_PRESS`][flet.TooltipTriggerMode.LONG_PRESS].
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor for a mouse pointer when it enters or is hovering over the content.
+    """
+
+    size_constraints: Optional[BoxConstraints] = None
+    """
+    Defines the constraints on the size of this tooltip.
+    
+    If `None`, [`TooltipTheme.size_constraints`][flet.TooltipTheme.size_constraints] is used.
+    If that's is also `None`, then a default value will be picked based on the current platform:
+    
+    - on desktop platforms: `BoxConstraints(min_height=24.0)`
+    - on mobile platforms: `BoxConstraints(min_height=32.0)`
     """
 
 

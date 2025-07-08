@@ -57,8 +57,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`][flet.ClipBehavior]
-    and defaults to `ClipBehavior.NONE`.
+    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     url: Optional[str] = None

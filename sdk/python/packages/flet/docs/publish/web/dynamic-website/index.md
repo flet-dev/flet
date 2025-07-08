@@ -390,7 +390,7 @@ async def flet_uploads(request: Request):
 
 #### OAuth callback handler
 
-Handles OAuth flow callback requests. If your app doesn't use [authentication](/docs/cookbook/authentication) then
+Handles OAuth flow callback requests. If your app doesn't use [authentication](../../../cookbook/authentication.md) then
 this endpoint is not needed.
 
 ```python

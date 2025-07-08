@@ -171,8 +171,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Defines the padding around this button. The entire padded icon will react to input
     gestures.
 
-    Type: [`Padding`][flet.Padding] and
-    defaults to `Padding.all(8)`.
+    Defaults to `Padding.all(8)`.
+    
+    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     enable_feedback: Optional[bool] = None

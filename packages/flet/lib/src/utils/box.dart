@@ -69,7 +69,7 @@ BoxDecoration? parseBoxDecoration(dynamic value, BuildContext context,
     shape: shape,
     borderRadius: shape == BoxShape.circle ? null : borderRadius,
     backgroundBlendMode: color != null || gradient != null ? blendMode : null,
-    boxShadow: parseBoxShadows(value["shadow"], theme),
+    boxShadow: parseBoxShadows(value["shadows"], theme),
     gradient: gradient,
     image: parseDecorationImage(value["image"], context),
   );

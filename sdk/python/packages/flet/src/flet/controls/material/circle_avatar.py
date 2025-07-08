@@ -77,7 +77,7 @@ class CircleAvatar(ConstrainedControl):
     min_radius: Optional[Number] = None
     """
     The minimum size of the avatar, expressed as the radius (half the diameter). If
-    `min_radius` is specified, then [`radius`][flet.CircleAvatar.radius] must not also be specified. 
+    `min_radius` is specified, then [`radius`][flet.CircleAvatar.radius] should not be specified.
     
     Defaults to `0.0`.
     """
@@ -86,7 +86,7 @@ class CircleAvatar(ConstrainedControl):
     """
     The maximum size of the avatar, expressed as the radius (half the diameter). 
     
-    If maxRadius is specified, then [`radius`][flet.CircleAvatar.radius] must not also be specified. 
+    If `max_radius` is specified, then [`radius`][flet.CircleAvatar.radius] should not be specified. 
     
     Defaults to "infinity".
     """

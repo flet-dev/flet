@@ -119,7 +119,7 @@ class View(ScrollableControl, ConstrainedControl):
 
     vertical_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls´][flet.View.controls] should be placed vertically.
+    Defines how the child [`controls`][flet.View.controls] should be placed vertically.
 
     Type: [`MainAxisAlignment`][flet.MainAxisAlignment]
     """

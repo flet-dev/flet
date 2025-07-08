@@ -10,7 +10,7 @@ __all__ = ["BrowserContextMenu"]
 @control("BrowserContextMenu")
 class BrowserContextMenu(Service):
     def __post_init__(self, ref):
-        Service.__post_init__(self, ref)
+        super().__post_init__(ref)
         self.__disabled = False
 
     async def enable_async(self, timeout: Optional[float] = None):
