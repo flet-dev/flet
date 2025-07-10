@@ -33,18 +33,16 @@ class CupertinoSwitch(ConstrainedControl):
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     The position of the label relative to the switch.
-
-    Type: [`LabelPosition`][flet.LabelPosition]
     """
 
     thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of this switch's thumb.
+    The color of this switch's thumb.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the focus highlight
+    The color to use for the focus highlight
     for keyboard interactions.
     """
 
@@ -58,13 +56,13 @@ class CupertinoSwitch(ConstrainedControl):
 
     on_label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the accessibility
+    The color to use for the accessibility
     label when the switch is on.
     """
 
     off_label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the accessibility
+    The color to use for the accessibility
     label when the switch is off.
     """
 
@@ -84,13 +82,13 @@ class CupertinoSwitch(ConstrainedControl):
 
     active_track_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the track when this
+    The color to use on the track when this
     switch is on.
     """
 
     inactive_thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the thumb when this
+    The color to use on the thumb when this
     switch is off.
 
     If `None`, defaults to [`thumb_color`][flet.CupertinoSwitch.thumb_color], and if this is also `None`,
@@ -99,13 +97,13 @@ class CupertinoSwitch(ConstrainedControl):
 
     inactive_track_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the track when this
+    The color to use on the track when this
     switch is off.
     """
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline [color](https://flet.dev/docs/reference/colors) of this switch's track
+    The outline color of this switch's track
     in various [`ControlState`][flet.ControlState]s.
 
     Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],

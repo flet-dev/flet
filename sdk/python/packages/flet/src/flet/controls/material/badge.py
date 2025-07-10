@@ -37,8 +37,6 @@ class Badge(BaseControl):
     [`label`][flet.Badge.label] relative to the content.
 
     Has effect only used if `label` is also provided.
-
-    Type: [`OffsetValue`][flet.OffsetValue]
     """
 
     alignment: Optional[Alignment] = None
@@ -56,13 +54,11 @@ class Badge(BaseControl):
         ```python
         badge.alignment = ft.Alignment.top_left()
         ```
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the [`label`][flet.Badge.label].
+    The background color of the [`label`][flet.Badge.label].
     """
 
     label_visible: bool = True
@@ -91,8 +87,6 @@ class Badge(BaseControl):
 
     Defaults to [`BadgeTheme.padding`][flet.BadgeTheme.padding], or if that is `None`,
     falls back to `4` pixels on the left and right.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     small_size: Optional[Number] = None
@@ -105,15 +99,13 @@ class Badge(BaseControl):
 
     text_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the text shown in the label.
+    The color of the text shown in the label.
     This color overrides the color of the [`label`][flet.Badge.label]'s `text_style`.
     """
 
     text_style: Optional[TextStyle] = None
     """
     The text style to use for text in the [`label`][flet.Badge.label].
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
 

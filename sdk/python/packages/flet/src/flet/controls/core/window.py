@@ -61,7 +61,7 @@ class Window(BaseControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets background [color](https://flet.dev/docs/reference/colors) of an application window.
+    Sets background color of an application window.
 
     Tip:
         Can be used together with [`Page.bgcolor`][flet.Page.bgcolor] to make a window transparent.
@@ -239,8 +239,6 @@ class Window(BaseControl):
     alignment: Optional[Alignment] = None
     """
     Defines the alignment of the app window.
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     badge_label: Optional[str] = None
@@ -271,8 +269,6 @@ class Window(BaseControl):
     """
     Called when app window changes its state.
     For example, when the window is maximized or minimized.
-
-    Event Type: [`WindowEvent`][flet.WindowEvent]
     """
 
     def __post_init__(self, ref) -> None:

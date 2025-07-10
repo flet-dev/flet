@@ -41,15 +41,11 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed horizontally.
-
-    Type: [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
     Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed vertically.
-
-    Type: [`CrossAxisAlignment`][flet.CrossAxisAlignment]
     """
 
     spacing: ResponsiveNumber = 10

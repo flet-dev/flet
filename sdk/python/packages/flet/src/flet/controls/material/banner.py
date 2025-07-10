@@ -61,8 +61,6 @@ class Banner(DialogControl):
 
     Defaults to [`BannerTheme.leading_padding`][flet.BannerTheme.leading_padding], or if that is `None`,
     falls back to `Padding.only(end=16)`.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     content_padding: Optional[PaddingValue] = None
@@ -74,8 +72,6 @@ class Banner(DialogControl):
 
     If the actions are trailing the `content`, this defaults to
     `Padding.only(left=16.0, top=2.0)`.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     force_actions_below: bool = False
@@ -90,23 +86,23 @@ class Banner(DialogControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the surface of this banner.
+    The color of the surface of this banner.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on [`bgcolor`][flet.Banner.bgcolor]
+    The color used as an overlay on [`bgcolor`][flet.Banner.bgcolor]
     to indicate elevation.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below this banner.
+    The color of the shadow below this banner.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the divider.
+    The color of the divider.
     """
 
     elevation: Optional[Number] = None
@@ -117,15 +113,11 @@ class Banner(DialogControl):
     margin: Optional[MarginValue] = None
     """
     The amount of space surrounding this banner.
-
-    Type: [`MarginValue`][flet.MarginValue]
     """
 
     content_text_style: Optional[TextStyle] = None
     """
     The style to be used for the [`Text`][flet.Text] controls in the [`content`][flet.Banner.content].
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     min_action_bar_height: Number = 52.0

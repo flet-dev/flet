@@ -92,25 +92,22 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     The tile's internal padding. It insets the contents of this tile.
     : its `leading`, `title`,
     `subtitle`, and `trailing` controls.
-
-
-    Type: [`PaddingValue`][flet.PaddingValue] and
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The list tile's background [color](https://flet.dev/docs/reference/colors).
+    The list tile's background color.
     """
 
     bgcolor_activated: Optional[str] = None
     """
-    The list tile's splash [color](https://flet.dev/docs/reference/colors) after the
+    The list tile's splash color after the
     being was tapped.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The tile's [color](https://flet.dev/docs/reference/colors) when hovered.
+    The tile's color when hovered.
     """
 
     selected: bool = False
@@ -141,13 +138,13 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     selected_color: Optional[ColorValue] = None
     """
-    Defines the [color](https://flet.dev/docs/reference/colors) used for icons and text
+    Defines the color used for icons and text
     when `selected=True`.
     """
 
     selected_tile_color: Optional[ColorValue] = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of ListTile
+    Defines the background color of ListTile
     when `selected=True`.
     """
 
@@ -155,8 +152,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     """
     Defines the font used for the title.
 
-    Value is of type [`ListTileStyle`][flet.ListTileStyle]
-    and defaults to `ListTileStyle.LIST`.
+    Defaults to `ListTileStyle.LIST`.
     """
 
     enable_feedback: bool = True
@@ -194,8 +190,6 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     title_alignment: Optional[ListTileTitleAlignment] = None
@@ -203,20 +197,19 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     Defines how `leading` and `trailing` are vertically aligned relative to the titles
     (`title` and `subtitle`).
 
-    Value is of type [`ListTileTitleAlignment`][flet.ListTileTitleAlignment]
-    and defaults to `ListTileTitleAlignment.THREE_LINE` in Material 3 or
+    Defaults to `ListTileTitleAlignment.THREE_LINE` in Material 3 or
     `ListTileTitleAlignment.TITLE_HEIGHT` in Material 2.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Defines the default [color](https://flet.dev/docs/reference/colors) for the icons
+    Defines the default color for the icons
     present in [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing].
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for 
+    The color used for 
     texts in [`title`][flet.ListTile.title], [`subtitle`][flet.ListTile.subtitle], 
     [`leading`][flet.ListTile.leading], and [`trailing`][flet.ListTile.trailing].
     """
@@ -229,8 +222,6 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the control's layout will be.
-
-    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     mouse_cursor: Optional[MouseCursor] = None

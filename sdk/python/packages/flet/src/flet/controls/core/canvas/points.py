@@ -49,8 +49,6 @@ class Points(Shape):
     point_mode: Optional[PointMode] = None
     """
     Defines how a list of points is interpreted when drawing a set of points.
-
-    Type: [`PointMode`][flet.PointMode]
     """
 
     paint: Optional[Paint] = None

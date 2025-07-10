@@ -122,15 +122,13 @@ class FilePicker(Service):
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
     Called when a file upload progress is updated.
-
-    Event Type: [`FilePickerUploadEvent`][flet.FilePickerUploadEvent]
     """
 
     async def upload_async(self, files: list[FilePickerUploadFile]):
         """
         Uploads selected files to specified upload URLs.
 
-        Before calling this method, [`pick_files()`][flet.FilePicker.pick_files]
+        Before calling this method, [`pick_files_async()`][flet.FilePicker.pick_files_async]
         must be called, so the internal file picker selection is not empty.
 
         Args:
@@ -146,7 +144,7 @@ class FilePicker(Service):
         """
         Uploads selected files to specified upload URLs.
 
-        Before calling `upload()` [pick_files()][flet.FilePicker.pick_files]
+        Before calling `upload()` [pick_files_async()][flet.FilePicker.pick_files_async]
         must be called, so the internal file picker selection is not empty.
 
         Method arguments:

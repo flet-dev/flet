@@ -70,15 +70,11 @@ class Image(ConstrainedControl):
     repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
     How to paint any portions of the layout bounds not covered by the image.
-
-    Type: [`ImageRepeat`][flet.ImageRepeat]
     """
 
     fit: Optional[BoxFit] = None
     """
     How to inscribe the image into the space allocated during layout.
-
-    Type: [`BoxFit`][flet.BoxFit]
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -88,7 +84,7 @@ class Image(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    If set, this [color](https://flet.dev/docs/reference/colors) is blended with each
+    If set, this color is blended with each
     image pixel using [`color_blend_mode`][flet.Image.color_blend_mode].
     """
 
@@ -97,8 +93,6 @@ class Image(ConstrainedControl):
     Used to combine `color` with the image.
 
     In terms of the blend mode, color is the source and this image is the destination.
-
-    Type: [`BlendMode`][flet.BlendMode]
     """
 
     gapless_playback: bool = False
@@ -125,8 +119,6 @@ class Image(ConstrainedControl):
     filter_quality: FilterQuality = FilterQuality.MEDIUM
     """
     The rendering quality of the image.
-
-    Type: [`FilterQuality`][flet.FilterQuality]
     """
 
     cache_width: Optional[int] = None

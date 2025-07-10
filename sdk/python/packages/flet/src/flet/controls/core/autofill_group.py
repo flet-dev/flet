@@ -95,9 +95,6 @@ class AutofillGroup(Control):
     """
     The action to be run when this group is the topmost
     and it's being disposed, in order to clean up the current autofill context.
-
-    Value is of type
-    [`AutofillGroupDisposeAction`][flet.AutofillGroupDisposeAction]
     """
 
     def before_update(self):

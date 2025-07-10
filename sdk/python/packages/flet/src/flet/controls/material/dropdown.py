@@ -100,8 +100,6 @@ class Dropdown(ConstrainedControl):
     text_align: TextAlign = TextAlign.START
     """
     The text align for the TextField of the Dropdown.
-
-    Type: [`TextAlign`][flet.TextAlign]
     """
 
     elevation: Optional[ControlStateValue[Optional[Number]]] = 8
@@ -186,7 +184,7 @@ class Dropdown(ConstrainedControl):
 
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the dropdown menu
+    The background color of the dropdown menu
     in various [`ControlState`][flet.ControlState]
     states.
     """
@@ -253,13 +251,12 @@ class Dropdown(ConstrainedControl):
     """
     Border around input.
 
-    Type: [`InputBorder`][flet.InputBorder]
-    and defaults to `InputBorder.OUTLINE`.
+    Defaults to `InputBorder.OUTLINE`.
     """
 
     color: Optional[ColorValue] = None
     """
-    Text [color](https://flet.dev/docs/reference/colors).
+    Text color.
     """
 
     border_width: Number = 1
@@ -269,7 +266,7 @@ class Dropdown(ConstrainedControl):
 
     border_color: Optional[ColorValue] = None
     """
-    Border [color](https://flet.dev/docs/reference/colors). Could be `transparent` to
+    Border color. Could be `transparent` to
     hide the border.
     """
 
@@ -284,14 +281,12 @@ class Dropdown(ConstrainedControl):
 
     focused_border_color: Optional[ColorValue] = None
     """
-    Border [color](https://flet.dev/docs/reference/colors) in focused state.
+    Border color in focused state.
     """
 
     content_padding: Optional[PaddingValue] = None
     """
     The padding for the input decoration's container.
-    
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     dense: bool = False
@@ -306,7 +301,7 @@ class Dropdown(ConstrainedControl):
 
     fill_color: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of the dropdown input
+    Background color of the dropdown input
     text field. 
     
     Note:
@@ -315,7 +310,7 @@ class Dropdown(ConstrainedControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the dropdown input text
+    The color of the dropdown input text
     field when hovered.
     """
 

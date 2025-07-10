@@ -55,8 +55,7 @@ class TimePicker(DialogControl):
     """
     The initial mode of time entry method for the time picker dialog.
 
-    Value is of type [`TimePickerEntryMode`][flet.TimePickerEntryMode]
-    and defaults to `TimePickerEntryMode.DIAL`.
+    Defaults to `TimePickerEntryMode.DIAL`.
     """
 
     hour_label_text: Optional[str] = None
@@ -99,8 +98,7 @@ class TimePicker(DialogControl):
 
     orientation: Optional[Orientation] = None
     """
-    The orientation of the dialog when displayed. Value is of type `Orientation`
-    enum which has the following possible values: `PORTRAIT` and `LANDSCAPE`.
+    The orientation of the dialog when displayed.
     """
 
     barrier_color: Optional[ColorValue] = None
@@ -117,7 +115,4 @@ class TimePicker(DialogControl):
     on_entry_mode_change: Optional[EventHandler[TimePickerEntryModeChangeEvent]] = None
     """
     Called when the `time_picker_entry_mode` is changed.
-
-    Event handler argument is of type
-    [`TimePickerEntryModeChangeEvent`][flet.TimePickerEntryModeChangeEvent]
     """

@@ -32,24 +32,22 @@ class CupertinoRadio(ConstrainedControl):
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     The position of the label relative to the radio.
-
-    Type: [`LabelPosition`][flet.LabelPosition].
     """
 
     fill_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the radio.
+    The color that fills the radio.
     """
 
     active_color: Optional[ColorValue] = Colors.PRIMARY
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio
+    The color used to fill this radio
     when it is selected.
     """
 
     inactive_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio
+    The color used to fill this radio
     when it is not selected.
     """
 
@@ -74,7 +72,7 @@ class CupertinoRadio(ConstrainedControl):
 
     focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the radio's border
+    The color for the radio's border
     when it has the input focus.
     """
 

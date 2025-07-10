@@ -47,16 +47,14 @@ class Text(Shape):
     """
     A point within a text rectangle to determine its position and rotation center.
 
-    Value is of type [`Alignment`][flet.Alignment]
-    and defaults to `alignment.top_left`.
+    Defaults to `alignment.top_left`.
     """
 
     text_align: Optional[TextAlign] = None
     """
     Text horizontal align.
 
-    Value is of type [`TextAlign`][flet.TextAlign]
-    and defaults to `TextAlign.LEFT`.
+    Defaults to `TextAlign.LEFT`.
     """
 
     max_lines: Optional[int] = None

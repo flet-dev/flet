@@ -70,15 +70,11 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the children.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     How to clip the [`controls`][flet.ListView.controls]
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     semantic_child_count: Optional[int] = None

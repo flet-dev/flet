@@ -122,8 +122,6 @@ class PaintRadialGradient(PaintGradient):
     """
     How this gradient should tile the plane beyond in the region before `begin` and
     after `end`. 
-    
-    Type: [`GradientTileMode`][flet.GradientTileMode]
     """
 
     focal: Optional[OffsetValue] = None
@@ -180,8 +178,6 @@ class PaintSweepGradient(PaintGradient):
     """
     How this gradient should tile the plane beyond in the region before `begin` and
     after `end`.
-    
-    Type: [`GradientTileMode`][flet.GradientTileMode]
     """
 
     start_angle: Number = 0.0
@@ -223,15 +219,11 @@ class Paint:
     A blend mode to apply when a shape is drawn or a layer is composited.
 
     Defaults to `BlendMode.SRC_OVER`.
-    
-    Type: [`BlendMode`][flet.BlendMode]
     """
 
     blur_image: Optional[BlurValue] = None
     """
     Blur image when drawing it on a canvas.
-
-    Type: [`BlurValue`][flet.BlurValue]
     """
 
     anti_alias: Optional[bool] = None
@@ -243,11 +235,7 @@ class Paint:
 
     gradient: Optional[PaintGradient] = None
     """
-    Configures gradient paint. Value is an instance of one of the following classes:
-
-    * [`PaintLinearGradient`][flet.PaintLinearGradient]
-    * [`PaintRadialGradient`][flet.PaintRadialGradient]
-    * [`PaintSweepGradient`][flet.PaintSweepGradient]
+    Configures gradient paint.
     """
 
     stroke_cap: Optional[StrokeCap] = None

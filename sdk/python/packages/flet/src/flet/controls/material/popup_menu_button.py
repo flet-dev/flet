@@ -62,8 +62,6 @@ class PopupMenuItem(Control):
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None
@@ -95,23 +93,23 @@ class PopupMenuButton(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The menu's background [color](https://flet.dev/docs/reference/colors).
+    The menu's background color.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    The `icon`'s [color](https://flet.dev/docs/reference/colors).
+    The `icon`'s color.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to paint the shadow below
+    The color used to paint the shadow below
     the menu.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on color to
+    The color used as an overlay on color to
     indicate elevation.
     """
 
@@ -137,8 +135,6 @@ class PopupMenuButton(ConstrainedControl):
     Defines position of the popup menu relative to the button.
 
     Defaults to `PopupMenuPosition.OVER`.
-    
-    Type: [`PopupMenuPosition`][flet.PopupMenuPosition]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -160,13 +156,12 @@ class PopupMenuButton(ConstrainedControl):
     """
     The menu's shape.
 
-    Value is of type [`OutlinedBorder`][flet.OutlinedBorder]
-    and defaults to `CircleBorder(radius=10.0)`.
+    Defaults to `CircleBorder(radius=10.0)`.
     """
 
     padding: PaddingValue = 8
     """
-    Type: [`PaddingValue`][flet.PaddingValue]
+    TBD
     """
 
     menu_padding: Optional[PaddingValue] = None

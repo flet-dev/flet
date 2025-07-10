@@ -69,8 +69,6 @@ class DragTarget(Control):
     on_will_accept: Optional[EventHandler[DragWillAcceptEvent]] = None
     """
     Called when a draggable is dragged on this target.
-
-    Event type: [`DragWillAcceptEvent`][flet.DragWillAcceptEvent]
     """
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
@@ -78,23 +76,17 @@ class DragTarget(Control):
     Called when the user does drop an acceptable (same [`group`][flet.DragTarget.group]) draggable on
     this target.
 
-    Event type: [`DragTargetEvent`][flet.DragTargetEvent]
-
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """
 
     on_leave: Optional[EventHandler[DragTargetLeaveEvent]] = None
     """
     Called when a draggable leaves this target.
-
-    Event type: [`DragTargetLeaveEvent`][flet.DragTargetLeaveEvent].
     """
 
     on_move: Optional[EventHandler[DragTargetEvent]] = None
     """
     Called when a draggable moves within this target.
-
-    Event handler argument is of type [`DragTargetEvent`][flet.DragTargetEvent].
     """
 
     def before_update(self):

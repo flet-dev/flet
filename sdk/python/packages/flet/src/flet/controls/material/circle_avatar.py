@@ -55,14 +55,14 @@ class CircleAvatar(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    The default [color](https://flet.dev/docs/reference/colors) for text in this avatar. 
+    The default color for text in this avatar. 
     
     Defaults to the primary text theme color if no `bgcolor` is specified.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) with which to fill the circle.
+    The color with which to fill the circle.
     
     Changing the background color will cause this avatar to animate to the new color.
     """

@@ -44,7 +44,7 @@ page.update()
 
 To open file picker dialog call one of the three methods:
 
-* `pick_files()`
+* `pick_files_async()`
 * `save_file()`
 * `get_directory_path()`
 
@@ -53,7 +53,7 @@ Lambda works pretty nice for that:
 ```python
 ft.ElevatedButton(
     content="Choose files...",
-    on_click=lambda _: file_picker.pick_files(allow_multiple=True)
+    on_click=lambda _: file_picker.pick_files_async(allow_multiple=True)
 )
 ```
 
@@ -80,7 +80,7 @@ Check [`FilePicker`][flet.FilePicker] control docs for all available dialog meth
 
 File picker has built-in upload capabilities that work on all platforms and the web.
 
-To upload one or more files you should call `FilePicker.pick_files()` first.
+To upload one or more files you should call `FilePicker.pick_files_async()` first.
 When the files are selected by the user they are not automatically uploaded anywhere, but instead their references are kept in the file picker state.
 
 To perform an actual upload you should call `FilePicker.upload()` method and pass the list of files that need to be uploaded along with their upload URLs and upload method (`PUT` or `POST`):

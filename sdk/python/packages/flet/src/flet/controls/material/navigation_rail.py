@@ -61,22 +61,18 @@ class NavigationRailDestination(Control):
     padding: Optional[PaddingValue] = None
     """
     The amount of space to inset the destination item.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the 
+    The color of the 
     [`indicator_shape`][flet.NavigationRailDestination.indicator_shape] when
     this destination is selected.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
-    The shape of the selection indicator. 
-    
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
+    The shape of the selection indicator.
     """
 
 
@@ -120,8 +116,6 @@ class NavigationRail(ConstrainedControl):
 
     If the rail is going to be in the extended state, then the `label_type` must be set
     to `none`.
-
-    Defaults to `False`.
     """
 
     label_type: Optional[NavigationRailLabelType] = None
@@ -131,20 +125,18 @@ class NavigationRail(ConstrainedControl):
 
     When a navigation rail is extended, the labels are always shown.
 
-    Value is of type
-    [`NavigationRailLabelType`][flet.NavigationRailLabelType]
-    and defaults to `None` - no labels are shown.
+    Defaults to `None` - no labels are shown.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets the [color](https://flet.dev/docs/reference/colors) of the Container that holds
+    Sets the color of the Container that holds
     all of the NavigationRail's contents.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the navigation rail's
+    The color of the navigation rail's
     indicator.
     """
 
@@ -152,9 +144,7 @@ class NavigationRail(ConstrainedControl):
     """
     The shape of the navigation rail's indicator.
 
-    Value is of type
-    [`OutlinedBorder`][flet.OutlinedBorder] and
-    defaults to `StadiumBorder()`.
+    Defaults to `StadiumBorder()`.
     """
 
     leading: Optional[Control] = None
@@ -163,8 +153,7 @@ class NavigationRail(ConstrainedControl):
 
     Its location is not affected by `group_alignment`.
 
-    This is commonly a
-    [`FloatingActionButton`][flet.FloatingActionButton], but
+    Typically a [`FloatingActionButton`][flet.FloatingActionButton], but
     may also be a non-button, such as a logo.
     """
 

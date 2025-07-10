@@ -47,7 +47,7 @@ class CupertinoAppBar(Control):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for this app bar.
+    The fill color to use for this app bar.
 
     Default color is defined by current theme.
     """
@@ -75,8 +75,6 @@ class CupertinoAppBar(Control):
     """
     The border of the app bar. By default, a single pixel bottom border side is
     rendered.
-
-    Type: [`Border`][flet.Border]
     """
 
     padding: Optional[PaddingValue] = None
@@ -133,8 +131,6 @@ class CupertinoAppBar(Control):
 
     If `None` (the default), its value will be inferred from the relative luminance of
     the `bgcolor`.
-
-    Type: [`Brightness`][flet.Brightness]
     """
 
     automatic_background_visibility: Optional[bool] = None

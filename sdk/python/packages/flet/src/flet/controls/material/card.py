@@ -40,8 +40,6 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     Defaults to [`CardTheme.margin`][flet.CardTheme.margin], or if that is `None`,
     falls back to `Margin.all(4.0)`.
-
-    Type: [`MarginValue`][flet.MarginValue]
     """
 
     elevation: Optional[Number] = None
@@ -55,12 +53,12 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The card's background [color](https://flet.dev/docs/reference/colors).
+    The card's background color.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to paint the shadow below this
+    The color to paint the shadow below this
     card.
 
     Defaults to [`CardTheme.shadow_color`][flet.CardTheme.shadow_color], or if that is `None`,
@@ -69,7 +67,7 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on `color`
+    The color used as an overlay on `color`
     to indicate elevation.
 
     If this is `None`, no overlay will be applied. Otherwise this color will be
@@ -83,8 +81,6 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     Defaults to [`CardTheme.shape`][flet.CardTheme.shape], or if that is `None`,
     falls back to `RoundedRectangleBorder(radius=12.0)`.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder].
     """
 
     clip_behavior: Optional[ClipBehavior] = None
@@ -111,6 +107,4 @@ class Card(ConstrainedControl, AdaptiveControl):
     variant: CardVariant = CardVariant.ELEVATED
     """
     Defines the card variant to be used.
-
-    Type: [`CardVariant`][flet.CardVariant]
     """

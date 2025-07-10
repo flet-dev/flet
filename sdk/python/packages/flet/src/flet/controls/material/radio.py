@@ -30,15 +30,12 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Value is of type [`LabelPosition`][flet.LabelPosition]
-    and defaults to `LabelPosition.RIGHT`.
+    Defaults to `LabelPosition.RIGHT`.
     """
 
     label_style: Optional[TextStyle] = None
     """
     The label's style.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     value: Optional[str] = None
@@ -56,20 +53,20 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the radio, in all or
+    The color that fills the radio, in all or
     specific [`ControlState`][flet.ControlState]
     states.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio when it
+    The color used to fill this radio when it
     is selected.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The overlay [color](https://flet.dev/docs/reference/colors) of this radio in all or
+    The overlay color of this radio in all or
     specific [`ControlState`][flet.ControlState]
     states.
     """
@@ -98,15 +95,11 @@ class Radio(ConstrainedControl, AdaptiveControl):
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the radio's layout will be.
-
-    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_focus: Optional[ControlEventHandler["Radio"]] = None

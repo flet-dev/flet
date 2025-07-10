@@ -48,7 +48,7 @@ class DatePicker(DialogControl):
     A Material-style date picker dialog.
 
     It is added to [`Page.overlay`][flet.Page.overlay] and can be opened by
-    calling [`Page.open_dialog()`][flet.Page.open_dialog] method.
+    calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
     Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar or an
     Input (TextField) for picking a date.
@@ -88,26 +88,16 @@ class DatePicker(DialogControl):
     keyboard_type: KeyboardType = KeyboardType.DATETIME
     """
     The type of keyboard to use for editing the text.
-
-    Type: [`KeyboardType`][flet.KeyboardType]
-    and defaults to `KeyboardType.DATETIME`.
     """
 
     date_picker_mode: DatePickerMode = DatePickerMode.DAY
     """
     Initial display of a calendar date picker.
-    
-    Defaults to `DatePickerMode.DAY`.
-
-    Type: [`DatePickerMode`][flet.DatePickerMode]
     """
 
     date_picker_entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
-
-    Type: [`DatePickerEntryMode`][flet.DatePickerEntryMode]
-    and defaults to `DatePickerEntryMode.CALENDAR`.
     """
 
     help_text: Optional[str] = None
@@ -183,7 +173,7 @@ class DatePicker(DialogControl):
 
     barrier_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the modal barrier that
+    The color of the modal barrier that
     darkens everything below the date picker.
 
     If `None`, the [`DialogTheme.barrier_color`][flet.DialogTheme.barrier_color]
@@ -202,6 +192,4 @@ class DatePicker(DialogControl):
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
     Called when the [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode] is changed.
-
-    Event type: [`DatePickerEntryModeChangeEvent`][flet.DatePickerEntryModeChangeEvent]
     """

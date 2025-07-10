@@ -127,8 +127,6 @@ class TextStyle:
     weight: Optional[FontWeight] = None
     """
     Defaults to `FontWeight.NORMAL`.
-    
-    Type: [`FontWeight`][flet.FontWeight]
     """
 
     italic: bool = False
@@ -139,8 +137,6 @@ class TextStyle:
     decoration: Optional[TextDecoration] = None
     """
     The decorations to paint near the text (e.g., an underline).
-
-    Type: [`TextDecoration`][flet.TextDecoration]
     """
 
     decoration_color: Optional[ColorValue] = None
@@ -159,8 +155,6 @@ class TextStyle:
     The style in which to paint the text decorations (e.g., dashed).
 
     Defaults to `TextDecorationStyle.SOLID`.
-    
-    Type: [`TextDecorationStyle`][flet.TextDecorationStyle]
     """
 
     font_family: Optional[str] = None
@@ -180,14 +174,12 @@ class TextStyle:
 
     shadow: Optional[BoxShadowValue] = None
     """
-    Type: [`BoxShadowValue`][flet.BoxShadowValue]
+    TBD
     """
 
     foreground: Optional[Paint] = None
     """
     The paint drawn as a foreground for the text.
-
-    Type: [`Paint`][flet.Paint]
     """
 
     letter_spacing: Optional[Number] = None
@@ -205,16 +197,12 @@ class TextStyle:
     overflow: Optional[TextOverflow] = None
     """
     How visual text overflow should be handled.
-
-    Type: [`TextOverflow`][flet.TextOverflow]
     """
 
     baseline: Optional[TextBaseline] = None
     """
     The common baseline that should be aligned between this text span and its parent
     text span, or, for the root text spans, with the line box.
-
-    Type: [`TextBaseline`][flet.TextBaseline]
     """
 
     def copy_with(
@@ -295,8 +283,6 @@ class StrutStyle:
     The typeface thickness to use when calculating the strut.
 
     Defaults to `FontWeight.W_400`.
-    
-    Type: [`FontWeight`][flet.FontWeight]
     """
 
     italic: bool = False

@@ -66,12 +66,15 @@ class Colors(str, Enum):
         Selects a random color, with optional exclusions and weights.
 
         Args:
-            exclude: A list of colors members to exclude from the selection.
+            exclude: A list of Colors to exclude from the selection.
             weights: A dictionary mapping color members to their respective weights for 
                 weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.
+
+        Example:
+            >>> Colors.random(exclude=[Colors.RED, Colors.GREEN])
         """
         choices = list(Colors)
         if exclude:

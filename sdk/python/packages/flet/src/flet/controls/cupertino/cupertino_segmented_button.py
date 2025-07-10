@@ -36,31 +36,29 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     selected_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the button when it is
+    The color of the button when it is
     selected.
     """
 
     unselected_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the button when it is not
+    The color of the button when it is not
     selected.
     """
 
     border_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the button's border.
+    The color of the button's border.
     """
 
     padding: Optional[PaddingValue] = None
     """
     The button's padding.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     click_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill the background
+    The color used to fill the background
     of this control when temporarily interacting with through a long press or drag.
 
     Defaults to the [`selected_color`][flet.CupertinoSegmentedButton.selected_color] with 20% opacity.

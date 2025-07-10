@@ -70,7 +70,7 @@ class NavigationDrawerDestination(Control):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of this destination.
+    The color of this destination.
     """
 
 
@@ -108,7 +108,7 @@ class NavigationDrawer(DialogControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the navigation drawer itself.
+    The color of the navigation drawer itself.
     """
 
     elevation: Optional[Number] = None
@@ -118,21 +118,18 @@ class NavigationDrawer(DialogControl):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the selected destination
+    The color of the selected destination
     indicator.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
     The shape of the selected destination indicator.
-
-    Value is of type
-    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the drop shadow to
+    The color used for the drop shadow to
     indicate `elevation`.
     """
 
@@ -143,16 +140,12 @@ class NavigationDrawer(DialogControl):
 
     tile_padding: Optional[PaddingValue] = None
     """
-    Defines the padding for `NavigationDrawerDestination` controls.
+    Defines the padding for `destination` controls.
     """
 
     position: NavigationDrawerPosition = NavigationDrawerPosition.START
     """
     The position of this drawer.
-
-    Value is of type
-    [`NavigationDrawerPosition`][flet.NavigationDrawerPosition]
-    and defaults to `NavigationDrawerPosition.START`.
     """
 
     on_change: Optional[ControlEventHandler["NavigationDrawer"]] = None

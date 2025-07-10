@@ -28,7 +28,7 @@ class CupertinoBottomSheet(DialogControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The sheet's background [color](https://flet.dev/docs/reference/colors).
+    The sheet's background color.
     """
 
     height: Optional[Number] = None
@@ -39,6 +39,4 @@ class CupertinoBottomSheet(DialogControl):
     padding: Optional[PaddingValue] = None
     """
     The sheet's padding.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """

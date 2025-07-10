@@ -50,8 +50,7 @@ class ScrollableControl(Control):
     """
     Enables a vertical scrolling for the Column to prevent its content overflow.
 
-    Value is of type [`ScrollMode`][flet.ScrollMode]
-    and defaults to `ScrollMode.None`.
+    Defaults to `ScrollMode.None`.
     """
     auto_scroll: bool = False
     """
@@ -65,8 +64,6 @@ class ScrollableControl(Control):
     on_scroll: Optional[EventHandler[OnScrollEvent]] = None
     """
     Called when scroll position is changed by a user.
-
-    Event type: [`OnScrollEvent`][flet.OnScrollEvent]
     class.
     """
 

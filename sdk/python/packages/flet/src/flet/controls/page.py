@@ -160,8 +160,6 @@ class Page(PageView):
     window: Window = field(default_factory=lambda: Window())
     """
     A class with properties/methods/events to control app's native OS window.
-
-    Type: [`Window`][flet.Window]
     """
 
     browser_context_menu: BrowserContextMenu = field(
@@ -170,8 +168,6 @@ class Page(PageView):
     """
     Used to enable or disable the context menu that appears when the user
     right-clicks on the web page.
-
-    Event type: [`BrowserContextMenu`][flet.BrowserContextMenu]
 
     Note:
         Web only.
@@ -246,15 +242,11 @@ class Page(PageView):
     platform: Optional[PagePlatform] = None
     """
     Operating system the application is running on.
-
-    Type: [`PagePlatform`][flet.PagePlatform]
     """
 
     platform_brightness: Optional[Brightness] = None
     """
     The current brightness mode of the host platform. (readonly)
-
-    Type: [`Brightness`][flet.Brightness]
     """
 
     client_ip: Optional[str] = None
@@ -295,31 +287,23 @@ class Page(PageView):
     ] = None
     """
     Triggers when app lifecycle state changes.
-
-    Event type: [`AppLifecycleStateChangeEvent`][flet.AppLifecycleStateChangeEvent]
     """
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
     Called when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
-
-    Event type: [`RouteChangeEvent`][flet.RouteChangeEvent]
     """
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
     Called when the user clicks automatic "Back" button in
     [`AppBar`][flet.AppBar] control.
-
-    Event type: [`ViewPopEvent`][flet.ViewPopEvent]
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
     """
     Called when a keyboard key is pressed.
-
-    Event type: [`KeyboardEvent`][flet.KeyboardEvent]
     """
 
     on_connect: Optional[ControlEventHandler["Page"]] = None

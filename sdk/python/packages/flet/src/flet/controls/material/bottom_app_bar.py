@@ -30,7 +30,7 @@ class BottomAppBar(ConstrainedControl):
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay
+    The color used as an overlay
     on [`bgcolor`][flet.BottomAppBar.bgcolor] to indicate elevation.
 
     If this is `None`, no overlay will be applied. Otherwise this color will be
@@ -41,7 +41,7 @@ class BottomAppBar(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for this
+    The fill color to use for this
     app bar.
 
     Defaults to [`BottomAppBarTheme.bgcolor`][flet.BottomAppBarTheme.bgcolor], or if that is `None`,
@@ -50,7 +50,7 @@ class BottomAppBar(ConstrainedControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below this app bar.
+    The color of the shadow below this app bar.
     """
 
     padding: Optional[PaddingValue] = None
@@ -59,22 +59,16 @@ class BottomAppBar(ConstrainedControl):
 
     Defaults to [`BottomAppBarTheme.padding`][flet.BottomAppBarTheme.padding], or if that is `None`,
     falls back to `Padding.symmetric(vertical=12.0, horizontal=16.0)`.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     Defines how the [`content`][flet.BottomAppBar.content] of this app bar should be clipped.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     shape: Optional[NotchShape] = None
     """
     The notch that is made for the floating action button.
-
-    Type: [`NotchShape`][flet.NotchShape]
     """
 
     notch_margin: Number = 4.0

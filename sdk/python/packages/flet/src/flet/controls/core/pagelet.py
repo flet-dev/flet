@@ -92,14 +92,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     ] = FloatingActionButtonLocation.END_FLOAT
     """
     Defines a position for the `FloatingActionButton`.
-
-    Type: [`OffsetValue`][flet.OffsetValue] or
-    [`FloatingActionButtonLocation`][flet.FloatingActionButtonLocation]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of the Pagelet.
+    Background color of the Pagelet.
     """
 
     def before_update(self):

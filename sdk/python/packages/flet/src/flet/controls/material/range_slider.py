@@ -81,7 +81,7 @@ class RangeSlider(ConstrainedControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of the
+    The color to use for the portion of the
     slider track that is active.
 
     The "active" segment of the range slider is the span between the thumbs.
@@ -89,7 +89,7 @@ class RangeSlider(ConstrainedControl):
 
     inactive_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the inactive portions of
+    The color for the inactive portions of
     the slider track.
 
     The "inactive" segments of the slider are the span of tracks between the min and
@@ -98,7 +98,7 @@ class RangeSlider(ConstrainedControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight [color](https://flet.dev/docs/reference/colors) that's typically
+    The highlight color that's typically
     used to indicate that the range slider thumb is in `HOVERED` or `DRAGGED`
     [`ControlState`][flet.ControlState] .
     """
@@ -106,12 +106,6 @@ class RangeSlider(ConstrainedControl):
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
-
-    It's value can be made to depend on the slider's
-    [`ControlState`][flet.ControlState]
-
-    Value is of type
-    [`MouseCursor`][flet.MouseCursor]
     """
 
     on_change: Optional[ControlEventHandler["RangeSlider"]] = None

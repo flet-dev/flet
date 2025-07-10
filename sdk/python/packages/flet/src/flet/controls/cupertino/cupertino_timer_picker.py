@@ -44,8 +44,6 @@ class CupertinoTimerPicker(ConstrainedControl):
     alignment: Alignment = field(default_factory=lambda: Alignment.center())
     """
     Defines how the timer picker should be positioned within its parent.
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     second_interval: int = 1
@@ -67,13 +65,11 @@ class CupertinoTimerPicker(ConstrainedControl):
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
     """
     The mode of the timer picker.
-
-    Type: [`CupertinoTimerPickerMode`][flet.CupertinoTimerPickerMode]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of this timer picker.
+    The background color of this timer picker.
     """
 
     item_extent: Number = 32.0

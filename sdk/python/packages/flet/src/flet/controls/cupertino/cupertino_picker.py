@@ -40,7 +40,7 @@ class CupertinoPicker(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the timer picker.
+    The background color of the timer picker.
     """
 
     use_magnifier: bool = False
@@ -90,7 +90,7 @@ class CupertinoPicker(ConstrainedControl):
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The default background [color](https://flet.dev/docs/reference/colors) of the
+    The default background color of the
     [`selection_overlay`][flet.CupertinoPicker.selection_overlay].
     """
 

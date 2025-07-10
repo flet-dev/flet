@@ -94,8 +94,6 @@ class View(ScrollableControl, ConstrainedControl):
     ] = None
     """
     Describes position of [`floating_action_button`][flet.View.floating_action_button]
-
-    Type: [`FloatingActionButtonLocation`][flet.FloatingActionButtonLocation]
     """
 
     navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None
@@ -120,15 +118,11 @@ class View(ScrollableControl, ConstrainedControl):
     vertical_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     Defines how the child [`controls`][flet.View.controls] should be placed vertically.
-
-    Type: [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
     How the child Controls should be placed horizontally.
-
-    Type: [`CrossAxisAlignment`][flet.CrossAxisAlignment]
     """
 
     spacing: Number = 10
@@ -145,27 +139,21 @@ class View(ScrollableControl, ConstrainedControl):
     padding: Optional[PaddingValue] = field(default_factory=lambda: Padding.all(10))
     """
     A space between page contents and its edges.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of the view.
+    Background color of the view.
     """
 
     decoration: Optional[BoxDecoration] = None
     """
     The background decoration.
-
-    Type: [`BoxDecoration`][flet.BoxDecoration]
     """
 
     foreground_decoration: Optional[BoxDecoration] = None
     """
     The foreground decoration.
-
-    Type: [`BoxDecoration`][flet.BoxDecoration]
     """
 
     can_pop: bool = True

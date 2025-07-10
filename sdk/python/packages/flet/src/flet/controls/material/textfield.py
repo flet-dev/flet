@@ -65,8 +65,6 @@ class InputFilter:
     allow: bool = True
     """
     A boolean value indicating whether to allow or deny/block the matched patterns.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     replacement_string: str = ""
@@ -218,8 +216,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Type: [`TextAlign`][flet.TextAlign] and
-    defaults to `TextAlign.LEFT`.
+    Defaults to `TextAlign.LEFT`.
     """
 
     autofocus: bool = False
@@ -233,8 +230,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Value is of type [`TextCapitalization`][flet.TextCapitalization]
-    and defaults to `TextCapitalization.NONE`.
+    Defaults to `TextCapitalization.NONE`.
     """
 
     autocorrect: bool = True
@@ -286,7 +282,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     cursor_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of TextField cursor.
+    The color of TextField cursor.
     """
 
     cursor_error_color: Optional[ColorValue] = None
@@ -311,7 +307,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     selection_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of TextField selection.
+    The color of TextField selection.
     """
 
     input_filter: Optional[InputFilter] = None
@@ -320,9 +316,6 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     Similar to the `on_change` callback, the input filters are not applied when the
     content of the field is changed programmatically.
-
-    Value is of type
-    [`InputFilter`][flet.InputFilter] class.
     """
 
     obscuring_character: str = "•"
@@ -392,9 +385,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
     """
-    Helps the autofill service identify the type of this text input. Value can either
-    be a single [`AutofillHint`][flet.AutofillHint]
-    enum item or a list of them.
+    Helps the autofill service identify the type of this text input.
 
     More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """

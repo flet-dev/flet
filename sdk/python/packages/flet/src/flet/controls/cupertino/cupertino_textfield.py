@@ -43,16 +43,12 @@ class CupertinoTextField(TextField):
     gradient: Optional[Gradient] = None
     """
     Configures the gradient background.
-
-    Type: [`Gradient`][flet.Gradient]
     """
 
     blend_mode: Optional[BlendMode] = None
     """
     The blend mode applied to the [`bgcolor`][flet.CupertinoTextField.bgcolor] or
     [`gradient`][flet.CupertinoTextField.gradient] background.
-
-    Type: [`BlendMode`][flet.BlendMode]
     """
 
     shadows: Optional[BoxShadowValue] = None
@@ -66,8 +62,6 @@ class CupertinoTextField(TextField):
     based on the state of text entry.
 
     Has no effect if `prefix` is not specified.
-
-    Type: [`OverlayVisibilityMode`][flet.OverlayVisibilityMode]
     """
 
     suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
@@ -76,8 +70,6 @@ class CupertinoTextField(TextField):
     based on the state of text entry.
 
     Has no effect if `suffix` is not specified.
-
-    Type: [`OverlayVisibilityMode`][flet.OverlayVisibilityMode]
     """
 
     clear_button_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.NEVER
@@ -85,8 +77,6 @@ class CupertinoTextField(TextField):
     Defines the visibility of the clear button based on the state of text entry.
 
     Will appear only if no [`suffix`][flet.CupertinoTextField.suffix] is provided.
-
-    Type: [`OverlayVisibilityMode`][flet.OverlayVisibilityMode]
     """
 
     clear_button_semantics_label: Optional[str] = "Clear"
@@ -100,8 +90,6 @@ class CupertinoTextField(TextField):
     """
     An image to paint above the [`bgcolor`][flet.CupertinoTextField.bgcolor] or
     [`gradient`][flet.CupertinoTextField.gradient] background.
-
-    Type: [`DecorationImage`][flet.DecorationImage]
     """
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
@@ -110,6 +98,4 @@ class CupertinoTextField(TextField):
     and [`suffix`][flet.CupertinoTextField.suffix] or the
     clear button when [`clear_button_mode`][flet.CupertinoTextField.clear_button_mode]
     is not `OverlayVisibilityMode.NEVER`.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """

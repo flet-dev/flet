@@ -92,7 +92,7 @@ class Tooltip:
 
     bgcolor: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of the tooltip.
+    Background color of the tooltip.
     """
 
     text_style: Optional[TextStyle] = None

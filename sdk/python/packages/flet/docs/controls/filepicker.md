@@ -21,7 +21,7 @@ def main(page: ft.Page):
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
     selected_files = ft.Text()
 
-    page.overlay.append(pick_files_dialog)
+    page.services.append(pick_files_dialog)
 
     page.add(
         ft.Row(
@@ -29,7 +29,7 @@ def main(page: ft.Page):
                 ft.ElevatedButton(
                     "Pick files",
                     icon=ft.Icons.UPLOAD_FILE,
-                    on_click=lambda _: pick_files_dialog.pick_files(
+                    on_click=lambda _: pick_files_dialog.pick_files_async(
                         allow_multiple=True
                     ),
                 ),

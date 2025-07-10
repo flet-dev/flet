@@ -29,27 +29,22 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     label: Optional[StrOrControl] = None
     """
-    The clickable label to display on the right of the Switch.
+    The clickable label to display on the right of this switch.
     """
 
-    label_position: Optional[LabelPosition] = None
+    label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Value is of type
-    [`LabelPosition`][flet.LabelPosition] and
-    defaults to `LabelPosition.RIGHT`.
+    The position of the [`label`][flet.Switch.label], if provided.
     """
 
-    label_style: Optional[TextStyle] = None
+    label_text_style: Optional[TextStyle] = None
     """
-    The label's style.
-
-    Value is of type
-    [`TextStyle`][flet.TextStyle]
+    The [`label`][flet.Switch.label]'s text style, when it is a string.
     """
 
     value: bool = False
     """
-    Current value of the Switch.
+    Current value of this switch.
     """
 
     autofocus: bool = False
@@ -61,13 +56,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when this switch
+    The color to use when this switch
     is on.
     """
 
     active_track_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the track when
+    The color to use on the track when
     this switch is on.
 
     If [`track_color`][flet.Switch.track_color] returns a non-none color in 
@@ -77,13 +72,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the focus
+    The color to use for the focus
     highlight for keyboard interactions.
     """
 
     inactive_thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the thumb when
+    The color to use on the thumb when
     this switch is off.
 
     Defaults to colors defined in the
@@ -96,7 +91,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     inactive_track_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the track when
+    The color to use on the track when
     this switch is off.
 
     Defaults to colors defined in the
@@ -109,7 +104,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of this switch's thumb
+    The color of this switch's thumb
     in various [`ControlState`][flet.ControlState]
     states.
 
@@ -130,7 +125,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     track_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of this switch's track
+    The color of this switch's track
     in various [`ControlState`][flet.ControlState]  states.
 
     The following states are supported: `ControlState.SELECTED`, 
@@ -152,7 +147,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to be used when it is
+    The color to be used when it is
     being hovered over by the mouse pointer.
     """
 
@@ -163,7 +158,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the switch's
+    The color for the switch's
     Material in various
     [`ControlState`][flet.ControlState] states.
 
@@ -174,7 +169,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline [color](https://flet.dev/docs/reference/colors) of this switch's
+    The outline color of this switch's
     track in various [`ControlState`][flet.ControlState]
     states.
 

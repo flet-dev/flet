@@ -4,7 +4,6 @@
 ::: flet.BorderRadiusValue
 ::: flet.BorderSideStrokeAlignValue
 ::: flet.BoxShadowValue
-::: flet.ColorEnums
 ::: flet.ColorValue
 ::: flet.ControlEvent
 ::: flet.ControlEventHandler
@@ -13,7 +12,6 @@
 ::: flet.DurationValue
 ::: flet.EventControlType
 ::: flet.EventHandler
-::: flet.IconEnums
 ::: flet.IconValue
 ::: flet.IconValueOrControl
 ::: flet.MarginValue

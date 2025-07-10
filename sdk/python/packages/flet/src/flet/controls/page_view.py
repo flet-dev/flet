@@ -72,36 +72,37 @@ class PageView(AdaptiveControl):
     """
     The page's theme mode.
 
-    Type: [`ThemeMode`][flet.ThemeMode] and
-    defaults to `ThemeMode.SYSTEM`.
+    Defaults to `ThemeMode.SYSTEM`.
     """
     theme: Optional[Theme] = None
     """
     Customizes the theme of the application when in light theme mode. Currently, a
     theme can only be automatically generated from a "seed" color. For example, to
     generate light theme from a green color.
-
-    Value is an instance of the `Theme()` class - more information in the [theming](https://flet.dev/docs/cookbook/theming)
-    guide.
     """
     dark_theme: Optional[Theme] = None
     """
     Customizes the theme of the application when in dark theme mode.
-
-    Value is an instance of the `Theme()` class - more information in the
-    [theming](https://flet.dev/docs/cookbook/theming) guide.
     """
+
     locale_configuration: Optional[LocaleConfiguration] = None
+
     show_semantics_debugger: Optional[bool] = None
     """
     `True` turns on an overlay that shows the accessibility information reported by the
     framework.
     """
+
     width: Optional[Number] = None
+
     height: Optional[Number] = None
+
     title: Optional[str] = None
+
     media: Optional[PageMediaData] = None
+
     scroll_event_interval: Optional[Number] = None
+
     on_resized: Optional[EventHandler["PageResizeEvent"]] = None
     """
     Called when a user resizes a browser or native OS window containing Flet app, for
@@ -113,8 +114,6 @@ class PageView(AdaptiveControl):
 
     page.on_resized = page_resized
     ```
-
-    Event type: [`PageResizeEvent`][flet.PageResizeEvent]
     """
     on_media_change: Optional[ControlEventHandler["PageView"]] = None
     """
@@ -122,12 +121,10 @@ class PageView(AdaptiveControl):
 
     Event type: [`PageMediaData`][flet.PageMediaData]
     """
+
     on_scroll: Optional[EventHandler["OnScrollEvent"]] = None
     """
     Called when page's scroll position is changed by a user.
-
-    Event handler argument is of type
-    [`OnScrollEvent`][flet.OnScrollEvent]
     """
 
     def __default_view(self) -> View:

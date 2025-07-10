@@ -73,8 +73,6 @@ class DataColumn(Control):
     heading_row_alignment: Optional[MainAxisAlignment] = None
     """
     Defines the horizontal layout of the label and sort indicator in the heading row.
-
-    Type: [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
     on_sort: Optional[EventHandler[DataColumnSortEvent]] = None
@@ -201,7 +199,7 @@ class DataRow(Control):
 
     color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the row.
+    The color for the row.
 
     By default, the color is transparent unless selected. Selected rows has a grey
     translucent color.
@@ -347,13 +345,13 @@ class DataTable(ConstrainedControl):
 
     horizontal_lines: Optional[BorderSide] = None
     """
-    Set the [color](https://flet.dev/docs/reference/colors) and width of horizontal
+    Set the color and width of horizontal
     lines between rows.
     """
 
     vertical_lines: Optional[BorderSide] = None
     """
-    Set the [color](https://flet.dev/docs/reference/colors) and width of vertical lines
+    Set the color and width of vertical lines
     between columns.
     """
 
@@ -369,7 +367,7 @@ class DataTable(ConstrainedControl):
 
     data_row_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) for the data rows.
+    The background color for the data rows.
 
     The effective background color can be made to depend on the [`ControlState`][flet.ControlState]
     state, i.e. if the row is selected, pressed, hovered, focused, disabled or enabled.
@@ -401,14 +399,12 @@ class DataTable(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) for the table.
+    The background color for the table.
     """
 
     gradient: Optional[Gradient] = None
     """
     The background gradient for the table.
-
-    Type: [`Gradient`][flet.Gradient]
     """
 
     divider_thickness: Number = 1.0
@@ -421,7 +417,7 @@ class DataTable(ConstrainedControl):
 
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) for the heading row.
+    The background color for the heading row.
 
     The effective background color can be made to depend on the [`ControlState`][flet.ControlState]
     state, i.e. if the row is pressed, hovered, focused when sorted. The color is
@@ -451,8 +447,6 @@ class DataTable(ConstrainedControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     Defines how the contents of the table are clipped.
-    
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     on_select_all: Optional[ControlEventHandler["DataTable"]] = None

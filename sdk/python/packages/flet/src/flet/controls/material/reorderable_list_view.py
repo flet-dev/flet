@@ -69,16 +69,11 @@ class ReorderableListView(ListView):
     padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the `controls`.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
-
-    Value is of type
-    [`ClipBehavior`][flet.ClipBehavior]
     """
 
     cache_extent: Optional[Number] = None
@@ -115,15 +110,11 @@ class ReorderableListView(ListView):
     header: Optional[Control] = None
     """
     A non-reorderable header item to show before the `controls`.
-
-    Value is of type `Control`.
     """
 
     footer: Optional[Control] = None
     """
     A non-reorderable footer item to show after the `controls`.
-
-    Value is of type `Control`.
     """
 
     build_controls_on_demand: bool = True
@@ -153,9 +144,6 @@ class ReorderableListView(ListView):
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
     Called when an item drag has started.
-
-    Event handler argument is of type
-    [`OnReorderEvent`][flet.OnReorderEvent]
     """
 
     on_reorder_end: Optional[EventHandler[OnReorderEvent]] = None

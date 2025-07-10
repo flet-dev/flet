@@ -75,29 +75,21 @@ class AnimationStyle:
     duration: Optional[DurationValue] = None
     """
     The duration of the animation.
-
-    Type: [`DurationValue`][flet.DurationValue]
     """
 
     reverse_duration: Optional[DurationValue] = None
     """
     The duration of the reverse animation.
-
-    Type: [`DurationValue`][flet.DurationValue]
     """
 
     curve: Optional[AnimationCurve] = None
     """
     The curve to use for the animation.
-
-    Type: [`AnimationCurve`][flet.AnimationCurve]
     """
 
     reverse_curve: Optional[AnimationCurve] = None
     """
     The curve to use for the reverse animation.
-
-    Type: [`AnimationCurve`][flet.AnimationCurve]
     """
 
 

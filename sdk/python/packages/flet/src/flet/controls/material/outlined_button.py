@@ -38,7 +38,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     style: Optional[ButtonStyle] = None
@@ -56,8 +56,6 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     url: Optional[str] = None
@@ -71,8 +69,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     """
     Where to open URL in the web mode.
 
-    Type: [`UrlTarget`][flet.UrlTarget] and
-    defaults to `UrlTarget.BLANK`.
+    Defaults to `UrlTarget.BLANK`.
     """
 
     on_click: Optional[ControlEventHandler["OutlinedButton"]] = None

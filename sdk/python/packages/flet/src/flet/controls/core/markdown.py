@@ -248,19 +248,13 @@ class Markdown(ConstrainedControl):
     extension_set: MarkdownExtensionSet = MarkdownExtensionSet.NONE
     """
     The extensions to use when rendering the markdown content.
-
-    Value is of type
-    [`MarkdownExtensionSet`][flet.MarkdownExtensionSet]
-    and defaults to `MarkdownExtensionSet.NONE`.
     """
 
     code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None
     """
     A syntax highlighting theme for code blocks.
 
-    Value is of type
-    [`MarkdownCodeTheme`][flet.MarkdownCodeTheme]
-    and defaults to `MarkdownCodeTheme.GITHUB`.
+    Defaults to `MarkdownCodeTheme.GITHUB`.
     """
 
     auto_follow_links: bool = False
@@ -290,8 +284,6 @@ class Markdown(ConstrainedControl):
     auto_follow_links_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     image_error_content: Optional[Control] = None
@@ -302,15 +294,11 @@ class Markdown(ConstrainedControl):
     code_style_sheet: Optional[MarkdownStyleSheet] = None
     """
     The styles to use when displaying the code blocks.
-
-    Type: [`MarkdownStyleSheet`][flet.MarkdownStyleSheet]
     """
 
     md_style_sheet: Optional[MarkdownStyleSheet] = None
     """
     The styles to use when displaying the markdown.
-
-    Type: [`MarkdownStyleSheet`][flet.MarkdownStyleSheet]
     """
 
     on_tap_text: Optional[ControlEventHandler["Markdown"]] = None
@@ -323,8 +311,6 @@ class Markdown(ConstrainedControl):
     ] = None
     """
     Called when the text selection changes.
-
-    Event Type: [`TextSelectionChangeEvent`][flet.TextSelectionChangeEvent]
     """
 
     on_tap_link: Optional[ControlEventHandler["Markdown"]] = None

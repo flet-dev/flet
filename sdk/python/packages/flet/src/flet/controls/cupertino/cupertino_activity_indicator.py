@@ -26,7 +26,7 @@ class CupertinoActivityIndicator(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    Defines the [color](https://flet.dev/docs/reference/colors) of the activity
+    Defines the color of the activity
     indicator.
     """
 

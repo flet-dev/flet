@@ -55,22 +55,16 @@ class SubmenuButton(ConstrainedControl):
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     Whether to clip the content of this control or not.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     menu_style: Optional[MenuStyle] = None
     """
     Customizes this menu's appearance.
-
-    Type: [`MenuStyle`][flet.MenuStyle]
     """
 
     style: Optional[ButtonStyle] = None
     """
     Customizes this button's appearance.
-
-    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     alignment_offset: Optional[OffsetValue] = None

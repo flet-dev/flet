@@ -37,12 +37,12 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Type: [`ButtonStyle`][flet.ButtonStyle]
+    TBD
     """
 
     autofocus: bool = False
@@ -63,15 +63,11 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     on_click: Optional[ControlEventHandler["TextButton"]] = None

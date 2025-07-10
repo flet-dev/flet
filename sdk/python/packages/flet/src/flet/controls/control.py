@@ -204,13 +204,11 @@ class Control(BaseControl):
     tooltip: Optional[TooltipValue] = None
     """
     The tooltip ot show when this control is hovered over.
-    
-    Type: [`TooltipValue`][flet.TooltipValue]
     """
 
     badge: Optional[BadgeValue] = None
     """
-    Type: [`BadgeValue`][flet.BadgeValue]
+    TBD
     """
 
     visible: bool = True
@@ -229,20 +227,21 @@ class Control(BaseControl):
     Note:
         The value of this property will be propagated down to all children controls recursively.
 
-    Example:
-        For example, if you have a form with multiple entry controls you can disable them
-        all together by disabling container:
-        
-        ```python
-        c = ft.Column(
-            disabled = True,
-            controls=[
-                ft.TextField(),
-                ft.TextField()
-            ]
-        )
-        page.add(c)
-        ```
+    /// details | Example
+        type: example
+    For example, if you have a form with multiple entry controls you can disable them
+    all together by disabling container:
+    
+    ```python
+    ft.Column(
+        disabled = True,
+        controls=[
+            ft.TextField(),
+            ft.TextField()
+        ]
+    )
+    ```
+    ///
     """
 
     rtl: bool = False

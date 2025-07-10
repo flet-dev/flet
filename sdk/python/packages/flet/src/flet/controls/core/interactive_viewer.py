@@ -90,22 +90,16 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     How to clip the `content`.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     alignment: Optional[Alignment] = None
     """
     Alignment of the `content` within.
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     boundary_margin: MarginValue = 0
     """
     A margin for the visible boundaries of the `content`.
-
-    Type: [`MarginValue`][flet.MarginValue]
     """
 
     interaction_update_interval: int = 200
@@ -118,8 +112,6 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     ] = None
     """
     Called when the user begins a pan or scale gesture.
-
-    Event handler argument is of type [`ScaleStartEvent`][flet.ScaleStartEvent].
     """
 
     on_interaction_update: Optional[
@@ -127,8 +119,6 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     ] = None
     """
     Called when the user updates a pan or scale gesture.
-
-    Event handler argument is of type [`ScaleUpdateEvent`][flet.ScaleUpdateEvent].
     """
 
     on_interaction_end: Optional[EventHandler[ScaleEndEvent["InteractiveViewer"]]] = (
@@ -136,8 +126,6 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     )
     """
     Called when the user ends a pan or scale gesture.
-
-    Event handler argument is of type [`ScaleEndEvent`][flet.ScaleEndEvent].
     """
 
     def before_update(self):

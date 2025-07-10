@@ -39,18 +39,18 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     color: Optional[ColorValue] = None
     """
-    Button's text [color](https://flet.dev/docs/reference/colors). If both `color` and
+    Button's text color. If both `color` and
     `style.color` are provided, `color` value will be used.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Button's background [color](https://flet.dev/docs/reference/colors). If both
+    Button's background color. If both
     `bgcolor` and `style.bgcolor` are provided, `bgcolor` value will be used.
     """
 
@@ -75,8 +75,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
     The content will be clipped (or not) according to this option.
 
-    Type: [`ClipBehavior`][flet.ClipBehavior]
-    and defaults to `ClipBehavior.NONE`.
+    Defaults to `ClipBehavior.NONE`.
     """
 
     url: Optional[str] = None
@@ -89,8 +88,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
     Where to open URL in the web mode.
 
-    Type: [`UrlTarget`][flet.UrlTarget] and
-    defaults to `UrlTarget.BLANK`.
+    Defaults to `UrlTarget.BLANK`.
     """
 
     on_click: Optional[ControlEventHandler["ElevatedButton"]] = None
@@ -109,22 +107,23 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     property of event object contains `true` (string) when cursor enters and `false`
     when it exits.
 
-    ```python
-    import flet as ft
-
-    def main(page: ft.Page):
-        def on_hover(e):
-            e.control.bgcolor = "orange" if e.data == "true" else "yellow"
-            e.control.update()
-
-        page.add(
-            ft.ElevatedButton(
-                "I'm changing color on hover", bgcolor="yellow", on_hover=on_hover
+    Example:
+        ```python
+        import flet as ft
+    
+        def main(page: ft.Page):
+            def on_hover(e):
+                e.control.bgcolor = "orange" if e.data == "true" else "yellow"
+                e.control.update()
+    
+            page.add(
+                ft.ElevatedButton(
+                    "I'm changing color on hover", bgcolor="yellow", on_hover=on_hover
+                )
             )
-        )
-
-    ft.run(main)
-    ```
+    
+        ft.run(main)
+        ```
     """
 
     on_focus: Optional[ControlEventHandler["ElevatedButton"]] = None

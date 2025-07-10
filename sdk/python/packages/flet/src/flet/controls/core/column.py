@@ -25,17 +25,11 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     How the child Controls should be placed vertically.
-
-    Value is of type
-    [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
     Defines how the [`controls`][flet.Column.controls] should be placed horizontally.
-
-    Value is of type
-    [`CrossAxisAlignment`][flet.CrossAxisAlignment]
     """
 
     spacing: Number = 10
@@ -68,7 +62,4 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap] is `True`.
-
-    Value is of type
-    [`MainAxisAlignment`][flet.MainAxisAlignment]
     """

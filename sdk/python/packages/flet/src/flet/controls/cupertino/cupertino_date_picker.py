@@ -125,15 +125,11 @@ class CupertinoDatePicker(ConstrainedControl):
     date_picker_mode: CupertinoDatePickerMode = CupertinoDatePickerMode.DATE_AND_TIME
     """
     The mode of the date picker.
-
-    Type: [`CupertinoDatePickerMode`][flet.CupertinoDatePickerMode]
     """
 
     date_order: Optional[CupertinoDatePickerDateOrder] = None
     """
     The order in which the columns inside this picker are displayed.
-
-    Type: [`CupertinoDatePickerDateOrder`][flet.CupertinoDatePickerDateOrder].
 
     Note:
         The final order in which the columns are displayed is also influenced by

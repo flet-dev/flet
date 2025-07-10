@@ -60,8 +60,6 @@ class SegmentedButton(ConstrainedControl):
     style: Optional[ButtonStyle] = None
     """
     Customizes this button's appearance.
-
-    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     allow_empty_selection: bool = False
@@ -120,7 +118,7 @@ class SegmentedButton(ConstrainedControl):
     """
     The orientation of the button's `segments`.
 
-    Type: [`Axis`][flet.Axis] and defaults
+    Defaults
     to `Axis.HORIZONTAL`.
     """
 
@@ -130,8 +128,6 @@ class SegmentedButton(ConstrainedControl):
     parent's space with this padding.
 
     When `None`, the button adopts its intrinsic content size.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     on_change: Optional[ControlEventHandler["SegmentedButton"]] = None

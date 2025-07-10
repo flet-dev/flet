@@ -61,8 +61,6 @@ class Draggable(Control):
     - `Axis.HORIZONTAL`: Only allows horizontal dragging.
     - `Axis.VERTICAL`: Only allows vertical dragging.
     - `None`: Allows dragging in any direction.
-
-    Type: [`Axis`][flet.Axis]
     """
 
     affinity: Optional[Axis] = None
@@ -72,8 +70,6 @@ class Draggable(Control):
     - If `None`, the drag starts as soon as a tap down gesture is recognized, regardless of direction.
     - If set to `Axis.HORIZONTAL` or `Axis.VERTICAL`, the control will only initiate a drag
     when the gesture matches the specified axis, allowing it to compete with other gestures in that direction.
-
-    Type: [`Axis`][flet.Axis]
     """
 
     max_simultaneous_drags: Optional[int] = None

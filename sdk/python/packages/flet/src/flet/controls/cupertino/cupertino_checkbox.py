@@ -31,8 +31,6 @@ class CupertinoCheckbox(ConstrainedControl):
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     Defines on which side of the checkbox the [`label`][flet.CupertinoCheckbox.label] should be shown.
-
-    Type: [`LabelPosition`][flet.LabelPosition]
     """
 
     value: Optional[bool] = False
@@ -58,13 +56,13 @@ class CupertinoCheckbox(ConstrainedControl):
 
     check_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the check icon when
+    The color to use for the check icon when
     this checkbox is checked.
     """
 
     active_color: Optional[ColorValue] = CupertinoColors.ACTIVE_BLUE
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill checkbox when it
+    The color used to fill checkbox when it
     is checked/selected.
 
     If [`fill_color`][flet.CupertinoCheckbox.fill_color] returns a non-null color in the
@@ -75,13 +73,13 @@ class CupertinoCheckbox(ConstrainedControl):
 
     focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the checkbox's border
+    The color used for the checkbox's border
     shadow when it has the input focus.
     """
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill the checkbox in
+    The color used to fill the checkbox in
     all or specific [`ControlState`][flet.ControlState]
     states.
 
@@ -101,15 +99,11 @@ class CupertinoCheckbox(ConstrainedControl):
     The shape of this checkbox.
 
     Internally defaults to `RoundedRectangleBorder(radius=4)`.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor for a mouse pointer entering or hovering over this checkbox.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     semantics_label: Optional[str] = None

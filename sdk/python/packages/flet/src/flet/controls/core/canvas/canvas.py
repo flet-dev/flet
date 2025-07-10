@@ -49,6 +49,4 @@ class Canvas(ConstrainedControl):
     on_resize: Optional[EventHandler[CanvasResizeEvent]] = None
     """
     Called when the size of canvas has changed.
-
-    Event type: [`CanvasResizeEvent`][flet.CanvasResizeEvent]
     """

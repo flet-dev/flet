@@ -63,7 +63,7 @@ class CupertinoSlider(ConstrainedControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of the
+    The color to use for the portion of the
     slider track that is active.
 
     The "active" side of the slider is the side between the thumb and the minimum
@@ -72,7 +72,7 @@ class CupertinoSlider(ConstrainedControl):
 
     thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the thumb.
+    The color of the thumb.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSlider"]] = None

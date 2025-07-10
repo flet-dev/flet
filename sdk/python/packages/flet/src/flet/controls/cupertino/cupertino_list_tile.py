@@ -54,12 +54,12 @@ class CupertinoListTile(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The list tile's background [color](https://flet.dev/docs/reference/colors).
+    The list tile's background color.
     """
 
     bgcolor_activated: Optional[ColorValue] = None
     """
-    The list tile's background [color](https://flet.dev/docs/reference/colors)
+    The list tile's background color
     after the tile was tapped.
     """
 
@@ -69,8 +69,6 @@ class CupertinoListTile(ConstrainedControl):
     [`leading`][flet.CupertinoListTile.leading], [`title`][flet.CupertinoListTile.title],
     [`subtitle`][flet.CupertinoListTile.subtitle], [`additional_info`][flet.CupertinoListTile.additional_info]
     and [`trailing`][flet.CupertinoListTile.trailing] controls.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     url: Optional[str] = None

@@ -104,7 +104,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of
+    The color to use for the portion of
     the slider track that is active.
 
     The "active" side of the slider is the side between the thumb and the minimum
@@ -113,7 +113,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     inactive_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the inactive portion of
+    The color for the inactive portion of
     the slider track.
 
     The "inactive" side of the slider is the side between the thumb and the maximum
@@ -122,7 +122,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the thumb.
+    The color of the thumb.
     """
 
     interaction: Optional[SliderInteraction] = None
@@ -136,14 +136,14 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     secondary_active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of
+    The color to use for the portion of
     the slider track between the thumb and 
     the [`secondary_track_value`][flet.Slider.secondary_track_value].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight [color](https://flet.dev/docs/reference/colors) that's typically
+    The highlight color that's typically
     used to indicate that the range slider thumb is in [`ControlState.HOVERED`][flet.ControlState.HOVERED]
     or [`ControlState.DRAGGED`][flet.ControlState.DRAGGED] states.
     """
@@ -164,8 +164,6 @@ class Slider(ConstrainedControl, AdaptiveControl):
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     padding: Optional[PaddingValue] = None

@@ -159,22 +159,17 @@ class ButtonStyle:
 
     side: Optional[ControlStateValue[BorderSide]] = None
     """
-    An instance of [`BorderSide`][flet.BorderSide]
-    class, the color and weight of the button's outline.
+    Defines the button's border outline.
     """
 
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
     The shape of the button's underlying Material.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     alignment: Optional[Alignment] = None
     """
     The alignment of the button's content.
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     enable_feedback: Optional[bool] = None
@@ -185,8 +180,6 @@ class ButtonStyle:
     text_style: Optional[ControlStateValue[TextStyle]] = None
     """
     The text style of the button's `Text` control descendants.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     icon_size: Optional[ControlStateValue[Optional[Number]]] = None
@@ -196,7 +189,7 @@ class ButtonStyle:
 
     icon_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The icon's [color](https://flet.dev/docs/reference/colors) inside the button.
+    The icon's color inside the button.
 
     If not set or `None`, then the `color` will be used.
     """
@@ -204,8 +197,6 @@ class ButtonStyle:
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the button's layout will be.
-
-    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None

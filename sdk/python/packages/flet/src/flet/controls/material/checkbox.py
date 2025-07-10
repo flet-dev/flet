@@ -44,8 +44,6 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     Defines on which side of the checkbox the `label` should be shown.
-
-    Type: [`LabelPosition`][flet.LabelPosition]
     """
 
     label_style: Optional[TextStyle] = None
@@ -67,7 +65,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the checkbox in
+    The color that fills the checkbox in
     all or specific [`ControlState`][flet.ControlState]s.
 
     Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
@@ -79,7 +77,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the checkbox's overlay in
+    The color of the checkbox's overlay in
     various [`ControlState`][flet.ControlState] states.
 
     This property supports the following `ControlState` values: `PRESSED`, `SELECTED`,
@@ -88,19 +86,19 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     check_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the check icon when
+    The color to use for the check icon when
     this checkbox is checked.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is
+    The color to use when this checkbox is
     checked.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is
+    The color to use when this checkbox is
     hovered.
     """
 
@@ -173,8 +171,6 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     Defaults to [`CheckboxTheme.mouse_cursor`][flet.CheckboxTheme.mouse_cursor], or if that is `None`,
     falls back to `MouseCursor.CLICK`.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_change: Optional[ControlEventHandler["Checkbox"]] = None

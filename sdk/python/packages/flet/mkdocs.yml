@@ -61,6 +61,7 @@ theme:
     - search.suggest
     - toc.follow
 
+# Extras
 extra:
   version:
     provider: mike
@@ -73,6 +74,121 @@ extra:
       link: https://x.com/fletdev
     - icon: fontawesome/brands/bluesky
       link: https://bsky.app/profile/fletdev.bsky.social
+
+# Validation
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+# Watch
+watch:
+  - docs
+  - src
+  - ../../../../CHANGELOG.md
+  - ../../../../LICENSE
+
+# Plugins
+plugins:
+  # - footnotes
+  - search:
+      lang: en
+  - mike:
+      alias_type: symlink
+  - glightbox:
+      background: none
+  # - section-index
+  - markdown-exec
+  - mkdocstrings:
+      default_handler: python_xref
+      handlers:
+        python_xref:
+          options:
+            relative_crossrefs: true
+            docstring_style: google
+            show_signature_annotations: true
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_bases: true
+            show_source: false
+            group_by_category: true
+            show_category_heading: false
+            show_labels: false
+            show_if_no_docstring: true
+            docstring_section_style: spacy
+            inherited_members: true
+            separate_signature: true
+            filters:
+              - "!^_"   # Exclude private members starting with only one underscore
+              - "!before_update"
+              - "!before_event"
+              - "!clean"
+              - "!did_mount"
+              - "!init"
+              - "!is_isolated"
+              - "!update"
+              - "!will_unmount"
+            extensions:
+              - griffe_modernized_annotations
+          inventories:
+            - url: https://docs.python.org/3/objects.inv
+              domains: [ py, std ]
+            - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
+
+# Markdown Extensions
+markdown_extensions:
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: "#"
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: python
+          class: python
+          validator: !!python/name:markdown_exec.validator
+          format: !!python/name:markdown_exec.formatter
+  - pymdownx.snippets:
+      restrict_base_path: False
+      url_download: True
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.blocks.caption
+  - pymdownx.blocks.admonition
+  - pymdownx.blocks.details
+  - pymdownx.blocks.tab:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  # - meta
 
 # Navigation
 nav:
@@ -102,28 +218,29 @@ nav:
               - MultiView: controls/multiview.md
               - PageView: controls/pageview.md
               - ScrollableControl: controls/scrollablecontrol.md
+              - Service: controls/service.md
           - Buttons:
-              - controls/buttons.md
-              - Button: controls/button.md
-              - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
-              - CupertinoButton: controls/cupertinobutton.md
-              - CupertinoContextmenuaction: controls/cupertinocontextmenuaction.md
-              - CupertinoDialogaction: controls/cupertinodialogaction.md
-              - CupertinoFilledButton: controls/cupertinofilledbutton.md
-              - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
-              - CupertinoSlidingsegmentedButton: controls/cupertinoslidingsegmentedbutton.md
-              - CupertinoTintedButton: controls/cupertinotintedbutton.md
-              - ElevatedButton: controls/elevatedbutton.md
-              - FilledButton: controls/filledbutton.md
-              - FilledTonalButton: controls/filledtonalbutton.md
-              - FloatingActionButton: controls/floatingactionbutton.md
-              - IconButton: controls/iconbutton.md
-              - MenuitemButton: controls/menuitembutton.md
-              - OutlinedButton: controls/outlinedbutton.md
-              - PopupMenuButton: controls/popupmenubutton.md
-              - SegmentedButton: controls/segmentedbutton.md
-              - SubmenuButton: controls/submenubutton.md
-              - TextButton: controls/textbutton.md
+              - controls/buttons/index.md
+              - Button: controls/buttons/button.md
+              - CupertinoActionSheetAction: controls/buttons/cupertinoactionsheetaction.md
+              - CupertinoButton: controls/buttons/cupertinobutton.md
+              - CupertinoContextMenuAction: controls/buttons/cupertinocontextmenuaction.md
+              - CupertinoDialogAction: controls/buttons/cupertinodialogaction.md
+              - CupertinoFilledButton: controls/buttons/cupertinofilledbutton.md
+              - CupertinoSegmentedButton: controls/buttons/cupertinosegmentedbutton.md
+              - CupertinoSlidingSegmentedButton: controls/buttons/cupertinoslidingsegmentedbutton.md
+              - CupertinoTintedButton: controls/buttons/cupertinotintedbutton.md
+              - ElevatedButton: controls/buttons/elevatedbutton.md
+              - FilledButton: controls/buttons/filledbutton.md
+              - FilledTonalButton: controls/buttons/filledtonalbutton.md
+              - FloatingActionButton: controls/buttons/floatingactionbutton.md
+              - IconButton: controls/buttons/iconbutton.md
+              - MenuItemButton: controls/buttons/menuitembutton.md
+              - OutlinedButton: controls/buttons/outlinedbutton.md
+              - PopupMenuButton: controls/buttons/popupmenubutton.md
+              - SegmentedButton: controls/buttons/segmentedbutton.md
+              - SubmenuButton: controls/buttons/submenubutton.md
+              - TextButton: controls/buttons/textbutton.md
           - Dialogs, Alerts and Panels:
               - AlertDialog: controls/alertdialog.md
               - Banner: controls/banner.md
@@ -293,8 +410,11 @@ nav:
               - TextOverflow: types/textoverflow.md
               - TextSelectionChangeCause: types/textselectionchangecause.md
               - ThemeMode: types/thememode.md
+              - TileAffinity: types/tileaffinity.md
               - TimePickerEntryMode: types/timepickerentrymode.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
+              - UpdateBehavior: types/updatebehavior.md
+              - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
               - VisualDensity: types/visualdensity.md
               - WebRenderer: types/webrenderer.md
@@ -362,6 +482,7 @@ nav:
               - BoxDecoration: types/boxdecoration.md
               - BoxShadow: types/boxshadow.md
               - BrowserContextMenu: types/browsercontextmenu.md
+              - ButtonStyle: types/buttonstyle.md
               - ColorFilter: types/colorfilter.md
               - ControlEvent: types/controlevent.md
               - ControlState: types/controlstate.md
@@ -392,7 +513,7 @@ nav:
                   - types/outlinedborder/index.md
                   - BeveledRectangleBorder: types/outlinedborder/beveledrectangleborder.md
                   - CircleBorder: types/outlinedborder/circleborder.md
-                  - ContinuousRectangleBorder: types/continuousrectangleborder.md
+                  - ContinuousRectangleBorder: types/outlinedborder/continuousrectangleborder.md
                   - RoundedRectangleBorder: types/outlinedborder/roundedrectangleborder.md
                   - StadiumBorder: types/outlinedborder/stadiumborder.md
               - Padding: types/padding.md
@@ -425,7 +546,6 @@ nav:
                   - BannerTheme: types/theme/bannertheme.md
                   - BottomAppBarTheme: types/theme/bottomappbartheme.md
                   - BottomSheetTheme: types/theme/bottomsheettheme.md
-                  - ButtonStyle: types/theme/buttonstyle.md
                   - CardTheme: types/theme/cardtheme.md
                   - CheckboxTheme: types/theme/checkboxtheme.md
                   - ChipTheme: types/theme/chiptheme.md
@@ -464,10 +584,7 @@ nav:
                   - TextTheme: types/theme/texttheme.md
                   - TimePickerTheme: types/theme/timepickertheme.md
                   - TooltipTheme: types/theme/tooltiptheme.md
-              - TileAffinity: types/tileaffinity.md
               - Tooltip: types/tooltip.md
-              - UpdateBehavior: types/updatebehavior.md
-              - UrlTarget: types/urltarget.md
               - ValueKey: types/valuekey.md
               - Window: types/window.md
   - Publish:
@@ -517,117 +634,3 @@ nav:
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
-
-# Validation
-validation:
-  omitted_files: warn
-  absolute_links: warn
-  unrecognized_links: warn
-  anchors: warn
-
-# Watch
-watch:
-  - docs
-  - src
-  - ../../../../CHANGELOG.md
-  - ../../../../LICENSE
-
-# Plugins
-plugins:
-  # - footnotes
-  - search:
-      lang: en
-  - mike:
-      alias_type: symlink
-  - glightbox:
-      background: none
-  # - section-index
-  - markdown-exec
-  - mkdocstrings:
-      default_handler: python_xref
-      handlers:
-        python_xref:
-          options:
-            relative_crossrefs: true
-            docstring_style: google
-            show_signature_annotations: true
-            signature_crossrefs: true
-            show_symbol_type_heading: true
-            show_symbol_type_toc: true
-            show_root_heading: true
-            show_root_full_path: false
-            show_bases: true
-            show_source: false
-            group_by_category: true
-            show_category_heading: false
-            show_labels: false
-            show_if_no_docstring: true
-            docstring_section_style: spacy
-            inherited_members: true
-            filters:
-              - "!^_"   # Exclude private members starting with only one underscore
-              - "!before_update"
-              - "!before_event"
-              - "!clean"
-              - "!did_mount"
-              - "!init"
-              - "!is_isolated"
-              - "!update"
-              - "!will_unmount"
-            extensions:
-              - griffe_modernized_annotations
-          inventories:
-            - url: https://docs.python.org/3/objects.inv
-              domains: [ py, std ]
-            - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
-
-# Markdown Extensions
-markdown_extensions:
-  - abbr
-  - attr_list
-  - def_list
-  - footnotes
-  - md_in_html
-  - toc:
-      permalink: "#"
-
-  # Python Markdown Extensions
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.betterem:
-      smart_enable: all
-  - pymdownx.caret
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.keys
-  - pymdownx.mark
-  - pymdownx.smartsymbols
-  - pymdownx.superfences:
-      custom_fences:
-        - name: python
-          class: python
-          validator: !!python/name:markdown_exec.validator
-          format: !!python/name:markdown_exec.formatter
-  - pymdownx.snippets:
-      restrict_base_path: False
-      url_download: True
-  - pymdownx.magiclink:
-      repo_url_shorthand: true
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde
-  - pymdownx.blocks.caption
-  - pymdownx.blocks.admonition
-  - pymdownx.blocks.details
-  - pymdownx.blocks.tab:
-      alternate_style: true
-      slugify: !!python/object/apply:pymdownx.slugs.slugify
-        kwds:
-          case: lower
-  # - meta

@@ -83,33 +83,26 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Typically used to force the expansion arrow icon to the tile's `leading` or
     `trailing` edge.
 
-    Type: [`TileAffinity`][flet.TileAffinity]
-    and defaults to `TileAffinity.PLATFORM`.
+    Defaults to `TileAffinity.PLATFORM`.
     """
 
     expanded_alignment: Optional[Alignment] = None
     """
     Defines the alignment of children, which are arranged in a column when the tile is
     expanded.
-
-    Type: [`Alignment`][flet.Alignment].
     """
 
     expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     """
     Defines the alignment of each child control within `controls` when the tile is
     expanded.
-
-    Value is of type [`CrossAxisAlignment`][flet.CrossAxisAlignment]
-    and defaults to `CrossAxisAlignment.CENTER`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`][flet.ClipBehavior]
-    and defaults to `ClipBehavior.NONE`.
+    Defaults to `ClipBehavior.NONE`.
     """
 
     initially_expanded: bool = False
@@ -129,44 +122,42 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     text_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the tile's titles when the
+    The color of the tile's titles when the
     sublist is expanded.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    The icon [color](https://flet.dev/docs/reference/colors) of tile's expansion arrow
+    The icon color of tile's expansion arrow
     icon when the sublist is expanded.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
     The tile's border shape when the sublist is expanded.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The  [color](https://flet.dev/docs/reference/colors) to display behind the sublist
+    The  color to display behind the sublist
     when expanded.
     """
 
     collapsed_bgcolor: Optional[ColorValue] = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of tile when
+    Defines the background color of tile when
     the sublist is collapsed.
     """
 
     collapsed_icon_color: Optional[ColorValue] = None
     """
-    The icon [color](https://flet.dev/docs/reference/colors) of tile's expansion arrow
+    The icon color of tile's expansion arrow
     icon when the sublist is collapsed.
     """
 
     collapsed_text_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the tile's titles when the
+    The color of the tile's titles when the
     sublist is collapsed.
     """
 
@@ -209,8 +200,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the control's layout will be.
-
-    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     on_change: Optional[ControlEventHandler["ExpansionTile"]] = None

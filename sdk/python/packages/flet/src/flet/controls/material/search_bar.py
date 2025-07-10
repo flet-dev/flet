@@ -62,14 +62,14 @@ class SearchBar(ConstrainedControl):
 
     bar_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of the
+    Defines the background color of the
     search bar in all or specific
     [`ControlState`][flet.ControlState] states.
     """
 
     bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the highlight [color](https://flet.dev/docs/reference/colors) that's
+    Defines the highlight color that's
     typically used to indicate that the search bar is in `FOCUSED`, `HOVERED`, or
     `PRESSED` [`ControlState`][flet.ControlState]
     states.
@@ -122,8 +122,6 @@ class SearchBar(ConstrainedControl):
     If the bar's text field is partially off-screen or covered (e.g., by the
     keyboard), it scrolls into view, ensuring it is positioned at the specified
     distance from the Scrollable edges.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     view_leading: Optional[Control] = None
@@ -149,7 +147,7 @@ class SearchBar(ConstrainedControl):
 
     view_bgcolor: Optional[ColorValue] = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of the
+    Defines the background color of the
     search view.
     """
 
@@ -161,16 +159,11 @@ class SearchBar(ConstrainedControl):
     view_side: Optional[BorderSide] = None
     """
     Defines the color and weight of the search view's outline.
-
-    Type: [`BorderSide`][flet.BorderSide]
     """
 
     view_shape: Optional[OutlinedBorder] = None
     """
     Defines the shape of the search view.
-
-    Value is of type
-    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     view_header_text_style: Optional[TextStyle] = None
@@ -203,9 +196,6 @@ class SearchBar(ConstrainedControl):
     capitalization: Optional[TextCapitalization] = None
     """
     Enables automatic on-the-fly capitalization of entered text.
-
-    Value is of type
-    [`TextCapitalization`][flet.TextCapitalization]
     """
 
     full_screen: bool = False
@@ -217,10 +207,6 @@ class SearchBar(ConstrainedControl):
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
     The type of action button to use for the keyboard.
-
-    Value is of type
-    [`KeyboardType`][flet.KeyboardType] and defaults
-    to `KeyboardType TEXT`.
     """
 
     view_surface_tint_color: Optional[ColorValue] = None

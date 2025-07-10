@@ -58,7 +58,7 @@ class Gradient:
 
     colors: list[str]
     """
-    The [colors](https://flet.dev/docs/reference/colors) the gradient should obtain at
+    The colors the gradient should obtain at
     each of the stops. This list must contain at least two colors.
 
     If `stops` is provided, this list must have the same length as `stops`.
@@ -68,8 +68,6 @@ class Gradient:
     """
     How this gradient should tile the plane beyond in the region before `begin` and
     after `end`. 
-    
-    Type: [`GradientTileMode`][flet.GradientTileMode]
     """
 
     rotation: Optional[Number] = None

@@ -80,8 +80,6 @@ class TextSelection:
     """
     If the text range is collapsed and has more than one visual location (e.g., occurs
     at a line break), which of the two locations to use when painting the caret.
-
-    Type: [`TextAffinity`][flet.TextAffinity]
     """
 
     directional: Optional[bool] = None
@@ -196,8 +194,6 @@ class Text(ConstrainedControl):
     text_align: TextAlign = TextAlign.START
     """
     Text horizontal align.
-
-    Type: [`TextAlign`][flet.TextAlign]
     """
 
     font_family: Optional[str] = None
@@ -218,8 +214,7 @@ class Text(ConstrainedControl):
     """
     Font weight.
 
-    Type: [`FontWeight`][flet.FontWeight]
-    and defaults to `FontWeight.NORMAL`.
+    Defaults to `FontWeight.NORMAL`.
     """
 
     italic: bool = False
@@ -230,15 +225,11 @@ class Text(ConstrainedControl):
     style: Optional[TextStyle] = None
     """
     The text's style.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     theme_style: Optional[TextThemeStyle] = None
     """
     Pre-defined text style.
-
-    Type: [`TextThemeStyle`][flet.TextThemeStyle]
     """
 
     max_lines: Optional[int] = None
@@ -255,8 +246,6 @@ class Text(ConstrainedControl):
     overflow: TextOverflow = TextOverflow.CLIP
     """
     Defines how the text overflows.
-
-    Type: [`TextOverflow`][flet.TextOverflow]
     """
 
     selectable: Optional[bool] = None
@@ -273,17 +262,17 @@ class Text(ConstrainedControl):
     If `True`, the glyphs in the text will be positioned as if there was unlimited
     horizontal space.
 
-    Value is of type `bool` and defaults to `False`.
+    Defaults to `False`.
     """
 
     color: Optional[ColorValue] = None
     """
-    The text's foreground [color](https://flet.dev/docs/reference/colors).
+    The text's foreground color.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The text's background [color](https://flet.dev/docs/reference/colors).
+    The text's background color.
     """
 
     semantics_label: Optional[str] = None
@@ -361,8 +350,6 @@ class Text(ConstrainedControl):
     on_selection_change: Optional[EventHandler[TextSelectionChangeEvent["Text"]]] = None
     """
     Called when the user changes the selection of text (including the cursor location).
-
-    Event type: [`TextSelectionChangeEvent`][flet.TextSelectionChangeEvent]
 
     Note:
         Has effect only when [`selectable`][flet.Text.selectable] is `True`.

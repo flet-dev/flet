@@ -36,8 +36,6 @@ class Rect(Shape):
     border_radius: Optional[BorderRadiusValue] = None
     """
     Border radius of the rectangle.
-
-    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
     paint: Optional[Paint] = None

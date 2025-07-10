@@ -38,7 +38,7 @@ class VerticalDivider(Control):
 
     color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when painting the
+    The color to use when painting the
     line.
     
     If `None`, [`DividerTheme.color`][flet.DividerTheme.color] is used.

@@ -49,22 +49,22 @@ class CupertinoButton(ConstrainedControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Button's background [color](https://flet.dev/docs/reference/colors).
+    Button's background color.
     """
 
     color: Optional[ColorValue] = None
     """
-    Button's text [color](https://flet.dev/docs/reference/colors).
+    Button's text color.
     """
 
     disabled_bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the button when
+    The background color of the button when
     it is disabled.
     """
 
@@ -116,8 +116,6 @@ class CupertinoButton(ConstrainedControl):
     url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     autofocus: bool = False

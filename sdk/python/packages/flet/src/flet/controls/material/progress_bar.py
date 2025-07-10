@@ -35,12 +35,12 @@ class ProgressBar(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    The progress indicator's [color](https://flet.dev/docs/reference/colors).
+    The progress indicator's color.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) of the track being filled by the
+    Color of the track being filled by the
     linear indicator.
     """
 
@@ -86,10 +86,10 @@ class ProgressBar(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert self.value is None or self.value >= 0, "value cannot be negative"
+        assert self.value is None or self.value >= 0, f"value must be greater than or equal to 0, got {self.value}"
         assert self.bar_height is None or self.bar_height >= 0, (
-            "bar_height cannot be negative"
+            f"bar_height must be greater than or equal to 0, got {self.bar_height}"
         )
         assert self.semantics_value is None or self.semantics_value >= 0, (
-            "semantics_value cannot be negative"
+            f"semantics_value must be greater than or equal to 0, got {self.semantics_value}"
         )

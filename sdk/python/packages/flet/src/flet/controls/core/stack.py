@@ -43,8 +43,6 @@ class Stack(ConstrainedControl, AdaptiveControl):
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     alignment: Optional[Alignment] = None
@@ -58,6 +56,4 @@ class Stack(ConstrainedControl, AdaptiveControl):
     fit: StackFit = StackFit.LOOSE
     """
     How to size the non-positioned [`controls`][flet.Stack.controls].
-
-    Type: [`StackFit`][flet.StackFit]
     """

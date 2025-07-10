@@ -39,7 +39,7 @@ class FloatingActionButton(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Button background [color](https://flet.dev/docs/reference/colors).
+    Button background color.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -65,21 +65,19 @@ class FloatingActionButton(ConstrainedControl):
 
     foreground_color: Optional[ColorValue] = None
     """
-    The default foreground [color](https://flet.dev/docs/reference/colors) for icons
+    The default foreground color for icons
     and text within the button.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for filling the button
+    The color to use for filling the button
     when the button has input focus.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     elevation: Optional[Number] = None
@@ -134,16 +132,13 @@ class FloatingActionButton(ConstrainedControl):
     """
     Where to open URL in the web mode.
 
-    Type: [`UrlTarget`][flet.UrlTarget] and
-    defaults to `UrlTarget.BLANK`.
+    Defaults to `UrlTarget.BLANK`.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     on_click: Optional[ControlEventHandler["FloatingActionButton"]] = None

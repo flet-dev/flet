@@ -30,7 +30,7 @@ class Icon(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     size: Optional[Number] = None

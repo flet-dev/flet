@@ -50,7 +50,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     icon_size: Optional[Number] = None
@@ -78,7 +78,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     selected_icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors) for the selected state.
+    Icon color for the selected state.
 
     An example of icon toggle button:
 
@@ -115,13 +115,13 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     highlight_color: Optional[ColorValue] = None
     """
-    The button's [color](https://flet.dev/docs/reference/colors) when the button is
+    The button's color when the button is
     pressed. The highlight fades in quickly as the button is held down.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Type: [`ButtonStyle`][flet.ButtonStyle]
+    TBD
     """
 
     autofocus: bool = False
@@ -133,23 +133,23 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     disabled_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the icon inside the
-      button when disabled.
+    The color to use for the icon inside the
+    button when disabled.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The button's [color](https://flet.dev/docs/reference/colors) when hovered.
+    The button's color when hovered.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The button's [color](https://flet.dev/docs/reference/colors) when in focus.
+    The button's color when in focus.
     """
 
     splash_color: Optional[ColorValue] = None
     """
-    The primary [color](https://flet.dev/docs/reference/colors) of the button when the
+    The primary color of the button when the
     button is in the down (pressed) state.
     """
 
@@ -172,8 +172,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     gestures.
 
     Defaults to `Padding.all(8)`.
-    
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     enable_feedback: Optional[bool] = None
@@ -192,23 +190,17 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
-
-    Type: [`MouseCursor`][flet.MouseCursor]
     """
 
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the control's layout will be.
-
-    Type: [`VisualDensity`][flet.VisualDensity]
     """
 
     size_constraints: Optional[BoxConstraints] = None

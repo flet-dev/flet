@@ -69,7 +69,7 @@ class AppBar(AdaptiveControl):
 
     color: Optional[ColorValue] = None
     """
-    The default [color](https://flet.dev/docs/reference/colors) for [`Text`][flet.Text]
+    The default color for [`Text`][flet.Text]
     and [`Icon`][flet.Icon] controls within this app bar.
 
     Default color is defined by [`AppBarTheme.color`][flet.AppBarTheme.color]
@@ -77,7 +77,7 @@ class AppBar(AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The fill [color](https://flet.dev/docs/reference/colors) to use for this app bar.
+    The fill color to use for this app bar.
 
     Default color is defined by [`AppBarTheme.bgcolor`][flet.AppBarTheme.bgcolor]
     """
@@ -98,7 +98,7 @@ class AppBar(AdaptiveControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the shadow below this app bar.
+    The color of the shadow below this app bar.
 
     A shadow is only visible and displayed if the [`elevation`][flet.AppBar.elevation] is greater than zero.
     """

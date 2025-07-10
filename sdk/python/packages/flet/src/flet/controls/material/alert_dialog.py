@@ -63,7 +63,7 @@ class AlertDialog(DialogControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of this dialog's
+    The background color of this dialog's
     surface.
     """
 
@@ -90,8 +90,6 @@ class AlertDialog(DialogControl):
     (but see [`content_padding`][flet.AlertDialog.content_padding]).
     If it is not set, then an extra `20` pixels of bottom padding is added to separate
     the `title` from the `actions`.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     content_padding: Optional[PaddingValue] = None
@@ -102,8 +100,6 @@ class AlertDialog(DialogControl):
     pixels is provided above the content to separate the content from the title, and
     padding of 24 pixels is provided on the left, right, and bottom to separate the
     content from the other edges of this dialog.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     actions_padding: Optional[PaddingValue] = None
@@ -115,8 +111,6 @@ class AlertDialog(DialogControl):
 
     If are no actions, then no padding will be included. The padding around the button
     bar defaults to zero.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     actions_alignment: Optional[MainAxisAlignment] = None
@@ -124,8 +118,6 @@ class AlertDialog(DialogControl):
     Defines the horizontal layout of the actions.
 
     Internally defaults to `MainAxisAlignment.END`.
-
-    Type: [`MainAxisAlignment`][flet.MainAxisAlignment]
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -134,8 +126,6 @@ class AlertDialog(DialogControl):
 
     Defaults to [`DialogTheme.shape`][flet.DialogTheme.shape]. If it is not set,
     it defaults to `RoundedRectangleBorder(radius=4.0)`.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     inset_padding: Optional[PaddingValue] = None
@@ -144,33 +134,27 @@ class AlertDialog(DialogControl):
 
     Defaults to `Padding.symmetric(vertical=40, horizontal=24)` - 40 pixels
     horizontally and 24 pixels vertically outside of this dialog box.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     icon_padding: Optional[PaddingValue] = None
     """
     Padding around the [`icon`][flet.AlertDialog.icon].
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     action_button_padding: Optional[PaddingValue] = None
     """
     The padding that surrounds each button in [`actions`][flet.AlertDialog.actions].
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as a surface tint overlay
+    The color used as a surface tint overlay
     on this dialog's background color, which reflects this dialog's elevation.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to paint a drop shadow
+    The color used to paint a drop shadow
     under this dialog, which reflects this dialog's elevation.
     """
 
@@ -228,8 +212,6 @@ class AlertDialog(DialogControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     Defines how the contents of this dialog are clipped (or not) to the given `shape`.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     semantics_label: Optional[str] = None
@@ -243,7 +225,7 @@ class AlertDialog(DialogControl):
 
     barrier_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the modal barrier that
+    The color of the modal barrier that
     darkens everything below this dialog.
 
     If `None`, then [`DialogTheme.barrier_color`][flet.DialogTheme.barrier_color]

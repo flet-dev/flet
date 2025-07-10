@@ -55,7 +55,7 @@ class Chip(ConstrainedControl):
 
     selected_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the chip's background
+    The color used for the chip's background
     when it is selected.
     """
 
@@ -68,7 +68,7 @@ class Chip(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) to be used for the unselected,
+    Color to be used for the unselected,
     enabled chip's background.
     """
 
@@ -80,13 +80,13 @@ class Chip(ConstrainedControl):
 
     check_color: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) of the chip's check mark when a
+    Color of the chip's check mark when a
     check mark is visible.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the chip's background
+    The color used for the chip's background
     when the elevation is greater than `0` and the chip is not selected.
     """
 
@@ -119,12 +119,12 @@ class Chip(ConstrainedControl):
 
     delete_icon_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the [`delete_icon`][flet.Chip.delete_icon].
+    The color of the [`delete_icon`][flet.Chip.delete_icon].
     """
 
     disabled_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the chip's background
+    The color used for the chip's background
     if it is disabled.
     """
 
@@ -139,13 +139,11 @@ class Chip(ConstrainedControl):
     label_text_style: Optional[TextStyle] = None
     """
     The style to be applied to the chip's [`label`][flet.Chip.label].
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     selected_shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the chip's background
+    The color used for the chip's background
     when the elevation is greater than `0` and the chip is selected.
     """
 
@@ -159,13 +157,13 @@ class Chip(ConstrainedControl):
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used as an overlay on [`bgcolor`][flet.Chip.bgcolor]
+    The color used as an overlay on [`bgcolor`][flet.Chip.bgcolor]
     to indicate elevation.
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the chip in various [`ControlState`][flet.ControlState].
+    The color that fills the chip in various [`ControlState`][flet.ControlState].
     """
 
     elevation_on_click: Optional[Number] = None
@@ -182,8 +180,6 @@ class Chip(ConstrainedControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     visual_density: Optional[VisualDensity] = None
@@ -194,8 +190,6 @@ class Chip(ConstrainedControl):
     border_side: Optional[BorderSide] = None
     """
     Defines the color and weight of the chip's outline.
-
-    Type: [`BorderSide`][flet.BorderSide]
     """
 
     leading_size_constraints: Optional[BoxConstraints] = None
@@ -204,8 +198,6 @@ class Chip(ConstrainedControl):
 
     When unspecified, it defaults to a minimum size of chip height or label height
     (whichever is greater) and a padding of `8.0` pixels on all sides.
-
-    Type: [`BoxConstraints`][flet.BoxConstraints]
     """
 
     delete_icon_size_constraints: Optional[BoxConstraints] = None
@@ -214,36 +206,26 @@ class Chip(ConstrainedControl):
 
     When unspecified, it defaults to a minimum size of chip height or label height
     (whichever is greater) and a padding of 8.0 pixels on all sides.
-
-    Type: [`BoxConstraints`][flet.BoxConstraints]
     """
 
     enable_animation_style: Optional[AnimationStyle] = None
     """
     The animation style for the enable and disable animations.
-
-    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     select_animation_style: Optional[AnimationStyle] = None
     """
     The animation style for the select and unselect animations.
-
-    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     leading_drawer_animation_style: Optional[AnimationStyle] = None
     """
     The animation style for the [`leading`][flet.Chip.leading] control's animations.
-
-    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     delete_drawer_animation_style: Optional[AnimationStyle] = None
     """
     The animation style for the [`delete_icon`][flet.Chip.delete_icon]'s animations.
-
-    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     on_click: Optional[ControlEventHandler["Chip"]] = None

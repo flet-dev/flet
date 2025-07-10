@@ -85,7 +85,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of this destination.
+    The color of this destination.
     """
 
 
@@ -114,7 +114,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the navigation bar itself.
+    The color of the navigation bar itself.
     """
 
     label_behavior: Optional[NavigationBarLabelBehavior] = None
@@ -123,9 +123,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     Can be used to show all labels, show only the selected label, or hide all labels.
 
-    Value is of type
-    [`NavigationBarLabelBehavior`][flet.NavigationBarLabelBehavior]
-    and defaults to `NavigationBarLabelBehavior.ALWAYS_SHOW`.
+    Defaults to `NavigationBarLabelBehavior.ALWAYS_SHOW`.
     """
 
     elevation: Optional[Number] = None
@@ -135,22 +133,19 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the drop shadow to
+    The color used for the drop shadow to
     indicate `elevation`.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the selected destination
+    The color of the selected destination
     indicator.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
     The shape of the selected destination indicator.
-
-    Value is of type
-    [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     surface_tint_color: Optional[ColorValue] = None
@@ -170,7 +165,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight [color](https://flet.dev/docs/reference/colors) of the
+    The highlight color of the
     `NavigationDestination` in various
     [`ControlState`][flet.ControlState] states.
 

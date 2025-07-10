@@ -43,15 +43,12 @@ class Option(Control):
     """
     Defines the alignment of this option in it's container.
 
-    Type: [`Alignment`][flet.Alignment]and
-    defaults to `Alignment.center_left()`.
+    Defaults to `Alignment.center_left()`.
     """
 
     text_style: Optional[TextStyle] = None
     """
     Defines the style of the `text`.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     on_click: Optional[ControlEventHandler["Option"]] = None
@@ -152,8 +149,6 @@ class DropdownM2(FormFieldControl):
     padding: Optional[PaddingValue] = None
     """
     The padding around the visible portion of this dropdown.
-    
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     select_icon_enabled_color: Optional[ColorValue] = None
@@ -172,8 +167,6 @@ class DropdownM2(FormFieldControl):
     By default this button's inner width is the minimum size of its content.
 
     If `True`, the inner width is expanded to fill its surrounding container.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     disabled_hint_content: Optional[Control] = None

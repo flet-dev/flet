@@ -38,7 +38,7 @@ class FormFieldControl(ConstrainedControl):
     text being edited.
     """
 
-    text_vertical_align: Union[VerticalAlignment, Optional[Number]] = None
+    text_vertical_align: Optional[Union[VerticalAlignment, Number]] = None
     """
     Defines how the text should be aligned vertically.
 
@@ -73,19 +73,16 @@ class FormFieldControl(ConstrainedControl):
     border: InputBorder = InputBorder.OUTLINE
     """
     Border around input.
-
-    Value is of type [`InputBorder`][flet.InputBorder]
-    and defaults to `InputBorder.OUTLINE`.
     """
 
     color: Optional[ColorValue] = None
     """
-    Text [color](https://flet.dev/docs/reference/colors).
+    Text color.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    TextField background [color](https://flet.dev/docs/reference/colors). Will not be
+    TextField background color. Will not be
     visible if `filled=False`.
     """
 
@@ -103,18 +100,18 @@ class FormFieldControl(ConstrainedControl):
 
     border_color: Optional[ColorValue] = None
     """
-    Border [color](https://flet.dev/docs/reference/colors). Could be `transparent` to
+    Border color. Could be `transparent` to
     hide the border.
     """
 
     focused_color: Optional[ColorValue] = None
     """
-    Text [color](https://flet.dev/docs/reference/colors) when TextField is focused.
+    Text color when TextField is focused.
     """
 
     focused_bgcolor: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of TextField in focused
+    Background color of TextField in focused
     state. Will not be visible if `filled=False`.
     """
 
@@ -125,7 +122,7 @@ class FormFieldControl(ConstrainedControl):
 
     focused_border_color: Optional[ColorValue] = None
     """
-    Border [color](https://flet.dev/docs/reference/colors) in focused state.
+    Border color in focused state.
     """
 
     content_padding: Optional[PaddingValue] = None
@@ -149,7 +146,7 @@ class FormFieldControl(ConstrainedControl):
 
     fill_color: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of TextField. Will not
+    Background color of TextField. Will not
     be visible if `filled=False`.
     """
 
@@ -165,7 +162,7 @@ class FormFieldControl(ConstrainedControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    Background [color](https://flet.dev/docs/reference/colors) of TextField when
+    Background color of TextField when
     hovered. Will not be visible if `filled=False`.
     """
 

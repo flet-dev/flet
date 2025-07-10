@@ -59,8 +59,6 @@ class CupertinoAlertDialog(DialogControl):
     """
     The animation style to be used when the system keyboard intrudes into the space
     that the dialog is placed in.
-
-    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     def before_update(self):

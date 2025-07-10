@@ -32,8 +32,6 @@ class TextSpan(Control):
     style: Optional[TextStyle] = None
     """
     Defines the style of this text span.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     spans: Optional[list["TextSpan"]] = None
@@ -54,8 +52,6 @@ class TextSpan(Control):
     url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     semantics_label: Optional[str] = None

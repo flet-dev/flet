@@ -49,8 +49,6 @@ class AutoComplete(Control):
     on_select: Optional[EventHandler[AutoCompleteSelectEvent]] = None
     """
     Called when a suggestion is selected.
-
-    Event type: [`AutoCompleteSelectEvent`][flet.AutoCompleteSelectEvent]
     """
 
     @property

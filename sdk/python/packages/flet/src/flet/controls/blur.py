@@ -33,8 +33,6 @@ class Blur:
     tile_mode: Optional[BlurTileMode] = None
     """
     The tile mode for the blur.
-
-    Type: [`BlurTileMode`][flet.BlurTileMode]
     """
 
 

@@ -77,8 +77,6 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
     """
     The direction in which the control can be dismissed.
-
-    Value is of type [`DismissDirection`][flet.DismissDirection].
     """
 
     dismiss_thresholds: dict[DismissDirection, Optional[Number]] = field(

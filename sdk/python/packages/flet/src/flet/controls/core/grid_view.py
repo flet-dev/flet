@@ -76,8 +76,6 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior].
     """
 
     semantic_child_count: Optional[int] = None

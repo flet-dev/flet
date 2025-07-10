@@ -143,7 +143,7 @@ class SnackBar(DialogControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    SnackBar background [color](https://flet.dev/docs/reference/colors).
+    SnackBar background color.
     """
 
     duration: DurationValue = field(default_factory=lambda: Duration(milliseconds=4000))
@@ -185,8 +185,6 @@ class SnackBar(DialogControl):
     shape: Optional[OutlinedBorder] = None
     """
     The shape of this snack bar.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE

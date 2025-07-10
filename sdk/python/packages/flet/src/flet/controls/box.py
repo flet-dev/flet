@@ -37,14 +37,12 @@ class ColorFilter:
 
     color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when applying the filter.
+    The color to use when applying the filter.
     """
 
     blend_mode: Optional[BlendMode] = None
     """
     The blend mode to apply to the color filter.
-
-    Type: [`BlendMode`][flet.BlendMode]
     """
 
 
@@ -99,7 +97,7 @@ class BoxShadow:
 
     color: ColorValue = Colors.BLACK
     """
-    [Color](https://flet.dev/docs/reference/colors) used to draw the shadow.
+    Color used to draw the shadow.
     """
 
     offset: OffsetValue = field(default_factory=lambda: Offset())
@@ -108,13 +106,11 @@ class BoxShadow:
     element. Positive x/y offsets will shift the shadow to the right and down, while
     negative offsets shift the shadow to the left and up. The offsets are relative to
     the position of the element that is casting it.
-
-    Type: [`Offset`][flet.Offset]
     """
 
     blur_style: BlurStyle = BlurStyle.NORMAL
     """
-    Type: [`BlurStyle`][flet.BlurStyle]
+    TBD
     """
 
 
@@ -160,29 +156,21 @@ class DecorationImage:
     color_filter: Optional[ColorFilter] = None
     """
     A color filter to apply to the image before painting it.
-
-    Type: [`ColorFilter`][flet.ColorFilter]
     """
 
     fit: Optional[BoxFit] = None
     """
     How the image should be inscribed into the box.
-
-    Type: [`BoxFit`][flet.BoxFit]
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.center())
     """
     The alignment of the image within its bounds.
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
     How the image should be repeated to fill the box.
-
-    Type: [`ImageRepeat`][flet.ImageRepeat]
     """
 
     match_text_direction: bool = False
@@ -203,8 +191,6 @@ class DecorationImage:
     filter_quality: FilterQuality = FilterQuality.MEDIUM
     """
     The quality of the image filter.
-
-    Type: [`FilterQuality`][flet.FilterQuality]
     """
 
     invert_colors: bool = False
@@ -227,7 +213,7 @@ class BoxDecoration:
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to fill in the background of
+    The color to fill in the background of
     the box.
     """
 
@@ -235,8 +221,6 @@ class BoxDecoration:
     """
     An image to paint above the background [`bgcolor`][flet.BoxDecoration.bgcolor] 
     or [`gradient`][flet.BoxDecoration.gradient].
-
-    Type: [`DecorationImage`][flet.DecorationImage]
     """
 
     border: Optional[Border] = None
@@ -244,22 +228,16 @@ class BoxDecoration:
     A border to draw above the background 
     [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient], 
     and [`image`][flet.BoxDecoration.image].
-
-    Type: [`Border`][flet.Border]
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of the box.
-
-    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
     shadows: Optional[BoxShadowValue] = None
     """
     A list of shadows cast by the box.
-
-    Type: [`BoxShadowValue`][flet.BoxShadowValue]
     """
 
     gradient: Optional[Gradient] = None
@@ -277,8 +255,6 @@ class BoxDecoration:
     """
     The blend mode to apply to the background [`bgcolor`][flet.BoxDecoration.bgcolor] 
     or [`gradient`][flet.BoxDecoration.gradient].
-
-    Type: [`BlendMode`][flet.BlendMode]
     """
 
     def __post_init__(self):
@@ -337,32 +313,24 @@ class BoxConstraints:
     """
     The minimum width that satisfies the constraints, such that
     `0.0 <= min_width <= max_width`.
-
-    Type: [`Number`][flet.Number]
     """
 
     min_height: Number = 0
     """
     The minimum height that satisfies the constraints, such that
     `0.0 <= min_height <= max_height`.
-
-    Type: [`Number`][flet.Number]
     """
 
     max_width: Number = float("inf")
     """
     The maximum width that satisfies the constraints, such that
     `min_width <= max_width <= float("inf")`.
-
-    Type: [`Number`][flet.Number]
     """
 
     max_height: Number = float("inf")
     """
     The maximum height that satisfies the constraints, such that
     `min_height <= max_height <= float("inf")`.
-
-    Type: [`Number`][flet.Number]
     """
 
     def __post_init__(self):

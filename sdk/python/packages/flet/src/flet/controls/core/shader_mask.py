@@ -22,8 +22,6 @@ class ShaderMask(ConstrainedControl):
     shader: Gradient
     """
     Use gradient as a shader.
-
-    Type: [`Gradient`][flet.Gradient]
     """
 
     content: Optional[Control] = None
@@ -34,13 +32,9 @@ class ShaderMask(ConstrainedControl):
     blend_mode: BlendMode = BlendMode.MODULATE
     """
     The blend mode to use when applying the shader to the [`content`][flet.ShaderMask.content].
-
-    Type: [`BlendMode`][flet.BlendMode]
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
     The radius of the mask.
-
-    Type: [`BorderRadiusValue`][flet.BorderRadiusValue]
     """

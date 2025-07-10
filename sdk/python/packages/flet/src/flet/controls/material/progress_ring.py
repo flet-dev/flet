@@ -36,12 +36,12 @@ class ProgressRing(ConstrainedControl):
 
     color: Optional[ColorValue] = None
     """
-    The progress indicator's [color](https://flet.dev/docs/reference/colors).
+    The progress indicator's color.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) of the circular track being filled
+    Color of the circular track being filled
     by the circular indicator.
     """
 
@@ -57,8 +57,6 @@ class ProgressRing(ConstrainedControl):
     stroke_cap: Optional[StrokeCap] = None
     """
     The progress indicator's line ending.
-
-    Type: [`StrokeCap`][flet.StrokeCap]
     """
 
     semantics_label: Optional[str] = None

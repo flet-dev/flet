@@ -22,7 +22,7 @@ class Placeholder(ConstrainedControl):
 
     color: ColorValue = Colors.BLUE_GREY_700
     """
-    The [color](https://flet.dev/docs/reference/colors) of the placeholder box.
+    The color of the placeholder box.
     """
 
     fallback_height: Number = 400.0

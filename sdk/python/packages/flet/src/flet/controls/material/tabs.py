@@ -99,8 +99,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Defaults to [`TabAlignment.START`][flet.TabAlignment.START], 
     if [`scrollable=True`][flet.Tabs.scrollable], and to
     [`TabAlignment.FILL`][flet.TabAlignment.FILL], if [`scrollable=False`][flet.Tabs.scrollable].
-    
-    Type: [`TabAlignment`][flet.TabAlignment]
     """
 
     animation_duration: DurationValue = field(default_factory=lambda: Duration(milliseconds=50))
@@ -110,12 +108,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     divider_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the divider.
+    The color of the divider.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the indicator(line that
+    The color of the indicator(line that
     appears below the selected tab).
     """
 
@@ -126,7 +124,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     indicator_border_side: Optional[BorderSide] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) and weight of the horizontal
+    The color and weight of the horizontal
     line drawn below the selected tab.
     """
 
@@ -153,39 +151,33 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of selected tab labels.
+    The color of selected tab labels.
     """
 
     label_padding: Optional[PaddingValue] = None
     """
     The padding around the tab label.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     label_text_style: Optional[TextStyle] = None
     """
     The text style of the tab labels.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     unselected_label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of unselected tab labels.
+    The color of unselected tab labels.
     """
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
     The text style of the unselected tab labels.
-
-    Type: [`TextStyle`][flet.TextStyle]
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the ink response focus, hover, and splash
-    [colors](https://flet.dev/docs/reference/colors) in various
+    colors in various
     [`ControlState`][flet.ControlState] states.
 
     The following states are supported: `ControlState.PRESSED`, `ControlState.HOVERED` and
@@ -223,22 +215,16 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     padding: Optional[PaddingValue] = None
     """
     The padding around the Tabs control.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     splash_border_radius: Optional[BorderRadiusValue] = None
     """
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
-
-    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     on_click: Optional[ControlEventHandler["Tabs"]] = None

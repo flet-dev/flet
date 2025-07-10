@@ -47,26 +47,24 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the navigation bar itself.
+    The color of the navigation bar itself.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and
+    The foreground color of the icon and
     title of the selected destination.
     """
 
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
     """
-    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and
+    The foreground color of the icon and
     title of the unselected destinations.
     """
 
     border: Optional[Border] = None
     """
     Defines the border of this navigation bar.
-
-    Type: [`Border`][flet.Border]
     """
 
     icon_size: Number = 30

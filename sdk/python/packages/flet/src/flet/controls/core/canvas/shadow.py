@@ -22,7 +22,7 @@ class Shadow(Shape):
 
     color: Optional[ColorValue] = None
     """
-    Shadow [color](https://flet.dev/docs/reference/colors).
+    Shadow color.
     """
 
     elevation: Optional[Number] = None

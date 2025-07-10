@@ -33,7 +33,7 @@ class BottomSheet(DialogControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The sheet's background [color](https://flet.dev/docs/reference/colors).
+    The sheet's background color.
     """
 
     dismissible: bool = True
@@ -73,29 +73,21 @@ class BottomSheet(DialogControl):
     animation_style: Optional[AnimationStyle] = None
     """
     The sheet's animation style.
-
-    Type: [`AnimationStyle`][flet.AnimationStyle]
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     The size constraints to apply to the bottom sheet.
-
-    Type: [`BoxConstraints`][flet.BoxConstraints]
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     Defines how the content of the bottom sheet should be clipped.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     shape: Optional[OutlinedBorder] = None
     """
     Defines the shape of the bottom sheet.
-
-    Type: [`OutlinedBorder`][flet.OutlinedBorder]
     """
 
     def before_update(self):

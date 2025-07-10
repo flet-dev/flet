@@ -14,12 +14,10 @@ class Color(Shape):
 
     color: Optional[ColorValue] = None
     """
-    [Color](https://flet.dev/docs/reference/colors) to paint onto the canvas.
+    Color to paint onto the canvas.
     """
 
     blend_mode: Optional[BlendMode] = None
     """
     Blend mode to apply.
-
-    Type: [`BlendMode`][flet.BlendMode]
     """

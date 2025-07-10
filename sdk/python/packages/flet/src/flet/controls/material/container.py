@@ -53,65 +53,50 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Empty space to inscribe inside a container decoration (background, border). The
     child control is placed inside this padding.
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     margin: Optional[MarginValue] = None
     """
     Empty space to surround the decoration and child control.
-
-    Type: [`Margin`][flet.Margin]
     """
 
     alignment: Optional[Alignment] = None
     """
     Defines the alignment of the [`content`][flet.Container.content] inside the
     container.
-
-    Type: [`Alignment`][flet.Alignment]
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Defines the background [color](https://flet.dev/docs/reference/colors) of the
+    Defines the background color of the
     container.
     """
 
     gradient: Optional[Gradient] = None
     """
     Defines the gradient background of the container.
-
-    Type: [`Gradient`][flet.Gradient]
     """
 
     blend_mode: Optional[BlendMode] = None
     """
     The blend mode applied to the `color` or `gradient` background of the container.
 
-    Type: [`BlendMode`][flet.BlendMode]and
-    defaults to `BlendMode.MODULATE`.
+    Defaults to `BlendMode.MODULATE`.
     """
 
     border: Optional[Border] = None
     """
     A border to draw above the background color.
-
-    Type: [`Border`][flet.Border]
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of this container.
-
-    Type: [`BorderRadius`][flet.BorderRadius]
     """
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
     Sets the shape of this container.
-
-    Type: [`BoxShape`][flet.BoxShape]
     """
 
     clip_behavior: Optional[ClipBehavior] = None
@@ -120,8 +105,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     
     Defaults to `ClipBehavior.ANTI_ALIAS` if [`border_radius`][flet.Container.border_radius] is not `None`;
     otherwise `ClipBehavior.NONE`.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     ink: bool = False
@@ -134,78 +117,63 @@ class Container(ConstrainedControl, AdaptiveControl):
     An image to paint above the `bgcolor` or `gradient`. If `shape=BoxShape.CIRCLE`
     then this image is clipped to the circle's boundary; if `border_radius` is not
     `None` then the image is clipped to the given radii.
-
-    Type: [`DecorationImage`][flet.DecorationImage]
     """
 
     ink_color: Optional[ColorValue] = None
     """
-    The splash [color](https://flet.dev/docs/reference/colors) of the ink response.
+    The splash color of the ink response.
     """
 
     animate: Optional[AnimationValue] = None
     """
     Enables container "implicit" animation that gradually changes its values over a
     period of time.
-
-    Type: [`AnimationValue`][flet.AnimationValue]
     """
 
     blur: Optional[BlurValue] = None
     """
     Applies Gaussian blur effect under the container.
 
-    The value of this property could be one of the following:
-
-    * **a number** - specifies the same value for horizontal and vertical sigmas, e.g.
-    `10`.
-    * **a tuple** - specifies separate values for horizontal and vertical sigmas, e.g.
-    `(10, 1)`.
-    * **an instance of [`Blur`][flet.Blur] *
-
-    For example:
-
-    ```python
-    ft.Stack(
-        controls=[
-            ft.Container(
-                content=ft.Text("Hello"),
-                image_src="https://picsum.photos/100/100",
-                width=100,
-                height=100,
-            ),
-            ft.Container(
-                width=50,
-                height=50,
-                blur=10,
-                bgcolor="#44CCCC00",
-            ),
-            ft.Container(
-                width=50,
-                height=50,
-                left=10,
-                top=60,
-                blur=(0, 10),
-            ),
-            ft.Container(
-                top=10,
-                left=60,
-                blur=ft.Blur(10, 0, ft.BlurTileMode.MIRROR),
-                width=50,
-                height=50,
-                bgcolor="#44CCCCCC",
-                border=ft.border.all(2, ft.Colors.BLACK),
-            ),
-        ]
-    )
-    ```
+    Example:
+        ```python
+        ft.Stack(
+            controls=[
+                ft.Container(
+                    content=ft.Text("Hello"),
+                    image_src="https://picsum.photos/100/100",
+                    width=100,
+                    height=100,
+                ),
+                ft.Container(
+                    width=50,
+                    height=50,
+                    blur=10,
+                    bgcolor="#44CCCC00",
+                ),
+                ft.Container(
+                    width=50,
+                    height=50,
+                    left=10,
+                    top=60,
+                    blur=(0, 10),
+                ),
+                ft.Container(
+                    top=10,
+                    left=60,
+                    blur=ft.Blur(10, 0, ft.BlurTileMode.MIRROR),
+                    width=50,
+                    height=50,
+                    bgcolor="#44CCCCCC",
+                    border=ft.border.all(2, ft.Colors.BLACK),
+                ),
+            ]
+        )
+        ```
     """
 
     shadow: Optional[BoxShadowValue] = None
     """
     The shadow(s) below this container.
-
-    Type: [`BoxShadowValue`][flet.BoxShadowValue]
     """
 
     url: Optional[str] = None
@@ -218,16 +186,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     url_target: Optional[UrlTarget] = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
-
-    Type: [`UrlTarget`][flet.UrlTarget]
     """
 
     theme: Optional[Theme] = None
     """
     Allows setting a nested theme for all controls inside the container and down its
     tree.
-
-    Type: [`Theme`][flet.Theme]
 
     Example:
         ```python
@@ -276,8 +240,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Allows setting a nested theme to be used when in dark theme mode for all controls
     inside the container and down its tree.
-
-    Type: [`Theme`][flet.Theme]
     """
 
     theme_mode: Optional[ThemeMode] = None
@@ -287,15 +249,11 @@ class Container(ConstrainedControl, AdaptiveControl):
     property override corresponding styles from the parent, inherited theme.
 
     Defaults to `ThemeMode.SYSTEM`.
-    
-    Type: [`ThemeMode`][flet.ThemeMode]
     """
 
     color_filter: Optional[ColorFilter] = None
     """
     Applies a color filter to this container.
-
-    Type: [`ColorFilter`][flet.ColorFilter].
     """
 
     ignore_interactions: bool = False
@@ -306,8 +264,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     foreground_decoration: Optional[BoxDecoration] = None
     """
     The foreground decoration of this container.
-
-    Type: [`BoxDecoration`][flet.BoxDecoration].
     """
 
     on_click: Optional[ControlEventHandler["Container"]] = None
@@ -318,8 +274,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     on_tap_down: Optional[EventHandler[TapEvent["Container"]]] = None
     """
     Called when a user clicks the container with or without a long press.
-
-    Event type: [`TapEvent`][flet.TapEvent]
 
     Info:
         If [`ink=True`][flet.Container.ink], the event handler argument will be plain 

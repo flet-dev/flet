@@ -42,7 +42,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the panel.
+    The background color of the panel.
     """
 
     expanded: bool = False
@@ -80,7 +80,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     divider_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the divider when
+    The color of the divider when
     `ExpansionPanel.expanded` is `False`.
     """
 
@@ -99,7 +99,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     expand_icon_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the icon. Defaults to
+    The color of the icon. Defaults to
     `colors.BLACK_54` in light theme mode and `colors.WHITE_60` in dark theme mode.
     """
 

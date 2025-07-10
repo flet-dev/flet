@@ -39,12 +39,12 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the button.
+    The background color of the button.
     """
 
     thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the button when it is not
+    The color of the button when it is not
     selected.
     """
 
@@ -53,8 +53,6 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     )
     """
     The amount of space by which to inset the [`controls`][flet.CupertinoSlidingSegmentedButton.controls].
-
-    Type: [`PaddingValue`][flet.PaddingValue]
     """
 
     proportional_width: bool = False

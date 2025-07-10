@@ -35,8 +35,6 @@ class WindowDragArea(ConstrainedControl):
     """
     Called when the `WindowDragArea` is double-tapped and `maximizable=True`.
 
-    Event type: [`WindowEvent`][flet.WindowEvent]
-
     Info:
         When a double-tap event is fired, the [`type`][flet.WindowEvent.type] property of the
         event handler argument can only be one of the following: `WindowEventType.MAXIMIZE`,
@@ -46,16 +44,12 @@ class WindowDragArea(ConstrainedControl):
     on_drag_start: Optional[EventHandler[DragStartEvent["WindowDragArea"]]] = None
     """
     Called when a pointer has contacted the screen and has begun to move/drag.
-
-    Event type: [`DragStartEvent`][flet.DragStartEvent]
     """
 
     on_drag_end: Optional[EventHandler[DragEndEvent["WindowDragArea"]]] = None
     """
     Called when a pointer that was previously in contact with the screen and
     moving/dragging is no longer in contact with the screen.
-
-    Event type: [`DragEndEvent`][flet.DragEndEvent]
     """
 
     def before_update(self):

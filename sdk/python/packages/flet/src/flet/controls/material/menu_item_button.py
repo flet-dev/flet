@@ -52,15 +52,11 @@ class MenuItemButton(ConstrainedControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     Whether to clip the content of this control or not.
-
-    Type: [`ClipBehavior`][flet.ClipBehavior]
     """
 
     style: Optional[ButtonStyle] = None
     """
     Customizes this button's appearance.
-
-    Type: [`ButtonStyle`][flet.ButtonStyle]
     """
 
     semantic_label: Optional[str] = None
@@ -80,8 +76,6 @@ class MenuItemButton(ConstrainedControl):
     The direction in which the menu item expands.
 
     If the menu item button is a descendent of `MenuBar`, then this property is ignored.
-
-    Type: [`Axis`][flet.Axis]
     """
 
     on_click: Optional[ControlEventHandler["MenuItemButton"]] = None
