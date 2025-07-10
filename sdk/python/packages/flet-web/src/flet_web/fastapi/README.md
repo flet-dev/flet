@@ -28,7 +28,7 @@ async def main(page: ft.Page):
         icon=ft.icons.ADD, on_click=add_click
     )
     await page.add_async(
-        ft.Container(counter, alignment=ft.alignment.center, expand=True)
+        ft.Container(counter, alignment=ft.Alignment.CENTER, expand=True)
     )
 
 app = flet_fastapi.app(main)

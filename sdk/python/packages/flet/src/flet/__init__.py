@@ -196,7 +196,7 @@ from flet.controls.events import (
 )
 from flet.controls.exceptions import (
     FletException,
-    FletUnimplementedPlatformEception,
+    FletUnimplementedPlatformException,
     FletUnsupportedPlatformException,
     FletPageDisconnectedException,
 )
@@ -620,7 +620,7 @@ __all__ = [
     "ScrollEvent",
     "TapEvent",
     "FletException",
-    "FletUnimplementedPlatformEception",
+    "FletUnimplementedPlatformException",
     "FletUnsupportedPlatformException",
     "Gradient",
     "GradientTileMode",

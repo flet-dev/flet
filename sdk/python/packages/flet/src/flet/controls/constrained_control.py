@@ -86,7 +86,7 @@ class ConstrainedControl(Control):
         width=100,
         height=100,
         border_radius=5,
-        rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.center_left())
+        rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.CENTER_LEFT)
     )
     ```
     ///

@@ -498,6 +498,10 @@ nav:
                   - SweepGradient: types/gradient/sweepgradient.md
               - InputBorder: types/inputborder.md
               - InputFilter: types/inputfilter.md
+              - Key:
+                  - types/key/index.md
+                  - ScrollKey: types/key/scrollkey.md
+                  - ValueKey: types/key/valuekey.md
               - ListTileStyle: types/listtilestyle.md
               - Locale: types/locale.md
               - LocaleConfiguration: types/localeconfiguration.md
@@ -529,7 +533,6 @@ nav:
               - Rotate: types/rotate.md
               - RouteUrlStrategy: types/routeurlstrategy.md
               - Scale: types/scale.md
-              - ScrollKey: types/scrollkey.md
               - Size: types/size.md
               - SliderInteraction: types/sliderinteraction.md
               - StrutStyle: types/strutstyle.md
@@ -585,7 +588,6 @@ nav:
                   - TimePickerTheme: types/theme/timepickertheme.md
                   - TooltipTheme: types/theme/tooltiptheme.md
               - Tooltip: types/tooltip.md
-              - ValueKey: types/valuekey.md
               - Window: types/window.md
   - Publish:
       - publish/index.md

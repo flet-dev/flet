@@ -52,7 +52,7 @@ class Badge(BaseControl):
 
     Example:
         ```python
-        badge.alignment = ft.Alignment.top_left()
+        badge.alignment = ft.Alignment.TOP_LEFT
         ```
     """
 

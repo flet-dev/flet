@@ -647,8 +647,17 @@ class DiffBuilder:
         if self.control_cls and isinstance(dst, self.control_cls):
             if frozen and hasattr(src, "_i"):
                 dst._i = src._i
-                dst.init()
-            dst.before_update()
+                if not hasattr(dst, "_initialized"):
+                    orig_frozen = getattr(dst, "_frozen", None)
+                    if orig_frozen is not None:
+                        del dst._frozen
+                    dst.init()
+                    dst.before_update()
+                    if orig_frozen is not None:
+                        object.__setattr__(dst, "_frozen", orig_frozen)
+                    object.__setattr__(dst, "_initialized", True)
+            elif not frozen:
+                dst.before_update()
 
         if not frozen:
             # in-place comparison
@@ -841,9 +850,7 @@ class DiffBuilder:
                     or not isinstance(obj, self.control_cls)
                 ):
                     if hasattr(obj, "_frozen"):
-                        raise Exception(
-                            "Controls inside data view cannot be updated."
-                        ) from None
+                        raise Exception("Frozen controls cannot be updated.") from None
 
                     if hasattr(obj, "__changes"):
                         old_value = getattr(obj, name, None)
@@ -867,6 +874,7 @@ class DiffBuilder:
                 if not configure_setattr_only:
                     item.init()
                     item.before_update()
+                    object.__setattr__(item, "_initialized", True)
                 yield item
 
             # recurse through fields

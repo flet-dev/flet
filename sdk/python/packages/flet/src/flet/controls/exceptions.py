@@ -1,12 +1,20 @@
 __all__ = [
     "FletException",
     "FletUnsupportedPlatformException",
-    "FletUnimplementedPlatformEception",
+    "FletUnimplementedPlatformException",
     "FletPageDisconnectedException",
 ]
 
 class FletException(Exception):
-    pass
+    """
+    Base class for all Flet exceptions.
+
+    See these subclasses/implementations:
+
+    - [`FletUnsupportedPlatformException`][flet.FletUnsupportedPlatformException]
+    - [`FletUnimplementedPlatformException`][flet.FletUnimplementedPlatformException]
+    - [`FletPageDisconnectedException`][flet.FletPageDisconnectedException]
+    """
 
 
 class FletUnsupportedPlatformException(FletException):
@@ -14,16 +22,13 @@ class FletUnsupportedPlatformException(FletException):
     Thrown by operations that are not supported on the current platform.
     """
 
-    def __init__(self, message: str):
-        super().__init__(message)
 
-
-class FletUnimplementedPlatformEception(FletUnsupportedPlatformException):
+class FletUnimplementedPlatformException(FletUnsupportedPlatformException):
     """
     Thrown by operations that have not been implemented yet.
     """
 
-    pass
-
 class FletPageDisconnectedException(FletException):
-    pass
+    """
+    Thrown when the page is disconnected.
+    """

@@ -103,16 +103,16 @@ class PageView(AdaptiveControl):
 
     scroll_event_interval: Optional[Number] = None
 
-    on_resized: Optional[EventHandler["PageResizeEvent"]] = None
+    on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
     Called when a user resizes a browser or native OS window containing Flet app, for
     example:
 
     ```python
-    def page_resized(e):
+    def page_resize(e):
         print("New page size:", page.window.width, page.window_height)
 
-    page.on_resized = page_resized
+    page.on_resize = page_resize
     ```
     """
     on_media_change: Optional[ControlEventHandler["PageView"]] = None

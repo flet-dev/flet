@@ -516,7 +516,7 @@ def test_both_frozen_hosted_by_in_place():
     assert hasattr(c, "__changes")
     assert not hasattr(c, "_frozen")
 
-    c.alignment = ft.Alignment.bottom_center()
+    c.alignment = ft.Alignment.BOTTOM_CENTER
     c.bgcolor = ft.Colors.AMBER
     ch = chart([[(1, 1), (2, 2), (3, 3)]])
     c.content = ch
@@ -549,7 +549,7 @@ def test_both_frozen_hosted_by_in_place():
         ],
     )
     assert hasattr(ch, "_frozen")
-    with pytest.raises(Exception, match="Controls inside data view cannot be updated."):
+    with pytest.raises(Exception, match="Frozen controls cannot be updated."):
         ch.width = 100
 
 
@@ -654,7 +654,7 @@ def test_nested_control_builders():
                         size=50,
                     ),
                 ),
-                alignment=ft.Alignment.center(),
+                alignment=ft.Alignment.CENTER,
             ),
             expand=True,
         ),

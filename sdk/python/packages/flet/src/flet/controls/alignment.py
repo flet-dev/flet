@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import ClassVar
 
 from flet.controls.types import Number
 
@@ -34,65 +35,66 @@ class Alignment:
     It's value ranges between `-1.0` and `1.0` inclusive.
     """
 
-    @classmethod
-    def bottom_center(cls) -> "Alignment":
-        """
-        Represents the bottom center and is equivalent to `Alignment(0.0, 1.0)`.
-        """
-        return Alignment(0, 1)
+    BOTTOM_CENTER: ClassVar["AlignmentProperty"]
+    """
+    Represents the bottom center and is equivalent to `Alignment(0.0, 1.0)`.
+    """
 
-    @classmethod
-    def bottom_left(cls) -> "Alignment":
-        """
-        Represents the bottom left corner and is equivalent to `Alignment(-1.0, 1.0)`.
-        """
-        return Alignment(-1, 1)
+    BOTTOM_LEFT: ClassVar["AlignmentProperty"]
+    """
+    Represents the bottom left corner and is equivalent to `Alignment(-1.0, 1.0)`.
+    """
 
-    @classmethod
-    def bottom_right(cls) -> "Alignment":
-        """
-        Represents the bottom right corner and is equivalent to `Alignment(1.0, 1.0)`.
-        """
-        return Alignment(1, 1)
+    BOTTOM_RIGHT: ClassVar["AlignmentProperty"]
+    """
+    Represents the bottom right corner and is equivalent to `Alignment(1.0, 1.0)`.
+    """
 
-    @classmethod
-    def center(cls) -> "Alignment":
-        """
-        Represents the center and is equivalent to `Alignment(0.0, 0.0)`.
-        """
-        return Alignment(0, 0)
+    CENTER: ClassVar["AlignmentProperty"]
+    """
+    Represents the center and is equivalent to `Alignment(0.0, 0.0)`.
+    """
 
-    @classmethod
-    def center_left(cls) -> "Alignment":
-        """
-        Represents the center left and is equivalent to `Alignment(-1.0, 0.0)`.
-        """
-        return Alignment(-1, 0)
+    CENTER_LEFT: ClassVar["AlignmentProperty"]
+    """
+    Represents the center left and is equivalent to `Alignment(-1.0, 0.0)`.
+    """
 
-    @classmethod
-    def center_right(cls) -> "Alignment":
-        """
-        Represents the center right and is equivalent to `Alignment(1.0, 0.0)`.
-        """
-        return Alignment(1, 0)
+    CENTER_RIGHT: ClassVar["AlignmentProperty"]
+    """
+    Represents the center right and is equivalent to `Alignment(1.0, 0.0)`.
+    """
 
-    @classmethod
-    def top_center(cls) -> "Alignment":
-        """
-        Represents the top center and is equivalent to `Alignment(0.0, -1.0)`.
-        """
-        return Alignment(0, -1)
+    TOP_CENTER: ClassVar["AlignmentProperty"]
+    """
+    Represents the top center and is equivalent to `Alignment(0.0, -1.0)`.
+    """
 
-    @classmethod
-    def top_left(cls) -> "Alignment":
-        """
-        Represents the top left corner and is equivalent to `Alignment(-1.0, -1.0)`.
-        """
-        return Alignment(-1, -1)
+    TOP_LEFT: ClassVar["AlignmentProperty"]
+    """
+    Represents the top left corner and is equivalent to `Alignment(-1.0, -1.0)`.
+    """
 
-    @classmethod
-    def top_right(cls) -> "Alignment":
-        """
-        Represents the top right corner and is equivalent to `Alignment(1.0, -1.0)`.
-        """
-        return Alignment(1, -1)
+    TOP_RIGHT: ClassVar["AlignmentProperty"]
+    """
+    Represents the top right corner and is equivalent to `Alignment(1.0, -1.0)`.
+    """
+
+
+class AlignmentProperty:
+    def __init__(self, factory):
+        self.factory = factory
+
+    def __get__(self, instance, owner) -> Alignment:
+        return self.factory()
+
+
+Alignment.BOTTOM_CENTER = AlignmentProperty(lambda: Alignment(0.0, 1.0))
+Alignment.BOTTOM_LEFT = AlignmentProperty(lambda: Alignment(-1.0, 1.0))
+Alignment.BOTTOM_RIGHT = AlignmentProperty(lambda: Alignment(1.0, 1.0))
+Alignment.CENTER = AlignmentProperty(lambda: Alignment(0.0, 0.0))
+Alignment.CENTER_LEFT = AlignmentProperty(lambda: Alignment(-1.0, 0.0))
+Alignment.CENTER_RIGHT = AlignmentProperty(lambda: Alignment(1.0, 0.0))
+Alignment.TOP_CENTER = AlignmentProperty(lambda: Alignment(0.0, -1.0))
+Alignment.TOP_LEFT = AlignmentProperty(lambda: Alignment(-1.0, -1.0))
+Alignment.TOP_RIGHT = AlignmentProperty(lambda: Alignment(1.0, -1.0))

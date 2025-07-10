@@ -87,13 +87,13 @@ def test_page_events():
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     p = Page(sess=Session(conn))
-    on_resized_type = ControlEvent.get_event_field_type(p, "on_resized")
+    on_resized_type = ControlEvent.get_event_field_type(p, "on_resize")
     assert on_resized_type == PageResizeEvent
     evt = from_dict(
         on_resized_type,
         {
             "control": p,
-            "name": "on_resized",
+            "name": "on_resize",
             "data": None,
             "width": 1,
             "height": 2,

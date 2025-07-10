@@ -186,7 +186,9 @@ class Control extends ChangeNotifier {
 
       if (dst[key] is Map && entry.value is Map) {
         _mergeMaps(parent, dst[key], entry.value, changes, fullKey);
-      } else if (dst[key] is Control && entry.value is Map) {
+      } else if (dst[key] is Control &&
+          entry.value is Map &&
+          (dst[key] as Control).id == entry.value["_i"]) {
         _mergeMaps(parent, dst[key].properties, entry.value, changes, fullKey);
       } else if (dst[key] != entry.value) {
         dst[key] = _transformIfControl(entry.value, parent, backend);
@@ -391,8 +393,7 @@ class Control extends ChangeNotifier {
     _invokeMethodListeners.add(listener);
 
     // If someone was waiting for a listener to be added, complete the future
-    if (_listenerAddedCompleter != null &&
-        !_listenerAddedCompleter!.isCompleted) {
+    if (_listenerAddedCompleter?.isCompleted == false) {
       _listenerAddedCompleter!.complete();
       _listenerAddedCompleter = null;
     }
@@ -408,19 +409,8 @@ class Control extends ChangeNotifier {
 
     // If no listeners, wait until one is added or timeout occurs
     if (_invokeMethodListeners.isEmpty) {
-      _listenerAddedCompleter = Completer<void>();
-
-      try {
-        await Future.any([
-          _listenerAddedCompleter!.future,
-          Future.delayed(
-              timeout,
-              () => throw TimeoutException(
-                  "No invoke method listeners registered within $timeout")),
-        ]);
-      } catch (e) {
-        rethrow;
-      }
+      _listenerAddedCompleter ??= Completer<void>();
+      await _listenerAddedCompleter!.future;
     }
 
     if (_invokeMethodListeners.isEmpty) {

@@ -32,6 +32,7 @@ __all__ = ["Session"]
 class Session:
     def __init__(self, conn: Connection):
         self.__conn = conn
+        self.__send_buffer: list[ClientMessage] = []
         self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, BaseControl] = (
@@ -40,6 +41,8 @@ class Session:
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
+        self.__method_calls: dict[str, asyncio.Event] = {}
+        self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
 
         session_id = self.__id
         weakref.finalize(
@@ -75,6 +78,9 @@ class Session:
         _session_page.set(self.__page)
         self.__conn = conn
         self.__expires_at = None
+        for message in self.__send_buffer:
+            self.__send_message(message)
+        self.__send_buffer.clear()
         await self.dispatch_event(self.__page._i, "connect", None)
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
@@ -90,6 +96,7 @@ class Session:
     def close(self):
         logger.debug(f"Closing expired session: {self.id}")
         self.__pubsub_client.unsubscribe_all()
+        self.__cancel_method_calls()
         asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
 
     def patch_control(self, control: BaseControl):
@@ -107,7 +114,7 @@ class Session:
             self.__index.pop(removed_control._i, None)
 
         if len(patch) > 1:
-            self.connection.send_message(
+            self.__send_message(
                 ClientMessage(
                     ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
                 )
@@ -228,8 +235,21 @@ class Session:
             tb = traceback.format_exc()
             self.error(f"Exception in '{field_name}': {ex}\n{tb}")
 
-    def invoke_method(self, control_id: int, call_id: str, method_name: str, args: Any):
-        self.connection.send_message(
+    async def invoke_method(
+        self,
+        control_id: int,
+        method_name: str,
+        args: Any,
+        timeout: Optional[float] = None,
+    ):
+        call_id = random_string(10)
+
+        # register callback
+        evt = asyncio.Event()
+        self.__method_calls[call_id] = evt
+
+        # call method
+        self.__send_message(
             ClientMessage(
                 ClientAction.INVOKE_METHOD,
                 InvokeMethodRequestBody(
@@ -238,34 +258,61 @@ class Session:
             )
         )
 
+        try:
+            await asyncio.wait_for(evt.wait(), timeout=timeout)
+        except TimeoutError:
+            if call_id in self.__method_calls:
+                del self.__method_calls[call_id]
+            raise TimeoutError(
+                f"Timeout waiting for invokeMethod {method_name}({args}) call"
+            ) from None
+
+        result, err = self.__method_call_results.pop(evt)
+        if err:
+            raise Exception(err)
+        return result
+
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]
     ):
-        if control := self.__index.get(control_id):
-            control._handle_invoke_method_results(
-                call_id=call_id, result=result, error=error
-            )
+        if control_id in self.__index:
+            evt = self.__method_calls.pop(call_id, None)
+            if evt is None:
+                return
+            self.__method_call_results[evt] = (result, error)
+            evt.set()
         else:
             raise Exception(
                 f"Error handling invoke method results. Control with ID {control_id} "
                 "is not registered."
             )
 
+    def __cancel_method_calls(self):
+        for evt in list(self.__method_calls.values()):
+            self.__method_call_results[evt] = (None, "Session closed")
+            evt.set()
+
     async def auto_update(self, control: BaseControl | None):
         while control:
             if (
                 control.is_isolated()
                 and not hasattr(control, "_frozen")
-                and self.connection
+                and self.__conn
             ):
                 control.update()
                 break
             control = control.parent
 
     def error(self, message: str):
-        self.connection.send_message(
+        self.__send_message(
             ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody(message))
         )
+
+    def __send_message(self, message: ClientMessage):
+        if self.__conn:
+            self.__conn.send_message(message)
+        else:
+            self.__send_buffer.append(message)
 
     def __get_update_control_patch(
         self, control: BaseControl, prev_control: Optional[BaseControl]

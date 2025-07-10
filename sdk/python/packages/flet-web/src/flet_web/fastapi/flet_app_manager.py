@@ -83,6 +83,8 @@ class FletAppManager:
         if session_id in self.__sessions:
             session = self.__sessions[session_id]
             await session.connect(conn)
+        else:
+            raise Exception(f"Session has expired or not found: {session_id}")
 
     async def disconnect_session(self, session_id: str, session_timeout_seconds: int):
         logger.info(f"Session disconnected: {session_id}")

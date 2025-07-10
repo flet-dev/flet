@@ -32,6 +32,7 @@ from flet.controls.exceptions import FletException
 from flet.controls.multi_view import MultiView
 from flet.controls.page_view import PageView
 from flet.controls.query_string import QueryString
+from flet.controls.ref import Ref
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.service import Service
@@ -46,6 +47,7 @@ from flet.controls.types import (
     Wrapper,
 )
 from flet.utils import classproperty, is_pyodide
+from flet.utils.strings import random_string
 
 if not is_pyodide():
     from flet.auth.authorization_service import AuthorizationService
@@ -87,6 +89,10 @@ RetT = TypeVar("RetT")
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
     services: list[Service] = field(default_factory=list)
+
+    def __post_init__(self, ref: Optional[Ref[Any]]):
+        super().__post_init__(ref)
+        self._internals["uid"] = random_string(10)
 
 
 @dataclass
@@ -163,7 +169,7 @@ class Page(PageView):
     """
 
     browser_context_menu: BrowserContextMenu = field(
-        default_factory=lambda: BrowserContextMenu()
+        default_factory=lambda: BrowserContextMenu(), metadata={"skip": True}
     )
     """
     Used to enable or disable the context menu that appears when the user
@@ -174,23 +180,29 @@ class Page(PageView):
     """
 
     shared_preferences: SharedPreferences = field(
-        default_factory=lambda: SharedPreferences()
+        default_factory=lambda: SharedPreferences(), metadata={"skip": True}
     )
     """
     TBD
     """
 
-    clipboard: Clipboard = field(default_factory=lambda: Clipboard())
+    clipboard: Clipboard = field(
+        default_factory=lambda: Clipboard(), metadata={"skip": True}
+    )
     """
     TBD
     """
 
-    storage_paths: StoragePaths = field(default_factory=lambda: StoragePaths())
+    storage_paths: StoragePaths = field(
+        default_factory=lambda: StoragePaths(), metadata={"skip": True}
+    )
     """
     TBD
     """
 
-    url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
+    url_launcher: UrlLauncher = field(
+        default_factory=lambda: UrlLauncher(), metadata={"skip": True}
+    )
     """
     TBD
     """
@@ -502,7 +514,7 @@ class Page(PageView):
             )
             if self.on_route_change:
                 if asyncio.iscoroutinefunction(self.on_route_change):
-                    self.run_task(self.on_route_change, e)
+                    asyncio.create_task(self.on_route_change(e))
                 elif callable(self.on_route_change):
                     self.on_route_change(e)
 
@@ -578,13 +590,13 @@ class Page(PageView):
             e = LoginEvent(name="login", control=self, error="", error_description="")
             if self.on_login:
                 if asyncio.iscoroutinefunction(self.on_login):
-                    self.run_task(self.on_login, e)
+                    asyncio.create_task(self.on_login(e))
                 elif callable(self.on_login):
                     self.on_login(e)
 
         return self.__authorization
 
-    async def _authorize_callback_async(self, data: dict[str, str]) -> None:
+    async def _authorize_callback_async(self, data: dict[str, Optional[str]]) -> None:
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state
@@ -613,7 +625,7 @@ class Page(PageView):
                 e.error = str(ex)
         if self.on_login:
             if asyncio.iscoroutinefunction(self.on_login):
-                self.run_task(self.on_login, e)
+                asyncio.create_task(self.on_login(e))
             elif callable(self.on_login):
                 self.on_login(e)
 
@@ -627,7 +639,7 @@ class Page(PageView):
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
             if asyncio.iscoroutinefunction(self.on_logout):
-                self.run_task(self.on_logout, e)
+                asyncio.create_task(self.on_logout(e))
             elif callable(self.on_logout):
                 self.on_logout(e)
 
