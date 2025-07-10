@@ -20,7 +20,7 @@ class StackControl extends StatelessWidget {
     debugPrint("Stack build: ${control.id}");
     final stack = Stack(
       clipBehavior:
-          parseClip(control.getString("clipBehavior"), Clip.hardEdge)!,
+          parseClip(control.getString("clip_behavior"), Clip.hardEdge)!,
       fit: parseStackFit(control.getString("fit"), StackFit.loose)!,
       alignment:
           control.getAlignment("alignment") ?? AlignmentDirectional.topStart,
