@@ -1,7 +1,5 @@
-Flet framework allows you to develop adaptive apps which means having a single codebase that will deliver 
-
-
-different look depending on the device's platform.
+Flet framework allows you to develop adaptive apps which means having a single codebase that
+will deliver different look depending on the device's platform.
 
 Below is the example of a very simple app that has a different look on iOS and Android platforms:
 
@@ -70,27 +68,32 @@ By setting just `page.adaptive = True` you can make you app looking awesome on b
   <div className="col col--6" style={{textAlign: 'center'}}>
     <h3>Android</h3>
     <img src="/img/blog/adaptive/android-adaptive-app.png" className="screenshot-60" style={{ width: '57%'}} />
-  </div>  
+  </div>
 </div>
 
 ## Material and Cupertino controls
 
-Most of Flet controls are based on [Material design](https://m3.material.io/). 
+Most of Flet controls are based on [Material design](https://m3.material.io/).
 
-There is also a number of iOS-style controls in Flet that are called Cupertino controls. 
+There is also a number of iOS-style controls in Flet that are called Cupertino controls.
 
-Cupertino controls usually have a matching Material control that has [`adaptive`](/docs/controls#adaptive) property
-which defaults to`False`. When using a Material control with `adaptive` property set to `True`, a different control will
+Cupertino controls usually have a matching Material control that has [`adaptive`][flet.AdaptiveControl.adaptive] property
+which defaults to`False`. When using a Material control with `adaptive` property set to `True`,
+a different control will
 be created depending on the platform, for example:
 ```python
 ft.Checkbox(adaptive=True, value=True, label="Adaptive Checkbox")
 ```
 
-Flet checks the value of [`Page.platform`][flet.Page.platform] property and if it is `ft.PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created; in all other cases Material control will be created. 
+Flet checks the value of [`Page.platform`][flet.Page.platform] property and if it is
+`PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created;
+in all other cases Material control will be created.
 
-::note
-[`adaptive`][flet.Control.adaptive] property can be set for an individual control or a container control such as `Row`, `Column` or any other control that has `content` or `controls` property. If container control is adaptive, all its child controls will be adaptive, unless `adaptive` property is explicitly set to `False` for a child control.
-::
+Note:
+    [`adaptive`][flet.AdaptiveControl.adaptive] property can be set for an individual control or
+    a container-controls (ex: `Row`, `Column`) that has children controls.
+    If a container-control is made adaptive, all its children will be adaptive too,
+    unless `adaptive` property is explicitly set to `False` for a child control.
 
 Below is the list of adaptive Material controls and their matching Cupertino controls:
 
@@ -102,7 +105,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinoalertdialog">CupertinoAlertDialog</a>
     <img src="/img/docs/adaptive-apps/cupertinoalertdialog.png" className="screenshot-60" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -113,7 +116,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
       <a href="/docs/controls/cupertinodialogaction">CupertinoDialogAction</a>
     <img src="/img/docs/adaptive-apps/cupertinodialogactions.png" className="screenshot-40" />
-  </div>  
+  </div>
 </div>
 
 
@@ -125,7 +128,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinoappbar">CupertinoAppBar</a>
     <img src="/img/docs/adaptive-apps/cupertinoappbar.png" className="screenshot-60" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -136,7 +139,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinonavigationbar">CupertinoNavigationBar</a>
     <img src="/img/docs/adaptive-apps/cupertinonavigationbar.png" className="screenshot-70" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -147,7 +150,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinolisttile">CupertinoListTile</a>
     <img src="/img/docs/adaptive-apps/cupertinolisttile.png" className="screenshot-70" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -158,7 +161,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinotextfield">CupertinoTextField</a>
     <img src="/img/docs/adaptive-apps/cupertinotextfield.png" className="screenshot-70" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -169,7 +172,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinocheckbox">CupertinoCheckbox</a>
     <img src="/img/docs/adaptive-apps/cupertinocheckbox.png" className="screenshot-10" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -180,7 +183,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinoslider">CupertinoSlider</a>
     <img src="/img/docs/adaptive-apps/cupertinoslider.png" className="screenshot-30" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -191,7 +194,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinoswitch">CupertinoSwitch</a>
     <img src="/img/docs/adaptive-apps/cupertinoswitch.png" className="screenshot-10" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -202,7 +205,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinoradio">CupertinoRadio</a>
     <img src="/img/docs/adaptive-apps/cupertinoradio.png" className="screenshot-10" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -213,7 +216,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinobutton">CupertinoFilledButton</a>
     <img src="/img/docs/adaptive-apps/cupertinofilledbutton.png" className="screenshot-30" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -224,7 +227,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinobutton">CupertinoButton</a>
     <img src="/img/docs/adaptive-apps/cupertinobutton-filledtonal.png" className="screenshot-30" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -235,7 +238,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinobutton">CupertinoButton</a>
     <img src="/img/docs/adaptive-apps/icon-button-cupertino.png" className="screenshot-10" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -246,7 +249,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
   <div className="col col--6" style={{textAlign: 'center'}}>
     <a href="/docs/controls/cupertinobutton">CupertinoButton</a>
     <img src="/img/docs/adaptive-apps/cupertinobutton.png" className="screenshot-20" />
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -255,7 +258,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
     <img src="/img/docs/adaptive-apps/outlinedbutton.png" className="screenshot-20" />
   </div>
   <div className="col col--6" style={{textAlign: 'center'}}>
-  </div>  
+  </div>
 </div>
 
 <div className="row">
@@ -264,19 +267,19 @@ Below is the list of adaptive Material controls and their matching Cupertino con
     <img src="/img/docs/adaptive-apps/textbutton.png" className="screenshot-20" />
   </div>
   <div className="col col--6" style={{textAlign: 'center'}}>
-  </div>  
+  </div>
 </div>
 
 ## Custom adaptive controls
 
-While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform 
+While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform
 
-automatically using their [`adaptive`][flet.Control.adaptive] property, there will be cases when you need more specific adaptive UI 
+automatically using their [`adaptive`][flet.Control.adaptive] property, there will be cases when you need more specific adaptive UI
 presentation, for example, using different icon, background color, padding etc. depending on the platform.
 
-With Flet, you can create your own reusable custom controls in Python that will inherit from a Flet control 
+With Flet, you can create your own reusable custom controls in Python that will inherit from a Flet control
 
-and implement specific properties you need. In the example below, we are creating a new 
+and implement specific properties you need. In the example below, we are creating a new
 `AdaptiveNavigationBarDestination` control that will be displaying different icon on iOS and Android:
 
 ```python
@@ -344,19 +347,13 @@ Now the `NavigationBar` and icons within it will look like different on Android 
   <div className="col col--6" style={{textAlign: 'center'}}>
     <h3>Android</h3>
     <img src="/img/docs/adaptive-apps/navigation-bar-custom-android.png" className="screenshot-100"/>
-  </div>  
+  </div>
 </div>
 
 /// admonition | Note
-You may utilise [reusable controls approach](../cookbook/custom-controls.md) to 
+You may utilise [reusable controls approach](../cookbook/custom-controls.md) to
 adapt your app not only depending on the [`Page.platform`][flet.Page.platform],
-but also use [`Page.web`][flet.Page.web] property to have different UI depending on whether the 
-app is running in a browser or not, or even combine the usage of both properties to have specific 
+but also use [`Page.web`][flet.Page.web] property to have different UI depending on whether the
+app is running in a browser or not, or even combine the usage of both properties to have specific
 UI for your apps.
 ///
-
-
-
-
-
-

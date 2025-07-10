@@ -34,7 +34,7 @@ class Chip(ConstrainedControl):
 
     label: StrOrControl
     """
-    The primary content of the chip. Can be a string or a control.
+    The primary content of the chip.
 
     Typically a [`Text`][flet.Text] control.
     """
@@ -93,7 +93,7 @@ class Chip(ConstrainedControl):
     shape: Optional[OutlinedBorder] = None
     """
     The shape of the border around the chip.
-    
+
     Defaults to [`ChipTheme.shape`][flet.ChipTheme.shape], or if that is resolves to `None`,
     falls back to `RoundedRectangleBorder(radius=8)`.
     """
@@ -107,7 +107,7 @@ class Chip(ConstrainedControl):
 
     delete_icon: Optional[Control] = None
     """
-    A `Control` to display to the right of the chip's [`label`][flet.Chip.label] 
+    A `Control` to display to the right of the chip's [`label`][flet.Chip.label]
     in case [`on_delete`][flet.Chip.on_delete] event is specified.
     """
 
@@ -132,7 +132,7 @@ class Chip(ConstrainedControl):
     """
     The padding around the [`label`][flet.Chip.label].
 
-    By default, this is `4` logical pixels at the beginning and the end of 
+    By default, this is `4` logical pixels at the beginning and the end of
     the [`label`][flet.Chip.label], and zero on `top` and `bottom`.
     """
 
@@ -172,7 +172,7 @@ class Chip(ConstrainedControl):
     This controls the size of the shadow below the chip.
 
     Defaults to `8.0`.
-    
+
     Note:
         Must be non-negative.
     """
@@ -261,12 +261,12 @@ class Chip(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.on_select is None or self.on_click is None
-        ), "on_select and on_click cannot be used together"
-        assert (
-            self.elevation is None or self.elevation >= 0.0
-        ), f"elevation must be greater than or equal to 0, got {self.elevation}"
-        assert (
-            self.elevation_on_click is None or self.elevation_on_click >= 0.0
-        ), f"elevation_on_click must be greater than or equal to 0, got {self.elevation_on_click}"
+        assert self.on_select is None or self.on_click is None, (
+            "on_select and on_click cannot be used together"
+        )
+        assert self.elevation is None or self.elevation >= 0.0, (
+            f"elevation must be greater than or equal to 0, got {self.elevation}"
+        )
+        assert self.elevation_on_click is None or self.elevation_on_click >= 0.0, (
+            f"elevation_on_click must be greater than or equal to 0, got {self.elevation_on_click}"
+        )

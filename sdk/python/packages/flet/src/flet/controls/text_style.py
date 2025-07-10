@@ -308,3 +308,29 @@ class StrutStyle:
 
     Defaults to `False`.
     """
+
+    def copy_with(
+        self,
+        *,
+        size: Optional[Number] = None,
+        height: Optional[Number] = None,
+        weight: Optional[FontWeight] = None,
+        italic: Optional[bool] = None,
+        font_family: Optional[str] = None,
+        leading: Optional[Number] = None,
+        force_strut_height: Optional[bool] = None,
+    ) -> "StrutStyle":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return StrutStyle(
+            size=size if size is not None else self.size,
+            height=height if height is not None else self.height,
+            weight=weight if weight is not None else self.weight,
+            italic=italic if italic is not None else self.italic,
+            font_family=font_family if font_family is not None else self.font_family,
+            leading=leading if leading is not None else self.leading,
+            force_strut_height=force_strut_height
+            if force_strut_height is not None
+            else self.force_strut_height,
+        )

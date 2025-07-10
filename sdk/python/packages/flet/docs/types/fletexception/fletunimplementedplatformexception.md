@@ -1,1 +1,1 @@
-::: flet.FletUnimplementedPlatformEception
+::: flet.FletUnimplementedPlatformException

@@ -1,4 +1,6 @@
 ::: flet.Alignment
+    options:
+        members_order: source
 
 ## Usage example
 

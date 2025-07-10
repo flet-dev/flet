@@ -4,3 +4,5 @@ hide:
 ---
 
 ::: flet.CupertinoIcons
+    options:
+        separate_signature: false

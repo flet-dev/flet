@@ -21,17 +21,63 @@ class Scale:
     scale_y: Optional[Number] = None
     alignment: Optional[Alignment] = None
 
+    def copy_with(
+        self,
+        *,
+        scale: Optional[Number] = None,
+        scale_x: Optional[Number] = None,
+        scale_y: Optional[Number] = None,
+        alignment: Optional[Alignment] = None,
+    ) -> "Scale":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Scale(
+            scale=scale if scale is not None else self.scale,
+            scale_x=scale_x if scale_x is not None else self.scale_x,
+            scale_y=scale_y if scale_y is not None else self.scale_y,
+            alignment=alignment if alignment is not None else self.alignment,
+        )
+
 
 @dataclass
 class Rotate:
     angle: Number
     alignment: Optional[Alignment] = None
 
+    def copy_with(
+        self,
+        *,
+        angle: Optional[Number] = None,
+        alignment: Optional[Alignment] = None,
+    ) -> "Rotate":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Rotate(
+            angle=angle if angle is not None else self.angle,
+            alignment=alignment if alignment is not None else self.alignment,
+        )
+
 
 @dataclass
 class Offset:
     x: Number = 0
     y: Number = 0
+
+    def copy_with(
+        self,
+        *,
+        x: Optional[Number] = None,
+        y: Optional[Number] = None,
+    ) -> "Offset":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Offset(
+            x=x if x is not None else self.x,
+            y=y if y is not None else self.y,
+        )
 
 
 # typing

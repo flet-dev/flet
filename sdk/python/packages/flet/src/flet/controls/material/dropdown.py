@@ -34,7 +34,7 @@ class DropdownOption(Control):
 
     key: Optional[str] = None
     """
-    Option's key. If not specified [`text`][flet.Option.text] will be used as fallback.
+    Option's key. If not specified [`text`][flet.DropdownOption.text] will be used as fallback.
     """
 
     text: Optional[str] = None
@@ -65,9 +65,9 @@ class DropdownOption(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.key is not None or self.text is not None
-        ), "key or text must be specified"
+        assert self.key is not None or self.text is not None, (
+            "key or text must be specified"
+        )
 
 
 Option = DropdownOption
@@ -129,16 +129,16 @@ class Dropdown(ConstrainedControl):
 
     menu_height: Optional[Number] = None
     """
-    The height of the dropdown menu. 
-    
+    The height of the dropdown menu.
+
     If this is `None`, the menu will display as many
     items as possible on the screen.
     """
 
     menu_width: Optional[Number] = None
     """
-    The width of the dropdown menu. 
-    
+    The width of the dropdown menu.
+
     If this is `None`, the menu width will be the same as
     input textfield width.
     """
@@ -243,8 +243,7 @@ class Dropdown(ConstrainedControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    [`label`][flet.Dropddown.label].
+    The [`label`][flet.Dropdown.label]'s text style.
     """
 
     border: Optional[InputBorder] = None
@@ -296,14 +295,14 @@ class Dropdown(ConstrainedControl):
 
     filled: bool = False
     """
-    Whether the decoration's container is filled with theme [`fill_color`][flet.Dropdown.fill_color]. 
+    Whether the decoration's container is filled with theme [`fill_color`][flet.Dropdown.fill_color].
     """
 
     fill_color: Optional[ColorValue] = None
     """
     Background color of the dropdown input
-    text field. 
-    
+    text field.
+
     Note:
         Will not be visible if `filled=False`.
     """

@@ -96,6 +96,6 @@ class CupertinoTextField(TextField):
     """
     The padding around the text entry area between the [`prefix`][flet.CupertinoTextField.prefix]
     and [`suffix`][flet.CupertinoTextField.suffix] or the
-    clear button when [`clear_button_mode`][flet.CupertinoTextField.clear_button_mode]
-    is not `OverlayVisibilityMode.NEVER`.
+    clear button when [`clear_button_visibility_mode`][flet.CupertinoTextField.clear_button_visibility_mode]
+    is not [`OverlayVisibilityMode.NEVER`][flet.OverlayVisibilityMode.NEVER].
     """

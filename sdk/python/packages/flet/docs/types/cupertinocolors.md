@@ -4,3 +4,5 @@ hide:
 ---
 
 ::: flet.CupertinoColors
+    options:
+        separate_signature: false

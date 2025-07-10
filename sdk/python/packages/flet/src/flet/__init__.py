@@ -196,9 +196,9 @@ from flet.controls.events import (
 )
 from flet.controls.exceptions import (
     FletException,
+    FletPageDisconnectedException,
     FletUnimplementedPlatformException,
     FletUnsupportedPlatformException,
-    FletPageDisconnectedException,
 )
 from flet.controls.geometry import Rect, Size
 from flet.controls.gradients import (
@@ -208,7 +208,7 @@ from flet.controls.gradients import (
     RadialGradient,
     SweepGradient,
 )
-from flet.controls.keys import ScrollKey, ValueKey
+from flet.controls.keys import Key, ScrollKey, ValueKey
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
@@ -862,6 +862,7 @@ __all__ = [
     "UpdateBehavior",
     "PubSubClient",
     "PubSubHub",
+    "Key",
     "ScrollKey",
     "ValueKey",
     "Event",
@@ -874,4 +875,6 @@ __all__ = [
     "DropdownTheme",
     "DropdownTheme",
     "StrutStyle",
+    "BadgeValue",
+    "TooltipValue",
 ]

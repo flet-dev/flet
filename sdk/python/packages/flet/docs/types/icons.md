@@ -4,3 +4,5 @@ hide:
 ---
 
 ::: flet.Icons
+    options:
+        separate_signature: false

@@ -13,3 +13,5 @@ def main(page: ft.Page):
 
 ft.app(main, view=ft.AppView.WEB_BROWSER, web_renderer=ft.WebRenderer.HTML)
 ```
+    options:
+        separate_signature: false

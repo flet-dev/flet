@@ -21,7 +21,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     content: StrOrControl
     """
-    The content of this action button. Can be a string or a Control.
+    The content of this action button.
     """
 
     default: bool = False

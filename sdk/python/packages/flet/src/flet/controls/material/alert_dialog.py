@@ -191,7 +191,7 @@ class AlertDialog(DialogControl):
     How to align this dialog.
 
     If `None`, then [`DialogTheme.alignment`][flet.DialogTheme.alignment] is used.
-    If that is also `None`, the default is [`Alignment.center()`][flet.Alignment.center].
+    If that is also `None`, the default is [`Alignment.CENTER`][flet.Alignment.CENTER].
     """
 
     content_text_style: Optional[TextStyle] = None

@@ -57,3 +57,5 @@ ft.app(main)
 ```
   </TabItem>
 </Tabs>
+    options:
+        separate_signature: false

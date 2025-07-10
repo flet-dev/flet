@@ -45,6 +45,20 @@ class ColorFilter:
     The blend mode to apply to the color filter.
     """
 
+    def copy_with(
+        self,
+        *,
+        color: Optional[ColorValue] = None,
+        blend_mode: Optional[BlendMode] = None,
+    ) -> "ColorFilter":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return ColorFilter(
+            color=color if color is not None else self.color,
+            blend_mode=blend_mode if blend_mode is not None else self.blend_mode,
+        )
+
 
 class FilterQuality(Enum):
     """
@@ -109,6 +123,29 @@ class BoxShadow:
     """
 
     blur_style: BlurStyle = BlurStyle.NORMAL
+
+    def copy_with(
+        self,
+        *,
+        spread_radius: Optional[Number] = None,
+        blur_radius: Optional[Number] = None,
+        color: Optional[ColorValue] = None,
+        offset: Optional[OffsetValue] = None,
+        blur_style: Optional[BlurStyle] = None,
+    ) -> "BoxShadow":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return BoxShadow(
+            spread_radius=spread_radius
+            if spread_radius is not None
+            else self.spread_radius,
+            blur_radius=blur_radius if blur_radius is not None else self.blur_radius,
+            color=color if color is not None else self.color,
+            offset=offset if offset is not None else self.offset,
+            blur_style=blur_style if blur_style is not None else self.blur_style,
+        )
+
     """
     TBD
     """
@@ -163,7 +200,7 @@ class DecorationImage:
     How the image should be inscribed into the box.
     """
 
-    alignment: Alignment = field(default_factory=lambda: Alignment.center())
+    alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
     """
     The alignment of the image within its bounds.
     """
@@ -203,6 +240,50 @@ class DecorationImage:
     Whether to paint the image in anti-aliased quality.
     """
 
+    def copy_with(
+        self,
+        *,
+        src: Optional[str] = None,
+        src_base64: Optional[str] = None,
+        src_bytes: Optional[bytes] = None,
+        color_filter: Optional[ColorFilter] = None,
+        fit: Optional[BoxFit] = None,
+        alignment: Optional[Alignment] = None,
+        repeat: Optional[ImageRepeat] = None,
+        match_text_direction: Optional[bool] = None,
+        scale: Optional[Number] = None,
+        opacity: Optional[Number] = None,
+        filter_quality: Optional[FilterQuality] = None,
+        invert_colors: Optional[bool] = None,
+        anti_alias: Optional[bool] = None,
+    ) -> "DecorationImage":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return DecorationImage(
+            src=src if src is not None else self.src,
+            src_base64=src_base64 if src_base64 is not None else self.src_base64,
+            src_bytes=src_bytes if src_bytes is not None else self.src_bytes,
+            color_filter=color_filter
+            if color_filter is not None
+            else self.color_filter,
+            fit=fit if fit is not None else self.fit,
+            alignment=alignment if alignment is not None else self.alignment,
+            repeat=repeat if repeat is not None else self.repeat,
+            match_text_direction=match_text_direction
+            if match_text_direction is not None
+            else self.match_text_direction,
+            scale=scale if scale is not None else self.scale,
+            opacity=opacity if opacity is not None else self.opacity,
+            filter_quality=filter_quality
+            if filter_quality is not None
+            else self.filter_quality,
+            invert_colors=invert_colors
+            if invert_colors is not None
+            else self.invert_colors,
+            anti_alias=anti_alias if anti_alias is not None else self.anti_alias,
+        )
+
 
 @dataclass
 class BoxDecoration:
@@ -219,14 +300,14 @@ class BoxDecoration:
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the background [`bgcolor`][flet.BoxDecoration.bgcolor] 
+    An image to paint above the background [`bgcolor`][flet.BoxDecoration.bgcolor]
     or [`gradient`][flet.BoxDecoration.gradient].
     """
 
     border: Optional[Border] = None
     """
-    A border to draw above the background 
-    [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient], 
+    A border to draw above the background
+    [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient],
     and [`image`][flet.BoxDecoration.image].
     """
 
@@ -247,13 +328,13 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient], 
+    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient],
     and [`image`][flet.BoxDecoration.image] into and to cast as the [`shadows`][flet.BoxDecoration.shadows].
     """
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode to apply to the background [`bgcolor`][flet.BoxDecoration.bgcolor] 
+    The blend mode to apply to the background [`bgcolor`][flet.BoxDecoration.bgcolor]
     or [`gradient`][flet.BoxDecoration.gradient].
     """
 
@@ -341,4 +422,22 @@ class BoxConstraints:
         assert 0 <= self.min_height <= self.max_height <= float("inf"), (
             "min_height and max_height must be between 0 and infinity "
             "and min_height must be less than or equal to max_height"
+        )
+
+    def copy_with(
+        self,
+        *,
+        min_width: Optional[Number] = None,
+        min_height: Optional[Number] = None,
+        max_width: Optional[Number] = None,
+        max_height: Optional[Number] = None,
+    ) -> "BoxConstraints":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return BoxConstraints(
+            min_width=min_width if min_width is not None else self.min_width,
+            min_height=min_height if min_height is not None else self.min_height,
+            max_width=max_width if max_width is not None else self.max_width,
+            max_height=max_height if max_height is not None else self.max_height,
         )

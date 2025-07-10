@@ -122,7 +122,7 @@ class RadialGradient(Gradient):
     RadialGradient-class.html).
     """
 
-    center: Alignment = field(default_factory=lambda: Alignment.center())
+    center: Alignment = field(default_factory=lambda: Alignment.CENTER)
     """
     The center of the gradient, as an offset into the (-1.0, -1.0) x (1.0, 1.0) square
     describing the gradient which will be mapped onto the paint box. For example, an
@@ -165,11 +165,12 @@ class SweepGradient(Gradient):
     SweepGradient-class.html).
     """
 
-    center: Alignment = field(default_factory=lambda: Alignment.center())
+    center: Alignment = field(default_factory=lambda: Alignment.CENTER)
     """
     The center of the gradient, as an offset into the (-1.0, -1.0) x (1.0, 1.0) square
-    describing the gradient which will be mapped onto the paint box. For example, an
-    `Alignment.center()` will place the sweep gradient in the center of the box.
+    describing the gradient which will be mapped onto the paint box. 
+    
+    For example, an `Alignment.CENTER` will place the sweep gradient in the center of the box.
     """
 
     start_angle: Number = 0.0

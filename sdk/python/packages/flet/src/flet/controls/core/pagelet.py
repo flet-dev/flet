@@ -66,7 +66,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     bottom_sheet: Optional[Control] = None
     """
     The persistent bottom sheet to show information that supplements the primary
-    content of the Pagelet. Can be any control.
+    content of the Pagelet.
     """
 
     drawer: Optional[NavigationDrawer] = None

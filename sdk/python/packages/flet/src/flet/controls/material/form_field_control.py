@@ -67,7 +67,6 @@ class FormFieldControl(ConstrainedControl):
     icon: Optional[IconValueOrControl] = None
     """
     The icon to show before the input field and outside of the decoration's container.
-    Can be a `Control` or an icon name.
     """
 
     border: InputBorder = InputBorder.OUTLINE
@@ -259,8 +258,7 @@ class FormFieldControl(ConstrainedControl):
     prefix_icon: Optional[IconValueOrControl] = None
     """
     An icon that appears before the `prefix` or `prefix_text` and before the editable
-    part of the text field, within the decoration's container. Can be a `Control` or an
-    icon name.
+    part of the text field, within the decoration's container.
     """
 
     prefix_icon_size_constraints: Optional[BoxConstraints] = None
@@ -290,8 +288,7 @@ class FormFieldControl(ConstrainedControl):
     suffix_icon: Optional[IconValueOrControl] = None
     """
     An icon that appears after the editable part of the text field and after the
-    `suffix` or `suffix_text`, within the decoration's container. Can be a `Control` or
-    an icon name.
+    `suffix` or `suffix_text`, within the decoration's container.
     """
 
     suffix_icon_size_constraints: Optional[BoxConstraints] = None

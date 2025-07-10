@@ -28,7 +28,7 @@ class CupertinoListTile(ConstrainedControl):
 
     title: StrOrControl
     """
-    The primary content of this list tile. Can be a string or a control.
+    The primary content of this list tile.
 
     Typically a [`Text`][flet.Text] control.
     """
@@ -127,6 +127,6 @@ class CupertinoListTile(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            isinstance(self.title, str) or self.title.visible
-        ), "title must be a string or a visible Control"
+        assert isinstance(self.title, str) or self.title.visible, (
+            "title must be a string or a visible Control"
+        )

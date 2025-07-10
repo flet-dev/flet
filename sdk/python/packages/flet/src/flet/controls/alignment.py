@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import ClassVar
+from typing import ClassVar, Optional
 
 from flet.controls.types import Number
 
@@ -79,6 +79,20 @@ class Alignment:
     """
     Represents the top right corner and is equivalent to `Alignment(1.0, -1.0)`.
     """
+
+    def copy_with(
+        self,
+        *,
+        x: Optional[Number] = None,
+        y: Optional[Number] = None,
+    ) -> "Alignment":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Alignment(
+            x=x if x is not None else self.x,
+            y=y if y is not None else self.y,
+        )
 
 
 class AlignmentProperty:

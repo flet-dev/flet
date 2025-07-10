@@ -91,7 +91,7 @@ class CupertinoButton(ConstrainedControl):
     button.
     """
 
-    alignment: Optional[Alignment] = field(default_factory=lambda: Alignment.center())
+    alignment: Optional[Alignment] = field(default_factory=lambda: Alignment.CENTER)
     """
     The alignment of the button's child.
 
@@ -162,9 +162,9 @@ class CupertinoButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            0 <= self.opacity_on_click <= 1
-        ), f"opacity_on_click must be between 0 and 1 inclusive, got {self.opacity_on_click}"
+        assert 0 <= self.opacity_on_click <= 1, (
+            f"opacity_on_click must be between 0 and 1 inclusive, got {self.opacity_on_click}"
+        )
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

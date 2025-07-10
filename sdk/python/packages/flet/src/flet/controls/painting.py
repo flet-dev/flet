@@ -82,6 +82,28 @@ class PaintLinearGradient(PaintGradient):
     def __post_init__(self):
         self._type = "linear"
 
+    def copy_with(
+        self,
+        *,
+        begin: Optional[OffsetValue] = None,
+        end: Optional[OffsetValue] = None,
+        colors: Optional[list[str]] = None,
+        color_stops: Optional[list[Number]] = None,
+        tile_mode: Optional[GradientTileMode] = None,
+    ) -> "PaintLinearGradient":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return PaintLinearGradient(
+            begin=begin if begin is not None else self.begin,
+            end=end if end is not None else self.end,
+            colors=colors if colors is not None else self.colors.copy(),
+            color_stops=color_stops
+            if color_stops is not None
+            else (self.color_stops.copy() if self.color_stops is not None else None),
+            tile_mode=tile_mode if tile_mode is not None else self.tile_mode,
+        )
+
 
 @dataclass
 class PaintRadialGradient(PaintGradient):
@@ -121,7 +143,7 @@ class PaintRadialGradient(PaintGradient):
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and
-    after `end`. 
+    after `end`.
     """
 
     focal: Optional[OffsetValue] = None
@@ -142,6 +164,34 @@ class PaintRadialGradient(PaintGradient):
 
     def __post_init__(self):
         self._type = "radial"
+
+    def copy_with(
+        self,
+        *,
+        center: Optional[OffsetValue] = None,
+        radius: Optional[Number] = None,
+        colors: Optional[list[str]] = None,
+        color_stops: Optional[list[Number]] = None,
+        tile_mode: Optional[GradientTileMode] = None,
+        focal: Optional[OffsetValue] = None,
+        focal_radius: Optional[Number] = None,
+    ) -> "PaintRadialGradient":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return PaintRadialGradient(
+            center=center if center is not None else self.center,
+            radius=radius if radius is not None else self.radius,
+            colors=colors if colors is not None else self.colors.copy(),
+            color_stops=color_stops
+            if color_stops is not None
+            else (self.color_stops.copy() if self.color_stops is not None else None),
+            tile_mode=tile_mode if tile_mode is not None else self.tile_mode,
+            focal=focal if focal is not None else self.focal,
+            focal_radius=focal_radius
+            if focal_radius is not None
+            else self.focal_radius,
+        )
 
 
 @dataclass
@@ -200,6 +250,32 @@ class PaintSweepGradient(PaintGradient):
 
     def __post_init__(self):
         self._type = "sweep"
+
+    def copy_with(
+        self,
+        *,
+        center: Optional[OffsetValue] = None,
+        colors: Optional[list[str]] = None,
+        color_stops: Optional[list[Number]] = None,
+        tile_mode: Optional[GradientTileMode] = None,
+        start_angle: Optional[Number] = None,
+        end_angle: Optional[Number] = None,
+        rotation: Optional[Number] = None,
+    ) -> "PaintSweepGradient":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return PaintSweepGradient(
+            center=center if center is not None else self.center,
+            colors=colors if colors is not None else self.colors.copy(),
+            color_stops=color_stops
+            if color_stops is not None
+            else (self.color_stops.copy() if self.color_stops is not None else None),
+            tile_mode=tile_mode if tile_mode is not None else self.tile_mode,
+            start_angle=start_angle if start_angle is not None else self.start_angle,
+            end_angle=end_angle if end_angle is not None else self.end_angle,
+            rotation=rotation if rotation is not None else self.rotation,
+        )
 
 
 @dataclass
@@ -267,3 +343,45 @@ class Paint:
     """
     TBD
     """
+
+    def copy_with(
+        self,
+        *,
+        color: Optional[ColorValue] = None,
+        blend_mode: Optional[BlendMode] = None,
+        blur_image: Optional[BlurValue] = None,
+        anti_alias: Optional[bool] = None,
+        gradient: Optional[PaintGradient] = None,
+        stroke_cap: Optional[StrokeCap] = None,
+        stroke_join: Optional[StrokeJoin] = None,
+        stroke_miter_limit: Optional[Number] = None,
+        stroke_width: Optional[Number] = None,
+        stroke_dash_pattern: Optional[list[Number]] = None,
+        style: Optional[PaintingStyle] = None,
+    ) -> "Paint":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Paint(
+            color=color if color is not None else self.color,
+            blend_mode=blend_mode if blend_mode is not None else self.blend_mode,
+            blur_image=blur_image if blur_image is not None else self.blur_image,
+            anti_alias=anti_alias if anti_alias is not None else self.anti_alias,
+            gradient=gradient if gradient is not None else self.gradient,
+            stroke_cap=stroke_cap if stroke_cap is not None else self.stroke_cap,
+            stroke_join=stroke_join if stroke_join is not None else self.stroke_join,
+            stroke_miter_limit=stroke_miter_limit
+            if stroke_miter_limit is not None
+            else self.stroke_miter_limit,
+            stroke_width=stroke_width
+            if stroke_width is not None
+            else self.stroke_width,
+            stroke_dash_pattern=stroke_dash_pattern
+            if stroke_dash_pattern is not None
+            else (
+                self.stroke_dash_pattern.copy()
+                if self.stroke_dash_pattern is not None
+                else None
+            ),
+            style=style if style is not None else self.style,
+        )

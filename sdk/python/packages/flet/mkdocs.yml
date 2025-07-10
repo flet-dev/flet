@@ -459,11 +459,11 @@ nav:
               - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md
               - ViewPopEvent: types/viewpopevent.md
               - WindowEvent: types/windowevent.md
-          - Exceptions:
-              - FletException: types/fletexception.md
-              - FletPageDisconnectedException: types/fletpagedisconnectedexception.md
-              - FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
-              - FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
+          - FletException:
+              - types/fletexception/index.md
+              - FletPageDisconnectedException: types/fletexception/fletpagedisconnectedexception.md
+              - FletUnimplementedPlatformException: types/fletexception/fletunimplementedplatformexception.md
+              - FletUnsupportedPlatformException: types/fletexception/fletunsupportedplatformexception.md
           - Dataclasses:
               - Alignment: types/alignment.md
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
@@ -484,7 +484,6 @@ nav:
               - BrowserContextMenu: types/browsercontextmenu.md
               - ButtonStyle: types/buttonstyle.md
               - ColorFilter: types/colorfilter.md
-              - ControlEvent: types/controlevent.md
               - ControlState: types/controlstate.md
               - DecorationImage: types/decorationimage.md
               - Duration: types/duration.md

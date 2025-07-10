@@ -1,5 +1,5 @@
 import asyncio
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -55,7 +55,7 @@ class FilePickerFileType(Enum):
 @dataclass
 class FilePickerUploadFile:
     upload_url: str
-    method: str = field(default="PUT")
+    method: str = "PUT"
     id: Optional[int] = None
     name: Optional[str] = None
 
@@ -79,7 +79,10 @@ class FilePickerFile:
 
     path: Optional[str] = None
     """
-    Full path to a file. Works for desktop and mobile only. `None` on web.
+    Full path to a file.
+
+    Note:
+        Works for desktop and mobile only. Will be `None` on web.
     """
 
 
@@ -107,16 +110,14 @@ class FilePicker(Service):
     A control that allows you to use the native file explorer to pick single
     or multiple files, with extensions filtering support and upload.
 
-    /// admonition | Important
-        type: danger
-    In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)  when running
-    Flet as an app. This is not a requirement when running Flet in a browser.
+    Danger: Important
+        In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)
+        when running Flet as an app. This is not a requirement when running Flet in a browser.
 
-    To install Zenity on Ubuntu/Debian run the following commands:
-    ```bash
-    sudo apt-get install zenity
-    ```
-    ///
+        To install Zenity on Ubuntu/Debian run the following commands:
+        ```bash
+        sudo apt-get install zenity
+        ```
     """
 
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None

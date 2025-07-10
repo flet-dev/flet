@@ -69,6 +69,20 @@ class Animation:
     The curve to use for the animation.
     """
 
+    def copy_with(
+        self,
+        *,
+        duration: Optional[DurationValue] = None,
+        curve: Optional[AnimationCurve] = None,
+    ) -> "Animation":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Animation(
+            duration=duration if duration is not None else self.duration,
+            curve=curve if curve is not None else self.curve,
+        )
+
 
 @dataclass
 class AnimationStyle:
@@ -92,8 +106,27 @@ class AnimationStyle:
     The curve to use for the reverse animation.
     """
 
+    def copy_with(
+        self,
+        *,
+        duration: Optional[DurationValue] = None,
+        reverse_duration: Optional[DurationValue] = None,
+        curve: Optional[AnimationCurve] = None,
+        reverse_curve: Optional[AnimationCurve] = None,
+    ) -> "AnimationStyle":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return AnimationStyle(
+            duration=duration if duration is not None else self.duration,
+            reverse_duration=reverse_duration
+            if reverse_duration is not None
+            else self.reverse_duration,
+            curve=curve if curve is not None else self.curve,
+            reverse_curve=reverse_curve
+            if reverse_curve is not None
+            else self.reverse_curve,
+        )
+
 
 AnimationValue = Union[bool, int, Animation]
-"""
-Test string
-"""

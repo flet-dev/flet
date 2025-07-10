@@ -51,6 +51,9 @@ class BorderSide:
     Creates the side of a border.
 
     By default, the border is `1.0` logical pixels wide and solid black color.
+
+    Raises:
+        AssertionError: if [`width`][(c).] is negative.
     """
 
     width: Number = 1.0
@@ -63,7 +66,7 @@ class BorderSide:
     This means that it will render faster than otherwise, but it might
     double-hit pixels, giving it a slightly darker/lighter result.
 
-    To omit the border entirely, set the `style` to `BorderStyle.NONE`.
+    To omit the border entirely, set the [`style`][flet.BorderSide.style] to `BorderStyle.NONE`.
     """
 
     color: ColorValue = Colors.BLACK
@@ -86,7 +89,9 @@ class BorderSide:
     """
 
     def __post_init__(self):
-        assert self.width >= 0.0, "widhth must be greater than or equal to 0.0"
+        assert self.width >= 0.0, (
+            f"width must be greater than or equal to 0.0, got {self.width}"
+        )
 
     # Properties
 
@@ -131,8 +136,7 @@ class BorderSide:
         stroke_align: Optional["BorderSideStrokeAlignValue"] = None,
     ) -> "BorderSide":
         """
-        Returns a copy of this `BorderSide` instance with the given fields replaced
-        with the new values.
+        Returns a copy of this object with the specified properties overridden.
         """
         return BorderSide(
             width=width if width is not None else self.width,

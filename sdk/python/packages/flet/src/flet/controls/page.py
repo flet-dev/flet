@@ -28,7 +28,6 @@ from flet.controls.control_event import (
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
-from flet.controls.exceptions import FletException
 from flet.controls.multi_view import MultiView
 from flet.controls.page_view import PageView
 from flet.controls.query_string import QueryString
@@ -683,18 +682,16 @@ class Page(PageView):
         window_height: Optional[int] = None,
     ) -> None:
         """
-        Opens `url` in a new browser window.
+        Opens provided `url` in a new browser window.
 
-        Optional method arguments:
-
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`][UrlTarget.SELF]
-        - the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
-        - a new browser tab (or in external
-        application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup
-        window. Defaults to `False`.
-        * `window_width` - optional, popup window width.
-        * `window_height` - optional, popup window height.
+        Args:
+            url: The URL to open.
+            web_window_name: Window tab/name to open URL in. Use [`UrlTarget.SELF`][flet.UrlTarget.SELF]
+                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] for a new browser
+                tab (or in external application on mobile device), or a custom name for a named tab.
+            web_popup_window: Display the URL in a browser popup window.
+            window_width: Popup window width.
+            window_height: Popup window height.
         """
         await self.url_launcher.launch_url_async(
             url,

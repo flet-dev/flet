@@ -20,7 +20,7 @@ class Badge(BaseControl):
 
     label: Optional[StrOrControl] = None
     """
-    The label of this badge Can be a string or a control.
+    The label of this badge.
 
     Typically a 1 to 4 characters text.
 

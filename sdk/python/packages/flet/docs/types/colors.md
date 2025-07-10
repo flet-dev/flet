@@ -4,3 +4,5 @@ hide:
 ---
 
 ::: flet.Colors
+    options:
+        separate_signature: false

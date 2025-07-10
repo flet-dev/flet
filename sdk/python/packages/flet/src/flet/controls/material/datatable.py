@@ -30,10 +30,10 @@ class DataColumnSortEvent(Event["DataColumn"]):
     ascending: bool = field(metadata={"data_field": "asc"})
 
 
-@control("DataColumn")
+@control("DataColumn", kw_only=True)
 class DataColumn(Control):
     """
-    Column configuration for a [`DataTable`][(p).].
+    Column configuration for a [`DataTable`][flet.DataTable].
 
     Raises:
         AssertionError: if the [`label`][(c).] is neither a string nor a visible control
@@ -41,18 +41,11 @@ class DataColumn(Control):
 
     label: StrOrControl
     """
-    The column heading. Can be a string or a control.
+    The column heading.
 
-    Typically, this will be a `Text` control. It could also be an `Icon` (typically
-    using size 18), or a `Row` with an icon and some text.
-    """
-
-    tooltip_text: Optional[str] = None
-    """
-    The column heading's tooltip.
-
-    This is a longer description of the column heading, for cases where the heading
-    might have been abbreviated to keep the column width to a reasonable size.
+    Typically, this will be a [`Text`][flet.Text] control.
+    It could also be an [`Icon`][flet.Icon] (typically
+    using size 18), or a combination of both in a [`Row`][flet.Row].
     """
 
     numeric: bool = False
@@ -65,8 +58,8 @@ class DataColumn(Control):
     tooltip: Optional[str] = None
     """
     The column heading's tooltip.
-    
-    This is a longer description of the column heading, for cases where the heading 
+
+    This is a longer description of the column heading, for cases where the heading
     might have been abbreviated to keep the column width to a reasonable size.
     """
 
@@ -93,7 +86,7 @@ class DataColumn(Control):
 @control("DataCell")
 class DataCell(Control):
     """
-    The data for a cell of a [`DataTable`][(p).].
+    The data for a cell of a [`DataTable`][flet.DataTable].
 
     Raises:
         AssertionError: If the [`content`][(c).] is neither a string nor a visible control
@@ -109,7 +102,7 @@ class DataCell(Control):
     provided instead, and [`placeholder`][flet.DataCell.placeholder] should be set to `True`.
 
     To lay out multiple children, let this
-    control's child be a container-like control such as [`Row`][flet.Row], [`Column`][flet.Column], 
+    control's child be a container-like control such as [`Row`][flet.Row], [`Column`][flet.Column],
     or [`Stack`][flet.Stack], which have `controls` property.
     """
 
@@ -226,10 +219,10 @@ class DataRow(Control):
     """
     Called if the row is long-pressed.
 
-    If a [`DataCell`][flet.DataCell] in the row has its [`DataCell.on_tap`][flet.DataCell.on_tap], 
+    If a [`DataCell`][flet.DataCell] in the row has its [`DataCell.on_tap`][flet.DataCell.on_tap],
     [`DataCell.on_double_tap`][flet.DataCell.on_double_tap],
-    [`DataCell.on_long_press`][flet.DataCell.on_long_press], 
-    [`DataCell.on_tap_cancel`][flet.DataCell.on_tap_cancel] 
+    [`DataCell.on_long_press`][flet.DataCell.on_long_press],
+    [`DataCell.on_tap_cancel`][flet.DataCell.on_tap_cancel]
     or [`DataCell.on_tap_down`][flet.DataCell.on_tap_down]
     callback defined, that callback behavior overrides the gesture behavior of the row
     for that particular cell.
@@ -249,7 +242,7 @@ class DataRow(Control):
     A row whose `on_select_changed` callback is null is ignored for the purposes of
     determining the state of the "all" checkbox, and its checkbox is disabled.
 
-    If a [`DataCell`][flet.DataCell] in the row has its 
+    If a [`DataCell`][flet.DataCell] in the row has its
     [`DataCell.on_tap`][flet.DataCell.on_tap] callback defined, that
     callback behavior overrides the gesture behavior of the row for that particular cell.
     """
@@ -259,9 +252,9 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(
-            cell.visible for cell in self.cells
-        ), "cells must contain at minimum one visible DataCell"
+        assert any(cell.visible for cell in self.cells), (
+            "cells must contain at minimum one visible DataCell"
+        )
 
 
 @control("DataTable")
@@ -290,7 +283,7 @@ class DataTable(ConstrainedControl):
 
     sort_ascending: bool = False
     """
-    Whether the column mentioned in [`sort_column_index`][flet.DataTable.sort_column_index], 
+    Whether the column mentioned in [`sort_column_index`][flet.DataTable.sort_column_index],
     if any, is sorted in ascending order.
 
     If `True`, the order is ascending (meaning the rows with the smallest values for
@@ -305,7 +298,7 @@ class DataTable(ConstrainedControl):
     Whether the control should display checkboxes for selectable rows.
 
     If `True`, a checkbox will be placed at the beginning of each row that is
-    selectable. However, if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] 
+    selectable. However, if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed]
     is not set for any row, checkboxes will not be placed, even if this value is `True`.
 
     If `False`, all rows will not display a checkbox.
@@ -409,8 +402,8 @@ class DataTable(ConstrainedControl):
 
     divider_thickness: Number = 1.0
     """
-    The width of the divider that appears between [`rows`][flet.DataTable.rows]. 
-    
+    The width of the divider that appears between [`rows`][flet.DataTable.rows].
+
     Note:
         Must be greater than or equal to zero.
     """
@@ -454,7 +447,7 @@ class DataTable(ConstrainedControl):
     Invoked when the user selects or unselects every row, using the checkbox in the
     heading row.
 
-    If this is `None`, then the [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] 
+    If this is `None`, then the [`DataRow.on_select_changed`][flet.DataRow.on_select_changed]
     callback of every row in the table is invoked appropriately instead.
 
     To control whether a particular row is selectable or not, see
@@ -471,9 +464,9 @@ class DataTable(ConstrainedControl):
             list(filter(lambda column: column.visible, self.columns))
         )
         visible_rows = list(filter(lambda row: row.visible, self.rows))
-        assert (
-            visible_columns_count > 0
-        ), "columns must contain at minimum one visible DataColumn"
+        assert visible_columns_count > 0, (
+            "columns must contain at minimum one visible DataColumn"
+        )
         assert all(
             [
                 len([c for c in row.cells if c.visible]) == visible_columns_count
@@ -487,10 +480,12 @@ class DataTable(ConstrainedControl):
             self.data_row_min_height is None
             or self.data_row_max_height is None
             or (self.data_row_min_height <= self.data_row_max_height)
-        ), f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
-        assert (
-            self.divider_thickness is None or self.divider_thickness >= 0
-        ), f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+        ), (
+            f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
+        )
+        assert self.divider_thickness is None or self.divider_thickness >= 0, (
+            f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+        )
         assert self.sort_column_index is None or (
             0 <= self.sort_column_index < visible_columns_count
         ), (
