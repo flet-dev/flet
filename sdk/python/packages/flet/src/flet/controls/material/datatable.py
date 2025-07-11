@@ -228,7 +228,7 @@ class DataRow(Control):
     for that particular cell.
     """
 
-    on_select_changed: OptionalControlEventHandler["DataRow"] = None
+    on_select_change: OptionalControlEventHandler["DataRow"] = None
     """
     Called when the user selects or unselects a selectable row.
 
