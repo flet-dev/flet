@@ -436,6 +436,11 @@ class ImageRepeat(Enum):
 
 
 class PagePlatform(Enum):
+    """
+    Supported platforms for a page, including mobile and desktop systems. Each platform 
+    corresponds to a specific operating system or environment.
+    """
+
     IOS = "ios"
     ANDROID = "android"
     ANDROID_TV = "android_tv"
@@ -460,22 +465,71 @@ class PagePlatform(Enum):
 
 
 class ThemeMode(Enum):
+    """
+    Describes which theme will be used by Flet app.
+    """
+
     SYSTEM = "system"
+    """
+    Use either the light or dark theme based on what the user has selected in the 
+    system settings.
+    """
+    
     LIGHT = "light"
+    """
+    Always use the light mode regardless of system preference.
+    """
+    
     DARK = "dark"
+    """
+    Always use the dark mode (if available) regardless of system preference.
+    """
 
 
 class Brightness(Enum):
+    """
+    Describes the contrast of a theme or color palette.
+    """
+
     LIGHT = "light"
+    """
+    The color is light and will require a dark text color to achieve readable contrast.
+
+    For example, the color might be bright white, requiring black text.
+    """
+    
     DARK = "dark"
+    """
+    The color is dark and will require a light text color to achieve readable contrast.
+
+    For example, the color might be dark grey, requiring white text.
+    """
 
 
 class Orientation(Enum):
+    """
+    Whether in portrait or landscape.
+    """
+
     PORTRAIT = "portrait"
+    """
+    Taller than wide.
+    """
+    
     LANDSCAPE = "landscape"
+    """
+    Wider than tall.
+    """
 
 
 class FloatingActionButtonLocation(Enum):
+    """
+    Defines a position for the [`FloatingActionButton`][flet.FloatingActionButton].
+
+    See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html) 
+    from Flutter documentation for placement location examples.
+    """
+
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
     CENTER_TOP = "centerTop"
@@ -498,93 +552,465 @@ class FloatingActionButtonLocation(Enum):
 
 
 class AppLifecycleState(Enum):
+    """
+    States that an application can be in once it is running.
+    """
+
     SHOW = "show"
+    """
+    The application is shown.
+
+    On mobile platforms, this is usually just before the application replaces another 
+    application in the foreground.
+
+    On desktop platforms, this is just before the application is shown after being 
+    minimized or otherwise made to show at least one view of the application.
+
+    On the web, this is just before a window (or tab) is shown.
+    """
+
     RESUME = "resume"
+    """
+    The application gains input focus. Indicates that the application is entering a 
+    state where it is visible, active, and accepting user input.
+    """
+    
     HIDE = "hide"
+    """
+    The application is hidden.
+
+    On mobile platforms, this is usually just before the application is replaced by 
+    another application in the foreground.
+
+    On desktop platforms, this is just before the application is hidden by being 
+    minimized or otherwise hiding all views of the application.
+
+    On the web, this is just before a window (or tab) is hidden.
+    """
+    
     INACTIVE = "inactive"
+    """
+    The application loses input focus.
+
+    On mobile platforms, this can be during a phone call or when a system dialog is 
+    visible.
+
+    On desktop platforms, this is when all views in an application have lost input 
+    focus but at least one view of the application is still visible.
+
+    On the web, this is when the window (or tab) has lost input focus.
+    """
+
     PAUSE = "pause"
+    """
+    The application is paused.
+
+    On mobile platforms, this happens right before the application is replaced by 
+    another application.
+
+    On desktop platforms and the web, this function is not called.
+    """
+
     DETACH = "detach"
+    """
+    The application has exited, and detached all host views from the engine.
+
+    This callback is only called on iOS and Android.
+    """
+
     RESTART = "restart"
+    """
+    The application is resumed after being paused.
+
+    On mobile platforms, this happens just before this application takes over as the 
+    active application.
+
+    On desktop platforms and the web, this function is not called.
+    """
 
 
 class MouseCursor(Enum):
+    """
+    Various mouse cursor types that represent different operations or states.
+    """
+    
     ALIAS = "alias"
+    """
+    A cursor indicating that the current operation will create an alias of, or a 
+    shortcut of the item. Typically the shape of an arrow with a shortcut icon at the 
+    corner.
+    """
+
     ALL_SCROLL = "allScroll"
+    """
+    A cursor indicating scrolling in any direction. Typically the shape of a dot 
+    surrounded by 4 arrows.
+    """
+
     BASIC = "basic"
+    """
+    The platform-dependent basic cursor. Typically the shape of an arrow.
+    """
+
     CELL = "cell"
+    """
+    A cursor indicating selectable table cells. Typically the shape of a hollow plus 
+    sign.
+    """
+
     CLICK = "click"
+    """
+    A cursor that emphasizes an element being clickable, such as a hyperlink.
+    Typically the shape of a pointing hand.
+    """
+
     CONTEXT_MENU = "contextMenu"
+    """
+    A cursor indicating somewhere the user can trigger a context menu. Typically the 
+    shape of an arrow with a small menu at the corner.
+    """
+
     COPY = "copy"
+    """
+    A cursor indicating that the current operation will copy the item. Typically the 
+    shape of an arrow with a boxed plus sign at the corner.
+    """
+
     DISAPPEARING = "disappearing"
+    """
+    A cursor indicating that the current operation will result in the disappearance of 
+    the item. Typically the shape of an arrow with a cloud of smoke at the corner.
+    """
+    
     FORBIDDEN = "forbidden"
+    """
+    A cursor indicating an operation that will not be carried out.
+    Typically the shape of a circle with a diagonal line. 
+    """
+    
     GRAB = "grab"
+    """
+    A cursor indicating something that can be dragged. Typically the shape of an open 
+    hand.
+    """
+    
     GRABBING = "grabbing"
+    """
+    A cursor indicating something that is being dragged. Typically the shape of a 
+    closed hand.
+    """
+    
     HELP = "help"
+    """
+    A cursor indicating help information. Typically the shape of a question mark, or an 
+    arrow therewith.
+    """
+
     MOVE = "move"
+    """
+    A cursor indicating moving something. Typically the shape of four-way arrow.
+    """
+    
     NO_DROP = "noDrop"
+    """
+    A cursor indicating somewhere that the current item may not be dropped.
+    Typically the shape of a hand with a forbidden sign at the corner.
+    """
+    
     NONE = "none"
+    """
+    Hide the cursor.
+    """
+
     PRECISE = "precise"
+    """
+    A cursor indicating precise selection, such as selecting a pixel in a bitmap. 
+    Typically the shape of a crosshair.
+    """
+
     PROGRESS = "progress"
+    """
+    A cursor indicating the status that the program is busy but can still be interacted 
+    with. Typically the shape of an arrow with an hourglass or a watch at the corner.
+    """
+
     RESIZE_COLUMN = "resizeColumn"
+    """
+    A cursor indicating resizing a column, or an item horizontally. Typically the shape 
+    of arrows pointing left and right with a vertical bar separating them.
+    """
+
     RESIZE_DOWN = "resizeDown"
+    """
+    A cursor indicating resizing an object from its bottom edge. Typically the shape of 
+    an arrow pointing down.
+    """
+
     RESIZE_DOWN_LEFT = "resizeDownLeft"
+    """
+    A cursor indicating resizing an object from its bottom-left corner. Typically the 
+    shape of an arrow pointing lower left.
+    """
+
     RESIZE_DOWN_RIGHT = "resizeDownRight"
+    """
+    A cursor indicating resizing an object from its bottom-right corner. Typically the 
+    shape of an arrow pointing lower right.
+    """
+    
     RESIZE_LEFT = "resizeLeft"
+    """
+    A cursor indicating resizing an object from its left edge. Typically the shape of 
+    an arrow pointing left.
+    """
+    
     RESIZE_LEFT_RIGHT = "resizeLeftRight"
+    """
+    A cursor indicating resizing an object bidirectionally from its left or right edge.
+    Typically the shape of a bidirectional arrow pointing left and right.
+    """
+
     RESIZE_RIGHT = "resizeRight"
+    """
+    A cursor indicating resizing an object from its right edge. Typically the shape of 
+    an arrow pointing right.
+    """
+    
     RESIZE_ROW = "resizeRow"
+    """
+    A cursor indicating resizing a row, or an item vertically. Typically the shape of 
+    arrows pointing up and down with a horizontal bar separating them. 
+    """
+    
     RESIZE_UP = "resizeUp"
+    """
+    A cursor indicating resizing an object from its top edge. Typically the shape of an 
+    arrow pointing up.
+    """
+
     RESIZE_UP_DOWN = "resizeUpDown"
+    """
+    A cursor indicating resizing an object bidirectionally from its top or bottom edge.
+    Typically the shape of a bidirectional arrow pointing up and down.
+    """
+
     RESIZE_UP_LEFT = "resizeUpLeft"
+    """
+    A cursor indicating resizing an object from its top-left corner. Typically the 
+    shape of an arrow pointing upper left.
+    """
+
     RESIZE_UP_LEFT_DOWN_RIGHT = "resizeUpLeftDownRight"
+    """
+    A cursor indicating resizing an object bidirectionally from its top left or bottom 
+    right corner. Typically the shape of a bidirectional arrow pointing upper left and 
+    lower right.
+    """
+
     RESIZE_UP_RIGHT = "resizeUpRight"
+    """
+    A cursor indicating resizing an object from its top-right corner. Typically the 
+    shape of an arrow pointing upper right.
+    """
+    
     RESIZE_UP_RIGHT_DOWN_LEFT = "resizeUpRightDownLeft"
+    """
+    A cursor indicating resizing an object bidirectionally from its top right or bottom 
+    left corner. Typically the shape of a bidirectional arrow pointing upper right and 
+    lower left.
+    """
+
     TEXT = "text"
+    """
+    A cursor indicating selectable text. Typically the shape of a capital I.
+    """
+
     VERTICAL_TEXT = "verticalText"
+    """
+    A cursor indicating selectable vertical text. Typically the shape of a capital I 
+    rotated to be horizontal.
+    """
+    
     WAIT = "wait"
+    """
+    A cursor indicating the status that the program is busy and therefore can not be 
+    interacted with. Typically the shape of an hourglass or a watch.
+    
+    This cursor is not available as a system cursor on macOS. Although macOS displays a 
+    "spinning ball" cursor when busy, it's handled by the OS and not exposed for 
+    applications to choose.
+    """
+
     ZOOM_IN = "zoomIn"
+    """
+    A cursor indicating zooming in. Typically a magnifying glass with a plus sign.
+    """
+
     ZOOM_OUT = "zoomOut"
+    """
+    A cursor indicating zooming out. Typically a magnifying glass with a minus sign.
+    """
 
 
 class PointerDeviceType(Enum):
+    """
+    The kind of pointer device.
+    """
+
     TOUCH = "touch"
+    """
+    A touch-based pointer device.
+    """
+    
     MOUSE = "mouse"
+    """
+    A mouse-based pointer device.
+    """
+    
     STYLUS = "stylus"
+    """
+    A pointer device with a stylus.
+    """
+    
     INVERTED_STYLUS = "invertedStylus"
+    """
+    A pointer device with a stylus that has been inverted.
+    """
+    
     TRACKPAD = "trackpad"
+    """
+    Gestures from a trackpad.
+    """
+    
     UNKNOWN = "unknown"
+    """
+    An unknown pointer device.
+    """
 
 
 class StrokeCap(Enum):
+    """
+    Styles to use for line endings.
+    """
+
     ROUND = "round"
+    """
+    Begin and end contours with a semi-circle extension.
+    """
+
     SQUARE = "square"
+    """
+    Begin and end contours with a half square extension.
+    """
+
     BUTT = "butt"
+    """
+    Begin and end contours with a flat edge and no extension.
+    """
 
 
 class StrokeJoin(Enum):
+    """
+    Styles to use for line segment joins.
+    """
+
     MITER = "miter"
+    """
+    Joins between line segments form sharp corners.
+    """
+    
     ROUND = "round"
+    """
+    Joins between line segments are semi-circular.
+    """
+    
     BEVEL = "bevel"
+    """
+    Joins between line segments connect the corners of the butt ends of the line 
+    segments to give a beveled appearance.
+    """
 
 
 class VisualDensity(Enum):
+    """
+    Defines the visual density of user interface components.
+    """
+
     STANDARD = "standard"
+    """
+    The default profile for VisualDensity. This default value represents a visual 
+    density that is less dense than either `comfortable` or `compact`, and corresponds 
+    to density values of zero in both axes.
+    """
+
     COMPACT = "compact"
+    """
+    The profile for a "compact" interpretation of VisualDensity.
+
+    Individual components will interpret the density value independently, making 
+    themselves more visually dense than `standard` and `comfortable` to different 
+    degrees based on the Material Design specification of the `comfortable` setting for 
+    their particular use case.
+
+    It corresponds to a density value of -2 in both axes.
+    """
+    
     COMFORTABLE = "comfortable"
+    """
+    The profile for a `comfortable` interpretation of `VisualDensity`. Individual 
+    components will interpret the density value independently, making themselves more 
+    visually dense than `standard` and less dense than `compact` to different degrees 
+    based on the Material Design specification of the `comfortable` setting for their 
+    particular use case.
+
+    It corresponds to a density value of -1 in both axes.
+    """
+    
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
+    """
+    Visual density that is adaptive based on the given platform. For desktop platforms, 
+    this returns `compact`, and for other platforms, it returns a default-constructed 
+    VisualDensity.
+    """
 
 
 @dataclass
 class Locale:
+    """
+    An identifier used to select a user's language and formatting preferences.
+    """
+
     language_code: Optional[str] = None
+    """
+    The language code of the locale.
+    """
+
     country_code: Optional[str] = None
+    """
+    The country code of the locale.
+    """
+    
     script_code: Optional[str] = None
+    """
+    The script code of the locale.
+    """
 
 
 @dataclass
 class LocaleConfiguration:
+    """
+    Represents the configuration for supported locales and the current locale.
+    """
+
     supported_locales: Optional[list[Locale]] = None
+    """
+    A list of `Locale` objects representing the locales supported by the application.
+    """
+
     current_locale: Optional[Locale] = None
+    """
+    The `Locale` object representing the current locale.
+    """
 
 
 # Colors
@@ -601,7 +1027,8 @@ Represents a color and can be:
 ### Hex value
 
 Hex value should be in format `#aarrggbb` (`0xaarrggbb`) or `#rrggbb` (`0xeeggbb`). 
-In case `aa` ([opacity](/docs/reference/colors#color-opacity)) is omitted, it is set to `ff` (not transparent).
+In case `aa` ([opacity](/docs/reference/colors#color-opacity)) is omitted, it is set to 
+`ff` (not transparent).
 
 ```
 >>> Container(bgcolor='#ff0000')
@@ -613,7 +1040,8 @@ In case `aa` ([opacity](/docs/reference/colors#color-opacity)) is omitted, it is
 
 Named colors are the Material Design [theme colors](https://m3.material.io/styles/color/the-color-system/color-roles) 
 and [colors palettes](https://m2.material.io/design/color/the-color-system.html#color-usage-and-palettes). 
-They can either be set with a string value or using the `Colors` or `CupertinoColors` enums.
+They can either be set with a string value or using the `Colors` or `CupertinoColors` 
+enums.
 
 ```python
 >>> Container(bgcolor=ft.Colors.YELLOW)
@@ -626,9 +1054,9 @@ They can either be set with a string value or using the `Colors` or `CupertinoCo
 
 [Live Example](https://flet-controls-gallery.fly.dev/colors/themecolors)
 
-There are 30 named theme colors in [`Theme.color_scheme`][flet.Theme.color_scheme] that are 
-generated based on the [`Theme.color_scheme_seed`][flet.Theme.color_scheme_seed] property, 
-which defaults to `Colors.BLUE`.
+There are 30 named theme colors in [`Theme.color_scheme`][flet.Theme.color_scheme] that 
+are generated based on the [`Theme.color_scheme_seed`][flet.Theme.color_scheme_seed] 
+property, which defaults to `Colors.BLUE`.
 
 ```
 # example for generating page theme colors based on the seed color
@@ -657,13 +1085,14 @@ Theme colors define fallback colors for most of Flet controls.
 
 [Live example](https://flet-controls-gallery.fly.dev/colors/colorspalettes)
 
-Originally created by Material Design in 2014, color palettes are comprised of colors designed 
-to work together harmoniously. 
+Originally created by Material Design in 2014, color palettes are comprised of colors 
+designed to work together harmoniously. 
 
 Color swatches (palettes) consist of different shades of a certain color. 
-Most swatches have shades from `100` to `900` in increments of one hundred, plus the color `50`. 
-The smaller the number, the more pale the color. The greater the number, the darker the color. 
-The accent swatches (e.g. `redAccent`) only have the values `100`, `200`, `400`, and `700`.
+Most swatches have shades from `100` to `900` in increments of one hundred, plus the 
+color `50`. The smaller the number, the more pale the color. The greater the number, 
+the darker the color. The accent swatches (e.g. `redAccent`) only have the values 
+`100`, `200`, `400`, and `700`.
 
 In addition, a series of blacks and whites with common opacities are available. 
 For example, `black54` is a pure black with 54% opacity.
@@ -674,7 +1103,8 @@ seed color for generating Theme colors.
 ## Color opacity
 
 You can specify opacity for any color (hex value or named) using `with_opacity` method. 
-Opacity value should be between `0.0` (completely transparent) and `1.0` (not transparent).
+Opacity value should be between `0.0` (completely transparent) and `1.0` 
+(not transparent).
 
 ```python
 color = ft.Colors.with_opacity(0.5, ft.Colors.PRIMARY)
@@ -687,7 +1117,8 @@ Another way to specify opacity for string value:
 color = "surface,0.5"
 ```
 
-For hex value, you can specify `aa` channel with values between `00` and `ff`, for example:
+For hex value, you can specify `aa` channel with values between `00` and `ff`, for 
+example:
 
 ```python
 color = "#7fff6666"
@@ -716,19 +1147,23 @@ ancestor's `theme`.
 
 ### Control Theme level
 
-For `ScrollBar` (used in scrollable controls: `Page`, `View`, `Column`, `Row`, `ListView` 
-and `GridView`), `Tabs` and `Text` controls, Flet will check if the [nearest anscestor](/blog/scrolling-controls-and-theming#nested-themes) 
-theme has [ScrollBar Theme](/blog/scrolling-controls-and-theming#scrollbar-theme), [Tabs theme](/blog/scrolling-controls-and-theming#tabs-theming) or [Text theme](/blog/scrolling-controls-and-theming#text-theming) specified.
+For `ScrollBar` (used in scrollable controls: `Page`, `View`, `Column`, `Row`, 
+`ListView` and `GridView`), `Tabs` and `Text` controls, Flet will check if the 
+[nearest anscestor](/blog/scrolling-controls-and-theming#nested-themes) theme has 
+[ScrollBar Theme](/blog/scrolling-controls-and-theming#scrollbar-theme), 
+[Tabs theme](/blog/scrolling-controls-and-theming#tabs-theming) or 
+[Text theme](/blog/scrolling-controls-and-theming#text-theming) specified.
 
 Note:
-    If you need to change theme for a particular ScrollBar, Text or Tabs control, you can wrap 
-    this control in a Container and customize `scrollbar_theme`, `text_theme` or `tabs_theme` 
-    for this Container `theme`.
+    If you need to change theme for a particular ScrollBar, Text or Tabs control, you 
+    can wrap this control in a Container and customize `scrollbar_theme`, `text_theme` 
+    or `tabs_theme` for this Container `theme`.
 
 ### Theme level
 
 Flet will check for the nearest ancestor that has `theme` defined, which is of type 
-[`Theme`][flet.Theme], and will take color from its [`color_scheme`][flet.Theme.color_scheme]. 
+[`Theme`][flet.Theme], and will take color from its 
+[`color_scheme`][flet.Theme.color_scheme]. 
 
 /// details | Example
     type: example
