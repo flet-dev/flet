@@ -4,8 +4,8 @@ from typing import Optional, Union
 from flet.controls.border_radius import (
     BorderRadius,
 )
-from flet.controls.box import BoxDecoration, BoxConstraints
-from flet.controls.duration import Duration, DurationValue
+from flet.controls.box import BoxConstraints, BoxDecoration
+from flet.controls.duration import DurationValue
 from flet.controls.margin import MarginValue
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
@@ -35,7 +35,7 @@ class TooltipTriggerMode:
 @dataclass
 class Tooltip:
     """
-    Tooltips provide text labels which help explain the function of a button or
+    Provide text labels which help explain the function of a button or
     other user interface action.
     """
 
@@ -63,8 +63,8 @@ class Tooltip:
     vertical_offset: Optional[Number] = None
     """
     The vertical gap between the control and the displayed tooltip.
-    
-    When [`prefer_below`][flet.Tooltip.prefer_below] is set to `True` 
+
+    When [`prefer_below`][flet.Tooltip.prefer_below] is set to `True`
     and tooltips have sufficient space to
     display themselves, this property defines how much vertical space
     tooltips will position themselves under their corresponding controls.
@@ -75,7 +75,7 @@ class Tooltip:
     margin: Optional[MarginValue] = None
     """
     The empty space that surrounds the tooltip.
-    
+
     If `None`, [`TooltipTheme.margin`][flet.TooltipTheme.margin] is used.
     If that's is also `None`, defaults to `Margin.all(0.0)`.
     """
@@ -85,7 +85,7 @@ class Tooltip:
     The amount of space by which to inset the tooltip's content.
 
     It has the following default values based on the current platform:
-    
+
     - On mobile platforms: `Padding.symmetric(horizontal=16.0, vertical=4.0)`
     - On desktop platforms: `Padding.symmetric(horizontal=8.0, vertical=4.0)`
     """
@@ -122,11 +122,11 @@ class Tooltip:
 
     show_duration: Optional[DurationValue] = None
     """
-    The length of time that the tooltip will be shown after a long press is released 
-    (if triggerMode is [`TooltipTriggerMode.LONG_PRESS`][flet.TooltipTriggerMode.LONG_PRESS]) or a tap is released 
-    (if triggerMode is [`TooltipTriggerMode.TAP`][flet.TooltipTriggerMode.TAP]). 
+    The length of time that the tooltip will be shown after a long press is released
+    (if triggerMode is [`TooltipTriggerMode.LONG_PRESS`][flet.TooltipTriggerMode.LONG_PRESS]) or a tap is released
+    (if triggerMode is [`TooltipTriggerMode.TAP`][flet.TooltipTriggerMode.TAP]).
     This property does not affect mouse pointer devices.
-    
+
     If `None`, [`TooltipTheme.show_duration`][flet.TooltipTheme.show_duration] is used.
     If that's is also `None`, defaults to `1.5` seconds for long press and tap released
     """
@@ -135,7 +135,7 @@ class Tooltip:
     """
     The length of time, in milliseconds, that a pointer must hover over a
     tooltip's control before the tooltip will be shown.
-    
+
     If `None`, [`TooltipTheme.wait_duration`][flet.TooltipTheme.wait_duration] is used.
     If that's is also `None`, defaults to `100` milliseconds.
     """
@@ -144,7 +144,7 @@ class Tooltip:
     """
     The length of time that the tooltip will be shown after a
     long press is released or a tap is released or mouse pointer exits the control.
-    
+
     If `None`, [`TooltipTheme.exit_duration`][flet.TooltipTheme.exit_duration] is used.
     If that's is also `None`, defaults to 0 milliseconds - no delay.
     """
@@ -162,9 +162,9 @@ class Tooltip:
     trigger_mode: Optional[TooltipTriggerMode] = None
     """
     The mode of the tooltip's trigger.
-    
+
     If `None`, [`TooltipTheme.trigger_mode`][flet.TooltipTheme.trigger_mode] is used.
-    If that's is also `None`, defaults to 
+    If that's is also `None`, defaults to
     [`TooltipTriggerMode.LONG_PRESS`][flet.TooltipTriggerMode.LONG_PRESS].
     """
 
@@ -176,10 +176,10 @@ class Tooltip:
     size_constraints: Optional[BoxConstraints] = None
     """
     Defines the constraints on the size of this tooltip.
-    
+
     If `None`, [`TooltipTheme.size_constraints`][flet.TooltipTheme.size_constraints] is used.
     If that's is also `None`, then a default value will be picked based on the current platform:
-    
+
     - on desktop platforms: `BoxConstraints(min_height=24.0)`
     - on mobile platforms: `BoxConstraints(min_height=32.0)`
     """

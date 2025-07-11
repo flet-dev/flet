@@ -154,17 +154,17 @@ class FloatingActionButton(ConstrainedControl):
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at minimum, icon or a visible content must be provided"
         assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
+            f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
         assert self.disabled_elevation is None or self.disabled_elevation >= 0, (
-            "disabled_elevation cannot be negative"
+            f"disabled_elevation must be greater than or equal to 0, got {self.disabled_elevation}"
         )
         assert self.focus_elevation is None or self.focus_elevation >= 0, (
-            "focus_elevation cannot be negative"
+            f"focus_elevation must be greater than or equal to 0, got {self.focus_elevation}"
         )
         assert self.highlight_elevation is None or self.highlight_elevation >= 0, (
-            "highlight_elevation cannot be negative"
+            f"highlight_elevation must be greater than or equal to 0, got {self.highlight_elevation}"
         )
         assert self.hover_elevation is None or self.hover_elevation >= 0, (
-            "hover_elevation cannot be negative"
+            f"hover_elevation must be greater than or equal to 0, got {self.hover_elevation}"
         )

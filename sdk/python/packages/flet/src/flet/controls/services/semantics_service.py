@@ -21,7 +21,7 @@ class SemanticsService(Service):
     async def announce_tooltip_async(self, message: str):
         """
         Sends a semantic announcement of a tooltip. Currently honored on Android only.
-        
+
         The provided `message` will be read by TalkBack.
         """
         await self._invoke_method_async(
@@ -31,7 +31,7 @@ class SemanticsService(Service):
     def announce_tooltip(self, message: str):
         """
         Sends a semantic announcement of a tooltip. Currently honored on Android only.
-        
+
         The provided `message` will be read by TalkBack.
         """
         asyncio.create_task(self.announce_tooltip_async(message))
@@ -80,4 +80,3 @@ class SemanticsService(Service):
         and can either be `Assertiveness.ASSERTIVE` or `Assertiveness.POLITE` (default).
         """
         asyncio.create_task(self.announce_message_async(message, rtl, assertiveness))
-

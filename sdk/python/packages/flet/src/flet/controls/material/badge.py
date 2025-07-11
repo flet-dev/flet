@@ -14,8 +14,8 @@ __all__ = ["Badge", "BadgeValue"]
 class Badge(BaseControl):
     """
     Badges are used to show notifications, counts, or status information on navigation
-    items such as NavigationBar or NavigationRail destinations
-    or a button's icon.
+    items such as [`NavigationBar`][flet.NavigationBar] or
+    [`NavigationRail`][flet.NavigationRail] destinations or a button's icon.
     """
 
     label: Optional[StrOrControl] = None
@@ -36,7 +36,7 @@ class Badge(BaseControl):
     Combined with `alignment` to determine the location of the
     [`label`][flet.Badge.label] relative to the content.
 
-    Has effect only used if `label` is also provided.
+    Has effect only used if [`label`][flet.Badge.label] is also provided.
     """
 
     alignment: Optional[Alignment] = None
@@ -48,12 +48,7 @@ class Badge(BaseControl):
     except that the badge alignment is resolved as if the label was a [`large_size`][flet.Badge.large_size]
     square and [`offset`][flet.Badge.offset] is added to the result.
 
-    This value is only used if `label` property is provided.
-
-    Example:
-        ```python
-        badge.alignment = ft.Alignment.TOP_LEFT
-        ```
+    Has effect only used if [`label`][flet.Badge.label] is also provided.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -63,7 +58,7 @@ class Badge(BaseControl):
 
     label_visible: bool = True
     """
-    If `False`, the [`label`][flet.Badge.label] is not displayed.
+    Whether the [`label`][flet.Badge.label] should be visible.
 
     It can be used to create a badge only shown under certain conditions.
     """

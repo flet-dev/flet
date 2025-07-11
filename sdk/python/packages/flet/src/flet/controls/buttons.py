@@ -23,13 +23,32 @@ __all__ = [
     "OutlinedBorder",
     "RoundedRectangleBorder",
     "StadiumBorder",
+    "ShapeBorder",
 ]
+
+@dataclass
+class ShapeBorder:
+    """
+    Base class for shape outlines.
+
+    See subclasses/implementations:
+
+    - [`OutlinedBorder`][flet.OutlinedBorder]
+    """
 
 
 @dataclass(kw_only=True)
-class OutlinedBorder:
+class OutlinedBorder(ShapeBorder):
     """
     An abstract class that can be used to create custom borders.
+
+    See subclasses/implementations:
+
+    - [`BeveledRectangleBorder`][flet.BeveledRectangleBorder]
+    - [`ContinuousRectangleBorder`][flet.ContinuousRectangleBorder]
+    - [`CircleBorder`][flet.CircleBorder]
+    - [`RoundedRectangleBorder`][flet.RoundedRectangleBorder]
+    - [`StadiumBorder`][flet.StadiumBorder]
     """
 
     side: Optional[BorderSide] = None
@@ -43,7 +62,7 @@ class OutlinedBorder:
 @dataclass
 class StadiumBorder(OutlinedBorder):
     """
-    Creates a border that looks like a stadium.
+    A border that looks like a stadium.
     """
 
     def __post_init__(self):
@@ -65,7 +84,7 @@ class StadiumBorder(OutlinedBorder):
 @dataclass
 class RoundedRectangleBorder(OutlinedBorder):
     """
-    Creates a border with rounded rectangle corners.
+    A border with rounded rectangle corners.
     """
 
     radius: Optional[BorderRadiusValue] = None
@@ -93,7 +112,7 @@ class RoundedRectangleBorder(OutlinedBorder):
 @dataclass
 class CircleBorder(OutlinedBorder):
     """
-    Creates a border with a circle shape.
+    A border with a circle shape.
     """
 
     eccentricity: Number = 0.0
@@ -121,7 +140,7 @@ class CircleBorder(OutlinedBorder):
 @dataclass
 class BeveledRectangleBorder(OutlinedBorder):
     """
-    Creates a border with beveled rectangle corners.
+    A border with beveled rectangle corners.
     """
 
     radius: Optional[BorderRadiusValue] = None
@@ -149,11 +168,12 @@ class BeveledRectangleBorder(OutlinedBorder):
 @dataclass
 class ContinuousRectangleBorder(OutlinedBorder):
     """
-    Creates a border with continuous rectangle corners.
+    A border with continuous rectangle corners.
     """
 
     radius: Optional[BorderRadiusValue] = None
     """
+    The radius for each corner.
     """
 
     def __post_init__(self):

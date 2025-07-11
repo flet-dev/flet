@@ -1,6 +1,3 @@
-import subprocess
-import sys
-
 from flet.utils.pip import ensure_flet_cli_package_installed
 
 

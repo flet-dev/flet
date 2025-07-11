@@ -1,9 +1,9 @@
 from typing import Optional
 
-from flet.controls.padding import PaddingValue
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.control import Control
+from flet.controls.padding import PaddingValue
 from flet.controls.types import Brightness, ColorValue, StrOrControl
 
 __all__ = ["CupertinoAppBar"]

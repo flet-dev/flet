@@ -115,7 +115,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
-            barrierColor: widget.control.getColor("barrierColor", context),
+            barrierColor: widget.control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => _dialog!).then((value) {
