@@ -45,6 +45,7 @@ from flet.controls.buttons import (
     OutlinedBorder,
     RoundedRectangleBorder,
     StadiumBorder,
+    ShapeBorder,
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
@@ -335,6 +336,7 @@ from flet.controls.page import (
 from flet.controls.page_view import PageMediaData, PageResizeEvent, PageView
 from flet.controls.painting import (
     Paint,
+    PaintGradient,
     PaintingStyle,
     PaintLinearGradient,
     PaintRadialGradient,
@@ -444,6 +446,8 @@ from flet.controls.types import (
     MainAxisAlignment,
     MouseCursor,
     NotchShape,
+    AutomaticNotchShape,
+    CircularRectangleNotchShape,
     Number,
     Orientation,
     PagePlatform,
@@ -742,6 +746,7 @@ __all__ = [
     "PageResizeEvent",
     "PageView",
     "Paint",
+    "PaintGradient",
     "PaintLinearGradient",
     "PaintRadialGradient",
     "PaintSweepGradient",
@@ -840,6 +845,8 @@ __all__ = [
     "MainAxisAlignment",
     "MouseCursor",
     "NotchShape",
+    "AutomaticNotchShape",
+    "CircularRectangleNotchShape",
     "Number",
     "Orientation",
     "PagePlatform",

@@ -334,6 +334,7 @@ nav:
               - StoragePaths: controls/storagepaths.md
               - HapticFeedback: controls/hapticfeedback.md
           - Utility:
+              - Badge: types/badge.md
               - Draggable: controls/draggable.md
               - DragTarget: controls/dragtarget.md
               - FletApp: controls/fletapp.md
@@ -344,19 +345,24 @@ nav:
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
               - TransparentPointer: controls/transparentpointer.md
+              - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
       - Types:
           - types/index.md
           - Aliases: types/aliases.md
           - Enums:
+              - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
               - AppLifecycleState: types/applifecyclestate.md
               - AppView: types/appview.md
               - Assertiveness: types/assertiveness.md
+              - AutoFillGroupDisposeAction: types/autofillgroupdisposeaction.md
+              - AutoFillHint: types/autofillhint.md
               - Axis: types/axis.md
               - BlendMode: types/blendmode.md
               - BlurStyle: types/blurstyle.md
               - BlurTileMode: types/blurtilemode.md
+              - BorderSideStrokeAlign: types/bordersidestrokealign.md
               - BorderStyle: types/borderstyle.md
               - BoxFit: types/boxfit.md
               - BoxShape: types/boxshape.md
@@ -374,6 +380,7 @@ nav:
               - DatePickerEntryMode: types/datepickerentrymode.md
               - DatePickerMode: types/datepickermode.md
               - DismissDirection: types/dismissdirection.md
+              - FilePickerFileType: types/filepickerfiletype.md
               - FilterQuality: types/filterquality.md
               - FloatingActionButtonLocation: types/floatingactionbuttonlocation.md
               - FontWeight: types/fontweight.md
@@ -382,21 +389,27 @@ nav:
               - ImageRepeat: types/imagerepeat.md
               - KeyboardType: types/keyboardtype.md
               - LabelPosition: types/labelposition.md
+              - ListTileStyle: types/listtilestyle.md
               - ListTileTitleAlignment: types/listtiletitlealignment.md
               - MainAxisAlignment: types/mainaxisalignment.md
               - MouseCursor: types/mousecursor.md
+              - MarkdownCodeTheme: types/markdowncodetheme.md
+              - MarkdownExtensionSet: types/markdownextensionset.md
               - NavigationBarLabelBehavior: types/navigationbarlabelbehavior.md
               - NavigationDrawerPosition: types/navigationdrawerposition.md
               - NavigationRailLabelType: types/navigationraillabeltype.md
               - Orientation: types/orientation.md
               - OverlayVisibilityMode: types/overlayvisibilitymode.md
               - PagePlatform: types/pageplatform.md
+              - PaintingStyle: types/paintingstyle.md
               - PointerDeviceType: types/pointerdevicetype.md
               - PointMode: types/pointmode.md
               - PopupMenuPosition: types/popupmenuposition.md
+              - RouteUrlStrategy: types/routeurlstrategy.md
               - ScrollDirection: types/scrolldirection.md
               - ScrollMode: types/scrollmode.md
               - ScrollType: types/scrolltype.md
+              - SliderInteraction: types/sliderinteraction.md
               - SnackBarBehavior: types/snackbarbehavior.md
               - StackFit: types/stackfit.md
               - StrokeCap: types/strokecap.md
@@ -466,18 +479,13 @@ nav:
               - FletUnsupportedPlatformException: types/fletexception/fletunsupportedplatformexception.md
           - Dataclasses:
               - Alignment: types/alignment.md
-              - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - Animation: types/animation.md
               - AnimationStyle: types/animationstyle.md
               - AutoCompleteSuggestion: types/autocompletesuggestion.md
-              - AutoFillGroupDisposeAction: types/autofillgroupdisposeaction.md
-              - AutoFillHint: types/autofillhint.md
-              - Badge: types/badge.md
               - Blur: types/blur.md
               - Border: types/border.md
               - BorderRadius: types/borderradius.md
               - BorderSide: types/borderside.md
-              - BorderSideStrokeAlign: types/bordersidestrokealign.md
               - BoxConstraints: types/boxconstraints.md
               - BoxDecoration: types/boxdecoration.md
               - BoxShadow: types/boxshadow.md
@@ -488,7 +496,6 @@ nav:
               - DecorationImage: types/decorationimage.md
               - Duration: types/duration.md
               - FilePickerFile: types/filepickerfile.md
-              - FilePickerFileType: types/filepickerfiletype.md
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Gradient:
                   - types/gradient/index.md
@@ -501,16 +508,16 @@ nav:
                   - types/key/index.md
                   - ScrollKey: types/key/scrollkey.md
                   - ValueKey: types/key/valuekey.md
-              - ListTileStyle: types/listtilestyle.md
               - Locale: types/locale.md
               - LocaleConfiguration: types/localeconfiguration.md
               - Margin: types/margin.md
-              - MarkdownCodeTheme: types/markdowncodetheme.md
               - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
-              - MarkdownExtensionSet: types/markdownextensionset.md
               - MarkdownStyleSheet: types/markdownstylesheet.md
               - MenuStyle: types/menustyle.md
-              - NotchShape: types/notchshape.md
+              - NotchShape:
+                  - types/notchshape/index.md
+                  - AutomaticNotchShape: types/notchshape/automaticnotchshape.md
+                  - CircularRectangleNotchShape: types/notchshape/circularrectanglenotchshape.md
               - Offset: types/offset.md
               - OutlinedBorder:
                   - types/outlinedborder/index.md
@@ -521,19 +528,17 @@ nav:
                   - StadiumBorder: types/outlinedborder/stadiumborder.md
               - Padding: types/padding.md
               - Paint: types/paint.md
-              - PaintingStyle: types/paintingstyle.md
-              - PaintLinearGradient: types/paintlineargradient.md
-              - PaintRadialGradient: types/paintradialgradient.md
-              - PaintSweepGradient: types/paintsweepgradient.md
-              - QueryString: types/querystring.md
+              - PaintGradient:
+                  - types/paintgradient/index.md
+                  - PaintLinearGradient: types/paintgradient/paintlineargradient.md
+                  - PaintRadialGradient: types/paintgradient/paintradialgradient.md
+                  - PaintSweepGradient: types/paintgradient/paintsweepgradient.md
               - Rect: types/rect.md
               - Ref: types/ref.md
               - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
               - Rotate: types/rotate.md
-              - RouteUrlStrategy: types/routeurlstrategy.md
               - Scale: types/scale.md
               - Size: types/size.md
-              - SliderInteraction: types/sliderinteraction.md
               - StrutStyle: types/strutstyle.md
               - TemplateRoute: types/templateroute.md
               - TextDecoration: types/textdecoration.md
@@ -587,7 +592,6 @@ nav:
                   - TimePickerTheme: types/theme/timepickertheme.md
                   - TooltipTheme: types/theme/tooltiptheme.md
               - Tooltip: types/tooltip.md
-              - Window: types/window.md
   - Publish:
       - publish/index.md
       - Android: publish/android.md

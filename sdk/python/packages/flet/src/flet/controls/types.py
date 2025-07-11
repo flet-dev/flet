@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -16,6 +16,7 @@ from flet.controls.material.icons import Icons
 
 if TYPE_CHECKING:
     from flet.controls.control import Control  # noqa
+    from flet.controls.buttons import ShapeBorder
 
 
 class AppView(Enum):
@@ -115,19 +116,44 @@ class FontWeight(Enum):
     Black, the most thick.
     """
 
-
-class NotchShape(Enum):
+@dataclass
+class NotchShape:
     """
     A shape with a notch in its outline.
+
+    Typically used as the outline of a 'host' control to make a notch that accommodates a 'guest' control.
+    e.g the [`BottomAppBar`][flet.BottomAppBar] may have a notch to accommodate
+    the [`FloatingActionButton`][flet.FloatingActionButton].
     """
-    AUTO = "auto"
-    """
-    A NotchShape created with continuous rectangle border.
-    """
-    CIRCULAR = "circular"
+
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
+
+
+@dataclass
+class CircularRectangleNotchShape(NotchShape):
     """
     A rectangle with a smooth circular notch.
     """
+
+    inverted: bool = False
+    """
+    Whether the notch should be placed at the bottom of the rectangle.
+    """
+
+    def __post_init__(self):
+        self._type = "circular"
+
+@dataclass
+class AutomaticNotchShape(NotchShape):
+    """
+    A notch sahpe created from [`ShapeBorder`][flet.ShapeBorder]s.
+    """
+
+    host: "ShapeBorder"
+    guest: Optional["ShapeBorder"] = None
+
+    def __post_init__(self):
+        self._type = "auto"
 
 
 class ResponsiveRowBreakpoint(Enum):

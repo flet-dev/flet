@@ -1,9 +1,9 @@
 import asyncio
 from typing import Optional, Union
 
-from flet.controls.types import UrlTarget
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
+from flet.controls.types import UrlTarget
 
 __all__ = ["UrlLauncher"]
 
@@ -13,7 +13,7 @@ class UrlLauncher(Service):
     async def launch_url_async(
         self,
         url: str,
-        web_window_name: Optional[Union[str,UrlTarget]] = None,
+        web_window_name: Optional[Union[str, UrlTarget]] = None,
         web_popup_window: Optional[bool] = False,
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
@@ -32,7 +32,7 @@ class UrlLauncher(Service):
     def launch_url(
         self,
         url: str,
-        web_window_name: Optional[Union[str,UrlTarget]] = None,
+        web_window_name: Optional[Union[str, UrlTarget]] = None,
         web_popup_window: Optional[bool] = False,
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,

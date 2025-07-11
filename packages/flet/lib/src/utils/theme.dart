@@ -773,7 +773,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
     padding: parsePadding(value["padding"]),
-    shape: parseNotchedShape(value["shape"]),
+    shape: parseNotchedShape(value["shape"], theme),
   );
 }
 
