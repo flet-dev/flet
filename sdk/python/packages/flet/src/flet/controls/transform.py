@@ -16,10 +16,29 @@ __all__ = [
 
 @dataclass
 class Scale:
+    """
+    Scaling configuration for an object.
+    """
+    
     scale: Optional[Number] = None
+    """
+    `scale_x` and `scale_y` get the value of `scale` if `scale` is provided.
+    """
+
     scale_x: Optional[Number] = None
+    """
+    The scalar by which to multiply the x-axis.
+    """
+
     scale_y: Optional[Number] = None
+    """
+    The scalar by which to multiply the y-axis.
+    """
+    
     alignment: Optional[Alignment] = None
+    """
+    Gives the origin of scale.
+    """
 
     def copy_with(
         self,
@@ -42,8 +61,19 @@ class Scale:
 
 @dataclass
 class Rotate:
+    """
+    Rotation configuration of an object.
+    """
+
     angle: Number
+    """
+    Gives the rotation in clockwise radians.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Defines the alignment of the rotation.
+    """
 
     def copy_with(
         self,
@@ -62,8 +92,19 @@ class Rotate:
 
 @dataclass
 class Offset:
+    """
+    A 2D floating-point offset.
+    """
+
     x: Number = 0
+    """
+    The horizontal offset. 
+    """
+
     y: Number = 0
+    """
+    The vertical offset.
+    """
 
     def copy_with(
         self,

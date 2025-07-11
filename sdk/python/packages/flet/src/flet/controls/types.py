@@ -247,25 +247,25 @@ class TabAlignment(Enum):
 
     START = "start"
     """
-    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the `Tabs`. 
-    Otherwise throws an exception.
+    If [`Tabs.scrollable`][flet.Tabs.scrollable] is `True`, tabs are aligned to the start of the 
+    [`Tabs`][flet.Tabs]. Otherwise throws an exception.
     """
 
     START_OFFSET = "startOffset"
     """
-    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the `Tabs` with an 
-    offset of 52.0 pixels. Otherwise throws an exception.
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the 
+    [`Tabs`][flet.Tabs] with an offset of 52.0 pixels. Otherwise throws an exception.
     """
 
     FILL = "fill"
     """
-    If `Tabs.scrollable` is `False`, tabs are stretched to fill the `Tabs`. Otherwise 
-    throws an exception.
+    If `Tabs.scrollable` is `False`, tabs are stretched to fill the 
+    [`Tabs`][flet.Tabs]. Otherwise throws an exception.
     """
     
     CENTER = "center"
     """
-    Tabs are aligned to the center of the `Tabs`.
+    Tabs are aligned to the center of the [`Tabs`][flet.Tabs].
     """
 
 
