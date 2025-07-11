@@ -3,6 +3,7 @@ from flet.controls.core.canvas.canvas import Canvas, CanvasResizeEvent
 from flet.controls.core.canvas.circle import Circle
 from flet.controls.core.canvas.color import Color
 from flet.controls.core.canvas.fill import Fill
+from flet.controls.core.canvas.image import Image
 from flet.controls.core.canvas.line import Line
 from flet.controls.core.canvas.oval import Oval
 from flet.controls.core.canvas.path import Path
@@ -26,4 +27,5 @@ __all__ = [
     "Rect",
     "Shadow",
     "Text",
+    "Image",
 ]
