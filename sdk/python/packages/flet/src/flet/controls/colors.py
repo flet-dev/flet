@@ -47,13 +47,43 @@ from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
     from flet.controls.types import ColorValue
+
 __all__ = ["Colors"]
 
 
 class Colors(str, Enum):
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.value.lower() == other.lower()
+        if isinstance(other, Enum):
+            return self.value.lower() == other.value.lower()
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.value.lower())
+
     @staticmethod
     def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
-        assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
+        """
+        Returns a color with the given opacity.
+
+        Args:
+            opacity: The opacity value between `0.0` and `1.0`.
+            color: The color to apply opacity to.
+
+        Returns:
+            A string representing the color with opacity, in the format `"color,opacity"`.
+
+        Examples:
+            >>> Colors.with_opacity(0.5, Colors.RED)
+            'red,0.5'
+
+        Raises:
+            AssertionError: If the opacity is not between `0` and `1` (inclusive).
+        """
+        assert 0 <= opacity <= 1, (
+            f"opacity must be between 0.0 and 1.0 inclusive, got {opacity}"
+        )
         color_str = color.value if isinstance(color, Enum) else color
         return f"{color_str},{opacity}"
 
@@ -67,14 +97,15 @@ class Colors(str, Enum):
 
         Args:
             exclude: A list of Colors to exclude from the selection.
-            weights: A dictionary mapping color members to their respective weights for 
+            weights: A dictionary mapping color members to their respective weights for
                 weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.
 
-        Example:
+        Examples:
             >>> Colors.random(exclude=[Colors.RED, Colors.GREEN])
+            Colors.BLUE
         """
         choices = list(Colors)
         if exclude:

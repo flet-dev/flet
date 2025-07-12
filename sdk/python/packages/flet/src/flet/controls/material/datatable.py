@@ -119,51 +119,76 @@ class DataCell(Control):
     Whether to show an edit icon at the end of the cell.
 
     This does not make the cell actually editable; the caller must implement editing
-    behavior if desired (initiated from the `on_tap` callback).
+    behavior if desired (initiated from the [`on_tap`][flet.DataCell.on_tap] callback).
 
-    If this is set, `on_tap` should also be set, otherwise tapping the icon will have
-    no effect.
+    Note:
+        If this is set, [`on_tap`][flet.DataCell.on_tap] should also be set,
+        otherwise tapping the icon will have no effect.
     """
 
     on_tap: Optional[ControlEventHandler["DataCell"]] = None
     """
     Called if the cell is tapped.
 
-    If specified, tapping the cell will call this callback, else tapping the cell will
-    attempt to select the row (if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] is provided).
+    Note:
+        If this is `None` (including [`on_double_tap`][flet.DataCell.on_double_tap],
+        [`on_long_press`][flet.DataCell.on_long_press],
+        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
+        [`on_tap_down`][flet.DataCell.on_tap_down]), tapping this cell
+        will attempt to select its row (if
+        [`DataRow.on_select_change`][flet.DataRow.on_select_change] is provided).
     """
 
     on_double_tap: Optional[ControlEventHandler["DataCell"]] = None
     """
     Called when the cell is double tapped.
 
-    If specified, tapping the cell will call this callback, else (tapping the cell will
-    attempt to select the row (if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] is provided).
+    Note:
+        If this is `None` (including [`on_tap`][flet.DataCell.on_tap],
+        [`on_long_press`][flet.DataCell.on_long_press],
+        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
+        [`on_tap_down`][flet.DataCell.on_tap_down]), tapping this cell
+        will attempt to select its row (if
+        [`DataRow.on_select_change`][flet.DataRow.on_select_change] is provided).
     """
 
     on_long_press: Optional[ControlEventHandler["DataCell"]] = None
     """
     Called if the cell is long-pressed.
 
-    If specified, tapping the cell will invoke this callback, else tapping the cell
-    will attempt to select the row (if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] is provided).
+    Note:
+        If this is `None` (including [`on_tap`][flet.DataCell.on_tap],
+        [`on_double_tap`][flet.DataCell.on_double_tap],
+        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
+        [`on_tap_down`][flet.DataCell.on_tap_down]), tapping this cell
+        will attempt to select its row (if
+        [`DataRow.on_select_change`][flet.DataRow.on_select_change] is provided).
     """
 
     on_tap_cancel: Optional[ControlEventHandler["DataCell"]] = None
     """
     Called if the user cancels a tap was started on cell.
 
-    If specified, cancelling the tap gesture will invoke this callback, else tapping
-    the cell will attempt to select the row (if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] is
-    provided).
+    Note:
+        If this is `None` (including [`on_tap`][flet.DataCell.on_tap],
+        [`on_double_tap`][flet.DataCell.on_double_tap],
+        [`on_long_press`][flet.DataCell.on_long_press],
+        [`on_tap_down`][flet.DataCell.on_tap_down]), tapping this cell
+        will attempt to select its row (if
+        [`DataRow.on_select_change`][flet.DataRow.on_select_change] is provided).
     """
 
     on_tap_down: Optional[EventHandler[TapEvent["DataCell"]]] = None
     """
     Called if the cell is tapped down.
 
-    If specified, tapping the cell will call this callback, else tapping the cell will
-    attempt to select the row (if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed] is provided).
+    Note:
+        If this is `None` (including [`on_tap`][flet.DataCell.on_tap],
+        [`on_double_tap`][flet.DataCell.on_double_tap],
+        [`on_long_press`][flet.DataCell.on_long_press],
+        [`on_tap_cancel`][flet.DataCell.on_tap_cancel]), tapping this cell
+        will attempt to select its row (if
+        [`DataRow.on_select_change`][flet.DataRow.on_select_change] is provided).
     """
 
     def before_update(self):
@@ -208,7 +233,7 @@ class DataRow(Control):
     """
     Whether the row is selected.
 
-    If `on_select_changed` is non-null for any row in the table, then a checkbox is
+    If `on_select_change` is non-null for any row in the table, then a checkbox is
     shown at the start of each row. If the row is selected (`True`), the checkbox will
     be checked and the row will be highlighted.
 
@@ -228,7 +253,7 @@ class DataRow(Control):
     for that particular cell.
     """
 
-    on_select_changed: Optional[ControlEventHandler["DataRow"]] = None
+    on_select_change: Optional[ControlEventHandler["DataRow"]] = None
     """
     Called when the user selects or unselects a selectable row.
 
@@ -239,7 +264,7 @@ class DataRow(Control):
     can be checked to select all selectable rows (and which is checked if all the rows
     are selected), and each subsequent row will have a checkbox to toggle just that row.
 
-    A row whose `on_select_changed` callback is null is ignored for the purposes of
+    A row whose `on_select_change` callback is null is ignored for the purposes of
     determining the state of the "all" checkbox, and its checkbox is disabled.
 
     If a [`DataCell`][flet.DataCell] in the row has its
@@ -252,9 +277,9 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(
-            cell.visible for cell in self.cells
-        ), "cells must contain at minimum one visible DataCell"
+        assert any(cell.visible for cell in self.cells), (
+            "cells must contain at minimum one visible DataCell"
+        )
 
 
 @control("DataTable")
@@ -298,7 +323,7 @@ class DataTable(ConstrainedControl):
     Whether the control should display checkboxes for selectable rows.
 
     If `True`, a checkbox will be placed at the beginning of each row that is
-    selectable. However, if [`DataRow.on_select_changed`][flet.DataRow.on_select_changed]
+    selectable. However, if [`DataRow.on_select_change`][flet.DataRow.on_select_change]
     is not set for any row, checkboxes will not be placed, even if this value is `True`.
 
     If `False`, all rows will not display a checkbox.
@@ -447,11 +472,11 @@ class DataTable(ConstrainedControl):
     Invoked when the user selects or unselects every row, using the checkbox in the
     heading row.
 
-    If this is `None`, then the [`DataRow.on_select_changed`][flet.DataRow.on_select_changed]
+    If this is `None`, then the [`DataRow.on_select_change`][flet.DataRow.on_select_change]
     callback of every row in the table is invoked appropriately instead.
 
     To control whether a particular row is selectable or not, see
-    `DataRow.on_select_changed`. This callback is only relevant if any row is
+    `DataRow.on_select_change`. This callback is only relevant if any row is
     selectable.
     """
 
@@ -464,9 +489,9 @@ class DataTable(ConstrainedControl):
             list(filter(lambda column: column.visible, self.columns))
         )
         visible_rows = list(filter(lambda row: row.visible, self.rows))
-        assert (
-            visible_columns_count > 0
-        ), "columns must contain at minimum one visible DataColumn"
+        assert visible_columns_count > 0, (
+            "columns must contain at minimum one visible DataColumn"
+        )
         assert all(
             [
                 len([c for c in row.cells if c.visible]) == visible_columns_count
@@ -480,10 +505,12 @@ class DataTable(ConstrainedControl):
             self.data_row_min_height is None
             or self.data_row_max_height is None
             or (self.data_row_min_height <= self.data_row_max_height)
-        ), f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
-        assert (
-            self.divider_thickness is None or self.divider_thickness >= 0
-        ), f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+        ), (
+            f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
+        )
+        assert self.divider_thickness is None or self.divider_thickness >= 0, (
+            f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+        )
         assert self.sort_column_index is None or (
             0 <= self.sort_column_index < visible_columns_count
         ), (

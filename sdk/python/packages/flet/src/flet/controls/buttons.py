@@ -26,10 +26,11 @@ __all__ = [
     "ShapeBorder",
 ]
 
+
 @dataclass
 class ShapeBorder:
     """
-    Base class for shape outlines.
+    Base class for shape outlines. Not intended to be used directly.
 
     See subclasses/implementations:
 
@@ -67,7 +68,7 @@ class StadiumBorder(OutlinedBorder):
 
     def __post_init__(self):
         self._type = "stadium"
-        
+
     def copy_with(
         self,
         *,
@@ -93,7 +94,7 @@ class RoundedRectangleBorder(OutlinedBorder):
 
     def __post_init__(self):
         self._type = "roundedRectangle"
-        
+
     def copy_with(
         self,
         *,
@@ -119,7 +120,7 @@ class CircleBorder(OutlinedBorder):
 
     def __post_init__(self):
         self._type = "circle"
-        
+
     def copy_with(
         self,
         *,
@@ -149,7 +150,7 @@ class BeveledRectangleBorder(OutlinedBorder):
 
     def __post_init__(self):
         self._type = "beveledRectangle"
-        
+
     def copy_with(
         self,
         *,
@@ -178,7 +179,7 @@ class ContinuousRectangleBorder(OutlinedBorder):
 
     def __post_init__(self):
         self._type = "continuousRectangle"
-        
+
     def copy_with(
         self,
         *,

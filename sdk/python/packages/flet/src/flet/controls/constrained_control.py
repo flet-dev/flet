@@ -28,9 +28,7 @@ class ConstrainedControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-
-        - [`Stack`][flet.Stack] control
-        - [`Page.overlay`][flet.Page.overlay] list
+        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
     """
 
     top: Optional[Number] = None
@@ -39,9 +37,7 @@ class ConstrainedControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-
-        - [`Stack`][flet.Stack] control
-        - [`Page.overlay`][flet.Page.overlay] list
+        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
     """
 
     right: Optional[Number] = None
@@ -50,9 +46,7 @@ class ConstrainedControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-
-        - [`Stack`][flet.Stack] control
-        - [`Page.overlay`][flet.Page.overlay] list
+        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
     """
 
     bottom: Optional[Number] = None
@@ -61,9 +55,7 @@ class ConstrainedControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-
-        - [`Stack`][flet.Stack] control
-        - [`Page.overlay`][flet.Page.overlay] list
+        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
     """
 
     rotate: Optional[RotateValue] = None
@@ -164,7 +156,7 @@ class ConstrainedControl(Control):
     """
     Enables implicit animation of the [`opacity`][flet.ConstrainedControl.opacity] property.
 
-    More information [here](../cookbook/animations.md).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_size: Optional[AnimationValue] = None
@@ -175,46 +167,40 @@ class ConstrainedControl(Control):
     animate_position: Optional[AnimationValue] = None
     """
     Enables implicit animation of the positioning properties
-    ([`left`](TBA), [`right`](TBA), [`top`](TBA) and [`bottom`](TBA)).
+    ([`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right],
+    [`top`][flet.ConstrainedControl.top] and [`bottom`][flet.ConstrainedControl.bottom]).
 
-    More information [here](../cookbook/animations.md).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_rotation: Optional[AnimationValue] = None
     """
     Enables implicit animation of the [`rotate`][flet.ConstrainedControl.rotate] property.
 
-    More information [here](../cookbook/animations.md).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_scale: Optional[AnimationValue] = None
     """
     Enables implicit animation of the [`scale`][flet.ConstrainedControl.scale] property.
 
-    More information [here](../cookbook/animations.md).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_offset: Optional[AnimationValue] = None
     """
     Enables implicit animation of the [`offset`][flet.ConstrainedControl.offset] property.
 
-    More information [here](../cookbook/animations.md).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     on_animation_end: Optional[ControlEventHandler["ConstrainedControl"]] = None
     """
     Called when animation completes.
+
     Can be used to chain multiple animations.
 
     The `data` property of the event handler argument contains the name of the animation.
-    It's value can be one of the following:
 
-    * `"opacity"`
-    * `"rotation"`
-    * `"scale"`
-    * `"offset"`
-    * `"position"`
-    * `"container"`
-
-    More information [here](../cookbook/animations.md).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """

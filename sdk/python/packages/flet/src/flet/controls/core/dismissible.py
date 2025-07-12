@@ -48,7 +48,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     Raises:
         AssertionError: If the [`content`][(c).] is not visible.
         AssertionError: If the [`secondary_background`][(c).] is specified but the
-        [`background`][(c).] is not specified/visible.
+            [`background`][(c).] is not specified/visible.
     """
 
     content: Control

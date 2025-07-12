@@ -32,7 +32,7 @@ sudo softwareupdate --install-rosetta --agree-to-license
 
 Binary Python packages (vs "pure" Python packages written in Python only) are packages that partially written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
-Make sure all non-pure (binary) packages used in your Flet app have [pre-built wheels for iOS](/docs/reference/binary-packages-android-ios).
+Make sure all non-pure (binary) packages used in your Flet app have [pre-built wheels for iOS](../binary-packages-android-ios.md).
 
 ## `flet build ipa`
 

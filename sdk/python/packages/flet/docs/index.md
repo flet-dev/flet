@@ -7,13 +7,13 @@
 
 Flet is a framework that allows building web, desktop and mobile applications in Python without prior experience in frontend development.
 
-You can build a UI for your program with Flet [controls](TBA) which are based on [Flutter](https://flutter.dev) by Google. Flet goes beyond merely wrapping Flutter widgets. It adds its own touch by combining smaller widgets, simplifying complexities, implementing UI best practices, and applying sensible defaults. This ensures that your applications look stylish and polished without requiring additional design efforts on your part.
+You can build a UI for your program with Flet [controls](controls/index.md) which are based on [Flutter](https://flutter.dev) by Google. Flet goes beyond merely wrapping Flutter widgets. It adds its own touch by combining smaller widgets, simplifying complexities, implementing UI best practices, and applying sensible defaults. This ensures that your applications look stylish and polished without requiring additional design efforts on your part.
 
 ## Usage
 
 ### Installation
 
-Follow [these instructions](getting-started/installation.md) to install Flet and 
+Follow [these instructions](getting-started/installation.md) to install Flet and
 get started based on your operating system.
 
 ### Example

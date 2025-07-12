@@ -1,9 +1,9 @@
 ## Implicit animations
 
-With implicit animations, you can animate a control property by setting a target value; whenever that target 
-value changes, the control animates the property from the old value to the new one. Animation produces 
-interpolated values between the old and the new value over the given *duration*. By default, the animation 
-is *linearly* increasing the animation value, however, a *curve* can be applied to the animation which changes the 
+With implicit animations, you can animate a control property by setting a target value; whenever that target
+value changes, the control animates the property from the old value to the new one. Animation produces
+interpolated values between the old and the new value over the given *duration*. By default, the animation
+is *linearly* increasing the animation value, however, a *curve* can be applied to the animation which changes the
 value according to the provided curve. For example, `AnimationCurve.EASE_OUT_CUBIC` curve increases the animation value quickly at the
 beginning of the animation and then slows down until the target value is reached:
 
@@ -13,7 +13,7 @@ beginning of the animation and then slows down until the target value is reached
 /// caption
 ///
 
-Each `ConstrainedControl` provides a number of `animate_{something}` properties, described below, to enable implicit 
+Each `ConstrainedControl` provides a number of `animate_{something}` properties, described below, to enable implicit
 animation of its appearance:
 
 * `animate_opacity`
@@ -25,15 +25,15 @@ animation of its appearance:
 
 `animate_*` properties could have one of the following values:
 
-* Instance of `Animation` class - allows configuring the duration (in milliseconds) and the curve of the 
-* animation, for example `animate_rotation=Animation(duration=300, curve=AnimationCurve.BOUNCE_OUT)`. 
+* Instance of `Animation` class - allows configuring the duration (in milliseconds) and the curve of the
+* animation, for example `animate_rotation=Animation(duration=300, curve=AnimationCurve.BOUNCE_OUT)`.
   See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is `linear`.
 * `int` value - enables animation with specified duration in milliseconds and `linear` curve.
 * `bool` value - enables animation with the duration of 1000 milliseconds and `linear` curve.
 
 ### Opacity animation
 
-Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above) 
+Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`ConstrainedControl.opacity`][flet.ConstrainedControl.opacity] property.
 
 ```python
@@ -69,7 +69,7 @@ ft.run(main)
 
 ### Rotation animation
 
-Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above) 
+Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`ConstrainedControl.rotate`][flet.ConstrainedControl.rotate] property.
 
 ```python
@@ -107,7 +107,7 @@ ft.run(main)
 
 ### Scale animation
 
-Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above) 
+Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`ConstrainedControl.scale`][flet.ConstrainedControl.scale] property.
 
 ```python
@@ -144,11 +144,11 @@ ft.run(main)
 
 ### Offset animation
 
-Setting control's `animate_offset` to either `True`, number or an instance of `Animation` class (see above) 
+Setting control's `animate_offset` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`ConstrainedControl.offset`][flet.ConstrainedControl.offset] property.
 
-`offset` property is an instance of `Offset` class which specifies horizontal `x` and vertical `y` 
-offset of a control scaled to control's size. For example, an offset `Offset(-0.25, 0)` will result in 
+`offset` property is an instance of `Offset` class which specifies horizontal `x` and vertical `y`
+offset of a control scaled to control's size. For example, an offset `Offset(-0.25, 0)` will result in
 a horizontal translation of one quarter the width of the control.
 
 Offset animation is used for various sliding effects:
@@ -184,9 +184,9 @@ ft.run(main)
 
 ### Position animation
 
-Setting control's `animate_position` to either `True`, number or an instance of `Animation` class 
-(see above) enables implicit animation of the following `ConstrainedControl` properties: 
-[`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right], 
+Setting control's `animate_position` to either `True`, number or an instance of `Animation` class
+(see above) enables implicit animation of the following `ConstrainedControl` properties:
+[`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right],
 [`bottom`][flet.ConstrainedControl.bottom], [`top`][flet.ConstrainedControl.top].
 
 
@@ -235,8 +235,8 @@ ft.run(main)
 
 ### Animate
 
-Setting [`Container.animate`][flet.Container.animate] to either `True`, number or an 
-instance of `Animation` class (see above) enables implicit animation of container properties such as size, 
+Setting [`Container.animate`][flet.Container.animate] to either `True`, number or an
+instance of `Animation` class (see above) enables implicit animation of container properties such as size,
 background color, border style, gradient.
 
 ```python
@@ -268,7 +268,7 @@ ft.run(main)
 
 ### Animated content switcher
 
-[`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between a new control and 
+[`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between a new control and
 the control previously set on the `AnimatedSwitcher` as a `content`.
 
 ```python
@@ -308,10 +308,11 @@ ft.run(main)
 
 ### Animation end callback
 
-`ConstrainedControl` also has an [`on_animation_end`][flet.ConstrainedControl.on_animation_end] event handler, which is called
+[`ConstrainedControl`][flet.ConstrainedControl] also has an
+[`on_animation_end`][flet.ConstrainedControl.on_animation_end] event handler, which is called
 when an animation is complete. It can be used to chain multiple animations.
 
-Event's `data` field/property contains the name of animation:
+Event's [`data`][flet.Event.data] field/property contains the name of animation:
 
 * `"opacity"`
 * `"rotation"`

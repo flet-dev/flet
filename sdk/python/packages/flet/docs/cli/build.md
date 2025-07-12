@@ -1,9 +1,9 @@
 ---
-title: build
-sidebar_label: build
+title: flet build
 ---
 
-This command is used to package a Flet application for distribution. You can find it's guide [here](/docs/publish).
+This command is used to package a Flet application for distribution.
+You can find it's guide [here](../publish/index.md).
 
 ```
 usage: flet build [-h] [-v] [--arch TARGET_ARCH [TARGET_ARCH ...]]

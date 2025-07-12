@@ -8,43 +8,43 @@ Let's make a clone of Trello in Python with the Flet framework and then deploy i
 /// caption
 ///
 
-The code for this tutorial can be found [here](https://github.com/flet-dev/examples/tree/main/python/apps/trolli) with self explanatory commits. 
-Be sure to run `pip install -r requirements.txt` after cloning. 
+The code for this tutorial can be found [here](https://github.com/flet-dev/examples/tree/main/python/apps/trolli) with self explanatory commits.
+Be sure to run `pip install -r requirements.txt` after cloning.
 
 You can see the live demo [here](https://gallery.flet.dev/trolli/).
 
 ## Why Flet?
 
-Most developers are undoubtedly familiar with the situation of either having developed a console app that 
-turns out to have a wider audience than originally intended, or needing to develop an internal tool for 
-non-developers but which is destined to have a small user base and/or a relatively brief shelf life. 
-In situations like these it can often feel awkward to reach for an oversized tool such as electron, 
-a feature rich framework like flutter (irony acknowledged!), or try to quickly get a handle on some other 
-cross platform framework like .NET MAUI. What we would really like is to be able to throw a UI on our logic 
-that looks generically decent, has acceptable performance, and ideally, takes less time to write than did 
-the business logic, and preferably in the same language in which the rest of the logic was written - i.e. 
-a language with which we are already proficient (currently the only released library is in Python but C#, 
-Typescript, and Golang libraries are on the roadmap). This is exactly what the Flet platform aims to provide. 
+Most developers are undoubtedly familiar with the situation of either having developed a console app that
+turns out to have a wider audience than originally intended, or needing to develop an internal tool for
+non-developers but which is destined to have a small user base and/or a relatively brief shelf life.
+In situations like these it can often feel awkward to reach for an oversized tool such as electron,
+a feature rich framework like flutter (irony acknowledged!), or try to quickly get a handle on some other
+cross platform framework like .NET MAUI. What we would really like is to be able to throw a UI on our logic
+that looks generically decent, has acceptable performance, and ideally, takes less time to write than did
+the business logic, and preferably in the same language in which the rest of the logic was written - i.e.
+a language with which we are already proficient (currently the only released library is in Python but C#,
+Typescript, and Golang libraries are on the roadmap). This is exactly what the Flet platform aims to provide.
 
-Flet takes a different approach to many new UI frameworks that is arguably more intuitive to the majority 
-of experienced programmers. Diverging from the currently ubiquitous declarative approach and opting instead 
-for an imperative model. 
+Flet takes a different approach to many new UI frameworks that is arguably more intuitive to the majority
+of experienced programmers. Diverging from the currently ubiquitous declarative approach and opting instead
+for an imperative model.
 
-Having intimated that Flet is designed with simple GUIs in mind, lets nonetheless try to make something a 
-tad more complicated than, for example, a simple dashboard with some filters, and shoot for something like a 
-minimal version of Trello - and bestow upon it the totally-independently-arrived-at-name, _Trolli_.  
-For the purposes of this tutorial I'll assume the reader is familiar with the basic concept and setup of a 
-Flet project (read [the tutorials](https://flet.dev../tutorials) and the [docs](https://flet.dev/docs) if not), and instead focus more on aspects 
+Having intimated that Flet is designed with simple GUIs in mind, lets nonetheless try to make something a
+tad more complicated than, for example, a simple dashboard with some filters, and shoot for something like a
+minimal version of Trello - and bestow upon it the totally-independently-arrived-at-name, _Trolli_.
+For the purposes of this tutorial I'll assume the reader is familiar with the basic concept and setup of a
+Flet project (read [the tutorials](https://flet.dev../tutorials) and the [docs](https://flet.dev/docs) if not), and instead focus more on aspects
 that are not part of the existing tutorials.
 
 ## Defining Entities and Layout
 
-With the proximate goal of creating the MVP of our clone, let's start by defining the main 
-entities (`boards`, `board_lists`, `items`), settle on an acceptable design and layout, and implement 
-a sort of pseudo-repository pattern so that in future development we can move from in-memory data storage 
-to persistent storage of some kind. 
+With the proximate goal of creating the MVP of our clone, let's start by defining the main
+entities (`boards`, `board_lists`, `items`), settle on an acceptable design and layout, and implement
+a sort of pseudo-repository pattern so that in future development we can move from in-memory data storage
+to persistent storage of some kind.
 
-Here, in the `main.py` module we'll add this code and then continue to define the `TrelloApp` class. 
+Here, in the `main.py` module we'll add this code and then continue to define the `TrelloApp` class.
 
 ```python title="main.py"
 import flet as ft
@@ -61,15 +61,15 @@ if __name__ == "__main__":
     ft.run(main)
 ```
 
-In terms of layout we can consider the app to consist of a header (`appbar`) and below that a 
-collapsible navigation panel, next to which is the active view consisting of either a board, settings, 
+In terms of layout we can consider the app to consist of a header (`appbar`) and below that a
+collapsible navigation panel, next to which is the active view consisting of either a board, settings,
 members or whatever else we may choose. Something like this...
 
 ![mock-up](../assets/tutorials/trolli/mock-up.png){width="80%"}
 /// caption
 ///
 
-So the class for the app itself could look something like this... 
+So the class for the app itself could look something like this...
 
 ```python
 import flet as ft
@@ -102,10 +102,10 @@ class TrelloApp:
         self.page.update()
 ```
 
-In a new file (`app_layout.py`) we can define a layout for our app in a class which will inherit from 
-the `Row` control and in which the navigation rail along with a toggle button to collapse and expand it, 
-and the main content area are laid out. But rather than define the navigation sidebar in that module, we'll 
-place that in its own `sidebar.py` module. 
+In a new file (`app_layout.py`) we can define a layout for our app in a class which will inherit from
+the `Row` control and in which the navigation rail along with a toggle button to collapse and expand it,
+and the main content area are laid out. But rather than define the navigation sidebar in that module, we'll
+place that in its own `sidebar.py` module.
 
 ```python title="app_layout.py"
 import flet as ft
@@ -232,26 +232,26 @@ If we [run](../getting-started/running-app.md) the main app with
 flet run
 ```
 
-we can see the result and get hot reloading when we make any style changes. 
+we can see the result and get hot reloading when we make any style changes.
 For example, try adding `alignment=ft.MainAxisAlignment.CENTER` to the first row in the container like this…
 ```python
 content = ft.Column(
     alignment=ft.MainAxisAlignment.CENTER),
     controls=[
         ft.Row([ft.Text("Workspace")]),
-    ], 
+    ],
 )
 ```
 
-If you save the file you should be able to see the change in your app window. 
+If you save the file you should be able to see the change in your app window.
 
 ![basic-nav-rail-toggle](../assets/tutorials/trolli/basic-nav-rail-toggle.gif){width="100%"}
 /// caption
 ///
 
-Before we move on let's define our basic entities. We'll need a `Board` class, which will keep a list of lists, each of which will be a `BoardList` object (apologies for the unfortunate lexical collisions here - the colloquial use of 'list' derives from the nature of the app, whereas the technical use of 'list' derives from python's particular term for an array-like data structure), and each of which, in turn, will contain a list of `Item` objects. If that's confusing, take some time to look over the source code to clear things up. 
+Before we move on let's define our basic entities. We'll need a `Board` class, which will keep a list of lists, each of which will be a `BoardList` object (apologies for the unfortunate lexical collisions here - the colloquial use of 'list' derives from the nature of the app, whereas the technical use of 'list' derives from python's particular term for an array-like data structure), and each of which, in turn, will contain a list of `Item` objects. If that's confusing, take some time to look over the source code to clear things up.
 
-For each of the entities, we'll add an application wide unique id with an `id_counter = itertools.count()` statement at the top of each class and a call to `next(Board.id_counter)` at initialization. This way two lists or boards can have the same name but still represent distinct entities. 
+For each of the entities, we'll add an application wide unique id with an `id_counter = itertools.count()` statement at the top of each class and a call to `next(Board.id_counter)` at initialization. This way two lists or boards can have the same name but still represent distinct entities.
 
 ## Data Access Layer and Customization
 
@@ -283,19 +283,19 @@ if __name__ == "__main__":
 
 ## Application Logic
 
-You can run the app now but apart from a nicer font for the name, it still does not have any functionality. 
+You can run the app now but apart from a nicer font for the name, it still does not have any functionality.
 
-Now it's time to fill out the application logic. Although this app might qualify as non-trivial, we won't 
-bother to separate the code into distinct application and business layers. The separation of the data access 
-and the rest of the logic will suffice for this non-architecturally focused tutorial, though further separation 
-may be a sensible thing to consider. 
+Now it's time to fill out the application logic. Although this app might qualify as non-trivial, we won't
+bother to separate the code into distinct application and business layers. The separation of the data access
+and the rest of the logic will suffice for this non-architecturally focused tutorial, though further separation
+may be a sensible thing to consider.
 
 ### Creating Views
 
-First up, we will add views to correspond to the sidebar navigation destinations. 
+First up, we will add views to correspond to the sidebar navigation destinations.
 
-We need a view to display all boards and a view to display a Members pane which, for now, will simply be a 
-placeholder until a future tutorial. We'll add these views as controls to the `app_layout.py` module. 
+We need a view to display all boards and a view to display a Members pane which, for now, will simply be a
+placeholder until a future tutorial. We'll add these views as controls to the `app_layout.py` module.
 
 ```python title="app_layout.py"
 self.members_view = ft.Text("members view")
@@ -354,8 +354,8 @@ self.all_boards_view = ft.Column(
 )
 ```
 
-Since we are working in an imperative paradigm and have no explicit state management tool such as redux or the like, 
-we will need a method to 'rehydrate' the view that shows all the boards so that its current state reflects changes 
+Since we are working in an imperative paradigm and have no explicit state management tool such as redux or the like,
+we will need a method to 'rehydrate' the view that shows all the boards so that its current state reflects changes
 made in other entities (namely the sideboard).
 
 ```python
@@ -415,11 +415,11 @@ def hydrate_all_boards_view(self):
 
 ### Syncing Navigation Panel
 
-Next up we need a visually distinct section of the navigation panel to display boards we've created. 
-We'll add a second, `bottom_nav_rail` to the sidebar to represent when a particular board is the active view. 
-This will necessitate a `sync_board_destinations` method in the sidebar component to be called whenever any change 
-has been made to the list of current boards. 
-We'll now have a change handler for each of the top and bottom nav rails. 
+Next up we need a visually distinct section of the navigation panel to display boards we've created.
+We'll add a second, `bottom_nav_rail` to the sidebar to represent when a particular board is the active view.
+This will necessitate a `sync_board_destinations` method in the sidebar component to be called whenever any change
+has been made to the list of current boards.
+We'll now have a change handler for each of the top and bottom nav rails.
 
 ```python
 self.top_nav_rail = ft.NavigationRail(
@@ -469,21 +469,21 @@ def sync_board_destinations(self):
             )
         )
 ```
-Now we can add new boards and they appear in our navigation rail. 
-Unfortunately clicking on the navigation rail doesn't actually navigate to anything. 
+Now we can add new boards and they appear in our navigation rail.
+Unfortunately clicking on the navigation rail doesn't actually navigate to anything.
 
 ![add-board-capability](../assets/tutorials/trolli/add-board-capability.gif){width="100%"}
 /// caption
 ///
 
-There are several ways we could achieve this such as having every view present in the `app_layout.py` 
-module and then toggling visibility on/off of the relevant views depending on the navigation rail index. 
-But that wouldn't help much in a browser context, nor in a mobile context with a back button. 
-We'll need to consider routing. Flet provides a `TemplateRoute` utility class for url matching. 
+There are several ways we could achieve this such as having every view present in the `app_layout.py`
+module and then toggling visibility on/off of the relevant views depending on the navigation rail index.
+But that wouldn't help much in a browser context, nor in a mobile context with a back button.
+We'll need to consider routing. Flet provides a `TemplateRoute` utility class for url matching.
 
 ### Routing
 
-In the `main.py` module let's wire up a handler to the `page.on_route_change` event. 
+In the `main.py` module let's wire up a handler to the `page.on_route_change` event.
 
 ```python title="main.py"
 class TrelloApp(AppLayout):
@@ -523,10 +523,10 @@ class TrelloApp(AppLayout):
         self.page.update()
 ```
 
-While here, we'll also change our initialization method so that the app starts with a pre-made board 
-for demonstration purposes. Within that method note that we add a flet `View` object to the page. 
-The page maintains a list of Views as top level containers for other Controls in order to track navigation history. 
-We'll need to add the corresponding `set_***_view` methods to the `layout.py` module as well. 
+While here, we'll also change our initialization method so that the app starts with a pre-made board
+for demonstration purposes. Within that method note that we add a flet `View` object to the page.
+The page maintains a list of Views as top level containers for other Controls in order to track navigation history.
+We'll need to add the corresponding `set_***_view` methods to the `layout.py` module as well.
 Here is the `set_board_view` method for example...
 
 ```python title="layout.py"
@@ -537,11 +537,11 @@ def set_board_view(self, i):
     self.page.update()
 ```
 
-Now, if we fire up the project in a web browser with the 
+Now, if we fire up the project in a web browser with the
 ```
 flet run -dw
-``` 
-command (_-d_ flag for hot reloading, and _-w_ flag for web) we can add some boards and reach them by 
+```
+command (_-d_ flag for hot reloading, and _-w_ flag for web) we can add some boards and reach them by
 clicking or entering `board/{i}`, where *i* is the zero indexed board, as the url.
 
 ![navigation](../assets/tutorials/trolli/navigation.gif){width="100%"}
@@ -550,10 +550,10 @@ clicking or entering `board/{i}`, where *i* is the zero indexed board, as the ur
 
 ### Changing Board Names
 
-Next, we should include the ability to change the name of a board. In contrast to the more "*proper*" 
-title editing logic that was implemented in the `board_list.py` module I'm going to favor what some might 
-consider a more "*hacky*" approach because I personally dislike overly ceremonial editing flows, 
-particularly in such a low stakes, fluid sort of application. We'll make use of the `on_focus` and `on_blur` 
+Next, we should include the ability to change the name of a board. In contrast to the more "*proper*"
+title editing logic that was implemented in the `board_list.py` module I'm going to favor what some might
+consider a more "*hacky*" approach because I personally dislike overly ceremonial editing flows,
+particularly in such a low stakes, fluid sort of application. We'll make use of the `on_focus` and `on_blur`
 events in the bottom navigation rail destinations in the `sidebar.py` module. Here are the handlers we'll add.
 
 ```python title="sidebar.py"
@@ -573,10 +573,10 @@ def board_name_blur(self, e):
     self.page.update()
 ```
 
-This makes for a very intuitive way to change a board name without unnecessary dialogs or extraneous button presses. 
+This makes for a very intuitive way to change a board name without unnecessary dialogs or extraneous button presses.
 
-Let's also quickly stub a login procedure which will be more fully realized in a future instalment. 
-For now, we'll simply add the following login method and wire it up to the login `PopupMenuItem` on_click event. 
+Let's also quickly stub a login procedure which will be more fully realized in a future instalment.
+For now, we'll simply add the following login method and wire it up to the login `PopupMenuItem` on_click event.
 
 ```python
 def login(self, e):
@@ -618,18 +618,18 @@ def login(self, e):
 
 ## Drag and Drop
 
-Next, we'll add crucial drag and drop functionality to lists themselves and items within lists. 
+Next, we'll add crucial drag and drop functionality to lists themselves and items within lists.
 
-We'll start with the simpler case of re-ordering lists within boards. In order to give some visual 
-indication of the target to which we're dragging a list, we'll modify the `board_list` containers `border` property, 
-darkening the color on the `list_will_drag_accept` event handler, and returning it to a lighter color in 
+We'll start with the simpler case of re-ordering lists within boards. In order to give some visual
+indication of the target to which we're dragging a list, we'll modify the `board_list` containers `border` property,
+darkening the color on the `list_will_drag_accept` event handler, and returning it to a lighter color in
 the `list_drag_accept` and `list_drag_leave` handlers.
 
-Next, we'll wrap the `board_list` view in a `DragTarget` object, all of which we will then wrap in a 
-`Draggable` object. Both of these will be passed a `group` parameter of "lists". This will be important since later 
-we will want to add the ability to drag and drop individual items between different lists so for that function 
-we'll specify a different group. If anything is unclear in the previous sentence. , have a look at the 
-relevant [documentation](https://flet.dev../controls/draggable).
+Next, we'll wrap the `board_list` view in a `DragTarget` object, all of which we will then wrap in a
+`Draggable` object. Both of these will be passed a `group` parameter of "lists". This will be important since later
+we will want to add the ability to drag and drop individual items between different lists so for that function
+we'll specify a different group. If anything is unclear in the previous sentence. , have a look at the
+relevant [documentation][flet.Draggable].
 
 Now the composition of the view should look something like this.
 
@@ -705,24 +705,24 @@ def list_drag_leave(self, e):
 ```
 
 
-Note the manipulation of the opacity field acting as a visual indication that the dragged item will be accepted 
-on the target. 
+Note the manipulation of the opacity field acting as a visual indication that the dragged item will be accepted
+on the target.
 
 ![drag-drop-list](../assets/tutorials/trolli/drag-drop-list.gif){width="100%"}
 /// caption
 ///
 
-Now for the slightly more complex case of dragging items within a list (including potentially to another list on 
-the same board). Now that we want a `board_list` to not only be a drag target for other lists, but also for items 
+Now for the slightly more complex case of dragging items within a list (including potentially to another list on
+the same board). Now that we want a `board_list` to not only be a drag target for other lists, but also for items
 being dragged to it from a different list, we'll need to add another `DragTarget` wrapper to the list, but this time
 we'll assign the group name "items" so that it only responds to the dragging of items.
 
-Since we'll have the ability to drag the list to a location above or below an existing list we'll employ a 
-different visual indicator strategy to what we've implemented for list dragging. 
-We'll make sure that every time a new `item` is added to the `board_list` it will be interspersed with a visual 
+Since we'll have the ability to drag the list to a location above or below an existing list we'll employ a
+different visual indicator strategy to what we've implemented for list dragging.
+We'll make sure that every time a new `item` is added to the `board_list` it will be interspersed with a visual
 indicator (implemented as a simple Container object).
 
-The `item.py` module will now need its view wrapped by `Draggable` and `DragTarget` and assigned to the "items" 
+The `item.py` module will now need its view wrapped by `Draggable` and `DragTarget` and assigned to the "items"
 group as seen below together with event handlers.
 
 ```python
@@ -792,11 +792,11 @@ def drag_leave(self, e):
     self.page.update()
 ```
 
-We need somewhere to house the logic that will decide on how and when to modify the items owned by a `board_list` 
-object based on a drag event. There are surely design pattern militants out there that will find several dozen 
-unholy violations of the sacred order of clean software design in the following approach but for this 
-size of application, simply overloading the `add_item` method to take optional keyword args when called from 
-different places, as seen below, seems to me like a perfectly workable approach. 
+We need somewhere to house the logic that will decide on how and when to modify the items owned by a `board_list`
+object based on a drag event. There are surely design pattern militants out there that will find several dozen
+unholy violations of the sacred order of clean software design in the following approach but for this
+size of application, simply overloading the `add_item` method to take optional keyword args when called from
+different places, as seen below, seems to me like a perfectly workable approach.
 
 ```python
 def add_item(
@@ -860,7 +860,7 @@ And with these changes, we should be able to drag lists around within the board 
 
 ## Handling Page Resizing
 
-The only final bit of logic we need to add is some page resizing to ensure that if more lists exist than can be displayed, there is a scroll bar to reach them. This logic will also have to take into account the state of the sidebar - extended or not. 
+The only final bit of logic we need to add is some page resizing to ensure that if more lists exist than can be displayed, there is a scroll bar to reach them. This logic will also have to take into account the state of the sidebar - extended or not.
 
 We'll add a resize method to `board.py` module:
 ```python title="board.py"
@@ -883,7 +883,7 @@ TBA
 
 ## Summary
 
-Hopefully this walkthrough gives the reader some idea of how actual usable apps can be developed and 
-deployed using the Flet framework. The flexibility, speed of development and developer experience make 
-it a really compelling tool to reach for in many different use cases and there is an ever growing number 
+Hopefully this walkthrough gives the reader some idea of how actual usable apps can be developed and
+deployed using the Flet framework. The flexibility, speed of development and developer experience make
+it a really compelling tool to reach for in many different use cases and there is an ever growing number
 of devs doing just that.

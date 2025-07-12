@@ -1020,7 +1020,7 @@ class Theme:
     disabled_color: Optional[ColorValue] = None
     canvas_color: Optional[ColorValue] = None
     scaffold_bgcolor: Optional[ColorValue] = None
-    card_color: Optional[ColorValue] = None
+    card_bgcolor: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None

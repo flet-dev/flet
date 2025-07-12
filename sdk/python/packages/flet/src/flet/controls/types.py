@@ -23,6 +23,7 @@ class AppView(Enum):
     """
     TBD
     """
+
     WEB_BROWSER = "web_browser"
     FLET_APP = "flet_app"
     FLET_APP_WEB = "flet_app_web"
@@ -33,6 +34,7 @@ class WebRenderer(Enum):
     """
     TBD
     """
+
     AUTO = "auto"
     CANVAS_KIT = "canvaskit"
     SKWASM = "skwasm"
@@ -42,6 +44,7 @@ class RouteUrlStrategy(Enum):
     """
     TBD
     """
+
     PATH = "path"
     HASH = "hash"
 
@@ -50,6 +53,7 @@ class UrlTarget(Enum):
     """
     TBD
     """
+
     BLANK = "blank"
     SELF = "_self"
     PARENT = "_parent"
@@ -60,61 +64,62 @@ class FontWeight(Enum):
     """
     The thickness of the glyphs used to draw the text.
     """
-    
+
     NORMAL = "normal"
     """
     The default font weight, equal to `w400`.
     """
-    
+
     BOLD = "bold"
     """
     A commonly used font weight that is heavier than normal, equal to `w700`.
     """
-    
+
     W_100 = "w100"
     """
     Thin, the least thick.
     """
-    
+
     W_200 = "w200"
     """
     Extra-light.
     """
-    
+
     W_300 = "w300"
     """
     Light.
     """
-    
+
     W_400 = "w400"
     """
     Normal / regular / plain.
     """
-    
+
     W_500 = "w500"
     """
     Medium.
     """
-    
+
     W_600 = "w600"
     """
     Semi-bold.
     """
-    
+
     W_700 = "w700"
     """
     Bold.
     """
-    
+
     W_800 = "w800"
     """
     Extra-bold.
     """
-    
+
     W_900 = "w900"
     """
     Black, the most thick.
     """
+
 
 @dataclass
 class NotchShape:
@@ -124,6 +129,11 @@ class NotchShape:
     Typically used as the outline of a 'host' control to make a notch that accommodates a 'guest' control.
     e.g the [`BottomAppBar`][flet.BottomAppBar] may have a notch to accommodate
     the [`FloatingActionButton`][flet.FloatingActionButton].
+
+    This class is not intended to be used directly. See usable derivatives:
+
+    - [`AutomaticNotchShape`][flet.AutomaticNotchShape]
+    - [`CircularRectangleNotchShape`][flet.CircularRectangleNotchShape]
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
@@ -142,6 +152,7 @@ class CircularRectangleNotchShape(NotchShape):
 
     def __post_init__(self):
         self._type = "circular"
+
 
 @dataclass
 class AutomaticNotchShape(NotchShape):
@@ -177,7 +188,7 @@ class MainAxisAlignment(Enum):
     """
     How the children should be placed along the main axis.
     """
-    
+
     START = "start"
     """
     Place the children as close to the start of the main axis as possible.
@@ -187,7 +198,7 @@ class MainAxisAlignment(Enum):
     """
     Place the children as close to the end of the main axis as possible.
     """
-    
+
     CENTER = "center"
     """
     Place the children as close to the middle of the main axis as possible.
@@ -200,13 +211,13 @@ class MainAxisAlignment(Enum):
 
     SPACE_AROUND = "spaceAround"
     """
-    Place the free space evenly between the children as well as half of that space 
+    Place the free space evenly between the children as well as half of that space
     before and after the first and last child.
     """
-    
+
     SPACE_EVENLY = "spaceEvenly"
     """
-    Place the free space evenly between the children as well as before and after the 
+    Place the free space evenly between the children as well as before and after the
     first and last child.
     """
 
@@ -218,7 +229,7 @@ class CrossAxisAlignment(Enum):
 
     START = "start"
     """
-    Place the children with their start edge aligned with the start side of the cross 
+    Place the children with their start edge aligned with the start side of the cross
     axis.
     """
 
@@ -249,17 +260,17 @@ class VerticalAlignment(Enum):
     """
 
     NONE = None
-    
+
     START = -1.0
     """
     Aligns the text vertically at the topmost location of the TextField.
     """
-    
+
     END = 1.0
     """
     Aligns the text vertically at the bottommost location of the TextField.
     """
-    
+
     CENTER = 0.0
     """
     Aligns the text vertically in the center of the TextField.
@@ -273,22 +284,22 @@ class TabAlignment(Enum):
 
     START = "start"
     """
-    If [`Tabs.scrollable`][flet.Tabs.scrollable] is `True`, tabs are aligned to the start of the 
+    If [`Tabs.scrollable`][flet.Tabs.scrollable] is `True`, tabs are aligned to the start of the
     [`Tabs`][flet.Tabs]. Otherwise throws an exception.
     """
 
     START_OFFSET = "startOffset"
     """
-    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the 
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the
     [`Tabs`][flet.Tabs] with an offset of 52.0 pixels. Otherwise throws an exception.
     """
 
     FILL = "fill"
     """
-    If `Tabs.scrollable` is `False`, tabs are stretched to fill the 
+    If `Tabs.scrollable` is `False`, tabs are stretched to fill the
     [`Tabs`][flet.Tabs]. Otherwise throws an exception.
     """
-    
+
     CENTER = "center"
     """
     Tabs are aligned to the center of the [`Tabs`][flet.Tabs].
@@ -297,7 +308,7 @@ class TabAlignment(Enum):
 
 class LabelPosition(Enum):
     """
-    Position of label in a [`Checkbox`][flet.Checkbox], [`Radio`][flet.Radio] or 
+    Position of label in a [`Checkbox`][flet.Checkbox], [`Radio`][flet.Radio] or
     [`Switch`][flet.Switch]
     """
 
@@ -314,7 +325,7 @@ class LabelPosition(Enum):
 
 class BlendMode(Enum):
     """
-    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from 
+    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from
     Flutter documentation for blend mode examples.
     """
 
@@ -359,7 +370,7 @@ class TextAlign(Enum):
     """
     Align the text on the left edge of the container.
     """
-    
+
     RIGHT = "right"
     """
     Align the text on the right edge of the container.
@@ -372,7 +383,7 @@ class TextAlign(Enum):
 
     JUSTIFY = "justify"
     """
-    Stretch lines of text that end with a soft line break to fill the width of the 
+    Stretch lines of text that end with a soft line break to fill the width of the
     container.
     """
 
@@ -391,7 +402,7 @@ class ScrollMode(Enum):
     """
     Weather scrolling is enabled and visibility of scroll bar options.
     """
-    
+
     AUTO = "auto"
     """
     Scrolling is enabled and scroll bar is only shown when scrolling occurs.
@@ -399,10 +410,10 @@ class ScrollMode(Enum):
 
     ADAPTIVE = "adaptive"
     """
-    Scrolling is enabled and scroll bar is always shown when running app as web or 
+    Scrolling is enabled and scroll bar is always shown when running app as web or
     desktop.
     """
-    
+
     ALWAYS = "always"
     """
     Scrolling is enabled and scroll bar is always shown.
@@ -416,7 +427,7 @@ class ScrollMode(Enum):
 
 class ClipBehavior(Enum):
     """
-    Different ways to clip content. See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html) 
+    Different ways to clip content. See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html)
     from Flutter documentation for ClipBehavior examples.
     """
 
@@ -424,7 +435,7 @@ class ClipBehavior(Enum):
     """
     No clip at all.
 
-    This is the default option for most widgets: if the content does not overflow the 
+    This is the default option for most widgets: if the content does not overflow the
     widget boundary, don't pay any performance cost for clipping.
     """
 
@@ -432,7 +443,7 @@ class ClipBehavior(Enum):
     """
     Clip with anti-aliasing.
 
-    This mode has anti-aliased clipping edges, which reduces jagged edges when the clip 
+    This mode has anti-aliased clipping edges, which reduces jagged edges when the clip
     shape itself has edges that are diagonal, curved, or otherwise not axis-aligned.
     """
 
@@ -440,12 +451,12 @@ class ClipBehavior(Enum):
     """
     Clip with anti-aliasing and saveLayer immediately following the clip.
     """
-    
+
     HARD_EDGE = "hardEdge"
     """
     Clip, but do not apply anti-aliasing.
 
-    This mode enables clipping, but curves and non-axis-aligned straight lines will be 
+    This mode enables clipping, but curves and non-axis-aligned straight lines will be
     jagged as no effort is made to anti-alias.
     """
 
@@ -463,7 +474,7 @@ class ImageRepeat(Enum):
 
 class PagePlatform(Enum):
     """
-    Supported platforms for a page, including mobile and desktop systems. Each platform 
+    Supported platforms for a page, including mobile and desktop systems. Each platform
     corresponds to a specific operating system or environment.
     """
 
@@ -497,15 +508,15 @@ class ThemeMode(Enum):
 
     SYSTEM = "system"
     """
-    Use either the light or dark theme based on what the user has selected in the 
+    Use either the light or dark theme based on what the user has selected in the
     system settings.
     """
-    
+
     LIGHT = "light"
     """
     Always use the light mode regardless of system preference.
     """
-    
+
     DARK = "dark"
     """
     Always use the dark mode (if available) regardless of system preference.
@@ -523,7 +534,7 @@ class Brightness(Enum):
 
     For example, the color might be bright white, requiring black text.
     """
-    
+
     DARK = "dark"
     """
     The color is dark and will require a light text color to achieve readable contrast.
@@ -541,7 +552,7 @@ class Orientation(Enum):
     """
     Taller than wide.
     """
-    
+
     LANDSCAPE = "landscape"
     """
     Wider than tall.
@@ -552,7 +563,7 @@ class FloatingActionButtonLocation(Enum):
     """
     Defines a position for the [`FloatingActionButton`][flet.FloatingActionButton].
 
-    See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html) 
+    See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
     from Flutter documentation for placement location examples.
     """
 
@@ -586,10 +597,10 @@ class AppLifecycleState(Enum):
     """
     The application is shown.
 
-    On mobile platforms, this is usually just before the application replaces another 
+    On mobile platforms, this is usually just before the application replaces another
     application in the foreground.
 
-    On desktop platforms, this is just before the application is shown after being 
+    On desktop platforms, this is just before the application is shown after being
     minimized or otherwise made to show at least one view of the application.
 
     On the web, this is just before a window (or tab) is shown.
@@ -597,31 +608,31 @@ class AppLifecycleState(Enum):
 
     RESUME = "resume"
     """
-    The application gains input focus. Indicates that the application is entering a 
+    The application gains input focus. Indicates that the application is entering a
     state where it is visible, active, and accepting user input.
     """
-    
+
     HIDE = "hide"
     """
     The application is hidden.
 
-    On mobile platforms, this is usually just before the application is replaced by 
+    On mobile platforms, this is usually just before the application is replaced by
     another application in the foreground.
 
-    On desktop platforms, this is just before the application is hidden by being 
+    On desktop platforms, this is just before the application is hidden by being
     minimized or otherwise hiding all views of the application.
 
     On the web, this is just before a window (or tab) is hidden.
     """
-    
+
     INACTIVE = "inactive"
     """
     The application loses input focus.
 
-    On mobile platforms, this can be during a phone call or when a system dialog is 
+    On mobile platforms, this can be during a phone call or when a system dialog is
     visible.
 
-    On desktop platforms, this is when all views in an application have lost input 
+    On desktop platforms, this is when all views in an application have lost input
     focus but at least one view of the application is still visible.
 
     On the web, this is when the window (or tab) has lost input focus.
@@ -631,7 +642,7 @@ class AppLifecycleState(Enum):
     """
     The application is paused.
 
-    On mobile platforms, this happens right before the application is replaced by 
+    On mobile platforms, this happens right before the application is replaced by
     another application.
 
     On desktop platforms and the web, this function is not called.
@@ -648,7 +659,7 @@ class AppLifecycleState(Enum):
     """
     The application is resumed after being paused.
 
-    On mobile platforms, this happens just before this application takes over as the 
+    On mobile platforms, this happens just before this application takes over as the
     active application.
 
     On desktop platforms and the web, this function is not called.
@@ -659,17 +670,17 @@ class MouseCursor(Enum):
     """
     Various mouse cursor types that represent different operations or states.
     """
-    
+
     ALIAS = "alias"
     """
-    A cursor indicating that the current operation will create an alias of, or a 
-    shortcut of the item. Typically the shape of an arrow with a shortcut icon at the 
+    A cursor indicating that the current operation will create an alias of, or a
+    shortcut of the item. Typically the shape of an arrow with a shortcut icon at the
     corner.
     """
 
     ALL_SCROLL = "allScroll"
     """
-    A cursor indicating scrolling in any direction. Typically the shape of a dot 
+    A cursor indicating scrolling in any direction. Typically the shape of a dot
     surrounded by 4 arrows.
     """
 
@@ -680,7 +691,7 @@ class MouseCursor(Enum):
 
     CELL = "cell"
     """
-    A cursor indicating selectable table cells. Typically the shape of a hollow plus 
+    A cursor indicating selectable table cells. Typically the shape of a hollow plus
     sign.
     """
 
@@ -692,43 +703,43 @@ class MouseCursor(Enum):
 
     CONTEXT_MENU = "contextMenu"
     """
-    A cursor indicating somewhere the user can trigger a context menu. Typically the 
+    A cursor indicating somewhere the user can trigger a context menu. Typically the
     shape of an arrow with a small menu at the corner.
     """
 
     COPY = "copy"
     """
-    A cursor indicating that the current operation will copy the item. Typically the 
+    A cursor indicating that the current operation will copy the item. Typically the
     shape of an arrow with a boxed plus sign at the corner.
     """
 
     DISAPPEARING = "disappearing"
     """
-    A cursor indicating that the current operation will result in the disappearance of 
+    A cursor indicating that the current operation will result in the disappearance of
     the item. Typically the shape of an arrow with a cloud of smoke at the corner.
     """
-    
+
     FORBIDDEN = "forbidden"
     """
     A cursor indicating an operation that will not be carried out.
-    Typically the shape of a circle with a diagonal line. 
+    Typically the shape of a circle with a diagonal line.
     """
-    
+
     GRAB = "grab"
     """
-    A cursor indicating something that can be dragged. Typically the shape of an open 
+    A cursor indicating something that can be dragged. Typically the shape of an open
     hand.
     """
-    
+
     GRABBING = "grabbing"
     """
-    A cursor indicating something that is being dragged. Typically the shape of a 
+    A cursor indicating something that is being dragged. Typically the shape of a
     closed hand.
     """
-    
+
     HELP = "help"
     """
-    A cursor indicating help information. Typically the shape of a question mark, or an 
+    A cursor indicating help information. Typically the shape of a question mark, or an
     arrow therewith.
     """
 
@@ -736,13 +747,13 @@ class MouseCursor(Enum):
     """
     A cursor indicating moving something. Typically the shape of four-way arrow.
     """
-    
+
     NO_DROP = "noDrop"
     """
     A cursor indicating somewhere that the current item may not be dropped.
     Typically the shape of a hand with a forbidden sign at the corner.
     """
-    
+
     NONE = "none"
     """
     Hide the cursor.
@@ -750,46 +761,46 @@ class MouseCursor(Enum):
 
     PRECISE = "precise"
     """
-    A cursor indicating precise selection, such as selecting a pixel in a bitmap. 
+    A cursor indicating precise selection, such as selecting a pixel in a bitmap.
     Typically the shape of a crosshair.
     """
 
     PROGRESS = "progress"
     """
-    A cursor indicating the status that the program is busy but can still be interacted 
+    A cursor indicating the status that the program is busy but can still be interacted
     with. Typically the shape of an arrow with an hourglass or a watch at the corner.
     """
 
     RESIZE_COLUMN = "resizeColumn"
     """
-    A cursor indicating resizing a column, or an item horizontally. Typically the shape 
+    A cursor indicating resizing a column, or an item horizontally. Typically the shape
     of arrows pointing left and right with a vertical bar separating them.
     """
 
     RESIZE_DOWN = "resizeDown"
     """
-    A cursor indicating resizing an object from its bottom edge. Typically the shape of 
+    A cursor indicating resizing an object from its bottom edge. Typically the shape of
     an arrow pointing down.
     """
 
     RESIZE_DOWN_LEFT = "resizeDownLeft"
     """
-    A cursor indicating resizing an object from its bottom-left corner. Typically the 
+    A cursor indicating resizing an object from its bottom-left corner. Typically the
     shape of an arrow pointing lower left.
     """
 
     RESIZE_DOWN_RIGHT = "resizeDownRight"
     """
-    A cursor indicating resizing an object from its bottom-right corner. Typically the 
+    A cursor indicating resizing an object from its bottom-right corner. Typically the
     shape of an arrow pointing lower right.
     """
-    
+
     RESIZE_LEFT = "resizeLeft"
     """
-    A cursor indicating resizing an object from its left edge. Typically the shape of 
+    A cursor indicating resizing an object from its left edge. Typically the shape of
     an arrow pointing left.
     """
-    
+
     RESIZE_LEFT_RIGHT = "resizeLeftRight"
     """
     A cursor indicating resizing an object bidirectionally from its left or right edge.
@@ -798,19 +809,19 @@ class MouseCursor(Enum):
 
     RESIZE_RIGHT = "resizeRight"
     """
-    A cursor indicating resizing an object from its right edge. Typically the shape of 
+    A cursor indicating resizing an object from its right edge. Typically the shape of
     an arrow pointing right.
     """
-    
+
     RESIZE_ROW = "resizeRow"
     """
-    A cursor indicating resizing a row, or an item vertically. Typically the shape of 
-    arrows pointing up and down with a horizontal bar separating them. 
+    A cursor indicating resizing a row, or an item vertically. Typically the shape of
+    arrows pointing up and down with a horizontal bar separating them.
     """
-    
+
     RESIZE_UP = "resizeUp"
     """
-    A cursor indicating resizing an object from its top edge. Typically the shape of an 
+    A cursor indicating resizing an object from its top edge. Typically the shape of an
     arrow pointing up.
     """
 
@@ -822,27 +833,27 @@ class MouseCursor(Enum):
 
     RESIZE_UP_LEFT = "resizeUpLeft"
     """
-    A cursor indicating resizing an object from its top-left corner. Typically the 
+    A cursor indicating resizing an object from its top-left corner. Typically the
     shape of an arrow pointing upper left.
     """
 
     RESIZE_UP_LEFT_DOWN_RIGHT = "resizeUpLeftDownRight"
     """
-    A cursor indicating resizing an object bidirectionally from its top left or bottom 
-    right corner. Typically the shape of a bidirectional arrow pointing upper left and 
+    A cursor indicating resizing an object bidirectionally from its top left or bottom
+    right corner. Typically the shape of a bidirectional arrow pointing upper left and
     lower right.
     """
 
     RESIZE_UP_RIGHT = "resizeUpRight"
     """
-    A cursor indicating resizing an object from its top-right corner. Typically the 
+    A cursor indicating resizing an object from its top-right corner. Typically the
     shape of an arrow pointing upper right.
     """
-    
+
     RESIZE_UP_RIGHT_DOWN_LEFT = "resizeUpRightDownLeft"
     """
-    A cursor indicating resizing an object bidirectionally from its top right or bottom 
-    left corner. Typically the shape of a bidirectional arrow pointing upper right and 
+    A cursor indicating resizing an object bidirectionally from its top right or bottom
+    left corner. Typically the shape of a bidirectional arrow pointing upper right and
     lower left.
     """
 
@@ -853,17 +864,17 @@ class MouseCursor(Enum):
 
     VERTICAL_TEXT = "verticalText"
     """
-    A cursor indicating selectable vertical text. Typically the shape of a capital I 
+    A cursor indicating selectable vertical text. Typically the shape of a capital I
     rotated to be horizontal.
     """
-    
+
     WAIT = "wait"
     """
-    A cursor indicating the status that the program is busy and therefore can not be 
+    A cursor indicating the status that the program is busy and therefore can not be
     interacted with. Typically the shape of an hourglass or a watch.
-    
-    This cursor is not available as a system cursor on macOS. Although macOS displays a 
-    "spinning ball" cursor when busy, it's handled by the OS and not exposed for 
+
+    This cursor is not available as a system cursor on macOS. Although macOS displays a
+    "spinning ball" cursor when busy, it's handled by the OS and not exposed for
     applications to choose.
     """
 
@@ -887,27 +898,27 @@ class PointerDeviceType(Enum):
     """
     A touch-based pointer device.
     """
-    
+
     MOUSE = "mouse"
     """
     A mouse-based pointer device.
     """
-    
+
     STYLUS = "stylus"
     """
     A pointer device with a stylus.
     """
-    
+
     INVERTED_STYLUS = "invertedStylus"
     """
     A pointer device with a stylus that has been inverted.
     """
-    
+
     TRACKPAD = "trackpad"
     """
     Gestures from a trackpad.
     """
-    
+
     UNKNOWN = "unknown"
     """
     An unknown pointer device.
@@ -944,15 +955,15 @@ class StrokeJoin(Enum):
     """
     Joins between line segments form sharp corners.
     """
-    
+
     ROUND = "round"
     """
     Joins between line segments are semi-circular.
     """
-    
+
     BEVEL = "bevel"
     """
-    Joins between line segments connect the corners of the butt ends of the line 
+    Joins between line segments connect the corners of the butt ends of the line
     segments to give a beveled appearance.
     """
 
@@ -964,8 +975,8 @@ class VisualDensity(Enum):
 
     STANDARD = "standard"
     """
-    The default profile for VisualDensity. This default value represents a visual 
-    density that is less dense than either `comfortable` or `compact`, and corresponds 
+    The default profile for VisualDensity. This default value represents a visual
+    density that is less dense than either `comfortable` or `compact`, and corresponds
     to density values of zero in both axes.
     """
 
@@ -973,29 +984,29 @@ class VisualDensity(Enum):
     """
     The profile for a "compact" interpretation of VisualDensity.
 
-    Individual components will interpret the density value independently, making 
-    themselves more visually dense than `standard` and `comfortable` to different 
-    degrees based on the Material Design specification of the `comfortable` setting for 
+    Individual components will interpret the density value independently, making
+    themselves more visually dense than `standard` and `comfortable` to different
+    degrees based on the Material Design specification of the `comfortable` setting for
     their particular use case.
 
     It corresponds to a density value of -2 in both axes.
     """
-    
+
     COMFORTABLE = "comfortable"
     """
-    The profile for a `comfortable` interpretation of `VisualDensity`. Individual 
-    components will interpret the density value independently, making themselves more 
-    visually dense than `standard` and less dense than `compact` to different degrees 
-    based on the Material Design specification of the `comfortable` setting for their 
+    The profile for a `comfortable` interpretation of `VisualDensity`. Individual
+    components will interpret the density value independently, making themselves more
+    visually dense than `standard` and less dense than `compact` to different degrees
+    based on the Material Design specification of the `comfortable` setting for their
     particular use case.
 
     It corresponds to a density value of -1 in both axes.
     """
-    
+
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
     """
-    Visual density that is adaptive based on the given platform. For desktop platforms, 
-    this returns `compact`, and for other platforms, it returns a default-constructed 
+    Visual density that is adaptive based on the given platform. For desktop platforms,
+    this returns `compact`, and for other platforms, it returns a default-constructed
     VisualDensity.
     """
 
@@ -1015,7 +1026,7 @@ class Locale:
     """
     The country code of the locale.
     """
-    
+
     script_code: Optional[str] = None
     """
     The script code of the locale.
@@ -1048,176 +1059,7 @@ Represents a color and can be:
 - a material color from the [`Colors`][flet.Colors] enum,
 - or a Cupertino color from the [`CupertinoColors`][flet.CupertinoColors] enum.
 
-<img src="/img/docs/colors/color_palettes.png"className="screenshot-100" />
-
-### Hex value
-
-Hex value should be in format `#aarrggbb` (`0xaarrggbb`) or `#rrggbb` (`0xeeggbb`). 
-In case `aa` ([opacity](/docs/reference/colors#color-opacity)) is omitted, it is set to 
-`ff` (not transparent).
-
-```
->>> Container(bgcolor='#ff0000')
-```
-
-[Live example](https://flet-controls-gallery.fly.dev/colors/controlcolors)
-
-### Named colors
-
-Named colors are the Material Design [theme colors](https://m3.material.io/styles/color/the-color-system/color-roles) 
-and [colors palettes](https://m2.material.io/design/color/the-color-system.html#color-usage-and-palettes). 
-They can either be set with a string value or using the `Colors` or `CupertinoColors` 
-enums.
-
-```python
->>> Container(bgcolor=ft.Colors.YELLOW)
->>> Container(bgcolor='yellow')
-```
-
-#### Theme colors
-
-<img src="/img/docs/colors/theme_colors.png"className="screenshot-100" />
-
-[Live Example](https://flet-controls-gallery.fly.dev/colors/themecolors)
-
-There are 30 named theme colors in [`Theme.color_scheme`][flet.Theme.color_scheme] that 
-are generated based on the [`Theme.color_scheme_seed`][flet.Theme.color_scheme_seed] 
-property, which defaults to `Colors.BLUE`.
-
-```
-# example for generating page theme colors based on the seed color
-page.theme = Theme(color_scheme_seed=ft.Colors.GREEN)
-page.update()
-```
-
-Any of the 30 colors can be overridden, in which case they will have an absolute value 
-that will not be dependent on the seed color.
-```
-page.theme = ft.Theme(
-    color_scheme=ft.ColorScheme(
-        primary=ft.Colors.GREEN,
-        primary_container=ft.Colors.GREEN_200
-    ),
-)
-```
-
-<img src="/img/docs/colors/theme_colors_green.png"className="screenshot-100" />
-
-Theme colors define fallback colors for most of Flet controls.
-
-#### Color palettes
-
-<img src="/img/docs/colors/color_palettes_2.png"className="screenshot-100" />
-
-[Live example](https://flet-controls-gallery.fly.dev/colors/colorspalettes)
-
-Originally created by Material Design in 2014, color palettes are comprised of colors 
-designed to work together harmoniously. 
-
-Color swatches (palettes) consist of different shades of a certain color. 
-Most swatches have shades from `100` to `900` in increments of one hundred, plus the 
-color `50`. The smaller the number, the more pale the color. The greater the number, 
-the darker the color. The accent swatches (e.g. `redAccent`) only have the values 
-`100`, `200`, `400`, and `700`.
-
-In addition, a series of blacks and whites with common opacities are available. 
-For example, `black54` is a pure black with 54% opacity.
-
-Palette colors can be used for setting individual controls color property or as a 
-seed color for generating Theme colors.
-
-## Color opacity
-
-You can specify opacity for any color (hex value or named) using `with_opacity` method. 
-Opacity value should be between `0.0` (completely transparent) and `1.0` 
-(not transparent).
-
-```python
-color = ft.Colors.with_opacity(0.5, ft.Colors.PRIMARY)
-color = ft.Colors.with_opacity(0.5, '#ff6666')
-```
-
-Another way to specify opacity for string value:
-
-```python
-color = "surface,0.5"
-```
-
-For hex value, you can specify `aa` channel with values between `00` and `ff`, for 
-example:
-
-```python
-color = "#7fff6666"
-``` 
-
-## Defining colors for Flet controls
-
-Most Flet controls have default colors defined by the `color_scheme` that can be 
-overridden on different levels.
-
-[Live example](https://flet-controls-gallery.fly.dev/colors/controlcolors)
-
-<img src="/img/docs/colors/colors_fallback.svg"className="screenshot-80" />
-
-### Control level
-
-If the color is defined on the control level, it will be used.
-
-```python
-c = ft.Container(width=100, height=100, bgcolor=ft.Colors.GREEN_200)
-```
-
-Not every Flet control has a color property that can be set on the control level. 
-For example, `FilledButton` always has a default "primary" color defined by the nearest 
-ancestor's `theme`.
-
-### Control Theme level
-
-For `ScrollBar` (used in scrollable controls: `Page`, `View`, `Column`, `Row`, 
-`ListView` and `GridView`), `Tabs` and `Text` controls, Flet will check if the 
-[nearest anscestor](/blog/scrolling-controls-and-theming#nested-themes) theme has 
-[ScrollBar Theme](/blog/scrolling-controls-and-theming#scrollbar-theme), 
-[Tabs theme](/blog/scrolling-controls-and-theming#tabs-theming) or 
-[Text theme](/blog/scrolling-controls-and-theming#text-theming) specified.
-
-Note:
-    If you need to change theme for a particular ScrollBar, Text or Tabs control, you 
-    can wrap this control in a Container and customize `scrollbar_theme`, `text_theme` 
-    or `tabs_theme` for this Container `theme`.
-
-### Theme level
-
-Flet will check for the nearest ancestor that has `theme` defined, which is of type 
-[`Theme`][flet.Theme], and will take color from its 
-[`color_scheme`][flet.Theme.color_scheme]. 
-
-/// details | Example
-    type: example
-In the example below, the nearest anscestor for the [`FilledButton`][flet.FilledButton]
-is [`Container`][flet.Container], and the `primary` color that is used for the button 
-will be taken from [`Container.theme`][flet.Container.theme].
-
-```python
-import flet as ft
-
-def main(page: ft.Page):          
-    page.add(
-        ft.Container(
-            width=200,
-            height=200,
-            border=ft.border.all(1, ft.Colors.BLACK),
-            theme=ft.Theme(color_scheme=ft.ColorScheme(primary=ft.Colors.YELLOW))
-            content=ft.FilledButton("Primary color"),
-        )
-    )
-
-ft.run(main)   
-```
-
-If control's color property, control-specific theme or nearest ancestor's theme is not 
-specified, the nearest ancestor will be the [`Page`][flet.Page] and the colors from its 
-[`theme.color_scheme`][flet.Page.theme] will be used.  
-///
+More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookbook/colors).
 """
 
 # Icons
@@ -1227,12 +1069,12 @@ IconValue = Union[str, Icons, CupertinoIcons]
 Represents an icon and can be:
 - a string (icon name),
 - a material icon from the [`Icons`][flet.Icons] enum,
-- or a Cupertino icon from the `[CupertinoIcons`][flet.CupertinoIcons] enum.
+- or a Cupertino icon from the [`CupertinoIcons`][flet.CupertinoIcons] enum.
 
 /// details | Example
     type: example
 
-```python
+```python-repl
 >>> import flet as ft
 >>> ft.Icons.ABC
 >>> ft.CupertinoIcons.BACK

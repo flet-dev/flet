@@ -20,7 +20,7 @@ If you have Android Studio installed Flet CLI will locate and use Android SDK co
 
 Binary Python packages (vs "pure" Python packages written in Python only) are packages that partially written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
-Make sure all non-pure (binary) packages used in your Flet app have [pre-built wheels for Android](/docs/reference/binary-packages-android-ios).
+Make sure all non-pure (binary) packages used in your Flet app have [pre-built wheels for Android](../binary-packages-android-ios.md).
 
 ## `flet build apk`
 

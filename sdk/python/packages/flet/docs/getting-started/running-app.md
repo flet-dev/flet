@@ -1,4 +1,4 @@
-Flet apps can be executed as either desktop or web applications using the [`flet run`](TBA) command.
+Flet apps can be executed as either desktop or web applications using the [`flet run`](../cli/run.md) command.
 Doing so will start the app in a native OS window or a web browser, respectively, with hot reload enabled to view changes in real-time.
 
 ## Desktop app
@@ -91,7 +91,7 @@ Web app
 
 ## Watching for changes
 
-By default, Flet will watch the script file that was run and reload the app whenever the contents 
+By default, Flet will watch the script file that was run and reload the app whenever the contents
 of this file are modified+saved, but will **not** watch for changes in other files.
 
 To modify this behavior, you can use one or more of the following options:

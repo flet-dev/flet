@@ -124,14 +124,14 @@ plugins:
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
-              - "!before_update"
-              - "!before_event"
-              - "!clean"
-              - "!did_mount"
-              - "!init"
-              - "!is_isolated"
-              - "!update"
-              - "!will_unmount"
+              # - "!before_update"
+              # - "!before_event"
+              # - "!clean"
+              # - "!did_mount"
+              # - "!init"
+              # - "!is_isolated"
+              # - "!update"
+              # - "!will_unmount"
             extensions:
               - griffe_modernized_annotations
           inventories:
@@ -350,6 +350,122 @@ nav:
       - Types:
           - types/index.md
           - Aliases: types/aliases.md
+          - Dataclasses:
+              - Alignment: types/alignment.md
+              - Animation: types/animation.md
+              - AnimationStyle: types/animationstyle.md
+              - AutoCompleteSuggestion: types/autocompletesuggestion.md
+              - Blur: types/blur.md
+              - Border: types/border.md
+              - BorderRadius: types/borderradius.md
+              - BorderSide: types/borderside.md
+              - BoxConstraints: types/boxconstraints.md
+              - BoxDecoration: types/boxdecoration.md
+              - BoxShadow: types/boxshadow.md
+              - BrowserContextMenu: types/browsercontextmenu.md
+              - ButtonStyle: types/buttonstyle.md
+              - ColorFilter: types/colorfilter.md
+              - ControlState: types/controlstate.md
+              - DecorationImage: types/decorationimage.md
+              - Duration: types/duration.md
+              - FilePickerFile: types/filepickerfile.md
+              - FilePickerUploadFile: types/filepickeruploadfile.md
+              - Gradient:
+                  - types/gradient/index.md
+                  - LinearGradient: types/gradient/lineargradient.md
+                  - RadialGradient: types/gradient/radialgradient.md
+                  - SweepGradient: types/gradient/sweepgradient.md
+              - InputBorder: types/inputborder.md
+              - InputFilter: types/inputfilter.md
+              - Key:
+                  - types/key/index.md
+                  - ScrollKey: types/key/scrollkey.md
+                  - ValueKey: types/key/valuekey.md
+              - Locale: types/locale.md
+              - LocaleConfiguration: types/localeconfiguration.md
+              - Margin: types/margin.md
+              - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
+              - MarkdownStyleSheet: types/markdownstylesheet.md
+              - MenuStyle: types/menustyle.md
+              - NotchShape:
+                  - types/notchshape/index.md
+                  - AutomaticNotchShape: types/notchshape/automaticnotchshape.md
+                  - CircularRectangleNotchShape: types/notchshape/circularrectanglenotchshape.md
+              - Offset: types/offset.md
+              - OutlinedBorder:
+                  - types/outlinedborder/index.md
+                  - BeveledRectangleBorder: types/outlinedborder/beveledrectangleborder.md
+                  - CircleBorder: types/outlinedborder/circleborder.md
+                  - ContinuousRectangleBorder: types/outlinedborder/continuousrectangleborder.md
+                  - RoundedRectangleBorder: types/outlinedborder/roundedrectangleborder.md
+                  - StadiumBorder: types/outlinedborder/stadiumborder.md
+              - Padding: types/padding.md
+              - Paint: types/paint.md
+              - PaintGradient:
+                  - types/paintgradient/index.md
+                  - PaintLinearGradient: types/paintgradient/paintlineargradient.md
+                  - PaintRadialGradient: types/paintgradient/paintradialgradient.md
+                  - PaintSweepGradient: types/paintgradient/paintsweepgradient.md
+              - Rect: types/rect.md
+              - Ref: types/ref.md
+              - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
+              - Rotate: types/rotate.md
+              - Scale: types/scale.md
+              - ShapeBorder: types/shapeborder.md
+              - Size: types/size.md
+              - StrutStyle: types/strutstyle.md
+              - TemplateRoute: types/templateroute.md
+              - TextDecoration: types/textdecoration.md
+              - TextSelection: types/textselection.md
+              - TextSpan: types/textspan.md
+              - TextStyle: types/textstyle.md
+              - TextThemeStyle: types/textthemestyle.md
+              - Theme:
+                  - types/theme/index.md
+                  - AppBarTheme: types/theme/appbartheme.md
+                  - BadgeTheme: types/theme/badgetheme.md
+                  - BannerTheme: types/theme/bannertheme.md
+                  - BottomAppBarTheme: types/theme/bottomappbartheme.md
+                  - BottomSheetTheme: types/theme/bottomsheettheme.md
+                  - CardTheme: types/theme/cardtheme.md
+                  - CheckboxTheme: types/theme/checkboxtheme.md
+                  - ChipTheme: types/theme/chiptheme.md
+                  - ColorScheme: types/theme/colorscheme.md
+                  - DataTableTheme: types/theme/datatabletheme.md
+                  - DatePickerTheme: types/theme/datepickertheme.md
+                  - DialogTheme: types/theme/dialogtheme.md
+                  - DividerTheme: types/theme/dividertheme.md
+                  - DropdownTheme: types/theme/dropdowntheme.md
+                  - ElevatedButtonTheme: types/theme/elevatedbuttontheme.md
+                  - ExpansionTileTheme: types/theme/expansiontiletheme.md
+                  - FilledButtonTheme: types/theme/filledbuttontheme.md
+                  - FloatingActionButtonTheme: types/theme/floatingactionbuttontheme.md
+                  - IconButtonTheme: types/theme/iconbuttontheme.md
+                  - IconTheme: types/theme/icontheme.md
+                  - ListTileTheme: types/theme/listtiletheme.md
+                  - NavigationBarTheme: types/theme/navigationbartheme.md
+                  - NavigationDrawerTheme: types/theme/navigationdrawertheme.md
+                  - NavigationRailTheme: types/theme/navigationrailtheme.md
+                  - OutlinedButtonTheme: types/theme/outlinedbuttontheme.md
+                  - PageTransitionsTheme: types/theme/pagetransitionstheme.md
+                  - PageTransitionTheme: types/theme/pagetransitiontheme.md
+                  - PopupMenuTheme: types/theme/popupmenutheme.md
+                  - ProgressIndicatorTheme: types/theme/progressindicatortheme.md
+                  - RadioTheme: types/theme/radiotheme.md
+                  - ScrollBarTheme: types/theme/scrollbartheme.md
+                  - SearchBarTheme: types/theme/searchbartheme.md
+                  - SearchViewTheme: types/theme/searchviewtheme.md
+                  - SegmentedButtonTheme: types/theme/segmentedbuttontheme.md
+                  - SliderTheme: types/theme/slidertheme.md
+                  - SnackBarTheme: types/theme/snackbartheme.md
+                  - SwitchTheme: types/theme/switchtheme.md
+                  - SystemOverlayStyle: types/theme/systemoverlaystyle.md
+                  - TabsTheme: types/theme/tabstheme.md
+                  - TextButtonTheme: types/theme/textbuttontheme.md
+                  - TextTheme: types/theme/texttheme.md
+                  - TimePickerTheme: types/theme/timepickertheme.md
+                  - TooltipTheme: types/theme/tooltiptheme.md
+              - Tooltip: types/tooltip.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
@@ -477,121 +593,10 @@ nav:
               - FletPageDisconnectedException: types/fletexception/fletpagedisconnectedexception.md
               - FletUnimplementedPlatformException: types/fletexception/fletunimplementedplatformexception.md
               - FletUnsupportedPlatformException: types/fletexception/fletunsupportedplatformexception.md
-          - Dataclasses:
-              - Alignment: types/alignment.md
-              - Animation: types/animation.md
-              - AnimationStyle: types/animationstyle.md
-              - AutoCompleteSuggestion: types/autocompletesuggestion.md
-              - Blur: types/blur.md
-              - Border: types/border.md
-              - BorderRadius: types/borderradius.md
-              - BorderSide: types/borderside.md
-              - BoxConstraints: types/boxconstraints.md
-              - BoxDecoration: types/boxdecoration.md
-              - BoxShadow: types/boxshadow.md
-              - BrowserContextMenu: types/browsercontextmenu.md
-              - ButtonStyle: types/buttonstyle.md
-              - ColorFilter: types/colorfilter.md
-              - ControlState: types/controlstate.md
-              - DecorationImage: types/decorationimage.md
-              - Duration: types/duration.md
-              - FilePickerFile: types/filepickerfile.md
-              - FilePickerUploadFile: types/filepickeruploadfile.md
-              - Gradient:
-                  - types/gradient/index.md
-                  - LinearGradient: types/gradient/lineargradient.md
-                  - RadialGradient: types/gradient/radialgradient.md
-                  - SweepGradient: types/gradient/sweepgradient.md
-              - InputBorder: types/inputborder.md
-              - InputFilter: types/inputfilter.md
-              - Key:
-                  - types/key/index.md
-                  - ScrollKey: types/key/scrollkey.md
-                  - ValueKey: types/key/valuekey.md
-              - Locale: types/locale.md
-              - LocaleConfiguration: types/localeconfiguration.md
-              - Margin: types/margin.md
-              - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
-              - MarkdownStyleSheet: types/markdownstylesheet.md
-              - MenuStyle: types/menustyle.md
-              - NotchShape:
-                  - types/notchshape/index.md
-                  - AutomaticNotchShape: types/notchshape/automaticnotchshape.md
-                  - CircularRectangleNotchShape: types/notchshape/circularrectanglenotchshape.md
-              - Offset: types/offset.md
-              - OutlinedBorder:
-                  - types/outlinedborder/index.md
-                  - BeveledRectangleBorder: types/outlinedborder/beveledrectangleborder.md
-                  - CircleBorder: types/outlinedborder/circleborder.md
-                  - ContinuousRectangleBorder: types/outlinedborder/continuousrectangleborder.md
-                  - RoundedRectangleBorder: types/outlinedborder/roundedrectangleborder.md
-                  - StadiumBorder: types/outlinedborder/stadiumborder.md
-              - Padding: types/padding.md
-              - Paint: types/paint.md
-              - PaintGradient:
-                  - types/paintgradient/index.md
-                  - PaintLinearGradient: types/paintgradient/paintlineargradient.md
-                  - PaintRadialGradient: types/paintgradient/paintradialgradient.md
-                  - PaintSweepGradient: types/paintgradient/paintsweepgradient.md
-              - Rect: types/rect.md
-              - Ref: types/ref.md
-              - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
-              - Rotate: types/rotate.md
-              - Scale: types/scale.md
-              - Size: types/size.md
-              - StrutStyle: types/strutstyle.md
-              - TemplateRoute: types/templateroute.md
-              - TextDecoration: types/textdecoration.md
-              - TextSelection: types/textselection.md
-              - TextSpan: types/textspan.md
-              - TextStyle: types/textstyle.md
-              - TextThemeStyle: types/textthemestyle.md
-              - Theme:
-                  - types/theme/index.md
-                  - AppBarTheme: types/theme/appbartheme.md
-                  - BadgeTheme: types/theme/badgetheme.md
-                  - BannerTheme: types/theme/bannertheme.md
-                  - BottomAppBarTheme: types/theme/bottomappbartheme.md
-                  - BottomSheetTheme: types/theme/bottomsheettheme.md
-                  - CardTheme: types/theme/cardtheme.md
-                  - CheckboxTheme: types/theme/checkboxtheme.md
-                  - ChipTheme: types/theme/chiptheme.md
-                  - ColorScheme: types/theme/colorscheme.md
-                  - DataTableTheme: types/theme/datatabletheme.md
-                  - DatePickerTheme: types/theme/datepickertheme.md
-                  - DialogTheme: types/theme/dialogtheme.md
-                  - DividerTheme: types/theme/dividertheme.md
-                  - DropdownTheme: types/theme/dropdowntheme.md
-                  - ElevatedButtonTheme: types/theme/elevatedbuttontheme.md
-                  - ExpansionTileTheme: types/theme/expansiontiletheme.md
-                  - FilledButtonTheme: types/theme/filledbuttontheme.md
-                  - FloatingActionButtonTheme: types/theme/floatingactionbuttontheme.md
-                  - IconButtonTheme: types/theme/iconbuttontheme.md
-                  - IconTheme: types/theme/icontheme.md
-                  - ListTileTheme: types/theme/listtiletheme.md
-                  - NavigationBarTheme: types/theme/navigationbartheme.md
-                  - NavigationDrawerTheme: types/theme/navigationdrawertheme.md
-                  - NavigationRailTheme: types/theme/navigationrailtheme.md
-                  - OutlinedButtonTheme: types/theme/outlinedbuttontheme.md
-                  - PageTransitionsTheme: types/theme/pagetransitionstheme.md
-                  - PageTransitionTheme: types/theme/pagetransitiontheme.md
-                  - PopupMenuTheme: types/theme/popupmenutheme.md
-                  - ProgressIndicatorTheme: types/theme/progressindicatortheme.md
-                  - RadioTheme: types/theme/radiotheme.md
-                  - ScrollBarTheme: types/theme/scrollbartheme.md
-                  - SearchBarTheme: types/theme/searchbartheme.md
-                  - SearchViewTheme: types/theme/searchviewtheme.md
-                  - SegmentedButtonTheme: types/theme/segmentedbuttontheme.md
-                  - SliderTheme: types/theme/slidertheme.md
-                  - SnackBarTheme: types/theme/snackbartheme.md
-                  - SwitchTheme: types/theme/switchtheme.md
-                  - SystemOverlayStyle: types/theme/systemoverlaystyle.md
-                  - TabsTheme: types/theme/tabstheme.md
-                  - TextButtonTheme: types/theme/textbuttontheme.md
-                  - TextTheme: types/theme/texttheme.md
-                  - TimePickerTheme: types/theme/timepickertheme.md
-                  - TooltipTheme: types/theme/tooltiptheme.md
-              - Tooltip: types/tooltip.md
+          - PubSub:
+              # - types/pubsub/index.md
+              - PubSubClient: types/pubsub/pubsubclient.md
+              - PubSubHub: types/pubsub/pubsubhub.md
   - Publish:
       - publish/index.md
       - Android: publish/android.md
@@ -618,10 +623,12 @@ nav:
       - Assets: cookbook/assets.md
       - Authentication: cookbook/authentication.md
       - Client Storage: cookbook/client-storage.md
+      - Colors: cookbook/colors.md
       - Control Refs: cookbook/control-refs.md
       - Custom Controls: cookbook/custom-controls.md
       - Drag and Drop: cookbook/drag-and-drop.md
       - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
+      - Expanding Controls: cookbook/expanding-controls.md
       - File Picker and Uploads: cookbook/file-picker-and-uploads.md
       - Fonts: cookbook/fonts.md
       - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
@@ -639,3 +646,14 @@ nav:
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
+  - Others:
+      - flet-cli:
+          - cli/index.md
+          - build: cli/build.md
+          - create: cli/create.md
+          - doctor: cli/doctor.md
+          - pack: cli/pack.md
+          - publish: cli/publish.md
+          - run: cli/run.md
+          # - serve: cli/serve.md
+      - Environment Variables: environment-variables.md

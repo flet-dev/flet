@@ -2,7 +2,8 @@
 title: Chat Tutorial
 ---
 
-In this tutorial we are going to create a trivial in-memory Chat app that will help you understand Flet framework basics. This app could be a good starting point to creating your own more complex and useful projects.
+In this tutorial we are going to create a trivial in-memory Chat app that will help you understand Flet framework basics.
+This app could be a good starting point to creating your own more complex and useful projects.
 
 In this tutorial you will learn how to:
 
@@ -27,9 +28,10 @@ The full code for the chat app can be found [here](https://github.com/flet-dev/e
 
 It's a tradition to start with "Hello, world!" app!
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript,
+but you do need a basic knowledge of Python and object-oriented programming.
 
-Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
+Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md).
 
 Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a hello-world app.
 
@@ -52,18 +54,19 @@ Run this app you will see a new window with a greeting:
 
 ## Adding page controls and handling events
 
-To start, we want to be able to take user input (chat message) and show messages history on the screen. The layout for this step could look like this:
+To start, we want to be able to take user input (chat message) and show messages history on the screen.
+The layout for this step could look like this:
 
 ![chat-layout-1](../assets/tutorials/chat/layout-1.svg){width="80%"}
 /// caption
 ///
 
 To implement this layout, we will be using these Flet controls:
-* [Column](../controls/column.md) - a container to display chat messages (Text controls) vertically.
-* [Text](../controls/text.md) - chat message displayed in the chat Column.
-* [TextField](../controls/textfield.md) - input control used for taking new message input from the user.
-* [ElevatedButton](../controls/elevatedbutton.md) - "Send" button that will add new message to the chat Column.
-* [Row](../controls/row.md) - a container to display TextField and ElevatedButton horizontally.
+* [`Column`][flet.Column] - a container to display chat messages (`Text` controls) vertically.
+* [`Text`][flet.Text] - chat message displayed in the chat Column.
+* [`TextField`][flet.TextField] - input control used for taking new message input from the user.
+* [`ElevatedButton`][flet.ElevatedButton] - "Send" button that will add new message to the chat Column.
+* [`Row`][flet.Row] - a container to display `TextField` and `ElevatedButton` horizontally.
 
 Create `chat.py` with the following contents:
 
@@ -86,10 +89,12 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-When user clicks on the "Send" button, it triggers `on_click` event which calls `send_click` method. `send_click` then adds new `Text` control to the list of Column `controls` and clears `new_message` TextField value.
+When user clicks on the "Send" button, it triggers [`on_click`][flet.ElevatedButton.on_click] event which calls `send_click` method. `send_click`
+then adds new [`Text`][flet.Text] control to the list of [`Column.controls`][flet.Column.controls] and clears `new_message` text field value.
 
 /// admonition | Note
-After any properties of a control are updated, an `update()` method of the control (or its parent control) should be called for the update to take effect.
+After any properties of a control are updated, an `update()` method of the control (or its parent control)
+should be called for the update to take effect.
 ///
 
 Chat app now looks like this:
@@ -112,7 +117,8 @@ flet run --web <path_to_your_app>
 Once it is opened, copy the url and paste it into a new tab.
 ///
 
-To build a realtime chat app, you need to somehow pass the messages between chat app sessions. When a user sends a message, it should be broadcasted to all other app sessions and displayed on their pages.
+To build a realtime chat app, you need to somehow pass the messages between chat app sessions.
+When a user sends a message, it should be broadcasted to all other app sessions and displayed on their pages.
 
 Flet provides a simple built-in [PubSub](../cookbook/pub-sub.md) mechanism for asynchronous communication between page sessions.
 
@@ -121,7 +127,8 @@ First, we need subscribe the user to receive broadcast messages:
     page.pubsub.subscribe(on_message)
 ```
 
-`pubsub.subscribe()` method will add current app session to the list of subscribers. It accepts `handler` as an argument, that will later be called at the moment a publisher calls `pubsub.send_all()` method.
+`pubsub.subscribe()` method will add current app session to the list of subscribers.
+It accepts `handler` as an argument, that will later be called at the moment a publisher calls `pubsub.send_all()` method.
 
 In the `handler` we will be adding new message (`Text`) to the list of chat `controls`:
 ```python
@@ -179,9 +186,12 @@ ft.run(main)
 
 ## User name dialog
 
-Chat app that you have created in the previous step has basic functionality needed to exchange messages between user sessions. It is not very user-friendly though, since it shows `session_id` that sent a message, which doesn't tell much about who you are communicating with.
+Chat app that you have created in the previous step has basic functionality needed to exchange messages
+between user sessions. It is not very user-friendly though, since it shows `session_id` that sent a message,
+which doesn't tell much about who you are communicating with.
 
-Let's improve our app to show user name instead of `session_id` for each message. To capture user name, we will be using [`AlertDialog`](../controls/alertdialog.md) control. Let's add it to the page:
+Let's improve our app to show user name instead of `session_id` for each message. To capture user name,
+we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the page:
 
 ```python
     user_name = ft.TextField(label="Enter your name")
@@ -204,7 +214,9 @@ A dialog will be opened on the start of the program since we have set its `open`
 /// caption
 ///
 
-When the user clicks on "Join chat" button, it will call `join_click` method that should send a message to all subscribers, informing them that the user has joined the chat. This message should look different from the regular chat message, for example, like this:
+When the user clicks on "Join chat" button, it will call `join_click` method that should send a message to
+all subscribers, informing them that the user has joined the chat. This message should look different
+from the regular chat message, for example, like this:
 
 ![chat-4](../assets/tutorials/chat/chat-4.png){width="80%"}
 /// caption
@@ -288,11 +300,12 @@ You may want to show messages in a different format, like this:
 /// caption
 ///
 
-Chat message will now be a `Row` containing [`CircleAvatar`](../controls/circleavatar.md) with username initials and
-`Column` that contains two `Text` controls: user name and message text.
+Chat message will now be a [`Row`][flet.Row] containing [`CircleAvatar`][flet.CircleAvatar] with username initials and
+[`Column`][flet.Column] that contains two [`Text`][flet.Text] controls: user name and message text.
 
 We will need to show quite a few chat messages in the chat app, so it makes sense to create
-your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage` class that will inherit from `Row`.
+your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage`
+class that will inherit from [`Row`][flet.Row].
 
 When creating an instance of `ChatMessage` class, we will pass a `Message` object as an
 argument and then `ChatMessage` will display itself based on `message.user_name` and `message.text`:
@@ -366,7 +379,7 @@ Instances of `ChatMessage` will be created instead of plain `Text` chat messages
 Other improvements suggested with the new layout are:
 
 * [`ListView`][flet.ListView] instead of [`Column`][flet.Column] for displaying messages, to be able to scroll through the messages later
-* `Container` for displaying border around [`ListView`][flet.ListView]
+* [`Container`][flet.Container] for displaying border around [`ListView`][flet.ListView]
 * [`IconButton`][flet.IconButton] instead of [`ElevatedButton`][flet.ElevatedButton] to send messages
 * Use of [`expand`][flet.Control.expand] property for controls to fill available space
 

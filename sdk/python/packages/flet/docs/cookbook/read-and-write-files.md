@@ -1,11 +1,13 @@
-In some cases, you need to read and write files to disk. 
+In some cases, you need to read and write files to disk.
 For example, you might need to persist data across app launches, or download data from the internet and save it for later offline use.
 
 Flet makes it easy to work with files and directories on the mobile/desktop device, as seen in the following example.
 
 ### Storage Paths
 
-Flet provides two directory paths for data storage, available as environment variables: [`FLET_APP_STORAGE_DATA`](/docs/reference/environment-variables/#flet_app_storage_data) and [`FLET_APP_STORAGE_TEMP`](/docs/reference/environment-variables/#flet_app_storage_temp).
+Flet provides two directory paths for data storage, available as environment variables:
+[`FLET_APP_STORAGE_DATA`](../environment-variables.md#flet_app_storage_data) and
+[`FLET_APP_STORAGE_TEMP`](../environment-variables.md#flet_app_storage_temp).
 
 Their values can be gotten as follows:
 
@@ -18,9 +20,9 @@ app_temp_path = os.getenv("FLET_APP_STORAGE_TEMP")
 
 ### Writing to a File
 
-To write data to a new/existing file, you can use the built-in [`open`](https://docs.python.org/3/library/functions.html#open) function. 
+To write data to a new/existing file, you can use the built-in [`open`](https://docs.python.org/3/library/functions.html#open) function.
 
-For example: 
+For example:
 
 ```python
 import os
@@ -53,7 +55,7 @@ Also, you can use the [`os`](https://docs.python.org/3/library/os.html) module (
 
 ## Example: Counter App
 
-Below is an example that showcases a basic Counter application, whose value persists across app launches. 
+Below is an example that showcases a basic Counter application, whose value persists across app launches.
 This is made possible by writing the counter value to a file in the app's data storage directory and reading it when the app launches.
 
 <video controls width="100%">
@@ -98,7 +100,7 @@ class Counter(ft.Text):
         try:
             with open(self.storage_path, "r") as f:
                 value = int(f.read().strip())
-        except (FileNotFoundError, ValueError): 
+        except (FileNotFoundError, ValueError):
             # file does not exist or int parsing failed
             value = 0
 
@@ -159,8 +161,6 @@ ft.run(main)
 ```
 
 - `Counter` class is a custom control, which is a subclass/extension of the [`Text`][flet.Text] control. More information [here](../cookbook/custom-controls.md).
-- [`FLET_APP_CONSOLE`](/docs/reference/environment-variables/#flet_app_console) is an environment variable that points to the application's console log file (`console.log`) which contains the app's [console output](https://flet.dev/docs/publish#console-output) (ex: `print()` statements). Its value is set in production mode.
-- If you have an android emulator or physical device, you can download and install this [apk](https://github.com/ndonkoHenri/flet-storage-cookbook/releases). 
+- [`FLET_APP_CONSOLE`](../environment-variables.md#flet_app_console) is an environment variable that points to the application's console log file (`console.log`) which contains the app's [console output](https://flet.dev/docs/publish#console-output) (ex: `print()` statements). Its value is set in production mode.
+- If you have an android emulator or physical device, you can download and install this [apk](https://github.com/ndonkoHenri/flet-storage-cookbook/releases).
 - Follow [this](../publish/index.md) guide to package your app for all platforms.
-
-

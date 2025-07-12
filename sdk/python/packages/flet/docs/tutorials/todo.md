@@ -2,9 +2,9 @@
 title: ToDo Tutorial
 ---
 
-In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and 
+In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and
 
-then publish it as a desktop, mobile or web app. The app is a single-file console program of just 
+then publish it as a desktop, mobile or web app. The app is a single-file console program of just
 [172 lines (formatted!) of Python code](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py), yet it is a multi-platform application with rich, responsive UI:
 
 ![complete-demo-web.gif](../assets/tutorials/todo/complete-demo-web.gif){width="80%"}
@@ -13,9 +13,9 @@ then publish it as a desktop, mobile or web app. The app is a single-file consol
 
 You can see the live demo [here](https://gallery.flet.dev/todo/).
 
-We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a 
+We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a
 
-Flet app: building a page layout, adding controls, handling events, displaying and editing lists, 
+Flet app: building a page layout, adding controls, handling events, displaying and editing lists,
 making reusable UI components, and publishing options.
 
 The tutorial consists of the following steps:
@@ -29,11 +29,11 @@ The tutorial consists of the following steps:
 
 ## Getting started with Flet
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but 
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but
 
 you do need a basic knowledge of Python and object-oriented programming.
 
-Before you can create your first Flet app, you need to 
+Before you can create your first Flet app, you need to
 [setup your development environment](../getting-started/installation.md).
 
 Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
@@ -59,9 +59,9 @@ Run this app, and you will see a new window with a greeting:
 
 Now we're ready to create a multi-user To-Do app.
 
-To start, we'll need a [`TextField`](../controls/textfield.md) for entering a task name, and an "+" 
-[`FloatingActionButton`](../controls/floatingactionbutton.md) with an event handler that will display
-a [`Checkbox`](../controls/checkbox.md) with a new task.
+To start, we'll need a [`TextField`][flet.TextField] for entering a task name, and an "+"
+[`FloatingActionButton`][flet.FloatingActionButton] with an event handler that will display
+a [`Checkbox`][flet.Checkbox] with a new task.
 
 Create `todo.py` with the following contents:
 
@@ -89,15 +89,15 @@ Run the app and you should see a page like this:
 
 ### Page layout
 
-Now let's make the app look nice! We want the entire app to be at the top center of the page, 
+Now let's make the app look nice! We want the entire app to be at the top center of the page,
 taking up 600 px width. The TextField and the "+" button should be aligned horizontally, and take up full app width:
 
 ![diagram-1](../assets/tutorials/todo/diagram-1.svg){width="80%"}
 /// caption
 ///
 
-[`Row`](../controls/row.md)  is a control that is used to lay its children controls out horizontally on a page. 
-[`Column`](../controls/column.md) is a control that is used to lay its children controls out vertically on a page.
+[`Row`][flet.Row]  is a control that is used to lay its children controls out horizontally on a page.
+[`Column`][flet.Column] is a control that is used to lay its children controls out vertically on a page.
 
 Replace `todo.py` contents with the following:
 
@@ -139,13 +139,13 @@ Run the app and you should see a page like this:
 
 ### Reusable UI components
 
-While we could continue writing our app in the `main` function, the best practice would be to 
-create a [reusable UI component](../cookbook/custom-controls.md). Imagine you are working on an app header, a side menu, 
-or UI that will be a part of a larger project. Even if you can't think of such uses right now, 
+While we could continue writing our app in the `main` function, the best practice would be to
+create a [reusable UI component](../cookbook/custom-controls.md). Imagine you are working on an app header, a side menu,
+or UI that will be a part of a larger project. Even if you can't think of such uses right now,
 we still recommend creating all your Flet apps with composability and reusability in mind.
 
-To make a reusable To-Do app component, we are going to encapsulate its state and presentation 
-logic in a separate class: 
+To make a reusable To-Do app component, we are going to encapsulate its state and presentation
+logic in a separate class:
 
 ```python title="todo.py"
 import flet as ft
@@ -205,22 +205,22 @@ page.add(app1, app2)
 
 ## View, edit and delete list items
 
-In the [previous step](#adding-page-controls-and-handling-events), we created a basic To-Do app with task items shown as checkboxes. 
-Let's improve the app by adding "Edit" and "Delete" buttons next to a task name. The "Edit" button 
+In the [previous step](#adding-page-controls-and-handling-events), we created a basic To-Do app with task items shown as checkboxes.
+Let's improve the app by adding "Edit" and "Delete" buttons next to a task name. The "Edit" button
 will switch a task item to edit mode.
 
 ![diagram-2](../assets/tutorials/todo/diagram-2.svg){width="80%"}
 /// caption
 ///
 
-Each task item is represented by two rows: `display_view` row with Checkbox, "Edit" and "Delete" 
-buttons and `edit_view` row with TextField and "Save" button. `view` column serves as a container 
+Each task item is represented by two rows: `display_view` row with Checkbox, "Edit" and "Delete"
+buttons and `edit_view` row with TextField and "Save" button. `view` column serves as a container
 for both `display_view` and `edit_view` rows.
 
-Before this step, the code was short enough to be fully included in the tutorial. Going forward, 
+Before this step, the code was short enough to be fully included in the tutorial. Going forward,
 we will be highlighting only the changes introduced in a step.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-4.py). Below we will explain the changes we've done 
+Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-4.py). Below we will explain the changes we've done
 to implement view, edit, and delete tasks.
 
 To encapsulate task item views and actions, we introduced a new `Task` class:
@@ -322,10 +322,10 @@ class TodoApp(ft.Column):
         self.update()
 ```
 
-For "Delete" task operation, we implemented `task_delete()` method in `TodoApp` class which 
+For "Delete" task operation, we implemented `task_delete()` method in `TodoApp` class which
 accepts task control instance as a parameter.
 
-Then, we passed a reference to `task_delete` method into Task constructor and called it on 
+Then, we passed a reference to `task_delete` method into Task constructor and called it on
 "Delete" button event handler.
 
 Run the app and try to edit and delete tasks:
@@ -336,10 +336,10 @@ Run the app and try to edit and delete tasks:
 
 ## Filtering list items
 
-We already have a functional To-Do app where we can create, edit, and delete tasks. 
+We already have a functional To-Do app where we can create, edit, and delete tasks.
 To be even more productive, we want to be able to filter tasks by their status.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-5.py). Below we will explain the changes we've done 
+Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-5.py). Below we will explain the changes we've done
 to implement filtering.
 
 `Tabs` control is used to display filter:
@@ -363,12 +363,12 @@ class TodoApp(ft.Column):
     # ...
 ```
 
-To display different lists of tasks depending on their statuses, we could maintain three 
-lists with "All", "Active" and "Completed" tasks. We, however, chose an easier approach 
+To display different lists of tasks depending on their statuses, we could maintain three
+lists with "All", "Active" and "Completed" tasks. We, however, chose an easier approach
 where we maintain the same list and only change a task's visibility depending on its status.
 
-In `TodoApp` class we overrided [`before_update()`](../cookbook/custom-controls.md#before_update) 
-method alled every time when the control is being updated. It iterates through all the tasks and updates their `visible` 
+In `TodoApp` class we overrided [`before_update()`](../cookbook/custom-controls.md#before_update)
+method alled every time when the control is being updated. It iterates through all the tasks and updates their `visible`
 property depending on the status of the task:
 
 ```python title="todo.py"
@@ -386,7 +386,7 @@ class TodoApp(ft.Column):
             )
 ```
 
-Filtering should occur when we click on a tab or change a task status. `TodoApp.before_update()` method 
+Filtering should occur when we click on a tab or change a task status. `TodoApp.before_update()` method
 is called when Tabs selected value is changed or Task item checkbox is clicked:
 
 ```python title="todo.py"
@@ -429,10 +429,10 @@ Run the app and try filtering tasks by clicking on the tabs:
 
 ## Final touches
 
-Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control) 
+Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control)
 displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py). Below we highlighted the changes we've 
+Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py). Below we highlighted the changes we've
 done to implement the footer:
 
 ```python title="todo.py"
@@ -515,7 +515,7 @@ In this tutorial, you have learnt how to:
 
 * Create a simple Flet app;
 * Work with [Reusable UI components](../cookbook/custom-controls.md);
-* Design UI layout using [`Column`](../controls/column.md) and [`Row`](../controls/row.md) controls;
+* Design UI layout using [`Column`][flet.Column] and [`Row`][flet.Row] controls;
 * Work with lists: view, edit and delete items, filtering;
 * [Publish](../publish/index.md) your Flet app to multiple platforms;
 

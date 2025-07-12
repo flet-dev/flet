@@ -1,11 +1,10 @@
 ::: flet.MainAxisAlignment
+    options:
+        separate_signature: false
 
 ## Usage example
 
 <img src="/img/docs/controls/column/column-alignment.png"  className="screenshot-70"/>
-
-<Tabs groupId="language">
-  <TabItem value="python" label="Python" default>
 
 ```python
 import flet as ft
@@ -52,7 +51,5 @@ def main(page: ft.Page):
         )
     )
 
-ft.app(main)
+ft.run(main)
 ```
-    options:
-        separate_signature: false

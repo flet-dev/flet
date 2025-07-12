@@ -1,6 +1,5 @@
 ---
-title: create
-sidebar_label: create
+title: flet create
 ---
 
 This command is used to create a new Flet app from a template.

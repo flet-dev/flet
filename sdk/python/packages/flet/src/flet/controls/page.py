@@ -343,7 +343,7 @@ class Page(PageView):
     """
     Called upon successful or failed OAuth authorization flow.
 
-    See [Authentication](../cookbook/authentication.md#checking-authentication-results)
+    See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#checking-authentication-results)
     guide for more information and examples.
     """
 
@@ -557,7 +557,9 @@ class Page(PageView):
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
         """
-        Starts OAuth flow. See [Authentication](../cookbook/authentication.md) guide
+        Starts OAuth flow.
+
+        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication) guide
         for more information and examples.
         """
         self.__authorization = authorization(
@@ -631,7 +633,7 @@ class Page(PageView):
     def logout(self) -> None:
         """
         Clears current authentication context. See
-        [Authentication](../cookbook/authentication.md#signing-out) guide for more
+        [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#signing-out) guide for more
         information and examples.
         """
         self.__authorization = None

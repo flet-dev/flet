@@ -40,10 +40,9 @@ def main(page: ft.Page):
     page.add(ft.Text("Body!"))
 
 
-ft.app(main)
+ft.run(main)
 ```
   </TabItem>
 </Tabs>
 
 <img src="/img/docs/controls/badge/badge-navigation-bar.png" className="screenshot-50" />
-

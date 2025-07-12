@@ -14,6 +14,17 @@ __all__ = ["CupertinoIcons"]
 
 
 class CupertinoIcons(str, Enum):
+
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.value.lower() == other.lower()
+        if isinstance(other, Enum):
+            return self.value.lower() == other.value.lower()
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.value.lower())
+
     @staticmethod
     def random(
         exclude: Optional[list["CupertinoIcons"]] = None,
@@ -28,7 +39,11 @@ class CupertinoIcons(str, Enum):
                 weighted random selection.
 
         Returns:
-            A randomly selected icon, or None if all members are excluded.
+            A randomly selected icon, or `None` if all members are excluded.
+
+        Examples:
+            >>> CupertinoIcons.random(exclude=[CupertinoIcons.BOOK], weights={CupertinoIcons.INFO: 150})
+            CupertinoIcons.INFO
         """
         choices = list(CupertinoIcons)
         if exclude:

@@ -43,7 +43,8 @@ Run this app and you will see a new window with a greeting:
 
 Now you are ready to create a calculator app.
 
-To start, you'll need a [`Text`](../controls/text.md) control for showing the result of calculation, and a few [ElevatedButton](../controls/elevatedbutton.md)s with all the numbers and actions on them.
+To start, you'll need a [`Text`][flet.Text] control for showing the result of calculation,
+and a few [`ElevatedButton`][flet.ElevatedButton]s with all the numbers and actions on them.
 
 Create `calc.py` with the following contents:
 
@@ -88,7 +89,7 @@ Run the app and you should see a page like this:
 
 ## Building page layout
 
-Now let's arrange the text and buttons in 6 horizontal [rows](../controls/row.md).
+Now let's arrange the text and buttons in 6 horizontal [`Row`][flet.Row]s.
 
 Replace `calc.py` contents with the following:
 
@@ -154,9 +155,9 @@ Run the app and you should see a page like this:
 
 ### Using Container for decoration
 
-To add a black background with rounded border around the calculator, we will be using [`Container`](../controls/container.md) control. 
-Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical 
-[`Column`](../controls/column.md) that will be used as the container's `content`:
+To add a black background with rounded border around the calculator, we will be using [`Container`][flet.Container] control.
+Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
+[`Column`][flet.Column] that will be used as the container's [`content`][flet.Container.content]:
 
 ![container-layout](../assets/tutorials/calculator/container-layout.svg){width="80%"}
 /// caption
@@ -277,7 +278,7 @@ content=ft.Column(
 ),
 ```
 
-Since the program is too long now to be fully included in this tutorial, 
+Since the program is too long now to be fully included in this tutorial,
 copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc3.py). Run the app and you should see a page like this:
 
 ![calc-app](../assets/tutorials/calculator/app.png){width="80%"}
@@ -289,15 +290,15 @@ Just what we wanted!
 ## Reusable UI components
 
 While you can continue writing your app in the `main` function, the best practice
-would be to create a [reusable UI component](../cookbook/custom-controls.md#composite-controls). 
+would be to create a [reusable UI component](../cookbook/custom-controls.md#composite-controls).
 
-Imagine you are working on an app header, a side menu, or UI that will be a part 
-of a larger project (for example, at Flet we will be using this Calculator app in a bigger "Gallery" app that will show all the examples for Flet framework). 
+Imagine you are working on an app header, a side menu, or UI that will be a part
+of a larger project (for example, at Flet we will be using this Calculator app in a bigger "Gallery" app that will show all the examples for Flet framework).
 
-Even if you can't think of such uses right now, we still recommend creating all your 
-Flet apps with composability and reusability in mind. 
+Even if you can't think of such uses right now, we still recommend creating all your
+Flet apps with composability and reusability in mind.
 
-To make a reusable Calc app component, we are going to encapsulate its state and 
+To make a reusable Calc app component, we are going to encapsulate its state and
 presentation logic in a separate `CalculatorApp` class. Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc4.py).
 
 /// admonition | Try something
@@ -316,9 +317,9 @@ page.add(calc1, calc2)
 
 ## Handling events
 
-Now let's make the calculator do its job. We will be using the same event handler 
-for all the buttons and use `data` property to differentiate between the actions 
-depending on the button clicked. For `CalcButton` class, let's specify `on_click=button_clicked` 
+Now let's make the calculator do its job. We will be using the same event handler
+for all the buttons and use `data` property to differentiate between the actions
+depending on the button clicked. For `CalcButton` class, let's specify `on_click=button_clicked`
 event and set `data` property equal to button's text:
 
 ```python
@@ -331,7 +332,7 @@ class CalcButton(ft.ElevatedButton):
         self.data = text
 ```
 
-We will define `button_click` method in `CalculatorClass` and pass it to each button. 
+We will define `button_click` method in `CalculatorClass` and pass it to each button.
 Below is `on_click` event handler that will reset the Text value when "AC" button is clicked:
 
 ```python
@@ -340,7 +341,7 @@ def button_clicked(self, e):
         self.result.value = "0"
 ```
 
-With similar approach, `button_click` method will handle different calculator actions 
+With similar approach, `button_click` method will handle different calculator actions
 depending on `data` property for each button. Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc.py).
 
 Run the app and see it in the action:
@@ -350,14 +351,14 @@ Run the app and see it in the action:
 
 ## Publishing your app
 
-Congratulations! You have created your Calculator app with Flet, and it looks awesome! 
+Congratulations! You have created your Calculator app with Flet, and it looks awesome!
 Now it's time to share your app with the world!
 
-Flet Python app and all its dependencies can be packaged into a standalone executable a 
+Flet Python app and all its dependencies can be packaged into a standalone executable a
 package for distribution using `flet build` command.
 
 
-[Follow these instructions](../publish/index.md) to package your Calculator app into a desktop executable, 
+[Follow these instructions](../publish/index.md) to package your Calculator app into a desktop executable,
 mobile app bundle or web app.
 
 ## Summary

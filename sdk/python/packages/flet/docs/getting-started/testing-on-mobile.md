@@ -10,11 +10,11 @@ Start building awesome mobile apps in Python using just your computer and mobile
 
 /// tab | iOS
 
-Install the [Flet iOS app](https://apps.apple.com/app/flet/id1624979699) on your iOS device. 
+Install the [Flet iOS app](https://apps.apple.com/app/flet/id1624979699) on your iOS device.
 You will be using this app to see how your Flet project is working on iPhone or iPad.
 
 [![Get it on App Store](../assets/getting-started/testing-on-ios/qr-code.jpg){width=300}](https://apps.apple.com/app/flet/id1624979699)
-/// caption 
+/// caption
 [View on App Store](https://apps.apple.com/app/flet/id1624979699)
 ///
 
@@ -25,31 +25,31 @@ Run the following command to start Flet development server with your app:
 uv run flet run --ios [script]  # (1)!
 ```
 
-1. [`flet run`](TBA) starts your app in hot reload mode. More info [here](running-app.md).
+1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md).
 ///
 /// tab | pip
 ```bash
 flet run --ios [script]  # (1)!
 ```
 
-1. [`flet run`](TBA) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 /// tab | poetry
 ```bash
 poetry run flet run --ios [script]  # (1)!
 ```
 
-1. [`flet run`](TBA) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 
 ///
 /// tab | Android
 
-Install the [Flet Android app](https://play.google.com/store/apps/details?id=com.appveyor.flet) on your Android device. 
+Install the [Flet Android app](https://play.google.com/store/apps/details?id=com.appveyor.flet) on your Android device.
 You will be using this app to see how your Flet project is working on Android device.
 
 [![Get it on Google Play](../assets/getting-started/testing-on-android/google-play-badge.png){width=300}](https://play.google.com/store/apps/details?id=com.appveyor.flet)
-/// caption 
+/// caption
 [View on PlayStore](https://play.google.com/store/apps/details?id=com.appveyor.flet)
 ///
 
@@ -60,21 +60,21 @@ Run the following command to start Flet development server with your app:
 uv run flet run --android [script]  # (1)!
 ```
 
-1. [`flet run`](TBA) starts your app in hot reload mode. More info [here](running-app.md).
+1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md).
 ///
 /// tab | pip
 ```bash
 flet run --android [script]  # (1)!
 ```
 
-1. [`flet run`](TBA) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 /// tab | poetry
 ```bash
 poetry run flet run --android [script]  # (1)!
 ```
 
-1. [`flet run`](TBA) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 
 ///
@@ -82,7 +82,7 @@ poetry run flet run --android [script]  # (1)!
 A QR code with encoded project URL will be displayed in the terminal:
 
 ![app-qr-code](../assets/getting-started/testing-on-ios/app-qr-code.png){width=300}
-/// caption 
+/// caption
 ///
 
 Open **Camera** app on your Android device, point to QR code you got and click URL to open it in Flet app.

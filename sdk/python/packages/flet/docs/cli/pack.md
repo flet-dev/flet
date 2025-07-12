@@ -1,9 +1,10 @@
 ---
-title: pack
-sidebar_label: pack
+title: flet pack
 ---
 
-This command is used to package a Flet application as a desktop bundle. You can find it's guide [here](/docs/cookbook/packaging-desktop-app).
+This command is used to package a Flet application as a desktop bundle.
+
+[//]: # (You can find it's guide [here]&#40;../cookbook/packaging-desktop-app&#41;.)
 
 ```
 usage: flet pack [-h] [-v] [-i ICON] [-n NAME] [-D] [--distpath DISTPATH] [--add-data [ADD_DATA ...]] [--add-binary [ADD_BINARY ...]] [--hidden-import [HIDDEN_IMPORT ...]] [--product-name PRODUCT_NAME]

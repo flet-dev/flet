@@ -22,15 +22,15 @@ We have broken down the game implementation into the following steps:
 * [Winning the game](#winning-the-game)
 * [Deploying the app](#deploying-the-app)
 
-In the Part 2 (will be covered in the next tutorial) we'll be adding Appbar with options to start new game, 
+In the Part 2 (will be covered in the next tutorial) we'll be adding Appbar with options to start new game,
 view game rules and change game settings.
 
 ## Getting started with Flet
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, 
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript,
 but you do need a basic knowledge of Python and object-oriented programming.
 
-Before you can create your first Flet app, you need to 
+Before you can create your first Flet app, you need to
 [setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
 
 Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
@@ -56,29 +56,30 @@ Run this app and you will see a new window with a greeting:
 
 For the proof of concept, we will only be using three types of controls:
 
-* [`Stack`](../controls/stack.md) - will be used as a parent control for absolute positioning of slots and cards
-* [`GestureDetector`](../controls/gesturedetector.md) - the card that will be moved within the `Stack`
-* [`Container`](../controls/container.md) - the slot where the card will be dropped. Will also be used as `content` for the `GestureDetector`.
+* [`Stack`][flet.Stack] - will be used as a parent control for absolute positioning of slots and cards
+* [`GestureDetector`][flet.GestureDetector] - the card that will be moved within the [`Stack`][flet.Stack]
+* [`Container`][flet.Container] - the slot where the card will be dropped. Will also be used as `content` for the [`GestureDetector`][flet.GestureDetector].
 
-We have broken down the proof of concept app into four easy steps, so that after each step you have 
+We have broken down the proof of concept app into four easy steps, so that after each step you have
 a complete short program to run and test.
 
 ###  Step 1: Drag the card around
 
-In this step we will create a `Stack` (Solitaire game field) and a `GestureDetector` (Solitaire card). 
-The card will then be added to the list of the `Stack.controls`. `top` and `left` properties of the 
+In this step we will create a [`Stack`][flet.Stack] (Solitaire game field)
+and a [`GestureDetector`][flet.GestureDetector] (Solitaire card).
+The card will then be added to the list of the [`Stack.controls`][flet.Stack.controls].
+[`top`][flet.GestureDetector.top] and [`left`][flet.GestureDetector.left] properties of the
 `GestureDetector` are used for absolute positioning of the card in the `Stack`.
 
 ```python
 import flet as ft
 
 def main(page: ft.Page):
-
    card = ft.GestureDetector(
        left=0,
        top=0,
        content=ft.Container(bgcolor=ft.Colors.GREEN, width=70, height=100),
-   )   
+   )
 
    page.add(ft.Stack(controls=[card], width=1000, height=500))
 
@@ -91,11 +92,11 @@ Run the app to see the card added to the stack:
 /// caption
 ///
 
-To be able to move the card, we'll create a `drag` method that will be called in `on_pan_update` 
-event of `GestureDetector` which happens every `drag_interval` while the user drags the card with their mouse.
+To be able to move the card, we'll create a `drag` method that will be called in [`on_pan_update`][flet.GestureDetector.on_pan_update]
+event of `GestureDetector` which happens every [`drag_interval`][flet.GestureDetector.drag_interval] while the user drags the card with their mouse.
 
-To show the card's movement, we’ll be updating the card’s `top` and `left` properties in the `drag` 
-method each time the `on_pan_update` event happens.
+To show the card's movement, we’ll be updating the card’s [`top`][flet.GestureDetector.top] and [`left`][flet.GestureDetector.left] properties in the `drag`
+callback each time the [`on_pan_update`][flet.GestureDetector.on_pan_update] event happens.
 
 Below is the simplest code for dragging `GestureDetector` in `Stack`:
 
@@ -118,7 +119,7 @@ def main(page: ft.Page):
        left=0,
        top=0,
        content=ft.Container(bgcolor=ft.Colors.GREEN, width=70, height=100),
-   )   
+   )
 
    page.add(ft.Stack(controls=[card], width=1000, height=500))
 
@@ -140,15 +141,21 @@ After any properties of a control are updated, an `update()` method of the contr
 The goal of this step is to be able to drop a card into a slot if it is close enough and bounce it back if it’s not.
 <img src="/img../solitaire-tutorial/drag-and-drop3.gif" className="screenshot-50" />
 
-Let’s create a `Container` control that will represent a slot to which we’ll be dropping the card:
+Let’s create a [`Container`][flet.Container] control that will represent a slot to which we’ll be dropping the card:
+
 ```python
 slot = ft.Container(
-    width=70, height=100, left=200, top=0, border=ft.border.all(1)
+        width=70,
+        height=100,
+        left=200,
+        top=0,
+        border=ft.border.all(1)
     )
 page.add(ft.Stack(controls = [slot, card], width=1000, height=500))
 ```
 
-`on_pan_end` event of the card is called when the card is dropped: 
+`on_pan_end` event of the card is called when the card is dropped:
+
 ```python
 card = ft.GestureDetector(
     mouse_cursor=ft.MouseCursor.MOVE,
@@ -161,7 +168,7 @@ card = ft.GestureDetector(
 )
 ```
 
-On this event, we’ll call `drop` method to check if the card is close enough to the slot 
+On this event, we’ll call `drop` method to check if the card is close enough to the slot
 (let’s say it’s closer than 20px to the slot), and `place` it there:
 
 ```python
@@ -180,11 +187,12 @@ def place(card, slot):
     page.update()
 ```
 
-Now, if the card is not close enough, we need to bounce it back to its original position. 
+Now, if the card is not close enough, we need to bounce it back to its original position.
 Unfortunately, we don’t know the original position coordinates, since the card’s `top` and `left` properties were changed on `on_pan_update` event.
 
-To solve this problem, let’s create a `Solitaire` class object to keep track of the original position of 
-the card when `on_pan_start` event of the card is called:
+To solve this problem, let’s create a `Solitaire` class object to keep track of the original position of
+the card when [`on_pan_start`][flet.GestureDetector.on_pan_start] event of the card is called:
+
 ```python
 class Solitaire:
    def __init__(self):
@@ -199,7 +207,7 @@ def start_drag(e: ft.DragStartEvent):
     e.control.update()
 ```
 
-Now let’s update `on_pan_end` event with the option to bounce card back:
+Now let’s update [`on_pan_end`][flet.GestureDetector.on_pan_end] event with the option to bounce card back:
 ```python
 def bounce_back(game, card):
     """return card to its original position"""
@@ -225,6 +233,7 @@ The full code for this step can be found [here](https://github.com/flet-dev/exam
 ### Step 3: Adding a second card
 
 Eventually, we’ll need 52 cards to play the game. For our proof of concept, let’s add a second card:
+
 ```python
 
    card2 = ft.GestureDetector(
@@ -242,15 +251,15 @@ Eventually, we’ll need 52 cards to play the game. For our proof of concept, le
    page.add(ft.Stack(controls=controls, width=1000, height=500))
 ```
 
-Now, if you run the app with the two cards, you will notice that when you move the cards around, the 
-yellow card (`card2`) is moving as expected but the green the card (`card1`) is moving under the yellow card. 
+Now, if you run the app with the two cards, you will notice that when you move the cards around, the
+yellow card (`card2`) is moving as expected but the green the card (`card1`) is moving under the yellow card.
 
 ![drag_and_drop4.gif](../assets/tutorials/solitaire/drag-and-drop4.gif){width="80%"}
 /// caption
 ///
 
-It happens because `card2` is added to the list of stack `controls` after `card1`. To fix this problem, 
-we need to move the draggable card to the top of the list of controls on `on_pan_start` event:
+It happens because `card2` is added to the list of stack's [`controls`][flet.Stack.controls] after `card1`. To fix this problem,
+we need to move the draggable card to the top of the list of controls on [`on_pan_start`][flet.GestureDetector.on_pan_start] event:
 
 ```python
 def move_on_top(card, controls):
@@ -292,7 +301,7 @@ slot2 = ft.Container(
 slots = [slot0, slot1, slot2]
 ```
 
-When creating new cards, we will not specify their `top` and `left` position now, but instead, 
+When creating new cards, we will not specify their `top` and `left` position now, but instead,
 will place them to the `slot0`:
 
 ```python
@@ -301,7 +310,7 @@ place(card1, slot0)
 place(card2, slot0)
 ```
 
-`on_pan_end` event, where we check if a card is close to a slot, we will now go through the 
+`on_pan_end` event, where we check if a card is close to a slot, we will now go through the
 list of slots to find where the card should be dropped:
 
 ```python
@@ -327,35 +336,35 @@ As a result, the two cards can be dragged between the three slots:
 
 The full code for this step can be found [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/solitaire/solitaire-drag-and-drop/step4.py).
 
-Congratulations on completing the proof of concept app for the Solitaire game! 
-Now you can work with `GestureDetector` to move cards inside `Stack` and place them to 
-certain `Containers`, which is a great part of the game to begin with.
+Congratulations on completing the proof of concept app for the Solitaire game!
+Now you can work with [`GestureDetector`][flet.GestureDetector] to move cards inside [`Stack`][flet.Stack] and place them to
+certain `Container`s, which is a great part of the game to begin with.
 
 ## Fanned card piles
 
-In the proof of concept app you have accomplished the task of dropping a card into a slot in 
-proximity or bounce it back. If there is already a card in that slot, the new card is placed on top of it, 
+In the proof of concept app you have accomplished the task of dropping a card into a slot in
+proximity or bounce it back. If there is already a card in that slot, the new card is placed on top of it,
 covering it completely.
 
-In the actual Solitaire game, if there is already a card in a *tableau* slot, you want to 
-place the draggable card a bit lower, so that you can see the previous card too, and if there are two cards, 
+In the actual Solitaire game, if there is already a card in a *tableau* slot, you want to
+place the draggable card a bit lower, so that you can see the previous card too, and if there are two cards,
 even lower. Those are called “fanned piles”.
 
-Then, we want to be able to pick a card from the fanned pile that is not the top card of 
+Then, we want to be able to pick a card from the fanned pile that is not the top card of
 the pile and drag the card together with all the cards below it:
 
 ![fanned_piles1.gif](../assets/tutorials/solitaire/fanned-piles3.gif){width="80%"}
 /// caption
 ///
 
-To be able to do that, it would be useful to have the information about the pile of cards 
-in the slot from which the card is dragged, as well as in the slot to which it is being dropped. 
+To be able to do that, it would be useful to have the information about the pile of cards
+in the slot from which the card is dragged, as well as in the slot to which it is being dropped.
 Let’s restructure our program and get it ready for the implementation of the fanned piles.
 
 ### Slot, Card and Solitaire classes
 
-A slot could have a `pile` property that would hold a list of cards that were placed there. 
-Now the slot is a `Container` control object, and we can’t add any new properties to it. 
+A slot could have a `pile` property that would hold a list of cards that were placed there.
+Now the slot is a [`Container`][flet.Container] control object, and we can’t add any new properties to it.
 Let’s create a new `Slot` class that will inherit from `Container` and add a `pile` property to it:
 
 ```python
@@ -375,8 +384,8 @@ class Slot(ft.Container):
        self.border=ft.border.all(1)
 ```
 
-Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides. 
-It will inherit from `GestureDetector` and we’ll move all card-related methods to it:
+Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides.
+It will inherit from [`GestureDetector`][flet.GestureDetector] and we’ll move all card-related methods to it:
 ```python
 CARD_WIDTH = 70
 CARD_HEIGTH = 100
@@ -440,11 +449,12 @@ class Card(ft.GestureDetector):
 ```
 
 /// admonition | Note
-Since each card has `slot` property now, there is no need to remember `start_left` and `start_top` 
+Since each card has `slot` property now, there is no need to remember `start_left` and `start_top`
 position of the draggable card in Solitaire class anymore, because we can just bounce it back to its slot.
 ///
 
-Let’s update `Solitaire` class to inherit from `Stack`, and move the creation of cards and slots there:
+Let’s update `Solitaire` class to inherit from [`Stack`][flet.Stack], and move the creation of cards and slots there:
+
 ```python
 SOLITAIRE_WIDTH = 1000
 SOLITAIRE_HEIGHT = 500
@@ -487,9 +497,9 @@ class Solitaire(ft.Stack):
 ```
 
 /// admonition | Note
-If you try to call `create_slots()` and `create_card_deck()` and `deal_cards()` methods  `__init__()` 
-method of the Solitaire class, it will cause an error “Control must be added to the page first”. 
-To fix this, we  create slots and cards inside the `did_mount()` method, which happens immediately 
+If you try to call `create_slots()` and `create_card_deck()` and `deal_cards()` methods  `__init__()`
+method of the Solitaire class, it will cause an error “Control must be added to the page first”.
+To fix this, we  create slots and cards inside the `did_mount()` method, which happens immediately
 after the stack is added to the page.
 ///
 
@@ -507,9 +517,9 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-You can find the full source code for this step [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-classes). It works exactly the same way as 
-the proof of concept app, but re-written with the new classes to be ready for adding more 
-complex functionality to it. 
+You can find the full source code for this step [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-classes). It works exactly the same way as
+the proof of concept app, but re-written with the new classes to be ready for adding more
+complex functionality to it.
 
 ### Placing card with offset
 
@@ -530,7 +540,7 @@ def place(self, slot):
     slot.pile.append(self)
 ```
 
-When updating card’s `top` and `left` position, `left` should remain the same, but `top` 
+When updating card’s `top` and `left` position, `left` should remain the same, but `top`
 will depend on the length of the new slot’s pile:
 ```python
     self.top = slot.top + len(slot.pile) * CARD_OFFSET
@@ -551,10 +561,10 @@ If you try to drag the card from the bottom of the pile now, it will look like t
 /// caption
 ///
 
-To fix this problem, we need to update all the methods that work with the draggable 
+To fix this problem, we need to update all the methods that work with the draggable
 card to work with the draggable pile instead.
 
-Let’s create `get_draggable_pile()` method that will get the list of cards that need to be dragged 
+Let’s create `get_draggable_pile()` method that will get the list of cards that need to be dragged
 together, starting with the card you picked:
 ```python
     def get_draggable_pile(self):
@@ -577,8 +587,8 @@ Then, we’ll update `move_on_top()` method:
         self.solitaire.update()
 ```
 
-Additionally, we need to update `drag()` method to go through the draggable pile and update 
-positions of all the cards being dragged: 
+Additionally, we need to update `drag()` method to go through the draggable pile and update
+positions of all the cards being dragged:
 ```python
     def drag(self, e: ft.DragUpdateEvent):
         for card in self.draggable_pile:
@@ -621,8 +631,8 @@ Finally, if no slot in proximity is found, we need to bounce the whole pile back
         self.solitaire.update()
 ```
 
-The full source code of this step can be found [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-fanned-piles). Now we can drag and drop cards in fanned piles, 
-which means we are ready for the real deal! 
+The full source code of this step can be found [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-fanned-piles). Now we can drag and drop cards in fanned piles,
+which means we are ready for the real deal!
 
 ## Solitaire setup
 
@@ -630,11 +640,11 @@ Let’s take a look at the [wikipedia article about Klondike (solitaire)](https:
 
 > Klondike is played with a standard 52-card deck.
 
-> After shuffling, a tableau of seven fanned piles of cards is laid from left to right. 
-> From left to right, each pile contains one more card than the last. 
-> The first and left-most pile contains a single upturned card, the second pile contains two cards, 
-> the third pile contains three cards, the fourth pile contains four cards, 
-> the fifth pile contains five cards, the sixth pile contains six cards, and the seventh pile contains seven cards. 
+> After shuffling, a tableau of seven fanned piles of cards is laid from left to right.
+> From left to right, each pile contains one more card than the last.
+> The first and left-most pile contains a single upturned card, the second pile contains two cards,
+> the third pile contains three cards, the fourth pile contains four cards,
+> the fifth pile contains five cards, the sixth pile contains six cards, and the seventh pile contains seven cards.
 > The topmost card of each pile is turned face up.
 > The remaining cards form the stock and are placed facedown at the upper left of the layout.
 
@@ -648,8 +658,8 @@ We will now work on this setup step by step.
 
 ### Create card deck
 
-The first step is to create a full deck of cards in Solitaire class. Each card should have a `suit` property 
-(hearts, diamonds, clubs and spades) and a `rank` property (from Ace to King). 
+The first step is to create a full deck of cards in Solitaire class. Each card should have a `suit` property
+(hearts, diamonds, clubs and spades) and a `rank` property (from Ace to King).
 For the suit, its `color` is important, because tableau piles are built by alternate colors.
 
 For the rank, its `value` is important, because foundations are built from the lowest (Ace) to the highest (King) rank value.
@@ -666,7 +676,7 @@ class Rank:
         self.name = card_name
         self.value = card_value
 ```
-Now, in the `Card` class, instead of accepting the color as an argument, we’ll be accepting `suite` and 
+Now, in the `Card` class, instead of accepting the color as an argument, we’ll be accepting `suite` and
 `rank` in `__init__()`. Additionally, we’ll add `face_up` property to the card and the Container will now has image of the back of the card as its `content`:
 ```python
 class Card(ft.GestureDetector):
@@ -690,7 +700,7 @@ class Card(ft.GestureDetector):
             border_radius = ft.border_radius.all(6),
             content=ft.Image(src="card_back.png"))
 ```
-All the images for the face up cards, as well as card back are stored in the “images” folder in the same directory as main.py. 
+All the images for the face up cards, as well as card back are stored in the “images” folder in the same directory as main.py.
 
 ::note
 For the reference to the image file to work, we need to specify the folder were it resides in the assets_dir in main.py:
@@ -780,7 +790,7 @@ def deal_cards(self):
     self.update()
 ```
 
-Then we'll deal the cards to the tableau piles from left to right so that each pile contains one more card 
+Then we'll deal the cards to the tableau piles from left to right so that each pile contains one more card
 than the last, and place the remaining cards to the stock pile:
 ```python
 def deal_cards(self):
@@ -811,8 +821,8 @@ Let’s run the program and see where we are at now:
 /// caption
 ///
 
-Cards in stock were placed in a fanned pile in the same manner as to the tableau, 
-but they should have been placed to a regular pile instead. To fix this problem, 
+Cards in stock were placed in a fanned pile in the same manner as to the tableau,
+but they should have been placed to a regular pile instead. To fix this problem,
 let’s add this condition to the `card.place()` method:
 ```python
 def place(self, slot):
@@ -829,8 +839,8 @@ Now cards are only placed in fanned piles to tableau:
 /// caption
 ///
 
-If you try moving the cards around now, the program won’t work. 
-The reason for this is that in the `card.drop()` method iterates through list of slots which we don’t have now. 
+If you try moving the cards around now, the program won’t work.
+The reason for this is that in the `card.drop()` method iterates through list of slots which we don’t have now.
 
 Let’s update the method to go separately through foundations and tableau:
 ```python
@@ -888,7 +898,7 @@ Let’s see how it looks now:
 
 The full source code for this step can be found [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-game-setup).
 
-Congratulations on completing the Solitaire game setup! You’ve created a full 52-card deck, 
+Congratulations on completing the Solitaire game setup! You’ve created a full 52-card deck,
 built layout with stock, waste, foundations and tableau piles, dealt the cards and revealed the top cards in tableau. Let’s move on to the next item on our todo list, which is Solitaire Rules.
 
 ## Solitaire rules
@@ -900,7 +910,7 @@ Now it is time to implement some rules.
 
 ### General rules
 
-Currently, we can move any card, but only face-up cards should be moved. 
+Currently, we can move any card, but only face-up cards should be moved.
 Let’s add this check in `start_drag`, `drag` and `drop` methods of the card:
 ```python
 def start_drag(self, e: ft.DragStartEvent):
@@ -936,7 +946,7 @@ def drop(self, e: ft.DragEndEvent):
     self.bounce_back()
 ```
 
-Now let’s specify `click` method for the `on_tap` event of the card to reveal the card 
+Now let’s specify `click` method for the `on_tap` event of the card to reveal the card
 if you click on a faced-down top card in a tableau pile:
 ```python
 def click(self, e):
@@ -954,7 +964,7 @@ Let's check how it works:
 
 ### Foundations rules
 
-At the moment we can place fanned piles to foundations, which shouldn’t be allowed. 
+At the moment we can place fanned piles to foundations, which shouldn’t be allowed.
 Let’s check the draggable pile length to fix it:
 
 ```python
@@ -979,7 +989,7 @@ def drop(self, e: ft.DragEndEvent):
     self.bounce_back()
 ```
 
-Then, of course, not any card can be placed to a foundation. According to the rules, a foundation should 
+Then, of course, not any card can be placed to a foundation. According to the rules, a foundation should
 start with an Ace and then the cards of the same suite can be placed on top of it to build a pile form Ace to King.
 
 Let’s add this rule to Solitaire class:
@@ -1019,7 +1029,7 @@ def drop(self, e: ft.DragEndEvent):
         self.bounce_back()
 ```
 
-As a final touch for foundations rules, let’s implement `doublclick` method for `on_double_tap` event of a card. 
+As a final touch for foundations rules, let’s implement `doublclick` method for `on_double_tap` event of a card.
 It will be checking if the faced-up card fits into any of the foundations and place it there:
 ```python
    def double-click(self, e):
@@ -1090,8 +1100,8 @@ def click(self, e):
         self.turn_face_up()
 ```
 
-That’s it! Now you can properly play solitaire, but it very difficult to win the game if 
-you cannot pass though the waste again. Let’s implement `click()` for `on_click` event of 
+That’s it! Now you can properly play solitaire, but it very difficult to win the game if
+you cannot pass though the waste again. Let’s implement `click()` for `on_click` event of
 the stock Slot to go thought the stock pile again:
 ```python
 class Slot(ft.Container):
@@ -1119,10 +1129,10 @@ def restart_stock(self):
         card = self.waste.get_top_card()
         card.turn_face_down()
         card.move_on_top()
-        card.place(self.stock)   
+        card.place(self.stock)
 ```
 
-For `card.place()` method to work properly with cards from Stock and Waste, we’ve added a 
+For `card.place()` method to work properly with cards from Stock and Waste, we’ve added a
 condition to `card.get_draggable_pile()`, so that it returns the top card only and not the whole pile:
 ```python
     def get_draggable_pile(self):
@@ -1143,7 +1153,7 @@ Let’s move on to the last step of the game itself - detecting the situation wh
 
 ## Winning the game
 
-According to [wikipedia](https://en.wikipedia.org/wiki/Klondike_(solitaire)#Probability_of_winning), some suggest the chances of winning the game as being 1 in 30 games. 
+According to [wikipedia](https://en.wikipedia.org/wiki/Klondike_(solitaire)#Probability_of_winning), some suggest the chances of winning the game as being 1 in 30 games.
 
 Knowing that the chances of winning are quite low, we should plan on showing the user something exciting when that finally happens.
 
@@ -1191,7 +1201,7 @@ def place(self, slot):
 Finally, if the winning condition is met, it will trigger a winning sequence involving [position animation](https://flet.dev../cookbook/animations#position-animation):
 ```python
 def winning_sequence(self):
-    for slot in self.foundations:   
+    for slot in self.foundations:
         for card in slot.pile:
             card.animate_position=1000
             card.move_on_top()
@@ -1205,7 +1215,7 @@ def winning_sequence(self):
 /// caption
 ///
 
-Wow! We did it. You can find the full source code for the Solitaire game [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-final-part1). 
+Wow! We did it. You can find the full source code for the Solitaire game [here](https://github.com/flet-dev/examples/tree/main/python/tutorials/solitaire/solitaire-final-part1).
 
 Now, as we have a decent desktop version of the game, let’s deploy it as a web app to share with your friends and colleagues.
 
@@ -1222,9 +1232,9 @@ Now it's time to share your app with the world!
 In this tutorial, you have learnt how to:
 
 * [Create](../getting-started/create-flet-app.md) a simple Flet app;
-* Drag and drop cards with [GestureDetector](../controls/gesturedetector.md);
+* Drag and drop cards with [`GestureDetector`][flet.GestureDetector];
 * [Create your own classes](../cookbook/custom-controls.md) that inherit from Flet controls;
-* Design UI layout using absolute positioning of controls in [Stack](../controls/stack.md);
+* Design UI layout using absolute positioning of controls in [`Stack`][flet.Stack];
 * Implement [implicit animations](../cookbook/animations.md);
 * [Deploy](../publish/web/index.md) your Flet app to the web;
 

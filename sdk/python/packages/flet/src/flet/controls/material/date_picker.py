@@ -152,23 +152,26 @@ class DatePicker(DialogControl):
 
     switch_to_calendar_icon: Optional[IconValue] = None
     """
-    The name of the icon displayed in the corner of the dialog when 
+    The name of the icon displayed in the corner of the dialog when
     [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
-    is `DatePickerEntryMode.INPUT`.
+    is [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
+
     Clicking on this icon changes the `date_picker_entry_mode` to
-    `DatePickerEntryMode.CALENDAR`. 
-    
-    If `None`, `Icons.CALENDAR_TODAY` is used.
+    [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
+
+    If `None`, [`Icons.CALENDAR_TODAY`][flet.Icons.CALENDAR_TODAY] is used.
     """
 
     switch_to_input_icon: Optional[IconValue] = None
     """
-    Name of the icon displayed in the corner of the dialog when 
+    The name of the icon displayed in the corner of the dialog when
     [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
-    is `DatePickerEntryMode.CALENDAR`.
-    Clicking on icon changes the `DatePickerEntryMode` to `DatePickerEntryMode.INPUT`.
-    
-    If `None`, `icons.EDIT_OUTLINED` is used.
+    is [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
+
+    Clicking on icon changes the `DatePickerEntryMode` to
+    [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
+
+    If `None`, [`Icons.EDIT_OUTLINED`][flet.Icons.EDIT_OUTLINED] is used.
     """
 
     barrier_color: Optional[ColorValue] = None
@@ -183,9 +186,9 @@ class DatePicker(DialogControl):
 
     on_change: Optional[ControlEventHandler["DatePicker"]] = None
     """
-    Called when user clicks confirm button. 
+    Called when user clicks confirm button.
     [`value`][flet.DatePicker.value] is updated with selected date.
-    
+
     The `data` property of the event handler argument contains the selected date.
     """
 

@@ -12,165 +12,35 @@ __all__ = ["Control"]
 @dataclass(kw_only=True)
 class Control(BaseControl):
     """
-    Base class for all controls.
+    Base class for controls.
+
+    Not meant to be used directly.
     """
 
     expand: Optional[Union[bool, int]] = None
     """
-    When a child Control is placed into a [`Column`][flet.Column]
-    or a [`Row`][flet.Row] you can "expand" it to fill the
-    available space.
-    `expand` property could be a boolean value (`True` - expand control to fill all
-    available space) or an integer - an "expand factor" specifying how to divide a free
-    space with other expanded child controls.
+    Specifies whether/how this control should expand to fill available space in its parent layout.
 
-    For more information and examples about `expand` property see "Expanding children"
-    sections in [`Column`](https://flet.dev/docs/controls/column#expanding-children) or
-    [`Row`](https://flet.dev/docs/controls/row#expanding-children).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/expanding-controls/#expand).
 
-    /// details | Example
-        type: example
-    Here is an example of expand being used in action for both [`Column`][flet.Column]
-    and [`Row`][flet.Row]:
-
-    ```python
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.spacing = 0
-        page.padding = 0
-        page.add(
-            ft.Column(
-                controls=[
-                    ft.Row(
-                        [
-                            ft.Card(
-                                content=ft.Text("Card_1"),
-                                color=ft.Colors.ORANGE_300,
-                                expand=True,
-                                height=page.height,
-                                margin=0,
-                            ),
-                            ft.Card(
-                                content=ft.Text("Card_2"),
-                                color=ft.Colors.GREEN_100,
-                                expand=True,
-                                height=page.height,
-                                margin=0,
-                            ),
-                        ],
-                        expand=True,
-                        spacing=0,
-                    ),
-                ],
-                expand=True,
-                spacing=0,
-            ),
-        )
-
-    ft.run(main)
-    ```
-    ///
+    Note:
+        Has effect only if the direct parent of this control is one of the following controls, or their subclasses:
+        [`Column`][flet.Column], [`Row`][flet.Row], [`View`][flet.View], [`Page`][flet.Page].
     """
 
-    expand_loose: Optional[bool] = None
+    expand_loose: bool = False
     """
-    Effective only if `expand` is `True`.
+    Allows the control to expand along the main axis if space is available,
+    but does not require it to fill all available space.
 
-    If `expand_loose` is `True`, the child control of a
-    [`Column`][flet.Column] or a [`Row`][flet.Row]
-    will be given the flexibility to expand to fill the available space in the main
-    axis (e.g., horizontally for a Row or vertically for a Column), but will not be
-    required to fill the available space.
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/expanding-controls/#expand_loose).
 
-    The default value is `False`.
+    Note:
+        If `expand_loose` is `True`, it will have effect only if:
 
-    /// details | Example
-        type: example
-    Here is the example of Containers placed in Rows with `expand_loose = True`:
-    ```python
-    import flet as ft
-
-
-    class Message(ft.Container):
-        def __init__(self, author, body):
-            super().__init__()
-            self.content = ft.Column(
-                controls=[
-                    ft.Text(author, weight=ft.FontWeight.BOLD),
-                    ft.Text(body),
-                ],
-            )
-            self.border = ft.border.all(1, ft.Colors.BLACK)
-            self.border_radius = ft.border_radius.all(10)
-            self.bgcolor = ft.Colors.GREEN_200
-            self.padding = 10
-            self.expand = True
-            self.expand_loose = True
-
-
-    def main(page: ft.Page):
-        chat = ft.ListView(
-            padding=10,
-            spacing=10,
-            controls=[
-                ft.Row(
-                    alignment=ft.MainAxisAlignment.START,
-                    controls=[
-                        Message(
-                            author="John",
-                            body="Hi, how are you?",
-                        ),
-                    ],
-                ),
-                ft.Row(
-                    alignment=ft.MainAxisAlignment.END,
-                    controls=[
-                        Message(
-                            author="Jake",
-                            body="Hi I am good thanks, how about you?",
-                        ),
-                    ],
-                ),
-                ft.Row(
-                    alignment=ft.MainAxisAlignment.START,
-                    controls=[
-                        Message(
-                            author="John",
-                            body="Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the industry's
-                            standard dummy text ever since the 1500s, when an unknown
-                            printer took a galley of type and scrambled it to make a
-                            type specimen book.",
-                        ),
-                    ],
-                ),
-                ft.Row(
-                    alignment=ft.MainAxisAlignment.END,
-                    controls=[
-                        Message(
-                            author="Jake",
-                            body="Thank you!",
-                        ),
-                    ],
-                ),
-            ],
-        )
-
-        page.window.width = 393
-        page.window.height = 600
-        page.window.always_on_top = False
-
-        page.add(chat)
-
-
-    ft.run(main)
-    ```
-
-    ![expand_loose](../../../assets/controls/control/expand-loose.png){width="65%"}
-    /// caption
-    ///
-    ///
+        - `expand` is not `None` and
+        - the direct parent of this control is one of the following controls, or their subclasses:
+            [`Column`][flet.Column], [`Row`][flet.Row], [`View`][flet.View], [`Page`][flet.Page].
     """
 
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
@@ -231,7 +101,7 @@ class Control(BaseControl):
         type: example
     For example, if you have a form with multiple entry controls you can disable them
     all together by disabling container:
-    
+
     ```python
     ft.Column(
         disabled = True,
@@ -252,10 +122,10 @@ class Control(BaseControl):
     def before_update(self):
         super().before_update()
         assert 0.0 <= self.opacity <= 1.0, (
-            "opacity must be between 0.0 and 1.0 inclusive"
+            f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
         )
         assert self.expand is None or isinstance(self.expand, (bool, int)), (
-            "expand must be of bool or int type"
+            f"expand must be of type bool or int, got {type(self.expand)}"
         )
 
     def clean(self) -> None:

@@ -14,6 +14,16 @@ __all__ = ["Icons"]
 
 
 class Icons(str, Enum):
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.value.lower() == other.lower()
+        if isinstance(other, Enum):
+            return self.value.lower() == other.value.lower()
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.value.lower())
+
     @staticmethod
     def random(
         exclude: Optional[list["Icons"]] = None,
@@ -28,7 +38,11 @@ class Icons(str, Enum):
                 weighted random selection.
 
         Returns:
-            A randomly selected icon, or None if all members are excluded.
+            A randomly selected icon, or `None` if all members are excluded.
+
+        Examples:
+            >>> Icons.random(exclude=[Icons.FAVORITE], weights={Icons.SCHOOL: 150})
+            Icons.SCHOOL
         """
         choices = list(Icons)
         if exclude:

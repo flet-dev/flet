@@ -22,7 +22,7 @@ Page route is a portion of application URL after `#` symbol:
 /// caption
 ///
 
-Default application route, if not set in application URL by the user, is `/`. 
+Default application route, if not set in application URL by the user, is `/`.
 All routes start with `/`, for example `/store`, `/authors/1/books/2`.
 
 Application route can be obtained by reading `page.route` property, for example:
@@ -80,12 +80,12 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-Click "Go to Store" button and you'll see application URL is changed and a new item is pushed in a browser history. 
+Click "Go to Store" button and you'll see application URL is changed and a new item is pushed in a browser history.
 You can use browser "Back" button to navigate to a previous route.
 
 ## Page views
 
-Flet's [`Page`][flet.Page] now is not just a single page, but a container for [`View`][flet.View] 
+Flet's [`Page`][flet.Page] now is not just a single page, but a container for [`View`][flet.View]
 layered on top of each other like a sandwich:
 
 <img src="/img/docs/navigation-routing/page-views.svg" className="screenshot-100" />
@@ -96,14 +96,13 @@ The last view in the list is the one currently displayed on a page. Views list m
 
 To simulate a transition between pages change `page.route` and add a new `View` in the end of `page.view` list.
 
-Pop the last view from the collection and change route to a "previous" one in 
-[`page.on_view_pop`][flet.Page.on_view_pop
-] event handler to go back.
+Pop the last view from the collection and change route to a "previous" one in
+[`page.on_view_pop`][flet.Page.on_view_pop] event handler to go back.
 
 ## Building views on route change
 
-To build a reliable navigation there must be a single place in the program which builds a list of views 
-depending on the current route. Other words, navigation history stack (represented by the list of views) 
+To build a reliable navigation there must be a single place in the program which builds a list of views
+depending on the current route. Other words, navigation history stack (represented by the list of views)
 must be a function of a route.
 
 This place is [`page.on_route_change`][flet.Page.on_route_change] event handler.
@@ -152,22 +151,22 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-Try navigating between pages using "Visit Store" and "Go Home" buttons, Back/Forward browser buttons, 
+Try navigating between pages using "Visit Store" and "Go Home" buttons, Back/Forward browser buttons,
 manually changing route in the URL - it works no matter what! :)
 
 /// admonition
     type: note
-To "navigate" between pages we used [`page.go()`][flet.Page.go] - a helper method that updates 
+To "navigate" between pages we used [`page.go()`][flet.Page.go] - a helper method that updates
 [`page.route`][flet.Page.route], calls [`page.on_route_change`][flet.Page.on_route_change] event handler to update views and finally calls `page.update()`.
 ///
 
-Notice the usage of [`page.on_view_pop`][flet.Page.on_view_pop] event handler. It fires when the user 
-clicks automatic "Back" button in [`AppBar`][flet.AppBar] control. In the handler we remove the last element 
+Notice the usage of [`page.on_view_pop`][flet.Page.on_view_pop] event handler. It fires when the user
+clicks automatic "Back" button in [`AppBar`][flet.AppBar] control. In the handler we remove the last element
 from views collection and navigate to view's root "under" it.
 
 ## Route templates
 
-Flet offers [`TemplateRoute`][flet.TemplateRoute] - an utility class based on [repath](https://github.com/nickcoutsos/python-repath) library which allows matching 
+Flet offers [`TemplateRoute`][flet.TemplateRoute] - an utility class based on [repath](https://github.com/nickcoutsos/python-repath) library which allows matching
 ExpressJS-like routes and parsing their parameters, for example `/account/:account_id/orders/:order_id`.
 
 `TemplateRoute` plays great with route change event:

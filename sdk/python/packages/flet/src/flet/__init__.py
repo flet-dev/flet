@@ -44,8 +44,8 @@ from flet.controls.buttons import (
     ContinuousRectangleBorder,
     OutlinedBorder,
     RoundedRectangleBorder,
-    StadiumBorder,
     ShapeBorder,
+    StadiumBorder,
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
@@ -430,8 +430,10 @@ from flet.controls.transform import (
 from flet.controls.types import (
     AppLifecycleState,
     AppView,
+    AutomaticNotchShape,
     BlendMode,
     Brightness,
+    CircularRectangleNotchShape,
     ClipBehavior,
     ColorValue,
     CrossAxisAlignment,
@@ -446,8 +448,6 @@ from flet.controls.types import (
     MainAxisAlignment,
     MouseCursor,
     NotchShape,
-    AutomaticNotchShape,
-    CircularRectangleNotchShape,
     Number,
     Orientation,
     PagePlatform,
@@ -518,6 +518,7 @@ __all__ = [
     "OutlinedBorder",
     "RoundedRectangleBorder",
     "StadiumBorder",
+    "ShapeBorder",
     "Colors",
     "ConstrainedControl",
     "Control",

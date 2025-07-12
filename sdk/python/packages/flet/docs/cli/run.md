@@ -1,6 +1,5 @@
 ---
-title: run
-sidebar_label: run
+title: flet run
 ---
 
 This command is used to run a Flet application in hot reload mode.

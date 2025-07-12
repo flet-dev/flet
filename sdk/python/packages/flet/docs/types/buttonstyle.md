@@ -66,7 +66,7 @@ def main(page: ft.Page):
         ),
     )
 
-ft.app(main)
+ft.run(main)
 ```
 
 ### Styled button example
@@ -106,6 +106,5 @@ def main(page: ft.Page):
         )
     )
 
-ft.app(main)
+ft.run(main)
 ```
-

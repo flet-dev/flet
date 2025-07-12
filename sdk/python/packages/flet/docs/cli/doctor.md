@@ -1,6 +1,5 @@
 ---
-title: doctor
-sidebar_label: doctor
+title: flet doctor
 ---
 
 The `doctor` command returns information about the Flet environment, such as the version of Flet and the version of the Python interpreter.

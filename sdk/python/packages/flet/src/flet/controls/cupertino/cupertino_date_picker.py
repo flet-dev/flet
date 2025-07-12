@@ -79,7 +79,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background [color](/docs/reference/colors) of the date picker.
+    The background color of the date picker.
     """
 
     minute_interval: int = 1
@@ -94,7 +94,7 @@ class CupertinoDatePicker(ConstrainedControl):
     minimum_year: int = 1
     """
     Minimum year to which the picker can be scrolled when in
-    `CupertinoDatePickerMode.DATE` mode.
+    [`CupertinoDatePickerMode.DATE`][flet.CupertinoDatePickerMode.DATE] mode.
     """
 
     maximum_year: Optional[int] = None
@@ -113,7 +113,7 @@ class CupertinoDatePicker(ConstrainedControl):
     use_24h_format: bool = False
     """
     Whether to use the 24-hour time format.
-    
+
     If `False`, the 12-hour time format is used.
     """
 
@@ -157,54 +157,54 @@ class CupertinoDatePicker(ConstrainedControl):
         else:
             value = self.value
 
-        assert (
-            self.item_extent > 0
-        ), f"item_extent must be strictly greater than 0, got {self.item_extent}"
-        assert (
-            self.minute_interval > 0 and 60 % self.minute_interval == 0
-        ), f"minute_interval must be a positive integer factor of 60, got {self.minute_interval}"
+        assert self.item_extent > 0, (
+            f"item_extent must be strictly greater than 0, got {self.item_extent}"
+        )
+        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
+            f"minute_interval must be a positive integer factor of 60, got {self.minute_interval}"
+        )
 
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
             if self.first_date:
-                assert (
-                    value >= self.first_date
-                ), f"value ({value}) can't be before first_date ({self.first_date})"
+                assert value >= self.first_date, (
+                    f"value ({value}) can't be before first_date ({self.first_date})"
+                )
             if self.last_date:
-                assert (
-                    value <= self.last_date
-                ), f"value ({value}) can't be after last_date ({self.last_date})"
+                assert value <= self.last_date, (
+                    f"value ({value}) can't be after last_date ({self.last_date})"
+                )
 
         if self.date_picker_mode in [
             CupertinoDatePickerMode.DATE,
             CupertinoDatePickerMode.MONTH_YEAR,
         ]:
-            assert (
-                1 <= self.minimum_year <= value.year
-            ), f"value.year ({value.year}) can't be less than minimum_year "
+            assert 1 <= self.minimum_year <= value.year, (
+                f"value.year ({value.year}) can't be less than minimum_year "
+            )
             f"({self.minimum_year})"
 
             if self.maximum_year:
-                assert (
-                    value.year <= self.maximum_year
-                ), f"value.year ({value.year}) can't be greater than maximum_year "
+                assert value.year <= self.maximum_year, (
+                    f"value.year ({value.year}) can't be greater than maximum_year "
+                )
                 f"({self.maximum_year})"
 
             if self.first_date:
-                assert (
-                    value >= self.first_date
-                ), f"value ({value}) can't be before first_date ({self.first_date})"
+                assert value >= self.first_date, (
+                    f"value ({value}) can't be before first_date ({self.first_date})"
+                )
 
             if self.last_date:
-                assert (
-                    value <= self.last_date
-                ), f"value ({value}) can't be after last_date ({self.last_date})"
+                assert value <= self.last_date, (
+                    f"value ({value}) can't be after last_date ({self.last_date})"
+                )
 
         if self.date_picker_mode != CupertinoDatePickerMode.DATE:
-            assert (
-                not self.show_day_of_week
-            ), "show_day_of_week is only supported when date_picker_mode is CupertinoDatePickerMode.DATE"
+            assert not self.show_day_of_week, (
+                "show_day_of_week is only supported when date_picker_mode is CupertinoDatePickerMode.DATE"
+            )
 
-        assert (
-            value.minute % self.minute_interval == 0
-        ), f"value.minute ({value.minute}) must be divisible by minute_interval "
+        assert value.minute % self.minute_interval == 0, (
+            f"value.minute ({value.minute}) must be divisible by minute_interval "
+        )
         f"({self.minute_interval})"
