@@ -8,6 +8,7 @@ import flet_cli.commands.doctor  # Adding the doctor command
 import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
+import flet_cli.commands.serve
 from flet.version import update_version
 
 
@@ -76,6 +77,7 @@ def main():
     flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
+    flet_cli.commands.serve.Command.register_to(sp, "serve")
     flet_cli.commands.doctor.Command.register_to(
         sp, "doctor"
     )  # Register the doctor command
