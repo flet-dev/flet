@@ -69,210 +69,352 @@ class ColorScheme:
     """
     The color displayed most frequently across your app’s screens and components.
     """
+    
     on_primary: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `primary`.
     """
+    
     primary_container: Optional[ColorValue] = None
     """
     A color used for elements needing less emphasis than `primary`.
     """
+    
     on_primary_container: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `primary_container`.
     """
+    
     secondary: Optional[ColorValue] = None
     """
     An accent color used for less prominent components in the UI, such as filter chips,
     while expanding the opportunity for color expression.
     """
+    
     on_secondary: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `secondary`.
     """
+    
     secondary_container: Optional[ColorValue] = None
     """
     A color used for elements needing less emphasis than `secondary`.
     """
+    
     on_secondary_container: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `secondary_container`.
     """
+    
     tertiary: Optional[ColorValue] = None
     """
     A color used as a contrasting accent that can balance `primary` and `secondary`
     colors or bring heightened attention to an element, such as an input field.
     """
+    
     on_tertiary: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `tertiary`.
     """
+    
     tertiary_container: Optional[ColorValue] = None
     """
     A color used for elements needing less emphasis than `tertiary`.
     """
+    
     on_tertiary_container: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `tertiary_container`.
     """
+    
     error: Optional[ColorValue] = None
     """
     The color to use for input validation errors, e.g. for `TextField.error_text`.
     """
+    
     on_error: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `error`.
     """
+    
     error_container: Optional[ColorValue] = None
     """
     A color used for error elements needing less emphasis than `error`.
     """
+    
     on_error_container: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `error_container`.
     """
+    
     background: Optional[ColorValue] = None
     """
     A color that typically appears behind scrollable content.
     """
+    
     on_background: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `background`.
     """
+    
     surface: Optional[ColorValue] = None
     """
     The background color for widgets like `Card`.
     """
+    
     on_surface: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `surface`.
     """
+    
     surface_variant: Optional[ColorValue] = None
     """
     A color variant of `surface` that can be used for differentiation against a
     component using `surface`.
     """
+    
     on_surface_variant: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `surface_variant`.
     """
+    
     outline: Optional[ColorValue] = None
     """
     A utility color that creates boundaries and emphasis to improve usability.
     """
+    
     outline_variant: Optional[ColorValue] = None
     """
     A utility color that creates boundaries for decorative elements when a 3:1 contrast
     isn’t required, such as for dividers or decorative elements.
     """
+    
     shadow: Optional[ColorValue] = None
     """
     A color use to paint the drop shadows of elevated components.
     """
+    
     scrim: Optional[ColorValue] = None
     """
     A color use to paint the scrim around of modal components.
     """
+    
     inverse_surface: Optional[ColorValue] = None
     """
     A surface color used for displaying the reverse of what’s seen in the surrounding
     UI, for example in a `SnackBar` to bring attention to an alert.
     """
+    
     on_inverse_surface: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `inverse_surface`.
     """
+    
     inverse_primary: Optional[ColorValue] = None
     """
     An accent color used for displaying a highlight color on `inverse_surface`
     backgrounds, like button text in a `SnackBar`.
     """
+    
     surface_tint: Optional[ColorValue] = None
     """
     A color used as an overlay on a surface color to indicate a component's elevation.
     """
+    
     on_primary_fixed: Optional[ColorValue] = None
     """
     A color that is used for text and icons that exist on top of elements having
     `primary_fixed` color.
     """
+    
     on_secondary_fixed: Optional[ColorValue] = None
     """
     A color that is used for text and icons that exist on top of elements having
     `secondary_fixed` color.
     """
+    
     on_tertiary_fixed: Optional[ColorValue] = None
     """
     A color that is used for text and icons that exist on top of elements having
     `tertiary_fixed` color.
     """
+    
     on_primary_fixed_variant: Optional[ColorValue] = None
     """
     A color that provides a lower-emphasis option for text and icons than
     `on_primary_fixed`.
     """
+    
     on_secondary_fixed_variant: Optional[ColorValue] = None
     """
     A color that provides a lower-emphasis option for text and icons than
     `on_secondary_fixed`.
     """
+    
     on_tertiary_fixed_variant: Optional[ColorValue] = None
     """
     A color that provides a lower-emphasis option for text and icons than
     `on_tertiary_fixed`.
     """
+    
     primary_fixed: Optional[ColorValue] = None
     """
     A substitute for `primary_container` that's the same color for the dark and light
     themes.
     """
+    
     secondary_fixed: Optional[ColorValue] = None
     """
     A substitute for `secondary_container` that's the same color for the dark and light
     themes.
     """
+    
     tertiary_fixed: Optional[ColorValue] = None
     """
     A substitute for `tertiary_container` that's the same color for dark and light
     themes.
     """
+    
     primary_fixed_dim: Optional[ColorValue] = None
     """
     A color used for elements needing more emphasis than `primary_fixed`.
     """
+    
     secondary_fixed_dim: Optional[ColorValue] = None
     """
     A color used for elements needing more emphasis than `secondary_fixed`.
     """
+    
     surface_bright: Optional[ColorValue] = None
     """
     A color that's always the lightest in the dark or light theme.
     """
+    
     surface_container: Optional[ColorValue] = None
+    """
+    A recommended color role for a distinct area within the surface.
+    """
+
     surface_container_high: Optional[ColorValue] = None
+    """
+    A surface container color with a darker tone.
+    """
+
     surface_container_low: Optional[ColorValue] = None
+    """
+    A surface container color with a lighter tone that creates less emphasis than 
+    `surface_container` but more emphasis than `surface_container_lowest`.
+    """
+
     surface_container_lowest: Optional[ColorValue] = None
+    """
+    A surface container color with the lightest tone and the least emphasis relative to 
+    the surface.
+    """
+    
     surface_dim: Optional[ColorValue] = None
+    """
+    A color that's always darkest in the dark or light theme.
+    """
+    
     tertiary_fixed_dim: Optional[ColorValue] = None
+    """
+    A color used for elements needing more emphasis than `tertiary_fixed`.
+    """
 
 
 @dataclass
 class TextTheme:
+    """
+    Customizes [`Text`][flet.Text] styles.
+
+    Material 3 design [defines](http://localhost:3000/docs/controls/text#pre-defined-theme-text-styles) 
+    5 groups of text styles with 3 sizes in each group: "Display", "Headline", "Title", 
+    "Label" and "Body" which are used across Flet controls. 
+    """
+
     body_large: Optional[TextStyle] = None
+    """
+    Largest of the body styles. Body styles are used for longer passages of text.
+    """
+    
     body_medium: Optional[TextStyle] = None
+    """
+    Middle size of the body styles. Body styles are used for longer passages of text. 
+    The default text style for Material.
+    """
+    
     body_small: Optional[TextStyle] = None
+    """
+    Smallest of the body styles.
+    """
+    
     display_large: Optional[TextStyle] = None
+    """
+    Largest of the display styles. As the largest text on the screen, display styles 
+    are reserved for short, important text or numerals. They work best on large screens.
+    """
+    
     display_medium: Optional[TextStyle] = None
+    """
+    Middle size of the display styles.
+    """
+    
     display_small: Optional[TextStyle] = None
+    """
+    Smallest of the display styles.
+    """
+
     headline_large: Optional[TextStyle] = None
+    """
+    Largest of the headline styles. Headline styles are smaller than display styles. 
+    They're best-suited for short, high-emphasis text on smaller screens.
+    """
+    
     headline_medium: Optional[TextStyle] = None
+    """
+    Middle size of the headline styles.
+    """
+
     headline_small: Optional[TextStyle] = None
+    """
+    Smallest of the headline styles.
+    """
+    
     label_large: Optional[TextStyle] = None
+    """
+    Largest of the label styles. Label styles are smaller, utilitarian styles, used for 
+    areas of the UI such as text inside of components or very small supporting text in 
+    the content body, like captions. Used for text on 
+    [`ElevatedButton`][flet.ElevatedButton], [`TextButton`][flet.TextButton] and 
+    [`OutlinedButton`][flet.OutlinedButton].
+    """
+    
     label_medium: Optional[TextStyle] = None
+    """
+    Middle size of the label styles.
+    """
+    
     label_small: Optional[TextStyle] = None
+    """
+    Smallest of the label styles.
+    """
+    
     title_large: Optional[TextStyle] = None
+    """
+    Largest of the title styles. Titles are smaller than headline styles and should be 
+    used for shorter, medium-emphasis text.
+    """
+
     title_medium: Optional[TextStyle] = None
+    """
+    Middle size of the title styles.
+    """
+
     title_small: Optional[TextStyle] = None
+    """
+    Smallest of the title styles.
+    """
 
 
 @dataclass
