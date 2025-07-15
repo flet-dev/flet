@@ -4,12 +4,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/banner)
 
-### Banner with leading icon and actions
+### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/banner/banner-test.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/banner/banner-basic.py"
 ```
 
-![Banner with custom content](/img/docs/controls/banner/banner-with-custom-content.gif){width="80%"}
+![banner-basic](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/banner/media/banner-basic.gif){width="80%"}
 /// caption
 ///

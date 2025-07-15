@@ -4,12 +4,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/bottomsheet)
 
-### Simple BottomSheet
+### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/bottom-sheet/modal-bottom-sheet.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/bottom-sheet/bottom-sheet-basic.py"
 ```
 
-![Bottom Sheet Sample](/img/docs/controls/bottom-sheet/bottom-sheet-sample.gif){width="80%"}
+![bottom-sheet-basic](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/bottom-sheet/media/bottom-sheet-basic.gif){width="80%"}
 /// caption
 ///

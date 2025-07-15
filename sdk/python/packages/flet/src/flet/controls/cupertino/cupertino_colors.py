@@ -12,6 +12,15 @@ for line in __import__("sys").stdin:
     elif match2:
         print("{} = \"{}\"".format(match2.group(1).upper(), match2.group(1)))
 ' >> "$output_file"
+
+---
+
+Code to sort the members:
+```
+s = sorted(CupertinoColors, key=lambda i: i.name)
+for i in s:
+    print(f"{i.name} = \"{i.value}\"")
+```
 """
 
 import random
@@ -101,8 +110,8 @@ class CupertinoColors(str, Enum):
     LABEL = "label"
     LIGHT_BACKGROUND_GRAY = "lightBackgroundGray"
     LINK = "link"
-    OPAQUE_SEPARATOR = "opaqueSeparator"
     ON_PRIMARY = "onprimary"
+    OPAQUE_SEPARATOR = "opaqueSeparator"
     PLACEHOLDER_TEXT = "placeholderText"
     PRIMARY = "primary"
     QUATERNARY_LABEL = "quaternaryLabel"

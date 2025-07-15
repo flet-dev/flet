@@ -14,7 +14,9 @@ __all__ = ["BottomSheet"]
 @control("BottomSheet")
 class BottomSheet(DialogControl):
     """
-    A modal bottom sheet is an alternative to a menu or a dialog and prevents the user
+    Displays a modal bottom sheet.
+
+    A bottom sheet is an alternative to a menu or dialog and prevents the user
     from interacting with the rest of the app.
 
     Raises:

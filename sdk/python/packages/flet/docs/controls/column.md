@@ -10,7 +10,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-spacing.py"
 ```
 
-![Column Spacing](/img/docs/controls/column/column-spacing.gif){width="80%"}
+![Column Spacing](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/column/column-spacing.gif){width="80%"}
 /// caption
 ///
 
@@ -21,7 +21,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-wrap.py"
 ```
 
-![Column Wrapping](/img/docs/controls/column/column-wrapping.gif){width="80%"}
+![Column Wrapping](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/column/column-wrapping.gif){width="80%"}
 /// caption
 ///
 
@@ -43,7 +43,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-horiz-alignment.py"
 ```
 
-![Column Horizontal Alignments](/img/docs/controls/column/column-horiz-alignment.png){width="80%"}
+![Column Horizontal Alignments](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/column/column-horiz-alignment.png){width="80%"}
 /// caption
 ///
 
@@ -56,7 +56,7 @@ The following example demonstrates adding of list items on-the-fly, as user scro
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-infinite-list.py"
 ```
 
-![Infinite Scroll List](/img/docs/controls/column/column-infinite-list.gif){width="80%"}
+![Infinite Scroll List](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/column/column-infinite-list.gif){width="80%"}
 /// caption
 ///
 

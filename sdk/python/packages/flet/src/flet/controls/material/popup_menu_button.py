@@ -39,7 +39,10 @@ class PopupMenuItem(Control):
 
     checked: Optional[bool] = None
     """
-    If set to `True` or `False` a menu item draws a checkmark.
+    Whether this menu item is checked.
+
+    If set to `True`, a checkmark will be shown on the left of the
+    [`content`][flet.PopupMenuItem.content].
     """
 
     height: Number = 48.0
@@ -51,17 +54,19 @@ class PopupMenuItem(Control):
     """
     The padding of this menu item.
 
-    Note that the `height` value of this menu item may influence the applied padding.
-    For example, if a `height` greater than the height of the sum of the padding and a
-    `content` is provided, then the padding's effect will not be visible.
+    Defaults to `Padding.symmetric(horizontal=12)`.
 
-    Defaults to `padding.symmetric(horizontal=12)`.
+    Note:
+        The [`height`][flet.PopupMenuItem.height] value of this menu item may influence the applied padding.
+
+        For example, if a `height` greater than the height of the sum of the padding and a
+        [`content`][flet.PopupMenuItem.content] is provided, then the padding's effect will not be visible.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
-    control.
+    The cursor to be displayed when a mouse pointer enters or
+    is hovering over this item.
     """
 
     on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None

@@ -10,6 +10,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-buttons/cupertino-button-example.py"
 ```
 
-![Cupertino Button](/img/docs/controls/cupertino-button/cupertino-buttons.png){width="80%"}
+![Cupertino Button](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/cupertino-button/cupertino-buttons.png){width="80%"}
 /// caption
 ///
