@@ -10,6 +10,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/responsive-row/responsive-layout.py"
 ```
 
-![Responsive Row](/img/docs/controls/responsive-row/responsive-row.gif){width="80%"}
+![Responsive Row](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/responsive-row/responsive-row.gif){width="80%"}
 /// caption
 ///

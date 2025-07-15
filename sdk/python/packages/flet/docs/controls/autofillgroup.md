@@ -7,9 +7,9 @@
 ### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/autofill-group/autofill-example.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/autofill-group/autofill-group-basic.py"
 ```
 
-![AutofillGroup Example](/img/docs/controls/autofillgroup/autofillgroup-example.gif){width="80%"}
+![autofill-group-basic](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/autofillgroup/media/autofill-group-basic.gif){width="80%"}
 /// caption
 ///

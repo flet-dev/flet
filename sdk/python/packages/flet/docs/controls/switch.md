@@ -10,7 +10,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/switch/switch-basic.py"
 ```
 
-![Basic Switch](/img/docs/controls/switch/basic-switch.gif){width="80%"}
+![Basic Switch](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/switch/basic-switch.gif){width="80%"}
 /// caption
 ///
 
@@ -20,6 +20,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/switch/switch-with-event.py"
 ```
 
-![Switch with Change Event](/img/docs/controls/switch/switch-with-change-event.gif){width="80%"}
+![Switch with Change Event](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/switch/switch-with-change-event.gif){width="80%"}
 /// caption
 ///

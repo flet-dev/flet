@@ -9,7 +9,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/navigation-drawer/nav-drawer-example.py"
 ```
 
-![Navigation Drawer Start](/img/docs/controls/navigationdrawer/navigation-drawer-start.gif){width="80%"}
+![Navigation Drawer Start](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/navigationdrawer/navigation-drawer-start.gif){width="80%"}
 /// caption
 ///
 
@@ -18,6 +18,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/navigation-drawer/nav-drawer-end.py"
 ```
 
-![Navigation Drawer End](/img/docs/controls/navigationdrawer/navigation-drawer-end.gif){width="80%"}
+![Navigation Drawer End](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/navigationdrawer/navigation-drawer-end.gif){width="80%"}
 /// caption
 ///

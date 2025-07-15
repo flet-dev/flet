@@ -4,23 +4,23 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/checkbox)
 
-### Basic checkboxes
+### Checkbox samples
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/checkbox-basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/checkbox-samples.py"
 ```
 
-![Basic Checkbox](/img/docs/controls/checkbox/basic-checkbox.gif){width="80%"}
+![checkbox-samples](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/checkbox/media/checkbox-samples.gif){width="80%"}
 /// caption
 ///
 
 
-### Checkbox with `on_change` event
+### Listening and handling state changes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/checkbox-with-event.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/listening-and-handling-state-changes.py"
 ```
 
-![Checkbox with Change Event](/img/docs/controls/checkbox/checkbox-with-change-event.gif){width="80%"}
+![listening-and-handling-state-changes](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/checkbox/media/listening-and-handling-state-changes.gif){width="80%"}
 /// caption
 ///

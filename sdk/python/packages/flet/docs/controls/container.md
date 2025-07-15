@@ -11,6 +11,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/container/clickable-container.py"
 ```
 
-![Clickable Container](/img/docs/controls/container/clickable-container.gif){width="80%"}
+![Clickable Container](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/container/clickable-container.gif){width="80%"}
 /// caption
 ///

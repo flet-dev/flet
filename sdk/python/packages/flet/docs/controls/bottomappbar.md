@@ -4,12 +4,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/bottomappbar)
 
-### BottomAppBar
+### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/bottom-app-bar/bottom-appbar.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/bottom-app-bar/bottom-app-bar-with-notched-fab.py"
 ```
 
-![Bottom AppBar](/img/docs/controls/bottom-app-bar/bottom-appbar.png){width="80%"}
+![bottom-app-bar-with-notched-fab](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/bottom-app-bar/media/bottom-app-bar-with-notched-fab.png){width="80%"}
 /// caption
 ///
