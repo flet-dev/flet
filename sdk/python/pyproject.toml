@@ -49,6 +49,10 @@ docs = [
     "pygments>=2.16",
     "markdown-exec[ansi]",
 ]
+all = [
+    { include-group = 'dev' },
+    { include-group = 'docs' },
+]
 
 [tool.ruff]
 line-length = 88
@@ -72,6 +76,7 @@ select = [
     "I"
 ]
 preview = true
+pydocstyle = { convention = 'google' }
 
 [tool.ruff.format]
 quote-style = "double"

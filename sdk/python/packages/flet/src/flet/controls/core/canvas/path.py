@@ -10,7 +10,7 @@ from flet.controls.painting import Paint
 @control("Path")
 class Path(Shape):
     """
-    Draws the a path with given `elements` with the given `Paint`.
+    Draws a path with given `elements` with the given `Paint`.
 
     Whether this shape is filled or stroked (or both) is controlled by `Paint.style`.
     If the path is filled, then sub-paths within it are implicitly closed

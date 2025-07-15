@@ -26,15 +26,14 @@ class Text(Shape):
     The y-axis coordinate of the text's `alignment` point.
     """
 
-    text: Optional[str] = None
+    value: Optional[str] = None
     """
     The text to draw.
     """
 
     style: Optional[TextStyle] = None
     """
-    A text style to draw `text` and `spans` with. The value is the instance of
-    [`TextStyle`][flet.TextStyle] class.
+    A text style to draw `text` and `spans` with.
     """
 
     spans: Optional[list[TextSpan]] = None
@@ -47,7 +46,7 @@ class Text(Shape):
     """
     A point within a text rectangle to determine its position and rotation center.
 
-    Defaults to `alignment.top_left`.
+    Defaults to `Alignment.TOP_LEFT`.
     """
 
     text_align: Optional[TextAlign] = None
@@ -80,6 +79,5 @@ class Text(Shape):
     rotate: Optional[Number] = None
     """
     Text rotation in radians. Text is rotated around the point determined by
-    `alignment`. See code examples above.
-    ```
+    `alignment`.
     """

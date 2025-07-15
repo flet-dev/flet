@@ -7,39 +7,20 @@
 
 ### Tabs
 
-<img src="/img/docs/controls/tabs/tabs-simple.gif" className="screenshot-60"/>
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/tabs-simple.py"
+```
 
+![Tabs](/img/docs/controls/tabs/tabs-simple.gif){width="80%"}
+/// caption
+///
 
+### Nesting tabs
 
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-
-    t = ft.Tabs(
-        selected_index=1,
-        animation_duration=300,
-        tabs=[
-            ft.Tab(
-                text="Tab 1",
-                content=ft.Container(
-                    content=ft.Text("This is Tab 1"), alignment=ft.alignment.center
-                ),
-            ),
-            ft.Tab(
-                tab_content=ft.Icon(ft.Icons.SEARCH),
-                content=ft.Text("This is Tab 2"),
-            ),
-            ft.Tab(
-                text="Tab 3",
-                icon=ft.Icons.SETTINGS,
-                content=ft.Text("This is Tab 3"),
-            ),
-        ],
-        expand=1,
-    )
-
-    page.add(t)
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/nested-tabs.py"
 ```
+
+![Nested Tabs](/img/docs/controls/tabs/nested-tabs.gif){width="80%"}
+/// caption
+///

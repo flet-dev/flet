@@ -14,33 +14,10 @@ or [`Row`][flet.Row] for smooth scrolling.
 
 ### Auto-scrolling ListView
 
-
-
 ```python
-from time import sleep
-import flet as ft
-
-def main(page: ft.Page):
-    page.title = "Auto-scrolling ListView"
-
-    lv = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
-
-    count = 1
-
-    for i in range(0, 60):
-        lv.controls.append(ft.Text(f"Line {count}"))
-        count += 1
-
-    page.add(lv)
-
-    for i in range(0, 60):
-        sleep(1)
-        lv.controls.append(ft.Text(f"Line {count}"))
-        count += 1
-        page.update()
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
 ```
 
-
-<img src="/img/docs/controls/listview/custom-listview.gif" className="screenshot-40"/>
+![Capture](){width="80%"}
+/// caption
+///

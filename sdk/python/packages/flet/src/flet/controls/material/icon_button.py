@@ -7,7 +7,6 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
@@ -18,7 +17,6 @@ from flet.controls.types import (
     UrlTarget,
     VisualDensity,
 )
-from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["IconButton"]
 
@@ -32,16 +30,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
     """
-
-    def __setattr__(self, name, value):
-        if name == "content" and value is not None:
-            deprecated_warning(
-                name="content",
-                reason="Use 'icon' instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
 
     icon: Optional[IconValueOrControl] = None
     """
@@ -221,11 +209,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     on_blur: Optional[ControlEventHandler["IconButton"]] = None
     """
     Called when the control has lost focus.
-    """
-
-    content: Optional[Control] = None  # todo(0.70.3): remove in favor of icon
-    """
-    A Control representing custom button content.
     """
 
     async def focus_async(self):

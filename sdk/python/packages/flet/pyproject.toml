@@ -55,6 +55,10 @@ docs = [
     "pygments>=2.16",
     "markdown-exec[ansi]",
 ]
+all = [
+    { include-group = 'dev' },
+    { include-group = 'docs' },
+]
 
 [build-system]
 requires = ["setuptools"]

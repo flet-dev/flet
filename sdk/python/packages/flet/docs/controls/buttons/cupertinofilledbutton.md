@@ -6,21 +6,10 @@
 
 ### Basic Example
 
-
-
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(
-        ft.CupertinoFilledButton(
-            content=ft.Text("CupertinoFilled"),
-            opacity_on_click=0.3,
-            on_click=lambda e: print("CupertinoFilledButton clicked!"),
-        ),
-    )
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
 ```
 
-<img src="/img/docs/controls/cupertino-filled-button/cupertino-filled-button.png" className="screenshot-20" />
+![Capture](){width="80%"}
+/// caption
+///

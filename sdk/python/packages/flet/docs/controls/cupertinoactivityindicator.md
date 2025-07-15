@@ -6,26 +6,10 @@
 
 ### Basic Example
 
-
-
 ```python
-import flet as ft
-
-def main(page):
-    page.theme_mode = ft.ThemeMode.LIGHT
-
-    page.add(
-        ft.CupertinoActivityIndicator(
-            radius=50,
-            color=ft.Colors.RED,
-            animating=True,
-        )
-    )
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-information-displays/cupertino-activity-indicator-example.py"
 ```
 
-
-
-<img src="/img/docs/controls/cupertino-activity-indicator/basic-cupertino-activity-indicator.png" className="screenshot-40"/>
-
+![Cupertino Activity Indicator](/img/docs/controls/cupertino-activity-indicator/basic-cupertino-activity-indicator.png){width="80%"}
+/// caption
+///

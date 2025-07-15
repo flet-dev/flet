@@ -6,19 +6,10 @@
 
 ### Filled tonal button
 
-
+![Filled Tonal Button](/img/docs/controls/filled-tonal-button/basic-filled-tonal-buttons.png){width="80%"}
+/// caption
+///
 
 ```python
-import flet as ft
-
-
-def main(page: ft.Page):
-    page.title = "Basic filled tonal buttons"
-    page.add(
-        ft.FilledTonalButton(text="Filled tonal button"),
-        ft.FilledTonalButton("Disabled button", disabled=True),
-        ft.FilledTonalButton("Button with icon", icon="add"),
-    )
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/buttons/filled-tonal-button/filled-tonal-button-example.py"
 ```

@@ -6,26 +6,10 @@
 
 ### Basic example
 
-
-
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(
-        ft.AutoComplete(
-            suggestions=[
-                ft.AutoCompleteSuggestion(key="one 1", value="One"),
-                ft.AutoCompleteSuggestion(key="two 2", value="Two"),
-                ft.AutoCompleteSuggestion(key="three 3", value="Three"),
-            ],
-            on_select=lambda e: print(e.control.selected_index, e.selection),
-        )
-    )
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/auto-complete/auto-complete-example.py"
 ```
 
-
-<img src="/img/docs/controls/autocomplete/autocomplete-example.gif" className="screenshot-40"/>
-
+![AutoComplete Example](/img/docs/controls/autocomplete/autocomplete-example.gif){width="80%"}
+/// caption
+///

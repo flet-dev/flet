@@ -4,14 +4,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/alertdialog)
 
-### Example 1
-
-Displays a basic (non-modal) and a modal dialog.
+### Basic and modal dialogs
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1/python/controls/dialogs-alerts-panels/alert-dialog/dialogs.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/alert-dialog/dialogs.py"
 ```
 
-![Example 1](../../../assets/controls/alert-dialog/example-1.gif){width="80%"}
+![AlertDialog with custom content](/img/docs/controls/alertdialog/alertdialog-with-custom-content.gif){width="80%"}
 /// caption
 ///

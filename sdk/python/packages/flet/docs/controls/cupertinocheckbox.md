@@ -7,25 +7,11 @@
 
 ### CupertinoCheckbox and adaptive CheckBox example
 
-
-
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(
-        ft.CupertinoCheckbox(label="Cupertino Checkbox", value=True),
-        ft.Checkbox(label="Material Checkbox", value=True),
-        ft.Container(height=20),
-        ft.Text(
-            "Adaptive Checkbox shows as CupertinoCheckbox on macOS and iOS and as Checkbox on other platforms:"
-        ),
-        ft.Checkbox(adaptive=True, label="Adaptive Checkbox", value=True),
-    )
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
 ```
 
-
-<img src="/img/docs/controls/cupertinocheckbox/cupertinocheckbox.png" className="screenshot-70" />
+![Capture](){width="80%"}
+/// caption
+///
 

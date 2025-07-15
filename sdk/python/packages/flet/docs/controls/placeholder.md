@@ -7,22 +7,11 @@
 ### Basic example
 
 
-
 ```python
-import flet as ft
-
-
-def main(page: ft.Page):
-    page.add(
-        ft.Placeholder(
-            expand=True,
-            color=ft.Colors.random_color()  # random material color
-        )
-    )
-
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
 ```
 
+![Capture](){width="80%"}
+/// caption
+///
 
-<img src="/img/docs/controls/placeholder/basic-example.png" className="screenshot-100"/>

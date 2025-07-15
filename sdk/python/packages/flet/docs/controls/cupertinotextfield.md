@@ -6,29 +6,10 @@
 
 ### Basic textfields
 
-
-
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-
-    page.add(
-        ft.TextField(
-            label="Material",
-        ),
-        ft.CupertinoTextField(
-            placeholder_text="Placeholder",
-        ),
-        ft.TextField(
-            adaptive=True,
-            label="Adaptive",
-        ),
-    )
-
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
 ```
 
-
-<img src="/img/docs/controls/cupertinotextfield/basic-cupertino-textfield.png" className="screenshot-40"/>
+![Capture](){width="80%"}
+/// caption
+///

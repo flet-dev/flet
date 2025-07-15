@@ -58,9 +58,9 @@ class Option(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.key is not None or self.text is not None, (
-            "key or text must be specified"
-        )
+        assert (
+            self.key is not None or self.text is not None
+        ), "key or text must be specified"
 
 
 @control("DropdownM2")
@@ -102,24 +102,14 @@ class DropdownM2(FormFieldControl):
     select_icon: Optional[IconValueOrControl] = None
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use
-    for the drop-down select button's icon. Defaults to an
-    `Icon(ft.Icons.ARROW_DROP_DOWN)`.
-
-    Example with icon name:
-    ```
-    icon=ft.Icons.BOOKMARK
-    ```
-    Example with Control:
-    ```
-    icon=ft.Icon(ft.Icons.BOOKMARK)
-    ```
+    for the drop-down select button's icon. 
+    
+    Defaults to `Icon(ft.Icons.ARROW_DROP_DOWN)`.
     """
 
     elevation: Number = 8
     """
     The dropdown's elevation.
-
-    Defaults to `8`.
     """
 
     item_height: Optional[Number] = None
@@ -135,8 +125,6 @@ class DropdownM2(FormFieldControl):
     select_icon_size: Number = 24.0
     """
     The size of the icon button which wraps `select_icon`.
-
-    Defaults to `24.0`.
     """
 
     enable_feedback: Optional[bool] = None

@@ -6,20 +6,6 @@
 
 ### Filled button
 
-
-
 ```python
-import flet as ft
-
-
-def main(page: ft.Page):
-    page.title = "Basic filled buttons"
-    page.add(
-        ft.FilledButton(text="Filled button"),
-        ft.FilledButton("Disabled button", disabled=True),
-        ft.FilledButton("Button with icon", icon="add"),
-    )
-
-ft.run(main)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
 ```
-

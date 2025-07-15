@@ -38,7 +38,7 @@ class ShapeBorder:
     """
 
 
-@dataclass(kw_only=True)
+@dataclass
 class OutlinedBorder(ShapeBorder):
     """
     An abstract class that can be used to create custom borders.
@@ -90,6 +90,7 @@ class RoundedRectangleBorder(OutlinedBorder):
 
     radius: Optional[BorderRadiusValue] = None
     """
+    The radius for each corner.
     """
 
     def __post_init__(self):
@@ -139,13 +140,9 @@ class CircleBorder(OutlinedBorder):
 
 
 @dataclass
-class BeveledRectangleBorder(OutlinedBorder):
+class BeveledRectangleBorder(RoundedRectangleBorder):
     """
     A border with beveled rectangle corners.
-    """
-
-    radius: Optional[BorderRadiusValue] = None
-    """
     """
 
     def __post_init__(self):
@@ -167,14 +164,9 @@ class BeveledRectangleBorder(OutlinedBorder):
 
 
 @dataclass
-class ContinuousRectangleBorder(OutlinedBorder):
+class ContinuousRectangleBorder(RoundedRectangleBorder):
     """
     A border with continuous rectangle corners.
-    """
-
-    radius: Optional[BorderRadiusValue] = None
-    """
-    The radius for each corner.
     """
 
     def __post_init__(self):
@@ -193,6 +185,9 @@ class ContinuousRectangleBorder(OutlinedBorder):
             side=side if side is not None else self.side,
             radius=radius if radius is not None else self.radius,
         )
+
+
+CircleBorder()
 
 
 @dataclass
