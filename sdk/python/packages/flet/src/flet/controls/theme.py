@@ -586,59 +586,325 @@ class TabsTheme:
 
 @dataclass
 class SystemOverlayStyle:
+    """
+    Allows the customization of the mobile's system overlay (which consists of the 
+    system status and navigation bars) appearance.
+    """
+
     status_bar_color: Optional[ColorValue] = None
+    """
+    The color of the status bar.
+    """
+    
     system_navigation_bar_color: Optional[ColorValue] = None
+    """
+    The color of the system navigation bar.
+    """
+    
     system_navigation_bar_divider_color: Optional[ColorValue] = None
+    """
+    The color of the divider between the system navigation bar and the app content.
+    """
+    
     enforce_system_navigation_bar_contrast: Optional[bool] = None
+    """
+    Indicates whether the system should enforce contrast for the status bar when 
+    setting a transparent status bar.
+    """
+    
     enforce_system_status_bar_contrast: Optional[bool] = None
+    """
+    Indicates whether the system should enforce contrast for the navigation bar when 
+    setting a transparent navigation bar.
+    """
+    
     system_navigation_bar_icon_brightness: Optional[Brightness] = None
+    """
+    The [`Brightness`][flet.Brightness] of the system navigation bar icons. Either 
+    `Brightness.DARK` or `Brightness.LIGHT`.
+    """
+    
     status_bar_brightness: Optional[Brightness] = None
+    """
+    The [`Brightness`][flet.Brightness] of the status bar. Either `Brightness.DARK` or 
+    `Brightness.LIGHT`.
+    """
+    
     status_bar_icon_brightness: Optional[Brightness] = None
+    """
+    The [`Brightness`][flet.Brightness] of the status bar icons. Either 
+    `Brightness.DARK` or `Brightness.LIGHT`.
+    """
 
 
 @dataclass
 class DialogTheme:
+    """
+    Customizes the appearance of [`AlertDialog`][flet.AlertDialog] across the app.
+    """
+    
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`AlertDialog.bgcolor`][flet.AlertDialog.bgcolor] in 
+    all descendant dialog controls.
+    """
+    
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.shadow_color`][flet.AlertDialog.shadow_color] in all descendant 
+    dialog controls.
+    """
+    
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.surface_tint_color`][flet.AlertDialog.surface_tint_color] in all 
+    descendant dialog controls.
+    """
+    
     icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.icon_color`][flet.AlertDialog.icon_color] in all descendant dialog 
+    controls.
+    """
+    
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.elevation`][flet.AlertDialog.elevation] in all descendant dialog 
+    controls.
+    """
+    
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of [`AlertDialog.shape`][flet.AlertDialog.shape] in all 
+    descendant dialog controls.
+    """
+    
     title_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.title_text_style`][flet.AlertDialog.title_text_style] in all 
+    descendant dialog controls.
+    """
+    
     content_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.content_text_style`].[flet.AlertDialog.content_text_style] in all 
+    descendant dialog controls.
+    """
+    
     alignment: Optional[Alignment] = None
+    """
+    Overrides the default value of [`AlertDialog.alignment`][flet.AlertDialog.alignment] 
+    in all descendant dialog controls.
+    """
+    
     actions_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.actions_padding`][flet.AlertDialog.actions_padding] in all descendant 
+    dialog controls.
+    """
+    
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.clip_behavior`][flet.AlertDialog.clip_behavior] in all descendant 
+    dialog controls.
+    """
+    
     barrier_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.barrier_color`][flet.AlertDialog.barrier_color] in all descendant 
+    dialog controls.
+    """
+    
     inset_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of 
+    [`AlertDialog.inset_padding`][flet.AlertDialog.inset_padding] in all descendant 
+    dialog controls.
+    """
 
 
 @dataclass
 class ElevatedButtonTheme:
+    """
+    Customizes the appearance of [`ElevatedButton`][flet.ElevatedButton] across the app.
+    """
+    
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.bgcolor`][flet.ElevatedButton.bgcolor] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.foreground_color`][flet.ElevatedButton.foreground_color] in all 
+    descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.icon_color`][flet.ElevatedButton.icon_color] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.shadow_color`][flet.ElevatedButton.shadow_color] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     disabled_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.disabled_bgcolor`][flet.ElevatedButton.disabled_bgcolor] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     disabled_foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.disabled_foreground_color`][flet.ElevatedButton.disabled_foreground_color] 
+    in all descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     disabled_icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.disabled_icon_color`][flet.ElevatedButton.disabled_icon_color] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     overlay_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.overlay_color`][flet.ElevatedButton.overlay_color] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.surface_tint_color`][flet.ElevatedButton.surface_tint_color] in 
+    all descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.elevation`][flet.ElevatedButton.elevation] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.padding`][flet.ElevatedButton.padding] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     enable_feedback: Optional[bool] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.enable_feedback`][flet.ElevatedButton.enable_feedback] in all 
+    descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     disabled_mouse_cursor: Optional[MouseCursor] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.disabled_mouse_cursor`][flet.ElevatedButton.disabled_mouse_cursor] 
+    in all descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     enabled_mouse_cursor: Optional[MouseCursor] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.enabled_mouse_cursor`][flet.ElevatedButton.enabled_mouse_cursor] 
+    in all descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.shape`][flet.ElevatedButton.shape] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.text_style`][flet.ElevatedButton.text_style] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     visual_density: Optional[VisualDensity] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.visual_density`][flet.ElevatedButton.visual_density] in all 
+    descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     border_side: Optional[BorderSide] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.border_side`][flet.ElevatedButton.border_side] in all 
+    descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     animation_duration: Optional[DurationValue] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.animation_duration`][flet.ElevatedButton.animation_duration] in 
+    all descendant [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     alignment: Optional[Alignment] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.alignment`][flet.ElevatedButton.alignment] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     icon_size: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.icon_size`][flet.ElevatedButton.icon_size] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     fixed_size: Optional[Size] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.fixed_size`][flet.ElevatedButton.fixed_size] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     maximum_size: Optional[Size] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.maximum_size`][flet.ElevatedButton.maximum_size] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
+    
     minimum_size: Optional[Size] = None
+    """
+    Overrides the default value of 
+    [`ElevatedButton.minimum_size`][flet.ElevatedButton.minimum_size] in all descendant 
+    [`ElevatedButton`][flet.ElevatedButton] controls.
+    """
 
 
 @dataclass
@@ -658,32 +924,179 @@ class FilledButtonTheme(ElevatedButtonTheme):
 
 @dataclass
 class IconButtonTheme:
+    """
+    Customizes the appearance of [`IconButton`][flet.IconButton] across the app.
+    """
     # from ElevatedButtonTheme (excluding icon_color, disabled_icon_color, text_style)
+    
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.bgcolor`][flet.IconButton.bgcolor] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.foreground_color`][flet.IconButton.foreground_color] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.shadow_color`][flet.IconButton.shadow_color] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     disabled_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.disabled_bgcolor`][flet.IconButton.disabled_bgcolor] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     disabled_foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.disabled_foreground_color`][flet.IconButton.disabled_foreground_color] 
+    in all descendant [`IconButton`][flet.IconButton] controls.
+    """
+
     overlay_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.overlay_color`][flet.IconButton.overlay_color] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.surface_tint_color`][flet.IconButton.surface_tint_color] in all 
+    descendant [`IconButton`][flet.IconButton] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`IconButton.elevation`][flet.IconButton.elevation] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+    
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.padding`][flet.IconButton.padding] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     enable_feedback: Optional[bool] = None
+    """
+    Overrides the default value of 
+    [`IconButton.enable_feedback`][flet.IconButton.enable_feedback] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     disabled_mouse_cursor: Optional[MouseCursor] = None
+    """
+    Overrides the default value of 
+    [`IconButton.disabled_mouse_cursor`][flet.IconButton.disabled_mouse_cursor] in all 
+    descendant [`IconButton`][flet.IconButton] controls.
+    """
+
     enabled_mouse_cursor: Optional[MouseCursor] = None
+    """
+    Overrides the default value of 
+    [`IconButton.enabled_mouse_cursor`][flet.IconButton.enabled_mouse_cursor] in all 
+    descendant [`IconButton`][flet.IconButton] controls.
+    """
+    
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of 
+    [`IconButton.shape`][flet.IconButton.shape] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Overrides the default value of 
+    [`IconButton.visual_density`][flet.IconButton.visual_density] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     border_side: Optional[BorderSide] = None
+    """
+    Overrides the default value of 
+    [`IconButton.border_side`][flet.IconButton.border_side] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     animation_duration: Optional[DurationValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.animation_duration`][flet.IconButton.animation_duration] in all 
+    descendant [`IconButton`][flet.IconButton] controls.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Overrides the default value of 
+    [`IconButton.alignment`][flet.IconButton.alignment] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+    
     icon_size: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`IconButton.icon_size`][flet.IconButton.icon_size] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     fixed_size: Optional[Size] = None
+    """
+    Overrides the default value of 
+    [`IconButton.fixed_size`][flet.IconButton.fixed_size] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     maximum_size: Optional[Size] = None
+    """
+    Overrides the default value of 
+    [`IconButton.maximum_size`][flet.IconButton.maximum_size] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     minimum_size: Optional[Size] = None
+    """
+    Overrides the default value of 
+    [`IconButton.minimum_size`][flet.IconButton.minimum_size] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+    
     # Icon Button Theme
     focus_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.focus_color`][flet.IconButton.focus_color] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     highlight_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.highlight_color`][flet.IconButton.highlight_color] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
+
     hover_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`IconButton.hover_color`][flet.IconButton.hover_color] in all descendant 
+    [`IconButton`][flet.IconButton] controls.
+    """
 
 
 @dataclass
