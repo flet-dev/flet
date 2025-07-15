@@ -73,7 +73,8 @@ class FletBackend extends ChangeNotifier {
   PageMediaData media = PageMediaData(
       padding: PaddingData(EdgeInsets.zero),
       viewPadding: PaddingData(EdgeInsets.zero),
-      viewInsets: PaddingData(EdgeInsets.zero));
+      viewInsets: PaddingData(EdgeInsets.zero),
+      devicePixelRatio: 0);
   TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;

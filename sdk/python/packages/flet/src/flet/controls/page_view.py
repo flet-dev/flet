@@ -50,6 +50,7 @@ class PageMediaData:
     padding: Padding
     view_padding: Padding
     view_insets: Padding
+    device_pixel_ratio: float
 
 
 @dataclass
@@ -100,7 +101,14 @@ class PageView(AdaptiveControl):
     width: OptionalNumber = None
     height: OptionalNumber = None
     title: Optional[str] = None
-    media: Optional[PageMediaData] = None
+    media: PageMediaData = field(
+        default_factory=lambda: PageMediaData(
+            padding=Padding.zero(),
+            view_padding=Padding.zero(),
+            view_insets=Padding.zero(),
+            device_pixel_ratio=0,
+        )
+    )
     scroll_event_interval: OptionalNumber = None
     on_resize: OptionalEventHandler["PageResizeEvent"] = None
     """
