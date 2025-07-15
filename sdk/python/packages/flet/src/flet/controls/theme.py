@@ -419,34 +419,169 @@ class TextTheme:
 
 @dataclass
 class ScrollbarTheme:
+    """
+    Customizes the colors, thickness, and shape of scrollbars across the app.
+    """
+    
     thumb_visibility: Optional[ControlStateValue[bool]] = None
+    """
+    Indicates that the scrollbar thumb should be visible, even when a scroll is not 
+    underway. When `False`, the scrollbar will be shown during scrolling and will fade 
+    out otherwise. When `True`, the scrollbar will always be visible and never fade 
+    out. Property value could be either a single boolean value or a dictionary with 
+    `ft.ControlState` as keys and boolean as values.
+    """
+    
     thickness: Optional[ControlStateValue[Optional[Number]]] = None
+    """
+    The thickness of the scrollbar in the cross axis of the scrollable. Property value 
+    could be either a single float value or a dictionary with `ft.ControlState` as keys 
+    and float as values.
+    """
+    
     track_visibility: Optional[ControlStateValue[bool]] = None
+    """
+    Indicates that the scrollbar track should be visible. When `True`, the scrollbar 
+    track will always be visible so long as the thumb is visible. If the scrollbar 
+    thumb is not visible, the track will not be visible either. Defaults to `False` 
+    when `None`. If this property is `None`, then `ScrollbarTheme.track_visibility` of 
+    `Theme.scrollbar_theme` is used. If that is also `None`, the default value is 
+    `False`. Property value could be either a single boolean value or a dictionary with 
+    `ft.ControlState` as keys and boolean as values.
+    """
+    
     radius: Optional[Number] = None
+    """
+    The Radius of the scrollbar thumb's rounded rectangle corners.
+    """
+    
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default Color of the Scrollbar thumb. The value is either a single 
+    color string or `ft.ControlState` dictionary.
+    """
+    
     track_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default Color of the Scrollbar track. The value is either a single 
+    color string or `ft.ControlState` dictionary.
+    """
+    
     track_border_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default Color of the Scrollbar track border. The value is either a 
+    single color string or `ft.ControlState` dictionary.
+    """
+    
     cross_axis_margin: Optional[Number] = None
+    """
+    Distance from the scrollbar thumb to the nearest cross axis edge in logical pixels. 
+    The scrollbar track consumes this space. Must not be null and defaults to 0.
+    """
+    
     main_axis_margin: Optional[Number] = None
+    """
+    Distance from the scrollbar thumb's start and end to the edge of the viewport in 
+    logical pixels. It affects the amount of available paint area. The scrollbar track 
+    consumes this space. Mustn't be null and defaults to 0.
+    """
+    
     min_thumb_length: Optional[Number] = None
+    """
+    The preferred smallest size the scrollbar thumb can shrink to when the total 
+    scrollable extent is large, the current visible viewport is small, and the viewport 
+    is not overscrolled.
+    """
+
     interactive: Optional[bool] = None
+    """
+    Whether the Scrollbar should be interactive and respond to dragging on the thumb, 
+    or tapping in the track area. When `False`, the scrollbar will not respond to 
+    gesture or hover events, and will allow to click through it. Defaults to `True` 
+    when `None`, unless on Android, which will default to `False` when `None`.
+    """
 
 
 @dataclass
 class TabsTheme:
+    """
+    Customizes the appearance of [`Tabs`][flet.Tabs] control across the app.
+    """
+
     divider_color: Optional[ColorValue] = None
+    """
+    The color of the divider.
+    """
+    
     indicator_border_radius: Optional[BorderRadiusValue] = None
+    """
+    The radius of the indicator's corners.
+    """
+    
     indicator_border_side: Optional[BorderSide] = None
+    """
+    The color and weight of the horizontal line drawn below the selected tab.
+    """
+    
     indicator_padding: Optional[PaddingValue] = None
+    """
+    Locates the selected tab's underline relative to the tab's boundary. The 
+    `indicator_tab_size` property can be used to define the tab indicator's bounds in 
+    terms of its (centered) tab widget with `False`, or the entire tab with `True`.
+    """
+    
     indicator_color: Optional[ColorValue] = None
+    """
+    The color of the line that appears below the selected tab.
+    """
+    
     indicator_tab_size: Optional[bool] = None
+    """
+    `True` for indicator to take entire tab.
+    """
+    
     label_color: Optional[ColorValue] = None
+    """
+    The color of selected tab labels.
+    """
+    
     unselected_label_color: Optional[ColorValue] = None
+    """
+    The color of unselected tab labels.
+    """
+    
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Defines the ink response focus, hover, and splash colors. If specified, it is 
+    resolved against one of `ControlState.FOCUSED`, `ControlState.HOVERED`, and 
+    `ControlState.PRESSED`.
+    """
+    
     mouse_cursor: Optional[ControlStateValue[Optional[MouseCursor]]] = None
+    """
+    The cursor for a mouse pointer when it enters or is hovering over the individual 
+    tabs.
+    """
+    
     label_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for [`Tabs.label_padding`][flet.Tabs.label_padding].
+
+    If there are few tabs with both icon and text and few tabs with only icon or text, 
+    this padding is vertically adjusted to provide uniform padding to all tabs.
+    """
+    
     label_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for 
+    [`Tabs.label_text_style`][flet.Tabs.label_text_style].
+    """
+    
     unselected_label_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for 
+    [`Tabs.unselected_label_text_style`][flet.Tabs.unselected_label_text_style].
+    """
 
 
 @dataclass
