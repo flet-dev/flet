@@ -1391,25 +1391,144 @@ class ChipTheme:
 
 @dataclass
 class FloatingActionButtonTheme:
+    """
+    Customizes the appearance of [`FloatingActionButton`][flet.FloatingActionButton]
+    across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.bgcolor`][flet.FloatingActionButton.bgcolor] in all
+    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     hover_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.hover_color`][flet.FloatingActionButton.hover_color] in all
+    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     focus_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.focus_color`][flet.FloatingActionButton.focus_color] in all
+    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.foreground_color`][flet.FloatingActionButton.foreground_color]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     splash_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.splash_color`][flet.FloatingActionButton.splash_color] in all
+    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.elevation`][flet.FloatingActionButton.elevation] in all
+    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     focus_elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.focus_elevation`][flet.FloatingActionButton.focus_elevation]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     hover_elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.hover_elevation`][flet.FloatingActionButton.hover_elevation]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     highlight_elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.highlight_elevation`][flet.FloatingActionButton.highlight_elevation]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     disabled_elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.disabled_elevation`][flet.FloatingActionButton.disabled_elevation]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.shape`][flet.FloatingActionButton.shape] in all
+    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     enable_feedback: Optional[bool] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.enable_feedback`][flet.FloatingActionButton.enable_feedback]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     extended_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.extended_padding`][flet.FloatingActionButton.extended_padding]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     extended_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.extended_text_style`][flet.FloatingActionButton.extended_text_style]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     extended_icon_label_spacing: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.extended_icon_label_spacing`][flet.FloatingActionButton.extended_icon_label_spacing]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     extended_size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.extended_size_constraints`][flet.FloatingActionButton.extended_size_constraints]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.size_constraints`][flet.FloatingActionButton.size_constraints]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     large_size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.large_size_constraints`][flet.FloatingActionButton.large_size_constraints]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
     small_size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`FloatingActionButton.small_size_constraints`][flet.FloatingActionButton.small_size_constraints]
+    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    """
+
 
 
 @dataclass
