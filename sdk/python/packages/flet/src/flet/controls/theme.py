@@ -1623,82 +1623,96 @@ class AppBarTheme:
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default value of `AppBar.color` in all descendant `AppBar` controls.
+    Overrides the default value of [`AppBar.color`][flet.AppBar.color] in all
+    descendant [`AppBar`][flet.AppBar] controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of `AppBar.bgcolor` in all descendant `AppBar` controls.
+    Overrides the default value of [`AppBar.bgcolor`][flet.AppBar.bgcolor] in all
+    descendant [`AppBar`][flet.AppBar] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of `AppBar.shadow_color` in all descendant `AppBar`
-    controls.
+    Overrides the default value of [`AppBar.shadow_color`][flet.AppBar.shadow_color] in
+    all descendant [`AppBar`][flet.AppBar] controls.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default value of `AppBar.surface_tint_color` in all descendant
-    `AppBar` controls.
+    Overrides the default value of
+    [`AppBar.surface_tint_color`][flet.AppBar.surface_tint_color] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     foreground_color: Optional[ColorValue] = None
     """
-    TBD
+    Overrides the default value of
+    [`AppBar.foreground_color`][flet.AppBar.foreground_color] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of `AppBar.elevation` in all descendant `AppBar`
-    controls.
+    Overrides the default value of [`AppBar.elevation`][flet.AppBar.elevation] in all
+    descendant [`AppBar`][flet.AppBar] controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of `AppBar.shape` in all descendant `AppBar` controls.
+    Overrides the default value of [`AppBar.shape`][flet.AppBar.shape] in all
+    descendant [`AppBar`][flet.AppBar] controls.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of `AppBar.title_text_style` in all descendant
-    `AppBar` controls.
+    Overrides the default value of
+    [`AppBar.title_text_style`][flet.AppBar.title_text_style] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     toolbar_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of `AppBar.toolbar_text_style` in all descendant
-    `AppBar` controls.
+    Overrides the default value of
+    [`AppBar.toolbar_text_style`][flet.AppBar.toolbar_text_style] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     center_title: Optional[bool] = None
     """
-    Overrides the default value of `AppBar.center_title` in all descendant `AppBar`
-    controls.
+    Overrides the default value of [`AppBar.center_title`][flet.AppBar.center_title] in
+    all descendant [`AppBar`][flet.AppBar] controls.
     """
 
     title_spacing: Optional[Number] = None
     """
-    Overrides the default value of `AppBar.title_spacing` in all descendant `AppBar`
-    controls.
+    Overrides the default value of
+    [`AppBar.title_spacing`][flet.AppBar.title_spacing] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     scroll_elevation: Optional[Number] = None
     """
-    Overrides the default value of `AppBar.scroll_elevation` in all descendant
-    `AppBar` controls.
+    Overrides the default value of
+    [`AppBar.scroll_elevation`][flet.AppBar.scroll_elevation] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     toolbar_height: Optional[Number] = None
     """
-    Overrides the default value of `AppBar.toolbar_height` in all descendant `AppBar`
-    controls.
+    Overrides the default value of
+    [`AppBar.toolbar_height`][flet.AppBar.toolbar_height] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
 
     actions_padding: Optional[PaddingValue] = None
     """
-    TBD
+    Overrides the default value of
+    [`AppBar.actions_padding`][flet.AppBar.actions_padding] in all descendant
+    [`AppBar`][flet.AppBar] controls.
     """
+
 
 
 @dataclass
