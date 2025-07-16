@@ -1717,13 +1717,55 @@ class AppBarTheme:
 
 @dataclass
 class BottomAppBarTheme:
+    """
+    Customizes the appearance of [`BottomAppBar`][flet.BottomAppBar] controls across
+    the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`BottomAppBar.bgcolor`][flet.BottomAppBar.bgcolor]
+    in all descendant [`BottomAppBar`][flet.BottomAppBar] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`BottomAppBar.shadow_color`][flet.BottomAppBar.shadow_color] in all descendant
+    [`BottomAppBar`][flet.BottomAppBar] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`BottomAppBar.surface_tint_color`][flet.BottomAppBar.surface_tint_color] in all
+    descendant [`BottomAppBar`][flet.BottomAppBar] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`BottomAppBar.elevation`][flet.BottomAppBar.elevation] in all descendant 
+    `BottomAppBar`][flet.BottomAppBar] controls.
+    """
+
     height: Optional[Number] = None
+    """
+    Overrides the default value of [`BottomAppBar.height`][flet.BottomAppBar.height] in
+    all descendant [`BottomAppBar`][flet.BottomAppBar] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of [`BottomAppBar.padding`][flet.BottomAppBar.padding]
+    in all descendant [`BottomAppBar`][flet.BottomAppBar] controls.
+    """
+
     shape: Optional[NotchShape] = None
+    """
+    Overrides the default value of [`BottomAppBar.shape`][flet.BottomAppBar.shape] in
+    all descendant [`BottomAppBar`][flet.BottomAppBar] controls.
+    """
 
 
 @dataclass
