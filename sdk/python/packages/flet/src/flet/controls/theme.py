@@ -1101,55 +1101,292 @@ class IconButtonTheme:
 
 @dataclass
 class BottomSheetTheme:
+    """
+    Customizes the appearance of [`BottomSheet`][flet.BottomSheet] across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`BottomSheet.bgcolor`][flet.BottomSheet.bgcolor] in 
+    all descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+    
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.shadow_color`][flet.BottomSheet.shadow_color] in all descendant 
+    [`BottomSheet`][flet.BottomSheet] controls.
+    """
+    
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.surface_tint_color`][flet.BottomSheet.surface_tint_color] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     drag_handle_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.drag_handle_color`][flet.BottomSheet.drag_handle_color] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+    
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.elevation`][flet.BottomSheet.elevation] in all descendant 
+    [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of [`BottomSheet.shape`][flet.BottomSheet.shape] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+    
     show_drag_handle: Optional[bool] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.show_drag_handle`][flet.BottomSheet.show_drag_handle] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     modal_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.modal_bgcolor`][flet.BottomSheet.modal_bgcolor] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     modal_elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.modal_elevation`][flet.BottomSheet.modal_elevation] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.clip_behavior`][flet.BottomSheet.clip_behavior] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.size_constraints`][flet.BottomSheet.size_constraints] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     modal_barrier_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`BottomSheet.modal_barrier_color`][flet.BottomSheet.modal_barrier_color] in all 
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
 
 
 @dataclass
 class CardTheme:
+    """
+    Customizes the appearance of [`Card`][flet.Card] across the app.
+    """
+
     color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Card.clip_behavior`][flet.Card.clip_behavior] in 
+    all descendant [`Card`][flet.Card] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Card.shadow_color`][flet.Card.shadow_color] in 
+    all descendant [`Card`][flet.Card] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Card.surface_tint_color`][flet.Card.surface_tint_color] in all descendant 
+    [`Card`][flet.Card] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`Card.elevation`][flet.Card.elevation] in all descendant [`Card`][flet.Card] 
+    controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of [`Card.shape`][flet.Card.shape] in all descendant 
+    [`Card`][flet.Card] controls.
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    Overrides the default value of [`Card.clip_behavior`][flet.Card.clip_behavior] in 
+    all descendant [`Card`][flet.Card] controls.
+    """
+
     margin: Optional[MarginValue] = None
+    """
+    Overrides the default value of [`Card.margin`][flet.Card.margin] in all descendant 
+    [`Card`][flet.Card] controls.
+    """
 
 
 @dataclass
 class ChipTheme:
+    """
+    Customizes the appearance of [`Chip`][flet.Chip] across the app.
+    """
+
     color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`Chip.color`][flet.Chip.color] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+    
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Chip.bgcolor`][flet.Chip.bgcolor] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Chip.shadow_color`][flet.Chip.shadow_color] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.surface_tint_color`][flet.Chip.surface_tint_color] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     disabled_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.disabled_color`][flet.Chip.disabled_color] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     selected_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.selected_color`][flet.Chip.selected_color] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     checkmark_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.checkmark_color`][flet.Chip.checkmark_color] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     delete_icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.delete_icon_color`][flet.Chip.delete_icon_color] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     secondary_selected_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.secondary_selected_color`][flet.Chip.secondary_selected_color] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     selected_shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`Chip.selected_shadow_color`][flet.Chip.selected_shadow_color] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of [`Chip.elevation`][flet.Chip.elevation] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     click_elevation: Optional[Number] = None
+    """
+    Overrides the default value of [`Chip.click_elevation`][flet.Chip.click_elevation] 
+    in all descendant [`Chip`][flet.Chip] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of [`Chip.shape`][flet.Chip.shape] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of [`Chip.padding`][flet.Chip.padding] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     label_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of [`Chip.label_padding`][flet.Chip.label_padding] in 
+    all descendant [`Chip`][flet.Chip] controls.
+    """
+
     label_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of 
+    [`Chip.label_text_style`][flet.Chip.label_text_style] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     secondary_label_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of 
+    [`Chip.secondary_label_text_style`][flet.Chip.secondary_label_text_style] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     border_side: Optional[BorderSide] = None
+    """
+    Overrides the default value of [`Chip.border_side`][flet.Chip.border_side] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     brightness: Optional[Brightness] = None
+    """
+    Overrides the default value of [`Chip.brightness`][flet.Chip.brightness] in all 
+    descendant [`Chip`][flet.Chip] controls.
+    """
+
     show_checkmark: Optional[bool] = None
+    """
+    Overrides the default value of [`Chip.show_checkmark`][flet.Chip.show_checkmark] in 
+    all descendant [`Chip`][flet.Chip] controls.
+    """
+
     avatar_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of 
+    [`Chip.avatar_constraints`][flet.Chip.avatar_constraints] in all descendant 
+    [`Chip`][flet.Chip] controls.
+    """
+
     delete_icon_size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of 
+    [`Chip.delete_icon_size_constraints`][flet.Chip.delete_icon_size_constraints] in 
+    all descendant [`Chip`][flet.Chip] controls.
+    """
 
 
 @dataclass
