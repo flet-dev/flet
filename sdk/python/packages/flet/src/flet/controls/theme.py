@@ -1533,17 +1533,86 @@ class FloatingActionButtonTheme:
 
 @dataclass
 class NavigationRailTheme:
+    """
+    Customizes the appearance of [`NavigationRail`][flet.NavigationRail] across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`NavigationRail.bgcolor`][flet.NavigationRail.bgcolor] in all descendant 
+    [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     indicator_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.indicator_color`][flet.NavigationRail.indicator_color] in all
+    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of 
+    [`NavigationRail.elevation`][flet.NavigationRail.elevation]in all descendant 
+    [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     indicator_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.indicator_shape`][flet.NavigationRail.indicator_shape] in all
+    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     unselected_label_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.unselected_label_text_style`][flet.NavigationRail.unselected_label_text_style]
+    in all descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     selected_label_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.selected_label_text_style`][flet.NavigationRail.selected_label_text_style]
+    in all descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     label_type: Optional[NavigationRailLabelType] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.label_type`][flet.NavigationRail.label_type] in all descendant
+    [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     min_width: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.min_width`][flet.NavigationRail.min_width] in all descendant
+    [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     min_extended_width: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.min_extended_width`][flet.NavigationRail.min_extended_width] in all
+    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     group_alignment: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.group_alignment`][flet.NavigationRail.group_alignment] in all
+    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
+
     use_indicator: Optional[bool] = None
+    """
+    Overrides the default value of
+    [`NavigationRail.use_indicator`][flet.NavigationRail.use_indicator] in all
+    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    """
 
 
 @dataclass
