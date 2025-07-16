@@ -14,7 +14,7 @@ An alternative to assist chips are buttons, which should appear persistently and
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/chip/chip-example.py"
 ```
 
-![Assist Chips](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/chip/assist-chips.png){width="80%"}
+![Assist Chips](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/chip/assist-chips.png){width="80%"}
 /// caption
 ///
 
@@ -26,6 +26,6 @@ Filter chips are chips with `on_select` event specified. They use tags or descri
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/chip/chip-filter-example.py"
 ```
 
-![Filter Chips](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/chip/filter-chips.png){width="80%"}
+![Filter Chips](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/chip/filter-chips.png){width="80%"}
 /// caption
 ///

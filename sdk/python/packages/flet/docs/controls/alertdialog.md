@@ -10,6 +10,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/alert-dialog/modal-and-non-modal-dialogs.py"
 ```
 
-![modal-and-non-modal-dialogs](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/alert-dialog/media/modal-and-non-modal-dialogs.gif){width="80%"}
+![modal-and-non-modal-dialogs](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/alert-dialog/media/modal-and-non-modal-dialogs.gif){width="80%"}
 /// caption
 ///

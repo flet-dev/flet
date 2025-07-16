@@ -6,7 +6,7 @@
 
 ### Filled tonal button
 
-![Filled Tonal Button](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/filled-tonal-button/basic-filled-tonal-buttons.png){width="80%"}
+![Filled Tonal Button](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/filled-tonal-button/basic-filled-tonal-buttons.png){width="80%"}
 /// caption
 ///
 

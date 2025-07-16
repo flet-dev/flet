@@ -10,7 +10,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/animated-switcher/switching-with-scale-effect.py"
 ```
 
-![switching-with-scale-effect](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/animated-switcher/media/switching-with-scale-effect.gif){width="80%"}
+![switching-with-scale-effect](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/animated-switcher/media/switching-with-scale-effect.gif){width="80%"}
 /// caption
 ///
 

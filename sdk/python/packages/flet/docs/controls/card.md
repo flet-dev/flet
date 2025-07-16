@@ -8,6 +8,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/card/music-info-card.py"
 ```
 
-![Card](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/card/media/music-info-card.gif){width="80%"}
+![Card](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/card/media/music-info-card.gif){width="80%"}
 /// caption
 ///

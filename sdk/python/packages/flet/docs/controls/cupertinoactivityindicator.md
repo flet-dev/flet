@@ -10,6 +10,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-information-displays/cupertino-activity-indicator-example.py"
 ```
 
-![Cupertino Activity Indicator](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/cupertino-activity-indicator/basic-cupertino-activity-indicator.png){width="80%"}
+![Cupertino Activity Indicator](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-activity-indicator/basic-cupertino-activity-indicator.png){width="80%"}
 /// caption
 ///

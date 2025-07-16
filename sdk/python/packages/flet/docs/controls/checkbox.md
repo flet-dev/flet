@@ -10,7 +10,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/checkbox-samples.py"
 ```
 
-![checkbox-samples](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/checkbox/media/checkbox-samples.gif){width="80%"}
+![checkbox-samples](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/checkbox/media/checkbox-samples.gif){width="80%"}
 /// caption
 ///
 
@@ -21,6 +21,12 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/listening-and-handling-state-changes.py"
 ```
 
-![listening-and-handling-state-changes](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/checkbox/media/listening-and-handling-state-changes.gif){width="80%"}
+![listening-and-handling-state-changes](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/checkbox/media/listening-and-handling-state-changes.gif){width="80%"}
 /// caption
 ///
+
+### Styled checkboxes
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/styled-checkboxes.py"
+```

@@ -11,7 +11,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/tabs-simple.py"
 ```
 
-![Tabs](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/tabs/tabs-simple.gif){width="80%"}
+![Tabs](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/tabs-simple.gif){width="80%"}
 /// caption
 ///
 
@@ -21,6 +21,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/nested-tabs.py"
 ```
 
-![Nested Tabs](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/tabs/nested-tabs.gif){width="80%"}
+![Nested Tabs](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/nested-tabs.gif){width="80%"}
 /// caption
 ///

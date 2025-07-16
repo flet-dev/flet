@@ -10,7 +10,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/app-bar/appbar-with-actions-and-popup-menu.py"
 ```
 
-![appbar-with-actions-and-popup-menu](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/app-bar/media/appbar-with-actions-and-popup-menu.gif){width="80%"}
+![appbar-with-actions-and-popup-menu](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/app-bar/media/appbar-with-actions-and-popup-menu.gif){width="80%"}
 /// caption
 ///
 

@@ -23,9 +23,6 @@ class BottomAppBarControl extends StatelessWidget {
       child: control.buildWidget("content"),
     );
 
-    return ConstrainedControl(
-      control: control,
-      child: bottomAppBar,
-    );
+    return ConstrainedControl(control: control, child: bottomAppBar);
   }
 }

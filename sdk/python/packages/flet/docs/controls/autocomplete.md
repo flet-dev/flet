@@ -10,6 +10,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/auto-complete/auto-complete-basic.py"
 ```
 
-![auto-complete-basic](https://github.com/flet-dev/examples/blob/v1-docs/python/controls/auto-complete/media/auto-complete-basic.gif){width="80%"}
+![auto-complete-basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/auto-complete/media/auto-complete-basic.gif){width="80%"}
 /// caption
 ///
