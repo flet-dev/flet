@@ -8,11 +8,9 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/buttons/segmented-button/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/segmented-button/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/buttons/segmented-button/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/segmented-button/media/basic.gif){width="80%"}
 /// caption
 ///
-
-

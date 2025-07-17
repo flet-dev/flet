@@ -13,15 +13,16 @@ __all__ = ["Text"]
 @control("Text")
 class Text(Shape):
     """
-    Draws `text` with `style` in the given point (`x`, `y`).
+    Draws [`text`][(c).] with [`style`][(c).] at
+    the given ([`x`][(c).], [`y`][(c).]) point.
     """
 
-    x: Optional[Number] = None
+    x: Number
     """
     The x-axis coordinate of the text's `alignment` point.
     """
 
-    y: Optional[Number] = None
+    y: Number
     """
     The y-axis coordinate of the text's `alignment` point.
     """
@@ -42,18 +43,14 @@ class Text(Shape):
     objects to build a rich text paragraph.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Alignment = Alignment.TOP_LEFT
     """
     A point within a text rectangle to determine its position and rotation center.
-
-    Defaults to `Alignment.TOP_LEFT`.
     """
 
-    text_align: Optional[TextAlign] = None
+    text_align: TextAlign = TextAlign.START
     """
     Text horizontal align.
-
-    Defaults to `TextAlign.LEFT`.
     """
 
     max_lines: Optional[int] = None
@@ -76,8 +73,8 @@ class Text(Shape):
     String used to ellipsize overflowing text.
     """
 
-    rotate: Optional[Number] = None
+    rotate: Number = 0
     """
-    Text rotation in radians. Text is rotated around the point determined by
+    The rotation of this text in radians. Text is rotated around the point determined by
     `alignment`.
     """

@@ -256,7 +256,20 @@ nav:
               - SnackBar: controls/snackbar.md
               - TimePicker: controls/timepicker.md
           - Information Displays:
-              - Canvas: controls/canvas.md
+              - Canvas:
+                  - controls/canvas/index.md
+                  - Arc: controls/canvas/arc.md
+                  - Circle: controls/canvas/circle.md
+                  - Color: controls/canvas/color.md
+                  - Fill: controls/canvas/fill.md
+                  - Line: controls/canvas/line.md
+                  - Oval: controls/canvas/oval.md
+                  - Path: controls/canvas/path.md
+                  - Points: controls/canvas/points.md
+                  - Rect: controls/canvas/rect.md
+                  - Shadow: controls/canvas/shadow.md
+                  - Shape: controls/canvas/shape.md
+                  - Text: controls/canvas/text.md
               - CircleAvatar: controls/circleavatar.md
               - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
               - Icon: controls/icon.md

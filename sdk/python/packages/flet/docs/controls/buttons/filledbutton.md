@@ -7,9 +7,9 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/buttons/filled-button/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/filled-button/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/buttons/filled-button/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/filled-button/media/basic.png){width="80%"}
 /// caption
 ///
