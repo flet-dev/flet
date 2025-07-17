@@ -1,16 +1,13 @@
 ::: flet.RadialGradient
 
-### Usage example
+## Examples
 
-<img src="/img/docs/controls/container/radial-gradient.png" className="screenshot-20" />
+### Container with radial gradient
 
 ```python
-Container(
-    gradient=ft.RadialGradient(
-       colors=[ft.Colors.YELLOW, ft.Colors.BLUE],
-    ),
-    width=150,
-    height=150,
-    border_radius=5,
-)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/gradient/radial-gradient/container.py"
 ```
+
+![container](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/gradient/radial-gradient/media/container.png){width="80%"}
+/// caption
+///

@@ -28,7 +28,7 @@ They use tags or descriptive words provided in the [`label`][flet.Chip.label] to
 They can be a good alternative to switches or checkboxes.
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/chip/chip-filter-example.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/chip/filter-chips.py"
 ```
 
 ![filter-chips](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/chip/media/filter-chips.png){width="80%"}

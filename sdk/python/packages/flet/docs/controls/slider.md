@@ -4,32 +4,38 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/slider)
 
-### Basic sliders
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/slider/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/media/basic.gif){width="80%"}
 /// caption
 ///
 
-### Sliders with values
+### Setting a custom label
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/slider/custom-label"
 ```
 
-![Capture](){width="80%"}
+![custom-label](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/media/custom-label.gif){width="80%"}
 /// caption
 ///
 
-### Slider with `on_change` event
+### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/slider/handling-events.py"
 ```
 
-![Capture](){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/media/handling-events.gif){width="80%"}
 /// caption
 ///
+
+### Random values
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/slider/random-values.py"
+```

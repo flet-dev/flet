@@ -7,9 +7,9 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-buttons/cupertino-button-example.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-button/basic.py"
 ```
 
-![Cupertino Button](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-button/cupertino-buttons.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-button/media/basic.png){width="80%"}
 /// caption
 ///

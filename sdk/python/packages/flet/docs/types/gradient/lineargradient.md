@@ -1,18 +1,13 @@
 ::: flet.LinearGradient
 
-### Usage example
+## Examples
 
-<img src="/img/docs/controls/container/linear-gradient.png" className="screenshot-20" />
+### Container with linear gradient
 
 ```python
-Container(
-    gradient=ft.LinearGradient(
-        begin=ft.alignment.top_center,
-        end=ft.alignment.bottom_center,
-       colors=[ft.Colors.BLUE, ft.Colors.YELLOW],
-    ),
-    width=150,
-    height=150,
-    border_radius=5,
-)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/gradient/linear-gradient/container.py"
 ```
+
+![container](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/gradient/linear-gradient/media/container.png){width="80%"}
+/// caption
+///

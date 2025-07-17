@@ -80,36 +80,35 @@ class CupertinoTimerPicker(ConstrainedControl):
     on_change: Optional[ControlEventHandler["CupertinoTimerPicker"]] = None
     """
     Called when the timer's duration changes.
+    
+    The [`data`][flet.Event] property of the event handler argument is the new duration.
+    It has the same [type][flet.DurationValue] as [`value`][flet.CupertinoTimerPicker.value].
     """
 
     def before_update(self):
         super().before_update()
-        # normalize for use in assertion checks
+        # normalize for use in below assertion checks
         value = (
             self.value
             if isinstance(self.value, Duration)
             else Duration(seconds=self.value)
         )
         assert value >= Duration(), "value must be a non-negative duration"
-        assert value < Duration(hours=24), (
-            f"value must be strictly less than 24 hours, got {value.in_hours} hours"
-        )
-        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
-            f"minute_interval ({self.minute_interval}) must be a positive integer "
-        )
-        "factor of 60"
-        assert self.second_interval > 0 and 60 % self.second_interval == 0, (
-            f"second_interval ({self.second_interval}) must be a positive integer "
-        )
-        "factor of 60"
-        assert value.in_minutes % self.minute_interval == 0, (
-            f"value ({value.in_minutes} minutes) must be a multiple of minute_interval "
-        )
-        f"({self.minute_interval})"
-        assert value.in_seconds % self.second_interval == 0, (
-            f"value ({value.in_seconds} seconds) must be a multiple of second_interval "
-        )
-        f"({self.second_interval})"
-        assert self.item_extent > 0, (
-            f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
-        )
+        assert value < Duration(
+            hours=24
+        ), f"value must be strictly less than 24 hours, got {value.in_hours} hours"
+        assert (
+            self.minute_interval > 0 and 60 % self.minute_interval == 0
+        ), f"minute_interval ({self.minute_interval}) must be a positive integer factor of 60"
+        assert (
+            self.second_interval > 0 and 60 % self.second_interval == 0
+        ), f"second_interval ({self.second_interval}) must be a positive integer factor of 60"
+        assert (
+            value.in_minutes % self.minute_interval == 0
+        ), f"value ({value.in_minutes} minutes) must be a multiple of minute_interval ({self.minute_interval})"
+        assert (
+            value.in_seconds % self.second_interval == 0
+        ), f"value ({value.in_seconds} seconds) must be a multiple of second_interval ({self.second_interval})"
+        assert (
+            self.item_extent > 0
+        ), f"item_extent must be strictly greater than 0.0, got {self.item_extent}"

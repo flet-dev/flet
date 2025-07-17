@@ -4,24 +4,23 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/filepicker)
 
-### Pick multiple files
+### Pick, save, and get directory paths
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/pick-save-and-get-directory-path.py"
 ```
 
-![Capture](){width="80%"}
+![pick-save-and-get-directory-path](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
 /// caption
 ///
 
-### All dialog modes
 
-<img src="/img/docs/controls/file-picker/file-picker-all-modes-demo.png" className="screenshot-70" />
+### Pick and upload files
 
-[Source code](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/file-picker-all-modes.py)
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/file-picker/pick-and-upload.py"
+```
 
-### Upload multiple files
-
-<img src="/img/docs/controls/file-picker/file-picker-multiple-uploads.png" className="screenshot-40" />
-
-[Source code](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/file-picker-upload-progress.py)
+![pick-and-upload](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/file-picker/media/pick-and-upload.png){width="80%"}
+/// caption
+///

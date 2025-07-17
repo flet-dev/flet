@@ -4,12 +4,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinoradio)
 
-### Basic Example
+### Cupertino, Material and Adaptive Radios
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-radio/cupertino-material-and-adaptive.py"
 ```
 
-![Capture](){width="80%"}
+![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-radio/media/cupertino-material-and-adaptive.png){width="80%"}
 /// caption
 ///

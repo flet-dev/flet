@@ -1,59 +1,65 @@
-Canvas is a control for drawing arbitrary graphics using a set of primitives or "shapes" such as line, arc, path and text.
-
 ::: flet.canvas.Canvas
 
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/canvas)
 
-### Basic example
-
+### Smiling face
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/canvas/smiling-face.py"
 ```
 
-![Capture](){width="80%"}
+![smiling-face](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/smiling-face.png){width="80%"}
 /// caption
 ///
 
-### `Path` shape example
-
+### Flet logo
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/canvas/flet-logo.py"
 ```
 
-![Capture](){width="80%"}
+![flet-logo](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/flet-logo.png){width="80%"}
+/// caption
+///
+
+### Triangles
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/canvas/triangles.py"
+```
+
+![triangles](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/triangles.png){width="80%"}
 /// caption
 ///
 
 ### Bezier curves
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/canvas/bezier-curves.py"
 ```
 
-![Capture](){width="80%"}
+![bezier-curves](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/bezier-curves.png){width="80%"}
 /// caption
 ///
 
-### Drawing text
+### Text
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/canvas/text.py"
 ```
 
-![Capture](){width="80%"}
+![text](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/text.png){width="80%"}
 /// caption
 ///
 
-### Free-hand drawing tool
+### Free-hand drawing with brush
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/canvas/brush.py"
 ```
 
-![Capture](){width="80%"}
+![brush](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/brush.gif){width="80%"}
 /// caption
 ///

@@ -4,18 +4,28 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/markdown)
 
-### Markdown with GitHubWeb extensions and clickable links
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/markdown/basicpy"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/markdown/media/basic.png){width="80%"}
 /// caption
 ///
 
-### Markdown with code syntax highlight
+### Code syntax highlight
 
-[Source code](https://github.com/flet-dev/examples/blob/main/python/controls/markdown/markdown-code-highlight.py)
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/markdown/code-syntax-highlight.py"
+```
 
-<img src="/img/docs/controls/markdown/markdown-highlight.png" className="screenshot-60"/>
+![code-syntax-highlight](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/markdown/media/code-syntax-highlight.png){width="80%"}
+/// caption
+///
+
+### Custom text theme
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/markdown/custom-text-theme.py"
+```

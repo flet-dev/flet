@@ -2,13 +2,12 @@
 
 ## Examples
 
-### App window without a title that can be moved
-
+### No frame window
 
 ```python
 --8<-- https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/window-drag-area/no-frame-window.py
 ```
 
-![Capture](){width="80%"}
+![no-frame-window](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/window-drag-area/media/no-frame-window.gif){width="80%"}
 /// caption
 ///

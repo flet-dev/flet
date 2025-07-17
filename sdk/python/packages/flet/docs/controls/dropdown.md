@@ -4,22 +4,29 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
 
-### Dropdown with colors
+### Color selection with filtering
+
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown/color-selection-with-filtering.py"
 ```
 
-![Capture](){width="80%"}
+![color-selection-with-filtering](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown/media/color-selection-with-filtering.gif){width="80%"}
 /// caption
 ///
 
 
-### Dropdown with icons
+### Icon selection
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown/icon-selection.py"
 ```
 
-![Capture](){width="80%"}
+![icon-selection](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown/media/icon-selection.png){width="80%"}
 /// caption
 ///
+
+### Styled dropdowns
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown/styled.py"
+```

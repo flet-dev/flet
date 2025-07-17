@@ -4,29 +4,29 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/checkbox)
 
-### Checkbox samples
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/checkbox-samples.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/basic.py"
 ```
 
-![checkbox-samples](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/checkbox/media/checkbox-samples.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/checkbox/media/basic.gif){width="80%"}
 /// caption
 ///
 
 
-### Listening and handling state changes
+### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/listening-and-handling-state-changes.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/handling-events.py"
 ```
 
-![listening-and-handling-state-changes](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/checkbox/media/listening-and-handling-state-changes.gif){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/checkbox/media/handling-events.gif){width="80%"}
 /// caption
 ///
 
 ### Styled checkboxes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/styled-checkboxes.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/styled.py"
 ```

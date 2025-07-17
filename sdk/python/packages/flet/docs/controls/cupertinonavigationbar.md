@@ -4,12 +4,18 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/cupertinonavigationbar)
 
-### A simple CupertinoNavigationBar
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-navigation-bar/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-navigation-bar/media/basic.png){width="80%"}
 /// caption
 ///
+
+### Wired navigation bar
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-navigation-bar/wired.py"
+```

@@ -4,24 +4,29 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/radio)
 
-### Basic RadioGroup
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/radio/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/radio/media/basic.gif){width="80%"}
 /// caption
 ///
 
 
-### RadioGroup with `on_change` event
+### Handling selection changes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/radio/handling-selection-changes.py"
 ```
 
-![Capture](){width="80%"}
+![handling-selection-changes](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/radio/media/handling-selection-changes.gif){width="80%"}
 /// caption
 ///
 
+### Styled radio buttons
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/radio/styled.py"
+```

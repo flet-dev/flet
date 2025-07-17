@@ -7,9 +7,9 @@
 ### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/auto-complete/auto-complete-basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/auto-complete/basic.py"
 ```
 
-![auto-complete-basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/auto-complete/media/auto-complete-basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/auto-complete/media/basic.gif){width="80%"}
 /// caption
 ///

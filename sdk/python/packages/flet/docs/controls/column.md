@@ -7,10 +7,10 @@
 ### Column `spacing`
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-spacing.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/spacing.py"
 ```
 
-![column-spacing](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/column-spacing.gif){width="80%"}
+![spacing](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/spacing.gif){width="80%"}
 /// caption
 ///
 
@@ -18,10 +18,10 @@
 ### Column wrapping
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-wrap.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/wrap.py"
 ```
 
-![column-wrap](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/column-wrap.gif){width="80%"}
+![wrap](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/wrap.gif){width="80%"}
 /// caption
 ///
 
@@ -29,10 +29,10 @@
 ### Column vertical alignments
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-alignment.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/alignment.py"
 ```
 
-![column-alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/column-alignment.png){width="80%"}
+![alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/alignment.png){width="80%"}
 /// caption
 ///
 
@@ -40,10 +40,10 @@
 ### Column horizontal alignments
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-horizontal-alignment.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/horizontal-alignment.py"
 ```
 
-![column-horizontal-alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/column-horizontal-alignment.png){width="80%"}
+![horizontal-alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/horizontal-alignment.png){width="80%"}
 /// caption
 ///
 
@@ -54,7 +54,7 @@ This example demonstrates adding of list items on-the-fly, as user scroll to the
 creating the illusion of infinite list:
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-infinite-scrolling.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/infinite-scrolling.py"
 ```
 
 ### Scrolling programmatically
@@ -63,10 +63,10 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/column-programmatic-scroll.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/programmatic-scroll.py"
 ```
 
-![column-programmatic-scroll](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/column-programmatic-scroll.gif){width="80%"}
+![programmatic-scroll](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/programmatic-scroll.gif){width="80%"}
 /// caption
 ///
 

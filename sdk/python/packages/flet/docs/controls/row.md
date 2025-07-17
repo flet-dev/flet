@@ -4,44 +4,44 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/row)
 
-### Row spacing
+### Spacing children
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/row-spacing.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/spacing.py"
 ```
 
-![Row spacing](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/row-spacing.gif){width="80%"}
+![spacing](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/media/spacing.gif){width="80%"}
 /// caption
 ///
 
 
-### Row wrapping
+### Wrapping children
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/row-wrap.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/wrap.py"
 ```
 
-![Row wrapping](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/row-wrap.gif){width="80%"}
+![wrap](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/media/wrap.gif){width="80%"}
 /// caption
 ///
 
 
-### Row horizontal alignments
+### Setting horizontal alignment
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/row-alignment.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/alignment.py"
 ```
 
-![Row horizontal alignments](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/row-alignment.png){width="80%"}
+![alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/media/alignment.png){width="80%"}
 /// caption
 ///
 
-### Row vertical
+### Setting vertical alignment
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/row-vert-alignment.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/row/vertical-alignment.py"
 ```
 
-![Row vertical alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/row-vertical-alignment.png){width="80%"}
+![vertical-alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/media/vertical-alignment.png){width="80%"}
 /// caption
 ///

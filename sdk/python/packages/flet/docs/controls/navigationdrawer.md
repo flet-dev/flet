@@ -4,20 +4,22 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/navigationdrawer)
 
-### NavigationDrawer sliding from the left edge of a page
+### Start-aligned drawer
+
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/navigation-drawer/nav-drawer-example.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/navigation-drawer/position-start.py"
 ```
 
-![Navigation Drawer Start](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/navigationdrawer/navigation-drawer-start.gif){width="80%"}
+![position-start](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/navigation-drawer/media/position-startgif){width="80%"}
 /// caption
 ///
 
-### NavigationDrawer sliding from the right edge of a page
+### End-aligned drawer
+
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/navigation-drawer/nav-drawer-end.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/navigation-drawer/position-end.py"
 ```
 
-![Navigation Drawer End](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/navigationdrawer/navigation-drawer-end.gif){width="80%"}
+![position-end](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/navigation-drawer/media/position-end.gif){width="80%"}
 /// caption
 ///

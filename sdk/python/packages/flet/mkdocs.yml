@@ -312,6 +312,7 @@ nav:
               - Row: controls/row.md
               - SafeArea: controls/safearea.md
               - Stack: controls/stack.md
+              - Tab: controls/tab.md
               - Tabs: controls/tabs.md
               - VerticalDivider: controls/verticaldivider.md
               - View: controls/view.md

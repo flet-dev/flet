@@ -37,7 +37,16 @@ class DismissDirection(Enum):
 
 @control("SnackBar")
 class SnackBarAction(Control):
-    """A button that can be used as an action in a [`SnackBar`][flet.SnackBar]."""
+    """
+    A button that can be used as an action in a [`SnackBar`][flet.SnackBar].
+
+    An action button for a [`SnackBar`][flet.SnackBar].
+
+    Note:
+        - Snack bar actions are always enabled. Instead of disabling a snack bar
+            action, avoid including it in the snack bar in the first place.
+        -  Snack bar actions can will only respond to first click. Subsequent clicks/presses are ignored.
+    """
 
     label: str
     """
@@ -226,6 +235,6 @@ class SnackBar(DialogControl):
             self.action_overflow_threshold is None
             or 0 <= self.action_overflow_threshold <= 1
         ), "action_overflow_threshold must be between 0 and 1 inclusive"
-        assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
-        )
+        assert (
+            self.elevation is None or self.elevation >= 0
+        ), "elevation cannot be negative"

@@ -1,19 +1,13 @@
 ::: flet.PaintRadialGradient
 
-## Usage example
+## Examples
 
-<img src="/img/docs/controls/canvas/paint-radial-gradient.png" className="screenshot-20" />
+### Canvas paint
 
 ```python
-cv.Circle(
-    60,
-    170,
-    50,
-    ft.Paint(
-        gradient=ft.PaintRadialGradient(
-            (60, 170), 50, colors=[ft.Colors.YELLOW, ft.Colors.BLUE]
-        ),
-        style=ft.PaintingStyle.FILL,
-    ),
-)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/paint-gradient/paint-radial-gradient/canvas-paint.py"
 ```
+
+![canvas-paint](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/paint-gradient/paint-radial-gradient/media/canvas-paint.png){width="80%"}
+/// caption
+///

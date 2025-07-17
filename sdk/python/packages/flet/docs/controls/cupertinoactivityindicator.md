@@ -7,9 +7,9 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-information-displays/cupertino-activity-indicator-example.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-activity-indicator/basic.py"
 ```
 
-![Cupertino Activity Indicator](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-activity-indicator/basic-cupertino-activity-indicator.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-activity-indicator/media/basic.png){width="80%"}
 /// caption
 ///

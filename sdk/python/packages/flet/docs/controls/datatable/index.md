@@ -4,21 +4,28 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/datatable)
 
-### Example 1
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/datatable/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/datatable/media/basic.png){width="80%"}
 /// caption
 ///
 
-### A styled DataTable
+### Sortable columns and selectable rows
+
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/datatable/sortable-and-selectable.py"
 ```
 
-![Capture](){width="80%"}
+![sortable-and-selectable](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/datatable/media/sortable-and-selectable.png){width="80%"}
 /// caption
 ///
+
+### Handling events
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/datatable/handling-events.py"
+```

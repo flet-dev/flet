@@ -1,21 +1,13 @@
 ::: flet.PaintLinearGradient
 
-## Usage example
+## Examples
 
-<img src="/img/docs/controls/canvas/paint-linear-gradient.png" className="screenshot-20" />
+### Canvas paint
 
 ```python
-cv.Rect(
-    10,
-    10,
-    100,
-    100,
-    5,
-    ft.Paint(
-        gradient=ft.PaintLinearGradient(
-            (0, 10), (0, 100), colors=[ft.Colors.BLUE, ft.Colors.YELLOW]
-        ),
-        style=ft.PaintingStyle.FILL,
-    ),
-)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/paint-gradient/paint-linear-gradient/canvas-paint.py"
 ```
+
+![canvas-paint](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/paint-gradient/paint-linear-gradient/media/canvas-paint.png){width="80%"}
+/// caption
+///
