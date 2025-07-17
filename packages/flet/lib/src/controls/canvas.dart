@@ -37,11 +37,22 @@ class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size? _lastSize;
   ui.Image? _capturedImage;
-  Size? _capturedSize;
+  double _dpr = 1.0;
+  bool _initialized = false;
+
   @override
   void initState() {
     super.initState();
     widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _dpr = MediaQuery.devicePixelRatioOf(context);
+      _initialized = true;
+    }
   }
 
   @override
@@ -89,21 +100,23 @@ class _CanvasControlState extends State<CanvasControl> {
         final canvas = Canvas(recorder);
 
         final painter = FletCustomPainter(
-          context: context,
-          theme: Theme.of(context),
-          shapes: shapes,
-          onPaintCallback: (_) {},
-        );
+            context: context,
+            theme: Theme.of(context),
+            shapes: shapes,
+            capturedImage: _capturedImage,
+            onPaintCallback: (_) {},
+            dpr: _dpr);
 
-        painter.paint(canvas, logicalSize);
+        var captureSize =
+            Size(logicalSize.width * _dpr, logicalSize.height * _dpr);
+
+        painter.paint(canvas, captureSize);
 
         final picture = recorder.endRecording();
         _capturedImage = await picture.toImage(
-          logicalSize.width.ceil(),
-          logicalSize.height.ceil(),
+          captureSize.width.toInt(),
+          captureSize.height.toInt(),
         );
-        _capturedSize = logicalSize;
-        setState(() {}); // trigger rebuild
         return;
 
       case "get_capture":
@@ -115,7 +128,6 @@ class _CanvasControlState extends State<CanvasControl> {
       case "clear_capture":
         _capturedImage?.dispose();
         _capturedImage = null;
-        _capturedSize = null;
         setState(() {});
         return;
 
@@ -128,7 +140,6 @@ class _CanvasControlState extends State<CanvasControl> {
   Widget build(BuildContext context) {
     debugPrint("Canvas build: ${widget.control.id}");
 
-    var onResize = widget.control.getBool("on_resize", false)!;
     var resizeInterval = widget.control.getInt("resize_interval", 10)!;
 
     var paint = CustomPaint(
@@ -137,17 +148,15 @@ class _CanvasControlState extends State<CanvasControl> {
         theme: Theme.of(context),
         shapes: widget.control.children("shapes"),
         capturedImage: _capturedImage,
-        capturedSize: _capturedSize,
+        dpr: 1,
         onPaintCallback: (size) {
-          _lastSize = size;
-          if (onResize) {
-            var now = DateTime.now().millisecondsSinceEpoch;
-            if ((now - _lastResize > resizeInterval && _lastSize != size) ||
-                _lastSize == null) {
-              _lastResize = now;
-              widget.control
-                  .triggerEvent("resize", {"w": size.width, "h": size.height});
-            }
+          var now = DateTime.now().millisecondsSinceEpoch;
+          if ((now - _lastResize > resizeInterval && _lastSize != size) ||
+              _lastSize == null) {
+            _lastSize = size;
+            _lastResize = now;
+            widget.control
+                .triggerEvent("resize", {"w": size.width, "h": size.height});
           }
         },
       ),
@@ -164,31 +173,31 @@ class FletCustomPainter extends CustomPainter {
   final List<Control> shapes;
   final CanvasControlOnPaintCallback onPaintCallback;
   final ui.Image? capturedImage;
-  final Size? capturedSize;
+  final double dpr;
 
   const FletCustomPainter({
     required this.context,
     required this.theme,
     required this.shapes,
     required this.onPaintCallback,
+    required this.dpr,
     this.capturedImage,
-    this.capturedSize,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
 
-    //debugPrint("SHAPE CONTROLS: $shapes");
+    debugPrint("paint.size: $size");
+    //debugPrint("paint.shapes: $shapes");
 
     canvas.save();
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
-    if (capturedImage != null && capturedSize != null) {
+    if (capturedImage != null) {
       final src = Rect.fromLTWH(0, 0, capturedImage!.width.toDouble(),
           capturedImage!.height.toDouble());
-      final dst =
-          Rect.fromLTWH(0, 0, capturedSize!.width, capturedSize!.height);
+      final dst = Rect.fromLTWH(0, 0, size.width, size.height);
       canvas.drawImageRect(capturedImage!, src, dst, Paint());
     }
 
@@ -389,8 +398,10 @@ class FletCustomPainter extends CustomPainter {
       final srcRect =
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
       final dstRect = width != null && height != null
-          ? Rect.fromLTWH(x, y, width, height)
-          : Offset(x, y) & Size(img.width.toDouble(), img.height.toDouble());
+          ? Rect.fromLTWH(x * dpr, y * dpr, width * dpr, height * dpr)
+          : Offset(x * dpr, y * dpr) &
+              Size(img.width.toDouble() * dpr, img.height.toDouble() * dpr);
+      debugPrint("canvas.drawImageRect($srcRect, $dstRect)");
       canvas.drawImageRect(img, srcRect, dstRect, paint);
     } else {
       loadCanvasImage(shape);
@@ -476,8 +487,6 @@ Future<void> loadCanvasImage(Control shape) async {
 
   final src = shape.getString("src");
   final srcBytes = shape.get("src_bytes") as Uint8List?;
-  final width = shape.getInt("width");
-  final height = shape.getInt("height");
 
   try {
     Uint8List bytes;
@@ -502,11 +511,7 @@ Future<void> loadCanvasImage(Control shape) async {
       throw Exception("Missing image source: 'src' or 'src_bytes'");
     }
 
-    final codec = await ui.instantiateImageCodec(
-      bytes,
-      targetWidth: width,
-      targetHeight: height,
-    );
+    final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
     shape.properties["_image"] = frame.image;
     shape.updateProperties({"_hash": getImageHash(shape)},
