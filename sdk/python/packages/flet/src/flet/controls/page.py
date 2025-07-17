@@ -3,7 +3,6 @@ import logging
 import weakref
 from collections.abc import Awaitable, Coroutine
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
-from contextvars import ContextVar
 from dataclasses import InitVar, dataclass, field
 from functools import partial
 from typing import (
@@ -19,6 +18,7 @@ from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
+from flet.controls.context import _context_page
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEvent,
@@ -46,7 +46,7 @@ from flet.controls.types import (
     PagePlatform,
     Wrapper,
 )
-from flet.utils import classproperty, is_pyodide
+from flet.utils import is_pyodide
 from flet.utils.strings import random_string
 
 if not is_pyodide():
@@ -71,14 +71,6 @@ try:
     from typing import ParamSpec
 except ImportError:
     from typing_extensions import ParamSpec
-
-_session_page = ContextVar("flet_session_page", default=None)
-
-
-class context:
-    @classproperty
-    def page(cls) -> Optional["Page"]:
-        return _session_page.get()
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -479,7 +471,7 @@ class Page(PageView):
         Run `handler` coroutine as a new Task in the event loop associated with the
         current page.
         """
-        _session_page.set(self)
+        _context_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
         future = asyncio.run_coroutine_threadsafe(
@@ -500,7 +492,7 @@ class Page(PageView):
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
         def wrapper(*args, **kwargs):
-            _session_page.set(self)
+            _context_page.set(self)
             handler(*args, **kwargs)
 
         return wrapper

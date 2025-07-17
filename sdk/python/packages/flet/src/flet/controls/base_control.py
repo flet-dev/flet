@@ -1,12 +1,18 @@
+import asyncio
+import inspect
 import logging
 import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
+from flet.controls.context import _context_page
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
 from flet.controls.keys import ScrollKey, ValueKey
 from flet.controls.ref import Ref
+from flet.controls.update_behavior import UpdateBehavior
+from flet.utils.from_dict import from_dict
+from flet.utils.object_model import get_param_count
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
@@ -210,3 +216,73 @@ class BaseControl:
         return await self.page.get_session().invoke_method(
             self._i, method_name, arguments, timeout
         )
+
+    async def _trigger_event(self, event_name: str, event_data: Any):
+        field_name = f"on_{event_name}"
+        if not hasattr(self, field_name):
+            # field_name not defined
+            return
+
+        event_type = ControlEvent.get_event_field_type(self, field_name)
+        if event_type is None:
+            return
+
+        if event_type == ControlEvent or not isinstance(event_data, dict):
+            # simple ControlEvent
+            e = ControlEvent(control=self, name=event_name, data=event_data)
+        else:
+            # custom ControlEvent
+            args = {
+                "control": self,
+                "name": event_name,
+                **(event_data or {}),
+            }
+            e = from_dict(event_type, args)
+
+        handle_event = self.before_event(e)
+
+        if handle_event is None or handle_event:
+            _context_page.set(self.page)
+            UpdateBehavior.reset()
+
+            assert self.page, "Control must be added on a page first."
+            session = self.page.get_session()
+
+            # Handle async and sync event handlers accordingly
+            event_handler = getattr(self, field_name)
+            if asyncio.iscoroutinefunction(event_handler):
+                if get_param_count(event_handler) == 0:
+                    await event_handler()
+                else:
+                    await event_handler(e)
+
+            elif inspect.isasyncgenfunction(event_handler):
+                if get_param_count(event_handler) == 0:
+                    async for _ in event_handler():
+                        if UpdateBehavior.auto_update_enabled():
+                            await session.auto_update(session.index.get(self._i))
+                else:
+                    async for _ in event_handler(e):
+                        if UpdateBehavior.auto_update_enabled():
+                            await session.auto_update(session.index.get(self._i))
+                return
+
+            elif inspect.isgeneratorfunction(event_handler):
+                if get_param_count(event_handler) == 0:
+                    for _ in event_handler():
+                        if UpdateBehavior.auto_update_enabled():
+                            await session.auto_update(session.index.get(self._i))
+                else:
+                    for _ in event_handler(e):
+                        if UpdateBehavior.auto_update_enabled():
+                            await session.auto_update(session.index.get(self._i))
+                return
+
+            elif callable(event_handler):
+                if get_param_count(event_handler) == 0:
+                    event_handler()
+                else:
+                    event_handler(e)
+
+            if UpdateBehavior.auto_update_enabled():
+                await session.auto_update(session.index.get(self._i))
