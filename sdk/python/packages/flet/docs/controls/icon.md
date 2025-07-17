@@ -1,18 +1,18 @@
 ::: flet.Icon
 
-
-
 ## Examples
 
-[Icons browser](https://gallery.flet.dev/icons-browser/)
+To browse and visualize all available icons, 
+visit our [icons browser](https://gallery.flet.dev/icons-browser/)
+
 [Live example](https://flet-controls-gallery.fly.dev/displays/icon)
 
-### Icons of different colors and sizes
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/icon/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/icon/media/basic.png){width="80%"}
 /// caption
 ///

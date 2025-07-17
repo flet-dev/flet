@@ -7,9 +7,9 @@
 ### ResponsiveRow
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/responsive-row/responsive-layout.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/responsive-row/basic.py"
 ```
 
-![Responsive Row](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/responsive-row/responsive-row.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/responsive-row/media/basic.gif){width="80%"}
 /// caption
 ///

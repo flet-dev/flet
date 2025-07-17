@@ -2,10 +2,8 @@
 
 ## Example
 
-```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
-```
+## Basic Example
 
-![Capture](){width="80%"}
-/// caption
-///
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/transparent-pointer/basic.py"
+```

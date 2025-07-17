@@ -4,42 +4,42 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/outlinedbutton)
 
-### Basic outlined buttons
+### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/outlined-button/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/basic.png){width="80%"}
 /// caption
 ///
 
-### Outlined buttons with icons
+### Handling clicks
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/outlined-button/handling-clicks.py"
 ```
 
-![Capture](){width="80%"}
+![handling-clicks](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/handling-clicks.gif){width="80%"}
 /// caption
 ///
 
-### Outlined button with `click` event
+### Icons
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/outlined-button/icons.py"
 ```
 
-![Capture](){width="80%"}
+![icons](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/icons.png){width="80%"}
 /// caption
 ///
 
-### Outlined button with custom content 
+### Custom content
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/outlined-button/custom-content.py"
 ```
 
-![Capture](){width="80%"}
+![custom-content](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/custom-content.png){width="80%"}
 /// caption
 ///

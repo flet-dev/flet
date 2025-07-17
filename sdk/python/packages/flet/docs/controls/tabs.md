@@ -1,26 +1,31 @@
 ::: flet.Tabs
-::: flet.Tab
 
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/tabs)
 
-### Tabs
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/tabs-simple.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/basic.py"
 ```
 
-![Tabs](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/tabs-simple.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/media/basic.gif){width="80%"}
 /// caption
 ///
 
 ### Nesting tabs
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/nested-tabs.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/nested.py"
 ```
 
-![Nested Tabs](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/nested-tabs.gif){width="80%"}
+![nested](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/media/nested.gif){width="80%"}
 /// caption
 ///
+
+### Dynamic tabs
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/dynamic.py"
+```

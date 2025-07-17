@@ -6,13 +6,16 @@ from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
 
+__all__ = ["Path"]
+
 
 @control("Path")
 class Path(Shape):
     """
-    Draws a path with given `elements` with the given `Paint`.
+    Draws a path with given [`elements`][(c).]
+    with the given [`paint`][(c).].
 
-    Whether this shape is filled or stroked (or both) is controlled by `Paint.style`.
+    Whether this shape is filled, stroked, or both, is controlled by `paint.style`.
     If the path is filled, then sub-paths within it are implicitly closed
     (see `Path.Close`).
     """
@@ -159,22 +162,27 @@ class Path(Shape):
         """
         Destination `x` coordinate of arc endpoint.
         """
+
         y: float
         """
         Destination `y` coordinate of arc endpoint.
         """
+
         radius: float = 0
         """
         Radius of the arc.
         """
+
         rotation: float = 0
         """
         Rotation of the arc in degrees.
         """
+
         large_arc: bool = False
         """
         Whether to use the large arc sweep.
         """
+
         clockwise: bool = True
         """
         Whether the arc should be drawn clockwise.
@@ -255,8 +263,7 @@ class Path(Shape):
     The list of path elements.
     """
 
-    paint: Optional[Paint] = None
+    paint: Paint = field(default_factory=lambda: Paint())
     """
-    A style to draw a path with. The value of this property is the instance of
-    [`Paint`][flet.Paint] class.
+    A style to draw a path with.
     """

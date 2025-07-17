@@ -4,65 +4,76 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/textfield)
 
-### Basic TextFields
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-field/media/basic.gif){width="80%"}
 /// caption
 ///
 
-
-### TextField with `on_change` event
+### Handling change events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/handling-change-events.py"
 ```
 
-![Capture](){width="80%"}
+![handling-change-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-field/media/handling-change-events.gif){width="80%"}
 /// caption
 ///
 
 ### Password with reveal button
+
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/password.py"
 ```
 
-![Capture](){width="80%"}
+![password](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-field/media/password.gif){width="80%"}
 /// caption
 ///
 
-### Multiline TextFields
+### Multiline fields
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/multiline.py"
 ```
 
-![Capture](){width="80%"}
+![multiline](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-field/media/multiline.gif){width="80%"}
 /// caption
 ///
 
 ### Underlined and borderless TextFields
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/underlined-and-borderless.py"
 ```
 
-![Capture](){width="80%"}
+![underlined-and-borderless](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-field/media/underlined-and-borderless.gif){width="80%"}
 /// caption
 ///
 
-
-### TextFields with prefixes and suffixes
+### Setting prefixes and suffixes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/prefix-and-suffix.py"
 ```
 
-![Capture](){width="80%"}
+![prefix-and-suffix](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-field/media/prefix-and-suffix.gif){width="80%"}
 /// caption
 ///
+
+### Styled TextField
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/styled.py"
+```
+
+### Custom label, hint, helper, and counter texts and styles 
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/label-hint-helper-counter.py"
+```
 
 

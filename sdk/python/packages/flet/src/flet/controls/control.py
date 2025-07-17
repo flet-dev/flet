@@ -45,12 +45,17 @@ class Control(BaseControl):
 
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     """
-    If a parent of the control is ResponsiveRow, `col` property is used to determine
-    how many virtual columns of a screen the control will span.
+    If a parent of this control is a [`ResponsiveRow`][flet.ResponsiveRow], 
+    this property is used to determine
+    how many virtual columns of a screen this control will span.
 
     Can be a number or a dictionary configured to have a different value for specific
-    breakpoints, for example `col={"sm": 6}`. Breakpoints are named dimension ranges:
+    breakpoints, for example `col={"sm": 6}`.
+    
+    This control spans the 12 virtual columns by default.
 
+    /// details | Dimensions
+        type: info
     | Breakpoint | Dimension |
     |---|---|
     | xs | <576px |
@@ -59,8 +64,7 @@ class Control(BaseControl):
     | lg | ≥992px |
     | xl | ≥1200px |
     | xxl | ≥1400px |
-
-    If `col` property is not specified, it spans the maximum number of columns (12).
+    ///
     """
 
     opacity: Number = 1.0
@@ -78,7 +82,7 @@ class Control(BaseControl):
 
     badge: Optional[BadgeValue] = None
     """
-    TBD
+    A badge to show on top of this control.
     """
 
     visible: bool = True

@@ -5,13 +5,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/popupmenubutton)
 
-### PopupMenuButton
-
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/popup-menu-button/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/popup-menu-button/media/basic.gif){width="80%"}
 /// caption
 ///

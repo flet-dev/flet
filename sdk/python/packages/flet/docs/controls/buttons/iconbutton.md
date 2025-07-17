@@ -4,22 +4,18 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/iconbutton)
 
-### Icon buttons
+### Handling clicks
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/icon-button/handling-clicks.py"
 ```
 
-![Capture](){width="80%"}
+![handling-clicks](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/icon-button/media/handling-clicks.gif){width="80%"}
 /// caption
 ///
 
-### Icon button with `click` event
+### Selected icon
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/icon-button/selected-icon.py"
 ```
-
-![Capture](){width="80%"}
-/// caption
-///

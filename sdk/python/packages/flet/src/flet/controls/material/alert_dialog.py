@@ -235,6 +235,5 @@ class AlertDialog(DialogControl):
     def before_update(self):
         super().before_update()
         assert self.title or self.content or self.actions, (
-            "AlertDialog has nothing to display. Provide at minimum one of the "
+            "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
         )
-        "following: title, content, actions"

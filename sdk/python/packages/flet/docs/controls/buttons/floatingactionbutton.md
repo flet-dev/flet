@@ -4,12 +4,12 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/floatingactionbutton)
 
-### Basic FAB
+### Handling clicks
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/floating-action-button/handling-clicks.py"
 ```
 
-![Capture](){width="80%"}
+![handling-clicks](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/floating-action-button/media/handling-clicks.gif){width="80%"}
 /// caption
 ///

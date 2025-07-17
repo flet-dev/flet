@@ -4,22 +4,22 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/switch)
 
-### Basic switches
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/switch/switch-basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/switch/basic.py"
 ```
 
-![Basic Switch](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/basic-switch.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/media/basic.gif){width="80%"}
 /// caption
 ///
 
-### Switch with `on_change` event
+### Handling change events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/switch/switch-with-event.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/switch/handling-events.py"
 ```
 
-![Switch with Change Event](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/switch-with-change-event.gif){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/media/handling-events.gif){width="80%"}
 /// caption
 ///

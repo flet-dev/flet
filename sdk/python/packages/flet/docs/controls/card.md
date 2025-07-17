@@ -5,9 +5,9 @@
 [Live example](https://flet-controls-gallery.fly.dev/layout/card)
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/card/music-info-card.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/card/music-info.py"
 ```
 
-![Card](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/card/media/music-info-card.gif){width="80%"}
+![music-info](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/card/media/music-info.gif){width="80%"}
 /// caption
 ///

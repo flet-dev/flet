@@ -4,44 +4,43 @@
 
 [Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
 
-### Basic dropdown
+### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown-m2/basic.py"
 ```
 
-![Capture](){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown-m2/media/basic.gif){width="80%"}
 /// caption
 ///
-
 
 ### Dropdown with label and hint
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown-m2/label-and-hint.py"
 ```
 
-![Capture](){width="80%"}
+![label-and-hint](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown-m2/media/label-and-hint.gif){width="80%"}
 /// caption
 ///
 
-### Dropdown with `on_change` event
+### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown-m2/handling-events.py"
 ```
 
-![Capture](){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown-m2/media/handling-events.gif){width="80%"}
 /// caption
 ///
 
 
-### Change items in dropdown options
+### Add and delete options
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/dropdown-m2/add-and-delete-options.py"
 ```
 
-![Capture](){width="80%"}
+![add-and-delete-options](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown-m2/media/add-and-delete-options.gif){width="80%"}
 /// caption
 ///
