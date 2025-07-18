@@ -11,6 +11,7 @@ import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
+import '../utils/mouse.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -73,6 +74,7 @@ class _ChipControlState extends State<ChipControl> {
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
       label: label,
+      mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
       avatar: widget.control.buildWidget("leading"),
       backgroundColor: widget.control.getColor("bgcolor", context),
       checkmarkColor: widget.control.getColor("check_color", context),

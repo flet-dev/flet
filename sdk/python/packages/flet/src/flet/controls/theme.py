@@ -834,13 +834,6 @@ class BottomSheetTheme:
     descendant [`BottomSheet`][flet.BottomSheet] controls.
     """
 
-    modal_elevation: Optional[Number] = None
-    """
-    Overrides the default value of
-    [`BottomSheet.modal_elevation`][flet.BottomSheet.modal_elevation] in all
-    descendant [`BottomSheet`][flet.BottomSheet] controls.
-    """
-
     clip_behavior: Optional[ClipBehavior] = None
     """
     Overrides the default value of
@@ -942,6 +935,13 @@ class ChipTheme:
     descendant [`Chip`][flet.Chip] controls.
     """
 
+    selected_shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`Chip.selected_shadow_color`][flet.Chip.selected_shadow_color] in all descendant
+    [`Chip`][flet.Chip] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
     """
     Overrides the default value of
@@ -963,10 +963,10 @@ class ChipTheme:
     [`Chip`][flet.Chip] controls.
     """
 
-    checkmark_color: Optional[ColorValue] = None
+    check_color: Optional[ColorValue] = None
     """
     Overrides the default value of
-    [`Chip.checkmark_color`][flet.Chip.checkmark_color] in all descendant
+    [`Chip.check_color`][flet.Chip.check_color] in all descendant
     [`Chip`][flet.Chip] controls.
     """
 
@@ -977,20 +977,6 @@ class ChipTheme:
     [`Chip`][flet.Chip] controls.
     """
 
-    secondary_selected_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Chip.secondary_selected_color`][flet.Chip.secondary_selected_color] in all
-    descendant [`Chip`][flet.Chip] controls.
-    """
-
-    selected_shadow_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Chip.selected_shadow_color`][flet.Chip.selected_shadow_color] in all
-    descendant [`Chip`][flet.Chip] controls.
-    """
-
     elevation: Optional[Number] = None
     """
     Overrides the default value of [`Chip.elevation`][flet.Chip.elevation] in all
@@ -999,7 +985,7 @@ class ChipTheme:
 
     elevation_on_click: Optional[Number] = None
     """
-    Overrides the default value of [`Chip.click_elevation`][flet.Chip.click_elevation]
+    Overrides the default value of [`Chip.elevation_on_click`][flet.Chip.elevation_on_click]
     in all descendant [`Chip`][flet.Chip] controls.
     """
 
@@ -1028,22 +1014,9 @@ class ChipTheme:
     [`Chip`][flet.Chip] controls.
     """
 
-    secondary_label_text_style: Optional[TextStyle] = None
-    """
-    Overrides the default value of
-    [`Chip.secondary_label_text_style`][flet.Chip.secondary_label_text_style] in all
-    descendant [`Chip`][flet.Chip] controls.
-    """
-
     border_side: Optional[BorderSide] = None
     """
     Overrides the default value of [`Chip.border_side`][flet.Chip.border_side] in all
-    descendant [`Chip`][flet.Chip] controls.
-    """
-
-    brightness: Optional[Brightness] = None
-    """
-    Overrides the default value of [`Chip.brightness`][flet.Chip.brightness] in all
     descendant [`Chip`][flet.Chip] controls.
     """
 
@@ -1066,6 +1039,15 @@ class ChipTheme:
     [`Chip.delete_icon_size_constraints`][flet.Chip.delete_icon_size_constraints] in
     all descendant [`Chip`][flet.Chip] controls.
     """
+
+    brightness: Optional[Brightness] = None
+    """
+    Overrides the default value for all chips which affects various base
+    material color choices in the chip rendering.
+    """
+
+    # secondary_selected_color: Optional[ColorValue] = None
+    # secondary_label_text_style: Optional[TextStyle] = None
 
 
 @dataclass
@@ -1161,52 +1143,35 @@ class FloatingActionButtonTheme:
 
     extended_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.extended_padding`][flet.FloatingActionButton.extended_padding]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The padding for an extended [FloatingActionButton]'s content.
     """
 
     extended_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.extended_text_style`][flet.FloatingActionButton.extended_text_style]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The text style for an extended
+    [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_icon_label_spacing: Optional[Number] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.extended_icon_label_spacing`][flet.FloatingActionButton.extended_icon_label_spacing]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The spacing between the icon and the label for an extended
+    [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.extended_size_constraints`][flet.FloatingActionButton.extended_size_constraints]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    Overrides the default size constraints of
+    extended [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.size_constraints`][flet.FloatingActionButton.size_constraints]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    Overrides the default size constraints of
+    [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
-    large_size_constraints: Optional[BoxConstraints] = None
-    """
-    Overrides the default value of
-    [`FloatingActionButton.large_size_constraints`][flet.FloatingActionButton.large_size_constraints]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
-    """
-
-    small_size_constraints: Optional[BoxConstraints] = None
-    """
-    Overrides the default value of
-    [`FloatingActionButton.small_size_constraints`][flet.FloatingActionButton.small_size_constraints]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
-    """
+    # large_size_constraints: Optional[BoxConstraints] = None
+    # small_size_constraints: Optional[BoxConstraints] = None
 
 
 @dataclass
@@ -1324,13 +1289,6 @@ class AppBarTheme:
     [`AppBar`][flet.AppBar] controls.
     """
 
-    foreground_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`AppBar.foreground_color`][flet.AppBar.foreground_color] in all descendant
-    [`AppBar`][flet.AppBar] controls.
-    """
-
     elevation: Optional[Number] = None
     """
     Overrides the default value of [`AppBar.elevation`][flet.AppBar.elevation] in all
@@ -1421,8 +1379,8 @@ class BottomAppBarTheme:
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of 
-    [`BottomAppBar.elevation`][flet.BottomAppBar.elevation] in all descendant 
+    Overrides the default value of
+    [`BottomAppBar.elevation`][flet.BottomAppBar.elevation] in all descendant
     `BottomAppBar`][flet.BottomAppBar] controls.
     """
 

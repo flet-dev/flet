@@ -472,16 +472,16 @@ BottomSheetThemeData? parseBottomSheetTheme(
   return theme.bottomSheetTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     modalBackgroundColor: parseColor(value["bgcolor"], theme),
-    elevation: parseDouble(value["elevation"]),
     shape: parseShape(value["shape"], theme),
     showDragHandle: parseBool(value["show_drag_handle"]),
-    modalElevation: parseDouble(value["modal_elevation"]),
     clipBehavior: parseClip(value["clip_behavior"]),
     constraints: parseBoxConstraints(value["size_constraints"]),
     modalBarrierColor: parseColor(value["barrier_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dragHandleColor: parseColor(value["drag_handle_color"], theme),
+    modalElevation: parseDouble(value["elevation"]),
+    // elevation: parseDouble(value["elevation"]),
   );
 }
 
@@ -513,15 +513,11 @@ ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     padding: parsePadding(value["padding"]),
     labelPadding: parsePadding(value["label_padding"]),
     labelStyle: parseTextStyle(value["label_text_style"], theme),
-    secondaryLabelStyle:
-        parseTextStyle(value["secondary_label_text_style"], theme),
     disabledColor: parseColor(value["disabled_color"], theme),
     selectedColor: parseColor(value["selected_color"], theme),
     checkmarkColor: parseColor(value["check_color"], theme),
     deleteIconColor: parseColor(value["delete_icon_color"], theme),
     side: parseBorderSide(value["border_side"], theme),
-    secondarySelectedColor:
-        parseColor(value["secondary_selected_color"], theme),
     brightness: parseBrightness(value["brightness"]),
     selectedShadowColor: parseColor(value["selected_shadow_color"], theme),
     showCheckmark: parseBool(value["show_checkmark"]),
@@ -530,6 +526,11 @@ ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
         parseBoxConstraints(value["leading_size_constraints"]),
     deleteIconBoxConstraints:
         parseBoxConstraints(value["delete_icon_size_constraints"]),
+    // below props are for [ChoiceChip], which is not supported yet
+    // secondaryLabelStyle:
+    //     parseTextStyle(value["secondary_label_text_style"], theme),
+    // secondarySelectedColor:
+    //     parseColor(value["secondary_selected_color"], theme),
   );
 }
 
@@ -559,8 +560,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     extendedSizeConstraints:
         parseBoxConstraints(value["extended_size_constraints"]),
     sizeConstraints: parseBoxConstraints(value["size_constraints"]),
-    smallSizeConstraints: parseBoxConstraints(value["small_size_constraints"]),
-    largeSizeConstraints: parseBoxConstraints(value["large_size_constraints"]),
+    // smallSizeConstraints: parseBoxConstraints(value["small_size_constraints"]),
+    // largeSizeConstraints: parseBoxConstraints(value["large_size_constraints"]),
   );
 }
 
@@ -592,9 +593,8 @@ AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
 
   return theme.appBarTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
-    color: parseColor(value["color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    foregroundColor: parseColor(value["foreground_color"], theme),
+    foregroundColor: parseColor(value["color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     titleTextStyle: parseTextStyle(value["title_text_style"], theme),
     toolbarTextStyle: parseTextStyle(value["toolbar_text_style"], theme),

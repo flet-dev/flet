@@ -28,12 +28,6 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     bool lastOpen = widget.control.getBool("_open", false)!;
     var open = widget.control.getBool("open", false)!;
 
-    //var modal = widget.control.attrBool("modal", true)!;
-    var dismissible = widget.control.getBool("dismissible", true)!;
-    var enableDrag = widget.control.getBool("enable_drag", false)!;
-    var showDragHandle = widget.control.getBool("show_drag_handle", false)!;
-    var useSafeArea = widget.control.getBool("use_safe_area", true)!;
-    var scrollControlled = widget.control.getBool("scroll_controlled", false)!;
     var maintainBottomViewInsetsPadding =
         widget.control.getBool("maintain_bottom_view_insets_padding", true)!;
 
@@ -61,21 +55,23 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
                   return content;
                 },
-                isDismissible: dismissible,
+                isDismissible: widget.control.getBool("dismissible", true)!,
                 backgroundColor: widget.control.getColor("bgcolor", context),
                 elevation: widget.control.getDouble("elevation"),
-                isScrollControlled: scrollControlled,
-                enableDrag: enableDrag,
+                isScrollControlled:
+                    widget.control.getBool("scroll_controlled", false)!,
+                enableDrag: widget.control.getBool("enable_drag", false)!,
                 barrierColor: widget.control.getColor("barrier_color", context),
                 sheetAnimationStyle:
                     widget.control.getAnimationStyle("animation_style"),
                 constraints:
                     widget.control.getBoxConstraints("size_constraints"),
-                showDragHandle: showDragHandle,
+                showDragHandle:
+                    widget.control.getBool("show_drag_handle", false)!,
                 clipBehavior: widget.control.getClipBehavior("clip_behavior"),
                 shape: widget.control
                     .getOutlinedBorder("shape", Theme.of(context)),
-                useSafeArea: useSafeArea)
+                useSafeArea: widget.control.getBool("use_safe_area", true)!)
             .then((value) {
           widget.control.updateProperties({"_open": false}, python: false);
           widget.control.updateProperties({"open": false});

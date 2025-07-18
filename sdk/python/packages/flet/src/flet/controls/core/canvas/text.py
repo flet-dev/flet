@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
@@ -43,7 +44,7 @@ class Text(Shape):
     objects to build a rich text paragraph.
     """
 
-    alignment: Alignment = Alignment.TOP_LEFT
+    alignment: Alignment = field(default_factory=lambda: Alignment.TOP_LEFT)
     """
     A point within a text rectangle to determine its position and rotation center.
     """

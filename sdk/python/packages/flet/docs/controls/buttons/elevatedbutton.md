@@ -55,3 +55,9 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/elevated-button/styling.py"
 ```
+
+### Animate on hover
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/elevated-button/animate-on-hover.py"
+```

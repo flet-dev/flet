@@ -19,7 +19,7 @@ class Scale:
     """
     Scaling configuration for an object.
     """
-    
+
     scale: Optional[Number] = None
     """
     `scale_x` and `scale_y` get the value of `scale` if `scale` is provided.
@@ -34,7 +34,7 @@ class Scale:
     """
     The scalar by which to multiply the y-axis.
     """
-    
+
     alignment: Optional[Alignment] = None
     """
     Gives the origin of scale.
@@ -67,12 +67,12 @@ class Rotate:
 
     angle: Number
     """
-    Gives the rotation in clockwise radians.
+    The rotation in clockwise radians.
     """
 
     alignment: Optional[Alignment] = None
     """
-    Defines the alignment of the rotation.
+    The alignment of the rotation.
     """
 
     def copy_with(
@@ -98,7 +98,7 @@ class Offset:
 
     x: Number = 0
     """
-    The horizontal offset. 
+    The horizontal offset.
     """
 
     y: Number = 0

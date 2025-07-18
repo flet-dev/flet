@@ -2,11 +2,14 @@
     options:
         members_order: source
 
-## Usage example
+## Examples
+
+### Example 1
 
 ```python
-container_1.alignment = ft.alignment.center
-container_2.alignment = ft.alignment.top_left
-container_3.alignment = ft.Alignment(-0.5, -0.5)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/alignment/container.py"
 ```
-<img src="/img/docs/controls/container/containers-alignments.png" className="screenshot-50" />
+
+![container](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/container.png){width="80%"}
+/// caption
+///

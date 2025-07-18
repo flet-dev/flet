@@ -65,7 +65,7 @@ class NavigationRailDestination(Control):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the 
+    The color of the
     [`indicator_shape`][flet.NavigationRailDestination.indicator_shape] when
     this destination is selected.
     """
@@ -217,6 +217,21 @@ class NavigationRail(ConstrainedControl):
     destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
+    """
+
+    use_indicator: Optional[bool] = None
+    """
+    Whether to add a rounded navigation indicator behind the selected destination's icon.
+
+    The indicator's shape will be circular if [`label_type`][flet.NavigationRail.label_type]
+    is [`NavigationRailLabelType.NONE`][flet.NavigationRailLabelType.NONE], or a
+    [`StadiumBorder`][flet.StadiumBorder] if [`label_type`][flet.NavigationRail.label_type]
+    is [`NavigationRailLabelType.ALL`][flet.NavigationRailLabelType.ALL] or
+    [`NavigationRailLabelType.SELECTED`][flet.NavigationRailLabelType.SELECTED].
+
+    If `None`, defaults to
+    [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator].
+    If that is also `None`, defaults to [`Theme.use_material3`][flet.Theme.use_material3].
     """
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None

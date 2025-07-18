@@ -1,18 +1,9 @@
 ::: flet.BoxShadow
 
-## Usage example
+## Examples
+
+### Example 1
 
 ```python
-ft.Container(
-    border_radius=10,
-    width=100,
-    height=100,
-    shadow=ft.BoxShadow(
-        spread_radius=1,
-        blur_radius=15,
-        color=ft.Colors.BLUE_GREY_300,
-        offset=ft.Offset(0, 0),
-        blur_style=ft.ShadowBlurStyle.OUTER,
-    )
-)
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/box-shadow/container.py"
 ```

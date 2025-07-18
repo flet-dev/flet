@@ -25,11 +25,19 @@ class FloatingActionButton(ConstrainedControl):
     promote a primary action in the application. Floating action button is usually set
     to `page.floating_action_button`, but can also be added as a regular control at any
     place on a page.
+
+    Raises:
+        AssertionError: If neither `icon` nor a valid `content`
+            (string or visible Control) is provided.
+        AssertionError: If [`elevation`][(c).],
+            [`disabled_elevation`][(c).], [`focus_elevation`][(c).],
+            [`highlight_elevation`][(c).], or [`hover_elevation`][(c).]
+            is negative.
     """
 
     content: Optional[StrOrControl] = None
     """
-    A Control representing custom button content.
+    The content of the button.
     """
 
     icon: Optional[IconValueOrControl] = None
@@ -115,6 +123,17 @@ class FloatingActionButton(ConstrainedControl):
     Defaults to `8`.
     """
 
+    hover_color: Optional[ColorValue] = None
+    """
+    The color to use for filling the button
+    when the button is hovered.
+    """
+
+    splash_color: Optional[ColorValue] = None
+    """
+    The color to use for the ink splash.
+    """
+
     enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback. On
@@ -152,7 +171,7 @@ class FloatingActionButton(ConstrainedControl):
             self.icon
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
-        ), "at minimum, icon or a visible content must be provided"
+        ), "at minimum, icon or a content (string or visible Control) must be provided"
         assert self.elevation is None or self.elevation >= 0, (
             f"elevation must be greater than or equal to 0, got {self.elevation}"
         )

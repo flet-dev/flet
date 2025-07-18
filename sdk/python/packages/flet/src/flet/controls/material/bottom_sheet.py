@@ -92,6 +92,11 @@ class BottomSheet(DialogControl):
     Defines the shape of the bottom sheet.
     """
 
+    barrier_color: Optional[ColorValue] = None
+    """
+    The color of the scrim that obscures content behind this bottom sheet.
+    """
+
     def before_update(self):
         super().before_update()
         assert self.elevation is None or self.elevation >= 0, (

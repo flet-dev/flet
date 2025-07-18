@@ -19,6 +19,10 @@ class Axis(Enum):
 class Alignment:
     """
     Defines an alignment relative to the center.
+
+    ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/overview.png){width="80%"}
+    /// caption
+    ///
     """
 
     x: Number

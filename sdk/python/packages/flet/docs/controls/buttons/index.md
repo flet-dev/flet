@@ -80,7 +80,7 @@
 -   [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
 
     ---
-    ![OutlinedButton](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/icon-button/media/index.png){width="100%"}
+    ![OutlinedButton](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/index.png){width="100%"}
 
 -   [:octicons-arrow-right-24: `PopupMenuButton`][flet.PopupMenuButton]
 
@@ -90,7 +90,7 @@
 -   [:octicons-arrow-right-24: `SegmentedButton`][flet.SegmentedButton]
 
     ---
-    ![SegmentedButton](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/index.png){width="100%"}
+    ![SegmentedButton](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/segmented-button/media/index.png){width="100%"}
 
 -   [:octicons-arrow-right-24: `SubmenuButton`][flet.SubmenuButton]
 

@@ -1,8 +1,9 @@
 ::: flet.Border
 
-## Usage example
+## Examples
+
+### Example 1
 
 ```python
-container_1.border = ft.border.all(10, ft.Colors.PINK_600)
-container_1.border = ft.border.only(bottom=ft.border.BorderSide(1, "black"))
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/types/border/container.py"
 ```
