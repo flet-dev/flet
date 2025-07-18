@@ -60,15 +60,18 @@ ft.run(main)
 
 By setting just `page.adaptive = True` you can make you app looking awesome on both iOS and Android devices:
 
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <h3>iPhone</h3>
-    <img src="/img/blog/adaptive/iphone-adaptive-app.png" className="screenshot-60" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <h3>Android</h3>
-    <img src="/img/blog/adaptive/android-adaptive-app.png" className="screenshot-60" style={{ width: '57%'}} />
-  </div>
+<div class="grid cards" markdown>
+
+-   **iPhone**
+
+    ---
+    ![iPhone](../assets/getting-started/adaptive-apps/iphone.png){width="80%"}
+
+-   **Android**
+
+    ---
+    ![Android](../assets/getting-started/adaptive-apps/android.png){width="80%"}
+
 </div>
 
 ## Material and Cupertino controls
@@ -89,186 +92,173 @@ Flet checks the value of [`Page.platform`][flet.Page.platform] property and if i
 `PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created;
 in all other cases Material control will be created.
 
-Note:
-    [`adaptive`][flet.AdaptiveControl.adaptive] property can be set for an individual control or
-    a container-controls (ex: `Row`, `Column`) that has children controls.
-    If a container-control is made adaptive, all its children will be adaptive too,
-    unless `adaptive` property is explicitly set to `False` for a child control.
+/// admonition | Note
+    type: note
+[`adaptive`][flet.AdaptiveControl.adaptive] property can be set for an individual control or
+a container-controls (ex: [`Row`][flet.Row], [`Column`][flet.Column]) that has children controls.
+If a container-control is made adaptive, all its children will be adaptive too,
+unless `adaptive` property is explicitly set to `False` for a child control.
+///
 
+/// details | Material vs Cupertino
+    type: example
 Below is the list of adaptive Material controls and their matching Cupertino controls:
 
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/alertdialog">AlertDialog</a>
-    <img src="/img/docs/adaptive-apps/alertdialog.png" className="screenshot-50" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinoalertdialog">CupertinoAlertDialog</a>
-    <img src="/img/docs/adaptive-apps/cupertinoalertdialog.png" className="screenshot-60" />
-  </div>
+<div class="grid cards" markdown>
+
+-   [:octicons-arrow-right-24: `AlertDialog`][flet.AlertDialog]
+
+    ---
+    ![AlertDialog](../assets/getting-started/adaptive-apps/alertdialog.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoAlertDialog`][flet.CupertinoAlertDialog]
+
+    ---
+    ![CupertinoAlertDialog](../assets/getting-started/adaptive-apps/cupertinoalertdialog.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `Any button in Dialog actions`][flet.Button]
+
+    ---
+    ![Dialog actions](../assets/getting-started/adaptive-apps/dialogactions.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
+
+    ---
+    ![CupertinoDialogAction](../assets/getting-started/adaptive-apps/cupertinodialogactions.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `AppBar`][flet.AppBar]
+
+    ---
+    ![AppBar](../assets/getting-started/adaptive-apps/appbar.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoAppBar`][flet.CupertinoAppBar]
+
+    ---
+    ![CupertinoAppBar](../assets/getting-started/adaptive-apps/cupertinoappbar.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `NavigationBar`][flet.NavigationBar]
+
+    ---
+    ![NavigationBar](../assets/getting-started/adaptive-apps/navigationbar.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoNavigationBar`][flet.CupertinoNavigationBar]
+
+    ---
+    ![CupertinoNavigationBar](../assets/getting-started/adaptive-apps/cupertinonavigationbar.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `ListTile`][flet.ListTile]
+
+    ---
+    ![ListTile](../assets/getting-started/adaptive-apps/listtile.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoListTile`][flet.CupertinoListTile]
+
+    ---
+    ![CupertinoListTile](../assets/getting-started/adaptive-apps/cupertinolisttile.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `TextField`][flet.TextField]
+
+    ---
+    ![TextField](../assets/getting-started/adaptive-apps/textfield.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoTextField`][flet.CupertinoTextField]
+
+    ---
+    ![CupertinoTextField](../assets/getting-started/adaptive-apps/cupertinotextfield.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `Checkbox`][flet.Checkbox]
+
+    ---
+    ![Checkbox](../assets/getting-started/adaptive-apps/checkbox.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoCheckbox`][flet.CupertinoCheckbox]
+
+    ---
+    ![CupertinoCheckbox](../assets/getting-started/adaptive-apps/cupertinocheckbox.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `Slider`][flet.Slider]
+
+    ---
+    ![Slider](../assets/getting-started/adaptive-apps/slider.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
+
+    ---
+    ![CupertinoSlider](../assets/getting-started/adaptive-apps/cupertinoslider.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `Switch`][flet.Switch]
+
+    ---
+    ![Switch](../assets/getting-started/adaptive-apps/switch.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoSwitch`][flet.CupertinoSwitch]
+
+    ---
+    ![CupertinoSwitch](../assets/getting-started/adaptive-apps/cupertinoswitch.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `Radio`][flet.Radio]
+
+    ---
+    ![Radio](../assets/getting-started/adaptive-apps/radio.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoRadio`][flet.CupertinoRadio]
+
+    ---
+    ![CupertinoRadio](../assets/getting-started/adaptive-apps/cupertinoradio.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
+
+    ---
+    ![FilledButton](../assets/getting-started/adaptive-apps/filledbutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
+
+    ---
+    ![CupertinoFilledButton](../assets/getting-started/adaptive-apps/cupertinofilledbutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `FilledTonalButton`][flet.FilledTonalButton]
+
+    ---
+    ![FilledTonalButton](../assets/getting-started/adaptive-apps/filledtonalbutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoButton (Tonal)`][flet.CupertinoButton]
+
+    ---
+    ![CupertinoButtonTonal](../assets/getting-started/adaptive-apps/cupertinobutton-filledtonal.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `IconButton`][flet.IconButton]
+
+    ---
+    ![IconButton](../assets/getting-started/adaptive-apps/icon-button.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoButton (Icon)`][flet.CupertinoButton]
+
+    ---
+    ![CupertinoIconButton](../assets/getting-started/adaptive-apps/icon-button-cupertino.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
+
+    ---
+    ![ElevatedButton](../assets/getting-started/adaptive-apps/elevatedbutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoButton (Elevated)`][flet.CupertinoButton]
+
+    ---
+    ![CupertinoButton](../assets/getting-started/adaptive-apps/cupertinobutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
+
+    ---
+    ![OutlinedButton](../assets/getting-started/adaptive-apps/outlinedbutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
+
+    ---
+    ![TextButton](../assets/getting-started/adaptive-apps/textbutton.png){width="45%"}
+
 </div>
 
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/buttons">Any button in Dialog actions</a>
-        <img src="/img/docs/adaptive-apps/dialogactions.png" className="screenshot-30" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-      <a href="/docs/controls/cupertinodialogaction">CupertinoDialogAction</a>
-    <img src="/img/docs/adaptive-apps/cupertinodialogactions.png" className="screenshot-40" />
-  </div>
-</div>
-
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/appbar">AppBar</a>
-    <img src="/img/docs/adaptive-apps/appbar.png" className="screenshot-60" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinoappbar">CupertinoAppBar</a>
-    <img src="/img/docs/adaptive-apps/cupertinoappbar.png" className="screenshot-60" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/navigationbar">NavigationBar</a>
-    <img src="/img/docs/adaptive-apps/navigationbar.png" className="screenshot-60" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinonavigationbar">CupertinoNavigationBar</a>
-    <img src="/img/docs/adaptive-apps/cupertinonavigationbar.png" className="screenshot-70" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/listtile">ListTile</a>
-    <img src="/img/docs/adaptive-apps/listtile.png" className="screenshot-70" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinolisttile">CupertinoListTile</a>
-    <img src="/img/docs/adaptive-apps/cupertinolisttile.png" className="screenshot-70" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/textfield">TextField</a>
-    <img src="/img/docs/adaptive-apps/textfield.png" className="screenshot-70" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinotextfield">CupertinoTextField</a>
-    <img src="/img/docs/adaptive-apps/cupertinotextfield.png" className="screenshot-70" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/checkbox">Checkbox</a>
-    <img src="/img/docs/adaptive-apps/checkbox.png" className="screenshot-10" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinocheckbox">CupertinoCheckbox</a>
-    <img src="/img/docs/adaptive-apps/cupertinocheckbox.png" className="screenshot-10" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/slider">Slider</a>
-    <img src="/img/docs/adaptive-apps/slider.png" className="screenshot-30" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinoslider">CupertinoSlider</a>
-    <img src="/img/docs/adaptive-apps/cupertinoslider.png" className="screenshot-30" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/switch">Switch</a>
-    <img src="/img/docs/adaptive-apps/switch.png" className="screenshot-10" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinoswitch">CupertinoSwitch</a>
-    <img src="/img/docs/adaptive-apps/cupertinoswitch.png" className="screenshot-10" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/radio">Radio</a>
-    <img src="/img/docs/adaptive-apps/radio.png" className="screenshot-10" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinoradio">CupertinoRadio</a>
-    <img src="/img/docs/adaptive-apps/cupertinoradio.png" className="screenshot-10" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/filledbutton">FilledButton</a>
-    <img src="/img/docs/adaptive-apps/filledbutton.png" className="screenshot-20" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinobutton">CupertinoFilledButton</a>
-    <img src="/img/docs/adaptive-apps/cupertinofilledbutton.png" className="screenshot-30" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/filledtonalbutton">FilledTonalButton</a>
-    <img src="/img/docs/adaptive-apps/filledtonalbutton.png" className="screenshot-20" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinobutton">CupertinoButton</a>
-    <img src="/img/docs/adaptive-apps/cupertinobutton-filledtonal.png" className="screenshot-30" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/iconbutton">IconButton</a>
-    <img src="/img/docs/adaptive-apps/icon-button.png" className="screenshot-10" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinobutton">CupertinoButton</a>
-    <img src="/img/docs/adaptive-apps/icon-button-cupertino.png" className="screenshot-10" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/elevatedbutton">ElevatedButton</a>
-    <img src="/img/docs/adaptive-apps/elevatedbutton.png" className="screenshot-20" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/cupertinobutton">CupertinoButton</a>
-    <img src="/img/docs/adaptive-apps/cupertinobutton.png" className="screenshot-20" />
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/outlinedbutton">OutlinedButton</a>
-    <img src="/img/docs/adaptive-apps/outlinedbutton.png" className="screenshot-20" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <a href="/docs/controls/textbutton">TextButton</a>
-    <img src="/img/docs/adaptive-apps/textbutton.png" className="screenshot-20" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-  </div>
-</div>
+///
 
 ## Custom adaptive controls
 
@@ -340,15 +330,18 @@ ft.run(main)
 
 Now the `NavigationBar` and icons within it will look like different on Android and iOS:
 
-<div className="row">
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <h3>iOS</h3>
-    <img src="/img/docs/adaptive-apps/navigation-bar-custom-ios.png" className="screenshot-100" />
-  </div>
-  <div className="col col--6" style={{textAlign: 'center'}}>
-    <h3>Android</h3>
-    <img src="/img/docs/adaptive-apps/navigation-bar-custom-android.png" className="screenshot-100"/>
-  </div>
+<div class="grid cards" markdown>
+
+-   **iOS**
+
+    ---
+    ![iOS](../assets/getting-started/adaptive-apps/navigation-bar-custom-ios.png)
+
+-   **Android**
+
+    ---
+    ![Android](../assets/getting-started/adaptive-apps/navigation-bar-custom-android.png){width="90%"}
+
 </div>
 
 /// admonition | Note
