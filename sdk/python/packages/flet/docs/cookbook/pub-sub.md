@@ -11,7 +11,7 @@ A typical PubSub usage would be:
 * [unsubscribe][flet.PubSubClient.subscribe] from broadcast messages or [unsubscribe from a topic][flet.PubSubClient.unsubscribe_topic] on some event, like "Leave" button click.
 * [unsubscribe_all][flet.PubSubClient.unsubscribe_all] from everything on [`page.on_close`][flet.Page.on_close].
 
-This is an example of a simple chat application:
+This is an example of a simple chat application that uses PubSub:
 
 ```python
 import flet as ft
@@ -41,6 +41,6 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-![Chat app example](../assets/cookbook/pub-sub/chat-app-example.gif)
+![Chat app](../assets/cookbook/pub-sub/chat-app.gif)
 /// caption
 ///

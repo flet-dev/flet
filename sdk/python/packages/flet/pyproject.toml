@@ -46,6 +46,7 @@ docs = [
     "mkdocs-material",
     "mkdocstrings-python",
     "mkdocstrings-python-xref",
+    "mkdocs-exclude",
     "mike",
     "markdown>=3.6",
     "pymdown-extensions",

@@ -45,16 +45,19 @@ Where `[script]` is a relative (ex: `counter.py`) or absolute (ex: `/Users/john/
 
 The app will be started in a native OS window:
 
-![macOS](../assets/getting-started/flet-counter-macos.png)
-/// caption
-macOS
-///
+<div class="grid cards" markdown>
 
+-   **macOS**
 
-![Windows](../assets/getting-started/flet-counter-windows.png)
-/// caption
-Windows
-///
+    ---
+    ![macOS](../assets/getting-started/counter-app/macos.png)
+
+-   **Windows**
+
+    ---
+    ![Windows](../assets/getting-started/counter-app/windows.png)
+
+</div>
 
 ## Web app
 
@@ -83,8 +86,7 @@ poetry run flet run --web [script]  # (1)!
 
 A new browser window/tab will be opened and the app will be using a random TCP port:
 
-![Web](../assets/getting-started/flet-counter-safari.png)
-
+![Web](../assets/getting-started/counter-app/safari.png){width="80%"}
 /// caption
 Web app
 ///
@@ -94,7 +96,7 @@ Web app
 By default, Flet will watch the script file that was run and reload the app whenever the contents
 of this file are modified+saved, but will **not** watch for changes in other files.
 
-To modify this behavior, you can use one or more of the following options:
+To modify this behavior, you can use one or more of these [`flet run`](../cli/run.md) options:
 
 * `-d` or `--directory` to watch for changes in the `[script]`s directory only
 * `-r` or `--recursive` to watch for changes in the `[script]`s directory and all sub-directories recursively

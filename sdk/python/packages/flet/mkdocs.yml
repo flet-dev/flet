@@ -92,6 +92,9 @@ watch:
 # Plugins
 plugins:
   # - footnotes
+  - exclude:
+      glob:
+        - archive/*
   - search:
       lang: en
   - mike:
@@ -193,7 +196,7 @@ markdown_extensions:
 # Navigation
 nav:
   - Getting Started:
-      - Overview: index.md
+      - index.md
       - Installation: getting-started/installation.md
       - Creating a new Flet app: getting-started/create-flet-app.md
       - Running a Flet app (Hot Reload): getting-started/running-app.md
@@ -221,26 +224,26 @@ nav:
               - Service: controls/service.md
           - Buttons:
               - controls/buttons/index.md
-              - Button: controls/buttons/button.md
-              - CupertinoActionSheetAction: controls/buttons/cupertinoactionsheetaction.md
-              - CupertinoButton: controls/buttons/cupertinobutton.md
-              - CupertinoContextMenuAction: controls/buttons/cupertinocontextmenuaction.md
-              - CupertinoDialogAction: controls/buttons/cupertinodialogaction.md
-              - CupertinoFilledButton: controls/buttons/cupertinofilledbutton.md
-              - CupertinoSegmentedButton: controls/buttons/cupertinosegmentedbutton.md
-              - CupertinoSlidingSegmentedButton: controls/buttons/cupertinoslidingsegmentedbutton.md
-              - CupertinoTintedButton: controls/buttons/cupertinotintedbutton.md
-              - ElevatedButton: controls/buttons/elevatedbutton.md
-              - FilledButton: controls/buttons/filledbutton.md
-              - FilledTonalButton: controls/buttons/filledtonalbutton.md
-              - FloatingActionButton: controls/buttons/floatingactionbutton.md
-              - IconButton: controls/buttons/iconbutton.md
-              - MenuItemButton: controls/buttons/menuitembutton.md
-              - OutlinedButton: controls/buttons/outlinedbutton.md
-              - PopupMenuButton: controls/buttons/popupmenubutton.md
-              - SegmentedButton: controls/buttons/segmentedbutton.md
-              - SubmenuButton: controls/buttons/submenubutton.md
-              - TextButton: controls/buttons/textbutton.md
+              - Button: controls/button.md
+              - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
+              - CupertinoButton: controls/cupertinobutton.md
+              - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
+              - CupertinoDialogAction: controls/cupertinodialogaction.md
+              - CupertinoFilledButton: controls/cupertinofilledbutton.md
+              - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
+              - CupertinoSlidingSegmentedButton: controls/cupertinoslidingsegmentedbutton.md
+              - CupertinoTintedButton: controls/cupertinotintedbutton.md
+              - ElevatedButton: controls/elevatedbutton.md
+              - FilledButton: controls/filledbutton.md
+              - FilledTonalButton: controls/filledtonalbutton.md
+              - FloatingActionButton: controls/floatingactionbutton.md
+              - IconButton: controls/iconbutton.md
+              - MenuItemButton: controls/menuitembutton.md
+              - OutlinedButton: controls/outlinedbutton.md
+              - PopupMenuButton: controls/popupmenubutton.md
+              - SegmentedButton: controls/segmentedbutton.md
+              - SubmenuButton: controls/submenubutton.md
+              - TextButton: controls/textbutton.md
           - Dialogs, Alerts and Panels:
               - AlertDialog: controls/alertdialog.md
               - Banner: controls/banner.md
@@ -305,9 +308,9 @@ nav:
               - Cupertinolisttile: controls/cupertinolisttile.md
               - Datatable:
                   - controls/datatable/index.md
-                  - DataCell: controls/datatable/datacell.md
-                  - DataColumn: controls/datatable/datacolumn.md
-                  - DataRow: controls/datatable/datarow.md
+                  - DataCell: controls/datacell.md
+                  - DataColumn: controls/datacolumn.md
+                  - DataRow: controls/datarow.md
               - Dismissible: controls/dismissible.md
               - Divider: controls/divider.md
               - ExpansionPanel: controls/expansionpanel.md
@@ -386,15 +389,15 @@ nav:
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Gradient:
                   - types/gradient/index.md
-                  - LinearGradient: types/gradient/lineargradient.md
-                  - RadialGradient: types/gradient/radialgradient.md
-                  - SweepGradient: types/gradient/sweepgradient.md
+                  - LinearGradient: types/lineargradient.md
+                  - RadialGradient: types/radialgradient.md
+                  - SweepGradient: types/sweepgradient.md
               - InputBorder: types/inputborder.md
               - InputFilter: types/inputfilter.md
               - Key:
                   - types/key/index.md
-                  - ScrollKey: types/key/scrollkey.md
-                  - ValueKey: types/key/valuekey.md
+                  - ScrollKey: types/scrollkey.md
+                  - ValueKey: types/valuekey.md
               - Locale: types/locale.md
               - LocaleConfiguration: types/localeconfiguration.md
               - Margin: types/margin.md
@@ -403,23 +406,23 @@ nav:
               - MenuStyle: types/menustyle.md
               - NotchShape:
                   - types/notchshape/index.md
-                  - AutomaticNotchShape: types/notchshape/automaticnotchshape.md
-                  - CircularRectangleNotchShape: types/notchshape/circularrectanglenotchshape.md
+                  - AutomaticNotchShape: types/automaticnotchshape.md
+                  - CircularRectangleNotchShape: types/circularrectanglenotchshape.md
               - Offset: types/offset.md
               - OutlinedBorder:
                   - types/outlinedborder/index.md
-                  - BeveledRectangleBorder: types/outlinedborder/beveledrectangleborder.md
-                  - CircleBorder: types/outlinedborder/circleborder.md
-                  - ContinuousRectangleBorder: types/outlinedborder/continuousrectangleborder.md
-                  - RoundedRectangleBorder: types/outlinedborder/roundedrectangleborder.md
-                  - StadiumBorder: types/outlinedborder/stadiumborder.md
+                  - BeveledRectangleBorder: types/beveledrectangleborder.md
+                  - CircleBorder: types/circleborder.md
+                  - ContinuousRectangleBorder: types/continuousrectangleborder.md
+                  - RoundedRectangleBorder: types/roundedrectangleborder.md
+                  - StadiumBorder: types/stadiumborder.md
               - Padding: types/padding.md
               - Paint: types/paint.md
               - PaintGradient:
                   - types/paintgradient/index.md
-                  - PaintLinearGradient: types/paintgradient/paintlineargradient.md
-                  - PaintRadialGradient: types/paintgradient/paintradialgradient.md
-                  - PaintSweepGradient: types/paintgradient/paintsweepgradient.md
+                  - PaintLinearGradient: types/paintlineargradient.md
+                  - PaintRadialGradient: types/paintradialgradient.md
+                  - PaintSweepGradient: types/paintsweepgradient.md
               - Rect: types/rect.md
               - Ref: types/ref.md
               - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
@@ -436,49 +439,49 @@ nav:
               - TextThemeStyle: types/textthemestyle.md
               - Theme:
                   - types/theme/index.md
-                  - AppBarTheme: types/theme/appbartheme.md
-                  - BadgeTheme: types/theme/badgetheme.md
-                  - BannerTheme: types/theme/bannertheme.md
-                  - BottomAppBarTheme: types/theme/bottomappbartheme.md
-                  - BottomSheetTheme: types/theme/bottomsheettheme.md
-                  - CardTheme: types/theme/cardtheme.md
-                  - CheckboxTheme: types/theme/checkboxtheme.md
-                  - ChipTheme: types/theme/chiptheme.md
-                  - ColorScheme: types/theme/colorscheme.md
-                  - DataTableTheme: types/theme/datatabletheme.md
-                  - DatePickerTheme: types/theme/datepickertheme.md
-                  - DialogTheme: types/theme/dialogtheme.md
-                  - DividerTheme: types/theme/dividertheme.md
-                  - DropdownTheme: types/theme/dropdowntheme.md
-                  - ElevatedButtonTheme: types/theme/elevatedbuttontheme.md
-                  - ExpansionTileTheme: types/theme/expansiontiletheme.md
-                  - FilledButtonTheme: types/theme/filledbuttontheme.md
-                  - FloatingActionButtonTheme: types/theme/floatingactionbuttontheme.md
-                  - IconButtonTheme: types/theme/iconbuttontheme.md
-                  - IconTheme: types/theme/icontheme.md
-                  - ListTileTheme: types/theme/listtiletheme.md
-                  - NavigationBarTheme: types/theme/navigationbartheme.md
-                  - NavigationDrawerTheme: types/theme/navigationdrawertheme.md
-                  - NavigationRailTheme: types/theme/navigationrailtheme.md
-                  - OutlinedButtonTheme: types/theme/outlinedbuttontheme.md
-                  - PageTransitionsTheme: types/theme/pagetransitionstheme.md
-                  - PageTransitionTheme: types/theme/pagetransitiontheme.md
-                  - PopupMenuTheme: types/theme/popupmenutheme.md
-                  - ProgressIndicatorTheme: types/theme/progressindicatortheme.md
-                  - RadioTheme: types/theme/radiotheme.md
-                  - ScrollBarTheme: types/theme/scrollbartheme.md
-                  - SearchBarTheme: types/theme/searchbartheme.md
-                  - SearchViewTheme: types/theme/searchviewtheme.md
-                  - SegmentedButtonTheme: types/theme/segmentedbuttontheme.md
-                  - SliderTheme: types/theme/slidertheme.md
-                  - SnackBarTheme: types/theme/snackbartheme.md
-                  - SwitchTheme: types/theme/switchtheme.md
-                  - SystemOverlayStyle: types/theme/systemoverlaystyle.md
-                  - TabsTheme: types/theme/tabstheme.md
-                  - TextButtonTheme: types/theme/textbuttontheme.md
-                  - TextTheme: types/theme/texttheme.md
-                  - TimePickerTheme: types/theme/timepickertheme.md
-                  - TooltipTheme: types/theme/tooltiptheme.md
+                  - AppBarTheme: types/appbartheme.md
+                  - BadgeTheme: types/badgetheme.md
+                  - BannerTheme: types/bannertheme.md
+                  - BottomAppBarTheme: types/bottomappbartheme.md
+                  - BottomSheetTheme: types/bottomsheettheme.md
+                  - CardTheme: types/cardtheme.md
+                  - CheckboxTheme: types/checkboxtheme.md
+                  - ChipTheme: types/chiptheme.md
+                  - ColorScheme: types/colorscheme.md
+                  - DataTableTheme: types/datatabletheme.md
+                  - DatePickerTheme: types/datepickertheme.md
+                  - DialogTheme: types/dialogtheme.md
+                  - DividerTheme: types/dividertheme.md
+                  - DropdownTheme: types/dropdowntheme.md
+                  - ElevatedButtonTheme: types/elevatedbuttontheme.md
+                  - ExpansionTileTheme: types/expansiontiletheme.md
+                  - FilledButtonTheme: types/filledbuttontheme.md
+                  - FloatingActionButtonTheme: types/floatingactionbuttontheme.md
+                  - IconButtonTheme: types/iconbuttontheme.md
+                  - IconTheme: types/icontheme.md
+                  - ListTileTheme: types/listtiletheme.md
+                  - NavigationBarTheme: types/navigationbartheme.md
+                  - NavigationDrawerTheme: types/navigationdrawertheme.md
+                  - NavigationRailTheme: types/navigationrailtheme.md
+                  - OutlinedButtonTheme: types/outlinedbuttontheme.md
+                  - PageTransitionsTheme: types/pagetransitionstheme.md
+                  - PageTransitionTheme: types/pagetransitiontheme.md
+                  - PopupMenuTheme: types/popupmenutheme.md
+                  - ProgressIndicatorTheme: types/progressindicatortheme.md
+                  - RadioTheme: types/radiotheme.md
+                  - ScrollBarTheme: types/scrollbartheme.md
+                  - SearchBarTheme: types/searchbartheme.md
+                  - SearchViewTheme: types/searchviewtheme.md
+                  - SegmentedButtonTheme: types/segmentedbuttontheme.md
+                  - SliderTheme: types/slidertheme.md
+                  - SnackBarTheme: types/snackbartheme.md
+                  - SwitchTheme: types/switchtheme.md
+                  - SystemOverlayStyle: types/systemoverlaystyle.md
+                  - TabsTheme: types/tabstheme.md
+                  - TextButtonTheme: types/textbuttontheme.md
+                  - TextTheme: types/texttheme.md
+                  - TimePickerTheme: types/timepickertheme.md
+                  - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
@@ -604,9 +607,9 @@ nav:
               - WindowEvent: types/windowevent.md
           - FletException:
               - types/fletexception/index.md
-              - FletPageDisconnectedException: types/fletexception/fletpagedisconnectedexception.md
-              - FletUnimplementedPlatformException: types/fletexception/fletunimplementedplatformexception.md
-              - FletUnsupportedPlatformException: types/fletexception/fletunsupportedplatformexception.md
+              - FletPageDisconnectedException: types/fletpagedisconnectedexception.md
+              - FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
+              - FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
           - PubSub:
               # - types/pubsub/index.md
               - PubSubClient: types/pubsub/pubsubclient.md
@@ -669,5 +672,6 @@ nav:
       - publish: cli/publish.md
       - run: cli/run.md
       # - serve: cli/serve.md
-  - Others:
-      - Environment Variables: environment-variables.md
+  - Unclassified:
+      - Environment Variables: unclassified/environment-variables.md
+      - Built-in binary Python packages for Android and iOS: unclassified/binary-packages-android-ios.md

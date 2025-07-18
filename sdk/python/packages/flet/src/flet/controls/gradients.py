@@ -95,7 +95,7 @@ class LinearGradient(Gradient):
     """
     Creates a linear gradient from `begin` to `end`.
 
-    More information on Linear gradient [here](https://api.flutter.dev/flutter/painting/LinearGradient-class.html).
+    More information on [here](https://api.flutter.dev/flutter/painting/LinearGradient-class.html).
     """
 
     begin: Alignment = field(default_factory=lambda: Alignment.center_left())
@@ -118,8 +118,7 @@ class RadialGradient(Gradient):
     Creates a radial gradient centered at center that ends at radius distance from the
     center.
 
-    More information on Radial gradient [here](https://api.flutter.dev/flutter/painting/
-    RadialGradient-class.html).
+    More information [here](https://api.flutter.dev/flutter/painting/RadialGradient-class.html).
     """
 
     center: Alignment = field(default_factory=lambda: Alignment.CENTER)
@@ -161,8 +160,7 @@ class SweepGradient(Gradient):
     Creates a sweep gradient centered at center that starts at `start_angle` and ends
     at `end_angle`.
 
-    More information on Sweep gradient [here](https://api.flutter.dev/flutter/painting/
-    SweepGradient-class.html).
+    More information [here](https://api.flutter.dev/flutter/painting/SweepGradient-class.html).
     """
 
     center: Alignment = field(default_factory=lambda: Alignment.CENTER)
@@ -175,13 +173,13 @@ class SweepGradient(Gradient):
 
     start_angle: Number = 0.0
     """
-    The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop 0.0 of
+    The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop `0.0` of
     the gradient is placed. 
     """
 
     end_angle: Number = math.pi * 2
     """
-    The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop 1.0 of
+    The angle in [radians](https://en.wikipedia.org/wiki/Radian) at which stop `1.0` of
     the gradient is placed.
     """
 

@@ -16,7 +16,7 @@ ft.run(main, view=ft.AppView.WEB_BROWSER)
 
 Run the program and notice that it's not just it takes a couple of seconds to initially load and render all text lines on a page, but scrolling is slow and laggy too:
 
-![Scroll column](../assets/getting-started/scroll-column.gif)
+![Scroll column](../assets/cookbook/large-lists/scroll-column.gif)
 
 For displaying lists with a lot of items use [`ListView`][flet.ListView] and [`GridView`][flet.GridView] controls which render items on demand, visible at the current scrolling position only.
 
@@ -42,7 +42,7 @@ ft.run(main, view=ft.AppView.WEB_BROWSER)
 
 Now the scrolling is smooth and fast enough to follow mouse movements:
 
-![Scroll listview](../assets/getting-started/scroll-listview.gif)
+![Scroll listview](../assets/cookbook/large-lists/scroll-listview.gif)
 
 /// admonition
     type: note
@@ -86,7 +86,7 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-![Row wrap as grid](../assets/getting-started/row-wrap-as-grid.png)
+![Row wrap as grid](../assets/cookbook/large-lists/row-wrap-as-grid.png)
 
 Try scrolling and resizing the browser window - everything works, but very laggy.
 
@@ -124,7 +124,7 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-![Grid view](../assets/getting-started/grid-view.png)
+![Grid view](../assets/cookbook/large-lists/grid-view.png)
 
 With GridView scrolling and window resizing are smooth and responsive!
 
@@ -155,4 +155,4 @@ def main(page: ft.Page):
 
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
-![Sending page updates in batches](../assets/getting-started/sending-page-updates-in-batches.png)
+![Sending page updates in batches](../assets/cookbook/large-lists/sending-page-updates-in-batches.png)

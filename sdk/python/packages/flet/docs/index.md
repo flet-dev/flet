@@ -71,15 +71,19 @@ poetry run flet run counter.py
 
 The app will be started in a native OS window - what a nice alternative to Electron!
 
-![macOS](assets/getting-started/flet-counter-macos.png){ width="500px"}
-/// caption
-macOS
-///
+<div class="grid cards" markdown>
 
-![Windows](assets/getting-started/flet-counter-windows.png){ width="500px"}
-/// caption
-Windows
-///
+-   **macOS**
+
+    ---
+    ![macOS](assets/getting-started/counter-app/macos.png)
+
+-   **Windows**
+
+    ---
+    ![Windows](assets/getting-started/counter-app/windows.png)
+
+</div>
 
 If you want to run the app in a web browser, you can use the `--web` (or `-w`) cli flag:
 
@@ -99,7 +103,7 @@ poetry run flet run --web counter.py
 ```
 ///
 
-![Web](assets/getting-started/flet-counter-safari.png){ width="500px"}
+![Web](assets/getting-started/counter-app/safari.png){ width="500px"}
 /// caption
 Web app
 ///

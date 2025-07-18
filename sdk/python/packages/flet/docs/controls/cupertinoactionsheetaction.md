@@ -2,4 +2,4 @@
 
 ## Examples
 
-See [these](../cupertinoactionsheet.md#examples).
+See [these](cupertinoactionsheet.md#examples).
