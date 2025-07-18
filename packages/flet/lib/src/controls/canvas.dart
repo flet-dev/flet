@@ -35,7 +35,7 @@ class CanvasControl extends StatefulWidget {
 
 class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
-  Size? _lastSize;
+  Size _lastSize = Size.zero;
   ui.Image? _capturedImage;
   double _dpr = 1.0;
   bool _initialized = false;
@@ -86,8 +86,7 @@ class _CanvasControlState extends State<CanvasControl> {
     switch (name) {
       case "capture":
         final shapes = widget.control.children("shapes");
-        final logicalSize = _lastSize;
-        if (logicalSize == null || logicalSize.isEmpty || shapes.isEmpty) {
+        if (_lastSize.isEmpty || shapes.isEmpty) {
           return;
         }
 
@@ -107,15 +106,12 @@ class _CanvasControlState extends State<CanvasControl> {
             onPaintCallback: (_) {},
             dpr: _dpr);
 
-        var captureSize =
-            Size(logicalSize.width * _dpr, logicalSize.height * _dpr);
-
-        painter.paint(canvas, captureSize);
+        painter.paint(canvas, _lastSize);
 
         final picture = recorder.endRecording();
         _capturedImage = await picture.toImage(
-          captureSize.width.toInt(),
-          captureSize.height.toInt(),
+          (_lastSize.width * _dpr).toInt(),
+          (_lastSize.height * _dpr).toInt(),
         );
         return;
 
@@ -152,7 +148,7 @@ class _CanvasControlState extends State<CanvasControl> {
         onPaintCallback: (size) {
           var now = DateTime.now().millisecondsSinceEpoch;
           if ((now - _lastResize > resizeInterval && _lastSize != size) ||
-              _lastSize == null) {
+              _lastSize.isEmpty) {
             _lastSize = size;
             _lastResize = now;
             widget.control
@@ -192,6 +188,7 @@ class FletCustomPainter extends CustomPainter {
     //debugPrint("paint.shapes: $shapes");
 
     canvas.save();
+    canvas.scale(dpr);
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
     if (capturedImage != null) {
@@ -398,9 +395,8 @@ class FletCustomPainter extends CustomPainter {
       final srcRect =
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
       final dstRect = width != null && height != null
-          ? Rect.fromLTWH(x * dpr, y * dpr, width * dpr, height * dpr)
-          : Offset(x * dpr, y * dpr) &
-              Size(img.width.toDouble() * dpr, img.height.toDouble() * dpr);
+          ? Rect.fromLTWH(x, y, width, height)
+          : Offset(x, y) & Size(img.width.toDouble(), img.height.toDouble());
       debugPrint("canvas.drawImageRect($srcRect, $dstRect)");
       canvas.drawImageRect(img, srcRect, dstRect, paint);
     } else {
