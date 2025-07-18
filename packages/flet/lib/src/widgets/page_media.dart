@@ -52,13 +52,11 @@ class _PageMediaState extends State<PageMedia> {
         _onPlatformBrightnessChanged(platformBrightness);
       }
 
-      var padding = MediaQuery.paddingOf(context);
-      var viewPadding = MediaQuery.viewPaddingOf(context);
-      var viewInsets = MediaQuery.viewInsetsOf(context);
       var newMedia = PageMediaData(
-          padding: PaddingData(padding),
-          viewPadding: PaddingData(viewPadding),
-          viewInsets: PaddingData(viewInsets));
+          padding: PaddingData(MediaQuery.paddingOf(context)),
+          viewPadding: PaddingData(MediaQuery.viewPaddingOf(context)),
+          viewInsets: PaddingData(MediaQuery.viewInsetsOf(context)),
+          devicePixelRatio: MediaQuery.devicePixelRatioOf(context));
 
       if (newMedia != backend.media || !pageSizeUpdated) {
         _onMediaChanged(newMedia);

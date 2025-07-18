@@ -54,7 +54,7 @@ class Image(ConstrainedControl):
 
     src_bytes: Optional[bytes] = None
     """
-    TBD
+    Displays an image from a bytes array.
     """
 
     error_content: OptionalControl = None
@@ -159,4 +159,3 @@ class Image(ConstrainedControl):
 
     Anti-aliasing alleviates the sawtooth artifact when the image is rotated.
     """
-

@@ -5,6 +5,7 @@ import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 
 import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
+import 'flet_msgpack_encoder.dart';
 
 @JS()
 external JSPromise jsConnect(
@@ -49,7 +50,11 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
 
   @override
   void send(Message message) {
-    jsSend(address, msgpack.serialize(message.toList()).toJS);
+    jsSend(
+        address,
+        msgpack
+            .serialize(message.toList(), extEncoder: FletMsgpackEncoder())
+            .toJS);
   }
 
   @override

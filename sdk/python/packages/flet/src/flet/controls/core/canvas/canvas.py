@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -53,3 +54,26 @@ class Canvas(ConstrainedControl):
     Event object `e` is an instance of
     [CanvasResizeEvent](https://flet.dev/docs/reference/types/canvasresizeevent).
     """
+
+    def before_update(self):
+        super().before_update()
+        if self.expand:
+            if self.width is None:
+                self.width = float("inf")
+            if self.height is None:
+                self.height = float("inf")
+
+    async def capture_async(self):
+        await self._invoke_method_async("capture")
+
+    def capture(self):
+        asyncio.create_task(self.capture_async())
+
+    async def get_capture_async(self):
+        return await self._invoke_method_async("get_capture")
+
+    async def clear_capture_async(self):
+        await self._invoke_method_async("capture")
+
+    def clear_capture(self):
+        asyncio.create_task(self.clear_capture_async())

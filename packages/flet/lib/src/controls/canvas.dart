@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flet/src/extensions/control.dart';
@@ -7,9 +11,11 @@ import 'package:flet/src/utils/colors.dart';
 import 'package:flet/src/utils/drawing.dart';
 import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
 import '../utils/dash_path.dart';
+import '../utils/hashing.dart';
 import '../utils/images.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -29,13 +35,107 @@ class CanvasControl extends StatefulWidget {
 
 class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
-  Size? _lastSize;
+  Size _lastSize = Size.zero;
+  ui.Image? _capturedImage;
+  double _dpr = 1.0;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _dpr = MediaQuery.devicePixelRatioOf(context);
+      _initialized = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  Future<void> _awaitImageLoads(List<Control> shapes) async {
+    final pending = <Future>[];
+
+    for (final shape in shapes) {
+      if (shape.type == "Image") {
+        if (shape.get("_loading") != null) {
+          pending.add(shape.get("_loading").future);
+        } else if (shape.get("_image") == null ||
+            shape.get("_hash") != getImageHash(shape)) {
+          final future = loadCanvasImage(shape);
+          pending.add(future);
+        }
+      }
+    }
+
+    if (pending.isNotEmpty) {
+      await Future.wait(pending);
+    }
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Canvas.$name($args)");
+    switch (name) {
+      case "capture":
+        final shapes = widget.control.children("shapes");
+        if (_lastSize.isEmpty || shapes.isEmpty) {
+          return;
+        }
+
+        // Wait for all images to load
+        await _awaitImageLoads(shapes);
+
+        if (!mounted) return;
+
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
+
+        final painter = FletCustomPainter(
+            context: context,
+            theme: Theme.of(context),
+            shapes: shapes,
+            capturedImage: _capturedImage,
+            onPaintCallback: (_) {},
+            dpr: _dpr);
+
+        painter.paint(canvas, _lastSize);
+
+        final picture = recorder.endRecording();
+        _capturedImage = await picture.toImage(
+          (_lastSize.width * _dpr).toInt(),
+          (_lastSize.height * _dpr).toInt(),
+        );
+        return;
+
+      case "get_capture":
+        if (_capturedImage == null) return null;
+        final byteData =
+            await _capturedImage!.toByteData(format: ui.ImageByteFormat.png);
+        return byteData!.buffer.asUint8List();
+
+      case "clear_capture":
+        _capturedImage?.dispose();
+        _capturedImage = null;
+        setState(() {});
+        return;
+
+      default:
+        throw Exception("Unknown Canvas method: $name");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Canvas build: ${widget.control.id}");
 
-    var onResize = widget.control.getBool("on_resize", false)!;
     var resizeInterval = widget.control.getInt("resize_interval", 10)!;
 
     var paint = CustomPaint(
@@ -43,16 +143,16 @@ class _CanvasControlState extends State<CanvasControl> {
         context: context,
         theme: Theme.of(context),
         shapes: widget.control.children("shapes"),
+        capturedImage: _capturedImage,
+        dpr: 1,
         onPaintCallback: (size) {
-          if (onResize) {
-            var now = DateTime.now().millisecondsSinceEpoch;
-            if ((now - _lastResize > resizeInterval && _lastSize != size) ||
-                _lastSize == null) {
-              _lastResize = now;
-              _lastSize = size;
-              widget.control
-                  .triggerEvent("resize", {"w": size.width, "h": size.height});
-            }
+          var now = DateTime.now().millisecondsSinceEpoch;
+          if ((now - _lastResize > resizeInterval && _lastSize != size) ||
+              _lastSize.isEmpty) {
+            _lastSize = size;
+            _lastResize = now;
+            widget.control
+                .triggerEvent("resize", {"w": size.width, "h": size.height});
           }
         },
       ),
@@ -68,18 +168,35 @@ class FletCustomPainter extends CustomPainter {
   final ThemeData theme;
   final List<Control> shapes;
   final CanvasControlOnPaintCallback onPaintCallback;
+  final ui.Image? capturedImage;
+  final double dpr;
 
-  const FletCustomPainter(
-      {required this.context,
-      required this.theme,
-      required this.shapes,
-      required this.onPaintCallback});
+  const FletCustomPainter({
+    required this.context,
+    required this.theme,
+    required this.shapes,
+    required this.onPaintCallback,
+    required this.dpr,
+    this.capturedImage,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
 
-    //debugPrint("SHAPE CONTROLS: $shapes");
+    debugPrint("paint.size: $size");
+    //debugPrint("paint.shapes: $shapes");
+
+    canvas.save();
+    canvas.scale(dpr);
+    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    if (capturedImage != null) {
+      final src = Rect.fromLTWH(0, 0, capturedImage!.width.toDouble(),
+          capturedImage!.height.toDouble());
+      final dst = Rect.fromLTWH(0, 0, size.width, size.height);
+      canvas.drawImageRect(capturedImage!, src, dst, Paint());
+    }
 
     for (var shape in shapes) {
       shape.notifyParent = true;
@@ -105,8 +222,12 @@ class FletCustomPainter extends CustomPainter {
         drawShadow(canvas, shape);
       } else if (shape.type == "Text") {
         drawText(context, canvas, shape);
+      } else if (shape.type == "Image") {
+        drawImage(canvas, shape);
       }
     }
+
+    canvas.restore();
   }
 
   @override
@@ -260,6 +381,29 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawShadow(path, color, elevation, transparentOccluder);
   }
 
+  void drawImage(Canvas canvas, Control shape) {
+    final paint = shape.getPaint("paint", theme, Paint())!;
+    final x = shape.getDouble("x")!;
+    final y = shape.getDouble("y")!;
+    final width = shape.getDouble("width");
+    final height = shape.getDouble("height");
+
+    // Check if image is already loaded and stored
+    if (shape.get("_image") != null &&
+        shape.get("_hash") == getImageHash(shape)) {
+      final img = shape.get("_image")!;
+      final srcRect =
+          Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
+      final dstRect = width != null && height != null
+          ? Rect.fromLTWH(x, y, width, height)
+          : Offset(x, y) & Size(img.width.toDouble(), img.height.toDouble());
+      debugPrint("canvas.drawImageRect($srcRect, $dstRect)");
+      canvas.drawImageRect(img, srcRect, dstRect, paint);
+    } else {
+      loadCanvasImage(shape);
+    }
+  }
+
   ui.Path buildPath(dynamic j) {
     var path = ui.Path();
     if (j == null) {
@@ -329,4 +473,60 @@ class FletCustomPainter extends CustomPainter {
     }
     return path;
   }
+}
+
+Future<void> loadCanvasImage(Control shape) async {
+  debugPrint("loadCanvasImage(${shape.id})");
+  if (shape.get("_loading") != null) return;
+  final completer = Completer();
+  shape.properties["_loading"] = completer;
+
+  final src = shape.getString("src");
+  final srcBytes = shape.get("src_bytes") as Uint8List?;
+
+  try {
+    Uint8List bytes;
+
+    if (srcBytes != null) {
+      bytes = srcBytes;
+    } else if (src != null) {
+      var assetSrc = shape.backend.getAssetSource(src);
+      if (assetSrc.isFile) {
+        final file = File(assetSrc.path);
+        bytes = await file.readAsBytes();
+      } else {
+        final resp = await http.get(Uri.parse(assetSrc.path));
+        if (resp.statusCode != 200) {
+          throw Exception("HTTP ${resp.statusCode}");
+        }
+        bytes = resp.bodyBytes;
+      }
+    } else if (src != null) {
+      bytes = base64Decode(src);
+    } else {
+      throw Exception("Missing image source: 'src' or 'src_bytes'");
+    }
+
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    shape.properties["_image"] = frame.image;
+    shape.updateProperties({"_hash": getImageHash(shape)},
+        python: false, notify: true);
+    completer.complete();
+  } catch (e) {
+    shape.properties["_image_error"] = e;
+    completer.completeError(e);
+  } finally {
+    shape.properties.remove("_loading");
+  }
+}
+
+int getImageHash(Control shape) {
+  final src = shape.getString("src");
+  final srcBytes = shape.get("src_bytes") as Uint8List?;
+  return src != null
+      ? src.hashCode
+      : srcBytes != null
+          ? fnv1aHash(srcBytes)
+          : 0;
 }

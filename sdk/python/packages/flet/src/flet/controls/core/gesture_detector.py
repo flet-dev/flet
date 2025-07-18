@@ -12,6 +12,7 @@ from flet.controls.events import (
     HoverEvent,
     LongPressEndEvent,
     LongPressStartEvent,
+    PointerEvent,
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
@@ -292,6 +293,33 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     Event handler argument is of type
     [`DragEndEvent`](https://flet.dev/docs/reference/types/dragendevent).
+    """
+
+    on_right_pan_start: OptionalEventHandler[PointerEvent["GestureDetector"]] = None
+    """
+    Pointer has contacted the screen while secondary button pressed
+    and has begun to move.
+
+    Event handler argument is of type
+    [`PointerEvent`](https://flet.dev/docs/reference/types/PointerEvent).
+    """
+
+    on_right_pan_update: OptionalEventHandler[PointerEvent["GestureDetector"]] = None
+    """
+    A pointer that is in contact with the screen, secondary button pressed
+    and moving has moved again.
+
+    Event handler argument is of type
+    [`PointerEvent`](https://flet.dev/docs/reference/types/PointerEvent).
+    """
+
+    on_right_pan_end: OptionalEventHandler[PointerEvent["GestureDetector"]] = None
+    """
+    A pointer with secondary button pressed is no longer in contact
+    and was moving at a specific velocity.
+
+    Event handler argument is of type
+    [`PointerEvent`](https://flet.dev/docs/reference/types/PointerEvent).
     """
 
     on_scale_start: OptionalEventHandler[ScaleStartEvent["GestureDetector"]] = None

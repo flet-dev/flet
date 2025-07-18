@@ -357,8 +357,8 @@ from flet.controls.page import (
     PageDisconnectedException,
     RouteChangeEvent,
     ViewPopEvent,
-    context,
 )
+from flet.controls.context import context
 from flet.controls.page_view import PageMediaData, PageResizeEvent, PageView
 from flet.controls.painting import (
     Paint,
