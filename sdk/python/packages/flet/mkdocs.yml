@@ -660,14 +660,14 @@ nav:
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
+  - CLI:
+      - cli/index.md
+      - build: cli/build.md
+      - create: cli/create.md
+      - doctor: cli/doctor.md
+      - pack: cli/pack.md
+      - publish: cli/publish.md
+      - run: cli/run.md
+      # - serve: cli/serve.md
   - Others:
-      - flet-cli:
-          - cli/index.md
-          - build: cli/build.md
-          - create: cli/create.md
-          - doctor: cli/doctor.md
-          - pack: cli/pack.md
-          - publish: cli/publish.md
-          - run: cli/run.md
-          # - serve: cli/serve.md
       - Environment Variables: environment-variables.md

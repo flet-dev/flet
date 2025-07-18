@@ -30,6 +30,8 @@ def main(page: ft.Page):
 
 ft.run(main)
 ```
-![Keyboard shortcuts](../assets/getting-started/keyboard-shortcuts.png)
+![Keyboard shortcuts](../assets/cookbook/keyboard/shortcuts.png)
+/// caption
+///
 
 Here is [more advanced example](https://github.com/flet-dev/examples/blob/main/python/controls/page/keyboard-events.py).

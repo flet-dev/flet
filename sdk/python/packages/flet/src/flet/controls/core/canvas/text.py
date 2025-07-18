@@ -13,7 +13,7 @@ __all__ = ["Text"]
 @control("Text")
 class Text(Shape):
     """
-    Draws [`text`][(c).] with [`style`][(c).] at
+    Draws [`value`][(c).] with [`style`][(c).] at
     the given ([`x`][(c).], [`y`][(c).]) point.
     """
 

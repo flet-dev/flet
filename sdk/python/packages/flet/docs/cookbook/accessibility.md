@@ -42,7 +42,7 @@ Set `page.show_semantics_debugger` to `True` to show an overlay that shows the a
 
 You can implement a specific [keyboard shortcut](keyboard-shortcuts.md) to conveniently toggle semantics debugger during app development:
 
-![Debug accessibility toggle](../assets/cookbook/debug-accessibility-toggle.gif)
+![Debug accessibility toggle](../assets/cookbook/accessibility/debug-accessibility-toggle.gif)
 
 ```python
 import flet as ft

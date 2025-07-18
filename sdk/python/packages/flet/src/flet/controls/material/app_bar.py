@@ -4,6 +4,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
@@ -125,7 +126,7 @@ class AppBar(AdaptiveControl):
     other characteristics of this app bar.
     """
 
-    is_secondary: bool = False
+    secondary: bool = False
     """
     Whether this app bar is not being displayed at the top of the screen.
     """
@@ -160,6 +161,12 @@ class AppBar(AdaptiveControl):
         device, these `actions` will be automatically placed in a [`Row`][flet.Row].
         This is because [`CupertinoAppBar.trailing`][flet.CupertinoAppBar.trailing]
         (which is the counterpart property of `actions`) takes only a single `Control`.
+    """
+
+    actions_padding: Optional[PaddingValue] = None
+    """
+    The padding between the [`actions`][flet.AppBar.actions]
+    and the end of this app bar.
     """
 
     toolbar_opacity: Number = 1.0

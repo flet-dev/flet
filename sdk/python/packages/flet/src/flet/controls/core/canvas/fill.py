@@ -13,7 +13,7 @@ class Fill(Shape):
     Fills the canvas with the given [`paint`][(c).].
 
     To fill the canvas with a solid color and blend mode,
-    consider [`Color`][(p).] shape instead.
+    consider [`Color`][(p).color.] shape instead.
     """
 
     paint: Paint = field(default_factory=lambda: Paint())

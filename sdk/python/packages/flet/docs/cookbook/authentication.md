@@ -1,4 +1,4 @@
-You can implement user authentication ("Login with X" buttons) in your Flet app using 
+You can implement user authentication ("Login with X" buttons) in your Flet app using
 3rd-party identity providers such as GitHub, Google, Azure, Auth0, LinkedIn and others.
 
 Identity provider must support [OAuth 2.0 Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow) to retrieve API access token.
@@ -53,14 +53,14 @@ To integrate Flet authentication with GitHub a new [GitHub OAuth app](https://gi
 {application-url}/oauth_callback
 ```
 
-![GitHub new OAuth app](../assets/getting-started/authentication/github-new-oauth-app.png){width="80%"}
+![GitHub new OAuth app](../assets/cookbook/authentication/github-new-oauth-app.png){width="80%"}
 /// caption
 ///
 
 On OAuth app details page click "Generate a new client secret" button.
 Copy "Client ID" and "Client secret" values to a safe place - you'll need them in a Flet app.
 
-![GitHub OAuth app details](../assets/getting-started/authentication/github-oauth-app-details.png){width="80%"}
+![GitHub OAuth app details](../assets/cookbook/authentication/github-oauth-app-details.png){width="80%"}
 /// caption
 ///
 
@@ -117,7 +117,9 @@ Run the program and click "Login with GitHub" button. GitHub authorize app page 
 * **Web** app - a new popup window (make sure popup blocker is off).
 * **Mobile** app - an in-app web browser.
 
-![GitHub OAuth authorize](../assets/getting-started/authentication/github-oauth-authorize.png)
+![GitHub OAuth authorize](../assets/cookbook/authentication/github-oauth-authorize.png){width="80%"}
+/// caption
+///
 
 ### Redirect URL
 

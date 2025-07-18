@@ -42,7 +42,7 @@ class PointMode(Enum):
 class Points(Shape):
     """
     Draws a sequence of points according to
-    the given [`point_mode`][flet.PointMode].
+    the given [`point_mode`][(c).].
     """
 
     points: Optional[list[OffsetValue]] = None

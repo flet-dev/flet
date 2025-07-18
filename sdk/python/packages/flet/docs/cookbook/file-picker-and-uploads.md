@@ -2,7 +2,9 @@
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
-![File picker all modes demo](../assets/docs/controls/file-picker/file-picker-all-modes-demo.png)
+![File picker all modes demo](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
+/// caption
+///
 
 Check out [source code of the demo above](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/file-picker-all-modes.py).
 
@@ -12,15 +14,15 @@ File picker allows opening three dialogs:
 * **Save file** - choose directory and file name.
 * **Get directory** - select directory.
 
-When running Flet app in a browser only "Pick files" option is available and it's used for 
+When running Flet app in a browser only "Pick files" option is available and it's used for
 uploads only as it, obviously, doesn't return a full path to a selected file.
 
-Where file picker really shines is a desktop! All three dialogs return full paths to selected 
+Where file picker really shines is a desktop! All three dialogs return full paths to selected
 files and directories - great assistance to your users!
 
 /// admonition
     type: info
-In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)  when running Flet as an app. 
+In Linux, the FilePicker control depends on [Zenity](https://help.gnome.org/users/zenity/stable/)  when running Flet as an app.
 This is not a requirement when running Flet in a browser.
 
 To install Zenity on Ubuntu/Debian run the following commands:
@@ -31,7 +33,7 @@ sudo apt-get install zenity
 
 ## Using file picker in your app
 
-Add file picker to [`Page.services`][flet.Page.services] collection, 
+Add file picker to [`Page.services`][flet.Page.services] collection,
 so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
 
 ```python
@@ -155,8 +157,11 @@ Event object of `on_upload` event is an instance of `FilePickerUploadEvent` clas
 
 The callback is called at least twice for every uploaded file: with `0` progress before upload begins and with `1.0` progress when upload is finished. For files larger than 1 MB a progress is additionally reported for every 10% uploaded.
 
-Check that [example](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/file-picker-upload-progress.py) demonstrating multiple file uploads:
+Check that [example](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/pick-and-upload.py) demonstrating multiple file uploads:
 
-![File picker multiple uploads](../assets/docs/controls/file-picker/file-picker-multiple-uploads.png)
+
+![File picker multiple uploads](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/file-picker/media/pick-and-upload.png){width="80%"}
+/// caption
+///
 
 See [`FilePicker`][flet.FilePicker] control docs for all its properties and examples.

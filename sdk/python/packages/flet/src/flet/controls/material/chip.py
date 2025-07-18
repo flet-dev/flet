@@ -194,7 +194,7 @@ class Chip(ConstrainedControl):
 
     leading_size_constraints: Optional[BoxConstraints] = None
     """
-    The size constraints for the `leading` control.
+    The size constraints for the [`leading`][flet.Chip.leading] control.
 
     When unspecified, it defaults to a minimum size of chip height or label height
     (whichever is greater) and a padding of `8.0` pixels on all sides.
