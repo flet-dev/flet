@@ -37,6 +37,7 @@ class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size _lastSize = Size.zero;
   ui.Image? _capturedImage;
+  Size _capturedSize = Size.zero;
   double _dpr = 1.0;
   bool _initialized = false;
 
@@ -98,11 +99,15 @@ class _CanvasControlState extends State<CanvasControl> {
         final recorder = ui.PictureRecorder();
         final canvas = Canvas(recorder);
 
+        var capturedSize =
+            _capturedSize != Size.zero ? _capturedSize : _lastSize;
+
         final painter = FletCustomPainter(
             context: context,
             theme: Theme.of(context),
             shapes: shapes,
             capturedImage: _capturedImage,
+            capturedSize: capturedSize,
             onPaintCallback: (_) {},
             dpr: _dpr);
 
@@ -113,6 +118,7 @@ class _CanvasControlState extends State<CanvasControl> {
           (_lastSize.width * _dpr).toInt(),
           (_lastSize.height * _dpr).toInt(),
         );
+        _capturedSize = _lastSize;
         return;
 
       case "get_capture":
@@ -144,6 +150,7 @@ class _CanvasControlState extends State<CanvasControl> {
         theme: Theme.of(context),
         shapes: widget.control.children("shapes"),
         capturedImage: _capturedImage,
+        capturedSize: _capturedSize,
         dpr: 1,
         onPaintCallback: (size) {
           var now = DateTime.now().millisecondsSinceEpoch;
@@ -169,16 +176,17 @@ class FletCustomPainter extends CustomPainter {
   final List<Control> shapes;
   final CanvasControlOnPaintCallback onPaintCallback;
   final ui.Image? capturedImage;
+  final Size? capturedSize;
   final double dpr;
 
-  const FletCustomPainter({
-    required this.context,
-    required this.theme,
-    required this.shapes,
-    required this.onPaintCallback,
-    required this.dpr,
-    this.capturedImage,
-  });
+  const FletCustomPainter(
+      {required this.context,
+      required this.theme,
+      required this.shapes,
+      required this.onPaintCallback,
+      required this.dpr,
+      this.capturedImage,
+      this.capturedSize});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -191,10 +199,11 @@ class FletCustomPainter extends CustomPainter {
     canvas.scale(dpr);
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
-    if (capturedImage != null) {
+    if (capturedImage != null && capturedSize != null) {
       final src = Rect.fromLTWH(0, 0, capturedImage!.width.toDouble(),
           capturedImage!.height.toDouble());
-      final dst = Rect.fromLTWH(0, 0, size.width, size.height);
+      final dst =
+          Rect.fromLTWH(0, 0, capturedSize!.width, capturedSize!.height);
       canvas.drawImageRect(capturedImage!, src, dst, Paint());
     }
 
