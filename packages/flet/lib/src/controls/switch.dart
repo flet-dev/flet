@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -75,6 +76,7 @@ class _SwitchControlState extends State<SwitchControl> {
 
     var s = Switch(
         autofocus: autofocus,
+        padding: widget.control.getPadding("padding"),
         focusNode: _focusNode,
         activeColor: widget.control.getColor("active_color", context),
         activeTrackColor:

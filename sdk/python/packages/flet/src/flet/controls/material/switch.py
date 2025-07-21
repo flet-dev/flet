@@ -5,6 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
@@ -195,6 +196,15 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     The value is
     [`MouseCursor`][flet.MouseCursor] enum.
+    """
+
+    padding: Optional[PaddingValue] = None
+    """
+    The amount of space to surround the child inside the bounds of the Switch.
+
+    Defaults to horizontal padding of 4 pixels. If 
+    [`Theme.use_material3`][flet.Theme.use_material3] is false, then there is no 
+    padding by default.
     """
 
     on_change: Optional[ControlEventHandler["Switch"]] = None

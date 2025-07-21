@@ -1622,8 +1622,8 @@ class SwitchTheme:
 
     padding: Optional[PaddingValue] = None
     """
-    The amount of space to surround the child inside the bounds of the descendant 
-    [`Switch`][flet.Switch] controls.
+    Overrides the default value of [`Switch.padding`][flet.Switch.padding] in
+    all descendant [`Switch`][flet.Switch] controls.
     """
 
 
@@ -1672,22 +1672,115 @@ class DividerTheme:
 
 @dataclass
 class SnackBarTheme:
+    """
+    Defines default property values for descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`SnackBar.bgcolor`][flet.SnackBar.bgcolor] in all
+    descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     action_text_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SnackBar.action.text_color`][flet.SnackBar.action.text_color] in all descendant
+    [`SnackBar`][flet.SnackBar] controls.
+    """
+
     action_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SnackBar.action.bgcolor`][flet.SnackBar.action.bgcolor] in all descendant
+    [`SnackBar`][flet.SnackBar] controls.
+    """
+
     close_icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SnackBar.close_icon_color`][flet.SnackBar.close_icon_color] in all descendant
+    [`SnackBar`][flet.SnackBar] controls.
+    """
+
     disabled_action_text_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SnackBar.action.disabled_text_color`][flet.SnackBar.action.disabled_text_color] in
+    all descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     disabled_action_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SnackBar.action.disabled_bgcolor`][flet.SnackBar.action.disabled_bgcolor] in all
+    descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of [`SnackBar.elevation`][flet.SnackBar.elevation] in
+    all descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     content_text_style: Optional[TextStyle] = None
+    """
+    Used to configure the `text_style` property for the [`SnackBar.content`] control if 
+    it exists.
+    """
+
     width: Optional[Number] = None
+    """
+    Overrides the default value of [`SnackBar.width`][flet.SnackBar.width] in all
+    descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Overrides the default value of [`SnackBar.alignment`][flet.SnackBar.alignment] in all
+    descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     show_close_icon: Optional[bool] = None
+    """
+    Overrides the default value of
+    [`SnackBar.show_close_icon`][flet.SnackBar.show_close_icon] in all descendant
+    [`SnackBar`][flet.SnackBar] controls.
+    """
+
     dismiss_direction: Optional[DismissDirection] = None
+    """
+    Overrides the default value of
+    [`SnackBar.dismiss_direction`][flet.SnackBar.dismiss_direction] in all descendant
+    [`SnackBar`][flet.SnackBar] controls.
+    """
+
     behavior: Optional[SnackBarBehavior] = None
+    """
+    Overrides the default value of [`SnackBar.behavior`][flet.SnackBar.behavior] in all
+    descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of [`SnackBar.shape`][flet.SnackBar.shape] in all
+    descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
     inset_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`SnackBar.inset_padding`][flet.SnackBar.inset_padding] in all descendant
+    [`SnackBar`][flet.SnackBar] controls.
+    """
+
     action_overflow_threshold: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`SnackBar.action_overflow_threshold`][flet.SnackBar.action_overflow_threshold] in
+    all descendant [`SnackBar`][flet.SnackBar] controls.
+    """
+
 
 
 @dataclass
