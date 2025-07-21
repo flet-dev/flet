@@ -27,6 +27,9 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     Elevated buttons are essentially filled tonal buttons with a shadow. To prevent
     shadow creep, only use them when absolutely necessary, such as when the button
     requires visual separation from a patterned background.
+
+    Raises:
+        AssertionError: If both [`content`][(c).] and [`icon`][(c).] are not set or invalid.
     """
 
     content: Optional[StrOrControl] = None
