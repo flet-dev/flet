@@ -1508,17 +1508,60 @@ class CheckboxTheme:
     """
 
 
-
 @dataclass
 class BadgeTheme:
+    """
+    Defines default property values for descendant [`Badge`][flet.Badge] controls.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Badge.bgcolor`][flet.Badge.bgcolor] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     text_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Badge.text_color`][flet.Badge.text_color] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     small_size: Optional[Number] = None
+    """
+    Overrides the default value of [`Badge.small_size`][flet.Badge.small_size] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     large_size: Optional[Number] = None
+    """
+    Overrides the default value of [`Badge.large_size`][flet.Badge.large_size] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Overrides the default value of [`Badge.alignment`][flet.Badge.alignment] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of [`Badge.padding`][flet.Badge.padding] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     offset: Optional[OffsetValue] = None
+    """
+    Overrides the default value of [`Badge.offset`][flet.Badge.offset] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
     text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of [`Badge.text_style`][flet.Badge.text_style] in all
+    descendant [`Badge`][flet.Badge] controls.
+    """
+
 
 
 @dataclass
