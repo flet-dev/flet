@@ -1566,24 +1566,108 @@ class BadgeTheme:
 
 @dataclass
 class SwitchTheme:
+    """
+    Defines default property values for descendant [`Switch`][flet.Switch] controls.
+    """
+
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`Switch.thumb_color`][flet.Switch.thumb_color] in
+    all descendant [`Switch`][flet.Switch] controls.
+    """
+
     track_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`Switch.track_color`][flet.Switch.track_color] in
+    all descendant [`Switch`][flet.Switch] controls.
+    """
+
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`Switch.overlay_color`][flet.Switch.overlay_color]
+    in all descendant [`Switch`][flet.Switch] controls.
+    """
+
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`Switch.track_outline_color`][flet.Switch.track_outline_color] in all descendant
+    [`Switch`][flet.Switch] controls.
+    """
+
     thumb_icon: Optional[ControlStateValue[IconValue]] = None
+    """
+    Overrides the default value of [`Switch.thumb_icon`][flet.Switch.thumb_icon] in all
+    descendant [`Switch`][flet.Switch] controls.
+    """
+
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
+    """
+    Overrides the default value of
+    [`Switch.track_outline_width`][flet.Switch.track_outline_width] in all descendant
+    [`Switch`][flet.Switch] controls.
+    """
+
     splash_radius: Optional[Number] = None
+    """
+    Overrides the default value of [`Switch.splash_radius`][flet.Switch.splash_radius]
+    in all descendant [`Switch`][flet.Switch] controls.
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value of [`Switch.mouse_cursor`][flet.Switch.mouse_cursor] in
+    all descendant [`Switch`][flet.Switch] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    The amount of space to surround the child inside the bounds of the descendant 
+    [`Switch`][flet.Switch] controls.
+    """
 
 
 @dataclass
 class DividerTheme:
+    """
+    Defines the visual properties of [`Divider`][flet.Divider], 
+    [`VerticalDivider`][flet.VerticalDivider], dividers between 
+    [`ListTile`][flet.ListTile]s, and dividers between rows in 
+    [`DataTable`][flet.DataTable].
+    """
+
     color: Optional[ColorValue] = None
+    """
+    The color of [`Divider`][flet.Divider]s and 
+    [`VerticalDivider`][flet.VerticalDivider]s, also used between 
+    [`ListTile`][flet.ListTile]s, between rows in [`DataTable`][flet.DataTable]s, and 
+    so forth.
+    """
+
     thickness: Optional[Number] = None
+    """
+    The thickness of the line drawn within the divider.
+    """
+
     space: Optional[Number] = None
+    """
+    The [`Divider`][flet.Divider]'s height or the 
+    [`VerticalDivider`][flet.VerticalDivider]'s width.
+
+    This represents the amount of horizontal or vertical space the divider takes up.
+    """
+
     leading_indent: Optional[Number] = None
+    """
+    The amount of empty space at the leading edge of [`Divider`][flet.Divider] or top 
+    edge of [`VerticalDivider`][flet.VerticalDivider].
+    """
+
     trailing_indent: Optional[Number] = None
+    """
+    The amount of empty space at the trailing edge of [`Divider`][flet.Divider] or 
+    bottom edge of [`VerticalDivider`][flet.VerticalDivider].
+    """
 
 
 @dataclass
