@@ -7,7 +7,7 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/markdown/basicpy"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/markdown/basic.py"
 ```
 
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/markdown/media/basic.png){width="80%"}
