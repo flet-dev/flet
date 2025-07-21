@@ -1,5 +1,4 @@
 import asyncio
-import inspect
 import logging
 import traceback
 import weakref
@@ -7,10 +6,9 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from flet.controls.base_control import BaseControl
-from flet.controls.control_event import ControlEvent
+from flet.controls.context import _context_page
 from flet.controls.object_patch import ObjectPatch
-from flet.controls.page import Page, _session_page
-from flet.controls.update_behavior import UpdateBehavior
+from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -20,8 +18,7 @@ from flet.messaging.protocol import (
     SessionCrashedBody,
 )
 from flet.pubsub.pubsub_client import PubSubClient
-from flet.utils.from_dict import from_dict
-from flet.utils.object_model import get_param_count, patch_dataclass
+from flet.utils.object_model import patch_dataclass
 from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
@@ -75,7 +72,7 @@ class Session:
 
     async def connect(self, conn: Connection) -> None:
         logger.debug(f"Connect session: {self.id}")
-        _session_page.set(self.__page)
+        _context_page.set(self.__page)
         self.__conn = conn
         self.__expires_at = None
         for message in self.__send_buffer:
@@ -167,73 +164,11 @@ class Session:
             logger.debug(f"Control with ID {control_id} not found.")
             return
 
-        field_name = f"on_{event_name}"
-        if not hasattr(control, field_name):
-            # field_name not defined
-            return
         try:
-            event_type = ControlEvent.get_event_field_type(control, field_name)
-            if event_type is None:
-                return
-
-            if event_type == ControlEvent or not isinstance(event_data, dict):
-                # simple ControlEvent
-                e = ControlEvent(control=control, name=event_name, data=event_data)
-            else:
-                # custom ControlEvent
-                args = {
-                    "control": control,
-                    "name": event_name,
-                    **(event_data or {}),
-                }
-                e = from_dict(event_type, args)
-
-            handle_event = control.before_event(e)
-
-            if handle_event is None or handle_event:
-                _session_page.set(self.__page)
-                UpdateBehavior.reset()
-
-                # Handle async and sync event handlers accordingly
-                event_handler = getattr(control, field_name)
-                if asyncio.iscoroutinefunction(event_handler):
-                    if get_param_count(event_handler) == 0:
-                        await event_handler()
-                    else:
-                        await event_handler(e)
-
-                elif inspect.isasyncgenfunction(event_handler):
-                    if get_param_count(event_handler) == 0:
-                        async for _ in event_handler():
-                            if UpdateBehavior.auto_update_enabled():
-                                await self.auto_update(self.index.get(control._i))
-                    else:
-                        async for _ in event_handler(e):
-                            if UpdateBehavior.auto_update_enabled():
-                                await self.auto_update(self.index.get(control._i))
-
-                elif inspect.isgeneratorfunction(event_handler):
-                    if get_param_count(event_handler) == 0:
-                        for _ in event_handler():
-                            if UpdateBehavior.auto_update_enabled():
-                                await self.auto_update(self.index.get(control._i))
-                    else:
-                        for _ in event_handler(e):
-                            if UpdateBehavior.auto_update_enabled():
-                                await self.auto_update(self.index.get(control._i))
-
-                elif callable(event_handler):
-                    if get_param_count(event_handler) == 0:
-                        event_handler()
-                    else:
-                        event_handler(e)
-
-                if UpdateBehavior.auto_update_enabled():
-                    await self.auto_update(self.index.get(control._i))
-
+            await control._trigger_event(event_name, event_data)
         except Exception as ex:
             tb = traceback.format_exc()
-            self.error(f"Exception in '{field_name}': {ex}\n{tb}")
+            self.error(f"Exception in 'on_{event_name}': {ex}\n{tb}")
 
     async def invoke_method(
         self,

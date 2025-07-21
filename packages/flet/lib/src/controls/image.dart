@@ -37,7 +37,6 @@ class ImageControl extends StatelessWidget {
 
     Widget? image = buildImage(
       context: context,
-      control: control,
       src: src,
       srcBase64: srcBase64,
       srcBytes: srcBytes,

@@ -67,11 +67,14 @@ class FilePickerService extends FletService {
               }).toList()
             : [];
       case "save_file":
-        if (kIsWeb) {
-          throw Exception("Save File dialog is not supported on web.");
-        } else if ((isAndroidMobile() || isIOSMobile()) && srcBytes == null) {
+        if ((kIsWeb || isAndroidMobile() || isIOSMobile()) &&
+            srcBytes == null) {
           throw Exception(
-              "\"src_bytes\" is required when saving a file on Android or iOS.");
+              "\"src_bytes\" is required when saving a file on Web, Android and iOS.");
+        }
+        if (kIsWeb && args["file_name"] == null) {
+          throw Exception(
+              "\"file_name\" is required when saving a file on Web.");
         }
         return await FilePicker.platform.saveFile(
             dialogTitle: dialogTitle,
