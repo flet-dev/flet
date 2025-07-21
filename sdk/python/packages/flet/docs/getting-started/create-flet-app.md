@@ -18,10 +18,10 @@ poetry run flet create
 ```
 ///
 
-/// admonition
-    type: note
+/// admonition | Important
+    type: danger
 Any existing `README.md` or `pyproject.toml` (for example, created by `uv init` or `poetry init`)
-will be replaced by the one created by `flet create` command.
+will be replaced by the one created by [`flet create`](../cli/create.md) command.
 ///
 
 The command will create the following directory structure:
@@ -39,9 +39,9 @@ storage
 ```
 
 1. Contains a simple Flet program.
-    It has `main()` function where you would add UI elements ([controls](flet-controls.md)) to a page or a window.
+    It has `main()` function where you would add UI elements (controls) to a page or a window.
     The application ends with a `ft.run()` function which initializes the Flet app and [runs](running-app.md) `main()`.
 
 You can find more information about `flet create` command [here](../cli/create.md).
 
-Now let's see Flet in action by [running the app](running-app.md)!
+**Now let's see Flet in action by [running the app](running-app.md)!**

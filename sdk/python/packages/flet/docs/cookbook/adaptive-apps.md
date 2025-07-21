@@ -65,12 +65,12 @@ By setting just `page.adaptive = True` you can make you app looking awesome on b
 -   **iPhone**
 
     ---
-    ![iPhone](../assets/getting-started/adaptive-apps/iphone.png){width="80%"}
+    ![iPhone](../assets/cookbook/adaptive-apps/iphone.png){width="80%"}
 
 -   **Android**
 
     ---
-    ![Android](../assets/getting-started/adaptive-apps/android.png){width="80%"}
+    ![Android](../assets/cookbook/adaptive-apps/android.png){width="80%"}
 
 </div>
 
@@ -109,152 +109,151 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 -   [:octicons-arrow-right-24: `AlertDialog`][flet.AlertDialog]
 
     ---
-    ![AlertDialog](../assets/getting-started/adaptive-apps/alertdialog.png){width="45%"}
+    ![AlertDialog](../assets/cookbook/adaptive-apps/alertdialog.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoAlertDialog`][flet.CupertinoAlertDialog]
 
     ---
-    ![CupertinoAlertDialog](../assets/getting-started/adaptive-apps/cupertinoalertdialog.png){width="45%"}
+    ![CupertinoAlertDialog](../assets/cookbook/adaptive-apps/cupertinoalertdialog.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Any button in Dialog actions`][flet.Button]
 
     ---
-    ![Dialog actions](../assets/getting-started/adaptive-apps/dialogactions.png){width="45%"}
+    ![Dialog actions](../assets/cookbook/adaptive-apps/dialogactions.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
 
     ---
-    ![CupertinoDialogAction](../assets/getting-started/adaptive-apps/cupertinodialogactions.png){width="45%"}
+    ![CupertinoDialogAction](../assets/cookbook/adaptive-apps/cupertinodialogactions.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `AppBar`][flet.AppBar]
 
     ---
-    ![AppBar](../assets/getting-started/adaptive-apps/appbar.png){width="45%"}
+    ![AppBar](../assets/cookbook/adaptive-apps/appbar.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoAppBar`][flet.CupertinoAppBar]
 
     ---
-    ![CupertinoAppBar](../assets/getting-started/adaptive-apps/cupertinoappbar.png){width="45%"}
+    ![CupertinoAppBar](../assets/cookbook/adaptive-apps/cupertinoappbar.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `NavigationBar`][flet.NavigationBar]
 
     ---
-    ![NavigationBar](../assets/getting-started/adaptive-apps/navigationbar.png){width="45%"}
+    ![NavigationBar](../assets/cookbook/adaptive-apps/navigationbar.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoNavigationBar`][flet.CupertinoNavigationBar]
 
     ---
-    ![CupertinoNavigationBar](../assets/getting-started/adaptive-apps/cupertinonavigationbar.png){width="45%"}
+    ![CupertinoNavigationBar](../assets/cookbook/adaptive-apps/cupertinonavigationbar.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `ListTile`][flet.ListTile]
 
     ---
-    ![ListTile](../assets/getting-started/adaptive-apps/listtile.png){width="45%"}
+    ![ListTile](../assets/cookbook/adaptive-apps/listtile.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoListTile`][flet.CupertinoListTile]
 
     ---
-    ![CupertinoListTile](../assets/getting-started/adaptive-apps/cupertinolisttile.png){width="45%"}
+    ![CupertinoListTile](../assets/cookbook/adaptive-apps/cupertinolisttile.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `TextField`][flet.TextField]
 
     ---
-    ![TextField](../assets/getting-started/adaptive-apps/textfield.png){width="45%"}
+    ![TextField](../assets/cookbook/adaptive-apps/textfield.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoTextField`][flet.CupertinoTextField]
 
     ---
-    ![CupertinoTextField](../assets/getting-started/adaptive-apps/cupertinotextfield.png){width="45%"}
+    ![CupertinoTextField](../assets/cookbook/adaptive-apps/cupertinotextfield.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Checkbox`][flet.Checkbox]
 
     ---
-    ![Checkbox](../assets/getting-started/adaptive-apps/checkbox.png){width="45%"}
+    ![Checkbox](../assets/cookbook/adaptive-apps/checkbox.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoCheckbox`][flet.CupertinoCheckbox]
 
     ---
-    ![CupertinoCheckbox](../assets/getting-started/adaptive-apps/cupertinocheckbox.png){width="45%"}
+    ![CupertinoCheckbox](../assets/cookbook/adaptive-apps/cupertinocheckbox.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Slider`][flet.Slider]
 
     ---
-    ![Slider](../assets/getting-started/adaptive-apps/slider.png){width="45%"}
+    ![Slider](../assets/cookbook/adaptive-apps/slider.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
 
     ---
-    ![CupertinoSlider](../assets/getting-started/adaptive-apps/cupertinoslider.png){width="45%"}
+    ![CupertinoSlider](../assets/cookbook/adaptive-apps/cupertinoslider.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Switch`][flet.Switch]
 
     ---
-    ![Switch](../assets/getting-started/adaptive-apps/switch.png){width="45%"}
+    ![Switch](../assets/cookbook/adaptive-apps/switch.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSwitch`][flet.CupertinoSwitch]
 
     ---
-    ![CupertinoSwitch](../assets/getting-started/adaptive-apps/cupertinoswitch.png){width="45%"}
+    ![CupertinoSwitch](../assets/cookbook/adaptive-apps/cupertinoswitch.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Radio`][flet.Radio]
 
     ---
-    ![Radio](../assets/getting-started/adaptive-apps/radio.png){width="45%"}
+    ![Radio](../assets/cookbook/adaptive-apps/radio.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoRadio`][flet.CupertinoRadio]
 
     ---
-    ![CupertinoRadio](../assets/getting-started/adaptive-apps/cupertinoradio.png){width="45%"}
+    ![CupertinoRadio](../assets/cookbook/adaptive-apps/cupertinoradio.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
 
     ---
-    ![FilledButton](../assets/getting-started/adaptive-apps/filledbutton.png){width="45%"}
+    ![FilledButton](../assets/cookbook/adaptive-apps/filledbutton.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
 
     ---
-    ![CupertinoFilledButton](../assets/getting-started/adaptive-apps/cupertinofilledbutton.png){width="45%"}
+    ![CupertinoFilledButton](../assets/cookbook/adaptive-apps/cupertinofilledbutton.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledTonalButton`][flet.FilledTonalButton]
 
     ---
-    ![FilledTonalButton](../assets/getting-started/adaptive-apps/filledtonalbutton.png){width="45%"}
+    ![FilledTonalButton](../assets/cookbook/adaptive-apps/filledtonalbutton.png){width="45%"}
 
--   [:octicons-arrow-right-24: `CupertinoButton (Tonal)`][flet.CupertinoButton]
+-   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoButtonTonal](../assets/getting-started/adaptive-apps/cupertinobutton-filledtonal.png){width="45%"}
+    ![CupertinoButtonTonal](../assets/cookbook/adaptive-apps/cupertinobutton-filledtonal.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `IconButton`][flet.IconButton]
 
     ---
-    ![IconButton](../assets/getting-started/adaptive-apps/icon-button.png){width="45%"}
+    ![IconButton](../assets/cookbook/adaptive-apps/icon-button.png){width="45%"}
 
--   [:octicons-arrow-right-24: `CupertinoButton (Icon)`][flet.CupertinoButton]
+-   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoIconButton](../assets/getting-started/adaptive-apps/icon-button-cupertino.png){width="45%"}
+    ![CupertinoIconButton](../assets/cookbook/adaptive-apps/icon-button-cupertino.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
 
-    ---
-    ![ElevatedButton](../assets/getting-started/adaptive-apps/elevatedbutton.png){width="45%"}
-
--   [:octicons-arrow-right-24: `CupertinoButton (Elevated)`][flet.CupertinoButton]
+    ![ElevatedButton](../assets/cookbook/adaptive-apps/elevatedbutton.png){width="45%"}
 
     ---
-    ![CupertinoButton](../assets/getting-started/adaptive-apps/cupertinobutton.png){width="45%"}
+    [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
 
--   [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
-
-    ---
-    ![OutlinedButton](../assets/getting-started/adaptive-apps/outlinedbutton.png){width="45%"}
-
--   [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
+    ![OutlinedButton](../assets/cookbook/adaptive-apps/outlinedbutton.png){width="45%"}
 
     ---
-    ![TextButton](../assets/getting-started/adaptive-apps/textbutton.png){width="45%"}
+    [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
+
+    ![TextButton](../assets/cookbook/adaptive-apps/textbutton.png){width="45%"}
+
+-   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
+
+    ---
+    ![CupertinoButton](../assets/cookbook/adaptive-apps/cupertinobutton.png){width="45%"}
 
 </div>
 
@@ -269,11 +268,15 @@ cases when you need more specific adaptive UI presentation, for example, using d
 icon, background color, padding, etc., depending on the platform.
 
 With Flet, you can create your own reusable custom controls in Python that will inherit from a Flet control
+and implement specific properties you need.
 
-and implement specific properties you need. In the example below, we are creating a new
-`AdaptiveNavigationBarDestination` control that will be displaying different icon on iOS and Android:
+In the example below, we are creating a new `AdaptiveNavigationBarDestination`
+[custom control](custom-controls.md) that will be displaying different icon on iOS and Android, and use it
+as destination for the [`NavigationBar`][flet.NavigationBar]:
 
 ```python
+import flet as ft
+
 class AdaptiveNavigationBarDestination(ft.NavigationBarDestination):
     def __init__(self, ios_icon, android_icon, label):
         super().__init__()
@@ -289,16 +292,8 @@ class AdaptiveNavigationBarDestination(ft.NavigationBarDestination):
             or self.page.platform == ft.PagePlatform.MACOS
             else self._android_icon
         )
-```
 
-We will use `AdaptiveNavigationBarDestination` in `NavigationBar`:
-
-```python
-import flet as ft
-from adaptive_navigation_destination import AdaptiveNavigationBarDestination
-
-def main(page):
-
+def main(page: ft.Page):
     page.adaptive = True
 
     page.navigation_bar = ft.NavigationBar(
@@ -335,12 +330,12 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 -   **iOS**
 
     ---
-    ![iOS](../assets/getting-started/adaptive-apps/navigation-bar-custom-ios.png)
+    ![iOS](../assets/cookbook/adaptive-apps/navigation-bar-custom-ios.png)
 
 -   **Android**
 
     ---
-    ![Android](../assets/getting-started/adaptive-apps/navigation-bar-custom-android.png){width="90%"}
+    ![Android](../assets/cookbook/adaptive-apps/navigation-bar-custom-android.png){width="90%"}
 
 </div>
 

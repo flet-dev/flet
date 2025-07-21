@@ -174,8 +174,9 @@ class BaseControl:
         """
         This method is called every time when this control is being updated.
 
-        Note:
-            Make sure not to call/request an `update()` here.
+        /// details | Note
+        Make sure not to call/request an `update()` here.
+        ///
         """
         pass
 

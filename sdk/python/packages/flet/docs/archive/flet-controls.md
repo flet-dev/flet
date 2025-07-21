@@ -1,10 +1,10 @@
 User interface is made of **Controls** (aka widgets).
 
-To make controls visible to a user they must be added to a [`Page`][flet.Page] (the top-most control in the tree) 
-or inside other controls. 
+To make controls visible to a user they must be added to a [`Page`][flet.Page] (the top-most control in the tree)
+or inside other controls.
 Nesting controls into each other could be represented as a tree with [`Page`][flet.Page] as a root.
 
-Controls are just regular Python classes. Create control instances via constructors with parameters matching 
+Controls are just regular Python classes. Create control instances via constructors with parameters matching
 their properties, for example:
 
 ```python
@@ -109,8 +109,11 @@ ft.run(main)
 
 
 ::info
-Flet implements *imperative* UI model where you "manually" build application UI with stateful controls and then mutate it by updating control properties. Flutter implements *declarative* model where UI is automatically re-built on application data changes.
-Managing application state in modern frontend applications is inherently complex task and Flet's "old-school" approach could be more attractive to programmers without frontend experience.
+Flet implements *imperative* UI model where you "manually" build application UI with stateful controls
+and then mutate it by updating control properties. Flutter implements *declarative* model where UI is
+automatically re-built on application data changes.
+Managing application state in modern frontend applications is inherently complex task and Flet's "old-school"
+approach could be more attractive to programmers without frontend experience.
 ::
 
 ### `disabled` property
@@ -194,8 +197,8 @@ ft.run(main)
 
 ## Textbox
 
-Flet provides a number of [controls](../controls/index.md) for building forms: 
-[`TextField`][flet.TextField], [`Checkbox`][flet.Checkbox], [`Dropdown`][flet.Dropdown], 
+Flet provides a number of [controls](../controls/index.md) for building forms:
+[`TextField`][flet.TextField], [`Checkbox`][flet.Checkbox], [`Dropdown`][flet.Dropdown],
 [`ElevatedButton`][flet.ElevatedButton].
 
 Let's ask a user for a name:

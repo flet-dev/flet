@@ -51,6 +51,7 @@ docs = [
     "markdown>=3.6",
     "pymdown-extensions",
     "mkdocs-glightbox",
+    "mkdocs-open-in-new-tab",
     "mkdocs-section-index",
     "griffe-modernized-annotations",
     "pygments>=2.16",

@@ -1,10 +1,13 @@
-## Prerequisites
 
+/// details | Prerequisites
 ### Python version
 
-Flet requires Python 3.10 or later.
+Flet requires [Python](https://www.python.org/downloads/) 3.10 or later. (1)
+{ .annotate }
 
-### Supported Operating Systems
+1. Check your Python version using `python --version`.
+
+### Operating System
 
 #### macOS
 
@@ -23,14 +26,15 @@ Flet supports Debian Linux 11 or later and Ubuntu Linux 20.04 LTS or later.
 
 Flet apps can be run on WSL 2 (Windows Subsystem for Linux 2).
 
-However, if you are getting `cannot open display` error follow this 
+However, if you are getting `cannot open display` error follow this
 [guide](https://github.com/microsoft/wslg/wiki/Diagnosing-%22cannot-open-display%22-type-issues-with-WSLg) for troubleshooting.
 ///
 
+///
 
-## Creating a Virtual environment (venv)
+##  Creating a virtual environment (venv)
 
-We recommend using a virtual environment for your Flet projects to keep dependencies 
+We recommend using a virtual environment for your Flet projects to keep dependencies
 isolated and avoid conflicts with your other Python projects.
 
 First, create a new directory for your Flet project and switch into it:
@@ -40,7 +44,7 @@ mkdir my-app
 cd my-app
 ```
 
-Next, create and activate a virtual environment:
+Next, create and activate a virtual environment (we recommend using `uv` as package manager):
 
 /// tab | uv
 [**uv**](https://docs.astral.sh/uv/) is "An extremely fast Python package and project manager, written in Rust".
@@ -48,7 +52,7 @@ Next, create and activate a virtual environment:
 [Install `uv`](https://docs.astral.sh/uv/getting-started/installation) if you haven't already, then run the following commands:
 
 ```bash
-uv init --python='>=3.10' 
+uv init --python='>=3.10'
 uv venv
 source .venv/bin/activate # (1)!
 ```
@@ -56,7 +60,7 @@ source .venv/bin/activate # (1)!
 1. If you are on Windows, use `.venv\Scripts\activate` instead.
 ///
 /// tab | pip
-Use Python's built-in [`venv`](https://docs.python.org/3/library/venv.html) module:
+Using Python's built-in [`venv`](https://docs.python.org/3/library/venv.html) module:
 ```bash
 python -m venv .venv  # (1)!
 source .venv/bin/activate # (2)!
@@ -66,16 +70,19 @@ source .venv/bin/activate # (2)!
 2. If you are on Windows, use `.venv\Scripts\activate` instead.
 ///
 /// tab | poetry
-Another way to set up a virtual environment for your Flet project is using [Poetry](https://python-poetry.org/docs/).
+[Poetry](https://python-poetry.org/docs/) is a Python dependency manager and package manager.
 
 [Install Poetry](https://python-poetry.org/docs/#installation) if you haven't already, then run the following commands:
 
 ```bash
 poetry init --python='>=3.10' --no-interaction
 ```
-/// 
+///
 
-Now install the latest Flet version and add it to your project dependencies:
+## Install Flet
+
+To install Flet and add it to your project dependencies,
+do the following depending on your package manager:
 
 /// tab | uv
 ```bash
@@ -95,28 +102,50 @@ poetry add 'flet[all]'
 ```
 ///
 
-To make sure Flet has been installed correctly, we can check its version:
+## Verify installation
+
+To make sure Flet has been installed correctly, we can check its version using the `--version` (or `-V`) flag or the [`doctor`](../cli/doctor.md) command:
 
 /// tab | uv
 ```bash
-uv run flet --version # (1)!
+uv run flet --version
+# or
+uv run flet doctor
 ```
-
-1. You can use the shorthand `-V` instead of `--version` to print the version of Flet installed.
 ///
 /// tab | pip
 ```bash
-flet --version # (1)!
+flet --version
+# or
+flet doctor
 ```
-
-1. You can use the shorthand `-V` instead of `--version` to print the version of Flet installed.
 ///
 /// tab | poetry
 ```bash
-poetry run flet --version # (1)!
+poetry run flet --version
+# or
+poetry run flet doctor
 ```
-
-1. You can use the shorthand `-V` instead of `--version` to print the version of Flet installed.
 ///
 
 Now you are ready to [create your first Flet app](create-flet-app.md).
+
+## Upgrade Flet
+
+To upgrade Flet to the latest version, use the `--upgrade` flag:
+
+/// tab | uv
+```bash
+uv add 'flet[all]' --upgrade
+```
+///
+/// tab | pip
+```bash
+pip install 'flet[all]' --upgrade
+```
+///
+/// tab | poetry
+```bash
+poetry add flet[all]@latest
+```
+///

@@ -97,6 +97,7 @@ plugins:
         - archive/*
   - search:
       lang: en
+  - open-in-new-tab
   - mike:
       alias_type: symlink
   - glightbox:
@@ -127,14 +128,6 @@ plugins:
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
-              # - "!before_update"
-              # - "!before_event"
-              # - "!clean"
-              # - "!did_mount"
-              # - "!init"
-              # - "!is_isolated"
-              # - "!update"
-              # - "!will_unmount"
             extensions:
               - griffe_modernized_annotations
           inventories:
@@ -191,21 +184,20 @@ markdown_extensions:
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
           case: lower
-  # - meta
 
 # Navigation
 nav:
   - Getting Started:
-      - index.md
+      - Introduction: index.md
       - Installation: getting-started/installation.md
       - Creating a new Flet app: getting-started/create-flet-app.md
       - Running a Flet app (Hot Reload): getting-started/running-app.md
       - Testing on Mobile: getting-started/testing-on-mobile.md
-      - Flet Controls: getting-started/flet-controls.md
-      - Adaptive apps: getting-started/adaptive-apps.md
-      - Async apps: getting-started/async-apps.md
-      - Changelog: getting-started/changelog.md
+      - Roadmap: https://flet.dev/roadmap
       - License: getting-started/license.md
+      - Release Notes:
+          - Changelog: getting-started/changelog.md
+          - Migration Guide: getting-started/migration-guide.md
   - API Reference:
       - Controls:
           - controls/index.md
@@ -365,7 +357,7 @@ nav:
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
       - Types:
-          - types/index.md
+          # - types/index.md
           - Aliases: types/aliases.md
           - Dataclasses:
               - Alignment: types/alignment.md
@@ -620,6 +612,7 @@ nav:
       - iOS: publish/ios.md
       - Linux: publish/linux.md
       - macOS: publish/macos.md
+      - Windows: publish/windows.md
       - Web:
           - publish/web/index.md
           - Dynamic Website:
@@ -633,11 +626,22 @@ nav:
               - publish/web/static-website/index.md
               - Hosting:
                   - Cloudflare: publish/web/static-website/hosting/cloudflare.md
-      - Windows: publish/windows.md
+  - CLI:
+      - cli/index.md
+      - build: cli/build.md
+      - create: cli/create.md
+      - doctor: cli/doctor.md
+      - pack: cli/pack.md
+      - publish: cli/publish.md
+      - run: cli/run.md
+      # - serve: cli/serve.md
   - Cookbook:
+      - cookbook/index.md
       - Accessibility: cookbook/accessibility.md
+      - Adaptive apps: cookbook/adaptive-apps.md
       - Animations: cookbook/animations.md
       - Assets: cookbook/assets.md
+      - Async apps: cookbook/async-apps.md
       - Authentication: cookbook/authentication.md
       - Client Storage: cookbook/client-storage.md
       - Colors: cookbook/colors.md
@@ -663,15 +667,15 @@ nav:
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
-  - CLI:
-      - cli/index.md
-      - build: cli/build.md
-      - create: cli/create.md
-      - doctor: cli/doctor.md
-      - pack: cli/pack.md
-      - publish: cli/publish.md
-      - run: cli/run.md
-      # - serve: cli/serve.md
-  - Unclassified:
+  - Contributing:
+      - contributing/index.md
+      - Code of Conduct: contributing/code-of-conduct.md
+      - Extensions:
+          - contributing/extensions/index.md
+          - Creating an Extension: contributing/extensions/user-extensions.md
+          - Built-in Extensions: contributing/extensions/built-in-extensions.md
+  - Blog: https://flet.dev/blog
+  - Support: support.md
+  - Others:
       - Environment Variables: unclassified/environment-variables.md
       - Built-in binary Python packages for Android and iOS: unclassified/binary-packages-android-ios.md

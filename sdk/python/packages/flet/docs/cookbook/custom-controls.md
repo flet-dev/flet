@@ -14,7 +14,7 @@ class MyButton(ft.ElevatedButton):
         super().__init__()
         self.bgcolor = ft.Colors.ORANGE_300
         self.color = ft.Colors.GREEN_800
-        self.text = text     
+        self.text = text
 ```
 Your control has a constructor to customize properties and events and pass custom data. Note that you must call `super().__init__()` in your own constructor to have access to the properties and methods of the Flet control from which you inherit.
 
@@ -29,7 +29,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Styled controls](../assets/custom-controls/styled-controls.png)
+![Styled controls](../assets/cookbook/custom-controls/styled-controls.png)
 /// caption
 ///
 
@@ -54,7 +54,7 @@ def main(page: ft.Page):
 
     def ok_clicked(e):
         print("OK clicked")
-    
+
     def cancel_clicked(e):
         print("Cancel clicked")
 
@@ -114,31 +114,31 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Composite controls](../assets/custom-controls/composite-controls.gif){width="90%"}
+![Composite controls](../assets/cookbook/custom-controls/composite-controls.gif){width="90%"}
 /// caption
 ///
 
 You can find more examples of composite custom controls in [community examples](https://github.com/flet-dev/examples/tree/main/python/community) and [flet-contrib](https://github.com/flet-dev/flet-contrib/tree/main/flet_contrib) repos.
 
-## Life-cycle methods 
+## Life-cycle methods
 
 Custom controls provide life-cycle "hook" methods that you may need to use for different use cases in your app.
 
 ### `build()`
 
-`build()` method is called when the control is being created and assigned its `self.page`. 
+`build()` method is called when the control is being created and assigned its `self.page`.
 
-Override `build()` method if you need to implement logic that cannot be executed in control's constructor because 
-it requires access to the `self.page`. For example, choose the right icon depending on `self.page.platform` 
-for your [adaptive app](../getting-started/adaptive-apps.md#custom-adaptive-controls). 
+Override `build()` method if you need to implement logic that cannot be executed in control's constructor because
+it requires access to the `self.page`. For example, choose the right icon depending on `self.page.platform`
+for your [adaptive app](adaptive-apps.md#custom-adaptive-controls).
 
-### `did_mount()` 
+### `did_mount()`
 
 `did_mount()` method is called after the control is added to the page and assigned transient `uid`.
 
 Override `did_mount()` method if you need to implement logic that needs to be executed after the control was added to the page, for example [Weather widget](https://github.com/flet-dev/examples/tree/main/python/community/weather_widget) which calls Open Weather API every minute to update itself with the new weather conditions.
 
-### `will_unmount()` 
+### `will_unmount()`
 
 `will_unmount()` method is called before the control is removed from the page.
 
@@ -164,7 +164,7 @@ In the above examples, simple styled `MyButton` doesn't need to be isolated, but
 class Task(ft.Row):
     def __init__(self, text):
         super().__init__()
-    
+
     def is_isolated(self):
         return True
-``` 
+```

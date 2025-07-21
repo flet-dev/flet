@@ -1,8 +1,11 @@
-Flet app can be written as an async app and use `asyncio` and other Python async libraries. Calling coroutines is naturally supported in Flet, so you don't need to wrap them to run synchronously. 
+Flet app can be written as an async app and use `asyncio` and other Python async libraries. Calling coroutines is
+naturally supported in Flet, so you don't need to wrap them to run synchronously.
 
-By default, Flet executes control event handlers in separate threads, but sometimes that could be an ineffective usage of CPU or it does nothing while waiting for a HTTP response or executing `sleep()`.
+By default, Flet executes control event handlers in separate threads, but sometimes that could be an ineffective
+usage of CPU or it does nothing while waiting for a HTTP response or executing `sleep()`.
 
-Asyncio, on the other hand, allows implementing concurrency in a single thread by switching execution context between "coroutines". This is especially important for apps that are going to be [published as static websites](../publish/web/static-website/index.md) using [Pyodide](https://pyodide.org/en/stable/). Pyodide is a Python runtime built as a WebAssembly (WASM) and running in the browser. At the time of writing it doesn't support [threading](https://github.com/pyodide/pyodide/issues/237) yet.
+Asyncio, on the other hand, allows implementing concurrency in a single thread by switching execution context
+between "coroutines". This is especially important for apps that are going to be [published as static websites](../publish/web/static-website/index.md) using [Pyodide](https://pyodide.org/en/stable/). Pyodide is a Python runtime built as a WebAssembly (WASM) and running in the browser. At the time of writing it doesn't support [threading](https://github.com/pyodide/pyodide/issues/237) yet.
 
 ## Getting started with async
 
@@ -79,7 +82,8 @@ ft.run(main)
 
 ## Threading
 
-To run something in the background use [`page.run_task()`][flet.Page.run_task]. For example, "Countdown" custom control which is self-updating on background could be implemented as following:
+To run something in the background use [`page.run_task()`][flet.Page.run_task]. For example, "Countdown" custom control
+which is self-updating on background could be implemented as following:
 
 ```python
 import asyncio
