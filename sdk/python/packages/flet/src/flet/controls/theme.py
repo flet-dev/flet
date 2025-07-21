@@ -1842,42 +1842,247 @@ class BannerTheme:
 
 @dataclass
 class DatePickerTheme:
+    """
+    Customizes the appearance of [`DatePicker`][flet.DatePicker] controls across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`DatePicker.bgcolor`][flet.DatePicker.bgcolor] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.surface_tint_color`][flet.DatePicker.surface_tint_color] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`DatePicker.shadow_color`][flet.DatePicker.shadow_color]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     divider_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`DatePicker.divider_color`][flet.DatePicker.divider_color]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     header_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`DatePicker.header_bgcolor`][flet.DatePicker.header_bgcolor]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     today_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`DatePicker.today_bgcolor`][flet.DatePicker.today_bgcolor]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     day_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`DatePicker.day_bgcolor`][flet.DatePicker.day_bgcolor]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     day_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`DatePicker.day_overlay_color`][flet.DatePicker.day_overlay_color] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     day_foreground_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`DatePicker.day_foreground_color`][flet.DatePicker.day_foreground_color] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of [`DatePicker.elevation`][flet.DatePicker.elevation] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_elevation`][flet.DatePicker.range_picker_elevation] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     day_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of [`DatePicker.day_text_style`][flet.DatePicker.day_text_style]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     weekday_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.weekday_text_style`][flet.DatePicker.weekday_text_style] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     year_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of [`DatePicker.year_text_style`][flet.DatePicker.year_text_style]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of [`DatePicker.shape`][flet.DatePicker.shape] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     cancel_button_style: Optional[ButtonStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.cancel_button_style`][flet.DatePicker.cancel_button_style] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     confirm_button_style: Optional[ButtonStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.confirm_button_style`][flet.DatePicker.confirm_button_style] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     header_foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.header_foreground_color`][flet.DatePicker.header_foreground_color] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     header_headline_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.header_headline_text_style`][flet.DatePicker.header_headline_text_style]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     header_help_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.header_help_text_style`][flet.DatePicker.header_help_text_style] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_bgcolor`][flet.DatePicker.range_picker_bgcolor] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_header_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_header_bgcolor`][flet.DatePicker.range_picker_header_bgcolor]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_header_foreground_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_header_foreground_color`][flet.DatePicker.range_picker_header_foreground_color]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`DatePicker.today_foreground_color`][flet.DatePicker.today_foreground_color] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_shape`][flet.DatePicker.range_picker_shape] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_header_help_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_header_help_text_style`][flet.DatePicker.range_picker_header_help_text_style]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_header_headline_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_header_headline_text_style`][flet.DatePicker.range_picker_header_headline_text_style]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_picker_surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_picker_surface_tint_color`][flet.DatePicker.range_picker_surface_tint_color]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_selection_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_selection_bgcolor`][flet.DatePicker.range_selection_bgcolor] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`DatePicker.range_selection_overlay_color`][flet.DatePicker.range_selection_overlay_color]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     today_border_side: Optional[BorderSide] = None
+    """
+    Overrides the default value of [`DatePicker.today_border_side`][flet.DatePicker.today_border_side]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`DatePicker.year_bgcolor`][flet.DatePicker.year_bgcolor]
+    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     year_foreground_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`DatePicker.year_foreground_color`][flet.DatePicker.year_foreground_color] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`DatePicker.year_overlay_color`][flet.DatePicker.year_overlay_color] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     day_shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    """
+    Overrides the default value of [`DatePicker.day_shape`][flet.DatePicker.day_shape] in
+    all descendant [`DatePicker`][flet.DatePicker] controls.
+    """
+
     locale: Optional[Locale] = None
+    """
+    Overrides the default value of [`DatePicker.locale`][flet.DatePicker.locale] in all
+    descendant [`DatePicker`][flet.DatePicker] controls.
+    """
 
 
 @dataclass
