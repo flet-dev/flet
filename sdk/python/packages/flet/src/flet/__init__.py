@@ -71,6 +71,7 @@ from flet.controls.buttons import (
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.context import context
 from flet.controls.control import Control, OptionalControl
 from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import (
@@ -114,6 +115,12 @@ from flet.controls.core.grid_view import GridView
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
 from flet.controls.core.interactive_viewer import InteractiveViewer
+from flet.controls.core.keyboard_listener import (
+    KeyboardListener,
+    KeyDownEvent,
+    KeyRepeatEvent,
+    KeyUpEvent,
+)
 from flet.controls.core.list_view import ListView
 from flet.controls.core.markdown import (
     Markdown,
@@ -358,7 +365,6 @@ from flet.controls.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
-from flet.controls.context import context
 from flet.controls.page_view import PageMediaData, PageResizeEvent, PageView
 from flet.controls.painting import (
     Paint,
@@ -972,4 +978,8 @@ __all__ = [
     "EventControlType",
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
+    "KeyboardListener",
+    "KeyDownEvent",
+    "KeyRepeatEvent",
+    "KeyUpEvent",
 ]
