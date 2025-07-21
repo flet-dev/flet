@@ -1725,8 +1725,7 @@ class SnackBarTheme:
 
     content_text_style: Optional[TextStyle] = None
     """
-    Used to configure the `text_style` property for the [`SnackBar.content`] control if 
-    it exists.
+    Used to configure the `text_style` property for the [`SnackBar.content`] control.
     """
 
     width: Optional[Number] = None
@@ -1785,14 +1784,60 @@ class SnackBarTheme:
 
 @dataclass
 class BannerTheme:
+    """
+    Defines default property values for descendant [`Banner`][flet.Banner] controls.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Banner.bgcolor`][flet.Banner.bgcolor] in all
+    descendant [`Banner`][flet.Banner] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`Banner.surface_tint_color`][flet.Banner.surface_tint_color] in all descendant
+    [`Banner`][flet.Banner] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Banner.shadow_color`][flet.Banner.shadow_color] in
+    all descendant [`Banner`][flet.Banner] controls.
+    """
+
     divider_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of [`Banner.divider_color`][flet.Banner.divider_color]
+    in all descendant [`Banner`][flet.Banner] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of [`Banner.content_padding`][flet.Banner.content_padding] 
+    in all descendant [`Banner`][flet.Banner] controls.
+    """
+
     leading_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`Banner.leading_padding`][flet.Banner.leading_padding] in all descendant
+    [`Banner`][flet.Banner] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of [`Banner.elevation`][flet.Banner.elevation] in all
+    descendant [`Banner`][flet.Banner] controls.
+    """
+
     content_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`Banner.content_text_style`][flet.Banner.content_text_style] in all descendant
+    [`Banner`][flet.Banner] controls.
+    """
 
 
 @dataclass
