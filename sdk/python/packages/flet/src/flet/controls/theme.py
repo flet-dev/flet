@@ -1410,12 +1410,39 @@ class BottomAppBarTheme:
 
 @dataclass
 class RadioTheme:
+    """
+    Defines default property values for descendant [`Radio`][flet.Radio] controls.
+    """
+    
     fill_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`Radio.fill_color`][flet.Radio.fill_color] in
+    all descendant [`Radio`][flet.Radio] controls.
+    """
+
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of [`Radio.overlay_color`][flet.Radio.overlay_color] in
+    all descendant [`Radio`][flet.Radio] controls.
+    """
+    
     splash_radius: Optional[Number] = None
-    height: Optional[Number] = None
+    """
+    Overrides the default value of [`Radio.splash_radius`][flet.Radio.splash_radius] in
+    all descendant [`Radio`][flet.Radio] controls.
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Overrides the default value of [`Radio.visual_density`][flet.Radio.visual_density] 
+    in all descendant [`Radio`][flet.Radio] controls.
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value of [`Radio.mouse_cursor`][flet.Radio.mouse_cursor] 
+    in all descendant [`Radio`][flet.Radio] controls.
+    """
 
 
 @dataclass
