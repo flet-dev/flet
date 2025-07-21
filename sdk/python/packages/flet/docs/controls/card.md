@@ -1,5 +1,3 @@
-::: flet.Card
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/card)
@@ -11,3 +9,5 @@
 ![music-info](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/card/media/music-info.gif){width="80%"}
 /// caption
 ///
+
+::: flet.Card

@@ -1,5 +1,3 @@
-::: flet.TimePicker
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/timepicker)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/time-picker/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.TimePicker

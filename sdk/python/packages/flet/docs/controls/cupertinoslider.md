@@ -1,5 +1,3 @@
-::: flet.CupertinoSlider
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinoslider)
@@ -13,3 +11,5 @@
 ![handling-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-slider/media/handling-events.gif){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoSlider

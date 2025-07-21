@@ -1,5 +1,5 @@
-::: flet.DropdownOption
-
 ## Examples
 
 See [these](dropdown.md#examples).
+
+::: flet.DropdownOption

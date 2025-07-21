@@ -1,5 +1,3 @@
-::: flet.ShaderMask
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/shadermask)
@@ -30,3 +28,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/shader-mask/linear-and-radial-gradients.py"
 ```
+
+::: flet.ShaderMask

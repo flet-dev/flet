@@ -187,9 +187,6 @@ class ContinuousRectangleBorder(RoundedRectangleBorder):
         )
 
 
-CircleBorder()
-
-
 @dataclass
 class ButtonStyle:
     """

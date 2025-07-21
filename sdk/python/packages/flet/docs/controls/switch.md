@@ -1,5 +1,3 @@
-::: flet.Switch
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/switch)
@@ -23,3 +21,5 @@
 ![handling-events](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/switch/media/handling-events.gif){width="80%"}
 /// caption
 ///
+
+::: flet.Switch

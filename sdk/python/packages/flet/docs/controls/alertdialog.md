@@ -1,5 +1,3 @@
-::: flet.AlertDialog
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/alertdialog)
@@ -13,3 +11,5 @@
 ![modal-and-non-modal](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/alert-dialog/media/modal-and-non-modal.gif){width="80%"}
 /// caption
 ///
+
+::: flet.AlertDialog

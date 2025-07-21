@@ -1,5 +1,3 @@
-::: flet.TextButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/textbutton)
@@ -43,3 +41,5 @@
 ![custom-content](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text-button/media/custom-content.png){width="80%"}
 /// caption
 ///
+
+::: flet.TextButton

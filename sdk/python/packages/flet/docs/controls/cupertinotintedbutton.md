@@ -1,5 +1,5 @@
-::: flet.CupertinoTintedButton
-
 ## Examples
 
 TBA
+
+::: flet.CupertinoTintedButton

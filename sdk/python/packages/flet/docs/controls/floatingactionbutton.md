@@ -1,5 +1,3 @@
-::: flet.FloatingActionButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/floatingactionbutton)
@@ -13,3 +11,5 @@
 ![handling-clicks](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/floating-action-button/media/handling-clicks.gif){width="80%"}
 /// caption
 ///
+
+::: flet.FloatingActionButton

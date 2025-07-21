@@ -1,5 +1,3 @@
-::: flet.Checkbox
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/checkbox)
@@ -30,3 +28,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/checkbox/styled.py"
 ```
+
+::: flet.Checkbox

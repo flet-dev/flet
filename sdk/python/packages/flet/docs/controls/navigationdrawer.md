@@ -1,5 +1,3 @@
-::: flet.NavigationDrawer
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/navigationdrawer)
@@ -23,3 +21,5 @@
 ![position-end](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/navigation-drawer/media/position-end.gif){width="80%"}
 /// caption
 ///
+
+::: flet.NavigationDrawer

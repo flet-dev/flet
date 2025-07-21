@@ -1,5 +1,3 @@
-::: flet.DropdownM2
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
@@ -44,3 +42,5 @@
 ![add-and-delete-options](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/dropdown-m2/media/add-and-delete-options.gif){width="80%"}
 /// caption
 ///
+
+::: flet.DropdownM2

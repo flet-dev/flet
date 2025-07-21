@@ -1,5 +1,3 @@
-::: flet.CupertinoFilledButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinofilledbutton)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-filled-button/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoFilledButton

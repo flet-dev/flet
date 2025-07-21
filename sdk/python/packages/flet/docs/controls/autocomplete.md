@@ -1,5 +1,3 @@
-::: flet.AutoComplete
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/autocomplete)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/auto-complete/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.AutoComplete

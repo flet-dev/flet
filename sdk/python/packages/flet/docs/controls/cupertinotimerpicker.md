@@ -1,5 +1,3 @@
-::: flet.CupertinoTimerPicker
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinotimerpicker)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-timer-picker/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoTimerPicker

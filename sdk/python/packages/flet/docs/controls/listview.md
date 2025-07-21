@@ -1,5 +1,3 @@
-::: flet.ListView
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/listview)
@@ -13,3 +11,5 @@
 ![autoscroll-and-dynamic-items](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/list-view/media/autoscroll-and-dynamic-items.gif){width="80%"}
 /// caption
 ///
+
+::: flet.ListView

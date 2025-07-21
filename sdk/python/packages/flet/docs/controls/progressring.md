@@ -1,5 +1,3 @@
-::: flet.ProgressRing
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/progressring)
@@ -21,3 +19,5 @@
 ```
 
 
+
+::: flet.ProgressRing

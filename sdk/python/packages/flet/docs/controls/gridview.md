@@ -1,5 +1,3 @@
-::: flet.GridView
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/gridview)
@@ -13,3 +11,5 @@
 ![photo-gallery](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/grid-view/media/photo-gallery.png){width="80%"}
 /// caption
 ///
+
+::: flet.GridView

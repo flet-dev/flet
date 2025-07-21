@@ -1,5 +1,3 @@
-::: flet.CupertinoListTile
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/cupertinolisttile)
@@ -14,3 +12,4 @@
 /// caption
 ///
 
+::: flet.CupertinoListTile

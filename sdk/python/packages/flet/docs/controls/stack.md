@@ -1,5 +1,3 @@
-::: flet.Stack
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/stack)
@@ -34,3 +32,5 @@
 /// caption
 ///
 
+
+::: flet.Stack

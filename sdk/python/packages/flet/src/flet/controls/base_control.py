@@ -102,7 +102,7 @@ class BaseControl:
     _c: str = field(init=False)
     data: Any = skip_field()
     """
-    Arbitrary data of any type that can be attached to a control.
+    Arbitrary data of any type.
     """
 
     key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None

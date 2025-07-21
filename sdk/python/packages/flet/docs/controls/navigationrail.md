@@ -1,5 +1,3 @@
-::: flet.NavigationRail
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/navigationrail)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/navigation-rail/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.NavigationRail

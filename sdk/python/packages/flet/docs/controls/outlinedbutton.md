@@ -1,5 +1,3 @@
-::: flet.OutlinedButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/outlinedbutton)
@@ -43,3 +41,5 @@
 ![custom-content](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/outlined-button/media/custom-content.png){width="80%"}
 /// caption
 ///
+
+::: flet.OutlinedButton

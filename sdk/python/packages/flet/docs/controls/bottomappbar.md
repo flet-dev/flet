@@ -1,5 +1,3 @@
-::: flet.BottomAppBar
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/bottomappbar)
@@ -13,3 +11,5 @@
 ![notched-fab](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/bottom-app-bar/media/notched-fab.png){width="80%"}
 /// caption
 ///
+
+::: flet.BottomAppBar

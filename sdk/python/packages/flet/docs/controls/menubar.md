@@ -1,5 +1,3 @@
-::: flet.MenuBar
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/menubar)
@@ -13,3 +11,5 @@
 ![nested-submenus](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/menu-bar/media/nested-submenus.gif){width="80%"}
 /// caption
 ///
+
+::: flet.MenuBar

@@ -1,5 +1,3 @@
-::: flet.CupertinoContextMenu
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinocontextmenu)
@@ -14,3 +12,5 @@
 /// caption
 ///
 
+
+::: flet.CupertinoContextMenu

@@ -1,6 +1,3 @@
-::: flet.SnackBar
-::: flet.SnackBarAction
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/snackbar)
@@ -20,3 +17,6 @@
 ```python
 --8<-- https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/snack-bar/counter.py
 ```
+
+::: flet.SnackBar
+::: flet.SnackBarAction

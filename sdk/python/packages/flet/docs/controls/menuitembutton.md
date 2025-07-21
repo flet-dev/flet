@@ -1,5 +1,3 @@
-::: flet.MenuItemButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/menuitembutton)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/menu-item-button/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.MenuItemButton

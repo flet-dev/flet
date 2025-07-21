@@ -1,5 +1,3 @@
-::: flet.AutofillGroup
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/autofillgroup)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/autofillgroup/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.AutofillGroup

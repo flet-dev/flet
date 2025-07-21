@@ -1,5 +1,3 @@
-::: flet.Row
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/row)
@@ -14,7 +12,6 @@
 /// caption
 ///
 
-
 ### Wrapping children
 
 ```python
@@ -24,7 +21,6 @@
 ![wrap](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/media/wrap.gif){width="80%"}
 /// caption
 ///
-
 
 ### Setting horizontal alignment
 
@@ -45,3 +41,5 @@
 ![vertical-alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/row/media/vertical-alignment.png){width="80%"}
 /// caption
 ///
+
+::: flet.Row

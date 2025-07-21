@@ -1,5 +1,3 @@
-::: flet.VerticalDivider
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/verticaldivider)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/vertical-divider/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.VerticalDivider

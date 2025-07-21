@@ -1,5 +1,3 @@
-::: flet.TextField
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/textfield)
@@ -70,10 +68,10 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/styled.py"
 ```
 
-### Custom label, hint, helper, and counter texts and styles 
+### Custom label, hint, helper, and counter texts and styles
 
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/text-field/label-hint-helper-counter.py"
 ```
 
-
+::: flet.TextField

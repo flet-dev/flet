@@ -1,6 +1,3 @@
-::: flet.SegmentedButton
-::: flet.Segment
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/segmentedbutton)
@@ -14,3 +11,6 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/segmented-button/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.SegmentedButton
+::: flet.Segment

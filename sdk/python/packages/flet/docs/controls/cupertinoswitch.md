@@ -1,5 +1,3 @@
-::: flet.CupertinoSwitch
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinoswitch)
@@ -13,3 +11,5 @@
 ![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-switch/media/cupertino-material-and-adaptive.gif){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoSwitch

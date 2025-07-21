@@ -1,5 +1,3 @@
-::: flet.Pagelet
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/pagelet)
@@ -15,3 +13,5 @@
 ///
 
 
+
+::: flet.Pagelet

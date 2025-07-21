@@ -1,5 +1,3 @@
-::: flet.CupertinoAlertDialog
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinoalertdialog)
@@ -19,3 +17,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-alert-dialog/cupertino-material-and-adaptive.py"
 ```
+
+::: flet.CupertinoAlertDialog

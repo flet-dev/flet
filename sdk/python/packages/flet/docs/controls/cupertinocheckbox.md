@@ -1,6 +1,3 @@
-::: flet.CupertinoCheckbox
-
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinocheckbox)
@@ -20,3 +17,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-checkbox/styled.py"
 ```
+
+::: flet.CupertinoCheckbox

@@ -1,5 +1,3 @@
-::: flet.Text
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/text)
@@ -63,3 +61,5 @@
 ![rich-text-gradient](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/text/media/rich-text-gradient.png){width="80%"}
 /// caption
 ///
+
+::: flet.Text

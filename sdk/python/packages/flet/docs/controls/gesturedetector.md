@@ -1,5 +1,3 @@
-::: flet.GestureDetector
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/gesturedetector)
@@ -16,7 +14,7 @@
 
 The following example demonstrates how a control can be freely dragged inside a Stack.
 
-The sample also shows that GestureDetector can have a child control (blue container) as well as be nested 
+The sample also shows that GestureDetector can have a child control (blue container) as well as be nested
 inside another control (yellow container) giving the same results.
 
 ```python
@@ -32,3 +30,5 @@ inside another control (yellow container) giving the same results.
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/gesture-detector/mouse-cursors.py"
 ```
+
+::: flet.GestureDetector

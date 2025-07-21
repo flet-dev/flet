@@ -1,5 +1,3 @@
-::: flet.CupertinoDatePicker
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinodatepicker)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-date-picker/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoDatePicker

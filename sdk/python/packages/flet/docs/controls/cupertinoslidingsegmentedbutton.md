@@ -1,5 +1,3 @@
-::: flet.CupertinoSlidingSegmentedButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinoslidingsegmentedbutton)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-sliding-segmented-button/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoSlidingSegmentedButton

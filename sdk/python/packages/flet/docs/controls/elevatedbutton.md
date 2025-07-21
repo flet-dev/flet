@@ -1,5 +1,3 @@
-::: flet.ElevatedButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/elevatedbutton)
@@ -61,3 +59,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/elevated-button/animate-on-hover.py"
 ```
+
+::: flet.ElevatedButton

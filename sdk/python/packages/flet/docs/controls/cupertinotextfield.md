@@ -1,5 +1,3 @@
-::: flet.CupertinoTextField
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinotextfield)
@@ -13,3 +11,5 @@
 ![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-text-field/media/cupertino-material-and-adaptive.png){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoTextField

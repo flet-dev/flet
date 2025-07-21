@@ -1,6 +1,3 @@
-::: flet.PopupMenuButton
-::: flet.PopupMenuItem
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/popupmenubutton)
@@ -14,3 +11,6 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/popup-menu-button/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.PopupMenuButton
+::: flet.PopupMenuItem

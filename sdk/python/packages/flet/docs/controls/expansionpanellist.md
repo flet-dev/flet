@@ -1,5 +1,3 @@
-::: flet.ExpansionPanelList
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/expansionpanellist)
@@ -14,4 +12,4 @@
 /// caption
 ///
 
-
+::: flet.ExpansionPanelList

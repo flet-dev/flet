@@ -1,5 +1,3 @@
-::: flet.CupertinoRadio
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinoradio)
@@ -13,3 +11,5 @@
 ![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-radio/media/cupertino-material-and-adaptive.png){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoRadio

@@ -1,5 +1,3 @@
-::: flet.FilledTonalButton
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/filledtonalbutton)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/filled-tonal-button/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.FilledTonalButton

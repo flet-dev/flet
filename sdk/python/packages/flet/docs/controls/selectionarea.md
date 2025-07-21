@@ -1,5 +1,3 @@
-::: flet.SelectionArea
-
 ## Examples
 
 ### Basic Example
@@ -11,3 +9,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/selection-area/media/basic.gif){width="80%"}
 /// caption
 ///
+
+::: flet.SelectionArea

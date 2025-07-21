@@ -1,5 +1,3 @@
-::: flet.ListTile
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/listtile)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/list-tile/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.ListTile

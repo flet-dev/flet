@@ -1,5 +1,3 @@
-::: flet.CircleAvatar
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/circleavatar)
@@ -13,3 +11,5 @@
 ![user-avatars](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/circle-avatar/media/user-avatars.png){width="80%"}
 /// caption
 ///
+
+::: flet.CircleAvatar

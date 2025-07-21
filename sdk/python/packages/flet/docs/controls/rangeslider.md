@@ -1,5 +1,3 @@
-::: flet.RangeSlider
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/rangeslider)
@@ -19,3 +17,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/range-slider/handling-change-events.py"
 ```
+
+::: flet.RangeSlider

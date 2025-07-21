@@ -1,5 +1,3 @@
-::: flet.ReorderableListView
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/autofillgroup)
@@ -17,3 +15,5 @@
 ### Custom drag handle
 
 See [this](reorderabledraggable.md#examples).
+
+::: flet.ReorderableListView

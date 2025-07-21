@@ -1,5 +1,3 @@
-::: flet.Column
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/column)
@@ -14,7 +12,6 @@
 /// caption
 ///
 
-
 ### Column wrapping
 
 ```python
@@ -24,7 +21,6 @@
 ![wrap](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/wrap.gif){width="80%"}
 /// caption
 ///
-
 
 ### Column vertical alignments
 
@@ -36,7 +32,6 @@
 /// caption
 ///
 
-
 ### Column horizontal alignments
 
 ```python
@@ -46,7 +41,6 @@
 ![horizontal-alignment](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/column/media/horizontal-alignment.png){width="80%"}
 /// caption
 ///
-
 
 ### Infinite scrolling
 
@@ -61,7 +55,6 @@ creating the illusion of infinite list:
 
 This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
 
-
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/column/programmatic-scroll.py"
 ```
@@ -70,7 +63,6 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 /// caption
 ///
 
+[//]: # (### Custom scrollbar)
 
-### Custom scrollbar
-
-TBA
+::: flet.Column

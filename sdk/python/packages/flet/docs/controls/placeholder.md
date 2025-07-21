@@ -1,5 +1,3 @@
-::: flet.Placeholder
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/placeholder)
@@ -14,3 +12,5 @@
 /// caption
 ///
 
+
+::: flet.Placeholder

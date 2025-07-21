@@ -1,5 +1,3 @@
-::: flet.CupertinoActivityIndicator
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/cupertinoactivityindicator)
@@ -13,3 +11,5 @@
 ![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-activity-indicator/media/basic.png){width="80%"}
 /// caption
 ///
+
+::: flet.CupertinoActivityIndicator

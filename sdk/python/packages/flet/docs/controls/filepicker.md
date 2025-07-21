@@ -1,5 +1,3 @@
-::: flet.FilePicker
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/filepicker)
@@ -24,3 +22,5 @@
 ![pick-and-upload](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/file-picker/media/pick-and-upload.png){width="80%"}
 /// caption
 ///
+
+::: flet.FilePicker

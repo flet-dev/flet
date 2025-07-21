@@ -1,5 +1,3 @@
-::: flet.AnimatedSwitcher
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/animations/animated_switcher)
@@ -25,3 +23,5 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/animated-switcher/image-switch-buffered.py"
 ```
+
+::: flet.AnimatedSwitcher
