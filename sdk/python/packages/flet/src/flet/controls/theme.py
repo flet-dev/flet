@@ -1769,9 +1769,9 @@ class SnackBarTheme:
 
     inset_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of
-    [`SnackBar.inset_padding`][flet.SnackBar.inset_padding] in all descendant
-    [`SnackBar`][flet.SnackBar] controls.
+    Overrides the default value for [`SnackBar.margin`][flet.SnackBar.margin].
+
+    This value is only used when behavior is SnackBarBehavior.floating.
     """
 
     action_overflow_threshold: Optional[Number] = None
