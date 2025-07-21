@@ -1189,23 +1189,22 @@ class NavigationRailTheme:
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`NavigationRail.bgcolor`][flet.NavigationRail.bgcolor] in all descendant
-    [`NavigationRail`][flet.NavigationRail] controls.
+    Color to be used for the [`NavigationRail`][flet.NavigationRail]'s background.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
     Overrides the default value of
     [`NavigationRail.indicator_color`][flet.NavigationRail.indicator_color] in all
-    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    descendant [`NavigationRail`][flet.NavigationRail] controls. when 
+    [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator]  
+    is true.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`NavigationRail.elevation`][flet.NavigationRail.elevation]in all descendant
-    [`NavigationRail`][flet.NavigationRail] controls.
+    The z-coordinate to be used for the [`NavigationRail`][flet.NavigationRail]'s 
+    elevation.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -1231,30 +1230,29 @@ class NavigationRailTheme:
 
     label_type: Optional[NavigationRailLabelType] = None
     """
-    Overrides the default value of
-    [`NavigationRail.label_type`][flet.NavigationRail.label_type] in all descendant
-    [`NavigationRail`][flet.NavigationRail] controls.
+    The type that defines the layout and behavior of the labels in the 
+    [`NavigationRail`][flet.NavigationRail].
     """
 
     min_width: Optional[Number] = None
     """
     Overrides the default value of
     [`NavigationRail.min_width`][flet.NavigationRail.min_width] in all descendant
-    [`NavigationRail`][flet.NavigationRail] controls.
+    [`NavigationRail`][flet.NavigationRail] controls when they are not extended.
     """
 
     min_extended_width: Optional[Number] = None
     """
     Overrides the default value of
     [`NavigationRail.min_extended_width`][flet.NavigationRail.min_extended_width] in all
-    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    descendant [`NavigationRail`][flet.NavigationRail] controls when they are extended.
     """
 
     group_alignment: Optional[Number] = None
     """
-    Overrides the default value of
-    [`NavigationRail.group_alignment`][flet.NavigationRail.group_alignment] in all
-    descendant [`NavigationRail`][flet.NavigationRail] controls.
+    The alignment for the 
+    [`NavigationRail.destinations`][flet.NavigationRail.destinations] as they are 
+    positioned within the [`NavigationRail`][flet.NavigationRail].
     """
 
     use_indicator: Optional[bool] = None
