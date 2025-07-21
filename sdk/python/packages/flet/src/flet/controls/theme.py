@@ -1447,14 +1447,66 @@ class RadioTheme:
 
 @dataclass
 class CheckboxTheme:
+    """
+    Defines default property values for descendant [`Checkbox`][flet.Checkbox] controls.
+    """
+
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`Checkbox.overlay_color`][flet.Checkbox.overlay_color] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     check_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`Checkbox.check_color`][flet.Checkbox.check_color] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     fill_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`Checkbox.fill_color`][flet.Checkbox.fill_color] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     splash_radius: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`Checkbox.splash_radius`][flet.Checkbox.splash_radius] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     border_side: Optional[BorderSide] = None
+    """
+    Overrides the default value of
+    [`Checkbox.border_side`][flet.Checkbox.border_side] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Overrides the default value of
+    [`Checkbox.visual_density`][flet.Checkbox.visual_density] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`Checkbox.shape`][flet.Checkbox.shape] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value of
+    [`Checkbox.mouse_cursor`][flet.Checkbox.mouse_cursor] in all descendant
+    [`Checkbox`][flet.Checkbox] controls.
+    """
+
 
 
 @dataclass
