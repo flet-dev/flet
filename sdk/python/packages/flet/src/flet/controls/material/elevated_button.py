@@ -18,6 +18,8 @@ from flet.controls.types import (
 
 __all__ = ["ElevatedButton"]
 
+DEFAULT_ELEVATION = 1
+
 
 @control("ElevatedButton")
 class ElevatedButton(ConstrainedControl, AdaptiveControl):
@@ -44,20 +46,29 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     color: Optional[ColorValue] = None
     """
-    Button's text color. If both `color` and
-    `style.color` are provided, `color` value will be used.
+    Button's text color.
+
+    Note:
+        If both `color` and [`style.color`][flet.ElevatedButton.style]
+        are provided, `color` value will be used.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Button's background color. If both
-    `bgcolor` and `style.bgcolor` are provided, `bgcolor` value will be used.
+    Button's background color.
+
+    Note:
+        If both `bgcolor` and [`style.bgcolor`][flet.ElevatedButton.style]
+        are provided, `bgcolor` value will be used.
     """
 
-    elevation: Number = 1
+    elevation: Number = DEFAULT_ELEVATION
     """
-    Button's elevation. If both `elevation` and `style.elevation` are provided,
-    `elevation` value will be used.
+    Button's elevation.
+
+    Note:
+        If both `elevation` and [`style.elevation`][flet.ElevatedButton.style]
+        are provided, `elevation` value will be used.
     """
 
     style: Optional[ButtonStyle] = None
@@ -145,9 +156,18 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at least icon or content (string or visible Control) must be provided"
-        self._internals["style"] = (self.style or ButtonStyle()).copy_with(
-            color=self.color, bgcolor=self.bgcolor, elevation=self.elevation
-        )
+        if self.style is None and (
+            self.color is not None
+            or self.bgcolor is not None
+            or self.elevation != DEFAULT_ELEVATION
+        ):
+            self.style = ButtonStyle()
+        if self.color is not None:
+            self.style.color = self.color
+        if self.bgcolor is not None:
+            self.style.bgcolor = self.bgcolor
+        if self.elevation != DEFAULT_ELEVATION:
+            self.style.elevation = self.elevation
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
