@@ -7,7 +7,7 @@
 ### Pick, save, and get directory paths
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/pick-save-and-get-directory-path.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/file-picker/pick-save-and-get-directory-path.py"
 ```
 
 ![pick-save-and-get-directory-path](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
