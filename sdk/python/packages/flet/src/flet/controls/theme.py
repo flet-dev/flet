@@ -646,28 +646,27 @@ class DialogTheme:
     bgcolor: Optional[ColorValue] = None
     """
     Overrides the default value of [`AlertDialog.bgcolor`][flet.AlertDialog.bgcolor] in
-    all descendant dialog controls.
+    all descendant [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of
     [`AlertDialog.shadow_color`][flet.AlertDialog.shadow_color] in all descendant
-    dialog controls.
+    [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
     Overrides the default value of
     [`AlertDialog.surface_tint_color`][flet.AlertDialog.surface_tint_color] in all
-    descendant dialog controls.
+    descendant [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`AlertDialog.icon_color`][flet.AlertDialog.icon_color] in all descendant dialog
-    controls.
+    Used to configure the [`IconTheme`][flet.IconTheme] for the 
+    [`AlertDialog.icon`][flet.AlertDialog.icon] control.
     """
 
     elevation: Optional[Number] = None
@@ -680,55 +679,55 @@ class DialogTheme:
     shape: Optional[OutlinedBorder] = None
     """
     Overrides the default value of [`AlertDialog.shape`][flet.AlertDialog.shape] in all
-    descendant dialog controls.
+    descendant [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
     Overrides the default value of
     [`AlertDialog.title_text_style`][flet.AlertDialog.title_text_style] in all
-    descendant dialog controls.
+    descendant [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     content_text_style: Optional[TextStyle] = None
     """
     Overrides the default value of
     [`AlertDialog.content_text_style`].[flet.AlertDialog.content_text_style] in all
-    descendant dialog controls.
+    descendant [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     alignment: Optional[Alignment] = None
     """
     Overrides the default value of [`AlertDialog.alignment`][flet.AlertDialog.alignment]
-    in all descendant dialog controls.
+    in all descendant [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     actions_padding: Optional[PaddingValue] = None
     """
     Overrides the default value of
     [`AlertDialog.actions_padding`][flet.AlertDialog.actions_padding] in all descendant
-    dialog controls.
+    [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     Overrides the default value of
     [`AlertDialog.clip_behavior`][flet.AlertDialog.clip_behavior] in all descendant
-    dialog controls.
+    [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     barrier_color: Optional[ColorValue] = None
     """
     Overrides the default value of
     [`AlertDialog.barrier_color`][flet.AlertDialog.barrier_color] in all descendant
-    dialog controls.
+    [`AlertDialog`][flet.AlertDialog] controls.
     """
 
     inset_padding: Optional[PaddingValue] = None
     """
     Overrides the default value of
     [`AlertDialog.inset_padding`][flet.AlertDialog.inset_padding] in all descendant
-    dialog controls.
+    [`AlertDialog`][flet.AlertDialog] controls.
     """
 
 
@@ -856,8 +855,25 @@ class BottomSheetTheme:
     """
 
     drag_handle_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`BottomSheet.drag_handle_color`][flet.BottomSheet.drag_handle_color] in all
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+    
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`BottomSheet.surface_tint_color`][flet.BottomSheet.surface_tint_color] in all
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`BottomSheet.shadow_color`][flet.BottomSheet.shadow_color] in all
+    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    """
 
 
 @dataclass
@@ -985,8 +1001,9 @@ class ChipTheme:
 
     elevation_on_click: Optional[Number] = None
     """
-    Overrides the default value of [`Chip.elevation_on_click`][flet.Chip.elevation_on_click]
-    in all descendant [`Chip`][flet.Chip] controls.
+    Overrides the default value of 
+    [`Chip.elevation_on_click`][flet.Chip.elevation_on_click] in all descendant 
+    [`Chip`][flet.Chip] controls.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -1029,8 +1046,8 @@ class ChipTheme:
     leading_size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default value of
-    [`Chip.leading_size_constraints`][flet.Chip.leading_size_constraints] in all descendant
-    [`Chip`][flet.Chip] controls.
+    [`Chip.leading_size_constraints`][flet.Chip.leading_size_constraints] in all 
+    descendant [`Chip`][flet.Chip] controls.
     """
 
     delete_icon_size_constraints: Optional[BoxConstraints] = None
@@ -1059,30 +1076,25 @@ class FloatingActionButtonTheme:
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.bgcolor`][flet.FloatingActionButton.bgcolor] in all
-    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    Color to be used for the unselected, enabled 
+    [`FloatingActionButton`][flet.FloatingActionButton]'s background.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.hover_color`][flet.FloatingActionButton.hover_color] in all
-    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The color to use for filling the button when the button has a pointer hovering over 
+    it.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.focus_color`][flet.FloatingActionButton.focus_color] in all
-    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The color to use for filling the button when the button has input focus.
     """
 
     foreground_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.foreground_color`][flet.FloatingActionButton.foreground_color]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    Color to be used for the unselected, enabled 
+    [`FloatingActionButton`][flet.FloatingActionButton]'s foreground.
     """
 
     splash_color: Optional[ColorValue] = None
@@ -1094,37 +1106,32 @@ class FloatingActionButtonTheme:
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.elevation`][flet.FloatingActionButton.elevation] in all
-    descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The z-coordinate to be used for the unselected, enabled 
+    [`FloatingActionButton`][flet.FloatingActionButton]'s elevation foreground.
     """
 
     focus_elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.focus_elevation`][flet.FloatingActionButton.focus_elevation]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The z-coordinate at which to place this button relative to its parent when the 
+    button has the input focus.
     """
 
     hover_elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.hover_elevation`][flet.FloatingActionButton.hover_elevation]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The z-coordinate at which to place this button relative to its parent when the 
+    button is enabled and has a pointer hovering over it.
     """
 
     highlight_elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.highlight_elevation`][flet.FloatingActionButton.highlight_elevation]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The z-coordinate to be used for the selected, enabled 
+    [`FloatingActionButton`][flet.FloatingActionButton]'s elevation foreground.
     """
 
     disabled_elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.disabled_elevation`][flet.FloatingActionButton.disabled_elevation]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    The z-coordinate to be used for the disabled 
+    [`FloatingActionButton`][flet.FloatingActionButton]'s elevation foreground.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -1136,14 +1143,14 @@ class FloatingActionButtonTheme:
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value of
-    [`FloatingActionButton.enable_feedback`][flet.FloatingActionButton.enable_feedback]
-    in all descendant [`FloatingActionButton`][flet.FloatingActionButton] controls.
+    If specified, defines the feedback property for 
+    [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for an extended [FloatingActionButton]'s content.
+    The padding for an extended [`FloatingActionButton`][flet.FloatingActionButton]'s 
+    content.
     """
 
     extended_text_style: Optional[TextStyle] = None
