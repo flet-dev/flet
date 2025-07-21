@@ -277,9 +277,9 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(
-            cell.visible for cell in self.cells
-        ), "cells must contain at minimum one visible DataCell"
+        assert any(cell.visible for cell in self.cells), (
+            "cells must contain at minimum one visible DataCell"
+        )
 
 
 @control("DataTable")
@@ -489,9 +489,9 @@ class DataTable(ConstrainedControl):
             list(filter(lambda column: column.visible, self.columns))
         )
         visible_rows = list(filter(lambda row: row.visible, self.rows))
-        assert (
-            visible_columns_count > 0
-        ), "columns must contain at minimum one visible DataColumn"
+        assert visible_columns_count > 0, (
+            "columns must contain at minimum one visible DataColumn"
+        )
         assert all(
             [
                 len([c for c in row.cells if c.visible]) == visible_columns_count
@@ -505,10 +505,12 @@ class DataTable(ConstrainedControl):
             self.data_row_min_height is None
             or self.data_row_max_height is None
             or (self.data_row_min_height <= self.data_row_max_height)
-        ), f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
-        assert (
-            self.divider_thickness is None or self.divider_thickness >= 0
-        ), f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+        ), (
+            f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
+        )
+        assert self.divider_thickness is None or self.divider_thickness >= 0, (
+            f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+        )
         assert self.sort_column_index is None or (
             0 <= self.sort_column_index < visible_columns_count
         ), (
