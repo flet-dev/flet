@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'flutter_tester.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,16 +19,23 @@ void main() {
         (tester) async {
       var dir = Directory.current.path;
       debugPrint("Current dir: $dir");
-      final fletTestAppPort = Platform.environment['FLET_TEST_APP_PORT'];
-      app.main(["tcp://localhost:$fletTestAppPort"]);
 
-      await tester.pumpAndSettle(const Duration(milliseconds: 100),
-          EnginePhase.sendSemanticsUpdate, const Duration(seconds: 20));
+      app.tester = FlutterWidgetTester(tester);
+
+      List<String> args = [];
+      final fletTestAppPort = Platform.environment['FLET_TEST_APP_PORT'];
+      if (fletTestAppPort != null) {
+        args.add("tcp://localhost:$fletTestAppPort");
+      }
+      app.main(args);
+
+      await app.tester?.pump();
+      await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
 
       // // Verify the counter starts at 0.
       // expect(find.text('0'), findsOneWidget);
 
-      // // Finds the floating action button to tap on.
+      // Finds the floating action button to tap on.
       // final Finder fab = find.byTooltip('Increment');
 
       // // Emulate a tap on the floating action button.
@@ -37,7 +46,7 @@ void main() {
 
       // // Verify the counter increments by 1.
       // expect(find.text('1'), findsOneWidget);
-      await Future.delayed(const Duration(seconds: 60));
+      await app.tester?.waitForTeardown();
     });
   });
 }

@@ -111,6 +111,7 @@ import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
 import 'services/storage_paths.dart';
+import 'services/tester.dart';
 import 'services/url_launcher.dart';
 
 class FletCoreExtension extends FletExtension {
@@ -348,6 +349,8 @@ class FletCoreExtension extends FletExtension {
         return SemanticsServiceControl(control: control);
       case "StoragePaths":
         return StoragePaths(control: control);
+      case "Tester":
+        return TesterService(control: control);
       case "UrlLauncher":
         return UrlLauncherService(control: control);
       default:

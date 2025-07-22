@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flet/flet.dart';
 import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
@@ -25,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
+Tester? tester;
 
 void main([List<String>? args]) async {
   // if (isProduction) {
@@ -117,6 +117,7 @@ void main([List<String>? args]) async {
     appStartupScreenMessage: "Working...",
     extensions: extensions,
     multiView: isMultiView(),
+    tester: tester,
   );
 
   if (app.multiView) {

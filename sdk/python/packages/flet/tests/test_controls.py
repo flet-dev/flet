@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @pytest_asyncio.fixture
-async def flutter_test():
+async def flet_app():
     """Async Pytest fixture for the FlutterTest class."""
     test = FlutterTest(
         flutter_app_dir="/Users/feodor/projects/flet-dev/flet/client", tcp_port=9010
@@ -21,6 +21,9 @@ async def flutter_test():
 
 
 @pytest.mark.asyncio
-async def test_hello(flutter_test):
-    print("Session acquired!")
-    flutter_test.page.add(ft.Text("Hello, world!"))
+async def test_hello(flet_app: FlutterTest):
+    print("test_hello")
+    flet_app.page.add(ft.Text("Hello, world!"))
+    await flet_app.tester.pump_and_settle()
+    count = await flet_app.tester.count_by_text("Hello, world!")
+    print("COUNT:", count)

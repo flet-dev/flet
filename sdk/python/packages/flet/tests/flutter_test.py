@@ -12,7 +12,18 @@ class FlutterTest:
         self.flutter_app_dir = flutter_app_dir
         self.tcp_port = tcp_port
         self.flutter_process = None
-        self.page = None
+        self.__page = None
+        self.__tester = None
+
+    @property
+    def page(self) -> ft.Page:
+        assert self.__page
+        return self.__page
+
+    @property
+    def tester(self) -> ft.Tester:
+        assert self.__tester
+        return self.__tester
 
     async def start(self):
         """Start Flet app and Flutter test process."""
@@ -20,9 +31,12 @@ class FlutterTest:
         page_ready = asyncio.Event()
 
         # start Flet app
-        def main(page: ft.Page):
+        async def main(page: ft.Page):
+            self.__page = page
+            self.__tester = ft.Tester()
+            page.services.append(self.__tester)
+            page.update()
             page_ready.set()
-            self.page = page
 
         asyncio.create_task(ft.run_async(main, port=self.tcp_port, view=None))
         print("Started Flet app")
@@ -46,6 +60,8 @@ class FlutterTest:
 
     async def teardown(self):
         """Teardown Flutter process."""
+
+        await self.tester.teardown()
 
         if self.flutter_process:
             print("Waiting for Flutter test process to exit...")
