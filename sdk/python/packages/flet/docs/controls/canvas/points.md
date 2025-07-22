@@ -1,5 +1,5 @@
-::: flet.canvas.Points
-
 ### Examples
 
 See [these](index.md#examples).
+
+::: flet.canvas.Points

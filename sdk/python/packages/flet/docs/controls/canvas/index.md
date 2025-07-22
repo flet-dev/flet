@@ -1,5 +1,3 @@
-::: flet.canvas.Canvas
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/canvas)
@@ -63,3 +61,5 @@
 ![brush](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/canvas/media/brush.gif){width="80%"}
 /// caption
 ///
+
+::: flet.canvas.Canvas
