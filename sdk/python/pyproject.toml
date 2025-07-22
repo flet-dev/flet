@@ -47,6 +47,7 @@ docs = [
     "mkdocs-open-in-new-tab",
     "mkdocs-section-index",
     "griffe-modernized-annotations",
+    "griffe-warnings-deprecated>=1.1.0",
     "pygments>=2.16",
     "markdown-exec[ansi]",
 ]

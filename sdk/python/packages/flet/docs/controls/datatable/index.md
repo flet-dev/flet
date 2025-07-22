@@ -7,25 +7,25 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/datatable/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/datatable/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/datatable/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/datatable/media/basic.png){width="80%"}
 /// caption
 ///
 
 ### Sortable columns and selectable rows
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/datatable/sortable-and-selectable.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/datatable/sortable-and-selectable.py"
 ```
 
-![sortable-and-selectable](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/datatable/media/sortable-and-selectable.png){width="80%"}
+![sortable-and-selectable](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/datatable/media/sortable-and-selectable.png){width="80%"}
 /// caption
 ///
 
 ### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/datatable/handling-events.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/datatable/handling-events.py"
 ```

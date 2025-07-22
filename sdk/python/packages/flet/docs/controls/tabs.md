@@ -5,27 +5,27 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/tabs/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/tabs/media/basic.gif){width="80%"}
 /// caption
 ///
 
 ### Nesting tabs
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/nested.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/tabs/nested.py"
 ```
 
-![nested](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/tabs/media/nested.gif){width="80%"}
+![nested](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/tabs/media/nested.gif){width="80%"}
 /// caption
 ///
 
 ### Dynamic tabs
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/tabs/dynamic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/tabs/dynamic.py"
 ```
 
 ::: flet.Tabs

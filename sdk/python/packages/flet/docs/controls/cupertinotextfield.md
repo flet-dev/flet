@@ -5,10 +5,10 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-text-field/cupertino-material-and-adaptive.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/cupertino-text-field/cupertino-material-and-adaptive.py"
 ```
 
-![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-text-field/media/cupertino-material-and-adaptive.png){width="80%"}
+![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/cupertino-text-field/media/cupertino-material-and-adaptive.png){width="80%"}
 /// caption
 ///
 

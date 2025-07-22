@@ -5,10 +5,10 @@
 ### Modal and non-modal dialogs
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/alert-dialog/modal-and-non-modal.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/alert-dialog/modal-and-non-modal.py"
 ```
 
-![modal-and-non-modal](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/alert-dialog/media/modal-and-non-modal.gif){width="80%"}
+![modal-and-non-modal](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/alert-dialog/media/modal-and-non-modal.gif){width="80%"}
 /// caption
 ///
 

@@ -5,17 +5,17 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-app-bar/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/cupertino-app-bar/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-app-bar/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/cupertino-app-bar/media/basic.png){width="80%"}
 /// caption
 ///
 
 ### App bar with theme mode toggle
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-app-bar/theme-mode-toggle.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/cupertino-app-bar/theme-mode-toggle.py"
 ```
 
 ::: flet.CupertinoAppBar

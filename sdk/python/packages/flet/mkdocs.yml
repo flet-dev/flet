@@ -130,6 +130,7 @@ plugins:
               - "!^_"   # Exclude private members starting with only one underscore
             extensions:
               - griffe_modernized_annotations
+              - griffe_warnings_deprecated
           inventories:
             - url: https://docs.python.org/3/objects.inv
               domains: [ py, std ]

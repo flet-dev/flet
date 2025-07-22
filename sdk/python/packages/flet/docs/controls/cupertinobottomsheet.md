@@ -5,10 +5,10 @@
 ### Displaying a `CupertinoActionSheet`
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/cupertino-action-sheet/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/cupertino-action-sheet/basic.py"
 ```
 
-![cupertinoactionsheet](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/cupertino-action-sheet/media/basic.png){width="80%"}
+![cupertinoactionsheet](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/cupertino-action-sheet/media/basic.png){width="80%"}
 /// caption
 ///
 

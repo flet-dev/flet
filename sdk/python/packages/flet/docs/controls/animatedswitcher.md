@@ -5,23 +5,23 @@
 ### Animated switching between two containers with scale effect
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/animated-switcher/scale-effect.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/animated-switcher/scale-effect.py"
 ```
 
-![scale-effect](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/animated-switcher/media/scale-effect.gif){width="80%"}
+![scale-effect](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/animated-switcher/media/scale-effect.gif){width="80%"}
 /// caption
 ///
 
 ### Animate Image switch
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/animated-switcher/image-switch.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/animated-switcher/image-switch.py"
 ```
 
 ### Animate Image switch buffered
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/examples/refs/heads/v1-docs/python/controls/animated-switcher/image-switch-buffered.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/animated-switcher/image-switch-buffered.py"
 ```
 
 ::: flet.AnimatedSwitcher
