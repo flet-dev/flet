@@ -5,7 +5,7 @@
 ### Text over an image
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/stack/text-on-image"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/stack/text-on-image"
 ```
 
 ![text-on-image](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/stack/media/text-on-image.png){width="80%"}
@@ -15,7 +15,7 @@
 ### Avatar with online status
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/stack/online-avatar"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/stack/online-avatar"
 ```
 
 ![online-avatar](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/stack/media/online-avatar.png){width="80%"}
@@ -25,7 +25,7 @@
 ### Absolute positioning
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/stack/absolute-positioning"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/stack/absolute-positioning"
 ```
 
 ![absolute-positioning](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/stack/media/absolute-positioning.png){width="80%"}

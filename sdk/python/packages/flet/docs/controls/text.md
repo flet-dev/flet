@@ -5,7 +5,7 @@
 ### Custom text styles
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/text/custom-styles.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/text/custom-styles.py"
 ```
 
 ![custom-styles](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/text/media/custom-styles.gif){width="80%"}
@@ -15,7 +15,7 @@
 ### Pre-defined theme text styles
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/text/text-theme-styles.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/text/text-theme-styles.py"
 ```
 
 ![text-theme-styles](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/text/media/text-theme-styles.png){width="80%"}
@@ -25,7 +25,7 @@
 ### Font with variable weight
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/text/variable-font-weight.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/text/variable-font-weight.py"
 ```
 
 ![variable-font-weight](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/text/media/variable-font-weight.gif){width="80%"}
@@ -35,7 +35,7 @@
 ### Basic rich text example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/text/rich-text-basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/text/rich-text-basic.py"
 ```
 
 ![rich-text-basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/text/media/rich-text-basic.png){width="80%"}
@@ -45,7 +45,7 @@
 ### Rich text with borders and stroke
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/text/rich-text-border-stroke.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/text/rich-text-border-stroke.py"
 ```
 
 ![rich-text-border-stroke](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/text/media/rich-text-border-stroke.png){width="80%"}
@@ -55,7 +55,7 @@
 ### Rich text with gradient
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/text/rich-text-gradient.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/text/rich-text-gradient.py"
 ```
 
 ![rich-text-gradient](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/text/media/rich-text-gradient.png){width="80%"}

@@ -5,7 +5,7 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/search-bar/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/search-bar/basic.py"
 ```
 
 ![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/search-bar/media/basic.gif){width="80%"}

@@ -5,7 +5,7 @@
 ### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/auto-complete/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/auto-complete/basic.py"
 ```
 
 ![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/auto-complete/media/basic.gif){width="80%"}

@@ -5,7 +5,7 @@
 ### Actions and Popup Menu
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/app-bar/actions-and-popup-menu.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/app-bar/actions-and-popup-menu.py"
 ```
 
 ![appbar-with-actions-and-popup-menu](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/app-bar/media/appbar-with-actions-and-popup-menu.gif){width="80%"}
@@ -15,7 +15,7 @@
 ### Theme and Material Mode Toggles
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/app-bar/theme-and-material-mode-toggles.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/app-bar/theme-and-material-mode-toggles.py"
 ```
 
 ::: flet.AppBar
