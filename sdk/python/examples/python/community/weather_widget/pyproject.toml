@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "weather-widget"
+version = "0.1.0"
+description = ""
+authors = ["InesaFitsner <inesa@appveyor.com>"]
+readme = "README.md"
+packages = [{include = "weather_widget"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flet = "^0.21.1"
+httpx = "^0.27.0"
+geocoder = "^1.38.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
