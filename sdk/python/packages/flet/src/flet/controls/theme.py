@@ -1848,240 +1848,295 @@ class DatePickerTheme:
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`DatePicker.bgcolor`][flet.DatePicker.bgcolor] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default background color of the surface in all descendant 
+    [`DatePicker`][flet.DatePicker] controls.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.surface_tint_color`][flet.DatePicker.surface_tint_color] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default surface tint color in all descendant 
+    [`DatePicker`][flet.DatePicker] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`DatePicker.shadow_color`][flet.DatePicker.shadow_color]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default shadow color in all descendant 
+    [`DatePicker`][flet.DatePicker] controls.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`DatePicker.divider_color`][flet.DatePicker.divider_color]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the divider in all descendant 
+    [`DatePicker`][flet.DatePicker] controls.
     """
 
     header_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`DatePicker.header_bgcolor`][flet.DatePicker.header_bgcolor]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the header's default background fill color.
+
+    The [`DatePicker`][flet.DatePicker]'s header displays the currently selected date.
     """
 
     today_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`DatePicker.today_bgcolor`][flet.DatePicker.today_bgcolor]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the background of the 
+    [`DatePicker.current_date`].[flet.DatePicker.current_date] label in the grid of the 
+    [`DatePicker`][flet.DatePicker].
     """
 
     day_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`DatePicker.day_bgcolor`][flet.DatePicker.day_bgcolor]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the background of the day labels in the 
+    grid of the [`DatePicker`][flet.DatePicker].
     """
 
     day_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of
-    [`DatePicker.day_overlay_color`][flet.DatePicker.day_overlay_color] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default highlight color that's typically used to indicate that a day 
+    in the grid is focused, hovered, or pressed.
     """
 
     day_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of
-    [`DatePicker.day_foreground_color`][flet.DatePicker.day_foreground_color] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the day labels in the grid of the 
+    [`DatePicker`][flet.DatePicker].
+
+    This will be used instead of the color provided in 
+    [`DatePicker.day_text_style`][flet.DatePicker.day_text_style].
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`DatePicker.elevation`][flet.DatePicker.elevation] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default value of [`DatePicker`][flet.DatePicker] elevation.
     """
 
     range_picker_elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_elevation`][flet.DatePicker.range_picker_elevation] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default elevation of the full screen DateRangePickerDialog.
     """
 
     day_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`DatePicker.day_text_style`][flet.DatePicker.day_text_style]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default text style used for each individual day label in the grid of 
+    the [`DatePicker`][flet.DatePicker].
+
+    The color in [`DatePicker.day_text_style`][flet.DatePicker.day_text_style] is 
+    not used, [`DatePicker.day_foreground_color`][flet.DatePicker.day_foreground_color] 
+    is used instead.
     """
 
     weekday_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.weekday_text_style`][flet.DatePicker.weekday_text_style] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default text style used for the row of weekday labels at the top of 
+    the [`DatePicker`][flet.DatePicker] grid.
     """
 
     year_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`DatePicker.year_text_style`][flet.DatePicker.year_text_style]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default text style used to paint each of the year entries in the year 
+    selector of the [`DatePicker`][flet.DatePicker].
+
+    The color of the [`DatePicker.year_text_style`][flet.DatePicker.year_text_style] is 
+    not used, 
+    [`DatePicker.year_foreground_color`][flet.DatePicker.year_foreground_color]  is 
+    used instead.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`DatePicker.shape`][flet.DatePicker.shape] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default value of [`DatePicker`][flet.DatePicker] shape.
+
+    If elevation is greater than zero then a shadow is shown and the shadow's shape 
+    mirrors the shape of the dialog.
     """
 
     cancel_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.cancel_button_style`][flet.DatePicker.cancel_button_style] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default style of the cancel button of a 
+    [`DatePicker`][flet.DatePicker].
     """
 
     confirm_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.confirm_button_style`][flet.DatePicker.confirm_button_style] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default style of the confirm (OK) button of a 
+    [`DatePicker`][flet.DatePicker].
     """
 
     header_foreground_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.header_foreground_color`][flet.DatePicker.header_foreground_color] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the header's default color used for text labels and icons.
+
+    The dialog's header displays the currently selected date.
+
+    This is used instead of the color property of 
+    [`DatePicker.header_headline_text_style`][flet.DatePicker.header_headline_text_style] 
+    and [`DatePicker.header_help_text_style`][flet.DatePicker.header_help_text_style].
     """
 
     header_headline_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.header_headline_text_style`][flet.DatePicker.header_headline_text_style]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the header's default headline text style.
+
+    The dialog's header displays the currently selected date.
+
+    The color of the 
+    [`DatePicker.header_headline_text_style`][flet.DatePicker.header_headline_text_style] 
+    is not used, 
+    [`DatePicker.header_foreground_color`][flet.DatePicker.header_foreground_color] is 
+    used instead.
     """
 
     header_help_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.header_help_text_style`][flet.DatePicker.header_help_text_style] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the header's default help text style.
+
+    The help text (also referred to as "supporting text" in the Material spec) is 
+    usually a prompt to the user at the top of the header (i.e. 'Select date').
+
+    The color of the `header_help_style` is not used, 
+    [`DatePicker.header_foreground_color`][flet.DatePicker.header_foreground_color] is 
+    used instead.
     """
 
     range_picker_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_bgcolor`][flet.DatePicker.range_picker_bgcolor] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default background color for DateRangePickerDialog.
     """
 
     range_picker_header_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_header_bgcolor`][flet.DatePicker.range_picker_header_bgcolor]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default background fill color for DateRangePickerDialog.
+
+    The dialog's header displays the currently selected date range.
     """
 
     range_picker_header_foreground_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_header_foreground_color`][flet.DatePicker.range_picker_header_foreground_color]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used for text labels and icons in the header of a full 
+    screen DateRangePickerDialog
+
+    The dialog's header displays the currently selected date range.
+
+    This is used instead of any colors provided by 
+    `range_picker_header_headline_text_style` or `range_picker_header_help_text_style`.
     """
 
     today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of
-    [`DatePicker.today_foreground_color`][flet.DatePicker.today_foreground_color] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the 
+    [`DatePicker.current_date`][flet.DatePicker.current_date] label in the grid of the 
+    dialog's CalendarDatePicker and the corresponding year in the dialog's YearPicker.
+
+    This will be used instead of the color provided in 
+    [`DatePicker.day_text_style`][flet.DatePicker.day_text_style].
     """
 
     range_picker_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_shape`][flet.DatePicker.range_picker_shape] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default overall shape of a full screen DateRangePickerDialog.
+
+    If elevation is greater than zero then a shadow is shown and the shadow's shape 
+    mirrors the shape of the dialog.
     """
 
     range_picker_header_help_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_header_help_text_style`][flet.DatePicker.range_picker_header_help_text_style]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default text style used for the help text of the header of a full 
+    screen DateRangePickerDialog.
+
+    The help text (also referred to as "supporting text" in the Material spec) is 
+    usually a prompt to the user at the top of the header (i.e. 'Select date').
+
+    The color of the `range_picker_header_help_text_style` is not used, 
+    `range_picker_header_foreground_color` is used instead.
     """
 
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_header_headline_text_style`][flet.DatePicker.range_picker_header_headline_text_style]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default text style used for the headline text in the header of a full 
+    screen DateRangePickerDialog.
+
+    The dialog's header displays the currently selected date range.
+
+    The color of `range_picker_header_headline_text_style` is not used, 
+    `range_picker_header_foreground_color` is used instead.
     """
 
     range_picker_surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_picker_surface_tint_color`][flet.DatePicker.range_picker_surface_tint_color]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color of the surface tint overlay applied to the 
+    background color of a full screen DateRangePickerDialog's to indicate elevation.
+
+    This is not recommended for use. Material 3 spec introduced a set of tone-based 
+    surfaces and surface containers in its ColorScheme, which provide more flexibility. 
+    The intention is to eventually remove surface tint color from the framework.
     """
 
     range_selection_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_selection_bgcolor`][flet.DatePicker.range_selection_bgcolor] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default background color used to paint days selected between the 
+    start and end dates in a DateRangePickerDialog.
     """
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of
-    [`DatePicker.range_selection_overlay_color`][flet.DatePicker.range_selection_overlay_color]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default highlight color that's typically used to indicate that a date 
+    in the selected range of a DateRangePickerDialog is focused, hovered, or pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
     """
-    Overrides the default value of [`DatePicker.today_border_side`][flet.DatePicker.today_border_side]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the border used to paint the 
+    [`DatePickerDialog.current_date`][flet.DatePickerDialog.current_date] label in the 
+    grid of the [`DatePicker`][flet.DatePicker].
+
+    The border side's [`BorderSide.color`] is not used, 
+    [`DatePicker.today_foreground_color`][flet.DatePicker.today_foreground_color] is 
+    used instead.
     """
 
     year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`DatePicker.year_bgcolor`][flet.DatePicker.year_bgcolor]
-    in all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the background of the year labels in the 
+    year selector of the of the [`DatePicker`][flet.DatePicker].
     """
 
     year_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of
-    [`DatePicker.year_foreground_color`][flet.DatePicker.year_foreground_color] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default color used to paint the year labels in the year selector of 
+    the date picker.
+
+    This will be used instead of the color provided in 
+    [`DatePicker.year_text_style`][flet.DatePicker.year_text_style].
     """
 
     year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of
-    [`DatePicker.year_overlay_color`][flet.DatePicker.year_overlay_color] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default highlight color that's typically used to indicate that a year 
+    in the year selector is focused, hovered, or pressed.
     """
 
     day_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
-    Overrides the default value of [`DatePicker.day_shape`][flet.DatePicker.day_shape] in
-    all descendant [`DatePicker`][flet.DatePicker] controls.
+    Overrides the default shape used to paint the shape decoration of the day labels in 
+    the grid of the [`DatePicker`][flet.DatePicker].
+
+    If the selected day is the current day, the provided shape with the value of 
+    [`DatePicker.today_bgcolor`][flet.DatePicker.today_bgcolor] is used to paint the 
+    shape decoration of the day label and the value of 
+    [`DatePicker.today_border_side`][flet.DatePicker.today_border_side] and 
+    [`DatePicker.today_foreground_color`][flet.DatePicker.today_foreground_color] is 
+    used to paint the border.
+
+    If the selected day is not the current day, the provided shape with the value of 
+    [`DatePicker.day_bgcolor`][flet.DatePicker.day_bgcolor] is used to paint the shape 
+    decoration of the day label.
     """
 
     locale: Optional[Locale] = None
     """
-    Overrides the default value of [`DatePicker.locale`][flet.DatePicker.locale] in all
-    descendant [`DatePicker`][flet.DatePicker] controls.
+    An optional locale argument can be used to set the locale for the date picker. It 
+    defaults to the ambient locale provided by Localizations.
     """
 
 
