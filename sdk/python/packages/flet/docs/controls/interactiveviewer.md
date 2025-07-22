@@ -5,7 +5,7 @@
 ### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/interactive-viewer/handling-events.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/interactive-viewer/handling-events.py"
 ```
 
 ::: flet.InteractiveViewer

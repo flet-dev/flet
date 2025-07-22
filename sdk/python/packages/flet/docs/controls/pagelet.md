@@ -5,7 +5,7 @@
 ### Pagelet example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/pagelet/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/pagelet/basic.py"
 ```
 
 ![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/pagelet/media/basic.png){width="80%"}

@@ -5,7 +5,7 @@
 ### Horizontal and Vertical
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/reorderable-list-view/horizontal-and-vertical.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/reorderable-list-view/horizontal-and-vertical.py"
 ```
 
 ![horizontal-and-vertical](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/reorderable-list-view/media/horizontal-and-vertical.gif){width="80%"}

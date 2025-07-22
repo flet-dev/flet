@@ -5,7 +5,7 @@
 ### Spacing children
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/row/spacing.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/row/spacing.py"
 ```
 
 ![spacing](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/row/media/spacing.gif){width="80%"}
@@ -15,7 +15,7 @@
 ### Wrapping children
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/row/wrap.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/row/wrap.py"
 ```
 
 ![wrap](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/row/media/wrap.gif){width="80%"}
@@ -25,7 +25,7 @@
 ### Setting horizontal alignment
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/row/alignment.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/row/alignment.py"
 ```
 
 ![alignment](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/row/media/alignment.png){width="80%"}
@@ -35,7 +35,7 @@
 ### Setting vertical alignment
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/row/vertical-alignment.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/row/vertical-alignment.py"
 ```
 
 ![vertical-alignment](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/row/media/vertical-alignment.png){width="80%"}

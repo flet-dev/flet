@@ -5,7 +5,7 @@
 ### File deletion confirmation
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/cupertino-alert-dialog/file-deletion-confirmation.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/cupertino-alert-dialog/file-deletion-confirmation.py"
 ```
 
 ![file-deletion-confirmation](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/cupertino-alert-dialog/media/file-deletion-confirmation.png){width="80%"}
@@ -15,7 +15,7 @@
 ### Cupertino, material and adaptive alert dialogs
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/python/controls/cupertino-alert-dialog/cupertino-material-and-adaptive.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/cupertino-alert-dialog/cupertino-material-and-adaptive.py"
 ```
 
 ::: flet.CupertinoAlertDialog

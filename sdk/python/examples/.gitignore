@@ -90,7 +90,6 @@ ipython_config.py
 #   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
 #Pipfile.lock
-uv.lock
 
 # celery beat schedule file
 celerybeat-schedule
@@ -134,3 +133,5 @@ __pypackages__/
 
 # bin
 flet/bin/
+
+/playground
