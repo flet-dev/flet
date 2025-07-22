@@ -201,7 +201,7 @@ nav:
           - Migration Guide: getting-started/migration-guide.md
   - API Reference:
       - Controls:
-          - controls/index.md
+          - Controls: controls/index.md
           - Animations:
               - AnimatedSwitcher: controls/animatedswitcher.md
           - Base:
@@ -216,7 +216,7 @@ nav:
               - ScrollableControl: controls/scrollablecontrol.md
               - Service: controls/service.md
           - Buttons:
-              - controls/buttons/index.md
+              - Buttons: controls/buttons/index.md
               - Button: controls/button.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
               - CupertinoButton: controls/cupertinobutton.md
@@ -253,7 +253,7 @@ nav:
               - TimePicker: controls/timepicker.md
           - Information Displays:
               - Canvas:
-                  - controls/canvas/index.md
+                  - Canvas: controls/canvas/index.md
                   - Arc: controls/canvas/arc.md
                   - Circle: controls/canvas/circle.md
                   - Color: controls/canvas/color.md
@@ -300,7 +300,7 @@ nav:
               - Container: controls/container.md
               - Cupertinolisttile: controls/cupertinolisttile.md
               - Datatable:
-                  - controls/datatable/index.md
+                  - DataTable: controls/datatable/index.md
                   - DataCell: controls/datacell.md
                   - DataColumn: controls/datacolumn.md
                   - DataRow: controls/datarow.md
@@ -381,14 +381,14 @@ nav:
               - FilePickerFile: types/filepickerfile.md
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Gradient:
-                  - types/gradient/index.md
+                  - Gradient: types/gradient/index.md
                   - LinearGradient: types/lineargradient.md
                   - RadialGradient: types/radialgradient.md
                   - SweepGradient: types/sweepgradient.md
               - InputBorder: types/inputborder.md
               - InputFilter: types/inputfilter.md
               - Key:
-                  - types/key/index.md
+                  - Key: types/key/index.md
                   - ScrollKey: types/scrollkey.md
                   - ValueKey: types/valuekey.md
               - Locale: types/locale.md
@@ -398,12 +398,12 @@ nav:
               - MarkdownStyleSheet: types/markdownstylesheet.md
               - MenuStyle: types/menustyle.md
               - NotchShape:
-                  - types/notchshape/index.md
+                  - NotchShape: types/notchshape/index.md
                   - AutomaticNotchShape: types/automaticnotchshape.md
                   - CircularRectangleNotchShape: types/circularrectanglenotchshape.md
               - Offset: types/offset.md
               - OutlinedBorder:
-                  - types/outlinedborder/index.md
+                  - OutlinedBorder: types/outlinedborder/index.md
                   - BeveledRectangleBorder: types/beveledrectangleborder.md
                   - CircleBorder: types/circleborder.md
                   - ContinuousRectangleBorder: types/continuousrectangleborder.md
@@ -412,7 +412,7 @@ nav:
               - Padding: types/padding.md
               - Paint: types/paint.md
               - PaintGradient:
-                  - types/paintgradient/index.md
+                  - PaintGradient: types/paintgradient/index.md
                   - PaintLinearGradient: types/paintlineargradient.md
                   - PaintRadialGradient: types/paintradialgradient.md
                   - PaintSweepGradient: types/paintsweepgradient.md
@@ -431,7 +431,7 @@ nav:
               - TextStyle: types/textstyle.md
               - TextThemeStyle: types/textthemestyle.md
               - Theme:
-                  - types/theme/index.md
+                  - Theme: types/theme/index.md
                   - AppBarTheme: types/appbartheme.md
                   - BadgeTheme: types/badgetheme.md
                   - BannerTheme: types/bannertheme.md
@@ -599,7 +599,7 @@ nav:
               - ViewPopEvent: types/viewpopevent.md
               - WindowEvent: types/windowevent.md
           - FletException:
-              - types/fletexception/index.md
+              - FletException: types/fletexception/index.md
               - FletPageDisconnectedException: types/fletpagedisconnectedexception.md
               - FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
               - FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
@@ -607,8 +607,9 @@ nav:
               # - types/pubsub/index.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
+      - Environment Variables: environment-variables.md
   - Publish:
-      - publish/index.md
+      - Build and Publish a Flet app: publish/index.md
       - Android: publish/android.md
       - iOS: publish/ios.md
       - Linux: publish/linux.md
@@ -628,7 +629,7 @@ nav:
               - Hosting:
                   - Cloudflare: publish/web/static-website/hosting/cloudflare.md
   - CLI:
-      - cli/index.md
+      - Flet CLI: cli/index.md
       - build: cli/build.md
       - create: cli/create.md
       - doctor: cli/doctor.md
@@ -671,12 +672,10 @@ nav:
   - Contributing:
       - contributing/index.md
       - Code of Conduct: contributing/code-of-conduct.md
+      - Built-in binary Python packages for Android and iOS: contributing/binary-packages-android-ios.md
       - Extensions:
           - contributing/extensions/index.md
           - Creating an Extension: contributing/extensions/user-extensions.md
           - Built-in Extensions: contributing/extensions/built-in-extensions.md
   - Blog: https://flet.dev/blog
   - Support: support.md
-  - Others:
-      - Environment Variables: unclassified/environment-variables.md
-      - Built-in binary Python packages for Android and iOS: unclassified/binary-packages-android-ios.md

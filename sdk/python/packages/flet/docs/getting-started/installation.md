@@ -1,5 +1,6 @@
 
 /// details | Prerequisites
+    open: True
 ### Python version
 
 Flet requires [Python](https://www.python.org/downloads/) 3.10 or later. (1)

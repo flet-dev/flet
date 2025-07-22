@@ -1,5 +1,3 @@
-::: flet.DataTable
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/datatable)
@@ -29,3 +27,4 @@
 ```python
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/datatable/handling-events.py"
 ```
+::: flet.DataTable

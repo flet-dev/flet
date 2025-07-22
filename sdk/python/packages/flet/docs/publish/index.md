@@ -1,28 +1,33 @@
----
-title: Publishing Flet app to multiple platforms
----
-
-## Introduction
-
-Flet CLI provides `flet build` command that allows packaging Flet app into a standalone executable or install package for distribution.
+Flet CLI provides [`flet build`](../cli/build.md) command that allows packaging Flet app into a standalone executable 
+or install package for distribution.
 
 ## Platform matrix
 
 The following matrix shows which OS you should run `flet build` command on in order to build a package for specific platform:
 
-| Run on / `flet build` | `apk/aab` | `ipa` | `macos` | `linux` | `windows` | `web` |
-|:---------------------:|:---------:|:-----:|:-------:|:-------:|:---------:|:-----:|
-|         macOS         |     ✅     |   ✅   |    ✅    |         |           |   ✅   |
-|        Windows        |     ✅     |       |         | ✅ (WSL) |     ✅     |   ✅   |
-|         Linux         |     ✅     |       |         |    ✅    |           |   ✅   |
+| Run on / `flet build` Target | [`apk/aab`] | [`ipa`] | [`macos`] | [`linux`] | [`windows`] | [`web`] |
+|:----------------------------:|:-----------:|:-------:|:---------:|:---------:|:-----------:|:-------:|
+|            macOS             |      ✅      |    ✅    |     ✅     |           |             |    ✅    |
+|           Windows            |      ✅      |         |           | ✅ ([WSL]) |      ✅      |    ✅    |
+|            Linux             |      ✅      |         |           |     ✅     |             |    ✅    |
+
+[`apk/aab`]: android.md
+[`ipa`]: ios.md
+[`macos`]: macos.md
+[`linux`]: linux.md
+[`windows`]: windows.md
+[`web`]: web/index.md
+[WSL]: https://docs.microsoft.com/en-us/windows/wsl/about
 
 ## Prerequisites
 
 ### Flutter SDK
 
-If the correct version of the Flutter SDK is not found in the `PATH`, it will be automatically installed during the first run when building a Flet app for any platform.
+[Flutter](https://flutter.dev) is required to build Flet apps for any platform. 
 
-Flutter SDK is installed into `$HOME/flutter/{version}` directory.
+If the minimum required version of the Flutter SDK is not already available in the system `PATH`, it will be automatically downloaded and installed (in the `$HOME/flutter/{version}` directory) during the first build process.
+
+<!-- TODO: Add a link to a table containing a map for Flet to min Flutter version required -->
 
 ## Project structure
 
@@ -30,64 +35,70 @@ Flutter SDK is installed into `$HOME/flutter/{version}` directory.
 
 ```tree
 README.md
-pyproject.toml
+pyproject.toml # (1)!
 src
-  assets
-    icon.png
-  main.py
+    assets # (2)!
+        icon.png
+    main.py # (3)!
 ```
 
-`main.py` is the entry point of your Flet application with `ft.run(main)` at the end. A different entry point could be specified with `--module-name` argument.
+1. Serves as the main configuration file for your application. 
+    It includes metadata, dependencies, and build settings. 
+    At a minimum, the `dependencies` section should specify `flet` package.
+    
+    /// admonition | Example
+        type: example
+    Below is an example of a `pyproject.toml` file:
+    ```toml title="pyproject.toml"
+    [project]
+    name = "example"
+    version = "0.1.0"
+    description = "An Example."
+    readme = "README.md"
+    requires-python = ">=3.9"
+    authors = [{ name = "Me", email = "me@example.com" }]
+    dependencies = [
+      "flet"
+    ]
+    
+    [tool.flet.app]
+    path = "src"
+    
+    [tool.flet]
+    org = "com.mycompany"
+    product = "Example"
+    company = "My Company"
+    copyright = "Copyright (C) 2025 by My Company"
+    ```
+    ///
+    
+2. An optional directory that contains application assets
+    (images, sound, text and other files required by your app) as well as images 
+    used for package [icons](#icons) and [splash screens](#splash-screen).
+3. The main [entry point](#entry-point) of your Flet app. It usually contains the call to `ft.run()`.
 
-`assets` is an optional directory that contains application assets (images, sound, text and other files required by your app) as well as images used for package icons and splash screens.
 
-If only `icon.png` (or other supported format such as `.bmp`, `.jpg`, `.webp`) is provided it will be used as a source image to generate all icons and splash screens for all platforms. See section below for more information about icons and splashes.
+/// admonition | Using `requirements.txt` instead of `pyproject.toml`
+Instead of a `pyproject.toml` file, you can also use `requirements.txt` file to specify dependencies.
 
-`pyproject.toml` contains the application metadata, lists its dependencies and controls build process. The list of project dependencies should contain at least `flet` package:
+In this case, two things to keep in mind:
 
-```toml title="pyproject.toml"
-[project]
-name = "myapp"
-version = "0.1.0"
-description = ""
-readme = "README.md"
-requires-python = ">=3.9"
-authors = [
-    { name = "Flet developer", email = "you@example.com" }
-]
-dependencies = [
-  "flet"
-]
+- if both files are present, `flet build` will ignore `requirements.txt`.
+- don't use `pip freeze > requirements.txt` to generate this file or fill it with dependencies, 
+  as it may include packages incompatible with the target platform. Instead, hand-pick and include 
+  only the direct dependencies required by your app, including `flet`.
+///
 
-[tool.flet]
-org = "com.mycompany"
-product = "MyApp"
-company = "My Company"
-copyright = "Copyright (C) 2025 by My Company"
+/// admonition | Tip
+    type: tip
+To quickly set up a project with the correct structure, use the [`flet create`](../cli/create.md) command:
 
-[tool.flet.app]
-path = "src"
+```bash
+flet create <project-name>
 ```
 
-::note
-Though `requirements.txt` can also be used to list app requirements Flet recommends using `pyproject.toml` for new projects. If both `pyproject.toml` and `requirements.txt` exist the latter will be ignored.
-::
-
-::caution No pip freeze
-Do not use `pip freeze > requirements.txt` command to create `requirements.txt` for the app that
-will be running on mobile. As you run `pip freeze` command on a desktop `requirements.txt` will have
-dependencies that are not intended to work on a mobile device, such as `watchdog`.
-
-Hand-pick `requirements.txt` to have only direct dependencies required by your app, plus `flet`. 
-::
-
-The easiest way to start with the right project structure is to use `flet create` command:
-
-```
-flet create myapp
-```
-
-where `myapp` is a target directory.
+Where `<project-name>` is the name for your project directory.
+///
 
 ## How it works
 
@@ -123,112 +134,326 @@ When you run `flet build <target_platform>` command it:
 * Runs `flutter build <target_platform>` command to produce an executable or an install package.
 * Copies build results to `{flet_app_directory}/build/<target_platform>` directory.
 
-## Including Flet Extensions
+## Including Extensions
 
-If your app uses a Flet extension such as [`flet_video`](https://pypi.org/project/flet-video), [`flet_audio`](https://pypi.org/project/flet-audio), 
-or any other, simply add it to your project's dependencies—just like you would with any standard Python package.
+If your app uses Flet extensions (third-party packages), simply add them to your project's 
+dependencies so they will be included in the packaged app:
 
-/// tab | pyproject.toml
 ```toml
 dependencies = [
+  "flet-extension",
   "flet",
-  "flet_video",
-  "flet_audio"
 ]
 ```
+
+If the extension has not been published on PyPi yet, you can reference it from alternative sources:
+
+- Git Repository:
+  ```toml
+  dependencies = [
+    "flet-extension @ git+https://github.com/account/flet-extension.git",
+    "flet",
+  ]
+  ```
+
+- Local Package: 
+  ```toml
+  dependencies = [
+    "flet-extension @ file:///path/to/flet-extension",
+    "flet",
+  ]
+  ```
+
+Example of extensions can be found here.
+
+## Flutter dependencies
+
+Adding a Flutter package can be done in the `pyproject.toml` as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+flutter.dependencies = ["package_1", "package_2"]
+```
 ///
-/// tab | requirements.txt
-```requirements
-flet
-flet_video
-flet_audio
+/// tab | `[tool.flet.flutter.dependencies]`
+```toml
+[tool.flet.flutter.dependencies]
+package_1 = "x.y.z"
+package_2 = "x.y.z"
+```
+///
+/// tab | `[tool.flet.flutter.dependencies.local_package]`
+```toml
+[tool.flet.flutter.dependencies.local_package]
+path = "/path/to/local_package"
 ```
 ///
 
+///
+/// tab | `flet build`
+```bash
+flet build
+```
+///
+
+## Output directory
+
+By default, the build output is saved in the `<python_app_directory>/build/<target_platform>` directory. 
+
+This can be customized as follows:
+
+<!-- fixme: build.py doesnt have this -->
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+output = "<path-to-output-dir>"
+```
+///
+
+///
+/// tab | CLI
+```bash
+flet build <target_platform> --output <path-to-output-dir>
+```
+///
 
 ## Icons
 
-You can customize app icons for all platforms (excluding Linux) with images in `assets` directory of your Flet app.
+You can customize app icons for all platforms (except Linux) using image files placed in 
+the `assets` directory of your Flet app.
 
-If only `icon.png` (or other supported format such as `.bmp`, `.jpg`, `.webp`) is provided it will be used as a source image to generate all icons.
+If a platform-specific icon (as in the table below) is not provided, `icon.png` 
+(or any supported format like `.bmp`, `.jpg`, or `.webp`) will be used as fallback. 
+For the iOS platform, transparency (alpha channel) will be automatically removed, if present.
 
-* **iOS** - `icon_ios.png` (or any supported image format). Recommended minimum image size is 1024 px. Image should not be transparent (have alpha channel). Defaults to `icon.png` with alpha-channel automatically removed.
-* **Android** - `icon_android.png` (or any supported image format). Recommended minimum image size is 192 px. Defaults to `icon.png`.
-* **Web** - `icon_web.png` (or any supported image format). Recommended minimum image size is 512 px. Defaults to `icon.png`.
-* **Windows** - `icon_windows.png` (or any supported image format). ICO will be produced of 256 px size. Defaults to `icon.png`. If `icon_windows.ico` file is provided it will be just copied to `windows/runner/resources/app_icon.ico` unmodified.
-* **macOS** - `icon_macos.png` (or any supported image format). Recommended minimum image size is 1024 px. Defaults to `icon.png`.
+| Platform | File Name                                | Recommended Size | Notes                                                                                       |
+|----------|------------------------------------------|------------------|---------------------------------------------------------------------------------------------|
+| iOS      | `icon_ios.png`                           | ≥ 1024×1024 px   | Transparency (alpha channel) is not supported and will be automatically removed if present. |
+| Android  | `icon_android.png`                       | ≥ 192×192 px     |                                                                                             |
+| Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
+| Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be interally converted to a 256×256 px `.ico` icon.                        |
+| macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
+
 
 ## Splash screen
 
-You can customize splash screens for iOS, Android and web applications with images in `assets` directory of your Flet app.
+You can customize splash screens for iOS, Android, and Web platforms by placing image files in 
+the `assets` directory of your Flet app.
 
-If only `splash.png` or `icon.png` (or other supported format such as `.bmp`, `.jpg`, `.webp`) is provided it will be used as a source image to generate all splash screen.
+If platform-specific splash images are not provided, Flet will fall back to `splash.png`. 
+If that is also missing, it will use `icon.png` or any supported format such as `.bmp`, `.jpg`, or `.webp`.
 
-* **iOS (light)** - `splash_ios.png` (or any supported image format). Defaults to `splash.png` and then `icon.png`.
-* **iOS (dark)** - `splash_dark_ios.png` (or any supported image format). Defaults to light iOS splash, then to `splash_dark.png`, then to `splash.png` and then `icon.png`.
-* **Android (light)** - `splash_android.png` (or any supported image format). Defaults to `splash.png` and then `icon.png`.
-* **Android (dark)** - `splash_dark_android.png` (or any supported image format).  Defaults to light Android splash, then to `splash_dark.png`, then to `splash.png` and then `icon.png`.
-* **Web (light)** - `splash_web.png` (or any supported image format). Defaults to `splash.png` and then `icon.png`.
-* **Web (dark)** - `splash_dark_web.png` (or any supported image format). Defaults to light web splash, then `splash_dark.png`, then to `splash.png` and then `icon.png`.
+### Platform-specific splash images
 
-`--splash-color` option specifies background color for a splash screen in light mode. Defaults to `#ffffff`.
+| Platform | Dark Fallback Order                                                                              | Light Fallback Order                             |
+|----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| iOS      | `splash_dark_ios.png` → `splash_ios.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_ios.png` → `splash.png` → `icon.png`     |
+| Android  | `splash_dark_android.png` → `splash_android.png` → `splash_dark.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
+| Web      | `splash_dark_web.png` → `splash_web.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
 
-`--splash-dark-color` option specifies background color for a splash screen in dark mode. Defaults to `#333333`.
 
-Configuring splash settings in `pyproject.toml`:
+### Splash Background Colors
 
+You can customize splash background colors using the following options:
+
+- **Splash Color:** Background color for light mode splash screens (defaults to `#ffffff`)
+- **Splash Dark Color:** Background color for dark mode splash screens (defaults to `#333333`)
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+splash.color = "#ffffff"
+splash.dark_color = "#333333"
+```
+///
+/// tab | `[tool.flet.splash]`
 ```toml
 [tool.flet.splash]
-color = "#FFFF00" # --splash-color
-dark_color = "#8B8000" # --splash-dark-color
-web = false # --no-web-splash
-ios = false # --no-ios-splash
-android = false # --no-android-splash
+color = "#ffffff"
+dark_color = "#333333"
+```
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --splash-color #ffffff --splash-dark-color #333333
+```
+///
+
+### Disabling Splash Screens
+
+Splash screens are enabled by default. This can be toggled for a specific platform as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+splash.android = false
+splash.ios = false
+splash.web = false
+```
+///
+/// tab | `[tool.flet.splash]`
+```toml
+[tool.flet.splash]
+android = false
+ios = false
+web = false
+```
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --no-android-splash --no-ios-splash --no-web-splash
+```
+///
+
+## Boot screen
+
+Boot screen is shown while the archive with Python app is being unpacked to a device file system.
+It's shown after splash screen and before startup screen. App archive does not include 3rd-party site packages.
+If the archive is small and its unpacking is fast you can keep that screen disabled (default).
+
+To enable boot screen in `pyproject.toml` for all target platforms:
+
+```toml
+[tool.flet.app.boot_screen]
+show = true
+message = "Preparing the app for its first launch…"
+```
+
+Boot screen can be enabled for specific platforms only or its message customized. For example, enabling it for Android only:
+
+```toml
+[tool.flet.android.app.boot_screen]
+show = true
+```
+
+## Startup screen
+
+Startup screen is shown while the archive (app.zip) with 3rd-party site packages (Android only) is being 
+unpacked and Python app is starting. Startup screen is shown after boot screen.
+
+To enable startup screen in `pyproject.toml` for all target platforms:
+
+```toml
+[tool.flet.app.startup_screen]
+show = true
+message = "Starting up the app…"
+```
+
+Startup screen can be enabled for specific platforms only or its message customized. For example, enabling it for Android only:
+
+```toml
+[tool.flet.android.app.startup_screen]
+show = true
 ```
 
 ## Entry point
 
-By default, `flet build` command assumes `main.py` as the entry point of your Flet application, i.e. the file with `ft.run(main)` at the end. A different entry point could be specified with `--module-name` argument or in `pyproject.toml`:
+The Flet application entry (or starting) point refers to the file that contains the call to `ft.run(target)`. 
 
+By default, Flet assumes this file is named `main.py`. 
+However, if your entry point is different (for example, `start.py`), you can specify it as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
-app.module = "main"
+app.module = "start.py"
 ```
+///
+/// tab | `[tool.flet.app]`
+```toml
+[tool.flet.app]
+module = "start.py"
+```
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --module-name start.py
+```
+///
 
 ## Compilation and cleanup
 
-`flet build` command is not compiling app `.py` files into `.pyc` by default which allows you to avoid (or defer?) discovery of any syntax errors in your app and successfully complete the packaging.
+By default, Flet does **not** compile your app files during packaging. 
+This allows the build process to complete even if there are syntax errors, 
+which can be useful for debugging or rapid iteration.
 
-You can enable the compilation and cleanup with the following new options:
+* `compile-app`: compile app's `.py` files
+* `compile-packages`: compile site/installed packages' `.py` files
+* `cleanup-packages`: remove unnecessary package files upon successful compilation
 
-* `--compile-app` - compile app's `.py` files.
-* `--compile-packages` - compile installed packages' `.py` files.
-* `--cleanup-on-compile` - remove unnecessary files upon successful compilation.
+Enable one or more of them as follows:
 
-Configuring compilation in `pyproject.toml`:
+/// tab | `pyproject.toml`
 
+/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
-compile.app = true # --compile-app
-compile.packages = true # --compile-packages
-compile.cleanup = true # --cleanup-on-compile
+compile.app = true
+compile.packages = true
+compile.cleanup = true
 ```
+///
+/// tab | `[tool.flet.compile]`
+```toml
+[tool.flet.compile]
+app = true
+packages = true
+cleanup = true
+```
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --compile-app --compile-packages --cleanup-packages
+```
+///
 
 ## Permissions
 
-`flet build` command allows granular control over permissions, features and entitlements embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
+`flet build` command allows granular control over permissions, features and entitlements 
+embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
-See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
+See platform guides for setting specific [iOS](/docs/publish/ios), [Android](/docs/publish/android) and [macOS](/docs/publish/macos) permissions.
 
 ### Cross-platform permissions
 
 There are pre-defined permissions that mapped to `Info.plist`, `*.entitlements` and `AndroidManifest.xml` for respective platforms.
 
-Setting cross-platform permissions:
+Setting permissions can be done as follows:
 
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+permissions = ["camera", "microphone"]
 ```
-flet build --permissions permission_1 permission_2 ...
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --permissions camera microphone
 ```
+///
 
 Supported permissions:
 
@@ -240,162 +465,256 @@ Supported permissions:
 #### iOS mapping to `Info.plist` entries
 
 * `location`
-  * `NSLocationWhenInUseUsageDescription = This app uses location service when in use.`
-  * `NSLocationAlwaysAndWhenInUseUsageDescription = This app uses location service.`
+    * `NSLocationWhenInUseUsageDescription = This app uses location service when in use.`
+    * `NSLocationAlwaysAndWhenInUseUsageDescription = This app uses location service.`
 * `camera`
-  * `NSCameraUsageDescription = This app uses the camera to capture photos and videos.`
+    * `NSCameraUsageDescription = This app uses the camera to capture photos and videos.`
 * `microphone`
-  * `NSMicrophoneUsageDescription = This app uses microphone to record sounds.`
+    * `NSMicrophoneUsageDescription = This app uses microphone to record sounds.`
 * `photo_library`
-  * `NSPhotoLibraryUsageDescription = This app saves photos and videos to the photo library.`
+    * `NSPhotoLibraryUsageDescription = This app saves photos and videos to the photo library.`
 
 #### macOS mapping to entitlements
 
 * `location`
-  * `com.apple.security.personal-information.location = True`
+    * `com.apple.security.personal-information.location = True`
 * `camera`
-  * `com.apple.security.device.camera = True`
+    * `com.apple.security.device.camera = True`
 * `microphone`
-  * `com.apple.security.device.audio-input = True`
+    * `com.apple.security.device.audio-input = True`
 * `photo_library`
-  * `com.apple.security.personal-information.photos-library = True`
+    * `com.apple.security.personal-information.photos-library = True`
 
 #### Android mappings
 
 * `location`
   * permissions:
-    * `android.permission.ACCESS_FINE_LOCATION": True`
-    * `android.permission.ACCESS_COARSE_LOCATION": True`
-    * `android.permission.ACCESS_BACKGROUND_LOCATION": True`
+      * `android.permission.ACCESS_FINE_LOCATION": True`
+      * `android.permission.ACCESS_COARSE_LOCATION": True`
+      * `android.permission.ACCESS_BACKGROUND_LOCATION": True`
   * features:
-    * `android.hardware.location.network": False`
-    * `android.hardware.location.gps": False`
+      * `android.hardware.location.network": False`
+      * `android.hardware.location.gps": False`
 * `camera`
-  * permissions:
-    * `android.permission.CAMERA": True`
+    * permissions:
+        * `android.permission.CAMERA": True`
   * features:
-    * `android.hardware.camera": False`
-    * `android.hardware.camera.any": False`
-    * `android.hardware.camera.front": False`
-    * `android.hardware.camera.external": False`
-    * `android.hardware.camera.autofocus": False`
+      * `android.hardware.camera": False`
+      * `android.hardware.camera.any": False`
+      * `android.hardware.camera.front": False`
+      * `android.hardware.camera.external": False`
+      * `android.hardware.camera.autofocus": False`
 * `microphone`
-  * permissions:
-    * `android.permission.RECORD_AUDIO": True`
-    * `android.permission.WRITE_EXTERNAL_STORAGE": True`
-    * `android.permission.READ_EXTERNAL_STORAGE": True`
+    * permissions:
+      * `android.permission.RECORD_AUDIO": True`
+      * `android.permission.WRITE_EXTERNAL_STORAGE": True`
+      * `android.permission.READ_EXTERNAL_STORAGE": True`
 * `photo_library`
-  * permissions:
-    * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True`
-
-Configuring cross-platform permissions in `pyproject.toml`:
-
-```toml
-[tool.flet]
-permissions = ["camera", "microphone"]
-```
+    * permissions:
+      * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True`
 
 ## Versioning
 
-You can provide a version information for built executable or package with `--build-number` and `--build-version` arguments. This is the information that is used to distinguish one build/release from another in App Store and Google Play and is shown to the user in about dialogs.
+### Build Number
 
-`--build-number` - an integer number (defaults to `1`), an identifier used as an internal version number.
-Each build must have a unique identifier to differentiate it from previous builds.
-It is used to determine whether one build is more recent than another, with higher numbers indicating
-more recent build.
+An integer identifier (defaults to `1`) used internally to distinguish one build from another. 
+Each new build must have a unique, incrementing number; higher numbers indicate more recent builds. 
 
-`--build-version` - a "x.y.z" string (defaults to `1.0.0`) used as the version number shown to users. For each new
-version of your app, you will provide a version number to differentiate it from previous versions.
+It's value can be set as follows:
 
-Configuring display version and version number in `pyproject.toml`:
+/// tab | `pyproject.toml`
 
+/// tab | `[tool.flet]`
 ```toml
-[project]
-name = "my_app"
-version = "1.0.0"
-description = "My Flet app"
-authors = [
-  {name = "John Smith", email = "john@email.com"}
-]
-dependencies = [
-  "flet==0.25.0",
-]
-
 [tool.flet]
 build_number = 1
 ```
+///
 
-## Customizing packaging template
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --build-number 1
+```
+///
 
-To create a temporary Flutter project `flet build` uses [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template stored in https://github.com/flet-dev/flet-build-template repository.
+### Build Version 
 
-You can customize that template to suit your specific needs and then use it with `flet build`.
+A user‑facing version string in `x.y.z` format (defaults to `1.0.0`). 
+Increment this for each new release to differentiate it from previous versions. 
 
-`--template` option can be used to provide the URL to the repository or path to a directory with your own template. Use `gh:` prefix for GitHub repos, e.g. `gh:{my-org}/{my-repo}` or provide a full path to a Git repository, e.g. `https://github.com/{my-org}/{my-repo}.git`.
+It's value can be set as follows:
 
-For Git repositories you can checkout specific branch/tag/commit with `--template-ref` option.
+/// tab | `pyproject.toml`
 
-`--template-dir` option specifies a relative path to a cookiecutter template in a repository given by `--template` option. When `--template` option is not used, this option specifies path relative to the `<user-directory>/.cookiecutters/flet-build-template`.
+/// tab | `[project]`
+```toml
+[project]
+version = "1.0.0"
+```
+///
+/// tab | `[tool.poetry]`
+```toml
+[tool.poetry]
+version = "1.0.0"
+```
+///
 
-Configuring template in `pyproject.toml`:
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --build-version 1.0.0
+```
+///
 
+## Customizing build template
+
+By default, `flet build` creates a temporary Flutter project using a 
+[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template 
+repository. The version of the template used is determined by the [template reference](#template-reference) option, 
+which defaults to the current Flet version.
+
+You can customize this behavior by specifying your own template source, reference, and subdirectory.
+
+### Template Source
+
+Defines the location of the template to be used. Defaults to `gh:flet-dev/flet-build-template`, 
+the [official Flet template](https://github.com/flet-dev/flet-build-template).
+
+Valid values include:
+
+- A GitHub repository using the `gh:` prefix (e.g., `gh:org/template`)
+- A full Git URL (e.g., `https://github.com/org/template.git`)
+- A local directory path
+
+It's value can be set in either of the following ways:
+
+- via Command Line: 
+  ```bash
+  flet build apk --template gh:flet-dev/flet-build-template
+  ```
+
+- via `pyproject.toml`:
+  ```toml
+  [tool.flet.template]
+  url = "gh:flet-dev/flet-build-template"
+  ```
+
+### Template Reference
+
+Defines the branch, tag, or commit to check out from the [template source](#template-source). 
+Defaults to the version of Flet installed.
+
+It's value can be set as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet.template]`
 ```toml
 [tool.flet.template]
-path = "gh:some-github/repo" # --template
-dir = "" # --template-dir
-ref = "" # --template-ref
+ref = "main"
 ```
+///
 
-## Extra args to `flutter build` command
-
-`--flutter-build-args` option allows passing extra arguments to `flutter build` command called during the build process. The option can be used multiple times.
-
-For example, if you want to add `--no-tree-shake-icons` option:
-
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --template-ref main
 ```
-flet build macos --flutter-build-args=--no-tree-shake-icons
+///
+
+### Template Directory
+
+Defines the relative path to the cookiecutter template. 
+If [template source](#template-source) is set, the path is treated as a 
+subdirectory within its root; otherwise, it is relative to`<user-directory>/.cookiecutters/flet-build-template`.
+
+It's value can be set as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet.template]`
+```toml
+[tool.flet.template]
+url = "gh:org/template"
+dir = "sub/directory"
 ```
+///
 
-To pass an option with a value:
-
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --template gh:org/template --template-dir sub/directory
 ```
-flet build ipa --flutter-build-args=--export-method --flutter-build-args=development
-```
+///
 
-Configuring Flutter build extra args:
+## Additional `flutter build` Arguments
 
+During the `flet build` process, `flutter build` command gets called internally to 
+package your app for the specified platform.
+
+It's value can be set in either of the following ways:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
 flutter.build_args = [
-    "--some-flutter-arg-1",
-    "--some-flutter-arg-2"
+  "--no-tree-shake-icons",
+  "--export-method", "development"
 ]
 ```
+///
+/// tab | `[tool.flet.flutter]`
+```toml
+[tool.flet.flutter]
+build_args = [
+  "--no-tree-shake-icons",
+  "--export-method", "development"
+]
+```
+///
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --flutter-build-args=--no-tree-shake-icons # (1)!
+
+# OR as key-value
+
+flet build <target_platform> --flutter-build-args=--export-method --flutter-build-args=development
+```
+
+1. `--flutter-build-args` can be used multiple times.
+///
 
 ## Verbose logging
 
-`--verbose` or `-vv` option allows to see the output of all commands during `flet build` run.
-We might ask for a detailed log if you need support.
+The `-v` (or `--verbose`) and `-vv` flags enables detailed output from all commands during the flet build process.
+Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed output (higher verbosity level).
+If you need support, we may ask you to share this verbose log.
 
 ## Console output
 
-All Flet apps output to `stdout` and `stderr` (e.g. all `print()` statements or `sys.stdout.write()` calls, Python `logging` library) is now redirected to `console.log` file with a full path to it stored in `FLET_APP_CONSOLE` environment variable.
+All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python 
+logging module—is now redirected to a `console.log` file. The full path to this file is available via the 
+`FLET_APP_CONSOLE` environment variable.
 
-Writes to that file are unbuffered, so you can retrieve a log in your Python program at any moment with a simple:
+The log file is written in an unbuffered manner, allowing you to read it at any point in your Python program using:
 
 ```python
 with open(os.getenv("FLET_APP_CONSOLE"), "r") as f:
-    log = f.read()
+  log = f.read()
 ```
 
-`AlertDialog` or any other control can be used to display the value of `log` variable.
+You can then display the `log` content using an `AlertDialog` or any other Flet control.
 
-When the program is terminated by calling `sys.exit()` with exit code `100` (magic code)
-the entire log will be displayed in a scrollable window.
+If your program calls sys.exit(100), the complete log will automatically be shown in a scrollable window. 
+This is a special “magic” exit code for debugging purposes:
 
 ```python
 import sys
 sys.exit(100)
 ```
 
-Calling `sys.exit()` with any other exit code will terminate (close) the app without displaying a log.
+Calling `sys.exit()` with any other code will terminate the app without displaying the log.
