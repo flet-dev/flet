@@ -24,6 +24,7 @@ members = ["packages/*"]
 [dependency-groups]
 dev = [
     "pytest >=7.2.0",
+    "pytest_asyncio >=1.1.0",
     "tomlkit >=0.11.6",
     "cryptography >=39.0.0",
     "pyinstaller >=6.6.0",
