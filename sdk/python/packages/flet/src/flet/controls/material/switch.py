@@ -25,7 +25,10 @@ class Switch(ConstrainedControl, AdaptiveControl):
     A toggle represents a physical switch that allows someone to choose between
     two mutually exclusive options.
 
-    For example, "On/Off", "Show/Hide". Choosing an option should produce
+    For example, "On/Off", "Show/Hide".
+
+    Raises:
+        AssertionError: If [`splash_radius`][(c).] is negative.
     """
 
     label: Optional[StrOrControl] = None
@@ -66,7 +69,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The color to use on the track when
     this switch is on.
 
-    If [`track_color`][flet.Switch.track_color] returns a non-none color in 
+    If [`track_color`][flet.Switch.track_color] returns a non-none color in
     the `ControlState.SELECTED` state, it will
     be used instead of this color.
     """
@@ -85,7 +88,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
 
-    If [`thumb_color`][flet.Switch.thumb_color] returns a non-none color 
+    If [`thumb_color`][flet.Switch.thumb_color] returns a non-none color
     in the `ControlState.DEFAULT` state, it will be
     used instead of this color.
     """
@@ -98,7 +101,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
 
-    If [`track_color`][flet.Switch.track_color] returns a non-none color 
+    If [`track_color`][flet.Switch.track_color] returns a non-none color
     in the `ControlState.DEFAULT` state, it will be
     used instead of this color.
     """
@@ -109,7 +112,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     in various [`ControlState`][flet.ControlState]
     states.
 
-    The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`, 
+    The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`,
     `ControlState.DISABLED`, `ControlState.FOCUSED` and
     `ControlState.DEFAULT` (fallback).
     """
@@ -119,7 +122,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The icon of this Switch's thumb in various
     [`ControlState`][flet.ControlState] states.
 
-    The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`, 
+    The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`,
     `ControlState.DISABLED`, `ControlState.FOCUSED` and
     `ControlState.DEFAULT` (fallback).
     """
@@ -129,7 +132,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The color of this switch's track
     in various [`ControlState`][flet.ControlState]  states.
 
-    The following states are supported: `ControlState.SELECTED`, 
+    The following states are supported: `ControlState.SELECTED`,
     `ControlState.HOVERED`, `ControlState.DISABLED`, `ControlState.FOCUSED` and
     `ControlState.DEFAULT` (fallback).
     """
@@ -163,7 +166,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Material in various
     [`ControlState`][flet.ControlState] states.
 
-    The following states are supported: `ControlState.PRESSED`, 
+    The following states are supported: `ControlState.PRESSED`,
     `ControlState.SELECTED`, `ControlState.HOVERED`, `ControlState.FOCUSED` and
     `ControlState.DEFAULT`.
     """
@@ -184,7 +187,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     The outline width of this switch's track in all or specific
     [`ControlState`][flet.ControlState] states.
 
-    The following states are supported: `ControlState.SELECTED`, 
+    The following states are supported: `ControlState.SELECTED`,
     `ControlState.HOVERED`, `ControlState.DISABLED`,
     `ControlState.FOCUSED` and `ControlState.DEFAULT` (fallback).
     """
@@ -193,17 +196,14 @@ class Switch(ConstrainedControl, AdaptiveControl):
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over
     this control.
-
-    The value is
-    [`MouseCursor`][flet.MouseCursor] enum.
     """
 
     padding: Optional[PaddingValue] = None
     """
     The amount of space to surround the child inside the bounds of the Switch.
 
-    Defaults to horizontal padding of 4 pixels. If 
-    [`Theme.use_material3`][flet.Theme.use_material3] is false, then there is no 
+    Defaults to horizontal padding of 4 pixels. If
+    [`Theme.use_material3`][flet.Theme.use_material3] is false, then there is no
     padding by default.
     """
 
@@ -224,6 +224,6 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.splash_radius is None or self.splash_radius >= 0
-        ), f"splash_radius must be greater than or equal to 0, got {self.splash_radius}"
+        assert self.splash_radius is None or self.splash_radius >= 0, (
+            f"splash_radius must be greater than or equal to 0, got {self.splash_radius}"
+        )
