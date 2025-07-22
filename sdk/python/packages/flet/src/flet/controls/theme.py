@@ -2286,8 +2286,26 @@ class TimePickerTheme:
 
 @dataclass
 class DropdownTheme:
+    """
+    Overrides the default values of visual properties for descendant 
+    [`Dropdown`][flet.Dropdown] controls.
+    """
+    
     menu_style: Optional[MenuStyle] = None
+    """
+    The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`, 
+    `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle] 
+    then they will override the default values for 
+    [`DropdownMenu.elevation`][flet.DropdownMenu.elevation], 
+    [`DropdownMenu.bgcolor`][flet.DropdownMenu.bgcolor] and 
+    [`DropdownMenu.menu_width`][flet.DropdownMenu.menu_width].
+    """
+    
     text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for 
+    [`DropdownMenu.text_style`][DropdownMenu.text_style].
+    """
 
 
 @dataclass

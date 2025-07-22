@@ -50,8 +50,8 @@ class DatePicker(DialogControl):
     It is added to [`Page.overlay`][flet.Page.overlay] and can be opened by
     calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
-    Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar or an
-    Input (TextField) for picking a date.
+    Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar 
+    or an Input (TextField) for picking a date.
     """
 
     value: Optional[DateTimeValue] = None
@@ -194,5 +194,6 @@ class DatePicker(DialogControl):
 
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode] is changed.
+    Called when the [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode] 
+    is changed.
     """
