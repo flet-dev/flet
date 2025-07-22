@@ -1843,7 +1843,8 @@ class BannerTheme:
 @dataclass
 class DatePickerTheme:
     """
-    Customizes the appearance of [`DatePicker`][flet.DatePicker] controls across the app.
+    Customizes the appearance of [`DatePicker`][flet.DatePicker] controls across the 
+    app.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -2142,30 +2143,145 @@ class DatePickerTheme:
 
 @dataclass
 class TimePickerTheme:
+    """
+    Customizes the appearance of [`TimePicker`][flet.TimePicker] controls across the 
+    app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    The background color of a [`TimePicker`][flet.TimePicker].
+
+    If this is null, the time picker defaults to the overall theme's 
+    [`ColorScheme.surface_container_high`][flet.ColorScheme.surface_container_high].
+    """
+
     day_period_color: Optional[ColorValue] = None
+    """
+    The background color of the AM/PM toggle.
+    """
+    
     day_period_text_color: Optional[ColorValue] = None
+    """
+    The color of the day period text that represents AM/PM.
+    """
+
     dial_bgcolor: Optional[ColorValue] = None
+    """
+    The background color of the time picker dial when the entry mode is 
+    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or 
+    [`TimePickerEntryMode.DIAL_ONLY`][flet.TimePickerEntryMode.DIAL_ONLY].
+    """
+
     dial_hand_color: Optional[ColorValue] = None
+    """
+    The color of the time picker dial's hand when the entry mode is 
+    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or 
+    [`TimePickerEntryMode.DIAL_ONLY`][flet.TimePickerEntryMode.DIAL_ONLY].
+    """
+    
     dial_text_color: Optional[ColorValue] = None
+    """
+    The color of the dial text that represents specific hours and minutes.
+    """
+    
     entry_mode_icon_color: Optional[ColorValue] = None
+    """
+    The color of the entry mode [`IconButton`][flet.IconButton].
+    """
+    
     hour_minute_color: Optional[ColorValue] = None
+    """
+    The background color of the hour and minute header segments.
+    """
+    
     hour_minute_text_color: Optional[ColorValue] = None
+    """
+    The color of the header text that represents hours and minutes.
+    """
+    
     day_period_button_style: Optional[ButtonStyle] = None
+    """
+    The style of the AM/PM toggle control of a [`TimePicker`][flet.TimePicker].
+    """
+    
     cancel_button_style: Optional[ButtonStyle] = None
+    """
+    The style of the cancel button of a [`TimePicker`][flet.TimePicker].
+    """
+    
     confirm_button_style: Optional[ButtonStyle] = None
+    """
+    The style of the confirm (OK) button of a [`TimePicker`][flet.TimePicker].
+    """
+    
     day_period_text_style: Optional[TextStyle] = None
+    """
+    Used to configure the [TextStyle][flet.TextStyle] for the AM/PM toggle control.
+
+    If this is null, the time picker defaults to the overall theme's 
+    [`TextTheme.title_medium`][flet.TextTheme.title_medium].
+    """
+    
     dial_text_style: Optional[TextStyle] = None
+    """
+    The [TextStyle][flet.TextStyle] for the numbers on the time selection dial.
+    """
+    
     help_text_style: Optional[TextStyle] = None
+    """
+    Used to configure the [TextStyle][flet.TextStyle] for the helper text in the header.
+
+    """
+    
     hour_minute_text_style: Optional[TextStyle] = None
+    """
+    Used to configure the [TextStyle][flet.TextStyle] for the hour/minute controls.
+    """
+    
     elevation: Optional[Number] = None
+    """
+    The Material elevation for the time picker dialog.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the Dialog that the time picker is presented in.
+    """
+
     day_period_shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the day period that the [`TimePicker`][flet.TimePicker] uses.
+    """
+    
     hour_minute_shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the hour and minute controls that the [`TimePicker`][flet.TimePicker] 
+    uses.
+    """
+    
     day_period_border_side: Optional[BorderSide] = None
+    """
+    The color and weight of the day period's outline.
+    """
+    
     padding: Optional[PaddingValue] = None
+    """
+    The padding around the time picker dialog when the entry mode is 
+    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or 
+    [`TimePickerEntryMode.DIAL_ONLY`][flet.TimePickerEntryMode.DIAL_ONLY].
+    """
+    
     time_selector_separator_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    The color of the time selector separator between the hour and minute controls.
+    """
+    
     time_selector_separator_text_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    Used to configure the text style for the time selector separator between the hour 
+    and minute controls.
+    """
 
 
 @dataclass
