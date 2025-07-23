@@ -64,10 +64,16 @@ class FletTestApp:
             elif platform.system() == "Darwin":
                 flet_test_device = "macos"
 
+        tcp_addr = "127.0.0.1"
+
+        flet_test_platform = os.getenv("FLET_TEST_PLATFORM")
+        if flet_test_platform == "android":
+            tcp_addr = "10.0.2.2"
+
         if flet_test_device is not None:
             flutter_args.extend(["-d", flet_test_device])
 
-        app_url = f"tcp://127.0.0.1:{self.tcp_port}"
+        app_url = f"tcp://{tcp_addr}:{self.tcp_port}"
         flutter_args.append(f"--dart-define=FLET_TEST_APP_URL={app_url}")
 
         # start Flutter test
