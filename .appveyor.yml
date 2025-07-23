@@ -433,7 +433,7 @@ for:
     build: off
 
     test_script:
-      - uv run pytest
+      - uv run pytest packages/flet/tests
 
   ######################
   #    Python Build    #

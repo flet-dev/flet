@@ -28,4 +28,4 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, port=8550, view=None)
+    ft.run(main)
