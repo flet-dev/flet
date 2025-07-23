@@ -4,9 +4,9 @@ title: Packaging app for Linux
 
 Flet CLI provides `flet build linux` command that allows packaging Flet app into a Linux application.
 
-::note
+/// admonition | Note
 The command can be run on Linux only.
-::
+///
 
 ## Prerequisites
 

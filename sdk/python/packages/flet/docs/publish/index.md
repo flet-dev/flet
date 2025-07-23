@@ -1,4 +1,4 @@
-Flet CLI provides [`flet build`](../cli/build.md) command that allows packaging Flet app into a standalone executable 
+Flet CLI provides [`flet build`](../cli/build.md) command that allows packaging Flet app into a standalone executable
 or install package for distribution.
 
 ## Platform matrix
@@ -23,7 +23,7 @@ The following matrix shows which OS you should run `flet build` command on in or
 
 ### Flutter SDK
 
-[Flutter](https://flutter.dev) is required to build Flet apps for any platform. 
+[Flutter](https://flutter.dev) is required to build Flet apps for any platform.
 
 If the minimum required version of the Flutter SDK is not already available in the system `PATH`, it will be automatically downloaded and installed (in the `$HOME/flutter/{version}` directory) during the first build process.
 
@@ -42,10 +42,10 @@ src
     main.py # (3)!
 ```
 
-1. Serves as the main configuration file for your application. 
-    It includes metadata, dependencies, and build settings. 
+1. Serves as the main configuration file for your application.
+    It includes metadata, dependencies, and build settings.
     At a minimum, the `dependencies` section should specify `flet` package.
-    
+
     /// admonition | Example
         type: example
     Below is an example of a `pyproject.toml` file:
@@ -60,10 +60,10 @@ src
     dependencies = [
       "flet"
     ]
-    
+
     [tool.flet.app]
     path = "src"
-    
+
     [tool.flet]
     org = "com.mycompany"
     product = "Example"
@@ -71,9 +71,9 @@ src
     copyright = "Copyright (C) 2025 by My Company"
     ```
     ///
-    
+
 2. An optional directory that contains application assets
-    (images, sound, text and other files required by your app) as well as images 
+    (images, sound, text and other files required by your app) as well as images
     used for package [icons](#icons) and [splash screens](#splash-screen).
 3. The main [entry point](#entry-point) of your Flet app. It usually contains the call to `ft.run()`.
 
@@ -84,8 +84,8 @@ Instead of a `pyproject.toml` file, you can also use `requirements.txt` file to 
 In this case, two things to keep in mind:
 
 - if both files are present, `flet build` will ignore `requirements.txt`.
-- don't use `pip freeze > requirements.txt` to generate this file or fill it with dependencies, 
-  as it may include packages incompatible with the target platform. Instead, hand-pick and include 
+- don't use `pip freeze > requirements.txt` to generate this file or fill it with dependencies,
+  as it may include packages incompatible with the target platform. Instead, hand-pick and include
   only the direct dependencies required by your app, including `flet`.
 ///
 
@@ -136,33 +136,33 @@ When you run `flet build <target_platform>` command it:
 
 ## Including Extensions
 
-If your app uses Flet extensions (third-party packages), simply add them to your project's 
-dependencies so they will be included in the packaged app:
+If your app uses Flet extensions (third-party packages), simply add them to your project's dependencies:
 
+/// tab | PyPI
 ```toml
 dependencies = [
   "flet-extension",
   "flet",
 ]
 ```
+///
+/// tab | Git Repo
+```toml
+dependencies = [
+"flet-extension @ git+https://github.com/account/flet-extension.git",
+"flet",
+]
+```
+///
+/// tab | Local Package
+```toml
+dependencies = [
+"flet-extension @ file:///path/to/flet-extension",
+"flet",
+]
+```
+///
 
-If the extension has not been published on PyPi yet, you can reference it from alternative sources:
-
-- Git Repository:
-  ```toml
-  dependencies = [
-    "flet-extension @ git+https://github.com/account/flet-extension.git",
-    "flet",
-  ]
-  ```
-
-- Local Package: 
-  ```toml
-  dependencies = [
-    "flet-extension @ file:///path/to/flet-extension",
-    "flet",
-  ]
-  ```
 
 Example of extensions can be found here.
 
@@ -201,7 +201,7 @@ flet build
 
 ## Output directory
 
-By default, the build output is saved in the `<python_app_directory>/build/<target_platform>` directory. 
+By default, the build output is saved in the `<python_app_directory>/build/<target_platform>` directory.
 
 This can be customized as follows:
 
@@ -224,11 +224,11 @@ flet build <target_platform> --output <path-to-output-dir>
 
 ## Icons
 
-You can customize app icons for all platforms (except Linux) using image files placed in 
+You can customize app icons for all platforms (except Linux) using image files placed in
 the `assets` directory of your Flet app.
 
-If a platform-specific icon (as in the table below) is not provided, `icon.png` 
-(or any supported format like `.bmp`, `.jpg`, or `.webp`) will be used as fallback. 
+If a platform-specific icon (as in the table below) is not provided, `icon.png`
+(or any supported format like `.bmp`, `.jpg`, or `.webp`) will be used as fallback.
 For the iOS platform, transparency (alpha channel) will be automatically removed, if present.
 
 | Platform | File Name                                | Recommended Size | Notes                                                                                       |
@@ -242,10 +242,10 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 
 ## Splash screen
 
-You can customize splash screens for iOS, Android, and Web platforms by placing image files in 
+You can customize splash screens for iOS, Android, and Web platforms by placing image files in
 the `assets` directory of your Flet app.
 
-If platform-specific splash images are not provided, Flet will fall back to `splash.png`. 
+If platform-specific splash images are not provided, Flet will fall back to `splash.png`.
 If that is also missing, it will use `icon.png` or any supported format such as `.bmp`, `.jpg`, or `.webp`.
 
 ### Platform-specific splash images
@@ -320,50 +320,62 @@ flet build <target_platform> --no-android-splash --no-ios-splash --no-web-splash
 
 ## Boot screen
 
-Boot screen is shown while the archive with Python app is being unpacked to a device file system.
-It's shown after splash screen and before startup screen. App archive does not include 3rd-party site packages.
-If the archive is small and its unpacking is fast you can keep that screen disabled (default).
+The boot screen is shown while the archive with Python app is being unpacked to a device file system.
+It is shown after splash screen and before startup screen. App archive does not include 3rd-party site packages.
+If the archive is small and its unpacking is fast you could leave this screen disabled (default).
 
-To enable boot screen in `pyproject.toml` for all target platforms:
+Below are its customizable properties and respective defaults:
 
+/// tab | `[tool.flet.app.boot_screen]`
 ```toml
 [tool.flet.app.boot_screen]
-show = true
+show = false
 message = "Preparing the app for its first launch…"
 ```
-
-Boot screen can be enabled for specific platforms only or its message customized. For example, enabling it for Android only:
+///
+/// tab | `[tool.flet.PLATFORM.app.boot_screen]`
+Its values can be set platform-specific too:
 
 ```toml
 [tool.flet.android.app.boot_screen]
-show = true
+show = false
+message = "Preparing the app for its first launch…"
 ```
+///
 
 ## Startup screen
 
-Startup screen is shown while the archive (app.zip) with 3rd-party site packages (Android only) is being 
-unpacked and Python app is starting. Startup screen is shown after boot screen.
+The startup screen is shown while the archive (`app.zip`), which contains the 3rd-party site packages (Android only), is being
+unpacked and the Python app is starting.
 
-To enable startup screen in `pyproject.toml` for all target platforms:
+/// admonition | Note
+Startup screen is shown after the [boot screen](#boot-screen).
+///
 
+Below are its customizable properties and respective defaults:
+
+/// tab | `[tool.flet.app.startup_screen]`
 ```toml
 [tool.flet.app.startup_screen]
-show = true
+show = false
 message = "Starting up the app…"
 ```
-
-Startup screen can be enabled for specific platforms only or its message customized. For example, enabling it for Android only:
+///
+/// tab | `[tool.flet.PLATFORM.app.startup_screen]`
+Its values can be set platform-specific too:
 
 ```toml
 [tool.flet.android.app.startup_screen]
-show = true
+show = false
+message = "Starting up the app…"
 ```
+///
 
 ## Entry point
 
-The Flet application entry (or starting) point refers to the file that contains the call to `ft.run(target)`. 
+The Flet application entry (or starting) point refers to the file that contains the call to `ft.run(target)`.
 
-By default, Flet assumes this file is named `main.py`. 
+By default, Flet assumes this file is named `main.py`.
 However, if your entry point is different (for example, `start.py`), you can specify it as follows:
 
 /// tab | `pyproject.toml`
@@ -390,8 +402,8 @@ flet build <target_platform> --module-name start.py
 
 ## Compilation and cleanup
 
-By default, Flet does **not** compile your app files during packaging. 
-This allows the build process to complete even if there are syntax errors, 
+By default, Flet does **not** compile your app files during packaging.
+This allows the build process to complete even if there are syntax errors,
 which can be useful for debugging or rapid iteration.
 
 * `compile-app`: compile app's `.py` files
@@ -428,7 +440,7 @@ flet build <target_platform> --compile-app --compile-packages --cleanup-packages
 
 ## Permissions
 
-`flet build` command allows granular control over permissions, features and entitlements 
+`flet build` command allows granular control over permissions, features and entitlements
 embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
 See platform guides for setting specific [iOS](/docs/publish/ios), [Android](/docs/publish/android) and [macOS](/docs/publish/macos) permissions.
@@ -517,8 +529,8 @@ Supported permissions:
 
 ### Build Number
 
-An integer identifier (defaults to `1`) used internally to distinguish one build from another. 
-Each new build must have a unique, incrementing number; higher numbers indicate more recent builds. 
+An integer identifier (defaults to `1`) used internally to distinguish one build from another.
+Each new build must have a unique, incrementing number; higher numbers indicate more recent builds.
 
 It's value can be set as follows:
 
@@ -538,10 +550,10 @@ flet build <target_platform> --build-number 1
 ```
 ///
 
-### Build Version 
+### Build Version
 
-A user‑facing version string in `x.y.z` format (defaults to `1.0.0`). 
-Increment this for each new release to differentiate it from previous versions. 
+A user‑facing version string in `x.y.z` format (defaults to `1.0.0`).
+Increment this for each new release to differentiate it from previous versions.
 
 It's value can be set as follows:
 
@@ -569,16 +581,16 @@ flet build <target_platform> --build-version 1.0.0
 
 ## Customizing build template
 
-By default, `flet build` creates a temporary Flutter project using a 
-[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template 
-repository. The version of the template used is determined by the [template reference](#template-reference) option, 
+By default, `flet build` creates a temporary Flutter project using a
+[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template
+repository. The version of the template used is determined by the [template reference](#template-reference) option,
 which defaults to the current Flet version.
 
 You can customize this behavior by specifying your own template source, reference, and subdirectory.
 
 ### Template Source
 
-Defines the location of the template to be used. Defaults to `gh:flet-dev/flet-build-template`, 
+Defines the location of the template to be used. Defaults to `gh:flet-dev/flet-build-template`,
 the [official Flet template](https://github.com/flet-dev/flet-build-template).
 
 Valid values include:
@@ -589,7 +601,7 @@ Valid values include:
 
 It's value can be set in either of the following ways:
 
-- via Command Line: 
+- via Command Line:
   ```bash
   flet build apk --template gh:flet-dev/flet-build-template
   ```
@@ -602,7 +614,7 @@ It's value can be set in either of the following ways:
 
 ### Template Reference
 
-Defines the branch, tag, or commit to check out from the [template source](#template-source). 
+Defines the branch, tag, or commit to check out from the [template source](#template-source).
 Defaults to the version of Flet installed.
 
 It's value can be set as follows:
@@ -625,8 +637,8 @@ flet build <target_platform> --template-ref main
 
 ### Template Directory
 
-Defines the relative path to the cookiecutter template. 
-If [template source](#template-source) is set, the path is treated as a 
+Defines the relative path to the cookiecutter template.
+If [template source](#template-source) is set, the path is treated as a
 subdirectory within its root; otherwise, it is relative to`<user-directory>/.cookiecutters/flet-build-template`.
 
 It's value can be set as follows:
@@ -650,7 +662,7 @@ flet build <target_platform> --template gh:org/template --template-dir sub/direc
 
 ## Additional `flutter build` Arguments
 
-During the `flet build` process, `flutter build` command gets called internally to 
+During the `flet build` process, `flutter build` command gets called internally to
 package your app for the specified platform.
 
 It's value can be set in either of the following ways:
@@ -696,8 +708,8 @@ If you need support, we may ask you to share this verbose log.
 
 ## Console output
 
-All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python 
-logging module—is now redirected to a `console.log` file. The full path to this file is available via the 
+All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python
+logging module—is now redirected to a `console.log` file. The full path to this file is available via the
 `FLET_APP_CONSOLE` environment variable.
 
 The log file is written in an unbuffered manner, allowing you to read it at any point in your Python program using:
@@ -709,7 +721,7 @@ with open(os.getenv("FLET_APP_CONSOLE"), "r") as f:
 
 You can then display the `log` content using an `AlertDialog` or any other Flet control.
 
-If your program calls sys.exit(100), the complete log will automatically be shown in a scrollable window. 
+If your program calls sys.exit(100), the complete log will automatically be shown in a scrollable window.
 This is a special “magic” exit code for debugging purposes:
 
 ```python

@@ -4,18 +4,17 @@ title: Packaging app for macOS
 
 Flet CLI provides `flet build macos` command that allows packaging Flet app into a macOS application bundle.
 
-::note
+/// admonition | Note
 The command can be run on macOS only.
-::
+///
 
-## Prerequisites
-
+/// admonition | Important
+    type: danger
 ## Prerequisites
 
 ### Rosetta 2
 
-Flutter requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple silicon:
-
+[Flutter](https://flutter.dev), which we use for packaging, requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon:
 ```
 sudo softwareupdate --install-rosetta --agree-to-license
 ```
@@ -26,7 +25,8 @@ sudo softwareupdate --install-rosetta --agree-to-license
 
 ### CocoaPods
 
-[CocoaPods](https://cocoapods.org/) 1.16 to compile and enable Flutter plugins.
+[CocoaPods](https://cocoapods.org/) 1.16 or later to compile and enable Flutter plugins.
+///
 
 ## `flet build macos`
 
@@ -34,29 +34,57 @@ Creates a macOS application bundle from your Flet app.
 
 ## Bundle architecture
 
-By default, `flet build macos` command builds universal app bundle that works on both Apple Silicon and older Intel processors. Therefore, packaging utility will try to download Python binary wheels for both `arm64` and `x86_64` platforms. Recent releases
+By default, `flet build macos` command builds universal app bundle that works on both
+Apple Silicon and older Intel processors. Therefore, packaging utility will try to download
+Python binary wheels for both `arm64` and `x86_64` platforms. Recent releases
 of some popular packages do not include `x86_64` wheels anymore, so the entire packaging operation will fail.
 
-You can limit the build command to a specific architecture only, by using `--arch` option. For example, to build macOS app bundle that works on Apple Silicon only use the following command:
+You can limit the build command to specific architectures only, by using `--arch` option.
+For example, to build macOS app bundle that works on Apple Silicon only use the following command:
 
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.macos]
+target_arch = ["arm64"] # (1)!
+```
+
+1. This setting can be a list (for one or more targets) or a string (for one target).
+///
+/// tab | `flet build`
 ```
 flet build macos --arch arm64
 ```
+///
 
-The same can be configured in `pyproject.toml`:
-
-```toml
-[tool.flet.macos]
-build_arch = "arm64"
-```
+#### TBD: list some common/supported archs
 
 ## Permissions
 
 Setting macOS entitlements which are written and `.entitlements` files:
 
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet.macos]`
+```toml
+[tool.flet.macos]
+entitlement."com.apple.security.personal-information.photos-library" = true
+entitlement."com.apple.security.personal-information.location" = true
 ```
-flet build --macos-entitlements name_1=True|False name_2=True|False ...
+///
+/// tab | `[tool.flet.macos.entitlement]`
+```toml
+[tool.flet.macos.entitlement]
+"com.apple.security.personal-information.location" = true
+"com.apple.security.personal-information.photos-library" = true
 ```
+///
+
+///
+/// tab | `flet build`
+```
+flet build --macos-entitlements "com.apple.security.personal-information.location"=True "com.apple.security.personal-information.photos-library"=True
+```
+///
 
 Default macOS entitlements:
 
