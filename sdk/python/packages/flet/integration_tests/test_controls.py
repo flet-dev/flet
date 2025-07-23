@@ -24,5 +24,5 @@ async def test_hello(flet_app: ft.FletTestApp):
     print("test_hello")
     flet_app.page.add(ft.Button("Click me"))
     await flet_app.tester.pump_and_settle()
-    count = await flet_app.tester.count_by_text("Click me")
-    assert count == 1
+    finder = await flet_app.tester.find_by_text("Click me")
+    assert finder.count == 1

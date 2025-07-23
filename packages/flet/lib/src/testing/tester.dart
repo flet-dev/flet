@@ -1,14 +1,17 @@
+import 'package:flutter/widgets.dart';
+
 import 'test_finder.dart';
 
 abstract class Tester {
-  Future<void> pump();
   Future<void> pumpAndSettle([Duration duration]);
-  int countByText(String text);
+  Future<void> pump({Duration? duration});
+  TestFinder findByText(String text);
+  TestFinder findByTextContaining(String text);
+  TestFinder findByKey(Key key);
+  TestFinder findByTooltip(String value);
+  TestFinder findByIcon(IconData icon);
   Future<void> tap(TestFinder finder);
   Future<void> enterText(TestFinder finder, String text);
-  void expect(dynamic actual, dynamic matcher);
-  TestFinder text(String value);
-  TestFinder tooltip(String value);
   void teardown();
   Future waitForTeardown();
 }

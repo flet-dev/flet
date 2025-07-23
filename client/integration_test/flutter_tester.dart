@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flet/flet.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'flutter_test_finder.dart';
@@ -11,16 +12,6 @@ class FlutterWidgetTester implements Tester {
   final Completer _teardown = Completer();
 
   FlutterWidgetTester(this._tester);
-
-  @override
-  Future<void> pump() async {
-    await lock.acquire();
-    try {
-      await _tester.pump();
-    } finally {
-      lock.release();
-    }
-  }
 
   @override
   Future<void> pumpAndSettle(
@@ -34,7 +25,31 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
-  int countByText(String text) => find.text(text).evaluate().length;
+  Future<void> pump({Duration? duration}) async {
+    await lock.acquire();
+    try {
+      await _tester.pump(duration);
+    } finally {
+      lock.release();
+    }
+  }
+
+  @override
+  TestFinder findByText(String text) => FlutterTestFinder(find.text(text));
+
+  @override
+  TestFinder findByTextContaining(String text) =>
+      FlutterTestFinder(find.textContaining(text));
+
+  @override
+  TestFinder findByKey(Key key) => FlutterTestFinder(find.byKey(key));
+
+  @override
+  TestFinder findByTooltip(String value) =>
+      FlutterTestFinder(find.byTooltip(value));
+
+  @override
+  TestFinder findByIcon(IconData icon) => FlutterTestFinder(find.byIcon(icon));
 
   @override
   Future<void> tap(TestFinder finder) =>
@@ -43,16 +58,6 @@ class FlutterWidgetTester implements Tester {
   @override
   Future<void> enterText(TestFinder finder, String text) =>
       _tester.enterText((finder as FlutterTestFinder).raw, text);
-
-  @override
-  void expect(dynamic actual, dynamic matcher) =>
-      expect(actual, matcher); // shadows global `expect`
-
-  @override
-  TestFinder text(String value) => FlutterTestFinder(find.text(value));
-
-  @override
-  TestFinder tooltip(String value) => FlutterTestFinder(find.byTooltip(value));
 
   @override
   void teardown() => _teardown.complete();

@@ -15,7 +15,7 @@ class CupertinoButtonControl extends StatefulWidget {
   final Control control;
 
   CupertinoButtonControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();

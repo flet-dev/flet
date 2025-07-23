@@ -14,7 +14,7 @@ class BottomSheetControl extends StatefulWidget {
   final Control control;
 
   BottomSheetControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();

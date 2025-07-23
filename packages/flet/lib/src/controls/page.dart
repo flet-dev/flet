@@ -36,7 +36,7 @@ class PageControl extends StatefulWidget {
   final Control control;
 
   PageControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<PageControl> createState() => _PageControlState();

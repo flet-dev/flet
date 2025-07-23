@@ -16,7 +16,7 @@ class SnackBarControl extends StatefulWidget {
   final Control control;
 
   SnackBarControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<SnackBarControl> createState() => _SnackBarControlState();

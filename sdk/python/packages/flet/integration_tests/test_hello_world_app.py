@@ -24,5 +24,5 @@ async def flet_app():
 @pytest.mark.asyncio
 async def test_app(flet_app: ft.FletTestApp):
     await flet_app.tester.pump_and_settle()
-    count = await flet_app.tester.count_by_text("Hello, world!")
-    assert count == 1
+    finder = await flet_app.tester.find_by_text("Hello, world!")
+    assert finder.count == 1

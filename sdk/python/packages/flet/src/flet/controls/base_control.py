@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
-from flet.controls.keys import ScrollKey, ValueKey
+from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
 
 logger = logging.getLogger("flet")
@@ -105,7 +105,7 @@ class BaseControl:
     Arbitrary data of any type that can be attached to a control.
     """
 
-    key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
+    key: Optional[KeyValue] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""

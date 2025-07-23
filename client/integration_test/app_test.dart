@@ -27,6 +27,10 @@ void main() {
       await app.tester?.pump();
       await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
 
+      //var finder = app.tester?.findByKey(const Key("decrement"));
+      // var finder = find.byKey(const Key("decrement"));
+      // print("Decrement: ${finder.evaluate().length}");
+
       // // Verify the counter starts at 0.
       // expect(find.text('0'), findsOneWidget);
 
