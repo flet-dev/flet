@@ -67,19 +67,21 @@ class FletTestApp:
         if flet_test_device is not None:
             flutter_args.extend(["-d", flet_test_device])
 
+        app_url = f"tcp://127.0.0.1:{self.tcp_port}"
+        flutter_args.append(f"--dart-define=FLET_TEST_APP_URL={app_url}")
+
         # start Flutter test
-        env = os.environ.copy()
-        env["FLET_TEST_APP_PORT"] = str(self.tcp_port)
         self.flutter_process = subprocess.Popen(
-            flutter_args,
-            cwd=str(self.flutter_app_dir),
-            stdout=pipe,
-            stderr=pipe,
-            env=env,
+            flutter_args, cwd=str(self.flutter_app_dir), stdout=pipe, stderr=pipe
         )
         print("Started Flutter test process.")
         print("Waiting for a Flet session...")
-        await ready.wait()
+        while not ready.is_set():
+            await asyncio.sleep(0.2)
+            if self.flutter_process.poll() is not None:
+                raise RuntimeError(
+                    f"Flutter process exited early with code {self.flutter_process.returncode}"
+                )
 
     async def teardown(self):
         """Teardown Flutter process."""

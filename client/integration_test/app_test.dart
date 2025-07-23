@@ -10,10 +10,6 @@ import 'flutter_tester.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  tearDown(() {
-    debugPrint("TEAR DOWN");
-  });
-
   group('end-to-end test', () {
     testWidgets('test app', (tester) async {
       var dir = Directory.current.path;
@@ -22,9 +18,9 @@ void main() {
       app.tester = FlutterWidgetTester(tester);
 
       List<String> args = [];
-      final fletTestAppPort = Platform.environment['FLET_TEST_APP_PORT'];
-      if (fletTestAppPort != null) {
-        args.add("tcp://localhost:$fletTestAppPort");
+      const fletTestAppUrl = String.fromEnvironment("FLET_TEST_APP_URL");
+      if (fletTestAppUrl != "") {
+        args.add(fletTestAppUrl);
       }
       app.main(args);
 

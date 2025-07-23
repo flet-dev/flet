@@ -22,7 +22,7 @@ async def flet_app():
 
 
 @pytest.mark.asyncio
-async def test_hello(flet_app: ft.FletTestApp):
+async def test_app(flet_app: ft.FletTestApp):
     await flet_app.tester.pump_and_settle()
     count = await flet_app.tester.count_by_text("Hello, world!")
     assert count == 1

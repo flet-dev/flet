@@ -74,8 +74,7 @@ void main([List<String>? args]) async {
     if (routeUrlStrategy == "path") {
       usePathUrlStrategy();
     }
-  } else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-    debugPrint("Flet View is running in Desktop mode");
+  } else {
     if (args!.isNotEmpty) {
       pageUrl = args[0];
       if (args.length > 1) {
@@ -88,8 +87,10 @@ void main([List<String>? args]) async {
         assetsDir = args[2];
         debugPrint("Args contain a path assets directory: $assetsDir}");
       }
-    } else if (!kDebugMode) {
-      throw Exception('Page URL must be provided as a first argument.');
+    } else if (!kDebugMode &&
+        (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+      throw Exception(
+          'In desktop mode Flet app URL must be provided as a first argument.');
     }
   }
 
