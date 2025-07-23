@@ -1,7 +1,6 @@
 import asyncio
 from typing import Optional
 
-from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -20,7 +19,7 @@ __all__ = ["InteractiveViewer"]
 
 
 @control("InteractiveViewer")
-class InteractiveViewer(ConstrainedControl, AdaptiveControl):
+class InteractiveViewer(ConstrainedControl):
     """
     InteractiveViewer allows users to pan, zoom, and rotate content.
 
@@ -153,9 +152,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         assert self.content.visible, "content must be visible"
         assert self.min_scale > 0, "min_scale must be greater than 0"
         assert self.max_scale > 0, "max_scale must be greater than 0"
-        assert (
-            self.max_scale >= self.min_scale
-        ), "max_scale must be greather than or equal to min_scale"
+        assert self.max_scale >= self.min_scale, (
+            "max_scale must be greather than or equal to min_scale"
+        )
         assert (
             self.interaction_end_friction_coefficient is None
             or self.interaction_end_friction_coefficient > 0

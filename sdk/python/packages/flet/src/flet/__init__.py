@@ -128,6 +128,7 @@ from flet.controls.core.reorderable_draggable import ReorderableDraggable
 from flet.controls.core.responsive_row import ResponsiveRow
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
+from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
@@ -977,4 +978,5 @@ __all__ = [
     "Tester",
     "FletTestApp",
     "KeyValue",
+    "Screenshot",
 ]

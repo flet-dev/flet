@@ -39,7 +39,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("OutlinedButton.$name($args)");
+    debugPrint("InteractiveViewer.$name($args)");
     switch (name) {
       case "zoom":
         var factor = parseDouble(args["factor"]);

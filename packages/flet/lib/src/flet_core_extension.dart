@@ -84,6 +84,7 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
+import 'controls/screenshot.dart';
 import 'controls/search_bar.dart';
 import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
@@ -283,6 +284,8 @@ class FletCoreExtension extends FletExtension {
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
+      case "Screenshot":
+        return ScreenshotControl(key: key, control: control);
       case "Slider":
         return AdaptiveSliderControl(key: key, control: control);
       case "SnackBar":
