@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/checkbox/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/checkbox/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/checkbox/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/checkbox/handling-events.py"
 ```
 
-![handling-events](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/checkbox/media/handling-events.gif){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/checkbox/media/handling-events.gif){width="80%"}
 /// caption
 ///
 

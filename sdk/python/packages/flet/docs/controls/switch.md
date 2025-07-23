@@ -26,7 +26,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/switch/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/switch/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/switch/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -36,7 +36,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/switch/handling-events.py"
 ```
 
-![handling-events](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/switch/media/handling-events.gif){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/switch/media/handling-events.gif){width="80%"}
 /// caption
 ///
 

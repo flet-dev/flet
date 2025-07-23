@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/shader-mask/pink-radial-glow.py"
 ```
 
-![pink-radial-glow](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/shader-mask/media/pink-radial-glow.png){width="80%"}
+![pink-radial-glow](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/shader-mask/media/pink-radial-glow.png){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/shader-mask/fade-out-image-bottom.py"
 ```
 
-![fade-out-image-bottom](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/shader-mask/media/fade-out-image-bottom.png){width="80%"}
+![fade-out-image-bottom](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/shader-mask/media/fade-out-image-bottom.png){width="80%"}
 /// caption
 ///
 

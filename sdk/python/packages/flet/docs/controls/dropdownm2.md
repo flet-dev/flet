@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/dropdown-m2/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/dropdown-m2/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/dropdown-m2/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/dropdown-m2/label-and-hint.py"
 ```
 
-![label-and-hint](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/dropdown-m2/media/label-and-hint.gif){width="80%"}
+![label-and-hint](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/dropdown-m2/media/label-and-hint.gif){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/dropdown-m2/handling-events.py"
 ```
 
-![handling-events](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/dropdown-m2/media/handling-events.gif){width="80%"}
+![handling-events](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/dropdown-m2/media/handling-events.gif){width="80%"}
 /// caption
 ///
 
@@ -39,7 +39,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/dropdown-m2/add-and-delete-options.py"
 ```
 
-![add-and-delete-options](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/dropdown-m2/media/add-and-delete-options.gif){width="80%"}
+![add-and-delete-options](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/dropdown-m2/media/add-and-delete-options.gif){width="80%"}
 /// caption
 ///
 

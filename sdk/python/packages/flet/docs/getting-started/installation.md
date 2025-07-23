@@ -1,6 +1,7 @@
 
-/// details | Prerequisites
-    open: True
+/// admonition | Important
+    type: danger
+## Prerequisites
 ### Python version
 
 Flet requires [Python](https://www.python.org/downloads/) 3.10 or later. (1)
@@ -133,7 +134,7 @@ Now you are ready to [create your first Flet app](create-flet-app.md).
 
 ## Upgrade Flet
 
-To upgrade Flet to the latest version, use the `--upgrade` flag:
+To upgrade Flet to its latest version:
 
 /// tab | uv
 ```bash

@@ -6,9 +6,9 @@ title: Packaging app for iOS
 
 Flet CLI provides `flet build ipa` command that allows packaging Flet app into an iOS archive bundle and IPA for distribution.
 
-::note
+/// admonition | Note
 The command can be run on macOS only.
-::
+///
 
 ## Prerequisites
 

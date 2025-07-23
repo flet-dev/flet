@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/image/gallery.py"
 ```
 
-![gallery](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/image/media/gallery.gif){width="80%"}
+![gallery](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/image/media/gallery.gif){width="80%"}
 /// caption
 ///
 

@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/datatable/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/datatable/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/datatable/media/basic.png){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/datatable/sortable-and-selectable.py"
 ```
 
-![sortable-and-selectable](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/datatable/media/sortable-and-selectable.png){width="80%"}
+![sortable-and-selectable](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/datatable/media/sortable-and-selectable.png){width="80%"}
 /// caption
 ///
 

@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/radio/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/radio/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/radio/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/radio/handling-selection-changes.py"
 ```
 
-![handling-selection-changes](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/radio/media/handling-selection-changes.gif){width="80%"}
+![handling-selection-changes](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/radio/media/handling-selection-changes.gif){width="80%"}
 /// caption
 ///
 

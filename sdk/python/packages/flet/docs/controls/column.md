@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/column/spacing.py"
 ```
 
-![spacing](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/column/media/spacing.gif){width="80%"}
+![spacing](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/column/media/spacing.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/column/wrap.py"
 ```
 
-![wrap](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/column/media/wrap.gif){width="80%"}
+![wrap](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/column/media/wrap.gif){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/column/alignment.py"
 ```
 
-![alignment](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/column/media/alignment.png){width="80%"}
+![alignment](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/column/media/alignment.png){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/column/horizontal-alignment.py"
 ```
 
-![horizontal-alignment](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/column/media/horizontal-alignment.png){width="80%"}
+![horizontal-alignment](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/column/media/horizontal-alignment.png){width="80%"}
 /// caption
 ///
 
@@ -59,7 +59,7 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/column/programmatic-scroll.py"
 ```
 
-![programmatic-scroll](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/column/media/programmatic-scroll.gif){width="80%"}
+![programmatic-scroll](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/column/media/programmatic-scroll.gif){width="80%"}
 /// caption
 ///
 

@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/cupertino-list-tile/notched.py"
 ```
 
-![notched](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/cupertino-list-tile/media/notched.png){width="80%"}
+![notched](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/cupertino-list-tile/media/notched.png){width="80%"}
 /// caption
 ///
 
