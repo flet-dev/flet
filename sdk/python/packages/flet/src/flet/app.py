@@ -159,7 +159,7 @@ async def run_async(
     page_name = __get_page_name(name)
 
     is_socket_server = (
-        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        is_embedded() or view in [AppView.FLET_APP, AppView.FLET_APP_HIDDEN, None]
     ) and not force_web_server
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
@@ -191,7 +191,7 @@ async def run_async(
             port=port,
             main=main or target,
             before_main=before_main,
-            blocking=is_embedded(),
+            blocking=is_embedded() or view is None,
         )
         if is_socket_server
         else await __run_web_server(
@@ -214,11 +214,7 @@ async def run_async(
 
     try:
         if (
-            (
-                view == AppView.FLET_APP
-                or view == AppView.FLET_APP_HIDDEN
-                or view == AppView.FLET_APP_WEB
-            )
+            (view in [AppView.FLET_APP, AppView.FLET_APP_HIDDEN, AppView.FLET_APP_WEB])
             and not force_web_server
             and not is_embedded()
             and url_prefix is None

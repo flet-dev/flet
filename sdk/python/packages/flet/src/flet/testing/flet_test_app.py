@@ -1,11 +1,10 @@
 import asyncio
 import logging
 import os
+import platform
 import subprocess
 
 import flet as ft
-
-os.environ["FLET_PLATFORM"] = "macos"
 
 
 class FletTestApp:
@@ -32,7 +31,7 @@ class FletTestApp:
     async def start(self):
         """Start Flet app and Flutter test process."""
 
-        page_ready = asyncio.Event()
+        ready = asyncio.Event()
 
         # start Flet app
         async def main(page: ft.Page):
@@ -45,7 +44,7 @@ class FletTestApp:
                 await self.flet_app_main(page)
             elif callable(self.flet_app_main):
                 self.flet_app_main(page)
-            page_ready.set()
+            ready.set()
 
         asyncio.create_task(ft.run_async(main, port=self.tcp_port, view=None))
         print("Started Flet app")
@@ -54,11 +53,25 @@ class FletTestApp:
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             pipe = None
 
+        flutter_args = ["flutter", "test", "integration_test"]
+
+        flet_test_device = os.getenv("FLET_TEST_DEVICE")
+        if flet_test_device is None:
+            if platform.system() == "Windows":
+                flet_test_device = "windows"
+            elif platform.system() == "Linux":
+                flet_test_device = "linux"
+            elif platform.system() == "Darwin":
+                flet_test_device = "macos"
+
+        if flet_test_device is not None:
+            flutter_args.extend(["-d", flet_test_device])
+
         # start Flutter test
         env = os.environ.copy()
         env["FLET_TEST_APP_PORT"] = str(self.tcp_port)
         self.flutter_process = subprocess.Popen(
-            ["flutter", "test", "integration_test", "-d", "macos"],
+            flutter_args,
             cwd=str(self.flutter_app_dir),
             stdout=pipe,
             stderr=pipe,
@@ -66,7 +79,7 @@ class FletTestApp:
         )
         print("Started Flutter test process.")
         print("Waiting for a Flet session...")
-        await page_ready.wait()
+        await ready.wait()
 
     async def teardown(self):
         """Teardown Flutter process."""
