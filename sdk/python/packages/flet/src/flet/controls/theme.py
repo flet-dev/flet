@@ -1684,15 +1684,14 @@ class SnackBarTheme:
 
     action_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`SnackBar.action.text_color`][flet.SnackBar.action.text_color] in all descendant
-    [`SnackBar`][flet.SnackBar] controls.
+    Overrides the default value of `text_color` of [`SnackBar.action`][flet.SnackBar.action] 
+    in all descendant [`SnackBar`][flet.SnackBar] controls.
     """
 
     action_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`SnackBar.action.bgcolor`][flet.SnackBar.action.bgcolor] in all descendant
+    Overrides the default value of `bgcolor` of 
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant
     [`SnackBar`][flet.SnackBar] controls.
     """
 
@@ -1705,16 +1704,16 @@ class SnackBarTheme:
 
     disabled_action_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`SnackBar.action.disabled_text_color`][flet.SnackBar.action.disabled_text_color] in
-    all descendant [`SnackBar`][flet.SnackBar] controls.
+    Overrides the default value of `disabled_text_color` of
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant 
+    [`SnackBar`][flet.SnackBar] controls.
     """
 
     disabled_action_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`SnackBar.action.disabled_bgcolor`][flet.SnackBar.action.disabled_bgcolor] in all
-    descendant [`SnackBar`][flet.SnackBar] controls.
+    Overrides the default value of `disabled_color` of
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant 
+    [`SnackBar`][flet.SnackBar] controls.
     """
 
     elevation: Optional[Number] = None
