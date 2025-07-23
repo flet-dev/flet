@@ -1733,12 +1733,6 @@ class SnackBarTheme:
     descendant [`SnackBar`][flet.SnackBar] controls.
     """
 
-    alignment: Optional[Alignment] = None
-    """
-    Overrides the default value of [`SnackBar.alignment`][flet.SnackBar.alignment] in all
-    descendant [`SnackBar`][flet.SnackBar] controls.
-    """
-
     show_close_icon: Optional[bool] = None
     """
     Overrides the default value of
@@ -2315,109 +2309,109 @@ class ListTileTheme:
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.icon_color`][ListTile.icon_color].
+    Overrides the default value for [`ListTile.icon_color`][flet.ListTile.icon_color].
     """
 
     text_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.text_color`][ListTile.text_color].
+    Overrides the default value for [`ListTile.text_color`][flet.ListTile.text_color].
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.bgcolor`][ListTile.bgcolor].
+    Overrides the default value for [`ListTile.bgcolor`][flet.ListTile.bgcolor].
     """
 
     selected_tile_color: Optional[ColorValue] = None
     """
     Overrides the default value for 
-    [`ListTile.selected_tile_color`][ListTile.selected_tile_color].
+    [`ListTile.selected_tile_color`][flet.ListTile.selected_tile_color].
     """
 
     selected_color: Optional[ColorValue] = None
     """
     Overrides the default value for 
-    [`ListTile.selected_color`][ListTile.selected_color].
+    [`ListTile.selected_color`][flet.ListTile.selected_color].
     """
 
     is_three_line: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.is_three_line`][ListTile.is_three_line].
+    Overrides the default value for [`ListTile.is_three_line`][flet.ListTile.is_three_line].
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.enable_feedback`][ListTile.enable_feedback].
+    Overrides the default value for [`ListTile.enable_feedback`][flet.ListTile.enable_feedback].
     """
 
     dense: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.dense`][ListTile.dense].
+    Overrides the default value for [`ListTile.dense`][flet.ListTile.dense].
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value for [`ListTile.shape`][ListTile.shape].
+    Overrides the default value for [`ListTile.shape`][flet.ListTile.shape].
     """
 
     visual_density: Optional[VisualDensity] = None
     """
     Overrides the default value for 
-    [`ListTile.visual_density`][ListTile.visual_density].
+    [`ListTile.visual_density`][flet.ListTile.visual_density].
     """
 
     content_padding: Optional[PaddingValue] = None
     """
     Overrides the default value for 
-    [`ListTile.content_padding`][ListTile.content_padding].
+    [`ListTile.content_padding`][flet.ListTile.content_padding].
     """
 
     min_vertical_padding: Optional[PaddingValue] = None
     """
     Overrides the default value for 
-    [`ListTile.min_vertical_padding`][ListTile.min_vertical_padding].
+    [`ListTile.min_vertical_padding`][flet.ListTile.min_vertical_padding].
     """
 
     horizontal_spacing: Optional[Number] = None
     """
     Overrides the default value for 
-    [`ListTile.horizontal_spacing`][ListTile.horizontal_spacing].
+    [`ListTile.horizontal_spacing`][flet.ListTile.horizontal_spacing].
     """
 
     min_leading_width: Optional[Number] = None
     """
     Overrides the default value for 
-    [`ListTile.min_leading_width`][ListTile.min_leading_width].
+    [`ListTile.min_leading_width`][flet.ListTile.min_leading_width].
     """
 
     title_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for 
-    [`ListTile.title_text_style`][ListTile.title_text_style].
+    [`ListTile.title_text_style`][flet.ListTile.title_text_style].
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for 
-    [`ListTile.subtitle_text_style`][ListTile.subtitle_text_style].
+    [`ListTile.subtitle_text_style`][flet.ListTile.subtitle_text_style].
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for 
-    [`ListTile.leading_and_trailing_text_style`][ListTile.leading_and_trailing_text_style].
+    [`ListTile.leading_and_trailing_text_style`][flet.ListTile.leading_and_trailing_text_style].
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
     Overrides the default value for 
-    [`ListTile.mouse_cursor`][ListTile.mouse_cursor].
+    [`ListTile.mouse_cursor`][flet.ListTile.mouse_cursor].
     """
 
     min_tile_height: Optional[Number] = None
     """
     Overrides the default value for 
-    [`ListTile.min_height`][ListTile.min_height].
+    [`ListTile.min_height`][flet.ListTile.min_height].
     """
 
 
