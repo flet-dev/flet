@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/clickable.py"
 ```
 
-![clickable](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/clickable.gif){width="80%"}
+![clickable](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/clickable.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/background-color.py"
 ```
 
-![background-color](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/background-color.png){width="80%"}
+![background-color](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/background-color.png){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/handling-clicks.py"
 ```
 
-![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/handling-clicks.gif){width="80%"}
+![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/handling-clicks.gif){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/handling-hovers.py"
 ```
 
-![handling-hovers](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/handling-hovers.gif){width="80%"}
+![handling-hovers](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/handling-hovers.gif){width="80%"}
 /// caption
 ///
 
@@ -48,7 +48,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/animate-1.py"
 ```
 
-![animate-1](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/animate-1.gif){width="80%"}
+![animate-1](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/animate-1.gif){width="80%"}
 /// caption
 ///
 
@@ -88,7 +88,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/nested-themes-3.py"
 ```
 
-![nested-themes-3](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/nested-themes-3.gif){width="80%"}
+![nested-themes-3](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/nested-themes-3.gif){width="80%"}
 /// caption
 ///
 

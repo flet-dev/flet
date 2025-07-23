@@ -39,7 +39,7 @@ properties, described below, to enable implicit animation of its appearance:
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/time-picker/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/time-picker/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/time-picker/media/basic.png){width="80%"}
 /// caption
 ///
 
@@ -55,7 +55,7 @@ enables implicit animation of [`ConstrainedControl.opacity`][flet.ConstrainedCon
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/constrained-control/animate-opacity.py"
 ```
 
-![animate-opacity](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/constrained-control/media/animate-opacity.gif){width="80%"}
+![animate-opacity](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/constrained-control/media/animate-opacity.gif){width="80%"}
 /// caption
 ///
 
@@ -68,7 +68,7 @@ enables implicit animation of [`ConstrainedControl.rotate`][flet.ConstrainedCont
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/constrained-control/animate-rotation.py"
 ```
 
-![animate-rotation](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/constrained-control/media/animate-rotation.gif){width="80%"}
+![animate-rotation](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/constrained-control/media/animate-rotation.gif){width="80%"}
 /// caption
 ///
 
@@ -81,7 +81,7 @@ enables implicit animation of [`ConstrainedControl.scale`][flet.ConstrainedContr
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/constrained-control/animate-scale.py"
 ```
 
-![animate-scale](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/constrained-control/media/animate-scale.gif){width="80%"}
+![animate-scale](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/constrained-control/media/animate-scale.gif){width="80%"}
 /// caption
 ///
 
@@ -100,7 +100,7 @@ Offset animation is used for various sliding effects:
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/constrained-control/animate-offset.py"
 ```
 
-![animate-offset](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/constrained-control/media/animate-offset.gif){width="80%"}
+![animate-offset](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/constrained-control/media/animate-offset.gif){width="80%"}
 /// caption
 ///
 
@@ -122,7 +122,7 @@ Note:
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/constrained-control/animate-position.py"
 ```
 
-![animate-position](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/constrained-control/media/animate-position.gif){width="80%"}
+![animate-position](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/constrained-control/media/animate-position.gif){width="80%"}
 /// caption
 ///
 
@@ -135,7 +135,7 @@ enables implicit animation of container properties such as size, background colo
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/container/animate.py"
 ```
 
-![animate](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/container/media/animate.gif){width="80%"}
+![animate](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/container/media/animate.gif){width="80%"}
 
 
 ### Animated content switcher

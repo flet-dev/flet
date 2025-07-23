@@ -14,7 +14,7 @@ An alternative to assist chips are [buttons](buttons/index.md), which should app
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/chip/assist-chips.py"
 ```
 
-![assist-chips](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/chip/media/assist-chips.png){width="80%"}
+![assist-chips](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/chip/media/assist-chips.png){width="80%"}
 /// caption
 ///
 
@@ -29,7 +29,7 @@ They can be a good alternative to switches or checkboxes.
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/chip/filter-chips.py"
 ```
 
-![filter-chips](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/chip/media/filter-chips.png){width="80%"}
+![filter-chips](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/chip/media/filter-chips.png){width="80%"}
 /// caption
 ///
 

@@ -21,7 +21,7 @@ inside another control (yellow container) giving the same results.
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/gesture-detector/draggable-containers.py"
 ```
 
-![draggable-containers](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/gesture-detector/media/draggable-containers.gif){width="80%"}
+![draggable-containers](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/gesture-detector/media/draggable-containers.gif){width="80%"}
 /// caption
 ///
 

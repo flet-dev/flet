@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/elevated-button/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/elevated-button/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/elevated-button/media/basic.png){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/elevated-button/icons.py"
 ```
 
-![icons](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/elevated-button/media/icons.png){width="80%"}
+![icons](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/elevated-button/media/icons.png){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/elevated-button/handling-clicks.py"
 ```
 
-![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/elevated-button/media/handling-clicks.png){width="80%"}
+![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/elevated-button/media/handling-clicks.png){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/elevated-button/custom-content.py"
 ```
 
-![custom-content](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/elevated-button/media/custom-content.png){width="80%"}
+![custom-content](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/elevated-button/media/custom-content.png){width="80%"}
 /// caption
 ///
 

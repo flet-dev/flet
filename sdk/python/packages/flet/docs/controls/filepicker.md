@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/file-picker/pick-save-and-get-directory-path.py"
 ```
 
-![pick-save-and-get-directory-path](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
+![pick-save-and-get-directory-path](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/file-picker/pick-and-upload.py"
 ```
 
-![pick-and-upload](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/file-picker/media/pick-and-upload.png){width="80%"}
+![pick-and-upload](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/file-picker/media/pick-and-upload.png){width="80%"}
 /// caption
 ///
 

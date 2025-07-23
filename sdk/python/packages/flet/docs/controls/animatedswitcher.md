@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/animated-switcher/scale-effect.py"
 ```
 
-![scale-effect](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/animated-switcher/media/scale-effect.gif){width="80%"}
+![scale-effect](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/animated-switcher/media/scale-effect.gif){width="80%"}
 /// caption
 ///
 

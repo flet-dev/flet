@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/tabs/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/tabs/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/tabs/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/tabs/nested.py"
 ```
 
-![nested](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/python/controls/tabs/media/nested.gif){width="80%"}
+![nested](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/tabs/media/nested.gif){width="80%"}
 /// caption
 ///
 
