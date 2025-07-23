@@ -856,23 +856,20 @@ class BottomSheetTheme:
 
     drag_handle_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`BottomSheet.drag_handle_color`][flet.BottomSheet.drag_handle_color] in all
-    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    Overrides the default value of drag handle color in all descendant 
+    [`BottomSheet`][flet.BottomSheet] controls.
     """
     
     surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`BottomSheet.surface_tint_color`][flet.BottomSheet.surface_tint_color] in all
-    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    Overrides the default value of surface tint color in all descendant 
+    [`BottomSheet`][flet.BottomSheet] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`BottomSheet.shadow_color`][flet.BottomSheet.shadow_color] in all
-    descendant [`BottomSheet`][flet.BottomSheet] controls.
+    Overrides the default value of shadow color in all descendant 
+    [`BottomSheet`][flet.BottomSheet] controls.
     """
 
 
@@ -1684,8 +1681,9 @@ class SnackBarTheme:
 
     action_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of `text_color` of [`SnackBar.action`][flet.SnackBar.action] 
-    in all descendant [`SnackBar`][flet.SnackBar] controls.
+    Overrides the default value of `text_color` of 
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant 
+    [`SnackBar`][flet.SnackBar] controls.
     """
 
     action_bgcolor: Optional[ColorValue] = None
@@ -1808,8 +1806,9 @@ class BannerTheme:
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Banner.content_padding`][flet.Banner.content_padding] 
-    in all descendant [`Banner`][flet.Banner] controls.
+    Overrides the default value of 
+    [`Banner.content_padding`][flet.Banner.content_padding] in all descendant 
+    [`Banner`][flet.Banner] controls.
     """
 
     leading_padding: Optional[PaddingValue] = None
@@ -1896,7 +1895,7 @@ class DatePickerTheme:
     [`DatePicker`][flet.DatePicker].
 
     This will be used instead of the color provided in 
-    [`DatePicker.day_text_style`][flet.DatePicker.day_text_style].
+    [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style].
     """
 
     elevation: Optional[Number] = None
@@ -1914,8 +1913,9 @@ class DatePickerTheme:
     Overrides the default text style used for each individual day label in the grid of 
     the [`DatePicker`][flet.DatePicker].
 
-    The color in [`DatePicker.day_text_style`][flet.DatePicker.day_text_style] is 
-    not used, [`DatePicker.day_foreground_color`][flet.DatePicker.day_foreground_color] 
+    The color in [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style] 
+    is not used, 
+    [`DatePickerTheme.day_foreground_color`][flet.DatePickerTheme.day_foreground_color] 
     is used instead.
     """
 
@@ -1930,10 +1930,11 @@ class DatePickerTheme:
     Overrides the default text style used to paint each of the year entries in the year 
     selector of the [`DatePicker`][flet.DatePicker].
 
-    The color of the [`DatePicker.year_text_style`][flet.DatePicker.year_text_style] is 
-    not used, 
-    [`DatePicker.year_foreground_color`][flet.DatePicker.year_foreground_color]  is 
-    used instead.
+    The color of the 
+    [`DatePickerTheme.year_text_style`][flet.DatePickerTheme.year_text_style] is not 
+    used, 
+    [`DatePickerTheme.year_foreground_color`][flet.DatePickerTheme.year_foreground_color]  
+    is used instead.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -1963,8 +1964,9 @@ class DatePickerTheme:
     The dialog's header displays the currently selected date.
 
     This is used instead of the color property of 
-    [`DatePicker.header_headline_text_style`][flet.DatePicker.header_headline_text_style] 
-    and [`DatePicker.header_help_text_style`][flet.DatePicker.header_help_text_style].
+    [`DatePickerTheme.header_headline_text_style`][flet.DatePickerTheme.header_headline_text_style] 
+    and 
+    [`DatePickerTheme.header_help_text_style`][flet.DatePickerTheme.header_help_text_style].
     """
 
     header_headline_text_style: Optional[TextStyle] = None
@@ -1974,10 +1976,10 @@ class DatePickerTheme:
     The dialog's header displays the currently selected date.
 
     The color of the 
-    [`DatePicker.header_headline_text_style`][flet.DatePicker.header_headline_text_style] 
+    [`DatePickerTheme.header_headline_text_style`][flet.DatePickerTheme.header_headline_text_style] 
     is not used, 
-    [`DatePicker.header_foreground_color`][flet.DatePicker.header_foreground_color] is 
-    used instead.
+    [`DatePickerTheme.header_foreground_color`][flet.DatePickerTheme.header_foreground_color] 
+    is used instead.
     """
 
     header_help_text_style: Optional[TextStyle] = None
@@ -1988,8 +1990,8 @@ class DatePickerTheme:
     usually a prompt to the user at the top of the header (i.e. 'Select date').
 
     The color of the `header_help_style` is not used, 
-    [`DatePicker.header_foreground_color`][flet.DatePicker.header_foreground_color] is 
-    used instead.
+    [`DatePickerTheme.header_foreground_color`][flet.DatePickerTheme.header_foreground_color] 
+    is used instead.
     """
 
     range_picker_bgcolor: Optional[ColorValue] = None
@@ -2022,7 +2024,7 @@ class DatePickerTheme:
     dialog's CalendarDatePicker and the corresponding year in the dialog's YearPicker.
 
     This will be used instead of the color provided in 
-    [`DatePicker.day_text_style`][flet.DatePicker.day_text_style].
+    [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style].
     """
 
     range_picker_shape: Optional[OutlinedBorder] = None
@@ -2036,7 +2038,7 @@ class DatePickerTheme:
     range_picker_header_help_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the help text of the header of a full 
-    screen DateRangePickerDialog.
+    screen DateRangePicker.
 
     The help text (also referred to as "supporting text" in the Material spec) is 
     usually a prompt to the user at the top of the header (i.e. 'Select date').
@@ -2048,7 +2050,7 @@ class DatePickerTheme:
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the headline text in the header of a full 
-    screen DateRangePickerDialog.
+    screen DateRangePicker.
 
     The dialog's header displays the currently selected date range.
 
@@ -2059,7 +2061,7 @@ class DatePickerTheme:
     range_picker_surface_tint_color: Optional[ColorValue] = None
     """
     Overrides the default color of the surface tint overlay applied to the 
-    background color of a full screen DateRangePickerDialog's to indicate elevation.
+    background color of a full screen DateRangePicker's to indicate elevation.
 
     This is not recommended for use. Material 3 spec introduced a set of tone-based 
     surfaces and surface containers in its ColorScheme, which provide more flexibility. 
@@ -2069,24 +2071,24 @@ class DatePickerTheme:
     range_selection_bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color used to paint days selected between the 
-    start and end dates in a DateRangePickerDialog.
+    start and end dates in a DateRangePicker.
     """
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default highlight color that's typically used to indicate that a date 
-    in the selected range of a DateRangePickerDialog is focused, hovered, or pressed.
+    in the selected range of a DateRangePicker is focused, hovered, or pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
     """
     Overrides the border used to paint the 
-    [`DatePickerDialog.current_date`][flet.DatePickerDialog.current_date] label in the 
+    [`DatePicker.current_date`][flet.DatePicker.current_date] label in the 
     grid of the [`DatePicker`][flet.DatePicker].
 
     The border side's [`BorderSide.color`] is not used, 
-    [`DatePicker.today_foreground_color`][flet.DatePicker.today_foreground_color] is 
-    used instead.
+    [`DatePickerTheme.today_foreground_color`][flet.DatePickerTheme.today_foreground_color] 
+    is used instead.
     """
 
     year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
@@ -2101,7 +2103,7 @@ class DatePickerTheme:
     the date picker.
 
     This will be used instead of the color provided in 
-    [`DatePicker.year_text_style`][flet.DatePicker.year_text_style].
+    [`DatePickerTheme.year_text_style`][flet.DatePickerTheme.year_text_style].
     """
 
     year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
@@ -2116,15 +2118,15 @@ class DatePickerTheme:
     the grid of the [`DatePicker`][flet.DatePicker].
 
     If the selected day is the current day, the provided shape with the value of 
-    [`DatePicker.today_bgcolor`][flet.DatePicker.today_bgcolor] is used to paint the 
-    shape decoration of the day label and the value of 
-    [`DatePicker.today_border_side`][flet.DatePicker.today_border_side] and 
-    [`DatePicker.today_foreground_color`][flet.DatePicker.today_foreground_color] is 
-    used to paint the border.
+    [`DatePickerTheme.today_bgcolor`][flet.DatePickerTheme.today_bgcolor] is used to 
+    paint the shape decoration of the day label and the value of 
+    [`DatePickerTheme.today_border_side`][flet.DatePickerTheme.today_border_side] and 
+    [`DatePickerTheme.today_foreground_color`][flet.DatePickerTheme.today_foreground_color] 
+    is used to paint the border.
 
     If the selected day is not the current day, the provided shape with the value of 
-    [`DatePicker.day_bgcolor`][flet.DatePicker.day_bgcolor] is used to paint the shape 
-    decoration of the day label.
+    [`DatePickerTheme.day_bgcolor`][flet.DatePickerTheme.day_bgcolor] is used to paint 
+    the shape decoration of the day label.
     """
 
     locale: Optional[Locale] = None
@@ -2289,15 +2291,15 @@ class DropdownTheme:
     The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`, 
     `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle] 
     then they will override the default values for 
-    [`DropdownMenu.elevation`][flet.DropdownMenu.elevation], 
-    [`DropdownMenu.bgcolor`][flet.DropdownMenu.bgcolor] and 
-    [`DropdownMenu.menu_width`][flet.DropdownMenu.menu_width].
+    [`DropdownMenu.elevation`][flet.Dropdown.elevation], 
+    [`DropdownMenu.bgcolor`][flet.Dropdown.bgcolor] and 
+    [`DropdownMenu.menu_width`][flet.Dropdown.menu_width].
     """
     
     text_style: Optional[TextStyle] = None
     """
     Overrides the default value for 
-    [`DropdownMenu.text_style`][DropdownMenu.text_style].
+    [`DropdownMenu.text_style`][flet.Dropdown.text_style].
     """
 
 
@@ -2336,12 +2338,14 @@ class ListTileTheme:
 
     is_three_line: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.is_three_line`][flet.ListTile.is_three_line].
+    Overrides the default value for 
+    [`ListTile.is_three_line`][flet.ListTile.is_three_line].
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.enable_feedback`][flet.ListTile.enable_feedback].
+    Overrides the default value for 
+    [`ListTile.enable_feedback`][flet.ListTile.enable_feedback].
     """
 
     dense: Optional[bool] = None
