@@ -2309,25 +2309,116 @@ class DropdownTheme:
 
 @dataclass
 class ListTileTheme:
+    """
+    Customizes the appearance of descendant [`ListTile`][flet.ListTile] controls.
+    """
+
     icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`ListTile.icon_color`][ListTile.icon_color].
+    """
+
     text_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`ListTile.text_color`][ListTile.text_color].
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`ListTile.bgcolor`][ListTile.bgcolor].
+    """
+
     selected_tile_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ListTile.selected_tile_color`][ListTile.selected_tile_color].
+    """
+
     selected_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ListTile.selected_color`][ListTile.selected_color].
+    """
+
     is_three_line: Optional[bool] = None
+    """
+    Overrides the default value for [`ListTile.is_three_line`][ListTile.is_three_line].
+    """
+
     enable_feedback: Optional[bool] = None
+    """
+    Overrides the default value for [`ListTile.enable_feedback`][ListTile.enable_feedback].
+    """
+
     dense: Optional[bool] = None
+    """
+    Overrides the default value for [`ListTile.dense`][ListTile.dense].
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for [`ListTile.shape`][ListTile.shape].
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Overrides the default value for 
+    [`ListTile.visual_density`][ListTile.visual_density].
+    """
+
     content_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for 
+    [`ListTile.content_padding`][ListTile.content_padding].
+    """
+
     min_vertical_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for 
+    [`ListTile.min_vertical_padding`][ListTile.min_vertical_padding].
+    """
+
     horizontal_spacing: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ListTile.horizontal_spacing`][ListTile.horizontal_spacing].
+    """
+
     min_leading_width: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ListTile.min_leading_width`][ListTile.min_leading_width].
+    """
+
     title_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for 
+    [`ListTile.title_text_style`][ListTile.title_text_style].
+    """
+
     subtitle_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for 
+    [`ListTile.subtitle_text_style`][ListTile.subtitle_text_style].
+    """
+
     leading_and_trailing_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for 
+    [`ListTile.leading_and_trailing_text_style`][ListTile.leading_and_trailing_text_style].
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value for 
+    [`ListTile.mouse_cursor`][ListTile.mouse_cursor].
+    """
+
     min_tile_height: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ListTile.min_height`][ListTile.min_height].
+    """
 
 
 @dataclass
