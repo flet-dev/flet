@@ -515,6 +515,7 @@ from flet.controls.types import (
 from flet.controls.update_behavior import UpdateBehavior
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
+from flet.testing.flet_test_app import FletTestApp
 
 __all__ = [
     "app",
@@ -974,4 +975,5 @@ __all__ = [
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
     "Tester",
+    "FletTestApp",
 ]

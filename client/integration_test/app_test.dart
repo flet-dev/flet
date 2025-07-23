@@ -15,8 +15,7 @@ void main() {
   });
 
   group('end-to-end test', () {
-    testWidgets('tap on the floating action button, verify counter',
-        (tester) async {
+    testWidgets('test app', (tester) async {
       var dir = Directory.current.path;
       debugPrint("Current dir: $dir");
 
