@@ -2507,16 +2507,70 @@ class TooltipTheme:
 
 @dataclass
 class ExpansionTileTheme:
+    """
+    Customizes the appearance of descendant [`ExpansionTile`][flet.ExpansionTile] 
+    controls.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.bgcolor`][flet.ExpansionTile.bgcolor].
+    """
+
     icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.icon_color`][flet.ExpansionTile.icon_color].
+    """
+
     text_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.text_color`][flet.ExpansionTile.text_color].
+    """
+
     collapsed_bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.collapsed_bgcolor`][flet.ExpansionTile.collapsed_bgcolor].
+    """
+
     collapsed_icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.collapsed_icon_color`][flet.ExpansionTile.collapsed_icon_color].
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.clip_behavior`][flet.ExpansionTile.clip_behavior].
+    """
+
     collapsed_text_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.collapsed_text_color`][flet.ExpansionTile.collapsed_text_color].
+    """
+
     tile_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.tile_padding`][flet.ExpansionTile.tile_padding].
+    """
+
     expanded_alignment: Optional[Alignment] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.expanded_alignment`][flet.ExpansionTile.expanded_alignment].
+    """
+
     controls_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for 
+    [`ExpansionTile.controls_padding`][flet.ExpansionTile.controls_padding].
+    """
 
 
 @dataclass
