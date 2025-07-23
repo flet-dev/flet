@@ -2575,31 +2575,159 @@ class ExpansionTileTheme:
 
 @dataclass
 class SliderTheme:
+    """
+    Customizes the appearance of descendant [`Slider`][flet.Slider] controls.
+    """
+        
     active_track_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`Slider.active_color`][flet.Slider.active_color].
+    """
+
     inactive_track_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`Slider.inactive_color`][flet.Slider.inactive_color].
+    """
+
     thumb_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`Slider.thumb_color`][flet.Slider.thumb_color].
+    """
+
     overlay_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`Slider.overlay_color`][flet.Slider.overlay_color].
+    """
+
     value_indicator_color: Optional[ColorValue] = None
+    """
+    The color given to the [`Slider`][flet.Slider]'s value indicator to draw 
+    itself with.
+    """
+
     disabled_thumb_color: Optional[ColorValue] = None
+    """
+    The color given to the thumb to draw itself with when the [`Slider`][flet.Slider] 
+    is disabled.
+    """
+    
     value_indicator_text_style: Optional[TextStyle] = None
+    """
+    The [TextStyle][flet.TextStyle] for the text on the value indicator.
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value for [`Slider.mouse_cursor`][flet.Slider.mouse_cursor].
+    """
+
     active_tick_mark_color: Optional[ColorValue] = None
+    """
+    The color of the track's tick marks that are drawn between the 
+    [Slider.min][flet.Slider.min] position and the current thumb position.
+    """
+
     disabled_active_tick_mark_color: Optional[ColorValue] = None
+    """
+    The color of the track's tick marks that are drawn between the current thumb 
+    osition and the [Slider.max][flet.Slider.max] position when the 
+    [`Slider`][flet.Slider] is disabled.
+    """
+
     disabled_active_track_color: Optional[ColorValue] = None
+    """
+    The color of the [`Slider`][flet.Slider] track between the 
+    [Slider.min][flet.Slider.min] position and the current thumb position when the 
+    [`Slider`][flet.Slider] is disabled.
+    """
+
     disabled_inactive_tick_mark_color: Optional[ColorValue] = None
+    """
+    The color of the track's tick marks that are drawn between the current thumb 
+    position and the [Slider.max][flet.Slider.max] position when the 
+    [`Slider`][flet.Slider] is disabled.
+    """
+
     disabled_inactive_track_color: Optional[ColorValue] = None
+    """
+    The color of the [`Slider`][flet.Slider] track between the current thumb position 
+    and the [Slider.max][flet.Slider.max] position when the [`Slider`][flet.Slider] is 
+    disabled.
+    """
+
     disabled_secondary_active_track_color: Optional[ColorValue] = None
+    """
+    The color of the [`Slider`][flet.Slider] track between the current thumb position 
+    and the [Slider.secondary_track_value][flet.Slider.secondary_track_value] position 
+    when the [`Slider`][flet.Slider] is disabled.
+    """
+
     inactive_tick_mark_color: Optional[ColorValue] = None
+    """
+    The color of the track's tick marks that are drawn between the current thumb 
+    position and the [Slider.max][flet.Slider.max] position.
+    """
+
     overlapping_shape_stroke_color: Optional[ColorValue] = None
+    """
+    The color given to the perimeter of the top range thumbs of a 
+    [RangeSlider][flet.RangeSlider] when the thumbs are overlapping and the top 
+    range value indicator when the value indicators are overlapping.
+    """
+
     min_thumb_separation: Optional[Number] = None
+    """
+    Limits the thumb's separation distance.
+
+    Use this only if you want to control the visual appearance of the thumbs in terms 
+    of a logical pixel value. This can be done when you want a specific look for thumbs 
+    when they are close together. To limit with the real values, rather than logical 
+    pixels, the values can be restricted by the parent.
+    """
+
     secondary_active_track_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`Slider.secondary_active_color`][flet.Slider.secondary_active_color].
+    """
+    
     track_height: Optional[Number] = None
+    """
+    The height of the [Slider][flet.Slider] track.
+    """
+
     value_indicator_stroke_color: Optional[ColorValue] = None
+    """
+    The color given to the value indicator shape stroke.
+    """
+
     interaction: Optional[SliderInteraction] = None
+    """
+    Overrides the default value for [`Slider.interaction`][flet.Slider.interaction].
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for [`Slider.padding`][flet.Slider.padding].
+    """
+
     track_gap: Optional[Number] = None
+    """
+    The size of the gap between the active and inactive tracks of the gapped slider 
+    track shape.
+    """
+
     thumb_size: Optional[ControlStateValue[Size]] = None
+    """
+    The size of the handle thumb shape thumb.
+    """
+
     year_2023: Optional[bool] = None
+    """
+    Overrides the default value for [`Slider.year_2023`][flet.Slider.year_2023].
+    """
+
 
 
 @dataclass
