@@ -1913,8 +1913,9 @@ class DatePickerTheme:
     Overrides the default text style used for each individual day label in the grid of 
     the [`DatePicker`][flet.DatePicker].
 
-    The color in [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style] 
-    is not used, 
+    The color in 
+    [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style] is not 
+    used, 
     [`DatePickerTheme.day_foreground_color`][flet.DatePickerTheme.day_foreground_color] 
     is used instead.
     """
@@ -2421,20 +2422,87 @@ class ListTileTheme:
 
 @dataclass
 class TooltipTheme:
+    """
+    Customizes the appearance of descendant [`Tooltip`][flet.Tooltip] controls.
+    """
+    
     text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for [`Tooltip.text_style`][flet.Tooltip.text_style].
+    """
+    
     enable_feedback: Optional[bool] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.enable_feedback`][flet.Tooltip.enable_feedback].
+    """
+
     exclude_from_semantics: Optional[bool] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.exclude_from_semantics`][flet.Tooltip.exclude_from_semantics].
+    """
+
     prefer_below: Optional[bool] = None
+    """
+    Overrides the default value for [`Tooltip.prefer_below`][flet.Tooltip.prefer_below].
+    """
+
     vertical_offset: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.vertical_offset`][flet.Tooltip.vertical_offset].
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for [`Tooltip.padding`][flet.Tooltip.padding].
+    """
+
     wait_duration: Optional[DurationValue] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.wait_duration`][flet.Tooltip.wait_duration].
+    """
+
     exit_duration: Optional[DurationValue] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.exit_duration`][flet.Tooltip.exit_duration].
+    """
+
     show_duration: Optional[DurationValue] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.show_duration`][flet.Tooltip.show_duration].
+    """
+
     margin: Optional[MarginValue] = None
+    """
+    Overrides the default value for [`Tooltip.margin`][flet.Tooltip.margin].
+    """
+
     trigger_mode: Optional[TooltipTriggerMode] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.trigger_mode`][flet.Tooltip.trigger_mode].
+    """
+
     decoration: Optional[BoxDecoration] = None
+    """
+    Overrides the default value for [`Tooltip.decoration`][flet.Tooltip.decoration].
+    """
+
     text_align: Optional[TextAlign] = None
+    """
+    Overrides the default value for [`Tooltip.text_align`][flet.Tooltip.text_align].
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value for 
+    [`Tooltip.size_constraints`][flet.Tooltip.size_constraints].
+    """
 
 
 @dataclass
