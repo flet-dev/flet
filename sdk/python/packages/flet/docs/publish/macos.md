@@ -2,8 +2,7 @@
 title: Packaging app for macOS
 ---
 
-Flet CLI provides `flet build macos` command that allows packaging
-Flet app into a macOS application bundle.
+Flet CLI provides `flet build macos` command that allows packaging Flet app into a macOS application bundle.
 
 /// admonition | Note
 The command can be run on macOS only.
@@ -15,8 +14,7 @@ The command can be run on macOS only.
 
 ### Rosetta 2
 
-[Flutter](https://flutter.dev), which we use for packaging,
-requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon:
+[Flutter](https://flutter.dev), which we use for packaging, requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon:
 ```
 sudo softwareupdate --install-rosetta --agree-to-license
 ```

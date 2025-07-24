@@ -2,21 +2,20 @@
 title: Packaging app for iOS
 ---
 
-Flet CLI provides `flet build ipa` command that allows packaging
-Flet app into an iOS archive bundle and IPA for distribution.
+## Introduction
+
+Flet CLI provides `flet build ipa` command that allows packaging Flet app into an iOS archive bundle and IPA for distribution.
 
 /// admonition | Note
 The command can be run on macOS only.
 ///
 
-/// admonition | Important
-    type: danger
 ## Prerequisites
 
 ### Rosetta 2
 
-[Flutter](https://flutter.dev), which we use for packaging,
-requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon:
+Flutter requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple silicon:
+
 ```
 sudo softwareupdate --install-rosetta --agree-to-license
 ```
@@ -31,36 +30,29 @@ sudo softwareupdate --install-rosetta --agree-to-license
 
 ### iOS wheels for binary Python packages
 
-Binary Python packages (vs "pure" Python packages written in Python only)
-are packages that partially written in C, Rust or other languages producing native code.
-Example packages are `numpy`, `cryptography`, or `pydantic-core`.
+Binary Python packages (vs "pure" Python packages written in Python only) are packages that partially written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
-Make sure all non-pure (binary) packages used in your Flet app have
-[pre-built wheels for iOS](../contributing/binary-packages-android-ios.md).
-///
+Make sure all non-pure (binary) packages used in your Flet app have [pre-built wheels for iOS](../unclassified/binary-packages-android-ios.md).
 
 ## `flet build ipa`
 
 Build an iOS app archive (`.ipa`) for testing and distribution (macOS host only).
 
-To generate an `.ipa `file for testing on your device or uploading to App Store Connect
-for distribution, you will need:
+To generate an `.ipa `file for testing on your device or uploading to App Store Connect for distribution, you will need:
 
-- [**Apple Developer Program**](https://developer.apple.com/programs/) subscription with access to [App Store Connect](https://appstoreconnect.apple.com/).
-- **Application Indentifier**
-- **Signing Certificate**
-- **Provisioning Profile**
+* **Apple Developer Program** subscription with access to App Store Connect.
+* **Application Indentifier**.
+* **Signing Certificate**.
+* **Provisioning Profile**.
 
 ## Application Identifier
 
-An **Application Identifier (App ID)** is a unique string that identifies your app within the Apple ecosystem.
-It is required to sign and distribute an iOS app and is used for various services like
-**Push Notifications, App Groups, iCloud, and In-App Purchases**.
+An **Application Identifier (App ID)** is a unique string that identifies your app within the Apple ecosystem. It is required to sign and distribute an iOS app and is used for various services like **Push Notifications, App Groups, iCloud, and In-App Purchases**.
 
 An App ID consists of two parts:
 
-1. **Team ID**: A unique 10-character string assigned by Apple to your developer account.
-2. **Bundle ID**: A reverse domain-style identifier for your app (e.g., `com.example.myapp`).
+1. **Team ID** – A unique 10-character string assigned by Apple to your developer account.
+2. **Bundle ID** – A reverse domain-style identifier for your app (e.g., `com.example.myapp`).
 
 Example of a full App ID:
 
@@ -94,7 +86,7 @@ The next step is creating a **Certificate** and a **Provisioning Profile** to in
 
 Before creating a development or distribution certificate, you need a **CSR (Certificate Signing Request)**.
 
-1. **Open Keychain Access** on your Mac (++cmd+space++, then search for "Keychain Access").
+1. **Open Keychain Access** on your Mac (`Command ⌘ + Space`, then search for "Keychain Access").
 2. In the top menu, go to **Keychain Access → Certificate Assistant → Request a Certificate From a Certificate Authority…**
 3. Fill in:
    - **User Email Address:** Your Apple Developer email.
@@ -107,20 +99,15 @@ Before creating a development or distribution certificate, you need a **CSR (Cer
 
 1. Go to [Apple Developer Certificates Page](https://developer.apple.com/account/resources/certificates/list).
 2. Click the **"+"** button to create a new certificate.
-3. Select **"Apple Distribution"** (for App Store & Ad Hoc) or **"Apple Development"**
-   (for development) and click **Continue**.
+3. Select **"Apple Distribution"** (for App Store & Ad Hoc) or **"Apple Development"** (for development) and click **Continue**.
 4. Upload the **CSR file** you created earlier and click **Continue**.
 5. Apple will generate the certificate. Click **Download** to get the `.cer` file.
 6. Double-click the downloaded `.cer` file to install it in **Keychain Access**.
-7. Open **Keychain Access** app and ensure the certificate is installed under **"login"** keychain.
-   The name of development certificate usually starts with **"Apple development:"** and the name of
-   distribution certificate starts with **"Apple distribution:"**.
+7. Open **Keychain Access** app and ensure the certificate is installed under **"login"** keychain. The name of development certificate usually starts with **"Apple development:"** and the name of distribution certificate starts with **"Apple distribution:"**.
 
 ## Provisioning Profile
 
-A **Provisioning Profile** is a file that allows an iOS app to run on physical devices and be
-distributed through the App Store or internally. It links your **App ID**,
-**Developer/Distribution Certificate**, and **Registered Devices**.
+A **Provisioning Profile** is a file that allows an iOS app to run on physical devices and be distributed through the App Store or internally. It links your **App ID**, **Developer/Distribution Certificate**, and **Registered Devices**.
 
 There are different types of provisioning profiles:
 
@@ -171,8 +158,7 @@ There are different types of provisioning profiles:
 
 Provisioning profiles are stored in `~/Library/MobileDevice/Provisioning Profiles` directory.
 
-To install downloaded provisioning profile just copy it to `~/Library/MobileDevice/Provisioning\ Profiles`
-directory with a new `{UUID}.mobileprovision` name.
+To install downloaded provisioning profile just copy it to `~/Library/MobileDevice/Provisioning\ Profiles` directory with a new `{UUID}.mobileprovision` name.
 
 Run the following command to get profile UUID:
 
@@ -187,10 +173,9 @@ Run this command to copy profile to `~/Library/MobileDevice/Provisioning Profile
 cp ~/Downloads/{profile-name}.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${profile_uuid}.mobileprovision
 ```
 
-/// admonition | Note
-If the copied profile disappears from the `~/Library/MobileDevice/Provisioning Profiles` directory,
-ensure that the Xcode process is not running in the background.
-///
+::warning
+If the copied profile disappears from the `~/Library/MobileDevice/Provisioning Profiles` directory, ensure that the Xcode process is not running in the background.
+::
 
 Finally, you can use this command to list all installed provisioning profiles, with their names and UUIDs:
 
@@ -200,219 +185,77 @@ for profile in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; 
 
 ## Configuring build
 
-To can either pass .ipa build options in the `pyproject.toml` or via `flet build` command line.
+To can either pass .ipa build options via `flet build` command line or configure in `pyproject.toml`.
 
 ### Command line
 
 To successfully generate "runnable" IPA you should provide correct values for the following arguments:
 
-/// admonition | Development package
+* `--ios-export-method` - specifies how the app should be packaged when exporting an `.ipa` file. Default is `debugging`. Can be one of the following:
+  * `debugging` (or deprecated `development`) - used for debugging and testing on development devices.
+  * `release-testing` (or deprecated `ad-hoc`) - used for distributing the app outside the App Store to specific registered devices.
+  * `app-store-connect` (or deprecated `app-store`) - used for submitting the app to the App Store.
+  * `enterprise` - used for internal distribution within an organization (requires an enterprise account).
+* `--ios-provisioning-profile` - provisioning profile name or UUID that used to sign and export an iOS app.
+* `--ios-signing-certificate` - certificate name, SHA-1 hash, or automatic selector to use for signing iOS app bundle. Automatic selectors allow Xcode to pick the newest installed certificate of a particular type. The available automatic selectors are "Apple Development", "Apple Distribution", "Developer ID Application", "iOS Developer", "iOS Distribution", "Mac App Distribution", and "Mac Developer".
+* `--ios-team-id` - developer team ID to export iOS app.
+* `--bundle-id` - bundle ID for the application, e.g. "com.mycompany.app-name" - used as an iOS, Android, macOS and Linux bundle ID.
+* `--org` - organization name in reverse domain name notation, e.g. `com.mycompany` (defaults to `com.flet`). The value is combined with `--project` and used as an iOS and Android bundle ID.
+* `--project` - project name in C-style identifier format (lowercase alphanumerics with underscores) used to build bundle ID and as a name for bundle executable. By default, it's the name of Flet app directory.
+
+::note Development package
 To build `.ipa` for testing on your developer device you need to provide `--ios-provisioning-profile` option only. `flet build` will assume `debugging` as an export method and automatically choose the most recent "Apple Development" certificate in your keychain. Team ID is not required.
-///
+::
 
-/// admonition | Bundle ID or Org?
-    type: info
+::info Bundle ID or Org?
 You can specify either `--bundle-id`, `--org`, or both.
+* If only the `--bundle-id` is provided and "--org" is not, the organization name is derived from the bundle ID by extracting the part before the last dot.
+* If only `--org` is specified and the "--bundle-id" is not, the bundle ID is generated as `{org}.{project_name}`.
+::
 
-* If only the `--bundle-id` is provided and `--org` is not, the organization name is derived from the bundle ID by extracting the part before the last dot.
-* If only `--org` is specified and the `--bundle-id` is not, the bundle ID is generated as `{org}.{project_name}`.
-///
+### `pyproject.toml`
 
-### Signing certificate
+You can also configure package export and signing settings in `pyproject.toml`.
 
-The certificate name, SHA-1 hash, or automatic selector to use for signing iOS app bundle.
-Automatic selectors allow Xcode to pick the newest installed certificate of a particular type.
+Project name and org:
 
-The available automatic selectors are `"Apple Development"`, `"Apple Distribution"`,
-`"Developer ID Application"`, `"iOS Developer"`, `"iOS Distribution"`, `"Mac App Distribution"`,
-and `"Mac Developer"`.
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.ios]`
 ```toml
-[tool.flet.ios]
-signing_certificate = "Apple Distribution"
-```
-///
+[project]
+name = "my-app"
 
-///
-/// tab | `flet build`
-```bash
-flet build --ios-signing-certificate "Apple Distribution"
-```
-///
-
-### Team ID
-
-The developer team ID to export iOS app.
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.ios]`
-```toml
-[tool.flet.ios]
-team_id = "ABCDEFE234"
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build --ios-team-id ABCDEFE234
-```
-///
-
-### Provisioning profile
-
-The provisioning profile name or UUID that used to sign and export the iOS app.
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.ios]`
-```toml
-[tool.flet.ios]
-provisioning_profile = "release-testing com.mycompany.example-app"
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build --ios-provisioning-profile "release-testing com.mycompany.example-app"
-```
-///
-
-### Project name
-
-The project name in C-style identifier format (lowercase alphanumerics with underscores).
-It is used to build [bundle ID](#bundle-id) and as a name for bundle executable.
-
-**Default:** the name of your Flet project directory
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-project = "my-app"
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build --project my-app
-```
-///
-
-### Organization name
-
-The organization name in reverse domain name notation, typically in the form `com.mycompany`.
-
-If the [bundle ID](#bundle-id) is not explicitly specified, the value of the organization name
-is combined with the [project name](#project-name) to form it.
-
-**Default:** `"com.flet"`
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
 [tool.flet]
 org = "com.mycompany"
 ```
-///
 
-///
-/// tab | `flet build`
-```bash
-flet build --org com.mycompany
-```
-///
+or bundle ID:
 
-### Bundle ID
-
-The bundle ID for the application, typically in the form `"com.mycompany.app-name"`.
-
-If not explicitly specified, it is formed by combining the [organization name](#organization-name)
-and the [project name](#project-name).
-
-**Default:** `"[organization-name](#organization-name).[project-name](#project-name)"`
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
 bundle_id = "com.mycompany.example-app"
 ```
-///
-/// tab | `[tool.flet.ios]`
+
+Both `org` and `bundle_id` could be platform-specific, for example:
+
 ```toml
 [tool.flet.ios]
 bundle_id = "com.mycompany.example-app-ios"
+
+[tool.flet.android]
+bundle_id = "com.mycompany.example-app-android"
 ```
-///
 
-///
-/// tab | `flet build`
-```bash
-flet build --bundle-id com.mycompany.example-app
-```
-///
+To configure iOS signing settings that will be globally applied to all export methods:
 
-### Export options
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.ios]`
 ```toml
 [tool.flet.ios]
+provisioning_profile = "release-testing com.mycompany.example-app"
+signing_certificate = "Apple Distribution"
+team_id = "ABCDEFE234"
 export_options = { uploadSymbols = false }
 ```
-///
 
-///
+To configure signing settings per export methods:
 
-### Export method
-
-Defines how the app should be packaged when exporting the `.ipa` file.
-
-Can be one of the following:
-
-- `"debugging"` (or deprecated `"development"`): used for debugging and testing on development devices.
-- `"release-testing"` (or deprecated `"ad-hoc"`): used for distributing the app outside the App Store to specific registered devices.
-- `"app-store-connect"` (or deprecated `"app-store"`): used for submitting the app to the App Store.
-- `"enterprise"`: used for internal distribution within an organization (requires an enterprise account).
-
-To configure build settings for one or more export methods, see [export methods](#export-methods).
-
-**Default:** `"debugging"`
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.ios]`
-```toml
-[tool.flet.ios]
-export_method = "debugging"
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build --ios-export-method debugging
-```
-///
-
-### Export methods
-
-Configure signing settings per export methods.
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.ios.export_methods."EXPORT_METHOD"]`
 ```toml
 [tool.flet.ios.export_methods."debugging"]
 provisioning_profile = "debugging com.mycompany.example-app"
@@ -430,12 +273,12 @@ team_id = "ABCDEFE234"
 signing_certificate = "Apple Distribution"
 export_options = { uploadSymbols = true }
 ```
-///
 
-///
+With the settings above you can run `flet build` command with just `--ios-export-method` provided, for example:
 
-When building, the specified [export method](#export-method)
-and its respective configuration above will be used.
+```bash
+flet build ipa --ios-export-method release-testing
+```
 
 ## Deploying app to an Apple device for testing
 
@@ -476,34 +319,40 @@ If the `.ipa` is installed from an **Ad Hoc or Enterprise profile**, you may nee
 
 ## Uploading app to App Store Connect for distribution
 
+**Transporter** is a macOS app that allows you to upload `.ipa` files to **App Store Connect** for distribution.
 
-### Step 1: Install and Sign in to Transporter
+**Step 1: Install Transporter**
 
-- Install and open [**Transporter**](https://apps.apple.com/us/app/transporter/id1450874784) from the Mac App Store.
-- Sign in using your **Apple Developer Account** credentials (the same account used for App Store Connect).
+1. Install [Transporter](https://apps.apple.com/us/app/transporter/id1450874784) from App Store.
 
-### Step 2: Prepare Your `.ipa` File
+**Step 2: Prepare the `.ipa` File**
 
-- Build your app and export an `.ipa` file using either the **app-store-connect** or **release-testing** export options.
+1. Ensure your `.ipa` file is built with either **app-store-connect** or **release-testing** export methods.
 
-### Step 3: Upload the `.ipa` File in Transporter
+**Step 3: Open Transporter and Sign In**
 
-1. Drag and drop the `.ipa` file directly into the Transporter window, or click "Add App" and select your `.ipa` file from your Mac.
-2. Click the "..." button next to "Deliver", and select "Verify".
-3. Wait for Transporter to complete the verification process.
-4. After successful verification, click "Deliver" to upload your `.ipa` file to App Store Connect.
+1. Launch **Transporter** on your Mac.
+2. Sign in with your **Apple Developer Account** (the same one used for App Store Connect).
 
-### Step 4: Check Upload Status
+**Step 4: Upload the `.ipa` File**
 
-- Transporter will display a success message upon completion.
-- If errors occur, carefully review the details provided, correct the issues, and repeat the upload process.
+1. Drag and drop the `.ipa` file into the Transporter window.
+2. Alternatively, click **Add App**, then choose the `.ipa` file from your Mac.
+3. Click `...` button next to "Deliver" and choose "Verify".
+4. Wait for Transporter to **verify** the file.
+3. Click **"Deliver"** to start the upload.
 
-### Step 5: Confirm Upload in App Store Connect
+**Step 5: Check Upload Status**
+
+1. Once the upload is complete, Transporter will display a **success message**.
+2. If there are errors, review them and correct any issues before retrying the upload.
+
+**Step 6: Confirm in App Store Connect**
 
 1. Go to [App Store Connect](https://appstoreconnect.apple.com/).
 2. Navigate to **Apps → Your App → TestFlight or App Store Version**.
-3. Your newly uploaded build will initially appear under **Processing** (processing typically takes a few minutes to an hour).
-4. Once processing completes, your build will become available for submission. You can now **submit the app for review**.
+3. The uploaded build should appear under **Processing** (this may take a few minutes to an hour).
+4. Once processing is complete, you can **submit the app for review**.
 
 ## Permissions
 
@@ -528,42 +377,17 @@ NSCameraUsageDescription = "This app uses the camera to ..."
 
 ## Deep linking
 
-You can configure the [deep-linking]() settings for iOS bundle.
+You can configure deep-linking settings for iOS bundle with the following `flet build` options:
 
-- **Scheme**: deep linking URL scheme to configure for iOS and Android builds, i.g. "https" or "myapp".
-- **Host**: deep linking URL host.
+* `--deep-linking-scheme` - deep linking URL scheme to configure for iOS and Android builds, i.g. "https" or "myapp".
+* `--deep-linking-host` - deep linking URL host.
 
-The same can be configured as follows:
+The same can be configured in `pyproject.toml`:
 
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-deep_linking.scheme = "https"
-deep_linking.host = "mydomain.com"
-```
-///
-/// tab | `[tool.flet.deep_linking]`
-```toml
-[tool.flet.deep_linking]
-scheme = "https"
-host = "mydomain.com"
-```
-///
-/// tab | `[tool.flet.ios.deep_linking]`
 ```toml
 [tool.flet.ios.deep_linking]
 scheme = "https"
 host = "mydomain.com"
 ```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
-```
-///
 
 See [Deep linking](https://docs.flutter.dev/ui/navigation/deep-linking) section in Flutter docs for more information and complete setup guide.

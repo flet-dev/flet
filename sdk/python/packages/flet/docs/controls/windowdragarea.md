@@ -1,6 +1,3 @@
-::: flet.WindowDragArea
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 ### No frame window
@@ -14,4 +11,3 @@
 ///
 
 ::: flet.WindowDragArea
-{{ class_remove_summary_and_description_options() }}

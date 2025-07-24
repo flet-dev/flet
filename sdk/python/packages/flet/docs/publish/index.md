@@ -443,7 +443,7 @@ flet build <target_platform> --compile-app --compile-packages --cleanup-packages
 `flet build` command allows granular control over permissions, features and entitlements
 embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
-See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
+See platform guides for setting specific [iOS](/docs/publish/ios), [Android](/docs/publish/android) and [macOS](/docs/publish/macos) permissions.
 
 ### Cross-platform permissions
 

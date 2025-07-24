@@ -1,6 +1,3 @@
-::: flet.SegmentedButton
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/segmentedbutton)
@@ -16,6 +13,4 @@
 ///
 
 ::: flet.SegmentedButton
-{{ class_remove_summary_and_description_options() }}
-
 ::: flet.Segment

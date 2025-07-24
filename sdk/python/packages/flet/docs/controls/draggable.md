@@ -1,6 +1,3 @@
-::: flet.Draggable
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/draggable)
@@ -16,4 +13,3 @@
 ///
 
 ::: flet.Draggable
-{{ class_remove_summary_and_description_options() }}

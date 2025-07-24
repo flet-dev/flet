@@ -1,6 +1,3 @@
-::: flet.CupertinoAlertDialog
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinoalertdialog)
@@ -22,4 +19,3 @@
 ```
 
 ::: flet.CupertinoAlertDialog
-{{ class_remove_summary_and_description_options() }}

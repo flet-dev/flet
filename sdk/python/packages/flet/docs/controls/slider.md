@@ -1,5 +1,4 @@
 ::: flet.Slider
-{{ class_summary_and_description_options() }}
 
 ## Examples
 

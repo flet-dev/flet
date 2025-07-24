@@ -1,6 +1,3 @@
-::: flet.HapticFeedback
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 ### Basic Example
@@ -10,4 +7,3 @@
 ```
 
 ::: flet.HapticFeedback
-{{ class_remove_summary_and_description_options() }}

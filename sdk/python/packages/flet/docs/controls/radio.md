@@ -1,6 +1,3 @@
-::: flet.Radio
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/radio)
@@ -33,4 +30,3 @@
 ```
 
 ::: flet.Radio
-{{ class_remove_summary_and_description_options() }}

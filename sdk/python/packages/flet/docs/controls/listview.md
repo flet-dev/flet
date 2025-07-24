@@ -1,6 +1,3 @@
-::: flet.ListView
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/listview)
@@ -16,4 +13,3 @@
 ///
 
 ::: flet.ListView
-{{ class_remove_summary_and_description_options() }}

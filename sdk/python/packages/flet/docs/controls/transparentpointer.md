@@ -1,6 +1,3 @@
-::: flet.TransparentPointer
-{{ class_summary_and_description_options() }}
-
 ## Example
 
 ## Basic Example
@@ -10,4 +7,3 @@
 ```
 
 ::: flet.TransparentPointer
-{{ class_remove_summary_and_description_options() }}

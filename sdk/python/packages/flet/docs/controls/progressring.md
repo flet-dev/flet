@@ -1,6 +1,3 @@
-::: flet.ProgressRing
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/progressring)
@@ -21,5 +18,6 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/progress-ring/gauge-with-progress.py"
 ```
 
+
+
 ::: flet.ProgressRing
-{{ class_remove_summary_and_description_options() }}

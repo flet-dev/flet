@@ -1,6 +1,3 @@
-::: flet.DatePicker
-{{ class_summary_and_description_options() }}
-
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/datepicker)
@@ -16,4 +13,3 @@
 ///
 
 ::: flet.DatePicker
-{{ class_remove_summary_and_description_options() }}
