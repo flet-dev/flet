@@ -173,10 +173,14 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     year_2023: Optional[bool] = None
     """
-    Whether to use the 2023 Material Design 3 appearance.
-    
     If this is set to `False`, this slider will use the latest 
     Material Design 3 appearance, which was introduced in December 2023.
+
+    When `True`, the Slider will use the 2023 Material Design 3 appearance.
+    
+    If not set, then the 
+    [`SliderTheme.year_2023`][flet.SliderTheme.year_2023] will be 
+    used, which is `False` by default.
     
     If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, 
     then this property is ignored.

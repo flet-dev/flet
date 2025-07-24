@@ -2723,7 +2723,7 @@ class SliderTheme:
     The size of the handle thumb shape thumb.
     """
 
-    year_2023: Optional[bool] = None
+    year_2023: bool = False
     """
     Overrides the default value for [`Slider.year_2023`][flet.Slider.year_2023].
     """
