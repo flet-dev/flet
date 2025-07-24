@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:flet/flet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 import 'flutter_test_finder.dart';
 
 class FlutterWidgetTester implements Tester {
   final WidgetTester _tester;
+  final IntegrationTestWidgetsFlutterBinding _binding;
   final lock = Lock();
   final Completer _teardown = Completer();
 
-  FlutterWidgetTester(this._tester);
+  FlutterWidgetTester(this._tester, this._binding);
 
   @override
   Future<void> pumpAndSettle(
@@ -50,6 +53,21 @@ class FlutterWidgetTester implements Tester {
 
   @override
   TestFinder findByIcon(IconData icon) => FlutterTestFinder(find.byIcon(icon));
+
+  @override
+  Future<Uint8List> takeScreenshot(String name) async {
+    if (defaultTargetPlatform != TargetPlatform.android &&
+        defaultTargetPlatform != TargetPlatform.iOS) {
+      throw Exception(
+          "Full app screenshots are only available on Android and iOS.");
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await _binding.convertFlutterSurfaceToImage();
+      await _tester.pump();
+    }
+    var bytes = await _binding.takeScreenshot(name);
+    return Uint8List.fromList(bytes);
+  }
 
   @override
   Future<void> tap(TestFinder finder) =>

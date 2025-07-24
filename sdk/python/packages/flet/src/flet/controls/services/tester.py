@@ -40,6 +40,9 @@ class Tester(Service):
         finder = await self._invoke_method_async("find_by_icon", {"icon": icon})
         return Finder(**finder)
 
+    async def take_screenshot(self, name: str):
+        return await self._invoke_method_async("take_screenshot", {"name": name})
+
     async def tap(self, finder: Finder):
         await self._invoke_method_async("tap", {"id": finder.id})
 

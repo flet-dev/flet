@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 
-import apps.hello_world as app
 import flet as ft
 import pytest
 import pytest_asyncio
@@ -13,7 +12,6 @@ logging.basicConfig(level=logging.DEBUG)
 async def flet_app(request):
     flet_app = ft.FletTestApp(
         flutter_app_dir=(Path(__file__).parent / "../../../../../client").resolve(),
-        flet_app_main=app.main,
         test_path=request.fspath,
         tcp_port=9010,
     )
@@ -23,22 +21,14 @@ async def flet_app(request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_app(flet_app: ft.FletTestApp):
+async def test_button_1(flet_app: ft.FletTestApp, request):
+    flet_app.page.add(scr := ft.Screenshot(ft.Button("Click me")))
     await flet_app.tester.pump_and_settle()
-    finder = await flet_app.tester.find_by_text("Hello, world!")
-    assert finder.count == 1
-    # bytes = await flet_app.tester.take_screenshot("scr1")
-    # p = Path(get_current_script_dir(), "scr_1.png")
-    # print(p)
-    # with open(p, "wb") as f:
-    #     f.write(bytes)
+    flet_app.assert_screenshot(request.node.name, await scr.capture_async())
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_1(flet_app: ft.FletTestApp):
-    print("Test 1")
-
-
-@pytest.mark.asyncio(loop_scope="module")
-async def test_2(flet_app: ft.FletTestApp):
-    print("Test 2")
+async def test_button_2(flet_app: ft.FletTestApp, request):
+    flet_app.page.add(scr := ft.Screenshot(ft.Button("Something else!")))
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(request.node.name, await scr.capture_async())

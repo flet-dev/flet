@@ -3,14 +3,26 @@ import logging
 import os
 import platform
 import subprocess
+from io import BytesIO
+from pathlib import Path
+from typing import Any, Optional
 
 import flet as ft
+import numpy as np
+from flet.utils.platform_utils import get_bool_env_var
+from PIL import Image
+from skimage.metrics import structural_similarity as ssim
 
 
 class FletTestApp:
     def __init__(
-        self, flutter_app_dir: os.PathLike, flet_app_main=None, tcp_port: int = 8550
+        self,
+        flutter_app_dir: os.PathLike,
+        flet_app_main: Any = None,
+        test_path: Optional[str] = None,
+        tcp_port: int = 8550,
     ):
+        self.test_path = test_path
         self.flet_app_main = flet_app_main
         self.flutter_app_dir = flutter_app_dir
         self.tcp_port = tcp_port
@@ -101,3 +113,48 @@ class FletTestApp:
             except subprocess.TimeoutExpired:
                 print("Flutter test process did exit in time, terminating it...")
                 self.flutter_process.terminate()  # or .kill() ?
+
+    def assert_screenshot(self, name: str, screenshot: bytes):
+        assert self.test_path, "test_path must be set to work with screenshots"
+        # if this is set then screenshot is saved as a golden image
+        # without doing comparison
+        golden_mode = get_bool_env_var("FLET_TEST_GOLDEN")
+        golden_image_path = Path(self.test_path).parent.joinpath(
+            "golden",
+            Path(self.test_path).stem.removeprefix("test_"),
+            f"{name.removeprefix('test_')}.png",
+        )
+
+        if golden_mode:
+            # save image
+            golden_image_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(golden_image_path, "bw") as f:
+                f.write(screenshot)
+        else:
+            # load image and compare with provided screenshot
+            if not golden_image_path.exists():
+                raise Exception(f"Golden image not found: {golden_image_path}")
+            golden_img = self.load_image_from_file(golden_image_path)
+            img = self.load_image_from_bytes(screenshot)
+            assert self.compare_images_rgb(golden_img, img) > 99.0, (
+                "Screenshots are not identical"
+            )
+
+    def load_image_from_file(self, file_name):
+        return Image.open(file_name).convert("RGB")
+
+    def load_image_from_bytes(self, data: bytes) -> Image.Image:
+        return Image.open(BytesIO(data)).convert("RGB")
+
+    def compare_images_rgb(self, img1, img2) -> float:
+        """Returns similarity as a percentage using color-aware SSIM."""
+        # Resize if needed
+        if img1.size != img2.size:
+            img2 = img2.resize(img1.size)
+
+        arr1 = np.array(img1)
+        arr2 = np.array(img2)
+
+        # Use SSIM in RGB mode (3-channel)
+        similarity, _ = ssim(arr1, arr2, channel_axis=-1, full=True)
+        return similarity * 100

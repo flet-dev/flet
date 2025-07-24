@@ -69,6 +69,9 @@ class TesterService extends FletService {
         _finders[finder.id] = finder;
         return finder.toMap();
 
+      case "take_screenshot":
+        return await control.backend.tester!.takeScreenshot(args["name"]);
+
       case "tap":
         var finder = _finders[args["id"]];
         if (finder != null) {

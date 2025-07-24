@@ -9,11 +9,12 @@ import pytest_asyncio
 logging.basicConfig(level=logging.DEBUG)
 
 
-@pytest_asyncio.fixture
-async def flet_app():
+@pytest_asyncio.fixture(scope="module")
+async def flet_app(request):
     flet_app = ft.FletTestApp(
         flutter_app_dir=(Path(__file__).parent / "../../../../../client").resolve(),
         flet_app_main=app.main,
+        test_path=request.fspath,
         tcp_port=9010,
     )
     await flet_app.start()
@@ -21,7 +22,7 @@ async def flet_app():
     await flet_app.teardown()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="module")
 async def test_app(flet_app: ft.FletTestApp):
     tester = flet_app.tester
     await tester.pump_and_settle()

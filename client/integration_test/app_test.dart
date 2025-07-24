@@ -8,14 +8,14 @@ import 'package:integration_test/integration_test.dart';
 import 'flutter_tester.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  var binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('end-to-end test', () {
     testWidgets('test app', (tester) async {
       var dir = Directory.current.path;
       debugPrint("Current dir: $dir");
 
-      app.tester = FlutterWidgetTester(tester);
+      app.tester = FlutterWidgetTester(tester, binding);
 
       List<String> args = [];
       const fletTestAppUrl = String.fromEnvironment("FLET_TEST_APP_URL");
@@ -23,6 +23,8 @@ void main() {
         args.add(fletTestAppUrl);
       }
       app.main(args);
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       await app.tester?.pump();
       await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
