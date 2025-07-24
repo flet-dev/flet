@@ -191,7 +191,7 @@ async def run_async(
             port=port,
             main=main or target,
             before_main=before_main,
-            blocking=is_embedded() or view is None,
+            blocking=is_embedded(),
         )
         if is_socket_server
         else await __run_web_server(
@@ -241,6 +241,7 @@ async def run_async(
                 await terminate.wait()
 
     finally:
+        print("33333")
         await conn.close()
 
 

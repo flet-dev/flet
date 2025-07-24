@@ -6,12 +6,14 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
 
-import flet as ft
 import numpy as np
-from flet.utils.network import get_free_tcp_port
-from flet.utils.platform_utils import get_bool_env_var
 from PIL import Image
 from skimage.metrics import structural_similarity as ssim
+
+import flet as ft
+from flet.testing.tester import Tester
+from flet.utils.network import get_free_tcp_port
+from flet.utils.platform_utils import get_bool_env_var
 
 
 class FletTestApp:
@@ -36,7 +38,7 @@ class FletTestApp:
         return self.__page
 
     @property
-    def tester(self) -> ft.Tester:
+    def tester(self) -> Tester:
         assert self.__tester
         return self.__tester
 
@@ -47,7 +49,7 @@ class FletTestApp:
 
         async def main(page: ft.Page):
             self.__page = page
-            self.__tester = ft.Tester()
+            self.__tester = Tester()
             page.services.append(self.__tester)
             page.update()
 

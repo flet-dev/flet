@@ -388,7 +388,6 @@ from flet.controls.services.semantics_service import Assertiveness, SemanticsSer
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.services.tester import Tester
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     OptionalStrutStyle,
@@ -516,7 +515,6 @@ from flet.controls.types import (
 from flet.controls.update_behavior import UpdateBehavior
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
-from flet.testing.flet_test_app import FletTestApp
 
 __all__ = [
     "app",
@@ -975,8 +973,6 @@ __all__ = [
     "EventControlType",
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
-    "Tester",
-    "FletTestApp",
     "KeyValue",
     "Screenshot",
 ]
