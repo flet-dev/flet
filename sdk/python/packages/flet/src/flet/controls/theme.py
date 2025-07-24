@@ -2780,6 +2780,11 @@ class ProgressIndicatorTheme:
     circular_track_padding: Optional[PaddingValue] = None
     size_constraints: Optional[BoxConstraints] = None
     stop_indicator_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for 
+    [`ProgressBar.stop_indicator_color`][flet.ProgressBar.stop_indicator_color].
+    """
+
     stop_indicator_radius: Optional[Number] = None
     """
     Overrides the default value for 
@@ -2790,6 +2795,11 @@ class ProgressIndicatorTheme:
     stroke_cap: Optional[StrokeCap] = None
     stroke_width: Optional[Number] = None
     year_2023: bool = False
+    """
+    Overrides the default values for 
+    [`ProgressBar.year_2023`][flet.ProgressBar.year_2023] and 
+    [`ProgressRing.year_2023`][flet.ProgressRing.year_2023].
+    """
 
 
 @dataclass

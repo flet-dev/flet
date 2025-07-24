@@ -24,8 +24,7 @@ class ProgressBarControl extends StatelessWidget {
       backgroundColor: control.getColor("bgcolor", context),
       semanticsLabel: control.getString("semantics_label"),
       semanticsValue: control.getDouble("semantics_value")?.toString(),
-      borderRadius:
-          control.getBorderRadius("border_radius", BorderRadius.zero)!,
+      borderRadius: control.getBorderRadius("border_radius"),
       stopIndicatorColor: control.getColor("stop_indicator_color", context),
       stopIndicatorRadius: control.getDouble("stop_indicator_radius"),
       trackGap: control.getDouble("track_gap"),

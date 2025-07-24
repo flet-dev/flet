@@ -40,16 +40,12 @@ class ProgressBar(ConstrainedControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Color of the track being filled by the
-    linear indicator.
+    Color of the track being filled by the linear indicator.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of both the indicator and the track.
-
-    Border radius is an instance of
-    [`BorderRadius`][flet.BorderRadius] class.
 
     Defaults to `BorderRadius.all(0)` - rectangular shape.
     """
