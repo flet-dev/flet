@@ -1905,7 +1905,7 @@ class DatePickerTheme:
 
     range_picker_elevation: Optional[Number] = None
     """
-    Overrides the default elevation of the full screen DateRangePickerDialog.
+    Overrides the default elevation of the full screen DateRangePicker (TBD).
     """
 
     day_text_style: Optional[TextStyle] = None
@@ -1997,12 +1997,12 @@ class DatePickerTheme:
 
     range_picker_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background color for DateRangePickerDialog.
+    Overrides the default background color for DateRangePicker (TBD).
     """
 
     range_picker_header_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background fill color for DateRangePickerDialog.
+    Overrides the default background fill color for DateRangePicker (TBD).
 
     The dialog's header displays the currently selected date range.
     """
@@ -2010,7 +2010,7 @@ class DatePickerTheme:
     range_picker_header_foreground_color: Optional[ColorValue] = None
     """
     Overrides the default color used for text labels and icons in the header of a full 
-    screen DateRangePickerDialog
+    screen DateRangePicker (TBD)
 
     The dialog's header displays the currently selected date range.
 
@@ -2030,7 +2030,7 @@ class DatePickerTheme:
 
     range_picker_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default overall shape of a full screen DateRangePickerDialog.
+    Overrides the default overall shape of a full screen DateRangePicker (TBD).
 
     If elevation is greater than zero then a shadow is shown and the shadow's shape 
     mirrors the shape of the dialog.
@@ -2039,7 +2039,7 @@ class DatePickerTheme:
     range_picker_header_help_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the help text of the header of a full 
-    screen DateRangePicker.
+    screen DateRangePicker (TBD).
 
     The help text (also referred to as "supporting text" in the Material spec) is 
     usually a prompt to the user at the top of the header (i.e. 'Select date').
@@ -2051,7 +2051,7 @@ class DatePickerTheme:
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the headline text in the header of a full 
-    screen DateRangePicker.
+    screen DateRangePicker (TBD).
 
     The dialog's header displays the currently selected date range.
 
@@ -2062,7 +2062,7 @@ class DatePickerTheme:
     range_picker_surface_tint_color: Optional[ColorValue] = None
     """
     Overrides the default color of the surface tint overlay applied to the 
-    background color of a full screen DateRangePicker's to indicate elevation.
+    background color of a full screen DateRangePicker (TBD)'s to indicate elevation.
 
     This is not recommended for use. Material 3 spec introduced a set of tone-based 
     surfaces and surface containers in its ColorScheme, which provide more flexibility. 
@@ -2072,13 +2072,13 @@ class DatePickerTheme:
     range_selection_bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color used to paint days selected between the 
-    start and end dates in a DateRangePicker.
+    start and end dates in a DateRangePicker (TBD).
     """
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default highlight color that's typically used to indicate that a date 
-    in the selected range of a DateRangePicker is focused, hovered, or pressed.
+    in the selected range of a DateRangePicker (TBD) is focused, hovered, or pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
@@ -2729,24 +2729,67 @@ class SliderTheme:
     """
 
 
-
 @dataclass
 class ProgressIndicatorTheme:
+    """
+    Customizes the appearance of progress indicators 
+    ([`ProgressBar`][flet.ProgressBar], [`ProgressRing`][flet.ProgressRing]) across the 
+    app.
+    """
+        
     color: Optional[ColorValue] = None
+    """
+    Overrides the default values for [`ProgressBar.color`][flet.ProgressBar.color] and 
+    [`ProgressRing.color`][flet.ProgressRing.color].
+    """
+        
     circular_track_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`ProgressRing.bgcolor`][flet.ProgressRing.bgcolor].
+    """
+
     linear_track_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`ProgressBar.bgcolor`][flet.ProgressBar.bgcolor].
+    """
+    
     refresh_bgcolor: Optional[ColorValue] = None
+    """
+    Background color of that fills the circle under the RefreshIndicator (TBD).
+    """
+    
     linear_min_height: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ProgressBar.bar_height`][flet.ProgressBar.bar_height].
+    """
+    
     border_radius: Optional[BorderRadiusValue] = None
+    """
+    Overrides the default value for 
+    [`ProgressBar.border_radius`][flet.ProgressBar.border_radius].
+    """
+    
     track_gap: Optional[Number] = None
+    """
+    Overrides the default values for 
+    [`ProgressBar.track_gap`][flet.ProgressBar.track_gap] and 
+    [`ProgressRing.track_gap`][flet.ProgressRing.track_gap].
+    """
+
     circular_track_padding: Optional[PaddingValue] = None
     size_constraints: Optional[BoxConstraints] = None
     stop_indicator_color: Optional[ColorValue] = None
     stop_indicator_radius: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ProgressBar.stop_indicator_radius`][flet.ProgressBar.stop_indicator_radius].
+    """
+
     stroke_align: Optional[Number] = None
     stroke_cap: Optional[StrokeCap] = None
     stroke_width: Optional[Number] = None
-    year_2023: Optional[bool] = None
+    year_2023: bool = False
 
 
 @dataclass

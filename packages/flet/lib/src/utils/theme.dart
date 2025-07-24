@@ -989,7 +989,7 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
     strokeAlign: parseDouble(value["stroke_align"]),
     strokeCap: parseStrokeCap(value["stroke_cap"]),
     strokeWidth: parseDouble(value["stroke_width"]),
-    year2023: parseBool(value["year_2023"]),
+    year2023: parseBool(value["year_2023"], false),
   );
 }
 

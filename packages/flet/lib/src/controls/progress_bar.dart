@@ -19,7 +19,7 @@ class ProgressBarControl extends StatelessWidget {
     debugPrint("ProgressBar build: ${control.id}");
     final indicator = LinearProgressIndicator(
       value: control.getDouble("value"),
-      minHeight: control.getDouble("bar_height", 4)!,
+      minHeight: control.getDouble("bar_height"),
       color: control.getColor("color", context),
       backgroundColor: control.getColor("bgcolor", context),
       semanticsLabel: control.getString("semantics_label"),
