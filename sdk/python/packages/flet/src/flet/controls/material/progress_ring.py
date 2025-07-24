@@ -103,9 +103,13 @@ class ProgressRing(ConstrainedControl):
     """
     The padding around the indicator track.
     
-    If `None`, [`ProgressIndicatorTheme.circular_track_padding`][flet.ProgressIndicatorTheme.circular_track_padding] 
+    If `None`, 
+    [`ProgressIndicatorTheme.circular_track_padding`][flet.ProgressIndicatorTheme.circular_track_padding] 
     is used.
-    If that's is also `None` and [`year_2023`][flet.ProgressRing.year_2023] is `False`, defaults to `Padding.all(4.0)`.
+    
+    If that's is also `None` and [`year_2023`][flet.ProgressRing.year_2023] is `False`, 
+    defaults to `Padding.all(4.0)`.
+    
     Otherwise, defaults to `Padding.all(0.0)`.
     """
 

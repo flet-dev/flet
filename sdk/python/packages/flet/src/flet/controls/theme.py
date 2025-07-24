@@ -2778,7 +2778,17 @@ class ProgressIndicatorTheme:
     """
 
     circular_track_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for 
+    [`ProgressRing.padding`][flet.ProgressRing.padding].
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value for 
+    [`ProgressRing.size_constraints`][flet.ProgressRing.size_constraints].
+    """
+    
     stop_indicator_color: Optional[ColorValue] = None
     """
     Overrides the default value for 
