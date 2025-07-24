@@ -426,13 +426,13 @@ for:
         - job_group: integration_tests
 
     install:
+      - source ci/install_flutter.sh
       - python --version
       - cd sdk/python
       - python -m ensurepip --upgrade
       - pip3 install --upgrade setuptools pip
       - curl -LsSf https://astral.sh/uv/install.sh | sh
       - export PATH="$HOME/.local/bin:$PATH"
-      - source ci/install_flutter.sh
 
     build: off
 
