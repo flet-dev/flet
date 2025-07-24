@@ -2792,8 +2792,23 @@ class ProgressIndicatorTheme:
     """
 
     stroke_align: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ProgressRing.stroke_align`][flet.ProgressRing.stroke_align].
+    """
+
     stroke_cap: Optional[StrokeCap] = None
+    """
+    Overrides the default value for 
+    [`ProgressRing.stroke_cap`][flet.ProgressRing.stroke_cap].
+    """
+
     stroke_width: Optional[Number] = None
+    """
+    Overrides the default value for 
+    [`ProgressRing.stroke_width`][flet.ProgressRing.stroke_width].
+    """
+
     year_2023: bool = False
     """
     Overrides the default values for 

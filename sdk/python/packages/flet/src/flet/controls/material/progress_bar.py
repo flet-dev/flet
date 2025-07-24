@@ -115,7 +115,7 @@ class ProgressBar(ConstrainedControl):
     [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be 
     used, which is `False` by default.
 
-    If [`Theme.use_Material3`][flet.Theme.use_Material3] is `False`, then this property 
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property 
     is ignored.
     """
 

@@ -21,13 +21,13 @@ class ProgressRingControl extends StatelessWidget {
     debugPrint("ProgressRing build: ${control.id}");
     final indicator = CircularProgressIndicator(
       value: control.getDouble("value"),
-      strokeWidth: control.getDouble("stroke_width", 4)!,
+      strokeWidth: control.getDouble("stroke_width"),
       color: control.getColor("color", context),
       backgroundColor: control.getColor("bgcolor", context),
       semanticsLabel: control.getString("semantics_label"),
       strokeCap: control.getStrokeCap("stroke_cap"),
       semanticsValue: control.getDouble("semantics_value")?.toString(),
-      strokeAlign: control.getDouble("stroke_align", 0)!,
+      strokeAlign: control.getDouble("stroke_align"),
       trackGap: control.getDouble("track_gap"),
       constraints: control.getBoxConstraints("size_constraints"),
       padding: control.getPadding("padding"),

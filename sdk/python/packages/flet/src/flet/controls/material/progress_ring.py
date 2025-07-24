@@ -29,7 +29,7 @@ class ProgressRing(ConstrainedControl):
     made.
     """
 
-    stroke_width: Number = 4.0
+    stroke_width: Optional[Number] = None
     """
     The width of the line used to draw the circle.
     """
@@ -45,13 +45,16 @@ class ProgressRing(ConstrainedControl):
     by the circular indicator.
     """
 
-    stroke_align: Number = 0.0
+    stroke_align: Optional[Number] = None
     """
     The relative position of the stroke.
 
     Value typically ranges be `-1.0` (inside stroke) and `1.0` (outside stroke).
 
-    Defaults to `0` - centered.
+    A value of 0 (center stroke) will center the border on the edge of the control.
+
+    If [`ProgressRing.year_2023`][flet.ProgressRing.year_2023] is `True`, then the 
+    default value is `0`. Otherwise, the default value is `-1`.
     """
 
     stroke_cap: Optional[StrokeCap] = None
@@ -66,17 +69,22 @@ class ProgressRing(ConstrainedControl):
 
     semantics_value: Optional[Number] = None
     """
-    Used for determinate progress indicators to indicate how much progress has been made.
+    Used for determinate progress indicators to indicate how much progress has been 
+    made.
     """
 
     track_gap: Optional[Number] = None
     """
     The gap between the active indicator and the background track.
-    If [`year_2023`][flet.ProgressRing.year_2023] is `False` or `Theme.use_material3` is `False`, 
-    then no track gap will be drawn.
+    
+    If [`year_2023`][flet.ProgressRing.year_2023] is `True` or `Theme.use_material3` is 
+    `False`, then no track gap will be drawn.
+    
     Set `track_gap` to `0` to hide this track gap.
 
-    If `None`, [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] is used.
+    If `None`, 
+    [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] is used.
+    
     If that's is also `None`, defaults to `4.0`.
     """
 
@@ -84,7 +92,10 @@ class ProgressRing(ConstrainedControl):
     """
     Defines the minimum and maximum size of the progress indicator.
     
-    If `None`, [`ProgressIndicatorTheme.size_constraints`][flet.ProgressIndicatorTheme.size_constraints] is used.
+    If `None`, 
+    [`ProgressIndicatorTheme.size_constraints`][flet.ProgressIndicatorTheme.size_constraints] 
+    is used.
+    
     If that's is also `None`, defaults to a minimum width and height of `36`.
     """
 
@@ -100,5 +111,15 @@ class ProgressRing(ConstrainedControl):
 
     year_2023: Optional[bool] = None
     """
-    TBD
+    If this is set to `False`, the `ProgressRing` will use the latest Material Design 3 
+    appearance, which was introduced in December 2023.
+
+    When `True`, the `ProgressRing` will use the 2023 Material Design 3 appearance.
+
+    If not set, then the 
+    [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be 
+    used, which is `False` by default.
+
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property 
+    is ignored.
     """
