@@ -23,6 +23,9 @@ async def flet_app(request):
 async def test_button_1(flet_app: ft.FletTestApp, request):
     flet_app.page.add(scr := ft.Screenshot(ft.Button("Click me")))
     await flet_app.tester.pump_and_settle()
+    button = await flet_app.tester.find_by_text("Click me")
+    assert button.count == 1
+    await flet_app.tester.mouse_hover(button)
     flet_app.assert_screenshot(request.node.name, await scr.capture_async())
 
 

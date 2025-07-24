@@ -15,6 +15,7 @@ abstract class Tester {
   Future<Uint8List> takeScreenshot(String name);
   Future<void> tap(TestFinder finder);
   Future<void> enterText(TestFinder finder, String text);
+  Future<void> mouseHover(TestFinder finder);
   void teardown();
   Future waitForTeardown();
 }

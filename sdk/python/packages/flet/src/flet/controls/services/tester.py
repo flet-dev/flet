@@ -49,5 +49,8 @@ class Tester(Service):
     async def enter_text(self, finder: Finder, text: str):
         await self._invoke_method_async("enter_text", {"id": finder.id, "text": text})
 
+    async def mouse_hover(self, finder: Finder):
+        await self._invoke_method_async("mouse_hover", {"id": finder.id})
+
     def teardown(self):
         return self._invoke_method_async("teardown")

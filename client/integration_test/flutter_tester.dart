@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
@@ -76,6 +77,15 @@ class FlutterWidgetTester implements Tester {
   @override
   Future<void> enterText(TestFinder finder, String text) =>
       _tester.enterText((finder as FlutterTestFinder).raw, text);
+
+  @override
+  Future<void> mouseHover(TestFinder finder) async {
+    final center = _tester.getCenter((finder as FlutterTestFinder).raw);
+    final gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
+    await gesture.addPointer();
+    await gesture.moveTo(center);
+    await pumpAndSettle();
+  }
 
   @override
   void teardown() => _teardown.complete();

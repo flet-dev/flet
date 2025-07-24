@@ -84,6 +84,12 @@ class TesterService extends FletService {
           await control.backend.tester!.enterText(finder, args["text"]);
         }
 
+      case "mouse_hover":
+        var finder = _finders[args["id"]];
+        if (finder != null) {
+          await control.backend.tester!.mouseHover(finder);
+        }
+
       case "teardown":
         control.backend.tester?.teardown();
 
