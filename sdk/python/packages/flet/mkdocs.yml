@@ -74,6 +74,8 @@ extra:
       link: https://x.com/fletdev
     - icon: fontawesome/brands/bluesky
       link: https://bsky.app/profile/fletdev.bsky.social
+extra_css:
+  - extras/css/mkdocstrings.css
 
 # Validation
 validation:
@@ -669,6 +671,7 @@ nav:
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
+  - Gallery: https://flet.dev/gallery
   - Contributing:
       - contributing/index.md
       - Code of Conduct: contributing/code-of-conduct.md
