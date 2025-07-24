@@ -15,7 +15,6 @@ async def flet_app(request):
         flutter_app_dir=(Path(__file__).parent / "../../../../../client").resolve(),
         flet_app_main=app.main,
         test_path=request.fspath,
-        tcp_port=9010,
     )
     await flet_app.start()
     yield flet_app

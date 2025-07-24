@@ -9,6 +9,7 @@ from typing import Any, Optional
 
 import flet as ft
 import numpy as np
+from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 from PIL import Image
 from skimage.metrics import structural_similarity as ssim
@@ -20,7 +21,7 @@ class FletTestApp:
         flutter_app_dir: os.PathLike,
         flet_app_main: Any = None,
         test_path: Optional[str] = None,
-        tcp_port: int = 8550,
+        tcp_port: Optional[int] = None,
     ):
         self.test_path = test_path
         self.flet_app_main = flet_app_main
@@ -58,6 +59,9 @@ class FletTestApp:
                 self.flet_app_main(page)
             ready.set()
 
+        if not self.tcp_port:
+            self.tcp_port = get_free_tcp_port()
+
         asyncio.create_task(ft.run_async(main, port=self.tcp_port, view=None))
         print("Started Flet app")
 
@@ -67,23 +71,26 @@ class FletTestApp:
 
         flutter_args = ["flutter", "test", "integration_test"]
 
-        flet_test_device = os.getenv("FLET_TEST_DEVICE")
-        if flet_test_device is None:
+        self.test_platform = os.getenv("FLET_TEST_PLATFORM")
+        if self.test_platform is None:
             if platform.system() == "Windows":
-                flet_test_device = "windows"
+                self.test_platform = "windows"
             elif platform.system() == "Linux":
-                flet_test_device = "linux"
+                self.test_platform = "linux"
             elif platform.system() == "Darwin":
-                flet_test_device = "macos"
+                self.test_platform = "macos"
+
+        self.test_device = os.getenv("FLET_TEST_DEVICE")
+        if self.test_device is None:
+            self.test_device = self.test_platform
 
         tcp_addr = "127.0.0.1"
 
-        flet_test_platform = os.getenv("FLET_TEST_PLATFORM")
-        if flet_test_platform == "android":
+        if self.test_platform == "android":
             tcp_addr = "10.0.2.2"
 
-        if flet_test_device is not None:
-            flutter_args.extend(["-d", flet_test_device])
+        if self.test_device is not None:
+            flutter_args.extend(["-d", self.test_device])
 
         app_url = f"tcp://{tcp_addr}:{self.tcp_port}"
         flutter_args.append(f"--dart-define=FLET_TEST_APP_URL={app_url}")
@@ -115,12 +122,17 @@ class FletTestApp:
                 self.flutter_process.terminate()  # or .kill() ?
 
     def assert_screenshot(self, name: str, screenshot: bytes):
-        assert self.test_path, "test_path must be set to work with screenshots"
+        assert self.test_platform, (
+            "FLET_TEST_PLATFORM must be set to test with screenshots"
+        )
+        assert self.test_path, "test_path must be set to test with screenshots"
+
         # if this is set then screenshot is saved as a golden image
         # without doing comparison
         golden_mode = get_bool_env_var("FLET_TEST_GOLDEN")
         golden_image_path = Path(self.test_path).parent.joinpath(
             "golden",
+            self.test_platform,
             Path(self.test_path).stem.removeprefix("test_"),
             f"{name.removeprefix('test_')}.png",
         )
