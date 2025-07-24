@@ -115,6 +115,7 @@ class FletTestApp:
             print("Waiting for Flutter test process to exit...")
             try:
                 await asyncio.wait_for(self.flutter_process.wait(), timeout=10)
+                print("Flutter test process has exited.")
             except asyncio.TimeoutError:
                 print("Flutter test process did not exit in time, terminating it...")
                 self.flutter_process.terminate()
