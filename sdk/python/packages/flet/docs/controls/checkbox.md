@@ -1,3 +1,6 @@
+::: flet.Checkbox
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/checkbox)
@@ -30,3 +33,4 @@
 ```
 
 ::: flet.Checkbox
+{{ class_remove_summary_and_description_options() }}

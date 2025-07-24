@@ -1,4 +1,4 @@
-## Examples
+## DropdownM2
 
 [Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
 
@@ -44,3 +44,4 @@
 ///
 
 ::: flet.DropdownM2
+{{ class_remove_summary_and_description_options() }}

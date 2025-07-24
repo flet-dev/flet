@@ -12,7 +12,7 @@ To integrate custom Flutter package into Flet you need to have basic understandi
 
 Flet now makes it easy to create and build projects with your custom controls based on Flutter widgets or Flutter 3rd-party packages. In the example below, we will be creating a custom Flet extension based on the [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) package.
 
-1. Create new virtual enviroment and [install Flet](/docs/getting-started/#virtual-environment) there.
+1. Create new virtual enviroment and [install Flet](../../getting-started/create-flet-app.md) there.
 
 2. Create new Flet extension project from template:
 

@@ -1,3 +1,6 @@
+::: flet.GestureDetector
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/gesturedetector)
@@ -32,3 +35,4 @@ inside another control (yellow container) giving the same results.
 ```
 
 ::: flet.GestureDetector
+{{ class_remove_summary_and_description_options() }}

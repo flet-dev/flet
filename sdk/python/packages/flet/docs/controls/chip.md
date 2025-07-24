@@ -1,3 +1,6 @@
+::: flet.Chip
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/chip)
@@ -34,3 +37,4 @@ They can be a good alternative to switches or checkboxes.
 ///
 
 ::: flet.Chip
+{{ class_remove_summary_and_description_options() }}

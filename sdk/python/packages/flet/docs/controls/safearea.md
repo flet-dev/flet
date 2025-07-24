@@ -1,3 +1,6 @@
+::: flet.SafeArea
+{{ class_summary_and_description_options() }}
+
 ## Example
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/safearea)
@@ -9,3 +12,4 @@
 ```
 
 ::: flet.SafeArea
+{{ class_remove_summary_and_description_options() }}

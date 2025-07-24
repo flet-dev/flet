@@ -1,3 +1,6 @@
+::: flet.Column
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/column)
@@ -66,3 +69,4 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 [//]: # (### Custom scrollbar)
 
 ::: flet.Column
+{{ class_remove_summary_and_description_options() }}

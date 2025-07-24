@@ -1,3 +1,6 @@
+::: flet.SearchBar
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/searchbar)
@@ -13,3 +16,4 @@
 ///
 
 ::: flet.SearchBar
+{{ class_remove_summary_and_description_options() }}

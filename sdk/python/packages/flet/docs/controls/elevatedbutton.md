@@ -1,3 +1,6 @@
+::: flet.ElevatedButton
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/elevatedbutton)
@@ -61,3 +64,4 @@
 ```
 
 ::: flet.ElevatedButton
+{{ class_remove_summary_and_description_options() }}

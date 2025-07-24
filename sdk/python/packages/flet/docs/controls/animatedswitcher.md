@@ -1,3 +1,6 @@
+::: flet.AnimatedSwitcher
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/animations/animated_switcher)
@@ -25,3 +28,4 @@
 ```
 
 ::: flet.AnimatedSwitcher
+{{ class_remove_summary_and_description_options() }}

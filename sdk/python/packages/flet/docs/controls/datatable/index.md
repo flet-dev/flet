@@ -1,3 +1,6 @@
+::: flet.DataTable
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/datatable)
@@ -28,3 +31,4 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/sdk/python/examples/controls/datatable/handling-events.py"
 ```
 ::: flet.DataTable
+{{ class_remove_summary_and_description_options() }}

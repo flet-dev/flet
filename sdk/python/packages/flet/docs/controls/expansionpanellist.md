@@ -1,3 +1,6 @@
+::: flet.ExpansionPanelList
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/expansionpanellist)
@@ -13,3 +16,4 @@
 ///
 
 ::: flet.ExpansionPanelList
+{{ class_remove_summary_and_description_options() }}

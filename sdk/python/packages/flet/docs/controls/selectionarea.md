@@ -1,3 +1,6 @@
+::: flet.SelectionArea
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 ### Basic Example
@@ -11,3 +14,4 @@
 ///
 
 ::: flet.SelectionArea
+{{ class_remove_summary_and_description_options() }}

@@ -1,3 +1,6 @@
+::: flet.NavigationRail
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/navigationrail)
@@ -13,3 +16,4 @@
 ///
 
 ::: flet.NavigationRail
+{{ class_remove_summary_and_description_options() }}

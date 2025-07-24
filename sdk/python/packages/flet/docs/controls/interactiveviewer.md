@@ -1,3 +1,6 @@
+::: flet.InteractiveViewer
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/interactiveviewer)
@@ -9,3 +12,4 @@
 ```
 
 ::: flet.InteractiveViewer
+{{ class_remove_summary_and_description_options() }}

@@ -1,3 +1,6 @@
+::: flet.ListTile
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/listtile)
@@ -13,3 +16,4 @@
 ///
 
 ::: flet.ListTile
+{{ class_remove_summary_and_description_options() }}

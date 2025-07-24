@@ -1,3 +1,6 @@
+::: flet.AlertDialog
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/alertdialog)
@@ -13,3 +16,4 @@
 ///
 
 ::: flet.AlertDialog
+{{ class_remove_summary_and_description_options() }}

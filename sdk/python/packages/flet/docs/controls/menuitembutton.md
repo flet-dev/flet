@@ -1,3 +1,6 @@
+::: flet.MenuItemButton
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/menuitembutton)
@@ -13,3 +16,4 @@
 ///
 
 ::: flet.MenuItemButton
+{{ class_remove_summary_and_description_options() }}

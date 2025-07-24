@@ -1,3 +1,6 @@
+::: flet.CupertinoAppBar
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/cupertinoappbar)
@@ -19,3 +22,4 @@
 ```
 
 ::: flet.CupertinoAppBar
+{{ class_remove_summary_and_description_options() }}

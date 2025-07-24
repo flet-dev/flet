@@ -1,3 +1,6 @@
+::: flet.ReorderableListView
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/autofillgroup)
@@ -17,3 +20,4 @@
 See [this](reorderabledraggable.md#examples).
 
 ::: flet.ReorderableListView
+{{ class_remove_summary_and_description_options() }}

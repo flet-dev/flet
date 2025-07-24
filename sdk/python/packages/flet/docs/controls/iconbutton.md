@@ -1,3 +1,6 @@
+::: flet.IconButton
+{{ class_summary_and_description_options() }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/iconbutton)
@@ -19,3 +22,4 @@
 ```
 
 ::: flet.IconButton
+{{ class_remove_summary_and_description_options() }}
