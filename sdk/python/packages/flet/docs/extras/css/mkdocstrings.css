@@ -1,0 +1,28 @@
+code.doc-symbol-parameter::after {
+    content: "parameter";
+}
+
+code.doc-symbol-attribute::after {
+    content: "property";
+}
+
+code.doc-symbol-function::after {
+    content: "function";
+}
+
+code.doc-symbol-method::after {
+    content: "method";
+}
+
+code.doc-symbol-class::after {
+    content: "class";
+}
+
+code.doc-symbol-module::after {
+    content: "module";
+}
+
+.doc-label-property {
+    background-color: #FBB454;
+    color: black;
+}
