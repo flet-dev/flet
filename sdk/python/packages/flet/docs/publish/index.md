@@ -5,19 +5,61 @@ or install package for distribution.
 
 The following matrix shows which OS you should run `flet build` command on in order to build a package for specific platform:
 
-| Run on / `flet build` Target | [`apk/aab`] | [`ipa`] | [`macos`] | [`linux`] | [`windows`] | [`web`] |
-|:----------------------------:|:-----------:|:-------:|:---------:|:---------:|:-----------:|:-------:|
-|            macOS             |      ✅      |    ✅    |     ✅     |           |             |    ✅    |
-|           Windows            |      ✅      |         |           | ✅ ([WSL]) |      ✅      |    ✅    |
-|            Linux             |      ✅      |         |           |     ✅     |             |    ✅    |
-
-[`apk/aab`]: android.md
-[`ipa`]: ios.md
-[`macos`]: macos.md
-[`linux`]: linux.md
-[`windows`]: windows.md
-[`web`]: web/index.md
-[WSL]: https://docs.microsoft.com/en-us/windows/wsl/about
+<style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+    }
+    th, td {
+      border: 1px solid #000;
+    }
+</style>
+<table border="1" cellspacing="0" cellpadding="6" style="border-collapse: collapse; width: 100%; text-align: center;">
+  <thead>
+    <tr>
+      <th rowspan="2" style="vertical-align: middle; text-align: center;">Run on</th>
+      <th colspan="6" style="text-align: center;">Target Platform</th>
+    </tr>
+    <tr>
+      <th style="text-align: center;"><a href="android.md">apk/aab</a></th>
+      <th style="text-align: center;"><a href="ios.md">ipa</a></th>
+      <th style="text-align: center;"><a href="macos.md">macos</a></th>
+      <th style="text-align: center;"><a href="linux.md">linux</a></th>
+      <th style="text-align: center;"><a href="windows.md">windows</a></th>
+      <th style="text-align: center;"><a href="web/index.md">web</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>macOS</strong></td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>✅</td>
+      <td></td>
+      <td></td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><strong>Windows</strong></td>
+      <td>✅</td>
+      <td></td>
+      <td></td>
+      <td><a href="https://docs.microsoft.com/en-us/windows/wsl/about">✅ (WSL)</a></td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><strong>Linux</strong></td>
+      <td>✅</td>
+      <td></td>
+      <td></td>
+      <td>✅</td>
+      <td></td>
+      <td>✅</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Prerequisites
 
@@ -345,8 +387,8 @@ message = "Preparing the app for its first launch…"
 
 ## Startup screen
 
-The startup screen is shown while the archive (`app.zip`), which contains the 3rd-party site packages (Android only), is being
-unpacked and the Python app is starting.
+The startup screen is shown while the archive (`app.zip`), which contains the 3rd-party site packages (Android only), 
+is being unpacked and the Python app is starting.
 
 /// admonition | Note
 Startup screen is shown after the [boot screen](#boot-screen).
@@ -443,11 +485,12 @@ flet build <target_platform> --compile-app --compile-packages --cleanup-packages
 `flet build` command allows granular control over permissions, features and entitlements
 embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
-See platform guides for setting specific [iOS](/docs/publish/ios), [Android](/docs/publish/android) and [macOS](/docs/publish/macos) permissions.
+See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
 
 ### Cross-platform permissions
 
-There are pre-defined permissions that mapped to `Info.plist`, `*.entitlements` and `AndroidManifest.xml` for respective platforms.
+There are pre-defined permissions that mapped to `Info.plist`, `*.entitlements` and `AndroidManifest.xml` 
+for respective platforms.
 
 Setting permissions can be done as follows:
 

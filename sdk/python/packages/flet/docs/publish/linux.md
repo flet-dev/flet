@@ -2,11 +2,7 @@
 title: Packaging app for Linux
 ---
 
-Flet CLI provides `flet build linux` command that allows packaging Flet app into a Linux application.
-
-/// admonition | Note
-The command can be run on Linux only.
-///
+Instructions for packaging a Flet app into a Linux executable.
 
 ## Prerequisites
 
@@ -28,15 +24,10 @@ apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-pl
 
 See [this guide](https://gstreamer.freedesktop.org/documentation/installing/on-linux.html?gi-language=c) for installing on other Linux distributives.
 
-To build your Flet app that uses `Audio` control add `--include-packages flet_audio` to `flet build` command, for example:
-
-```
-flet build apk --include-packages flet_audio
-```
-
 ### MPV for `Video`
 
-[libmpv](https://mpv.io/) libraries must be installed if your Flet app uses `Video` control. On Ubuntu/Debian you can install it with:
+[libmpv](https://mpv.io/) libraries must be installed if your Flet app uses `Video` control.
+On Ubuntu/Debian you can install it with:
 
 ```
 sudo apt install libmpv-dev mpv
@@ -48,6 +39,10 @@ To build your Flet app that uses `Video` control add `--include-packages flet_vi
 flet build apk --include-packages flet_video
 ```
 
-## `flet build linux`
+## <code class="doc-symbol doc-symbol-command"></code> `flet build linux`
 
-Creates a Linux application from your Flet app.
+/// admonition | Note
+This command can be run on a **Linux only** (or [WSL](https://docs.microsoft.com/en-us/windows/wsl/about)).
+///
+
+Builds a Linux executable.

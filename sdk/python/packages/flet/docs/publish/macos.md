@@ -2,19 +2,14 @@
 title: Packaging app for macOS
 ---
 
-Flet CLI provides `flet build macos` command that allows packaging Flet app into a macOS application bundle.
+Instructions for packaging a Flet app into a macOS application bundle.
 
-/// admonition | Note
-The command can be run on macOS only.
-///
-
-/// admonition | Important
-    type: danger
 ## Prerequisites
 
 ### Rosetta 2
 
-[Flutter](https://flutter.dev), which we use for packaging, requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon:
+[Flutter](https://flutter.dev), which we use for packaging,
+requires [Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon:
 ```
 sudo softwareupdate --install-rosetta --agree-to-license
 ```
@@ -26,9 +21,12 @@ sudo softwareupdate --install-rosetta --agree-to-license
 ### CocoaPods
 
 [CocoaPods](https://cocoapods.org/) 1.16 or later to compile and enable Flutter plugins.
-///
 
-## `flet build macos`
+## <code class="doc-symbol doc-symbol-command"></code> `flet build macos`
+
+/// admonition | Note
+This command can be run on a **macOS only**.
+///
 
 Creates a macOS application bundle from your Flet app.
 
@@ -58,9 +56,12 @@ flet build macos --arch arm64
 
 #### TBD: list some common/supported archs
 
-## Permissions
+## Entitlements
 
-Setting macOS entitlements which are written and `.entitlements` files:
+Key-value pairs that grant an executable permission to use a service or technology. 
+Supported entitlements are defined in [Apple Developer Entitlements Reference](https://developer.apple.com/documentation/bundleresources/entitlements).
+
+They can be set as follows:
 
 /// tab | `pyproject.toml`
 
@@ -86,16 +87,16 @@ flet build --macos-entitlements "com.apple.security.personal-information.locatio
 ```
 ///
 
-Default macOS entitlements:
+They get written into specific `.entitlements` files.
 
-* `com.apple.security.app-sandbox = False`
-* `com.apple.security.cs.allow-jit = True`
-* `com.apple.security.network.client = True`
-* `com.apple.security.network.server" = True`
-
-Configuring macOS app entitlements in `pyproject.toml` (notice `"` around entitlement name):
+/// details | Default values
+    type: info
+Below is a list of default entitlements:
 
 ```toml
-[tool.flet.macos]
-entitlement."com.apple.security.personal-information.photos-library" = true
+[tool.flet.macos.entitlement]
+"com.apple.security.app-sandbox" = false
+"com.apple.security.cs.allow-jit" = true
+"com.apple.security.network.client" = true
+"com.apple.security.network.server" = true
 ```

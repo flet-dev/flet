@@ -47,11 +47,11 @@ To start developing with Flet, you just need your favorite IDE or text editor.
 No SDKs, no thousands of dependencies, no complex tooling - Flet has a built-in web server
 with assets hosting and desktop clients.
 
-### Powered by Flutter
+### <img src="https://storage.googleapis.com/cms-storage-bucket/icon_flutter.4fd5520fe28ebf839174.svg" width="18" style="vertical-align: middle;" /> Powered by Flutter
 
 Flet UI is built with [Flutter](https://flutter.dev/), so your app looks professional and could be delivered to any platform.
 Flet simplifies the Flutter model by combining smaller "widgets" to ready-to-use "controls"
-with an imperative programming model.
+with an imperative programming model. 
 
 ### 📱 Deliver to any device or platform
 

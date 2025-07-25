@@ -17,6 +17,7 @@ theme:
   name: "material"
   favicon: 'images/favicon.ico'
   logo: 'images/logo.svg'
+  custom_dir: docs/overrides
   icon:
     annotation: material/plus-circle
   palette:
@@ -90,6 +91,7 @@ watch:
   - src
   - ../../../../CHANGELOG.md
   - ../../../../LICENSE
+  - ../../../../README.md
 
 # Plugins
 plugins:
@@ -145,6 +147,7 @@ markdown_extensions:
   - def_list
   - footnotes
   - md_in_html
+  - footnotes
   - toc:
       permalink: "#"
 
@@ -171,6 +174,9 @@ markdown_extensions:
           class: python
           validator: !!python/name:markdown_exec.validator
           format: !!python/name:markdown_exec.formatter
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.snippets:
       restrict_base_path: False
       url_download: True
@@ -671,7 +677,6 @@ nav:
       - Solitaire: tutorials/solitaire.md
       - ToDo: tutorials/todo.md
       - Trolli: tutorials/trolli.md
-  - Gallery: https://flet.dev/gallery
   - Contributing:
       - contributing/index.md
       - Code of Conduct: contributing/code-of-conduct.md
@@ -680,5 +685,6 @@ nav:
           - contributing/extensions/index.md
           - Creating an Extension: contributing/extensions/user-extensions.md
           - Built-in Extensions: contributing/extensions/built-in-extensions.md
+  - Gallery: https://flet.dev/gallery
   - Blog: https://flet.dev/blog
   - Support: support.md

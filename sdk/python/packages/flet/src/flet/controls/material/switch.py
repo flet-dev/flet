@@ -224,6 +224,6 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.splash_radius is None or self.splash_radius >= 0, (
-            f"splash_radius must be greater than or equal to 0, got {self.splash_radius}"
-        )
+        assert (
+            self.splash_radius is None or self.splash_radius >= 0
+        ), f"splash_radius must be greater than or equal to 0, got {self.splash_radius}"

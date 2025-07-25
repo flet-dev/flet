@@ -4,7 +4,8 @@ title: Packaging app for Android
 
 ## Introduction
 
-Flet CLI provides `flet build apk` and `flet build aab` commands that allow packaging Flet app into Android APK and Android App Bundle (AAB) respectively.
+Instructions for packaging a Flet app into an
+Android APK and Android App Bundle (AAB).
 
 ## Prerequisites
 
@@ -14,19 +15,23 @@ Java (JDK) and Android SDK will be automatically installed on the first run of `
 
 JDK is installed into `$HOME/java/{version}` directory.
 
-If you have Android Studio installed Flet CLI will locate and use Android SDK coming with the studio; otherwise Android SDK will be installed to `$HOME/Android/sdk` directory.
+If you have Android Studio installed Flet CLI will locate and use Android SDK coming with the studio;
+otherwise Android SDK will be installed to `$HOME/Android/sdk` directory.
 
 ### Android wheels for binary Python packages
 
-Binary Python packages (vs "pure" Python packages written in Python only) are packages that partially written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
+Binary Python packages (vs "pure" Python packages written in Python only) are packages that partially
+written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
-Make sure all non-pure (binary) packages used in your Flet app have [pre-built wheels for Android](../unclassified/binary-packages-android-ios.md).
+Make sure all non-pure (binary) packages used in your Flet app have 
+[pre-built wheels for Android](../contributing/binary-packages-android-ios.md).
 
-## `flet build apk`
+## <code class="doc-symbol doc-symbol-command"></code> `flet build apk`
 
 Build an Android APK file from your app.
 
-This command builds release version. 'release' builds don't support debugging and are suitable for deploying to app stores. If you are deploying the app to the Play Store, it's recommended to use Android App Bundles (AAB) or split the APK to reduce the APK size.
+This command builds release version. 'release' builds don't support debugging and are suitable f
+or deploying to app stores. If you are deploying the app to the Play Store, it's recommended to use Android App Bundles (AAB) or split the APK to reduce the APK size.
 
 * https://developer.android.com/guide/app-bundle
 * https://developer.android.com/studio/build/configure-apk-splits#configure-abi-split
@@ -35,7 +40,8 @@ This command builds release version. 'release' builds don't support debugging an
 
 By default, Flet builds "fat" APK which includes binaries for both `arm64-v8a` and `armeabi-v7a` architectures.
 
-You can configure Flet to split fat APK into smaller APKs for each platformby using `--split-per-abi` option or by setting `split_per_abi` in `pyproject.toml`:
+You can configure Flet to split fat APK into smaller APKs for each platformby using `--split-per-abi`
+option or by setting `split_per_abi` in `pyproject.toml`:
 
 ```toml
 [tool.flet.android]
@@ -66,11 +72,12 @@ adb -s <device> install <path-to-your.apk>
 
 where `<device>` can be found with `adb devices` command.
 
-## `flet build aab`
+## <code class="doc-symbol doc-symbol-command"></code> `flet build aab`
 
 Build an Android App Bundle (AAB) file from your app.
 
-This command builds release version. 'release' builds don't support debugging and are suitable for deploying to app stores. App bundle is the recommended way to publish to the Play Store as it improves your app size.
+This command builds release version. 'release' builds don't support debugging and are suitable
+for deploying to app stores. App bundle is the recommended way to publish to the Play Store as it improves your app size.
 
 ## Signing Android bundle
 
@@ -88,7 +95,8 @@ key_alias = "upload"
 
 ## Splash screen
 
-By default, generated Android app will be showing a splash screen with an image from `assets` directory (see below) or Flet logo. You can disable splash screen for Android app with `--no-android-splash` option.
+By default, generated Android app will be showing a splash screen with an image from `assets`
+directory (see below) or Flet logo. You can disable splash screen for Android app with `--no-android-splash` option.
 
 Configuring splash in `pyproject.toml`:
 
@@ -161,20 +169,49 @@ Configuring meta-data in `pyproject.toml` (notice quotes `"` around key names):
 
 ## Deep linking
 
-You can configure deep-linking settings for Android app with the following `flet build` options:
+[Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users to 
+navigate directly to specific content within a mobile app 
+using a URI (Uniform Resource Identifier). Instead of opening the app's homepage, deep 
+links direct users to a specific page, feature, or content within the app, enhancing 
+user experience and engagement.
 
-* `--deep-linking-scheme` - deep linking URL scheme to configure for Android builds, i.g. "https" or "myapp".
-* `--deep-linking-host` - deep linking URL host.
+- **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
+- **Host**: deep linking URL host.
 
-The same can be configured in `pyproject.toml`:
+See [this](https://docs.flutter.dev/ui/navigation/deep-linking) Flutter guide for more information.
 
+It can be configured as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+deep_linking.scheme = "https"
+deep_linking.host = "mydomain.com"
+```
+///
+/// tab | `[tool.flet.deep_linking]`
+```toml
+[tool.flet.deep_linking]
+scheme = "https"
+host = "mydomain.com"
+```
+///
+/// tab | `[tool.flet.android.deep_linking]`
 ```toml
 [tool.flet.android.deep_linking]
 scheme = "https"
 host = "mydomain.com"
 ```
+///
 
-See [Deep linking](https://docs.flutter.dev/ui/navigation/deep-linking) section in Flutter docs for more information and complete setup guide.
+///
+/// tab | `flet build`
+```bash
+flet build --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
+```
+///
 
 ## Troubleshooting Android
 
@@ -194,4 +231,12 @@ To download a file from a device to your local computer:
 
 ```
 adb pull <device-path> <local-path>
+```
+
+---
+Both `org` and `bundle_id` could be platform-specific, for example:
+
+```toml
+[tool.flet.android]
+bundle_id = "com.mycompany.example-app-android"
 ```

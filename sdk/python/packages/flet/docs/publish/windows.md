@@ -2,28 +2,25 @@
 title: Packaging app for Windows
 ---
 
-Flet CLI provides `flet build windows` command that allows packaging Flet app into a Windows application.
+Instructions for packaging a Flet app into a Windows application.
 
-/// admonition | Note
-The command can be run on Windows only.
-///
-
-/// admonition | Important
-    type: danger
 ## Prerequisites
 
 ### Visual Studio 2022
 
-Building Flet app for Windows desktop requires [Visual Studio 2022](https://learn.microsoft.com/visualstudio/install/install-visual-studio?view=vs-2022) with
-**Desktop development with C++** workload installed.
+[Visual Studio 2022](https://learn.microsoft.com/visualstudio/install/install-visual-studio?view=vs-2022) is required 
+with **Desktop development with C++** workload installed.
 
-Follow this [guide](https://medium.com/@teamcode20233/a-guide-to-install-desktop-development-with-c-workload-542bb92cfe90) for the instructions on downloading & installing correct
-Visual Studio components for Flutter desktop development.
-///
+Follow this [guide](https://medium.com/@teamcode20233/a-guide-to-install-desktop-development-with-c-workload-542bb92cfe90) 
+for instructions on downloading & installing correct Visual Studio components for Flutter desktop development.
 
 ## `flet build windows`
 
-Creates a Windows application from your Flet app.
+/// admonition | Note
+This command can be run on **Windows only**.
+///
+
+Builds a Windows application.
 
 ## Troubleshooting
 
@@ -39,5 +36,5 @@ Please enable Developer Mode in your system settings. Run
 to open settings.
 ```
 
-you need to enable Developer Mode as indicated.
+you need to enable Developer Mode as it indicates.
 Follow this [guide](https://stackoverflow.com/a/70994092/1435891) on how to do that.
