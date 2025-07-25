@@ -121,6 +121,13 @@ for:
           }
           Update-AppveyorBuild -Version $env:PKG_VER
       - . ci/common.sh
+
+      - sh: |
+          # patch pubspecs
+          for dir in packages/flet*; do
+            echo "Patching $dir/pubspec.yaml"
+            uv run --with pyyaml ci/patch_pubspec.py $dir/pubspec.yaml $PKG_VER
+          done
       - source ci/install_flutter.sh
 
     build_script:
