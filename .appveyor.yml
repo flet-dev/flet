@@ -25,15 +25,15 @@ environment:
     #   job_group: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    - job_name: Build Flet for Windows
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-
-    # - job_name: Build Flet for macOS
+    # - job_name: Build Flet for Windows
     #   job_group: build_flet
     #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+
+    - job_name: Build Flet for macOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
 
     # - job_name: Build Flet for Linux
     #   job_group: build_flet_linux
@@ -261,8 +261,8 @@ for:
       - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
-            python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
-            python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
+            uv run --with wheel $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
+            uv run --with wheel $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
             rm $file
           done
 
