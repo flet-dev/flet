@@ -10,7 +10,7 @@ repo_name: flet-dev/flet
 repo_url: https://github.com/flet-dev/flet
 
 # Copyright
-copyright: Copyright &copy; 2025 Flet
+copyright: Copyright &copy; 2025 Appveyor Systems Inc.
 
 # Theme
 theme:

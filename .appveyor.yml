@@ -22,14 +22,14 @@ environment:
     secure: trYGM65OQ1+HYnOYOe/NOHrofLpP3bz64nHwVWPJhiUIYll3MrrQd7ilFNp+zSkI
 
   matrix:
-    # - job_name: Build Flet package for Flutter
-    #   job_group: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+    - job_name: Build Flet package for Flutter
+      job_group: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    - job_name: Build Flet for Windows
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    # - job_name: Build Flet for Windows
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     # - job_name: Build Flet for macOS
     #   job_group: build_flet
