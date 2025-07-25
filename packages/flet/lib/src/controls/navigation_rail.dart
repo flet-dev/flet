@@ -85,6 +85,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           leading: widget.control.buildWidget("leading"),
           trailing: widget.control.buildWidget("trailing"),
           selectedIndex: _selectedIndex,
+          useIndicator: widget.control.getBool("use_indicator"),
           onDestinationSelected: _destinationChanged,
           destinations:
               widget.control.children("destinations").map((destinationControl) {

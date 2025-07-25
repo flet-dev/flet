@@ -5,9 +5,9 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
-from flet.controls.types import ClipBehavior, Number, OptionalNumber
+from flet.controls.types import ClipBehavior, Number
 
 __all__ = ["GridView"]
 
@@ -17,20 +17,18 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     A scrollable, 2D array of controls.
 
-    GridView is very effective for large lists (thousands of items). Prefer it over
-    wrapping `Column` or `Row` for smooth scrolling.
-
-    Online docs: https://flet.dev/docs/controls/gridview
+    It is very effective for large lists (thousands of items).
+    Prefer it over wrapping [`Column`][flet.Column]s or [`Row`][flet.Row]s for smooth scrolling.
     """
 
     controls: list[Control] = field(default_factory=list)
     """
-    A list of `Control`s to display inside GridView.
+    A list of controls to display inside grid.
     """
 
     horizontal: bool = False
     """
-    `True` to layout GridView items horizontally.
+    Whether to layout the grid items horizontally.
     """
 
     reverse: bool = False
@@ -43,8 +41,6 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
-
-    Defaults to `False`.
     """
 
     runs_count: int = 1
@@ -72,21 +68,14 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     The ratio of the cross-axis to the main-axis extent of each child.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the children.
-
-    Padding is an instance of
-    [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.
-
-    Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
-    to `ClipBehavior.HARD_EDGE`.
     """
 
     semantic_child_count: Optional[int] = None
@@ -94,7 +83,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     The number of children that will contribute semantic information.
     """
 
-    cache_extent: OptionalNumber = None
+    cache_extent: Optional[Number] = None
     """
     Items that fall in the cache area (area before or after the visible area that are
     about to become visible when the user scrolls) are laid out even though they are

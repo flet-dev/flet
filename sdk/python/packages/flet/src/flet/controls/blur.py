@@ -8,8 +8,6 @@ __all__ = [
     "Blur",
     "BlurTileMode",
     "BlurValue",
-    "OptionalBlurValue",
-    "OptionalBlurTileMode",
 ]
 
 
@@ -35,11 +33,7 @@ class Blur:
     tile_mode: Optional[BlurTileMode] = None
     """
     The tile mode for the blur.
-
-    Value is of type [`BlurTileMode`](https://flet.dev/docs/reference/types/blurtilemode).
     """
 
 
 BlurValue = Union[Number, tuple[Number, Number], Blur]
-OptionalBlurValue = Optional[BlurValue]
-OptionalBlurTileMode = Optional[BlurTileMode]

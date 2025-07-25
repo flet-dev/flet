@@ -16,7 +16,8 @@ class ReorderableDraggableControl extends StatelessWidget {
 
     var index = control.getInt("index");
     if (index == null) {
-      return const ErrorControl("ReorderableDraggable.index is invalid");
+      return const ErrorControl(
+          "ReorderableDraggable.index must be an integer");
     }
     var content = control.buildWidget("content");
     if (content == null) {
@@ -25,9 +26,6 @@ class ReorderableDraggableControl extends StatelessWidget {
     }
 
     return ReorderableDragStartListener(
-      index: index,
-      enabled: !control.disabled,
-      child: content,
-    );
+        index: index, enabled: !control.disabled, child: content);
   }
 }

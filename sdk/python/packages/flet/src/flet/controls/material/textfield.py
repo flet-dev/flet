@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import PaddingValue
@@ -12,10 +12,9 @@ from flet.controls.text_style import StrutStyle
 from flet.controls.types import (
     Brightness,
     ClipBehavior,
+    ColorValue,
     MouseCursor,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     TextAlign,
 )
 
@@ -66,8 +65,6 @@ class InputFilter:
     allow: bool = True
     """
     A boolean value indicating whether to allow or deny/block the matched patterns.
-
-    Value is of type `bool` and defaults to `True`.
     """
 
     replacement_string: str = ""
@@ -136,8 +133,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
-
-    Online docs: https://flet.dev/docs/controls/textfield
     """
 
     value: str = ""
@@ -147,8 +142,8 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
-    The type of keyboard to use for editing the text. The property value is 
-    [`KeyboardType`](https://flet.dev/docs/reference/types/keyboardtype) and defaults 
+    The type of keyboard to use for editing the text. The property value is
+    [`KeyboardType`][flet.KeyboardType] and defaults
     to `KeyboardType.TEXT`.
     """
 
@@ -161,7 +156,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     The minimum number of lines to occupy when the content spans fewer lines.
 
-    This affects the height of the field itself and does not limit the number of lines 
+    This affects the height of the field itself and does not limit the number of lines
     that can be entered into the field.
 
     Defaults to `1`.
@@ -171,10 +166,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     The maximum number of lines to show at one time, wrapping if necessary.
 
-    This affects the height of the field itself and does not limit the number of lines 
+    This affects the height of the field itself and does not limit the number of lines
     that can be entered into the field.
 
-    If this is `1` (the default), the text will not wrap, but will scroll horizontally 
+    If this is `1` (the default), the text will not wrap, but will scroll horizontally
     instead.
     """
 
@@ -192,11 +187,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     can_reveal_password: bool = False
     """
-    Displays a toggle icon button that allows revealing the entered password. Is shown 
+    Displays a toggle icon button that allows revealing the entered password. Is shown
     if both `password` and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as `suffix` and in case both 
-    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is 
+    The icon is displayed in the same location as `suffix` and in case both
+    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is
     not shown.
     """
 
@@ -204,7 +199,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether the text can be changed.
 
-    When this is set to `True`, the text cannot be modified by any shortcut or keyboard 
+    When this is set to `True`, the text cannot be modified by any shortcut or keyboard
     operation. The text is still selectable.
 
     Defaults to `False`.
@@ -212,8 +207,8 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, 
-    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires 
+    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like,
+    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires
     `on_submit` event.
     """
 
@@ -221,14 +216,13 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign) and 
-    defaults to `TextAlign.LEFT`.
+    Defaults to `TextAlign.LEFT`.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than 
-    one control on a page with autofocus set, then the first one added to the page will 
+    True if the control will be selected as the initial focus. If there is more than
+    one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
 
@@ -236,8 +230,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Value is of type [`TextCapitalization`](https://flet.dev/docs/reference/types/textcapitalization) 
-    and defaults to `TextCapitalization.NONE`.
+    Defaults to `TextCapitalization.NONE`.
     """
 
     autocorrect: bool = True
@@ -251,8 +244,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether to show input suggestions as the user types.
 
-    This flag only affects Android. On iOS, suggestions are tied directly to 
-    `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`. 
+    This flag only affects Android. On iOS, suggestions are tied directly to
+    `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`.
     On Android autocorrection and suggestion are controlled separately.
 
     Defaults to `True`.
@@ -262,8 +255,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether to allow the platform to automatically format dashes.
 
-    This flag only affects iOS versions 11 and above. As an example of what this does, 
-    two consecutive hyphen characters will be automatically replaced with one en dash, 
+    This flag only affects iOS versions 11 and above. As an example of what this does,
+    two consecutive hyphen characters will be automatically replaced with one en dash,
     and three consecutive hyphens will become one em dash.
 
     Defaults to `True`.
@@ -273,8 +266,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Whether to allow the platform to automatically format quotes.
 
-    This flag only affects iOS. As an example of what this does, a standard vertical 
-    double quote character will be automatically replaced by a left or right double 
+    This flag only affects iOS. As an example of what this does, a standard vertical
+    double quote character will be automatically replaced by a left or right double
     quote depending on its position in a word.
 
     Defaults to `True`.
@@ -287,12 +280,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     Defaults to `True`.
     """
 
-    cursor_color: OptionalColorValue = None
+    cursor_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of TextField cursor.
+    The color of TextField cursor.
     """
 
-    cursor_error_color: OptionalColorValue = None
+    cursor_error_color: Optional[ColorValue] = None
     """
     TBD
     """
@@ -302,30 +295,27 @@ class TextField(FormFieldControl, AdaptiveControl):
     Sets cursor width.
     """
 
-    cursor_height: OptionalNumber = None
+    cursor_height: Optional[Number] = None
     """
     Sets cursor height.
     """
 
-    cursor_radius: OptionalNumber = None
+    cursor_radius: Optional[Number] = None
     """
     Sets cursor radius.
     """
 
-    selection_color: OptionalColorValue = None
+    selection_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of TextField selection.
+    The color of TextField selection.
     """
 
     input_filter: Optional[InputFilter] = None
     """
     Provides as-you-type filtering/validation.
 
-    Similar to the `on_change` callback, the input filters are not applied when the 
+    Similar to the `on_change` callback, the input filters are not applied when the
     content of the field is changed programmatically.
-
-    Value is of type 
-    [`InputFilter`](https://flet.dev/docs/reference/types/inputfilter) class.
     """
 
     obscuring_character: str = "•"
@@ -395,39 +385,37 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
     """
-    Helps the autofill service identify the type of this text input. Value can either 
-    be a single [`AutoFillHint`](https://flet.dev/docs/reference/types/autofillhint) 
-    enum item or a list of them.
+    Helps the autofill service identify the type of this text input.
 
     More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
 
-    on_change: OptionalControlEventHandler["TextField"] = None
+    on_change: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when the typed input for the TextField has changed.
+    Called when the typed input for the TextField has changed.
     """
 
-    on_click: OptionalControlEventHandler["TextField"] = None
+    on_click: Optional[ControlEventHandler["TextField"]] = None
     """
     TBD
     """
 
-    on_submit: OptionalControlEventHandler["TextField"] = None
+    on_submit: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when user presses ENTER while focus is on TextField.
-    """
-
-    on_focus: OptionalControlEventHandler["TextField"] = None
-    """
-    Fires when the control has received focus.
+    Called when user presses ENTER while focus is on TextField.
     """
 
-    on_blur: OptionalControlEventHandler["TextField"] = None
+    on_focus: Optional[ControlEventHandler["TextField"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has received focus.
     """
 
-    on_tap_outside: OptionalControlEventHandler["TextField"] = None
+    on_blur: Optional[ControlEventHandler["TextField"]] = None
+    """
+    Called when the control has lost focus.
+    """
+
+    on_tap_outside: Optional[ControlEventHandler["TextField"]] = None
     """
     TBD
     """

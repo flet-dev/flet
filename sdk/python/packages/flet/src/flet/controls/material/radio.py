@@ -3,15 +3,14 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
     MouseCursor,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     VisualDensity,
 )
 
@@ -22,8 +21,6 @@ __all__ = ["Radio"]
 class Radio(ConstrainedControl, AdaptiveControl):
     """
     Radio buttons let people select a single option from two or more choices.
-
-    Online docs: https://flet.dev/docs/controls/radio
     """
 
     label: str = ""
@@ -33,15 +30,12 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition)
-    and defaults to `LabelPosition.RIGHT`.
+    Defaults to `LabelPosition.RIGHT`.
     """
 
     label_style: Optional[TextStyle] = None
     """
     The label's style.
-
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
     value: Optional[str] = None
@@ -59,35 +53,35 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) that fills the radio, in all or
-    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
+    The color that fills the radio, in all or
+    specific [`ControlState`][flet.ControlState]
     states.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill this radio when it 
+    The color used to fill this radio when it
     is selected.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The overlay [color](https://flet.dev/docs/reference/colors) of this radio in all or
-    specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
+    The overlay color of this radio in all or
+    specific [`ControlState`][flet.ControlState]
     states.
     """
 
-    hover_color: OptionalColorValue = None
+    hover_color: Optional[ColorValue] = None
     """
     The color of this radio when it is hovered.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
     The color of this radio when it has the input focus.
     """
 
-    splash_radius: OptionalNumber = None
+    splash_radius: Optional[Number] = None
     """
     The splash radius of the circular Material ink response.
     """
@@ -101,23 +95,19 @@ class Radio(ConstrainedControl, AdaptiveControl):
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the radio's layout will be.
-
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
-
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_focus: OptionalControlEventHandler["Radio"] = None
+    on_focus: Optional[ControlEventHandler["Radio"]] = None
     """
-    Fires when the control has received focus.
+    Called when the control has received focus.
     """
 
-    on_blur: OptionalControlEventHandler["Radio"] = None
+    on_blur: Optional[ControlEventHandler["Radio"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has lost focus.
     """

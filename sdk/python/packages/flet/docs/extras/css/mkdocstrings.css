@@ -1,0 +1,52 @@
+/* Overrides */
+code.doc-symbol-parameter::after {
+    content: "parameter";
+}
+
+code.doc-symbol-attribute::after {
+    content: "property";
+}
+
+code.doc-symbol-function::after {
+    content: "function";
+}
+
+code.doc-symbol-method::after {
+    content: "method";
+}
+
+code.doc-symbol-class::after {
+    content: "class";
+}
+
+code.doc-symbol-module::after {
+    content: "module";
+}
+
+/* Overrides */
+
+/* Command symbol */
+:root, :host,
+    /* Light mode */
+[data-md-color-scheme="default"] {
+    --doc-symbol-command-fg-color: #9538001;
+    --doc-symbol-command-bg-color: #9538001a;
+}
+
+/* Dark mode */
+[data-md-color-scheme="slate"] {
+    --doc-symbol-command-fg-color: #ffa6571;
+    --doc-symbol-command-bg-color: #ffa6571a;
+}
+
+code.doc-symbol-command,
+a code.doc-symbol-command {
+    color: var(--doc-symbol-command-fg-color);
+    background-color: var(--doc-symbol-command-bg-color);
+}
+
+code.doc-symbol-command::after {
+    content: "cmd";
+}
+
+/* Command symbol */

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   id="svg30260"
+   viewBox="0 0 360 540.00003"
+   height="152.40001mm"
+   width="101.6mm"
+   sodipodi:docname="1550167896.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview54"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false" />
+  <defs
+     id="defs30262">
+    <pattern
+       patternUnits="userSpaceOnUse"
+       width="30.066020"
+       height="5.1805778"
+       id="Wavy">
+      <path
+         style="fill:black;stroke:none;"
+         d="M 7.597,0.061 C 5.079,-0.187 2.656,0.302 -0.01,1.788 L -0.01,3.061 C 2.773,1.431 5.173,1.052 7.472,1.280 C 9.770,1.508 11.969,2.361 14.253,3.218 C 18.820,4.931 23.804,6.676 30.066,3.061 L 30.062,1.788 C 23.622,5.497 19.246,3.770 14.691,2.061 C 12.413,1.207 10.115,0.311 7.597,0.061 z "
+         id="path28206" />
+    </pattern>
+  </defs>
+  <metadata
+     id="metadata30265">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-30,-626.37023)"
+     id="g31864">
+    <g
+       id="g36023">
+      <g
+         transform="translate(0,-543.58972)"
+         id="g21017"
+         style="fill:#47db9d;fill-opacity:1">
+        <rect
+           style="fill:#47db9d;fill-opacity:1;stroke:#000000"
+           x="30.5"
+           y="1170.46"
+           width="359"
+           height="539"
+           rx="29.944"
+           id="rect56" />
+      </g>
+      <g
+         style="opacity:1;fill:url(#Wavy);fill-opacity:1"
+         id="g31909"
+         transform="translate(0,-543.58972)">
+        <rect
+           id="rect31911"
+           rx="29.944"
+           height="539"
+           width="359"
+           y="1170.46"
+           x="30.5"
+           style="fill:url(#Wavy);fill-opacity:1;stroke:#000000" />
+      </g>
+    </g>
+  </g>
+</svg>

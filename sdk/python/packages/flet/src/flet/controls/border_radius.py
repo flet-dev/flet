@@ -1,13 +1,12 @@
 import dataclasses
 from typing import Optional, Union
 
-from flet.controls.types import Number, OptionalNumber
+from flet.controls.types import Number
 from flet.utils import deprecated
 
 __all__ = [
     "BorderRadius",
     "BorderRadiusValue",
-    "OptionalBorderRadiusValue",
     "all",
     "horizontal",
     "vertical",
@@ -51,8 +50,6 @@ class BorderRadius:
         """
         Creates a horizontally symmetrical `BorderRadius` where the `left` and `right`
         sides of the rectangle have the same radii.
-
-        Both `left` and `right` default to `0`.
         """
         return BorderRadius(
             top_left=left, top_right=right, bottom_left=left, bottom_right=right
@@ -63,8 +60,6 @@ class BorderRadius:
         """
         Creates a vertically symmetric `BorderRadius` where the `top` and `bottom`
         sides of the rectangle have the same radii.
-
-        Both `top` and `bottom` default to `0`.
         """
         return BorderRadius(
             top_left=top, top_right=top, bottom_left=bottom, bottom_right=bottom
@@ -95,10 +90,10 @@ class BorderRadius:
     def copy_with(
         self,
         *,
-        top_left: OptionalNumber = None,
-        top_right: OptionalNumber = None,
-        bottom_left: OptionalNumber = None,
-        bottom_right: OptionalNumber = None,
+        top_left: Optional[Number] = None,
+        top_right: Optional[Number] = None,
+        bottom_left: Optional[Number] = None,
+        bottom_right: Optional[Number] = None,
     ) -> "BorderRadius":
         """
         Returns a copy of this `BorderRadius` instance with the given fields replaced
@@ -108,7 +103,9 @@ class BorderRadius:
             top_left=top_left if top_left is not None else self.top_left,
             top_right=top_right if top_right is not None else self.top_right,
             bottom_left=bottom_left if bottom_left is not None else self.bottom_left,
-            bottom_right=bottom_right if bottom_right is not None else self.bottom_right,
+            bottom_right=bottom_right
+            if bottom_right is not None
+            else self.bottom_right,
         )
 
     # Arithmetics
@@ -139,11 +136,11 @@ class BorderRadius:
         """Multiplies `BorderRadius` by a scalar factor."""
         if isinstance(other, BorderRadius):
             return BorderRadius(
-            top_left=self.top_left * other.top_left,
-            top_right=self.top_right * other.top_right,
-            bottom_left=self.bottom_left * other.bottom_left,
-            bottom_right=self.bottom_right * other.bottom_right,
-        )
+                top_left=self.top_left * other.top_left,
+                top_right=self.top_right * other.top_right,
+                bottom_left=self.bottom_left * other.bottom_left,
+                bottom_right=self.bottom_right * other.bottom_right,
+            )
         elif isinstance(other, Number):
             return BorderRadius(
                 top_left=self.top_left * other,
@@ -208,10 +205,10 @@ def vertical(top: float = 0, bottom: float = 0) -> BorderRadius:
     show_parentheses=True,
 )
 def only(
-        top_left: float = 0,
-        top_right: float = 0,
-        bottom_left: float = 0,
-        bottom_right: float = 0,
+    top_left: float = 0,
+    top_right: float = 0,
+    bottom_left: float = 0,
+    bottom_right: float = 0,
 ) -> BorderRadius:
     return BorderRadius(
         top_left=top_left,
@@ -222,4 +219,3 @@ def only(
 
 
 BorderRadiusValue = Union[Number, BorderRadius]
-OptionalBorderRadiusValue = Optional[BorderRadiusValue]

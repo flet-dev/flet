@@ -4,9 +4,11 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.canvas.shape import Shape
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
+
+__all__ = ["Canvas", "CanvasResizeEvent"]
 
 
 @dataclass
@@ -31,25 +33,22 @@ class Canvas(ConstrainedControl):
 
     shapes: list[Shape] = field(default_factory=list)
     """
-    The list of `Shape` objects (see below) to draw on the canvas.
+    A list of shapes to draw on this canvas.
     """
 
     content: Optional[Control] = None
     """
-    TBD
+    The content of this canvas.
     """
 
-    resize_interval: OptionalNumber = None
+    resize_interval: Number = 10
     """
     Sampling interval in milliseconds for `on_resize` event.
 
-    Defaults to `0` - call `on_resize` immediately on every change.
+    Setting to `0` calls [`on_resize`][flet.canvas.Canvas.on_resize] immediately on every change.
     """
 
-    on_resize: OptionalEventHandler[CanvasResizeEvent] = None
+    on_resize: Optional[EventHandler[CanvasResizeEvent]] = None
     """
-    Fires when the size of canvas has changed.
-
-    Event object `e` is an instance of
-    [CanvasResizeEvent](https://flet.dev/docs/reference/types/canvasresizeevent).
+    Called when the size of this canvas has changed.
     """

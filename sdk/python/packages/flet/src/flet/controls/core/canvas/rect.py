@@ -1,10 +1,12 @@
-from typing import Optional
+from dataclasses import field
 
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadius, BorderRadiusValue
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
+
+__all__ = ["Rect"]
 
 
 @control("Rect")
@@ -13,36 +15,34 @@ class Rect(Shape):
     Draws a rectangle.
     """
 
-    x: OptionalNumber = None
+    x: Number
     """
-    The x-axis coordinate of the rectangle's top left point.
-    """
-
-    y: OptionalNumber = None
-    """
-    The y-axis coordinate of the rectangle's top left point.
+    The x-axis coordinate of this rectangle's top left point.
     """
 
-    width: OptionalNumber = None
+    y: Number
     """
-    Width of the rectangle.
-    """
-
-    height: OptionalNumber = None
-    """
-    Height of the rectangle.
+    The y-axis coordinate of this rectangle's top left point.
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    width: Number = 0
     """
-    Border radius of the rectangle.
-
-    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
+    The width of this rectangle.
     """
 
-    paint: Optional[Paint] = None
+    height: Number = 0
     """
-    A style to draw a rectangle with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    The height of this rectangle.
     """
 
+    border_radius: BorderRadiusValue = field(
+        default_factory=lambda: BorderRadius.all(0)
+    )
+    """
+    The border radius of this rectangle.
+    """
+
+    paint: Paint = field(default_factory=lambda: Paint())
+    """
+    A style to draw this rectangle with.
+    """

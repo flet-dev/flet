@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from flet.controls.transform import Offset
 from flet.controls.types import Number
@@ -69,6 +70,20 @@ class Size:
     @classmethod
     def infinite(cls):
         return Size(float("inf"), float("inf"))
+        
+    def copy_with(
+        self,
+        *,
+        width: Optional[Number] = None,
+        height: Optional[Number] = None,
+    ) -> "Size":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Size(
+            width=width if width is not None else self.width,
+            height=height if height is not None else self.height,
+        )
 
 
 @dataclass
@@ -98,6 +113,24 @@ class Rect:
     def height(self) -> Number:
         """The distance between the top and bottom edges of this rectangle."""
         return self.bottom - self.top
+        
+    def copy_with(
+        self,
+        *,
+        left: Optional[Number] = None,
+        top: Optional[Number] = None,
+        right: Optional[Number] = None,
+        bottom: Optional[Number] = None,
+    ) -> "Rect":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Rect(
+            left=left if left is not None else self.left,
+            top=top if top is not None else self.top,
+            right=right if right is not None else self.right,
+            bottom=bottom if bottom is not None else self.bottom,
+        )
 
     @property
     def size(self) -> Size:
@@ -108,7 +141,9 @@ class Rect:
         return Size(self.width, self.height)
 
     @classmethod
-    def from_lwth(cls, *, left: Number, top: Number, width: Number, height: Number) -> "Rect":
+    def from_lwth(
+        cls, *, left: Number, top: Number, width: Number, height: Number
+    ) -> "Rect":
         """
         Construct a rectangle from its left and top edges,
         its width, and its height.

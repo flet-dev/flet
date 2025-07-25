@@ -68,6 +68,13 @@ BorderSide? parseBorderSide(dynamic value, ThemeData? theme,
   );
 }
 
+ShapeBorder? parseShapeBorder(dynamic value, ThemeData? theme,
+    [ShapeBorder? defaultValue]) {
+  if (value == null) return defaultValue;
+  return parseOutlinedBorder(value, theme,
+      defaultValue: defaultValue as OutlinedBorder?);
+}
+
 OutlinedBorder? parseOutlinedBorder(dynamic value, ThemeData? theme,
     {BorderSide defaultBorderSide = BorderSide.none,
     BorderRadius defaultBorderRadius = BorderRadius.zero,

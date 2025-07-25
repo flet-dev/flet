@@ -12,6 +12,15 @@ for line in __import__("sys").stdin:
     elif match2:
         print("{} = \"{}\"".format(match2.group(1).upper(), match2.group(1)))
 ' >> "$output_file"
+
+---
+
+Code to sort the members:
+```
+s = sorted(CupertinoColors, key=lambda i: i.name)
+for i in s:
+    print(f"{i.name} = \"{i.value}\"")
+```
 """
 
 import random
@@ -25,22 +34,38 @@ __all__ = ["CupertinoColors"]
 
 
 class CupertinoColors(str, Enum):
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.value.lower() == other.lower()
+        if isinstance(other, Enum):
+            return self.value.lower() == other.value.lower()
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.value.lower())
+
     @staticmethod
     def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
         """
         Returns the color with the specified opacity.
 
         Args:
-            opacity: The opacity value, which must be between 0 and 1.
-            color: The color value.
+            opacity: The opacity value between `0.0` and `1.0`.
+            color: The color to apply opacity to.
 
         Returns:
-            A string representing the color value with the specified opacity appended.
+            A string representing the color with opacity, in the format `"color,opacity"`.
+
+        Examples:
+            >>> CupertinoColors.with_opacity(0.5, CupertinoColors.WHITE)
+            'white,0.5'
 
         Raises:
-            AssertionError: If the opacity is not between 0 and 1 (inclusive).
+            AssertionError: If the opacity is not between `0` and `1` (inclusive).
         """
-        assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
+        assert 0 <= opacity <= 1, (
+            f"opacity must be between 0.0 and 1.0 inclusive, got {opacity}"
+        )
         color_str = color.value if isinstance(color, Enum) else color
         return f"{color_str},{opacity}"
 
@@ -55,10 +80,14 @@ class CupertinoColors(str, Enum):
         Args:
             exclude: A list of colors members to exclude from the selection.
             weights: A dictionary mapping color members to their respective weights for
-            weighted random selection.
+                weighted random selection.
 
         Returns:
             A randomly selected color, or None if all members are excluded.
+
+        Examples:
+            >>> CupertinoColors.random(exclude=[CupertinoColors.WHITE])
+            CupertinoColors.ON_PRIMARY
         """
         choices = list(CupertinoColors)
         if exclude:
@@ -70,51 +99,51 @@ class CupertinoColors(str, Enum):
             return random.choices(choices, weights=weights_list)[0]
         return random.choice(choices)
 
-    PRIMARY = "primary"
-    ON_PRIMARY = "onprimary"
     ACTIVE_BLUE = "activeBlue"
     ACTIVE_GREEN = "activeGreen"
     ACTIVE_ORANGE = "activeOrange"
-    WHITE = "cupertinoWhite"
     BLACK = "cupertinoBlack"
-    LIGHT_BACKGROUND_GRAY = "lightBackgroundGray"
-    EXTRA_LIGHT_BACKGROUND_GRAY = "extraLightBackgroundGray"
     DARK_BACKGROUND_GRAY = "darkBackgroundGray"
-    INACTIVE_GRAY = "inactiveGray"
     DESTRUCTIVE_RED = "destructiveRed"
+    EXTRA_LIGHT_BACKGROUND_GRAY = "extraLightBackgroundGray"
+    INACTIVE_GRAY = "inactiveGray"
+    LABEL = "label"
+    LIGHT_BACKGROUND_GRAY = "lightBackgroundGray"
+    LINK = "link"
+    ON_PRIMARY = "onprimary"
+    OPAQUE_SEPARATOR = "opaqueSeparator"
+    PLACEHOLDER_TEXT = "placeholderText"
+    PRIMARY = "primary"
+    QUATERNARY_LABEL = "quaternaryLabel"
+    QUATERNARY_SYSTEM_FILL = "quaternarySystemFill"
+    SECONDARY_LABEL = "secondaryLabel"
+    SECONDARY_SYSTEM_BACKGROUND = "secondarySystemBackground"
+    SECONDARY_SYSTEM_FILL = "secondarySystemFill"
+    SECONDARY_SYSTEM_GROUPED_BACKGROUND = "secondarySystemGroupedBackground"
+    SEPARATOR = "separator"
+    SYSTEM_BACKGROUND = "systemBackground"
     SYSTEM_BLUE = "systemBlue"
-    SYSTEM_GREEN = "systemGreen"
-    SYSTEM_MINT = "systemMint"
-    SYSTEM_INDIGO = "systemIndigo"
-    SYSTEM_ORANGE = "systemOrange"
-    SYSTEM_PINK = "systemPink"
     SYSTEM_BROWN = "systemBrown"
-    SYSTEM_PURPLE = "systemPurple"
-    SYSTEM_RED = "systemRed"
-    SYSTEM_TEAL = "systemTeal"
     SYSTEM_CYAN = "systemCyan"
-    SYSTEM_YELLOW = "systemYellow"
+    SYSTEM_FILL = "systemFill"
+    SYSTEM_GREEN = "systemGreen"
     SYSTEM_GREY = "systemGrey"
     SYSTEM_GREY2 = "systemGrey2"
     SYSTEM_GREY3 = "systemGrey3"
     SYSTEM_GREY4 = "systemGrey4"
     SYSTEM_GREY5 = "systemGrey5"
     SYSTEM_GREY6 = "systemGrey6"
-    LABEL = "label"
-    SECONDARY_LABEL = "secondaryLabel"
-    TERTIARY_LABEL = "tertiaryLabel"
-    QUATERNARY_LABEL = "quaternaryLabel"
-    SYSTEM_FILL = "systemFill"
-    SECONDARY_SYSTEM_FILL = "secondarySystemFill"
-    TERTIARY_SYSTEM_FILL = "tertiarySystemFill"
-    QUATERNARY_SYSTEM_FILL = "quaternarySystemFill"
-    PLACEHOLDER_TEXT = "placeholderText"
-    SYSTEM_BACKGROUND = "systemBackground"
-    SECONDARY_SYSTEM_BACKGROUND = "secondarySystemBackground"
-    TERTIARY_SYSTEM_BACKGROUND = "tertiarySystemBackground"
     SYSTEM_GROUPED_BACKGROUND = "systemGroupedBackground"
-    SECONDARY_SYSTEM_GROUPED_BACKGROUND = "secondarySystemGroupedBackground"
+    SYSTEM_INDIGO = "systemIndigo"
+    SYSTEM_MINT = "systemMint"
+    SYSTEM_ORANGE = "systemOrange"
+    SYSTEM_PINK = "systemPink"
+    SYSTEM_PURPLE = "systemPurple"
+    SYSTEM_RED = "systemRed"
+    SYSTEM_TEAL = "systemTeal"
+    SYSTEM_YELLOW = "systemYellow"
+    TERTIARY_LABEL = "tertiaryLabel"
+    TERTIARY_SYSTEM_BACKGROUND = "tertiarySystemBackground"
+    TERTIARY_SYSTEM_FILL = "tertiarySystemFill"
     TERTIARY_SYSTEM_GROUPED_BACKGROUND = "tertiarySystemGroupedBackground"
-    SEPARATOR = "separator"
-    OPAQUE_SEPARATOR = "opaqueSeparator"
-    LINK = "link"
+    WHITE = "cupertinoWhite"

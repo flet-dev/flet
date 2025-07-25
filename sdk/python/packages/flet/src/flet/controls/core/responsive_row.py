@@ -19,61 +19,49 @@ __all__ = ["ResponsiveRow", "ResponsiveRowBreakpoint", "ResponsiveNumber"]
 @control("ResponsiveRow")
 class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     """
-    ResponsiveRow allows aligning child controls to virtual columns. By default, a
-    virtual grid has 12 columns, but that can be customized with
-    `ResponsiveRow.columns` property.
+    Allows aligning child controls to virtual columns.
 
-    Similar to `expand` property, every control now has `col` property which allows
+    By default, a virtual grid has 12 columns, but that can be customized with
+    [`columns`][(c).] property.
+
+    Similar to `expand` property, every control has [`col`][flet.Control.col] property which allows
     specifying how many columns a control should span.
-
-    Online docs: https://flet.dev/docs/controls/responsiverow
     """
 
     controls: list[Control] = field(default_factory=list)
     """
-    A list of Controls to display inside the ResponsiveRow.
+    A list of Controls to display.
     """
 
     columns: ResponsiveNumber = 12
     """
     The number of virtual columns to layout children.
-
-    Defaults to `12`.
     """
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the child Controls should be placed horizontally.
-
-    Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment)
-    and defaults to `MainAxisAlignment.START`.
+    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    How the child Controls should be placed vertically.
-
-    Value is of type
-    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment)
-    and defaults to `CrossAxisAlignment.START`.
+    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed vertically.
     """
 
     spacing: ResponsiveNumber = 10
     """
-    Spacing between controls in a row in virtual pixels.
+    The spacing between controls in a row in virtual pixels.
 
-    It is applied only when `alignment` is set to `MainAxisAlignment.START`,
-    `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
-
-    Defaults to `10`.
+    Note:
+        Has effect only when [`alignment`][flet.ResponsiveRow.alignment] is set to
+        [`MainAxisAlignment.START`][flet.MainAxisAlignment.START],
+        [`MainAxisAlignment.END`][flet.MainAxisAlignment.END],
+        or [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER].
     """
 
     run_spacing: ResponsiveNumber = 10
     """
-    Spacing between runs when row content is wrapped on multiple lines.
-
-    Defaults to `10`.
+    The spacing between runs when row content is wrapped on multiple lines.
     """
 
     breakpoints: dict[Union[ResponsiveRowBreakpoint, str], Number] = field(

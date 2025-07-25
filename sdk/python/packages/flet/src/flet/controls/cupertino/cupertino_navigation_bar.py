@@ -1,16 +1,14 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.material.navigation_bar import NavigationBarDestination
 from flet.controls.types import (
     ColorValue,
     Number,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoNavigationBar"]
@@ -24,57 +22,70 @@ class CupertinoNavigationBar(ConstrainedControl):
     Navigation bars offer a persistent and convenient way to switch between primary
     destinations in an app.
 
-    Online docs: https://flet.dev/docs/controls/cupertinonavigationbar
+    Raises:
+        AssertionError: If [`destinations`][(c).] does not contain at least two visible [`NavigationBarDestination`][flet.NavigationBarDestination]s.
+        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
-    destinations: list[NavigationBarDestination] = field(default_factory=list)
+    destinations: list[NavigationBarDestination]
     """
-    Defines the appearance of the button items that are arrayed within the navigation 
-    bar.
+    The destinations of this navigation bar.
 
-    The value must be a list of two or more 
-    [`NavigationBarDestination`](https://flet.dev/docs/controls/navigationbar#navigationbardestination-properties) 
-    instances.
+    Note:
+        Must be a list of two or more [`NavigationBarDestination`][flet.NavigationBarDestination]s.
     """
 
     selected_index: int = 0
     """
-    The index into `destinations` for the current selected `NavigationBarDestination`.
+    The index into [`destinations`][flet.CupertinoNavigationBar.destinations] for the currently
+    selected [`NavigationBarDestination`][flet.NavigationBarDestination].
+
+    Note:
+        Must be a value between `0` and the length of visible 
+        [`destinations`][flet.CupertinoNavigationBar.destinations], inclusive.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the navigation bar itself.
+    The color of the navigation bar itself.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and 
+    The foreground color of the icon and
     title of the selected destination.
     """
 
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
     """
-    The foreground [color](https://flet.dev/docs/reference/colors) of the icon and 
+    The foreground color of the icon and
     title of the unselected destinations.
     """
 
     border: Optional[Border] = None
     """
     Defines the border of this navigation bar.
-
-    The value is an instance of 
-    [`Border`](https://flet.dev/docs/reference/types/border) class.
     """
 
     icon_size: Number = 30
     """
     The size of all destination icons.
-
-    Defaults to `30`.
     """
 
-    on_change: OptionalControlEventHandler["CupertinoNavigationBar"] = None
+    on_change: Optional[ControlEventHandler["CupertinoNavigationBar"]] = None
     """
-    Fires when selected destination changed.
+    Called when selected destination changed.
     """
+
+    def before_update(self):
+        super().before_update()
+        visible_destinations_count = len([d for d in self.destinations if d.visible])
+        assert visible_destinations_count >= 2, (
+            f"destinations must contain at minimum two visible controls, "
+            f"got {visible_destinations_count}"
+        )
+        if not (0 <= self.selected_index < visible_destinations_count):
+            raise IndexError(
+                f"selected_index ({self.selected_index}) is out of range. "
+                f"Expected a value between 0 and {visible_destinations_count - 1} inclusive."
+            )
