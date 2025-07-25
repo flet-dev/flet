@@ -4,6 +4,8 @@ title: Packaging app for Linux
 
 Instructions for packaging a Flet app into a Linux executable.
 
+**See complementary information [here](index.md).**
+
 ## Prerequisites
 
 ### GStreamer for `Audio`

@@ -102,25 +102,29 @@ pip install 'flet[all]'
 then launch the app:
 
 ```bash
-python counter.py
+flet run counter.py
 ```
 
 This will open the app in a native OS window - what a nice alternative to Electron! 🙂
 
 <p align="center">
-    <img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="45%" />
+    <img src="https://docs.flet-docs.pages.dev/assets/getting-started/counter-app/macos.png" width="45%" />
 </p>
 
-To run the same app as a web app, just replace the last line with:
+To run the same app as a web app, update the last line in your script to:
 
 ```python
-ft.run(target=main, view=flet.AppView.WEB_BROWSER)
+ft.run(main, view=flet.AppView.WEB_BROWSER)
 ```
 
-Run the script again, and it opens in your browser:
+Alternatively, you can use the `--web` flag when running the `flet run` command:
+
+```bash
+flet run --web counter.py
+```
 
 <p align="center">
-    <img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="60%" />
+    <img src="https://docs.flet-docs.pages.dev/assets/getting-started/counter-app/safari.png" width="60%" />
 </p>
 
 ## Learn more

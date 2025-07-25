@@ -4,6 +4,8 @@ title: Packaging app for macOS
 
 Instructions for packaging a Flet app into a macOS application bundle.
 
+**See complementary information [here](index.md).**
+
 ## Prerequisites
 
 ### Rosetta 2
@@ -40,6 +42,11 @@ of some popular packages do not include `x86_64` wheels anymore, so the entire p
 You can limit the build command to specific architectures only, by using `--arch` option.
 For example, to build macOS app bundle that works on Apple Silicon only use the following command:
 
+/// tab | `flet build`
+```
+flet build macos --arch arm64
+```
+///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.macos]
@@ -48,13 +55,8 @@ target_arch = ["arm64"] # (1)!
 
 1. This setting can be a list (for one or more targets) or a string (for one target).
 ///
-/// tab | `flet build`
-```
-flet build macos --arch arm64
-```
-///
 
-#### TBD: list some common/supported archs
+**TBD: list some common/supported archs**
 
 ## Entitlements
 
@@ -63,28 +65,26 @@ Supported entitlements are defined in [Apple Developer Entitlements Reference](h
 
 They can be set as follows:
 
+/// tab | `flet build`
+```
+flet build --macos-entitlements "key"=value
+```
+///
 /// tab | `pyproject.toml`
 
 /// tab | `[tool.flet.macos]`
 ```toml
 [tool.flet.macos]
-entitlement."com.apple.security.personal-information.photos-library" = true
-entitlement."com.apple.security.personal-information.location" = true
+entitlement."key" = value
 ```
 ///
 /// tab | `[tool.flet.macos.entitlement]`
 ```toml
 [tool.flet.macos.entitlement]
-"com.apple.security.personal-information.location" = true
-"com.apple.security.personal-information.photos-library" = true
+"key" = value
 ```
 ///
 
-///
-/// tab | `flet build`
-```
-flet build --macos-entitlements "com.apple.security.personal-information.location"=True "com.apple.security.personal-information.photos-library"=True
-```
 ///
 
 They get written into specific `.entitlements` files.

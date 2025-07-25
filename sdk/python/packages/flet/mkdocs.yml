@@ -203,10 +203,13 @@ nav:
       - Running a Flet app (Hot Reload): getting-started/running-app.md
       - Testing on Mobile: getting-started/testing-on-mobile.md
       - Roadmap: https://flet.dev/roadmap
-      - License: getting-started/license.md
       - Release Notes:
           - Changelog: getting-started/changelog.md
           - Migration Guide: getting-started/migration-guide.md
+      - Policies:
+          - Versioning: policies/versioning.md
+          - Deprecation: policies/deprecation.md
+          - License: policies/license.md
   - API Reference:
       - Controls:
           - Controls: controls/index.md

@@ -4,6 +4,8 @@ title: Packaging app for Windows
 
 Instructions for packaging a Flet app into a Windows application.
 
+**See complementary information [here](index.md).**
+
 ## Prerequisites
 
 ### Visual Studio 2022

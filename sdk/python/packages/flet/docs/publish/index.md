@@ -1,9 +1,12 @@
 Flet CLI provides [`flet build`](../cli/build.md) command that allows packaging Flet app into a standalone executable
 or install package for distribution.
 
-## Platform matrix
+## Prerequisites
 
-The following matrix shows which OS you should run `flet build` command on in order to build a package for specific platform:
+### Platform matrix
+
+The following matrix shows which OS you should run `flet build` command on in 
+order to build a package for specific platform:
 
 <style>
     table {
@@ -60,8 +63,6 @@ The following matrix shows which OS you should run `flet build` command on in or
     </tr>
   </tbody>
 </table>
-
-## Prerequisites
 
 ### Flutter SDK
 
@@ -142,6 +143,14 @@ flet create <project-name>
 Where `<project-name>` is the name for your project directory.
 ///
 
+/// admonition | Note
+Throughout this documentation, the following placeholders are used:
+
+- `<target_platform>` - one of the following: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
+- `<flet_app_directory>` - the path to the directory containing your Flet project/app.
+- `PLATFORM` - one of the following: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
+///
+
 ## How it works
 
 `flet build <target_platform>` command could be run from the root of Flet app directory:
@@ -150,19 +159,14 @@ Where `<project-name>` is the name for your project directory.
 <flet_app_directory> % flet build <target_platform>
 ```
 
-where `<target_platform>` could be one of the following: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
-
 When running from a different directory you can provide the path to a directory with Flet app:
 
 ```
 flet build <target_platform> <path_to_python_app>
 ```
 
-Build results are copied to `<python_app_directory>/build/<target_platform>`. You can specify a custom output directory with `--output` option:
-
-```
-flet build <target_platform> --output <path-to-output-dir>
-```
+Build results are copied to `<flet_app_directory>/build/<target_platform>` by default.
+See [this](#custom-output-directory) to set a custom location for build results.
 
 `flet build` uses Flutter SDK and the number of Flutter packages to build a distribution package from your Flet app.
 
@@ -173,12 +177,13 @@ When you run `flet build <target_platform>` command it:
 * Generates icons for all platforms using [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package.
 * Generates splash screens for web, iOS and Android targets using [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash) package.
 * Packages Python app using `package` command of [`serious_python`](https://pub.dev/packages/serious_python) package. `package` command installs pure and binary Python packages from https://pypi.org and https://pypi.flet.dev for selected platform. If configured, `.py` files of installed packages and/or application will be compiled to `.pyc` files. All files, except `build` directory will be added to a package asset.
-* Runs `flutter build <target_platform>` command to produce an executable or an install package.
+* Runs `flutter build <target_platform>` command to produce an executable or an installable package.
 * Copies build results to `{flet_app_directory}/build/<target_platform>` directory.
 
 ## Including Extensions
 
-If your app uses Flet extensions (third-party packages), simply add them to your project's dependencies:
+If your app uses Flet extensions (third-party packages), 
+simply add them to your project's dependencies:
 
 /// tab | PyPI
 ```toml
@@ -205,19 +210,26 @@ dependencies = [
 ```
 ///
 
-
 Example of extensions can be found here.
 
 ## Flutter dependencies
 
 Adding a Flutter package can be done in the `pyproject.toml` as follows:
 
+/// tab | `flet build`
+```bash
+flet build
+```
+///
 /// tab | `pyproject.toml`
 
 /// tab | `[tool.flet]`
 ```toml
 [tool.flet]
-flutter.dependencies = ["package_1", "package_2"]
+flutter.dependencies = [
+    "package_1", 
+    "package_2",
+]
 ```
 ///
 /// tab | `[tool.flet.flutter.dependencies]`
@@ -227,27 +239,26 @@ package_1 = "x.y.z"
 package_2 = "x.y.z"
 ```
 ///
-/// tab | `[tool.flet.flutter.dependencies.local_package]`
+/// tab | `[tool.flet.flutter.dependencies.LOCAL_PACKAGE]`
 ```toml
-[tool.flet.flutter.dependencies.local_package]
-path = "/path/to/local_package"
+[tool.flet.flutter.dependencies.LOCAL_PACKAGE]
+path = "/path/to/LOCAL_PACKAGE"
 ```
 ///
 
 ///
-/// tab | `flet build`
-```bash
-flet build
-```
-///
 
-## Output directory
+## Custom output directory
 
-By default, the build output is saved in the `<python_app_directory>/build/<target_platform>` directory.
+By default, the build output is saved in the `<flet_app_directory>/build/<target_platform>` directory.
 
 This can be customized as follows:
 
-<!-- fixme: build.py doesnt have this -->
+/// tab | CLI
+```bash
+flet build <target_platform> --output <path-to-output-dir>
+```
+///
 /// tab | `pyproject.toml`
 
 /// tab | `[tool.flet]`
@@ -257,11 +268,6 @@ output = "<path-to-output-dir>"
 ```
 ///
 
-///
-/// tab | CLI
-```bash
-flet build <target_platform> --output <path-to-output-dir>
-```
 ///
 
 ## Icons
@@ -284,20 +290,22 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 
 ## Splash screen
 
+A splash screen is a visual element displayed when an app is launching, 
+typically showing a logo or image while the app loads.
+
 You can customize splash screens for iOS, Android, and Web platforms by placing image files in
 the `assets` directory of your Flet app.
 
 If platform-specific splash images are not provided, Flet will fall back to `splash.png`.
 If that is also missing, it will use `icon.png` or any supported format such as `.bmp`, `.jpg`, or `.webp`.
 
-### Platform-specific splash images
+### Splash images
 
 | Platform | Dark Fallback Order                                                                              | Light Fallback Order                             |
 |----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------|
 | iOS      | `splash_dark_ios.png` → `splash_ios.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_ios.png` → `splash.png` → `icon.png`     |
 | Android  | `splash_dark_android.png` → `splash_android.png` → `splash_dark.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
 | Web      | `splash_dark_web.png` → `splash_web.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
-
 
 ### Splash Background Colors
 
@@ -332,33 +340,10 @@ flet build <target_platform> --splash-color #ffffff --splash-dark-color #333333
 
 ### Disabling Splash Screens
 
-Splash screens are enabled by default. This can be toggled for a specific platform as follows:
+Splash screens are enabled by default. 
 
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-splash.android = false
-splash.ios = false
-splash.web = false
-```
-///
-/// tab | `[tool.flet.splash]`
-```toml
-[tool.flet.splash]
-android = false
-ios = false
-web = false
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --no-android-splash --no-ios-splash --no-web-splash
-```
-///
+See the respective platform docs for more information: [iOS](ios.md#disable-splash-screen),
+[Android](android.md#disable-splash-screen), and [Web](web/static-website/index.md#disable-splash-screen).
 
 ## Boot screen
 
@@ -773,3 +758,132 @@ sys.exit(100)
 ```
 
 Calling `sys.exit()` with any other code will terminate the app without displaying the log.
+
+## Deep linking
+
+[Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users to 
+navigate directly to specific content within a mobile app 
+using a URI (Uniform Resource Identifier). Instead of opening the app's homepage, deep 
+links direct users to a specific page, feature, or content within the app, enhancing 
+user experience and engagement.
+
+- **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
+- **Host**: deep linking URL host.
+
+See [this](https://docs.flutter.dev/ui/navigation/deep-linking) Flutter guide for more information.
+
+It can be configured as follows:
+
+/// tab | `flet build`
+```bash
+flet build ipa --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+deep_linking.scheme = "https"
+deep_linking.host = "mydomain.com"
+```
+///
+/// tab | `[tool.flet.deep_linking]`
+```toml
+[tool.flet.deep_linking]
+scheme = "https"
+host = "mydomain.com"
+```
+///
+/// tab | `[tool.flet.PLATFORM.deep_linking]`
+`PLATFORM` can be `android` or `ios`.
+```toml
+[tool.flet.PLATFORM.deep_linking]
+scheme = "https"
+host = "mydomain.com"
+```
+///
+
+///
+
+
+
+### Project name
+
+The project name in C-style identifier format (lowercase alphanumerics with underscores).
+It is used to build [bundle ID](#bundle-id) and as a name for bundle executable.
+
+**Default:** the name of your Flet project directory
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --project my-app
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+project = "my-app"
+```
+///
+
+///
+
+### Organization name
+
+The organization name in reverse domain name notation, typically in the form `com.mycompany`.
+
+If you do not provide an explicit value for the organization name, but specify the [bundle ID](#bundle-id), 
+the organization name will be automatically generated by taking the part of the bundle ID before the last dot.  
+For example, with a bundle ID of `com.mycompany.myapp`, the organization name becomes `com.mycompany`.
+
+**Default:** `"com.flet"`
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --org com.mycompany
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+org = "com.mycompany"
+```
+///
+
+///
+
+## Bundle ID
+
+The bundle ID for the application, typically in the form `"com.mycompany.app-name"`.
+
+If not explicitly specified, it is formed by combining the [organization name](#organization-name)
+and the [project name](#project-name).
+
+**Default:** `"[organization-name].[project-name]"`
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --bundle-id com.mycompany.example-app
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+bundle_id = "com.mycompany.example-app"
+```
+///
+/// tab | `[tool.flet.PLATFORM]`
+```toml
+[tool.flet.PLATFORM]
+bundle_id = "com.mycompany.example-app-platform"
+```
+///
+
+///

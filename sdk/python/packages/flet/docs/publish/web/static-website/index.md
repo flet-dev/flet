@@ -2,24 +2,28 @@
 title: Publish app to a static website
 ---
 
-## Introduction
-
-Flet CLI provides `flet build web` and `flet publish` commands that allow publishing Flet app into a standalone static website (SPA) that runs entirely in the browser with [Pyodide](https://pyodide.org/en/stable/index.html) and does not require any code running on the server side.
+Instructions for publishing Flet app into a standalone static website (SPA) that runs entirely in the browser with 
+[Pyodide](https://pyodide.org/en/stable/index.html) and does not require any code running on the server side.
 
 Pyodide is a port of CPython to WebAssembly (WASM) which is an emerging technology with [some limitations](https://pyodide.org/en/stable/usage/wasm-constraints.html).
 
 ::note Native Python packages
-Native Python packages (vs "pure" Python packages written in Python only) are packages that partially written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, `lxml`, `pydantic`.
+Native Python packages (vs "pure" Python packages written in Python only) are packages that partially written in 
+C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, `lxml`, `pydantic`.
 
-Pyodide comes with a big list of [built-in packages](https://pyodide.org/en/stable/usage/packages-in-pyodide.html). However, to use a Python package from PyPI it must be a pure Python package or provide a wheel with binaries [built for Emscripten](https://pyodide.org/en/stable/development/new-packages.html).
+Pyodide comes with a big list of [built-in packages](https://pyodide.org/en/stable/usage/packages-in-pyodide.html). However, to use a Python package from PyPI it must be a 
+pure Python package or provide a wheel with binaries [built for Emscripten](https://pyodide.org/en/stable/development/new-packages.html).
 ::
 
 ### Async and threading
 
 Flet app that published to a static website could use both sync and async event handlers and methods.
-Pyodide is a WebAssembly application which does not support threading. The entire Flet is running in a single thread and all sync and async control event handlers are running in the same thread. If your app has CPU-bound logic (e.g. calculating Fibonacci 😀) or "sleeps" to make UI prettier it may "hang" UI. Consider moving that logic to a server and calling it via web API. Using `asyncio.sleep` in async methods is OK though.
+Pyodide is a WebAssembly application which does not support threading. The entire Flet is running in a single thread 
+and all sync and async control event handlers are running in the same thread. If your app has CPU-bound logic 
+(e.g. calculating Fibonacci 😀) or "sleeps" to make UI prettier it may "hang" UI. Consider moving that logic to 
+a server and calling it via web API. Using `asyncio.sleep` in async methods is OK though.
 
-## `flet build web`
+## <code class="doc-symbol doc-symbol-command"></code> `flet build web`
 
 Publish Flet app as a static website.
 
@@ -100,17 +104,44 @@ flet build web --base-url <sub-directory>
 
 For example, if app's URL is `https://mywebsite.com/myapp` then it must be published with `--base-url myapp`.
 
-### Splash screen
+## Disable splash screen
 
-By default, generated web app will be showing a splash screen with an image from `assets` directory (see below) or Flet logo. You can disable splash screen for web app with `--no-web-splash` option.
+The [splash screen](../../index.md#splash-screen) is enabled/shown by default.
 
-## `flet publish`
+It can be disabled as follows:
+
+/// tab | `flet build`
+```bash
+flet build apk --no-android-splash
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+splash.android = false
+```
+///
+/// tab | `[tool.flet.splash]`
+```toml
+[tool.flet.splash]
+android = false
+```
+///
+
+///
+
+## <code class="doc-symbol doc-symbol-command"></code> `flet publish`
 
 An alternative method to publish Flet app as a static website.
 
 Compared to [`flet build web`](#flet-build-web) command it does not require Flutter SDK to be installed on your computer.
 
-However, static websites built with `flet build web` command, compared to `flet publish`, have faster load time as all Python dependencies are now packaged into a single archive instead of being pulled in runtime with `micropip`. `flet build web` also detects native Python [packages built into Pyodide](https://pyodide.org/en/stable/usage/packages-in-pyodide.html), such as `bcrypt`, `html5lib`, `numpy` and many others, and installs them from Pyodide package registry.
+However, static websites built with `flet build web` command, compared to `flet publish`, have faster load time 
+as all Python dependencies are now packaged into a single archive instead of being pulled in runtime with `micropip`. 
+`flet build web` also detects native Python [packages built into Pyodide](https://pyodide.org/en/stable/usage/packages-in-pyodide.html), such as `bcrypt`, `html5lib`, `numpy` 
+and many others, and installs them from Pyodide package registry.
 
 ### Publish app as a static website
 
@@ -148,7 +179,8 @@ You can load custom packages from PyPI during app start by listing them in `requ
 
 Each line of `requirements.txt` contains a package name followed by an optional version specifier.
 
-::info
+/// admonition | Micropip
+    type: tip
 
 To install custom packages Pyodide uses [micropip](https://pypi.org/project/micropip/) - a lightweight version of `pip` that works in a browser.
 
@@ -161,7 +193,7 @@ if sys.platform == "emscripten": # check if run in Pyodide environment
     import micropip
     await micropip.install("regex")
 ```
-::
+///
 
 #### Pre-release Python packages
 
