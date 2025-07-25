@@ -22,14 +22,14 @@ environment:
     secure: trYGM65OQ1+HYnOYOe/NOHrofLpP3bz64nHwVWPJhiUIYll3MrrQd7ilFNp+zSkI
 
   matrix:
-    - job_name: Build Flet package for Flutter
-      job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+    # - job_name: Build Flet package for Flutter
+    #   job_group: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     # - job_name: Build Flet for macOS
     #   job_group: build_flet
@@ -73,25 +73,25 @@ environment:
     #   PYODIDE_CDN_URL: https://cdn.jsdelivr.net/pyodide/v0.27.7/full
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.10
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.10
+      job_group: python_tests
+      PYTHON_VERSION: 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.11
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.11
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.11
+      job_group: python_tests
+      PYTHON_VERSION: 3.11
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.12
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.12
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      PYTHON_VERSION: 3.12
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.13
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.13
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.13
+      job_group: python_tests
+      PYTHON_VERSION: 3.13
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     # - job_name: Build Python wheels
     #   job_group: python_build
@@ -201,8 +201,8 @@ for:
       - uv build --wheel --package flet-desktop
       - ps: |
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win_amd64'"
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win32'"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) 'py3-none-win_amd64'"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) 'py3-none-win32'"
             Remove-Item $_.FullName
           }
       - dir dist
@@ -429,7 +429,7 @@ for:
     test_script:
       # run tests
       - cd sdk/python
-      - uv run pytest
+      - uv run pytest packages/flet/tests
 
       # docs coverage report
       - cd packages/flet
