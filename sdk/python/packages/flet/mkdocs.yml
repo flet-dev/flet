@@ -40,6 +40,7 @@ theme:
         icon: material/brightness-auto
         name: Switch to light mode
   features:
+    - announce.dismiss
     - content.action.edit
     - content.action.view
     - content.action.annotate
@@ -57,6 +58,7 @@ theme:
     - navigation.footer
     - navigation.top
     - navigation.indexes
+    - navigation.prune
     - search.highlight
     - search.share
     - search.suggest
