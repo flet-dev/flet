@@ -159,7 +159,7 @@ for:
         - job_name: Build Flet for Windows
 
     install:
-      - . ci\common.ps1
+      - ps: . ci\common.ps1
       - ps: irm https://astral.sh/uv/install.ps1 | iex
       - ps: Add-SessionPath "$HOME\.local\bin"
       - uv --version
