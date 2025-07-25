@@ -207,13 +207,13 @@ for:
             Remove-Item $_.FullName
           }
           $ErrorActionPreference = "Stop"
-      - dir dist
+      - dir %flet_sdk_root%\dist
 
       # publish
       - ps: |
-          uvx twine --version
+          uvx twine --version | Write-Output
           if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
-              uvx twine upload $env:flet_sdk_root\dist\*
+              uvx twine upload $env:flet_sdk_root\dist\* | Write-Output
           } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
             $wheels = (Get-ChildItem $env:flet_sdk_root/dist/*.whl | Select-Object -ExpandProperty FullName)
             foreach ($wheel in $wheels) {
