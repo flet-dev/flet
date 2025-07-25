@@ -240,8 +240,11 @@ async def run_async(
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
+        elif view is None:
+            with contextlib.suppress(KeyboardInterrupt):
+                await terminate.wait()
+
     finally:
-        print("33333")
         await conn.close()
 
 
