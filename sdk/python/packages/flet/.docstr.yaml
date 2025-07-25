@@ -4,3 +4,4 @@ skip_file_doc: True
 skip_private: False
 ignore_patterns: # Dict with key/value pairs of file-pattern/node-pattern
   .*: __post_init__  # Ignore __post_init__ in all files
+fail_under: 40
