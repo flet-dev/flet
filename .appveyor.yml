@@ -166,6 +166,7 @@ for:
       - uv python install %PYTHON_VERSION%
       - uv python pin %PYTHON_VERSION%
       - uv run python --version
+      - ps: Start-ProcessWithOutput "uvx twine --version"
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
