@@ -2,11 +2,11 @@ export root=$APPVEYOR_BUILD_FOLDER
 export flet_sdk_root=$root/sdk/python
 echo "flet_sdk_root: $flet_sdk_root"
 
-python --version
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
 uv python install $PYTHON_VERSION
 uv python pin $PYTHON_VERSION
+uv run python --version
 
 function patch_python_package_versions() {
     PYPI_VER="${APPVEYOR_BUILD_VERSION/+/.dev}"
