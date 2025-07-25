@@ -21,14 +21,14 @@ environment:
     secure: trYGM65OQ1+HYnOYOe/NOHrofLpP3bz64nHwVWPJhiUIYll3MrrQd7ilFNp+zSkI
 
   matrix:
-    - job_name: Build Flet package for Flutter
-      job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+    # - job_name: Build Flet package for Flutter
+    #   job_group: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     # - job_name: Build Flet for macOS
     #   job_group: build_flet
@@ -120,14 +120,7 @@ for:
             $env:PKG_VER = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
           Update-AppveyorBuild -Version $env:PKG_VER
-      - . ci/common.sh
-
-      - sh: |
-          # patch pubspecs
-          for dir in packages/flet*; do
-            echo "Patching $dir/pubspec.yaml"
-            uv run --with pyyaml ci/patch_pubspec.py $dir/pubspec.yaml $PKG_VER
-          done
+      - source ci/common.sh
       - source ci/install_flutter.sh
 
     build_script:
@@ -168,7 +161,6 @@ for:
 
     install:
       - python --version
-      - pip3 install --upgrade setuptools wheel twine tomlkit
       - ps: irm https://astral.sh/uv/install.ps1 | iex
       - ps: Add-SessionPath "$HOME\.local\bin"
       - uv --version
@@ -185,7 +177,7 @@ for:
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "$env:flet_sdk_root/packages/flet-desktop/src/flet_desktop/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
-      - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
+      - uv run --with tomlkit ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
 
       - cd client
       - set RELEASE_DIR=build\windows\x64\runner\Release
@@ -207,8 +199,8 @@ for:
       - ps: |
           $ErrorActionPreference = "Continue"
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64"
-            python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32"
+            uv run --with wheel $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64"
+            uv run --with wheel $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32"
             Remove-Item $_.FullName
           }
           $ErrorActionPreference = "Stop"
@@ -216,8 +208,9 @@ for:
 
       # publish
       - ps: |
+          uvx twine --version
           if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
-              twine upload $env:flet_sdk_root\dist\*
+              uvx twine upload $env:flet_sdk_root\dist\*
           } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
             $wheels = (Get-ChildItem $env:flet_sdk_root/dist/*.whl | Select-Object -ExpandProperty FullName)
             foreach ($wheel in $wheels) {
@@ -247,8 +240,8 @@ for:
         - job_name: Build Flet for macOS
 
     install:
-      - . ci/common.sh
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
+      - source ci/common.sh
       - source ci/install_flutter.sh
 
     build_script:
@@ -296,7 +289,7 @@ for:
         - job_group: build_flet_linux
 
     install:
-      - . ci/common.sh
+      - source ci/common.sh
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y clang libgtk-3-dev libasound2-dev
       - sh: |
@@ -382,7 +375,7 @@ for:
         - job_name: Build Flet for web
 
     install:
-      - . ci/common.sh
+      - source ci/common.sh
       - source ci/install_flutter.sh
 
     build_script:
@@ -428,7 +421,7 @@ for:
         - job_group: python_tests
 
     install:
-      - . ci/common.sh
+      - source ci/common.sh
 
     build: off
 
@@ -452,7 +445,7 @@ for:
         - job_group: python_build
 
     install:
-      - . ci/common.sh
+      - source ci/common.sh
 
     test: off
 
