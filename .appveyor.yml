@@ -43,12 +43,12 @@ environment:
     #   PACKAGE_NAME: flet-desktop
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Build Flet Light for Linux
-      job_group: build_flet_linux
-      job_depends_on: build_flet_package
-      ARCH: amd64
-      PACKAGE_NAME: flet-desktop-light
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Build Flet Light for Linux
+    #   job_group: build_flet_linux
+    #   job_depends_on: build_flet_package
+    #   ARCH: amd64
+    #   PACKAGE_NAME: flet-desktop-light
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     # - job_name: Build Flet for Linux ARM64
     #   job_group: build_flet_linux
@@ -159,7 +159,7 @@ for:
         - job_name: Build Flet for Windows
 
     install:
-      - python --version
+      - . ci\common.ps1
       - ps: irm https://astral.sh/uv/install.ps1 | iex
       - ps: Add-SessionPath "$HOME\.local\bin"
       - uv --version
@@ -199,20 +199,18 @@ for:
       - cd %flet_sdk_root%
       - uv build --wheel --package flet-desktop
       - ps: |
-          $ErrorActionPreference = "Continue"
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64" | Write-Output
-            uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32" | Write-Output
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win_amd64'"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win32'"
             Remove-Item $_.FullName
           }
-          $ErrorActionPreference = "Stop"
       - dir dist
 
       # publish
       - ps: |
-          uvx twine --version | Write-Output
+          Start-ProcessWithOutput "uvx twine --version"
           if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
-              uvx twine upload $env:flet_sdk_root\dist\* | Write-Output
+              Start-ProcessWithOutput "uvx twine upload $env:flet_sdk_root\dist\*"
           } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
             $wheels = (Get-ChildItem $env:flet_sdk_root/dist/*.whl | Select-Object -ExpandProperty FullName)
             foreach ($wheel in $wheels) {
