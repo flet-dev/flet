@@ -2,7 +2,7 @@
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
-![File picker all modes demo](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
+![File picker all modes demo](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
 /// caption
 ///
 
@@ -160,7 +160,7 @@ The callback is called at least twice for every uploaded file: with `0` progress
 Check that [example](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/pick-and-upload.py) demonstrating multiple file uploads:
 
 
-![File picker multiple uploads](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/file-picker/media/pick-and-upload.png){width="80%"}
+![File picker multiple uploads](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/file-picker/media/pick-and-upload.png){width="80%"}
 /// caption
 ///
 
