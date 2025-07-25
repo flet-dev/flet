@@ -17,7 +17,7 @@ theme:
   name: "material"
   favicon: 'images/favicon.ico'
   logo: 'images/logo.svg'
-  custom_dir: docs/overrides
+  # custom_dir: docs/overrides
   icon:
     annotation: material/plus-circle
   palette:
@@ -40,7 +40,7 @@ theme:
         icon: material/brightness-auto
         name: Switch to light mode
   features:
-    - announce.dismiss
+    # - announce.dismiss
     - content.action.edit
     - content.action.view
     - content.action.annotate
