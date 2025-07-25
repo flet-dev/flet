@@ -432,7 +432,7 @@ for:
 
       # docs coverage report
       - cd packages/flet
-      - uv run --group docs docstr-coverage > docstr_coverage.log 2>&1
+      - uv run --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
 
     artifacts:
       - path: sdk/python/packages/flet/*.log
