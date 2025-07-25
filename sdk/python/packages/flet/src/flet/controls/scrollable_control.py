@@ -6,12 +6,11 @@ from typing import Optional, Union
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import Event, OptionalEventHandler
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.control_event import Event, EventHandler
+from flet.controls.duration import DurationValue
 from flet.controls.keys import ScrollKey
 from flet.controls.types import (
     Number,
-    OptionalNumber,
     ScrollMode,
 )
 
@@ -51,34 +50,29 @@ class ScrollableControl(Control):
     """
     Enables a vertical scrolling for the Column to prevent its content overflow.
 
-    Value is of type [`ScrollMode`](https://flet.dev/docs/reference/types/scrollmode) 
-    and defaults to `ScrollMode.None`.
+    Defaults to `ScrollMode.None`.
     """
     auto_scroll: bool = False
     """
-    `True` if scrollbar should automatically move its position to the end when children 
+    `True` if scrollbar should automatically move its position to the end when children
     updated. Must be `False` for `scroll_to()` method to work.
     """
     scroll_interval: Number = 10
     """
     Throttling in milliseconds for `on_scroll` event.
-
-    Defaults to `10`.
     """
-    on_scroll: OptionalEventHandler[OnScrollEvent] = None
+    on_scroll: Optional[EventHandler[OnScrollEvent]] = None
     """
-    Fires when scroll position is changed by a user.
-
-    Event handler argument is an instance of [`OnScrollEvent`](https://flet.dev/docs/reference/types/onscrollevent) 
+    Called when scroll position is changed by a user.
     class.
     """
 
     def scroll_to(
         self,
-        offset: OptionalNumber = None,
-        delta: OptionalNumber = None,
+        offset: Optional[Number] = None,
+        delta: Optional[Number] = None,
         scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
-        duration: OptionalDurationValue = None,
+        duration: Optional[DurationValue] = None,
         curve: Optional[AnimationCurve] = None,
     ):
         """
@@ -132,7 +126,7 @@ class ScrollableControl(Control):
                 ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
             )
 
-        ft.app(main)
+        ft.run(main)
         ```
 
         Note:
@@ -142,7 +136,7 @@ class ScrollableControl(Control):
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
+        `curve` configures animation curve. Property value is [`AnimationCurve`][flet.AnimationCurve]
         enum.
         Defaults to `AnimationCurve.EASE`.
         """
@@ -155,7 +149,7 @@ class ScrollableControl(Control):
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
-        duration: OptionalDurationValue = None,
+        duration: Optional[DurationValue] = None,
         curve: Optional[AnimationCurve] = None,
     ):
         """
@@ -209,7 +203,7 @@ class ScrollableControl(Control):
                 ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
             )
 
-        ft.app(main)
+        ft.run(main)
         ```
 
         Note:
@@ -219,7 +213,7 @@ class ScrollableControl(Control):
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`](https://flet.dev/docs/reference/types/animationcurve)
+        `curve` configures animation curve. Property value is [`AnimationCurve`][flet.AnimationCurve]
         enum.
         Defaults to `AnimationCurve.EASE`.
         """

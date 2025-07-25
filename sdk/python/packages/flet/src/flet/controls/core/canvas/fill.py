@@ -1,22 +1,22 @@
-from typing import Optional
+from dataclasses import field
 
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
 
+__all__ = ["Fill"]
+
 
 @control("Fill")
 class Fill(Shape):
     """
-    Fills the canvas with the given `Paint`.
+    Fills the canvas with the given [`paint`][(c).].
 
-    To fill the canvas with a solid color and blend mode, consider `Color` shape
-    instead.
+    To fill the canvas with a solid color and blend mode,
+    consider [`Color`][(p).color.] shape instead.
     """
 
-    paint: Optional[Paint] = None
+    paint: Paint = field(default_factory=lambda: Paint())
     """
-    A style to fill the canvas with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    A style to fill the canvas with.
     """
-

@@ -1,3 +1,4 @@
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
@@ -5,6 +6,8 @@ from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
 from flet.controls.transform import OffsetValue
+
+__all__ = ["Points", "PointMode"]
 
 
 class PointMode(Enum):
@@ -38,24 +41,21 @@ class PointMode(Enum):
 @control("Points")
 class Points(Shape):
     """
-    Draws a sequence of points according to the given `point_mode`.
+    Draws a sequence of points according to
+    the given [`point_mode`][(c).].
     """
 
     points: Optional[list[OffsetValue]] = None
     """
-    The list of `ft.Offset` describing points.
+    The list of offsets describing points.
     """
 
-    point_mode: Optional[PointMode] = None
+    point_mode: PointMode = PointMode.POINTS
     """
     Defines how a list of points is interpreted when drawing a set of points.
-
-    Value is of type [`PointMode`](https://flet.dev/docs/reference/types/pointmode).
     """
 
-    paint: Optional[Paint] = None
+    paint: Paint = field(default_factory=lambda: Paint())
     """
-    A style to draw points with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    A style to draw points with.
     """
-

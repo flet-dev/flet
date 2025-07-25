@@ -16,17 +16,15 @@ from typing import (
 )
 
 if TYPE_CHECKING:
-    from .base_control import BaseControl
+    from .base_control import BaseControl  # noqa
     from .page import Page
     from .page_view import PageView
 
 __all__ = [
     "ControlEvent",
-    "OptionalControlEventHandler",
     "Event",
     "ControlEventHandler",
     "EventHandler",
-    "OptionalEventHandler",
     "EventControlType",
 ]
 
@@ -90,16 +88,8 @@ class Event(Generic[EventControlType]):
 
 EventType = TypeVar("EventType", bound=Event)
 
-ControlEventHandler = Union[
-    Callable[[], Any], Callable[[Event[EventControlType]], Any]
-]
-
-OptionalControlEventHandler = Union[
-    Callable[[], Any], Callable[[Event[EventControlType]], Any], None, 
-]
+ControlEventHandler = Union[Callable[[], Any], Callable[[Event[EventControlType]], Any]]
 
 EventHandler = Union[Callable[[], Any], Callable[[EventType], Any]]
-
-OptionalEventHandler = Union[Callable[[], Any], Callable[[EventType], Any], None]
 
 ControlEvent = Event["BaseControl"]

@@ -1,20 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
 from flet.controls.border import Border
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
+from flet.controls.colors import Colors
 from flet.controls.gradients import Gradient
-from flet.controls.transform import OffsetValue
+from flet.controls.transform import Offset, OffsetValue
 from flet.controls.types import (
     BlendMode,
-    ImageFit,
+    ColorValue,
     ImageRepeat,
     Number,
-    OptionalBool,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = [
@@ -23,42 +21,43 @@ __all__ = [
     "DecorationImage",
     "ColorFilter",
     "FilterQuality",
-    "ShadowBlurStyle",
+    "BlurStyle",
     "BoxShape",
     "BoxConstraints",
     "BoxFit",
-    "ShadowValue",
-    "OptionalShadowValue",
-    "OptionalBoxDecoration",
-    "OptionalBoxShadow",
-    "OptionalDecorationImage",
-    "OptionalColorFilter",
-    "OptionalFilterQuality",
-    "OptionalShadowBlurStyle",
-    "OptionalBoxShape",
-    "OptionalBoxConstraints",
-    "OptionalBoxFit",
+    "BoxShadowValue",
 ]
 
 
 @dataclass
 class ColorFilter:
     """
-    Defines a color filter that can be used with
-    [`Container.color_filter`](https://flet.dev/docs/controls/container#color_filter).
+    Defines a color filter.
     """
 
-    color: OptionalColorValue = None
+    color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use when applying the filter.
+    The color to use when applying the filter.
     """
 
     blend_mode: Optional[BlendMode] = None
     """
     The blend mode to apply to the color filter.
-
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
     """
+
+    def copy_with(
+        self,
+        *,
+        color: Optional[ColorValue] = None,
+        blend_mode: Optional[BlendMode] = None,
+    ) -> "ColorFilter":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return ColorFilter(
+            color=color if color is not None else self.color,
+            blend_mode=blend_mode if blend_mode is not None else self.blend_mode,
+        )
 
 
 class FilterQuality(Enum):
@@ -78,20 +77,20 @@ class FilterQuality(Enum):
 
     MEDIUM = "medium"
     """
-    The best all around filtering method that is only worse than high at extremely 
+    The best all around filtering method that is only worse than high at extremely
     large scale factors.
     """
 
     HIGH = "high"
     """
     Best possible quality when scaling up images by scale factors larger than 5-10x.
-    When images are scaled down, this can be worse than medium for scales smaller than 
+    When images are scaled down, this can be worse than medium for scales smaller than
     0.5x, or when animating the scale factor.
     This option is also the slowest.
     """
 
 
-class ShadowBlurStyle(Enum):
+class BlurStyle(Enum):
     NORMAL = "normal"
     SOLID = "solid"
     OUTER = "outer"
@@ -100,45 +99,59 @@ class ShadowBlurStyle(Enum):
 
 @dataclass
 class BoxShadow:
-    spread_radius: OptionalNumber = None
+    spread_radius: Number = 0.0
     """
     The amount the box should be inflated prior to applying the blur.
-
-    Defaults to `0.0.`
     """
 
-    blur_radius: OptionalNumber = None
+    blur_radius: Number = 0.0
     """
     The standard deviation of the Gaussian to convolve with the shadow's shape.
-
-    Defaults to `0.0.`
     """
 
-    color: OptionalColorValue = None
+    color: ColorValue = Colors.BLACK
     """
-    [Color](https://flet.dev/docs/reference/colors) used to draw the shadow.
+    Color used to draw the shadow.
     """
 
-    offset: Optional[OffsetValue] = None
+    offset: OffsetValue = field(default_factory=lambda: Offset())
     """
-    An instance of `Offset` class - the displacement of the shadow from the casting
+    The displacement of the shadow from the casting
     element. Positive x/y offsets will shift the shadow to the right and down, while
     negative offsets shift the shadow to the left and up. The offsets are relative to
     the position of the element that is casting it.
-
-    Value is of type [`Offset`](https://flet.dev/docs/reference/types/offset) and
-    defaults to `Offset(0,0)`.
     """
 
-    blur_style: ShadowBlurStyle = ShadowBlurStyle.NORMAL
+    blur_style: BlurStyle = BlurStyle.NORMAL
+
+    def copy_with(
+        self,
+        *,
+        spread_radius: Optional[Number] = None,
+        blur_radius: Optional[Number] = None,
+        color: Optional[ColorValue] = None,
+        offset: Optional[OffsetValue] = None,
+        blur_style: Optional[BlurStyle] = None,
+    ) -> "BoxShadow":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return BoxShadow(
+            spread_radius=spread_radius
+            if spread_radius is not None
+            else self.spread_radius,
+            blur_radius=blur_radius if blur_radius is not None else self.blur_radius,
+            color=color if color is not None else self.color,
+            offset=offset if offset is not None else self.offset,
+            blur_style=blur_style if blur_style is not None else self.blur_style,
+        )
+
     """
-    Value is of type [`ShadowBlurStyle`](https://flet.dev/docs/reference/types/shadowblurstyle)
-    and defaults to `ShadowBlurStyle.NORMAL`.
+    TBD
     """
 
 
-ShadowValue = Union[BoxShadow, list[BoxShadow]]
-OptionalShadowValue = Union[BoxShadow, list[BoxShadow]]
+BoxShadowValue = Union[BoxShadow, list[BoxShadow]]
 
 
 class BoxShape(Enum):
@@ -180,75 +193,96 @@ class DecorationImage:
     color_filter: Optional[ColorFilter] = None
     """
     A color filter to apply to the image before painting it.
-
-    Value is of type [`ColorFilter`](https://flet.dev/docs/reference/types/colorfilter).
     """
 
-    fit: Optional[ImageFit] = None
+    fit: Optional[BoxFit] = None
     """
     How the image should be inscribed into the box.
-
-    Value is of type [`ImageFit`](https://flet.dev/docs/reference/types/imagefit).
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
     """
     The alignment of the image within its bounds.
-
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and 
-    defaults to `Alignment(0.0, 0.0)`.
     """
 
-    repeat: Optional[ImageRepeat] = None
+    repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
     How the image should be repeated to fill the box.
-
-    Value is of type [`ImageRepeat`](https://flet.dev/docs/reference/types/imagerepeat) 
-    and defaults to `ImageRepeat.NO_REPEAT`.
     """
 
-    match_text_direction: OptionalBool = None
+    match_text_direction: bool = False
     """
     Whether to paint the image in the direction of the TextDirection.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
-    scale: OptionalNumber = None
+    scale: Number = 1.0
     """
     The scale(image pixels to be shown per logical pixels) to apply to the image.
-
-    Value is of type `float` and defaults to `1.0`.
     """
 
-    opacity: OptionalNumber = None
+    opacity: Number = 1.0
     """
     The opacity of the image.
-
-    Value is of type `float` and defaults to `1.0`.
     """
 
-    filter_quality: Optional[FilterQuality] = None
+    filter_quality: FilterQuality = FilterQuality.MEDIUM
     """
     The quality of the image filter.
-
-    Value is of type [`FilterQuality`](https://flet.dev/docs/reference/types/filterquality) 
-    and defaults to `FilterQuality.MEDIUM`.
     """
 
-    invert_colors: OptionalBool = None
+    invert_colors: bool = False
     """
     Whether to invert the colors of the image while drawing.
-
-    Value is of type `bool` and defaults to `False`.
     """
 
-    anti_alias: OptionalBool = None
+    anti_alias: bool = False
     """
     Whether to paint the image in anti-aliased quality.
-
-    Value is of type `bool` and defaults to `False`.
     """
+
+    def copy_with(
+        self,
+        *,
+        src: Optional[str] = None,
+        src_base64: Optional[str] = None,
+        src_bytes: Optional[bytes] = None,
+        color_filter: Optional[ColorFilter] = None,
+        fit: Optional[BoxFit] = None,
+        alignment: Optional[Alignment] = None,
+        repeat: Optional[ImageRepeat] = None,
+        match_text_direction: Optional[bool] = None,
+        scale: Optional[Number] = None,
+        opacity: Optional[Number] = None,
+        filter_quality: Optional[FilterQuality] = None,
+        invert_colors: Optional[bool] = None,
+        anti_alias: Optional[bool] = None,
+    ) -> "DecorationImage":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return DecorationImage(
+            src=src if src is not None else self.src,
+            src_base64=src_base64 if src_base64 is not None else self.src_base64,
+            src_bytes=src_bytes if src_bytes is not None else self.src_bytes,
+            color_filter=color_filter
+            if color_filter is not None
+            else self.color_filter,
+            fit=fit if fit is not None else self.fit,
+            alignment=alignment if alignment is not None else self.alignment,
+            repeat=repeat if repeat is not None else self.repeat,
+            match_text_direction=match_text_direction
+            if match_text_direction is not None
+            else self.match_text_direction,
+            scale=scale if scale is not None else self.scale,
+            opacity=opacity if opacity is not None else self.opacity,
+            filter_quality=filter_quality
+            if filter_quality is not None
+            else self.filter_quality,
+            invert_colors=invert_colors
+            if invert_colors is not None
+            else self.invert_colors,
+            anti_alias=anti_alias if anti_alias is not None else self.anti_alias,
+        )
 
 
 @dataclass
@@ -258,38 +292,33 @@ class BoxDecoration:
     The box has a border, a body, and may cast a shadow.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to fill in the background of 
+    The color to fill in the background of
     the box.
     """
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the background `color` or `gradient`.
-
-    Value is of type [`DecorationImage`](https://flet.dev/docs/reference/types/decorationimage).
+    An image to paint above the background [`bgcolor`][flet.BoxDecoration.bgcolor]
+    or [`gradient`][flet.BoxDecoration.gradient].
     """
 
     border: Optional[Border] = None
     """
-    A border to draw above the background `color`, `gradient`, or `image`.
-
-    Value is of type [`Border`](https://flet.dev/docs/reference/types/border).
+    A border to draw above the background
+    [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient],
+    and [`image`][flet.BoxDecoration.image].
     """
 
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius of the box.
-
-    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
     """
 
-    shadow: Optional[ShadowValue] = None
+    shadows: Optional[BoxShadowValue] = None
     """
     A list of shadows cast by the box.
-
-    Value is of type [`List[BoxShadow]`](https://flet.dev/docs/reference/types/boxshadow).
     """
 
     gradient: Optional[Gradient] = None
@@ -299,20 +328,52 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the `bgcolor`, `gradient`, and `image` into and to cast as the 
-    `shadow`.
+    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient],
+    and [`image`][flet.BoxDecoration.image] into and to cast as the [`shadows`][flet.BoxDecoration.shadows].
     """
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode to apply to the background `color` or `gradient`.
-
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
+    The blend mode to apply to the background [`bgcolor`][flet.BoxDecoration.bgcolor]
+    or [`gradient`][flet.BoxDecoration.gradient].
     """
 
     def __post_init__(self):
-        assert self.blend_mode is None or self.bgcolor is not None or self.gradient is not None, "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
-        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), "border_radius must be None when shape is BoxShape.CIRCLE"
+        assert (
+            self.blend_mode is None
+            or self.bgcolor is not None
+            or self.gradient is not None
+        ), (
+            "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
+        )
+        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), (
+            "border_radius must be None when shape is BoxShape.CIRCLE"
+        )
+
+    def copy_with(
+        self,
+        *,
+        bgcolor: Optional[ColorValue] = None,
+        image: Optional[DecorationImage] = None,
+        border: Optional[Border] = None,
+        border_radius: Optional[BorderRadiusValue] = None,
+        shadows: Optional[BoxShadowValue] = None,
+        gradient: Optional[Gradient] = None,
+        shape: Optional[BoxShape] = None,
+        blend_mode: Optional[BlendMode] = None,
+    ):
+        return BoxDecoration(
+            bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
+            image=image if image is not None else self.image,
+            border=border if border is not None else self.border,
+            border_radius=border_radius
+            if border_radius is not None
+            else self.border_radius,
+            shadows=shadows if shadows is not None else self.shadows,
+            gradient=gradient if gradient is not None else self.gradient,
+            shape=shape if shape is not None else self.shape,
+            blend_mode=blend_mode if blend_mode is not None else self.blend_mode,
+        )
 
 
 @dataclass
@@ -333,36 +394,24 @@ class BoxConstraints:
     """
     The minimum width that satisfies the constraints, such that
     `0.0 <= min_width <= max_width`.
-
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `0.0`.
     """
 
     min_height: Number = 0
     """
     The minimum height that satisfies the constraints, such that
     `0.0 <= min_height <= max_height`.
-
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `0.0`.
     """
 
     max_width: Number = float("inf")
     """
     The maximum width that satisfies the constraints, such that
     `min_width <= max_width <= float("inf")`.
-
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `float("inf")` - infinity.
     """
 
     max_height: Number = float("inf")
     """
     The maximum height that satisfies the constraints, such that
     `min_height <= max_height <= float("inf")`.
-
-    Value is of type [`Number`](https://flet.dev/docs/reference/types/aliases#number)
-    and defaults to `float("inf")` - infinity.
     """
 
     def __post_init__(self):
@@ -375,14 +424,20 @@ class BoxConstraints:
             "and min_height must be less than or equal to max_height"
         )
 
-
-# typing
-OptionalBoxDecoration = Optional[BoxDecoration]
-OptionalBoxShadow = Optional[BoxShadow]
-OptionalDecorationImage = Optional[DecorationImage]
-OptionalColorFilter = Optional[ColorFilter]
-OptionalFilterQuality = Optional[FilterQuality]
-OptionalShadowBlurStyle = Optional[ShadowBlurStyle]
-OptionalBoxShape = Optional[BoxShape]
-OptionalBoxConstraints = Optional[BoxConstraints]
-OptionalBoxFit = Optional[BoxFit]
+    def copy_with(
+        self,
+        *,
+        min_width: Optional[Number] = None,
+        min_height: Optional[Number] = None,
+        max_width: Optional[Number] = None,
+        max_height: Optional[Number] = None,
+    ) -> "BoxConstraints":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return BoxConstraints(
+            min_width=min_width if min_width is not None else self.min_width,
+            min_height=min_height if min_height is not None else self.min_height,
+            max_width=max_width if max_width is not None else self.max_width,
+            max_height=max_height if max_height is not None else self.max_height,
+        )

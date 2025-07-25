@@ -6,8 +6,8 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     IconValue,
     IconValueOrControl,
@@ -19,6 +19,13 @@ __all__ = ["SegmentedButton", "Segment"]
 
 @control("Segment")
 class Segment(Control):
+    """
+    A segment for a [`SegmentedButton`][flet.SegmentedButton].
+
+    Raises:
+        AssertionError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
+    """
+
     value: str
     """
     Used to identify the `Segment`.
@@ -26,13 +33,13 @@ class Segment(Control):
 
     icon: Optional[IconValueOrControl] = None
     """
-    The icon (typically an [`Icon`](https://flet.dev/docs/controls/icon)) to be
+    The icon (typically an [`Icon`][flet.Icon]) to be
     displayed in the segment.
     """
 
     label: Optional[StrOrControl] = None
     """
-    The label (usually a [`Text`](https://flet.dev/docs/controls/text)) to be
+    The label (usually a [`Text`][flet.Text]) to be
     displayed in the segment.
     """
 
@@ -51,20 +58,21 @@ class SegmentedButton(ConstrainedControl):
     """
     A segmented button control.
 
-    Online docs: https://flet.dev/docs/controls/segmentedbutton
+    Raises:
+        AssertionError: If [`segments`][(c).] is empty or does not have at
+            least one visible `Segment`.
+        AssertionError: If [`selected`][(c).] is empty and [`allow_empty_selection`][(c).] is `False`.
+        AssertionError: If [`selected`][(c).] has more than one item and [`allow_multiple_selection`][(c).] is `False`.
     """
 
     segments: list[Segment]
     """
-    A required parameter that describes the segments in the button. It's a list of
-    `Segment` objects.
+    The segments of this button.
     """
 
     style: Optional[ButtonStyle] = None
     """
     Customizes this button's appearance.
-
-    Value is of type [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
     """
 
     allow_empty_selection: bool = False
@@ -87,7 +95,7 @@ class SegmentedButton(ConstrainedControl):
     other `selected` segments will stay selected. Selecting an already selected segment
     will unselect it.
 
-    If `False`(the default), only one segment may be selected at a time. When a segment
+    If `False` (the default), only one segment may be selected at a time. When a segment
     is selected, any previously selected segment will be unselected.
     """
 
@@ -123,39 +131,34 @@ class SegmentedButton(ConstrainedControl):
     """
     The orientation of the button's `segments`.
 
-    Value is of type [`Axis`](https://flet.dev/docs/reference/types/axis) and defaults
+    Defaults
     to `Axis.HORIZONTAL`.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     Defines the button's size and padding. If specified, the button expands to fill its
     parent's space with this padding.
 
     When `None`, the button adopts its intrinsic content size.
-
-    Value is of type
-    [`PaddingValue`](https://flet.dev/docs/reference/types/aliases#paddingvalue).
     """
 
-    on_change: OptionalControlEventHandler["SegmentedButton"] = None
+    on_change: Optional[ControlEventHandler["SegmentedButton"]] = None
     """
-    Fires when the selection changes.
+    Called when the selection changes.
+    
+    The [`data`][flet.Event.data] property of the event handler argument 
+    contains a list of strings identifying the selected segments.
     """
 
     def before_update(self):
         super().before_update()
-        assert any(segment.visible for segment in self.segments), (
-            "segments must have at minimum one visible Segment"
-        )
-        assert len(self.selected) > 0 or self.allow_empty_selection, (
-            "allow_empty_selection must be True for selected to be empty"
-        )
-        assert len(self.selected) < 2 or self.allow_multiple_selection, (
-            "allow_multiple_selection must be True for selected to have more than one "
-        )
-        "item"
-        assert len(self.selected) < 2 or self.allow_multiple_selection, (
-            "allow_multiple_selection must be True for selected to have more than one "
-        )
-        "item"
+        assert any(
+            segment.visible for segment in self.segments
+        ), "segments must have at minimum one visible Segment"
+        assert (
+            len(self.selected) > 0 or self.allow_empty_selection
+        ), "allow_empty_selection must be True for selected to be empty"
+        assert (
+            len(self.selected) < 2 or self.allow_multiple_selection
+        ), "allow_multiple_selection must be True for selected to have more than one item"

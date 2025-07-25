@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
@@ -5,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextStyle
-from flet.controls.types import OptionalNumber, TextAlign
+from flet.controls.types import Number, TextAlign
 
 __all__ = ["Text"]
 
@@ -13,50 +14,44 @@ __all__ = ["Text"]
 @control("Text")
 class Text(Shape):
     """
-    Draws `text` with `style` in the given point (`x`, `y`).
+    Draws [`value`][(c).] with [`style`][(c).] at
+    the given ([`x`][(c).], [`y`][(c).]) point.
     """
 
-    x: OptionalNumber = None
+    x: Number
     """
     The x-axis coordinate of the text's `alignment` point.
     """
 
-    y: OptionalNumber = None
+    y: Number
     """
     The y-axis coordinate of the text's `alignment` point.
     """
 
-    text: Optional[str] = None
+    value: Optional[str] = None
     """
     The text to draw.
     """
 
     style: Optional[TextStyle] = None
     """
-    A text style to draw `text` and `spans` with. The value is the instance of
-    [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) class.
+    A text style to draw `text` and `spans` with.
     """
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`](https://flet.dev/docs/reference/types/textspan)
+    The list of [`TextSpan`][flet.TextSpan]
     objects to build a rich text paragraph.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Alignment = field(default_factory=lambda: Alignment.TOP_LEFT)
     """
     A point within a text rectangle to determine its position and rotation center.
-
-    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment)
-    and defaults to `alignment.top_left`.
     """
 
-    text_align: Optional[TextAlign] = None
+    text_align: TextAlign = TextAlign.START
     """
     Text horizontal align.
-
-    Value is of type [`TextAlign`](https://flet.dev/docs/reference/types/textalign)
-    and defaults to `TextAlign.LEFT`.
     """
 
     max_lines: Optional[int] = None
@@ -67,7 +62,7 @@ class Text(Shape):
     that overflows the width constraints are dropped.
     """
 
-    max_width: OptionalNumber = None
+    max_width: Optional[Number] = None
     """
     The maximum width of the painted text.
 
@@ -79,10 +74,8 @@ class Text(Shape):
     String used to ellipsize overflowing text.
     """
 
-    rotate: OptionalNumber = None
+    rotate: Number = 0
     """
-    Text rotation in radians. Text is rotated around the point determined by
-    `alignment`. See code examples above.
-    ```
-    """  
-
+    The rotation of this text in radians. Text is rotated around the point determined by
+    `alignment`.
+    """

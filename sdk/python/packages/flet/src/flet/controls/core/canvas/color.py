@@ -1,8 +1,9 @@
-from typing import Optional
-
 from flet.controls.base_control import control
+from flet.controls.colors import Colors
 from flet.controls.core.canvas.shape import Shape
-from flet.controls.types import BlendMode, OptionalColorValue
+from flet.controls.types import BlendMode, ColorValue
+
+__all__ = ["Color"]
 
 
 @control("Color")
@@ -12,15 +13,12 @@ class Color(Shape):
     the given color being the source and the background being the destination.
     """
 
-    color: OptionalColorValue = None
+    color: ColorValue = Colors.BLACK
     """
-    [Color](https://flet.dev/docs/reference/colors) to paint onto the canvas.
+    Color to paint onto the canvas.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: BlendMode = BlendMode.SRC_OVER
     """
     Blend mode to apply.
-
-    Value is of type [`BlendMode`](https://flet.dev/docs/reference/types/blendmode).
     """
-

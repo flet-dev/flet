@@ -31,10 +31,10 @@ class CardControl extends StatelessWidget {
     var elevation = control.getDouble("elevation");
     var shape = control.getShape("shape", Theme.of(context));
     var margin = control.getMargin("margin");
-    var isSemanticContainer = control.getBool("is_semantic_container", true)!;
+    var isSemanticContainer = control.getBool("semantic_container", true)!;
     var showBorderOnForeground =
         control.getBool("show_border_on_foreground", true)!;
-    var color = control.getColor("color", context);
+    var bgcolor = control.getColor("bgcolor", context);
     var shadowColor = control.getColor("shadow_color", context);
     var surfaceTintColor = control.getColor("surface_tint_color", context);
 
@@ -51,7 +51,7 @@ class CardControl extends StatelessWidget {
           semanticContainer: isSemanticContainer,
           borderOnForeground: showBorderOnForeground,
           clipBehavior: clipBehavior,
-          color: color,
+          color: bgcolor,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
           child: contentWidget);
@@ -63,7 +63,7 @@ class CardControl extends StatelessWidget {
           semanticContainer: isSemanticContainer,
           borderOnForeground: showBorderOnForeground,
           clipBehavior: clipBehavior,
-          color: color,
+          color: bgcolor,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
           child: contentWidget);
@@ -75,7 +75,7 @@ class CardControl extends StatelessWidget {
           semanticContainer: isSemanticContainer,
           borderOnForeground: showBorderOnForeground,
           clipBehavior: clipBehavior,
-          color: color,
+          color: bgcolor,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
           child: contentWidget);

@@ -85,15 +85,14 @@ class _SnackBarControlState extends State<SnackBarControl> {
     return SnackBar(
       behavior: behavior,
       clipBehavior:
-          parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!,
+          widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
       actionOverflowThreshold:
           widget.control.getDouble("action_overflow_threshold"),
       shape: widget.control.getOutlinedBorder("shape", Theme.of(context)),
       onVisible: () {
         backend.triggerControlEvent(widget.control, "visible");
       },
-      dismissDirection:
-          parseDismissDirection(widget.control.getString("dismiss_direction")),
+      dismissDirection: widget.control.getDismissDirection("dismiss_direction"),
       showCloseIcon: widget.control.getBool("show_close_icon"),
       closeIconColor: widget.control.getColor("close_icon_color", context),
       content: content,

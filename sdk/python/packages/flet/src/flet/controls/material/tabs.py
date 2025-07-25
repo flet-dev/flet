@@ -4,23 +4,21 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
-from flet.controls.duration import OptionalDurationValue
-from flet.controls.margin import OptionalMarginValue
+from flet.controls.duration import DurationValue, Duration
+from flet.controls.margin import MarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
-from flet.controls.padding import OptionalPaddingValue, PaddingValue
-from flet.controls.text_style import OptionalTextStyle
+from flet.controls.padding import PaddingValue
+from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     MouseCursor,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
     StrOrControl,
     TabAlignment,
 )
@@ -31,17 +29,18 @@ __all__ = ["Tab", "Tabs"]
 @control("Tab")
 class Tab(AdaptiveControl):
     """
-    TBD
+    Raises:
+        AssertionError: If both [`label`][(c).] and [`icon`][(c).] are not set.
     """
 
     label: Optional[StrOrControl] = None
     """
-    String or Control to display as Tab's name.
+    The tab's name. Can be either a string or a control.
     """
 
     content: Optional[Control] = None
     """
-    A `Control` to display below the Tab when it is selected.
+    The tab's content to display when it is selected.
     """
 
     icon: Optional[IconValueOrControl] = None
@@ -49,12 +48,12 @@ class Tab(AdaptiveControl):
     An icon to display on the left of Tab text.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     TBD
     """
 
-    icon_margin: OptionalMarginValue = None
+    icon_margin: Optional[MarginValue] = None
     """
     TBD
     """
@@ -69,16 +68,14 @@ class Tab(AdaptiveControl):
 @control("Tabs")
 class Tabs(ConstrainedControl, AdaptiveControl):
     """
-    The Tabs control is used for navigating frequently accessed, distinct content
+    Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
     on text headers to articulate the different sections of content.
-
-    Online docs: https://flet.dev/docs/controls/tabs
     """
 
     tabs: list[Tab] = field(default_factory=list)
     """
-    A list of `Tab` controls.
+    A list of [`Tab`][flet.Tab] controls.
     """
 
     selected_index: int = 0
@@ -99,37 +96,35 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
     Specifies the horizontal alignment of the tabs within the Tabs control.
 
-    Value is of type [`TabAlignment`](https://flet.dev/docs/reference/types/tabalignment)
-    and defaults to `TabAlignment.START`, if `scrollable=True`, and to
-    `TabAlignment.FILL`, if `scrollable=False`.
+    Defaults to [`TabAlignment.START`][flet.TabAlignment.START], 
+    if [`scrollable=True`][flet.Tabs.scrollable], and to
+    [`TabAlignment.FILL`][flet.TabAlignment.FILL], if [`scrollable=False`][flet.Tabs.scrollable].
     """
 
-    animation_duration: OptionalDurationValue = None
+    animation_duration: DurationValue = field(default_factory=lambda: Duration(milliseconds=50))
     """
     Duration of animation in milliseconds of switching between tabs.
-
-    Defaults to `50`.
     """
 
-    divider_color: OptionalColorValue = None
+    divider_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the divider.
+    The color of the divider.
     """
 
-    indicator_color: OptionalColorValue = None
+    indicator_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the indicator(line that
+    The color of the indicator(line that
     appears below the selected tab).
     """
 
-    indicator_border_radius: OptionalBorderRadiusValue = None
+    indicator_border_radius: Optional[BorderRadiusValue] = None
     """
     The radius of the indicator's corners.
     """
 
     indicator_border_side: Optional[BorderSide] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) and weight of the horizontal
+    The color and weight of the horizontal
     line drawn below the selected tab.
     """
 
@@ -138,66 +133,58 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Locates the selected tab's underline relative to the tab's boundary.
 
     The `indicator_tab_size` property can be used to define the tab indicator's bounds
-    in terms of its (centered) tab widget with `False`, or the entire tab with `True`.
+    in terms of its (centered) tab control with `False`, or the entire tab with `True`.
     """
 
     indicator_tab_size: Optional[bool] = None
     """
-    `True` for indicator to take entire tab.
+    Whether the indicator should take entire tab.
     """
 
-    is_secondary: Optional[bool] = None
+    secondary: bool = False
     """
     Whether to create a secondary/nested tab bar.
 
     Secondary tabs are used within a content area to further separate related content
     and establish hierarchy.
-
-    Defaults to `False`.
     """
 
-    label_color: bool = False
+    label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of selected tab labels.
+    The color of selected tab labels.
     """
 
-    label_padding: OptionalPaddingValue = None
+    label_padding: Optional[PaddingValue] = None
     """
     The padding around the tab label.
-
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
-    label_text_style: OptionalTextStyle = None
+    label_text_style: Optional[TextStyle] = None
     """
     The text style of the tab labels.
-
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
-    unselected_label_color: OptionalColorValue = None
+    unselected_label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of unselected tab labels.
+    The color of unselected tab labels.
     """
 
-    unselected_label_text_style: OptionalTextStyle = None
+    unselected_label_text_style: Optional[TextStyle] = None
     """
     The text style of the unselected tab labels.
-
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the ink response focus, hover, and splash
-    [colors](https://flet.dev/docs/reference/colors) in various
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    colors in various
+    [`ControlState`][flet.ControlState] states.
 
-    The following `ControlState` values are supported: `PRESSED`, `HOVERED` and
-    `FOCUSED`.
+    The following states are supported: `ControlState.PRESSED`, `ControlState.HOVERED` and
+    `ControlState.FOCUSED`.
     """
 
-    divider_height: OptionalNumber = None
+    divider_height: Optional[Number] = None
     """
     The height of the divider.
 
@@ -207,11 +194,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     indicator_thickness: Number = 2.0
     """
     The thickness of the indicator. Value must be greater than zero.
-
-    Defaults to `2.0`.
     """
 
-    enable_feedback: Optional[str] = None
+    enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback.
 
@@ -225,40 +210,31 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
-
-    The value is [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor)
-    enum.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The padding around the Tabs control.
-
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
-    splash_border_radius: OptionalBorderRadiusValue = None
+    splash_border_radius: Optional[BorderRadiusValue] = None
     """
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
-
-    Value is of type [`BorderRadius`](https://flet.dev/docs/reference/types/borderradius).
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
-
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
     """
 
-    on_click: OptionalControlEventHandler["Tabs"] = None
+    on_click: Optional[ControlEventHandler["Tabs"]] = None
     """
-    Fires when a tab is clicked.
+    Called when a tab is clicked.
     """
 
-    on_change: OptionalControlEventHandler["Tabs"] = None
+    on_change: Optional[ControlEventHandler["Tabs"]] = None
     """
-    Fires when `selected_index` changes.
+    Called when [`selected_index`][flet.Tabs.selected_index] changes.
     """
 
     def __contains__(self, item):

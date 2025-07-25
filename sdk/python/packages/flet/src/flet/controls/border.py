@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.colors import Colors
-from flet.controls.types import ColorValue, Number, OptionalColorValue, OptionalNumber
+from flet.controls.types import ColorValue, Number
 from flet.utils import deprecated
 
 __all__ = [
@@ -11,11 +11,7 @@ __all__ = [
     "BorderSide",
     "BorderSideStrokeAlign",
     "BorderStyle",
-    "OptionalBorder",
-    "OptionalBorderSide",
-    "OptionalBorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
-    "OptionalBorderSideStrokeAlignValue",
     "all",
     "symmetric",
     "only",
@@ -40,6 +36,7 @@ class BorderSideStrokeAlign(float, Enum):
     The border is drawn on the outside of the border path.
     """
 
+
 class BorderStyle(Enum):
     NONE = "none"
     """Skip the border."""
@@ -54,50 +51,47 @@ class BorderSide:
     Creates the side of a border.
 
     By default, the border is `1.0` logical pixels wide and solid black color.
+
+    Raises:
+        AssertionError: if [`width`][(c).] is negative.
     """
+
     width: Number = 1.0
     """
     The width of this side of the border, in logical pixels.
-    
+
     Setting width to 0.0 will result in a hairline border. This means that
     the border will have the width of one physical pixel. Hairline
     rendering takes shortcuts when the path overlaps a pixel more than once.
     This means that it will render faster than otherwise, but it might
     double-hit pixels, giving it a slightly darker/lighter result.
-    
-    To omit the border entirely, set the `style` to `BorderStyle.NONE`.
-    
-    Defaults to `1.0`.
+
+    To omit the border entirely, set the [`style`][flet.BorderSide.style] to `BorderStyle.NONE`.
     """
 
     color: ColorValue = Colors.BLACK
     """
     The color of this side of the border.
-    
-    Defaults to `Colors.BLACK`.
     """
 
     stroke_align: "BorderSideStrokeAlignValue" = BorderSideStrokeAlign.INSIDE
     """
     The relative position of the stroke on a `BorderSide` in an
     `OutlinedBorder` or `Border`.
-    
-    Defaults to `BorderSideStrokeAlign.INSIDE`.
     """
 
-    style:BorderStyle = BorderStyle.SOLID
+    style: BorderStyle = BorderStyle.SOLID
     """
     The style of this side of the border.
-    
-    To omit a side, set `style` to `BorderStyle.NONE`. 
+
+    To omit a side, set `style` to `BorderStyle.NONE`.
     This skips painting the border, but the border still has a `width`.
-    
-    Defaults to `BorderStyle.SOLID`.
     """
 
-
     def __post_init__(self):
-        assert self.width >= 0.0, "widhth must be greater than or equal to 0.0"
+        assert self.width >= 0.0, (
+            f"width must be greater than or equal to 0.0, got {self.width}"
+        )
 
     # Properties
 
@@ -137,13 +131,12 @@ class BorderSide:
     def copy_with(
         self,
         *,
-        width: OptionalNumber = None,
-        color: OptionalColorValue = None,
-        stroke_align: "OptionalBorderSideStrokeAlignValue" = None,
+        width: Optional[Number] = None,
+        color: Optional[ColorValue] = None,
+        stroke_align: Optional["BorderSideStrokeAlignValue"] = None,
     ) -> "BorderSide":
         """
-        Returns a copy of this `BorderSide` instance with the given fields replaced
-        with the new values.
+        Returns a copy of this object with the specified properties overridden.
         """
         return BorderSide(
             width=width if width is not None else self.width,
@@ -164,51 +157,46 @@ class BorderSide:
 @dataclass
 class Border:
     """
-    A border comprised of four sides: top, right, bottom, left.
+    A border comprised of four sides: `top`, `right`, `bottom`, `left`.
 
     Each side of the border is an instance of
-    [`BorderSide`](https://flet.dev/docs/reference/types/borderside) class.
+    [`BorderSide`][flet.BorderSide].
 
     Example:
-    ```python
-    container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
-    container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
-    ```
+        ```python
+        container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
+        container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
+        ```
     """
 
     top: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Top side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     right: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Right side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     bottom: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Bottom side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     left: BorderSide = field(default_factory=lambda: BorderSide.none())
     """
     Left side of the border.
-    
-    Defaults to `BorderSide.none()`
     """
 
     # Class Methods
 
     @classmethod
     def all(
-        cls, width: OptionalNumber = None, color: OptionalColorValue = None, side: "OptionalBorderSide" = None
+        cls,
+        width: Optional[Number] = None,
+        color: Optional[ColorValue] = None,
+        side: Optional[BorderSide] = None,
     ) -> "Border":
         """
         Creates a border whose sides are all the same.
@@ -224,40 +212,47 @@ class Border:
     def symmetric(
         cls,
         *,
-        vertical: BorderSide = BorderSide.none(),
-        horizontal: BorderSide = BorderSide.none(),
+        vertical: Optional[BorderSide] = None,
+        horizontal: Optional[BorderSide] = None,
     ) -> "Border":
         """
         Creates a border with symmetrical vertical and horizontal sides.
 
         The `vertical` argument applies to the `left` and `right` sides,
         and the `horizontal` argument applies to the `top` and `bottom` sides.
-
-        All arguments default to `BorderSide.none()`.
         """
+        if vertical is None:
+            vertical = BorderSide(width=0.0, style=BorderStyle.NONE)
+        if horizontal is None:
+            horizontal = BorderSide(width=0.0, style=BorderStyle.NONE)
         return Border(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 
     @classmethod
     def only(
         cls,
         *,
-        left:BorderSide = BorderSide.none(),
-        top: BorderSide = BorderSide.none(),
-        right: BorderSide = BorderSide.none(),
-        bottom: BorderSide = BorderSide.none(),
+        left: Optional[BorderSide] = None,
+        top: Optional[BorderSide] = None,
+        right: Optional[BorderSide] = None,
+        bottom: Optional[BorderSide] = None,
     ) -> "Border":
         """Creates a `Border` from the given values."""
-        return Border(left=left, top=top, right=right, bottom=bottom)
+        return Border(
+            left=left or BorderSide(width=0.0, style=BorderStyle.NONE),
+            top=top or BorderSide(width=0.0, style=BorderStyle.NONE),
+            right=right or BorderSide(width=0.0, style=BorderStyle.NONE),
+            bottom=bottom or BorderSide(width=0.0, style=BorderStyle.NONE),
+        )
 
     # Instance Methods
 
     def copy_with(
         self,
         *,
-        left: "OptionalBorderSide" = None,
-        top: "OptionalBorderSide" = None,
-        right: "OptionalBorderSide" = None,
-        bottom: "OptionalBorderSide" = None,
+        left: Optional[BorderSide] = None,
+        top: Optional[BorderSide] = None,
+        right: Optional[BorderSide] = None,
+        bottom: Optional[BorderSide] = None,
     ) -> "Border":
         """
         Returns a copy of this `Border` instance with the given fields replaced
@@ -267,7 +262,7 @@ class Border:
             left=left if left is not None else self.left,
             top=top if top is not None else self.top,
             right=right if right is not None else self.right,
-            bottom=bottom if bottom is not None else self.bottom
+            bottom=bottom if bottom is not None else self.bottom,
         )
 
 
@@ -277,7 +272,7 @@ class Border:
     delete_version="0.73.0",
     show_parentheses=True,
 )
-def all(width: Optional[float] = None, color: Optional[ColorValue] = None) -> Border:
+def all(width: Optional[Number] = None, color: Optional[ColorValue] = None) -> Border:
     bs = BorderSide(width or 1.0, color or Colors.BLACK)
     return Border(left=bs, top=bs, right=bs, bottom=bs)
 
@@ -309,12 +304,4 @@ def only(
     return Border(left=left, top=top, right=right, bottom=bottom)
 
 
-# Typings
-OptionalBorder = Optional[Border]
-"""
-OptionalBorder type description
-"""
-OptionalBorderSide = Optional[BorderSide]
-OptionalBorderSideStrokeAlign = Optional[BorderSideStrokeAlign]
 BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
-OptionalBorderSideStrokeAlignValue = Optional[BorderSideStrokeAlignValue]

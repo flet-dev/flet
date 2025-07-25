@@ -1,8 +1,10 @@
+from typing import Optional
+
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
-from flet.controls.padding import OptionalPaddingValue
-from flet.controls.types import OptionalColorValue, OptionalNumber
+from flet.controls.padding import PaddingValue
+from flet.controls.types import ColorValue, Number
 
 __all__ = ["CupertinoBottomSheet"]
 
@@ -11,33 +13,30 @@ __all__ = ["CupertinoBottomSheet"]
 class CupertinoBottomSheet(DialogControl):
     """
     A Cupertino version of modal bottom sheet.
-
-    Online docs: https://flet.dev/docs/controls/cupertinobottomsheet
     """
 
     content: Control
     """
-    The content of the bottom sheet.
+    The control to be displayed.
     """
 
     modal: bool = False
     """
-    Whether this bottom sheet can be dismissed/closed by clicking the area outside of 
+    Whether this bottom sheet can be dismissed/closed by clicking the area outside of
     it.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The sheet's background [color](https://flet.dev/docs/reference/colors).
-    """
-
-    height: OptionalNumber = None
-    """
-    The height of the bottom sheet.
+    The sheet's background color.
     """
 
-    padding: OptionalPaddingValue = None
+    height: Optional[Number] = None
     """
-    The sheet's padding. The value is an instance of 
-    [`Padding`](https://flet.dev/docs/reference/types/padding) class or a number.
+    The height of this bottom sheet.
+    """
+
+    padding: Optional[PaddingValue] = None
+    """
+    The sheet's padding.
     """

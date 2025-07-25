@@ -51,7 +51,7 @@ def control(
     - Supports `@control` (without parentheses)
     - Supports `@control("custom_type")` (with optional arguments)
     - Supports `@control("custom_type", post_init_args=1, isolated=True)` to
-      specify the number of `InitVar` arguments and isolation
+        specify the number of `InitVar` arguments and isolation
     """
 
     # Case 1: If used as `@control` (without parentheses)
@@ -102,7 +102,7 @@ class BaseControl:
     _c: str = field(init=False)
     data: Any = skip_field()
     """
-    Arbitrary data of any type that can be attached to a control.
+    Arbitrary data of any type.
     """
 
     key: Optional[KeyValue] = None
@@ -172,8 +172,11 @@ class BaseControl:
 
     def before_update(self):
         """
-        `before_update()` method is called every time when the control is being updated.
-        Make sure not to call `update()` method within `before_update()`.
+        This method is called every time when this control is being updated.
+
+        /// details | Note
+        Make sure not to call/request an `update()` here.
+        ///
         """
         pass
 

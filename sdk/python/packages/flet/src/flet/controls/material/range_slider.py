@@ -2,14 +2,12 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     MouseCursor,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = ["RangeSlider"]
@@ -22,8 +20,6 @@ class RangeSlider(ConstrainedControl):
     A range slider can be used to select from either a continuous or a discrete
     set of values.
     The default is to use a continuous range of values from min to max.
-
-    Online docs: https://flet.dev/docs/controls/rangeslider
     """
 
     start_value: Number
@@ -49,7 +45,7 @@ class RangeSlider(ConstrainedControl):
     If not set, then the labels will not be displayed.
     """
 
-    min: OptionalNumber = None
+    min: Optional[Number] = None
     """
     The minimum value the user can select.
 
@@ -58,7 +54,7 @@ class RangeSlider(ConstrainedControl):
     If the `max` is equal to the `min`, then the slider is disabled.
     """
 
-    max: OptionalNumber = None
+    max: Optional[Number] = None
     """
     The maximum value the user can select. Must be greater than or equal to `min`.
 
@@ -83,17 +79,17 @@ class RangeSlider(ConstrainedControl):
     The default is 0 (displays value rounded to the nearest integer).
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of the
+    The color to use for the portion of the
     slider track that is active.
 
     The "active" segment of the range slider is the span between the thumbs.
     """
 
-    inactive_color: OptionalColorValue = None
+    inactive_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) for the inactive portions of
+    The color for the inactive portions of
     the slider track.
 
     The "inactive" segments of the slider are the span of tracks between the min and
@@ -102,35 +98,29 @@ class RangeSlider(ConstrainedControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight [color](https://flet.dev/docs/reference/colors) that's typically
+    The highlight color that's typically
     used to indicate that the range slider thumb is in `HOVERED` or `DRAGGED`
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate)s.
+    [`ControlState`][flet.ControlState] .
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
-
-    It's value can be made to depend on the slider's
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate).
-
-    Value is of type
-    [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
-    on_change: OptionalControlEventHandler["RangeSlider"] = None
+    on_change: Optional[ControlEventHandler["RangeSlider"]] = None
     """
-    Fires when the state of the Slider is changed.
-    """
-
-    on_change_start: OptionalControlEventHandler["RangeSlider"] = None
-    """
-    Fires when the user starts selecting a new value for the slider.
+    Called when the state of the Slider is changed.
     """
 
-    on_change_end: OptionalControlEventHandler["RangeSlider"] = None
+    on_change_start: Optional[ControlEventHandler["RangeSlider"]] = None
     """
-    Fires when the user is done selecting a new value for the slider.
+    Called when the user starts selecting a new value for the slider.
+    """
+
+    on_change_end: Optional[ControlEventHandler["RangeSlider"]] = None
+    """
+    Called when the user is done selecting a new value for the slider.
     """
 
     def before_update(self):

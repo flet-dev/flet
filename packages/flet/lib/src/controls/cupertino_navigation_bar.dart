@@ -42,9 +42,9 @@ class _CupertinoNavigationBarControlState
     }
     var navBar = CupertinoTabBar(
         backgroundColor: widget.control.getColor("bgcolor", context),
+        // "indicator_color" from adaptive Material NavBar
         activeColor: widget.control.getColor("active_color", context) ??
             widget.control.getColor("indicator_color", context),
-        // "indicator_color" from adaptive Material NavBar
         inactiveColor: widget.control
             .getColor("inactive_color", context, CupertinoColors.inactiveGray)!,
         iconSize: widget.control.getDouble("icon_size", 30.0)!,
