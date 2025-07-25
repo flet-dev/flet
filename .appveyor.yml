@@ -26,10 +26,10 @@ environment:
     #   job_group: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     # - job_name: Build Flet for macOS
     #   job_group: build_flet
@@ -198,16 +198,15 @@ for:
       # build package
       - cd %flet_sdk_root%
       - uv build --wheel --package flet-desktop
-      - cd %APPVEYOR_BUILD_FOLDER%
       - ps: |
           $ErrorActionPreference = "Continue"
-          Get-ChildItem -Path $env:flet_sdk_root/dist/*-py3-none-any.whl | ForEach-Object {
-            uv run --with wheel $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64" | Write-Output
-            uv run --with wheel $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32" | Write-Output
+          Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
+            uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64" | Write-Output
+            uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32" | Write-Output
             Remove-Item $_.FullName
           }
           $ErrorActionPreference = "Stop"
-      - dir %flet_sdk_root%\dist
+      - dir dist
 
       # publish
       - ps: |
@@ -264,8 +263,8 @@ for:
       - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
-            uv run --with wheel $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
-            uv run --with wheel $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
+            uv run --with wheel --no-project $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
+            uv run --with wheel --no-project $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
             rm $file
           done
 
