@@ -459,7 +459,7 @@ for:
       - uv build --wheel --package flet
 
       # update deps
-      - python $root/ci/update-flet-wheel-deps.py dist
+      - uv run --with wheel $root/ci/update-flet-wheel-deps.py dist
 
       # publish packages
       - publish_to_pypi dist/*.whl
