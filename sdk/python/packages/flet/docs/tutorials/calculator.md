@@ -4,7 +4,7 @@ title: Calculator Tutorial
 
 In this tutorial you will learn, step-by-step, how to create a Calculator app in Python using Flet framework and publish it as a desktop, mobile or web app. The app is [a simple console program](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc.py), yet it is a multi-platform application with similar to iPhone calculator app UI:
 
-![calc-app](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
+![calc-app](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
 /// caption
 ///
 
@@ -35,7 +35,7 @@ ft.run(main)
 
 Run this app and you will see a new window with a greeting:
 
-![hello-world](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
+![hello-world](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
 /// caption
 ///
 
@@ -83,7 +83,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app-1.png){width="80%"}
+![app-1](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app-1.png){width="80%"}
 /// caption
 ///
 
@@ -149,7 +149,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app-2.png){width="80%"}
+![app-2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app-2.png){width="80%"}
 /// caption
 ///
 
@@ -159,7 +159,7 @@ To add a black background with rounded border around the calculator, we will be 
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
 [`Column`][flet.Column] that will be used as the container's [`content`][flet.Container.content]:
 
-![container-layout](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/container-layout.svg){width="80%"}
+![container-layout](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/container-layout.svg){width="80%"}
 /// caption
 ///
 
@@ -282,11 +282,11 @@ content=ft.Column(
     type: example
     open: true
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/calculator/calc3.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/fix-links/sdk/python/examples/tutorials/calculator/calc3.py"
 ```
 ///
 
-![calc-app](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
+![calc-app](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
 /// caption
 ///
 
@@ -350,7 +350,7 @@ With similar approach, `button_click` method will handle different calculator ac
 depending on `data` property for each button. Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc.py).
 
 Run the app and see it in the action:
-![calc-app2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.gif){width="80%"}
+![calc-app2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app.gif){width="80%"}
 /// caption
 ///
 

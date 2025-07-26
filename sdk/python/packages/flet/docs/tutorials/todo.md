@@ -7,7 +7,7 @@ In this tutorial we will show you, step-by-step, how to create a To-Do app in Py
 then publish it as a desktop, mobile or web app. The app is a single-file console program of just
 [172 lines (formatted!) of Python code](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py), yet it is a multi-platform application with rich, responsive UI:
 
-![complete-demo-web.gif](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/complete-demo-web.gif){width="80%"}
+![complete-demo-web.gif](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/complete-demo-web.gif){width="80%"}
 /// caption
 ///
 
@@ -51,7 +51,7 @@ ft.run(main)
 
 Run this app, and you will see a new window with a greeting:
 
-![hello-world](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
+![hello-world](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
 /// caption
 ///
 
@@ -83,7 +83,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-1.png){width="80%"}
+![app-1](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/app-1.png){width="80%"}
 /// caption
 ///
 
@@ -92,7 +92,7 @@ Run the app and you should see a page like this:
 Now let's make the app look nice! We want the entire app to be at the top center of the page,
 taking up 600 px width. The TextField and the "+" button should be aligned horizontally, and take up full app width:
 
-![diagram-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/diagram-1.svg){width="80%"}
+![diagram-1](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/diagram-1.svg){width="80%"}
 /// caption
 ///
 
@@ -133,7 +133,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-2.png){width="80%"}
+![app-2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/app-2.png){width="80%"}
 /// caption
 ///
 
@@ -209,7 +209,7 @@ In the [previous step](#adding-page-controls-and-handling-events), we created a 
 Let's improve the app by adding "Edit" and "Delete" buttons next to a task name. The "Edit" button
 will switch a task item to edit mode.
 
-![diagram-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/diagram-2.svg){width="80%"}
+![diagram-2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/diagram-2.svg){width="80%"}
 /// caption
 ///
 
@@ -330,7 +330,7 @@ Then, we passed a reference to `task_delete` method into Task constructor and ca
 
 Run the app and try to edit and delete tasks:
 
-![view-edit-delete](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/view-edit-delete.gif){width="80%"}
+![view-edit-delete](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/view-edit-delete.gif){width="80%"}
 /// caption
 ///
 
@@ -423,7 +423,7 @@ class Task(ft.Column):
 
 Run the app and try filtering tasks by clicking on the tabs:
 
-![filtering](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/filtering.gif){width="80%"}
+![filtering](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/filtering.gif){width="80%"}
 /// caption
 ///
 
@@ -435,11 +435,11 @@ displaying the number of incomplete tasks (`Text` control) and a "Clear complete
 /// details | Full code
     type: example
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/todo/todo.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/fix-links/sdk/python/examples/tutorials/todo/todo.py"
 ```
 ///
 
-![app-4](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-4.png){width="80%"}
+![app-4](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/app-4.png){width="80%"}
 /// caption
 ///
 
