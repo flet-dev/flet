@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-date-picker/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-date-picker/media/basic.gif){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-date-picker/media/basic.png){width="80%"}
 /// caption
 ///
 

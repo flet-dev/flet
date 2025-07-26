@@ -1,0 +1,18 @@
+# Docs: https://taskfile.dev/installation/
+
+version: '3'
+# includes:
+tasks:
+  dev-setup:
+    commands:
+      - uv run --group all
+
+  docs-serve:
+    aliases:
+      - docs
+    commands:
+      - uv run --directory packages/flet --group docs mkdocs serve
+
+  docs-coverage:
+    commands:
+      - uv run --directory packages/flet --group docs-coverage docstr-coverage

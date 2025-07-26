@@ -16,4 +16,4 @@ def main(page: ft.Page):
     page.add(txt_name, ft.ElevatedButton("Say hello!", on_click=btn_click))
 
 
-ft.app(main)
+ft.run(main)

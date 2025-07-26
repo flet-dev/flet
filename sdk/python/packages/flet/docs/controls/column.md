@@ -59,7 +59,7 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/programmatic-scroll.py"
 ```
 
-![programmatic-scroll](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/programmatic-scroll.gif){width="80%"}
+![programmatic-scroll](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/programmatic-scroll.png){width="80%"}
 /// caption
 ///
 

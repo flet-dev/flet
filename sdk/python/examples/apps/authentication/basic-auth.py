@@ -28,4 +28,4 @@ def main(page: ft.Page):
     page.add(ft.ElevatedButton("Login with GitHub", on_click=login_click))
 
 
-ft.app(target=main, port=8550, view=ft.WEB_BROWSER)
+ft.run(target=main, port=8550, view=ft.WEB_BROWSER)

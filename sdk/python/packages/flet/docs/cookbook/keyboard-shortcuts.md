@@ -34,4 +34,7 @@ ft.run(main)
 /// caption
 ///
 
-Here is [more advanced example](https://github.com/flet-dev/examples/blob/main/python/controls/page/keyboard-events.py).
+Below is a more advanced example:
+```python
+--8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/page/keyboard-events.py
+```

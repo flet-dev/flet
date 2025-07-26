@@ -8,4 +8,4 @@ def main(page: ft.Page):
     page.add(solitaire)
 
 
-ft.app(target=main)
+ft.run(main)

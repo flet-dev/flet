@@ -135,8 +135,9 @@ enables implicit animation of container properties such as size, background colo
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/container/animate.py"
 ```
 
-![animate](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/container/media/animate.gif){width="80%"}
-
+![animate](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/container/media/animate-1.gif){width="80%"}
+/// caption
+///
 
 ### Animated content switcher
 

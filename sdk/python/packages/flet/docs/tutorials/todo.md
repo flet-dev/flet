@@ -7,7 +7,7 @@ In this tutorial we will show you, step-by-step, how to create a To-Do app in Py
 then publish it as a desktop, mobile or web app. The app is a single-file console program of just
 [172 lines (formatted!) of Python code](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py), yet it is a multi-platform application with rich, responsive UI:
 
-![complete-demo-web.gif](../assets/tutorials/todo/complete-demo-web.gif){width="80%"}
+![complete-demo-web.gif](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/complete-demo-web.gif){width="80%"}
 /// caption
 ///
 
@@ -27,8 +27,8 @@ The tutorial consists of the following steps:
 * [Final touches](#final-touches)
 * [Publishing the app](#publishing-the-app)
 
-## Getting started with Flet
-
+/// details | For beginners
+    type: info
 To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but
 
 you do need a basic knowledge of Python and object-oriented programming.
@@ -51,13 +51,13 @@ ft.run(main)
 
 Run this app, and you will see a new window with a greeting:
 
-![hello-world](../assets/tutorials/todo/hello-world.png){width="80%"}
+![hello-world](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
 /// caption
 ///
 
-## Adding page controls and handling events
+///
 
-Now we're ready to create a multi-user To-Do app.
+## Adding page controls and handling events
 
 To start, we'll need a [`TextField`][flet.TextField] for entering a task name, and an "+"
 [`FloatingActionButton`][flet.FloatingActionButton] with an event handler that will display
@@ -83,7 +83,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-1](../assets/tutorials/todo/app-1.png){width="80%"}
+![app-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-1.png){width="80%"}
 /// caption
 ///
 
@@ -92,7 +92,7 @@ Run the app and you should see a page like this:
 Now let's make the app look nice! We want the entire app to be at the top center of the page,
 taking up 600 px width. The TextField and the "+" button should be aligned horizontally, and take up full app width:
 
-![diagram-1](../assets/tutorials/todo/diagram-1.svg){width="80%"}
+![diagram-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/diagram-1.svg){width="80%"}
 /// caption
 ///
 
@@ -133,7 +133,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-2](../assets/tutorials/todo/app-2.png){width="80%"}
+![app-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-2.png){width="80%"}
 /// caption
 ///
 
@@ -209,7 +209,7 @@ In the [previous step](#adding-page-controls-and-handling-events), we created a 
 Let's improve the app by adding "Edit" and "Delete" buttons next to a task name. The "Edit" button
 will switch a task item to edit mode.
 
-![diagram-2](../assets/tutorials/todo/diagram-2.svg){width="80%"}
+![diagram-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/diagram-2.svg){width="80%"}
 /// caption
 ///
 
@@ -330,7 +330,7 @@ Then, we passed a reference to `task_delete` method into Task constructor and ca
 
 Run the app and try to edit and delete tasks:
 
-![view-edit-delete](../assets/tutorials/todo/view-edit-delete.gif){width="80%"}
+![view-edit-delete](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/view-edit-delete.gif){width="80%"}
 /// caption
 ///
 
@@ -339,8 +339,8 @@ Run the app and try to edit and delete tasks:
 We already have a functional To-Do app where we can create, edit, and delete tasks.
 To be even more productive, we want to be able to filter tasks by their status.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-5.py). Below we will explain the changes we've done
-to implement filtering.
+Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-5.py).
+Below we will explain the changes we've done to implement filtering.
 
 `Tabs` control is used to display filter:
 
@@ -423,7 +423,7 @@ class Task(ft.Column):
 
 Run the app and try filtering tasks by clicking on the tabs:
 
-![filtering](../assets/tutorials/todo/filtering.gif){width="80%"}
+![filtering](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/filtering.gif){width="80%"}
 /// caption
 ///
 
@@ -432,72 +432,14 @@ Run the app and try filtering tasks by clicking on the tabs:
 Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control)
 displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py). Below we highlighted the changes we've
-done to implement the footer:
-
-```python title="todo.py"
-class TodoApp():
-    def __init__(self):
-        # ...
-
-        self.items_left = ft.Text("0 items left")
-
-        self.width = 600
-        self.controls = [
-            ft.Row(
-                [ft.Text(value="Todos", theme_style=ft.TextThemeStyle.HEADLINE_MEDIUM)],
-                alignment=ft.MainAxisAlignment.CENTER,
-            ),
-            ft.Row(
-                controls=[
-                    self.new_task,
-                    ft.FloatingActionButton(
-                        icon=ft.Icons.ADD, on_click=self.add_clicked
-                    ),
-                ],
-            ),
-            ft.Column(
-                spacing=25,
-                controls=[
-                    self.filter,
-                    self.tasks,
-                    ft.Row(
-                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                        controls=[
-                            self.items_left,
-                            ft.OutlinedButton(
-                                text="Clear completed", on_click=self.clear_clicked
-                            ),
-                        ],
-                    ),
-                ],
-            ),
-        ]
-
-    # ...
-
-    def clear_clicked(self, e):
-        for task in self.tasks.controls[:]:
-            if task.completed:
-                self.task_delete(task)
-
-    def before_update(self):
-        status = self.filter.tabs[self.filter.selected_index].text
-        count = 0
-        for task in self.tasks.controls:
-            task.visible = (
-                status == "all"
-                or (status == "active" and task.completed == False)
-                or (status == "completed" and task.completed)
-            )
-            if not task.completed:
-                count += 1
-        self.items_left.value = f"{count} active item(s) left"
+/// details | Full code
+    type: example
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/todo/todo.py"
 ```
-Run the app:
+///
 
-![app-4](../assets/tutorials/todo/app-4.png){width="80%"}
+![app-4](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-4.png){width="80%"}
 /// caption
 ///
 

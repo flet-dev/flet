@@ -26,4 +26,4 @@ def main(page: ft.Page):
     page.add(view)
 
 
-ft.app(target=main)
+ft.run(main)

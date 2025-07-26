@@ -8,7 +8,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/markdown/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/markdown/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/markdown/media/basic.gif){width="80%"}
 /// caption
 ///
 

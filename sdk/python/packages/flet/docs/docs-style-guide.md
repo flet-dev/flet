@@ -14,7 +14,7 @@ The class must be present in our topmost `__init__.py`, and can then be (cross-)
 [`Row.controls`][flet.Row.controls]
 ```
 
-**The type of a property or its default value should not be mentioned in the docstring, as they are already described 
+**The type of a property or its default value should not be mentioned in the docstring, as they are already described
 in their respective definitions, and made visible to the user by our docs engine.**
 
 ## Admonition
@@ -42,7 +42,7 @@ Note:
     Message.
 ```
 
-Where `Note` can literally be replaced by anything, which will then be used as title of the Detail. 
+Where `Note` can literally be replaced by anything, which will then be used as title of the Detail.
 
 However, for appropriate icons/colors, use predefined types, such as 'Note' (default), 'Attention', 'Caution', 'Danger', 'Error', 'Tip', 'Hint', 'Warning' ([Visual example](https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types))
 
@@ -98,4 +98,3 @@ This is the caption of this image. It is optional.
 ```
 
 Images are usually not centered when displayed. A hack to quickly center an image is to have add a caption block below it. It must not contain text.
-

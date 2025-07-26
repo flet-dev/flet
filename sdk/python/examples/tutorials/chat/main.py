@@ -19,12 +19,12 @@ class ChatMessage(ft.Row):
                 bgcolor=self.get_avatar_color(message.user_name),
             ),
             ft.Column(
-                [
-                    ft.Text(message.user_name, weight="bold"),
-                    ft.Text(message.text, selectable=True),
-                ],
                 tight=True,
                 spacing=5,
+                controls=[
+                    ft.Text(message.user_name, weight=ft.FontWeight.BOLD),
+                    ft.Text(message.text, selectable=True),
+                ],
             ),
         ]
 
@@ -108,7 +108,7 @@ def main(page: ft.Page):
         modal=True,
         title=ft.Text("Welcome!"),
         content=ft.Column([join_user_name], width=300, height=70, tight=True),
-        actions=[ft.ElevatedButton(text="Join chat", on_click=join_chat_click)],
+        actions=[ft.ElevatedButton(content="Join chat", on_click=join_chat_click)],
         actions_alignment=ft.MainAxisAlignment.END,
     )
 
@@ -143,7 +143,7 @@ def main(page: ft.Page):
             expand=True,
         ),
         ft.Row(
-            [
+            controls=[
                 new_message,
                 ft.IconButton(
                     icon=ft.Icons.SEND_ROUNDED,
@@ -155,4 +155,4 @@ def main(page: ft.Page):
     )
 
 
-ft.app(target=main)
+ft.run(main)

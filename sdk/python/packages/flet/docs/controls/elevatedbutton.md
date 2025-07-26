@@ -28,7 +28,7 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/handling-clicks.py"
 ```
 
-![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/handling-clicks.png){width="80%"}
+![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/handling-clicks.gif){width="80%"}
 /// caption
 ///
 

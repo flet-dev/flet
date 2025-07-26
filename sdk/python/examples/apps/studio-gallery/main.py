@@ -117,4 +117,4 @@ def main(page: ft.Page):
     page.update()
 
 
-ft.app(target=main, assets_dir="assets")
+ft.run(target=main, assets_dir="assets")

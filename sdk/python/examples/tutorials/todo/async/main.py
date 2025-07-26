@@ -175,4 +175,4 @@ async def main(page: ft.Page):
     await page.add_async(app)
 
 
-ft.app(main)
+ft.run(main)

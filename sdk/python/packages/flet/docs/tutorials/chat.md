@@ -16,13 +16,11 @@ In this tutorial you will learn how to:
 
 The complete application will look like this:
 
-![chat](../assets/tutorials/chat/chat.gif){width="80%"}
+![chat](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat.gif){width="80%"}
 /// caption
 ///
 
-You can play with a live demo [here](https://flet-chat.fly.dev).
-
-The full code for the chat app can be found [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/chat/chat.py).
+You can try the live demo [here](https://flet-chat.fly.dev).
 
 ## Getting started with Flet
 
@@ -48,7 +46,7 @@ ft.run(main)
 
 Run this app you will see a new window with a greeting:
 
-![hello-world](../assets/tutorials/todo/hello-world.png){width="80%"}
+![hello-world](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
 /// caption
 ///
 
@@ -57,7 +55,7 @@ Run this app you will see a new window with a greeting:
 To start, we want to be able to take user input (chat message) and show messages history on the screen.
 The layout for this step could look like this:
 
-![chat-layout-1](../assets/tutorials/chat/layout-1.svg){width="80%"}
+![chat-layout-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/layout-1.svg){width="80%"}
 /// caption
 ///
 
@@ -98,7 +96,7 @@ should be called for the update to take effect.
 ///
 
 Chat app now looks like this:
-![chat-1](../assets/tutorials/chat/chat-1.png){width="80%"}
+![chat-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat-1.png){width="80%"}
 /// caption
 ///
 
@@ -180,7 +178,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![chat-2](../assets/tutorials/chat/chat-2.gif){width="80%"}
+![chat-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat-2.gif){width="80%"}
 /// caption
 ///
 
@@ -210,7 +208,7 @@ we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the 
 A dialog will be opened on the start of the program since we have set its `open` property to `True`.
 ///
 
-![username-dialog](../assets/tutorials/chat/username-dialog.png){width="80%"}
+![username-dialog](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/username-dialog.png){width="80%"}
 /// caption
 ///
 
@@ -218,7 +216,7 @@ When the user clicks on "Join chat" button, it will call `join_click` method tha
 all subscribers, informing them that the user has joined the chat. This message should look different
 from the regular chat message, for example, like this:
 
-![chat-4](../assets/tutorials/chat/chat-4.png){width="80%"}
+![chat-4](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat-4.png){width="80%"}
 /// caption
 ///
 
@@ -280,7 +278,7 @@ def send_click(e):
 
 The full code for this step can be found [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/chat/chat_3.py).
 
-![chat-3](../assets/tutorials/chat/chat-3.gif){width="80%"}
+![chat-3](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat-3.gif){width="80%"}
 /// caption
 ///
 
@@ -296,7 +294,7 @@ to it that will improve user experience and make the app look more professional.
 
 You may want to show messages in a different format, like this:
 
-![chat-layout-chatmessage](../assets/tutorials/chat/layout-chatmessage.svg){width="80%"}
+![chat-layout-chatmessage](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/layout-chatmessage.svg){width="80%"}
 /// caption
 ///
 
@@ -360,7 +358,7 @@ Later, if you decide to improve control layout or its logic, it won't affect the
 
 Now you can use your brand new `ChatMessage` to build a better layout for the chat app:
 
-![chat-layout-2](../assets/tutorials/chat/layout-2.svg){width="80%"}
+![chat-layout-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/layout-2.svg){width="80%"}
 /// caption
 ///
 
@@ -429,8 +427,15 @@ Here is how you can implement this layout:
 
 The full code for this step can be found [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/chat/chat.py).
 
-This is the final version of the chat app for the purpose of this tutorial. Below you can read more about the enhancements that we have made.
+/// details | Full code
+    type: example
+    open: true
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/chat/main.py"
+```
+///
 
+This is the final version of the chat app for the purpose of this tutorial. Below you can read more about the enhancements that we have made.
 
 ### Keyboard support
 
