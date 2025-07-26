@@ -156,7 +156,8 @@ class FletTestApp:
             logging.debug(f"Similarity: {similarity}%")
             if similarity <= 99:
                 actual_image_path = (
-                    golden_image_path.parent / f"{golden_image_path.stem}_actual.png"
+                    golden_image_path.parent
+                    / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)

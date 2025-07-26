@@ -27,11 +27,15 @@ async def test_button_1(flet_app: ftt.FletTestApp, request):
     button = await flet_app.tester.find_by_text("Click me")
     assert button.count == 1
     await flet_app.tester.mouse_hover(button)
-    flet_app.assert_screenshot(request.node.name, await scr.capture_async())
+    flet_app.assert_screenshot(
+        request.node.name, await scr.capture_async(pixel_ratio=2.0)
+    )
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_button_2(flet_app: ftt.FletTestApp, request):
     flet_app.page.add(scr := ft.Screenshot(ft.Button("Something else!")))
     await flet_app.tester.pump_and_settle()
-    flet_app.assert_screenshot(request.node.name, await scr.capture_async())
+    flet_app.assert_screenshot(
+        request.node.name, await scr.capture_async(pixel_ratio=2.0)
+    )
