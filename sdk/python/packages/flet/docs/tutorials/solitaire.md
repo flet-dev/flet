@@ -8,7 +8,7 @@ This tutorial is aimed at beginner/intermediate level Python developers who have
 
 You can find a live demo [here](https://gallery.flet.dev/solitaire/).
 
-![solitaire](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/part1-final.gif){width="80%"}
+![solitaire](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/part1-final.gif){width="80%"}
 /// caption
 ///
 
@@ -48,7 +48,7 @@ ft.run(main)
 
 Run this app and you will see a new window with a greeting:
 
-![hello-world](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
+![hello-world](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
 /// caption
 ///
 
@@ -88,7 +88,7 @@ ft.run(main)
 
 Run the app to see the card added to the stack:
 
-![drag_and_drop1](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop1.png){width="80%"}
+![drag_and_drop1](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop1.png){width="80%"}
 /// caption
 ///
 
@@ -128,7 +128,7 @@ ft.run(main)
 
 Now you can see the card moving:
 
-![drag_and_drop2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop2.gif){width="80%"}
+![drag_and_drop2](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop2.gif){width="80%"}
 /// caption
 ///
 
@@ -254,7 +254,7 @@ Eventually, we’ll need 52 cards to play the game. For our proof of concept, le
 Now, if you run the app with the two cards, you will notice that when you move the cards around, the
 yellow card (`card2`) is moving as expected but the green the card (`card1`) is moving under the yellow card.
 
-![drag_and_drop4.gif](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop4.gif){width="80%"}
+![drag_and_drop4.gif](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop4.gif){width="80%"}
 /// caption
 ///
 
@@ -276,7 +276,7 @@ def start_drag(e: ft.DragStartEvent):
 
 Now the two cards can be dragged without issues:
 
-![drag_and_drop5.gif](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop5.gif){width="80%"}
+![drag_and_drop5.gif](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop5.gif){width="80%"}
 /// caption
 ///
 
@@ -330,7 +330,7 @@ def drop(e: ft.DragEndEvent):
 
 As a result, the two cards can be dragged between the three slots:
 
-![drag_and_drop6.gif](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop6.gif){width="80%"}
+![drag_and_drop6.gif](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/drag-and-drop6.gif){width="80%"}
 /// caption
 ///
 
@@ -353,7 +353,7 @@ even lower. Those are called “fanned piles”.
 Then, we want to be able to pick a card from the fanned pile that is not the top card of
 the pile and drag the card together with all the cards below it:
 
-![fanned_piles1.gif](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/fanned-piles3.gif){width="80%"}
+![fanned_piles1.gif](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/fanned-piles3.gif){width="80%"}
 /// caption
 ///
 
@@ -549,7 +549,7 @@ will depend on the length of the new slot’s pile:
 
 Now the cards are placed with offset which gives us the fanned pile look:
 
-![fanned_piles1](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/fanned-piles1.png){width="80%"}
+![fanned_piles1](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/fanned-piles1.png){width="80%"}
 /// caption
 ///
 
@@ -557,7 +557,7 @@ Now the cards are placed with offset which gives us the fanned pile look:
 
 If you try to drag the card from the bottom of the pile now, it will look like this:
 
-![drag_pile](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/fanned-piles2.gif){width="80%"}
+![drag_pile](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/fanned-piles2.gif){width="80%"}
 /// caption
 ///
 
@@ -650,7 +650,7 @@ Let’s take a look at the [wikipedia article about Klondike (solitaire)](https:
 
 > The four foundations (light rectangles in the upper right of the figure) are built up by suit from Ace (low in this game) to King, and the tableau piles can be built down by alternate colors.
 
-![game_setup_wiki](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup-wiki.png){width="60%"}
+![game_setup_wiki](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup-wiki.png){width="60%"}
 /// caption
 ///
 
@@ -746,7 +746,7 @@ The card deck is ready to be dealt, and now we need to create the layout for it.
 
 Klondike solitaire game layout should look like this:
 
-![solitaire-layout](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/solitaire-layout.svg){width="60%"}
+![solitaire-layout](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/solitaire-layout.svg){width="60%"}
 /// caption
 ///
 
@@ -817,7 +817,7 @@ def deal_cards(self):
 
 Let’s run the program and see where we are at now:
 
-![game-setup1](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup1.png){width="80%"}
+![game-setup1](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup1.png){width="80%"}
 /// caption
 ///
 
@@ -835,7 +835,7 @@ def place(self, slot):
 ```
 Now cards are only placed in fanned piles to tableau:
 
-![game-setup2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup2.png){width="80%"}
+![game-setup2](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup2.png){width="80%"}
 /// caption
 ///
 
@@ -892,7 +892,7 @@ for slot in self.tableau:
 
 Let’s see how it looks now:
 
-![game-setup3](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup3.png){width="80%"}
+![game-setup3](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-setup3.png){width="80%"}
 /// caption
 ///
 
@@ -958,7 +958,7 @@ def click(self, e):
 
 Let's check how it works:
 
-![game_rules2](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-rules2.gif){width="80%"}
+![game_rules2](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/game-rules2.gif){width="80%"}
 /// caption
 ///
 
@@ -1211,7 +1211,7 @@ def winning_sequence(self):
     self.controls.append(ft.AlertDialog(title=ft.Text("Congratulations! You won!"), open=True))
 ```
 
-![winning_the_game](https://raw.githubusercontent.com/reflet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/winning-the-game.gif){width="80%"}
+![winning_the_game](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/solitaire/media/winning-the-game.gif){width="80%"}
 /// caption
 ///
 
