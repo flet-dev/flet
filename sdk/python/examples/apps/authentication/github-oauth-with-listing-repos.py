@@ -96,4 +96,4 @@ def main(page: ft.Page):
     page.add(ft.Row([logged_user, login_button, logout_button]), repos_view)
 
 
-ft.app(main)
+ft.run(main)

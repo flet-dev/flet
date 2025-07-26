@@ -22,21 +22,24 @@ flet-web = { workspace = true }
 members = ["packages/*"]
 
 [dependency-groups]
-dev = [
+test = [
     "pytest >=7.2.0",
     "pytest_asyncio >=1.1.0",
+]
+dev = [
     "tomlkit >=0.11.6",
     "cryptography >=39.0.0",
-    "pyinstaller >=6.6.0",
     "pillow >=10.3.0",
     "pre-commit >=2.21.0",
     "pypi-cleanup==0.1.4",
-    "matplotlib >=3.10.1",
-    "plotly >=6.0.1",
     "pandas >=2.2.3",
     "numpy >=2.2.0",
     "scikit-image >=0.25.2",
     "ruff>=0.11.7",
+    { include-group = 'test' },
+]
+docs-coverage = [
+    "docstr-coverage >=2.3.2",
 ]
 docs = [
     "mkdocs >=1.6.1",
@@ -55,10 +58,8 @@ docs = [
     "pygments >=2.16",
     "markdown-exec[ansi] >=1.11.0",
     "pydocstyle >=6.3.0",
+    "linkcheckmd >=1.4.0",
     { include-group = 'docs-coverage' },
-]
-docs-coverage = [
-    "docstr-coverage >=2.3.2",
 ]
 all = [
     { include-group = 'dev' },

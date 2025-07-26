@@ -456,11 +456,10 @@ for:
     test_script:
       # run tests
       - cd sdk/python
-      - uv run pytest packages/flet/tests
+      - uv run --group test pytest packages/flet/tests
 
       # docs coverage report
-      - cd packages/flet
-      - uv run --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
+      - uv run --directory packages/flet --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
 
     artifacts:
       - path: sdk/python/packages/flet/*.log

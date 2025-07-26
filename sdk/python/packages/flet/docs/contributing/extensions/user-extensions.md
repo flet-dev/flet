@@ -80,7 +80,7 @@ def main(page: ft.Page):
     )
 
 
-ft.app(main)
+ft.run(main)
 ```
 
 and run:
@@ -358,7 +358,7 @@ def main(page: ft.Page):
     )
 
 
-ft.app(main)
+ft.run(main)
 ```
 
 <img src="/img/docs/extending-flet/spinkit2.gif" className="screenshot-30" />
@@ -506,7 +506,7 @@ def main(page: ft.Page):
     )
 
 
-ft.app(main)
+ft.run(main)
 ```
 
 Re-build and run:

@@ -33,4 +33,4 @@ def main(page: ft.Page):
     page.add(text_field, list_view)
 
 
-ft.app(port=8080, target=main, view=ft.WEB_BROWSER)
+ft.run(port=8080, target=main, view=ft.WEB_BROWSER)

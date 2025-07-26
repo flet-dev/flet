@@ -104,5 +104,5 @@ You can also "manually" add a new project by clicking **"+"** floating action bu
     https://flet-counter-test-ios.fly.dev
     ```
 - The "Gallery" tab of the app has some more examples that you can try out.
-- Explore [Flet examples](https://github.com/flet-dev/examples/tree/main/python) for even more examples.
+- Explore [Flet examples](https://github.com/flet-dev/flet/blob/main/sdk/python/examples) for even more examples.
 ///

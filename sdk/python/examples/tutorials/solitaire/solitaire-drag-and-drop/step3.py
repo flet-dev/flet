@@ -75,4 +75,4 @@ def main(page: ft.Page):
     page.add(ft.Stack(controls=controls, width=1000, height=500))
 
 
-ft.app(target=main)
+ft.run(main)
