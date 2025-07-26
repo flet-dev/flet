@@ -169,6 +169,7 @@ for:
     build: off
 
     test_script:
+      - cd sdk/python
       - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/test_counter_app.py
 
   # ======================================
