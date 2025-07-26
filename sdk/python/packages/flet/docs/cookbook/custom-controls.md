@@ -118,8 +118,6 @@ ft.run(main)
 /// caption
 ///
 
-You can find more examples of composite custom controls in [community examples](https://github.com/flet-dev/examples/tree/main/python/community) and [flet-contrib](https://github.com/flet-dev/flet-contrib/tree/main/flet_contrib) repos.
-
 ## Life-cycle methods
 
 Custom controls provide life-cycle "hook" methods that you may need to use for different use cases in your app.
@@ -136,7 +134,9 @@ for your [adaptive app](adaptive-apps.md#custom-adaptive-controls).
 
 `did_mount()` method is called after the control is added to the page and assigned transient `uid`.
 
-Override `did_mount()` method if you need to implement logic that needs to be executed after the control was added to the page, for example [Weather widget](https://github.com/flet-dev/examples/tree/main/python/community/weather_widget) which calls Open Weather API every minute to update itself with the new weather conditions.
+Override `did_mount()` method if you need to implement logic that needs to be executed after the control
+was added to the page, for example [Weather widget](https://github.com/flet-dev/examples/tree/main/python/community/weather_widget)
+which calls Open Weather API every minute to update itself with the new weather conditions.
 
 ### `will_unmount()`
 

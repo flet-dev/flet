@@ -6,7 +6,7 @@ It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 /// caption
 ///
 
-Check out [source code of the demo above](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/file-picker-all-modes.py).
+Check out [source code of the demo above](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/controls/file-picker/pick-save-and-get-directory-path.py).
 
 File picker allows opening three dialogs:
 

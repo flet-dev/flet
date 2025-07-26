@@ -2,7 +2,9 @@
 title: Calculator Tutorial
 ---
 
-In this tutorial you will learn, step-by-step, how to create a Calculator app in Python using Flet framework and publish it as a desktop, mobile or web app. The app is [a simple console program](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc.py), yet it is a multi-platform application with similar to iPhone calculator app UI:
+In this tutorial you will learn, step-by-step, how to create a Calculator app in Python using
+Flet framework and publish it as a desktop, mobile or web app.
+The app is a simple console program, yet it is a multi-platform application with similar to iPhone calculator app UI:
 
 ![calc-app](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
 /// caption
@@ -304,7 +306,9 @@ Even if you can't think of such uses right now, we still recommend creating all 
 Flet apps with composability and reusability in mind.
 
 To make a reusable Calc app component, we are going to encapsulate its state and
-presentation logic in a separate `CalculatorApp` class. Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc4.py).
+presentation logic in a separate `CalculatorApp` class.
+
+Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc4.py).
 
 /// admonition | Try something
     type: example
@@ -347,7 +351,9 @@ def button_clicked(self, e):
 ```
 
 With similar approach, `button_click` method will handle different calculator actions
-depending on `data` property for each button. Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/calc/calc.py).
+depending on `data` property for each button.
+Copy the entire code for this step from
+[here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc.py).
 
 Run the app and see it in the action:
 ![calc-app2](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/calculator/media/app.gif){width="80%"}

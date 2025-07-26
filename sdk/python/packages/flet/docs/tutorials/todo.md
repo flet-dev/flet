@@ -5,7 +5,8 @@ title: ToDo Tutorial
 In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and
 
 then publish it as a desktop, mobile or web app. The app is a single-file console program of just
-[172 lines (formatted!) of Python code](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py), yet it is a multi-platform application with rich, responsive UI:
+[172 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py),
+yet it is a multi-platform application with rich, responsive UI:
 
 ![complete-demo-web.gif](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/todo/media/complete-demo-web.gif){width="80%"}
 /// caption
@@ -220,7 +221,7 @@ for both `display_view` and `edit_view` rows.
 Before this step, the code was short enough to be fully included in the tutorial. Going forward,
 we will be highlighting only the changes introduced in a step.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-4.py). Below we will explain the changes we've done
+Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/todo/to-do-4.py). Below we will explain the changes we've done
 to implement view, edit, and delete tasks.
 
 To encapsulate task item views and actions, we introduced a new `Task` class:
@@ -339,7 +340,7 @@ Run the app and try to edit and delete tasks:
 We already have a functional To-Do app where we can create, edit, and delete tasks.
 To be even more productive, we want to be able to filter tasks by their status.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/todo/to-do-5.py).
+Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/todo/to-do-5.py).
 Below we will explain the changes we've done to implement filtering.
 
 `Tabs` control is used to display filter:

@@ -8,7 +8,7 @@ Let's make a clone of Trello in Python with the Flet framework and then deploy i
 /// caption
 ///
 
-The code for this tutorial can be found [here](https://github.com/flet-dev/examples/tree/main/python/apps/trolli) with self explanatory commits.
+The code for this tutorial can be found [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/trolli) with self explanatory commits.
 Be sure to run `pip install -r requirements.txt` after cloning.
 
 You can see the live demo [here](https://gallery.flet.dev/trolli/).
