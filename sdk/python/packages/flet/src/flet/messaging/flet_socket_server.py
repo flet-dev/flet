@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import logging
 import os
 import tempfile
@@ -198,14 +199,13 @@ class FletSocketServer(Connection):
             logger.debug("Shutting down thread pool...")
             self.executor.shutdown(wait=False, cancel_futures=True)
 
-        # close socket
-        if self.__receive_loop_task:
-            self.__receive_loop_task.cancel()
-        if self.__send_loop_task:
-            self.__send_loop_task.cancel()
-        if self.__server:
-            self.__server.cancel()
+        for task in [self.__receive_loop_task, self.__send_loop_task, self.__server]:
+            if task:
+                task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await task
 
-        # remove UDS path
         if self.__uds_path and os.path.exists(self.__uds_path):
             os.unlink(self.__uds_path)
+
+        logger.debug("Connection closed.")
