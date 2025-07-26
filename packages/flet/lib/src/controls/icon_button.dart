@@ -8,7 +8,7 @@ class IconButtonControl extends StatefulWidget {
   final Control control;
 
   IconButtonControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? key ?? ValueKey("control_${control.id}"));
 
   @override
   State<IconButtonControl> createState() => _IconButtonControlState();

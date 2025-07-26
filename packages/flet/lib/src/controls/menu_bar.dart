@@ -5,7 +5,7 @@ class MenuBarControl extends StatefulWidget {
   final Control control;
 
   MenuBarControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<MenuBarControl> createState() => _MenuBarControlState();

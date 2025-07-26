@@ -105,6 +105,7 @@ from flet.controls.core.reorderable_draggable import ReorderableDraggable
 from flet.controls.core.responsive_row import ResponsiveRow
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
+from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
@@ -209,7 +210,7 @@ from flet.controls.gradients import (
     RadialGradient,
     SweepGradient,
 )
-from flet.controls.keys import Key, ScrollKey, ValueKey
+from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
@@ -879,8 +880,9 @@ __all__ = [
     "EventControlType",
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
+    "KeyValue",
+    "Screenshot",
     "MergeSemantics",
-    "DropdownTheme",
     "DropdownTheme",
     "StrutStyle",
     "BadgeValue",

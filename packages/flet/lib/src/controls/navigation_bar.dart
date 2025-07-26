@@ -16,7 +16,7 @@ class NavigationBarControl extends StatefulWidget {
   final Control control;
 
   NavigationBarControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();

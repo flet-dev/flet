@@ -16,7 +16,7 @@ class CupertinoRadioControl extends StatefulWidget {
   final Control control;
 
   CupertinoRadioControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();

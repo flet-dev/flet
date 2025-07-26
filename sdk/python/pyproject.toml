@@ -24,6 +24,7 @@ members = ["packages/*"]
 [dependency-groups]
 test = [
     "pytest >=7.2.0",
+    "pytest_asyncio >=1.1.0",
 ]
 dev = [
     "tomlkit >=0.11.6",
@@ -32,6 +33,8 @@ dev = [
     "pre-commit >=2.21.0",
     "pypi-cleanup==0.1.4",
     "pandas >=2.2.3",
+    "numpy >=2.2.0",
+    "scikit-image >=0.25.2",
     "ruff>=0.11.7",
     { include-group = 'test' },
 ]

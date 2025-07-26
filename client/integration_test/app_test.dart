@@ -5,36 +5,49 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+import 'flutter_tester.dart';
 
-  tearDown(() {
-    debugPrint("TEAR DOWN");
-  });
+void main() {
+  var binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('end-to-end test', () {
-    testWidgets('tap on the floating action button, verify counter',
-        (tester) async {
+    testWidgets('test app', (tester) async {
       var dir = Directory.current.path;
       debugPrint("Current dir: $dir");
-      app.main();
-      await tester.pumpAndSettle(const Duration(milliseconds: 100),
-          EnginePhase.sendSemanticsUpdate, const Duration(seconds: 20));
 
-      // Verify the counter starts at 0.
-      expect(find.text('0'), findsOneWidget);
+      app.tester = FlutterWidgetTester(tester, binding);
+
+      List<String> args = [];
+      const fletTestAppUrl = String.fromEnvironment("FLET_TEST_APP_URL");
+      if (fletTestAppUrl != "") {
+        args.add(fletTestAppUrl);
+      }
+      app.main(args);
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      await app.tester?.pump();
+      await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
+
+      //var finder = app.tester?.findByKey(const Key("decrement"));
+      // var finder = find.byKey(const Key("decrement"));
+      // print("Decrement: ${finder.evaluate().length}");
+
+      // // Verify the counter starts at 0.
+      // expect(find.text('0'), findsOneWidget);
 
       // Finds the floating action button to tap on.
-      final Finder fab = find.byTooltip('Increment');
+      // final Finder fab = find.byTooltip('Increment');
 
-      // Emulate a tap on the floating action button.
-      await tester.tap(fab);
+      // // Emulate a tap on the floating action button.
+      // await tester.tap(fab);
 
-      // Trigger a frame.
-      await tester.pumpAndSettle();
+      // // Trigger a frame.
+      // await tester.pumpAndSettle();
 
-      // Verify the counter increments by 1.
-      expect(find.text('1'), findsOneWidget);
+      // // Verify the counter increments by 1.
+      // expect(find.text('1'), findsOneWidget);
+      await app.tester?.waitForTeardown();
     });
   });
 }

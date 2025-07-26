@@ -21,7 +21,7 @@ class CanvasControl extends StatefulWidget {
   final Control control;
 
   CanvasControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<CanvasControl> createState() => _CanvasControlState();

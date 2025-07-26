@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../flet.dart';
 import 'flet_app_errors_handler.dart';
 import 'flet_core_extension.dart';
 import 'flet_extension.dart';
@@ -47,6 +48,7 @@ class FletBackend extends ChangeNotifier {
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
   final bool? forcePyodide;
+  final Tester? tester;
   final Map<String, GlobalKey> globalKeys = {};
 
   final WeakValueMap<int, Control> controlsIndex = WeakValueMap<int, Control>();
@@ -90,6 +92,7 @@ class FletBackend extends ChangeNotifier {
       this.controlId,
       this.args,
       this.forcePyodide,
+      this.tester,
       required extensions,
       FletBackend? parentFletBackend})
       : _parentFletBackend =

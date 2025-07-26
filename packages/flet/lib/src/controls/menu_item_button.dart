@@ -11,7 +11,7 @@ class MenuItemButtonControl extends StatefulWidget {
   final Control control;
 
   MenuItemButtonControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();

@@ -73,7 +73,7 @@ def process_wheels(directory):
         print(f"Version: {version}")
 
         # Create a temporary directory
-        with tempfile.TemporaryDirectory() as tmp_dir:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp_dir:
             # Unpack the wheel file
             wheel.cli.unpack.unpack(wheel_file, tmp_dir)
 

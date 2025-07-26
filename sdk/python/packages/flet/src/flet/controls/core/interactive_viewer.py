@@ -1,7 +1,6 @@
 import asyncio
 from typing import Optional
 
-from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -20,7 +19,7 @@ __all__ = ["InteractiveViewer"]
 
 
 @control("InteractiveViewer")
-class InteractiveViewer(ConstrainedControl, AdaptiveControl):
+class InteractiveViewer(ConstrainedControl):
     """
     Allows you to pan, zoom, and rotate its [`content`][(c).].
 

@@ -22,9 +22,14 @@ environment:
     secure: trYGM65OQ1+HYnOYOe/NOHrofLpP3bz64nHwVWPJhiUIYll3MrrQd7ilFNp+zSkI
 
   matrix:
-    - job_name: Build Flet package for Flutter
-      job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+    # - job_name: Build Flet package for Flutter
+    #   job_group: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+
+    - job_name: Integration tests on macOS
+      job_group: integration_tests
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
 
     # - job_name: Build Flet for Windows
     #   job_group: build_flet
@@ -150,6 +155,27 @@ for:
 
           fi
 
+  ###########################
+  #    Integration Tests    #
+  ###########################
+  - matrix:
+      only:
+        - job_group: integration_tests
+
+    install:
+      - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
+      - source ci/common.sh
+      - source ci/install_flutter.sh
+
+    build: off
+
+    test_script:
+      - cd sdk/python
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/test_buttons.py
+
+    on_failure:
+      - find packages/flet/integration_tests -type f -name '*_actual.png' -exec appveyor PushArtifact {} \;
+
   # ======================================
   #      Build Flet Client for Windows
   # ======================================
@@ -201,8 +227,8 @@ for:
       - uv build --wheel --package flet-desktop
       - ps: |
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win_amd64'"
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win32'"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win_amd64"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win32"
             Remove-Item $_.FullName
           }
       - dir dist
@@ -223,7 +249,7 @@ for:
 
     artifacts:
       - path: client\build\windows\x64\runner\flet-windows.zip
-      - path: sdk\python\packages\*.whl
+      - path: sdk\python\dist\*.whl
 
     deploy:
       provider: GitHub
@@ -429,7 +455,7 @@ for:
     test_script:
       # run tests
       - cd sdk/python
-      - uv run --group test pytest
+      - uv run --group test pytest packages/flet/tests
 
       # docs coverage report
       - uv run --directory packages/flet --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
@@ -458,7 +484,7 @@ for:
       - uv build --wheel --package flet
 
       # update deps
-      - python $root/ci/update-flet-wheel-deps.py dist
+      - uv run --with wheel $root/ci/update-flet-wheel-deps.py dist
 
       # publish packages
       - publish_to_pypi dist/*.whl

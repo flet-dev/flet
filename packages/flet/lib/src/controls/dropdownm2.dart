@@ -15,7 +15,7 @@ class DropdownM2Control extends StatefulWidget {
   final Control control;
 
   DropdownM2Control({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<DropdownM2Control> createState() => _DropdownM2ControlState();

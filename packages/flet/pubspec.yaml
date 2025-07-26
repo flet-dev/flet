@@ -42,7 +42,8 @@ dependencies:
   web: ^1.1.1
   file_picker: ^10.1.9
   path_provider: ^2.1.5
-
+  screenshot: ^3.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

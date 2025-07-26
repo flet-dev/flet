@@ -1,5 +1,7 @@
 library flet;
 
+export 'dart:io';
+
 export 'src/controls/base_controls.dart';
 export 'src/extensions/control.dart';
 export 'src/flet_app.dart';
@@ -10,6 +12,8 @@ export 'src/flet_service.dart';
 export 'src/models/asset_source.dart';
 export 'src/models/control.dart';
 export 'src/models/page_size_view_model.dart';
+export 'src/testing/test_finder.dart';
+export 'src/testing/tester.dart';
 export 'src/utils.dart';
 export 'src/utils/alignment.dart';
 export 'src/utils/animations.dart';
@@ -36,6 +40,7 @@ export 'src/utils/icons.dart';
 export 'src/utils/images.dart';
 export 'src/utils/launch_url.dart';
 export 'src/utils/locale.dart';
+export 'src/utils/lock.dart';
 export 'src/utils/markdown.dart';
 export 'src/utils/material_icons.dart';
 export 'src/utils/material_state.dart';

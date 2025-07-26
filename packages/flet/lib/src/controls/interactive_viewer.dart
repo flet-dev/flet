@@ -14,7 +14,7 @@ class InteractiveViewerControl extends StatefulWidget {
   final Control control;
 
   InteractiveViewerControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<InteractiveViewerControl> createState() =>
@@ -39,7 +39,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("OutlinedButton.$name($args)");
+    debugPrint("InteractiveViewer.$name($args)");
     switch (name) {
       case "zoom":
         var factor = parseDouble(args["factor"]);

@@ -6,6 +6,7 @@ import 'flet_app_errors_handler.dart';
 import 'flet_backend.dart';
 import 'flet_extension.dart';
 import 'models/control.dart';
+import 'testing/tester.dart';
 
 /// FletApp - The top-level widget that initializes everything
 class FletApp extends StatefulWidget {
@@ -21,6 +22,7 @@ class FletApp extends StatefulWidget {
   final List<FletExtension>? extensions;
   final Map<String, dynamic>? args;
   final bool? forcePyodide;
+  final Tester? tester;
   final bool multiView;
 
   const FletApp(
@@ -37,6 +39,7 @@ class FletApp extends StatefulWidget {
       this.extensions,
       this.args,
       this.forcePyodide,
+      this.tester,
       this.multiView = false});
 
   @override
@@ -68,6 +71,7 @@ class _FletAppState extends State<FletApp> {
             extensions: widget.extensions ?? [],
             args: widget.args,
             forcePyodide: widget.forcePyodide,
+            tester: widget.tester,
             multiView: widget.multiView,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));

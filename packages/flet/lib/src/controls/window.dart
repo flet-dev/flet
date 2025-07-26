@@ -17,7 +17,7 @@ class WindowControl extends StatefulWidget {
   final Control control;
 
   WindowControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<WindowControl> createState() => _WindowControlState();
