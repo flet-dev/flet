@@ -1,9 +1,3 @@
----
-title: Host app as a dynamic website
----
-
-## Introduction
-
 Flet implements [FastAPI](https://fastapi.tiangolo.com/) app to run your app as a dynamic website.
 
 It uses [Uvicorn](https://www.uvicorn.org/) web server, by default, to run the app, but any ASGI-compatible server can be used instead.
@@ -377,7 +371,7 @@ async def flet_app(websocket: WebSocket):
 
 #### Uploads handler
 
-Handles file uploads by [`FilePicker`][flet.FilePicker] control. 
+Handles file uploads by [`FilePicker`][flet.FilePicker] control.
 This endpoint is optional - if your app doesn't use [`FilePicker`][flet.FilePicker] then it's not needed.
 
 ```python

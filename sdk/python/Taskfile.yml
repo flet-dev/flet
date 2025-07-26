@@ -1,0 +1,20 @@
+# Docs: https://taskfile.dev/installation/
+
+version: '3'
+# includes:
+tasks:
+  dev-setup:
+    aliases:
+      - setup
+    cmds:
+      - uv pip install -r pyproject.toml --group all
+
+  docs-serve:
+    aliases:
+      - docs
+    cmds:
+      - uv run --directory packages/flet --group docs mkdocs serve
+
+  docs-coverage:
+    cmds:
+      - uv run --directory packages/flet --group docs-coverage docstr-coverage

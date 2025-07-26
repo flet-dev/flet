@@ -12,7 +12,7 @@ Well, it took [more efforts](https://github.com/flet-dev/flet/pull/95/files) tha
 /// caption
 ///
 
-Explore [source code](https://github.com/flet-dev/examples/blob/main/python/apps/routing-navigation/building-views-on-route-change.py) of the example above.
+Explore [source code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing-navigation/building-views-on-route-change.py) of the example above.
 
 ## Page route
 

@@ -342,7 +342,7 @@ if ejt:
     page.login(provider, saved_token=jt)
 ```
 
-[See complete app example](https://github.com/flet-dev/examples/blob/main/python/apps/authentication/github-oauth-with-listing-repos.py).
+[See complete app example](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/authentication/github-oauth-with-listing-repos.py).
 
 ## Signing out
 
@@ -356,7 +356,7 @@ def logout_button_click(e):
     page.logout()
 ```
 
-[See complete app example](https://github.com/flet-dev/examples/blob/main/python/apps/authentication/github-oauth-with-listing-repos.py).
+[See complete app example](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/authentication/github-oauth-with-listing-repos.py).
 
 ## Customizing authorization flow
 

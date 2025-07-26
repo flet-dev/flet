@@ -63,6 +63,6 @@ def main(page: ft.Page):
 
 
 # os.environ["FLET_PLATFORM"] = "macos"
-# ft.app(main, view=ft.AppView.FLET_APP, port=8550)
+# ft.run(main, view=ft.AppView.FLET_APP, port=8550)
 
 ft.run(main)

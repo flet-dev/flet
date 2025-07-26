@@ -31,8 +31,10 @@ web = ["flet-web"]
 flet = "flet.cli:main"
 
 [dependency-groups]
-dev = [
+test = [
     "pytest >=7.2.0",
+]
+dev = [
     "tomlkit >=0.11.6",
     "cryptography >=39.0.0",
     "pillow >=10.3.0",
@@ -40,6 +42,10 @@ dev = [
     "pypi-cleanup==0.1.4",
     "pandas >=2.2.3",
     "ruff>=0.11.7",
+    { include-group = 'test' },
+]
+docs-coverage = [
+    "docstr-coverage >=2.3.2",
 ]
 docs = [
     "mkdocs >=1.6.1",
@@ -58,10 +64,8 @@ docs = [
     "pygments >=2.16",
     "markdown-exec[ansi] >=1.11.0",
     "pydocstyle >=6.3.0",
+    "linkcheckmd >=1.4.0",
     { include-group = 'docs-coverage' },
-]
-docs-coverage = [
-    "docstr-coverage >=2.3.2",
 ]
 all = [
     { include-group = 'dev' },

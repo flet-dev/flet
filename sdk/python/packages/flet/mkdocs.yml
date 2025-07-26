@@ -5,7 +5,7 @@ site_author: Flet
 site_description: Build multi-platform Python apps powered by Flutter.
 
 # Repository
-edit_uri: edit/docs/sdk/python/packages/flet/docs
+edit_uri: edit/main/sdk/python/packages/flet/docs
 repo_name: flet-dev/flet
 repo_url: https://github.com/flet-dev/flet
 
@@ -631,14 +631,14 @@ nav:
       - Web:
           - publish/web/index.md
           - Dynamic Website:
-              - publish/web/dynamic-website/index.md
+              - Publish web app as dynamic website: publish/web/dynamic-website/index.md
               - Hosting:
-                  - publish/web/dynamic-website/hosting/index.md
+                  - Hosting: publish/web/dynamic-website/hosting/index.md
                   - Fly.io: publish/web/dynamic-website/hosting/fly-io.md
                   - Replit: publish/web/dynamic-website/hosting/replit.md
                   - Self-Hosting: publish/web/dynamic-website/hosting/self-hosting.md
           - Static Website:
-              - publish/web/static-website/index.md
+              - Publish web app as static website: publish/web/static-website/index.md
               - Hosting:
                   - Cloudflare: publish/web/static-website/hosting/cloudflare.md
   - CLI:

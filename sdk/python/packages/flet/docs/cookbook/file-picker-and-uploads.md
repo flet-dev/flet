@@ -2,11 +2,11 @@
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
-![File picker all modes demo](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
+![File picker all modes demo](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
 /// caption
 ///
 
-Check out [source code of the demo above](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/file-picker-all-modes.py).
+Check out [source code of the demo above](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/controls/file-picker/pick-save-and-get-directory-path.py).
 
 File picker allows opening three dialogs:
 
@@ -147,7 +147,8 @@ page.add(ft.Image(src="/uploads/<some-uploaded-picture.png>"))
 
 ### Upload progress
 
-Once `FilePicker.upload()` method is called Flet client asynchronously starts uploading selected files one-by-one and reports the progress via `FilePicker.on_upload` callback.
+Once `FilePicker.upload()` method is called Flet client asynchronously starts uploading selected files one-by-one
+and reports the progress via `FilePicker.on_upload` callback.
 
 Event object of `on_upload` event is an instance of `FilePickerUploadEvent` class with the following fields:
 
@@ -155,12 +156,17 @@ Event object of `on_upload` event is an instance of `FilePickerUploadEvent` clas
 * `progress` - a value from `0.0` to `1.0`.
 * `error`
 
-The callback is called at least twice for every uploaded file: with `0` progress before upload begins and with `1.0` progress when upload is finished. For files larger than 1 MB a progress is additionally reported for every 10% uploaded.
+The callback is called at least twice for every uploaded file: with `0` progress before upload begins
+and with `1.0` progress when upload is finished. For files larger than 1 MB a progress is additionally
+reported for every 10% uploaded.
 
-Check that [example](https://github.com/flet-dev/examples/blob/main/python/controls/file-picker/pick-and-upload.py) demonstrating multiple file uploads:
+The following example demonstrates multiple file uploads:
 
+```python
+--8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/file-picker/pick-and-upload.py
+```
 
-![File picker multiple uploads](https://raw.githubusercontent.com/flet-dev/flet/docs/sdk/python/examples/controls/file-picker/media/pick-and-upload.png){width="80%"}
+![File picker multiple uploads](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/file-picker/media/pick-and-upload.png){width="80%"}
 /// caption
 ///
 
