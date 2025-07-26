@@ -176,6 +176,7 @@ for:
     artifacts:
       - path: sdk/python/packages/flet/integration_tests/**/*_actual.png
 
+
   # ======================================
   #      Build Flet Client for Windows
   # ======================================
