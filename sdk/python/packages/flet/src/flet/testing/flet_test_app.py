@@ -152,9 +152,15 @@ class FletTestApp:
                 raise Exception(f"Golden image not found: {golden_image_path}")
             golden_img = self.load_image_from_file(golden_image_path)
             img = self.load_image_from_bytes(screenshot)
-            assert self.compare_images_rgb(golden_img, img) > 99.0, (
-                "Screenshots are not identical"
-            )
+            similarity = self.compare_images_rgb(golden_img, img)
+            logging.debug(f"Similarity: {similarity}%")
+            if similarity <= 99:
+                actual_image_path = (
+                    golden_image_path.parent / golden_image_path.stem / "_actual.png"
+                )
+                with open(actual_image_path, "bw") as f:
+                    f.write(screenshot)
+            assert similarity > 99.0, "Screenshots are not identical"
 
     def load_image_from_file(self, file_name):
         return Image.open(file_name).convert("RGB")

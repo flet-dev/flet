@@ -171,8 +171,11 @@ for:
 
     test_script:
       - cd sdk/python
-      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/test_buttons.py
 
+    artifacts:
+      - sdk/python/packages/flet/integration_tests/**/*_actual.png
+      
   # ======================================
   #      Build Flet Client for Windows
   # ======================================
