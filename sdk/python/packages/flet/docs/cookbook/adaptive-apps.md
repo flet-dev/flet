@@ -109,151 +109,151 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 -   [:octicons-arrow-right-24: `AlertDialog`][flet.AlertDialog]
 
     ---
-    ![AlertDialog](../assets/cookbook/adaptive-apps/alertdialog.png){width="45%"}
+    ![AlertDialog](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/alert-dialog/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoAlertDialog`][flet.CupertinoAlertDialog]
 
     ---
-    ![CupertinoAlertDialog](../assets/cookbook/adaptive-apps/cupertinoalertdialog.png){width="45%"}
+    ![CupertinoAlertDialog](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-alert-dialog/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `Any button in Dialog actions`][flet.Button]
 
     ---
-    ![Dialog actions](../assets/cookbook/adaptive-apps/dialogactions.png){width="45%"}
+    ![Dialog actions](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/alert-dialog/media/adaptive-dialog-action.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
 
     ---
-    ![CupertinoDialogAction](../assets/cookbook/adaptive-apps/cupertinodialogactions.png){width="45%"}
+    ![CupertinoDialogAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-alert-dialog/media/adaptive-dialog-action.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `AppBar`][flet.AppBar]
 
     ---
-    ![AppBar](../assets/cookbook/adaptive-apps/appbar.png){width="45%"}
+    ![AppBar](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/app-bar/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoAppBar`][flet.CupertinoAppBar]
 
     ---
-    ![CupertinoAppBar](../assets/cookbook/adaptive-apps/cupertinoappbar.png){width="45%"}
+    ![CupertinoAppBar](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-app-bar/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `NavigationBar`][flet.NavigationBar]
 
     ---
-    ![NavigationBar](../assets/cookbook/adaptive-apps/navigationbar.png){width="45%"}
+    ![NavigationBar](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/navigation-bar/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoNavigationBar`][flet.CupertinoNavigationBar]
 
     ---
-    ![CupertinoNavigationBar](../assets/cookbook/adaptive-apps/cupertinonavigationbar.png){width="45%"}
+    ![CupertinoNavigationBar](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-navigation-bar/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `ListTile`][flet.ListTile]
 
     ---
-    ![ListTile](../assets/cookbook/adaptive-apps/listtile.png){width="45%"}
+    ![ListTile](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/list-tile/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoListTile`][flet.CupertinoListTile]
 
     ---
-    ![CupertinoListTile](../assets/cookbook/adaptive-apps/cupertinolisttile.png){width="45%"}
+    ![CupertinoListTile](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-list-tile/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `TextField`][flet.TextField]
 
     ---
-    ![TextField](../assets/cookbook/adaptive-apps/textfield.png){width="45%"}
+    ![TextField](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/text-field/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoTextField`][flet.CupertinoTextField]
 
     ---
-    ![CupertinoTextField](../assets/cookbook/adaptive-apps/cupertinotextfield.png){width="45%"}
+    ![CupertinoTextField](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-text-field/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `Checkbox`][flet.Checkbox]
 
     ---
-    ![Checkbox](../assets/cookbook/adaptive-apps/checkbox.png){width="45%"}
+    ![Checkbox](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/checkbox/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoCheckbox`][flet.CupertinoCheckbox]
 
     ---
-    ![CupertinoCheckbox](../assets/cookbook/adaptive-apps/cupertinocheckbox.png){width="45%"}
+    ![CupertinoCheckbox](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-checkbox/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Slider`][flet.Slider]
 
     ---
-    ![Slider](../assets/cookbook/adaptive-apps/slider.png){width="45%"}
+    ![Slider](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/slider/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
 
     ---
-    ![CupertinoSlider](../assets/cookbook/adaptive-apps/cupertinoslider.png){width="45%"}
+    ![CupertinoSlider](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-slider/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Switch`][flet.Switch]
 
     ---
-    ![Switch](../assets/cookbook/adaptive-apps/switch.png){width="45%"}
+    ![Switch](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/switch/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSwitch`][flet.CupertinoSwitch]
 
     ---
-    ![CupertinoSwitch](../assets/cookbook/adaptive-apps/cupertinoswitch.png){width="45%"}
+    ![CupertinoSwitch](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-switch/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Radio`][flet.Radio]
 
     ---
-    ![Radio](../assets/cookbook/adaptive-apps/radio.png){width="45%"}
+    ![Radio](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/radio/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoRadio`][flet.CupertinoRadio]
 
     ---
-    ![CupertinoRadio](../assets/cookbook/adaptive-apps/cupertinoradio.png){width="45%"}
+    ![CupertinoRadio](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-radio/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
 
     ---
-    ![FilledButton](../assets/cookbook/adaptive-apps/filledbutton.png){width="45%"}
+    ![FilledButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/filled-button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
 
     ---
-    ![CupertinoFilledButton](../assets/cookbook/adaptive-apps/cupertinofilledbutton.png){width="45%"}
+    ![CupertinoFilledButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-filled-button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledTonalButton`][flet.FilledTonalButton]
 
     ---
-    ![FilledTonalButton](../assets/cookbook/adaptive-apps/filledtonalbutton.png){width="45%"}
+    ![FilledTonalButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/filled-tonal-button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoButtonTonal](../assets/cookbook/adaptive-apps/cupertinobutton-filledtonal.png){width="45%"}
+    ![CupertinoButtonTonal](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-button/media/adaptive-tonal-button.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `IconButton`][flet.IconButton]
 
     ---
-    ![IconButton](../assets/cookbook/adaptive-apps/icon-button.png){width="45%"}
+    ![IconButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/icon-button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoIconButton](../assets/cookbook/adaptive-apps/icon-button-cupertino.png){width="45%"}
+    ![CupertinoIconButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-button/media/adaptive-icon-button.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
 
-    ![ElevatedButton](../assets/cookbook/adaptive-apps/elevatedbutton.png){width="45%"}
+    ![ElevatedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/elevated-button/media/adaptive.png){width="45%"}
 
     ---
     [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
 
-    ![OutlinedButton](../assets/cookbook/adaptive-apps/outlinedbutton.png){width="45%"}
+    ![OutlinedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/outlined-button/media/adaptive.png){width="45%"}
 
     ---
     [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
 
-    ![TextButton](../assets/cookbook/adaptive-apps/textbutton.png){width="45%"}
+    ![TextButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/text-button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoButton](../assets/cookbook/adaptive-apps/cupertinobutton.png){width="45%"}
+    ![CupertinoButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-button/media/adaptive.png){width="45%"}
 
 </div>
 
@@ -330,12 +330,12 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 -   **iOS**
 
     ---
-    ![iOS](../assets/cookbook/adaptive-apps/navigation-bar-custom-ios.png)
+    ![iOS](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/xyz/media/index.png)
 
 -   **Android**
 
     ---
-    ![Android](../assets/cookbook/adaptive-apps/navigation-bar-custom-android.png){width="90%"}
+    ![Android](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/xyz/media/index.png){width="90%"}
 
 </div>
 

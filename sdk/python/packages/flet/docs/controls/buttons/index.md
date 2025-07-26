@@ -30,7 +30,7 @@
 -   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
 
     ---
-    ![CupertinoFilledButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-filled-button/media/index.png){width="100%"}
+    ![CupertinoFilledButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-filled-button/media/basic.png){width="100%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSegmentedButton`][flet.CupertinoSegmentedButton]
 
