@@ -5,7 +5,7 @@ site_author: Flet
 site_description: Build multi-platform Python apps powered by Flutter.
 
 # Repository
-edit_uri: edit/docs/sdk/python/packages/flet/docs
+edit_uri: edit/main/sdk/python/packages/flet/docs
 repo_name: flet-dev/flet
 repo_url: https://github.com/flet-dev/flet
 

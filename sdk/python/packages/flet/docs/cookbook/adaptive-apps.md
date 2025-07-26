@@ -330,12 +330,12 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 -   **iOS**
 
     ---
-    ![iOS](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/xyz/media/index.png)
+    ![CupertinoNavigationBar](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/navigation-bar/media/adaptive.png){width="90%"}
 
 -   **Android**
 
     ---
-    ![Android](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/xyz/media/index.png){width="90%"}
+    ![CupertinoNavigationBar](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/navigation-bar/media/adaptive.png){width="90%"}
 
 </div>
 
