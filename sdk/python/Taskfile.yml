@@ -4,15 +4,17 @@ version: '3'
 # includes:
 tasks:
   dev-setup:
-    commands:
-      - uv run --group all
+    aliases:
+      - setup
+    cmds:
+      - uv pip install -r pyproject.toml --group all
 
   docs-serve:
     aliases:
       - docs
-    commands:
+    cmds:
       - uv run --directory packages/flet --group docs mkdocs serve
 
   docs-coverage:
-    commands:
+    cmds:
       - uv run --directory packages/flet --group docs-coverage docstr-coverage

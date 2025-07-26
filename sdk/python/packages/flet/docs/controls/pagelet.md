@@ -5,10 +5,10 @@
 ### Pagelet example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/fix-links/sdk/python/examples/controls/pagelet/basic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/pagelet/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/pagelet/media/basic.png){width="80%"}
+![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/pagelet/media/basic.png){width="80%"}
 /// caption
 ///
 
