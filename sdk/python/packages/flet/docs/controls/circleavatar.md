@@ -5,10 +5,10 @@
 ### User avatars
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/circle-avatar/user-avatars.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/fix-links/sdk/python/examples/controls/circle-avatar/user-avatars.py"
 ```
 
-![user-avatars](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/circle-avatar/media/user-avatars.png){width="80%"}
+![user-avatars](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/circle-avatar/media/user-avatars.png){width="80%"}
 /// caption
 ///
 

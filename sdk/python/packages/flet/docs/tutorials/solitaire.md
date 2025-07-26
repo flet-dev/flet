@@ -1238,6 +1238,6 @@ In this tutorial, you have learnt how to:
 * Implement [implicit animations](../cookbook/animations.md);
 * [Deploy](../publish/web/index.md) your Flet app to the web;
 
-For further reading you can explore [controls](../controls/index.md) and [examples repository](https://github.com/flet-dev/examples/tree/main/python).
+For further reading you can explore [controls](../controls/index.md) and [examples](https://github.com/flet-dev/flet/tree/docs/fix-links/sdk/python/examples).
 
 We would love to hear your feedback! Please drop us an [email](mailto:hello@flet.dev), join the discussion on [Discord](https://discord.gg/dzWXP8SHG8).
