@@ -276,7 +276,13 @@ def send_click(e):
     page.update()
 ```
 
-The full code for this step can be found [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/chat/chat_3.py).
+/// details | Code
+    type: example
+    open: true
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/docs/fix-links/sdk/python/examples/tutorials/chat/chat_3.py"
+```
+///
 
 ![chat-3](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/tutorials/chat/media/chat-3.gif){width="80%"}
 /// caption
@@ -424,8 +430,6 @@ Here is how you can implement this layout:
         ),
     )
 ```
-
-The full code for this step can be found [here](https://github.com/flet-dev/examples/blob/main/python/tutorials/chat/chat.py).
 
 /// details | Full code
     type: example

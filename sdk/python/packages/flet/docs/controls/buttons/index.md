@@ -10,7 +10,7 @@
 -   [:octicons-arrow-right-24: `CupertinoActionSheetAction`][flet.CupertinoActionSheetAction]
 
     ---
-    ![CupertinoActionSheetAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-action-sheet-action/media/index.png){width="100%"}
+    <!-- ![CupertinoActionSheetAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-action-sheet-action/media/index.png){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
@@ -20,12 +20,12 @@
 -   [:octicons-arrow-right-24: `CupertinoContextMenuAction`][flet.CupertinoContextMenuAction]
 
     ---
-    ![CupertinoContextMenuAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-context-menu-action/media/index.png){width="100%"}
+    <!-- ![CupertinoContextMenuAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-context-menu-action/media/index.png){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
 
     ---
-    ![CupertinoDialogAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-dialog-action/media/index.png){width="100%"}
+    <!-- ![CupertinoDialogAction](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-dialog-action/media/index.png){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
 
@@ -40,12 +40,12 @@
 -   [:octicons-arrow-right-24: `CupertinoSlidingSegmentedButton`][flet.CupertinoSlidingSegmentedButton]
 
     ---
-    ![CupertinoSlidingSegmentedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-sliding-segmented-button/media/index.png){width="100%"}
+    <!-- ![CupertinoSlidingSegmentedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-sliding-segmented-button/media/index.png){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `CupertinoTintedButton`][flet.CupertinoTintedButton]
 
     ---
-    ![CupertinoTintedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-tinted-button/media/index.png){width="100%"}
+    <!-- ![CupertinoTintedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/cupertino-tinted-button/media/index.png){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
 
@@ -75,7 +75,7 @@
 -   [:octicons-arrow-right-24: `MenuItemButton`][flet.MenuItemButton]
 
     ---
-    ![MenuItemButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/menu-item-button/media/index.gif){width="100%"}
+    <!-- ![MenuItemButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/menu-item-button/media/index.gif){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
 
@@ -90,11 +90,11 @@
 -   [:octicons-arrow-right-24: `SegmentedButton`][flet.SegmentedButton]
 
     ---
-    ![SegmentedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/segmented-button/media/index.gif){width="100%"}
+    <!-- ![SegmentedButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/segmented-button/media/index.png){width="100%"} -->
 
 -   [:octicons-arrow-right-24: `SubmenuButton`][flet.SubmenuButton]
 
     ---
-    ![SubmenuButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/segmented-button/media/index.png){width="100%"}
+    <!-- ![SubmenuButton](https://raw.githubusercontent.com/flet-dev/flet/docs/fix-links/sdk/python/examples/controls/segmented-button/media/index.png){width="100%"} -->
 
 </div>
