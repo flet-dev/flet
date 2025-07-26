@@ -174,7 +174,7 @@ for:
       - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/test_buttons.py
 
     on_failure:
-      - find sdk/python/packages/flet/integration_tests -type f -name '*_actual.png' -exec appveyor PushArtifact {} \;
+      - find packages/flet/integration_tests -type f -name '*_actual.png' -exec appveyor PushArtifact {} \;
 
   # ======================================
   #      Build Flet Client for Windows
