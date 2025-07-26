@@ -163,6 +163,7 @@ for:
         - job_group: integration_tests
 
     install:
+      - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
       - source ci/common.sh
       - source ci/install_flutter.sh
 
