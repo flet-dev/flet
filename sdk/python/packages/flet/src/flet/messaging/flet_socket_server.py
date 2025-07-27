@@ -199,6 +199,8 @@ class FletSocketServer(Connection):
             logger.debug("Shutting down thread pool...")
             self.executor.shutdown(wait=False, cancel_futures=True)
 
+        logger.debug("Cancelling pending tasks...")
+
         for task in [self.__receive_loop_task, self.__send_loop_task, self.__server]:
             if task:
                 task.cancel()
