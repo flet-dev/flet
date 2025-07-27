@@ -31,3 +31,5 @@ Environment variables:
 `FLET_TEST_DEVICE`
 
 `FLET_TEST_GOLDEN`
+
+`FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - default is 2.0

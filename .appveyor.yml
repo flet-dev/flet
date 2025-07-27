@@ -30,6 +30,7 @@ environment:
       job_group: integration_tests
       python_stack: python 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+      FLET_TEST_SCREENSHOTS_PIXEL_RATIO: 2.0
 
     # - job_name: Build Flet for Windows
     #   job_group: build_flet
@@ -171,7 +172,7 @@ for:
 
     test_script:
       - cd sdk/python
-      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/test_buttons.py
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/
 
     on_failure:
       - find packages/flet/integration_tests -type f -name '*_actual.png' -exec appveyor PushArtifact {} \;

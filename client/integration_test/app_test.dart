@@ -24,7 +24,7 @@ void main() {
       }
       app.main(args);
 
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 500));
 
       await app.tester?.pump();
       await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));

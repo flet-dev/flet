@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 import flet as ft
@@ -7,6 +8,8 @@ import pytest
 import pytest_asyncio
 
 logging.basicConfig(level=logging.DEBUG)
+
+pixel_ratio = int(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -28,7 +31,7 @@ async def test_button_1(flet_app: ftt.FletTestApp, request):
     assert button.count == 1
     await flet_app.tester.mouse_hover(button)
     flet_app.assert_screenshot(
-        request.node.name, await scr.capture_async(pixel_ratio=2.0)
+        request.node.name, await scr.capture_async(pixel_ratio=pixel_ratio)
     )
 
 
@@ -37,5 +40,5 @@ async def test_button_2(flet_app: ftt.FletTestApp, request):
     flet_app.page.add(scr := ft.Screenshot(ft.Button("Something else!")))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        request.node.name, await scr.capture_async(pixel_ratio=2.0)
+        request.node.name, await scr.capture_async(pixel_ratio=pixel_ratio)
     )
