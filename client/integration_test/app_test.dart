@@ -26,7 +26,7 @@ void main() {
 
       await Future.delayed(const Duration(milliseconds: 500));
 
-      await app.tester?.pump();
+      await app.tester?.pump(duration: const Duration(seconds: 1));
       await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
 
       //var finder = app.tester?.findByKey(const Key("decrement"));
