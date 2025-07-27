@@ -100,7 +100,10 @@ class FletSocketServer(Connection):
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         while True:
             try:
-                buf = await reader.read(1024**2)
+                try:
+                    buf = await asyncio.wait_for(reader.read(1024**2), timeout=1.0)
+                except asyncio.TimeoutError:
+                    continue
                 if not buf:
                     return None
                 unpacker.feed(buf)
@@ -113,7 +116,10 @@ class FletSocketServer(Connection):
 
     async def __send_loop(self, writer: asyncio.StreamWriter):
         while True:
-            message = await self.__send_queue.get()
+            try:
+                message = await asyncio.wait_for(self.__send_queue.get(), timeout=1.0)
+            except asyncio.TimeoutError:
+                continue
             try:
                 writer.write(message)
             except Exception:
