@@ -95,8 +95,18 @@ class FletSocketServer(Connection):
         if not self.__connected:
             self.__connected = True
             logger.debug("Connected new TCP client")
+
             self.__receive_loop_task = asyncio.create_task(self.__receive_loop(reader))
             self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
+
+            done, pending = await asyncio.wait(
+                [self.__receive_loop_task, self.__send_loop_task],
+                return_when=asyncio.FIRST_COMPLETED,
+            )
+
+            # Optionally cancel the remaining one
+            for task in pending:
+                task.cancel()
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
