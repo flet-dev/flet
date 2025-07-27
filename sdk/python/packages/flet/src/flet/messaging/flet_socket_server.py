@@ -40,6 +40,7 @@ class FletSocketServer(Connection):
         executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
+        self.__server = None
         self.__send_loop_task = None
         self.__receive_loop_task = None
         self.__connected = None
@@ -65,7 +66,9 @@ class FletSocketServer(Connection):
             port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://{host}:{port}"
             logger.info(f"Starting up TCP server on {host}:{port}")
-            server = await asyncio.start_server(self.handle_connection, host, port)
+            self.__server = await asyncio.start_server(
+                self.handle_connection, host, port
+            )
         else:
             # UDS
             if not self.__uds_path:
@@ -76,15 +79,15 @@ class FletSocketServer(Connection):
                 os.remove(self.__uds_path)
             self.page_url = self.__uds_path
             logger.info(f"Starting up UDS server on {self.__uds_path}")
-            server = await asyncio.start_unix_server(
+            self.__server = await asyncio.start_unix_server(
                 self.handle_connection, self.__uds_path
             )
 
         if self.__blocking:
-            self.__server = None
-            await server.serve_forever()
+            self.__serve_task = None
+            await self.__server.serve_forever()
         else:
-            self.__server = asyncio.create_task(server.serve_forever())
+            self.__serve_task = asyncio.create_task(self.__server.serve_forever())
 
     async def handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
@@ -200,13 +203,22 @@ class FletSocketServer(Connection):
     async def close(self):
         logger.debug("Closing connection...")
 
+        if self.__server:
+            logger.debug("Shutting down TCP server...")
+            self.__server.close()
+            await self.__server.wait_closed()
+
         if self.executor:
             logger.debug("Shutting down thread pool...")
             self.executor.shutdown(wait=False, cancel_futures=True)
 
         logger.debug("Cancelling pending tasks...")
 
-        for task in [self.__receive_loop_task, self.__send_loop_task, self.__server]:
+        for task in [
+            self.__receive_loop_task,
+            self.__send_loop_task,
+            self.__serve_task,
+        ]:
             if task:
                 task.cancel()
                 try:
