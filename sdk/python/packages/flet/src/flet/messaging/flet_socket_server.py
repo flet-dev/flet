@@ -1,5 +1,4 @@
 import asyncio
-import contextlib
 import logging
 import os
 import tempfile
@@ -210,8 +209,12 @@ class FletSocketServer(Connection):
         for task in [self.__receive_loop_task, self.__send_loop_task, self.__server]:
             if task:
                 task.cancel()
-                with contextlib.suppress(asyncio.CancelledError):
-                    await task
+                try:
+                    await asyncio.wait_for(task, timeout=1.0)
+                except asyncio.TimeoutError:
+                    logger.warning(f"Task {task} did not exit in time, skipping.")
+                except asyncio.CancelledError:
+                    pass
 
         if self.__uds_path and os.path.exists(self.__uds_path):
             os.unlink(self.__uds_path)
