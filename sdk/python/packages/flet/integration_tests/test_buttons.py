@@ -9,7 +9,7 @@ import pytest_asyncio
 
 logging.basicConfig(level=logging.DEBUG)
 
-pixel_ratio = int(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
+pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
 
 
 @pytest_asyncio.fixture(scope="module")
