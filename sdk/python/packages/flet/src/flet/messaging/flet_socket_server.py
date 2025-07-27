@@ -100,34 +100,35 @@ class FletSocketServer(Connection):
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
-        while True:
-            try:
-                try:
-                    buf = await asyncio.wait_for(reader.read(1024**2), timeout=1.0)
-                except asyncio.TimeoutError:
-                    continue
+        try:
+            while True:
+                buf = await reader.read(1024 * 1024)
                 if not buf:
-                    return None
+                    break
                 unpacker.feed(buf)
-            except Exception as e:
-                logger.debug(f"Error receiving socket data from Flet client: {e}")
-                return None
-
-            for msg in unpacker:
-                await self.__on_message(msg)
+                for msg in unpacker:
+                    await self.__on_message(msg)
+        except asyncio.CancelledError:
+            logger.debug("Receive loop cancelled.")
+        except Exception as e:
+            logger.debug(f"Error in receive loop: {e}")
+        finally:
+            logger.debug("Receive loop exiting.")
 
     async def __send_loop(self, writer: asyncio.StreamWriter):
-        while True:
-            try:
-                message = await asyncio.wait_for(self.__send_queue.get(), timeout=1.0)
-            except asyncio.TimeoutError:
-                continue
-            try:
+        try:
+            while True:
+                message = await self.__send_queue.get()
+                if message is None:
+                    break  # Sentinel to exit
                 writer.write(message)
-            except Exception:
-                # re-enqueue the message to repeat it when re-connected
-                self.__send_queue.put_nowait(message)
-                raise
+                await writer.drain()
+        except asyncio.CancelledError:
+            logger.debug("Send loop cancelled.")
+        except Exception as e:
+            logger.debug(f"Error in send loop: {e}")
+        finally:
+            logger.debug("Send loop exiting.")
 
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
@@ -202,6 +203,9 @@ class FletSocketServer(Connection):
 
     async def close(self):
         logger.debug("Closing connection...")
+
+        # Put a sentinel in send queue to unblock it
+        await self.__send_queue.put(None)
 
         if self.__server:
             logger.debug("Shutting down TCP server...")
