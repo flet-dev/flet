@@ -4,17 +4,45 @@ version: '3'
 # includes:
 tasks:
   dev-setup:
+    desc: "Install all pyproject.toml dependencies present in 'dev' dependency-group."
     aliases:
       - setup
     cmds:
       - uv pip install -r pyproject.toml --group all
 
   docs-serve:
+    desc: "Serve MkDocs documentation from the 'packages/flet' directory."
     aliases:
       - docs
     cmds:
       - uv run --directory packages/flet --group docs mkdocs serve
 
   docs-coverage:
+    desc: "Run docstring coverage report in the 'packages/flet' directory."
     cmds:
       - uv run --directory packages/flet --group docs-coverage docstr-coverage
+
+  pre-commit:
+    desc: "Install pre-commit hooks"
+    aliases:
+      - precommit
+      - pre-commit-install
+    cmds:
+      - uv run pre-commit install
+
+  pre-commit-bump-repos-version:
+    desc: "Upgrade versions of repos in .pre-commit-config.yaml to their latest."
+    aliases:
+      - pre-commit-bump
+      - pre-commit-upgrade
+      - pre-commit-autoupdate
+    cmds:
+      - uv run pre-commit autoupdate
+
+  free-port-8550:
+    desc: "Frees port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."
+    prompt: "This will kill any process using port 8550. Do you want to continue?"
+    aliases:
+      - free-port
+    cmds:
+      - kill -9 $(lsof -ti :8550)
