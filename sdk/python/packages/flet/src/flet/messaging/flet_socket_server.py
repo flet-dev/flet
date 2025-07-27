@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import logging
 import os
 import tempfile
@@ -99,14 +100,25 @@ class FletSocketServer(Connection):
             self.__receive_loop_task = asyncio.create_task(self.__receive_loop(reader))
             self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
 
-            done, pending = await asyncio.wait(
-                [self.__receive_loop_task, self.__send_loop_task],
-                return_when=asyncio.FIRST_COMPLETED,
-            )
+            try:
+                done, pending = await asyncio.wait(
+                    [self.__receive_loop_task, self.__send_loop_task],
+                    return_when=asyncio.FIRST_COMPLETED,
+                )
 
-            # Optionally cancel the remaining one
-            for task in pending:
-                task.cancel()
+                logger.debug("handle_connection: after waiting loop tasks.")
+
+                for task in pending:
+                    task.cancel()
+                    with contextlib.suppress(asyncio.CancelledError):
+                        await task
+
+                logger.debug("handle_connection: after cancelling pending tasks.")
+            finally:
+                writer.close()
+                await writer.wait_closed()
+                logger.debug("Writer closed.")
+        logger.debug("handle_connection() returned.")
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
