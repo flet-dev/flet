@@ -106,19 +106,15 @@ class FletSocketServer(Connection):
                     return_when=asyncio.FIRST_COMPLETED,
                 )
 
-                logger.debug("handle_connection: after waiting loop tasks.")
-
                 for task in pending:
                     task.cancel()
                     with contextlib.suppress(asyncio.CancelledError):
                         await task
 
-                logger.debug("handle_connection: after cancelling pending tasks.")
             finally:
                 writer.close()
                 await writer.wait_closed()
-                logger.debug("Writer closed.")
-        logger.debug("handle_connection() returned.")
+                logger.debug("Connection writer closed.")
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
@@ -133,7 +129,7 @@ class FletSocketServer(Connection):
         except asyncio.CancelledError:
             logger.debug("Receive loop cancelled.")
         except Exception as e:
-            logger.debug(f"Error in receive loop: {e}")
+            logger.debug(f"Error receiving socket data from Flet client: {e}")
         finally:
             logger.debug("Receive loop exiting.")
 
