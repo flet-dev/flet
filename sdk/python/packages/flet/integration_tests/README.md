@@ -26,10 +26,10 @@ FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packag
 
 Environment variables:
 
-`FLET_TEST_PLATFORM`
+`FLET_TEST_PLATFORM` - The platform on which tests are running: `macos`, `windows`, `linux`, `android` or `ios`. Desktop platforms are detected automatically if not specified.
 
-`FLET_TEST_DEVICE`
+`FLET_TEST_DEVICE` - The device to run tests on. For running tests on desktop: `macos`, `windows` or `linux` - detected automatically if not specified. To run on iOS, Android or a real device a device ID must be specified that can be obtained with `flutter devices` command.
 
-`FLET_TEST_GOLDEN`
+`FLET_TEST_GOLDEN` - Run tests to take "golden" (expected) screenshots and writing them to a file system.
 
-`FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - default is 2.0
+`FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - device pixel ration to use to take screenshots. Default is 2.0.
