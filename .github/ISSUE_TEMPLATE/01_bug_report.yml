@@ -1,8 +1,7 @@
----
 name: Bug Report
 description: "You found a bug in Flet causing your application to crash or behave abnormally? Help us know more about it by providing as much details as possible."
-labels: bug
----
+title: "bug: "
+labels: ["bug"]
 
 body:
   - type: markdown

@@ -1,9 +1,7 @@
----
 name: Feature Request
 description: "Suggest a new feature to be added to Flet."
 title: "feature: "
-labels: feature request
----
+labels: ["feature request"]
 
 body:
   - type: checkboxes
