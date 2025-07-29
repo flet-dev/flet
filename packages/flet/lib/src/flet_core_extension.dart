@@ -84,7 +84,6 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
-import 'controls/screenshot.dart';
 import 'controls/search_bar.dart';
 import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
@@ -108,6 +107,7 @@ import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
 import 'services/file_picker.dart';
 import 'services/haptic_feedback.dart';
+import 'services/screenshot.dart';
 import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
@@ -284,8 +284,6 @@ class FletCoreExtension extends FletExtension {
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
-      case "Screenshot":
-        return ScreenshotControl(key: key, control: control);
       case "Slider":
         return AdaptiveSliderControl(key: key, control: control);
       case "SnackBar":
@@ -344,6 +342,8 @@ class FletCoreExtension extends FletExtension {
         return FilePickerService(control: control);
       case "HapticFeedback":
         return HapticFeedbackService(control: control);
+      case "Screenshot":
+        return ScreenshotService(control: control);
       case "ShakeDetector":
         return ShakeDetectorService(control: control);
       case "SharedPreferences":

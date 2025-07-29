@@ -157,7 +157,7 @@ class BaseControl:
         """The page (of type `Page` or `PageView`) to which this control belongs to."""
         from .page import Page, PageView
 
-        parent = self.parent
+        parent = self
         while parent:
             if isinstance(parent, (Page, PageView)):
                 return parent
