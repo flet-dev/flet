@@ -15,7 +15,7 @@ pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
 @pytest_asyncio.fixture(scope="module")
 async def flet_app(request):
     flet_app = ftt.FletTestApp(
-        flutter_app_dir=(Path(__file__).parent / "../../../../../client").resolve(),
+        flutter_app_dir=(Path(__file__).parent / "../../../../../../client").resolve(),
         test_path=request.fspath,
     )
     await flet_app.start()

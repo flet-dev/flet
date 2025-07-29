@@ -1,9 +1,21 @@
 # Flet tests
 
-Running tests with output and log debug output:
+Running **all** tests in directory with output and log debug output:
 
 ```
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
+```
+
+Running **single file** tests with output and log debug output:
+
+```
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/test_buttons.py
+```
+
+Running **single test** with output and log debug output:
+
+```
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/test_buttons.py -k test_button_2
 ```
 
 Running tests on iOS simulator:
