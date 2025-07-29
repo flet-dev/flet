@@ -71,7 +71,7 @@ class FletTestApp:
             stdout = None
             stderr = None
 
-        flutter_args = ["fvm", "flutter", "test", "integration_test"]
+        flutter_args = ["flutter", "test", "integration_test"]
 
         self.test_platform = os.getenv("FLET_TEST_PLATFORM")
         if self.test_platform is None:

@@ -1128,14 +1128,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
-  screenshot:
-    dependency: transitive
-    description:
-      name: screenshot
-      sha256: "63817697a7835e6ce82add4228e15d233b74d42975c143ad8cfe07009fab866b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   sensors_plus:
     dependency: transitive
     description:

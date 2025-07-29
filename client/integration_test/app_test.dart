@@ -25,28 +25,8 @@ void main() {
       app.main(args);
 
       await Future.delayed(const Duration(milliseconds: 500));
-
       await app.tester?.pump(duration: const Duration(seconds: 1));
       await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
-
-      //var finder = app.tester?.findByKey(const Key("decrement"));
-      // var finder = find.byKey(const Key("decrement"));
-      // print("Decrement: ${finder.evaluate().length}");
-
-      // // Verify the counter starts at 0.
-      // expect(find.text('0'), findsOneWidget);
-
-      // Finds the floating action button to tap on.
-      // final Finder fab = find.byTooltip('Increment');
-
-      // // Emulate a tap on the floating action button.
-      // await tester.tap(fab);
-
-      // // Trigger a frame.
-      // await tester.pumpAndSettle();
-
-      // // Verify the counter increments by 1.
-      // expect(find.text('1'), findsOneWidget);
       await app.tester?.waitForTeardown();
     });
   });
