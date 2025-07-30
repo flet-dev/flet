@@ -2,4 +2,4 @@
 
 See [this](tabs/index.md#examples).
 
-::: flet.Tab
+::: flet.TabBarView

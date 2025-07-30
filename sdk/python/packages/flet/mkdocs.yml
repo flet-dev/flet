@@ -134,6 +134,7 @@ plugins:
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
+              - "!get_event_field_type"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
@@ -334,8 +335,11 @@ nav:
               - Row: controls/row.md
               - SafeArea: controls/safearea.md
               - Stack: controls/stack.md
-              - Tab: controls/tab.md
-              - Tabs: controls/tabs.md
+              - Tabs:
+                  - Tabs: controls/tabs/index.md
+                  - Tab: controls/tab.md
+                  - TabBar: controls/tabbar.md
+                  - TabBarView: controls/tabbarview.md
               - VerticalDivider: controls/verticaldivider.md
               - View: controls/view.md
           - Navigation:
