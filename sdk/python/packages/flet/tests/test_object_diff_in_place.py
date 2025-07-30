@@ -115,7 +115,7 @@ def test_simple_page():
 
     msg, _, _, added_controls, removed_controls = make_msg(page, {}, show_details=True)
     u_msg = b_unpack(msg)
-    assert len(added_controls) == 14
+    assert len(added_controls) == 15
     assert len(removed_controls) == 0
 
     assert page.parent is None
