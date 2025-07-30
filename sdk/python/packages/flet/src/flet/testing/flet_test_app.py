@@ -172,7 +172,7 @@ class FletTestApp:
             golden_img = self.load_image_from_file(golden_image_path)
             img = self.load_image_from_bytes(screenshot)
             similarity = self.compare_images_rgb(golden_img, img)
-            logging.debug(f"Similarity: {similarity}%")
+            print(f"Similarity: {similarity}%")
             if similarity <= 99:
                 actual_image_path = (
                     golden_image_path.parent
