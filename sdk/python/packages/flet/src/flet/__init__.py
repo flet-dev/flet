@@ -303,7 +303,7 @@ from flet.controls.material.snack_bar import (
 )
 from flet.controls.material.submenu_button import SubmenuButton
 from flet.controls.material.switch import Switch
-from flet.controls.material.tabs import Tab, Tabs
+from flet.controls.material.tabs import Tab, TabAlignment, TabBar, TabBarView, Tabs
 from flet.controls.material.text_button import TextButton
 from flet.controls.material.textfield import (
     InputFilter,
@@ -460,7 +460,6 @@ from flet.controls.types import (
     StrokeJoin,
     StrOrControl,
     SupportsStr,
-    TabAlignment,
     TextAlign,
     ThemeMode,
     UrlTarget,
@@ -885,4 +884,6 @@ __all__ = [
     "StrutStyle",
     "BadgeValue",
     "TooltipValue",
+    "TabBar",
+    "TabBarView",
 ]

@@ -1,4 +1,5 @@
 from dataclasses import field
+from enum import Enum
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -9,7 +10,7 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
-from flet.controls.duration import DurationValue, Duration
+from flet.controls.duration import Duration, DurationValue
 from flet.controls.margin import MarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
 from flet.controls.padding import PaddingValue
@@ -20,49 +21,38 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    TabAlignment,
 )
 
-__all__ = ["Tab", "Tabs"]
+__all__ = ["Tab", "Tabs", "TabBar", "TabBarView", "TabAlignment"]
 
 
-@control("Tab")
-class Tab(AdaptiveControl):
+class TabAlignment(Enum):
     """
-    Raises:
-        AssertionError: If both [`label`][(c).] and [`icon`][(c).] are not set.
+    Defines how tabs are aligned horizontally in a [`Tabs`][flet.Tabs].
     """
 
-    label: Optional[StrOrControl] = None
+    START = "start"
     """
-    The tab's name. Can be either a string or a control.
-    """
-
-    content: Optional[Control] = None
-    """
-    The tab's content to display when it is selected.
+    If [`Tabs.scrollable`][flet.Tabs.scrollable] is `True`, tabs are aligned #to the 
+    start of the [`Tabs`][flet.Tabs]. Otherwise throws an exception.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    START_OFFSET = "startOffset"
     """
-    An icon to display on the left of Tab text.
-    """
-
-    height: Optional[Number] = None
-    """
-    TBD
+    If `Tabs.scrollable` is `True`, tabs are aligned to the start of the
+    [`Tabs`][flet.Tabs] with an offset of 52.0 pixels. Otherwise throws an exception.
     """
 
-    icon_margin: Optional[MarginValue] = None
+    FILL = "fill"
     """
-    TBD
+    If `Tabs.scrollable` is `False`, tabs are stretched to fill the
+    [`Tabs`][flet.Tabs]. Otherwise throws an exception.
     """
 
-    def before_update(self):
-        super().before_update()
-        assert (self.label is not None) or (self.icon is not None), (
-            "Tab must have at least label or icon property set"
-        )
+    CENTER = "center"
+    """
+    Tabs are aligned to the center of the [`Tabs`][flet.Tabs].
+    """
 
 
 @control("Tabs")
@@ -73,9 +63,95 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     on text headers to articulate the different sections of content.
     """
 
-    tabs: list[Tab] = field(default_factory=list)
+    content: Control
     """
-    A list of [`Tab`][flet.Tab] controls.
+    The content to display.
+    """
+
+    length: int
+    """
+    The total number of tabs.
+    
+    Typically greater than one.
+    
+    Note:
+        Must match the length of both [`TabBar.tabs`][flet.TabBar.tabs] 
+        and [`TabBarView.controls`][flet.TabBarView.controls].
+    """
+
+    initial_index: int = 0
+    """
+    The initial index of the selected tab.
+    
+    Can't be changed after the control is mounted (added to the page tree).
+    """
+
+    animation_duration: Optional[DurationValue] = field(
+        default_factory=lambda: Duration(milliseconds=250),
+    )
+    """
+    The duration of the animations.
+    """
+
+    def before_update(self):
+        super().before_update()
+        assert self.length >= 0, (
+            f"length must be greater than or equal to 0, got {self.length}"
+        )
+        assert self.length == 0 or (0 <= self.initial_index < self.length), (
+            f"initial_index must be between 0 and length - 1 ({self.length - 1}) "
+            f"inclusive, got {self.initial_index}"
+        )
+
+
+@control("TabBarView")
+class TabBarView(ConstrainedControl, AdaptiveControl):
+    """
+    A page view with one child per tab.
+
+    Note:
+        The length of [`controls`][(c).] must be the same as the
+        [`length`][flet.Tabs.length] property of the ancestor [`Tabs`][flet.Tabs].
+    """
+
+    controls: list[Control]
+    """
+    A list of controls, where each control represents the 
+    content of a corresponding tab. So, a control at index `i` in this list is 
+    displayed when the [`Tab`][flet.Tab] at index `i` is selected.
+
+    Note:
+        The length of this list must be equal to the number of tabs specified in an 
+        ancestor [`Tabs`][flet.Tabs] control.
+    """
+
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    """
+    Defines how the [`controls`][flet.TabBarView.controls] will be clipped.
+    """
+
+    viewport_fraction: Number = 1.0
+    """
+    The fraction of the viewport that each page should occupy.
+    
+    For example, `1.0` (the default), means each page fills 
+    the viewport in the scrolling direction.
+    """
+
+
+@control("TabBar")
+class TabBar(ConstrainedControl, AdaptiveControl):
+    """
+    Used for navigating frequently accessed, distinct content
+    categories. Tabs allow for navigation between two or more content views and relies
+    on text headers to articulate the different sections of content.
+    """
+
+    tabs: list[Control]
+    """
+    A list of controls.
+
+    Typically [`Tab`][flet.Tab]s.
     """
 
     selected_index: int = 0
@@ -98,12 +174,8 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     Defaults to [`TabAlignment.START`][flet.TabAlignment.START], 
     if [`scrollable=True`][flet.Tabs.scrollable], and to
-    [`TabAlignment.FILL`][flet.TabAlignment.FILL], if [`scrollable=False`][flet.Tabs.scrollable].
-    """
-
-    animation_duration: DurationValue = field(default_factory=lambda: Duration(milliseconds=50))
-    """
-    Duration of animation in milliseconds of switching between tabs.
+    [`TabAlignment.FILL`][flet.TabAlignment.FILL], 
+    if [`scrollable=False`][flet.Tabs.scrollable].
     """
 
     divider_color: Optional[ColorValue] = None
@@ -180,7 +252,8 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     colors in various
     [`ControlState`][flet.ControlState] states.
 
-    The following states are supported: `ControlState.PRESSED`, `ControlState.HOVERED` and
+    The following states are supported: `ControlState.PRESSED`, 
+    `ControlState.HOVERED` and
     `ControlState.FOCUSED`.
     """
 
@@ -222,20 +295,68 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
-    """
-    The content will be clipped (or not) according to this option.
-    """
-
-    on_click: Optional[ControlEventHandler["Tabs"]] = None
+    on_click: Optional[ControlEventHandler["TabBar"]] = None
     """
     Called when a tab is clicked.
+    
+    The [`data`][flet.Event.data] property of the event handler argument 
+    contains the index of the clicked tab.
     """
 
-    on_change: Optional[ControlEventHandler["Tabs"]] = None
+    on_change: Optional[ControlEventHandler["TabBar"]] = None
     """
     Called when [`selected_index`][flet.Tabs.selected_index] changes.
     """
 
     def __contains__(self, item):
         return item in self.tabs
+
+
+@control("Tab")
+class Tab(AdaptiveControl):
+    """
+    A Material Design [`TabBar`][flet.TabBar] tab.
+
+    Raises:
+        AssertionError: If both [`label`][(c).] and [`icon`][(c).] are not set.
+    """
+
+    label: Optional[StrOrControl] = None
+    """
+    The tab's name. Can be either a string or a control.
+    """
+
+    icon: Optional[IconValueOrControl] = None
+    """
+    An icon to display on the left of Tab text.
+    """
+
+    height: Optional[Number] = None
+    """
+    The height of the tab.
+    
+    If `None`, it will be calculated based on the content of the Tab. When 
+    [`icon`][flet.Tab.icon] is not `None` along with [`label`][flet.Tab.label], 
+    the default `height` is `72.0` pixels. Without an `icon`, 
+    the `height` is 46.0 pixels.
+    
+    Currently, the provided tab height cannot be lower than the default height. 
+    """
+
+    icon_margin: Optional[MarginValue] = None
+    """
+    The margin added around the tab's icon.
+    
+    Only useful when used in combination with [`icon`][flet.Tab.icon], 
+    and [`label`][flet.Tab.label] is not `None`.
+    
+    Defaults to `2` pixels of bottom margin. 
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, 
+    then defaults to `10` pixels of bottom margin.
+    """
+
+    def before_update(self):
+        super().before_update()
+        assert (self.label is not None) or (self.icon is not None), (
+            "Tab must have at least label or icon property set"
+        )

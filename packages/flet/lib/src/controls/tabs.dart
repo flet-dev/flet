@@ -5,7 +5,7 @@ class TabsControl extends StatefulWidget {
   final Control control;
 
   TabsControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<TabsControl> createState() => _TabsControlState();
@@ -13,84 +13,80 @@ class TabsControl extends StatefulWidget {
 
 class _TabsControlState extends State<TabsControl>
     with TickerProviderStateMixin {
-  String? _tabsSnapshot;
-  TabController? _tabController;
-  int _selectedIndex = 0;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    debugPrint("Tabs.didChangeDependencies: ${widget.control.id}");
-    _configureTabController();
-  }
-
-  @override
-  void didUpdateWidget(covariant TabsControl oldWidget) {
-    debugPrint("Tabs.didUpdateWidget: ${widget.control.id}");
-    super.didUpdateWidget(oldWidget);
-    _configureTabController();
-  }
-
-  @override
-  void dispose() {
-    debugPrint("Tabs.dispose: ${widget.control.id}");
-    _tabController?.removeListener(_tabChanged);
-    _tabController?.dispose();
-    super.dispose();
-  }
-
-  void _tabChanged() {
-    if (_tabController!.indexIsChanging == true) {
-      return;
-    }
-    var index = _tabController!.index;
-    if (_selectedIndex != index) {
-      widget.control.updateProperties({"selected_index": index});
-      widget.control.triggerEvent("change", index);
-      _selectedIndex = index;
-    }
-  }
-
-  void _configureTabController() {
-    var tabs = widget.control.children("tabs");
-    var tabsSnapshot = tabs.map((tab) => tab.id.toString()).join();
-    if (tabsSnapshot != _tabsSnapshot) {
-      _tabsSnapshot = tabsSnapshot;
-
-      if (_tabController != null) {
-        _tabController!.removeListener(_tabChanged);
-        _tabController!.dispose();
-      }
-      _selectedIndex = 0;
-      _tabController = TabController(
-          initialIndex: _selectedIndex,
-          length: tabs.length,
-          animationDuration: widget.control.getDuration(
-              "animation_duration", const Duration(milliseconds: 50))!,
-          vsync: this);
-      _tabController!.addListener(_tabChanged);
-    }
-
-    var selectedIndex = widget.control.getInt("selected_index", 0)!;
-
-    debugPrint("selectedIndex: $selectedIndex");
-
-    if (selectedIndex > -1 &&
-        selectedIndex < _tabController!.length &&
-        _selectedIndex != selectedIndex) {
-      _selectedIndex = selectedIndex;
-      _tabController!.index = selectedIndex;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
 
-    // check if all tabs have no content
-    bool emptyTabs = !widget.control
-        .children("tabs")
-        .any((tab) => tab.child("content") != null);
+    var content = widget.control.buildWidget("content");
+
+    if (content == null) {
+      return const ErrorControl("Tabs.content must be provided and visible");
+    }
+
+    return ConstrainedControl(
+        control: widget.control,
+        child: DefaultTabController(
+            length: widget.control.getInt("length", 0)!,
+            initialIndex: widget.control.getInt("initial_index", 0)!,
+            animationDuration: widget.control.getDuration(
+                "animation_duration", const Duration(milliseconds: 50))!,
+            child: content));
+  }
+}
+
+class TabBarViewControl extends StatelessWidget {
+  final Control control;
+
+  const TabBarViewControl({super.key, required this.control});
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("TabBarViewControl build: ${control.id}");
+
+    return ConstrainedControl(
+        control: control,
+        child: TabBarView(
+          clipBehavior:
+              control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+          viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
+          children: control.buildWidgets("controls"),
+        ));
+  }
+}
+
+class TabControl extends StatelessWidget {
+  final Control control;
+
+  const TabControl({super.key, required this.control});
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("TabControl build: ${control.id}");
+
+    return BaseControl(
+        control: control,
+        child: Tab(
+          icon: control.buildIconOrWidget("icon"),
+          height: control.getDouble("height"),
+          iconMargin: control.getMargin("icon_margin"),
+          child: control.buildTextOrWidget("label"),
+        ));
+  }
+}
+
+class TabBarControl extends StatefulWidget {
+  final Control control;
+
+  const TabBarControl({super.key, required this.control});
+
+  @override
+  State<TabBarControl> createState() => _TabBarControlState();
+}
+
+class _TabBarControlState extends State<TabBarControl> {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("TabBarControl build: ${widget.control.id}");
 
     var overlayColor = widget.control.getWidgetStateColor(
         "overlay_color", Theme.of(context),
@@ -131,8 +127,6 @@ class _TabsControlState extends State<TabsControl>
         scrollable ? TabAlignment.start : TabAlignment.fill)!;
     var mouseCursor =
         parseMouseCursor(widget.control.getString("mouse_cursor"));
-    var clipBehavior =
-        widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
     var padding = parseEdgeInsets(widget.control.getPadding("padding"));
     var labelPadding = widget.control.getPadding("label_padding");
     var labelStyle =
@@ -141,6 +135,7 @@ class _TabsControlState extends State<TabsControl>
         .getTextStyle("unselected_label_text_style", Theme.of(context));
     var splashBorderRadius =
         widget.control.getBorderRadius("splash_border_radius");
+    var tabs = widget.control.buildWidgets("tabs");
 
     void onTap(int index) {
       widget.control.triggerEvent("click", index);
@@ -168,25 +163,12 @@ class _TabsControlState extends State<TabsControl>
             : TabBarIndicatorSize.label)
         : TabBarTheme.of(context).indicatorSize;
 
-    var tabs = widget.control.children("tabs").map((tab) {
-      tab.notifyParent = true;
-      var icon = tab.buildIconOrWidget("icon");
-      var label = tab.buildTextOrWidget("label");
-
-      return Tab(
-        icon: icon,
-        height: tab.getDouble("height"),
-        iconMargin: tab.getMargin("icon_margin"),
-        child: label,
-      );
-    }).toList();
-
     TabBar? tabBar;
 
     if (secondary) {
       tabBar = TabBar.secondary(
+          // controller: _tabController,
           tabAlignment: tabAlignment,
-          controller: _tabController,
           isScrollable: scrollable,
           dividerHeight: dividerHeight,
           enableFeedback: enableFeedback,
@@ -209,8 +191,8 @@ class _TabsControlState extends State<TabsControl>
           onTap: onTap);
     } else {
       tabBar = TabBar(
+          // controller: _tabController,
           tabAlignment: tabAlignment,
-          controller: _tabController,
           isScrollable: scrollable,
           dividerHeight: dividerHeight,
           enableFeedback: enableFeedback,
@@ -233,24 +215,6 @@ class _TabsControlState extends State<TabsControl>
           onTap: onTap);
     }
 
-    if (emptyTabs) {
-      return tabBar;
-    }
-
-    var child = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        tabBar,
-        Expanded(
-            child: TabBarView(
-                controller: _tabController,
-                clipBehavior: clipBehavior,
-                children: widget.control.children("tabs").map((tab) {
-                  return tab.buildWidget("content") ?? const SizedBox.shrink();
-                }).toList()))
-      ],
-    );
-
-    return ConstrainedControl(control: widget.control, child: child);
+    return BaseControl(control: widget.control, child: tabBar);
   }
 }
