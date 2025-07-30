@@ -11,9 +11,13 @@ from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 
 import flet as ft
+from flet.controls.control import Control
 from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
+from flet.utils.strings import random_string
+
+pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
 
 
 class FletTestApp:
@@ -127,6 +131,21 @@ class FletTestApp:
                 except asyncio.TimeoutError:
                     print("Force killing Flutter test process...")
                     self.flutter_process.kill()
+
+    async def assert_control_screenshot(self, name: str, control: Control):
+        # clean page
+        self.page.clean()
+
+        # add control and take screenshot
+        control.key = ft.ScreenshotKey(random_string(10))
+        self.page.add(control)
+        await self.tester.pump_and_settle()
+        self.assert_screenshot(
+            name,
+            await self.page.screenshot.capture_async(
+                screenshot_key=control.key, pixel_ratio=pixel_ratio
+            ),
+        )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
         assert self.test_platform, (

@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 import apps.counter as app
@@ -6,8 +5,6 @@ import flet as ft
 import flet.testing as ftt
 import pytest
 import pytest_asyncio
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 @pytest_asyncio.fixture(scope="module")
