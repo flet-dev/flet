@@ -6,11 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../flet.dart';
-import 'flet_app_errors_handler.dart';
 import 'flet_core_extension.dart';
-import 'flet_extension.dart';
-import 'models/asset_source.dart';
-import 'models/control.dart';
 import 'models/window_state.dart';
 import 'protocol/control_event_body.dart';
 import 'protocol/invoke_method_request_body.dart';
@@ -23,15 +19,8 @@ import 'protocol/register_client_response_body.dart';
 import 'protocol/session_crashed_body.dart';
 import 'protocol/update_control_body.dart';
 import 'transport/flet_backend_channel.dart';
-import 'utils/desktop.dart';
-import 'utils/images.dart';
-import 'utils/numbers.dart';
-import 'utils/platform.dart';
-import 'utils/platform_utils_web.dart'
-    if (dart.library.io) "utils/platform_utils_non_web.dart";
 import 'utils/session_store_web.dart'
     if (dart.library.io) "utils/session_store_non_web.dart";
-import 'utils/uri.dart';
 import 'utils/weak_value_map.dart';
 
 /// FletBackend - Handles business logic, provides data, and acts as ChangeNotifier
@@ -110,6 +99,7 @@ class FletBackend extends ChangeNotifier {
       "web": kIsWeb,
       "debug": kDebugMode,
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
+      "test": tester != null,
       "multi_view": multiView,
       "window": {
         "_c": "Window",
@@ -193,6 +183,7 @@ class FletBackend extends ChangeNotifier {
                   'web': page.get("web"),
                   'debug': page.get("debug"),
                   'wasm': page.get("wasm"),
+                  'test': page.get("test"),
                   'multi_view': page.get("multi_view"),
                   'platform_brightness': page.get("platform_brightness"),
                   'width': page.get("width"),

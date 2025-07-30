@@ -253,6 +253,11 @@ class Page(PageView):
     TBD
     """
 
+    test: bool = False
+    """
+    TBD
+    """
+
     multi_view: bool = False
     """
     TBD
