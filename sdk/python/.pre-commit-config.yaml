@@ -8,15 +8,13 @@ repos:
       # Run the formatter.
       - id: ruff-format
 
-  - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.22
-    hooks:
-      - id: mdformat
-        additional_dependencies:
-          - mdformat-ruff
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+
+  - repo: https://github.com/aio-libs/sort-all
+    rev: v1.3.0
+    hooks:
+      - id: sort-all
