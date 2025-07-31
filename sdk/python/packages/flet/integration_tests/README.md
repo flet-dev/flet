@@ -45,3 +45,5 @@ Environment variables:
 `FLET_TEST_GOLDEN` - Run tests to take "golden" (expected) screenshots and writing them to a file system.
 
 `FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - device pixel ration to use to take screenshots. Default is 2.0.
+
+`FLET_TEST_SIMILARITY_THRESHOLD` - a minimum value for comparison result of golden and actual screenshot for a test to pass. Default is 99.0.

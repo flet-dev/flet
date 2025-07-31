@@ -18,6 +18,7 @@ from flet.utils.platform_utils import get_bool_env_var
 from flet.utils.strings import random_string
 
 pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
+similarity_threshold = float(os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", "99.0"))
 
 
 class FletTestApp:
@@ -168,19 +169,23 @@ class FletTestApp:
                 f.write(screenshot)
         else:
             if not golden_image_path.exists():
-                raise Exception(f"Golden image not found: {golden_image_path}")
+                raise Exception(
+                    f"Golden image for {name} not found: {golden_image_path}"
+                )
             golden_img = self.load_image_from_file(golden_image_path)
             img = self.load_image_from_bytes(screenshot)
             similarity = self.compare_images_rgb(golden_img, img)
-            print(f"Similarity: {similarity}%")
-            if similarity <= 99:
+            print(f"Similarity for {name}: {similarity}%")
+            if similarity <= similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
                     / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
-            assert similarity > 99.0, "Screenshots are not identical"
+            assert similarity > similarity_threshold, (
+                f"{name} screenshots are not identical"
+            )
 
     def load_image_from_file(self, file_name):
         return Image.open(file_name)
