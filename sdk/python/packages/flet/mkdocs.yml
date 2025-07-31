@@ -354,7 +354,6 @@ nav:
               - FilePicker: controls/filepicker.md
               - SemanticsService: controls/semanticsservice.md
               - ShakeDetector: controls/shakedetector.md
-              - StoragePaths: controls/storagepaths.md
               - HapticFeedback: controls/hapticfeedback.md
           - Utility:
               - Badge: types/badge.md
@@ -620,6 +619,16 @@ nav:
               # - types/pubsub/index.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
+          - Services:
+              - BrowserContextMenu: types/services/browsercontextmenu.md
+              - Clipboard: types/services/clipboard.md
+              - SharedPreferences: types/services/sharedpreferences.md
+              - StoragePaths: types/services/storagepaths.md
+              - UrlLauncher: types/services/urllauncher.md
+          - Testing:
+              - Finder: types/testing/finder.md
+              - FletTestApp: types/testing/flettestapp.md
+              - Tester: types/testing/tester.md
       - Environment Variables: environment-variables.md
   - Publish:
       - Build and Publish a Flet app: publish/index.md

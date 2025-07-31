@@ -351,6 +351,7 @@ from flet.controls.scrollable_control import (
     ScrollType,
 )
 from flet.controls.services.browser_context_menu import BrowserContextMenu
+from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.file_picker import (
     FilePicker,
     FilePickerFile,
@@ -363,7 +364,9 @@ from flet.controls.services.screenshot import Screenshot
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
+from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
+from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     StrutStyle,
@@ -888,4 +891,7 @@ __all__ = [
     "TooltipValue",
     "ScreenshotKey",
     "Screenshot",
+    "SharedPreferences",
+    "Clipboard",
+    "UrlLauncher",
 ]
