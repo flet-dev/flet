@@ -236,20 +236,21 @@ class FletSocketServer(Connection):
 
         logger.debug("Cancelling pending tasks...")
 
-        for task in [
+        tasks = [task for task in [
             self.__receive_loop_task,
             self.__send_loop_task,
             self.__serve_task,
-        ]:
-            if task:
-                task.cancel()
-                try:
-                    await asyncio.wait_for(task, timeout=1.0)
-                except asyncio.TimeoutError:
-                    logger.warning(f"Task {task} did not exit in time, skipping.")
-                except asyncio.CancelledError:
-                    pass
+        ] if task]
 
+        for task in tasks:
+            task.cancel()
+
+        try:
+            await asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=1.0)
+        except asyncio.TimeoutError:
+            logger.warning("Some tasks did not exit in time, skipping.")
+        except asyncio.CancelledError:
+            pass
         if self.__uds_path and os.path.exists(self.__uds_path):
             os.unlink(self.__uds_path)
 
