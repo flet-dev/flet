@@ -318,6 +318,7 @@ for:
 
     install:
       - source ci/common.sh
+      - grep -r "apt.postgresql.org" /etc/apt/sources.list*
       - sudo rm /etc/apt/sources.list.d/pgdg.list
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y clang libgtk-3-dev libasound2-dev
