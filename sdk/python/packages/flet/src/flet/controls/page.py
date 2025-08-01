@@ -34,7 +34,6 @@ from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.clipboard import Clipboard
-from flet.controls.services.screenshot import Screenshot
 from flet.controls.services.service import Service
 from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
@@ -202,13 +201,6 @@ class Page(PageView):
 
     url_launcher: UrlLauncher = field(
         default_factory=lambda: UrlLauncher(), metadata={"skip": True}
-    )
-    """
-    TBD
-    """
-
-    screenshot: Screenshot = field(
-        default_factory=lambda: Screenshot(), metadata={"skip": True}
     )
     """
     TBD
@@ -396,7 +388,6 @@ class Page(PageView):
             self.clipboard,
             self.url_launcher,
             self.storage_paths,
-            self.screenshot,
         ]
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
@@ -412,12 +403,10 @@ class Page(PageView):
         ```python
         import flet as ft
 
-
         def main(page: ft.Page):
             x = ft.IconButton(ft.Icons.ADD)
             page.add(x)
             print(type(page.get_control(x.uid)))
-
 
         ft.run(main)
         ```

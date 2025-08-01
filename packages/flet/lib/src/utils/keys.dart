@@ -26,10 +26,6 @@ class ControlScrollKey extends ControlKey {
   const ControlScrollKey(super.value);
 }
 
-class ControlScreenshotKey extends ControlKey {
-  const ControlScreenshotKey(super.value);
-}
-
 class ControlValueKey extends ControlKey {
   const ControlValueKey(super.value);
 }
@@ -43,8 +39,6 @@ ControlKey? parseKey(dynamic value) {
       return ControlValueKey(value["value"]);
     } else if (type == "scroll") {
       return ControlScrollKey(value["value"]);
-    } else if (type == "screenshot") {
-      return ControlScreenshotKey(value["value"]);
     }
     throw Exception("Unknown key type: $type");
   } else {

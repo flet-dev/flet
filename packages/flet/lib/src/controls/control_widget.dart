@@ -19,7 +19,7 @@ class ControlWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ControlKey? controlKey = control.getKey("key");
     Key? key;
-    if (controlKey is ControlScrollKey || controlKey is ControlScreenshotKey) {
+    if (controlKey is ControlScrollKey) {
       key = GlobalKey();
       FletBackend.of(context).globalKeys[controlKey.toString()] =
           key as GlobalKey;
@@ -30,8 +30,7 @@ class ControlWidget extends StatelessWidget {
     Widget? widget;
     if (control.internals?["skip_inherited_notifier"] == true) {
       for (var extension in FletBackend.of(context).extensions) {
-        widget = extension.createWidget(
-            controlKey is! ControlScreenshotKey ? key : null, control);
+        widget = extension.createWidget(key, control);
         if (widget != null) return widget;
       }
       widget = ErrorControl("Unknown control: ${control.type}");
@@ -43,21 +42,12 @@ class ControlWidget extends StatelessWidget {
 
           Widget? cw;
           for (var extension in FletBackend.of(context).extensions) {
-            cw = extension.createWidget(
-                controlKey is! ControlScreenshotKey ? key : null, control);
+            cw = extension.createWidget(key, control);
             if (cw != null) return cw;
           }
 
           return ErrorControl("Unknown control: ${control.type}");
         }),
-      );
-    }
-
-    // wrap into RepaintBoundary for taking screenshots
-    if (controlKey is ControlScreenshotKey) {
-      widget = RepaintBoundary(
-        key: key,
-        child: widget,
       );
     }
 

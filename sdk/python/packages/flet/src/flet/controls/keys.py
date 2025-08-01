@@ -29,10 +29,4 @@ class ScrollKey(Key):
         self._type = "scroll"
 
 
-@dataclass
-class ScreenshotKey(Key):
-    def __post_init__(self):
-        self._type = "screenshot"
-
-
-KeyValue = Union[ValueKey, ScrollKey, ScreenshotKey, str, int, float, bool]
+KeyValue = Union[ValueKey, ScrollKey, str, int, float, bool]
