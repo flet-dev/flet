@@ -50,6 +50,6 @@ class _InteractiveViewerControlState extends State<ScreenshotControl> {
         controller: _screenshotController,
         child: widget.control.buildWidget("content"));
 
-    return ConstrainedControl(control: widget.control, child: screenshot);
+    return BaseControl(control: widget.control, child: screenshot);
   }
 }

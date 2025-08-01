@@ -38,7 +38,8 @@ class TesterService extends FletService {
         return finder.toMap();
 
       case "find_by_text_containing":
-        var finder = control.backend.tester!.findByTextContaining(args["text"]);
+        var finder =
+            control.backend.tester!.findByTextContaining(args["pattern"]);
         _finders[finder.id] = finder;
         return finder.toMap();
 

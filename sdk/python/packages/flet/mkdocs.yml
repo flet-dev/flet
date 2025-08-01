@@ -366,6 +366,7 @@ nav:
               - SelectionArea: controls/selectionarea.md
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
+              - Screenshot: controls/screenshot.md
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md

@@ -42,8 +42,8 @@ class FlutterWidgetTester implements Tester {
   TestFinder findByText(String text) => FlutterTestFinder(find.text(text));
 
   @override
-  TestFinder findByTextContaining(String text) =>
-      FlutterTestFinder(find.textContaining(text));
+  TestFinder findByTextContaining(String pattern) =>
+      FlutterTestFinder(find.textContaining(RegExp(pattern)));
 
   @override
   TestFinder findByKey(Key key) => FlutterTestFinder(find.byKey(key));

@@ -8,7 +8,7 @@ abstract class Tester {
   Future<void> pumpAndSettle([Duration duration]);
   Future<void> pump({Duration? duration});
   TestFinder findByText(String text);
-  TestFinder findByTextContaining(String text);
+  TestFinder findByTextContaining(String pattern);
   TestFinder findByKey(Key key);
   TestFinder findByTooltip(String value);
   TestFinder findByIcon(IconData icon);

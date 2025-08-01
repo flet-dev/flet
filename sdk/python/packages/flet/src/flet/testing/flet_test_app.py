@@ -28,26 +28,39 @@ class FletTestApp:
         test_path: Optional[str] = None,
         tcp_port: Optional[int] = None,
     ):
-        self.test_path = test_path
-        self.flet_app_main = flet_app_main
-        self.flutter_app_dir = flutter_app_dir
-        self.tcp_port = tcp_port
-        self.flutter_process: Optional[asyncio.subprocess.Process] = None
+        """
+        Flet app test controller is a bridge that connects together
+        a Flet app in Python and a running integration test in Flutter.
+        """
+        self.__test_path = test_path
+        self.__flet_app_main = flet_app_main
+        self.__flutter_app_dir = flutter_app_dir
+        self.__tcp_port = tcp_port
+        self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
         self.__tester = None
 
     @property
     def page(self) -> ft.Page:
+        """
+        Returns an instance of Flet's app [`Page`][flet.Page].
+        """
         assert self.__page
         return self.__page
 
     @property
     def tester(self) -> Tester:
+        """
+        Returns an instance of [`Tester`][flet.testing.Tester] class
+        that programmatically interacts with page controls and the test environment.
+        """
         assert self.__tester
         return self.__tester
 
     async def start(self):
-        """Start Flet app and Flutter test process."""
+        """
+        Starts Flet app and Flutter integration test process.
+        """
 
         ready = asyncio.Event()
 
@@ -57,16 +70,16 @@ class FletTestApp:
             page.services.append(self.__tester)
             page.update()
 
-            if asyncio.iscoroutinefunction(self.flet_app_main):
-                await self.flet_app_main(page)
-            elif callable(self.flet_app_main):
-                self.flet_app_main(page)
+            if asyncio.iscoroutinefunction(self.__flet_app_main):
+                await self.__flet_app_main(page)
+            elif callable(self.__flet_app_main):
+                self.__flet_app_main(page)
             ready.set()
 
-        if not self.tcp_port:
-            self.tcp_port = get_free_tcp_port()
+        if not self.__tcp_port:
+            self.__tcp_port = get_free_tcp_port()
 
-        asyncio.create_task(ft.run_async(main, port=self.tcp_port, view=None))
+        asyncio.create_task(ft.run_async(main, port=self.__tcp_port, view=None))
         print("Started Flet app")
 
         stdout = asyncio.subprocess.DEVNULL
@@ -92,12 +105,12 @@ class FletTestApp:
         if self.test_device:
             flutter_args += ["-d", self.test_device]
 
-        app_url = f"tcp://{tcp_addr}:{self.tcp_port}"
+        app_url = f"tcp://{tcp_addr}:{self.__tcp_port}"
         flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
 
-        self.flutter_process = await asyncio.create_subprocess_exec(
+        self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
-            cwd=str(self.flutter_app_dir),
+            cwd=str(self.__flutter_app_dir),
             stdout=stdout,
             stderr=stderr,
         )
@@ -107,32 +120,43 @@ class FletTestApp:
 
         while not ready.is_set():
             await asyncio.sleep(0.2)
-            if self.flutter_process.returncode is not None:
+            if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
-                    f"Flutter process exited early with code {self.flutter_process.returncode}"
+                    f"Flutter process exited early with code {self.__flutter_process.returncode}"
                 )
 
     async def teardown(self):
-        """Teardown Flutter process."""
+        """
+        Teardown Flutter integration test process.
+        """
 
         await self.tester.teardown()
 
-        if self.flutter_process:
+        if self.__flutter_process:
             print("Waiting for Flutter test process to exit...")
             try:
-                await asyncio.wait_for(self.flutter_process.wait(), timeout=10)
+                await asyncio.wait_for(self.__flutter_process.wait(), timeout=10)
                 print("Flutter test process has exited.")
             except asyncio.TimeoutError:
                 print("Flutter test process did not exit in time, terminating it...")
-                self.flutter_process.terminate()
+                self.__flutter_process.terminate()
                 # Optionally ensure it terminates
                 try:
-                    await asyncio.wait_for(self.flutter_process.wait(), timeout=5)
+                    await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
                 except asyncio.TimeoutError:
                     print("Force killing Flutter test process...")
-                    self.flutter_process.kill()
+                    self.__flutter_process.kill()
 
     async def assert_control_screenshot(self, name: str, control: Control):
+        """
+        Adds control to a clean page, takes a screenshot and compares it with
+        a golden copy or takes golden screenshot if `FLET_TEST_GOLDEN=1`
+        environment variable is set.
+
+        Args:
+            name: Screenshot name - will be used as a base for a screenshot filename.
+            control: Control to take a screenshot of.
+        """
         # clean page
         self.page.clean()
 
@@ -146,17 +170,25 @@ class FletTestApp:
         )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
+        """
+        Compares provided screenshot with a golden copy or takes golden screenshot
+        if `FLET_TEST_GOLDEN=1` environment variable is set.
+
+        Args:
+            name: Screenshot name - will be used as a base for a screenshot filename.
+            screenshot: Screenshot contents in PNG format.
+        """
         assert self.test_platform, (
             "FLET_TEST_PLATFORM must be set to test with screenshots"
         )
-        assert self.test_path, "test_path must be set to test with screenshots"
+        assert self.__test_path, "test_path must be set to test with screenshots"
 
         golden_mode = get_bool_env_var("FLET_TEST_GOLDEN")
         golden_image_path = (
-            Path(self.test_path).parent
+            Path(self.__test_path).parent
             / "golden"
             / self.test_platform
-            / Path(self.test_path).stem.removeprefix("test_")
+            / Path(self.__test_path).stem.removeprefix("test_")
             / f"{name.removeprefix('test_')}.png"
         )
 
@@ -169,9 +201,9 @@ class FletTestApp:
                 raise Exception(
                     f"Golden image for {name} not found: {golden_image_path}"
                 )
-            golden_img = self.load_image_from_file(golden_image_path)
-            img = self.load_image_from_bytes(screenshot)
-            similarity = self.compare_images_rgb(golden_img, img)
+            golden_img = self._load_image_from_file(golden_image_path)
+            img = self._load_image_from_bytes(screenshot)
+            similarity = self._compare_images_rgb(golden_img, img)
             print(f"Similarity for {name}: {similarity}%")
             if similarity <= similarity_threshold:
                 actual_image_path = (
@@ -184,13 +216,13 @@ class FletTestApp:
                 f"{name} screenshots are not identical"
             )
 
-    def load_image_from_file(self, file_name):
+    def _load_image_from_file(self, file_name):
         return Image.open(file_name)
 
-    def load_image_from_bytes(self, data: bytes) -> Image.Image:
+    def _load_image_from_bytes(self, data: bytes) -> Image.Image:
         return Image.open(BytesIO(data))
 
-    def compare_images_rgb(self, img1, img2) -> float:
+    def _compare_images_rgb(self, img1, img2) -> float:
         if img1.size != img2.size:
             img2 = img2.resize(img1.size)
         arr1 = np.array(img1)
