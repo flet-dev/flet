@@ -15,7 +15,6 @@ from flet.controls.control import Control
 from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
-from flet.utils.strings import random_string
 
 pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
 similarity_threshold = float(os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", "99.0"))
@@ -138,14 +137,12 @@ class FletTestApp:
         self.page.clean()
 
         # add control and take screenshot
-        control.key = ft.ScreenshotKey(random_string(10))
-        self.page.add(control)
+        screenshot = ft.Screenshot(control)
+        self.page.add(screenshot)
         await self.tester.pump_and_settle()
         self.assert_screenshot(
             name,
-            await self.page.screenshot.capture_async(
-                screenshot_key=control.key, pixel_ratio=pixel_ratio
-            ),
+            await screenshot.capture_async(pixel_ratio=pixel_ratio),
         )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
