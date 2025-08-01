@@ -351,10 +351,15 @@ nav:
               - NavigationRail: controls/navigationrail.md
               - NavigationRailDestination: controls/navigationraildestination.md
           - Services:
+              - BrowserContextMenu: controls/browsercontextmenu.md
               - FilePicker: controls/filepicker.md
+              - HapticFeedback: controls/hapticfeedback.md
+              - Clipboard: controls/clipboard.md
               - SemanticsService: controls/semanticsservice.md
               - ShakeDetector: controls/shakedetector.md
-              - HapticFeedback: controls/hapticfeedback.md
+              - SharedPreferences: controls/sharedpreferences.md
+              - StoragePaths: controls/storagepaths.md
+              - UrlLauncher: controls/urllauncher.md
           - Utility:
               - Badge: types/badge.md
               - Draggable: controls/draggable.md
@@ -370,6 +375,10 @@ nav:
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
+      - Testing:
+          - Finder: testing/finder.md
+          - FletTestApp: testing/flettestapp.md
+          - Tester: testing/tester.md
       - Types:
           # - types/index.md
           - Aliases: types/aliases.md
@@ -620,16 +629,6 @@ nav:
               # - types/pubsub/index.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
-          - Services:
-              - BrowserContextMenu: types/services/browsercontextmenu.md
-              - Clipboard: types/services/clipboard.md
-              - SharedPreferences: types/services/sharedpreferences.md
-              - StoragePaths: types/services/storagepaths.md
-              - UrlLauncher: types/services/urllauncher.md
-          - Testing:
-              - Finder: types/testing/finder.md
-              - FletTestApp: types/testing/flettestapp.md
-              - Tester: types/testing/tester.md
       - Environment Variables: environment-variables.md
   - Publish:
       - Build and Publish a Flet app: publish/index.md

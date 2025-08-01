@@ -73,7 +73,7 @@ class Tester(Service):
         Finds controls by a tooltip.
 
         Args:
-            tooltip: Tooltip value.
+            value: Tooltip value.
         """
         finder = await self._invoke_method_async("find_by_tooltip", {"value": value})
         return Finder(**finder)

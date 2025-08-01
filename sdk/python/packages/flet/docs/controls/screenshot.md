@@ -3,7 +3,7 @@
 ### Taking control screenshot
 
 ```python
---8<-- "../../examples/controls/screenshot/taking_screenshot.py"
+--8<-- "../../examples/controls/screenshot/taking-screenshot.py"
 ```
 
 ::: flet.Screenshot

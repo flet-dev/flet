@@ -3,6 +3,7 @@ import 'package:screenshot/screenshot.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/time.dart';
 import 'base_controls.dart';
 
 class ScreenshotControl extends StatefulWidget {
@@ -30,7 +31,8 @@ class _InteractiveViewerControlState extends State<ScreenshotControl> {
       case "capture":
         return await _screenshotController.capture(
             pixelRatio: args["pixel_ratio"],
-            delay: args["delay"] ?? const Duration(milliseconds: 20));
+            delay: parseDuration(
+                args["delay"], const Duration(milliseconds: 20))!);
       default:
         throw Exception("Unknown Screenshot method: $name");
     }
