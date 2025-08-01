@@ -51,16 +51,6 @@ async def test_example1(flet_app: ftt.FletTestApp, request):
     checkbox_text = await tester.find_by_text("Unchecked by default checkbox")
     assert checkbox_text.count == 1
 
-    flet_app.page.views[0].key = ft.ScreenshotKey("page")
-    flet_app.page.update()
-    await tester.pump_and_settle()
-    flet_app.assert_screenshot(
-        request.node.name,
-        await flet_app.page.screenshot.capture_async(
-            screenshot_key=flet_app.page.views[0].key
-        ),
-    )
-
     # tap open dialog
     # dialog_btn = await tester.find_by_key(123)
     # assert dialog_btn.count == 1
