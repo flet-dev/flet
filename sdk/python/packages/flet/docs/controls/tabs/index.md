@@ -18,14 +18,22 @@
 --8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/tabs/nested.py"
 ```
 
-![nested](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/tabs/media/nested.gif){width="80%"}
-/// caption
-///
-
-### Dynamic tabs
+### Dynamic tab addition
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/tabs/dynamic.py"
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/tabs/dynamic-tab-addition.py"
+```
+
+### Custom indicator
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/tabs/custom-indicator.py"
+```
+
+### Programmatical Tab switch
+
+```python
+--8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/tabs/move-to.py"
 ```
 
 ::: flet.Tabs

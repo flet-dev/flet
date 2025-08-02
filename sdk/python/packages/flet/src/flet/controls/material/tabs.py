@@ -1,8 +1,10 @@
+import asyncio
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
@@ -152,6 +154,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
     on text headers to articulate the different sections of content.
+
+    Raises:
+        ValueError: If [`length`][flet.Tabs.length] is negative.
+        IndexError: If [`selected_index`][(c).] is not in the range
+            `[-length, length - 1]`.
     """
 
     content: Control
@@ -167,31 +174,135 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     Note:
         Must match the length of both [`TabBar.tabs`][flet.TabBar.tabs]
-        and [`TabBarView.controls`][flet.TabBarView.controls].
+        and [`TabBarView.controls`][flet.TabBarView.controls]. Don't forget to update
+        it when adding/removing tabs.
     """
 
-    initial_index: int = 0
+    selected_index: int = 0
     """
-    The initial index of the selected tab.
+    The index of the currently selected tab.
 
-    Can't be changed after the control is mounted (added to the page tree).
+    Supports Python-style negative indexing, where `-1` represents the last tab,
+    `-2` the second to last, and so on.
+
+    Note:
+        - Must be in range `[-length, length - 1]`.
+        - Changing the value of this property will internally trigger
+            [`move_to`][flet.Tabs.move_to] with
+            [`animation_duration`][flet.Tabs.animation_duration] and
+            [`Curve.EASE`][flet.AnimationCurve.EASE] animation curve. To specify
+            a different animation curve or duration for this particular change,
+            use [`move_to`][flet.Tabs.move_to] directly.
     """
 
-    animation_duration: Optional[DurationValue] = field(
+    animation_duration: DurationValue = field(
         default_factory=lambda: Duration(milliseconds=250),
     )
     """
-    The duration of the animations.
+    The duration of tab animations. For example, the animation that occurs
+    when the selected tab changes.
+    """
+
+    on_change: Optional[ControlEventHandler["TabBar"]] = None
+    """
+    Called when [`selected_index`][flet.Tabs.selected_index] changes.
+
+    The [`data`][flet.Event.data] property of the event handler argument
+    contains the index of the selected tab.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.length >= 0, (
-            f"length must be greater than or equal to 0, got {self.length}"
+        if self.length < 0:
+            raise ValueError(
+                f"length must be greater than or equal to 0, got {self.length}"
+            )
+        if not (-self.length <= self.selected_index < self.length):
+            raise IndexError(
+                f"selected_index out of range: got {self.selected_index}, "
+                f"expected in range [-{self.length}, {self.length - 1}]"
+            )
+
+    async def move_to_async(
+        self,
+        index: int,
+        animation_curve: AnimationCurve = AnimationCurve.EASE_IN,
+        animation_duration: Optional[DurationValue] = None,
+    ):
+        """
+        Selects the tab at the given `index`.
+
+        Additionally, it triggers [`on_change`][flet.Tabs.on_change] event and updates
+        [`selected_index`][flet.Tabs.selected_index].
+
+        Note:
+            If `index` is negative, it is interpreted as a Python-style negative index
+            (e.g., -1 refers to the last tab). If the resolved index is already the
+            currently selected tab, the method returns immediately and does nothing.
+
+        Args:
+            index: The index of the tab to select. Must be between in range
+                `[-length, length - 1]`.
+            animation_curve: The curve to apply to the animation.
+            animation_duration: The duration of the animation. If `None` (the default),
+                [`Tabs.animation_duration`][flet.Tabs.animation_duration] will be used.
+
+        Raises:
+            IndexError: If the `index` is outside the range `[-length, length - 1]`.
+        """
+        if not (-self.length <= index < self.length):
+            raise IndexError(
+                f"index out of range: got {index}, expected in range "
+                f"[-{self.length}, {self.length - 1}]"
+            )
+
+        # Resolve negative index to positive
+        resolved_index = index if index >= 0 else self.length + index
+
+        # Early return if already on this tab
+        if self.selected_index == resolved_index:
+            return
+
+        await self._invoke_method_async(
+            method_name="move_to",
+            arguments={
+                "index": index,
+                "curve": animation_curve,
+                "duration": animation_duration
+                if animation_duration is not None
+                else self.animation_duration,
+            },
         )
-        assert self.length == 0 or (0 <= self.initial_index < self.length), (
-            f"initial_index must be between 0 and length - 1 ({self.length - 1}) "
-            f"inclusive, got {self.initial_index}"
+
+    def move_to(
+        self,
+        index: int,
+        animation_curve: AnimationCurve = AnimationCurve.EASE,
+        animation_duration: Optional[DurationValue] = None,
+    ):
+        """
+        Selects the tab at the given `index`.
+
+        Additionally, it triggers [`on_change`][flet.Tabs.on_change] event and updates
+        [`selected_index`][flet.Tabs.selected_index].
+
+        Note:
+            If `index` is negative, it is interpreted as a Python-style negative index
+            (e.g., -1 refers to the last tab). If the resolved index is already the
+            currently selected tab, the method returns immediately and does nothing.
+
+        Args:
+            index: The index of the tab to select. Must be between in range
+                `[-length, length - 1]`.
+            animation_curve: The curve to apply to the animation.
+            animation_duration: The duration of the animation. If `None` (the default),
+                [`Tabs.animation_duration`][flet.Tabs.animation_duration] will be used.
+
+        Raises:
+            IndexError: If the `index` is outside the range `[-length, length - 1]`.
+        """
+        asyncio.create_task(
+            self.move_to_async(index, animation_curve, animation_duration)
         )
 
 
@@ -239,7 +350,7 @@ class TabBar(ConstrainedControl, AdaptiveControl):
 
     Raises:
         AssertionError: If [`indicator`][(c).] is None and
-            [`indicator_thickness`][(c).] is not greater than 0.
+            [`indicator_thickness`][(c).] is not strictly greater than 0.
         AssertionError: If [`tab_alignment`][(c).] is not valid for
             the given [`scrollable`][(c).] state.
     """
@@ -250,11 +361,6 @@ class TabBar(ConstrainedControl, AdaptiveControl):
 
     Typically [`Tab`][flet.Tab]s.
     """
-
-    # selected_index: int = 0
-    # """
-    # The index of currently selected tab.
-    # """
 
     scrollable: bool = True
     """
@@ -302,17 +408,20 @@ class TabBar(ConstrainedControl, AdaptiveControl):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the indicator(line that
-    appears below the selected tab).
+    The color of the indicator(line that appears below the selected tab).
+
+    Note:
+        Will be ignored if [`indicator`][flet.TabBar.indicator] or
+        [`TabBarTheme.indicator`][flet.TabBarTheme.indicator] is not `None`.
     """
 
     indicator: Optional[UnderlineTabIndicator] = None
     """
     Defines the appearance of the selected tab indicator.
 
-    If [`TabBarTheme.indicator`][flet.TabBarTheme.indicator] is specified,
-    its [`indicator_color`][flet.TabBarTheme.indicator_color] and
-    [`indicator_weight`][flet.TabBarTheme.indicator_weight] properties are ignored.
+    If this or [`TabBarTheme.indicator`][flet.TabBarTheme.indicator] is not `None`,
+    [`indicator_color`][flet.TabBar.indicator_color] and
+    [`indicator_thickness`][flet.TabBar.indicator_thickness] properties are ignored.
 
     The indicator's size is based on the tab's bounds. If
     [`indicator_size`][flet.TabBar.indicator_size]
@@ -400,12 +509,18 @@ class TabBar(ConstrainedControl, AdaptiveControl):
     """
     The height of the divider.
 
-    Defaults to `1.0`.
+    If `None`, defaults to
+    [`TabBarTheme.divider_height`][flet.TabBarTheme.divider_height]. If this is also
+    `None`, `1.0` will be used.
     """
 
     indicator_thickness: Number = 2.0
     """
     The thickness of the indicator. Value must be greater than zero.
+
+    Note:
+        Will be ignored if [`indicator`][flet.TabBar.indicator] or
+        [`TabBarTheme.indicator`][flet.TabBarTheme.indicator] is not `None`.
     """
 
     enable_feedback: Optional[bool] = None
@@ -442,14 +557,10 @@ class TabBar(ConstrainedControl, AdaptiveControl):
     contains the index of the clicked tab.
     """
 
-    # on_change: Optional[ControlEventHandler["TabBar"]] = None
-    # """
-    # Called when [`selected_index`][flet.Tabs.selected_index] changes.
-    # """
-
     on_hover: Optional[EventHandler[TabBarHoverEvent]] = None
     """
-    Called when a [`Tab`][flet.Tab]'s hover state in the tab bar changes.
+    Called when a tab's (from [`tabs`][flet.TabBar.tabs]) hover state in the
+    tab bar changes.
 
     When hover is moved from one tab directly to another, this will be called
     twice. First to represent hover exiting the initial tab, and then second

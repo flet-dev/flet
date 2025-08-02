@@ -27,7 +27,7 @@ UnderlineTabIndicator? parseUnderlineTabIndicator(
   if (value == null) return defaultValue;
   return UnderlineTabIndicator(
     insets: parseEdgeInsets(value['insets'], EdgeInsets.zero)!,
-    borderSide: parseBorderSide(value['borderSide'], theme,
+    borderSide: parseBorderSide(value['border_side'], theme,
         defaultValue: const BorderSide(width: 2.0, color: Colors.white))!,
     borderRadius: parseBorderRadius(value['border_radius']),
   );

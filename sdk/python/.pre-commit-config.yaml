@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.5
+    rev: v0.12.7
     hooks:
       # Run the linter.
       - id: ruff
@@ -8,13 +8,13 @@ repos:
       # Run the formatter.
       - id: ruff-format
 
+  - repo: https://github.com/aio-libs/sort-all
+    rev: v1.3.0
+    hooks:
+      - id: sort-all
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
-
-  - repo: https://github.com/aio-libs/sort-all
-    rev: v1.3.0
-    hooks:
-      - id: sort-all
