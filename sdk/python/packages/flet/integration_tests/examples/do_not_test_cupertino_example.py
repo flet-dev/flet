@@ -1,9 +1,15 @@
+import os
+import sys
 from pathlib import Path
 
-import flet as ft
 import flet.testing as ftt
 import pytest
 import pytest_asyncio
+
+examples_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
+print("examples_dir:", examples_dir)
+sys.path.append(examples_dir)
+
 import examples.cupertino_action_sheet as ex
 
 
