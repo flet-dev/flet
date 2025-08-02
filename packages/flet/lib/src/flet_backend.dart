@@ -21,6 +21,7 @@ import 'protocol/register_client_request_body.dart';
 import 'protocol/register_client_response_body.dart';
 import 'protocol/session_crashed_body.dart';
 import 'protocol/update_control_body.dart';
+import 'testing/tester.dart';
 import 'transport/flet_backend_channel.dart';
 import 'utils/desktop.dart';
 import 'utils/images.dart';
@@ -47,6 +48,7 @@ class FletBackend extends ChangeNotifier {
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
   final bool? forcePyodide;
+  final Tester? tester;
   final Map<String, GlobalKey> globalKeys = {};
 
   final WeakValueMap<int, Control> controlsIndex = WeakValueMap<int, Control>();
@@ -90,6 +92,7 @@ class FletBackend extends ChangeNotifier {
       this.controlId,
       this.args,
       this.forcePyodide,
+      this.tester,
       required extensions,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
@@ -107,6 +110,7 @@ class FletBackend extends ChangeNotifier {
       "web": kIsWeb,
       "debug": kDebugMode,
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
+      "test": tester != null,
       "multi_view": multiView,
       "window": {
         "_c": "Window",
@@ -190,6 +194,7 @@ class FletBackend extends ChangeNotifier {
                   'web': page.get("web"),
                   'debug': page.get("debug"),
                   'wasm': page.get("wasm"),
+                  'test': page.get("test"),
                   'multi_view': page.get("multi_view"),
                   'platform_brightness': page.get("platform_brightness"),
                   'width': page.get("width"),

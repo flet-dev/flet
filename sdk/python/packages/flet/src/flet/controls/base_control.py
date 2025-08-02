@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
-from flet.controls.keys import ScrollKey, ValueKey
+from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
 
 logger = logging.getLogger("flet")
@@ -105,7 +105,7 @@ class BaseControl:
     Arbitrary data of any type.
     """
 
-    key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
+    key: Optional[KeyValue] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
@@ -157,7 +157,7 @@ class BaseControl:
         """The page (of type `Page` or `PageView`) to which this control belongs to."""
         from .page import Page, PageView
 
-        parent = self.parent
+        parent = self
         while parent:
             if isinstance(parent, (Page, PageView)):
                 return parent

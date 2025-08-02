@@ -8,12 +8,11 @@ import wheel.cli.unpack
 
 
 def repackage_wheel(wheel_path, new_tag):
-
     wheel_path = os.path.realpath(wheel_path)
     print(f"Re-packaging wheel {wheel_path} with {new_tag}")
 
     # Create temporary directory
-    with tempfile.TemporaryDirectory() as tmp_dir:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp_dir:
         tmp_dir_path = Path(tmp_dir)
 
         # Unpack the wheel file

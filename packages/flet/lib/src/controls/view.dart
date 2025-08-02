@@ -32,7 +32,7 @@ class ViewControl extends StatefulWidget {
   final Control control;
 
   ViewControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<ViewControl> createState() => _ViewControlState();

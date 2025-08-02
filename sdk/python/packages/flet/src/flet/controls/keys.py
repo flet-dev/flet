@@ -27,3 +27,6 @@ class ValueKey(Key):
 class ScrollKey(Key):
     def __post_init__(self):
         self._type = "scroll"
+
+
+KeyValue = Union[ValueKey, ScrollKey, str, int, float, bool]

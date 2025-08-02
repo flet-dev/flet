@@ -5,7 +5,7 @@ class TabsControl extends StatefulWidget {
   final Control control;
 
   TabsControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<TabsControl> createState() => _TabsControlState();

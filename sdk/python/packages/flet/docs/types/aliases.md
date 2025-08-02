@@ -14,6 +14,7 @@
 ::: flet.EventHandler
 ::: flet.IconValue
 ::: flet.IconValueOrControl
+::: flet.KeyValue
 ::: flet.MarginValue
 ::: flet.Number
 ::: flet.OffsetValue
