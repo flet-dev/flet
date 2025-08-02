@@ -22,10 +22,10 @@ if TYPE_CHECKING:
 
 __all__ = [
     "ControlEvent",
-    "Event",
     "ControlEventHandler",
-    "EventHandler",
+    "Event",
     "EventControlType",
+    "EventHandler",
 ]
 
 EventControlType = TypeVar("EventControlType", bound="BaseControl")
@@ -46,7 +46,7 @@ class Event(Generic[EventControlType]):
         return self.control._i
 
     @staticmethod
-    def get_event_field_type(control: Any, field_name: str):
+    def _get_event_field_type(control: Any, field_name: str):
         frame = inspect.currentframe().f_back
         globalns = sys.modules[control.__class__.__module__].__dict__
         localns = frame.f_globals.copy()

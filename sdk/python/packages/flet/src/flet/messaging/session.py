@@ -172,7 +172,7 @@ class Session:
             # field_name not defined
             return
         try:
-            event_type = ControlEvent.get_event_field_type(control, field_name)
+            event_type = ControlEvent._get_event_field_type(control, field_name)
             if event_type is None:
                 return
 
