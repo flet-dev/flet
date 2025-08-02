@@ -487,12 +487,13 @@ nav:
                   - SnackBarTheme: types/snackbartheme.md
                   - SwitchTheme: types/switchtheme.md
                   - SystemOverlayStyle: types/systemoverlaystyle.md
-                  - TabsTheme: types/tabstheme.md
+                  - TabBarTheme: types/tabbartheme.md
                   - TextButtonTheme: types/textbuttontheme.md
                   - TextTheme: types/texttheme.md
                   - TimePickerTheme: types/timepickertheme.md
                   - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
+              - UnderlineTabIndicator: types/underlinetabindicator.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
@@ -558,6 +559,8 @@ nav:
               - StrokeCap: types/strokecap.md
               - StrokeJoin: types/strokejoin.md
               - TabAlignment: types/tabalignment.md
+              - TabBarIndicatorSize: types/tabbarindicatorsize.md
+              - TabIndicatorAnimation: types/tabindicatoranimation.md
               - TextAffinity: types/textaffinity.md
               - TextAlign: types/textalign.md
               - TextBaseline: types/textbaseline.md
@@ -610,6 +613,7 @@ nav:
               - ScaleStartEvent: types/scalestartevent.md
               - ScaleUpdateEvent: types/scaleupdateevent.md
               - ScrollEvent: types/scrollevent.md
+              - TabBarHoverEvent: types/tabbarhoverevent.md
               - TapEvent: types/tapevent.md
               - TextSelectionChangeEvent: types/textselectionchangeevent.md
               - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md

@@ -1,5 +1,19 @@
-import 'package:flet/flet.dart';
+import '../extensions/control.dart';
+import '../utils/borders.dart';
+import '../utils/edge_insets.dart';
+import '../utils/misc.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
+import '../utils/tabs.dart';
+import '../utils/text.dart';
+import '../utils/time.dart';
 import 'package:flutter/material.dart';
+
+import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/mouse.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class TabsControl extends StatefulWidget {
   final Control control;
@@ -88,43 +102,22 @@ class _TabBarControlState extends State<TabBarControl> {
   Widget build(BuildContext context) {
     debugPrint("TabBarControl build: ${widget.control.id}");
 
-    var overlayColor = widget.control.getWidgetStateColor(
-        "overlay_color", Theme.of(context),
-        defaultValue: TabBarTheme.of(context).overlayColor);
-    var indicatorBorderRadius =
-        widget.control.getBorderRadius("indicator_border_radius");
-    var indicatorBorderSide = widget.control
-        .getBorderSide("indicator_border_side", Theme.of(context));
+    var overlayColor =
+        widget.control.getWidgetStateColor("overlay_color", Theme.of(context));
     var indicatorPadding =
         widget.control.getPadding("indicator_padding", EdgeInsets.zero)!;
-    var indicatorColor = widget.control.getColor(
-        "indicator_color",
-        context,
-        TabBarTheme.of(context).indicatorColor ??
-            Theme.of(context).colorScheme.primary)!;
-    var labelColor = widget.control.getColor(
-        "label_color",
-        context,
-        TabBarTheme.of(context).labelColor ??
-            Theme.of(context).colorScheme.primary);
-    var unselectedLabelColor = widget.control.getColor(
-        "unselected_label_color",
-        context,
-        TabBarTheme.of(context).unselectedLabelColor ??
-            Theme.of(context).colorScheme.onSurface);
-    var dividerColor = widget.control.getColor("divider_color", context) ??
-        TabBarTheme.of(context).dividerColor;
-    var themeIndicator =
-        TabBarTheme.of(context).indicator as UnderlineTabIndicator?;
-    var indicatorTabSize = widget.control.getBool("indicator_tab_size");
+    var indicatorColor = widget.control.getColor("indicator_color", context);
+    var labelColor = widget.control.getColor("label_color", context);
+    var unselectedLabelColor =
+        widget.control.getColor("unselected_label_color", context);
+    var dividerColor = widget.control.getColor("divider_color", context);
     var scrollable = widget.control.getBool("scrollable", true)!;
     var secondary = widget.control.getBool("secondary", false)!;
     var dividerHeight = widget.control.getDouble("divider_height");
     var enableFeedback = widget.control.getBool("enable_feedback");
     var indicatorWeight = widget.control.getDouble("indicator_thickness", 2.0)!;
-    var tabAlignment = parseTabAlignment(
-        widget.control.getString("tab_alignment"),
-        scrollable ? TabAlignment.start : TabAlignment.fill)!;
+    var tabAlignment = widget.control.getTabAlignment(
+        "tab_alignment", scrollable ? TabAlignment.start : TabAlignment.fill)!;
     var mouseCursor =
         parseMouseCursor(widget.control.getString("mouse_cursor"));
     var padding = parseEdgeInsets(widget.control.getPadding("padding"));
@@ -141,27 +134,18 @@ class _TabBarControlState extends State<TabBarControl> {
       widget.control.triggerEvent("click", index);
     }
 
-    var indicator = indicatorBorderRadius != null ||
-            indicatorBorderSide != null ||
-            indicatorPadding != null
-        ? UnderlineTabIndicator(
-            borderRadius: indicatorBorderRadius ??
-                themeIndicator?.borderRadius ??
-                const BorderRadius.only(
-                    topLeft: Radius.circular(2), topRight: Radius.circular(2)),
-            borderSide: indicatorBorderSide ??
-                themeIndicator?.borderSide ??
-                BorderSide(
-                    width: themeIndicator?.borderSide.width ?? 2,
-                    color: themeIndicator?.borderSide.color ?? indicatorColor),
-            insets:
-                indicatorPadding ?? themeIndicator?.insets ?? EdgeInsets.zero)
-        : TabBarTheme.of(context).indicator;
-    var indicatorSize = indicatorTabSize != null
-        ? (indicatorTabSize
-            ? TabBarIndicatorSize.tab
-            : TabBarIndicatorSize.label)
-        : TabBarTheme.of(context).indicatorSize;
+    void onHover(bool hovering, int? index) {
+      widget.control
+          .triggerEvent("hover", {"hovering": hovering, "index": index});
+    }
+
+    var indicator =
+        widget.control.getUnderlineTabIndicator("indicator", Theme.of(context));
+    var indicatorSize = widget.control.getTabBarIndicatorSize("indicator_size");
+    var indicatorAnimation =
+        widget.control.getTabIndicatorAnimation("indicator_animation");
+
+    debugPrint("TabBar indicatorAnimation: ${indicator?.borderSide.color}");
 
     TabBar? tabBar;
 
@@ -178,6 +162,8 @@ class _TabBarControlState extends State<TabBarControl> {
           indicatorSize: indicatorSize,
           indicator: indicator,
           indicatorColor: indicatorColor,
+          indicatorPadding: indicatorPadding,
+          indicatorAnimation: indicatorAnimation,
           labelColor: labelColor,
           unselectedLabelColor: unselectedLabelColor,
           overlayColor: overlayColor,
@@ -187,8 +173,8 @@ class _TabBarControlState extends State<TabBarControl> {
           labelStyle: labelStyle,
           unselectedLabelStyle: unselectedLabelStyle,
           splashBorderRadius: splashBorderRadius,
-          indicatorPadding: indicatorPadding,
-          onTap: onTap);
+          onTap: onTap,
+          onHover: onHover);
     } else {
       tabBar = TabBar(
           // controller: _tabController,
@@ -202,6 +188,8 @@ class _TabBarControlState extends State<TabBarControl> {
           indicatorSize: indicatorSize,
           indicator: indicator,
           indicatorColor: indicatorColor,
+          indicatorPadding: indicatorPadding,
+          indicatorAnimation: indicatorAnimation,
           labelColor: labelColor,
           unselectedLabelColor: unselectedLabelColor,
           overlayColor: overlayColor,
@@ -211,8 +199,8 @@ class _TabBarControlState extends State<TabBarControl> {
           labelStyle: labelStyle,
           unselectedLabelStyle: unselectedLabelStyle,
           splashBorderRadius: splashBorderRadius,
-          indicatorPadding: indicatorPadding,
-          onTap: onTap);
+          onTap: onTap,
+          onHover: onHover);
     }
 
     return BaseControl(control: widget.control, child: tabBar);

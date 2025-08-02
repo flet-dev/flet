@@ -31,7 +31,7 @@ tasks:
     cmds:
       - uv pip install -r pyproject.toml --group all
 
-  docs-serve:
+  serve-docs:
     desc: "Serve MkDocs documentation from the 'packages/flet' directory."
     aliases:
       - docs
@@ -74,6 +74,7 @@ tasks:
     prompt: "This will kill any process using port 8550. Do you want to continue?"
     aliases:
       - free-port
+      - free-8550
     cmds:
       - kill -9 $(lsof -ti :8550)
 
