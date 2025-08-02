@@ -88,7 +88,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     var theme = Theme.of(context);
 
-    var style = widget.control.getButtonStyle("style", Theme.of(context),
+    var style = parseButtonStyle(
+        widget.control.internals?["style"], Theme.of(context),
         defaultForegroundColor: widget.control
             .getColor("color", context, theme.colorScheme.primary)!,
         defaultBackgroundColor: widget.control

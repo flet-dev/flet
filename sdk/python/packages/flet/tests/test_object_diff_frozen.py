@@ -268,9 +268,13 @@ def test_button_basic_diff():
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["scale"], "value_type": ft.Scale},
+            {
+                "op": "add",
+                "path": ["_internals", "style"],
+                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
+            },
+            {"op": "replace", "path": ["scale"], "value": ft.Scale(0.2)},
             {"op": "replace", "path": ["content"], "value": "Click me"},
-            {"op": "replace", "path": ["style"], "value_type": ft.ButtonStyle},
         ],
     )
 
@@ -281,9 +285,9 @@ def test_button_basic_diff():
     assert cmp_ops(
         patch,
         [
+            {"op": "replace", "path": ["_internals", "style", "color"], "value": None},
             {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
-            {"op": "replace", "path": ["content"], "value_type": ft.Text},
-            {"op": "replace", "path": ["style"], "value": None},
+            {"op": "replace", "path": ["content"], "value": ft.Text("Text_1")},
         ],
     )
 

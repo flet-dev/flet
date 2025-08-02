@@ -7,13 +7,13 @@ from flet.controls.painting import Paint
 from flet.controls.types import ColorValue, FontWeight, Number
 
 __all__ = [
-    "TextOverflow",
+    "StrutStyle",
     "TextBaseline",
-    "TextThemeStyle",
     "TextDecoration",
     "TextDecorationStyle",
+    "TextOverflow",
     "TextStyle",
-    "StrutStyle",
+    "TextThemeStyle",
 ]
 
 
@@ -49,8 +49,18 @@ class TextThemeStyle(Enum):
 
 class TextDecoration(IntFlag):
     """
-    TBD
+    A linear decoration to draw near the text.
     """
+
+    @classmethod
+    def combine(cls, decorations: list["TextDecoration"]) -> "TextDecoration":
+        """
+        Creates a decoration that paints the union of all the given decorations.
+        """
+        result = cls.NONE
+        for d in decorations:
+            result |= d
+        return result
 
     NONE = 0
     """
@@ -75,7 +85,7 @@ class TextDecoration(IntFlag):
 
 class TextDecorationStyle(Enum):
     """
-    TBD
+    The style in which to draw a text decoration.
     """
 
     SOLID = "solid"
@@ -107,7 +117,7 @@ class TextDecorationStyle(Enum):
 @dataclass
 class TextStyle:
     """
-    A style describing how to format and paint text. It has the following properties:
+    A style describing how to format and paint text.
     """
 
     size: Optional[Number] = None
@@ -121,12 +131,15 @@ class TextStyle:
     """
     The height of this text span, as a multiple of the font size.
 
-    See detailed explanation [here](https://api.flutter.dev/flutter/painting/TextStyle/height.html).
+    See detailed explanation
+    [here](https://api.flutter.dev/flutter/painting/TextStyle/height.html).
     """
 
     weight: Optional[FontWeight] = None
     """
-    Defaults to `FontWeight.NORMAL`.
+    The typeface thickness to use when painting the text (e.g., bold).
+
+    Defaults to [`FontWeight.NORMAL`][flet.FontWeight.NORMAL].
     """
 
     italic: bool = False
@@ -141,7 +154,7 @@ class TextStyle:
 
     decoration_color: Optional[ColorValue] = None
     """
-    The https://flet.dev/docs/reference/colors in which to paint the text decorations.
+    The color in which to paint the text decorations.
     """
 
     decoration_thickness: Optional[Number] = None

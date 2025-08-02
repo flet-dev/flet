@@ -1,4 +1,4 @@
-::: flet.TabsTheme
+::: flet.TabBarTheme
 
 ## Examples
 
@@ -6,7 +6,7 @@
 
 ```python
 page.theme = ft.Theme(
-    tabs_theme=ft.TabsTheme(
+    tabs_theme=ft.TabBarTheme(
         divider_color=ft.Colors.BLUE,
         indicator_color=ft.Colors.RED,
         indicator_tab_size=True,

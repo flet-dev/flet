@@ -3,18 +3,110 @@
 version: '3'
 # includes:
 tasks:
-  dev-setup:
+  list:
+    desc: "Lists all available tasks."
     aliases:
-      - setup
+      - ls
+      - tasks
+    cmds:
+      - task --list
+
+  setup:
+    desc: "Setup environment by installing all pyproject.toml dependencies and pre-commit hooks."
+    cmds:
+      - task: pyproject-setup
+      - task: pre-commit-install
+
+  venv-init:
+    desc: "Initialize virtual environment."
+    aliases:
+      - venv
+    cmds:
+      - uv venv
+
+  pytest:
+    desc: "Run tests."
+    aliases:
+      - test
+    cmds:
+      - uv run --group test pytest
+
+  pyproject-setup:
+    desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."
+    aliases:
+      - pyproject
     cmds:
       - uv pip install -r pyproject.toml --group all
 
-  docs-serve:
+  serve-docs:
+    desc: "Serve MkDocs documentation from the 'packages/flet' directory."
     aliases:
       - docs
     cmds:
       - uv run --directory packages/flet --group docs mkdocs serve
 
   docs-coverage:
+    desc: "Run docstring coverage report in the 'packages/flet' directory."
     cmds:
       - uv run --directory packages/flet --group docs-coverage docstr-coverage
+
+  pre-commit-install:
+    desc: "Install pre-commit hooks."
+    aliases:
+      - precommit-install
+      - pc-install
+    cmds:
+      - uv run pre-commit install
+
+  pre-commit-run:
+    desc: "Run pre-commit hooks on all files of the repo."
+    aliases:
+      - precommit-run
+      - pc-run
+    cmds:
+      - uv run pre-commit run --all-files
+
+  pre-commit-autoupdate:
+    desc: "Upgrade versions of repos in .pre-commit-config.yaml to their latest."
+    aliases:
+      - pc-update
+      - pc-autoupdate
+      - pre-commit-autoupdate
+      - precommit-autoupdate
+    cmds:
+      - uv run pre-commit autoupdate
+
+  free-port-8550:
+    desc: "Frees Unix port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."
+    prompt: "This will kill any process using port 8550. Do you want to continue?"
+    aliases:
+      - free-port
+      - free-8550
+    cmds:
+      - kill -9 $(lsof -ti :8550)
+
+  extensions-pre-commit-install:
+    desc: "Installs pre-commit hooks of all extensions, assuming they are present in the currently active uv-workspace."
+    aliases:
+      - pc-extensions
+      - extensions-pre-commit
+      - extensions-precommit
+    cmds:
+      - uv run --package flet-ads pre-commit install
+      - uv run --package flet-audio pre-commit install
+      - uv run --package flet-audio-recorder pre-commit install
+      - uv run --package flet-charts pre-commit install
+      - uv run --package flet-datatable2 pre-commit install
+      - uv run --package flet-flashlight pre-commit install
+      - uv run --package flet-geolocator pre-commit install
+      - uv run --package flet-lottie pre-commit install
+      - uv run --package flet-map pre-commit install
+      - uv run --package flet-permission-handler pre-commit install
+      - uv run --package flet-rive pre-commit install
+      - uv run --package flet-video pre-commit install
+      - uv run --package flet-webview pre-commit install
+
+#  serve-extensions:
+#    desc: "Serves all extensions, assuming they are present in the currently active uv-workspace."
+#    cmds:
+#      - uv run --active --package flet-audio --directory path/to/flet-audio mkdocs serve

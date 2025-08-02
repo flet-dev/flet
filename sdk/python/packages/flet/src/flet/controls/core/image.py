@@ -17,9 +17,11 @@ __all__ = ["Image"]
 @control("Image")
 class Image(ConstrainedControl):
     """
-    A control that displays an image.
+    Displays an image. The following popular formats are supported: JPEG, PNG, SVG,
+    GIF, Animated GIF, WebP, Animated WebP, BMP, and WBMP.
 
-    The source can be specified through one of the following properties (in order of precedence):
+    The source can be specified through one of the following
+    properties (in order of precedence):
 
     - [`src_bytes`][(c).]
     - [`src_base64`][(c).]
