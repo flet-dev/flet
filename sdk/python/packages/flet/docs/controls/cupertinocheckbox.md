@@ -5,17 +5,17 @@
 ### Cupertino, Material and Adaptive Checkboxes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-checkbox/cupertino-material-and-adaptive.py"
+--8<-- "../../examples/controls/cupertino_checkbox/cupertino_material_and_adaptive.py"
 ```
 
-![cupertino-material-and-adaptive](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-checkbox/media/cupertino-material-and-adaptive.png){width="80%"}
+![cupertino-material-and-adaptive](../../examples/controls/cupertino_checkbox/media/cupertino_material_and_adaptive.png){width="80%"}
 /// caption
 ///
 
 ### Styled checkboxes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-checkbox/styled.py"
+--8<-- "../../examples/controls/cupertino_checkbox/styled.py"
 ```
 
 ::: flet.CupertinoCheckbox

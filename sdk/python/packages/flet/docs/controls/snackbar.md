@@ -8,7 +8,7 @@
 --8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/snack-bar/basic.py
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/snack-bar/media/basic.gif){width="80%"}
+![basic](../../examples/controls/snack_bar/media/basic.gif){width="80%"}
 /// caption
 ///
 

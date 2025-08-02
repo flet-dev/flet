@@ -5,23 +5,23 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/expansion-tile/basic.py"
+--8<-- "../../examples/controls/expansion_tile/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/expansion-tile/media/basic.png){width="80%"}
+![basic](../../examples/controls/expansion_tile/media/basic.png){width="80%"}
 /// caption
 ///
 
 ### Theme mode toggle
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/expansion-tile/theme-mode-toggle.py"
+--8<-- "../../examples/controls/expansion_tile/theme_mode_toggle.py"
 ```
 
 ### Borders
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/expansion-tile/borders.py"
+--8<-- "../../examples/controls/expansion_tile/borders.py"
 ```
 
 ::: flet.ExpansionTile

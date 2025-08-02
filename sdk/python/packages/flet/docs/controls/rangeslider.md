@@ -5,17 +5,17 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/range-slider/basic.py"
+--8<-- "../../examples/controls/range_slider/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/range-slider/media/basic.gif){width="80%"}
+![basic](../../examples/controls/range_slider/media/basic.gif){width="80%"}
 /// caption
 ///
 
 ### RangeSlider with events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/range-slider/handling-change-events.py"
+--8<-- "../../examples/controls/range_slider/handling_change_events.py"
 ```
 
 ::: flet.RangeSlider

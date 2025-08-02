@@ -5,9 +5,9 @@
 ### Canvas paint
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/types/paint-gradient/paint-radial-gradient/canvas-paint.py"
+--8<-- "../../examples/controls/types/paint_gradient/paint_radial_gradient/canvas_paint.py"
 ```
 
-![canvas-paint](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/types/paint-gradient/paint-radial-gradient/media/canvas-paint.png){width="80%"}
+![canvas-paint](../../examples/controls/types/paint_gradient/paint_radial_gradient/media/canvas_paint.png){width="80%"}
 /// caption
 ///
