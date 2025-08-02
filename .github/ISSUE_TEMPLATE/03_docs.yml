@@ -1,9 +1,7 @@
----
 name: Documentation update
 about: Found some unclear, missing or outdated documentation?
 title: "docs: "
-labels: documentation
----
+labels: ["documentation"]
 
 body:
   - type: textarea

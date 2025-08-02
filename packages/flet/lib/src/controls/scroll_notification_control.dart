@@ -9,7 +9,7 @@ class ScrollNotificationControl extends StatefulWidget {
 
   ScrollNotificationControl(
       {Key? key, required this.child, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<ScrollNotificationControl> createState() =>

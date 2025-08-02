@@ -15,7 +15,7 @@ class ScrollableControl extends StatefulWidget {
       required this.child,
       required this.scrollDirection,
       this.scrollController})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<ScrollableControl> createState() => _ScrollableControlState();

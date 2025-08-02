@@ -5,7 +5,7 @@ class ButtonControl extends StatefulWidget {
   final Control control;
 
   ButtonControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<ButtonControl> createState() => _ButtonControlState();

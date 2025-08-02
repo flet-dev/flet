@@ -11,7 +11,7 @@ class DatePickerControl extends StatefulWidget {
   final Control control;
 
   DatePickerControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();

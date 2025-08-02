@@ -24,79 +24,86 @@ environment:
   matrix:
     - job_name: Build Flet package for Flutter
       job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2204
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Integration tests on macOS
+      job_group: integration_tests
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+      FLET_TEST_SCREENSHOTS_PIXEL_RATIO: 2.0
+      FLET_TEST_SIMILARITY_THRESHOLD: 99.0
 
-    # - job_name: Build Flet for macOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
-    # - job_name: Build Flet for Linux
-    #   job_group: build_flet_linux
-    #   job_depends_on: build_flet_package
-    #   ARCH: amd64
-    #   PACKAGE_NAME: flet-desktop
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet for macOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
 
-    # - job_name: Build Flet Light for Linux
-    #   job_group: build_flet_linux
-    #   job_depends_on: build_flet_package
-    #   ARCH: amd64
-    #   PACKAGE_NAME: flet-desktop-light
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet for Linux
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: amd64
+      PACKAGE_NAME: flet-desktop
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet for Linux ARM64
-    #   job_group: build_flet_linux
-    #   job_depends_on: build_flet_package
-    #   ARCH: arm64
-    #   PACKAGE_NAME: flet-desktop
-    #   PYTHON_VERSION: 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    - job_name: Build Flet Light for Linux
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: amd64
+      PACKAGE_NAME: flet-desktop-light
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet Light for Linux ARM64
-    #   job_group: build_flet_linux
-    #   job_depends_on: build_flet_package
-    #   ARCH: arm64
-    #   PACKAGE_NAME: flet-desktop-light
-    #   PYTHON_VERSION: 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    - job_name: Build Flet for Linux ARM64
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: arm64
+      PACKAGE_NAME: flet-desktop
+      PYTHON_VERSION: 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
-    # - job_name: Build Flet for web
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   PYODIDE_URL: https://github.com/pyodide/pyodide/releases/download/0.27.7/pyodide-core-0.27.7.tar.bz2
-    #   PYODIDE_CDN_URL: https://cdn.jsdelivr.net/pyodide/v0.27.7/full
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet Light for Linux ARM64
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: arm64
+      PACKAGE_NAME: flet-desktop-light
+      PYTHON_VERSION: 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
-    # - job_name: Test Python 3.10
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet for web
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      PYODIDE_URL: https://github.com/pyodide/pyodide/releases/download/0.27.7/pyodide-core-0.27.7.tar.bz2
+      PYODIDE_CDN_URL: https://cdn.jsdelivr.net/pyodide/v0.27.7/full
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.11
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.11
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.10
+      job_group: python_tests
+      PYTHON_VERSION: 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.12
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.12
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.11
+      job_group: python_tests
+      PYTHON_VERSION: 3.11
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.13
-    #   job_group: python_tests
-    #   PYTHON_VERSION: 3.13
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      PYTHON_VERSION: 3.12
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Python wheels
-    #   job_group: python_build
-    #   job_depends_on: python_tests, build_flet, build_flet_linux
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Test Python 3.13
+      job_group: python_tests
+      PYTHON_VERSION: 3.13
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
+    - job_name: Build Python wheels
+      job_group: python_build
+      job_depends_on: python_tests, build_flet, build_flet_linux
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
 matrix:
   fast_finish: true
@@ -150,6 +157,27 @@ for:
 
           fi
 
+  ###########################
+  #    Integration Tests    #
+  ###########################
+  - matrix:
+      only:
+        - job_group: integration_tests
+
+    install:
+      - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
+      - source ci/common.sh
+      - source ci/install_flutter.sh
+
+    build: off
+
+    test_script:
+      - cd sdk/python
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/
+
+    on_failure:
+      - find packages/flet/integration_tests -type f -name '*_actual.png' -exec appveyor PushArtifact {} \;
+
   # ======================================
   #      Build Flet Client for Windows
   # ======================================
@@ -201,8 +229,8 @@ for:
       - uv build --wheel --package flet-desktop
       - ps: |
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win_amd64'"
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName 'py3-none-win32'"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win_amd64"
+            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win32"
             Remove-Item $_.FullName
           }
       - dir dist
@@ -223,7 +251,7 @@ for:
 
     artifacts:
       - path: client\build\windows\x64\runner\flet-windows.zip
-      - path: sdk\python\packages\*.whl
+      - path: sdk\python\dist\*.whl
 
     deploy:
       provider: GitHub
@@ -291,6 +319,7 @@ for:
 
     install:
       - source ci/common.sh
+      - sudo sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y clang libgtk-3-dev libasound2-dev
       - sh: |
@@ -429,7 +458,7 @@ for:
     test_script:
       # run tests
       - cd sdk/python
-      - uv run --group test pytest
+      - uv run --group test pytest packages/flet/tests
 
       # docs coverage report
       - uv run --directory packages/flet --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
@@ -458,7 +487,7 @@ for:
       - uv build --wheel --package flet
 
       # update deps
-      - python $root/ci/update-flet-wheel-deps.py dist
+      - uv run --with wheel $root/ci/update-flet-wheel-deps.py dist
 
       # publish packages
       - publish_to_pypi dist/*.whl

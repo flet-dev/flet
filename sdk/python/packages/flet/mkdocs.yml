@@ -355,11 +355,15 @@ nav:
               - NavigationRail: controls/navigationrail.md
               - NavigationRailDestination: controls/navigationraildestination.md
           - Services:
+              - BrowserContextMenu: controls/browsercontextmenu.md
               - FilePicker: controls/filepicker.md
+              - HapticFeedback: controls/hapticfeedback.md
+              - Clipboard: controls/clipboard.md
               - SemanticsService: controls/semanticsservice.md
               - ShakeDetector: controls/shakedetector.md
+              - SharedPreferences: controls/sharedpreferences.md
               - StoragePaths: controls/storagepaths.md
-              - HapticFeedback: controls/hapticfeedback.md
+              - UrlLauncher: controls/urllauncher.md
           - Utility:
               - Badge: types/badge.md
               - Draggable: controls/draggable.md
@@ -371,9 +375,14 @@ nav:
               - SelectionArea: controls/selectionarea.md
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
+              - Screenshot: controls/screenshot.md
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
+      - Testing:
+          - Finder: testing/finder.md
+          - FletTestApp: testing/flettestapp.md
+          - Tester: testing/tester.md
       - Types:
           # - types/index.md
           - Aliases: types/aliases.md
