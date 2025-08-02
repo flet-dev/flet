@@ -1,42 +1,44 @@
-from typing import Optional
+from dataclasses import field
 
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
+
+__all__ = ["Oval"]
 
 
 @control("Oval")
 class Oval(Shape):
     """
-    Draws an axis-aligned oval that fills the given axis-aligned rectangle with the
-    given `Paint`. Whether the oval is filled or stroked (or both) is controlled by
-    `Paint.style`.
+    Draws an axis-aligned oval that fills the given
+    axis-aligned rectangle with the given [`paint`][(c).].
+
+    The [`style`][flet.Paint.style] property of [`paint`][(c).] indicates
+    whether this oval is filled, stroked, or both.
     """
 
-    x: OptionalNumber = None
+    x: Number
     """
     The x-axis coordinate of the oval's top left point.
     """
 
-    y: OptionalNumber = None
+    y: Number
     """
     The y-axis coordinate of the oval's top left point.
     """
 
-    width: OptionalNumber = None
+    width: Number = 0
     """
-    Width of the rectangle containing the oval.
-    """
-
-    height: OptionalNumber = None
-    """
-    Height of the rectangle containing the oval.
+    The width of the rectangle containing the oval.
     """
 
-    paint: Optional[Paint] = None
+    height: Number = 0
     """
-    A style to draw an oval with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    The height of the rectangle containing the oval.
     """
 
+    paint: Paint = field(default_factory=lambda: Paint())
+    """
+    A style to draw an oval with.
+    """

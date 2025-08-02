@@ -21,7 +21,7 @@ class CanvasControl extends StatefulWidget {
   final Control control;
 
   CanvasControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<CanvasControl> createState() => _CanvasControlState();
@@ -167,7 +167,7 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawColor(Canvas canvas, Control shape) {
-    var color = shape.getColor("color", context) ?? Colors.black;
+    var color = shape.getColor("color", context, Colors.black)!;
     var blendMode =
         parseBlendMode(shape.getString("blend_mode"), BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
@@ -187,16 +187,17 @@ class FletCustomPainter extends CustomPainter {
   void drawRect(Canvas canvas, Control shape) {
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
-    var borderRadius = shape.getBorderRadius("border_radius");
+    var borderRadius =
+        shape.getBorderRadius("border_radius", BorderRadius.zero)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
     canvas.drawRRect(
         RRect.fromRectAndCorners(
             Rect.fromLTWH(
                 shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-            topLeft: borderRadius?.topLeft ?? Radius.zero,
-            topRight: borderRadius?.topRight ?? Radius.zero,
-            bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
-            bottomRight: borderRadius?.bottomRight ?? Radius.zero),
+            topLeft: borderRadius.topLeft,
+            topRight: borderRadius.topRight,
+            bottomLeft: borderRadius.bottomLeft,
+            bottomRight: borderRadius.bottomRight),
         paint);
   }
 
@@ -220,8 +221,7 @@ class FletCustomPainter extends CustomPainter {
     // paint
     TextPainter textPainter = TextPainter(
         text: span,
-        textAlign:
-            parseTextAlign(shape.getString("text_align"), TextAlign.start)!,
+        textAlign: shape.getTextAlign("text_align", TextAlign.start)!,
         maxLines: maxLines,
         ellipsis: ellipsis,
         textDirection: Directionality.of(context));
@@ -254,7 +254,7 @@ class FletCustomPainter extends CustomPainter {
 
   void drawShadow(Canvas canvas, Control shape) {
     var path = buildPath(shape.get("path", [])!);
-    var color = shape.getColor("color", context) ?? Colors.black;
+    var color = shape.getColor("color", context, Colors.black)!;
     var elevation = shape.getDouble("elevation", 0)!;
     var transparentOccluder = shape.getBool("transparent_occluder", false)!;
     canvas.drawShadow(path, color, elevation, transparentOccluder);

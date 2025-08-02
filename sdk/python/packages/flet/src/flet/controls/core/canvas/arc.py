@@ -1,9 +1,11 @@
-from typing import Optional
+from dataclasses import field
 
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
-from flet.controls.types import OptionalNumber
+from flet.controls.types import Number
+
+__all__ = ["Arc"]
 
 
 @control("Arc")
@@ -11,55 +13,54 @@ class Arc(Shape):
     """
     Draws an arc scaled to fit inside the given rectangle.
 
-    It starts from `start_angle` radians around the oval up to `start_angle` +
-    `sweep_angle` radians around the oval, with zero radians being the point on
+    It starts from [`start_angle`][(c).] radians around the oval up to [`start_angle`][(c).] +
+    [`sweep_angle`][(c).] radians around the oval, with zero radians being the point on
     the right hand side of the oval that crosses the horizontal line that
     intersects the center of the rectangle and with positive angles going
-    clockwise around the oval. If `use_center` is `True`, the arc is closed back
+    clockwise around the oval. If [`use_center`][(c).] is `True`, the arc is closed back
     to the center, forming a circle sector. Otherwise, the arc is not closed,
     forming a circle segment.
 
     https://api.flutter.dev/flutter/dart-ui/Canvas/drawArc.html
     """
 
-    x: OptionalNumber = None
+    x: Number
     """
     The x-axis coordinate of the arc's top left point.
     """
 
-    y: OptionalNumber = None
+    y: Number
     """
     The y-axis coordinate of the arc's top left point.
     """
 
-    width: OptionalNumber = None
+    width: Number = 0
     """
-    Width of the rectangle containing the arc's oval.
-    """
-
-    height: OptionalNumber = None
-    """
-    Height of the rectangle containing the arc's oval.
+    The width of the rectangle containing the arc's oval.
     """
 
-    start_angle: OptionalNumber = None
+    height: Number = 0
     """
-    Starting angle in radians to draw arc from.
+    The height of the rectangle containing the arc's oval.
     """
 
-    sweep_angle: OptionalNumber = None
+    start_angle: Number = 0
+    """
+    The starting angle in radians to draw arc from.
+    """
+
+    sweep_angle: Number = 0
     """
     The length of the arc in radians.
     """
 
-    use_center: Optional[bool] = None
+    use_center: bool = False
     """
-    If `use_center` is `True`, the arc is closed back to the center, forming a
-    circle sector. Otherwise, the arc is not closed, forming a circle segment.
+    Whether this arc is closed back to the center, forming a
+    circle sector. If not closed (`False`), this arc forms a circle segment.
     """
 
-    paint: Optional[Paint] = None
+    paint: Paint = field(default_factory=lambda: Paint())
     """
-    A style to draw an arc with. The value of this property is the instance of
-    [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    A style to draw an arc with.
     """

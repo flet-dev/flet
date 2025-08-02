@@ -31,7 +31,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var padding = control.getPadding("padding");
     var margin = control.getMargin("margin");
     var alignment = control.getAlignment("alignment");
-
     var borderRadius = control.getBorderRadius("border_radius");
     var clipBehavior = control.getClipBehavior(
         "clip_behavior", borderRadius != null ? Clip.antiAlias : Clip.none)!;
@@ -110,6 +109,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               width: width,
               height: height,
               margin: margin,
+              alignment: alignment,
+              padding: padding,
               decoration: boxDecoration,
               foregroundDecoration: boxForegroundDecoration,
               clipBehavior: clipBehavior,

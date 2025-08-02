@@ -14,7 +14,7 @@ class SliderControl extends StatefulWidget {
   final Control control;
 
   SliderControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<SliderControl> createState() => _SliderControlState();
@@ -81,8 +81,8 @@ class _SliderControlState extends State<SliderControl> {
         value: _value,
         min: min,
         max: max,
+        // todo: remove deprecated property year2023
         year2023: widget.control.getBool("year_2023"),
-        // todo: remove
         divisions: widget.control.getInt("divisions"),
         label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
         activeColor: widget.control.getColor("active_color", context),

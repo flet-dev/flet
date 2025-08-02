@@ -1,6 +1,7 @@
-import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'material_state.dart';
 import 'numbers.dart';
 
 Size? parseSize(dynamic value, [Size? defaultValue]) {
@@ -12,6 +13,14 @@ Size? parseSize(dynamic value, [Size? defaultValue]) {
   if (width == null || height == null) return defaultValue;
 
   return Size(width, height);
+}
+
+WidgetStateProperty<Size?>? parseWidgetStateSize(dynamic value,
+    {Size? defaultSize, WidgetStateProperty<Size?>? defaultValue}) {
+  if (value == null) return defaultValue;
+
+  return getWidgetStateProperty<Size?>(
+      value, (jv) => parseSize(jv), defaultSize);
 }
 
 Rect? parseRect(dynamic value, [Rect? defaultValue]) {
@@ -32,6 +41,12 @@ Rect? parseRect(dynamic value, [Rect? defaultValue]) {
 extension GeometryParsers on Control {
   Size? getSize(String propertyName, [Size? defaultValue]) {
     return parseSize(get(propertyName), defaultValue);
+  }
+
+  WidgetStateProperty<Size?>? getWidgetStateSize(String propertyName,
+      {Size? defaultSize, WidgetStateProperty<Size?>? defaultValue}) {
+    return parseWidgetStateSize(get(propertyName),
+        defaultSize: defaultSize, defaultValue: defaultValue);
   }
 
   Rect? getRect(String propertyName, [Rect? defaultValue]) {

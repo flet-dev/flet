@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 
 __all__ = ["RadioGroup"]
 
@@ -11,8 +11,6 @@ __all__ = ["RadioGroup"]
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.
-
-    Online docs: https://flet.dev/docs/controls/radio
     """
 
     content: Control
@@ -28,9 +26,9 @@ class RadioGroup(Control):
     Current value of the RadioGroup.
     """
 
-    on_change: OptionalControlEventHandler["RadioGroup"] = None
+    on_change: Optional[ControlEventHandler["RadioGroup"]] = None
     """
-    Fires when the state of the RadioGroup is changed.
+    Called when the state of the RadioGroup is changed.
     """
 
     def before_update(self):

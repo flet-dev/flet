@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_id import ControlId
-from flet.controls.keys import ScrollKey, ValueKey
+from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
 
 logger = logging.getLogger("flet")
@@ -51,7 +51,7 @@ def control(
     - Supports `@control` (without parentheses)
     - Supports `@control("custom_type")` (with optional arguments)
     - Supports `@control("custom_type", post_init_args=1, isolated=True)` to
-      specify the number of `InitVar` arguments and isolation
+        specify the number of `InitVar` arguments and isolation
     """
 
     # Case 1: If used as `@control` (without parentheses)
@@ -102,10 +102,10 @@ class BaseControl:
     _c: str = field(init=False)
     data: Any = skip_field()
     """
-    Arbitrary data of any type that can be attached to a control.
+    Arbitrary data of any type.
     """
 
-    key: Union[ValueKey, ScrollKey, str, int, float, bool, None] = None
+    key: Optional[KeyValue] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
@@ -157,7 +157,7 @@ class BaseControl:
         """The page (of type `Page` or `PageView`) to which this control belongs to."""
         from .page import Page, PageView
 
-        parent = self.parent
+        parent = self
         while parent:
             if isinstance(parent, (Page, PageView)):
                 return parent
@@ -172,8 +172,11 @@ class BaseControl:
 
     def before_update(self):
         """
-        `before_update()` method is called every time when the control is being updated.
-        Make sure not to call `update()` method within `before_update()`.
+        This method is called every time when this control is being updated.
+
+        /// details | Note
+        Make sure not to call/request an `update()` here.
+        ///
         """
         pass
 

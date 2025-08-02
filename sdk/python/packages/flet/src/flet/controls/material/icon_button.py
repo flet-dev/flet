@@ -7,18 +7,16 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
     MouseCursor,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     UrlTarget,
     VisualDensity,
 )
-from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["IconButton"]
 
@@ -31,31 +29,19 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
-
-    Online docs: https://flet.dev/docs/controls/iconbutton
     """
-
-    def __setattr__(self, name, value):
-        if name == "content" and value is not None:
-            deprecated_warning(
-                name="content",
-                reason="Use 'icon' instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
 
     icon: Optional[IconValueOrControl] = None
     """
     Icon shown in the button.
     """
 
-    icon_color: OptionalColorValue = None
+    icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
-    icon_size: OptionalNumber = None
+    icon_size: Optional[Number] = None
     """
     Icon size in virtual pixels.
 
@@ -66,10 +52,10 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
     The optional selection state of the icon button.
 
-    If this property is not set, the button will behave as a normal push button, 
+    If this property is not set, the button will behave as a normal push button,
     otherwise, the button will toggle between showing `icon` and `selected_icon` based
-    on the value of `selected`. 
-    
+    on the value of `selected`.
+
     If True, it will show `selected_icon`, if False it will show `icon`.
     """
 
@@ -78,9 +64,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Icon shown in the button in selected state.
     """
 
-    selected_icon_color: OptionalColorValue = None
+    selected_icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors) for the selected state.
+    Icon color for the selected state.
 
     An example of icon toggle button:
 
@@ -106,56 +92,56 @@ class IconButton(ConstrainedControl, AdaptiveControl):
             )
         )
 
-    ft.app(main)
+    ft.run(main)
     ```
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
     TBD
     """
 
-    highlight_color: OptionalColorValue = None
+    highlight_color: Optional[ColorValue] = None
     """
-    The button's [color](https://flet.dev/docs/reference/colors) when the button is 
+    The button's color when the button is
     pressed. The highlight fades in quickly as the button is held down.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Value is of type [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
+    TBD
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than 
-    one control on a page with autofocus set, then the first one added to the page will 
+    True if the control will be selected as the initial focus. If there is more than
+    one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
 
-    disabled_color: OptionalColorValue = None
+    disabled_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the icon inside the
-      button when disabled.
-    """
-
-    hover_color: OptionalColorValue = None
-    """
-    The button's [color](https://flet.dev/docs/reference/colors) when hovered.
+    The color to use for the icon inside the
+    button when disabled.
     """
 
-    focus_color: OptionalColorValue = None
+    hover_color: Optional[ColorValue] = None
     """
-    The button's [color](https://flet.dev/docs/reference/colors) when in focus.
+    The button's color when hovered.
     """
 
-    splash_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
-    The primary [color](https://flet.dev/docs/reference/colors) of the button when the 
+    The button's color when in focus.
+    """
+
+    splash_color: Optional[ColorValue] = None
+    """
+    The primary color of the button when the
     button is in the down (pressed) state.
     """
 
-    splash_radius: OptionalNumber = None
+    splash_radius: Optional[Number] = None
     """
     The splash radius. Honoured only when in Material 2.
     """
@@ -163,25 +149,24 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     alignment: Optional[Alignment] = None
     """
     Defines how the icon is positioned within the IconButton. Alignment is an instance
-    of [`Alignment`](https://flet.dev/docs/reference/types/alignment) class.
+    of [`Alignment`][flet.Alignment] class.
 
     Defaults to `alignment.center`.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
-    Defines the padding around this button. The entire padded icon will react to input 
+    Defines the padding around this button. The entire padded icon will react to input
     gestures.
 
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding) and 
-    defaults to `Padding.all(8)`.
+    Defaults to `Padding.all(8)`.
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. 
-    On Android, for example, setting this to `True` produce a click sound and a 
-    long-press will produce a short vibration. 
+    Whether detected gestures should provide acoustic and/or haptic feedback.
+    On Android, for example, setting this to `True` produce a click sound and a
+    long-press will produce a short vibration.
     """
 
     url: Optional[str] = None
@@ -193,23 +178,17 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
-
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget).
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this 
+    The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
-
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
     """
 
     visual_density: Optional[VisualDensity] = None
     """
     Defines how compact the control's layout will be.
-
-    Value is of type [`VisualDensity`](https://flet.dev/docs/reference/types/visualdensity).
     """
 
     size_constraints: Optional[BoxConstraints] = None
@@ -217,24 +196,19 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     TBD
     """
 
-    on_click: OptionalControlEventHandler["IconButton"] = None
+    on_click: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Fires when a user clicks the button.
-    """
-
-    on_focus: OptionalControlEventHandler["IconButton"] = None
-    """
-    Fires when the control has received focus.
+    Called when a user clicks the button.
     """
 
-    on_blur: OptionalControlEventHandler["IconButton"] = None
+    on_focus: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has received focus.
     """
 
-    content: Optional[Control] = None  # todo(0.70.3): remove in favor of icon
+    on_blur: Optional[ControlEventHandler["IconButton"]] = None
     """
-    A Control representing custom button content.
+    Called when the control has lost focus.
     """
 
     async def focus_async(self):

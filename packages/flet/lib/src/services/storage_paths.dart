@@ -42,7 +42,7 @@ class StoragePaths extends FletService {
               : null;
         case "get_library_directory":
           return isApplePlatform() ? (await getLibraryDirectory()).path : null;
-        case "get_external_cache_directory":
+        case "get_external_storage_directory":
           return isAndroidMobile()
               ? (await getExternalStorageDirectory())?.path
               : null;

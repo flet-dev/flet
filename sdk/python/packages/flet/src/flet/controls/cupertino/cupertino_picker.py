@@ -4,12 +4,11 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.types import (
     ColorValue,
     Number,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoPicker"]
@@ -20,7 +19,8 @@ class CupertinoPicker(ConstrainedControl):
     """
     An iOS-styled picker.
 
-    Online docs: https://flet.dev/docs/controls/cupertinopicker
+    Raises:
+        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c).], or [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -30,19 +30,17 @@ class CupertinoPicker(ConstrainedControl):
 
     item_extent: Number = 32.0
     """
-    The uniform height of all children.
-
-    Defaults to `32`.
+    The uniform height of all [`controls`][flet.CupertinoPicker.controls].
     """
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected item in the `controls` list.
+    The index (starting from `0`) of the selected item in the [`controls`][flet.CupertinoPicker.controls] list.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The background [color](https://flet.dev/docs/reference/colors) of the timer picker.
+    The background color of the timer picker.
     """
 
     use_magnifier: bool = False
@@ -53,8 +51,6 @@ class CupertinoPicker(ConstrainedControl):
     looping: bool = False
     """
     If `True`, children on a wheel can be scrolled in a loop.
-
-    Defaults to `False`.
     """
 
     magnification: Number = 1.0
@@ -62,10 +58,8 @@ class CupertinoPicker(ConstrainedControl):
     The zoomed-in rate of the magnifier, if it is used.
 
     If the value is greater than `1.0`, the item in the center will be zoomed in by that
-    rate, and it will also be rendered as flat, not cylindrical like the rest of the 
+    rate, and it will also be rendered as flat, not cylindrical like the rest of the
     list. The item will be zoomed-out if magnification is less than `1.0`.
-
-    Defaults to `1.0` - normal.
     """
 
     squeeze: Number = 1.45
@@ -87,30 +81,32 @@ class CupertinoPicker(ConstrainedControl):
 
     selection_overlay: Optional[Control] = None
     """
-    A control overlaid on the picker to highlight the selected entry, centered and 
+    A control overlaid on the picker to highlight the selected entry, centered and
     matching the height of the center row.
 
-    Defaults to a rounded rectangle in iOS 14 style with 
-    `default_selection_overlay_bgcolor` as background color.
+    Defaults to a rounded rectangle in iOS 14 style with
+    [`default_selection_overlay_bgcolor`][flet.CupertinoPicker.default_selection_overlay_bgcolor] as background color.
     """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The default background [color](https://flet.dev/docs/reference/colors) of the 
-    `selection_overlay`.
-
-    Defaults to `CupertinoColors.TERTIARY_SYSTEM_FILL`.
+    The default background color of the
+    [`selection_overlay`][flet.CupertinoPicker.selection_overlay].
     """
 
-    on_change: OptionalControlEventHandler["CupertinoPicker"] = None
+    on_change: Optional[ControlEventHandler["CupertinoPicker"]] = None
     """
-    Fires when the selection changes.
+    Called when the selection changes.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.squeeze > 0, "squeeze must be strictly greater than 0"
-        assert self.magnification > 0, "magnification must be strictly greater than 0"
-        assert self.item_extent is None or self.item_extent > 0, (
-            "item_extent must be strictly greater than 0"
+        assert self.squeeze > 0.0, (
+            f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
+        )
+        assert self.magnification > 0.0, (
+            f"magnification must be strictly greater than 0.0, got {self.magnification}"
+        )
+        assert self.item_extent > 0.0, (
+            f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
         )

@@ -1,3 +1,5 @@
+import 'package:flet/src/utils/geometry.dart';
+import 'package:flet/src/utils/mouse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
@@ -15,7 +17,7 @@ class CupertinoButtonControl extends StatefulWidget {
   final Control control;
 
   CupertinoButtonControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
@@ -67,8 +69,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       if (content != null) {
         child = Row(
           mainAxisSize: MainAxisSize.min,
-          children: [icon, const SizedBox(width: 8), content],
-        );
+            children: [icon, const SizedBox(width: 8), content]);
       } else {
         child = icon;
       }
@@ -76,14 +77,14 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       child = content ?? const Text("");
     }
 
-    double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
-    double? minSize = widget.control.getDouble("min_size");
-    bool autofocus = widget.control.getBool("autofocus", false)!;
-    Color? bgColor = widget.control.getColor("bgcolor", context);
-    Color? focusColor = widget.control.getColor("focus_color", context);
-
-    CupertinoButtonSize sizeStyle = widget.control
-        .getCupertinoButtonSize("size_style", CupertinoButtonSize.large)!;
+    var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
+    var minSize = widget.control.getSize("min_size");
+    var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
+    var autofocus = widget.control.getBool("autofocus", false)!;
+    var bgColor = widget.control.getColor("bgcolor", context);
+    var focusColor = widget.control.getColor("focus_color", context);
+    var size = widget.control
+        .getCupertinoButtonSize("size", CupertinoButtonSize.large)!;
 
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
@@ -156,17 +157,18 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       button = CupertinoButton.filled(
         onPressed: onPressed,
         disabledColor: disabledColor,
-        //color: widget.control.getColor("bgcolor", context),
+        color: bgColor,
         padding: padding,
         borderRadius: borderRadius,
         pressedOpacity: pressedOpacity,
         alignment: alignment,
-        minSize: minSize,
-        sizeStyle: sizeStyle,
+        minimumSize: minSize,
+        sizeStyle: size,
         autofocus: autofocus,
         focusColor: focusColor,
         onLongPress: onLongPressed,
         focusNode: _focusNode,
+        mouseCursor: mouseCursor,
         child: child,
       );
     } else if (isTintedButton) {
@@ -178,12 +180,13 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         borderRadius: borderRadius,
         pressedOpacity: pressedOpacity,
         alignment: alignment,
-        minSize: minSize,
-        sizeStyle: sizeStyle,
+        minimumSize: minSize,
+        sizeStyle: size,
         autofocus: autofocus,
         focusColor: focusColor,
         onLongPress: onLongPressed,
         focusNode: _focusNode,
+        mouseCursor: mouseCursor,
         child: child,
       );
     } else {
@@ -195,12 +198,13 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         borderRadius: borderRadius,
         pressedOpacity: pressedOpacity,
         alignment: alignment,
-        minSize: minSize,
-        sizeStyle: sizeStyle,
+        minimumSize: minSize,
+        sizeStyle: size,
         autofocus: autofocus,
         focusColor: focusColor,
         onLongPress: onLongPressed,
         focusNode: _focusNode,
+        mouseCursor: mouseCursor,
         child: child,
       );
     }

@@ -8,6 +8,4 @@ __all__ = ["CupertinoFilledButton"]
 class CupertinoFilledButton(CupertinoButton):
     """
     An iOS-style button filled with default background color.
-
-    Online docs: https://flet.dev/docs/controls/cupertinofilledbutton
     """

@@ -5,13 +5,13 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import (
+    ControlEventHandler,
     Event,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
-    OptionalColorValue,
+    ColorValue,
     Orientation,
 )
 
@@ -38,8 +38,6 @@ class TimePicker(DialogControl):
 
     Depending on the `time_picker_entry_mode`, it will show either a Dial or
     an Input (hour and minute text fields) for picking a time.
-
-    Online docs: https://flet.dev/docs/controls/time_picker
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())
@@ -57,8 +55,7 @@ class TimePicker(DialogControl):
     """
     The initial mode of time entry method for the time picker dialog.
 
-    Value is of type [`TimePickerEntryMode`](https://flet.dev/docs/reference/types/timepickerentrymode)
-    and defaults to `TimePickerEntryMode.DIAL`.
+    Defaults to `TimePickerEntryMode.DIAL`.
     """
 
     hour_label_text: Optional[str] = None
@@ -101,25 +98,21 @@ class TimePicker(DialogControl):
 
     orientation: Optional[Orientation] = None
     """
-    The orientation of the dialog when displayed. Value is of type `Orientation`
-    enum which has the following possible values: `PORTRAIT` and `LANDSCAPE`.
+    The orientation of the dialog when displayed.
     """
 
-    barrier_color: OptionalColorValue = None
+    barrier_color: Optional[ColorValue] = None
     """
     TBD
     """
 
-    on_change: OptionalControlEventHandler["TimePicker"] = None
+    on_change: Optional[ControlEventHandler["TimePicker"]] = None
     """
-    Fires when user clicks confirm button. `value` property is updated with selected
+    Called when user clicks confirm button. `value` property is updated with selected
     time. `e.data` also contains the selected time.
     """
 
-    on_entry_mode_change: OptionalEventHandler[TimePickerEntryModeChangeEvent] = None
+    on_entry_mode_change: Optional[EventHandler[TimePickerEntryModeChangeEvent]] = None
     """
-    Fires when the `time_picker_entry_mode` is changed.
-
-    Event handler argument is of type
-    [`TimePickerEntryModeChangeEvent`](https://flet.dev/docs/reference/types/timepickerentrymodechangeevent).
+    Called when the `time_picker_entry_mode` is changed.
     """

@@ -2,11 +2,10 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
+    ColorValue,
     Number,
-    OptionalColorValue,
-    OptionalNumber,
 )
 
 __all__ = ["CupertinoSlider"]
@@ -24,10 +23,13 @@ class CupertinoSlider(ConstrainedControl):
     brightness), or when people would benefit from instant feedback on the effect of
     setting changes.
 
-    Online docs: https://flet.dev/docs/controls/cupertinoslider
+    Raises:
+        AssertionError: If [`min`][(c).] is greater than or equal to [`max`][(c).].
+        AssertionError: If [`min`][(c).] is greater than or equal to [`value`][(c).].
+        AssertionError: If [`max`][(c).] is less than or equal to [`value`][(c).].
     """
 
-    value: OptionalNumber = None
+    value: Optional[Number] = None
     """
     The currently selected value for this slider.
 
@@ -38,78 +40,75 @@ class CupertinoSlider(ConstrainedControl):
     """
     The minimum value the user can select.
 
-    Defaults to `0.0`. Must be less than or equal to `max`.
-
-    If the `max` is equal to the `min`, then the slider is disabled.
+    Note:
+        - Must be less than or equal to [`max`][flet.CupertinoSlider.max].
+        - If the [`max`][flet.CupertinoSlider.max] is equal to the `min`, then the slider is disabled.
     """
 
     max: Number = 1.0
     """
     The maximum value the user can select.
 
-    Defaults to `1.0`. Must be greater than or equal to `min`.
-
-    If the `max` is equal to the `min`, then the slider is disabled.
+    Note:
+        - Must be greater than or equal to [`min`][flet.CupertinoSlider.min].
+        - If the [`min`][flet.CupertinoSlider.min] is equal to the `max`, then the slider is disabled.
     """
 
     divisions: Optional[int] = None
     """
     The number of discrete divisions.
 
-    If not set, the slider is continuous.
+    If `None`, the slider is continuous.
     """
 
-    round: int = 0
+    active_color: Optional[ColorValue] = None
     """
-    TBD
-    """
-
-    active_color: OptionalColorValue = None
-    """
-    The [color](https://flet.dev/docs/reference/colors) to use for the portion of the 
+    The color to use for the portion of the
     slider track that is active.
 
-    The "active" side of the slider is the side between the thumb and the minimum 
+    The "active" side of the slider is the side between the thumb and the minimum
     value.
     """
 
-    thumb_color: OptionalColorValue = None
+    thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the thumb.
-    """
-
-    on_change: OptionalControlEventHandler["CupertinoSlider"] = None
-    """
-    Fires when the state of the Slider is changed.
+    The color of the thumb.
     """
 
-    on_change_start: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_change: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
-    Fires when the user starts selecting a new value for the slider.
-    """
-
-    on_change_end: OptionalControlEventHandler["CupertinoSlider"] = None
-    """
-    Fires when the user is done selecting a new value for the slider.
+    Called when the state of this slider changed.
     """
 
-    on_focus: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_change_start: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
-    Fires when the control has received focus.
+    Called when the user starts selecting a new value for this slider.
     """
 
-    on_blur: OptionalControlEventHandler["CupertinoSlider"] = None
+    on_change_end: Optional[ControlEventHandler["CupertinoSlider"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the user is done selecting a new value for this slider.
+    """
+
+    on_focus: Optional[ControlEventHandler["CupertinoSlider"]] = None
+    """
+    Called when this slider has received focus.
+    """
+
+    on_blur: Optional[ControlEventHandler["CupertinoSlider"]] = None
+    """
+    Called when this slider has lost focus.
     """
 
     def before_update(self):
         super().before_update()
         self.value = self.value if self.value is not None else self.min
-        assert self.min <= self.max, "min must be less than or equal to max"
+        assert self.min <= self.max, (
+            f"min ({self.min}) must be less than or equal to max ({self.max})"
+        )
         assert self.value is None or (self.value >= self.min), (
-            "value must be greater than or equal to min"
+            f"value ({self.value}) must be greater than or equal to min ({self.min})"
         )
         assert self.value is None or (self.value <= self.max), (
-            "value must be less than or equal to max"
+            f"value ({self.value}) must be less than or equal to max ({self.max})"
         )

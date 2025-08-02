@@ -55,7 +55,7 @@ class InvalidObjectPatch(ObjectPatchException):
 
 
 class PatchOperation:
-    """A single operation inside a Object Patch."""
+    """A single operation inside an Object Patch."""
 
     def __init__(self, operation):
         if not operation.__contains__("path"):

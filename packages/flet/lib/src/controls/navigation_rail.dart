@@ -17,7 +17,7 @@ class NavigationRailControl extends StatefulWidget {
   final Control control;
 
   NavigationRailControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<NavigationRailControl> createState() => _NavigationRailControlState();
@@ -85,6 +85,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           leading: widget.control.buildWidget("leading"),
           trailing: widget.control.buildWidget("trailing"),
           selectedIndex: _selectedIndex,
+          useIndicator: widget.control.getBool("use_indicator"),
           onDestinationSelected: _destinationChanged,
           destinations:
               widget.control.children("destinations").map((destinationControl) {

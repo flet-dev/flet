@@ -65,10 +65,7 @@ class ImageControl extends StatelessWidget {
 
   Widget _clipCorners(Widget image, BorderRadius? borderRadius) {
     return borderRadius != null
-        ? ClipRRect(
-            borderRadius: borderRadius,
-            child: image,
-          )
+        ? ClipRRect(borderRadius: borderRadius, child: image)
         : image;
   }
 }

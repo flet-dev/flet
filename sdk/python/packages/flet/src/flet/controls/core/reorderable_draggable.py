@@ -7,15 +7,24 @@ from flet.controls.control import Control
 @control("ReorderableDraggable")
 class ReorderableDraggable(ConstrainedControl, AdaptiveControl):
     """
-    TBD
+    Used to drag an item in a [`ReorderableListView`][flet.ReorderableListView].
+
+    It creates a listener for a drag immediately following a pointer down
+    event over the given [`content`][(c).] control.
+
+    Raises:
+        AssertionError: If [`content`][(c).] is not visible.
     """
+
     index: int
     """
-    TBD
+    The index of the associated item that will be dragged in the list.
     """
+
     content: Control
     """
-    TBD
+    The control for which the application would like to respond to a tap and
+    drag gesture by starting a reordering drag on a reorderable list.
     """
 
     def before_update(self):

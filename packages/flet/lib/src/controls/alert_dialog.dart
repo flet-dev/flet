@@ -16,7 +16,7 @@ class AlertDialogControl extends StatefulWidget {
   final Control control;
 
   AlertDialogControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<AlertDialogControl> createState() => _AlertDialogControlState();
@@ -30,14 +30,12 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    debugPrint("AlertDialog.didChangeDependencies: ${widget.control.id}");
     _navigatorState = Navigator.of(context);
     _toggleDialog();
   }
 
   @override
   void didUpdateWidget(covariant AlertDialogControl oldWidget) {
-    debugPrint("AlertDialog.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
     _toggleDialog();
   }
@@ -58,11 +56,6 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
 
-    final actionsAlignment =
-        widget.control.getMainAxisAlignment("actions_alignment");
-    var clipBehavior =
-        parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
-
     return AlertDialog(
       title: title is Control
           ? ControlWidget(control: title)
@@ -75,7 +68,8 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
       actions: actions,
       actionsPadding: widget.control.getPadding("actions_padding"),
-      actionsAlignment: actionsAlignment,
+      actionsAlignment:
+          widget.control.getMainAxisAlignment("actions_alignment"),
       shape: widget.control.getShape("shape", Theme.of(context)),
       semanticLabel: widget.control.getString("semantics_label"),
       insetPadding: widget.control.getPadding("inset_padding",
@@ -86,7 +80,8 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       elevation: widget.control.getDouble("elevation"),
-      clipBehavior: clipBehavior,
+      clipBehavior:
+          parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
       icon: widget.control.buildIconOrWidget("icon"),
       iconColor: widget.control.getColor("icon_color", context),
       scrollable: widget.control.getBool("scrollable", false)!,
@@ -120,7 +115,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
-            barrierColor: widget.control.getColor("barrierColor", context),
+            barrierColor: widget.control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => _dialog!).then((value) {

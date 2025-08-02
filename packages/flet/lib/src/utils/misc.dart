@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../models/control.dart';
+import 'borders.dart';
+import 'numbers.dart';
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
   if (value == null) return defaultValue;
@@ -41,13 +43,19 @@ BoxShape? parseBoxShape(String? value, [BoxShape? defaultValue]) {
       defaultValue;
 }
 
-NotchedShape? parseNotchedShape(String? value, [NotchedShape? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  } else if (value == "circular") {
-    return const CircularNotchedRectangle();
-  } else if (value == "auto") {
-    return const AutomaticNotchedShape(ContinuousRectangleBorder());
+NotchedShape? parseNotchedShape(dynamic value, ThemeData? theme,
+    [NotchedShape? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  var type = value["_type"];
+  if (type == "circular") {
+    return CircularNotchedRectangle(
+        inverted: parseBool(value["inverted"], false)!);
+  } else if (type == "auto") {
+    return AutomaticNotchedShape(
+        parseShapeBorder(
+            value["host"], theme, const ContinuousRectangleBorder())!,
+        parseShapeBorder(value["guest"], theme));
   } else {
     return defaultValue;
   }
@@ -177,6 +185,21 @@ NavigationRailLabelType? parseNavigationRailLabelType(String? value,
       defaultValue;
 }
 
+BlurStyle? parseBlurStyle(String? value, [BlurStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+  return BlurStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
+FloatingLabelBehavior? parseFloatingLabelBehavior(String? value,
+    [FloatingLabelBehavior? defaultValue]) {
+  if (value == null) return defaultValue;
+  return FloatingLabelBehavior.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
 extension MiscParsers on Control {
   Clip? getClipBehavior(String propertyName, [Clip? defaultValue]) {
     return parseClip(get(propertyName), defaultValue);
@@ -199,9 +222,9 @@ extension MiscParsers on Control {
     return parseBoxShape(get(propertyName), defaultValue);
   }
 
-  NotchedShape? getNotchedShape(String propertyName,
+  NotchedShape? getNotchedShape(String propertyName, ThemeData? theme,
       [NotchedShape? defaultValue]) {
-    return parseNotchedShape(get(propertyName), defaultValue);
+    return parseNotchedShape(get(propertyName), theme, defaultValue);
   }
 
   SliderInteraction? getSliderInteraction(String propertyName,
@@ -277,5 +300,14 @@ extension MiscParsers on Control {
   NavigationRailLabelType? getNavigationRailLabelType(String propertyName,
       [NavigationRailLabelType? defaultValue]) {
     return parseNavigationRailLabelType(get(propertyName), defaultValue);
+  }
+
+  BlurStyle? getBlurStyle(String propertyName, [BlurStyle? defaultValue]) {
+    return parseBlurStyle(get(propertyName), defaultValue);
+  }
+
+  FloatingLabelBehavior? getFloatingLabelBehavior(String propertyName,
+      [FloatingLabelBehavior? defaultValue]) {
+    return parseFloatingLabelBehavior(get(propertyName), defaultValue);
   }
 }

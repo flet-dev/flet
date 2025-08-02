@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import logging
 import os
 import tempfile
@@ -40,6 +41,7 @@ class FletSocketServer(Connection):
         executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
+        self.__server = None
         self.__send_loop_task = None
         self.__receive_loop_task = None
         self.__connected = None
@@ -65,7 +67,9 @@ class FletSocketServer(Connection):
             port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://{host}:{port}"
             logger.info(f"Starting up TCP server on {host}:{port}")
-            server = await asyncio.start_server(self.handle_connection, host, port)
+            self.__server = await asyncio.start_server(
+                self.handle_connection, host, port
+            )
         else:
             # UDS
             if not self.__uds_path:
@@ -76,15 +80,15 @@ class FletSocketServer(Connection):
                 os.remove(self.__uds_path)
             self.page_url = self.__uds_path
             logger.info(f"Starting up UDS server on {self.__uds_path}")
-            server = await asyncio.start_unix_server(
+            self.__server = await asyncio.start_unix_server(
                 self.handle_connection, self.__uds_path
             )
 
         if self.__blocking:
-            self.__server = None
-            await server.serve_forever()
+            self.__serve_task = None
+            await self.__server.serve_forever()
         else:
-            self.__server = asyncio.create_task(server.serve_forever())
+            self.__serve_task = asyncio.create_task(self.__server.serve_forever())
 
     async def handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
@@ -92,33 +96,57 @@ class FletSocketServer(Connection):
         if not self.__connected:
             self.__connected = True
             logger.debug("Connected new TCP client")
+
             self.__receive_loop_task = asyncio.create_task(self.__receive_loop(reader))
             self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
 
+            try:
+                done, pending = await asyncio.wait(
+                    [self.__receive_loop_task, self.__send_loop_task],
+                    return_when=asyncio.FIRST_COMPLETED,
+                )
+
+                for task in pending:
+                    task.cancel()
+                    with contextlib.suppress(asyncio.CancelledError):
+                        await task
+
+            finally:
+                writer.close()
+                await writer.wait_closed()
+                logger.debug("Connection writer closed.")
+
     async def __receive_loop(self, reader: asyncio.StreamReader):
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
-        while True:
-            try:
-                buf = await reader.read(1024**2)
+        try:
+            while True:
+                buf = await reader.read(1024 * 1024)
                 if not buf:
-                    return None
+                    break
                 unpacker.feed(buf)
-            except Exception as e:
-                logger.debug(f"Error receiving socket data from Flet client: {e}")
-                return None
-
-            for msg in unpacker:
-                await self.__on_message(msg)
+                for msg in unpacker:
+                    await self.__on_message(msg)
+        except asyncio.CancelledError:
+            logger.debug("Receive loop cancelled.")
+        except Exception as e:
+            logger.debug(f"Error receiving socket data from Flet client: {e}")
+        finally:
+            logger.debug("Receive loop exiting.")
 
     async def __send_loop(self, writer: asyncio.StreamWriter):
-        while True:
-            message = await self.__send_queue.get()
-            try:
+        try:
+            while True:
+                message = await self.__send_queue.get()
+                if message is None:
+                    break  # Sentinel to exit
                 writer.write(message)
-            except Exception:
-                # re-enqueue the message to repeat it when re-connected
-                self.__send_queue.put_nowait(message)
-                raise
+                await writer.drain()
+        except asyncio.CancelledError:
+            logger.debug("Send loop cancelled.")
+        except Exception as e:
+            logger.debug(f"Error in send loop: {e}")
+        finally:
+            logger.debug("Send loop exiting.")
 
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
@@ -194,18 +222,36 @@ class FletSocketServer(Connection):
     async def close(self):
         logger.debug("Closing connection...")
 
+        # Put a sentinel in send queue to unblock it
+        await self.__send_queue.put(None)
+
+        if self.__server:
+            logger.debug("Shutting down TCP server...")
+            self.__server.close()
+            await self.__server.wait_closed()
+
         if self.executor:
             logger.debug("Shutting down thread pool...")
             self.executor.shutdown(wait=False, cancel_futures=True)
 
-        # close socket
-        if self.__receive_loop_task:
-            self.__receive_loop_task.cancel()
-        if self.__send_loop_task:
-            self.__send_loop_task.cancel()
-        if self.__server:
-            self.__server.cancel()
+        logger.debug("Cancelling pending tasks...")
 
-        # remove UDS path
+        tasks = [task for task in [
+            self.__receive_loop_task,
+            self.__send_loop_task,
+            self.__serve_task,
+        ] if task]
+
+        for task in tasks:
+            task.cancel()
+
+        try:
+            await asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=1.0)
+        except asyncio.TimeoutError:
+            logger.warning("Some tasks did not exit in time, skipping.")
+        except asyncio.CancelledError:
+            pass
         if self.__uds_path and os.path.exists(self.__uds_path):
             os.unlink(self.__uds_path)
+
+        logger.debug("Connection closed.")

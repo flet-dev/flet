@@ -1,5 +1,7 @@
 name: Bug Report
 description: "You found a bug in Flet causing your application to crash or behave abnormally? Help us know more about it by providing as much details as possible."
+title: "bug: "
+labels: ["bug"]
 
 body:
   - type: markdown
@@ -32,21 +34,21 @@ body:
       description: |
         Please create a minimal reproducible and runnable sample that shows the problem
         and attach it below between the lines with the backticks.
-        
+
         Alternatively, you can create a public GitHub repository or use an existing one to share your sample.
-        
+
         Without this we will unlikely be able to progress on the issue, and because of that
         we regretfully will have to close it.
-        
+
         Note: Please do not upload screenshots of text. Instead, use code blocks
         or the above mentioned ways to upload your code sample.
       value: |
         <details open><summary>Code</summary>
-        
+
         ```python
         [Paste your code here]
         ```
-        
+
         </details>
     validations:
       required: true
@@ -74,9 +76,9 @@ body:
       value: |
         <details open>
         <summary>Captures</summary>
-        
+
         [Upload media here]
-        
+
         </details>
     validations:
       required: false
@@ -84,7 +86,7 @@ body:
     id: "os"
     attributes:
       label: "Operating System"
-      multiple: false
+      multiple: true
       options:
         - macOS
         - Linux
@@ -102,7 +104,7 @@ body:
     id: "flet-version"
     attributes:
       label: "Flet version"
-      description: "run `pip show flet` in your terminal to view your Flet version"
+      description: "Tip: you can run `flet doctor` or `pip show flet` in your terminal to view your Flet version."
     validations:
       required: true
   - type: dropdown

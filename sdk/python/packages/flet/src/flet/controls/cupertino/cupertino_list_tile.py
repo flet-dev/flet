@@ -2,12 +2,12 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.control_event import ControlEventHandler
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
+    ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
     StrOrControl,
     UrlTarget,
 )
@@ -18,111 +18,111 @@ __all__ = ["CupertinoListTile"]
 @control("CupertinoListTile")
 class CupertinoListTile(ConstrainedControl):
     """
-    An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material
-    ListTile.
+    An iOS-style list tile.
 
-    Online docs: https://flet.dev/docs/controls/cupertinolisttile
+    Can also serve as a cupertino equivalent of the Material [`ListTile`][flet.ListTile].
+
+    Raises:
+        AssertionError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     title: StrOrControl
     """
-    A `Control` to display as primary content of the list tile.
-    
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    The primary content of this list tile.
+
+    Typically a [`Text`][flet.Text] control.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
-    Additional content displayed below the title.
+    Additional content displayed below the [`title`][flet.CupertinoListTile.title].
 
-    Typically a [`Text`](https://flet.dev/docs/controls/text) control.
+    Typically a [`Text`][flet.Text] control.
     """
 
     leading: Optional[IconValueOrControl] = None
     """
-    A `Control` to display before the `title`.
+    A control to display before the [`title`][flet.CupertinoListTile.title].
     """
 
     trailing: Optional[IconValueOrControl] = None
     """
-    A `Control` to display after the title.
-    
-    Typically an [`Icon`](https://flet.dev/docs/controls/icon) control.
+    A control to display after the [`title`][flet.CupertinoListTile.title].
+
+    Typically an [`Icon`][flet.Icon] control.
     """
 
-    bgcolor: OptionalColorValue = None
+    bgcolor: Optional[ColorValue] = None
     """
-    The list tile's background [color](https://flet.dev/docs/reference/colors).
+    The list tile's background color.
     """
 
-    bgcolor_activated: OptionalColorValue = None
+    bgcolor_activated: Optional[ColorValue] = None
     """
-    The list tile's background [color](https://flet.dev/docs/reference/colors)
+    The list tile's background color
     after the tile was tapped.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
-    The tile's internal padding. Insets a CupertinoListTile's contents: its 
-    `leading`, `title`, `subtitle`, `additional_info` and `trailing` controls.
-
-    Padding is an instance of 
-    [`Padding`](https://flet.dev/docs/reference/types/padding) class.
+    The tile's internal padding. Insets a CupertinoListTile's contents: its
+    [`leading`][flet.CupertinoListTile.leading], [`title`][flet.CupertinoListTile.title],
+    [`subtitle`][flet.CupertinoListTile.subtitle], [`additional_info`][flet.CupertinoListTile.additional_info]
+    and [`trailing`][flet.CupertinoListTile.trailing] controls.
     """
 
     url: Optional[str] = None
     """
-    The URL to open when the list tile is clicked. If registered, `on_click`
-    event is fired after that.
+    The URL to open when the list tile is clicked.
+
+    If registered, [`on_click`][flet.CupertinoListTile.on_click] event is fired after that.
     """
 
-    url_target: Optional[UrlTarget] = None
+    url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
-
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget)
-    and defaults to `UrlTarget.BLANK`.
     """
 
     toggle_inputs: bool = False
     """
-    Whether clicking on a list tile should toggle the state of `Radio`, `Checkbox`
-    or `Switch` inside the tile. Default is `False`.
+    Whether clicking on a list tile should toggle the state of togglable controls
+    like [`Radio`][flet.Radio], [`Checkbox`][flet.Checkbox]
+    or [`Switch`][flet.Switch] inside the tile.
     """
 
     additional_info: Optional[StrOrControl] = None
     """
-    A `Control` to display on the right of the list tile, before `trailing`.
-    
-    Similar to `subtitle`, an `additional_info` is used to display additional 
-    information. Usually a [`Text`](https://flet.dev/docs/controls/text) control.
+    A `Control` to display on the right of the list tile, before [`trailing`][flet.CupertinoListTile.trailing].
+
+    Similar to [`subtitle`][flet.CupertinoListTile.subtitle], an
+    [`additional_info`][flet.CupertinoListTile.additional_info] is used to display additional
+    information. Typically a [`Text`][flet.Text] control.
     """
 
-    leading_size: OptionalNumber = None
+    leading_size: Optional[Number] = None
     """
-    Used to constrain the width and height of `leading` control.
-    
-    Defaults to `30.0`, if `notched=True`, else `28.0`.
+    Used to constrain the width and height of [`leading`][flet.CupertinoListTile.leading] control.
+
+    Defaults to `30.0`, if [`notched=True`][flet.CupertinoListTile.notched], else `28.0`.
     """
 
-    leading_to_title: OptionalNumber = None
+    leading_to_title: Optional[Number] = None
     """
-    The horizontal space between `leading` and `title`.
-    
-    Defaults to `12.0`, if `notched=True`, else `16.0`.
+    The horizontal space between [`leading`][flet.CupertinoListTile.leading]
+    and `[`title`][flet.CupertinoListTile.title].
+
+    Defaults to `12.0`, if [`notched=True`][flet.CupertinoListTile.notched], else `16.0`.
     """
 
     notched: bool = False
     """
-    If `True`, list tile will be created in an "Inset Grouped" form, known from
+    Whether this list tile should be created in an "Inset Grouped" form, known from
     either iOS Notes or Reminders app.
-
-    Defaults to `False`.
     """
 
-    on_click: OptionalControlEventHandler["CupertinoListTile"] = None
+    on_click: Optional[ControlEventHandler["CupertinoListTile"]] = None
     """
-    Fires when a user clicks or taps the list tile.
+    Called when a user clicks/taps the list tile.
     """
 
     def before_update(self):

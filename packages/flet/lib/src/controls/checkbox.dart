@@ -16,7 +16,7 @@ class CheckboxControl extends StatefulWidget {
   final Control control;
 
   CheckboxControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<CheckboxControl> createState() => _CheckboxControlState();
@@ -77,7 +77,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
         autofocus: widget.control.getBool("autofocus", false)!,
         focusNode: _focusNode,
         value: _value,
-        isError: widget.control.getBool("is_error", false)!,
+        isError: widget.control.getBool("error", false)!,
         semanticLabel: widget.control.getString("semantics_label"),
         shape: widget.control.getShape("shape", Theme.of(context)),
         side: widget.control

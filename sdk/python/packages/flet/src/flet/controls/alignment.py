@@ -7,8 +7,6 @@ from flet.controls.types import Number
 __all__ = [
     "Alignment",
     "Axis",
-    "OptionalAlignment",
-    "OptionalAxis",
 ]
 
 
@@ -20,19 +18,25 @@ class Axis(Enum):
 @dataclass
 class Alignment:
     """
-    Used to define an alignment relative to the center.
+    Defines an alignment relative to the center.
+
+    ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/overview.png){width="80%"}
+    /// caption
+    ///
     """
 
     x: Number
     """
-    Represents the horizontal distance from the center. It's value ranges between
-    `-1.0` and `1.0`.
+    Represents the horizontal distance from the center.
+
+    It's value ranges between `-1.0` and `1.0` inclusive.
     """
 
     y: Number
     """
-    Represents the vertical distance from the center. It's value ranges between
-    `-1.0` and `1.0`.
+    Represents the vertical distance from the center.
+
+    It's value ranges between `-1.0` and `1.0` inclusive.
     """
 
     BOTTOM_CENTER: ClassVar["AlignmentProperty"]
@@ -80,6 +84,20 @@ class Alignment:
     Represents the top right corner and is equivalent to `Alignment(1.0, -1.0)`.
     """
 
+    def copy_with(
+        self,
+        *,
+        x: Optional[Number] = None,
+        y: Optional[Number] = None,
+    ) -> "Alignment":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return Alignment(
+            x=x if x is not None else self.x,
+            y=y if y is not None else self.y,
+        )
+
 
 class AlignmentProperty:
     def __init__(self, factory):
@@ -98,7 +116,3 @@ Alignment.CENTER_RIGHT = AlignmentProperty(lambda: Alignment(1.0, 0.0))
 Alignment.TOP_CENTER = AlignmentProperty(lambda: Alignment(0.0, -1.0))
 Alignment.TOP_LEFT = AlignmentProperty(lambda: Alignment(-1.0, -1.0))
 Alignment.TOP_RIGHT = AlignmentProperty(lambda: Alignment(1.0, -1.0))
-
-# Typing
-OptionalAlignment = Optional[Alignment]
-OptionalAxis = Optional[Axis]

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flet/flet.dart';
 import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
@@ -7,6 +5,7 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
+import 'package:flet_charts/flet_charts.dart' as flet_charts;
 import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
@@ -19,12 +18,13 @@ import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
-import 'package:flet_charts/flet_charts.dart' as flet_charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
+Tester? tester;
 
 void main([List<String>? args]) async {
   // if (isProduction) {
@@ -74,23 +74,23 @@ void main([List<String>? args]) async {
     if (routeUrlStrategy == "path") {
       usePathUrlStrategy();
     }
-  } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
-      !kDebugMode) {
-    debugPrint("Flet View is running in Desktop mode");
-    // first argument must be
-    if (args!.isEmpty) {
-      throw Exception('Page URL must be provided as a first argument.');
-    }
-    pageUrl = args[0];
-    if (args.length > 1) {
-      var pidFilePath = args[1];
-      debugPrint("Args contain a path to PID file: $pidFilePath}");
-      var pidFile = await File(pidFilePath).create();
-      await pidFile.writeAsString("$pid");
-    }
-    if (args.length > 2) {
-      assetsDir = args[2];
-      debugPrint("Args contain a path assets directory: $assetsDir}");
+  } else {
+    if (args!.isNotEmpty) {
+      pageUrl = args[0];
+      if (args.length > 1) {
+        var pidFilePath = args[1];
+        debugPrint("Args contain a path to PID file: $pidFilePath}");
+        var pidFile = await File(pidFilePath).create();
+        await pidFile.writeAsString("$pid");
+      }
+      if (args.length > 2) {
+        assetsDir = args[2];
+        debugPrint("Args contain a path assets directory: $assetsDir}");
+      }
+    } else if (!kDebugMode &&
+        (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+      throw Exception(
+          'In desktop mode Flet app URL must be provided as a first argument.');
     }
   }
 
@@ -118,6 +118,7 @@ void main([List<String>? args]) async {
     appStartupScreenMessage: "Working...",
     extensions: extensions,
     multiView: isMultiView(),
+    tester: tester,
   );
 
   if (app.multiView) {

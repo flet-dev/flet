@@ -2,6 +2,9 @@ import contextvars
 
 
 class UpdateBehavior:
+    """
+    TBD
+    """
     _auto_update_enabled: bool = True
 
     @classmethod

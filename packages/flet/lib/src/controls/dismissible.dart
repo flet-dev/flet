@@ -14,7 +14,7 @@ class DismissibleControl extends StatefulWidget {
   final Control control;
 
   DismissibleControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<DismissibleControl> createState() => _DismissibleControlState();
@@ -58,11 +58,8 @@ class _DismissibleControlState extends State<DismissibleControl> {
         key: ValueKey<int>(widget.control.id),
         direction: widget.control.getDismissDirection(
             "dismiss_direction", DismissDirection.horizontal)!,
-        background: widget.control.buildWidget("background") ??
-            Container(color: Colors.transparent),
-        secondaryBackground:
-            widget.control.buildWidget("secondary_background") ??
-                Container(color: Colors.transparent),
+        background: widget.control.buildWidget("background"),
+        secondaryBackground: widget.control.buildWidget("secondary_background"),
         onDismissed: widget.control.getBool("on_dismiss", false)!
             ? (DismissDirection direction) => widget.control
                 .triggerEvent("dismiss", {"direction": direction.name})
