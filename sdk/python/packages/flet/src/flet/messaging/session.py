@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from flet.controls.base_control import BaseControl
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page, _session_page
 from flet.controls.update_behavior import UpdateBehavior
@@ -172,7 +172,7 @@ class Session:
             # field_name not defined
             return
         try:
-            event_type = ControlEvent._get_event_field_type(control, field_name)
+            event_type = get_event_field_type(control, field_name)
             if event_type is None:
                 return
 

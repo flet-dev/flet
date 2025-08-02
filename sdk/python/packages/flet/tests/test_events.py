@@ -1,6 +1,6 @@
 from typing import ForwardRef, get_args, get_origin
 
-from flet.controls.control_event import ControlEvent, Event
+from flet.controls.control_event import ControlEvent, Event, get_event_field_type
 from flet.controls.core.column import Column
 from flet.controls.events import TapEvent
 from flet.controls.material.container import Container
@@ -20,24 +20,24 @@ from flet.utils.from_dict import from_dict
 
 def test_get_event_field_type():
     btn = ElevatedButton()
-    on_click_type = ControlEvent._get_event_field_type(btn, "on_click")
+    on_click_type = get_event_field_type(btn, "on_click")
     assert get_origin(on_click_type) is Event
     assert get_args(on_click_type)[0] == ForwardRef("ElevatedButton")
 
     c = Container()
-    on_tap_down_type = ControlEvent._get_event_field_type(c, "on_tap_down")
+    on_tap_down_type = get_event_field_type(c, "on_tap_down")
     assert on_tap_down_type == TapEvent["Container"]
     assert on_tap_down_type != ControlEvent
 
     col = Column()
-    on_scroll_type = ControlEvent._get_event_field_type(col, "on_scroll")
+    on_scroll_type = get_event_field_type(col, "on_scroll")
     assert on_scroll_type == OnScrollEvent
     assert on_scroll_type != ControlEvent
 
 
 def test_create_event_typed_data():
     c = Container()
-    on_tap_down_type = ControlEvent._get_event_field_type(c, "on_tap_down")
+    on_tap_down_type = get_event_field_type(c, "on_tap_down")
     assert on_tap_down_type == TapEvent["Container"]
 
     evt = from_dict(
@@ -62,7 +62,7 @@ def test_create_event_typed_data():
 
 def test_create_reorder_event():
     c = ReorderableListView()
-    on_reorder_type = ControlEvent._get_event_field_type(c, "on_reorder")
+    on_reorder_type = get_event_field_type(c, "on_reorder")
     assert on_reorder_type == OnReorderEvent
 
     evt = from_dict(
@@ -87,7 +87,7 @@ def test_page_events():
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     p = Page(sess=Session(conn))
-    on_resized_type = ControlEvent._get_event_field_type(p, "on_resize")
+    on_resized_type = get_event_field_type(p, "on_resize")
     assert on_resized_type == PageResizeEvent
     evt = from_dict(
         on_resized_type,
