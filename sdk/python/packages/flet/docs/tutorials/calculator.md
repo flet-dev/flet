@@ -2,9 +2,11 @@
 title: Calculator Tutorial
 ---
 
-In this tutorial you will learn, step-by-step, how to create a Calculator app in Python using
+In this tutorial you will learn, step-by-step, how to create a Calculator app in
+Python using
 Flet framework and publish it as a desktop, mobile or web app.
-The app is a simple console program, yet it is a multi-platform application with similar to iPhone calculator app UI:
+The app is a simple console program, yet it is a multi-platform application with
+similar to iPhone calculator app UI:
 
 ![calc-app](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
 /// caption
@@ -12,15 +14,21 @@ The app is a simple console program, yet it is a multi-platform application with
 
 You can find a live demo [here](https://gallery.flet.dev/calculator/).
 
-In this tutorial, we will cover all of the basic concepts for creating a Flet app: building a page layout, adding controls, making reusable UI components, handling events, and publishing options.
+In this tutorial, we will cover all of the basic concepts for creating a Flet app:
+building a page layout, adding controls, making reusable UI components, handling
+events, and publishing options.
 
 The tutorial consists of the following steps:
 
 ## Getting started with Flet
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML,
+CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented
+programming.
 
-Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
+Before you can create your first Flet app, you need to
+[setup your development environment](../getting-started/installation.md), which requires Python 3.10 or
+above and `flet` package.
 
 Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
 
@@ -284,7 +292,7 @@ content=ft.Column(
     type: example
     open: true
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/calculator/calc3.py"
+--8<-- "../../examples/tutorials/calculator/calc3.py"
 ```
 ///
 

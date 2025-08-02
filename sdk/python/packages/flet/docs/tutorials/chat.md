@@ -280,11 +280,11 @@ def send_click(e):
     type: example
     open: true
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/chat/chat_3.py"
+--8<-- "../../examples/tutorials/chat/chat_3.py"
 ```
 ///
 
-![chat-3](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat-3.gif){width="80%"}
+![chat-3](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/chat/media/chat_3.gif){width="80%"}
 /// caption
 ///
 
@@ -435,11 +435,12 @@ Here is how you can implement this layout:
     type: example
     open: true
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/chat/main.py"
+--8<-- "../../examples/tutorials/chat/main.py"
 ```
 ///
 
-This is the final version of the chat app for the purpose of this tutorial. Below you can read more about the enhancements that we have made.
+This is the final version of the chat app for the purpose of this tutorial.
+Below you can read more about the enhancements that we have made.
 
 ### Keyboard support
 

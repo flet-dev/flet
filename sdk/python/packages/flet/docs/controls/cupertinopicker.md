@@ -5,10 +5,10 @@
 ### Fruit selection
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-picker/fruit-selection.py"
+--8<-- "../../examples/controls/cupertino_picker/fruit_selection.py"
 ```
 
-![fruit-selection](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-picker/media/fruit-selection.gif){width="80%"}
+![fruit-selection](../../examples/controls/cupertino_picker/media/fruit_selection.gif){width="80%"}
 /// caption
 ///
 

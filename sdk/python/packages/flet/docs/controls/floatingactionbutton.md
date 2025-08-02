@@ -5,10 +5,10 @@
 ### Handling clicks
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/floating-action-button/handling-clicks.py"
+--8<-- "../../examples/controls/floating_action_button/handling_clicks.py"
 ```
 
-![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/floating-action-button/media/handling-clicks.gif){width="80%"}
+![handling-clicks](../../examples/controls/floating_action_button/media/handling_clicks.gif){width="80%"}
 /// caption
 ///
 

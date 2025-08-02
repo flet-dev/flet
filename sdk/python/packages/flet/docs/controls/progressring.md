@@ -5,17 +5,17 @@
 ### Determinate and indeterminate progress rings
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/progress-ring/determinate-and-indeterminate.py"
+--8<-- "../../examples/controls/progress_ring/determinate_and_indeterminate.py"
 ```
 
-![determinate-and-indeterminate](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/progress-ring/media/determinate-and-indeterminate.gif){width="80%"}
+![determinate-and-indeterminate](../../examples/controls/progress_ring/media/determinate_and_indeterminate.gif){width="80%"}
 /// caption
 ///
 
 ### Gauge with progress
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/progress-ring/gauge-with-progress.py"
+--8<-- "../../examples/controls/progress_ring/gauge_with_progress.py"
 ```
 
 

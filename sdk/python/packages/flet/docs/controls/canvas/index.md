@@ -5,60 +5,60 @@
 ### Smiling face
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/canvas/smiling-face.py"
+--8<-- "../../examples/controls/canvas/smiling_face.py"
 ```
 
-![smiling-face](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/canvas/media/smiling-face.png){width="80%"}
+![smiling-face](../../examples/controls/canvas/media/smiling_face.png){width="80%"}
 /// caption
 ///
 
 ### Flet logo
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/canvas/flet-logo.py"
+--8<-- "../../examples/controls/canvas/flet_logo.py"
 ```
 
-![flet-logo](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/canvas/media/flet-logo.png){width="80%"}
+![flet-logo](../../examples/controls/canvas/media/flet_logo.png){width="80%"}
 /// caption
 ///
 
 ### Triangles
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/canvas/triangles.py"
+--8<-- "../../examples/controls/canvas/triangles.py"
 ```
 
-![triangles](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/canvas/media/triangles.png){width="80%"}
+![triangles](../../examples/controls/canvas/media/triangles.png){width="80%"}
 /// caption
 ///
 
 ### Bezier curves
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/canvas/bezier-curves.py"
+--8<-- "../../examples/controls/canvas/bezier_curves.py"
 ```
 
-![bezier-curves](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/canvas/media/bezier-curves.png){width="80%"}
+![bezier-curves](../../examples/controls/canvas/media/bezier_curves.png){width="80%"}
 /// caption
 ///
 
 ### Text
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/canvas/text.py"
+--8<-- "../../examples/controls/canvas/text.py"
 ```
 
-![text](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/canvas/media/text.png){width="80%"}
+![text](../../examples/controls/canvas/media/text.png){width="80%"}
 /// caption
 ///
 
 ### Free-hand drawing with brush
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/canvas/brush.py"
+--8<-- "../../examples/controls/canvas/brush.py"
 ```
 
-![brush](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/canvas/media/brush.gif){width="80%"}
+![brush](../../examples/controls/canvas/media/brush.gif){width="80%"}
 /// caption
 ///
 

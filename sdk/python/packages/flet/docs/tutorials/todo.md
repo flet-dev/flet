@@ -436,11 +436,11 @@ displaying the number of incomplete tasks (`Text` control) and a "Clear complete
 /// details | Full code
     type: example
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/todo/todo.py"
+--8<-- "../../examples/tutorials/todo/todo.py"
 ```
 ///
 
-![app-4](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app-4.png){width="80%"}
+![app-4](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/app_4.png){width="80%"}
 /// caption
 ///
 

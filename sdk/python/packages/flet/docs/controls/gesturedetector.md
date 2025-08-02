@@ -7,7 +7,7 @@
 ### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/gesture-detector/handling-events.py"
+--8<-- "../../examples/controls/gesture_detector/handling_events.py"
 ```
 
 ### Draggable containers
@@ -18,17 +18,17 @@ The sample also shows that GestureDetector can have a child control (blue contai
 inside another control (yellow container) giving the same results.
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/gesture-detector/draggable-containers.py"
+--8<-- "../../examples/controls/gesture_detector/draggable_containers.py"
 ```
 
-![draggable-containers](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/gesture-detector/media/draggable-containers.gif){width="80%"}
+![draggable-containers](../../examples/controls/gesture_detector/media/draggable_containers.gif){width="80%"}
 /// caption
 ///
 
 ### Mouse Cursors
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/gesture-detector/mouse-cursors.py"
+--8<-- "../../examples/controls/gesture_detector/mouse_cursors.py"
 ```
 
 ::: flet.GestureDetector
