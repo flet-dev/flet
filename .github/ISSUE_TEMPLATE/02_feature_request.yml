@@ -1,5 +1,7 @@
 name: Feature Request
-description: "You are about to create a feature request in Flet. We'd appreciate if you'd first search through our open issues and docs, to make sure the issue isn't already known."
+description: "Suggest a new feature to be added to Flet."
+title: "feature: "
+labels: ["feature request"]
 
 body:
   - type: checkboxes
@@ -22,11 +24,11 @@ body:
       label: "Suggest a solution"
       description: "Share with us your idea on how to solve the problem. If you have multiple solutions, please present each one separately."
       placeholder: "A concise description of your preferred solution. Things to address include:
-      
+
       * Details of the technical implementation, e.g. Flutter widget solving the problem.
       * Tradeoffs made in design decisions
       * Caveats and considerations for the future
-      
+
       If there are multiple solutions, please present each one separately. Save comparisons for the very end."
   - type: textarea
     id: "screenshots"
@@ -42,5 +44,3 @@ body:
       description: "Add any other detail about the request here."
     validations:
       required: false
-
-

@@ -22,13 +22,12 @@ from flet.controls.context import _context_page
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEvent,
+    ControlEventHandler,
     Event,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
-from flet.controls.exceptions import FletException
 from flet.controls.multi_view import MultiView
 from flet.controls.page_view import PageView
 from flet.controls.query_string import QueryString
@@ -136,20 +135,13 @@ class MultiViewRemoveEvent(Event["Page"]):
     view_id: int
 
 
-class PageDisconnectedException(FletException):
-    def __init__(self, message):
-        super().__init__(message)
-
-
 @control("Page", isolated=True, post_init_args=2)
 class Page(PageView):
     """
-    Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
+    Page is a container for [`View`][flet.View] controls.
 
     A page instance and the root view are automatically created when a new
     user session started.
-
-    Online docs: https://flet.dev/docs/controls/page
     """
 
     sess: InitVar["Session"]
@@ -165,8 +157,6 @@ class Page(PageView):
     window: Window = field(default_factory=lambda: Window())
     """
     A class with properties/methods/events to control app's native OS window.
-
-    Value is of type [Window](https://flet.dev/docs/reference/types/window).
     """
 
     browser_context_menu: BrowserContextMenu = field(
@@ -176,10 +166,8 @@ class Page(PageView):
     Used to enable or disable the context menu that appears when the user
     right-clicks on the web page.
 
-    Value is of type
-    [BrowserContextMenu](https://flet.dev/docs/reference/types/browsercontextmenu).
-
-    🌎 Web only.
+    Note:
+        Web only.
     """
 
     shared_preferences: SharedPreferences = field(
@@ -249,6 +237,11 @@ class Page(PageView):
     TBD
     """
 
+    test: bool = False
+    """
+    TBD
+    """
+
     multi_view: bool = False
     """
     TBD
@@ -257,16 +250,11 @@ class Page(PageView):
     platform: Optional[PagePlatform] = None
     """
     Operating system the application is running on.
-
-    Value is of type [PagePlatform](https://flet.dev/docs/reference/types/pageplatform).
     """
 
     platform_brightness: Optional[Brightness] = None
     """
-    The current brightness mode of the host platform.
-
-    Value is read-only and of type
-    [Brightness](https://flet.dev/docs/reference/types/brightness).
+    The current brightness mode of the host platform. (readonly)
     """
 
     client_ip: Optional[str] = None
@@ -297,50 +285,38 @@ class Page(PageView):
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
-    on_platform_brightness_change: OptionalControlEventHandler["Page"] = None
+    on_platform_brightness_change: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when brightness of app host platform has changed.
+    Called when brightness of app host platform has changed.
     """
 
-    on_app_lifecycle_state_change: OptionalEventHandler[
-        AppLifecycleStateChangeEvent
+    on_app_lifecycle_state_change: Optional[
+        EventHandler[AppLifecycleStateChangeEvent]
     ] = None
     """
     Triggers when app lifecycle state changes.
-
-    Event handler argument is of type
-    [AppLifecycleStateChangeEvent](https://flet.dev/docs/reference/types/applifecyclestatechangeevent).
     """
 
-    on_route_change: OptionalEventHandler[RouteChangeEvent] = None
+    on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
-    Fires when page route changes either programmatically, by editing
+    Called when page route changes either programmatically, by editing
     application URL or using browser Back/Forward buttons.
-
-    Event handler argument is of type
-    [RouteChangeEvent](https://flet.dev/docs/reference/types/routechangeevent).
     """
 
-    on_view_pop: OptionalEventHandler[ViewPopEvent] = None
+    on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
-    Fires when the user clicks automatic "Back" button in
-    [AppBar](https://flet.dev/docs/controls/appbar) control.
-
-    Event handler argument is of type
-    [ViewPopEvent](https://flet.dev/docs/reference/types/viewpopevent).
+    Called when the user clicks automatic "Back" button in
+    [`AppBar`][flet.AppBar] control.
     """
 
-    on_keyboard_event: OptionalEventHandler[KeyboardEvent] = None
+    on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
     """
-    Fires when a keyboard key is pressed.
-
-    Event handler argument is of type
-    [KeyboardEvent](https://flet.dev/docs/reference/types/keyboardevent).
+    Called when a keyboard key is pressed.
     """
 
-    on_connect: OptionalControlEventHandler["Page"] = None
+    on_connect: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when a web user (re-)connects to a page session.
+    Called when a web user (re-)connects to a page session.
 
     It is not triggered when an app page is first opened, but is triggered when
     the page is refreshed, or Flet web client has re-connected after computer
@@ -348,42 +324,42 @@ class Page(PageView):
     "online".
     """
 
-    on_disconnect: OptionalControlEventHandler["Page"] = None
+    on_disconnect: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when a web user disconnects from a page session, i.e. closes browser
+    Called when a web user disconnects from a page session, i.e. closes browser
     tab/window.
     """
 
-    on_close: OptionalControlEventHandler["Page"] = None
+    on_close: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires when a session has expired after configured amount of time
+    Called when a session has expired after configured amount of time
     (60 minutes by default).
     """
 
-    on_login: OptionalEventHandler[LoginEvent] = None
+    on_login: Optional[EventHandler[LoginEvent]] = None
     """
-    Fires upon successful or failed OAuth authorization flow.
+    Called upon successful or failed OAuth authorization flow.
 
-    See [Authentication](https://flet.dev/docs/cookbook/authentication#checking-authentication-results)
+    See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#checking-authentication-results)
     guide for more information and examples.
     """
 
-    on_logout: OptionalControlEventHandler["Page"] = None
+    on_logout: Optional[ControlEventHandler["Page"]] = None
     """
-    Fires after `page.logout()` call.
-    """
-
-    on_error: OptionalControlEventHandler["Page"] = None
-    """
-    Fires when unhandled exception occurs.
+    Called after `page.logout()` call.
     """
 
-    on_multi_view_add: OptionalEventHandler[MultiViewAddEvent] = None
+    on_error: Optional[ControlEventHandler["Page"]] = None
+    """
+    Called when unhandled exception occurs.
+    """
+
+    on_multi_view_add: Optional[EventHandler[MultiViewAddEvent]] = None
     """
     TBD
     """
 
-    on_multi_view_remove: OptionalEventHandler[MultiViewRemoveEvent] = None
+    on_multi_view_remove: Optional[EventHandler[MultiViewRemoveEvent]] = None
     """
     TBD
     """
@@ -424,7 +400,7 @@ class Page(PageView):
             page.add(x)
             print(type(page.get_control(x.uid)))
 
-        ft.app(main)
+        ft.run(main)
         ```
         """
         return self.get_session().index.get(id)
@@ -558,7 +534,7 @@ class Page(PageView):
         call:
 
         ```python
-        ft.app(main, upload_dir="uploads")
+        ft.run(main, upload_dir="uploads")
         ```
         """
         return self.get_session().connection.get_upload_url(file_name, expires)
@@ -578,7 +554,9 @@ class Page(PageView):
         authorization: type[AT] = AuthorizationImpl,
     ) -> AT:
         """
-        Starts OAuth flow. See [Authentication](/docs/cookbook/authentication) guide
+        Starts OAuth flow.
+
+        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication) guide
         for more information and examples.
         """
         self.__authorization = authorization(
@@ -652,7 +630,7 @@ class Page(PageView):
     def logout(self) -> None:
         """
         Clears current authentication context. See
-        [Authentication](/docs/cookbook/authentication#signing-out) guide for more
+        [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#signing-out) guide for more
         information and examples.
         """
         self.__authorization = None
@@ -677,8 +655,8 @@ class Page(PageView):
         Optional method arguments:
 
         * `web_window_name` - window tab/name to open URL in:
-        [`UrlTarget.SELF`](https://flet.dev/docs/reference/types/urltarget#self) - the
-        same browser tab, [`UrlTarget.BLANK`](/docs/reference/types/urltarget#blank) -
+        [`UrlTarget.SELF`][flet.UrlTarget.SELF] - the
+        same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] -
         a new browser tab (or in external
         application on mobile device) or `<your name>` - a named tab.
         * `web_popup_window` - set to `True` to display a URL in a browser popup
@@ -703,18 +681,16 @@ class Page(PageView):
         window_height: Optional[int] = None,
     ) -> None:
         """
-        Opens `url` in a new browser window.
+        Opens provided `url` in a new browser window.
 
-        Optional method arguments:
-
-        * `web_window_name` - window tab/name to open URL in: [`UrlTarget.SELF`](https://flet.dev//docs/reference/types/urltarget#self)
-        - the same browser tab, [`UrlTarget.BLANK`](https://flet.dev//docs/reference/types/urltarget#blank)
-        - a new browser tab (or in external
-        application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup
-        window. Defaults to `False`.
-        * `window_width` - optional, popup window width.
-        * `window_height` - optional, popup window height.
+        Args:
+            url: The URL to open.
+            web_window_name: Window tab/name to open URL in. Use [`UrlTarget.SELF`][flet.UrlTarget.SELF]
+                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] for a new browser
+                tab (or in external application on mobile device), or a custom name for a named tab.
+            web_popup_window: Display the URL in a browser popup window.
+            window_width: Popup window width.
+            window_height: Popup window height.
         """
         await self.url_launcher.launch_url_async(
             url,

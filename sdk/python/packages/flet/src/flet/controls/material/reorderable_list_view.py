@@ -5,15 +5,14 @@ from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import (
     Event,
-    OptionalEventHandler,
+    EventHandler,
 )
 from flet.controls.core.list_view import ListView
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
     MouseCursor,
     Number,
-    OptionalNumber,
 )
 
 
@@ -27,8 +26,6 @@ class OnReorderEvent(Event["ReorderableListView"]):
 class ReorderableListView(ListView):
     """
     A scrollable list of controls that can be reordered.
-
-    Online docs: https://flet.dev/docs/controls/reorderablelistview
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -39,8 +36,6 @@ class ReorderableListView(ListView):
     horizontal: bool = False
     """
     Whether the `controls` should be laid out horizontally.
-
-    Defaults to `False`.
     """
 
     reverse: bool = False
@@ -53,11 +48,9 @@ class ReorderableListView(ListView):
 
     Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
-
-    Defaults to `False`.
     """
 
-    item_extent: OptionalNumber = None
+    item_extent: Optional[Number] = None
     """
     If non-null, forces the children to have the given extent in the scroll direction.
 
@@ -71,27 +64,19 @@ class ReorderableListView(ListView):
     """
     `True` if the dimensions of the first item should be used as a "prototype" for all
     other items, i.e. their height or width will be the same as the first item.
-
-    Defaults to `False`.
     """
 
-    padding: OptionalPaddingValue = None
+    padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the `controls`.
-
-    Value is of type [`Padding`](https://flet.dev/docs/reference/types/padding).
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
-
-    Value is of type
-    [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults
-    to `ClipBehavior.HARD_EDGE`.
     """
 
-    cache_extent: OptionalNumber = None
+    cache_extent: Optional[Number] = None
     """
     The viewport has an area before and after the visible area to cache items that are
     about to become visible when the user scrolls.
@@ -113,11 +98,9 @@ class ReorderableListView(ListView):
     anchor: Number = 0.0
     """
     The relative position of the zero scroll offset.
-
-    Defaults to `0.0`.
     """
 
-    auto_scroller_velocity_scalar: OptionalNumber = None
+    auto_scroller_velocity_scalar: Optional[Number] = None
     """
     The velocity scalar per pixel over scroll. It represents how the velocity scale
     with the over scroll distance. The auto-scroll velocity = (distance of overscroll)
@@ -127,15 +110,11 @@ class ReorderableListView(ListView):
     header: Optional[Control] = None
     """
     A non-reorderable header item to show before the `controls`.
-
-    Value is of type `Control`.
     """
 
     footer: Optional[Control] = None
     """
     A non-reorderable footer item to show after the `controls`.
-
-    Value is of type `Control`.
     """
 
     build_controls_on_demand: bool = True
@@ -144,8 +123,6 @@ class ReorderableListView(ListView):
     about to become visible.
 
     This is particularly useful when dealing with a large number of controls.
-
-    Defaults to `True`.
     """
 
     show_default_drag_handles: bool = True
@@ -158,21 +135,18 @@ class ReorderableListView(ListView):
     TBD
     """
 
-    on_reorder: OptionalEventHandler[OnReorderEvent] = None
+    on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Fires when a child control has been dragged to a new location in the list and the
+    Called when a child control has been dragged to a new location in the list and the
     application should update the order of the items.
     """
 
-    on_reorder_start: OptionalEventHandler[OnReorderEvent] = None
+    on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Fires when an item drag has started.
-
-    Event handler argument is of type
-    [`OnReorderEvent`](https://flet.dev/docs/reference/types/onreorderevent).
+    Called when an item drag has started.
     """
 
-    on_reorder_end: OptionalEventHandler[OnReorderEvent] = None
+    on_reorder_end: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Fires when the dragged item is dropped.
+    Called when the dragged item is dropped.
     """

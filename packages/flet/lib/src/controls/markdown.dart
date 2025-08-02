@@ -68,7 +68,7 @@ class MarkdownControl extends StatelessWidget {
               srcBase64: srcBase64,
               semanticsLabel: alt,
               disabled: control.disabled,
-              errorCtrl: control.buildWidget("img_error_content"));
+              errorCtrl: control.buildWidget("image_error_content"));
         },
         shrinkWrap: control.getBool("shrink_wrap", true)!,
         fitContent: control.getBool("fit_content", true)!,

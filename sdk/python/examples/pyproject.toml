@@ -1,0 +1,23 @@
+[project]
+name = "flet-examples"
+version = "0.1.0"
+description = "Sample apps for Flet"
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+  "flet>=0.70.0.dev0",
+  "flet-desktop>=0.70.0.dev0",
+  "flet-web>=0.70.0.dev0",
+  "flet-cli>=0.70.0.dev0",
+  "flet-contrib",
+]
+
+[dependency-groups]
+dev = [
+    "black>=23.3.0,<24.0.0",
+    "matplotlib",
+    "mplfinance",
+    "pandas",
+    "plotly"
+]

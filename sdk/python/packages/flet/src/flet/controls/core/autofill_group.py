@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -84,26 +83,18 @@ class AutofillGroupDisposeAction(Enum):
 @control("AutofillGroup")
 class AutofillGroup(Control):
     """
-    This control is used to group autofill controls together.
-
-    Online docs: https://flet.dev/docs/controls/autofillgroup
+    Used to group autofill controls together.
     """
 
     content: Control
     """
-    The content control of this group.
-
-    Value is of type `Control`.
+    The content of this group.
     """
 
-    dispose_action: Optional[AutofillGroupDisposeAction] = None
+    dispose_action: AutofillGroupDisposeAction = AutofillGroupDisposeAction.COMMIT
     """
-    The action to be run when this `AutofillGroup` is the topmost `AutofillGroup`
+    The action to be run when this group is the topmost
     and it's being disposed, in order to clean up the current autofill context.
-
-    Value is of type
-    [`AutofillGroupDisposeAction`](https://flet.dev/docs/reference/types/autofillgroupdisposeaction)
-    and defaults to `AutofillGroupDisposeAction.COMMIT`.
     """
 
     def before_update(self):

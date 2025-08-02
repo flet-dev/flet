@@ -32,7 +32,7 @@ class ViewControl extends StatefulWidget {
   final Control control;
 
   ViewControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<ViewControl> createState() => _ViewControlState();
@@ -184,8 +184,7 @@ class _ViewControlState extends State<ViewControl> {
     Widget body = Stack(children: [
       SizedBox.expand(
           child: Container(
-              padding: parsePadding(
-                  control.get("padding"), const EdgeInsets.all(10))!,
+              padding: control.getPadding("padding", const EdgeInsets.all(10))!,
               child: child)),
       ...overlayWidgets
     ]);

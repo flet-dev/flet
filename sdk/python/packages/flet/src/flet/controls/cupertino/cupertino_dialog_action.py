@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import StrOrControl
 
@@ -12,42 +12,44 @@ __all__ = ["CupertinoDialogAction"]
 @control("CupertinoDialogAction")
 class CupertinoDialogAction(Control):
     """
-    A button typically used in a CupertinoAlertDialog.
+    A dialog action button.
 
-    Online docs: https://flet.dev/docs/controls/cupertinodialogaction
+    Typically used as a child of [`CupertinoAlertDialog.actions`][flet.CupertinoAlertDialog.actions].
+
+    Raises:
+        AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
-    A Control representing custom button content.
+    The content of this action button.
     """
 
     default: bool = False
     """
-    If set to True, the button will have bold text. More than one action can have 
-    this property set to True in CupertinoAlertDialog.
+    Whether this action is a default action. In this case, the button will have bold text.
 
-    Defaults to `False`.
+    Info:
+        More than one action can have
+        this property set to `True` in [`CupertinoAlertDialog`][flet.CupertinoAlertDialog].
     """
 
     destructive: bool = False
     """
-    If set to True, the button's text color will be red. Use it for actions that 
+    If set to True, the button's text color will be red. Use it for actions that
     destroy objects, such as an delete that deletes an email etc.
-
-    Defaults to `False`.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    The text style to use for text on the button.
+    The text style to use for text in the button.
 
-    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    Can be useful when [`content`][flet.CupertinoDialogAction.content] is a string.
     """
 
-    on_click: OptionalControlEventHandler["CupertinoDialogAction"] = None
+    on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None
     """
-    Fires when a user clicks the button.
+    Called when a user clicks the button.
     """
 
     def before_update(self):

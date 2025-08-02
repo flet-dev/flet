@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -39,7 +40,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: control.getDouble("elevation_on_scroll"),
       forceMaterialTransparency:
           control.getBool("force_material_transparency", false)!,
-      primary: !control.getBool("isSecondary", false)!,
+      primary: !control.getBool("secondary", false)!,
       titleSpacing: control.getDouble("title_spacing"),
       excludeHeaderSemantics:
           control.getBool("exclude_header_semantics", false)!,
@@ -49,7 +50,8 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       shape: control.getShape("shape", Theme.of(context)),
       toolbarOpacity: control.getDouble("toolbar_opacity", 1)!,
       toolbarTextStyle:
-          parseTextStyle(control.get("toolbar_text_style"), Theme.of(context)),
+          control.getTextStyle("toolbar_text_style", Theme.of(context)),
+      actionsPadding: control.getPadding("actions_padding"),
     );
 
     return BaseControl(control: control, child: appBar);

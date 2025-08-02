@@ -18,7 +18,7 @@ class PageletControl extends StatefulWidget {
   final Control control;
 
   PageletControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<PageletControl> createState() => _PageletControlState();

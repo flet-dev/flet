@@ -15,65 +15,51 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     Container allows to decorate a control with background color and border and
     position it with padding, margin and alignment.
-
-    Online docs: https://flet.dev/docs/controls/column
     """
 
     controls: list[Control] = field(default_factory=list)
     """
-    A list of Controls to display inside the Column.
+    A list of controls to display.
     """
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     How the child Controls should be placed vertically.
-
-    Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment).
     """
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    How the child Controls should be placed horizontally.
-
-    Value is of type
-    [`CrossAxisAlignment`](https://flet.dev/docs/reference/types/crossaxisalignment)
-    and defaults to `CrossAxisAlignment.START`.
+    Defines how the [`controls`][flet.Column.controls] should be placed horizontally.
     """
 
     spacing: Number = 10
     """
     Spacing between the `controls`.
 
-    It is applied only when `alignment` is set to `MainAxisAlignment.START`,
+    It is applied only when [`alignment`][flet.Column.alignment] is `MainAxisAlignment.START`,
     `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
-
-    Default value is `10` virtual pixels.
     """
 
     tight: bool = False
     """
-    Specifies how much space should be occupied vertically.
+    Determines how vertical space is allocated.
 
-    Defaults to `False` - allocate all space to children.
+    If `False` (default), children expand to fill the available vertical space.
+    If `True`, only the minimum vertical space required by the children is used.
     """
 
     wrap: bool = False
     """
-    When set to `True` the Column will put child controls into additional columns
-    (runs) if they don't fit a single column.
+    Whether the [`controls`][flet.Column.controls] should wrap into additional columns (runs)
+    when they don't fit in a single vertical column.
     """
 
     run_spacing: Number = 10
     """
-    Spacing between runs when `wrap=True`. Default value is 10.
+    The spacing between runs when [`wrap`][flet.Column.wrap] is `True`.
     """
 
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the runs should be placed in the cross-axis when `wrap=True`.
-
-    Value is of type
-    [`MainAxisAlignment`](https://flet.dev/docs/reference/types/mainaxisalignment)
-    and defaults to `MainAxisAlignment.START`.
+    How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap] is `True`.
     """

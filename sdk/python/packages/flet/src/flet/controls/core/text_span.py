@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import UrlTarget
 
@@ -12,41 +12,46 @@ __all__ = ["TextSpan"]
 @control("TextSpan")
 class TextSpan(Control):
     """
-    A span of [Text](https://flet.dev/docs/controls/text).
+    A text span.
+
+    Usage Example: As a child of [`Text.spans`][flet.Text.spans].
+
+    For the object to be useful, at least one of [`text`][(c).] or
+    [`spans`][(c).] should be set.
     """
 
     text: Optional[str] = None
     """
     The text contained in this span.
 
-    If both `text` and `spans` are defined, the `text` will precede the `spans`.
+    Note:
+        If both `text` and [`spans`][flet.TextSpan.spans] are defined,
+        the `text` takes precedence.
     """
 
     style: Optional[TextStyle] = None
     """
-    The [`TextStyle`](https://flet.dev/docs/reference/types/textstyle) to apply to
-    this span.
+    Defines the style of this text span.
     """
 
     spans: Optional[list["TextSpan"]] = None
     """
     Additional spans to include as children.
 
-    If both `text` and `spans` are defined, the `text` will precede the `spans`.
+    Note:
+        If both `spans` and [`text`][flet.TextSpan.text] are defined,
+        the `text` takes precedence.
     """
 
     url: Optional[str] = None
     """
-    The URL to open when the span is clicked. If registered, `on_click` event is fired
-    after that.
+    The URL to open when the span is clicked.
+    If registered, [`on_click`][flet.TextSpan.on_click] event is fired after that.
     """
 
-    url_target: Optional[UrlTarget] = None
+    url_target: UrlTarget = UrlTarget.BLANK
     """
     Where to open URL in the web mode.
-
-    Value is of [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) enum.
-    Defaults to `UrlTarget.BLANK`.
     """
 
     semantics_label: Optional[str] = None
@@ -59,20 +64,37 @@ class TextSpan(Control):
 
     spell_out: Optional[bool] = None
     """
-    TBD
+    Whether the assistive technologies should spell out this text character by character.
+
+    If the text is 'hello world', setting this to true causes the assistive technologies,
+    such as VoiceOver or TalkBack, to pronounce 'h-e-l-l-o-space-w-o-r-l-d' instead of complete words.
+    This is useful for texts, such as passwords or verification codes.
+
+    If this span contains other text span children, they also inherit the property from
+    this span unless explicitly set.
+
+    If the property is not set, this text span inherits the spell out setting from its parent.
+    If this text span does not have a parent or the parent does not have a spell out setting,
+    this text span does not spell out the text by default.
     """
 
-    on_click: OptionalControlEventHandler["TextSpan"] = None
+    on_click: Optional[ControlEventHandler["TextSpan"]] = None
     """
-    Fires when the span is clicked.
-    """
-
-    on_enter: OptionalControlEventHandler["TextSpan"] = None
-    """
-    Triggered when a mouse pointer has entered the span.
+    Called when this span is clicked.
     """
 
-    on_exit: OptionalControlEventHandler["TextSpan"] = None
+    on_enter: Optional[ControlEventHandler["TextSpan"]] = None
     """
-    Triggered when a mouse pointer has exited the span.
+    Called when a mouse pointer has entered this span.
     """
+
+    on_exit: Optional[ControlEventHandler["TextSpan"]] = None
+    """
+    Called when a mouse pointer has exited this span.
+    """
+
+    def before_update(self):
+        super().before_update()
+        assert not (
+            self.text is None and self.semantics_label is not None
+        ), "semantics_label can be set only when text is not None"

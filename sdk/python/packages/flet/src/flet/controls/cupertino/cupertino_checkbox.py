@@ -4,13 +4,13 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
     MouseCursor,
-    OptionalColorValue,
 )
 
 __all__ = ["CupertinoCheckbox"]
@@ -21,8 +21,6 @@ class CupertinoCheckbox(ConstrainedControl):
     """
     A macOS style checkbox. Checkbox allows to select one or more items from a group,
     or switch between two mutually exclusive options (checked or unchecked, on or off).
-
-    Online docs: https://flet.dev/docs/controls/cupertinocheckbox
     """
 
     label: Optional[str] = None
@@ -32,111 +30,115 @@ class CupertinoCheckbox(ConstrainedControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Defines on which side of the checkbox the `label` should be shown.
-
-    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition) 
-    and defaults to `RIGHT`.
+    Defines on which side of the checkbox the [`label`][flet.CupertinoCheckbox.label] should be shown.
     """
 
-    value: Optional[bool] = None
+    value: Optional[bool] = False
     """
-    Current value of the checkbox.
+    The value of this checkbox.
+
+    - If `True` the checkbox is checked.
+    - If `False` the checkbox is unchecked.
+    - If `None` and [`tristate`][flet.CupertinoCheckbox.tristate] is `True` the checkbox is indeterminate. (displayed as a dash)
     """
 
-    tristate: bool = True
+    tristate: bool = False
     """
-    If `True` the checkbox's value can be `True`, `False`, or `None`.
-
-    Checkbox displays a dash when its value is null.
+    If `True` the checkbox's [`value`][flet.CupertinoCheckbox.value] can be `True`, `False`, or `None`.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than 
-    one control on a page with autofocus set, then the first one added to the page will 
+    Whether this control will be selected as the initial focus. If there is more than
+    one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
 
-    check_color: OptionalColorValue = None
+    check_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the check icon when 
+    The color to use for the check icon when
     this checkbox is checked.
     """
 
-    active_color: OptionalColorValue = None
+    active_color: Optional[ColorValue] = CupertinoColors.ACTIVE_BLUE
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill checkbox when it 
+    The color used to fill checkbox when it
     is checked/selected.
 
-    If `fill_color` returns a non-null color in the `SELECTED` state, it will be used 
-    instead of this color.
+    If [`fill_color`][flet.CupertinoCheckbox.fill_color] returns a non-null color in the
+    `ControlState.SELECTED` state, it will be used instead of this color.
 
     Defaults to `Colors.PRIMARY`.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used for the checkbox's border 
+    The color used for the checkbox's border
     shadow when it has the input focus.
     """
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) used to fill the checkbox in 
-    all or specific [`ControlState`](https://flet.dev/docs/reference/types/controlstate) 
+    The color used to fill the checkbox in
+    all or specific [`ControlState`][flet.ControlState]
     states.
 
-    The following states are supported: `DEFAULT`, `SELECTED`, `HOVERED`, `FOCUSED`, 
-    and `DISABLED`.
+    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
+    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
+    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
+    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
+    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
 
-    `active_color` is used as fallback color when the checkbox is in the `SELECTED` 
-    state, `CupertinoColors.WHITE` at 50% opacity is used as fallback color when the 
+    [`active_color`][flet.CupertinoCheckbox.active_color] is used as fallback color when the checkbox is in the `SELECTED`
+    state, `CupertinoColors.WHITE` at 50% opacity is used as fallback color when this
     checkbox is in the `DISABLED` state, and `CupertinoColors.WHITE` otherwise.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    The shape of the checkbox.
+    The shape of this checkbox.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) 
-    and defaults to `RoundedRectangleBorder(radius=4)`.
+    Internally defaults to `RoundedRectangleBorder(radius=4)`.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor for a mouse pointer entering or hovering over this control.
-
-    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    The cursor for a mouse pointer entering or hovering over this checkbox.
     """
 
     semantics_label: Optional[str] = None
     """
     The semantic label for the checkbox that will be announced by screen readers.
 
-    This is announced by assistive technologies (e.g TalkBack/VoiceOver) and not shown 
+    This is announced by assistive technologies (e.g TalkBack/VoiceOver) and not shown
     on the UI.
     """
 
     border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    Defines the checkbox's border sides in all or specific 
-    [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    Defines the checkbox's border sides in all or specific
+    [`ControlState`][flet.ControlState] states.
 
-    The following states are supported: `DEFAULT`, `PRESSED`, `SELECTED`, `HOVERED`, 
-    `FOCUSED`, `DISABLED` and `ERROR`.
-    """
-
-    on_change: OptionalControlEventHandler["CupertinoCheckbox"] = None
-    """
-    Fires when the state of the Checkbox is changed.
-    """
-
-    on_focus: OptionalControlEventHandler["CupertinoCheckbox"] = None
-    """
-    Fires when the control has received focus.
+    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
+    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
+    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
+    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
+    [`ControlState.PRESSED`][flet.ControlState.PRESSED],
+    [`ControlState.ERROR`][flet.ControlState.ERROR],
+    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
     """
 
-    on_blur: OptionalControlEventHandler["CupertinoCheckbox"] = None
+    on_change: Optional[ControlEventHandler["CupertinoCheckbox"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the state of this checkbox is changed.
+    """
+
+    on_focus: Optional[ControlEventHandler["CupertinoCheckbox"]] = None
+    """
+    Called when this checkbox has received focus.
+    """
+
+    on_blur: Optional[ControlEventHandler["CupertinoCheckbox"]] = None
+    """
+    Called when this checkbox has lost focus.
     """

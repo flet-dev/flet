@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -15,7 +16,7 @@ class SwitchControl extends StatefulWidget {
   final Control control;
 
   SwitchControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<SwitchControl> createState() => _SwitchControlState();
@@ -62,7 +63,7 @@ class _SwitchControlState extends State<SwitchControl> {
     bool autofocus = widget.control.getBool("autofocus", false)!;
 
     TextStyle? labelStyle =
-        widget.control.getTextStyle("label_style", Theme.of(context));
+        widget.control.getTextStyle("label_text_style", Theme.of(context));
     if (widget.control.disabled && labelStyle != null) {
       labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
     }
@@ -75,6 +76,7 @@ class _SwitchControlState extends State<SwitchControl> {
 
     var s = Switch(
         autofocus: autofocus,
+        padding: widget.control.getPadding("padding"),
         focusNode: _focusNode,
         activeColor: widget.control.getColor("active_color", context),
         activeTrackColor:
@@ -130,7 +132,7 @@ class _SwitchControlState extends State<SwitchControl> {
               : null,
           child: labelPosition == LabelPosition.right
               ? Row(
-                  // mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.min,
                   children: [result, labelWidget],
                 )
               : Row(
@@ -140,14 +142,13 @@ class _SwitchControlState extends State<SwitchControl> {
         ),
       );
     }
+
+    // a hack to size the switch
     if (width != null || height != null) {
       result = SizedBox(
         width: width,
         height: height,
-        child: FittedBox(
-          fit: BoxFit.fill,
-          child: result,
-        ),
+        child: FittedBox(fit: BoxFit.fill, child: result),
       );
     }
 

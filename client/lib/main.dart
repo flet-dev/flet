@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flet/flet.dart';
 import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
@@ -25,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
+Tester? tester;
 
 void main([List<String>? args]) async {
   // if (isProduction) {
@@ -74,23 +74,23 @@ void main([List<String>? args]) async {
     if (routeUrlStrategy == "path") {
       usePathUrlStrategy();
     }
-  } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
-      !kDebugMode) {
-    debugPrint("Flet View is running in Desktop mode");
-    // first argument must be
-    if (args!.isEmpty) {
-      throw Exception('Page URL must be provided as a first argument.');
-    }
-    pageUrl = args[0];
-    if (args.length > 1) {
-      var pidFilePath = args[1];
-      debugPrint("Args contain a path to PID file: $pidFilePath}");
-      var pidFile = await File(pidFilePath).create();
-      await pidFile.writeAsString("$pid");
-    }
-    if (args.length > 2) {
-      assetsDir = args[2];
-      debugPrint("Args contain a path assets directory: $assetsDir}");
+  } else {
+    if (args!.isNotEmpty) {
+      pageUrl = args[0];
+      if (args.length > 1) {
+        var pidFilePath = args[1];
+        debugPrint("Args contain a path to PID file: $pidFilePath}");
+        var pidFile = await File(pidFilePath).create();
+        await pidFile.writeAsString("$pid");
+      }
+      if (args.length > 2) {
+        assetsDir = args[2];
+        debugPrint("Args contain a path assets directory: $assetsDir}");
+      }
+    } else if (!kDebugMode &&
+        (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+      throw Exception(
+          'In desktop mode Flet app URL must be provided as a first argument.');
     }
   }
 
@@ -118,6 +118,7 @@ void main([List<String>? args]) async {
     appStartupScreenMessage: "Working...",
     extensions: extensions,
     multiView: isMultiView(),
+    tester: tester,
   );
 
   if (app.multiView) {

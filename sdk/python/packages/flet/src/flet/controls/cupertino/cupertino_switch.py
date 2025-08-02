@@ -2,14 +2,13 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
     IconValue,
     LabelPosition,
-    OptionalColorValue,
-    OptionalNumber,
+    Number,
 )
 
 __all__ = ["CupertinoSwitch"]
@@ -19,57 +18,51 @@ __all__ = ["CupertinoSwitch"]
 class CupertinoSwitch(ConstrainedControl):
     """
     An iOS-style switch. Used to toggle the on/off state of a single setting.
-
-    Online docs: https://flet.dev/docs/controls/cupertinoswitch
     """
 
     label: Optional[str] = None
     """
-    The clickable label to display on the right of the switch.
+    The clickable label to display on the right of this switch.
     """
 
     value: bool = False
     """
-    Current value of the switch.
+    The current value of this switch.
     """
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     The position of the label relative to the switch.
-
-    Value is of type 
-    [LabelPosition](https://flet.dev/docs/reference/types/labelposition) and defaults 
-    to `LabelPosition.RIGHT`.
     """
 
-    thumb_color: OptionalColorValue = None
+    thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) of the switch's thumb.
+    The color of this switch's thumb.
     """
 
-    focus_color: OptionalColorValue = None
+    focus_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the focus highlight 
+    The color to use for the focus highlight
     for keyboard interactions.
     """
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus.
+    Whether this switch will be selected as the initial focus.
 
-    If there is more than one control on a page with autofocus set, then the first one 
+    If there is more than one control on a page with autofocus set, then the first one
     added to the page will get focus.
     """
 
-    on_label_color: OptionalColorValue = None
+    on_label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the accessibility 
+    The color to use for the accessibility
     label when the switch is on.
     """
 
-    off_label_color: OptionalColorValue = None
+    off_label_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use for the accessibility 
+    The color to use for the accessibility
     label when the switch is off.
     """
 
@@ -87,65 +80,80 @@ class CupertinoSwitch(ConstrainedControl):
     Can be a local file path or URL.
     """
 
-    active_track_color: OptionalColorValue = None
+    active_track_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the track when this 
+    The color to use on the track when this
     switch is on.
     """
 
-    inactive_thumb_color: OptionalColorValue = None
+    inactive_thumb_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the thumb when this 
+    The color to use on the thumb when this
     switch is off.
 
-    If `None`, defaults to `thumb_color`, or `CupertinoColors.WHITE` if `thumb_color` 
-    is also `None`.
+    If `None`, defaults to [`thumb_color`][flet.CupertinoSwitch.thumb_color], and if this is also `None`,
+    defaults to [`CupertinoColors.WHITE`][flet.CupertinoColors.WHITE].
     """
 
-    inactive_track_color: OptionalColorValue = None
+    inactive_track_color: Optional[ColorValue] = None
     """
-    The [color](https://flet.dev/docs/reference/colors) to use on the track when this 
+    The color to use on the track when this
     switch is off.
     """
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline [color](https://flet.dev/docs/reference/colors) of this switch's track 
-    in various 
-    [ControlState](https://flet.dev/docs/reference/types/controlstate) states.
+    The outline color of this switch's track
+    in various [`ControlState`][flet.ControlState]s.
+
+    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
+    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
+    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
+    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
+    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
     """
 
-    track_outline_width: Optional[ControlStateValue[OptionalNumber]] = None
+    track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
-    The outline width of this switch's track in all or specific 
-    [ControlState](https://flet.dev/docs/reference/types/controlstate) states.
+    The outline width of this switch's track in all or specific
+    [`ControlState`][flet.ControlState]s.
+
+    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
+    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
+    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
+    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
+    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
     """
 
     thumb_icon: Optional[ControlStateValue[IconValue]] = None
     """
-    The icon of this Switch's thumb in various 
-    [ControlState](https://flet.dev/docs/reference/types/controlstate) states.
+    The icon of this Switch's thumb in various
+    [`ControlState`][flet.ControlState]s.
 
-    Supported values: `SELECTED`, `HOVERED`, `DISABLED`, `FOCUSED`, `DEFAULT`.
-    """
-
-    on_change: OptionalControlEventHandler["CupertinoSwitch"] = None
-    """
-    Fires when the state of the switch is changed.
-    """
-
-    on_focus: OptionalControlEventHandler["CupertinoSwitch"] = None
-    """
-    Fires when the control has received focus.
+    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
+    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
+    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
+    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
+    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
     """
 
-    on_blur: OptionalControlEventHandler["CupertinoSwitch"] = None
+    on_change: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the state of the switch is changed.
     """
 
-    on_image_error: OptionalControlEventHandler["CupertinoSwitch"] = None
+    on_focus: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Fires when the image (`active_thumb_image` or `inactive_thumb_image`) fails to 
-    load.
+    Called when the control has received focus.
+    """
+
+    on_blur: Optional[ControlEventHandler["CupertinoSwitch"]] = None
+    """
+    Called when the control has lost focus.
+    """
+
+    on_image_error: Optional[ControlEventHandler["CupertinoSwitch"]] = None
+    """
+    Called when the image ([`active_thumb_image`][flet.CupertinoSwitch.active_thumb_image] or
+    [`inactive_thumb_image`][flet.CupertinoSwitch.inactive_thumb_image]) fails to load.
     """

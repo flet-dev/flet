@@ -5,11 +5,11 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
+    ColorValue,
     IconValueOrControl,
-    OptionalColorValue,
     StrOrControl,
     UrlTarget,
 )
@@ -23,8 +23,6 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Text buttons are used for the lowest priority actions, especially when presenting
     multiple options. Text buttons can be placed on a variety of backgrounds. Until the
     button is interacted with, its container isn’t visible.
-
-    Online docs: https://flet.dev/docs/controls/textbutton
     """
 
     content: Optional[StrOrControl] = None
@@ -37,14 +35,14 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Icon shown in the button.
     """
 
-    icon_color: OptionalColorValue = None
+    icon_color: Optional[ColorValue] = None
     """
-    Icon [color](https://flet.dev/docs/reference/colors).
+    Icon color.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Value is of type [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle).
+    TBD
     """
 
     autofocus: bool = False
@@ -59,50 +57,45 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     """
     The URL to open when the button is clicked.
 
-    If registered, `on_click` event is fired after that.
+    If registered, [`on_click`][flet.TextButton.on_click] event is fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
     """
     Where to open URL in the web mode.
-
-    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget).
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
-
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior)
-    and defaults to `ClipBehavior.NONE`.
     """
 
-    on_click: OptionalControlEventHandler["TextButton"] = None
+    on_click: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Fires when a user clicks the button.
-    """
-
-    on_long_press: OptionalControlEventHandler["TextButton"] = None
-    """
-    Fires when the button is long-pressed.
+    Called when a user clicks the button.
     """
 
-    on_hover: OptionalControlEventHandler["TextButton"] = None
+    on_long_press: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Fires when a mouse pointer enters or exists the button response area.
-
-    `data` property of event object contains `true` (string) when cursor enters and
-    `false` when it exits.
+    Called when the button is long-pressed.
     """
 
-    on_focus: OptionalControlEventHandler["TextButton"] = None
+    on_hover: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Fires when the control has received focus.
+    Called when a mouse pointer enters or exists the button response area.
+
+    `data` property of event object is `True` when cursor enters and
+    `False` when it exits.
     """
 
-    on_blur: OptionalControlEventHandler["TextButton"] = None
+    on_focus: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Fires when the control has lost focus.
+    Called when the control has received focus.
+    """
+
+    on_blur: Optional[ControlEventHandler["TextButton"]] = None
+    """
+    Called when the control has lost focus.
     """
 
     async def focus_async(self):

@@ -9,7 +9,7 @@ dependencies = [
     "flet",
     "flet-cli",
     "flet-desktop",
-    "flet-web"
+    "flet-web",
 ]
 
 [tool.uv.sources]
@@ -22,18 +22,48 @@ flet-web = { workspace = true }
 members = ["packages/*"]
 
 [dependency-groups]
-dev = [
+test = [
     "pytest >=7.2.0",
+    "pytest_asyncio >=1.1.0",
+]
+dev = [
     "tomlkit >=0.11.6",
     "cryptography >=39.0.0",
-    "pyinstaller >=6.6.0",
     "pillow >=10.3.0",
     "pre-commit >=2.21.0",
     "pypi-cleanup==0.1.4",
-    "matplotlib >=3.10.1",
-    "plotly >=6.0.1",
     "pandas >=2.2.3",
+    "numpy >=2.2.0",
+    "scikit-image >=0.25.2",
     "ruff>=0.11.7",
+    { include-group = 'test' },
+]
+docs-coverage = [
+    "docstr-coverage >=2.3.2",
+]
+docs = [
+    "mkdocs >=1.6.1",
+    "mkdocs-material >=9.6.15",
+    "mkdocstrings-python >=1.16.12",
+    "mkdocstrings-python-xref >=1.16.3",
+    "mike >=2.1.3",
+    "markdown >=3.6",
+    "pymdown-extensions >=10.16",
+    "mkdocs-exclude >=1.0.2",
+    "mkdocs-glightbox >=0.4.0",
+    "mkdocs-open-in-new-tab >=1.0.8",
+    "mkdocs-section-index >=0.3.10",
+    "griffe-modernized-annotations >=1.0.8",
+    "griffe-warnings-deprecated >=1.1.0",
+    "pygments >=2.16",
+    "markdown-exec[ansi] >=1.11.0",
+    "pydocstyle >=6.3.0",
+    "linkcheckmd >=1.4.0",
+    { include-group = 'docs-coverage' },
+]
+all = [
+    { include-group = 'dev' },
+    { include-group = 'docs' },
 ]
 
 [tool.ruff]
@@ -58,8 +88,11 @@ select = [
     "I"
 ]
 preview = true
+pydocstyle = { convention = 'google' }
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 80

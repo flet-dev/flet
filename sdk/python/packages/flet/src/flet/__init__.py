@@ -1,24 +1,18 @@
 from flet.app import app, app_async, run, run_async
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
+from flet.controls.alignment import Alignment, Axis
 from flet.controls.animation import (
     Animation,
     AnimationCurve,
     AnimationStyle,
     AnimationValue,
-    OptionalAnimation,
-    OptionalAnimationCurve,
-    OptionalAnimationStyle,
-    OptionalAnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
 from flet.controls.blur import (
     Blur,
     BlurTileMode,
     BlurValue,
-    OptionalBlurTileMode,
-    OptionalBlurValue,
 )
 from flet.controls.border import (
     Border,
@@ -26,53 +20,37 @@ from flet.controls.border import (
     BorderSideStrokeAlign,
     BorderSideStrokeAlignValue,
     BorderStyle,
-    OptionalBorder,
-    OptionalBorderSide,
-    OptionalBorderSideStrokeAlign,
-    OptionalBorderSideStrokeAlignValue,
 )
 from flet.controls.border_radius import (
     BorderRadius,
     BorderRadiusValue,
-    OptionalBorderRadiusValue,
 )
 from flet.controls.box import (
+    BlurStyle,
     BoxConstraints,
     BoxDecoration,
     BoxFit,
     BoxShadow,
+    BoxShadowValue,
     BoxShape,
     ColorFilter,
     DecorationImage,
     FilterQuality,
-    OptionalBoxConstraints,
-    OptionalBoxDecoration,
-    OptionalBoxFit,
-    OptionalBoxShadow,
-    OptionalBoxShape,
-    OptionalColorFilter,
-    OptionalDecorationImage,
-    OptionalFilterQuality,
-    OptionalShadowBlurStyle,
-    OptionalShadowValue,
-    ShadowBlurStyle,
-    ShadowValue,
 )
 from flet.controls.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
     CircleBorder,
     ContinuousRectangleBorder,
-    OptionalButtonStyle,
-    OptionalOutlinedBorder,
     OutlinedBorder,
     RoundedRectangleBorder,
+    ShapeBorder,
     StadiumBorder,
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.context import context
-from flet.controls.control import Control, OptionalControl
+from flet.controls.control import Control
 from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import (
     ControlEvent,
@@ -80,8 +58,6 @@ from flet.controls.control_event import (
     Event,
     EventControlType,
     EventHandler,
-    OptionalControlEventHandler,
-    OptionalEventHandler,
 )
 from flet.controls.control_state import (
     ControlState,
@@ -129,12 +105,14 @@ from flet.controls.core.markdown import (
     MarkdownExtensionSet,
     MarkdownStyleSheet,
 )
+from flet.controls.core.merge_semantics import MergeSemantics
 from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_draggable import ReorderableDraggable
 from flet.controls.core.responsive_row import ResponsiveRow
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
+from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
@@ -196,7 +174,7 @@ from flet.controls.cupertino.cupertino_sliding_segmented_button import (
 from flet.controls.cupertino.cupertino_switch import CupertinoSwitch
 from flet.controls.cupertino.cupertino_textfield import (
     CupertinoTextField,
-    VisibilityMode,
+    OverlayVisibilityMode,
 )
 from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPicker,
@@ -209,9 +187,6 @@ from flet.controls.duration import (
     DateTimeValue,
     Duration,
     DurationValue,
-    OptionalDateTimeValue,
-    OptionalDuration,
-    OptionalDurationValue,
 )
 from flet.controls.events import (
     DragEndEvent,
@@ -230,7 +205,8 @@ from flet.controls.events import (
 )
 from flet.controls.exceptions import (
     FletException,
-    FletUnimplementedPlatformEception,
+    FletPageDisconnectedException,
+    FletUnimplementedPlatformException,
     FletUnsupportedPlatformException,
 )
 from flet.controls.geometry import Rect, Size
@@ -241,8 +217,8 @@ from flet.controls.gradients import (
     RadialGradient,
     SweepGradient,
 )
-from flet.controls.keys import ScrollKey, ValueKey
-from flet.controls.margin import Margin, MarginValue, OptionalMarginValue
+from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
+from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
 from flet.controls.material.app_bar import AppBar
@@ -251,7 +227,7 @@ from flet.controls.material.auto_complete import (
     AutoCompleteSelectEvent,
     AutoCompleteSuggestion,
 )
-from flet.controls.material.badge import Badge
+from flet.controls.material.badge import Badge, BadgeValue
 from flet.controls.material.banner import Banner
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.bottom_sheet import BottomSheet
@@ -350,10 +326,10 @@ from flet.controls.material.time_picker import (
     TimePickerEntryMode,
     TimePickerEntryModeChangeEvent,
 )
-from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode
+from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
 from flet.controls.multi_view import MultiView
-from flet.controls.padding import OptionalPaddingValue, Padding, PaddingValue
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
@@ -361,13 +337,13 @@ from flet.controls.page import (
     MultiViewAddEvent,
     MultiViewRemoveEvent,
     Page,
-    PageDisconnectedException,
     RouteChangeEvent,
     ViewPopEvent,
 )
 from flet.controls.page_view import PageMediaData, PageResizeEvent, PageView
 from flet.controls.painting import (
     Paint,
+    PaintGradient,
     PaintingStyle,
     PaintLinearGradient,
     PaintRadialGradient,
@@ -382,8 +358,10 @@ from flet.controls.scrollable_control import (
     ScrollType,
 )
 from flet.controls.services.browser_context_menu import BrowserContextMenu
+from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.file_picker import (
     FilePicker,
+    FilePickerFile,
     FilePickerFileType,
     FilePickerUploadEvent,
     FilePickerUploadFile,
@@ -392,16 +370,12 @@ from flet.controls.services.haptic_feedback import HapticFeedback
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
+from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
+from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
-    OptionalStrutStyle,
-    OptionalTextBaseline,
-    OptionalTextDecoration,
-    OptionalTextDecorationStyle,
-    OptionalTextOverflow,
-    OptionalTextStyle,
-    OptionalTextThemeStyle,
+    StrutStyle,
     TextBaseline,
     TextDecoration,
     TextDecorationStyle,
@@ -423,6 +397,7 @@ from flet.controls.theme import (
     DatePickerTheme,
     DialogTheme,
     DividerTheme,
+    DropdownTheme,
     ElevatedButtonTheme,
     ExpansionTileTheme,
     FilledButtonTheme,
@@ -457,33 +432,25 @@ from flet.controls.theme import (
 from flet.controls.transform import (
     Offset,
     OffsetValue,
-    OptionalOffsetValue,
-    OptionalRotateValue,
-    OptionalScaleValue,
     Rotate,
     RotateValue,
     Scale,
     ScaleValue,
 )
 from flet.controls.types import (
-    FLET_APP,
-    FLET_APP_HIDDEN,
-    FLET_APP_WEB,
-    WEB_BROWSER,
     AppLifecycleState,
     AppView,
+    AutomaticNotchShape,
     BlendMode,
     Brightness,
+    CircularRectangleNotchShape,
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
-    IconEnums,
     IconValue,
     IconValueOrControl,
-    ImageFit,
     ImageRepeat,
     LabelPosition,
     Locale,
@@ -492,12 +459,6 @@ from flet.controls.types import (
     MouseCursor,
     NotchShape,
     Number,
-    OptionalBool,
-    OptionalColorValue,
-    OptionalFloat,
-    OptionalInt,
-    OptionalNumber,
-    OptionalString,
     Orientation,
     PagePlatform,
     PointerDeviceType,
@@ -534,35 +495,22 @@ __all__ = [
     "AdaptiveControl",
     "Alignment",
     "Axis",
-    "OptionalAlignment",
-    "OptionalAxis",
     "Animation",
     "AnimationCurve",
     "AnimationStyle",
     "AnimationValue",
-    "OptionalAnimation",
-    "OptionalAnimationCurve",
-    "OptionalAnimationStyle",
-    "OptionalAnimationValue",
     "BaseControl",
     "control",
     "Blur",
     "BlurTileMode",
     "BlurValue",
-    "OptionalBlurTileMode",
-    "OptionalBlurValue",
     "Border",
     "BorderSide",
     "BorderStyle",
     "BorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
-    "OptionalBorder",
-    "OptionalBorderSide",
-    "OptionalBorderSideStrokeAlign",
-    "OptionalBorderSideStrokeAlignValue",
     "BorderRadius",
     "BorderRadiusValue",
-    "OptionalBorderRadiusValue",
     "BoxConstraints",
     "BoxDecoration",
     "BoxFit",
@@ -571,31 +519,19 @@ __all__ = [
     "ColorFilter",
     "DecorationImage",
     "FilterQuality",
-    "OptionalBoxConstraints",
-    "OptionalBoxDecoration",
-    "OptionalBoxFit",
-    "OptionalBoxShadow",
-    "OptionalBoxShape",
-    "OptionalColorFilter",
-    "OptionalDecorationImage",
-    "OptionalFilterQuality",
-    "OptionalShadowBlurStyle",
-    "OptionalShadowValue",
-    "ShadowBlurStyle",
-    "ShadowValue",
+    "BlurStyle",
+    "BoxShadowValue",
     "BeveledRectangleBorder",
     "ButtonStyle",
     "CircleBorder",
     "ContinuousRectangleBorder",
-    "OptionalButtonStyle",
-    "OptionalOutlinedBorder",
     "OutlinedBorder",
     "RoundedRectangleBorder",
     "StadiumBorder",
+    "ShapeBorder",
     "Colors",
     "ConstrainedControl",
     "Control",
-    "OptionalControl",
     "ControlEvent",
     "ControlState",
     "ControlStateValue",
@@ -676,7 +612,7 @@ __all__ = [
     "CupertinoSlidingSegmentedButton",
     "CupertinoSwitch",
     "CupertinoTextField",
-    "VisibilityMode",
+    "OverlayVisibilityMode",
     "CupertinoTimerPicker",
     "CupertinoTimerPickerMode",
     "CupertinoTintedButton",
@@ -685,9 +621,6 @@ __all__ = [
     "DateTimeValue",
     "Duration",
     "DurationValue",
-    "OptionalDateTimeValue",
-    "OptionalDuration",
-    "OptionalDurationValue",
     "DragEndEvent",
     "DragStartEvent",
     "DragUpdateEvent",
@@ -702,7 +635,7 @@ __all__ = [
     "ScrollEvent",
     "TapEvent",
     "FletException",
-    "FletUnimplementedPlatformEception",
+    "FletUnimplementedPlatformException",
     "FletUnsupportedPlatformException",
     "Gradient",
     "GradientTileMode",
@@ -711,7 +644,6 @@ __all__ = [
     "SweepGradient",
     "Margin",
     "MarginValue",
-    "OptionalMarginValue",
     "dropdown",
     "dropdownm2",
     "icons",
@@ -809,7 +741,6 @@ __all__ = [
     "TooltipTriggerMode",
     "VerticalDivider",
     "MultiView",
-    "OptionalPaddingValue",
     "Padding",
     "PaddingValue",
     "AppLifecycleStateChangeEvent",
@@ -818,7 +749,7 @@ __all__ = [
     "MultiViewAddEvent",
     "MultiViewRemoveEvent",
     "Page",
-    "PageDisconnectedException",
+    "FletPageDisconnectedException",
     "RouteChangeEvent",
     "ViewPopEvent",
     "context",
@@ -826,6 +757,7 @@ __all__ = [
     "PageResizeEvent",
     "PageView",
     "Paint",
+    "PaintGradient",
     "PaintLinearGradient",
     "PaintRadialGradient",
     "PaintSweepGradient",
@@ -838,6 +770,7 @@ __all__ = [
     "ScrollableControl",
     "BrowserContextMenu",
     "FilePicker",
+    "FilePickerFile",
     "FilePickerFileType",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
@@ -850,13 +783,6 @@ __all__ = [
     "Size",
     "Rect",
     "TemplateRoute",
-    "OptionalStrutStyle",
-    "OptionalTextBaseline",
-    "OptionalTextDecoration",
-    "OptionalTextDecorationStyle",
-    "OptionalTextOverflow",
-    "OptionalTextStyle",
-    "OptionalTextThemeStyle",
     "TextBaseline",
     "TextDecoration",
     "TextDecorationStyle",
@@ -908,9 +834,6 @@ __all__ = [
     "TooltipTheme",
     "Offset",
     "OffsetValue",
-    "OptionalOffsetValue",
-    "OptionalRotateValue",
-    "OptionalScaleValue",
     "Rotate",
     "RotateValue",
     "Scale",
@@ -920,18 +843,12 @@ __all__ = [
     "BlendMode",
     "Brightness",
     "ClipBehavior",
-    "ColorEnums",
     "ColorValue",
     "CrossAxisAlignment",
-    "FLET_APP",
-    "FLET_APP_HIDDEN",
-    "FLET_APP_WEB",
     "FloatingActionButtonLocation",
     "FontWeight",
-    "IconEnums",
     "IconValue",
     "IconValueOrControl",
-    "ImageFit",
     "ImageRepeat",
     "LabelPosition",
     "Locale",
@@ -939,13 +856,9 @@ __all__ = [
     "MainAxisAlignment",
     "MouseCursor",
     "NotchShape",
+    "AutomaticNotchShape",
+    "CircularRectangleNotchShape",
     "Number",
-    "OptionalBool",
-    "OptionalColorValue",
-    "OptionalFloat",
-    "OptionalInt",
-    "OptionalNumber",
-    "OptionalString",
     "Orientation",
     "PagePlatform",
     "PointerDeviceType",
@@ -963,18 +876,16 @@ __all__ = [
     "UrlTarget",
     "VerticalAlignment",
     "VisualDensity",
-    "WEB_BROWSER",
     "WebRenderer",
     "UpdateBehavior",
     "PubSubClient",
     "PubSubHub",
+    "Key",
     "ScrollKey",
     "ValueKey",
     "Event",
-    "OptionalControlEventHandler",
     "ControlEventHandler",
     "EventHandler",
-    "OptionalEventHandler",
     "EventControlType",
     "TextSelectionChangeCause",
     "TextSelectionChangeEvent",
@@ -982,4 +893,14 @@ __all__ = [
     "KeyDownEvent",
     "KeyRepeatEvent",
     "KeyUpEvent",
+    "KeyValue",
+    "Screenshot",
+    "MergeSemantics",
+    "DropdownTheme",
+    "StrutStyle",
+    "BadgeValue",
+    "TooltipValue",
+    "SharedPreferences",
+    "Clipboard",
+    "UrlLauncher",
 ]

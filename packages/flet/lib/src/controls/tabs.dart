@@ -5,7 +5,7 @@ class TabsControl extends StatefulWidget {
   final Control control;
 
   TabsControl({Key? key, required this.control})
-      : super(key: ValueKey("control_${control.id}"));
+      : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
   State<TabsControl> createState() => _TabsControlState();
@@ -121,14 +121,14 @@ class _TabsControlState extends State<TabsControl>
     var themeIndicator =
         TabBarTheme.of(context).indicator as UnderlineTabIndicator?;
     var indicatorTabSize = widget.control.getBool("indicator_tab_size");
-    var isScrollable = widget.control.getBool("scrollable", true)!;
-    var secondary = widget.control.getBool("is_secondary", false)!;
+    var scrollable = widget.control.getBool("scrollable", true)!;
+    var secondary = widget.control.getBool("secondary", false)!;
     var dividerHeight = widget.control.getDouble("divider_height");
     var enableFeedback = widget.control.getBool("enable_feedback");
     var indicatorWeight = widget.control.getDouble("indicator_thickness", 2.0)!;
     var tabAlignment = parseTabAlignment(
         widget.control.getString("tab_alignment"),
-        isScrollable ? TabAlignment.start : TabAlignment.fill)!;
+        scrollable ? TabAlignment.start : TabAlignment.fill)!;
     var mouseCursor =
         parseMouseCursor(widget.control.getString("mouse_cursor"));
     var clipBehavior =
@@ -187,7 +187,7 @@ class _TabsControlState extends State<TabsControl>
       tabBar = TabBar.secondary(
           tabAlignment: tabAlignment,
           controller: _tabController,
-          isScrollable: isScrollable,
+          isScrollable: scrollable,
           dividerHeight: dividerHeight,
           enableFeedback: enableFeedback,
           mouseCursor: mouseCursor,
@@ -211,7 +211,7 @@ class _TabsControlState extends State<TabsControl>
       tabBar = TabBar(
           tabAlignment: tabAlignment,
           controller: _tabController,
-          isScrollable: isScrollable,
+          isScrollable: scrollable,
           dividerHeight: dividerHeight,
           enableFeedback: enableFeedback,
           mouseCursor: mouseCursor,

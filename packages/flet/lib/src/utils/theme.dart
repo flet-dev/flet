@@ -138,9 +138,8 @@ ThemeData parseTheme(
     disabledColor: parseColor(value?["disabled_color"], theme),
     canvasColor: parseColor(value?["canvas_color"], theme),
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
-    cardColor: parseColor(value?["card_color"], theme),
+    cardColor: parseColor(value?["card_bgcolor"], theme),
     dividerColor: parseColor(value?["divider_color"], theme),
-    indicatorColor: parseColor(value?["indicator_color"], theme),
     hintColor: parseColor(value?["hint_color"], theme),
     shadowColor: parseColor(value?["shadow_color"], theme),
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
@@ -184,7 +183,6 @@ ThemeData parseTheme(
     navigationBarTheme:
         parseNavigationBarTheme(value?["navigation_bar_theme"], theme),
     dataTableTheme: parseDataTableTheme(value?["data_table_theme"], context),
-    buttonTheme: parseButtonTheme(value?["button_theme"], theme),
     elevatedButtonTheme:
         parseElevatedButtonTheme(value?["elevated_button_theme"], theme),
     outlinedButtonTheme:
@@ -284,59 +282,13 @@ TextTheme? parseTextTheme(
   );
 }
 
-ButtonThemeData? parseButtonTheme(Map<dynamic, dynamic>? value, ThemeData theme,
-    [ButtonThemeData? defaultValue]) {
-  if (value == null) return defaultValue;
-
-  return theme.buttonTheme.copyWith(
-    buttonColor: parseColor(value["button_color"], theme),
-    disabledColor: parseColor(value["disabled_color"], theme),
-    hoverColor: parseColor(value["hover_color"], theme),
-    focusColor: parseColor(value["focus_color"], theme),
-    highlightColor: parseColor(value["highlight_color"], theme),
-    splashColor: parseColor(value["splash_color"], theme),
-    colorScheme: parseColorScheme(value["color_scheme"], theme),
-    alignedDropdown: parseBool(value["aligned_dropdown"]),
-    height: parseDouble(value["height"]),
-    minWidth: parseDouble(value["min_width"]),
-    shape: parseShape(value["shape"], theme),
-    padding: parsePadding(value["padding"]),
-  );
-}
-
 ElevatedButtonThemeData? parseElevatedButtonTheme(
     Map<dynamic, dynamic>? value, ThemeData theme,
     [ElevatedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
   return ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-    iconColor: parseColor(value["icon_color"], theme),
-    foregroundColor: parseColor(value["foreground_color"], theme),
-    backgroundColor: parseColor(value["bgcolor"], theme),
-    shadowColor: parseColor(value["shadow_color"], theme),
-    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
-    disabledForegroundColor:
-        parseColor(value["disabled_foreground_color"], theme),
-    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
-    overlayColor: parseColor(value["overlay_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
-    elevation: parseDouble(value["elevation"]),
-    padding: parsePadding(value["padding"]),
-    enableFeedback: parseBool(value["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseShape(value["shape"], theme),
-    textStyle: parseTextStyle(value["text_style"], theme),
-    visualDensity: parseVisualDensity(value["visual_density"]),
-    side: parseBorderSide(value["border_side"], theme),
-    animationDuration: parseDuration(value["animation_duration"]),
-    alignment: parseAlignment(value["alignment"]),
-    iconSize: parseDouble(value["icon_size"]),
-    fixedSize: parseSize(value["fixed_size"]),
-    maximumSize: parseSize(value["maximum_size"]),
-    minimumSize: parseSize(value["minimum_size"]),
-  ));
+      style: parseButtonStyle(value["style"], theme));
 }
 
 OutlinedButtonThemeData? parseOutlinedButtonTheme(
@@ -345,33 +297,7 @@ OutlinedButtonThemeData? parseOutlinedButtonTheme(
   if (value == null) return defaultValue;
 
   return OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-    iconColor: parseColor(value["icon_color"], theme),
-    foregroundColor: parseColor(value["foreground_color"], theme),
-    backgroundColor: parseColor(value["bgcolor"], theme),
-    shadowColor: parseColor(value["shadow_color"], theme),
-    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
-    disabledForegroundColor:
-        parseColor(value["disabled_foreground_color"], theme),
-    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
-    overlayColor: parseColor(value["overlay_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
-    elevation: parseDouble(value["elevation"]),
-    padding: parsePadding(value["padding"]),
-    enableFeedback: parseBool(value["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseShape(value["shape"], theme),
-    textStyle: parseTextStyle(value["text_style"], theme),
-    visualDensity: parseVisualDensity(value["visual_density"]),
-    side: parseBorderSide(value["border_side"], theme),
-    animationDuration: parseDuration(value["animation_duration"]),
-    alignment: parseAlignment(value["alignment"]),
-    iconSize: parseDouble(value["icon_size"]),
-    fixedSize: parseSize(value["fixed_size"]),
-    maximumSize: parseSize(value["maximum_size"]),
-    minimumSize: parseSize(value["minimum_size"]),
-  ));
+      style: parseButtonStyle(value["style"], theme));
 }
 
 TextButtonThemeData? parseTextButtonTheme(
@@ -379,34 +305,7 @@ TextButtonThemeData? parseTextButtonTheme(
     [TextButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
-  return TextButtonThemeData(
-      style: TextButton.styleFrom(
-    iconColor: parseColor(value["icon_color"], theme),
-    foregroundColor: parseColor(value["foreground_color"], theme),
-    backgroundColor: parseColor(value["bgcolor"], theme),
-    shadowColor: parseColor(value["shadow_color"], theme),
-    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
-    disabledForegroundColor:
-        parseColor(value["disabled_foreground_color"], theme),
-    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
-    overlayColor: parseColor(value["overlay_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
-    elevation: parseDouble(value["elevation"]),
-    padding: parsePadding(value["padding"]),
-    enableFeedback: parseBool(value["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseShape(value["shape"], theme),
-    textStyle: parseTextStyle(value["text_style"], theme),
-    visualDensity: parseVisualDensity(value["visual_density"]),
-    side: parseBorderSide(value["border_side"], theme),
-    animationDuration: parseDuration(value["animation_duration"]),
-    alignment: parseAlignment(value["alignment"]),
-    iconSize: parseDouble(value["icon_size"]),
-    fixedSize: parseSize(value["fixed_size"]),
-    maximumSize: parseSize(value["maximum_size"]),
-    minimumSize: parseSize(value["minimum_size"]),
-  ));
+  return TextButtonThemeData(style: parseButtonStyle(value["style"], theme));
 }
 
 FilledButtonThemeData? parseFilledButtonTheme(
@@ -414,34 +313,7 @@ FilledButtonThemeData? parseFilledButtonTheme(
     [FilledButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
-  return FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-    iconColor: parseColor(value["icon_color"], theme),
-    foregroundColor: parseColor(value["foreground_color"], theme),
-    backgroundColor: parseColor(value["bgcolor"], theme),
-    shadowColor: parseColor(value["shadow_color"], theme),
-    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
-    disabledForegroundColor:
-        parseColor(value["disabled_foreground_color"], theme),
-    disabledIconColor: parseColor(value["disabled_icon_color"], theme),
-    overlayColor: parseColor(value["overlay_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
-    elevation: parseDouble(value["elevation"]),
-    padding: parsePadding(value["padding"]),
-    enableFeedback: parseBool(value["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseShape(value["shape"], theme),
-    textStyle: parseTextStyle(value["text_style"], theme),
-    visualDensity: parseVisualDensity(value["visual_density"]),
-    side: parseBorderSide(value["border_side"], theme),
-    animationDuration: parseDuration(value["animation_duration"]),
-    alignment: parseAlignment(value["alignment"]),
-    iconSize: parseDouble(value["icon_size"]),
-    fixedSize: parseSize(value["fixed_size"]),
-    maximumSize: parseSize(value["maximum_size"]),
-    minimumSize: parseSize(value["minimum_size"]),
-  ));
+  return FilledButtonThemeData(style: parseButtonStyle(value["style"], theme));
 }
 
 IconButtonThemeData? parseIconButtonTheme(
@@ -449,34 +321,7 @@ IconButtonThemeData? parseIconButtonTheme(
     [IconButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
-  return IconButtonThemeData(
-      style: IconButton.styleFrom(
-    foregroundColor: parseColor(value["foreground_color"], theme),
-    backgroundColor: parseColor(value["bgcolor"], theme),
-    shadowColor: parseColor(value["shadow_color"], theme),
-    disabledBackgroundColor: parseColor(value["disabled_bgcolor"], theme),
-    disabledForegroundColor:
-        parseColor(value["disabled_foreground_color"], theme),
-    overlayColor: parseColor(value["overlay_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
-    focusColor: parseColor(value["focus_color"], theme),
-    highlightColor: parseColor(value["highlight_color"], theme),
-    hoverColor: parseColor(value["hover_color"], theme),
-    elevation: parseDouble(value["elevation"]),
-    padding: parsePadding(value["padding"]),
-    enableFeedback: parseBool(value["enable_feedback"]),
-    disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
-    enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseShape(value["shape"], theme),
-    visualDensity: parseVisualDensity(value["visual_density"]),
-    side: parseBorderSide(value["border_side"], theme),
-    animationDuration: parseDuration(value["animation_duration"]),
-    alignment: parseAlignment(value["alignment"]),
-    iconSize: parseDouble(value["icon_size"]),
-    fixedSize: parseSize(value["fixed_size"]),
-    maximumSize: parseSize(value["maximum_size"]),
-    minimumSize: parseSize(value["minimum_size"]),
-  ));
+  return IconButtonThemeData(style: parseButtonStyle(value["style"], theme));
 }
 
 DataTableThemeData? parseDataTableTheme(
@@ -626,17 +471,17 @@ BottomSheetThemeData? parseBottomSheetTheme(
 
   return theme.bottomSheetTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
+    modalBackgroundColor: parseColor(value["bgcolor"], theme),
+    shape: parseShape(value["shape"], theme),
+    showDragHandle: parseBool(value["show_drag_handle"]),
+    clipBehavior: parseClip(value["clip_behavior"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
+    modalBarrierColor: parseColor(value["barrier_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dragHandleColor: parseColor(value["drag_handle_color"], theme),
-    elevation: parseDouble(value["elevation"]),
-    shape: parseShape(value["shape"], theme),
-    showDragHandle: parseBool(value["show_drag_handle"]),
-    modalBackgroundColor: parseColor(value["modal_bgcolor"], theme),
-    modalElevation: parseDouble(value["modal_elevation"]),
-    clipBehavior: parseClip(value["clip_behavior"]),
-    constraints: parseBoxConstraints(value["size_constraints"]),
-    modalBarrierColor: parseColor(value["modal_barrier_color"], theme),
+    modalElevation: parseDouble(value["elevation"]),
+    // elevation: parseDouble(value["elevation"]),
   );
 }
 
@@ -668,22 +513,24 @@ ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     padding: parsePadding(value["padding"]),
     labelPadding: parsePadding(value["label_padding"]),
     labelStyle: parseTextStyle(value["label_text_style"], theme),
-    secondaryLabelStyle:
-        parseTextStyle(value["secondary_label_text_style"], theme),
     disabledColor: parseColor(value["disabled_color"], theme),
     selectedColor: parseColor(value["selected_color"], theme),
     checkmarkColor: parseColor(value["check_color"], theme),
     deleteIconColor: parseColor(value["delete_icon_color"], theme),
     side: parseBorderSide(value["border_side"], theme),
-    secondarySelectedColor:
-        parseColor(value["secondary_selected_color"], theme),
     brightness: parseBrightness(value["brightness"]),
     selectedShadowColor: parseColor(value["selected_shadow_color"], theme),
     showCheckmark: parseBool(value["show_checkmark"]),
-    pressElevation: parseDouble(value["click_elevation"]),
-    avatarBoxConstraints: parseBoxConstraints(value["avatar_constraints"]),
+    pressElevation: parseDouble(value["elevation_on_click"]),
+    avatarBoxConstraints:
+        parseBoxConstraints(value["leading_size_constraints"]),
     deleteIconBoxConstraints:
         parseBoxConstraints(value["delete_icon_size_constraints"]),
+    // below props are for [ChoiceChip], which is not supported yet
+    // secondaryLabelStyle:
+    //     parseTextStyle(value["secondary_label_text_style"], theme),
+    // secondarySelectedColor:
+    //     parseColor(value["secondary_selected_color"], theme),
   );
 }
 
@@ -713,8 +560,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     extendedSizeConstraints:
         parseBoxConstraints(value["extended_size_constraints"]),
     sizeConstraints: parseBoxConstraints(value["size_constraints"]),
-    smallSizeConstraints: parseBoxConstraints(value["small_size_constraints"]),
-    largeSizeConstraints: parseBoxConstraints(value["large_size_constraints"]),
+    // smallSizeConstraints: parseBoxConstraints(value["small_size_constraints"]),
+    // largeSizeConstraints: parseBoxConstraints(value["large_size_constraints"]),
   );
 }
 
@@ -746,9 +593,8 @@ AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
 
   return theme.appBarTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
-    color: parseColor(value["color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    foregroundColor: parseColor(value["foreground_color"], theme),
+    foregroundColor: parseColor(value["color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     titleTextStyle: parseTextStyle(value["title_text_style"], theme),
     toolbarTextStyle: parseTextStyle(value["toolbar_text_style"], theme),
@@ -756,7 +602,7 @@ AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     elevation: parseDouble(value["elevation"]),
     centerTitle: parseBool(value["center_title"]),
     titleSpacing: parseDouble(value["title_spacing"]),
-    scrolledUnderElevation: parseDouble(value["scroll_elevation"]),
+    scrolledUnderElevation: parseDouble(value["elevation_on_scroll"]),
     toolbarHeight: parseDouble(value["toolbar_height"]),
     actionsPadding: parsePadding(value["actions_padding"]),
   );
@@ -774,7 +620,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
     padding: parsePadding(value["padding"]),
-    shape: parseNotchedShape(value["shape"]),
+    shape: parseNotchedShape(value["shape"], theme),
   );
 }
 
@@ -1044,7 +890,7 @@ TooltipThemeData? parseTooltipTheme(
 
   return theme.tooltipTheme.copyWith(
     enableFeedback: parseBool(value["enable_feedback"]),
-    height: parseDouble(value["height"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
     excludeFromSemantics: parseBool(value["exclude_from_semantics"]),
     textStyle: parseTextStyle(value["text_style"], theme),
     preferBelow: parseBool(value["prefer_below"]),
@@ -1143,7 +989,7 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
     strokeAlign: parseDouble(value["stroke_align"]),
     strokeCap: parseStrokeCap(value["stroke_cap"]),
     strokeWidth: parseDouble(value["stroke_width"]),
-    year2023: parseBool(value["year_2023"]),
+    year2023: parseBool(value["year_2023"], false),
   );
 }
 
@@ -1448,11 +1294,6 @@ extension ThemeParsers on Control {
           ? parseSystemUiOverlayStyle(get(propertyName), theme, brightness)
           : null,
     );
-  }
-
-  ButtonThemeData? getButtonTheme(String propertyName, ThemeData theme,
-      [ButtonThemeData? defaultValue]) {
-    return parseButtonTheme(get(propertyName), theme, defaultValue);
   }
 
   ElevatedButtonThemeData? getElevatedButtonTheme(

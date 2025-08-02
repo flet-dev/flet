@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://web.resource.org/cc/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg2" viewBox="0 0 140 190" sodipodi:version="0.32" version="1.0" y="0" x="0" sodipodi:docname="back2.svg" sodipodi:docbase="/home/nicu/Desktop/cards">
+  <sodipodi:namedview id="base" bordercolor="#666666" borderopacity="1.0" pagecolor="#ffffff"/>
+  <defs id="defs3">
+    <linearGradient id="linearGradient8303">
+      <stop id="stop8314" stop-color="#000086" offset="0"/>
+      <stop id="stop8316" stop-color="#005aff" offset="1"/>
+    </linearGradient>
+    <linearGradient id="linearGradient4853" x1="2" gradientUnits="userSpaceOnUse" y1="63.1" gradientTransform="translate(0 -1)" x2="109" y2="128.7">
+      <stop id="stop2062" stop-color="#ebf0d0" offset="0"/>
+      <stop id="stop2064" stop-color="#ffffeb" offset="1"/>
+    </linearGradient>
+    <linearGradient id="linearGradient8318" x1="138.23" xlink:href="#linearGradient8303" gradientUnits="userSpaceOnUse" y1="146.62" gradientTransform="scale(.85424 1.1706)" x2="36.52" y2="18.728"/>
+    <linearGradient id="linearGradient9086" x1="22.029" xlink:href="#linearGradient8303" gradientUnits="userSpaceOnUse" y1="17.153" gradientTransform="scale(.85537 1.1691)" x2="146.4" y2="140.45"/>
+    <pattern id="pattern10642" width="14.142157" patternUnits="userSpaceOnUse" patternTransform="translate(15 -5)" height="13.750009">
+      <g id="g10644" transform="translate(31.25 -2.9289)" fill="#fff">
+        <rect id="rect10646" transform="rotate(45)" height="5" width="5" y="21.668" x="-17.526"/>
+        <rect id="rect10648" transform="rotate(45)" height="5" width="5" y="26.391" x="-12.803"/>
+        <rect id="rect10650" transform="rotate(45)" height="5" width="5" y="16.668" x="-12.526"/>
+        <rect id="rect10652" transform="rotate(45)" height="5" width="5" y="21.391" x="-7.8033"/>
+      </g>
+    </pattern>
+  </defs>
+  <g id="g5630">
+    <path id="rect2070" d="m21 5h103c8.86 0 16 7.136 16 16v153c0 8.86-7.14 16-16 16h-103c-8.864 0-16-7.14-16-16v-153c0-8.864 7.136-16 16-16z" fill-opacity=".49804"/>
+    <path id="rect1300" d="m17 1h103c8.86 0 16 7.136 16 16v153c0 8.86-7.14 16-16 16h-103c-8.864 0-16-7.14-16-16v-153c0-8.864 7.136-16 16-16z" fill="#fff"/>
+    <path id="path5624" d="m19 3h103c8.86 0 16 7.136 16 16v153c0 8.86-7.14 16-16 16h-103c-8.864 0-16-7.14-16-16v-153c0-8.864 7.136-16 16-16z" fill="#c7891f"/>
+    <path id="rect1306" d="m18 2h103c8.86 0 16 7.136 16 16v153c0 8.86-7.14 16-16 16h-103c-8.864 0-16-7.14-16-16v-153c0-8.864 7.136-16 16-16z" fill="url(#linearGradient4853)"/>
+  </g>
+  <path id="path1385" d="m22.167 10h94.413c8.13 0 14.67 6.541 14.67 14.667v140.25c0 8.12-6.54 14.66-14.67 14.66h-94.413c-8.126 0-14.667-6.54-14.667-14.66v-140.25c0-8.129 6.541-14.67 14.667-14.67z" fill="url(#linearGradient8318)"/>
+  <path id="path9846" d="m22.167 10h94.413c8.13 0 14.67 6.541 14.67 14.667v140.25c0 8.12-6.54 14.66-14.67 14.66h-94.413c-8.126 0-14.667-6.54-14.667-14.66v-140.25c0-8.129 6.541-14.67 14.667-14.67z" fill="url(#pattern10642)"/>
+  <path id="path2154" d="m22.156 9.375c-8.461 0-15.281 6.82-15.281 15.281v140.25c0 8.46 6.82 15.31 15.281 15.31h94.434c8.46 0 15.29-6.85 15.29-15.31v-140.25c0-8.465-6.83-15.285-15.29-15.285h-94.434zm0 1.25h94.434c7.79 0 14.03 6.241 14.03 14.031v140.25c0 7.79-6.24 14.06-14.03 14.06h-94.434c-7.79 0-14.031-6.27-14.031-14.06v-140.25c0-7.794 6.241-14.035 14.031-14.035z" fill="url(#linearGradient9086)"/>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Card backs: grid blue</dc:title>
+        <dc:date>2009-03-23T13:56:40</dc:date>
+        <dc:description>playing card backs for the "Ornamental", "White", "Simple" and "Bordered" sets</dc:description>
+        <dc:source>http://openclipart.org/detail/23034/card-backs:-grid-blue-by-nicubunu</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>nicubunu</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>bordered deck</rdf:li>
+            <rdf:li>card</rdf:li>
+            <rdf:li>cards</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>deck</rdf:li>
+            <rdf:li>gambling</rdf:li>
+            <rdf:li>game</rdf:li>
+            <rdf:li>image</rdf:li>
+            <rdf:li>media</rdf:li>
+            <rdf:li>ornamental deck</rdf:li>
+            <rdf:li>play</rdf:li>
+            <rdf:li>playing cards</rdf:li>
+            <rdf:li>png</rdf:li>
+            <rdf:li>public domain</rdf:li>
+            <rdf:li>simple deck</rdf:li>
+            <rdf:li>svg</rdf:li>
+            <rdf:li>white deck</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

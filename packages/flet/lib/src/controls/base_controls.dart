@@ -90,7 +90,7 @@ Widget _expandable(Widget widget, Control control) {
                 ? 0
                 : control.getInt("expand")
         : null;
-    var expandLoose = control.getBool("expand_loose");
+    var expandLoose = control.getBool("expand_loose", false)!;
     return expand != null
         ? (expandLoose == true)
             ? Flexible(flex: expand, child: widget)

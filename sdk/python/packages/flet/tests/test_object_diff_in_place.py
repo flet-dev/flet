@@ -334,13 +334,13 @@ def test_floating_action_button():
     )
     page.controls.append(
         ft.SafeArea(
-            ft.Container(
-                counter,
+            expand=True,
+            content=ft.Container(
+                content=counter,
                 alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.YELLOW,
                 expand=True,
             ),
-            expand=True,
         ),
     )
 

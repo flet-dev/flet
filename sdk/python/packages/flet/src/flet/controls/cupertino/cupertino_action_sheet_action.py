@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control_event import OptionalControlEventHandler
+from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import MouseCursor, StrOrControl
 
 __all__ = ["CupertinoActionSheetAction"]
@@ -13,38 +13,33 @@ class CupertinoActionSheetAction(ConstrainedControl):
     """
     An action button typically used in a CupertinoActionSheet.
 
-    Online docs: https://flet.dev/docs/controls/cupertinoactionsheetaction
+    Raises:
+        AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
     The child control to be shown in this action button.
-
-    In case both `text` and `content` are provided, then `content` will be used.
     """
 
     default: bool = False
     """
     Whether this action should receive the style of an emphasized, default action.
-
-    Defaults to `False`.
     """
 
     destructive: bool = False
     """
     Whether this action should receive the style of a destructive action.
-
-    Defaults to `False`.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    TBD
+    Defines the mouse cursor for this action button.
     """
 
-    on_click: OptionalControlEventHandler["CupertinoActionSheetAction"] = None
+    on_click: Optional[ControlEventHandler["CupertinoActionSheetAction"]] = None
     """
-    Fires when this action button is clicked.
+    Called when this action button is clicked.
     """
 
     def before_update(self):

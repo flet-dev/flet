@@ -1,20 +1,18 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Optional, Union
+
 from flet.controls.types import Number
 
 __all__ = [
     "Duration",
     "DurationValue",
-    "OptionalDurationValue",
     "MICROSECONDS_PER_MILLISECOND",
     "MICROSECONDS_PER_SECOND",
     "MICROSECONDS_PER_MINUTE",
     "MICROSECONDS_PER_HOUR",
     "MICROSECONDS_PER_DAY",
     "DateTimeValue",
-    "OptionalDateTimeValue",
-    "OptionalDuration",
 ]
 
 MICROSECONDS_PER_MILLISECOND = 1_000
@@ -222,8 +220,12 @@ class Duration:
         with the new values.
         """
         return Duration(
-            microseconds=microseconds if microseconds is not None else self.microseconds,
-            milliseconds=milliseconds if milliseconds is not None else self.milliseconds,
+            microseconds=microseconds
+            if microseconds is not None
+            else self.microseconds,
+            milliseconds=milliseconds
+            if milliseconds is not None
+            else self.milliseconds,
             seconds=seconds if seconds is not None else self.seconds,
             minutes=minutes if minutes is not None else self.minutes,
             hours=hours if hours is not None else self.hours,
@@ -231,8 +233,5 @@ class Duration:
         )
 
 
-OptionalDuration = Optional[Duration]
 DurationValue = Union[Duration, int]
-OptionalDurationValue = Optional[DurationValue]
 DateTimeValue = Union[datetime, date]
-OptionalDateTimeValue = Optional[DateTimeValue]

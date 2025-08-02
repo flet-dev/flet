@@ -19,15 +19,13 @@ TooltipTriggerMode? parseTooltipTriggerMode(String? value,
 }
 
 Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
-  const defaultWaitDuration = Duration(milliseconds: 800);
   if (value == null) {
     return null;
   } else if (value is String) {
     return Tooltip(
       message: value,
-      waitDuration: defaultWaitDuration,
-      child: widget,
-    );
+        waitDuration: const Duration(milliseconds: 800),
+        child: widget);
   }
 
   var theme = Theme.of(context);
@@ -45,9 +43,9 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
   return Tooltip(
     message: value["message"],
     enableFeedback: parseBool(value["enable_feedback"]),
-    enableTapToDismiss: parseBool(value["enable_tap_to_dismiss"], true)!,
+    enableTapToDismiss: parseBool(value["tap_to_dismiss"], true)!,
     excludeFromSemantics: parseBool(value["exclude_from_semantics"]),
-    height: parseDouble(value["height"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
     exitDuration: parseDuration(value["exit_duration"]),
     preferBelow: parseBool(value["prefer_below"]),
     padding: parseEdgeInsets(value["padding"]),
@@ -58,7 +56,7 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
     mouseCursor: parseMouseCursor(value["mouse_cursor"]),
     textAlign: parseTextAlign(value["text_align"]),
     showDuration: parseDuration(value["show_duration"]),
-    waitDuration: parseDuration(value["wait_duration"], defaultWaitDuration)!,
+    waitDuration: parseDuration(value["wait_duration"]),
     triggerMode: parseTooltipTriggerMode(value["trigger_mode"]),
     child: widget,
   );

@@ -44,14 +44,10 @@ BoxShadow? parseBoxShadow(dynamic value, ThemeData theme,
     [BoxShadow? defaultValue]) {
   if (value == null) return defaultValue;
 
-  var offset = parseOffset(value["offset"]);
   return BoxShadow(
-      color: parseColor(value["color"], theme, const Color(0xFF000000))!,
-      offset: offset != null ? Offset(offset.dx, offset.dy) : Offset.zero,
-      blurStyle: value["blur_style"] != null
-          ? BlurStyle.values
-              .firstWhere((e) => e.name.toLowerCase() == value["blur_style"])
-          : BlurStyle.normal,
+      color: parseColor(value["color"], theme, Colors.black)!,
+      offset: parseOffset(value["offset"], Offset.zero)!,
+      blurStyle: parseBlurStyle(value["blur_style"], BlurStyle.normal)!,
       blurRadius: parseDouble(value["blur_radius"], 0)!,
       spreadRadius: parseDouble(value["spread_radius"], 0)!);
 }
@@ -73,7 +69,7 @@ BoxDecoration? parseBoxDecoration(dynamic value, BuildContext context,
     shape: shape,
     borderRadius: shape == BoxShape.circle ? null : borderRadius,
     backgroundBlendMode: color != null || gradient != null ? blendMode : null,
-    boxShadow: parseBoxShadows(value["shadow"], theme),
+    boxShadow: parseBoxShadows(value["shadows"], theme),
     gradient: gradient,
     image: parseDecorationImage(value["image"], context),
   );
@@ -202,6 +198,7 @@ Widget buildImage({
         image = SvgPicture.memory(bytes,
             width: width,
             height: height,
+            excludeFromSemantics: excludeFromSemantics,
             fit: fit ?? BoxFit.contain,
             colorFilter: color != null
                 ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
@@ -219,7 +216,8 @@ Widget buildImage({
             filterQuality: filterQuality,
             isAntiAlias: antiAlias,
             colorBlendMode: colorBlendMode,
-            gaplessPlayback: gaplessPlayback ?? true,
+            gaplessPlayback: gaplessPlayback ?? false,
+            excludeFromSemantics: excludeFromSemantics,
             semanticLabel: semanticsLabel);
       }
       return image;
@@ -232,6 +230,7 @@ Widget buildImage({
           width: width,
           height: height,
           fit: fit ?? BoxFit.contain,
+          excludeFromSemantics: excludeFromSemantics,
           colorFilter: color != null
               ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
               : null,

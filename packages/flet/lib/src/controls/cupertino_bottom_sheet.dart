@@ -69,7 +69,6 @@ class CupertinoBottomSheetControl extends StatelessWidget {
             useRootNavigator: false,
             context: context,
             builder: (context) => dialog).then((value) {
-          debugPrint("Dismiss CupertinoBottomSheet: $lastOpen");
           control.updateProperties({"_open": false}, python: false);
           control.updateProperties({"open": false});
           control.triggerEvent("dismiss");

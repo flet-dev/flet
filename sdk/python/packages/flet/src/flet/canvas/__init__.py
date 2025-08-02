@@ -10,6 +10,7 @@ from flet.controls.core.canvas.path import Path
 from flet.controls.core.canvas.points import PointMode, Points
 from flet.controls.core.canvas.rect import Rect
 from flet.controls.core.canvas.shadow import Shadow
+from flet.controls.core.canvas.shape import Shape
 from flet.controls.core.canvas.text import Text
 
 __all__ = [
@@ -28,4 +29,5 @@ __all__ = [
     "Shadow",
     "Text",
     "Image",
+    "Shape",
 ]

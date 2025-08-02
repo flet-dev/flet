@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.control_event import ControlEvent, Event, EventControlType
-from flet.controls.duration import Duration, OptionalDuration
+from flet.controls.duration import Duration
 from flet.controls.types import PointerDeviceType
 
 __all__ = [
@@ -61,7 +61,7 @@ class DragStartEvent(Event[EventControlType]):
     local_y: float = field(metadata={"data_field": "ly"})
     global_x: float = field(metadata={"data_field": "gx"})
     global_y: float = field(metadata={"data_field": "gy"})
-    timestamp: OptionalDuration = field(default=None, metadata={"data_field": "ts"})
+    timestamp: Optional[Duration] = field(default=None, metadata={"data_field": "ts"})
 
 
 @dataclass(kw_only=True)
@@ -73,7 +73,7 @@ class DragUpdateEvent(Event[EventControlType]):
     delta_x: float = field(metadata={"data_field": "dx"})
     delta_y: float = field(metadata={"data_field": "dy"})
     primary_delta: Optional[float] = field(default=None, metadata={"data_field": "pd"})
-    timestamp: OptionalDuration = field(default=None, metadata={"data_field": "ts"})
+    timestamp: Optional[Duration] = field(default=None, metadata={"data_field": "ts"})
 
 
 @dataclass(kw_only=True)
@@ -96,7 +96,7 @@ class ScaleStartEvent(Event[EventControlType]):
     local_focal_point_x: float = field(metadata={"data_field": "lfpx"})
     local_focal_point_y: float = field(metadata={"data_field": "lfpy"})
     pointer_count: int = field(metadata={"data_field": "pc"})
-    timestamp: OptionalDuration = field(metadata={"data_field": "ts"})
+    timestamp: Optional[Duration] = field(metadata={"data_field": "ts"})
 
 
 @dataclass(kw_only=True)
@@ -119,7 +119,7 @@ class ScaleUpdateEvent(Event[EventControlType]):
     vertical_scale: float = field(metadata={"data_field": "vs"})
     scale: float = field(metadata={"data_field": "s"})
     rotation: float = field(metadata={"data_field": "rot"})
-    timestamp: OptionalDuration = field(metadata={"data_field": "ts"})
+    timestamp: Optional[Duration] = field(metadata={"data_field": "ts"})
 
 
 @dataclass(kw_only=True)
