@@ -1,4 +1,5 @@
 import asyncio
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -27,7 +28,8 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     requires visual separation from a patterned background.
 
     Raises:
-        AssertionError: If both [`content`][(c).] and [`icon`][(c).] are not set or invalid.
+        AssertionError: If both [`content`][(c).] and [`icon`][(c).] are not set
+            or invalid.
     """
 
     content: Optional[StrOrControl] = None
@@ -45,7 +47,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     Icon color.
     """
 
-    color: Optional[ColorValue] = None
+    color: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     """
     Button's text color.
 
@@ -54,7 +56,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         are provided, `color` value will be used.
     """
 
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     """
     Button's background color.
 
@@ -63,7 +65,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         are provided, `bgcolor` value will be used.
     """
 
-    elevation: Number = 1
+    elevation: Number = field(default=1, metadata={"skip": True})
     """
     Button's elevation.
 
@@ -72,8 +74,15 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         are provided, `elevation` value will be used.
     """
 
-    style: Optional[ButtonStyle] = None
+    style: Optional[ButtonStyle] = field(default=None, metadata={"skip": True})
     """
+    The style of the button.
+
+    Note:
+        The values of [`color`][flet.ElevatedButton.color],
+        [`bgcolor`][flet.ElevatedButton.bgcolor`] and
+        [`elevation`][flet.ElevatedButton.elevation], if not `None`, will override
+        the respective values of this `style`.
     """
 
     autofocus: Optional[bool] = None
@@ -131,7 +140,9 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
         page.add(
             ft.ElevatedButton(
-                "I'm changing color on hover", bgcolor="ft.Colors.YELLOW, on_hover=on_hover
+                "I'm changing color on hover",
+                bgcolor="ft.Colors.YELLOW",
+                on_hover=on_hover,
             )
         )
 
