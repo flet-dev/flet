@@ -249,7 +249,7 @@ Widget _sizedControl(Widget widget, Control control) {
   var width = control.getDouble("width");
   var height = control.getDouble("height");
   if ((width != null || height != null) &&
-      !["container", "image"].contains(control.type)) {
+      !["Container", "Image"].contains(control.type)) {
     widget = ConstrainedBox(
       constraints: BoxConstraints.tightFor(width: width, height: height),
       child: widget,

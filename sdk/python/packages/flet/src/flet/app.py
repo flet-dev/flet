@@ -10,7 +10,8 @@ from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
-from flet.controls.page import Page, _session_page
+from flet.controls.context import _context_page
+from flet.controls.page import Page
 from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
@@ -253,7 +254,7 @@ def __get_on_session_created(main):
         logger.info("App session started")
         try:
             assert main is not None
-            _session_page.set(session.page)
+            _context_page.set(session.page)
             UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(main):
                 await main(session.page)

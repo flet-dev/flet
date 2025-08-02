@@ -50,6 +50,7 @@ class PageMediaData:
     padding: Padding
     view_padding: Padding
     view_insets: Padding
+    device_pixel_ratio: float
 
 
 @dataclass
@@ -98,9 +99,14 @@ class PageView(AdaptiveControl):
     height: Optional[Number] = None
 
     title: Optional[str] = None
-
-    media: Optional[PageMediaData] = None
-
+    media: PageMediaData = field(
+        default_factory=lambda: PageMediaData(
+            padding=Padding.zero(),
+            view_padding=Padding.zero(),
+            view_insets=Padding.zero(),
+            device_pixel_ratio=0,
+        )
+    )
     scroll_event_interval: Optional[Number] = None
 
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
@@ -115,6 +121,7 @@ class PageView(AdaptiveControl):
     page.on_resize = page_resize
     ```
     """
+
     on_media_change: Optional[ControlEventHandler["PageView"]] = None
     """
     Called when `page.media` has changed.

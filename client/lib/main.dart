@@ -64,7 +64,7 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "tcp://localhost:8550";
+    pageUrl = "http://localhost:8550";
   }
 
   if (kIsWeb) {
