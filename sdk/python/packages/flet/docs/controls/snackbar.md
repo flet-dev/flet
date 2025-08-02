@@ -5,7 +5,7 @@
 ### Basic Example
 
 ```python
---8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/snack-bar/basic.py
+--8<-- ../../examples/controls/snack_bar/basic.py
 ```
 
 ![basic](../../examples/controls/snack_bar/media/basic.gif){width="80%"}
@@ -15,7 +15,7 @@
 ### Counter
 
 ```python
---8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/snack-bar/counter.py
+--8<-- ../../examples/controls/snack_bar/counter.py
 ```
 
 ::: flet.SnackBar

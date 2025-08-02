@@ -17,7 +17,7 @@
 ### Setting a custom label
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/slider/custom-label"
+--8<-- "../../examples/controls/slider/custom_label"
 ```
 
 ![custom-label](../../examples/controls/slider/media/custom_label.gif){width="80%"}
