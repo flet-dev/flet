@@ -167,9 +167,9 @@ class DragEndEvent(Event[EventControlType]):
     has been completed.
     """
 
-    velocity: float = field(metadata={"data_field": "v"})
+    velocity: Offset = field(metadata={"data_field": "v"})
     """
-    The velocity the pointer was moving when it stopped contacting the screen,
+    The velocity vector the pointer was moving when it stopped contacting the screen,
     in logical pixels per second.
     """
 
