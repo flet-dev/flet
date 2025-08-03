@@ -161,7 +161,7 @@ class DragEndEvent(Event[EventControlType]):
     when the drag gesture has been completed.
     """
 
-    global__position: Offset = field(metadata={"data_field": "g"})
+    global_position: Offset = field(metadata={"data_field": "g"})
     """
     The global position the pointer is located at when the drag gesture
     has been completed.
