@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from flet import Offset
 from flet.controls.control_event import ControlEvent, Event, EventControlType
 from flet.controls.duration import Duration
+from flet.controls.transform import Offset
 from flet.controls.types import PointerDeviceType
 
 __all__ = [
