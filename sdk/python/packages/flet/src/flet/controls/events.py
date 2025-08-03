@@ -25,17 +25,21 @@ __all__ = [
 
 @dataclass(kw_only=True)
 class TapEvent(Event[EventControlType]):
-    kind: Optional[PointerDeviceType] = field(metadata={"data_field": "k"})
+    kind: Optional[PointerDeviceType] = field(
+        default=None, metadata={"data_field": "k"}
+    )
     """
     The kind of the device that initiated the event.
     """
 
-    local_position: Optional[Offset] = field(metadata={"data_field": "l"})
+    local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer contacted the screen.
     """
 
-    global_position: Optional[Offset] = field(metadata={"data_field": "g"})
+    global_position: Optional[Offset] = field(
+        default=None, metadata={"data_field": "g"}
+    )
     """
     The global position at which the pointer contacted the screen.
     """
@@ -48,12 +52,14 @@ class MultiTapEvent(ControlEvent):
 
 @dataclass(kw_only=True)
 class LongPressStartEvent(Event[EventControlType]):
-    local_position: Optional[Offset] = field(metadata={"data_field": "l"})
+    local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer initially contacted the screen.
     """
 
-    global_position: Optional[Offset] = field(metadata={"data_field": "g"})
+    global_position: Optional[Offset] = field(
+        default=None, metadata={"data_field": "g"}
+    )
     """
     The global position at which the pointer initially contacted the screen.
     """
@@ -61,12 +67,14 @@ class LongPressStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressEndEvent(Event[EventControlType]):
-    local_position: Optional[Offset] = field(metadata={"data_field": "l"})
+    local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer contacted the screen.
     """
 
-    global_position: Optional[Offset] = field(metadata={"data_field": "g"})
+    global_position: Optional[Offset] = field(
+        default=None, metadata={"data_field": "g"}
+    )
     """
     The global position at which the pointer lifted from the screen.
     """
@@ -121,12 +129,12 @@ class DragUpdateEvent(Event[EventControlType]):
     The pointer's global position when it triggered this update.
     """
 
-    local_delta: Optional[Offset] = field(metadata={"data_field": "ld"})
+    local_delta: Optional[Offset] = field(default=None, metadata={"data_field": "ld"})
     """
 
     """
 
-    global_delta: Optional[Offset] = field(metadata={"data_field": "gd"})
+    global_delta: Optional[Offset] = field(default=None, metadata={"data_field": "gd"})
     """
 
     """
@@ -196,7 +204,7 @@ class ScaleStartEvent(Event[EventControlType]):
     control using the gesture recognizer.
     """
 
-    timestamp: Optional[Duration] = field(metadata={"data_field": "ts"})
+    timestamp: Optional[Duration] = field(default=None, metadata={"data_field": "ts"})
     """
     Recorded timestamp of the source pointer event that triggered the scale event.
 
@@ -280,7 +288,7 @@ class ScaleUpdateEvent(Event[EventControlType]):
     in contact with the screen.
     """
 
-    timestamp: Optional[Duration] = field(metadata={"data_field": "ts"})
+    timestamp: Optional[Duration] = field(default=None, metadata={"data_field": "ts"})
     """
     Recorded timestamp of the source pointer event that triggered the scale event.
 
@@ -402,7 +410,7 @@ class PointerEvent(Event[EventControlType]):
     The tilt angle of the detected object, in radians.
     """
 
-    local_delta: Optional[Offset] = field(metadata={"data_field": "ld"})
+    local_delta: Optional[Offset] = field(default=None, metadata={"data_field": "ld"})
     """
 
     """
