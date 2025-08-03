@@ -131,12 +131,14 @@ class DragUpdateEvent(Event[EventControlType]):
 
     local_delta: Optional[Offset] = field(default=None, metadata={"data_field": "ld"})
     """
-
+    The amount the pointer has moved in the local coordinate space of the event receiver
+    since the start of the drag.
     """
 
     global_delta: Optional[Offset] = field(default=None, metadata={"data_field": "gd"})
     """
-
+    The amount the pointer has moved in the global coordinate space
+    since the start of the drag.
     """
 
     primary_delta: Optional[float] = field(default=None, metadata={"data_field": "pd"})
@@ -412,7 +414,14 @@ class PointerEvent(Event[EventControlType]):
 
     local_delta: Optional[Offset] = field(default=None, metadata={"data_field": "ld"})
     """
+    The delta of the pointer's position since the event start, in logical pixels,
+    within the local coordinate space.
+    """
 
+    global_delta: Optional[Offset] = field(default=None, metadata={"data_field": "gd"})
+    """
+    The delta of the pointer's position since the event start, in logical pixels,
+    within the global coordinate space.
     """
 
 
