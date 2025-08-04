@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/range_slider/basic.py"
 ```
 
-![basic](../../examples/controls/range_slider/media/basic.gif){width="80%"}
+![basic](../examples/controls/range_slider/media/basic.gif){width="80%"}
 /// caption
 ///
 

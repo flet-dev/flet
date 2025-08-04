@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/bottom_app_bar/notched_fab.py"
 ```
 
-![notched-fab](../../examples/controls/bottom_app_bar/media/notched_fab.png){width="80%"}
+![notched-fab](../examples/controls/bottom_app_bar/media/notched_fab.png){width="80%"}
 /// caption
 ///
 

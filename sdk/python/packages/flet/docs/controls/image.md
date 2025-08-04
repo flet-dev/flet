@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/image/gallery.py"
 ```
 
-![gallery](../../examples/controls/image/media/gallery.gif){width="80%"}
+![gallery](../examples/controls/image/media/gallery.gif){width="80%"}
 /// caption
 ///
 

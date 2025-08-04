@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/segmented_button/basic.py"
 ```
 
-![basic](../../examples/controls/segmented_button/media/basic.gif){width="80%"}
+![basic](../examples/controls/segmented_button/media/basic.gif){width="80%"}
 /// caption
 ///
 

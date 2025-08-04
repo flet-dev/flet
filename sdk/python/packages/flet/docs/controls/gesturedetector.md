@@ -21,7 +21,7 @@ inside another control (yellow container) giving the same results.
 --8<-- "../../examples/controls/gesture_detector/draggable_containers.py"
 ```
 
-![draggable-containers](../../examples/controls/gesture_detector/media/draggable_containers.gif){width="80%"}
+![draggable-containers](../examples/controls/gesture_detector/media/draggable_containers.gif){width="80%"}
 /// caption
 ///
 

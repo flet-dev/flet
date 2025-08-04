@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/alert_dialog/modal_and_non_modal.py"
 ```
 
-![modal-and-non-modal](../../examples/controls/alert_dialog/media/modal_and_non_modal.gif){width="80%"}
+![modal-and-non-modal](../examples/controls/alert_dialog/media/modal_and_non_modal.gif){width="80%"}
 /// caption
 ///
 

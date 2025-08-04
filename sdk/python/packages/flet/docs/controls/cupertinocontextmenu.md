@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/cupertino_context_menu/basic.py"
 ```
 
-![basic](../../examples/controls/cupertino_context_menu/media/basic.gif){width="80%"}
+![basic](../examples/controls/cupertino_context_menu/media/basic.gif){width="80%"}
 /// caption
 ///
 

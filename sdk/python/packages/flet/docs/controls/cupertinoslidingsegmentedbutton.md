@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/cupertino_sliding_segmented_button/basic.py"
 ```
 
-![basic](../../examples/controls/cupertino_sliding_segmented_button/media/basic.gif){width="80%"}
+![basic](../examples/controls/cupertino_sliding_segmented_button/media/basic.gif){width="80%"}
 /// caption
 ///
 

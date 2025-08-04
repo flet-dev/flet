@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/cupertino_alert_dialog/file_deletion_confirmation.py"
 ```
 
-![file-deletion-confirmation](../../examples/controls/cupertino_alert_dialog/media/file_deletion_confirmation.png){width="80%"}
+![file-deletion-confirmation](../examples/controls/cupertino_alert_dialog/media/file_deletion_confirmation.png){width="80%"}
 /// caption
 ///
 

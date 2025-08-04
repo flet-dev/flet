@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/navigation_rail/basic.py"
 ```
 
-![basic](../../examples/controls/navigation_rail/media/basic.png){width="80%"}
+![basic](../examples/controls/navigation_rail/media/basic.png){width="80%"}
 /// caption
 ///
 

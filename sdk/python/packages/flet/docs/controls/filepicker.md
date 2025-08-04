@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/file_picker/pick_save_and_get_directory_path.py"
 ```
 
-![pick-save-and-get-directory-path](../../examples/controls/file_picker/media/pick_save_and_get_directory_path.png){width="80%"}
+![pick-save-and-get-directory-path](../examples/controls/file_picker/media/pick_save_and_get_directory_path.png){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "../../examples/controls/file_picker/pick_and_upload.py"
 ```
 
-![pick-and-upload](../../examples/controls/file_picker/media/pick_and_upload.png){width="80%"}
+![pick-and-upload](../examples/controls/file_picker/media/pick_and_upload.png){width="80%"}
 /// caption
 ///
 

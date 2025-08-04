@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/cupertino_filled_button/basic.py"
 ```
 
-![basic](../../examples/controls/cupertino_filled_button/media/basic.png){width="80%"}
+![basic](../examples/controls/cupertino_filled_button/media/basic.png){width="80%"}
 /// caption
 ///
 

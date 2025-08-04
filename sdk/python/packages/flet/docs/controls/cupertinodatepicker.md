@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/cupertino_date_picker/basic.py"
 ```
 
-![basic](../../examples/controls/cupertino_date_picker/media/basic.png){width="80%"}
+![basic](../examples/controls/cupertino_date_picker/media/basic.png){width="80%"}
 /// caption
 ///
 

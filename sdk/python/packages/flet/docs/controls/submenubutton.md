@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/submenu_button/basic.py"
 ```
 
-![basic](../../examples/controls/submenu_button/media/basic.gif){width="80%"}
+![basic](../examples/controls/submenu_button/media/basic.gif){width="80%"}
 /// caption
 ///
 

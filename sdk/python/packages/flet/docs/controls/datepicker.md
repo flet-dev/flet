@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/date_picker/basic.py"
 ```
 
-![basic](../../examples/controls/date_picker/media/basic.png){width="80%"}
+![basic](../examples/controls/date_picker/media/basic.png){width="80%"}
 /// caption
 ///
 

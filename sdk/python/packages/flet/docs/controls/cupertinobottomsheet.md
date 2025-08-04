@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/cupertino_action_sheet/basic.py"
 ```
 
-![cupertinoactionsheet](../../examples/controls/cupertino_action_sheet/media/basic.png){width="80%"}
+![cupertinoactionsheet](../examples/controls/cupertino_action_sheet/media/basic.png){width="80%"}
 /// caption
 ///
 

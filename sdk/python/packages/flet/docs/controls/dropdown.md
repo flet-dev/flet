@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/dropdown/color_selection_with_filtering.py"
 ```
 
-![color-selection-with-filtering](../../examples/controls/dropdown/media/color_selection_with_filtering.gif){width="80%"}
+![color-selection-with-filtering](../examples/controls/dropdown/media/color_selection_with_filtering.gif){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "../../examples/controls/dropdown/icon_selection.py"
 ```
 
-![icon-selection](../../examples/controls/dropdown/media/icon_selection.png){width="80%"}
+![icon-selection](../examples/controls/dropdown/media/icon_selection.png){width="80%"}
 /// caption
 ///
 

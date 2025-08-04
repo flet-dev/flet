@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/animated_switcher/scale_effect.py"
 ```
 
-![scale-effect](../../examples/controls/animated_switcher/media/scale_effect.gif){width="80%"}
+![scale-effect](../examples/controls/animated_switcher/media/scale_effect.gif){width="80%"}
 /// caption
 ///
 

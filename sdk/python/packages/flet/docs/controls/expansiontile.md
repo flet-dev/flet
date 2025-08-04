@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/expansion_tile/basic.py"
 ```
 
-![basic](../../examples/controls/expansion_tile/media/basic.png){width="80%"}
+![basic](../examples/controls/expansion_tile/media/basic.png){width="80%"}
 /// caption
 ///
 

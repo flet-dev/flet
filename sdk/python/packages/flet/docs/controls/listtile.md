@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/list_tile/basic.py"
 ```
 
-![basic](../../examples/controls/list_tile/media/basic.png){width="80%"}
+![basic](../examples/controls/list_tile/media/basic.png){width="80%"}
 /// caption
 ///
 

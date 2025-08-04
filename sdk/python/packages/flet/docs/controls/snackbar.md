@@ -8,7 +8,7 @@
 --8<-- ../../examples/controls/snack_bar/basic.py
 ```
 
-![basic](../../examples/controls/snack_bar/media/basic.gif){width="80%"}
+![basic](../examples/controls/snack_bar/media/basic.gif){width="80%"}
 /// caption
 ///
 

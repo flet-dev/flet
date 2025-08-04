@@ -8,6 +8,6 @@
 --8<-- "../../examples/controls/types/padding/container.py"
 ```
 
-![container](../../examples/controls/types/padding/media/container.png){width="80%"}
+![container](../examples/controls/types/padding/media/container.png){width="80%"}
 /// caption
 ///

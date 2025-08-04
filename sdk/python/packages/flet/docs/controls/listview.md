@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/list_view/autoscroll_and_dynamic_items.py"
 ```
 
-![autoscroll-and-dynamic-items](../../examples/controls/list_view/media/autoscroll_and_dynamic_items.gif){width="80%"}
+![autoscroll-and-dynamic-items](../examples/controls/list_view/media/autoscroll_and_dynamic_items.gif){width="80%"}
 /// caption
 ///
 

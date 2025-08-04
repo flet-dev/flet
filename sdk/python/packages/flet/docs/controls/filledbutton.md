@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/filled_button/basic.py"
 ```
 
-![basic](../../examples/controls/filled_button/media/basic.png){width="80%"}
+![basic](../examples/controls/filled_button/media/basic.png){width="80%"}
 /// caption
 ///
 

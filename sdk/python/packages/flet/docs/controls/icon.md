@@ -11,7 +11,7 @@ visit our [icons browser](https://gallery.flet.dev/icons-browser/)
 --8<-- "../../examples/controls/icon/basic.py"
 ```
 
-![basic](../../examples/controls/icon/media/basic.png){width="80%"}
+![basic](../examples/controls/icon/media/basic.png){width="80%"}
 /// caption
 ///
 

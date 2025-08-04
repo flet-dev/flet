@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/time_picker/basic.py"
 ```
 
-![basic](../../examples/controls/time_picker/media/basic.png){width="80%"}
+![basic](../examples/controls/time_picker/media/basic.png){width="80%"}
 /// caption
 ///
 

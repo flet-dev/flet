@@ -8,6 +8,6 @@
 --8<-- "../../examples/controls/types/tooltip/with_decoration.py"
 ```
 
-![with-decoration](../../examples/controls/types/tooltip/media/with_decoration.gif){width="80%"}
+![with-decoration](../examples/controls/types/tooltip/media/with_decoration.gif){width="80%"}
 /// caption
 ///

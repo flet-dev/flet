@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/dismissible/dismissable_list_tiles.py"
 ```
 
-![dismissable-list-tiles](../../examples/controls/dismissible/media/dismissable_list_tiles.gif){width="80%"}
+![dismissable-list-tiles](../examples/controls/dismissible/media/dismissable_list_tiles.gif){width="80%"}
 /// caption
 ///
 

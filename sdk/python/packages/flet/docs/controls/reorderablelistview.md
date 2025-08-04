@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/reorderable_list_view/horizontal_and_vertical.py"
 ```
 
-![horizontal-and-vertical](../../examples/controls/reorderable_list_view/media/horizontal_and_vertical.gif){width="80%"}
+![horizontal-and-vertical](../examples/controls/reorderable_list_view/media/horizontal_and_vertical.gif){width="80%"}
 /// caption
 ///
 

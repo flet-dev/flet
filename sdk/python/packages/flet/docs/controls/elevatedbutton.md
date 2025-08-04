@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/elevated_button/basic.py"
 ```
 
-![basic](../../examples/controls/elevated_button/media/basic.png){width="80%"}
+![basic](../examples/controls/elevated_button/media/basic.png){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "../../examples/controls/elevated_button/icons.py"
 ```
 
-![icons](../../examples/controls/elevated_button/media/icons.png){width="80%"}
+![icons](../examples/controls/elevated_button/media/icons.png){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "../../examples/controls/elevated_button/handling_clicks.py"
 ```
 
-![handling-clicks](../../examples/controls/elevated_button/media/handling_clicks.gif){width="80%"}
+![handling-clicks](../examples/controls/elevated_button/media/handling_clicks.gif){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "../../examples/controls/elevated_button/custom_content.py"
 ```
 
-![custom-content](../../examples/controls/elevated_button/media/custom_content.png){width="80%"}
+![custom-content](../examples/controls/elevated_button/media/custom_content.png){width="80%"}
 /// caption
 ///
 

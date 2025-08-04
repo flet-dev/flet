@@ -10,7 +10,7 @@
 --8<-- "../../examples/controls/slider/basic.py"
 ```
 
-![basic](../../examples/controls/slider/media/basic.gif){width="80%"}
+![basic](../examples/controls/slider/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -20,7 +20,7 @@
 --8<-- "../../examples/controls/slider/custom_label"
 ```
 
-![custom-label](../../examples/controls/slider/media/custom_label.gif){width="80%"}
+![custom-label](../examples/controls/slider/media/custom_label.gif){width="80%"}
 /// caption
 ///
 
@@ -30,7 +30,7 @@
 --8<-- "../../examples/controls/slider/handling_events.py"
 ```
 
-![handling-events](../../examples/controls/slider/media/handling_events.gif){width="80%"}
+![handling-events](../examples/controls/slider/media/handling_events.gif){width="80%"}
 /// caption
 ///
 

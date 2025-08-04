@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/switch/basic.py"
 ```
 
-![basic](../../examples/controls/switch/media/basic.gif){width="80%"}
+![basic](../examples/controls/switch/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "../../examples/controls/switch/handling_events.py"
 ```
 
-![handling-events](../../examples/controls/switch/media/handling_events.gif){width="80%"}
+![handling-events](../examples/controls/switch/media/handling_events.gif){width="80%"}
 /// caption
 ///
 

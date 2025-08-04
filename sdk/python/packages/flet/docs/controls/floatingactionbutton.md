@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/floating_action_button/handling_clicks.py"
 ```
 
-![handling-clicks](../../examples/controls/floating_action_button/media/handling_clicks.gif){width="80%"}
+![handling-clicks](../examples/controls/floating_action_button/media/handling_clicks.gif){width="80%"}
 /// caption
 ///
 

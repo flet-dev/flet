@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/placeholder/basic.py"
 ```
 
-![basic](../../examples/controls/placeholder/media/basic.png){width="80%"}
+![basic](../examples/controls/placeholder/media/basic.png){width="80%"}
 /// caption
 ///
 

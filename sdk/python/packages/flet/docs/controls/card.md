@@ -6,7 +6,7 @@
 --8<-- "../../examples/controls/card/music_info.py"
 ```
 
-![music-info](../../examples/controls/card/media/music_info.gif){width="80%"}
+![music-info](../examples/controls/card/media/music_info.gif){width="80%"}
 /// caption
 ///
 

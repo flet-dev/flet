@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/progress_ring/determinate_and_indeterminate.py"
 ```
 
-![determinate-and-indeterminate](../../examples/controls/progress_ring/media/determinate_and_indeterminate.gif){width="80%"}
+![determinate-and-indeterminate](../examples/controls/progress_ring/media/determinate_and_indeterminate.gif){width="80%"}
 /// caption
 ///
 

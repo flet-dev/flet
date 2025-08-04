@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/app_bar/actions_and_popup_menu.py"
 ```
 
-![actions-and-popup-menu](../../examples/controls/app_bar/media/actions_and_popup_menu.gif){width="80%"}
+![actions-and-popup-menu](../examples/controls/app_bar/media/actions_and_popup_menu.gif){width="80%"}
 /// caption
 ///
 

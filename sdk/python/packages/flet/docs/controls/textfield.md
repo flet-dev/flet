@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/text_field/basic.py"
 ```
 
-![basic](../../examples/controls/text_field/media/basic.gif){width="80%"}
+![basic](../examples/controls/text_field/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "../../examples/controls/text_field/handling_change_events.py"
 ```
 
-![handling-change-events](../../examples/controls/text_field/media/handling_change_events.gif){width="80%"}
+![handling-change-events](../examples/controls/text_field/media/handling_change_events.gif){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "../../examples/controls/text_field/password.py"
 ```
 
-![password](../../examples/controls/text_field/media/password.gif){width="80%"}
+![password](../examples/controls/text_field/media/password.gif){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "../../examples/controls/text_field/multiline.py"
 ```
 
-![multiline](../../examples/controls/text_field/media/multiline.gif){width="80%"}
+![multiline](../examples/controls/text_field/media/multiline.gif){width="80%"}
 /// caption
 ///
 
@@ -48,7 +48,7 @@
 --8<-- "../../examples/controls/text_field/underlined_and_borderless.py"
 ```
 
-![underlined-and-borderless](../../examples/controls/text_field/media/underlined_and_borderless.gif){width="80%"}
+![underlined-and-borderless](../examples/controls/text_field/media/underlined_and_borderless.gif){width="80%"}
 /// caption
 ///
 
@@ -58,7 +58,7 @@
 --8<-- "../../examples/controls/text_field/prefix_and_suffix.py"
 ```
 
-![prefix-and-suffix](../../examples/controls/text_field/media/prefix_and_suffix.gif){width="80%"}
+![prefix-and-suffix](../examples/controls/text_field/media/prefix_and_suffix.gif){width="80%"}
 /// caption
 ///
 

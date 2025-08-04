@@ -10,6 +10,6 @@
 --8<-- "../../examples/controls/types/alignment/container.py"
 ```
 
-![container](../../examples/controls/types/alignment/media/container.png){width="80%"}
+![container](../examples/controls/types/alignment/media/container.png){width="80%"}
 /// caption
 ///

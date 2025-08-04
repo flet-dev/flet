@@ -8,6 +8,6 @@
 --8<-- "../../examples/controls/types/paint_gradient/paint_radial_gradient/canvas_paint.py"
 ```
 
-![canvas-paint](../../examples/controls/types/paint_gradient/paint_radial_gradient/media/canvas_paint.png){width="80%"}
+![canvas-paint](../examples/controls/types/paint_gradient/paint_radial_gradient/media/canvas_paint.png){width="80%"}
 /// caption
 ///

@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/tabs/basic.py"
 ```
 
-![basic](../../examples/controls/tabs/media/basic.gif){width="80%"}
+![basic](../examples/controls/tabs/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "../../examples/controls/tabs/nested.py"
 ```
 
-![nested](../../examples/controls/tabs/media/nested.gif){width="80%"}
+![nested](../examples/controls/tabs/media/nested.gif){width="80%"}
 /// caption
 ///
 

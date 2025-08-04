@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/radio/basic.py"
 ```
 
-![basic](../../examples/controls/radio/media/basic.gif){width="80%"}
+![basic](../examples/controls/radio/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "../../examples/controls/radio/handling_selection_changes.py"
 ```
 
-![handling-selection-changes](../../examples/controls/radio/media/handling_selection_changes.gif){width="80%"}
+![handling-selection-changes](../examples/controls/radio/media/handling_selection_changes.gif){width="80%"}
 /// caption
 ///
 

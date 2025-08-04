@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/shader_mask/pink_radial_glow.py"
 ```
 
-![pink-radial-glow](../../examples/controls/shader_mask/media/pink_radial_glow.png){width="80%"}
+![pink-radial-glow](../examples/controls/shader_mask/media/pink_radial_glow.png){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "../../examples/controls/shader_mask/fade_out_image_bottom.py"
 ```
 
-![fade-out-image-bottom](../../examples/controls/shader_mask/media/fade_out_image_bottom.png){width="80%"}
+![fade-out-image-bottom](../examples/controls/shader_mask/media/fade_out_image_bottom.png){width="80%"}
 /// caption
 ///
 

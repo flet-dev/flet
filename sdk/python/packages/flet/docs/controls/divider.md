@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/divider/basic.py"
 ```
 
-![basic](../../examples/controls/divider/media/basic.png){width="80%"}
+![basic](../examples/controls/divider/media/basic.png){width="80%"}
 /// caption
 ///
 

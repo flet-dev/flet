@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/column/spacing.py"
 ```
 
-![spacing](../../examples/controls/column/media/spacing.gif){width="80%"}
+![spacing](../examples/controls/column/media/spacing.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "../../examples/controls/column/wrap.py"
 ```
 
-![wrap](../../examples/controls/column/media/wrap.gif){width="80%"}
+![wrap](../examples/controls/column/media/wrap.gif){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "../../examples/controls/column/alignment.py"
 ```
 
-![alignment](../../examples/controls/column/media/alignment.png){width="80%"}
+![alignment](../examples/controls/column/media/alignment.png){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "../../examples/controls/column/horizontal_alignment.py"
 ```
 
-![horizontal-alignment](../../examples/controls/column/media/horizontal_alignment.png){width="80%"}
+![horizontal-alignment](../examples/controls/column/media/horizontal_alignment.png){width="80%"}
 /// caption
 ///
 
@@ -59,7 +59,7 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 --8<-- "../../examples/controls/column/programmatic_scroll.py"
 ```
 
-![programmatic-scroll](../../examples/controls/column/media/programmatic_scroll.png){width="80%"}
+![programmatic-scroll](../examples/controls/column/media/programmatic_scroll.png){width="80%"}
 /// caption
 ///
 

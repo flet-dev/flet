@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/autofill_group/basic.py"
 ```
 
-![basic](../../examples/controls/autofill_group/media/basic.gif){width="80%"}
+![basic](../examples/controls/autofill_group/media/basic.gif){width="80%"}
 /// caption
 ///
 

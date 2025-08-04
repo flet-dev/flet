@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/checkbox/basic.py"
 ```
 
-![basic](../../examples/controls/checkbox/media/basic.gif){width="80%"}
+![basic](../examples/controls/checkbox/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -19,7 +19,7 @@
 --8<-- "../../examples/controls/checkbox/handling_events.py"
 ```
 
-![handling-events](../../examples/controls/checkbox/media/handling_events.gif){width="80%"}
+![handling-events](../examples/controls/checkbox/media/handling_events.gif){width="80%"}
 /// caption
 ///
 

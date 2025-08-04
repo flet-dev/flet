@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/container/clickable.py"
 ```
 
-![clickable](../../examples/controls/container/media/clickable.gif){width="80%"}
+![clickable](../examples/controls/container/media/clickable.gif){width="80%"}
 /// caption
 ///
 
@@ -18,7 +18,7 @@
 --8<-- "../../examples/controls/container/background_color.py"
 ```
 
-![background-color](../../examples/controls/container/media/background_color.png){width="80%"}
+![background-color](../examples/controls/container/media/background_color.png){width="80%"}
 /// caption
 ///
 
@@ -28,7 +28,7 @@
 --8<-- "../../examples/controls/container/handling_clicks.py"
 ```
 
-![handling-clicks](../../examples/controls/container/media/handling_clicks.gif){width="80%"}
+![handling-clicks](../examples/controls/container/media/handling_clicks.gif){width="80%"}
 /// caption
 ///
 
@@ -38,7 +38,7 @@
 --8<-- "../../examples/controls/container/handling_hovers.py"
 ```
 
-![handling-hovers](../../examples/controls/container/media/handling_hovers.gif){width="80%"}
+![handling-hovers](../examples/controls/container/media/handling_hovers.gif){width="80%"}
 /// caption
 ///
 
@@ -48,7 +48,7 @@
 --8<-- "../../examples/controls/container/animate_1.py"
 ```
 
-![animate-1](../../examples/controls/container/media/animate_1.gif){width="80%"}
+![animate-1](../examples/controls/container/media/animate_1.gif){width="80%"}
 /// caption
 ///
 
@@ -88,7 +88,7 @@
 --8<-- "../../examples/controls/container/nested_themes_3.py"
 ```
 
-![nested-themes-3](../../examples/controls/container/media/nested_themes_3.gif){width="80%"}
+![nested-themes-3](../examples/controls/container/media/nested_themes_3.gif){width="80%"}
 /// caption
 ///
 
