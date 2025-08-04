@@ -3,19 +3,19 @@ import 'package:flutter/gestures.dart';
 extension ScaleEndDetailsExtension on ScaleEndDetails {
   Map<String, dynamic> toMap() => {
         "pc": pointerCount,
-        "vx": velocity.pixelsPerSecond.dx,
-        "vy": velocity.pixelsPerSecond.dy,
+        "v": {
+          "x": velocity.pixelsPerSecond.dx,
+          "y": velocity.pixelsPerSecond.dy
+        },
       };
 }
 
 extension ScaleUpdateDetailsExtension on ScaleUpdateDetails {
   Map<String, dynamic> toMap() => {
-        "fpx": focalPoint.dx,
-        "fpy": focalPoint.dy,
+        "gfp": {"x": focalPoint.dx, "y": focalPoint.dy},
         "fpdx": focalPointDelta.dx,
         "fpdy": focalPointDelta.dy,
-        "lfpx": localFocalPoint.dx,
-        "lfpy": localFocalPoint.dy,
+        "lfp": {"x": localFocalPoint.dx, "y": localFocalPoint.dy},
         "pc": pointerCount,
         "hs": horizontalScale,
         "vs": verticalScale,
@@ -27,10 +27,8 @@ extension ScaleUpdateDetailsExtension on ScaleUpdateDetails {
 
 extension ScaleStartDetailsExtension on ScaleStartDetails {
   Map<String, dynamic> toMap() => {
-        "fpx": focalPoint.dx,
-        "fpy": focalPoint.dy,
-        "lfpx": localFocalPoint.dx,
-        "lfpy": localFocalPoint.dy,
+        "gfp": {"x": focalPoint.dx, "y": focalPoint.dy},
+        "lfp": {"x": localFocalPoint.dx, "y": localFocalPoint.dy},
         "pc": pointerCount,
         "ts": sourceTimeStamp,
       };
@@ -38,97 +36,89 @@ extension ScaleStartDetailsExtension on ScaleStartDetails {
 
 extension DragEndDetailsExtension on DragEndDetails {
   Map<String, dynamic> toMap() => {
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": globalPosition.dx,
-        "gy": globalPosition.dy,
-        "vx": velocity.pixelsPerSecond.dx,
-        "vy": velocity.pixelsPerSecond.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": globalPosition.dx, "y": globalPosition.dy},
+        "v": {
+          "x": velocity.pixelsPerSecond.dx,
+          "y": velocity.pixelsPerSecond.dy
+        },
         "pv": primaryVelocity,
       };
 }
 
 extension LongPressEndDetailsExtension on LongPressEndDetails {
   Map<String, dynamic> toMap() => {
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": globalPosition.dx,
-        "gy": globalPosition.dy,
-        "vx": velocity.pixelsPerSecond.dx,
-        "vy": velocity.pixelsPerSecond.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": globalPosition.dx, "y": globalPosition.dy},
+        "v": {
+          "x": velocity.pixelsPerSecond.dx,
+          "y": velocity.pixelsPerSecond.dy
+        },
       };
 }
 
 extension LongPressStartDetailsExtension on LongPressStartDetails {
   Map<String, dynamic> toMap() => {
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": globalPosition.dx,
-        "gy": globalPosition.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": globalPosition.dx, "y": globalPosition.dy},
       };
 }
 
 extension TapDownDetailsExtension on TapDownDetails {
   Map<String, dynamic> toMap() => {
         "k": kind?.name,
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": globalPosition.dx,
-        "gy": globalPosition.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": globalPosition.dx, "y": globalPosition.dy},
       };
 }
 
 extension TapUpDetailsExtension on TapUpDetails {
   Map<String, dynamic> toMap() => {
         "k": kind.name,
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": globalPosition.dx,
-        "gy": globalPosition.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": globalPosition.dx, "y": globalPosition.dy},
       };
 }
 
 extension DragStartDetailsExtension on DragStartDetails {
   Map<String, dynamic> toMap() => {
         "k": kind?.name,
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": globalPosition.dx,
-        "gy": globalPosition.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": globalPosition.dx, "y": globalPosition.dy},
         "ts": sourceTimeStamp,
       };
 }
 
 extension DragUpdateDetailsExtension on DragUpdateDetails {
-  Map<String, dynamic> toMap(double previousX, double previousY) {
+  Map<String, dynamic> toMap(
+      [Offset? previousLocalPosition, Offset? previousGlobalPosition]) {
+    final localDelta = previousLocalPosition != null
+        ? localPosition - previousLocalPosition
+        : null;
+    final globalDelta = previousGlobalPosition != null
+        ? globalPosition - previousGlobalPosition
+        : null;
     return {
-      "lx": localPosition.dx,
-      "ly": localPosition.dy,
-      "gx": globalPosition.dx,
-      "gy": globalPosition.dy,
-      "ts": sourceTimeStamp,
-      "dx": localPosition.dx - previousX,
-      "dy": localPosition.dy - previousY,
+      "l": {"x": localPosition.dx, "y": localPosition.dy},
+      "g": {"x": globalPosition.dx, "y": globalPosition.dy},
+      "ld": {"x": localDelta?.dx, "y": localDelta?.dy},
+      "gd": {"x": globalDelta?.dx, "y": globalDelta?.dy},
       "pd": primaryDelta,
+      "ts": sourceTimeStamp,
     };
   }
 }
 
 extension PointerEventExtension on PointerEvent {
-  Map<String, dynamic> toMap([double? previousDx, double? previousDy]) {
-    // todo: should dx/dy be null if previousDx/Dy is null?
-    var dx = previousDx != null ? previousDx - localPosition.dx : null;
-    var dy = previousDy != null ? previousDy - localPosition.dy : null;
+  Map<String, dynamic> toMap([Offset? previousLocalPosition]) {
+    var localDelta = previousLocalPosition != null
+        ? localPosition - previousLocalPosition
+        : null;
     return {
       "k": kind.name,
-      "lx": localPosition.dx,
-      "ly": localPosition.dy,
-      "gx": position.dx,
-      "gy": position.dy,
+      "l": {"x": localPosition.dx, "y": localPosition.dy},
+      "g": {"x": position.dx, "y": position.dy},
       "ts": timeStamp,
-      "vId": viewId,
-      "btt": buttons,
-      "obs": obscured,
       "dev": device,
       "ps": pressure,
       "pMin": pressureMin,
@@ -142,20 +132,15 @@ extension PointerEventExtension on PointerEvent {
       "rMax": radiusMax,
       "or": orientation,
       "tilt": tilt,
-      "eId": embedderId,
-      "dx": dx,
-      "dy": dy,
+      "ld": {"x": localDelta?.dx, "y": localDelta?.dy},
     };
   }
 }
 
 extension PointerScrollEventExtension on PointerScrollEvent {
   Map<String, dynamic> toMap() => {
-        "lx": localPosition.dx,
-        "ly": localPosition.dy,
-        "gx": position.dx,
-        "gy": position.dy,
-        "sdx": scrollDelta.dx,
-        "sdy": scrollDelta.dy,
+        "l": {"x": localPosition.dx, "y": localPosition.dy},
+        "g": {"x": position.dx, "y": position.dy},
+        "sd": {"x": scrollDelta.dx, "y": scrollDelta.dy},
       };
 }
