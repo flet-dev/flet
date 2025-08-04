@@ -29,16 +29,17 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
+            "web_root",
+            type=str,
+            nargs="?",
+            help="directory to serve (default: ./build/web)",
+            default="build/web",
+        )
+        parser.add_argument(
             "--port",
             type=int,
             default=8000,
             help="Port to serve on (default: 8000)",
-        )
-        parser.add_argument(
-            "--web-root",
-            type=str,
-            default="build/web",
-            help="Directory to serve (default: ./build/web)",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
