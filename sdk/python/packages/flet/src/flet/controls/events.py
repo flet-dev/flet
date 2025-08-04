@@ -192,7 +192,7 @@ class ScaleStartEvent(Event[EventControlType]):
     in local coordinates.
     """
 
-    global_focal_point_x: Offset = field(metadata={"data_field": "gfp"})
+    global_focal_point: Offset = field(metadata={"data_field": "gfp"})
     """
     The initial focal point of the pointers in contact with the screen,
     in global coordinates.
