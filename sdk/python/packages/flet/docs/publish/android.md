@@ -15,7 +15,7 @@ The build process requires both **Java** ([JDK](https://de.wikipedia.org/wiki/Ja
 and the **Android SDK**.
 
 If either component is missing or an incompatible version is detected, the required tools will be 
-**automatically installed** during the first run of the [`flet build`](../cli/build.md) command.
+**automatically installed** during the first run of the [`flet build`](../cli/flet-build.md) command.
 
 - The JDK will be installed in `$HOME/java/{version}`.
 - If **Android Studio** is installed, Flet CLI will automatically use the Android SDK bundled with it.  
