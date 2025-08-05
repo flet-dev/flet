@@ -39,7 +39,7 @@ properties, described below, to enable implicit animation of its appearance:
 --8<-- "../../examples/controls/time_picker/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/time_picker/media/basic.png){width="80%"}
+![basic](../examples/controls/time_picker/media/basic.png){width="80%"}
 /// caption
 ///
 
@@ -55,7 +55,7 @@ enables implicit animation of [`ConstrainedControl.opacity`][flet.ConstrainedCon
 --8<-- "../../examples/controls/constrained_control/animate_opacity.py"
 ```
 
-![animate-opacity](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/constrained_control/media/animate_opacity.gif){width="80%"}
+![animate-opacity](../examples/controls/constrained_control/media/animate_opacity.gif){width="80%"}
 /// caption
 ///
 
@@ -68,7 +68,7 @@ enables implicit animation of [`ConstrainedControl.rotate`][flet.ConstrainedCont
 --8<-- "../../examples/controls/constrained-control/animate_rotation.py"
 ```
 
-![animate-rotation](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/constrained_control/media/animate_rotation.gif){width="80%"}
+![animate-rotation](../examples/controls/constrained_control/media/animate_rotation.gif){width="80%"}
 /// caption
 ///
 
@@ -81,7 +81,7 @@ enables implicit animation of [`ConstrainedControl.scale`][flet.ConstrainedContr
 --8<-- "../../examples/controls/constrained_control/animate_scale.py"
 ```
 
-![animate-scale](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/constrained_control/media/animate_scale.gif){width="80%"}
+![animate-scale](../examples/controls/constrained_control/media/animate_scale.gif){width="80%"}
 /// caption
 ///
 
@@ -100,7 +100,7 @@ Offset animation is used for various sliding effects:
 --8<-- "../../examples/controls/constrained_control/animate_offset.py"
 ```
 
-![animate-offset](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/constrained_control/media/animate_offset.gif){width="80%"}
+![animate-offset](../examples/controls/constrained_control/media/animate_offset.gif){width="80%"}
 /// caption
 ///
 
@@ -122,7 +122,7 @@ Note:
 --8<-- "../../examples/controls/constrained_control/animate_position.py"
 ```
 
-![animate-position](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/constrained_control/media/animate_position.gif){width="80%"}
+![animate-position](../examples/controls/constrained_control/media/animate_position.gif){width="80%"}
 /// caption
 ///
 
@@ -135,7 +135,7 @@ enables implicit animation of container properties such as size, background colo
 --8<-- "../../examples/controls/container/animate.py"
 ```
 
-![animate](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/container/media/animate_1.gif){width="80%"}
+![animate](../examples/controls/container/media/animate_1.gif){width="80%"}
 /// caption
 ///
 

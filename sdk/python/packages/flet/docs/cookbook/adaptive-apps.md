@@ -109,151 +109,151 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 -   [:octicons-arrow-right-24: `AlertDialog`][flet.AlertDialog]
 
     ---
-    ![AlertDialog](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/alert-dialog/media/index.png){width="85%"}
+    ![AlertDialog](../examples/controls/alert_dialog/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoAlertDialog`][flet.CupertinoAlertDialog]
 
     ---
-    ![CupertinoAlertDialog](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-alert-dialog/media/adaptive.png){width="85%"}
+    ![CupertinoAlertDialog](../examples/controls/cupertino_alert_dialog/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `Any button in Dialog actions`][flet.Button]
 
     ---
-    ![Dialog actions](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/alert-dialog/media/adaptive-dialog-action.png){width="85%"}
+    ![Dialog actions](../examples/controls/alert_dialog/media/adaptive_dialog_action.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
 
     ---
-    ![CupertinoDialogAction](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-alert-dialog/media/adaptive-dialog-action.png){width="85%"}
+    ![CupertinoDialogAction](../examples/controls/cupertino_alert_dialog/media/adaptive_dialog_action.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `AppBar`][flet.AppBar]
 
     ---
-    ![AppBar](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/app-bar/media/index.png){width="85%"}
+    ![AppBar](../examples/controls/app_bar/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoAppBar`][flet.CupertinoAppBar]
 
     ---
-    ![CupertinoAppBar](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-app-bar/media/index.png){width="85%"}
+    ![CupertinoAppBar](../examples/controls/cupertino_app_bar/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `NavigationBar`][flet.NavigationBar]
 
     ---
-    ![NavigationBar](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/navigation-bar/media/adaptive.png){width="85%"}
+    ![NavigationBar](../examples/controls/navigation_bar/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoNavigationBar`][flet.CupertinoNavigationBar]
 
     ---
-    ![CupertinoNavigationBar](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-navigation-bar/media/adaptive.png){width="85%"}
+    ![CupertinoNavigationBar](../examples/controls/cupertino_navigation_bar/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `ListTile`][flet.ListTile]
 
     ---
-    ![ListTile](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/list-tile/media/index.png){width="85%"}
+    ![ListTile](../examples/controls/list_tile/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoListTile`][flet.CupertinoListTile]
 
     ---
-    ![CupertinoListTile](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-list-tile/media/index.png){width="85%"}
+    ![CupertinoListTile](../examples/controls/cupertino_list_tile/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `TextField`][flet.TextField]
 
     ---
-    ![TextField](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/text-field/media/index.png){width="85%"}
+    ![TextField](../examples/controls/text_field/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `CupertinoTextField`][flet.CupertinoTextField]
 
     ---
-    ![CupertinoTextField](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-text-field/media/index.png){width="85%"}
+    ![CupertinoTextField](../examples/controls/cupertino_text_field/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `Checkbox`][flet.Checkbox]
 
     ---
-    ![Checkbox](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/checkbox/media/index.png){width="45%"}
+    ![Checkbox](../examples/controls/checkbox/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoCheckbox`][flet.CupertinoCheckbox]
 
     ---
-    ![CupertinoCheckbox](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-checkbox/media/index.png){width="45%"}
+    ![CupertinoCheckbox](../examples/controls/cupertino_checkbox/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Slider`][flet.Slider]
 
     ---
-    ![Slider](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/slider/media/index.png){width="45%"}
+    ![Slider](../examples/controls/slider/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
 
     ---
-    ![CupertinoSlider](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-slider/media/index.png){width="45%"}
+    ![CupertinoSlider](../examples/controls/cupertino_slider/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Switch`][flet.Switch]
 
     ---
-    ![Switch](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/switch/media/index.png){width="45%"}
+    ![Switch](../examples/controls/switch/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSwitch`][flet.CupertinoSwitch]
 
     ---
-    ![CupertinoSwitch](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-switch/media/index.png){width="45%"}
+    ![CupertinoSwitch](../examples/controls/cupertino_switch/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Radio`][flet.Radio]
 
     ---
-    ![Radio](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/radio/media/index.png){width="45%"}
+    ![Radio](../examples/controls/radio/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoRadio`][flet.CupertinoRadio]
 
     ---
-    ![CupertinoRadio](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-radio/media/index.png){width="45%"}
+    ![CupertinoRadio](../examples/controls/cupertino_radio/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
 
     ---
-    ![FilledButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/filled-button/media/adaptive.png){width="45%"}
+    ![FilledButton](../examples/controls/filled_button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
 
     ---
-    ![CupertinoFilledButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-filled-button/media/adaptive.png){width="45%"}
+    ![CupertinoFilledButton](../examples/controls/cupertino_filled_button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledTonalButton`][flet.FilledTonalButton]
 
     ---
-    ![FilledTonalButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/filled-tonal-button/media/adaptive.png){width="45%"}
+    ![FilledTonalButton](../examples/controls/filled_tonal_button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoButtonTonal](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-button/media/adaptive-tonal-button.png){width="45%"}
+    ![CupertinoButtonTonal](../examples/controls/cupertino_button/media/adaptive_tonal_button.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `IconButton`][flet.IconButton]
 
     ---
-    ![IconButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/icon-button/media/adaptive.png){width="45%"}
+    ![IconButton](../examples/controls/icon_button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoIconButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-button/media/adaptive-icon-button.png){width="45%"}
+    ![CupertinoIconButton](../examples/controls/cupertino_button/media/adaptive_icon_button.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
 
-    ![ElevatedButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/adaptive.png){width="45%"}
+    ![ElevatedButton](../examples/controls/elevated_button/media/adaptive.png){width="45%"}
 
     ---
     [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
 
-    ![OutlinedButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/outlined-button/media/adaptive.png){width="45%"}
+    ![OutlinedButton](../examples/controls/outlined_button/media/adaptive.png){width="45%"}
 
     ---
     [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
 
-    ![TextButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/text-button/media/adaptive.png){width="45%"}
+    ![TextButton](../examples/controls/text_button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
     ---
-    ![CupertinoButton](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-button/media/adaptive.png){width="45%"}
+    ![CupertinoButton](../examples/controls/cupertino_button/media/adaptive.png){width="45%"}
 
 </div>
 
@@ -330,12 +330,12 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 -   **iOS**
 
     ---
-    ![CupertinoNavigationBar](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/navigation-bar/media/adaptive.png){width="90%"}
+    ![CupertinoNavigationBar](../examples/controls/navigation_bar/media/adaptive.png){width="90%"}
 
 -   **Android**
 
     ---
-    ![CupertinoNavigationBar](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/navigation-bar/media/adaptive.png){width="90%"}
+    ![CupertinoNavigationBar](../examples/controls/navigation_bar/media/adaptive.png){width="90%"}
 
 </div>
 

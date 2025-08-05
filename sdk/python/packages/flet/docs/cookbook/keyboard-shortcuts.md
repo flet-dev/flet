@@ -30,11 +30,13 @@ def main(page: ft.Page):
 
 ft.run(main)
 ```
+
 ![Keyboard shortcuts](../assets/cookbook/keyboard/shortcuts.png)
 /// caption
 ///
 
 Below is a more advanced example:
+
 ```python
---8<-- ../../examples/controls/page/keyboard_events.py
+--8<-- "../../examples/controls/page/keyboard_events.py"
 ```
