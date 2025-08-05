@@ -5,59 +5,59 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/basic.py"
+--8<-- "../../examples/controls/elevated_button/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/basic.png){width="80%"}
+![basic](../examples/controls/elevated_button/media/basic.png){width="80%"}
 /// caption
 ///
 
 ### Icons
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/icons.py"
+--8<-- "../../examples/controls/elevated_button/icons.py"
 ```
 
-![icons](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/icons.png){width="80%"}
+![icons](../examples/controls/elevated_button/media/icons.png){width="80%"}
 /// caption
 ///
 
 ### Handling clicks
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/handling-clicks.py"
+--8<-- "../../examples/controls/elevated_button/handling_clicks.py"
 ```
 
-![handling-clicks](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/handling-clicks.gif){width="80%"}
+![handling-clicks](../examples/controls/elevated_button/media/handling_clicks.gif){width="80%"}
 /// caption
 ///
 
 ### Custom content
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/custom-content.py"
+--8<-- "../../examples/controls/elevated_button/custom_content.py"
 ```
 
-![custom-content](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/elevated-button/media/custom-content.png){width="80%"}
+![custom-content](../examples/controls/elevated_button/media/custom_content.png){width="80%"}
 /// caption
 ///
 
 ### Shapes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/shapes.py"
+--8<-- "../../examples/controls/elevated_button/shapes.py"
 ```
 
 ### Styling
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/styling.py"
+--8<-- "../../examples/controls/elevated_button/styling.py"
 ```
 
 ### Animate on hover
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/elevated-button/animate-on-hover.py"
+--8<-- "../../examples/controls/elevated_button/animate_on_hover.py"
 ```
 
 ::: flet.ElevatedButton

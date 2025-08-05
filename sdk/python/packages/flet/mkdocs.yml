@@ -141,6 +141,11 @@ plugins:
             - url: https://docs.python.org/3/objects.inv
               domains: [ py, std ]
             - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
+  - external-images:
+      mappings:
+        - source_dir: ../../examples
+          target_url_path: examples
+          include_exts: [".png", ".gif"]
 
 # Markdown Extensions
 markdown_extensions:

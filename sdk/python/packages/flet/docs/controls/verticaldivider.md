@@ -5,10 +5,10 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/vertical-divider/basic.py"
+--8<-- "../../examples/controls/vertical_divider/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/vertical-divider/media/basic.png){width="80%"}
+![basic](../examples/controls/vertical_divider/media/basic.png){width="80%"}
 /// caption
 ///
 
