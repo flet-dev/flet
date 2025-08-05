@@ -5,10 +5,10 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/radio/basic.py"
+--8<-- "../../examples/controls/radio/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/radio/media/basic.gif){width="80%"}
+![basic](../examples/controls/radio/media/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -16,17 +16,17 @@
 ### Handling selection changes
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/radio/handling-selection-changes.py"
+--8<-- "../../examples/controls/radio/handling_selection_changes.py"
 ```
 
-![handling-selection-changes](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/radio/media/handling-selection-changes.gif){width="80%"}
+![handling-selection-changes](../examples/controls/radio/media/handling_selection_changes.gif){width="80%"}
 /// caption
 ///
 
 ### Styled radio buttons
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/radio/styled.py"
+--8<-- "../../examples/controls/radio/styled.py"
 ```
 
 ::: flet.Radio

@@ -5,10 +5,10 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/expansion-panel-list/basic.py"
+--8<-- "../../examples/controls/expansion_panel_list/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/expansion-panel-list/media/basic.gif){width="80%"}
+![basic](../examples/controls/expansion_panel_list/media/basic.gif){width="80%"}
 /// caption
 ///
 

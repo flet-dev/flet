@@ -5,20 +5,20 @@
 ### Start-aligned drawer
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/navigation-drawer/position-start.py"
+--8<-- "../../examples/controls/navigation_drawer/position_start.py"
 ```
 
-![position-start](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/navigation-drawer/media/position-start.gif){width="80%"}
+![position-start](../examples/controls/navigation_drawer/media/position_start.gif){width="80%"}
 /// caption
 ///
 
 ### End-aligned drawer
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/navigation-drawer/position-end.py"
+--8<-- "../../examples/controls/navigation_drawer/position_end.py"
 ```
 
-![position-end](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/navigation-drawer/media/position-end.gif){width="80%"}
+![position-end](../examples/controls/navigation_drawer/media/position_end.gif){width="80%"}
 /// caption
 ///
 

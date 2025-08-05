@@ -12,6 +12,7 @@ from flet.controls.material.reorderable_list_view import (
 from flet.controls.page import Page
 from flet.controls.page_view import PageResizeEvent
 from flet.controls.scrollable_control import OnScrollEvent
+from flet.controls.types import PointerDeviceType
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
@@ -46,16 +47,16 @@ def test_create_event_typed_data():
             "control": c,
             "name": "some_event",
             "data": None,
-            "lx": 1,
-            "ly": 2,
-            "gx": 4,
-            "gy": 5,
+            "k": "mouse",
+            "l": {"x": 1, "y": 2},
+            "g": {"x": 4, "y": 5},
         },
     )
 
     assert isinstance(evt, TapEvent)
-    assert evt.local_x == 1
-    assert evt.global_y == 5
+    assert evt.kind == PointerDeviceType.MOUSE
+    assert evt.local_position.x == 1
+    assert evt.global_position.y == 5
     assert evt.control == c
     assert evt.name == "some_event"
 
