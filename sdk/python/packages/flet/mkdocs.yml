@@ -145,7 +145,7 @@ plugins:
       mappings:
         - source_dir: ../../examples
           target_url_path: examples
-          include_exts: [".png", ".gif"]
+          include_exts: [".png", ".gif", ".svg"]
 
 # Markdown Extensions
 markdown_extensions:
