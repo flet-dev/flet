@@ -149,7 +149,7 @@ class UnderlineTabIndicator:
 
 
 @control("Tabs")
-class Tabs(AdaptiveControl):
+class Tabs(ConstrainedControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
