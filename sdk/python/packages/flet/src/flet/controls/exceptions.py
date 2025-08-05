@@ -5,6 +5,7 @@ __all__ = [
     "FletPageDisconnectedException",
 ]
 
+
 class FletException(Exception):
     """
     Base class for all Flet exceptions.
@@ -27,6 +28,7 @@ class FletUnimplementedPlatformException(FletUnsupportedPlatformException):
     """
     Thrown by operations that have not been implemented yet.
     """
+
 
 class FletPageDisconnectedException(FletException):
     """

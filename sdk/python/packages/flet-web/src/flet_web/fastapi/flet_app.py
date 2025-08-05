@@ -11,7 +11,8 @@ from typing import Any, Optional
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
 from flet.controls.base_control import BaseControl
-from flet.controls.page import PageDisconnectedException, _session_page
+from flet.controls.exceptions import FletPageDisconnectedException
+from flet.controls.page import _session_page
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -158,7 +159,7 @@ class FletApp(Connection):
 
             if UpdateBehavior.auto_update_enabled():
                 await self.__session.auto_update(self.__session.page)
-        except PageDisconnectedException:
+        except FletPageDisconnectedException:
             logger.debug(
                 "Session handler attempted to update disconnected page: "
                 f"{self.__session.id}"
