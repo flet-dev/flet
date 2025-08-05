@@ -47,6 +47,5 @@ class Image(Shape):
 
     paint: Optional[Paint] = None
     """
-    A paint to composite the image into canvas. The value of this property
-    is the instance of [`Paint`](https://flet.dev/docs/reference/types/paint) class.
+    A paint to composite the image into canvas.
     """

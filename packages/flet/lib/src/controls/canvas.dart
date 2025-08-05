@@ -248,47 +248,84 @@ class FletCustomPainter extends CustomPainter {
     Paint paint = shape.getPaint("paint", theme, Paint())!;
     var dashPattern = shape.getPaintStrokeDashPattern("paint");
     paint.style = ui.PaintingStyle.stroke;
-    var path = ui.Path();
-    path.moveTo(shape.getDouble("x1")!, shape.getDouble("y1")!);
-    path.lineTo(shape.getDouble("x2")!, shape.getDouble("y2")!);
 
-    if (dashPattern != null) {
+    var p1 = Offset(shape.getDouble("x1")!, shape.getDouble("y1")!);
+    var p2 = Offset(shape.getDouble("x2")!, shape.getDouble("y2")!);
+
+    if (dashPattern == null) {
+      canvas.drawLine(p1, p2, paint);
+    } else {
+      var path = ui.Path();
+      path.moveTo(p1.dx, p1.dy);
+      path.lineTo(p2.dx, p2.dy);
       path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
     }
-    canvas.drawPath(path, paint);
   }
 
   void drawCircle(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var radius = shape.getDouble("radius", 0)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawCircle(
-        Offset(shape.getDouble("x")!, shape.getDouble("y")!), radius, paint);
+
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+
+    if (dashPattern == null) {
+      canvas.drawCircle(Offset(x, y), radius, paint);
+    } else {
+      var path = ui.Path();
+      path.addOval(Rect.fromCircle(center: Offset(x, y), radius: radius));
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawOval(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawOval(
-        Rect.fromLTWH(
-            shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-        paint);
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+
+    if (dashPattern == null) {
+      canvas.drawOval(Rect.fromLTWH(x, y, width, height), paint);
+    } else {
+      var path = ui.Path();
+      path.addOval(Rect.fromLTWH(x, y, width, height));
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawArc(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
     var startAngle = shape.getDouble("start_angle", 0)!;
     var sweepAngle = shape.getDouble("sweep_angle", 0)!;
     var useCenter = shape.getBool("use_center", false)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawArc(
-        Rect.fromLTWH(
-            shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-        startAngle,
-        sweepAngle,
-        useCenter,
-        paint);
+
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+    if (dashPattern == null) {
+      canvas.drawArc(Rect.fromLTWH(x, y, width, height), startAngle, sweepAngle,
+          useCenter, paint);
+    } else {
+      var path = ui.Path();
+      if (useCenter) {
+        path.moveTo(x + width / 2, y + height / 2);
+        path.arcTo(
+            Rect.fromLTWH(x, y, width, height), startAngle, sweepAngle, false);
+        path.close();
+      } else {
+        path.addArc(Rect.fromLTWH(x, y, width, height), startAngle, sweepAngle);
+      }
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawFill(Canvas canvas, Control shape) {
@@ -315,20 +352,33 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawRect(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
     var borderRadius =
         shape.getBorderRadius("border_radius", BorderRadius.zero)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(
-            Rect.fromLTWH(
-                shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-            topLeft: borderRadius.topLeft,
-            topRight: borderRadius.topRight,
-            bottomLeft: borderRadius.bottomLeft,
-            bottomRight: borderRadius.bottomRight),
-        paint);
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+
+    if (dashPattern == null) {
+      canvas.drawRRect(
+          RRect.fromRectAndCorners(Rect.fromLTWH(x, y, width, height),
+              topLeft: borderRadius.topLeft,
+              topRight: borderRadius.topRight,
+              bottomLeft: borderRadius.bottomLeft,
+              bottomRight: borderRadius.bottomRight),
+          paint);
+    } else {
+      var path = ui.Path();
+      path.addRRect(RRect.fromRectAndCorners(Rect.fromLTWH(x, y, width, height),
+          topLeft: borderRadius.topLeft,
+          topRight: borderRadius.topRight,
+          bottomLeft: borderRadius.bottomLeft,
+          bottomRight: borderRadius.bottomRight));
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawText(BuildContext context, Canvas canvas, Control shape) {
