@@ -36,6 +36,7 @@ class Command(BaseCommand):
             default="build/web",
         )
         parser.add_argument(
+            "-p",
             "--port",
             type=int,
             default=8000,

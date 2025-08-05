@@ -20,7 +20,7 @@ Path to the directory to serve. Use this to specify the root directory containin
 
 ## Options
 
-### `--port`
+### `--port`, `-p`
 
 Port number to serve the files on. Use this to customize the port if the default (`8000`) is already in use or needs to be changed.
 
