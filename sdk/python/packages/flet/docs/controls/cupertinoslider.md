@@ -5,10 +5,10 @@
 ### Handling events
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-slider/handling-events.py"
+--8<-- "../../examples/controls/cupertino_slider/handling_events.py"
 ```
 
-![handling-events](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-slider/media/handling-events.gif){width="80%"}
+![handling-events](../examples/controls/cupertino_slider/media/handling_events.gif){width="80%"}
 /// caption
 ///
 

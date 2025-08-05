@@ -5,40 +5,40 @@
 ### Column `spacing`
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/spacing.py"
+--8<-- "../../examples/controls/column/spacing.py"
 ```
 
-![spacing](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/spacing.gif){width="80%"}
+![spacing](../examples/controls/column/media/spacing.gif){width="80%"}
 /// caption
 ///
 
 ### Column wrapping
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/wrap.py"
+--8<-- "../../examples/controls/column/wrap.py"
 ```
 
-![wrap](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/wrap.gif){width="80%"}
+![wrap](../examples/controls/column/media/wrap.gif){width="80%"}
 /// caption
 ///
 
 ### Column vertical alignments
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/alignment.py"
+--8<-- "../../examples/controls/column/alignment.py"
 ```
 
-![alignment](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/alignment.png){width="80%"}
+![alignment](../examples/controls/column/media/alignment.png){width="80%"}
 /// caption
 ///
 
 ### Column horizontal alignments
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/horizontal-alignment.py"
+--8<-- "../../examples/controls/column/horizontal_alignment.py"
 ```
 
-![horizontal-alignment](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/horizontal-alignment.png){width="80%"}
+![horizontal-alignment](../examples/controls/column/media/horizontal_alignment.png){width="80%"}
 /// caption
 ///
 
@@ -48,7 +48,7 @@ This example demonstrates adding of list items on-the-fly, as user scroll to the
 creating the illusion of infinite list:
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/infinite-scrolling.py"
+--8<-- "../../examples/controls/column/infinite_scrolling.py"
 ```
 
 ### Scrolling programmatically
@@ -56,10 +56,10 @@ creating the illusion of infinite list:
 This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/column/programmatic-scroll.py"
+--8<-- "../../examples/controls/column/programmatic_scroll.py"
 ```
 
-![programmatic-scroll](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/column/media/programmatic-scroll.png){width="80%"}
+![programmatic-scroll](../examples/controls/column/media/programmatic_scroll.png){width="80%"}
 /// caption
 ///
 

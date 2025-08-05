@@ -2,7 +2,7 @@
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
-![File picker all modes demo](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/file-picker/media/pick-save-and-get-directory-path.png){width="80%"}
+![File picker all modes demo](../examples/controls/file_picker/media/pick_save_and_get_directory_path.png){width="80%"}
 /// caption
 ///
 
@@ -163,10 +163,10 @@ reported for every 10% uploaded.
 The following example demonstrates multiple file uploads:
 
 ```python
---8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/file-picker/pick-and-upload.py
+--8<-- "../../examples/controls/file_picker/pick_and_upload.py"
 ```
 
-![File picker multiple uploads](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/file-picker/media/pick-and-upload.png){width="80%"}
+![File picker multiple uploads](../examples/controls/file_picker/media/pick_and_upload.png){width="80%"}
 /// caption
 ///
 

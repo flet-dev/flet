@@ -5,10 +5,10 @@
 ### Photo gallery
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/grid-view/photo-gallery.py"
+--8<-- "../../examples/controls/grid_view/photo_gallery.py"
 ```
 
-![photo-gallery](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/grid-view/media/photo-gallery.png){width="80%"}
+![photo-gallery](../examples/controls/grid_view/media/photo_gallery.png){width="80%"}
 /// caption
 ///
 

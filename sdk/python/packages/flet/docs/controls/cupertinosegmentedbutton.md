@@ -5,17 +5,17 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-segmented-button/basic.py"
+--8<-- "../../examples/controls/cupertino_segmented_button/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-segmented-button/media/basic.gif){width="80%"}
+![basic](../examples/controls/cupertino_segmented_button/media/basic.gif){width="80%"}
 /// caption
 ///
 
 ### Adjusting segments padding
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-segmented-button/segments-padding.py"
+--8<-- "../../examples/controls/cupertino_segmented_button/segments_padding.py"
 ```
 
 ::: flet.CupertinoSegmentedButton

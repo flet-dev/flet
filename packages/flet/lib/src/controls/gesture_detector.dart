@@ -25,17 +25,16 @@ class GestureDetectorControl extends StatefulWidget {
 
 class _GestureDetectorControlState extends State<GestureDetectorControl> {
   int _panTimestamp = DateTime.now().millisecondsSinceEpoch;
-  double _panX = 0;
-  double _panY = 0;
+  Offset _localPan = Offset.zero;
+  Offset _globalPan = Offset.zero;
   int _hDragTimestamp = DateTime.now().millisecondsSinceEpoch;
-  double _hDragX = 0;
-  double _hDragY = 0;
+  Offset _localHorizontalDrag = Offset.zero;
+  Offset _globalHorizontalDrag = Offset.zero;
   int _vDragTimestamp = DateTime.now().millisecondsSinceEpoch;
-  double _vDragX = 0;
-  double _vDragY = 0;
+  Offset _localVerticalDrag = Offset.zero;
+  Offset _globalVerticalDrag = Offset.zero;
   int _hoverTimestamp = DateTime.now().millisecondsSinceEpoch;
-  double _hoverX = 0;
-  double _hoverY = 0;
+  Offset _localHover = Offset.zero;
   Timer? _debounce;
   bool _rightPanActive = false;
   int _rightPanTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -108,8 +107,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var dragInterval = widget.control.getInt("drag_interval", 0)!;
 
     void handlePanStart(DragStartDetails details) {
-      _panX = details.localPosition.dx;
-      _panY = details.localPosition.dy;
+      _localPan = Offset(details.localPosition.dx, details.localPosition.dy);
+      _globalPan = Offset(details.globalPosition.dx, details.globalPosition.dy);
       if (onPanStart) {
         widget.control.triggerEvent("pan_start", details.toMap());
       }
@@ -119,15 +118,15 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _panTimestamp > dragInterval) {
         _panTimestamp = now;
-        widget.control.triggerEvent("pan_update", details.toMap(_panX, _panY));
-        _panX = details.localPosition.dx;
-        _panY = details.localPosition.dy;
+        widget.control
+            .triggerEvent("pan_update", details.toMap(_localPan, _globalPan));
+        _localPan = details.localPosition;
       }
     }
 
     void handleHorizontalDragStart(DragStartDetails details) {
-      _hDragX = details.localPosition.dx;
-      _hDragY = details.localPosition.dy;
+      _localHorizontalDrag = details.localPosition;
+      _globalHorizontalDrag = details.globalPosition;
       if (onHorizontalDragStart) {
         widget.control.triggerEvent("horizontal_drag_start", details.toMap());
       }
@@ -137,16 +136,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _hDragTimestamp > dragInterval) {
         _hDragTimestamp = now;
-        widget.control.triggerEvent(
-            "horizontal_drag_update", details.toMap(_hDragX, _hDragY));
-        _hDragX = details.localPosition.dx;
-        _hDragY = details.localPosition.dy;
+        widget.control.triggerEvent("horizontal_drag_update",
+            details.toMap(_localHorizontalDrag, _globalHorizontalDrag));
+        _localHorizontalDrag = details.localPosition;
+        _globalHorizontalDrag = details.globalPosition;
       }
     }
 
     void handleVerticalDragStart(DragStartDetails details) {
-      _vDragX = details.localPosition.dx;
-      _vDragY = details.localPosition.dy;
+      _localVerticalDrag = details.localPosition;
+      _globalVerticalDrag = details.globalPosition;
       if (onVerticalDragStart) {
         widget.control.triggerEvent("vertical_drag_start", details.toMap());
       }
@@ -156,18 +155,17 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _vDragTimestamp > dragInterval) {
         _vDragTimestamp = now;
-        widget.control.triggerEvent(
-            "vertical_drag_update", details.toMap(_vDragX, _vDragY));
-        _vDragX = details.localPosition.dx;
-        _vDragY = details.localPosition.dy;
+        widget.control.triggerEvent("vertical_drag_update",
+            details.toMap(_localVerticalDrag, _globalVerticalDrag));
+        _localVerticalDrag = details.localPosition;
+        _globalVerticalDrag = details.globalPosition;
       }
     }
 
     var hoverInterval = widget.control.getInt("hover_interval", 0)!;
 
     void handleEnter(PointerEnterEvent details) {
-      _hoverX = details.localPosition.dx;
-      _hoverY = details.localPosition.dy;
+      _localHover = details.localPosition;
       if (onEnter) {
         widget.control.triggerEvent("enter", details.toMap());
       }
@@ -177,9 +175,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _hoverTimestamp > hoverInterval) {
         _hoverTimestamp = now;
-        widget.control.triggerEvent("hover", details.toMap(_hoverX, _hoverY));
-        _hoverX = details.localPosition.dx;
-        _hoverY = details.localPosition.dy;
+        widget.control.triggerEvent("hover", details.toMap(_localHover));
+        _localHover = details.localPosition;
       }
     }
 

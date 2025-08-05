@@ -5,10 +5,10 @@
 ### Basic example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/auto-complete/basic.py"
+--8<-- "../../examples/controls/auto_complete/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/auto-complete/media/basic.gif){width="80%"}
+![basic](../examples/controls/auto_complete/media/basic.gif){width="80%"}
 /// caption
 ///
 
