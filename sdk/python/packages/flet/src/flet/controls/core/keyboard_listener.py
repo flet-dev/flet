@@ -1,9 +1,10 @@
 import asyncio
 from dataclasses import dataclass
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import Event, OptionalEventHandler
+from flet.controls.control_event import Event, EventHandler
 
 __all__ = [
     "KeyboardListener",
@@ -50,7 +51,7 @@ class KeyboardListener(Control):
     Include semantics information in this control.
     """
 
-    on_key_down: OptionalEventHandler[KeyDownEvent] = None
+    on_key_down: Optional[EventHandler[KeyDownEvent]] = None
     """
     Fires when a keyboard key is pressed.
 
@@ -58,7 +59,7 @@ class KeyboardListener(Control):
     [KeyboardEvent](https://flet.dev/docs/reference/types/keydownvent).
     """
 
-    on_key_up: OptionalEventHandler[KeyUpEvent] = None
+    on_key_up: Optional[EventHandler[KeyUpEvent]] = None
     """
     Fires when a keyboard key is released.
 
@@ -66,7 +67,7 @@ class KeyboardListener(Control):
     [KeyboardEvent](https://flet.dev/docs/reference/types/keyupevent).
     """
 
-    on_key_repeat: OptionalEventHandler[KeyRepeatEvent] = None
+    on_key_repeat: Optional[EventHandler[KeyRepeatEvent]] = None
     """
     Fires when a keyboard key is being hold, causing repeated events.
 

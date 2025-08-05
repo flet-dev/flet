@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
-from flet.controls.types import OptionalNumber, OptionalString
+from flet.controls.types import Number
 
 
 @control("Image")
@@ -12,7 +12,7 @@ class Image(Shape):
     Draws an image.
     """
 
-    src: OptionalString = None
+    src: Optional[str] = None
     """
     Draws an image from a source.
 
@@ -25,22 +25,22 @@ class Image(Shape):
     Draws an image from a bytes array.
     """
 
-    x: OptionalNumber = None
+    x: Optional[Number] = None
     """
     The x-axis coordinate of the image's top-left corner.
     """
 
-    y: OptionalNumber = None
+    y: Optional[Number] = None
     """
     The y-axis coordinate of the image's top-left corner.
     """
 
-    width: OptionalNumber = None
+    width: Optional[Number] = None
     """
     The width of the rectangle to draw the image into. Use image width if None.
     """
 
-    height: OptionalNumber = None
+    height: Optional[Number] = None
     """
     The height of the rectangle to draw the image into. Use image height if None.
     """

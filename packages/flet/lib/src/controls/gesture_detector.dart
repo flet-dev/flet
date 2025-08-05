@@ -38,8 +38,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   Timer? _debounce;
   bool _rightPanActive = false;
   int _rightPanTimestamp = DateTime.now().millisecondsSinceEpoch;
-  double _rightPanStartX = 0.0;
-  double _rightPanStartY = 0.0;
+  Offset _rightPanStart = Offset.zero;
 
   @override
   void initState() {
@@ -386,8 +385,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 if (event.kind == PointerDeviceKind.mouse &&
                     event.buttons == kSecondaryMouseButton) {
                   _rightPanActive = true;
-                  _rightPanStartX = event.localPosition.dx;
-                  _rightPanStartY = event.localPosition.dy;
+                  _rightPanStart = event.localPosition;
                   widget.control.triggerEvent("right_pan_start", event.toMap());
                 }
               }
@@ -398,10 +396,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   var now = DateTime.now().millisecondsSinceEpoch;
                   if (now - _rightPanTimestamp > dragInterval) {
                     _rightPanTimestamp = now;
-                    widget.control.triggerEvent("right_pan_update",
-                        event.toMap(_rightPanStartX, _rightPanStartY));
-                    _rightPanStartX = event.localPosition.dx;
-                    _rightPanStartY = event.localPosition.dy;
+                    widget.control.triggerEvent(
+                        "right_pan_update", event.toMap(_rightPanStart));
+                    _rightPanStart = event.localPosition;
                   }
                 }
               }
