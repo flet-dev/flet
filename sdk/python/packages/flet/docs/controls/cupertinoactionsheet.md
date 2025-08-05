@@ -5,10 +5,10 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-action-sheet/basic.py"
+--8<-- "../../examples/controls/cupertino_action_sheet/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-action-sheet/media/basic.png){width="80%"}
+![basic](../examples/controls/cupertino_action_sheet/media/basic.png){width="80%"}
 /// caption
 ///
 

@@ -36,5 +36,5 @@ ft.run(main)
 
 Below is a more advanced example:
 ```python
---8<-- https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/page/keyboard-events.py
+--8<-- ../../examples/controls/page/keyboard_events.py
 ```

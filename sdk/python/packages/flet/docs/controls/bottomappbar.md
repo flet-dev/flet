@@ -5,10 +5,10 @@
 ### Notched `FloatingActionButton`
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/bottom-app-bar/notched-fab.py"
+--8<-- "../../examples/controls/bottom_app_bar/notched_fab.py"
 ```
 
-![notched-fab](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/bottom-app-bar/media/notched-fab.png){width="80%"}
+![notched-fab](../examples/controls/bottom_app_bar/media/notched_fab.png){width="80%"}
 /// caption
 ///
 

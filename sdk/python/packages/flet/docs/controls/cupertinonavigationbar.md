@@ -5,17 +5,17 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-navigation-bar/basic.py"
+--8<-- "../../examples/controls/cupertino_navigation_bar/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-navigation-bar/media/basic.png){width="80%"}
+![basic](../examples/controls/cupertino_navigation_bar/media/basic.png){width="80%"}
 /// caption
 ///
 
 ### Wired navigation bar
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-navigation-bar/wired.py"
+--8<-- "../../examples/controls/cupertino_navigation_bar/wired.py"
 ```
 
 ::: flet.CupertinoNavigationBar

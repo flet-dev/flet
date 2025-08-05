@@ -5,10 +5,10 @@
 ### `MenuBar` with Nested Submenus
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/menu-bar/nested-submenus.py"
+--8<-- "../../examples/controls/menu_bar/nested_submenus.py"
 ```
 
-![nested-submenus](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/menu-bar/media/nested-submenus.gif){width="80%"}
+![nested-submenus](../examples/controls/menu_bar/media/nested_submenus.gif){width="80%"}
 /// caption
 ///
 
