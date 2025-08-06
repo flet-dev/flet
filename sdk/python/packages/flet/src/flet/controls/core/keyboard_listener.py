@@ -13,17 +13,54 @@ __all__ = [
 
 @dataclass
 class KeyDownEvent(Event["KeyboardListener"]):
+    """
+    Event triggered when a key is pressed down.
+
+    Typically used to detect the initial press of a key before it is released or repeated.
+    """
+
     key: str
+    """
+    The key that was pressed down.
+
+    Represents the physical key (e.g., <kbd>A</kbd>, <kbd>Enter</kbd>,
+    <kbd>Shift</kbd>) that triggered the key down event.
+    """
 
 
 @dataclass
 class KeyUpEvent(Event["KeyboardListener"]):
+    """
+    Event triggered when a key is released.
+
+    Useful for tracking when a key is no longer being pressed after
+    a key down or repeat event.
+    """
+
     key: str
+    """
+    The key that was released.
+
+    Indicates which key was previously pressed and has now been lifted.
+    """
 
 
 @dataclass
 class KeyRepeatEvent(Event["KeyboardListener"]):
+    """
+    Event triggered when a key is held down and repeating.
+
+    This event fires continuously while the key remains pressed,
+    depending on the system's key repeat rate.
+    """
+
     key: str
+    """
+    The key that is being held down and repeating.
+
+    Represents the physical key that is generating repeat events (e.g.,
+    <kbd>ArrowDown</kbd>, <kbd>Backspace</kbd>).
+    """
 
 
 @control("KeyboardListener")
