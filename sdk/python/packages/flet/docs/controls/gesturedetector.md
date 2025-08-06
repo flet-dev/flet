@@ -25,6 +25,12 @@ inside another control (yellow container) giving the same results.
 /// caption
 ///
 
+### Window drag area
+
+```python
+--8<-- "../../examples/controls/gesture_detector/window_drag_area.py"
+```
+
 ### Mouse Cursors
 
 ```python

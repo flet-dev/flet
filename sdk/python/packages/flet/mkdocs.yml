@@ -134,6 +134,7 @@ plugins:
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
+              - "!get_event_field_type"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
@@ -339,8 +340,11 @@ nav:
               - Row: controls/row.md
               - SafeArea: controls/safearea.md
               - Stack: controls/stack.md
-              - Tab: controls/tab.md
-              - Tabs: controls/tabs.md
+              - Tabs:
+                  - Tabs: controls/tabs/index.md
+                  - Tab: controls/tab.md
+                  - TabBar: controls/tabbar.md
+                  - TabBarView: controls/tabbarview.md
               - VerticalDivider: controls/verticaldivider.md
               - View: controls/view.md
           - Navigation:
@@ -497,12 +501,13 @@ nav:
                   - SnackBarTheme: types/snackbartheme.md
                   - SwitchTheme: types/switchtheme.md
                   - SystemOverlayStyle: types/systemoverlaystyle.md
-                  - TabsTheme: types/tabstheme.md
+                  - TabBarTheme: types/tabbartheme.md
                   - TextButtonTheme: types/textbuttontheme.md
                   - TextTheme: types/texttheme.md
                   - TimePickerTheme: types/timepickertheme.md
                   - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
+              - UnderlineTabIndicator: types/underlinetabindicator.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
@@ -568,6 +573,8 @@ nav:
               - StrokeCap: types/strokecap.md
               - StrokeJoin: types/strokejoin.md
               - TabAlignment: types/tabalignment.md
+              - TabBarIndicatorSize: types/tabbarindicatorsize.md
+              - TabIndicatorAnimation: types/tabindicatoranimation.md
               - TextAffinity: types/textaffinity.md
               - TextAlign: types/textalign.md
               - TextBaseline: types/textbaseline.md
@@ -620,6 +627,7 @@ nav:
               - ScaleStartEvent: types/scalestartevent.md
               - ScaleUpdateEvent: types/scaleupdateevent.md
               - ScrollEvent: types/scrollevent.md
+              - TabBarHoverEvent: types/tabbarhoverevent.md
               - TapEvent: types/tapevent.md
               - TextSelectionChangeEvent: types/textselectionchangeevent.md
               - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md

@@ -18,14 +18,22 @@
 --8<-- "../../examples/controls/tabs/nested.py"
 ```
 
-![nested](../examples/controls/tabs/media/nested.gif){width="80%"}
-/// caption
-///
-
-### Dynamic tabs
+### Dynamic tab addition
 
 ```python
---8<-- "../../examples/controls/tabs/dynamic.py"
+--8<-- "../../examples/controls/tabs/dynamic-tab-addition.py"
+```
+
+### Custom indicator
+
+```python
+--8<-- "../../examples/controls/tabs/custom-indicator.py"
+```
+
+### Programmatical Tab switch
+
+```python
+--8<-- "../../examples/controls/tabs/move-to.py"
 ```
 
 ::: flet.Tabs
