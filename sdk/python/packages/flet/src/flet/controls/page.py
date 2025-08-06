@@ -16,7 +16,6 @@ from urllib.parse import urlparse
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
-from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.context import _context_page
 from flet.controls.control import Control
@@ -369,7 +368,7 @@ class Page(PageView):
         ref,
         sess: "Session",
     ) -> None:
-        AdaptiveControl.__post_init__(self, ref)
+        PageView.__post_init__(self, ref)
         self._i = 1
         self.__session = weakref.ref(sess)
 
@@ -395,10 +394,12 @@ class Page(PageView):
         ```python
         import flet as ft
 
+
         def main(page: ft.Page):
             x = ft.IconButton(ft.Icons.ADD)
             page.add(x)
             print(type(page.get_control(x.uid)))
+
 
         ft.run(main)
         ```

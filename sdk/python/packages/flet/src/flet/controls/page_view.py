@@ -27,7 +27,6 @@ from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
-from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -100,7 +99,7 @@ class PageResizeEvent(Event["PageView"]):
 
 
 @control("PageView", isolated=True, kw_only=True)
-class PageView(ScrollableControl, AdaptiveControl):
+class PageView(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
 
