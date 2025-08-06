@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -377,32 +378,20 @@ TabBarThemeData? parseTabBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
       parseColor(value["indicator_color"], theme, theme.colorScheme.primary)!;
 
   return theme.tabBarTheme.copyWith(
+      indicatorSize: parseTabBarIndicatorSize(value["indicator_size"]),
+      indicator: parseUnderlineTabIndicator(value["indicator"], theme),
+      indicatorAnimation:
+          parseTabIndicatorAnimation(value["indicator_animation"]),
+      splashBorderRadius: parseBorderRadius(value["splash_border_radius"]),
+      tabAlignment: parseTabAlignment(value["tab_alignment"]),
       overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
       dividerColor: parseColor(value["divider_color"], theme),
       indicatorColor: indicatorColor,
+      mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+      dividerHeight: parseDouble(value["divider_height"]),
       labelColor: parseColor(value["label_color"], theme),
       unselectedLabelColor: parseColor(value["unselected_label_color"], theme),
-      indicatorSize: parseBool(value["indicator_tab_size"], false)!
-          ? TabBarIndicatorSize.tab
-          : TabBarIndicatorSize.label,
-      indicator: value["indicator_border_radius"] != null ||
-              value["indicator_border_side"] != null ||
-              value["indicator_padding"] != null
-          ? UnderlineTabIndicator(
-              borderRadius: parseBorderRadius(
-                  value["indicator_border_radius"],
-                  const BorderRadius.only(
-                      topLeft: Radius.circular(2),
-                      topRight: Radius.circular(2)))!,
-              borderSide: parseBorderSide(value["indicator_border_side"], theme,
-                  defaultSideColor: indicatorColor,
-                  defaultValue: BorderSide(width: 2.0, color: indicatorColor))!,
-              insets:
-                  parsePadding(value["indicator_padding"], EdgeInsets.zero)!)
-          : null,
-      mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
       labelPadding: parsePadding(value["label_padding"]),
-      dividerHeight: parseDouble(value["divider_height"]),
       labelStyle: parseTextStyle(value["label_text_style"], theme),
       unselectedLabelStyle:
           parseTextStyle(value["unselected_label_text_style"], theme));

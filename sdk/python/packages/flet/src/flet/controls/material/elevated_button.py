@@ -1,4 +1,5 @@
 import asyncio
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -18,8 +19,6 @@ from flet.controls.types import (
 
 __all__ = ["ElevatedButton"]
 
-DEFAULT_ELEVATION = 1
-
 
 @control("ElevatedButton")
 class ElevatedButton(ConstrainedControl, AdaptiveControl):
@@ -29,7 +28,8 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     requires visual separation from a patterned background.
 
     Raises:
-        AssertionError: If both [`content`][(c).] and [`icon`][(c).] are not set or invalid.
+        AssertionError: If both [`content`][(c).] and [`icon`][(c).] are not set
+            or invalid.
     """
 
     content: Optional[StrOrControl] = None
@@ -47,7 +47,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     Icon color.
     """
 
-    color: Optional[ColorValue] = None
+    color: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     """
     Button's text color.
 
@@ -56,7 +56,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         are provided, `color` value will be used.
     """
 
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     """
     Button's background color.
 
@@ -65,7 +65,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         are provided, `bgcolor` value will be used.
     """
 
-    elevation: Number = DEFAULT_ELEVATION
+    elevation: Number = field(default=1, metadata={"skip": True})
     """
     Button's elevation.
 
@@ -74,8 +74,15 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         are provided, `elevation` value will be used.
     """
 
-    style: Optional[ButtonStyle] = None
+    style: Optional[ButtonStyle] = field(default=None, metadata={"skip": True})
     """
+    The style of the button.
+
+    Note:
+        The values of [`color`][flet.ElevatedButton.color],
+        [`bgcolor`][flet.ElevatedButton.bgcolor`] and
+        [`elevation`][flet.ElevatedButton.elevation], if not `None`, will override
+        the respective values of this `style`.
     """
 
     autofocus: Optional[bool] = None
@@ -128,12 +135,14 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     def main(page: ft.Page):
         def on_hover(e):
-            e.control.bgcolor = "orange" if e.data == "true" else "yellow"
+            e.control.bgcolor = ft.Colors.ORANGE if e.data else ft.Colors.YELLOW
             e.control.update()
 
         page.add(
             ft.ElevatedButton(
-                "I'm changing color on hover", bgcolor="yellow", on_hover=on_hover
+                "I'm changing color on hover",
+                bgcolor="ft.Colors.YELLOW",
+                on_hover=on_hover,
             )
         )
 
@@ -159,18 +168,18 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at least icon or content (string or visible Control) must be provided"
-        if self.style is None and (
-            self.color is not None
+
+        if (
+            self.style is None
+            or self.color is not None
             or self.bgcolor is not None
-            or self.elevation != DEFAULT_ELEVATION
+            or self.elevation != 1
         ):
-            self.style = ButtonStyle()
-        if self.color is not None:
-            self.style.color = self.color
-        if self.bgcolor is not None:
-            self.style.bgcolor = self.bgcolor
-        if self.elevation != DEFAULT_ELEVATION:
-            self.style.elevation = self.elevation
+            self._internals["style"] = (self.style or ButtonStyle()).copy_with(
+                color=self.color,
+                bgcolor=self.bgcolor,
+                elevation=self.elevation,
+            )
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

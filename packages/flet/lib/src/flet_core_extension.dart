@@ -299,6 +299,12 @@ class FletCoreExtension extends FletExtension {
         return AdaptiveSwitchControl(key: key, control: control);
       case "Tabs":
         return TabsControl(key: key, control: control);
+      case "TabBar":
+        return TabBarControl(key: key, control: control);
+      case "TabBarView":
+        return TabBarViewControl(key: key, control: control);
+      case "Tab":
+        return TabControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
       case "TextField":

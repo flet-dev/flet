@@ -25,21 +25,21 @@ Run the following command to start Flet development server with your app:
 uv run flet run --ios [script]  # (1)!
 ```
 
-1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md).
+1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md).
 ///
 /// tab | pip
 ```bash
 flet run --ios [script]  # (1)!
 ```
 
-1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 /// tab | poetry
 ```bash
 poetry run flet run --ios [script]  # (1)!
 ```
 
-1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 
 ///
@@ -60,21 +60,21 @@ Run the following command to start Flet development server with your app:
 uv run flet run --android [script]  # (1)!
 ```
 
-1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md).
+1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md).
 ///
 /// tab | pip
 ```bash
 flet run --android [script]  # (1)!
 ```
 
-1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 /// tab | poetry
 ```bash
 poetry run flet run --android [script]  # (1)!
 ```
 
-1. [`flet run`](../cli/run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
+1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
 
 ///

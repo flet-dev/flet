@@ -270,8 +270,22 @@ def test_simple_page():
             {
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 0],
-                "value_type": SuperElevatedButton,
-            }
+                "value": SuperElevatedButton("Foo"),
+            },
+            {
+                "op": "replace",
+                "path": [
+                    "views",
+                    0,
+                    "controls",
+                    0,
+                    "controls",
+                    1,
+                    "_internals",
+                    "style",
+                ],
+                "value": ButtonStyle(elevation=1),
+            },
         ],
     )
 
@@ -287,12 +301,40 @@ def test_simple_page():
             {
                 "op": "add",
                 "path": ["views", 0, "controls", 0, "controls", 0],
-                "value_type": SuperElevatedButton,
+                "value": SuperElevatedButton("Bar"),
             },
             {
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 1, "content"],
                 "value": "Baz",
+            },
+            {
+                "op": "replace",
+                "path": [
+                    "views",
+                    0,
+                    "controls",
+                    0,
+                    "controls",
+                    1,
+                    "_internals",
+                    "style",
+                ],
+                "value": ButtonStyle(elevation=1),
+            },
+            {
+                "op": "replace",
+                "path": [
+                    "views",
+                    0,
+                    "controls",
+                    0,
+                    "controls",
+                    2,
+                    "_internals",
+                    "style",
+                ],
+                "value": ButtonStyle(elevation=1),
             },
         ],
     )
@@ -387,7 +429,7 @@ def test_changes_tracking():
             {
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "content"],
-                "value_type": ft.Text,
+                "value": ft.Text("A new button content"),
             },
             {
                 "op": "replace",
@@ -399,7 +441,16 @@ def test_changes_tracking():
                 "path": ["views", 0, "controls", 0, "height"],
                 "value": 100,
             },
-            {"op": "add", "path": ["views", 0, "controls", 1], "value_type": ft.Text},
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls", 0, "_internals", "style"],
+                "value": ft.ButtonStyle(elevation=1),
+            },
+            {
+                "op": "add",
+                "path": ["views", 0, "controls", 1],
+                "value": Text("Line 2"),
+            },
         ],
     )
 
