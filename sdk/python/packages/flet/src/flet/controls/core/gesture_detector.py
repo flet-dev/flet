@@ -241,27 +241,18 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     """
     Pointer has contacted the screen while secondary button pressed
     and has begun to move.
-
-    Event handler argument is of type
-    [`PointerEvent`](https://flet.dev/docs/reference/types/PointerEvent).
     """
 
     on_right_pan_update: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
     """
     A pointer that is in contact with the screen, secondary button pressed
     and moving has moved again.
-
-    Event handler argument is of type
-    [`PointerEvent`](https://flet.dev/docs/reference/types/PointerEvent).
     """
 
     on_right_pan_end: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
     """
     A pointer with secondary button pressed is no longer in contact
     and was moving at a specific velocity.
-
-    Event handler argument is of type
-    [`PointerEvent`](https://flet.dev/docs/reference/types/PointerEvent).
     """
 
     on_scale_start: Optional[EventHandler[ScaleStartEvent["GestureDetector"]]] = None

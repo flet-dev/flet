@@ -31,8 +31,6 @@ class KeyboardListener(Control):
     """
     A control that calls a callback whenever the user presses or releases
     a key on a keyboard.
-
-    Online docs: https://flet.dev/docs/controls/keyboardlistener
     """
 
     content: Control
@@ -54,25 +52,16 @@ class KeyboardListener(Control):
     on_key_down: Optional[EventHandler[KeyDownEvent]] = None
     """
     Fires when a keyboard key is pressed.
-
-    Event handler argument is of type
-    [KeyboardEvent](https://flet.dev/docs/reference/types/keydownvent).
     """
 
     on_key_up: Optional[EventHandler[KeyUpEvent]] = None
     """
     Fires when a keyboard key is released.
-
-    Event handler argument is of type
-    [KeyboardEvent](https://flet.dev/docs/reference/types/keyupevent).
     """
 
     on_key_repeat: Optional[EventHandler[KeyRepeatEvent]] = None
     """
     Fires when a keyboard key is being hold, causing repeated events.
-
-    Event handler argument is of type
-    [KeyboardEvent](https://flet.dev/docs/reference/types/keyrepeatevent).
     """
 
     async def focus_async(self):
