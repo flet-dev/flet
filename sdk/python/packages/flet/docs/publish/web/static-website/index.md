@@ -41,10 +41,10 @@ A static website is published into `./build/web` directory.
 
 ### Testing website
 
-You can test a published Flet app using Python's built-in [`http.server` module](https://docs.python.org/3/library/http.server.html):
+You can test a published Flet app using [`flet serve`](../../../cli/flet-serve.md) command:
 
 ```
-python -m http.server --directory build/web
+flet serve
 ```
 
 Open `http://localhost:8000` in your browser to check the published app.
@@ -161,10 +161,10 @@ Command optional arguments:
 
 ### Testing website
 
-You can test a published Flet app using Python's built-in [`http.server` module](https://docs.python.org/3/library/http.server.html):
+You can test a published Flet app using [`flet serve`](../../../cli/flet-serve.md) command:
 
 ```
-python -m http.server --directory dist
+flet serve dist
 ```
 
 Open `http://localhost:8000` in your browser to check the published app.

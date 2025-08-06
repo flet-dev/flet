@@ -374,7 +374,7 @@ Congratulations! You have created your Calculator app with Flet, and it looks aw
 Now it's time to share your app with the world!
 
 Flet Python app and all its dependencies can be packaged into a standalone executable a
-package for distribution using [`flet build`](../cli/build.md) command.
+package for distribution using [`flet build`](../cli/flet-build.md) command.
 
 
 [Follow these instructions](../publish/index.md) to package your Calculator app into a desktop executable,

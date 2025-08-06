@@ -106,7 +106,7 @@ poetry add 'flet[all]'
 
 ## Verify installation
 
-To make sure Flet has been installed correctly, we can check its version using the `--version` (or `-V`) flag or the [`doctor`](../cli/doctor.md) command:
+To make sure Flet has been installed correctly, we can check its version using the `--version` (or `-V`) flag or the [`doctor`](../cli/flet-doctor.md) command:
 
 /// tab | uv
 ```bash

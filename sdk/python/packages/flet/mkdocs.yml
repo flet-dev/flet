@@ -657,13 +657,13 @@ nav:
                   - Cloudflare: publish/web/static-website/hosting/cloudflare.md
   - CLI:
       - Flet CLI: cli/index.md
-      - build: cli/build.md
-      - create: cli/create.md
-      - doctor: cli/doctor.md
-      - pack: cli/pack.md
-      - publish: cli/publish.md
-      - run: cli/run.md
-      # - serve: cli/serve.md
+      - flet build: cli/flet-build.md
+      - flet create: cli/flet-create.md
+      - flet doctor: cli/flet-doctor.md
+      - flet pack: cli/flet-pack.md
+      - flet publish: cli/flet-publish.md
+      - flet run: cli/flet-run.md
+      - flet serve: cli/flet-serve.md
   - Cookbook:
       - cookbook/index.md
       - Accessibility: cookbook/accessibility.md

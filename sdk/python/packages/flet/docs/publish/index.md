@@ -1,4 +1,4 @@
-Flet CLI provides [`flet build`](../cli/build.md) command that allows packaging Flet app into a standalone executable
+Flet CLI provides [`flet build`](../cli/flet-build.md) command that allows packaging Flet app into a standalone executable
 or install package for distribution.
 
 ## Prerequisites
@@ -134,7 +134,7 @@ In this case, two things to keep in mind:
 
 /// admonition | Tip
     type: tip
-To quickly set up a project with the correct structure, use the [`flet create`](../cli/create.md) command:
+To quickly set up a project with the correct structure, use the [`flet create`](../cli/flet-create.md) command:
 
 ```bash
 flet create <project-name>
