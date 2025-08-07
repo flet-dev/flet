@@ -11,7 +11,7 @@ from flet.controls.types import (
     ColorValue,
     IconValueOrControl,
     StrOrControl,
-    UrlTarget,
+    Url,
 )
 
 __all__ = ["TextButton"]
@@ -32,7 +32,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     icon: Optional[IconValueOrControl] = None
     """
-    Icon shown in the button.
+    An icon to show in this button.
     """
 
     icon_color: Optional[ColorValue] = None
@@ -42,7 +42,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     style: Optional[ButtonStyle] = None
     """
-    TBD
+    Defines the style of this button.
     """
 
     autofocus: bool = False
@@ -53,49 +53,45 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     added to the page will get focus.
     """
 
-    url: Optional[str] = None
+    url: Optional[Url] = None
     """
-    The URL to open when the button is clicked.
+    The URL to open when this button is clicked.
 
-    If registered, [`on_click`][flet.TextButton.on_click] event is fired after that.
-    """
-
-    url_target: Optional[UrlTarget] = None
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.TextButton.on_click] event callback is
+    provided, it is fired after that.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    The content will be clipped (or not) according to this option.
+    Defines how the content of this button is clipped.
     """
 
     on_click: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Called when a user clicks the button.
+    Called when a user clicks this button.
     """
 
     on_long_press: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Called when the button is long-pressed.
+    Called when this button is long-pressed.
     """
 
     on_hover: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Called when a mouse pointer enters or exists the button response area.
+    Called when a mouse pointer enters or exists this button's response area.
 
-    `data` property of event object is `True` when cursor enters and
-    `False` when it exits.
+    The [`data`][ft.Event.data] property of event object is `True` when cursor
+    enters and `False` when it exits.
     """
 
     on_focus: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Called when the control has received focus.
+    Called when this button has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["TextButton"]] = None
     """
-    Called when the control has lost focus.
+    Called when this button has lost focus.
     """
 
     async def focus_async(self):

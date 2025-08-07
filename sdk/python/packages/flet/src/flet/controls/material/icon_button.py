@@ -15,7 +15,7 @@ from flet.controls.types import (
     IconValueOrControl,
     MouseCursor,
     Number,
-    UrlTarget,
+    Url,
     VisualDensity,
 )
 
@@ -49,7 +49,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     icon_size: Optional[Number] = None
     """
-    Icon size in virtual pixels.
+    The [`icon`][flet.IconButton.icon]'s size in virtual pixels.
 
     Defaults to `24`.
     """
@@ -65,12 +65,12 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     selected_icon: Optional[IconValueOrControl] = None
     """
-    Icon shown in the button in selected state.
+    The icon to be shown in this button for the 'selected' state.
     """
 
     selected_icon_color: Optional[ColorValue] = None
     """
-    Icon color for the selected state.
+    The icon color for the 'selected' state of this button.
 
     An example of icon toggle button:
 
@@ -135,7 +135,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
+    Whether this control will be provided initial focus. If there is more than
     one control on a page with autofocus set, then the first one added to the page will
     get focus.
     """
@@ -148,12 +148,12 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The button's color when hovered.
+    The color of this button when hovered.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The button's color when in focus.
+    The color of this button when in focus.
     """
 
     splash_color: Optional[ColorValue] = None
@@ -167,8 +167,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     The splash radius.
 
     Note:
-        This value is honoured only when in Material 2 ([`Theme.use_material3`][
-        flet.Theme.use_material3] is `False`).
+        This value is honoured only when in Material 2
+        ([`Theme.use_material3`][flet.Theme.use_material3] is `False`).
     """
 
     alignment: Optional[Alignment] = None
@@ -194,16 +194,12 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     long-press will produce a short vibration.
     """
 
-    # TODO: create a Url class with props url, url_target
-    url: Optional[str] = None
+    url: Optional[Url] = None
     """
-    The URL to open when the button is clicked. If registered,
-    [`on_click`][ft.IconButton.on_click] event is fired after that.
-    """
+    The URL to open when this button is clicked.
 
-    url_target: Optional[UrlTarget] = None
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.IconButton.on_click] event callback is provided,
+    it is fired after that.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
@@ -256,13 +252,13 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     async def focus_async(self):
         """
-        Moves focus to a button.
+        Moves focus to this button.
         """
         await self._invoke_method_async("focus")
 
     def focus(self):
         """
-        Moves focus to a button.
+        Moves focus to this button.
         """
         asyncio.create_task(self.focus_async())
 

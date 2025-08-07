@@ -12,7 +12,7 @@ from flet.controls.types import (
     ColorValue,
     IconValueOrControl,
     StrOrControl,
-    UrlTarget,
+    Url,
 )
 
 __all__ = ["OutlinedButton"]
@@ -33,7 +33,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     icon: Optional[IconValueOrControl] = None
     """
-    Icon shown in the button.
+    An icon to display in this button.
     """
 
     icon_color: Optional[ColorValue] = None
@@ -58,33 +58,27 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     The content will be clipped (or not) according to this option.
     """
 
-    url: Optional[str] = None
+    url: Optional[Url] = None
     """
-    The URL to open when the button is clicked.
+    The URL to open when this button is clicked.
 
-    If registered, `on_click` event is fired after that.
-    """
-
-    url_target: Optional[UrlTarget] = None
-    """
-    Where to open URL in the web mode.
-
-    Defaults to `UrlTarget.BLANK`.
+    Additionally, if [`on_click`][ft.OutlinedButton.on_click] event callback is
+    provided, it is fired after that.
     """
 
     on_click: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
-    Called when a user clicks the button.
+    Called when a user clicks this button.
     """
 
     on_long_press: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
-    Called when the button is long-pressed.
+    Called when this button is long-pressed.
     """
 
     on_hover: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
-    Called when a mouse pointer enters or exists the button response area.
+    Called when a mouse pointer enters or exists this button's response area.
 
     `data` property of event object contains `true` (string) when cursor enters and
     `false` when it exits.
@@ -92,12 +86,12 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     on_focus: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
-    Called when the control has received focus.
+    Called when this button has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["OutlinedButton"]] = None
     """
-    Called when the control has lost focus.
+    Called when this button has lost focus.
     """
 
     def before_update(self):

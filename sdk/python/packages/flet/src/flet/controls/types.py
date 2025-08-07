@@ -60,6 +60,19 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
+@dataclass
+class Url:
+    url: str
+    """
+    The url to open.
+    """
+
+    target: UrlTarget = UrlTarget.BLANK
+    """
+    Where to open URL in the web mode.
+    """
+
+
 class FontWeight(Enum):
     """
     The thickness of the glyphs used to draw the text.

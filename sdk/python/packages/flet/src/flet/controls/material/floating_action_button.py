@@ -12,7 +12,7 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    UrlTarget,
+    Url,
 )
 
 __all__ = ["FloatingActionButton"]
@@ -27,7 +27,7 @@ class FloatingActionButton(ConstrainedControl):
     place on a page.
 
     Raises:
-        AssertionError: If neither `icon` nor a valid `content`
+        AssertionError: If neither [`icon`][(c).] nor a valid [`content`][(c).]
             (string or visible Control) is provided.
         AssertionError: If [`elevation`][(c).],
             [`disabled_elevation`][(c).], [`focus_elevation`][(c).],
@@ -37,12 +37,12 @@ class FloatingActionButton(ConstrainedControl):
 
     content: Optional[StrOrControl] = None
     """
-    The content of the button.
+    The content of this button.
     """
 
     icon: Optional[IconValueOrControl] = None
     """
-    Icon shown in the button.
+    Icon shown in this button.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -74,59 +74,58 @@ class FloatingActionButton(ConstrainedControl):
     foreground_color: Optional[ColorValue] = None
     """
     The default foreground color for icons
-    and text within the button.
+    and text within this button.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The color to use for filling the button
-    when the button has input focus.
+    The color to use for filling this button
+    when it has input focus.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    The content will be clipped (or not) according to this option.
+    Defines how the [`content`][flet.FloatingActionButton.content] is clipped.
     """
 
     elevation: Optional[Number] = None
     """
-    The button's elevation.
+    The elevation of this button.
 
     Defaults to `6`.
     """
 
     disabled_elevation: Optional[Number] = None
     """
-    The button's elevation when disabled.
+    The elevation of this button when disabled.
 
     Defaults to the same value as `elevation`.
     """
 
     focus_elevation: Optional[Number] = None
     """
-    The button's elevation when it has input focus.
+    The elevation of this button when it has input focus.
 
     Defaults to `8`.
     """
 
     highlight_elevation: Optional[Number] = None
     """
-    The button's elevation when being touched.
+    The elevation of this button when it is highlighted.
 
     Defaults to `12`.
     """
 
     hover_elevation: Optional[Number] = None
     """
-    The button's elevation when it is enabled and being hovered.
+    The elevation of this button it is enabled and being hovered over.
 
     Defaults to `8`.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The color to use for filling the button
-    when the button is hovered.
+    The color to use for filling this button when hovered.
     """
 
     splash_color: Optional[ColorValue] = None
@@ -141,17 +140,12 @@ class FloatingActionButton(ConstrainedControl):
     long-press will produce a short vibration.
     """
 
-    url: Optional[str] = None
+    url: Optional[Url] = None
     """
-    The URL to open when the button is clicked. If registered, `on_click` event is
-    fired after that.
-    """
+    The URL to open when this button is clicked.
 
-    url_target: Optional[UrlTarget] = None
-    """
-    Where to open URL in the web mode.
-
-    Defaults to `UrlTarget.BLANK`.
+    Additionally, if [`on_click`][ft.FloatingActionButton.on_click] event callback
+    is provided, it is fired after that.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
@@ -162,7 +156,7 @@ class FloatingActionButton(ConstrainedControl):
 
     on_click: Optional[ControlEventHandler["FloatingActionButton"]] = None
     """
-    Called when a user clicks the button.
+    Called when a user clicks this button.
     """
 
     def before_update(self):

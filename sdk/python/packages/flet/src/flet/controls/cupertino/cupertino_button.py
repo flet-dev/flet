@@ -16,7 +16,7 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    UrlTarget,
+    Url,
 )
 
 __all__ = ["CupertinoButton", "CupertinoButtonSize"]
@@ -34,38 +34,38 @@ class CupertinoButton(ConstrainedControl):
     An iOS-style button.
 
     Raises:
-        AssertionError: If [`opacity_on_click`][(c).] is not between `0.0` and `1.0` inclusive.
+        AssertionError: If [`opacity_on_click`][(c).] is not between `0.0`
+            and `1.0` inclusive.
     """
 
     content: Optional[StrOrControl] = None
     """
-    The content of the button. Can be either a string or a control.
+    The content of this button.
     """
 
     icon: Optional[IconValueOrControl] = None
     """
-    Icon shown in the button.
+    An icon shown in this button.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon color.
+    The foreground color of the [`icon`][flet.CupertinoButton.icon].
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Button's background color.
+    The background color of this button.
     """
 
     color: Optional[ColorValue] = None
     """
-    Button's text color.
+    The color of this button's text.
     """
 
     disabled_bgcolor: Optional[ColorValue] = None
     """
-    The background color of the button when
-    it is disabled.
+    The background color of this button when disabled.
     """
 
     opacity_on_click: Number = 0.4
@@ -93,10 +93,10 @@ class CupertinoButton(ConstrainedControl):
 
     alignment: Optional[Alignment] = field(default_factory=lambda: Alignment.CENTER)
     """
-    The alignment of the button's child.
+    The alignment of this button's content.
 
     Typically buttons are sized to be just big enough to contain the child and its padding.
-    If the button's size is constrained to a fixed size,
+    If this button's size is constrained to a fixed size,
     this property defines how the child is aligned within the available space.
     """
 
@@ -107,15 +107,12 @@ class CupertinoButton(ConstrainedControl):
     The radius of the button's corners when it has a background color.
     """
 
-    url: Optional[str] = None
+    url: Optional[Url] = None
     """
-    The URL to open when the button is clicked. If registered, `on_click` event is
-    fired after that.
-    """
+    The URL to open when this button is clicked.
 
-    url_target: UrlTarget = UrlTarget.BLANK
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.CupertinoButton.on_click] event callback is
+    provided, it is fired after that.
     """
 
     autofocus: bool = False
@@ -142,22 +139,22 @@ class CupertinoButton(ConstrainedControl):
 
     on_click: Optional[ControlEventHandler["CupertinoButton"]] = None
     """
-    Called when a user clicks the button.
+    Called when a user clicks this button.
     """
 
     on_long_press: Optional[ControlEventHandler["CupertinoButton"]] = None
     """
-    Called when a user long-presses the button.
+    Called when a user long-presses this button.
     """
 
     on_focus: Optional[ControlEventHandler["CupertinoButton"]] = None
     """
-    Called when the button receives focus.
+    Called when this button receives focus.
     """
 
     on_blur: Optional[ControlEventHandler["CupertinoButton"]] = None
     """
-    Called when the button loses focus.
+    Called when this button loses focus.
     """
 
     def before_update(self):
