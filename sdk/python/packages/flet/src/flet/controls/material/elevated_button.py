@@ -1,6 +1,6 @@
 import asyncio
 from dataclasses import field
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -99,7 +99,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     Defaults to `ClipBehavior.NONE`.
     """
 
-    url: Optional[Url] = None
+    url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 

@@ -68,7 +68,6 @@ class _IconButtonControlState extends State<IconButtonControl>
       var highlightColor = widget.control.getColor("highlight_color", context);
       var selectedIconColor =
           widget.control.getColor("selected_icon_color", context);
-      var bgcolor = widget.control.getColor("bgcolor", context);
       var disabledColor = widget.control.getColor("disabled_color", context);
       var hoverColor = widget.control.getColor("hover_color", context);
       var splashColor = widget.control.getColor("splash_color", context);
@@ -82,15 +81,13 @@ class _IconButtonControlState extends State<IconButtonControl>
       var autofocus = widget.control.getBool("autofocus", false)!;
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
       var selected = widget.control.getBool("selected", false)!;
-      var url = widget.control.getString("url");
-      var urlTarget = widget.control.getString("url_target");
       var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
-      var visualDensity = widget.control.getVisualDensity("visual_density");
+      var url = widget.control.getUrl("url");
 
       Function()? onPressed = !widget.control.disabled
           ? () {
               if (url != null) {
-                openWebBrowser(url, webWindowName: urlTarget);
+                openWebBrowser(url);
               }
               widget.control.triggerEvent("click");
             }

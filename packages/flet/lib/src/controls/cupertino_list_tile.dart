@@ -38,8 +38,7 @@ class CupertinoListTileControl extends StatelessWidget {
         control.getDouble("leading_to_title", notched ? 12.0 : 16.0)!;
     var onclick = control.getBool("on_click", false)!;
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getString("url");
-    var urlTarget = control.getString("url_target");
+    var url = control.getUrl("url");
 
     Function()? onPressed =
         (onclick || toggleInputs || url != "") && !control.disabled
@@ -48,7 +47,7 @@ class CupertinoListTileControl extends StatelessWidget {
                   _clickNotifier.onClick();
                 }
                 if (url != null) {
-                  openWebBrowser(url, webWindowName: urlTarget);
+                  openWebBrowser(url);
                 }
                 if (onclick) {
                   control.triggerEvent("click");

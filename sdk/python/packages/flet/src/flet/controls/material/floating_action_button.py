@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
@@ -140,7 +140,7 @@ class FloatingActionButton(ConstrainedControl):
     long-press will produce a short vibration.
     """
 
-    url: Optional[Url] = None
+    url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 

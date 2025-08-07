@@ -1,6 +1,6 @@
 import asyncio
 from dataclasses import field
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -194,7 +194,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     long-press will produce a short vibration.
     """
 
-    url: Optional[Url] = None
+    url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 

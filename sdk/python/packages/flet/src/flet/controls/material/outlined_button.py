@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -58,7 +58,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     The content will be clipped (or not) according to this option.
     """
 
-    url: Optional[Url] = None
+    url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 

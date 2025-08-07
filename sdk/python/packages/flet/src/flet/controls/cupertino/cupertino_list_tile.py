@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -74,7 +74,7 @@ class CupertinoListTile(ConstrainedControl):
     and [`trailing`][flet.CupertinoListTile.trailing] controls.
     """
 
-    url: Optional[Url] = None
+    url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 

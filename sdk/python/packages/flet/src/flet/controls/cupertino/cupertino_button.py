@@ -1,7 +1,7 @@
 import asyncio
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -107,7 +107,7 @@ class CupertinoButton(ConstrainedControl):
     The radius of the button's corners when it has a background color.
     """
 
-    url: Optional[Url] = None
+    url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 

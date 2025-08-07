@@ -12,6 +12,7 @@ from typing import (
     Callable,
     Optional,
     TypeVar,
+    Union,
 )
 from urllib.parse import urlparse
 
@@ -43,6 +44,8 @@ from flet.controls.types import (
     AppLifecycleState,
     Brightness,
     PagePlatform,
+    Url,
+    UrlTarget,
     Wrapper,
 )
 from flet.utils import classproperty, is_pyodide
@@ -403,10 +406,12 @@ class Page(PageView):
         ```python
         import flet as ft
 
+
         def main(page: ft.Page):
             x = ft.IconButton(ft.Icons.ADD)
             page.add(x)
             print(type(page.get_control(x.uid)))
+
 
         ft.run(main)
         ```
@@ -651,80 +656,79 @@ class Page(PageView):
 
     def launch_url(
         self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: Optional[bool] = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
+        url: Union[str, Url],
+        *,
+        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
+        web_popup_window: bool = False,
+        web_popup_window_width: Optional[int] = None,
+        web_popup_window_height: Optional[int] = None,
     ) -> None:
         """
-        Opens `url` in a new browser window.
+        Opens a web browser or popup window to a given `url`.
 
-        Optional method arguments:
-
-        * `web_window_name` - window tab/name to open URL in:
-        [`UrlTarget.SELF`][flet.UrlTarget.SELF] - the
-        same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] -
-        a new browser tab (or in external
-        application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup
-        window. Defaults to `False`.
-        * `window_width` - optional, popup window width.
-        * `window_height` - optional, popup window height.
+        Args:
+            url: The URL to open.
+            web_popup_window_name: Window tab/name to open URL in.
+            web_popup_window: Whether to open the URL in a browser popup window.
+            web_popup_window_width: Popup window width.
+            web_popup_window_height: Popup window height.
         """
         self.url_launcher.launch_url(
-            url,
-            web_window_name=web_window_name,
+            url=url,
+            web_popup_window_name=web_popup_window_name,
             web_popup_window=web_popup_window,
-            window_width=window_width,
-            window_height=window_height,
+            web_popup_window_width=web_popup_window_width,
+            web_popup_window_height=web_popup_window_height,
         )
 
     async def launch_url_async(
         self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: Optional[bool] = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
+        url: Union[str, Url],
+        *,
+        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
+        web_popup_window: bool = False,
+        web_popup_window_width: Optional[int] = None,
+        web_popup_window_height: Optional[int] = None,
     ) -> None:
         """
-        Opens provided `url` in a new browser window.
+        Opens a web browser or popup window to a given `url`.
 
         Args:
             url: The URL to open.
-            web_window_name: Window tab/name to open URL in. Use [`UrlTarget.SELF`][flet.UrlTarget.SELF]
-                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] for a new browser
-                tab (or in external application on mobile device), or a custom name for a named tab.
-            web_popup_window: Display the URL in a browser popup window.
-            window_width: Popup window width.
-            window_height: Popup window height.
+            web_popup_window_name: Window tab/name to open URL in.
+            web_popup_window: Whether to open the URL in a browser popup window.
+            web_popup_window_width: Popup window width.
+            web_popup_window_height: Popup window height.
         """
         await self.url_launcher.launch_url_async(
-            url,
-            web_window_name=web_window_name,
+            url=url,
+            web_popup_window_name=web_popup_window_name,
             web_popup_window=web_popup_window,
-            window_width=window_width,
-            window_height=window_height,
+            web_popup_window_width=web_popup_window_width,
+            web_popup_window_height=web_popup_window_height,
         )
 
-    def can_launch_url_async(self, url: str):
+    async def can_launch_url_async(self, url: Union[str, Url]) -> bool:
         """
-        Checks whether the specified URL can be handled by some app installed on the
-        device.
+        Checks whether the specified URL can be handled by some app
+        installed on the device.
 
-        Returns `True` if it is possible to verify that there is a handler available.
-        A `False` return value can indicate either that there is no handler available,
-        or that the application does not have permission to check. For example:
+        Args:
+            url: The URL to check.
 
-        * On recent versions of Android and iOS, this will always return `False` unless
-        the application has been configuration to allow querying the system for launch
-        support.
-        * On web, this will always return `False` except for a few specific schemes
-        that are always assumed to be supported (such as http(s)), as web pages are
-        never allowed to query installed applications.
+        Returns:
+            `True` if it is possible to verify that there is a handler available.
+            `False` if there is no handler available,
+            or the application does not have permission to check. For example:
+
+            - On recent versions of Android and iOS, this will always return `False`
+                unless the application has been configuration to allow querying the
+                system for launch support.
+            - On web, this will always return `False` except for a few specific schemes
+                that are always assumed to be supported (such as http(s)), as web pages
+                are never allowed to query installed applications.
         """
-        return self.url_launcher.can_launch_url_async(url)
+        return await self.url_launcher.can_launch_url_async(url)
 
     def close_in_app_web_view(self) -> None:
         """
