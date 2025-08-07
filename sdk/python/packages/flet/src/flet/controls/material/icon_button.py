@@ -202,7 +202,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     it is fired after that.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor] = field(default=None, metadata={"skip": True})
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
     control.
@@ -244,10 +244,12 @@ class IconButton(ConstrainedControl, AdaptiveControl):
             self.style is not None
             or self.bgcolor is not None
             or self.visual_density is not None
+            or self.mouse_cursor is not None
         ):
             self._internals["style"] = (self.style or ButtonStyle()).copy_with(
                 bgcolor=self.bgcolor,
                 visual_density=self.visual_density,
+                mouse_cursor=self.mouse_cursor,
             )
 
     async def focus_async(self):
