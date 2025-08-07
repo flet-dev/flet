@@ -16,6 +16,7 @@ import pytest
 class TestFinders:
     @pytest.mark.asyncio(loop_scope="module")
     async def test_find_by_text(self, flet_app: ftt.FletTestApp):
+        await flet_app.tester.pump(1000)
         finder = await flet_app.tester.find_by_text("Hello, world!")
         assert finder.count == 2
 

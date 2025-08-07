@@ -3,7 +3,7 @@ import flet as ft
 
 async def main(page: ft.Page):
     print("Test mode:", page.test)
-    page.window.width = 400
+    page.window.width = 800
     page.add(ft.Text("Hello, world!"))
     page.add(ft.Button("Button_1"))
     page.add(ft.Button("Button_2"))
