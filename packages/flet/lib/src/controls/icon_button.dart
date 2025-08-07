@@ -109,7 +109,7 @@ class _IconButtonControlState extends State<IconButtonControl>
 
       var theme = Theme.of(context);
       var style = parseButtonStyle(
-          widget.control.get("style"), Theme.of(context),
+          widget.control.internals?["style"], Theme.of(context),
           defaultForegroundColor: theme.colorScheme.primary,
           defaultBackgroundColor: Colors.transparent,
           defaultOverlayColor: Colors.transparent,
@@ -126,26 +126,96 @@ class _IconButtonControlState extends State<IconButtonControl>
       if (icon is Control) {
         iconWidget = ControlWidget(control: icon);
       } else if (icon is String) {
-        iconWidget = Icon(
-          widget.control.getIcon("icon"),
-          color: iconColor,
-        );
+        iconWidget = Icon(widget.control.getIcon("icon"), color: iconColor);
       } else if (content != null) {
         iconWidget = ControlWidget(control: content);
       }
 
       Widget? selectedIconWidget;
-
       if (selectedIcon is Control) {
         selectedIconWidget = ControlWidget(control: selectedIcon);
       } else if (selectedIcon is String) {
-        selectedIconWidget = Icon(
-          widget.control.getIcon("selected_icon"),
-          color: selectedIconColor,
-        );
+        selectedIconWidget = Icon(widget.control.getIcon("selected_icon"),
+            color: selectedIconColor);
       }
 
-      if (iconWidget != null) {
+      if (iconWidget == null) {
+        return const ErrorControl(
+            "IconButton must have either icon or a visible content specified.");
+      }
+
+      var variant = widget.control.type;
+
+      if (variant == "FilledIconButton") {
+        button = IconButton.filled(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            highlightColor: highlightColor,
+            disabledColor: disabledColor,
+            hoverColor: hoverColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
+            icon: iconWidget,
+            iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            style: style,
+            isSelected: selected,
+            constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            selectedIcon: selectedIconWidget,
+            onPressed: onPressed);
+      } else if (variant == "FilledTonalIconButton") {
+        button = IconButton.filledTonal(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            highlightColor: highlightColor,
+            disabledColor: disabledColor,
+            hoverColor: hoverColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
+            icon: iconWidget,
+            iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            style: style,
+            isSelected: selected,
+            constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            selectedIcon: selectedIconWidget,
+            onPressed: onPressed);
+      } else if (variant == "OutlinedIconButton") {
+        button = IconButton.outlined(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            highlightColor: highlightColor,
+            disabledColor: disabledColor,
+            hoverColor: hoverColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
+            icon: iconWidget,
+            iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            style: style,
+            isSelected: selected,
+            constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            selectedIcon: selectedIconWidget,
+            onPressed: onPressed);
+      } else {
         button = IconButton(
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -161,7 +231,6 @@ class _IconButtonControlState extends State<IconButtonControl>
             icon: iconWidget,
             iconSize: iconSize,
             mouseCursor: mouseCursor,
-            visualDensity: visualDensity,
             style: style,
             isSelected: selected,
             constraints: sizeConstraints,
@@ -169,17 +238,6 @@ class _IconButtonControlState extends State<IconButtonControl>
             onHover: onHoverHandler,
             selectedIcon: selectedIconWidget,
             onPressed: onPressed);
-      } else {
-        return const ErrorControl(
-            "IconButton must have either icon or a visible content specified.");
-      }
-
-      if (bgcolor != null) {
-        button = Container(
-          decoration:
-              ShapeDecoration(color: bgcolor, shape: const CircleBorder()),
-          child: button,
-        );
       }
 
       return ConstrainedControl(control: widget.control, child: button);

@@ -15,6 +15,7 @@ import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 
+// TODO: make use of defaultValue to have the default of each property
 ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     {Color? defaultForegroundColor,
     Color? defaultBackgroundColor,

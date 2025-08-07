@@ -253,7 +253,12 @@ from flet.controls.material.filled_button import FilledButton
 from flet.controls.material.filled_tonal_button import FilledTonalButton
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.form_field_control import InputBorder
-from flet.controls.material.icon_button import IconButton
+from flet.controls.material.icon_button import (
+    FilledIconButton,
+    FilledTonalIconButton,
+    IconButton,
+    OutlinedIconButton,
+)
 from flet.controls.material.icons import Icons
 from flet.controls.material.list_tile import (
     ListTile,
@@ -652,7 +657,9 @@ __all__ = [
     "FilePickerUploadFile",
     "FilledButton",
     "FilledButtonTheme",
+    "FilledIconButton",
     "FilledTonalButton",
+    "FilledTonalIconButton",
     "FilterQuality",
     "FletApp",
     "FletException",
@@ -738,6 +745,7 @@ __all__ = [
     "OutlinedBorder",
     "OutlinedButton",
     "OutlinedButtonTheme",
+    "OutlinedIconButton",
     "OverlayVisibilityMode",
     "Padding",
     "PaddingValue",
@@ -814,7 +822,6 @@ __all__ = [
     "ShaderMask",
     "ShakeDetector",
     "ShapeBorder",
-    "SharedPreferences",
     "SharedPreferences",
     "Size",
     "Slider",

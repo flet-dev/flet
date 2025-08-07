@@ -1,4 +1,5 @@
 import asyncio
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -18,7 +19,12 @@ from flet.controls.types import (
     VisualDensity,
 )
 
-__all__ = ["IconButton"]
+__all__ = [
+    "FilledIconButton",
+    "FilledTonalIconButton",
+    "IconButton",
+    "OutlinedIconButton",
+]
 
 
 @control("IconButton")
@@ -38,7 +44,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Icon color.
+    The foreground color of the icon.
     """
 
     icon_size: Optional[Number] = None
@@ -53,10 +59,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     The optional selection state of the icon button.
 
     If this property is not set, the button will behave as a normal push button,
-    otherwise, the button will toggle between showing `icon` and `selected_icon` based
-    on the value of `selected`.
-
-    If True, it will show `selected_icon`, if False it will show `icon`.
+    otherwise, the button will toggle between showing [`icon`][flet.IconButton.icon]
+    (when `False`), and [`selected_icon`][flet.IconButton.selected_icon] (when `True`).
     """
 
     selected_icon: Optional[IconValueOrControl] = None
@@ -87,7 +91,10 @@ class IconButton(ConstrainedControl, AdaptiveControl):
                 on_click=toggle_icon_button,
                 selected=False,
                 style=ft.ButtonStyle(
-                    color={"selected": ft.Colors.GREEN, "": ft.Colors.RED},
+                    color={
+                        ft.ControlState.SELECTED: ft.Colors.GREEN,
+                        ft.ControlState.DEFAULT: ft.Colors.RED
+                    },
                 ),
             )
         )
@@ -96,9 +103,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     ```
     """
 
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     """
-    TBD
+    The button's background color.
     """
 
     highlight_color: Optional[ColorValue] = None
@@ -109,7 +116,21 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     style: Optional[ButtonStyle] = None
     """
-    TBD
+    Customizes this button's appearance.
+
+    Note:
+        - Only honoured in Material 3 design
+            ([`Theme.use_material3`][flet.Theme.use_material3] is `True` - default).
+        - If [`Theme.use_material3`][flet.Theme.use_material3] is `True`,
+            any parameters defined in style will be overridden by the
+            corresponding parameters in this `IconButton`.
+            For example, if icon button
+            [`visual_density`][flet.IconButton.visual_density]
+            is set to [`VisualDensity.STANDARD`][flet.VisualDensity.STANDARD] and
+            style's [`visual_density`][flet.ButtonStyle.visual_density] is
+            set to [`VisualDensity.COMPACT`][flet.VisualDensity.COMPACT], the icon
+            button will have [`VisualDensity.STANDARD`][flet.VisualDensity.STANDARD]
+            to define the button's layout.
     """
 
     autofocus: bool = False
@@ -143,7 +164,11 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     splash_radius: Optional[Number] = None
     """
-    The splash radius. Honoured only when in Material 2.
+    The splash radius.
+
+    Note:
+        This value is honoured only when in Material 2 ([`Theme.use_material3`][
+        flet.Theme.use_material3] is `False`).
     """
 
     alignment: Optional[Alignment] = None
@@ -151,7 +176,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Defines how the icon is positioned within the IconButton. Alignment is an instance
     of [`Alignment`][flet.Alignment] class.
 
-    Defaults to `alignment.center`.
+    Defaults to [`Alignment.CENTER`][flet.Alignment.CENTER].
     """
 
     padding: Optional[PaddingValue] = None
@@ -169,10 +194,11 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     long-press will produce a short vibration.
     """
 
+    # TODO: create a Url class with props url, url_target
     url: Optional[str] = None
     """
-    The URL to open when the button is clicked. If registered, `on_click` event is fired
-    after that.
+    The URL to open when the button is clicked. If registered,
+    [`on_click`][ft.IconButton.on_click] event is fired after that.
     """
 
     url_target: Optional[UrlTarget] = None
@@ -186,19 +212,21 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     control.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity] = field(
+        default=None, metadata={"skip": True}
+    )
     """
     Defines how compact the control's layout will be.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    TBD
+    Size constraints for this button.
     """
 
     on_click: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Called when a user clicks the button.
+    Called when a user clicks this button.
     """
 
     on_focus: Optional[ControlEventHandler["IconButton"]] = None
@@ -211,6 +239,21 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Called when the control has lost focus.
     """
 
+    def before_update(self):
+        super().before_update()
+        assert self.splash_radius is None or self.splash_radius > 0.0, (
+            f"splash_radius must be greater than 0, got {self.splash_radius}"
+        )
+        if (
+            self.style is not None
+            or self.bgcolor is not None
+            or self.visual_density is not None
+        ):
+            self._internals["style"] = (self.style or ButtonStyle()).copy_with(
+                bgcolor=self.bgcolor,
+                visual_density=self.visual_density,
+            )
+
     async def focus_async(self):
         """
         Moves focus to a button.
@@ -222,3 +265,36 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         Moves focus to a button.
         """
         asyncio.create_task(self.focus_async())
+
+
+@control("FilledIconButton")
+class FilledIconButton(IconButton):
+    """
+    A filled variant of [`IconButton`][flet.IconButton].
+
+    Filled icon buttons have higher visual impact and should be used for high emphasis
+    actions, such as turning off a microphone or camera.
+    """
+
+
+@control("FilledTonalIconButton")
+class FilledTonalIconButton(IconButton):
+    """
+    A filled tonal variant of [`IconButton`][flet.IconButton].
+
+    Filled tonal icon buttons are a middle ground between filled and
+    outlined icon buttons. They’re useful in contexts where the button requires
+    slightly more emphasis than an outline would give, such as a secondary action
+    paired with a high emphasis action.
+    """
+
+
+@control("OutlinedIconButton")
+class OutlinedIconButton(IconButton):
+    """
+    An outlined variant of [`IconButton`][flet.IconButton].
+
+    Outlined icon buttons are medium-emphasis buttons.
+    They’re useful when an icon button needs more emphasis than a
+    standard icon button but less than a filled or filled tonal icon button.
+    """
