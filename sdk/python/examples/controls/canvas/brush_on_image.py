@@ -14,18 +14,22 @@ def main(page: ft.Page):
     page.title = "Flet Brush"
 
     def handle_pan_start(e: ft.DragStartEvent):
-        state.x = e.local_x
-        state.y = e.local_y
+        state.x = e.local_position.x
+        state.y = e.local_position.y
 
     def handle_pan_update(e: ft.DragUpdateEvent):
         canvas.shapes.append(
             cv.Line(
-                state.x, state.y, e.local_x, e.local_y, paint=ft.Paint(stroke_width=3)
+                state.x,
+                state.y,
+                e.local_position.x,
+                e.local_position.y,
+                paint=ft.Paint(stroke_width=3),
             )
         )
         canvas.update()
-        state.x = e.local_x
-        state.y = e.local_y
+        state.x = e.local_position.x
+        state.y = e.local_position.y
 
     page.add(
         ft.Container(

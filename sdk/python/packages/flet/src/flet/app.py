@@ -206,7 +206,6 @@ async def run_async(
             web_renderer=web_renderer,
             route_url_strategy=route_url_strategy,
             no_cdn=no_cdn,
-            blocking=(view == AppView.WEB_BROWSER or view is None or force_web_server),
             on_startup=on_app_startup,
         )
     )
@@ -241,7 +240,7 @@ async def run_async(
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
-        elif view is None:
+        elif view == AppView.WEB_BROWSER or view is None or force_web_server:
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
@@ -316,7 +315,6 @@ async def __run_web_server(
     web_renderer: Optional[WebRenderer],
     route_url_strategy,
     no_cdn,
-    blocking,
     on_startup,
 ):
     ensure_flet_web_package_installed()
@@ -345,7 +343,6 @@ async def __run_web_server(
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
         no_cdn=no_cdn,
-        blocking=blocking,
         on_startup=on_startup,
         log_level=logging.getLevelName(log_level).lower(),
     )

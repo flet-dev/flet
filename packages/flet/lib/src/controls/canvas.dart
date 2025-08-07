@@ -390,7 +390,7 @@ class FletCustomPainter extends CustomPainter {
       style = style.copyWith(color: theme.textTheme.bodyMedium!.color);
     }
     TextSpan span = TextSpan(
-        text: shape.getString("text", "")!,
+        text: shape.getString("value", "")!,
         style: style,
         children: parseTextSpans(shape.children("spans"), theme));
 

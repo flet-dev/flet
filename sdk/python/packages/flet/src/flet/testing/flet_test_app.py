@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import platform
+import tempfile
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
@@ -25,6 +26,7 @@ class FletTestApp:
         self,
         flutter_app_dir: os.PathLike,
         flet_app_main: Any = None,
+        assets_dir: Optional[os.PathLike] = None,
         test_path: Optional[str] = None,
         tcp_port: Optional[int] = None,
     ):
@@ -35,6 +37,7 @@ class FletTestApp:
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__flutter_app_dir = flutter_app_dir
+        self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
@@ -79,7 +82,16 @@ class FletTestApp:
         if not self.__tcp_port:
             self.__tcp_port = get_free_tcp_port()
 
-        asyncio.create_task(ft.run_async(main, port=self.__tcp_port, view=None))
+        use_http = get_bool_env_var("FLET_TEST_USE_HTTP")
+
+        if use_http:
+            os.environ["FLET_FORCE_WEB_SERVER"] = "true"
+
+        asyncio.create_task(
+            ft.run_async(
+                main, port=self.__tcp_port, assets_dir=str(self.__assets_dir), view=None
+            )
+        )
         print("Started Flet app")
 
         stdout = asyncio.subprocess.DEVNULL
@@ -101,12 +113,21 @@ class FletTestApp:
         self.test_device = os.getenv("FLET_TEST_DEVICE", self.test_platform)
 
         tcp_addr = "10.0.2.2" if self.test_platform == "android" else "127.0.0.1"
+        protocol = "http" if use_http else "tcp"
 
         if self.test_device:
             flutter_args += ["-d", self.test_device]
 
-        app_url = f"tcp://{tcp_addr}:{self.__tcp_port}"
+        app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
         flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
+
+        if not use_http:
+            temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+            flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
+            if self.__assets_dir:
+                flutter_args += [
+                    f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
+                ]
 
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
@@ -147,7 +168,9 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
-    async def assert_control_screenshot(self, name: str, control: Control):
+    async def assert_control_screenshot(
+        self, name: str, control: Control, delay: Optional[ft.DurationValue] = None
+    ):
         """
         Adds control to a clean page, takes a screenshot and compares it with
         a golden copy or takes golden screenshot if `FLET_TEST_GOLDEN=1`
@@ -159,11 +182,13 @@ class FletTestApp:
         """
         # clean page
         self.page.clean()
+        await self.tester.pump_and_settle()
 
         # add control and take screenshot
         screenshot = ft.Screenshot(control)
         self.page.add(screenshot)
         await self.tester.pump_and_settle()
+        await self.tester.pump(duration=delay)
         self.assert_screenshot(
             name,
             await screenshot.capture_async(pixel_ratio=pixel_ratio),

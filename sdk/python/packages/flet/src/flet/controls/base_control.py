@@ -6,7 +6,7 @@ from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.context import _context_page
-from flet.controls.control_event import ControlEvent
+from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.control_id import ControlId
 from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
@@ -226,7 +226,7 @@ class BaseControl:
             # field_name not defined
             return
 
-        event_type = ControlEvent.get_event_field_type(self, field_name)
+        event_type = get_event_field_type(self, field_name)
         if event_type is None:
             return
 

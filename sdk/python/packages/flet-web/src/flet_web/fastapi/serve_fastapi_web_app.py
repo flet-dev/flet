@@ -12,9 +12,12 @@ logger = logging.getLogger(flet_fastapi.__name__)
 
 
 class WebServerHandle:
-    def __init__(self, page_url: str, server: uvicorn.Server) -> None:
+    def __init__(
+        self, page_url: str, server: uvicorn.Server, serve_task: asyncio.Task
+    ) -> None:
         self.page_url = page_url
         self.server = server
+        self.serve_task = serve_task
 
     async def close(self):
         logger.info("Closing Flet web server...")
@@ -61,10 +64,9 @@ async def serve_fastapi_web_app(
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: bool = False,
-    blocking: bool = False,
     on_startup: Optional[Any] = None,
     log_level: Optional[Union[str, int]] = None,
-):
+) -> WebServerHandle:
     web_path = f"/{page_name.strip('/')}"
     page_url = f"http://{url_host}:{port}{web_path if web_path != '/' else ''}"
 
@@ -91,9 +93,6 @@ async def serve_fastapi_web_app(
     )
     server = uvicorn.Server(config)
 
-    if blocking:
-        await server.serve()
-    else:
-        asyncio.create_task(server.serve())
-
-    return WebServerHandle(page_url=page_url, server=server)
+    return WebServerHandle(
+        page_url=page_url, server=server, serve_task=asyncio.create_task(server.serve())
+    )
