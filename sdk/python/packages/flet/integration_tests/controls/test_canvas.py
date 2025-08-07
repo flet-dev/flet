@@ -571,5 +571,5 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
             width=120,
             height=120,
         ),
-        delay=3000,
+        delay=5000,
     )
