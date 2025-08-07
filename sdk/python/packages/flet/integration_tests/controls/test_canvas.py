@@ -557,7 +557,8 @@ async def test_draw_asset_image(flet_app: ftt.FletTestApp, request):
             width=120,
             height=120,
         ),
-        delay=1000,
+        pump_times=1,
+        pump_duration=1000,
     )
 
 
@@ -571,5 +572,6 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
             width=120,
             height=120,
         ),
-        delay=5000,
+        pump_times=7,
+        pump_duration=1000,
     )

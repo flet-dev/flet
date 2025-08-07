@@ -169,7 +169,11 @@ class FletTestApp:
                     self.__flutter_process.kill()
 
     async def assert_control_screenshot(
-        self, name: str, control: Control, delay: Optional[ft.DurationValue] = None
+        self,
+        name: str,
+        control: Control,
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
     ):
         """
         Adds control to a clean page, takes a screenshot and compares it with
@@ -188,7 +192,8 @@ class FletTestApp:
         screenshot = ft.Screenshot(control)
         self.page.add(screenshot)
         await self.tester.pump_and_settle()
-        await self.tester.pump(duration=delay)
+        for _ in range(0, pump_times):
+            await self.tester.pump(duration=pump_duration)
         self.assert_screenshot(
             name,
             await screenshot.capture_async(pixel_ratio=pixel_ratio),
