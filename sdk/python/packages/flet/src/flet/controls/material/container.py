@@ -178,7 +178,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     url: Optional[Union[str, Url]] = None
     """
-    The URL to open when this button is clicked.
+    The URL to open when this container is clicked.
 
     Additionally, if [`on_click`][ft.Container.on_click] event callback is provided,
     it is fired after that.
