@@ -90,7 +90,7 @@ class Url:
 
 class FontWeight(Enum):
     """
-    The thickness of the glyphs used to draw the text.
+    The thickness of the glyphs used to draw text.
     """
 
     NORMAL = "normal"

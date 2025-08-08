@@ -94,6 +94,11 @@ class RouteChangeEvent(Event["Page"]):
 
 
 @dataclass
+class PlatformBrightnessChangeEvent(Event["Page"]):
+    brightness: Brightness
+
+
+@dataclass
 class ViewPopEvent(Event["Page"]):
     route: str
     view: Optional[View] = None
@@ -251,26 +256,31 @@ class Page(PageView):
 
     platform: Optional[PagePlatform] = None
     """
-    Operating system the application is running on.
+    The operating system the application is running on.
     """
 
     platform_brightness: Optional[Brightness] = None
     """
-    The current brightness mode of the host platform. (readonly)
+    The current brightness mode of the host platform.
+
+    Note:
+        This property is read-only.
     """
 
     client_ip: Optional[str] = None
     """
     IP address of the connected user.
 
-    🌎 Web only.
+    Note:
+        This property is web only.
     """
 
     client_user_agent: Optional[str] = None
     """
     Browser details of the connected user.
 
-    🌎 Web only.
+    Note:
+        This property is web only.
     """
 
     fonts: Optional[dict[str, str]] = None
@@ -287,7 +297,9 @@ class Page(PageView):
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
-    on_platform_brightness_change: Optional[ControlEventHandler["Page"]] = None
+    on_platform_brightness_change: Optional[
+        EventHandler[PlatformBrightnessChangeEvent]
+    ] = None
     """
     Called when brightness of app host platform has changed.
     """

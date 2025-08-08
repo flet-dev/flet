@@ -352,6 +352,7 @@ from flet.controls.page import (
     MultiViewAddEvent,
     MultiViewRemoveEvent,
     Page,
+    PlatformBrightnessChangeEvent,
     RouteChangeEvent,
     ViewPopEvent,
 )
@@ -772,6 +773,7 @@ __all__ = [
     "PaintSweepGradient",
     "PaintingStyle",
     "Placeholder",
+    "PlatformBrightnessChangeEvent",
     "PointerDeviceType",
     "PointerEvent",
     "PopupMenuButton",
