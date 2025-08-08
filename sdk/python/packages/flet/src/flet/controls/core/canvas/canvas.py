@@ -46,7 +46,8 @@ class Canvas(ConstrainedControl):
     """
     Sampling interval in milliseconds for `on_resize` event.
 
-    Setting to `0` calls [`on_resize`][flet.canvas.Canvas.on_resize] immediately on every change.
+    Setting to `0` calls [`on_resize`][flet.canvas.Canvas.on_resize] immediately
+    on every change.
     """
 
     on_resize: Optional[EventHandler[CanvasResizeEvent]] = None
@@ -75,7 +76,8 @@ class Canvas(ConstrainedControl):
         """
         Initiates an asynchronous capture of the current canvas state.
 
-        This is a non-blocking version of `capture_async()` and should be used in synchronous contexts.
+        This is a non-blocking version of `capture_async()` and should be used
+        in synchronous contexts.
         """
         asyncio.create_task(self.capture_async())
 
@@ -84,7 +86,8 @@ class Canvas(ConstrainedControl):
         Retrieves the most recent canvas capture as PNG bytes.
 
         Returns:
-            bytes: The captured image in PNG format, or an empty result if no capture has been made.
+            bytes: The captured image in PNG format, or an empty result
+            if no capture has been made.
         """
         return await self._invoke_method_async("get_capture")
 
@@ -94,12 +97,13 @@ class Canvas(ConstrainedControl):
 
         After clearing, no background will be rendered from a prior capture.
         """
-        await self._invoke_method_async("capture")
+        await self._invoke_method_async("clear_capture")
 
     def clear_capture(self):
         """
         Initiates an asynchronous operation to clear the captured canvas image.
 
-        This is a non-blocking version of `clear_capture_async()` and should be used in synchronous contexts.
+        This is a non-blocking version of `clear_capture_async()` and should
+        be used in synchronous contexts.
         """
         asyncio.create_task(self.clear_capture_async())

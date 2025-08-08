@@ -17,8 +17,8 @@ from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
-pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
-similarity_threshold = float(os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", "99.0"))
+DEFAULT_SCREENSHOTS_PIXEL_RATIO = "2.0"
+DEFAULT_SIMILARITY_THRESHOLD = "99.0"
 
 
 class FletTestApp:
@@ -34,6 +34,14 @@ class FletTestApp:
         Flet app test controller is a bridge that connects together
         a Flet app in Python and a running integration test in Flutter.
         """
+        self.pixel_ratio = float(
+            os.getenv(
+                "FLET_TEST_SCREENSHOTS_PIXEL_RATIO", DEFAULT_SCREENSHOTS_PIXEL_RATIO
+            )
+        )
+        self.similarity_threshold = float(
+            os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", DEFAULT_SIMILARITY_THRESHOLD)
+        )
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__flutter_app_dir = flutter_app_dir
@@ -196,7 +204,7 @@ class FletTestApp:
             await self.tester.pump(duration=pump_duration)
         self.assert_screenshot(
             name,
-            await screenshot.capture_async(pixel_ratio=pixel_ratio),
+            await screenshot.capture_async(pixel_ratio=self.pixel_ratio),
         )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
@@ -235,14 +243,14 @@ class FletTestApp:
             img = self._load_image_from_bytes(screenshot)
             similarity = self._compare_images_rgb(golden_img, img)
             print(f"Similarity for {name}: {similarity}%")
-            if similarity <= similarity_threshold:
+            if similarity <= self.similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
                     / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
-            assert similarity > similarity_threshold, (
+            assert similarity > self.similarity_threshold, (
                 f"{name} screenshots are not identical"
             )
 

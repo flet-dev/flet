@@ -575,3 +575,66 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
         pump_times=7,
         pump_duration=1000,
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_capture(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    canvas = fc.Canvas(
+        [
+            fc.Circle(
+                x=50,
+                y=50,
+                radius=40,
+                paint=ft.Paint(
+                    stroke_width=3,
+                    color=ft.Colors.GREEN,
+                    style=ft.PaintingStyle.STROKE,
+                ),
+            )
+        ],
+        width=100,
+        height=100,
+    )
+    screenshot = ft.Screenshot(canvas)
+
+    # clean page
+    flet_app.page.clean()
+    await flet_app.tester.pump_and_settle()
+
+    # add canvas to a page, pump and settle
+    flet_app.page.add(screenshot)
+    await flet_app.tester.pump_and_settle()
+
+    # ensure there is no initial capture
+    capture_0 = await canvas.get_capture_async()
+    assert capture_0 is None
+
+    # take capture and assert
+    await canvas.capture_async()
+    capture_1 = await canvas.get_capture_async()
+    assert capture_1 is not None
+    flet_app.assert_screenshot("capture_1", capture_1)
+
+    # clean canvas and draw a line
+    canvas.shapes = [fc.Line(10, 10, 90, 90, ft.Paint(stroke_width=3))]
+    canvas.update()
+    await flet_app.tester.pump_and_settle()
+
+    # take screenshot
+    # it must be a circle striked out with a line (capture + shapes)
+    capture_2 = await screenshot.capture_async(pixel_ratio=flet_app.pixel_ratio)
+    flet_app.assert_screenshot("capture_2", capture_2)
+
+    # clean current capture
+    await canvas.clear_capture_async()
+    await flet_app.tester.pump_and_settle()
+
+    # take screenshot
+    # it must be just a single line
+    capture_3 = await screenshot.capture_async(pixel_ratio=flet_app.pixel_ratio)
+    flet_app.assert_screenshot("capture_3", capture_3)
+
+    # back to empty capture
+    capture_4 = await canvas.get_capture_async()
+    assert capture_4 is None
