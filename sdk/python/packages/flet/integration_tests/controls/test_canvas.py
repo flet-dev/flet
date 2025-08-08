@@ -611,7 +611,7 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
     assert capture_0 is None
 
     # take capture and assert
-    await canvas.capture_async()
+    await canvas.capture_async(pixel_ratio=flet_app.pixel_ratio)
     capture_1 = await canvas.get_capture_async()
     assert capture_1 is not None
     flet_app.assert_screenshot("capture_1", capture_1)

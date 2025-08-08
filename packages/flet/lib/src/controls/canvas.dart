@@ -91,6 +91,8 @@ class _CanvasControlState extends State<CanvasControl> {
           return;
         }
 
+        var dpr = parseDouble(args["pixel_ratio"]) ?? _dpr;
+
         // Wait for all images to load
         await _awaitImageLoads(shapes);
 
@@ -109,14 +111,14 @@ class _CanvasControlState extends State<CanvasControl> {
             capturedImage: _capturedImage,
             capturedSize: capturedSize,
             onPaintCallback: (_) {},
-            dpr: _dpr);
+            dpr: dpr);
 
         painter.paint(canvas, _lastSize);
 
         final picture = recorder.endRecording();
         _capturedImage = await picture.toImage(
-          (_lastSize.width * _dpr).toInt(),
-          (_lastSize.height * _dpr).toInt(),
+          (_lastSize.width * dpr).toInt(),
+          (_lastSize.height * dpr).toInt(),
         );
         _capturedSize = _lastSize;
         return;

@@ -63,23 +63,39 @@ class Canvas(ConstrainedControl):
             if self.height is None:
                 self.height = float("inf")
 
-    async def capture_async(self):
+    async def capture_async(self, pixel_ratio: Optional[Number] = None):
         """
         Captures the current visual state of the canvas asynchronously.
 
         The captured image is stored internally and will be rendered as a background
         beneath all subsequently drawn shapes.
-        """
-        await self._invoke_method_async("capture")
 
-    def capture(self):
+        Args:
+            pixel_ratio:
+                The pixel density multiplier to use when rendering the capture.
+                `1.0` means 1 device pixel per logical pixel (no scaling).
+                Values greater than `1.0` produce higher-resolution captures.
+                If `None`, the device's default pixel ratio is used.
+        """
+        await self._invoke_method_async(
+            "capture", arguments={"pixel_ratio": pixel_ratio}
+        )
+
+    def capture(self, pixel_ratio: Optional[Number] = None):
         """
         Initiates an asynchronous capture of the current canvas state.
 
         This is a non-blocking version of `capture_async()` and should be used
         in synchronous contexts.
+
+        Args:
+            pixel_ratio:
+                The pixel density multiplier to use when rendering the capture.
+                `1.0` means 1 device pixel per logical pixel (no scaling).
+                Values greater than `1.0` produce higher-resolution captures.
+                If `None`, the device's default pixel ratio is used.
         """
-        asyncio.create_task(self.capture_async())
+        asyncio.create_task(self.capture_async(pixel_ratio=pixel_ratio))
 
     async def get_capture_async(self) -> bytes:
         """
