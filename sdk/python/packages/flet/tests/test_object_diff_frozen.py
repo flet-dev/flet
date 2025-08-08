@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from typing import Optional
 
-import flet as ft
 import pytest
 from flet.controls.base_control import BaseControl, control
+
+import flet as ft
 
 from .common import (
     LineChart,
@@ -264,13 +265,12 @@ def test_button_basic_diff():
 
     # 2nd iteration
     patch, _, _, _ = make_diff(b2, b1)
-    assert len(patch) == 3
+    assert len(patch) == 2
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["scale"], "value_type": ft.Scale},
+            {"op": "replace", "path": ["scale"], "value": ft.Scale(0.2)},
             {"op": "replace", "path": ["content"], "value": "Click me"},
-            {"op": "replace", "path": ["style"], "value_type": ft.ButtonStyle},
         ],
     )
 
@@ -281,9 +281,13 @@ def test_button_basic_diff():
     assert cmp_ops(
         patch,
         [
+            {
+                "op": "add",
+                "path": ["_internals", "style"],
+                "value": ft.ButtonStyle(elevation=1),
+            },
             {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
-            {"op": "replace", "path": ["content"], "value_type": ft.Text},
-            {"op": "replace", "path": ["style"], "value": None},
+            {"op": "replace", "path": ["content"], "value": ft.Text("Text_1")},
         ],
     )
 

@@ -5,10 +5,10 @@
 ### Dismissable `ListTile`s
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/dismissible/dismissable-list-tiles.py"
+--8<-- "../../examples/controls/dismissible/dismissable_list_tiles.py"
 ```
 
-![dismissable-list-tiles](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/dismissible/media/dismissable-list-tiles.gif){width="80%"}
+![dismissable-list-tiles](../examples/controls/dismissible/media/dismissable_list_tiles.gif){width="80%"}
 /// caption
 ///
 

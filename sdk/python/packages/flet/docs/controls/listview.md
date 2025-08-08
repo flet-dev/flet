@@ -5,10 +5,10 @@
 ### Auto-scrolling and dynamical items addition
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/list-view/autoscroll-and-dynamic-items.py"
+--8<-- "../../examples/controls/list_view/autoscroll_and_dynamic_items.py"
 ```
 
-![autoscroll-and-dynamic-items](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/list-view/media/autoscroll-and-dynamic-items.gif){width="80%"}
+![autoscroll-and-dynamic-items](../examples/controls/list_view/media/autoscroll_and_dynamic_items.gif){width="80%"}
 /// caption
 ///
 

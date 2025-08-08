@@ -1,5 +1,5 @@
 ## Examples
 
-See [this](tabs.md#examples).
+See [this](tabs/index.md#examples).
 
 ::: flet.Tab

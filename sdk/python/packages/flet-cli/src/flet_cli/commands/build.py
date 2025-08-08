@@ -665,8 +665,7 @@ class Command(BaseCommand):
                     f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. "
                     f"{self.emojis['directory']}"
                     + (
-                        f"\nRun [cyan]python -m http.server --directory "
-                        f"{self.rel_out_dir}[/cyan] command to start dev web server "
+                        "\nRun [cyan]flet serve[/cyan] command to start a web server "
                         "with your app. "
                         if self.options.target_platform == "web"
                         else ""

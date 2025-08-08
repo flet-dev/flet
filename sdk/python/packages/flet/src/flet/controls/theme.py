@@ -17,6 +17,12 @@ from flet.controls.material.navigation_rail import NavigationRailLabelType
 from flet.controls.material.popup_menu_button import PopupMenuPosition
 from flet.controls.material.slider import SliderInteraction
 from flet.controls.material.snack_bar import DismissDirection, SnackBarBehavior
+from flet.controls.material.tabs import (
+    TabAlignment,
+    TabBarIndicatorSize,
+    TabIndicatorAnimation,
+    UnderlineTabIndicator,
+)
 from flet.controls.material.textfield import TextCapitalization
 from flet.controls.material.tooltip import TooltipTriggerMode
 from flet.controls.padding import PaddingValue
@@ -503,84 +509,99 @@ class ScrollbarTheme:
 
 
 @dataclass
-class TabsTheme:
+class TabBarTheme:
     """
-    Customizes the appearance of [`Tabs`][flet.Tabs] control across the app.
-    """
-
-    divider_color: Optional[ColorValue] = None
-    """
-    The color of the divider.
+    Customizes the appearance of [`TabBar`][flet.TabBar] control across the app.
     """
 
-    indicator_border_radius: Optional[BorderRadiusValue] = None
+    indicator_size: Optional[TabBarIndicatorSize] = None
     """
-    The radius of the indicator's corners.
-    """
-
-    indicator_border_side: Optional[BorderSide] = None
-    """
-    The color and weight of the horizontal line drawn below the selected tab.
+    Overrides the default value for
+    [`TabBar.indicator_size`][flet.TabBar.indicator_size].
     """
 
-    indicator_padding: Optional[PaddingValue] = None
+    indicator: Optional[UnderlineTabIndicator] = None
     """
-    Locates the selected tab's underline relative to the tab's boundary. The
-    `indicator_tab_size` property can be used to define the tab indicator's bounds in
-    terms of its (centered) tab widget with `False`, or the entire tab with `True`.
-    """
-
-    indicator_color: Optional[ColorValue] = None
-    """
-    The color of the line that appears below the selected tab.
+    Overrides the default value for
+    [`TabBar.indicator`][flet.TabBar.indicator].
     """
 
-    indicator_tab_size: Optional[bool] = None
+    indicator_animation: Optional[TabIndicatorAnimation] = None
     """
-    `True` for indicator to take entire tab.
-    """
-
-    label_color: Optional[ColorValue] = None
-    """
-    The color of selected tab labels.
+    Overrides the default value for
+    [`TabBar.indicator_animation`][flet.TabBar.indicator_animation].
     """
 
-    unselected_label_color: Optional[ColorValue] = None
+    splash_border_radius: Optional[BorderRadiusValue] = None
     """
-    The color of unselected tab labels.
+    Overrides the default value for
+    [`TabBar.splash_border_radius`][flet.TabBar.splash_border_radius].
+    """
+
+    tab_alignment: Optional[TabAlignment] = None
+    """
+    Overrides the default value for
+    [`TabBar.tab_alignment`][flet.TabBar.tab_alignment].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the ink response focus, hover, and splash colors. If specified, it is
-    resolved against one of `ControlState.FOCUSED`, `ControlState.HOVERED`, and
-    `ControlState.PRESSED`.
+    Overrides the default value for
+    [`TabBar.overlay_color`][flet.TabBar.overlay_color].
+    """
+
+    divider_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`TabBar.divider_color`][flet.TabBar.divider_color].
+    """
+
+    indicator_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`TabBar.indicator_color`][flet.TabBar.indicator_color].
     """
 
     mouse_cursor: Optional[ControlStateValue[Optional[MouseCursor]]] = None
     """
-    The cursor for a mouse pointer when it enters or is hovering over the individual
-    tabs.
+    Overrides the default value for
+    [`TabBar.mouse_cursor`][flet.TabBar.mouse_cursor].
+    """
+
+    divider_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`TabBar.divider_height`][flet.TabBar.divider_height].
+    """
+
+    label_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`TabBar.label_color`][flet.TabBar.label_color].
+    """
+
+    unselected_label_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`TabBar.unselected_label_color`][flet.TabBar.unselected_label_color].
     """
 
     label_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`Tabs.label_padding`][flet.Tabs.label_padding].
-
-    If there are few tabs with both icon and text and few tabs with only icon or text,
-    this padding is vertically adjusted to provide uniform padding to all tabs.
+    Overrides the default value for
+    [`TabBar.label_padding`][flet.TabBar.label_padding].
     """
 
     label_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for
-    [`Tabs.label_text_style`][flet.Tabs.label_text_style].
+    [`TabBar.label_text_style`][flet.TabBar.label_text_style].
     """
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for
-    [`Tabs.unselected_label_text_style`][flet.Tabs.unselected_label_text_style].
+    [`TabBar.unselected_label_text_style`][flet.TabBar.unselected_label_text_style].
     """
 
 
@@ -665,7 +686,7 @@ class DialogTheme:
 
     icon_color: Optional[ColorValue] = None
     """
-    Used to configure the [`IconTheme`][flet.IconTheme] for the 
+    Used to configure the [`IconTheme`][flet.IconTheme] for the
     [`AlertDialog.icon`][flet.AlertDialog.icon] control.
     """
 
@@ -856,19 +877,19 @@ class BottomSheetTheme:
 
     drag_handle_color: Optional[ColorValue] = None
     """
-    Overrides the default value of drag handle color in all descendant 
+    Overrides the default value of drag handle color in all descendant
     [`BottomSheet`][flet.BottomSheet] controls.
     """
-    
+
     surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default value of surface tint color in all descendant 
+    Overrides the default value of surface tint color in all descendant
     [`BottomSheet`][flet.BottomSheet] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of shadow color in all descendant 
+    Overrides the default value of shadow color in all descendant
     [`BottomSheet`][flet.BottomSheet] controls.
     """
 
@@ -998,8 +1019,8 @@ class ChipTheme:
 
     elevation_on_click: Optional[Number] = None
     """
-    Overrides the default value of 
-    [`Chip.elevation_on_click`][flet.Chip.elevation_on_click] in all descendant 
+    Overrides the default value of
+    [`Chip.elevation_on_click`][flet.Chip.elevation_on_click] in all descendant
     [`Chip`][flet.Chip] controls.
     """
 
@@ -1043,7 +1064,7 @@ class ChipTheme:
     leading_size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default value of
-    [`Chip.leading_size_constraints`][flet.Chip.leading_size_constraints] in all 
+    [`Chip.leading_size_constraints`][flet.Chip.leading_size_constraints] in all
     descendant [`Chip`][flet.Chip] controls.
     """
 
@@ -1073,13 +1094,13 @@ class FloatingActionButtonTheme:
 
     bgcolor: Optional[ColorValue] = None
     """
-    Color to be used for the unselected, enabled 
+    Color to be used for the unselected, enabled
     [`FloatingActionButton`][flet.FloatingActionButton]'s background.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The color to use for filling the button when the button has a pointer hovering over 
+    The color to use for filling the button when the button has a pointer hovering over
     it.
     """
 
@@ -1090,7 +1111,7 @@ class FloatingActionButtonTheme:
 
     foreground_color: Optional[ColorValue] = None
     """
-    Color to be used for the unselected, enabled 
+    Color to be used for the unselected, enabled
     [`FloatingActionButton`][flet.FloatingActionButton]'s foreground.
     """
 
@@ -1103,31 +1124,31 @@ class FloatingActionButtonTheme:
 
     elevation: Optional[Number] = None
     """
-    The z-coordinate to be used for the unselected, enabled 
+    The z-coordinate to be used for the unselected, enabled
     [`FloatingActionButton`][flet.FloatingActionButton]'s elevation foreground.
     """
 
     focus_elevation: Optional[Number] = None
     """
-    The z-coordinate at which to place this button relative to its parent when the 
+    The z-coordinate at which to place this button relative to its parent when the
     button has the input focus.
     """
 
     hover_elevation: Optional[Number] = None
     """
-    The z-coordinate at which to place this button relative to its parent when the 
+    The z-coordinate at which to place this button relative to its parent when the
     button is enabled and has a pointer hovering over it.
     """
 
     highlight_elevation: Optional[Number] = None
     """
-    The z-coordinate to be used for the selected, enabled 
+    The z-coordinate to be used for the selected, enabled
     [`FloatingActionButton`][flet.FloatingActionButton]'s elevation foreground.
     """
 
     disabled_elevation: Optional[Number] = None
     """
-    The z-coordinate to be used for the disabled 
+    The z-coordinate to be used for the disabled
     [`FloatingActionButton`][flet.FloatingActionButton]'s elevation foreground.
     """
 
@@ -1140,13 +1161,13 @@ class FloatingActionButtonTheme:
 
     enable_feedback: Optional[bool] = None
     """
-    If specified, defines the feedback property for 
+    If specified, defines the feedback property for
     [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for an extended [`FloatingActionButton`][flet.FloatingActionButton]'s 
+    The padding for an extended [`FloatingActionButton`][flet.FloatingActionButton]'s
     content.
     """
 
@@ -1193,14 +1214,14 @@ class NavigationRailTheme:
     """
     Overrides the default value of
     [`NavigationRail.indicator_color`][flet.NavigationRail.indicator_color] in all
-    descendant [`NavigationRail`][flet.NavigationRail] controls. when 
-    [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator]  
+    descendant [`NavigationRail`][flet.NavigationRail] controls. when
+    [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator]
     is true.
     """
 
     elevation: Optional[Number] = None
     """
-    The z-coordinate to be used for the [`NavigationRail`][flet.NavigationRail]'s 
+    The z-coordinate to be used for the [`NavigationRail`][flet.NavigationRail]'s
     elevation.
     """
 
@@ -1227,7 +1248,7 @@ class NavigationRailTheme:
 
     label_type: Optional[NavigationRailLabelType] = None
     """
-    The type that defines the layout and behavior of the labels in the 
+    The type that defines the layout and behavior of the labels in the
     [`NavigationRail`][flet.NavigationRail].
     """
 
@@ -1247,8 +1268,8 @@ class NavigationRailTheme:
 
     group_alignment: Optional[Number] = None
     """
-    The alignment for the 
-    [`NavigationRail.destinations`][flet.NavigationRail.destinations] as they are 
+    The alignment for the
+    [`NavigationRail.destinations`][flet.NavigationRail.destinations] as they are
     positioned within the [`NavigationRail`][flet.NavigationRail].
     """
 
@@ -1410,7 +1431,7 @@ class RadioTheme:
     """
     Defines default property values for descendant [`Radio`][flet.Radio] controls.
     """
-    
+
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default value of [`Radio.fill_color`][flet.Radio.fill_color] in
@@ -1422,7 +1443,7 @@ class RadioTheme:
     Overrides the default value of [`Radio.overlay_color`][flet.Radio.overlay_color] in
     all descendant [`Radio`][flet.Radio] controls.
     """
-    
+
     splash_radius: Optional[Number] = None
     """
     Overrides the default value of [`Radio.splash_radius`][flet.Radio.splash_radius] in
@@ -1431,13 +1452,13 @@ class RadioTheme:
 
     visual_density: Optional[VisualDensity] = None
     """
-    Overrides the default value of [`Radio.visual_density`][flet.Radio.visual_density] 
+    Overrides the default value of [`Radio.visual_density`][flet.Radio.visual_density]
     in all descendant [`Radio`][flet.Radio] controls.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value of [`Radio.mouse_cursor`][flet.Radio.mouse_cursor] 
+    Overrides the default value of [`Radio.mouse_cursor`][flet.Radio.mouse_cursor]
     in all descendant [`Radio`][flet.Radio] controls.
     """
 
@@ -1560,7 +1581,6 @@ class BadgeTheme:
     """
 
 
-
 @dataclass
 class SwitchTheme:
     """
@@ -1627,17 +1647,17 @@ class SwitchTheme:
 @dataclass
 class DividerTheme:
     """
-    Defines the visual properties of [`Divider`][flet.Divider], 
-    [`VerticalDivider`][flet.VerticalDivider], dividers between 
-    [`ListTile`][flet.ListTile]s, and dividers between rows in 
+    Defines the visual properties of [`Divider`][flet.Divider],
+    [`VerticalDivider`][flet.VerticalDivider], dividers between
+    [`ListTile`][flet.ListTile]s, and dividers between rows in
     [`DataTable`][flet.DataTable].
     """
 
     color: Optional[ColorValue] = None
     """
-    The color of [`Divider`][flet.Divider]s and 
-    [`VerticalDivider`][flet.VerticalDivider]s, also used between 
-    [`ListTile`][flet.ListTile]s, between rows in [`DataTable`][flet.DataTable]s, and 
+    The color of [`Divider`][flet.Divider]s and
+    [`VerticalDivider`][flet.VerticalDivider]s, also used between
+    [`ListTile`][flet.ListTile]s, between rows in [`DataTable`][flet.DataTable]s, and
     so forth.
     """
 
@@ -1648,7 +1668,7 @@ class DividerTheme:
 
     space: Optional[Number] = None
     """
-    The [`Divider`][flet.Divider]'s height or the 
+    The [`Divider`][flet.Divider]'s height or the
     [`VerticalDivider`][flet.VerticalDivider]'s width.
 
     This represents the amount of horizontal or vertical space the divider takes up.
@@ -1656,13 +1676,13 @@ class DividerTheme:
 
     leading_indent: Optional[Number] = None
     """
-    The amount of empty space at the leading edge of [`Divider`][flet.Divider] or top 
+    The amount of empty space at the leading edge of [`Divider`][flet.Divider] or top
     edge of [`VerticalDivider`][flet.VerticalDivider].
     """
 
     trailing_indent: Optional[Number] = None
     """
-    The amount of empty space at the trailing edge of [`Divider`][flet.Divider] or 
+    The amount of empty space at the trailing edge of [`Divider`][flet.Divider] or
     bottom edge of [`VerticalDivider`][flet.VerticalDivider].
     """
 
@@ -1681,14 +1701,14 @@ class SnackBarTheme:
 
     action_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of `text_color` of 
-    [`SnackBar.action`][flet.SnackBar.action] in all descendant 
+    Overrides the default value of `text_color` of
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant
     [`SnackBar`][flet.SnackBar] controls.
     """
 
     action_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of `bgcolor` of 
+    Overrides the default value of `bgcolor` of
     [`SnackBar.action`][flet.SnackBar.action] in all descendant
     [`SnackBar`][flet.SnackBar] controls.
     """
@@ -1703,14 +1723,14 @@ class SnackBarTheme:
     disabled_action_text_color: Optional[ColorValue] = None
     """
     Overrides the default value of `disabled_text_color` of
-    [`SnackBar.action`][flet.SnackBar.action] in all descendant 
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant
     [`SnackBar`][flet.SnackBar] controls.
     """
 
     disabled_action_bgcolor: Optional[ColorValue] = None
     """
     Overrides the default value of `disabled_color` of
-    [`SnackBar.action`][flet.SnackBar.action] in all descendant 
+    [`SnackBar.action`][flet.SnackBar.action] in all descendant
     [`SnackBar`][flet.SnackBar] controls.
     """
 
@@ -1772,7 +1792,6 @@ class SnackBarTheme:
     """
 
 
-
 @dataclass
 class BannerTheme:
     """
@@ -1806,8 +1825,8 @@ class BannerTheme:
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of 
-    [`Banner.content_padding`][flet.Banner.content_padding] in all descendant 
+    Overrides the default value of
+    [`Banner.content_padding`][flet.Banner.content_padding] in all descendant
     [`Banner`][flet.Banner] controls.
     """
 
@@ -1835,31 +1854,31 @@ class BannerTheme:
 @dataclass
 class DatePickerTheme:
     """
-    Customizes the appearance of [`DatePicker`][flet.DatePicker] controls across the 
+    Customizes the appearance of [`DatePicker`][flet.DatePicker] controls across the
     app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background color of the surface in all descendant 
+    Overrides the default background color of the surface in all descendant
     [`DatePicker`][flet.DatePicker] controls.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default surface tint color in all descendant 
+    Overrides the default surface tint color in all descendant
     [`DatePicker`][flet.DatePicker] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default shadow color in all descendant 
+    Overrides the default shadow color in all descendant
     [`DatePicker`][flet.DatePicker] controls.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default color used to paint the divider in all descendant 
+    Overrides the default color used to paint the divider in all descendant
     [`DatePicker`][flet.DatePicker] controls.
     """
 
@@ -1872,29 +1891,29 @@ class DatePickerTheme:
 
     today_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the background of the 
-    [`DatePicker.current_date`].[flet.DatePicker.current_date] label in the grid of the 
+    Overrides the default color used to paint the background of the
+    [`DatePicker.current_date`].[flet.DatePicker.current_date] label in the grid of the
     [`DatePicker`][flet.DatePicker].
     """
 
     day_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the background of the day labels in the 
+    Overrides the default color used to paint the background of the day labels in the
     grid of the [`DatePicker`][flet.DatePicker].
     """
 
     day_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default highlight color that's typically used to indicate that a day 
+    Overrides the default highlight color that's typically used to indicate that a day
     in the grid is focused, hovered, or pressed.
     """
 
     day_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the day labels in the grid of the 
+    Overrides the default color used to paint the day labels in the grid of the
     [`DatePicker`][flet.DatePicker].
 
-    This will be used instead of the color provided in 
+    This will be used instead of the color provided in
     [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style].
     """
 
@@ -1910,31 +1929,31 @@ class DatePickerTheme:
 
     day_text_style: Optional[TextStyle] = None
     """
-    Overrides the default text style used for each individual day label in the grid of 
+    Overrides the default text style used for each individual day label in the grid of
     the [`DatePicker`][flet.DatePicker].
 
-    The color in 
-    [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style] is not 
-    used, 
-    [`DatePickerTheme.day_foreground_color`][flet.DatePickerTheme.day_foreground_color] 
+    The color in
+    [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style] is not
+    used,
+    [`DatePickerTheme.day_foreground_color`][flet.DatePickerTheme.day_foreground_color]
     is used instead.
     """
 
     weekday_text_style: Optional[TextStyle] = None
     """
-    Overrides the default text style used for the row of weekday labels at the top of 
+    Overrides the default text style used for the row of weekday labels at the top of
     the [`DatePicker`][flet.DatePicker] grid.
     """
 
     year_text_style: Optional[TextStyle] = None
     """
-    Overrides the default text style used to paint each of the year entries in the year 
+    Overrides the default text style used to paint each of the year entries in the year
     selector of the [`DatePicker`][flet.DatePicker].
 
-    The color of the 
-    [`DatePickerTheme.year_text_style`][flet.DatePickerTheme.year_text_style] is not 
-    used, 
-    [`DatePickerTheme.year_foreground_color`][flet.DatePickerTheme.year_foreground_color]  
+    The color of the
+    [`DatePickerTheme.year_text_style`][flet.DatePickerTheme.year_text_style] is not
+    used,
+    [`DatePickerTheme.year_foreground_color`][flet.DatePickerTheme.year_foreground_color]
     is used instead.
     """
 
@@ -1942,19 +1961,19 @@ class DatePickerTheme:
     """
     Overrides the default value of [`DatePicker`][flet.DatePicker] shape.
 
-    If elevation is greater than zero then a shadow is shown and the shadow's shape 
+    If elevation is greater than zero then a shadow is shown and the shadow's shape
     mirrors the shape of the dialog.
     """
 
     cancel_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default style of the cancel button of a 
+    Overrides the default style of the cancel button of a
     [`DatePicker`][flet.DatePicker].
     """
 
     confirm_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default style of the confirm (OK) button of a 
+    Overrides the default style of the confirm (OK) button of a
     [`DatePicker`][flet.DatePicker].
     """
 
@@ -1964,9 +1983,9 @@ class DatePickerTheme:
 
     The dialog's header displays the currently selected date.
 
-    This is used instead of the color property of 
-    [`DatePickerTheme.header_headline_text_style`][flet.DatePickerTheme.header_headline_text_style] 
-    and 
+    This is used instead of the color property of
+    [`DatePickerTheme.header_headline_text_style`][flet.DatePickerTheme.header_headline_text_style]
+    and
     [`DatePickerTheme.header_help_text_style`][flet.DatePickerTheme.header_help_text_style].
     """
 
@@ -1976,10 +1995,10 @@ class DatePickerTheme:
 
     The dialog's header displays the currently selected date.
 
-    The color of the 
-    [`DatePickerTheme.header_headline_text_style`][flet.DatePickerTheme.header_headline_text_style] 
-    is not used, 
-    [`DatePickerTheme.header_foreground_color`][flet.DatePickerTheme.header_foreground_color] 
+    The color of the
+    [`DatePickerTheme.header_headline_text_style`][flet.DatePickerTheme.header_headline_text_style]
+    is not used,
+    [`DatePickerTheme.header_foreground_color`][flet.DatePickerTheme.header_foreground_color]
     is used instead.
     """
 
@@ -1987,11 +2006,11 @@ class DatePickerTheme:
     """
     Overrides the header's default help text style.
 
-    The help text (also referred to as "supporting text" in the Material spec) is 
+    The help text (also referred to as "supporting text" in the Material spec) is
     usually a prompt to the user at the top of the header (i.e. 'Select date').
 
-    The color of the `header_help_style` is not used, 
-    [`DatePickerTheme.header_foreground_color`][flet.DatePickerTheme.header_foreground_color] 
+    The color of the `header_help_style` is not used,
+    [`DatePickerTheme.header_foreground_color`][flet.DatePickerTheme.header_foreground_color]
     is used instead.
     """
 
@@ -2009,22 +2028,22 @@ class DatePickerTheme:
 
     range_picker_header_foreground_color: Optional[ColorValue] = None
     """
-    Overrides the default color used for text labels and icons in the header of a full 
+    Overrides the default color used for text labels and icons in the header of a full
     screen DateRangePicker (TBD)
 
     The dialog's header displays the currently selected date range.
 
-    This is used instead of any colors provided by 
+    This is used instead of any colors provided by
     `range_picker_header_headline_text_style` or `range_picker_header_help_text_style`.
     """
 
     today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the 
-    [`DatePicker.current_date`][flet.DatePicker.current_date] label in the grid of the 
+    Overrides the default color used to paint the
+    [`DatePicker.current_date`][flet.DatePicker.current_date] label in the grid of the
     dialog's CalendarDatePicker and the corresponding year in the dialog's YearPicker.
 
-    This will be used instead of the color provided in 
+    This will be used instead of the color provided in
     [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style].
     """
 
@@ -2032,107 +2051,107 @@ class DatePickerTheme:
     """
     Overrides the default overall shape of a full screen DateRangePicker (TBD).
 
-    If elevation is greater than zero then a shadow is shown and the shadow's shape 
+    If elevation is greater than zero then a shadow is shown and the shadow's shape
     mirrors the shape of the dialog.
     """
 
     range_picker_header_help_text_style: Optional[TextStyle] = None
     """
-    Overrides the default text style used for the help text of the header of a full 
+    Overrides the default text style used for the help text of the header of a full
     screen DateRangePicker (TBD).
 
-    The help text (also referred to as "supporting text" in the Material spec) is 
+    The help text (also referred to as "supporting text" in the Material spec) is
     usually a prompt to the user at the top of the header (i.e. 'Select date').
 
-    The color of the `range_picker_header_help_text_style` is not used, 
+    The color of the `range_picker_header_help_text_style` is not used,
     `range_picker_header_foreground_color` is used instead.
     """
 
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
-    Overrides the default text style used for the headline text in the header of a full 
+    Overrides the default text style used for the headline text in the header of a full
     screen DateRangePicker (TBD).
 
     The dialog's header displays the currently selected date range.
 
-    The color of `range_picker_header_headline_text_style` is not used, 
+    The color of `range_picker_header_headline_text_style` is not used,
     `range_picker_header_foreground_color` is used instead.
     """
 
     range_picker_surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default color of the surface tint overlay applied to the 
+    Overrides the default color of the surface tint overlay applied to the
     background color of a full screen DateRangePicker (TBD)'s to indicate elevation.
 
-    This is not recommended for use. Material 3 spec introduced a set of tone-based 
-    surfaces and surface containers in its ColorScheme, which provide more flexibility. 
+    This is not recommended for use. Material 3 spec introduced a set of tone-based
+    surfaces and surface containers in its ColorScheme, which provide more flexibility.
     The intention is to eventually remove surface tint color from the framework.
     """
 
     range_selection_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background color used to paint days selected between the 
+    Overrides the default background color used to paint days selected between the
     start and end dates in a DateRangePicker (TBD).
     """
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default highlight color that's typically used to indicate that a date 
+    Overrides the default highlight color that's typically used to indicate that a date
     in the selected range of a DateRangePicker (TBD) is focused, hovered, or pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
     """
-    Overrides the border used to paint the 
-    [`DatePicker.current_date`][flet.DatePicker.current_date] label in the 
+    Overrides the border used to paint the
+    [`DatePicker.current_date`][flet.DatePicker.current_date] label in the
     grid of the [`DatePicker`][flet.DatePicker].
 
-    The border side's [`BorderSide.color`] is not used, 
-    [`DatePickerTheme.today_foreground_color`][flet.DatePickerTheme.today_foreground_color] 
+    The border side's [`BorderSide.color`] is not used,
+    [`DatePickerTheme.today_foreground_color`][flet.DatePickerTheme.today_foreground_color]
     is used instead.
     """
 
     year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the background of the year labels in the 
+    Overrides the default color used to paint the background of the year labels in the
     year selector of the of the [`DatePicker`][flet.DatePicker].
     """
 
     year_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the year labels in the year selector of 
+    Overrides the default color used to paint the year labels in the year selector of
     the date picker.
 
-    This will be used instead of the color provided in 
+    This will be used instead of the color provided in
     [`DatePickerTheme.year_text_style`][flet.DatePickerTheme.year_text_style].
     """
 
     year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default highlight color that's typically used to indicate that a year 
+    Overrides the default highlight color that's typically used to indicate that a year
     in the year selector is focused, hovered, or pressed.
     """
 
     day_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
-    Overrides the default shape used to paint the shape decoration of the day labels in 
+    Overrides the default shape used to paint the shape decoration of the day labels in
     the grid of the [`DatePicker`][flet.DatePicker].
 
-    If the selected day is the current day, the provided shape with the value of 
-    [`DatePickerTheme.today_bgcolor`][flet.DatePickerTheme.today_bgcolor] is used to 
-    paint the shape decoration of the day label and the value of 
-    [`DatePickerTheme.today_border_side`][flet.DatePickerTheme.today_border_side] and 
-    [`DatePickerTheme.today_foreground_color`][flet.DatePickerTheme.today_foreground_color] 
+    If the selected day is the current day, the provided shape with the value of
+    [`DatePickerTheme.today_bgcolor`][flet.DatePickerTheme.today_bgcolor] is used to
+    paint the shape decoration of the day label and the value of
+    [`DatePickerTheme.today_border_side`][flet.DatePickerTheme.today_border_side] and
+    [`DatePickerTheme.today_foreground_color`][flet.DatePickerTheme.today_foreground_color]
     is used to paint the border.
 
-    If the selected day is not the current day, the provided shape with the value of 
-    [`DatePickerTheme.day_bgcolor`][flet.DatePickerTheme.day_bgcolor] is used to paint 
+    If the selected day is not the current day, the provided shape with the value of
+    [`DatePickerTheme.day_bgcolor`][flet.DatePickerTheme.day_bgcolor] is used to paint
     the shape decoration of the day label.
     """
 
     locale: Optional[Locale] = None
     """
-    An optional locale argument can be used to set the locale for the date picker. It 
+    An optional locale argument can be used to set the locale for the date picker. It
     defaults to the ambient locale provided by Localizations.
     """
 
@@ -2140,7 +2159,7 @@ class DatePickerTheme:
 @dataclass
 class TimePickerTheme:
     """
-    Customizes the appearance of [`TimePicker`][flet.TimePicker] controls across the 
+    Customizes the appearance of [`TimePicker`][flet.TimePicker] controls across the
     app.
     """
 
@@ -2148,7 +2167,7 @@ class TimePickerTheme:
     """
     The background color of a [`TimePicker`][flet.TimePicker].
 
-    If this is null, the time picker defaults to the overall theme's 
+    If this is null, the time picker defaults to the overall theme's
     [`ColorScheme.surface_container_high`][flet.ColorScheme.surface_container_high].
     """
 
@@ -2156,7 +2175,7 @@ class TimePickerTheme:
     """
     The background color of the AM/PM toggle.
     """
-    
+
     day_period_text_color: Optional[ColorValue] = None
     """
     The color of the day period text that represents AM/PM.
@@ -2164,77 +2183,77 @@ class TimePickerTheme:
 
     dial_bgcolor: Optional[ColorValue] = None
     """
-    The background color of the time picker dial when the entry mode is 
-    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or 
+    The background color of the time picker dial when the entry mode is
+    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or
     [`TimePickerEntryMode.DIAL_ONLY`][flet.TimePickerEntryMode.DIAL_ONLY].
     """
 
     dial_hand_color: Optional[ColorValue] = None
     """
-    The color of the time picker dial's hand when the entry mode is 
-    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or 
+    The color of the time picker dial's hand when the entry mode is
+    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or
     [`TimePickerEntryMode.DIAL_ONLY`][flet.TimePickerEntryMode.DIAL_ONLY].
     """
-    
+
     dial_text_color: Optional[ColorValue] = None
     """
     The color of the dial text that represents specific hours and minutes.
     """
-    
+
     entry_mode_icon_color: Optional[ColorValue] = None
     """
     The color of the entry mode [`IconButton`][flet.IconButton].
     """
-    
+
     hour_minute_color: Optional[ColorValue] = None
     """
     The background color of the hour and minute header segments.
     """
-    
+
     hour_minute_text_color: Optional[ColorValue] = None
     """
     The color of the header text that represents hours and minutes.
     """
-    
+
     day_period_button_style: Optional[ButtonStyle] = None
     """
     The style of the AM/PM toggle control of a [`TimePicker`][flet.TimePicker].
     """
-    
+
     cancel_button_style: Optional[ButtonStyle] = None
     """
     The style of the cancel button of a [`TimePicker`][flet.TimePicker].
     """
-    
+
     confirm_button_style: Optional[ButtonStyle] = None
     """
     The style of the confirm (OK) button of a [`TimePicker`][flet.TimePicker].
     """
-    
+
     day_period_text_style: Optional[TextStyle] = None
     """
     Used to configure the [TextStyle][flet.TextStyle] for the AM/PM toggle control.
 
-    If this is null, the time picker defaults to the overall theme's 
+    If this is null, the time picker defaults to the overall theme's
     [`TextTheme.title_medium`][flet.TextTheme.title_medium].
     """
-    
+
     dial_text_style: Optional[TextStyle] = None
     """
     The [TextStyle][flet.TextStyle] for the numbers on the time selection dial.
     """
-    
+
     help_text_style: Optional[TextStyle] = None
     """
     Used to configure the [TextStyle][flet.TextStyle] for the helper text in the header.
 
     """
-    
+
     hour_minute_text_style: Optional[TextStyle] = None
     """
     Used to configure the [TextStyle][flet.TextStyle] for the hour/minute controls.
     """
-    
+
     elevation: Optional[Number] = None
     """
     The Material elevation for the time picker dialog.
@@ -2249,33 +2268,33 @@ class TimePickerTheme:
     """
     The shape of the day period that the [`TimePicker`][flet.TimePicker] uses.
     """
-    
+
     hour_minute_shape: Optional[OutlinedBorder] = None
     """
-    The shape of the hour and minute controls that the [`TimePicker`][flet.TimePicker] 
+    The shape of the hour and minute controls that the [`TimePicker`][flet.TimePicker]
     uses.
     """
-    
+
     day_period_border_side: Optional[BorderSide] = None
     """
     The color and weight of the day period's outline.
     """
-    
+
     padding: Optional[PaddingValue] = None
     """
-    The padding around the time picker dialog when the entry mode is 
-    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or 
+    The padding around the time picker dialog when the entry mode is
+    [`TimePickerEntryMode.DIAL`][flet.TimePickerEntryMode.DIAL] or
     [`TimePickerEntryMode.DIAL_ONLY`][flet.TimePickerEntryMode.DIAL_ONLY].
     """
-    
+
     time_selector_separator_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The color of the time selector separator between the hour and minute controls.
     """
-    
+
     time_selector_separator_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    Used to configure the text style for the time selector separator between the hour 
+    Used to configure the text style for the time selector separator between the hour
     and minute controls.
     """
 
@@ -2283,23 +2302,23 @@ class TimePickerTheme:
 @dataclass
 class DropdownTheme:
     """
-    Overrides the default values of visual properties for descendant 
+    Overrides the default values of visual properties for descendant
     [`Dropdown`][flet.Dropdown] controls.
     """
-    
+
     menu_style: Optional[MenuStyle] = None
     """
-    The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`, 
-    `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle] 
-    then they will override the default values for 
-    [`DropdownMenu.elevation`][flet.Dropdown.elevation], 
-    [`DropdownMenu.bgcolor`][flet.Dropdown.bgcolor] and 
+    The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`,
+    `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle]
+    then they will override the default values for
+    [`DropdownMenu.elevation`][flet.Dropdown.elevation],
+    [`DropdownMenu.bgcolor`][flet.Dropdown.bgcolor] and
     [`DropdownMenu.menu_width`][flet.Dropdown.menu_width].
     """
-    
+
     text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`DropdownMenu.text_style`][flet.Dropdown.text_style].
     """
 
@@ -2327,25 +2346,25 @@ class ListTileTheme:
 
     selected_tile_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.selected_tile_color`][flet.ListTile.selected_tile_color].
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.selected_color`][flet.ListTile.selected_color].
     """
 
     is_three_line: Optional[bool] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.is_three_line`][flet.ListTile.is_three_line].
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.enable_feedback`][flet.ListTile.enable_feedback].
     """
 
@@ -2361,61 +2380,61 @@ class ListTileTheme:
 
     visual_density: Optional[VisualDensity] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.visual_density`][flet.ListTile.visual_density].
     """
 
     content_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.content_padding`][flet.ListTile.content_padding].
     """
 
     min_vertical_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.min_vertical_padding`][flet.ListTile.min_vertical_padding].
     """
 
     horizontal_spacing: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.horizontal_spacing`][flet.ListTile.horizontal_spacing].
     """
 
     min_leading_width: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.min_leading_width`][flet.ListTile.min_leading_width].
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.title_text_style`][flet.ListTile.title_text_style].
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.subtitle_text_style`][flet.ListTile.subtitle_text_style].
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.leading_and_trailing_text_style`][flet.ListTile.leading_and_trailing_text_style].
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.mouse_cursor`][flet.ListTile.mouse_cursor].
     """
 
     min_tile_height: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ListTile.min_height`][flet.ListTile.min_height].
     """
 
@@ -2425,21 +2444,21 @@ class TooltipTheme:
     """
     Customizes the appearance of descendant [`Tooltip`][flet.Tooltip] controls.
     """
-    
+
     text_style: Optional[TextStyle] = None
     """
     Overrides the default value for [`Tooltip.text_style`][flet.Tooltip.text_style].
     """
-    
+
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.enable_feedback`][flet.Tooltip.enable_feedback].
     """
 
     exclude_from_semantics: Optional[bool] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.exclude_from_semantics`][flet.Tooltip.exclude_from_semantics].
     """
 
@@ -2450,7 +2469,7 @@ class TooltipTheme:
 
     vertical_offset: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.vertical_offset`][flet.Tooltip.vertical_offset].
     """
 
@@ -2461,19 +2480,19 @@ class TooltipTheme:
 
     wait_duration: Optional[DurationValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.wait_duration`][flet.Tooltip.wait_duration].
     """
 
     exit_duration: Optional[DurationValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.exit_duration`][flet.Tooltip.exit_duration].
     """
 
     show_duration: Optional[DurationValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.show_duration`][flet.Tooltip.show_duration].
     """
 
@@ -2484,7 +2503,7 @@ class TooltipTheme:
 
     trigger_mode: Optional[TooltipTriggerMode] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.trigger_mode`][flet.Tooltip.trigger_mode].
     """
 
@@ -2500,7 +2519,7 @@ class TooltipTheme:
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Tooltip.size_constraints`][flet.Tooltip.size_constraints].
     """
 
@@ -2508,67 +2527,67 @@ class TooltipTheme:
 @dataclass
 class ExpansionTileTheme:
     """
-    Customizes the appearance of descendant [`ExpansionTile`][flet.ExpansionTile] 
+    Customizes the appearance of descendant [`ExpansionTile`][flet.ExpansionTile]
     controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.bgcolor`][flet.ExpansionTile.bgcolor].
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.icon_color`][flet.ExpansionTile.icon_color].
     """
 
     text_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.text_color`][flet.ExpansionTile.text_color].
     """
 
     collapsed_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.collapsed_bgcolor`][flet.ExpansionTile.collapsed_bgcolor].
     """
 
     collapsed_icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.collapsed_icon_color`][flet.ExpansionTile.collapsed_icon_color].
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.clip_behavior`][flet.ExpansionTile.clip_behavior].
     """
 
     collapsed_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.collapsed_text_color`][flet.ExpansionTile.collapsed_text_color].
     """
 
     tile_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.tile_padding`][flet.ExpansionTile.tile_padding].
     """
 
     expanded_alignment: Optional[Alignment] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.expanded_alignment`][flet.ExpansionTile.expanded_alignment].
     """
 
     controls_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ExpansionTile.controls_padding`][flet.ExpansionTile.controls_padding].
     """
 
@@ -2578,7 +2597,7 @@ class SliderTheme:
     """
     Customizes the appearance of descendant [`Slider`][flet.Slider] controls.
     """
-        
+
     active_track_color: Optional[ColorValue] = None
     """
     Overrides the default value for [`Slider.active_color`][flet.Slider.active_color].
@@ -2586,7 +2605,7 @@ class SliderTheme:
 
     inactive_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Slider.inactive_color`][flet.Slider.inactive_color].
     """
 
@@ -2602,16 +2621,16 @@ class SliderTheme:
 
     value_indicator_color: Optional[ColorValue] = None
     """
-    The color given to the [`Slider`][flet.Slider]'s value indicator to draw 
+    The color given to the [`Slider`][flet.Slider]'s value indicator to draw
     itself with.
     """
 
     disabled_thumb_color: Optional[ColorValue] = None
     """
-    The color given to the thumb to draw itself with when the [`Slider`][flet.Slider] 
+    The color given to the thumb to draw itself with when the [`Slider`][flet.Slider]
     is disabled.
     """
-    
+
     value_indicator_text_style: Optional[TextStyle] = None
     """
     The [TextStyle][flet.TextStyle] for the text on the value indicator.
@@ -2624,55 +2643,55 @@ class SliderTheme:
 
     active_tick_mark_color: Optional[ColorValue] = None
     """
-    The color of the track's tick marks that are drawn between the 
+    The color of the track's tick marks that are drawn between the
     [Slider.min][flet.Slider.min] position and the current thumb position.
     """
 
     disabled_active_tick_mark_color: Optional[ColorValue] = None
     """
-    The color of the track's tick marks that are drawn between the current thumb 
-    osition and the [Slider.max][flet.Slider.max] position when the 
+    The color of the track's tick marks that are drawn between the current thumb
+    osition and the [Slider.max][flet.Slider.max] position when the
     [`Slider`][flet.Slider] is disabled.
     """
 
     disabled_active_track_color: Optional[ColorValue] = None
     """
-    The color of the [`Slider`][flet.Slider] track between the 
-    [Slider.min][flet.Slider.min] position and the current thumb position when the 
+    The color of the [`Slider`][flet.Slider] track between the
+    [Slider.min][flet.Slider.min] position and the current thumb position when the
     [`Slider`][flet.Slider] is disabled.
     """
 
     disabled_inactive_tick_mark_color: Optional[ColorValue] = None
     """
-    The color of the track's tick marks that are drawn between the current thumb 
-    position and the [Slider.max][flet.Slider.max] position when the 
+    The color of the track's tick marks that are drawn between the current thumb
+    position and the [Slider.max][flet.Slider.max] position when the
     [`Slider`][flet.Slider] is disabled.
     """
 
     disabled_inactive_track_color: Optional[ColorValue] = None
     """
-    The color of the [`Slider`][flet.Slider] track between the current thumb position 
-    and the [Slider.max][flet.Slider.max] position when the [`Slider`][flet.Slider] is 
+    The color of the [`Slider`][flet.Slider] track between the current thumb position
+    and the [Slider.max][flet.Slider.max] position when the [`Slider`][flet.Slider] is
     disabled.
     """
 
     disabled_secondary_active_track_color: Optional[ColorValue] = None
     """
-    The color of the [`Slider`][flet.Slider] track between the current thumb position 
-    and the [Slider.secondary_track_value][flet.Slider.secondary_track_value] position 
+    The color of the [`Slider`][flet.Slider] track between the current thumb position
+    and the [Slider.secondary_track_value][flet.Slider.secondary_track_value] position
     when the [`Slider`][flet.Slider] is disabled.
     """
 
     inactive_tick_mark_color: Optional[ColorValue] = None
     """
-    The color of the track's tick marks that are drawn between the current thumb 
+    The color of the track's tick marks that are drawn between the current thumb
     position and the [Slider.max][flet.Slider.max] position.
     """
 
     overlapping_shape_stroke_color: Optional[ColorValue] = None
     """
-    The color given to the perimeter of the top range thumbs of a 
-    [RangeSlider][flet.RangeSlider] when the thumbs are overlapping and the top 
+    The color given to the perimeter of the top range thumbs of a
+    [RangeSlider][flet.RangeSlider] when the thumbs are overlapping and the top
     range value indicator when the value indicators are overlapping.
     """
 
@@ -2680,18 +2699,18 @@ class SliderTheme:
     """
     Limits the thumb's separation distance.
 
-    Use this only if you want to control the visual appearance of the thumbs in terms 
-    of a logical pixel value. This can be done when you want a specific look for thumbs 
-    when they are close together. To limit with the real values, rather than logical 
+    Use this only if you want to control the visual appearance of the thumbs in terms
+    of a logical pixel value. This can be done when you want a specific look for thumbs
+    when they are close together. To limit with the real values, rather than logical
     pixels, the values can be restricted by the parent.
     """
 
     secondary_active_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`Slider.secondary_active_color`][flet.Slider.secondary_active_color].
     """
-    
+
     track_height: Optional[Number] = None
     """
     The height of the [Slider][flet.Slider] track.
@@ -2714,7 +2733,7 @@ class SliderTheme:
 
     track_gap: Optional[Number] = None
     """
-    The size of the gap between the active and inactive tracks of the gapped slider 
+    The size of the gap between the active and inactive tracks of the gapped slider
     track shape.
     """
 
@@ -2732,17 +2751,17 @@ class SliderTheme:
 @dataclass
 class ProgressIndicatorTheme:
     """
-    Customizes the appearance of progress indicators 
-    ([`ProgressBar`][flet.ProgressBar], [`ProgressRing`][flet.ProgressRing]) across the 
+    Customizes the appearance of progress indicators
+    ([`ProgressBar`][flet.ProgressBar], [`ProgressRing`][flet.ProgressRing]) across the
     app.
     """
-        
+
     color: Optional[ColorValue] = None
     """
-    Overrides the default values for [`ProgressBar.color`][flet.ProgressBar.color] and 
+    Overrides the default values for [`ProgressBar.color`][flet.ProgressBar.color] and
     [`ProgressRing.color`][flet.ProgressRing.color].
     """
-        
+
     circular_track_color: Optional[ColorValue] = None
     """
     Overrides the default value for [`ProgressRing.bgcolor`][flet.ProgressRing.bgcolor].
@@ -2752,77 +2771,77 @@ class ProgressIndicatorTheme:
     """
     Overrides the default value for [`ProgressBar.bgcolor`][flet.ProgressBar.bgcolor].
     """
-    
+
     refresh_bgcolor: Optional[ColorValue] = None
     """
     Background color of that fills the circle under the RefreshIndicator (TBD).
     """
-    
+
     linear_min_height: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressBar.bar_height`][flet.ProgressBar.bar_height].
     """
-    
+
     border_radius: Optional[BorderRadiusValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressBar.border_radius`][flet.ProgressBar.border_radius].
     """
-    
+
     track_gap: Optional[Number] = None
     """
-    Overrides the default values for 
-    [`ProgressBar.track_gap`][flet.ProgressBar.track_gap] and 
+    Overrides the default values for
+    [`ProgressBar.track_gap`][flet.ProgressBar.track_gap] and
     [`ProgressRing.track_gap`][flet.ProgressRing.track_gap].
     """
 
     circular_track_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressRing.padding`][flet.ProgressRing.padding].
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressRing.size_constraints`][flet.ProgressRing.size_constraints].
     """
-    
+
     stop_indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressBar.stop_indicator_color`][flet.ProgressBar.stop_indicator_color].
     """
 
     stop_indicator_radius: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressBar.stop_indicator_radius`][flet.ProgressBar.stop_indicator_radius].
     """
 
     stroke_align: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressRing.stroke_align`][flet.ProgressRing.stroke_align].
     """
 
     stroke_cap: Optional[StrokeCap] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressRing.stroke_cap`][flet.ProgressRing.stroke_cap].
     """
 
     stroke_width: Optional[Number] = None
     """
-    Overrides the default value for 
+    Overrides the default value for
     [`ProgressRing.stroke_width`][flet.ProgressRing.stroke_width].
     """
 
     year_2023: bool = False
     """
-    Overrides the default values for 
-    [`ProgressBar.year_2023`][flet.ProgressBar.year_2023] and 
+    Overrides the default values for
+    [`ProgressBar.year_2023`][flet.ProgressBar.year_2023] and
     [`ProgressRing.year_2023`][flet.ProgressRing.year_2023].
     """
 
@@ -3037,7 +3056,7 @@ class Theme:
     snackbar_theme: Optional[SnackBarTheme] = None
     switch_theme: Optional[SwitchTheme] = None
     system_overlay_style: SystemOverlayStyle = field(default_factory=SystemOverlayStyle)
-    tabs_theme: Optional[TabsTheme] = None
+    tab_bar_theme: Optional[TabBarTheme] = None
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None

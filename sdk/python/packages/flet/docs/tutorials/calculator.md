@@ -2,25 +2,33 @@
 title: Calculator Tutorial
 ---
 
-In this tutorial you will learn, step-by-step, how to create a Calculator app in Python using
+In this tutorial you will learn, step-by-step, how to create a Calculator app in
+Python using
 Flet framework and publish it as a desktop, mobile or web app.
-The app is a simple console program, yet it is a multi-platform application with similar to iPhone calculator app UI:
+The app is a simple console program, yet it is a multi-platform application with
+similar to iPhone calculator app UI:
 
-![calc-app](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
+![calc-app](../examples/tutorials/calculator/media/app.png){width="80%"}
 /// caption
 ///
 
 You can find a live demo [here](https://gallery.flet.dev/calculator/).
 
-In this tutorial, we will cover all of the basic concepts for creating a Flet app: building a page layout, adding controls, making reusable UI components, handling events, and publishing options.
+In this tutorial, we will cover all of the basic concepts for creating a Flet app:
+building a page layout, adding controls, making reusable UI components, handling
+events, and publishing options.
 
 The tutorial consists of the following steps:
 
 ## Getting started with Flet
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML,
+CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented
+programming.
 
-Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md), which requires Python 3.9 or above and `flet` package.
+Before you can create your first Flet app, you need to
+[setup your development environment](../getting-started/installation.md), which requires Python 3.10 or
+above and `flet` package.
 
 Once you have Flet installed, let's [create](../getting-started/create-flet-app.md) a simple hello-world app.
 
@@ -37,7 +45,7 @@ ft.run(main)
 
 Run this app and you will see a new window with a greeting:
 
-![hello-world](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/todo/media/hello-world.png){width="80%"}
+![hello-world](../examples/tutorials/todo/media/hello-world.png){width="80%"}
 /// caption
 ///
 
@@ -85,7 +93,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-1](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app-1.png){width="80%"}
+![app-1](../examples/tutorials/calculator/media/app-1.png){width="80%"}
 /// caption
 ///
 
@@ -151,7 +159,7 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app-2.png){width="80%"}
+![app-2](../examples/tutorials/calculator/media/app-2.png){width="80%"}
 /// caption
 ///
 
@@ -161,7 +169,7 @@ To add a black background with rounded border around the calculator, we will be 
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
 [`Column`][flet.Column] that will be used as the container's [`content`][flet.Container.content]:
 
-![container-layout](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/container-layout.svg){width="80%"}
+![container-layout](../examples/tutorials/calculator/media/container-layout.svg){width="80%"}
 /// caption
 ///
 
@@ -284,11 +292,11 @@ content=ft.Column(
     type: example
     open: true
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/tutorials/calculator/calc3.py"
+--8<-- "../../examples/tutorials/calculator/calc3.py"
 ```
 ///
 
-![calc-app](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.png){width="80%"}
+![calc-app](../examples/tutorials/calculator/media/app.png){width="80%"}
 /// caption
 ///
 
@@ -356,7 +364,7 @@ Copy the entire code for this step from
 [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc.py).
 
 Run the app and see it in the action:
-![calc-app2](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/tutorials/calculator/media/app.gif){width="80%"}
+![calc-app2](../examples/tutorials/calculator/media/app.gif){width="80%"}
 /// caption
 ///
 
@@ -366,7 +374,7 @@ Congratulations! You have created your Calculator app with Flet, and it looks aw
 Now it's time to share your app with the world!
 
 Flet Python app and all its dependencies can be packaged into a standalone executable a
-package for distribution using [`flet build`](../cli/build.md) command.
+package for distribution using [`flet build`](../cli/flet-build.md) command.
 
 
 [Follow these instructions](../publish/index.md) to package your Calculator app into a desktop executable,

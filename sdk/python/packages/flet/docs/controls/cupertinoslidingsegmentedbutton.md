@@ -5,10 +5,10 @@
 ### Basic Example
 
 ```python
---8<-- "https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/sdk/python/examples/controls/cupertino-sliding-segmented-button/basic.py"
+--8<-- "../../examples/controls/cupertino_sliding_segmented_button/basic.py"
 ```
 
-![basic](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/examples/controls/cupertino-sliding-segmented-button/media/basic.gif){width="80%"}
+![basic](../examples/controls/cupertino_sliding_segmented_button/media/basic.gif){width="80%"}
 /// caption
 ///
 
