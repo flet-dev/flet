@@ -67,3 +67,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     How the runs should be placed in the cross-axis when `wrap=True`.
     """
+
+    def init(self):
+        super().init()
+        self._internals["host_expanded"] = True

@@ -63,3 +63,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap] is `True`.
     """
+
+    def init(self):
+        super().init()
+        self._internals["host_expanded"] = True

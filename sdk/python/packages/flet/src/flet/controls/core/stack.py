@@ -57,3 +57,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
     """
     How to size the non-positioned [`controls`][flet.Stack.controls].
     """
+
+    def init(self):
+        super().init()
+        self._internals["host_positioned"] = True

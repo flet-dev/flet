@@ -534,6 +534,10 @@ class PageView(AdaptiveControl):
 class Overlay(BaseControl):
     controls: list[BaseControl] = field(default_factory=list)
 
+    def init(self):
+        super().init()
+        self._internals["host_positioned"] = True
+
 
 @control("Dialogs")
 class Dialogs(BaseControl):

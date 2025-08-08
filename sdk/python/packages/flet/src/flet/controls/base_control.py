@@ -133,6 +133,8 @@ class BaseControl:
         if ref is not None:
             ref.current = self
 
+        self.init()
+
         # control_id = self._i
         # object_id = id(self)
         # ctrl_type = self._c
@@ -174,6 +176,13 @@ class BaseControl:
         return hasattr(self, "_isolated") and self._isolated
 
     def init(self):
+        pass
+
+    def build(self):
+        """
+        Called once during control initialization to define its child controls.
+        self.page is available in this method.
+        """
         pass
 
     def before_update(self):

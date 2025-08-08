@@ -651,7 +651,7 @@ class DiffBuilder:
                     orig_frozen = getattr(dst, "_frozen", None)
                     if orig_frozen is not None:
                         del dst._frozen
-                    dst.init()
+                    dst.build()
                     dst.before_update()
                     if orig_frozen is not None:
                         object.__setattr__(dst, "_frozen", orig_frozen)
@@ -872,7 +872,7 @@ class DiffBuilder:
 
             if self.control_cls and isinstance(item, self.control_cls):
                 if not configure_setattr_only:
-                    item.init()
+                    item.build()
                     item.before_update()
                     object.__setattr__(item, "_initialized", True)
                 yield item
