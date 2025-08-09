@@ -20,11 +20,14 @@ def main(page: ft.Page):
         ft.ControlBuilder(
             state,
             lambda state: ft.SafeArea(
-                ft.Column(
-                    [
+                expand=True,
+                content=ft.Column(
+                    controls=[
                         ft.Button("Toggle strokes", on_click=state.toggle_strokes),
                         fc.Canvas(
-                            [
+                            width=300,
+                            height=300,
+                            shapes=[
                                 fc.Line(
                                     x1=30,
                                     y1=30,
@@ -115,12 +118,9 @@ def main(page: ft.Page):
                                     use_center=True,
                                 ),
                             ],
-                            width=300,
-                            height=300,
                         ),
                     ]
                 ),
-                expand=True,
             ),
             expand=True,
         )

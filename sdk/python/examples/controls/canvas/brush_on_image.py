@@ -33,6 +33,9 @@ def main(page: ft.Page):
 
     page.add(
         ft.Container(
+            border_radius=5,
+            width=float("inf"),
+            expand=True,
             content=ft.Stack(
                 controls=[
                     ft.Image(
@@ -50,9 +53,6 @@ def main(page: ft.Page):
                     ),
                 ]
             ),
-            border_radius=5,
-            width=float("inf"),
-            expand=True,
         )
     )
 

@@ -5,8 +5,8 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
-from flet.controls.types import PagePlatform
 
 __all__ = [
     "FilePicker",
@@ -178,8 +178,8 @@ class FilePicker(Service):
             NotImplementedError: if called in web app.
         """
         if self.page.web:
-            raise NotImplementedError(
-                "Get Directory Path dialog is not supported on web."
+            raise FletUnsupportedPlatformException(
+                "get_directory_path is not supported on web"
             )
 
         return await self._invoke_method_async(
@@ -225,10 +225,7 @@ class FilePicker(Service):
             ValueError: if `file_name` is not provided in web mode.
         """
 
-        if (
-            self.page.web
-            or self.page.platform in [PagePlatform.ANDROID, PagePlatform.IOS]
-        ) and not src_bytes:
+        if (self.page.web or self.page.platform.is_mobile()) and not src_bytes:
             raise ValueError(
                 '"src_bytes" is required when saving a file on Web, Android and iOS.'
             )

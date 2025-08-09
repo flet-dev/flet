@@ -58,10 +58,6 @@
 --8<-- "../../examples/controls/canvas/brush.py"
 ```
 
-![brush](../../examples/controls/canvas/media/brush.gif){width="80%"}
-/// caption
-///
-
 ### Gradients
 
 ```python
