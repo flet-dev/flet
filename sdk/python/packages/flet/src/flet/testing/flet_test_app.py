@@ -20,6 +20,9 @@ from flet.utils.platform_utils import get_bool_env_var
 DEFAULT_SCREENSHOTS_PIXEL_RATIO = "2.0"
 DEFAULT_SIMILARITY_THRESHOLD = "99.0"
 
+USE_FVM = get_bool_env_var("FLET_TEST_USE_FVM")
+"""Whether to use FVM to run the Flutter app."""
+
 
 class FletTestApp:
     def __init__(
@@ -109,6 +112,9 @@ class FletTestApp:
             stderr = None
 
         flutter_args = ["flutter", "test", "integration_test"]
+
+        if USE_FVM:
+            flutter_args.insert(0, "fvm")
 
         self.test_platform = os.getenv("FLET_TEST_PLATFORM")
         if self.test_platform is None:
