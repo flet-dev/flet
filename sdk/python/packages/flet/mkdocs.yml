@@ -629,6 +629,7 @@ nav:
               - OnScrollEvent: types/onscrollevent.md
               - PageMediaData: types/pagemediadata.md
               - PageResizeEvent: types/pageresizeevent.md
+              - PlatformBrightnessChangeEvent: types/platformbrightnesschangeevent.md
               - PointerEvent: types/pointerevent.md
               - RouteChangeEvent: types/routechangeevent.md
               - ScaleEndEvent: types/scaleendevent.md
