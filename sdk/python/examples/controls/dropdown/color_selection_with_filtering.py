@@ -2,6 +2,8 @@ import flet as ft
 
 
 def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.LIGHT
+
     def get_options():
         colors = [
             ft.Colors.RED,
