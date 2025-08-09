@@ -2,7 +2,6 @@ import asyncio
 import logging
 import os
 import platform
-import shutil
 import tempfile
 from io import BytesIO
 from pathlib import Path
@@ -21,8 +20,8 @@ from flet.utils.platform_utils import get_bool_env_var
 DEFAULT_SCREENSHOTS_PIXEL_RATIO = "2.0"
 DEFAULT_SIMILARITY_THRESHOLD = "99.0"
 
-HAS_FVM = shutil.which("fvm") is not None
-"""Whether fvm is available in PATH."""
+USE_FVM = os.getenv("FLET_TEST_USE_FVM", False)
+"""Whether to use FVM to run the Flutter app."""
 
 
 class FletTestApp:
@@ -112,11 +111,10 @@ class FletTestApp:
             stdout = None
             stderr = None
 
-        flutter_args = (["fvm"] if HAS_FVM else []) + [
-            "flutter",
-            "test",
-            "integration_test",
-        ]
+        flutter_args = ["flutter", "test", "integration_test"]
+
+        if USE_FVM:
+            flutter_args.insert(0, "fvm")
 
         self.test_platform = os.getenv("FLET_TEST_PLATFORM")
         if self.test_platform is None:
