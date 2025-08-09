@@ -10,7 +10,8 @@ from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
-from flet.controls.page import Page, _session_page
+from flet.controls.context import _context_page
+from flet.controls.page import Page
 from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
@@ -205,7 +206,6 @@ async def run_async(
             web_renderer=web_renderer,
             route_url_strategy=route_url_strategy,
             no_cdn=no_cdn,
-            blocking=(view == AppView.WEB_BROWSER or view is None or force_web_server),
             on_startup=on_app_startup,
         )
     )
@@ -240,7 +240,7 @@ async def run_async(
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
-        elif view is None:
+        elif view == AppView.WEB_BROWSER or view is None or force_web_server:
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
@@ -253,7 +253,7 @@ def __get_on_session_created(main):
         logger.info("App session started")
         try:
             assert main is not None
-            _session_page.set(session.page)
+            _context_page.set(session.page)
             UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(main):
                 await main(session.page)
@@ -315,7 +315,6 @@ async def __run_web_server(
     web_renderer: Optional[WebRenderer],
     route_url_strategy,
     no_cdn,
-    blocking,
     on_startup,
 ):
     ensure_flet_web_package_installed()
@@ -344,7 +343,6 @@ async def __run_web_server(
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
         no_cdn=no_cdn,
-        blocking=blocking,
         on_startup=on_startup,
         log_level=logging.getLevelName(log_level).lower(),
     )

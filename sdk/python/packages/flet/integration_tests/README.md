@@ -47,3 +47,11 @@ Environment variables:
 `FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - device pixel ration to use to take screenshots. Default is 2.0.
 
 `FLET_TEST_SIMILARITY_THRESHOLD` - a minimum value for comparison result of golden and actual screenshot for a test to pass. Default is 99.0.
+
+`FLET_TEST_USE_HTTP` - run Flet app in a web server. By default, the app starts socket
+server, but if integration tests use assets they could be inaccessible via TCP from iOS or
+Android device or simulator.
+
+`FLET_TEST_PID_FILE_PATH` - path to a Flutter client PID file.
+
+`FLET_TEST_ASSETS_DIR` - path to assets directory.

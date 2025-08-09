@@ -145,3 +145,7 @@ class Image(ConstrainedControl):
 
     Anti-aliasing alleviates the sawtooth artifact when the image is rotated.
     """
+
+    def init(self):
+        super().init()
+        self._internals["skip_properties"] = ["width", "height"]

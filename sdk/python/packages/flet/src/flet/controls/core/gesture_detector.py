@@ -12,6 +12,7 @@ from flet.controls.events import (
     HoverEvent,
     LongPressEndEvent,
     LongPressStartEvent,
+    PointerEvent,
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
@@ -234,6 +235,24 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     on_pan_end: Optional[EventHandler[DragEndEvent["GestureDetector"]]] = None
     """
     Called when a pointer is no longer in contact and was moving at a specific velocity.
+    """
+
+    on_right_pan_start: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
+    """
+    Pointer has contacted the screen while secondary button pressed
+    and has begun to move.
+    """
+
+    on_right_pan_update: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
+    """
+    A pointer that is in contact with the screen, secondary button pressed
+    and moving has moved again.
+    """
+
+    on_right_pan_end: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
+    """
+    A pointer with secondary button pressed is no longer in contact
+    and was moving at a specific velocity.
     """
 
     on_scale_start: Optional[EventHandler[ScaleStartEvent["GestureDetector"]]] = None

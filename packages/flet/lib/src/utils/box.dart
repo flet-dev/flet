@@ -166,11 +166,10 @@ ImageProvider? getImageProvider(
 
 Widget buildImage({
   required BuildContext context,
-  required Control control,
   required Widget? errorCtrl,
   required String? src,
   required String? srcBase64,
-  required Uint8List srcBytes,
+  Uint8List? srcBytes,
   double? width,
   double? height,
   ImageRepeat repeat = ImageRepeat.noRepeat,
@@ -189,7 +188,7 @@ Widget buildImage({
   Widget? image;
   const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
-  Uint8List bytes = srcBytes;
+  Uint8List bytes = srcBytes ?? Uint8List(0);
   if (bytes.isEmpty && srcBase64 != null && srcBase64.isNotEmpty) {
     bytes = base64Decode(srcBase64);
   }

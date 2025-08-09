@@ -11,7 +11,6 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
-    ControlEventHandler,
     Event,
     EventHandler,
 )
@@ -27,7 +26,6 @@ from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
-from flet.controls.scrollable_control import OnScrollEvent
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -47,61 +45,161 @@ logger = logging.getLogger("flet")
 
 @dataclass
 class PageMediaData:
+    """
+    Represents the environmental metrics of a page or window.
+
+    This data is updated whenever the platform window or layout changes,
+    such as when rotating a device, resizing a browser window, or adjusting
+    system UI elements like the keyboard or safe areas.
+    """
+
     padding: Padding
+    """
+    The space surrounding the entire display, accounting for system UI
+    like notches and status bars.
+    """
+
     view_padding: Padding
+    """
+    Similar to `padding`, but includes padding that is always reserved
+    (even when the system UI is hidden).
+    """
+
     view_insets: Padding
+    """
+    Areas obscured by system UI overlays, such as the on-screen keyboard
+    or system gesture areas.
+    """
+
+    device_pixel_ratio: float
+    """
+    The number of device pixels for each logical pixel.
+    """
 
 
 @dataclass
 class PageResizeEvent(Event["PageView"]):
+    """
+    Event fired when the size of the containing window or browser is changed.
+
+    Typically used to adapt layout dynamically in response to resizes,
+    such as switching between compact and expanded views in a responsive design.
+    """
+
     width: float
+    """
+    The new width of the page in logical pixels.
+    """
+
     height: float
+    """
+    The new height of the page in logical pixels.
+    """
 
 
 @control("PageView", isolated=True, kw_only=True)
 class PageView(AdaptiveControl):
     """
-    TBD
+    A visual container representing a top-level view in a Flet application.
+
+    `PageView` serves as the base class for [Page][flet.Page] and
+    [MultiView][flet.MultiView], and provides a unified surface for rendering
+    application content, app bars,
+    navigation elements, dialogs, overlays, and more. It manages one
+    or more [View][flet.View] instances and exposes high-level layout,
+    scrolling, and theming properties.
+
+    Unlike lower-level layout controls (e.g., [Column][flet.Column],
+    [Container][flet.Container]), [PageView][flet.PageView] represents
+    an entire logical view or screen of the app. It provides direct access
+    to view-level controls such as [AppBar][flet.AppBar],
+    [NavigationBar][flet.NavigationBar],
+    [FloatingActionButton][flet.FloatingActionButton],
+    and supports system-level events like window resizing and media changes.
+
+    This class is not intended to be used directly in most apps; instead,
+    use [Page][flet.Page] or [MultiView][flet.MultiView], which extend this base
+    functionality.
     """
 
     views: list[View] = field(default_factory=lambda: [View()])
-    _overlay: "Overlay" = field(default_factory=lambda: Overlay())
-    _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
+    """
+    A list of views managed by the page.
+
+    Each [View][flet.View] represents a distinct navigation state or screen
+    in the application.
+
+    The first view in the list is considered the active one by default.
+    """
 
     theme_mode: Optional[ThemeMode] = ThemeMode.SYSTEM
     """
     The page's theme mode.
-
-    Defaults to `ThemeMode.SYSTEM`.
     """
+
     theme: Optional[Theme] = None
     """
     Customizes the theme of the application when in light theme mode. Currently, a
     theme can only be automatically generated from a "seed" color. For example, to
     generate light theme from a green color.
     """
+
     dark_theme: Optional[Theme] = None
     """
     Customizes the theme of the application when in dark theme mode.
     """
 
     locale_configuration: Optional[LocaleConfiguration] = None
+    """
+    Configures supported locales and the current locale.
+    """
 
     show_semantics_debugger: Optional[bool] = None
     """
-    `True` turns on an overlay that shows the accessibility information reported by the
-    framework.
+    Whether to turn on an overlay that shows the accessibility information
+    reported by the framework.
     """
 
     width: Optional[Number] = None
+    """
+    Page width in logical pixels.
+
+    Note:
+        - This property is read-only.
+        - To get or set the full window height including window chrome (e.g.,
+            title bar and borders) when running a Flet app on desktop,
+            use the [`width`][flet.Window.width] property of
+            [`Page.window`][flet.Page.window] instead.
+    """
 
     height: Optional[Number] = None
+    """
+    Page height in logical pixels.
+
+    Note:
+        - This property is read-only.
+        - To get or set the full window height including window chrome (e.g.,
+            title bar and borders) when running a Flet app on desktop,
+            use the [`height`][flet.Window.height] property of
+            [`Page.window`][flet.Page.window] instead.
+    """
 
     title: Optional[str] = None
+    """
+    Page or window title.
+    """
 
-    media: Optional[PageMediaData] = None
-
-    scroll_event_interval: Optional[Number] = None
+    media: PageMediaData = field(
+        default_factory=lambda: PageMediaData(
+            padding=Padding.zero(),
+            view_padding=Padding.zero(),
+            view_insets=Padding.zero(),
+            device_pixel_ratio=0,
+        )
+    )
+    """
+    Represents the environmental metrics of a page or window.
+    """
 
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
@@ -115,17 +213,14 @@ class PageView(AdaptiveControl):
     page.on_resize = page_resize
     ```
     """
-    on_media_change: Optional[ControlEventHandler["PageView"]] = None
-    """
-    Called when `page.media` has changed.
 
-    Event type: [`PageMediaData`][flet.PageMediaData]
+    on_media_change: Optional[EventHandler[PageMediaData]] = None
+    """
+    Called when `media` has changed.
     """
 
-    on_scroll: Optional[EventHandler["OnScrollEvent"]] = None
-    """
-    Called when page's scroll position is changed by a user.
-    """
+    _overlay: "Overlay" = field(default_factory=lambda: Overlay())
+    _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
     def __default_view(self) -> View:
         assert len(self.views) > 0, "views list is empty."
@@ -278,6 +373,13 @@ class PageView(AdaptiveControl):
     # appbar
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
+        """
+        Gets or sets the top application bar ([AppBar][flet.AppBar] or
+        [CupertinoAppBar][flet.CupertinoAppBar]) for the view.
+
+        The app bar typically displays the page title and optional actions
+        such as navigation icons, menus, or other interactive elements.
+        """
         return self.__default_view().appbar
 
     @appbar.setter
@@ -434,6 +536,10 @@ class PageView(AdaptiveControl):
 @control("Overlay")
 class Overlay(BaseControl):
     controls: list[BaseControl] = field(default_factory=list)
+
+    def init(self):
+        super().init()
+        self._internals["host_positioned"] = True
 
 
 @control("Dialogs")

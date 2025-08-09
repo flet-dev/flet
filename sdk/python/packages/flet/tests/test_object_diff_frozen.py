@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
+import flet as ft
 import pytest
 from flet.controls.base_control import BaseControl, control
-
-import flet as ft
 
 from .common import (
     LineChart,
@@ -333,7 +332,6 @@ def test_lists_with_key_diff():
                 "path": ["data_series", 0, "points", 2],
                 "value_type": LineChartDataPoint,
             },
-            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
     assert patch[2]["value"].x == 3
@@ -395,7 +393,6 @@ def test_lists_with_no_key_diff():
                 "path": ["data_series", 0, "points", 2, "y"],
                 "value": 5,
             },
-            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
 
@@ -410,7 +407,6 @@ def test_simple_lists_diff_1():
         [
             {"op": "remove", "path": ["data_series", 0, "points", 0], "value": 1},
             {"op": "add", "path": ["data_series", 0, "points", 2], "value": 4},
-            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
 
@@ -424,7 +420,6 @@ def test_simple_lists_diff_2():
         patch,
         [
             {"op": "remove", "path": ["data_series", 0, "points", 1], "value": 2},
-            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
 
@@ -447,7 +442,6 @@ def test_similar_lists_diff():
                 "path": ["data_series", 0, "points", 1, "scale"],
                 "value": 2,
             },
-            {"op": "replace", "path": ["_skip_inherited_notifier"], "value": True},
         ],
     )
 

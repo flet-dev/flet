@@ -8,7 +8,7 @@ class Task(ft.Column):
         self.task_name = task_name
         self.task_delete = task_delete
 
-    def init(self):
+    def build(self):
         self.display_task = ft.Checkbox(
             value=False, label=self.task_name, on_change=self.status_changed
         )
@@ -72,7 +72,7 @@ class Task(ft.Column):
 
 class TodoApp(ft.Column):
     # application's root control is a Column containing all other controls
-    def init(self):
+    def build(self):
         self.new_task = ft.TextField(
             hint_text="What needs to be done?", on_submit=self.add_clicked, expand=True
         )

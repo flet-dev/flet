@@ -61,6 +61,7 @@ import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/interactive_viewer.dart';
+import 'controls/keyboard_listener.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/markdown.dart';
@@ -246,6 +247,8 @@ class FletCoreExtension extends FletExtension {
         return AdaptiveButtonControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);
+      case "KeyboardListener":
+        return KeyboardListenerControl(key: key, control: control);
       case "SubmenuButton":
         return SubmenuButtonControl(key: key, control: control);
       case "FloatingActionButton":

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flet/src/extensions/control.dart';
@@ -7,9 +10,11 @@ import 'package:flet/src/utils/colors.dart';
 import 'package:flet/src/utils/drawing.dart';
 import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
 import '../utils/dash_path.dart';
+import '../utils/hashing.dart';
 import '../utils/images.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -29,13 +34,115 @@ class CanvasControl extends StatefulWidget {
 
 class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
-  Size? _lastSize;
+  Size _lastSize = Size.zero;
+  ui.Image? _capturedImage;
+  Size _capturedSize = Size.zero;
+  double _dpr = 1.0;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _dpr = MediaQuery.devicePixelRatioOf(context);
+      _initialized = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  Future<void> _awaitImageLoads(List<Control> shapes) async {
+    final pending = <Future>[];
+
+    for (final shape in shapes) {
+      if (shape.type == "Image") {
+        if (shape.get("_loading") != null) {
+          pending.add(shape.get("_loading").future);
+        } else if (shape.get("_image") == null ||
+            shape.get("_hash") != getImageHash(shape)) {
+          final future = loadCanvasImage(shape);
+          pending.add(future);
+        }
+      }
+    }
+
+    if (pending.isNotEmpty) {
+      await Future.wait(pending);
+    }
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Canvas.$name($args)");
+    switch (name) {
+      case "capture":
+        final shapes = widget.control.children("shapes");
+        if (_lastSize.isEmpty || shapes.isEmpty) {
+          return;
+        }
+
+        var dpr = parseDouble(args["pixel_ratio"]) ?? _dpr;
+
+        // Wait for all images to load
+        await _awaitImageLoads(shapes);
+
+        if (!mounted) return;
+
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
+
+        var capturedSize =
+            _capturedSize != Size.zero ? _capturedSize : _lastSize;
+
+        final painter = FletCustomPainter(
+            context: context,
+            theme: Theme.of(context),
+            shapes: shapes,
+            capturedImage: _capturedImage,
+            capturedSize: capturedSize,
+            onPaintCallback: (_) {},
+            dpr: dpr);
+
+        painter.paint(canvas, _lastSize);
+
+        final picture = recorder.endRecording();
+        _capturedImage = await picture.toImage(
+          (_lastSize.width * dpr).toInt(),
+          (_lastSize.height * dpr).toInt(),
+        );
+        _capturedSize = _lastSize;
+        return;
+
+      case "get_capture":
+        if (_capturedImage == null) return null;
+        final byteData =
+            await _capturedImage!.toByteData(format: ui.ImageByteFormat.png);
+        return byteData!.buffer.asUint8List();
+
+      case "clear_capture":
+        _capturedImage?.dispose();
+        _capturedImage = null;
+        setState(() {});
+        return;
+
+      default:
+        throw Exception("Unknown Canvas method: $name");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Canvas build: ${widget.control.id}");
 
-    var onResize = widget.control.getBool("on_resize", false)!;
     var resizeInterval = widget.control.getInt("resize_interval", 10)!;
 
     var paint = CustomPaint(
@@ -43,16 +150,17 @@ class _CanvasControlState extends State<CanvasControl> {
         context: context,
         theme: Theme.of(context),
         shapes: widget.control.children("shapes"),
+        capturedImage: _capturedImage,
+        capturedSize: _capturedSize,
+        dpr: 1,
         onPaintCallback: (size) {
-          if (onResize) {
-            var now = DateTime.now().millisecondsSinceEpoch;
-            if ((now - _lastResize > resizeInterval && _lastSize != size) ||
-                _lastSize == null) {
-              _lastResize = now;
-              _lastSize = size;
-              widget.control
-                  .triggerEvent("resize", {"w": size.width, "h": size.height});
-            }
+          var now = DateTime.now().millisecondsSinceEpoch;
+          if ((now - _lastResize > resizeInterval && _lastSize != size) ||
+              _lastSize.isEmpty) {
+            _lastSize = size;
+            _lastResize = now;
+            widget.control
+                .triggerEvent("resize", {"w": size.width, "h": size.height});
           }
         },
       ),
@@ -68,18 +176,37 @@ class FletCustomPainter extends CustomPainter {
   final ThemeData theme;
   final List<Control> shapes;
   final CanvasControlOnPaintCallback onPaintCallback;
+  final ui.Image? capturedImage;
+  final Size? capturedSize;
+  final double dpr;
 
   const FletCustomPainter(
       {required this.context,
       required this.theme,
       required this.shapes,
-      required this.onPaintCallback});
+      required this.onPaintCallback,
+      required this.dpr,
+      this.capturedImage,
+      this.capturedSize});
 
   @override
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
 
-    //debugPrint("SHAPE CONTROLS: $shapes");
+    debugPrint("paint.size: $size");
+    //debugPrint("paint.shapes: $shapes");
+
+    canvas.save();
+    canvas.scale(dpr);
+    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    if (capturedImage != null && capturedSize != null) {
+      final src = Rect.fromLTWH(0, 0, capturedImage!.width.toDouble(),
+          capturedImage!.height.toDouble());
+      final dst =
+          Rect.fromLTWH(0, 0, capturedSize!.width, capturedSize!.height);
+      canvas.drawImageRect(capturedImage!, src, dst, Paint());
+    }
 
     for (var shape in shapes) {
       shape.notifyParent = true;
@@ -105,8 +232,12 @@ class FletCustomPainter extends CustomPainter {
         drawShadow(canvas, shape);
       } else if (shape.type == "Text") {
         drawText(context, canvas, shape);
+      } else if (shape.type == "Image") {
+        drawImage(canvas, shape);
       }
     }
+
+    canvas.restore();
   }
 
   @override
@@ -118,47 +249,84 @@ class FletCustomPainter extends CustomPainter {
     Paint paint = shape.getPaint("paint", theme, Paint())!;
     var dashPattern = shape.getPaintStrokeDashPattern("paint");
     paint.style = ui.PaintingStyle.stroke;
-    var path = ui.Path();
-    path.moveTo(shape.getDouble("x1")!, shape.getDouble("y1")!);
-    path.lineTo(shape.getDouble("x2")!, shape.getDouble("y2")!);
 
-    if (dashPattern != null) {
+    var p1 = Offset(shape.getDouble("x1")!, shape.getDouble("y1")!);
+    var p2 = Offset(shape.getDouble("x2")!, shape.getDouble("y2")!);
+
+    if (dashPattern == null) {
+      canvas.drawLine(p1, p2, paint);
+    } else {
+      var path = ui.Path();
+      path.moveTo(p1.dx, p1.dy);
+      path.lineTo(p2.dx, p2.dy);
       path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
     }
-    canvas.drawPath(path, paint);
   }
 
   void drawCircle(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var radius = shape.getDouble("radius", 0)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawCircle(
-        Offset(shape.getDouble("x")!, shape.getDouble("y")!), radius, paint);
+
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+
+    if (dashPattern == null) {
+      canvas.drawCircle(Offset(x, y), radius, paint);
+    } else {
+      var path = ui.Path();
+      path.addOval(Rect.fromCircle(center: Offset(x, y), radius: radius));
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawOval(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawOval(
-        Rect.fromLTWH(
-            shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-        paint);
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+
+    if (dashPattern == null) {
+      canvas.drawOval(Rect.fromLTWH(x, y, width, height), paint);
+    } else {
+      var path = ui.Path();
+      path.addOval(Rect.fromLTWH(x, y, width, height));
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawArc(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
     var startAngle = shape.getDouble("start_angle", 0)!;
     var sweepAngle = shape.getDouble("sweep_angle", 0)!;
     var useCenter = shape.getBool("use_center", false)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawArc(
-        Rect.fromLTWH(
-            shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-        startAngle,
-        sweepAngle,
-        useCenter,
-        paint);
+
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+    if (dashPattern == null) {
+      canvas.drawArc(Rect.fromLTWH(x, y, width, height), startAngle, sweepAngle,
+          useCenter, paint);
+    } else {
+      var path = ui.Path();
+      if (useCenter) {
+        path.moveTo(x + width / 2, y + height / 2);
+        path.arcTo(
+            Rect.fromLTWH(x, y, width, height), startAngle, sweepAngle, false);
+        path.close();
+      } else {
+        path.addArc(Rect.fromLTWH(x, y, width, height), startAngle, sweepAngle);
+      }
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawFill(Canvas canvas, Control shape) {
@@ -185,20 +353,33 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawRect(Canvas canvas, Control shape) {
+    var x = shape.getDouble("x")!;
+    var y = shape.getDouble("y")!;
     var width = shape.getDouble("width", 0)!;
     var height = shape.getDouble("height", 0)!;
     var borderRadius =
         shape.getBorderRadius("border_radius", BorderRadius.zero)!;
     Paint paint = shape.getPaint("paint", theme, Paint())!;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(
-            Rect.fromLTWH(
-                shape.getDouble("x")!, shape.getDouble("y")!, width, height),
-            topLeft: borderRadius.topLeft,
-            topRight: borderRadius.topRight,
-            bottomLeft: borderRadius.bottomLeft,
-            bottomRight: borderRadius.bottomRight),
-        paint);
+    var dashPattern = shape.getPaintStrokeDashPattern("paint");
+
+    if (dashPattern == null) {
+      canvas.drawRRect(
+          RRect.fromRectAndCorners(Rect.fromLTWH(x, y, width, height),
+              topLeft: borderRadius.topLeft,
+              topRight: borderRadius.topRight,
+              bottomLeft: borderRadius.bottomLeft,
+              bottomRight: borderRadius.bottomRight),
+          paint);
+    } else {
+      var path = ui.Path();
+      path.addRRect(RRect.fromRectAndCorners(Rect.fromLTWH(x, y, width, height),
+          topLeft: borderRadius.topLeft,
+          topRight: borderRadius.topRight,
+          bottomLeft: borderRadius.bottomLeft,
+          bottomRight: borderRadius.bottomRight));
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+      canvas.drawPath(path, paint);
+    }
   }
 
   void drawText(BuildContext context, Canvas canvas, Control shape) {
@@ -210,7 +391,7 @@ class FletCustomPainter extends CustomPainter {
       style = style.copyWith(color: theme.textTheme.bodyMedium!.color);
     }
     TextSpan span = TextSpan(
-        text: shape.getString("text", "")!,
+        text: shape.getString("value", "")!,
         style: style,
         children: parseTextSpans(shape.children("spans"), theme));
 
@@ -258,6 +439,29 @@ class FletCustomPainter extends CustomPainter {
     var elevation = shape.getDouble("elevation", 0)!;
     var transparentOccluder = shape.getBool("transparent_occluder", false)!;
     canvas.drawShadow(path, color, elevation, transparentOccluder);
+  }
+
+  void drawImage(Canvas canvas, Control shape) {
+    final paint = shape.getPaint("paint", theme, Paint())!;
+    final x = shape.getDouble("x")!;
+    final y = shape.getDouble("y")!;
+    final width = shape.getDouble("width");
+    final height = shape.getDouble("height");
+
+    // Check if image is already loaded and stored
+    if (shape.get("_image") != null &&
+        shape.get("_hash") == getImageHash(shape)) {
+      final img = shape.get("_image")!;
+      final srcRect =
+          Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
+      final dstRect = width != null && height != null
+          ? Rect.fromLTWH(x, y, width, height)
+          : Offset(x, y) & Size(img.width.toDouble(), img.height.toDouble());
+      debugPrint("canvas.drawImageRect($srcRect, $dstRect)");
+      canvas.drawImageRect(img, srcRect, dstRect, paint);
+    } else {
+      loadCanvasImage(shape);
+    }
   }
 
   ui.Path buildPath(dynamic j) {
@@ -329,4 +533,58 @@ class FletCustomPainter extends CustomPainter {
     }
     return path;
   }
+}
+
+Future<void> loadCanvasImage(Control shape) async {
+  debugPrint("loadCanvasImage(${shape.id})");
+  if (shape.get("_loading") != null) return;
+  final completer = Completer();
+  shape.properties["_loading"] = completer;
+
+  final src = shape.getString("src");
+  final srcBytes = shape.get("src_bytes") as Uint8List?;
+
+  try {
+    Uint8List bytes;
+
+    if (srcBytes != null) {
+      bytes = srcBytes;
+    } else if (src != null) {
+      var assetSrc = shape.backend.getAssetSource(src);
+      if (assetSrc.isFile) {
+        final file = File(assetSrc.path);
+        bytes = await file.readAsBytes();
+      } else {
+        final resp = await http.get(Uri.parse(assetSrc.path));
+        if (resp.statusCode != 200) {
+          throw Exception("HTTP ${resp.statusCode}");
+        }
+        bytes = resp.bodyBytes;
+      }
+    } else {
+      throw Exception("Missing image source: 'src' or 'src_bytes'");
+    }
+
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    shape.properties["_image"] = frame.image;
+    shape.updateProperties({"_hash": getImageHash(shape)},
+        python: false, notify: true);
+    completer.complete();
+  } catch (e) {
+    shape.properties["_image_error"] = e;
+    completer.completeError(e);
+  } finally {
+    shape.properties.remove("_loading");
+  }
+}
+
+int getImageHash(Control shape) {
+  final src = shape.getString("src");
+  final srcBytes = shape.get("src_bytes") as Uint8List?;
+  return src != null
+      ? src.hashCode
+      : srcBytes != null
+          ? fnv1aHash(srcBytes)
+          : 0;
 }

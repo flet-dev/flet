@@ -40,6 +40,10 @@ class SuperElevatedButton(ElevatedButton):
 
     def init(self):
         print("SuperElevatedButton.init()")
+        assert not self.page
+
+    def build(self):
+        print("SuperElevatedButton.build()")
         assert self.page
 
 
