@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -562,8 +561,6 @@ Future<void> loadCanvasImage(Control shape) async {
         }
         bytes = resp.bodyBytes;
       }
-    } else if (src != null) {
-      bytes = base64Decode(src);
     } else {
       throw Exception("Missing image source: 'src' or 'src_bytes'");
     }
