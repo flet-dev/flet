@@ -83,15 +83,6 @@ class _CanvasControlState extends State<CanvasControl> {
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Canvas.$name($args)");
-
-    // Returns the captured image
-    Future<Uint8List?> getCapture() async {
-      if (_capturedImage == null) return null;
-      final byteData =
-          await _capturedImage!.toByteData(format: ui.ImageByteFormat.png);
-      return byteData!.buffer.asUint8List();
-    }
-
     switch (name) {
       case "capture":
         final shapes = widget.control.children("shapes");
@@ -129,11 +120,13 @@ class _CanvasControlState extends State<CanvasControl> {
           (_lastSize.height * dpr).toInt(),
         );
         _capturedSize = _lastSize;
-
-        return getCapture();
+        return;
 
       case "get_capture":
-        return getCapture();
+        if (_capturedImage == null) return null;
+        final byteData =
+            await _capturedImage!.toByteData(format: ui.ImageByteFormat.png);
+        return byteData!.buffer.asUint8List();
 
       case "clear_capture":
         _capturedImage?.dispose();
