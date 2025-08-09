@@ -255,6 +255,11 @@ class FletApp(Connection):
             self.__session.apply_page_patch(req.page)
 
             if new_session:
+                # update IP and user-agent
+                self.__session.page.client_ip = self.client_ip
+                self.__session.page.client_user_agent = self.client_user_agent
+
+                # run before_main
                 if asyncio.iscoroutinefunction(self.__before_main):
                     await self.__before_main(self.__session.page)
                 elif callable(self.__before_main):
