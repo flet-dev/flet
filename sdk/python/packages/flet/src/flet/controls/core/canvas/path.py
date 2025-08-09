@@ -168,7 +168,7 @@ class Path(Shape):
         (bool) and `large_arc` (bool) in such a way that the sweep angle is always less
         than 360 degrees.
 
-        A simple line is appended if either radii are zero or the last point in
+        A simple line is appended if either radius is zero or the last point in
         the path (`x`,`y`). The radii are scaled to fit the last path point if both are
         greater than zero but too small to describe an arc.
         """
