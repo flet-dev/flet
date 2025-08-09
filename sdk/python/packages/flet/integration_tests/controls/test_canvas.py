@@ -11,8 +11,8 @@ async def test_draw_line(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [fc.Line(10, 10, 90, 90, ft.Paint(stroke_width=3))],
+        control=fc.Canvas(
+            shapes=[fc.Line(10, 10, 90, 90, ft.Paint(stroke_width=3))],
             width=100,
             height=100,
         ),
@@ -24,20 +24,22 @@ async def test_draw_dashed_line(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=100,
+            height=100,
+            shapes=[
                 fc.Line(
-                    10,
-                    10,
-                    90,
-                    90,
-                    ft.Paint(
-                        stroke_width=3, stroke_dash_pattern=[5, 5], color=ft.Colors.RED
+                    x1=10,
+                    y1=10,
+                    x2=90,
+                    y2=90,
+                    paint=ft.Paint(
+                        stroke_width=3,
+                        stroke_dash_pattern=[5, 5],
+                        color=ft.Colors.RED,
                     ),
                 )
             ],
-            width=100,
-            height=100,
         ),
     )
 
@@ -47,8 +49,10 @@ async def test_draw_circle(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=100,
+            height=100,
+            shapes=[
                 fc.Circle(
                     x=50,
                     y=50,
@@ -56,8 +60,6 @@ async def test_draw_circle(flet_app: ftt.FletTestApp, request):
                     paint=ft.Paint(stroke_width=3, style=ft.PaintingStyle.STROKE),
                 )
             ],
-            width=100,
-            height=100,
         ),
     )
 
@@ -68,7 +70,9 @@ async def test_draw_dashed_circle(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
-            [
+            width=100,
+            height=100,
+            shapes=[
                 fc.Circle(
                     x=50,
                     y=50,
@@ -81,8 +85,6 @@ async def test_draw_dashed_circle(flet_app: ftt.FletTestApp, request):
                     ),
                 )
             ],
-            width=100,
-            height=100,
         ),
     )
 
@@ -92,10 +94,10 @@ async def test_draw_filled_circle_default_paint(flet_app: ftt.FletTestApp, reque
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [fc.Circle(x=50, y=50, radius=40, paint=ft.Paint())],
+        control=fc.Canvas(
             width=100,
             height=100,
+            shapes=[fc.Circle(x=50, y=50, radius=40, paint=ft.Paint())],
         ),
     )
 
@@ -105,8 +107,10 @@ async def test_draw_oval(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=100,
+            height=100,
+            shapes=[
                 fc.Oval(
                     x=10,
                     y=10,
@@ -115,8 +119,6 @@ async def test_draw_oval(flet_app: ftt.FletTestApp, request):
                     paint=ft.Paint(stroke_width=2, style=ft.PaintingStyle.STROKE),
                 )
             ],
-            width=100,
-            height=100,
         ),
     )
 
@@ -126,8 +128,10 @@ async def test_draw_dashed_oval(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=100,
+            height=100,
+            shapes=[
                 fc.Oval(
                     x=10,
                     y=10,
@@ -141,8 +145,6 @@ async def test_draw_dashed_oval(flet_app: ftt.FletTestApp, request):
                     ),
                 )
             ],
-            width=100,
-            height=100,
         ),
     )
 
@@ -152,15 +154,17 @@ async def test_draw_arc(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=200,
+            height=150,
+            shapes=[
                 fc.Arc(
-                    40,
-                    40,
-                    100,
-                    60,
-                    math.pi * 0.1,
-                    math.pi * 0.4,
+                    x=40,
+                    y=40,
+                    width=100,
+                    height=60,
+                    start_angle=math.pi * 0.1,
+                    sweep_angle=math.pi * 0.4,
                     paint=ft.Paint(
                         color=ft.Colors.YELLOW,
                         stroke_width=4,
@@ -168,8 +172,6 @@ async def test_draw_arc(flet_app: ftt.FletTestApp, request):
                     ),
                 )
             ],
-            width=200,
-            height=150,
         ),
     )
 
@@ -179,26 +181,26 @@ async def test_draw_dashed_arc(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=200,
+            height=150,
+            shapes=[
                 fc.Arc(
-                    40,
-                    40,
-                    100,
-                    60,
-                    math.pi * 0.1,
-                    math.pi * 0.4,
+                    x=40,
+                    y=40,
+                    width=100,
+                    height=60,
+                    start_angle=math.pi * 0.1,
+                    sweep_angle=math.pi * 0.4,
+                    use_center=False,
                     paint=ft.Paint(
                         color=ft.Colors.AMBER,
                         stroke_width=4,
                         stroke_dash_pattern=[7, 7],
                         style=ft.PaintingStyle.STROKE,
                     ),
-                    use_center=False,
                 )
             ],
-            width=200,
-            height=150,
         ),
     )
 
@@ -208,8 +210,10 @@ async def test_draw_dashed_arc_with_center(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=200,
+            height=150,
+            shapes=[
                 fc.Arc(
                     x=40,
                     y=40,
@@ -217,17 +221,15 @@ async def test_draw_dashed_arc_with_center(flet_app: ftt.FletTestApp, request):
                     height=60,
                     start_angle=math.pi * 0.1,
                     sweep_angle=math.pi * 0.6,
+                    use_center=True,
                     paint=ft.Paint(
                         color=ft.Colors.AMBER,
                         stroke_width=4,
                         stroke_dash_pattern=[7, 7],
                         style=ft.PaintingStyle.STROKE,
                     ),
-                    use_center=True,
                 )
             ],
-            width=200,
-            height=150,
         ),
     )
 
@@ -237,8 +239,10 @@ async def test_draw_filled_rect(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=200,
+            height=150,
+            shapes=[
                 fc.Rect(
                     x=40,
                     y=40,
@@ -251,8 +255,6 @@ async def test_draw_filled_rect(flet_app: ftt.FletTestApp, request):
                     ),
                 )
             ],
-            width=200,
-            height=150,
         ),
     )
 
@@ -262,8 +264,10 @@ async def test_draw_dashed_rect(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=200,
+            height=150,
+            shapes=[
                 fc.Rect(
                     x=40,
                     y=40,
@@ -278,8 +282,6 @@ async def test_draw_dashed_rect(flet_app: ftt.FletTestApp, request):
                     ),
                 )
             ],
-            width=200,
-            height=150,
         ),
     )
 
@@ -289,8 +291,10 @@ async def test_draw_flet_logo_with_path(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=300,
+            height=300,
+            shapes=[
                 fc.Path(
                     elements=[
                         fc.Path.MoveTo(25, 125),
@@ -318,8 +322,6 @@ async def test_draw_flet_logo_with_path(flet_app: ftt.FletTestApp, request):
                     ),
                 ),
             ],
-            width=300,
-            height=300,
         ),
     )
 
@@ -329,8 +331,10 @@ async def test_draw_dashed_path_with_fill(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=150,
+            height=150,
+            shapes=[
                 fc.Fill(
                     paint=ft.Paint(
                         style=ft.PaintingStyle.FILL,
@@ -358,8 +362,6 @@ async def test_draw_dashed_path_with_fill(flet_app: ftt.FletTestApp, request):
                     ],
                 ),
             ],
-            width=150,
-            height=150,
         ),
     )
 
@@ -369,8 +371,10 @@ async def test_draw_text(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=800,
+            height=500,
+            shapes=[
                 fc.Fill(
                     paint=ft.Paint(
                         style=ft.PaintingStyle.FILL,
@@ -435,7 +439,11 @@ async def test_draw_text(flet_app: ftt.FletTestApp, request):
                 fc.Text(
                     x=300,
                     y=400,
-                    value="Limited to max_width and right-aligned.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                    value="Limited to max_width and right-aligned.\nLorem ipsum dolor "
+                    "sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+                    "incididunt ut labore et dolore magna aliqua. Ut enim ad minim "
+                    "veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip "
+                    "ex ea commodo consequat.",
                     text_align=ft.TextAlign.RIGHT,
                     max_width=400,
                 ),
@@ -474,8 +482,6 @@ async def test_draw_text(flet_app: ftt.FletTestApp, request):
                     ),
                 ),
             ],
-            width=800,
-            height=500,
         ),
     )
 
@@ -485,8 +491,10 @@ async def test_draw_gradients(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [
+        control=fc.Canvas(
+            width=150,
+            height=350,
+            shapes=[
                 fc.Rect(
                     x=10,
                     y=10,
@@ -541,8 +549,6 @@ async def test_draw_gradients(flet_app: ftt.FletTestApp, request):
                     ),
                 ),
             ],
-            width=150,
-            height=350,
         ),
     )
 
@@ -552,13 +558,13 @@ async def test_draw_asset_image(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [fc.Image(src="52-100x100.png", x=10, y=10)],
-            width=120,
-            height=120,
-        ),
         pump_times=1,
         pump_duration=1000,
+        control=fc.Canvas(
+            width=120,
+            height=120,
+            shapes=[fc.Image(src="52-100x100.png", x=10, y=10)],
+        ),
     )
 
 
@@ -567,13 +573,13 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        fc.Canvas(
-            [fc.Image(src="https://picsum.photos/id/237/100/100", x=10, y=10)],
-            width=120,
-            height=120,
-        ),
         pump_times=7,
         pump_duration=1000,
+        control=fc.Canvas(
+            width=120,
+            height=120,
+            shapes=[fc.Image(src="https://picsum.photos/id/237/100/100", x=10, y=10)],
+        ),
     )
 
 
@@ -581,7 +587,9 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
 async def test_capture(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     canvas = fc.Canvas(
-        [
+        width=100,
+        height=100,
+        shapes=[
             fc.Circle(
                 x=50,
                 y=50,
@@ -593,8 +601,6 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
                 ),
             )
         ],
-        width=100,
-        height=100,
     )
     screenshot = ft.Screenshot(canvas)
 
@@ -622,7 +628,7 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     # take screenshot
-    # it must be a circle striked out with a line (capture + shapes)
+    # it must be a circle struck out with a line (capture + shapes)
     capture_2 = await screenshot.capture_async(pixel_ratio=flet_app.pixel_ratio)
     flet_app.assert_screenshot("capture_2", capture_2)
 

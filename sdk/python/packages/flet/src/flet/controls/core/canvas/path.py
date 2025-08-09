@@ -26,6 +26,16 @@ class Path(Shape):
             init=False, repr=False, compare=False, default=None
         )
 
+    elements: list[PathElement] = field(default_factory=list)
+    """
+    The list of path elements.
+    """
+
+    paint: Paint = field(default_factory=lambda: Paint())
+    """
+    A style to draw a path with.
+    """
+
     @dataclass
     class MoveTo(PathElement):
         """
@@ -36,7 +46,7 @@ class Path(Shape):
         y: float
 
         def __post_init__(self):
-            self._type = "moveto"
+            self._type = "MoveTo"
 
     @dataclass
     class LineTo(PathElement):
@@ -49,7 +59,7 @@ class Path(Shape):
         y: float
 
         def __post_init__(self):
-            self._type = "lineto"
+            self._type = "LineTo"
 
     @dataclass
     class QuadraticTo(PathElement):
@@ -70,7 +80,7 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self._type = "conicto"
+            self._type = "QuadraticTo"
 
     @dataclass
     class CubicTo(PathElement):
@@ -87,7 +97,7 @@ class Path(Shape):
         y: float
 
         def __post_init__(self):
-            self._type = "cubicto"
+            self._type = "CubicTo"
 
     @dataclass
     class SubPath(PathElement):
@@ -100,7 +110,7 @@ class Path(Shape):
         y: float
 
         def __post_init__(self):
-            self._type = "subpath"
+            self._type = "SubPath"
 
     @dataclass
     class Arc(PathElement):
@@ -118,29 +128,34 @@ class Path(Shape):
         """
         Top-left corner `x` of the rectangle bounding the arc.
         """
+
         y: float
         """
         Top-left corner `y` of the rectangle bounding the arc.
         """
+
         width: float
         """
         Width of the rectangle bounding the arc.
         """
+
         height: float
         """
         Height of the rectangle bounding the arc.
         """
+
         start_angle: float
         """
         Starting angle in radians of the arc.
         """
+
         sweep_angle: float
         """
         Sweep angle in radians from `start_angle`.
         """
 
         def __post_init__(self):
-            self._type = "arc"
+            self._type = "Arc"
 
     @dataclass
     class ArcTo(PathElement):
@@ -153,7 +168,7 @@ class Path(Shape):
         (bool) and `large_arc` (bool) in such a way that the sweep angle is always less
         than 360 degrees.
 
-        A simple line is appended if either either radii are zero or the last point in
+        A simple line is appended if either radii are zero or the last point in
         the path (`x`,`y`). The radii are scaled to fit the last path point if both are
         greater than zero but too small to describe an arc.
         """
@@ -189,7 +204,7 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self._type = "arcto"
+            self._type = "ArcTo"
 
     @dataclass
     class Oval(PathElement):
@@ -202,21 +217,24 @@ class Path(Shape):
         """
         The x-axis coordinate of the top-left of the bounding rectangle.
         """
+
         y: float
         """
         The y-axis coordinate of the top-left of the bounding rectangle.
         """
+
         width: float
         """
         Width of the bounding rectangle.
         """
+
         height: float
         """
         Height of the bounding rectangle.
         """
 
         def __post_init__(self):
-            self._type = "oval"
+            self._type = "Oval"
 
     @dataclass
     class Rect(PathElement):
@@ -228,25 +246,29 @@ class Path(Shape):
         """
         The x-axis coordinate of the top-left of the rectangle.
         """
+
         y: float
         """
         The y-axis coordinate of the top-left of the rectangle.
         """
+
         width: float
         """
         Width of the rectangle.
         """
+
         height: float
         """
         Height of the rectangle.
         """
+
         border_radius: Optional[BorderRadiusValue] = None
         """
         Optional border radius to round rectangle corners.
         """
 
         def __post_init__(self):
-            self._type = "rect"
+            self._type = "Rect"
 
     @dataclass
     class Close(PathElement):
@@ -256,14 +278,4 @@ class Path(Shape):
         """
 
         def __post_init__(self):
-            self._type = "close"
-
-    elements: list[PathElement] = field(default_factory=list)
-    """
-    The list of path elements.
-    """
-
-    paint: Paint = field(default_factory=lambda: Paint())
-    """
-    A style to draw a path with.
-    """
+            self._type = "Close"

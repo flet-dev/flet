@@ -175,7 +175,7 @@ class FilePicker(Service):
             initial_directory: The initial directory where the dialog should open.
 
         Raises:
-            NotImplementedError: if called in web app.
+            NotImplementedError: If called in web app.
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
@@ -204,6 +204,11 @@ class FilePicker(Service):
         Opens a save file dialog which lets the user select a file path and a file name
         to save a file.
 
+        Note:
+            - On desktop this method only opens a dialog for the user to select
+                a location and file name, and returns the chosen path. The file
+                itself is not created or saved.
+
         Args:
             dialog_title: The title of the dialog window.
             file_name: The default file name.
@@ -215,14 +220,10 @@ class FilePicker(Service):
                 `file_type` is
                 [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
 
-        Note:
-            - On desktop this method only opens a dialog for the user to select
-              a location and file name, and returns the chosen path. The file
-              itself is not created or saved.
-
         Raises:
-            ValueError: if `src_bytes` is not provided in web, iOS or Android modes.
-            ValueError: if `file_name` is not provided in web mode.
+            ValueError: If `src_bytes` is not provided, when called on Web,
+                iOS or Android.
+            ValueError: If `file_name` is not provided in web mode.
         """
 
         if (self.page.web or self.page.platform.is_mobile()) and not src_bytes:

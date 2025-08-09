@@ -83,6 +83,15 @@ class _CanvasControlState extends State<CanvasControl> {
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Canvas.$name($args)");
+
+    // Returns the captured image
+    Future<Uint8List?> getCapture() async {
+      if (_capturedImage == null) return null;
+      final byteData =
+          await _capturedImage!.toByteData(format: ui.ImageByteFormat.png);
+      return byteData!.buffer.asUint8List();
+    }
+
     switch (name) {
       case "capture":
         final shapes = widget.control.children("shapes");
@@ -120,13 +129,11 @@ class _CanvasControlState extends State<CanvasControl> {
           (_lastSize.height * dpr).toInt(),
         );
         _capturedSize = _lastSize;
-        return;
+
+        return getCapture();
 
       case "get_capture":
-        if (_capturedImage == null) return null;
-        final byteData =
-            await _capturedImage!.toByteData(format: ui.ImageByteFormat.png);
-        return byteData!.buffer.asUint8List();
+        return getCapture();
 
       case "clear_capture":
         _capturedImage?.dispose();
@@ -471,11 +478,11 @@ class FletCustomPainter extends CustomPainter {
     }
     for (var elem in (j as List)) {
       var type = elem["_type"];
-      if (type == "moveto") {
+      if (type == "MoveTo") {
         path.moveTo(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!);
-      } else if (type == "lineto") {
+      } else if (type == "LineTo") {
         path.lineTo(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!);
-      } else if (type == "arc") {
+      } else if (type == "Arc") {
         path.addArc(
             Rect.fromLTWH(
                 parseDouble(elem["x"], 0)!,
@@ -484,20 +491,20 @@ class FletCustomPainter extends CustomPainter {
                 parseDouble(elem["height"], 0)!),
             parseDouble(elem["start_angle"], 0)!,
             parseDouble(elem["sweep_angle"], 0)!);
-      } else if (type == "arcto") {
+      } else if (type == "ArcTo") {
         path.arcToPoint(
             Offset(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!),
             radius: Radius.circular(parseDouble(elem["radius"], 0)!),
             rotation: parseDouble(elem["rotation"], 0)!,
             largeArc: parseBool(elem["large_arc"], false)!,
             clockwise: parseBool(elem["clockwise"], true)!);
-      } else if (type == "oval") {
+      } else if (type == "Oval") {
         path.addOval(Rect.fromLTWH(
             parseDouble(elem["x"], 0)!,
             parseDouble(elem["y"], 0)!,
             parseDouble(elem["width"], 0)!,
             parseDouble(elem["height"], 0)!));
-      } else if (type == "rect") {
+      } else if (type == "Rect") {
         var borderRadius = parseBorderRadius(elem["border_radius"]);
         path.addRRect(RRect.fromRectAndCorners(
             Rect.fromLTWH(
@@ -509,14 +516,14 @@ class FletCustomPainter extends CustomPainter {
             topRight: borderRadius?.topRight ?? Radius.zero,
             bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
             bottomRight: borderRadius?.bottomRight ?? Radius.zero));
-      } else if (type == "conicto") {
+      } else if (type == "QuadraticTo") {
         path.conicTo(
             parseDouble(elem["cp1x"], 0)!,
             parseDouble(elem["cp1y"], 0)!,
             parseDouble(elem["x"], 0)!,
             parseDouble(elem["y"], 0)!,
             parseDouble(elem["w"], 0)!);
-      } else if (type == "cubicto") {
+      } else if (type == "CubicTo") {
         path.cubicTo(
             parseDouble(elem["cp1x"], 0)!,
             parseDouble(elem["cp1y"], 0)!,
@@ -524,10 +531,10 @@ class FletCustomPainter extends CustomPainter {
             parseDouble(elem["cp2y"], 0)!,
             parseDouble(elem["x"], 0)!,
             parseDouble(elem["y"], 0)!);
-      } else if (type == "subpath") {
+      } else if (type == "SubPath") {
         path.addPath(buildPath(elem["elements"]),
             Offset(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!));
-      } else if (type == "close") {
+      } else if (type == "Close") {
         path.close();
       }
     }
