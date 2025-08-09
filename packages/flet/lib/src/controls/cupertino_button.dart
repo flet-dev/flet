@@ -136,12 +136,11 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
               .copyWith(color: color),
           child: child);
     }
-    var url = widget.control.getString("url");
+    var url = widget.control.getUrl("url");
     Function()? onPressed = !widget.control.disabled
         ? () {
             if (url != null) {
-              openWebBrowser(url,
-                  webWindowName: widget.control.getString("url_target"));
+              openWebBrowser(url);
             }
             widget.control.triggerEvent("click");
           }

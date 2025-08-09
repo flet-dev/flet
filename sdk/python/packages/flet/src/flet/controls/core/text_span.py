@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
-from flet.controls.types import UrlTarget
+from flet.controls.types import Url
 
 __all__ = ["TextSpan"]
 
@@ -43,15 +43,12 @@ class TextSpan(Control):
         the `text` takes precedence.
     """
 
-    url: Optional[str] = None
+    url: Optional[Union[str, Url]] = None
     """
-    The URL to open when the span is clicked.
-    If registered, [`on_click`][flet.TextSpan.on_click] event is fired after that.
-    """
+    The URL to open when this button is clicked.
 
-    url_target: UrlTarget = UrlTarget.BLANK
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.TextSpan.on_click] event callback is provided,
+    it is fired after that.
     """
 
     semantics_label: Optional[str] = None
@@ -95,6 +92,6 @@ class TextSpan(Control):
 
     def before_update(self):
         super().before_update()
-        assert not (
-            self.text is None and self.semantics_label is not None
-        ), "semantics_label can be set only when text is not None"
+        assert not (self.text is None and self.semantics_label is not None), (
+            "semantics_label can be set only when text is not None"
+        )

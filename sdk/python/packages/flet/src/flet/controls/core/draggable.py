@@ -78,9 +78,9 @@ class Draggable(Control):
 
     - `0` - disables dragging entirely.
     - `1` - allows only one drag at a time.
-     For a better user experience, you may want to provide an "empty" widget for
-     [`content_when_dragging`][flet.Draggable.content_when_dragging]
-     to visually indicate the item is being moved.
+        For a better user experience, you may want to provide an "empty" widget for
+        [`content_when_dragging`][flet.Draggable.content_when_dragging]
+        to visually indicate the item is being moved.
     - Set to any positive integer to allow that many concurrent drags.
     - If `None`, there is no limit on the number of simultaneous drags.
     """

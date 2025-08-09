@@ -128,7 +128,7 @@ class BoardList(ft.Container):
             width=250,
             border=ft.border.all(2, ft.Colors.BLACK12),
             border_radius=ft.border_radius.all(5),
-            bgcolor=self.color if (self.color != "") else ft.Colors.BACKGROUND,
+            bgcolor=self.color if (self.color != "") else ft.Colors.SURFACE,
             padding=ft.Padding.only(bottom=10, right=10, left=10, top=5),
         )
 

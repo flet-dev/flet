@@ -276,20 +276,6 @@ def test_simple_page():
                 "path": ["views", 0, "controls", 0, "controls", 0],
                 "value": SuperElevatedButton("Foo"),
             },
-            {
-                "op": "replace",
-                "path": [
-                    "views",
-                    0,
-                    "controls",
-                    0,
-                    "controls",
-                    1,
-                    "_internals",
-                    "style",
-                ],
-                "value": ButtonStyle(elevation=1),
-            },
         ],
     )
 
@@ -311,34 +297,6 @@ def test_simple_page():
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 1, "content"],
                 "value": "Baz",
-            },
-            {
-                "op": "replace",
-                "path": [
-                    "views",
-                    0,
-                    "controls",
-                    0,
-                    "controls",
-                    1,
-                    "_internals",
-                    "style",
-                ],
-                "value": ButtonStyle(elevation=1),
-            },
-            {
-                "op": "replace",
-                "path": [
-                    "views",
-                    0,
-                    "controls",
-                    0,
-                    "controls",
-                    2,
-                    "_internals",
-                    "style",
-                ],
-                "value": ButtonStyle(elevation=1),
             },
         ],
     )
@@ -446,14 +404,9 @@ def test_changes_tracking():
                 "value": 100,
             },
             {
-                "op": "replace",
-                "path": ["views", 0, "controls", 0, "_internals", "style"],
-                "value": ft.ButtonStyle(elevation=1),
-            },
-            {
                 "op": "add",
                 "path": ["views", 0, "controls", 1],
-                "value": Text("Line 2"),
+                "value": ft.Text("Line 2"),
             },
         ],
     )

@@ -25,13 +25,13 @@ class UrlLauncherService extends FletService {
     debugPrint("UrlLauncherService.$name($args)");
     switch (name) {
       case "launch_url":
-        return openWebBrowser(args["url"]!,
-            webWindowName: args["web_window_name"],
-            webPopupWindow: parseBool(args["web_popup_window"]),
-            windowWidth: parseInt(args["window_width"]),
-            windowHeight: parseInt(args["window_height"]));
+        return openWebBrowser(parseUrl(args["url"]!)!,
+            webPopupWindow: parseBool(args["web_popup_window"], false)!,
+            webPopupWindowName: args["web_popup_window_name"],
+            webPopupWindowWidth: parseInt(args["web_popup_window_width"]),
+            webPopupWindowHeight: parseInt(args["web_popup_window_height"]));
       case "can_launch_url":
-        return canLaunchUrl(Uri.parse(args["url"]!));
+        return canLaunchUrl(Uri.parse(parseUrl(args["url"]!)!.url));
       case "close_in_app_web_view":
         return closeInAppWebView();
       default:
