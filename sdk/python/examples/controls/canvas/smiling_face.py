@@ -13,12 +13,20 @@ def main(page: ft.Page):
             width=float("inf"),
             expand=True,
             shapes=[
-                cv.Circle(100, 100, 50, stroke_paint),
-                cv.Circle(80, 90, 10, stroke_paint),
-                cv.Circle(84, 87, 5, fill_paint),
-                cv.Circle(120, 90, 10, stroke_paint),
-                cv.Circle(124, 87, 5, fill_paint),
-                cv.Arc(70, 95, 60, 40, 0, math.pi, paint=stroke_paint),
+                cv.Circle(x=100, y=100, radius=50, paint=stroke_paint),
+                cv.Circle(x=80, y=90, radius=10, paint=stroke_paint),
+                cv.Circle(x=84, y=87, radius=5, paint=fill_paint),
+                cv.Circle(x=120, y=90, radius=10, paint=stroke_paint),
+                cv.Circle(x=124, y=87, radius=5, paint=fill_paint),
+                cv.Arc(
+                    x=70,
+                    y=95,
+                    width=60,
+                    height=40,
+                    start_angle=0,
+                    sweep_angle=math.pi,
+                    paint=stroke_paint,
+                ),
             ],
         )
     )

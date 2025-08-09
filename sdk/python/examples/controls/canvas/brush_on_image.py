@@ -20,10 +20,10 @@ def main(page: ft.Page):
     def handle_pan_update(e: ft.DragUpdateEvent):
         canvas.shapes.append(
             cv.Line(
-                state.x,
-                state.y,
-                e.local_position.x,
-                e.local_position.y,
+                x1=state.x,
+                y1=state.y,
+                x2=e.local_position.x,
+                y2=e.local_position.y,
                 paint=ft.Paint(stroke_width=3),
             )
         )

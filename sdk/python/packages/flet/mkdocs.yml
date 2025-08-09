@@ -277,6 +277,7 @@ nav:
                   - Circle: controls/canvas/circle.md
                   - Color: controls/canvas/color.md
                   - Fill: controls/canvas/fill.md
+                  - Image: controls/canvas/image.md
                   - Line: controls/canvas/line.md
                   - Oval: controls/canvas/oval.md
                   - Path: controls/canvas/path.md

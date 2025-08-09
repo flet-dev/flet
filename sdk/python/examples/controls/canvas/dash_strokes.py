@@ -26,11 +26,11 @@ def main(page: ft.Page):
                         fc.Canvas(
                             [
                                 fc.Line(
-                                    30,
-                                    30,
-                                    200,
-                                    100,
-                                    ft.Paint(
+                                    x1=30,
+                                    y1=30,
+                                    x2=200,
+                                    y2=100,
+                                    paint=ft.Paint(
                                         color=ft.Colors.BLACK,
                                         stroke_width=3,
                                         stroke_dash_pattern=[4, 4]
@@ -40,10 +40,10 @@ def main(page: ft.Page):
                                     ),
                                 ),
                                 fc.Circle(
-                                    150,
-                                    150,
-                                    130,
-                                    ft.Paint(
+                                    x=150,
+                                    y=150,
+                                    radius=130,
+                                    paint=ft.Paint(
                                         color=ft.Colors.BLUE,
                                         stroke_width=4,
                                         stroke_dash_pattern=[4, 4]
@@ -53,10 +53,10 @@ def main(page: ft.Page):
                                     ),
                                 ),
                                 fc.Oval(
-                                    10,
-                                    10,
-                                    240,
-                                    140,
+                                    x=10,
+                                    y=10,
+                                    width=240,
+                                    height=140,
                                     paint=ft.Paint(
                                         color=ft.Colors.GREEN,
                                         stroke_width=4,
@@ -67,12 +67,12 @@ def main(page: ft.Page):
                                     ),
                                 ),
                                 fc.Arc(
-                                    20,
-                                    20,
-                                    220,
-                                    220,
-                                    0,
-                                    math.pi,
+                                    x=20,
+                                    y=20,
+                                    width=220,
+                                    height=220,
+                                    start_angle=0,
+                                    sweep_angle=math.pi,
                                     paint=ft.Paint(
                                         color=ft.Colors.RED,
                                         stroke_width=4,
@@ -83,11 +83,11 @@ def main(page: ft.Page):
                                     ),
                                 ),
                                 fc.Rect(
-                                    40,
-                                    60,
-                                    60,
-                                    70,
-                                    0,
+                                    x=40,
+                                    y=60,
+                                    width=60,
+                                    height=70,
+                                    border_radius=0,
                                     paint=ft.Paint(
                                         color=ft.Colors.RED,
                                         stroke_width=4,
@@ -98,12 +98,12 @@ def main(page: ft.Page):
                                     ),
                                 ),
                                 fc.Arc(
-                                    50,
-                                    50,
-                                    170,
-                                    140,
-                                    math.pi * 0.1,
-                                    math.pi * 0.4,
+                                    x=50,
+                                    y=50,
+                                    width=170,
+                                    height=140,
+                                    start_angle=math.pi * 0.1,
+                                    sweep_angle=math.pi * 0.4,
                                     paint=ft.Paint(
                                         color=ft.Colors.YELLOW,
                                         stroke_width=4,
