@@ -10,13 +10,13 @@ def main(page: ft.Page):
             cv.Path(
                 paint=ft.Paint(stroke_width=2, style=ft.PaintingStyle.STROKE),
                 elements=[
-                    cv.Path.MoveTo(75, 25),
-                    cv.Path.QuadraticTo(25, 25, 25, 62.5),
-                    cv.Path.QuadraticTo(25, 100, 50, 100),
-                    cv.Path.QuadraticTo(50, 120, 30, 125),
-                    cv.Path.QuadraticTo(60, 120, 65, 100),
-                    cv.Path.QuadraticTo(125, 100, 125, 62.5),
-                    cv.Path.QuadraticTo(125, 25, 75, 25),
+                    cv.Path.MoveTo(x=75, y=25),
+                    cv.Path.QuadraticTo(cp1x=25, cp1y=25, x=25, y=62.5),
+                    cv.Path.QuadraticTo(cp1x=25, cp1y=100, x=50, y=100),
+                    cv.Path.QuadraticTo(cp1x=50, cp1y=120, x=30, y=125),
+                    cv.Path.QuadraticTo(cp1x=60, cp1y=120, x=65, y=100),
+                    cv.Path.QuadraticTo(cp1x=125, cp1y=100, x=125, y=62.5),
+                    cv.Path.QuadraticTo(cp1x=125, cp1y=25, x=75, y=25),
                 ],
             ),
             cv.Path(
@@ -25,13 +25,25 @@ def main(page: ft.Page):
                         x=100,
                         y=100,
                         elements=[
-                            cv.Path.MoveTo(75, 40),
-                            cv.Path.CubicTo(75, 37, 70, 25, 50, 25),
-                            cv.Path.CubicTo(20, 25, 20, 62.5, 20, 62.5),
-                            cv.Path.CubicTo(20, 80, 40, 102, 75, 120),
-                            cv.Path.CubicTo(110, 102, 130, 80, 130, 62.5),
-                            cv.Path.CubicTo(130, 62.5, 130, 25, 100, 25),
-                            cv.Path.CubicTo(85, 25, 75, 37, 75, 40),
+                            cv.Path.MoveTo(x=75, y=40),
+                            cv.Path.CubicTo(
+                                cp1x=75, cp1y=37, cp2x=70, cp2y=25, x=50, y=25
+                            ),
+                            cv.Path.CubicTo(
+                                cp1x=20, cp1y=25, cp2x=20, cp2y=62.5, x=20, y=62.5
+                            ),
+                            cv.Path.CubicTo(
+                                cp1x=20, cp1y=80, cp2x=40, cp2y=102, x=75, y=120
+                            ),
+                            cv.Path.CubicTo(
+                                cp1x=110, cp1y=102, cp2x=130, cp2y=80, x=130, y=62.5
+                            ),
+                            cv.Path.CubicTo(
+                                cp1x=130, cp1y=62.5, cp2x=130, cp2y=25, x=100, y=25
+                            ),
+                            cv.Path.CubicTo(
+                                cp1x=85, cp1y=25, cp2x=75, cp2y=37, x=75, y=40
+                            ),
                         ],
                     )
                 ],

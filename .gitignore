@@ -27,3 +27,4 @@
 .python-version
 vendor/
 /client/android/app/.cxx
+client/devtools_options.yaml

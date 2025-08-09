@@ -11,8 +11,8 @@ from typing import Any, Optional
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
 from flet.controls.base_control import BaseControl
+from flet.controls.context import _context_page
 from flet.controls.exceptions import FletPageDisconnectedException
-from flet.controls.page import _session_page
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -139,7 +139,7 @@ class FletApp(Connection):
         logger.info(f"Start session: {self.__session.id}")
         try:
             assert self.__main is not None
-            _session_page.set(self.__session.page)
+            _context_page.set(self.__session.page)
             UpdateBehavior.reset()
 
             if asyncio.iscoroutinefunction(self.__main):

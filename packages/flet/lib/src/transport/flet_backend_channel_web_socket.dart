@@ -8,6 +8,7 @@ import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/uri.dart';
 import 'flet_backend_channel.dart';
+import 'flet_msgpack_encoder.dart';
 
 class FletWebSocketBackendChannel implements FletBackendChannel {
   late final String _wsUrl;
@@ -60,7 +61,8 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
 
   @override
   void send(Message message) {
-    _channel?.sink.add(msgpack.serialize(message.toList()));
+    _channel?.sink.add(
+        msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder()));
   }
 
   @override

@@ -22,11 +22,23 @@ void main() {
       if (fletTestAppUrl != "") {
         args.add(fletTestAppUrl);
       }
+
+      const fletTestPidFile = String.fromEnvironment("FLET_TEST_PID_FILE_PATH");
+      if (fletTestPidFile != "") {
+        args.add(fletTestPidFile);
+      }
+
+      const fletTestAssetsDir = String.fromEnvironment("FLET_TEST_ASSETS_DIR");
+      if (fletTestAssetsDir != "") {
+        args.add(fletTestAssetsDir);
+      }
+
       app.main(args);
 
       await Future.delayed(const Duration(milliseconds: 500));
       await app.tester?.pump(duration: const Duration(seconds: 1));
-      await app.tester?.pumpAndSettle(const Duration(milliseconds: 100));
+      await app.tester
+          ?.pumpAndSettle(duration: const Duration(milliseconds: 100));
       await app.tester?.waitForTeardown();
     });
   });

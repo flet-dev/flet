@@ -81,21 +81,15 @@ Widget _directionality(Widget widget, Control control) {
 }
 
 Widget _expandable(Widget widget, Control control) {
-  var parent = control.parent;
-  if (parent != null && ["View", "Column", "Row"].contains(parent.type)) {
-    int? expand = control.properties.containsKey("expand")
-        ? control.get("expand") == true
-            ? 1
-            : control.get("expand") == false
-                ? 0
-                : control.getInt("expand")
-        : null;
-    var expandLoose = control.getBool("expand_loose", false)!;
-    return expand != null
-        ? (expandLoose == true)
-            ? Flexible(flex: expand, child: widget)
-            : Expanded(flex: expand, child: widget)
-        : widget;
+  int? expand = control.get("expand") == true
+      ? 1
+      : control.get("expand") == false
+          ? 0
+          : control.getInt("expand");
+  if (expand != null && control.parent?.internals?["host_expanded"] == true) {
+    return (control.getBool("expand_loose") == true)
+        ? Flexible(flex: expand, child: widget)
+        : Expanded(flex: expand, child: widget);
   }
   return widget;
 }
@@ -206,8 +200,15 @@ Widget _positionedControl(
   var right = control.getDouble("right", null);
   var bottom = control.getDouble("bottom", null);
 
+  var errorControl = ErrorControl("Error displaying ${control.type}",
+      description:
+          "Control can be positioned absolutely with \"left\", \"top\", \"right\" and \"bottom\" properties inside Stack control only and page.overlay.");
+
   var animation = control.getAnimation("animate_position");
   if (animation != null) {
+    if (control.parent?.internals?["host_positioned"] != true) {
+      return errorControl;
+    }
     if (left == null && top == null && right == null && bottom == null) {
       left = 0;
       top = 0;
@@ -228,11 +229,8 @@ Widget _positionedControl(
       child: widget,
     );
   } else if (left != null || top != null || right != null || bottom != null) {
-    var parent = control.parent;
-    if (!["Stack", "Page", "Overlay"].contains(parent?.type)) {
-      return ErrorControl("Error displaying ${control.type}",
-          description:
-              "Control can be positioned absolutely with \"left\", \"top\", \"right\" and \"bottom\" properties inside Stack control only.");
+    if (control.parent?.internals?["host_positioned"] != true) {
+      return errorControl;
     }
     return Positioned(
       left: left,
@@ -246,10 +244,16 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control control) {
+  final skipProps = control.internals?["skip_properties"] as List?;
+  if (skipProps?.contains("width") == true ||
+      skipProps?.contains("height") == true) {
+    return widget;
+  }
+
   var width = control.getDouble("width");
   var height = control.getDouble("height");
-  if ((width != null || height != null) &&
-      !["container", "image"].contains(control.type)) {
+
+  if ((width != null || height != null)) {
     widget = ConstrainedBox(
       constraints: BoxConstraints.tightFor(width: width, height: height),
       child: widget,

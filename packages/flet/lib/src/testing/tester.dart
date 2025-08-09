@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'test_finder.dart';
 
 abstract class Tester {
-  Future<void> pumpAndSettle([Duration duration]);
+  Future<void> pumpAndSettle({Duration? duration});
   Future<void> pump({Duration? duration});
   TestFinder findByText(String text);
   TestFinder findByTextContaining(String pattern);
