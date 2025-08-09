@@ -257,7 +257,10 @@ class BaseControl:
             _context_page.set(self.page)
             UpdateBehavior.reset()
 
-            assert self.page, "Control must be added on a page first."
+            assert self.page, (
+                "Control must be added to a page before triggering events. "
+                "Use page.add(control) or add it to a parent control that's on a page."
+            )
             session = self.page.get_session()
 
             # Handle async and sync event handlers accordingly

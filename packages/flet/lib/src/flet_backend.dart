@@ -345,7 +345,7 @@ class FletBackend extends ChangeNotifier {
     debugPrint("Page media updated: $newMedia");
     media = newMedia;
     updateControl(page.id, {"media": newMedia.toMap()});
-    triggerControlEvent(page, "media_change");
+    triggerControlEvent(page, "media_change", newMedia.toMap());
     notifyListeners();
   }
 

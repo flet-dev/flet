@@ -11,7 +11,6 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
-    ControlEventHandler,
     Event,
     EventHandler,
 )
@@ -129,7 +128,7 @@ class PageView(AdaptiveControl):
 
     Each [View][flet.View] represents a distinct navigation state or screen
     in the application.
-    
+
     The first view in the list is considered the active one by default.
     """
 
@@ -157,26 +156,32 @@ class PageView(AdaptiveControl):
 
     show_semantics_debugger: Optional[bool] = None
     """
-    `True` turns on an overlay that shows the accessibility information reported by the
-    framework.
+    Whether to turn on an overlay that shows the accessibility information
+    reported by the framework.
     """
 
     width: Optional[Number] = None
     """
-    Page width in logical pixels (read-only).
+    Page width in logical pixels.
 
-    To get or set the full window width including window chrome (e.g.,
-    title bar and borders) when running a Flet app on desktop,
-    use the `page.window.width` property instead.
+    Note:
+        - This property is read-only.
+        - To get or set the full window height including window chrome (e.g.,
+            title bar and borders) when running a Flet app on desktop,
+            use the [`width`][flet.Window.width] property of
+            [`Page.window`][flet.Page.window] instead.
     """
 
     height: Optional[Number] = None
     """
-    Page height in logical pixels (read-only).
+    Page height in logical pixels.
 
-    To get or set the full window height including window chrome (e.g.,
-    title bar and borders) when running a Flet app on desktop,
-    use the `page.window.height` property instead.
+    Note:
+        - This property is read-only.
+        - To get or set the full window height including window chrome (e.g.,
+            title bar and borders) when running a Flet app on desktop,
+            use the [`height`][flet.Window.height] property of
+            [`Page.window`][flet.Page.window] instead.
     """
 
     title: Optional[str] = None
@@ -209,11 +214,9 @@ class PageView(AdaptiveControl):
     ```
     """
 
-    on_media_change: Optional[ControlEventHandler["PageView"]] = None
+    on_media_change: Optional[EventHandler[PageMediaData]] = None
     """
-    Called when `page.media` has changed.
-
-    Event type: [`PageMediaData`][flet.PageMediaData]
+    Called when `media` has changed.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
