@@ -268,7 +268,6 @@ def test_simple_page():
     #     print("\nREMOVED CONTROL:", rc)
     assert len(added_controls) == 1
     assert len(removed_controls) == 1
-    print(patch)
     assert cmp_ops(
         patch,
         [
