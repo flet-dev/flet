@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import platform
+import shutil
 import tempfile
 from io import BytesIO
 from pathlib import Path
@@ -19,6 +20,9 @@ from flet.utils.platform_utils import get_bool_env_var
 
 DEFAULT_SCREENSHOTS_PIXEL_RATIO = "2.0"
 DEFAULT_SIMILARITY_THRESHOLD = "99.0"
+
+HAS_FVM = shutil.which("fvm") is not None
+"""Whether fvm is available in PATH."""
 
 
 class FletTestApp:
@@ -108,7 +112,11 @@ class FletTestApp:
             stdout = None
             stderr = None
 
-        flutter_args = ["flutter", "test", "integration_test"]
+        flutter_args = (["fvm"] if HAS_FVM else []) + [
+            "flutter",
+            "test",
+            "integration_test",
+        ]
 
         self.test_platform = os.getenv("FLET_TEST_PLATFORM")
         if self.test_platform is None:
@@ -151,7 +159,8 @@ class FletTestApp:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
-                    f"Flutter process exited early with code {self.__flutter_process.returncode}"
+                    f"Flutter process exited early with code "
+                    f"{self.__flutter_process.returncode}"
                 )
 
     async def teardown(self):
@@ -202,6 +211,7 @@ class FletTestApp:
         await self.tester.pump_and_settle()
         for _ in range(0, pump_times):
             await self.tester.pump(duration=pump_duration)
+
         self.assert_screenshot(
             name,
             await screenshot.capture_async(pixel_ratio=self.pixel_ratio),
@@ -237,7 +247,7 @@ class FletTestApp:
         else:
             if not golden_image_path.exists():
                 raise Exception(
-                    f"Golden image for {name} not found: {golden_image_path}"
+                    f"Golden image for {name} not found at {golden_image_path}"
                 )
             golden_img = self._load_image_from_file(golden_image_path)
             img = self._load_image_from_bytes(screenshot)
@@ -250,17 +260,21 @@ class FletTestApp:
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
+
             assert similarity > self.similarity_threshold, (
                 f"{name} screenshots are not identical"
             )
 
-    def _load_image_from_file(self, file_name):
+    @staticmethod
+    def _load_image_from_file(file_name):
         return Image.open(file_name)
 
-    def _load_image_from_bytes(self, data: bytes) -> Image.Image:
+    @staticmethod
+    def _load_image_from_bytes(data: bytes) -> Image.Image:
         return Image.open(BytesIO(data))
 
-    def _compare_images_rgb(self, img1, img2) -> float:
+    @staticmethod
+    def _compare_images_rgb(img1, img2) -> float:
         if img1.size != img2.size:
             img2 = img2.resize(img1.size)
         arr1 = np.array(img1)
