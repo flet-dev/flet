@@ -52,15 +52,18 @@ class ScrollableControl(Control):
 
     Defaults to `ScrollMode.None`.
     """
+
     auto_scroll: bool = False
     """
     `True` if scrollbar should automatically move its position to the end when children
     updated. Must be `False` for `scroll_to()` method to work.
     """
+
     scroll_interval: Number = 10
     """
     Throttling in milliseconds for `on_scroll` event.
     """
+
     on_scroll: Optional[EventHandler[OnScrollEvent]] = None
     """
     Called when scroll position is changed by a user.
@@ -108,6 +111,7 @@ class ScrollableControl(Control):
         ```python
         import flet as ft
 
+
         def main(page: ft.Page):
             cl = ft.Column(
                 spacing=10,
@@ -125,6 +129,7 @@ class ScrollableControl(Control):
                 ft.Container(cl, border=ft.border.all(1)),
                 ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
             )
+
 
         ft.run(main)
         ```
@@ -185,6 +190,7 @@ class ScrollableControl(Control):
         ```python
         import flet as ft
 
+
         def main(page: ft.Page):
             cl = ft.Column(
                 spacing=10,
@@ -202,6 +208,7 @@ class ScrollableControl(Control):
                 ft.Container(cl, border=ft.border.all(1)),
                 ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
             )
+
 
         ft.run(main)
         ```

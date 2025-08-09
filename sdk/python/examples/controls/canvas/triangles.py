@@ -11,17 +11,17 @@ def main(page: ft.Page):
                 cv.Path(
                     paint=ft.Paint(style=ft.PaintingStyle.FILL),
                     elements=[
-                        cv.Path.MoveTo(25, 25),
-                        cv.Path.LineTo(105, 25),
-                        cv.Path.LineTo(25, 105),
+                        cv.Path.MoveTo(x=25, y=25),
+                        cv.Path.LineTo(x=105, y=25),
+                        cv.Path.LineTo(x=25, y=105),
                     ],
                 ),
                 cv.Path(
                     paint=ft.Paint(stroke_width=2, style=ft.PaintingStyle.STROKE),
                     elements=[
-                        cv.Path.MoveTo(125, 125),
-                        cv.Path.LineTo(125, 45),
-                        cv.Path.LineTo(45, 125),
+                        cv.Path.MoveTo(x=125, y=125),
+                        cv.Path.LineTo(x=125, y=45),
+                        cv.Path.LineTo(x=45, y=125),
                         cv.Path.Close(),
                     ],
                 ),

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.duration import Duration
+from flet.controls.duration import DurationValue
 from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
 from flet.controls.types import IconValue
@@ -16,7 +16,7 @@ class Tester(Service):
     Class that programmatically interacts with page controls and the test environment.
     """
 
-    async def pump(self, duration: Optional[Duration] = None):
+    async def pump(self, duration: Optional[DurationValue] = None):
         """
         Triggers a frame after duration amount of time.
 
@@ -25,7 +25,7 @@ class Tester(Service):
         """
         return await self._invoke_method_async("pump", {"duration": duration})
 
-    async def pump_and_settle(self):
+    async def pump_and_settle(self, duration: Optional[DurationValue] = None):
         """
         Repeatedly calls pump until there are no longer any frames scheduled.
         This will call `pump` at least once, even if no frames are scheduled when
@@ -33,8 +33,13 @@ class Tester(Service):
         themselves schedule a frame.
 
         This essentially waits for all animations to have completed.
+
+        Args:
+            duration: A duration after which to trigger a frame.
         """
-        return await self._invoke_method_async("pump_and_settle")
+        return await self._invoke_method_async(
+            "pump_and_settle", {"duration": duration}
+        )
 
     async def find_by_text(self, text: str) -> Finder:
         """

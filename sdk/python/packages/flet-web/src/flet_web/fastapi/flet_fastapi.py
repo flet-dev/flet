@@ -1,20 +1,17 @@
 import asyncio
-from contextlib import asynccontextmanager
+from collections.abc import Awaitable, Coroutine, Sequence
+from contextlib import asynccontextmanager, suppress
 from typing import (
     Any,
-    Awaitable,
     Callable,
-    Coroutine,
     Dict,
     List,
     Optional,
-    Sequence,
     Type,
     Union,
 )
 
 import fastapi
-import flet_web.fastapi
 from fastapi.datastructures import Default
 from fastapi.params import Depends
 from fastapi.utils import generate_unique_id
@@ -22,6 +19,8 @@ from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import BaseRoute
+
+import flet_web.fastapi
 
 
 class FastAPI(fastapi.FastAPI):
@@ -80,7 +79,8 @@ class FastAPI(fastapi.FastAPI):
                     else:
                         h()
 
-            yield
+            with suppress(asyncio.CancelledError):
+                yield
             if on_shutdown:
                 for h in on_shutdown:
                     if asyncio.iscoroutinefunction(h):

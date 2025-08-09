@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.duration import Duration
+from flet.controls.duration import DurationValue
 from flet.controls.types import Number
 
 __all__ = ["Screenshot"]
@@ -20,7 +20,9 @@ class Screenshot(Control):
     """
 
     async def capture_async(
-        self, pixel_ratio: Optional[Number] = None, delay: Optional[Duration] = None
+        self,
+        pixel_ratio: Optional[Number] = None,
+        delay: Optional[DurationValue] = None,
     ) -> bytes:
         """
         Captures a screenshot of the enclosed content control.

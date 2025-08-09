@@ -348,3 +348,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         ft.run(main)
         ```
     """
+
+    def init(self):
+        super().init()
+        self._internals["skip_properties"] = ["width", "height"]

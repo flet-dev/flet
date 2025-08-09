@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import platform
+import tempfile
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
@@ -16,8 +17,8 @@ from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
-pixel_ratio = float(os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", "2.0"))
-similarity_threshold = float(os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", "99.0"))
+DEFAULT_SCREENSHOTS_PIXEL_RATIO = "2.0"
+DEFAULT_SIMILARITY_THRESHOLD = "99.0"
 
 
 class FletTestApp:
@@ -25,6 +26,7 @@ class FletTestApp:
         self,
         flutter_app_dir: os.PathLike,
         flet_app_main: Any = None,
+        assets_dir: Optional[os.PathLike] = None,
         test_path: Optional[str] = None,
         tcp_port: Optional[int] = None,
     ):
@@ -32,9 +34,18 @@ class FletTestApp:
         Flet app test controller is a bridge that connects together
         a Flet app in Python and a running integration test in Flutter.
         """
+        self.pixel_ratio = float(
+            os.getenv(
+                "FLET_TEST_SCREENSHOTS_PIXEL_RATIO", DEFAULT_SCREENSHOTS_PIXEL_RATIO
+            )
+        )
+        self.similarity_threshold = float(
+            os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", DEFAULT_SIMILARITY_THRESHOLD)
+        )
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__flutter_app_dir = flutter_app_dir
+        self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
@@ -79,7 +90,16 @@ class FletTestApp:
         if not self.__tcp_port:
             self.__tcp_port = get_free_tcp_port()
 
-        asyncio.create_task(ft.run_async(main, port=self.__tcp_port, view=None))
+        use_http = get_bool_env_var("FLET_TEST_USE_HTTP")
+
+        if use_http:
+            os.environ["FLET_FORCE_WEB_SERVER"] = "true"
+
+        asyncio.create_task(
+            ft.run_async(
+                main, port=self.__tcp_port, assets_dir=str(self.__assets_dir), view=None
+            )
+        )
         print("Started Flet app")
 
         stdout = asyncio.subprocess.DEVNULL
@@ -101,12 +121,21 @@ class FletTestApp:
         self.test_device = os.getenv("FLET_TEST_DEVICE", self.test_platform)
 
         tcp_addr = "10.0.2.2" if self.test_platform == "android" else "127.0.0.1"
+        protocol = "http" if use_http else "tcp"
 
         if self.test_device:
             flutter_args += ["-d", self.test_device]
 
-        app_url = f"tcp://{tcp_addr}:{self.__tcp_port}"
+        app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
         flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
+
+        if not use_http:
+            temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+            flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
+            if self.__assets_dir:
+                flutter_args += [
+                    f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
+                ]
 
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
@@ -147,7 +176,13 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
-    async def assert_control_screenshot(self, name: str, control: Control):
+    async def assert_control_screenshot(
+        self,
+        name: str,
+        control: Control,
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ):
         """
         Adds control to a clean page, takes a screenshot and compares it with
         a golden copy or takes golden screenshot if `FLET_TEST_GOLDEN=1`
@@ -159,14 +194,17 @@ class FletTestApp:
         """
         # clean page
         self.page.clean()
+        await self.tester.pump_and_settle()
 
         # add control and take screenshot
         screenshot = ft.Screenshot(control)
         self.page.add(screenshot)
         await self.tester.pump_and_settle()
+        for _ in range(0, pump_times):
+            await self.tester.pump(duration=pump_duration)
         self.assert_screenshot(
             name,
-            await screenshot.capture_async(pixel_ratio=pixel_ratio),
+            await screenshot.capture_async(pixel_ratio=self.pixel_ratio),
         )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
@@ -205,14 +243,14 @@ class FletTestApp:
             img = self._load_image_from_bytes(screenshot)
             similarity = self._compare_images_rgb(golden_img, img)
             print(f"Similarity for {name}: {similarity}%")
-            if similarity <= similarity_threshold:
+            if similarity <= self.similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
                     / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
-            assert similarity > similarity_threshold, (
+            assert similarity > self.similarity_threshold, (
                 f"{name} screenshots are not identical"
             )
 

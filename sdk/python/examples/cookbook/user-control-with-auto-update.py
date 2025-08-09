@@ -8,7 +8,7 @@ class MyPanel(ft.Container):
     greeting: str = "Hi"
 
     # called only once
-    def init(self):
+    def build(self):
         print(self.page.platform)
         self.content = ft.Column(
             [

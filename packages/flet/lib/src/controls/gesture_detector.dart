@@ -36,6 +36,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   int _hoverTimestamp = DateTime.now().millisecondsSinceEpoch;
   Offset _localHover = Offset.zero;
   Timer? _debounce;
+  bool _rightPanActive = false;
+  int _rightPanTimestamp = DateTime.now().millisecondsSinceEpoch;
+  Offset _rightPanStart = Offset.zero;
 
   @override
   void initState() {
@@ -362,16 +365,55 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
           )
         : result;
 
-    result = onScroll
-        ? Listener(
-            behavior: HitTestBehavior.translucent,
-            onPointerSignal: (details) {
-              if (details is PointerScrollEvent) {
-                widget.control.triggerEvent("scroll", details.toMap());
+    var onRightPanStart = widget.control.getBool("on_right_pan_start", false)!;
+    var onRightPanUpdate =
+        widget.control.getBool("on_right_pan_update", false)!;
+    var onRightPanEnd = widget.control.getBool("on_right_pan_end", false)!;
+
+    if (onScroll || onRightPanStart || onRightPanUpdate || onRightPanEnd) {
+      result = Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerSignal: onScroll
+            ? (details) {
+                if (details is PointerScrollEvent) {
+                  widget.control.triggerEvent("scroll", details.toMap());
+                }
               }
-            },
-            child: result)
-        : result;
+            : null,
+        onPointerDown: onRightPanStart
+            ? (event) {
+                if (event.kind == PointerDeviceKind.mouse &&
+                    event.buttons == kSecondaryMouseButton) {
+                  _rightPanActive = true;
+                  _rightPanStart = event.localPosition;
+                  widget.control.triggerEvent("right_pan_start", event.toMap());
+                }
+              }
+            : null,
+        onPointerMove: onRightPanUpdate
+            ? (event) {
+                if (_rightPanActive && event.buttons == kSecondaryMouseButton) {
+                  var now = DateTime.now().millisecondsSinceEpoch;
+                  if (now - _rightPanTimestamp > dragInterval) {
+                    _rightPanTimestamp = now;
+                    widget.control.triggerEvent(
+                        "right_pan_update", event.toMap(_rightPanStart));
+                    _rightPanStart = event.localPosition;
+                  }
+                }
+              }
+            : null,
+        onPointerUp: onRightPanEnd
+            ? (event) {
+                if (_rightPanActive) {
+                  _rightPanActive = false;
+                  widget.control.triggerEvent("right_pan_end", event.toMap());
+                }
+              }
+            : null,
+        child: result,
+      );
+    }
 
     var mouseCursor =
         parseMouseCursor(widget.control.getString("mouse_cursor"));

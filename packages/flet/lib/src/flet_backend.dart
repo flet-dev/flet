@@ -75,7 +75,8 @@ class FletBackend extends ChangeNotifier {
   PageMediaData media = PageMediaData(
       padding: PaddingData(EdgeInsets.zero),
       viewPadding: PaddingData(EdgeInsets.zero),
-      viewInsets: PaddingData(EdgeInsets.zero));
+      viewInsets: PaddingData(EdgeInsets.zero),
+      devicePixelRatio: 0);
   TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;
@@ -344,7 +345,7 @@ class FletBackend extends ChangeNotifier {
     debugPrint("Page media updated: $newMedia");
     media = newMedia;
     updateControl(page.id, {"media": newMedia.toMap()});
-    triggerControlEvent(page, "media_change");
+    triggerControlEvent(page, "media_change", newMedia.toMap());
     notifyListeners();
   }
 

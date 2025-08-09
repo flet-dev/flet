@@ -75,12 +75,15 @@ class DataColumn(Control):
     If not set, the column will not be considered sortable.
     """
 
+    def init(self):
+        super().init()
+        self._internals["skip_properties"] = ["tooltip"]
+
     def before_update(self):
         super().before_update()
         assert isinstance(self.label, str) or (
             isinstance(self.label, Control) and self.label.visible
         ), "label must a string or a visible control"
-        self._internals["skip_properties"] = ["tooltip"]
 
 
 @control("DataCell")

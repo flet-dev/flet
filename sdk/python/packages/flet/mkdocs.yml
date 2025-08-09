@@ -279,6 +279,7 @@ nav:
                   - Circle: controls/canvas/circle.md
                   - Color: controls/canvas/color.md
                   - Fill: controls/canvas/fill.md
+                  - Image: controls/canvas/image.md
                   - Line: controls/canvas/line.md
                   - Oval: controls/canvas/oval.md
                   - Path: controls/canvas/path.md
@@ -378,6 +379,7 @@ nav:
               - FletApp: controls/fletapp.md
               - GestureDetector: controls/gesturedetector.md
               - InteractiveViewer: controls/interactiveviewer.md
+              - KeyboardListener: controls/keyboardlistener.md
               - MergeSemantics: controls/mergesemantics.md
               - SelectionArea: controls/selectionarea.md
               - Semantics: controls/semantics.md
@@ -614,6 +616,9 @@ nav:
               - FilePickerUploadEvent: types/filepickeruploadevent.md
               - HoverEvent: types/hoverevent.md
               - KeyboardEvent: types/keyboardevent.md
+              - KeyDownEvent: types/keydownevent.md
+              - KeyRepeatEvent: types/keyrepeatevent.md
+              - KeyUpEvent: types/keyupevent.md
               - LoginEvent: types/loginevent.md
               - LongPressEndEvent: types/longpressendevent.md
               - LongPressStartEvent: types/longpressstartevent.md

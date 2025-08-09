@@ -165,6 +165,10 @@ class View(ScrollableControl, ConstrainedControl):
     async def confirm_pop_async(self, should_pop: bool) -> None:
         await self._invoke_method_async("confirm_pop", {"should_pop": should_pop})
 
+    def init(self):
+        super().init()
+        self._internals["host_expanded"] = True
+
     # Magic methods
     def __contains__(self, item: Control) -> bool:
         return item in self.controls

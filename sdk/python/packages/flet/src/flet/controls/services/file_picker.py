@@ -5,20 +5,22 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
 
 __all__ = [
     "FilePicker",
-    "FilePickerUploadEvent",
-    "FilePickerFileType",
-    "FilePickerUploadFile",
     "FilePickerFile",
+    "FilePickerFileType",
+    "FilePickerUploadEvent",
+    "FilePickerUploadFile",
 ]
 
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the [`FilePicker`][flet.FilePicker].
+    Defines the file types that can be selected using the
+    [`FilePicker`][flet.FilePicker].
     """
 
     ANY = "any"
@@ -28,7 +30,8 @@ class FilePickerFileType(Enum):
 
     MEDIA = "media"
     """
-    A combination of [`VIDEO`][flet.FilePickerFileType.VIDEO] and [`IMAGE`][flet.FilePickerFileType.IMAGE].
+    A combination of [`VIDEO`][flet.FilePickerFileType.VIDEO] and
+    [`IMAGE`][flet.FilePickerFileType.IMAGE].
     """
 
     IMAGE = "image"
@@ -130,12 +133,14 @@ class FilePicker(Service):
         """
         Uploads selected files to specified upload URLs.
 
-        Before calling this method, [`pick_files_async()`][flet.FilePicker.pick_files_async]
+        Before calling this method,
+        [`pick_files_async()`][flet.FilePicker.pick_files_async]
         must be called, so that the internal file picker selection is not empty.
 
         Args:
             files: A list of [`FilePickerUploadFile`][flet.FilePickerUploadFile], where
-                each item specifies which file to upload, and where (with PUT or POST).
+                each item specifies which file to upload, and where
+                (with PUT or POST).
         """
         await self._invoke_method_async(
             "upload",
@@ -146,12 +151,14 @@ class FilePicker(Service):
         """
         Uploads selected files to specified upload URLs.
 
-        Before calling this method, [`pick_files_async()`][flet.FilePicker.pick_files_async]
+        Before calling this method,
+        [`pick_files_async()`][flet.FilePicker.pick_files_async]
         must be called, so that the internal file picker selection is not empty.
 
         Args:
             files: A list of [`FilePickerUploadFile`][flet.FilePickerUploadFile], where
-                each item specifies which file to upload, and where (with PUT or POST).
+                each item specifies which file to upload, and where
+                (with PUT or POST).
         """
         asyncio.create_task(self.upload_async(files))
 
@@ -166,7 +173,15 @@ class FilePicker(Service):
         Args:
             dialog_title: The title of the dialog window. Defaults to [`FilePicker.
             initial_directory: The initial directory where the dialog should open.
+
+        Raises:
+            NotImplementedError: if called in web app.
         """
+        if self.page.web:
+            raise FletUnsupportedPlatformException(
+                "get_directory_path is not supported on web"
+            )
+
         return await self._invoke_method_async(
             "get_directory_path",
             {
@@ -194,48 +209,29 @@ class FilePicker(Service):
             file_name: The default file name.
             initial_directory: The initial directory where the dialog should open.
             file_type: The file types allowed to be selected.
-            src_bytes: TBA
+            src_bytes: The contents of a file. Must be provided in web,
+                iOS or Android modes.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
+                `file_type` is
+                [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
 
         Note:
-            - This method only opens a dialog for the user to select a location and file name,
-            and returns the chosen path. The file itself is not created or saved.
-            - This method is only available on desktop platforms (Linux, macOS & Windows).
+            - On desktop this method only opens a dialog for the user to select
+              a location and file name, and returns the chosen path. The file
+              itself is not created or saved.
 
-        Info: Saving a file on web
-            To save a file from the web, you actually don't need to use a `FilePicker`.
-
-            You can instead provide an API endpoint `/download/:filename` that returns the
-            file content, and then use
-            [`page.launch_url`][flet.Page.launch_url] to open the url, which
-            will trigger the browser's save file dialog.
-
-            Take [FastAPI](https://flet.dev/docs/publish/web/dynamic-website#advanced-fastapi-scenarios)
-            as an example, you can use the following code to implement the endpoint:
-
-            ```python
-            from fastapi import FastAPI, Response
-            from fastapi.responses import FileResponse
-
-            app = flet_fastapi.app(main)
-
-            @app.get("/download/{filename}")
-            def download(filename: str):
-                path = prepare_file(filename)
-                return FileResponse(path)
-            ```
-
-            and then use `page.launch_url("/download/myfile.txt")` to open the url, for
-            instance, when a button is clicked.
-
-            ```python
-            ft.ElevatedButton(
-                "Download myfile",
-                on_click=lambda _: page.launch_url("/download/myfile.txt"),
-            )
-            ```
+        Raises:
+            ValueError: if `src_bytes` is not provided in web, iOS or Android modes.
+            ValueError: if `file_name` is not provided in web mode.
         """
+
+        if (self.page.web or self.page.platform.is_mobile()) and not src_bytes:
+            raise ValueError(
+                '"src_bytes" is required when saving a file on Web, Android and iOS.'
+            )
+        if self.page.web and not file_name:
+            raise ValueError('"file_name" is required when saving a file on Web.')
+
         return await self._invoke_method_async(
             "save_file",
             {
@@ -266,7 +262,8 @@ class FilePicker(Service):
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
+                `file_type` is
+                [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
         """
         files = await self._invoke_method_async(
             "pick_files",

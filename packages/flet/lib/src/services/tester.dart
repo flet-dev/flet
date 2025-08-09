@@ -1,8 +1,6 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_service.dart';
-import '../testing/test_finder.dart';
-import '../utils/icons.dart';
 import '../utils/keys.dart';
 
 class TesterService extends FletService {
@@ -27,10 +25,12 @@ class TesterService extends FletService {
     debugPrint("Tester.$name($args)");
     switch (name) {
       case "pump":
-        await control.backend.tester!.pump(duration: args["duration"]);
+        await control.backend.tester!
+            .pump(duration: parseDuration(args["duration"]));
 
       case "pump_and_settle":
-        await control.backend.tester!.pumpAndSettle();
+        await control.backend.tester!
+            .pumpAndSettle(duration: parseDuration(args["duration"]));
 
       case "find_by_text":
         var finder = control.backend.tester!.findByText(args["text"]);

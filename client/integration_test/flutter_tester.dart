@@ -18,11 +18,11 @@ class FlutterWidgetTester implements Tester {
   FlutterWidgetTester(this._tester, this._binding);
 
   @override
-  Future<void> pumpAndSettle(
-      [Duration duration = const Duration(milliseconds: 100)]) async {
+  Future<void> pumpAndSettle({Duration? duration}) async {
     await lock.acquire();
     try {
-      await _tester.pumpAndSettle(duration);
+      await _tester
+          .pumpAndSettle(duration ?? const Duration(milliseconds: 100));
     } finally {
       lock.release();
     }

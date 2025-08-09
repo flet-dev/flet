@@ -173,7 +173,7 @@ for:
 
     test_script:
       - cd sdk/python
-      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/
+      - uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests
 
     on_failure:
       - find packages/flet/integration_tests -type f -name '*_actual.png' -exec appveyor PushArtifact {} \;
