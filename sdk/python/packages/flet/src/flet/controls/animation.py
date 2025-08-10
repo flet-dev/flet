@@ -69,7 +69,7 @@ class Animation:
     The curve to use for the animation.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         duration: Optional[DurationValue] = None,
@@ -106,7 +106,7 @@ class AnimationStyle:
     The curve to use for the reverse animation.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         duration: Optional[DurationValue] = None,

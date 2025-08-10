@@ -218,7 +218,7 @@ class TextStyle:
     text span, or, for the root text spans, with the line box.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         size: Optional[Number] = None,
@@ -322,7 +322,7 @@ class StrutStyle:
     Defaults to `False`.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         size: Optional[Number] = None,

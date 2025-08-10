@@ -22,8 +22,8 @@ __all__ = [
     "ContinuousRectangleBorder",
     "OutlinedBorder",
     "RoundedRectangleBorder",
-    "StadiumBorder",
     "ShapeBorder",
+    "StadiumBorder",
 ]
 
 
@@ -69,7 +69,7 @@ class StadiumBorder(OutlinedBorder):
     def __post_init__(self):
         self._type = "stadium"
 
-    def copy_with(
+    def copy(
         self,
         *,
         side: Optional[BorderSide] = None,
@@ -96,7 +96,7 @@ class RoundedRectangleBorder(OutlinedBorder):
     def __post_init__(self):
         self._type = "roundedRectangle"
 
-    def copy_with(
+    def copy(
         self,
         *,
         side: Optional[BorderSide] = None,
@@ -122,7 +122,7 @@ class CircleBorder(OutlinedBorder):
     def __post_init__(self):
         self._type = "circle"
 
-    def copy_with(
+    def copy(
         self,
         *,
         side: Optional[BorderSide] = None,
@@ -148,7 +148,7 @@ class BeveledRectangleBorder(RoundedRectangleBorder):
     def __post_init__(self):
         self._type = "beveledRectangle"
 
-    def copy_with(
+    def copy(
         self,
         *,
         side: Optional[BorderSide] = None,
@@ -172,7 +172,7 @@ class ContinuousRectangleBorder(RoundedRectangleBorder):
     def __post_init__(self):
         self._type = "continuousRectangle"
 
-    def copy_with(
+    def copy(
         self,
         *,
         side: Optional[BorderSide] = None,
@@ -288,7 +288,7 @@ class ButtonStyle:
     over the button.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         color: Optional[ControlStateValue[ColorValue]] = None,
