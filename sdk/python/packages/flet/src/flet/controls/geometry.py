@@ -5,8 +5,8 @@ from flet.controls.transform import Offset
 from flet.controls.types import Number
 
 __all__ = [
-    "Size",
     "Rect",
+    "Size",
 ]
 
 
@@ -39,11 +39,6 @@ class Size:
         return self.width != float("inf") and self.height != float("inf")
 
     @classmethod
-    def copy(cls, source: "Size") -> "Size":
-        """Creates a copy of the given Size object."""
-        return Size(source.width, source.height)
-
-    @classmethod
     def square(cls, dimension: Number) -> "Size":
         """Creates a square Size where width and height are the same."""
         return Size(dimension, dimension)
@@ -70,8 +65,8 @@ class Size:
     @classmethod
     def infinite(cls):
         return Size(float("inf"), float("inf"))
-        
-    def copy_with(
+
+    def copy(
         self,
         *,
         width: Optional[Number] = None,
@@ -89,7 +84,8 @@ class Size:
 @dataclass
 class Rect:
     """
-    A 2D, axis-aligned, floating-point rectangle whose coordinates are relative to a given origin.
+    A 2D, axis-aligned, floating-point rectangle whose coordinates are relative
+    to a given origin.
     """
 
     left: Number
@@ -113,8 +109,8 @@ class Rect:
     def height(self) -> Number:
         """The distance between the top and bottom edges of this rectangle."""
         return self.bottom - self.top
-        
-    def copy_with(
+
+    def copy(
         self,
         *,
         left: Optional[Number] = None,
@@ -161,7 +157,7 @@ class Rect:
             center.y - height / 2,
             center.x + width / 2,
             center.y + height / 2,
-                    )
+        )
 
     @classmethod
     def from_points(cls, a: Offset, b: Offset):
@@ -174,4 +170,4 @@ class Rect:
             min(a.y, b.y),
             max(a.x, b.x),
             max(a.y, b.y),
-                    )
+        )

@@ -175,7 +175,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             or self.bgcolor is not None
             or self.elevation != 1
         ):
-            self._internals["style"] = (self.style or ButtonStyle()).copy_with(
+            self._internals["style"] = (self.style or ButtonStyle()).copy(
                 color=self.color,
                 bgcolor=self.bgcolor,
                 elevation=self.elevation,

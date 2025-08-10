@@ -84,7 +84,7 @@ class Alignment:
     Represents the top right corner and is equivalent to `Alignment(1.0, -1.0)`.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         x: Optional[Number] = None,

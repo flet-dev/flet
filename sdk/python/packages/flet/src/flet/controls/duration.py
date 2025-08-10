@@ -5,14 +5,14 @@ from typing import Optional, Union
 from flet.controls.types import Number
 
 __all__ = [
+    "DateTimeValue",
     "Duration",
     "DurationValue",
-    "MICROSECONDS_PER_MILLISECOND",
-    "MICROSECONDS_PER_SECOND",
-    "MICROSECONDS_PER_MINUTE",
-    "MICROSECONDS_PER_HOUR",
     "MICROSECONDS_PER_DAY",
-    "DateTimeValue",
+    "MICROSECONDS_PER_HOUR",
+    "MICROSECONDS_PER_MILLISECOND",
+    "MICROSECONDS_PER_MINUTE",
+    "MICROSECONDS_PER_SECOND",
 ]
 
 MICROSECONDS_PER_MILLISECOND = 1_000
@@ -205,7 +205,7 @@ class Duration:
 
     # Instance Methods
 
-    def copy_with(
+    def copy(
         self,
         *,
         microseconds: Optional[int] = None,

@@ -5,12 +5,12 @@ from flet.controls.alignment import Alignment
 from flet.controls.types import Number
 
 __all__ = [
-    "Scale",
-    "Rotate",
     "Offset",
-    "ScaleValue",
-    "RotateValue",
     "OffsetValue",
+    "Rotate",
+    "RotateValue",
+    "Scale",
+    "ScaleValue",
 ]
 
 
@@ -40,7 +40,7 @@ class Scale:
     Gives the origin of scale.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         scale: Optional[Number] = None,
@@ -75,7 +75,7 @@ class Rotate:
     The alignment of the rotation.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         angle: Optional[Number] = None,
@@ -106,7 +106,7 @@ class Offset:
     The vertical offset.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         x: Optional[Number] = None,

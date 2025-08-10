@@ -10,11 +10,11 @@ __all__ = [
     "Border",
     "BorderSide",
     "BorderSideStrokeAlign",
-    "BorderStyle",
     "BorderSideStrokeAlignValue",
+    "BorderStyle",
     "all",
-    "symmetric",
     "only",
+    "symmetric",
 ]
 
 
@@ -66,7 +66,8 @@ class BorderSide:
     This means that it will render faster than otherwise, but it might
     double-hit pixels, giving it a slightly darker/lighter result.
 
-    To omit the border entirely, set the [`style`][flet.BorderSide.style] to `BorderStyle.NONE`.
+    To omit the border entirely, set the [`style`][flet.BorderSide.style]
+    to [`BorderStyle.NONE`][flet.BorderStyle.NONE].
     """
 
     color: ColorValue = Colors.BLACK
@@ -128,7 +129,7 @@ class BorderSide:
 
     # Instance Methods
 
-    def copy_with(
+    def copy(
         self,
         *,
         width: Optional[Number] = None,
@@ -246,7 +247,7 @@ class Border:
 
     # Instance Methods
 
-    def copy_with(
+    def copy(
         self,
         *,
         left: Optional[BorderSide] = None,
@@ -255,8 +256,7 @@ class Border:
         bottom: Optional[BorderSide] = None,
     ) -> "Border":
         """
-        Returns a copy of this `Border` instance with the given fields replaced
-        with the new values.
+        Returns a copy of this object with the specified properties overridden.
         """
         return Border(
             left=left if left is not None else self.left,
