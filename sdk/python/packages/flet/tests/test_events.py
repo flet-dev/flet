@@ -1,5 +1,6 @@
 from typing import ForwardRef, get_args, get_origin
 
+from flet.controls.base_page import PageResizeEvent
 from flet.controls.control_event import ControlEvent, Event, get_event_field_type
 from flet.controls.core.column import Column
 from flet.controls.events import TapEvent
@@ -10,7 +11,6 @@ from flet.controls.material.reorderable_list_view import (
     ReorderableListView,
 )
 from flet.controls.page import Page
-from flet.controls.page_view import PageResizeEvent
 from flet.controls.scrollable_control import OnScrollEvent
 from flet.controls.types import PointerDeviceType
 from flet.messaging.connection import Connection

@@ -27,8 +27,8 @@ else:
 
 
 if TYPE_CHECKING:
+    from .base_page import BasePage
     from .page import Page
-    from .page_view import PageView
 
 __all__ = [
     "BaseControl",
@@ -141,7 +141,8 @@ class BaseControl:
         # weakref.finalize(
         #     self,
         #     lambda: controls_log.debug(
-        #         f"Control was garbage collected: {ctrl_type}({control_id} - {object_id})"
+        #         f"Control was garbage collected: {ctrl_type}({control_id} "
+        #         f"- {object_id})"
         #     ),
         # )
 
@@ -153,21 +154,25 @@ class BaseControl:
         """
         The direct ancestor(parent) of this control.
 
-        It defaults to `None` and will only have a value when this control is mounted (added to the page tree).
+        It defaults to `None` and will only have a value when this control is mounted
+        (added to the page tree).
 
-        The `Page` control (which is the root of the tree) is an exception - it always has `parent=None`.
+        The `Page` control (which is the root of the tree) is an exception - it always
+        has `parent=None`.
         """
         parent_ref = getattr(self, "_parent", None)
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> Optional[Union["Page", "PageView"]]:
-        """The page (of type `Page` or `PageView`) to which this control belongs to."""
-        from .page import Page, PageView
+    def page(self) -> Optional[Union["Page", "BasePage"]]:
+        """
+        The page to which this control belongs to.
+        """
+        from .page import BasePage, Page
 
         parent = self
         while parent:
-            if isinstance(parent, (Page, PageView)):
+            if isinstance(parent, (Page, BasePage)):
                 return parent
             parent = parent.parent
         return None
