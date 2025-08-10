@@ -55,3 +55,5 @@ Android device or simulator.
 `FLET_TEST_PID_FILE_PATH` - path to a Flutter client PID file.
 
 `FLET_TEST_ASSETS_DIR` - path to assets directory.
+
+`FLET_TEST_USE_FVM` - `True` to use `fvm` to run Flutter process with tests.
