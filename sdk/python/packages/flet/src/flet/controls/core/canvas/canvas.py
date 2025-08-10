@@ -62,7 +62,7 @@ class Canvas(ConstrainedControl):
             if self.height is None:
                 self.height = float("inf")
 
-    async def capture_async(self, pixel_ratio: Optional[Number] = None):
+    async def capture(self, pixel_ratio: Optional[Number] = None):
         """
         Captures the current visual state of the canvas asynchronously.
 
@@ -76,11 +76,9 @@ class Canvas(ConstrainedControl):
                 Values greater than `1.0` produce higher-resolution captures.
                 If `None`, the device's default pixel ratio is used.
         """
-        await self._invoke_method_async(
-            "capture", arguments={"pixel_ratio": pixel_ratio}
-        )
+        await self._invoke_method("capture", arguments={"pixel_ratio": pixel_ratio})
 
-    async def get_capture_async(self) -> bytes:
+    async def get_capture(self) -> bytes:
         """
         Retrieves the most recent canvas capture as PNG bytes.
 
@@ -88,12 +86,12 @@ class Canvas(ConstrainedControl):
             bytes: The captured image in PNG format, or an empty result
             if no capture has been made.
         """
-        return await self._invoke_method_async("get_capture")
+        return await self._invoke_method("get_capture")
 
-    async def clear_capture_async(self):
+    async def clear_capture(self):
         """
         Clears the previously captured canvas image asynchronously.
 
         After clearing, no background will be rendered from a prior capture.
         """
-        await self._invoke_method_async("clear_capture")
+        await self._invoke_method("clear_capture")

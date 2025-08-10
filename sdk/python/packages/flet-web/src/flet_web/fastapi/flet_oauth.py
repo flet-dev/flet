@@ -51,7 +51,7 @@ class FletOAuth:
             )
             return response
         else:
-            await session.page._authorize_callback_async(
+            await session.page._authorize_callback(
                 {
                     "state": state_id,
                     "code": state.code,
@@ -75,6 +75,6 @@ class FletOAuth:
                 <p>You've been successfully signed in! You can close this tab or window now.</p>
             </body>
             </html>
-            """
+            """  # noqa: E501
             )
             return HTMLResponse(content=html_content, status_code=200)

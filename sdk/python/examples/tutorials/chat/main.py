@@ -84,7 +84,7 @@ def main(page: ft.Page):
                 )
             )
             new_message.value = ""
-            await new_message.focus_async()
+            await new_message.focus()
             page.update()
 
     def on_message(message: Message):

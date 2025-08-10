@@ -163,5 +163,5 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
             "specified/visible"
         )
 
-    async def confirm_dismiss_async(self, dismiss: bool):
-        await self._invoke_method_async("confirm_dismiss", {"dismiss": dismiss})
+    async def confirm_dismiss(self, dismiss: bool):
+        await self._invoke_method("confirm_dismiss", {"dismiss": dismiss})

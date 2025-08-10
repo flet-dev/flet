@@ -132,7 +132,7 @@ def example(page):
                 )
                 self.tasks.controls.append(task)
                 self.new_task.value = ""
-                await self.new_task.focus_async()
+                await self.new_task.focus()
                 self.update()
 
         def task_status_change(self, task):

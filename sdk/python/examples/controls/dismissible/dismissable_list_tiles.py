@@ -4,7 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     async def handle_dialog_action_click(e: ft.Event[ft.TextButton]):
         page.pop_dialog()
-        await dlg.data.confirm_dismiss_async(e.control.data)
+        await dlg.data.confirm_dismiss(e.control.data)
 
     dlg = ft.AlertDialog(
         modal=True,
@@ -24,7 +24,7 @@ def main(page: ft.Page):
             dlg.data = e.control
             page.show_dialog(dlg)
         else:  # left-to-right slide
-            await e.control.confirm_dismiss_async(True)
+            await e.control.confirm_dismiss(True)
 
     def handle_dismiss(e):
         e.control.parent.controls.remove(e.control)

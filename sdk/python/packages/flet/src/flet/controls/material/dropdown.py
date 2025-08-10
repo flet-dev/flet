@@ -351,5 +351,5 @@ class Dropdown(ConstrainedControl):
     def __contains__(self, item):
         return item in self.options
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
+    async def focus(self):
+        await self._invoke_method("focus")

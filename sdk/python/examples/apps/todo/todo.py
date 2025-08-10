@@ -129,7 +129,7 @@ class TodoApp(ft.Column):
             task = Task(self.new_task.value, self.task_delete)
             self.tasks.controls.append(task)
             self.new_task.value = ""
-            await self.new_task.focus_async()
+            await self.new_task.focus()
 
     def task_delete(self, task):
         self.tasks.controls.remove(task)

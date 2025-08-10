@@ -6,7 +6,7 @@ def main(page: ft.Page):
     page.window.title_bar_buttons_hidden = True
 
     async def handle_window_close(e: ft.Event[ft.IconButton]):
-        await page.window.close_async()
+        await page.window.close()
 
     page.add(
         ft.Row(

@@ -149,19 +149,19 @@ class InteractiveViewer(ConstrainedControl):
             f"got {self.interaction_end_friction_coefficient}"
         )
 
-    async def reset_async(self, animation_duration: Optional[DurationValue] = None):
-        await self._invoke_method_async(
+    async def reset(self, animation_duration: Optional[DurationValue] = None):
+        await self._invoke_method(
             "reset", arguments={"animation_duration": animation_duration}
         )
 
-    async def save_state_async(self):
-        await self._invoke_method_async("save_state")
+    async def save_state(self):
+        await self._invoke_method("save_state")
 
-    async def restore_state_async(self):
-        await self._invoke_method_async("restore_state")
+    async def restore_state(self):
+        await self._invoke_method("restore_state")
 
-    async def zoom_async(self, factor: Number):
-        await self._invoke_method_async("zoom", arguments={"factor": factor})
+    async def zoom(self, factor: Number):
+        await self._invoke_method("zoom", arguments={"factor": factor})
 
-    async def pan_async(self, dx: Number, dy: Number = 0, dz: Number = 0):
-        await self._invoke_method_async("pan", arguments={"dx": dx, "dy": dy, "dz": dz})
+    async def pan(self, dx: Number, dy: Number = 0, dz: Number = 0):
+        await self._invoke_method("pan", arguments={"dx": dx, "dy": dy, "dz": dz})

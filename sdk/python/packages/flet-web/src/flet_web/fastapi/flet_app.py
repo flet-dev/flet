@@ -292,7 +292,7 @@ class FletApp(Connection):
                     self.__session.page.go(self.__session.page.route)
 
                 if oauth_state:
-                    await self.__session.page._authorize_callback_async(
+                    await self.__session.page._authorize_callback(
                         {
                             "state": self.__oauth_state_id,
                             "code": oauth_state.code,

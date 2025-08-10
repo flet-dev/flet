@@ -107,5 +107,5 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at minimum, icon or a visible content must be provided"
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
+    async def focus(self):
+        await self._invoke_method("focus")

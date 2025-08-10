@@ -160,8 +160,8 @@ class View(ScrollableControl, ConstrainedControl):
     can_pop: bool = True
     on_confirm_pop: Optional[ControlEventHandler["View"]] = None
 
-    async def confirm_pop_async(self, should_pop: bool) -> None:
-        await self._invoke_method_async("confirm_pop", {"should_pop": should_pop})
+    async def confirm_pop(self, should_pop: bool) -> None:
+        await self._invoke_method("confirm_pop", {"should_pop": should_pop})
 
     def init(self):
         super().init()

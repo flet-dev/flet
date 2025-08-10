@@ -270,11 +270,11 @@ import flet.fastapi as flet_fastapi
 
 
 async def root_main(page: ft.Page):
-    await page.add_async(ft.Text("This is root app!"))
+    page.add(ft.Text("This is root app!"))
 
 
 async def sub_main(page: ft.Page):
-    await page.add_async(ft.Text("This is sub app!"))
+    page.add(ft.Text("This is sub app!"))
 
 
 app = flet_fastapi.FastAPI()
@@ -310,7 +310,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 async def main(page: ft.Page):
-    await page.add_async(ft.Text("Hello, Flet!"))
+    page.add(ft.Text("Hello, Flet!"))
 
 app.mount("/flet-app", flet_fastapi.app(main))
 ```
@@ -356,7 +356,7 @@ Handles WebSocket connections from Flet client app running in the browser. WebSo
 from flet.fastapi import FletApp
 
 async def main(page: ft.Page):
-    await page.add_async(ft.Text("Hello, Flet!"))
+    page.add(ft.Text("Hello, Flet!"))
 
 @app.websocket("/app1/ws")
 async def flet_app(websocket: WebSocket):

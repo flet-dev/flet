@@ -11,7 +11,7 @@ def example():
         save_to_favourites.update()
 
     async def open_google_maps(e):
-        await e.control.page.launch_url_async("https://maps.google.com")
+        await e.control.page.launch_url("https://maps.google.com")
 
     save_to_favourites = ft.Chip(
         label=ft.Text("Save to favourites"),

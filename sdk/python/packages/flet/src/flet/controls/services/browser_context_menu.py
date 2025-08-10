@@ -12,12 +12,12 @@ class BrowserContextMenu(Service):
         super().__post_init__(ref)
         self.__disabled = False
 
-    async def enable_async(self, timeout: Optional[float] = None):
-        await self._invoke_method_async("enable_menu", timeout=timeout)
+    async def enable(self, timeout: Optional[float] = None):
+        await self._invoke_method("enable_menu", timeout=timeout)
         self.__disabled = False
 
-    async def disable_async(self, timeout: Optional[float] = None):
-        await self._invoke_method_async("disable_menu", timeout=timeout)
+    async def disable(self, timeout: Optional[float] = None):
+        await self._invoke_method("disable_menu", timeout=timeout)
         self.__disabled = True
 
     @property

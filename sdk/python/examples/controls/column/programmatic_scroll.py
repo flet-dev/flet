@@ -13,24 +13,24 @@ def main(page: ft.Page):
     )
 
     async def scroll_to_offset(e):
-        await column.scroll_to_async(offset=500, duration=1000)
+        await column.scroll_to(offset=500, duration=1000)
 
     async def scroll_to_start(e):
-        await column.scroll_to_async(offset=0, duration=1000)
+        await column.scroll_to(offset=0, duration=1000)
 
     async def scroll_to_end(e):
-        await column.scroll_to_async(
+        await column.scroll_to(
             offset=-1, duration=2000, curve=ft.AnimationCurve.EASE_IN_OUT
         )
 
     async def scroll_to_key(e):
-        await column.scroll_to_async(scroll_key="20", duration=1000)
+        await column.scroll_to(scroll_key="20", duration=1000)
 
     async def scroll_to_delta(e):
-        await column.scroll_to_async(delta=100, duration=200)
+        await column.scroll_to(delta=100, duration=200)
 
     async def scroll_to_minus_delta(e):
-        await column.scroll_to_async(delta=-100, duration=200)
+        await column.scroll_to(delta=-100, duration=200)
 
     page.add(
         ft.Container(content=column, border=ft.Border.all(1)),

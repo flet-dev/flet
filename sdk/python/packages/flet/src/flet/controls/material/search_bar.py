@@ -259,16 +259,16 @@ class SearchBar(ConstrainedControl):
         super().before_update()
 
     # Public methods
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
+    async def focus(self):
+        await self._invoke_method("focus")
 
-    async def blur_async(self):
-        await self._invoke_method_async("blur")
+    async def blur(self):
+        await self._invoke_method("blur")
 
-    async def open_view_async(self):
-        await self._invoke_method_async("open_view")
+    async def open_view(self):
+        await self._invoke_method("open_view")
 
-    async def close_view_async(self, text: Optional[str] = None):
-        await self._invoke_method_async(
+    async def close_view(self, text: Optional[str] = None):
+        await self._invoke_method(
             "close_view", {"text": text if text is not None else self.value}
         )

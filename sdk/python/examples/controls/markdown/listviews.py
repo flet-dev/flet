@@ -128,9 +128,7 @@ def main(page: ft.Page):
             controls=[
                 ft.Markdown(
                     value=sample,
-                    on_tap_link=lambda e: asyncio.create_task(
-                        page.launch_url_async(e.data)
-                    ),
+                    on_tap_link=lambda e: asyncio.create_task(page.launch_url(e.data)),
                 )
             ],
         ),
@@ -142,9 +140,7 @@ def main(page: ft.Page):
                     value=sample,
                     selectable=True,
                     extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-                    on_tap_link=lambda e: asyncio.create_task(
-                        page.launch_url_async(e.data)
-                    ),
+                    on_tap_link=lambda e: asyncio.create_task(page.launch_url(e.data)),
                 )
             ],
         ),

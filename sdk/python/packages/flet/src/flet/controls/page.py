@@ -540,7 +540,7 @@ class Page(BasePage):
         """
         return self.get_session().connection.get_upload_url(file_name, expires)
 
-    async def login_async(
+    async def login(
         self,
         provider: OAuthProvider,
         fetch_user: bool = True,
@@ -580,11 +580,11 @@ class Page(BasePage):
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
-                await self.launch_url_async(
+                await self.launch_url(
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
         else:
-            await self.__authorization.dehydrate_token_async(saved_token)
+            await self.__authorization.dehydrate_token(saved_token)
 
             e = LoginEvent(name="login", control=self, error="", error_description="")
             if self.on_login:
@@ -595,7 +595,7 @@ class Page(BasePage):
 
         return self.__authorization
 
-    async def _authorize_callback_async(self, data: dict[str, Optional[str]]) -> None:
+    async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state
@@ -603,10 +603,10 @@ class Page(BasePage):
         if not self.web:
             if self.platform in ["ios", "android"]:
                 # close web view on mobile
-                await self.close_in_app_web_view_async()
+                await self.close_in_app_web_view()
             else:
                 # activate desktop window
-                await self.window.to_front_async()
+                await self.window.to_front()
         e = LoginEvent(
             error=data.get("error"),
             error_description=data.get("error_description"),
@@ -619,7 +619,7 @@ class Page(BasePage):
             code = data.get("code")
             assert code not in [None, ""]
             try:
-                await self.__authorization.request_token_async(code)
+                await self.__authorization.request_token(code)
             except Exception as ex:
                 e.error = str(ex)
         if self.on_login:
@@ -642,7 +642,7 @@ class Page(BasePage):
             elif callable(self.on_logout):
                 self.on_logout(e)
 
-    async def launch_url_async(
+    async def launch_url(
         self,
         url: str,
         web_window_name: Optional[str] = None,
@@ -664,7 +664,7 @@ class Page(BasePage):
             window_width: Popup window width.
             window_height: Popup window height.
         """
-        await self.url_launcher.launch_url_async(
+        await self.url_launcher.launch_url(
             url,
             web_window_name=web_window_name,
             web_popup_window=web_popup_window,
@@ -672,7 +672,7 @@ class Page(BasePage):
             window_height=window_height,
         )
 
-    def can_launch_url_async(self, url: str):
+    def can_launch_url(self, url: str):
         """
         Checks whether the specified URL can be handled by some app installed on the
         device.
@@ -688,15 +688,15 @@ class Page(BasePage):
         that are always assumed to be supported (such as http(s)), as web pages are
         never allowed to query installed applications.
         """
-        return self.url_launcher.can_launch_url_async(url)
+        return self.url_launcher.can_launch_url(url)
 
-    async def close_in_app_web_view_async(self) -> None:
+    async def close_in_app_web_view(self) -> None:
         """
         Closes in-app web view opened with `launch_url()`.
 
         📱 Mobile only.
         """
-        await self.url_launcher.close_in_app_web_view_async()
+        await self.url_launcher.close_in_app_web_view()
 
     # query
     @property

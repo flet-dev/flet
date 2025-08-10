@@ -8,7 +8,7 @@ def main(page: ft.Page):
         # random index, excluding the current one
         i = random.choice([i for i in range(tabs.length) if i != tabs.selected_index])
 
-        await tabs.move_to_async(
+        await tabs.move_to(
             index=i,
             animation_curve=ft.AnimationCurve.FAST_OUT_SLOWIN,
             animation_duration=ft.Duration(seconds=3),

@@ -9,19 +9,19 @@ def example():
     async def open_color_picker(e):
         e.control.page.dialog = d
         d.open = True
-        await e.control.page.update_async()
+        e.control.page.update()
 
     color_picker = ColorPicker(color="#c8df6f", width=300)
     color_icon = ft.IconButton(icon=ft.Icons.BRUSH, on_click=open_color_picker)
 
-    async def change_color(e):
+    def change_color(e):
         color_icon.icon_color = color_picker.color
         d.open = False
-        await e.control.page.update_async()
+        e.control.page.update()
 
-    async def close_dialog(e):
+    def close_dialog(e):
         d.open = False
-        await d.update_async()
+        d.update()
 
     d = ft.AlertDialog(
         content=color_picker,

@@ -97,5 +97,5 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Called when the control has lost focus.
     """
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
+    async def focus(self):
+        await self._invoke_method("focus")

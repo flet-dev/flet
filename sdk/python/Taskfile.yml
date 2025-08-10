@@ -31,6 +31,11 @@ tasks:
     cmds:
       - uv run --group test pytest packages/flet/tests
 
+  control-tests:
+    desc: "Run integration tests for controls."
+    cmds:
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls
+
   pyproject-setup:
     desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."
     aliases:

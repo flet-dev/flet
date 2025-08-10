@@ -46,7 +46,7 @@ page.update()
 
 To open file picker dialog call one of the three methods:
 
-* `pick_files_async()`
+* `pick_files()`
 * `save_file()`
 * `get_directory_path()`
 
@@ -55,7 +55,7 @@ Lambda works pretty nice for that:
 ```python
 ft.ElevatedButton(
     content="Choose files...",
-    on_click=lambda _: file_picker.pick_files_async(allow_multiple=True)
+    on_click=lambda _: file_picker.pick_files(allow_multiple=True)
 )
 ```
 

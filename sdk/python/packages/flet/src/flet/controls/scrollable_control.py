@@ -69,7 +69,7 @@ class ScrollableControl(Control):
     class.
     """
 
-    async def scroll_to_async(
+    async def scroll_to(
         self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
@@ -147,7 +147,7 @@ class ScrollableControl(Control):
         Defaults to `AnimationCurve.EASE`.
         """
 
-        await self._invoke_method_async(
+        await self._invoke_method(
             "scroll_to",
             {
                 "offset": offset,

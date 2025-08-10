@@ -167,5 +167,5 @@ class CupertinoButton(ConstrainedControl):
             f"got {self.opacity_on_click}"
         )
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
+    async def focus(self):
+        await self._invoke_method("focus")

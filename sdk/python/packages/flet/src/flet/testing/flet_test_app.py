@@ -151,7 +151,8 @@ class FletTestApp:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
-                    f"Flutter process exited early with code {self.__flutter_process.returncode}"
+                    "Flutter process exited early with code "
+                    f"{self.__flutter_process.returncode}"
                 )
 
     async def teardown(self):
@@ -204,7 +205,7 @@ class FletTestApp:
             await self.tester.pump(duration=pump_duration)
         self.assert_screenshot(
             name,
-            await screenshot.capture_async(pixel_ratio=self.pixel_ratio),
+            await screenshot.capture(pixel_ratio=self.pixel_ratio),
         )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
@@ -246,7 +247,7 @@ class FletTestApp:
             if similarity <= self.similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
-                    / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"
+                    / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"  # noqa: E501
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)

@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from flet.auth.group import Group
 from flet.auth.user import User
@@ -12,11 +12,11 @@ class OAuthProvider:
         authorization_endpoint: str,
         token_endpoint: str,
         redirect_url: str,
-        scopes: Optional[List[str]] = None,
-        user_scopes: Optional[List[str]] = None,
+        scopes: Optional[list[str]] = None,
+        user_scopes: Optional[list[str]] = None,
         user_endpoint: Optional[str] = None,
         user_id_fn: Optional[Callable] = None,
-        group_scopes: Optional[List[str]] = None,
+        group_scopes: Optional[list[str]] = None,
         code_challenge: Optional[str] = None,
         code_challenge_method: Optional[str] = None,
         code_verifier: Optional[str] = None,
@@ -38,8 +38,8 @@ class OAuthProvider:
     def _name(self):
         raise Exception("Not implemented")
 
-    async def _fetch_groups_async(self, access_token: str) -> List[Group]:
+    async def _fetch_groups(self, access_token: str) -> list[Group]:
         return []
 
-    async def _fetch_user_async(self, access_token: str) -> Optional[User]:
+    async def _fetch_user(self, access_token: str) -> Optional[User]:
         return None

@@ -127,7 +127,7 @@ class Board(ft.Container):
             on_dismiss=lambda e: print("Modal dialog dismissed!"),
         )
         self.page.open(dialog)
-        await dialog_text.focus_async()
+        await dialog_text.focus()
 
     def remove_list(self, list: BoardList, e):
         self.board_lists.controls.remove(list)

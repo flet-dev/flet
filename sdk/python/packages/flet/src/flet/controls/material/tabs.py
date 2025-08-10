@@ -222,7 +222,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
                 f"expected in range [-{self.length}, {self.length - 1}]"
             )
 
-    async def move_to_async(
+    async def move_to(
         self,
         index: int,
         animation_curve: AnimationCurve = AnimationCurve.EASE_IN,
@@ -262,7 +262,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         if self.selected_index == resolved_index:
             return
 
-        await self._invoke_method_async(
+        await self._invoke_method(
             method_name="move_to",
             arguments={
                 "index": index,

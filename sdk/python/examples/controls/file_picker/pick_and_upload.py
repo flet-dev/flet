@@ -13,7 +13,7 @@ def main(page: ft.Page):
     page.services.append(file_picker := ft.FilePicker(on_upload=on_upload_progress))
 
     async def handle_files_pick(e: ft.Event[ft.ElevatedButton]):
-        files = await file_picker.pick_files_async(allow_multiple=True)
+        files = await file_picker.pick_files(allow_multiple=True)
         print("Picked files:", files)
         state["picked_files"] = files
 
@@ -28,7 +28,7 @@ def main(page: ft.Page):
 
     async def handle_file_upload(e: ft.Event[ft.ElevatedButton]):
         upload_button.disabled = True
-        await file_picker.upload_async(
+        await file_picker.upload(
             files=[
                 ft.FilePickerUploadFile(
                     name=file.name,

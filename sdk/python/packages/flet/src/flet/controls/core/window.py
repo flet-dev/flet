@@ -276,41 +276,41 @@ class Window(BaseControl):
         super().__post_init__(ref)
         self._i = 2
 
-    async def wait_until_ready_to_show_async(self):
+    async def wait_until_ready_to_show(self):
         """
         Waits until the app window is ready to show.
         """
-        await self._invoke_method_async("wait_until_ready_to_show")
+        await self._invoke_method("wait_until_ready_to_show")
 
-    async def destroy_async(self):
+    async def destroy(self):
         """
         Destroys the app window.
         """
-        await self._invoke_method_async("destroy")
+        await self._invoke_method("destroy")
 
-    async def center_async(self):
+    async def center(self):
         """
         Centers the app window.
         """
-        await self._invoke_method_async("center")
+        await self._invoke_method("center")
 
-    async def close_async(self):
-        await self._invoke_method_async("close")
+    async def close(self):
+        await self._invoke_method("close")
 
-    async def to_front_async(self):
+    async def to_front(self):
         """
         Brings the app window to the front.
         """
-        await self._invoke_method_async("to_front")
+        await self._invoke_method("to_front")
 
-    async def start_dragging_async(self):
+    async def start_dragging(self):
         """
         Starts dragging the app window.
         """
-        await self._invoke_method_async("start_dragging")
+        await self._invoke_method("start_dragging")
 
-    async def start_resizing_async(self, edge: WindowResizeEdge):
+    async def start_resizing(self, edge: WindowResizeEdge):
         """
         Starts resizing the app window.
         """
-        await self._invoke_method_async("start_resizing", {"edge": edge})
+        await self._invoke_method("start_resizing", {"edge": edge})

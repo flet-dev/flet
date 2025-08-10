@@ -3,10 +3,10 @@ import flet as ft
 
 def main(page: ft.Page):
     async def handle_tile_click(e: ft.Event[ft.ListTile]):
-        await anchor.close_view_async(e.control.title.value)
+        await anchor.close_view(e.control.title.value)
 
     async def open_click():
-        await anchor.open_view_async()
+        await anchor.open_view()
 
     def handle_change(e: ft.Event[ft.SearchBar]):
         print(f"handle_change e.data: {e.data}")
@@ -16,7 +16,7 @@ def main(page: ft.Page):
 
     async def handle_tap(e: ft.Event[ft.SearchBar]):
         print("handle_tap")
-        await anchor.open_view_async()
+        await anchor.open_view()
 
     page.add(
         ft.Row(

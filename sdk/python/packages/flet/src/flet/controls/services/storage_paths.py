@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.exceptions import FletUnsupportedPlatformException
@@ -15,7 +15,7 @@ class StoragePaths(Service):
         Its methods are not supported on web.
     """
 
-    async def get_application_cache_directory_async(self) -> str:
+    async def get_application_cache_directory(self) -> str:
         """Returns the path to the application-specific cache directory.
 
         If this directory does not exist, it is created automatically.
@@ -30,32 +30,32 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_application_cache_directory is not supported on web"
             )
-        return await self._invoke_method_async("get_application_cache_directory")
+        return await self._invoke_method("get_application_cache_directory")
 
-    async def get_application_documents_directory_async(self) -> str:
+    async def get_application_documents_directory(self) -> str:
         """Returns the path to a directory for user-generated data.
 
         This directory is intended for data that cannot be recreated by your application.
 
         For non-user-generated data, consider using:
 
-        - [`get_application_support_directory_async()`][flet.StoragePaths.get_application_support_directory_async]
-        - [`get_application_cache_directory_async()`][flet.StoragePaths.get_application_cache_directory_async]
-        - [`get_external_storage_directory_async()`][flet.StoragePaths.get_external_storage_directory_async]
+        - [`get_application_support_directory()`][flet.StoragePaths.get_application_support_directory]
+        - [`get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory]
+        - [`get_external_storage_directory()`][flet.StoragePaths.get_external_storage_directory]
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.
 
         Returns:
             The path to the application documents directory.
-        """
+        """  # noqa: E501
         if self.page.web:
             raise FletUnsupportedPlatformException(
                 "get_application_documents_directory is not supported on web"
             )
-        return await self._invoke_method_async("get_application_documents_directory")
+        return await self._invoke_method("get_application_documents_directory")
 
-    async def get_application_support_directory_async(self) -> str:
+    async def get_application_support_directory(self) -> str:
         """Returns the path to a directory for application support files.
 
         This directory is created automatically if it does not exist.
@@ -71,12 +71,13 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_application_support_directory is not supported on web"
             )
-        return await self._invoke_method_async("get_application_support_directory")
+        return await self._invoke_method("get_application_support_directory")
 
-    async def get_downloads_directory_async(self) -> Optional[str]:
+    async def get_downloads_directory(self) -> Optional[str]:
         """Returns the path to the downloads directory.
 
-        The returned directory may not exist; clients should verify and create it if necessary.
+        The returned directory may not exist; clients should verify and create it
+        if necessary.
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.
@@ -88,16 +89,17 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_downloads_directory is not supported on web"
             )
-        return await self._invoke_method_async("get_downloads_directory")
+        return await self._invoke_method("get_downloads_directory")
 
-    async def get_external_cache_directories_async(self) -> Optional[List[str]]:
+    async def get_external_cache_directories(self) -> Optional[list[str]]:
         """Returns paths to external cache directories.
 
         These directories are typically on external storage (e.g., SD cards).
         Multiple directories may be available on some devices.
 
         Raises:
-            FletUnsupportedPlatformException: If called on the web or non-Android platforms.
+            FletUnsupportedPlatformException: If called on the web or
+            non-Android platforms.
 
         Returns:
             A List of external cache directory paths, or `None` if unavailable.
@@ -106,16 +108,17 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_external_cache_directories is supported only on Android"
             )
-        return await self._invoke_method_async("get_external_cache_directories")
+        return await self._invoke_method("get_external_cache_directories")
 
-    async def get_external_storage_directories_async(self) -> Optional[List[str]]:
+    async def get_external_storage_directories(self) -> Optional[list[str]]:
         """Returns paths to external storage directories.
 
         These directories are typically on external storage (e.g., SD cards).
         Multiple directories may be available on some devices.
 
         Raises:
-            FletUnsupportedPlatformException: If called on the web or non-Android platforms.
+            FletUnsupportedPlatformException: If called on the web or
+            non-Android platforms.
 
         Returns:
             A List of external storage directory paths, or `None` if unavailable.
@@ -124,15 +127,17 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_external_storage_directories is supported only on Android"
             )
-        return await self._invoke_method_async("get_external_storage_directories")
+        return await self._invoke_method("get_external_storage_directories")
 
-    async def get_library_directory_async(self) -> str:
+    async def get_library_directory(self) -> str:
         """Returns the path to the library directory.
 
-        This directory is for persistent, backed-up files not visible to the user (e.g., sqlite.db).
+        This directory is for persistent, backed-up files not visible to the user
+        (e.g., sqlite.db).
 
         Raises:
-            FletUnsupportedPlatformException: If called on the web or non-Apple platforms.
+            FletUnsupportedPlatformException: If called on the web or
+            non-Apple platforms.
 
         Returns:
             The path to the library directory.
@@ -141,13 +146,14 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_library_directory is supported only on iOS and macOS"
             )
-        return await self._invoke_method_async("get_library_directory")
+        return await self._invoke_method("get_library_directory")
 
-    async def get_external_storage_directory_async(self) -> Optional[str]:
+    async def get_external_storage_directory(self) -> Optional[str]:
         """Returns the path to the top-level external storage directory.
 
         Raises:
-            FletUnsupportedPlatformException: If called on the web or non-Android platforms.
+            FletUnsupportedPlatformException: If called on the web or
+            non-Android platforms.
 
         Returns:
             The path to the external storage directory, or `None` if unavailable.
@@ -156,12 +162,13 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_external_storage_directory is supported only on Android"
             )
-        return await self._invoke_method_async("get_external_storage_directory")
+        return await self._invoke_method("get_external_storage_directory")
 
-    async def get_temporary_directory_async(self) -> str:
+    async def get_temporary_directory(self) -> str:
         """Returns the path to the temporary directory.
 
-        This directory is not backed up and is suitable for storing caches of downloaded files.
+        This directory is not backed up and is suitable for storing caches
+        of downloaded files.
         Files may be cleared at any time.
         The caller is responsible for managing files within this directory.
 
@@ -175,22 +182,22 @@ class StoragePaths(Service):
             raise FletUnsupportedPlatformException(
                 "get_temporary_directory is not supported on web"
             )
-        return await self._invoke_method_async("get_temporary_directory")
+        return await self._invoke_method("get_temporary_directory")
 
-    async def get_console_log_filename_async(self) -> str:
+    async def get_console_log_filename(self) -> str:
         """Returns the path to a `console.log` file for debugging.
 
         This file is located in the
-        [application cache directory][flet.StoragePaths.get_application_cache_directory_async].
+        [application cache directory][flet.StoragePaths.get_application_cache_directory].
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.
 
         Returns:
             The path to the console log file.
-        """
+        """  # noqa: E501
         if self.page.web:
             raise FletUnsupportedPlatformException(
                 "get_console_log_filename is not supported on web"
             )
-        return await self._invoke_method_async("get_console_log_filename")
+        return await self._invoke_method("get_console_log_filename")

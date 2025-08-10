@@ -77,12 +77,10 @@ class TrelloApp(AppLayout):
                 if user not in self.store.get_users():
                     self.store.add_user(user)
                 self.user = user_name.value
-                await self.page.shared_preferences.set_async(
-                    "current_user", user_name.value
-                )
+                await self.page.shared_preferences.set("current_user", user_name.value)
 
             self.page.close(dialog)
-            current_user = await self.page.shared_preferences.get_async("current_user")
+            current_user = await self.page.shared_preferences.get("current_user")
             self.appbar_items[0] = ft.PopupMenuItem(content=f"{current_user}'s Profile")
             self.page.update()
 
@@ -159,7 +157,7 @@ class TrelloApp(AppLayout):
         self.page.open(dialog)
         dialog.open = True
         self.page.update()
-        await dialog_text.focus_async()
+        await dialog_text.focus()
 
     def create_new_board(self, board_name):
         new_board = Board(self, self.store, board_name, self.page)

@@ -210,8 +210,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Called when the control has lost focus.
     """
 
-    async def focus_async(self):
+    async def focus(self):
         """
         Moves focus to a button.
         """
-        await self._invoke_method_async("focus")
+        await self._invoke_method("focus")

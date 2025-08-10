@@ -169,7 +169,7 @@ def main(page: ft.Page):
             code_style_sheet=ft.MarkdownStyleSheet(
                 code_text_style=ft.TextStyle(font_family="Roboto Mono")
             ),
-            on_tap_link=lambda e: asyncio.create_task(page.launch_url_async(e.data)),
+            on_tap_link=lambda e: asyncio.create_task(page.launch_url(e.data)),
         )
     )
 

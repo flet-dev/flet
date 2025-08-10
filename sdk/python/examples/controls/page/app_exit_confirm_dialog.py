@@ -11,7 +11,7 @@ def main(page: ft.Page):
     page.window.on_event = window_event
 
     async def handle_yes_click(e: ft.Event[ft.ElevatedButton]):
-        await page.window.destroy_async()
+        await page.window.destroy()
 
     def handle_no_click(e: ft.Event[ft.OutlinedButton]):
         page.pop_dialog()

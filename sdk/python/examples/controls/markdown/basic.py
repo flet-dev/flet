@@ -80,7 +80,7 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.AUTO
 
     async def handle_link_tap(e: ft.Event[ft.Markdown]):
-        await page.launch_url_async(e.data)
+        await page.launch_url(e.data)
 
     page.add(
         ft.Markdown(

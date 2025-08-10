@@ -17,17 +17,15 @@ class SemanticsService(Service):
     Allows access to the platform's accessibility services.
     """
 
-    async def announce_tooltip_async(self, message: str):
+    async def announce_tooltip(self, message: str):
         """
         Sends a semantic announcement of a tooltip. Currently honored on Android only.
 
         The provided `message` will be read by TalkBack.
         """
-        await self._invoke_method_async(
-            "announce_tooltip", arguments={"message": message}
-        )
+        await self._invoke_method("announce_tooltip", arguments={"message": message})
 
-    async def announce_message_async(
+    async def announce_message(
         self,
         message: str,
         rtl: bool = False,
@@ -44,7 +42,7 @@ class SemanticsService(Service):
         engine and has no effect on other platforms. Value is an `Assertiveness` enum
         and can either be `Assertiveness.ASSERTIVE` or `Assertiveness.POLITE` (default).
         """
-        await self._invoke_method_async(
+        await self._invoke_method(
             "announce_message",
             arguments={
                 "message": message,
