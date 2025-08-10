@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from enum import Enum
 from typing import Optional
@@ -34,7 +33,8 @@ class CupertinoButton(ConstrainedControl):
     An iOS-style button.
 
     Raises:
-        AssertionError: If [`opacity_on_click`][(c).] is not between `0.0` and `1.0` inclusive.
+        AssertionError: If [`opacity_on_click`][(c).] is not between `0.0`
+        and `1.0` inclusive.
     """
 
     content: Optional[StrOrControl] = None
@@ -95,8 +95,8 @@ class CupertinoButton(ConstrainedControl):
     """
     The alignment of the button's child.
 
-    Typically buttons are sized to be just big enough to contain the child and its padding.
-    If the button's size is constrained to a fixed size,
+    Typically buttons are sized to be just big enough to contain the child
+    and its padding. If the button's size is constrained to a fixed size,
     this property defines how the child is aligned within the available space.
     """
 
@@ -163,11 +163,9 @@ class CupertinoButton(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert 0 <= self.opacity_on_click <= 1, (
-            f"opacity_on_click must be between 0 and 1 inclusive, got {self.opacity_on_click}"
+            "opacity_on_click must be between 0 and 1 inclusive, "
+            f"got {self.opacity_on_click}"
         )
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())

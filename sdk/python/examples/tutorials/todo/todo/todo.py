@@ -124,12 +124,12 @@ class TodoApp(ft.Column):
             ),
         ]
 
-    def add_clicked(self, e):
+    async def add_clicked(self, e):
         if self.new_task.value:
             task = Task(self.new_task.value, self.task_delete)
             self.tasks.controls.append(task)
             self.new_task.value = ""
-            self.new_task.focus()
+            await self.new_task.focus_async()
 
     def task_delete(self, task):
         self.tasks.controls.remove(task)
@@ -145,7 +145,7 @@ class TodoApp(ft.Column):
         for task in self.tasks.controls:
             task.visible = (
                 status == "all"
-                or (status == "active" and task.completed == False)
+                or (status == "active" and not task.completed)
                 or (status == "completed" and task.completed)
             )
             if not task.completed:

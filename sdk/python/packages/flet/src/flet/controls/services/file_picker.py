@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
@@ -146,21 +145,6 @@ class FilePicker(Service):
             "upload",
             {"files": files},
         )
-
-    def upload(self, files: list[FilePickerUploadFile]):
-        """
-        Uploads selected files to specified upload URLs.
-
-        Before calling this method,
-        [`pick_files_async()`][flet.FilePicker.pick_files_async]
-        must be called, so that the internal file picker selection is not empty.
-
-        Args:
-            files: A list of [`FilePickerUploadFile`][flet.FilePickerUploadFile], where
-                each item specifies which file to upload, and where
-                (with PUT or POST).
-        """
-        asyncio.create_task(self.upload_async(files))
 
     async def get_directory_path_async(
         self,

@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional
 
 from flet.controls.base_control import control
@@ -10,12 +9,6 @@ __all__ = ["Clipboard"]
 
 @control("Clipboard")
 class Clipboard(Service):
-    def set(self, value: str, timeout: Optional[Number] = None) -> None:
-        """
-        Get the last text value saved to a clipboard on a client side.
-        """
-        asyncio.create_task(self.set_async(value, timeout=timeout))
-
     async def set_async(self, value: str, timeout: Optional[Number] = None) -> None:
         """
         Set clipboard data on a client side (user's web browser or a desktop).

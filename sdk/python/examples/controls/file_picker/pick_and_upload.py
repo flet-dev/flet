@@ -28,7 +28,7 @@ def main(page: ft.Page):
 
     async def handle_file_upload(e: ft.Event[ft.ElevatedButton]):
         upload_button.disabled = True
-        file_picker.upload(
+        await file_picker.upload_async(
             files=[
                 ft.FilePickerUploadFile(
                     name=file.name,

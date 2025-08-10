@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
@@ -64,7 +63,8 @@ class Window(BaseControl):
     Sets background color of an application window.
 
     Tip:
-        Can be used together with [`Page.bgcolor`][flet.Page.bgcolor] to make a window transparent.
+        Can be used together with [`Page.bgcolor`][flet.Page.bgcolor] to make
+        a window transparent.
     """
 
     width: Optional[Number] = None
@@ -191,7 +191,8 @@ class Window(BaseControl):
 
     skip_task_bar: bool = False
     """
-    Whether the app window should be hidden from the Task Bar (on Windows) or Dock (on macOS).
+    Whether the app window should be hidden from the Task Bar (on Windows)
+    or Dock (on macOS).
     """
 
     title_bar_hidden: bool = False
@@ -281,23 +282,11 @@ class Window(BaseControl):
         """
         await self._invoke_method_async("wait_until_ready_to_show")
 
-    def wait_until_ready_to_show(self):
-        """
-        Waits until the app window is ready to show.
-        """
-        asyncio.create_task(self.wait_until_ready_to_show_async())
-
     async def destroy_async(self):
         """
         Destroys the app window.
         """
         await self._invoke_method_async("destroy")
-
-    def destroy(self):
-        """
-        Destroys the app window.
-        """
-        asyncio.create_task(self.destroy_async())
 
     async def center_async(self):
         """
@@ -305,17 +294,8 @@ class Window(BaseControl):
         """
         await self._invoke_method_async("center")
 
-    def center(self):
-        """
-        Centers the app window.
-        """
-        asyncio.create_task(self.center_async())
-
     async def close_async(self):
         await self._invoke_method_async("close")
-
-    def close(self):
-        asyncio.create_task(self.close_async())
 
     async def to_front_async(self):
         """
@@ -323,32 +303,14 @@ class Window(BaseControl):
         """
         await self._invoke_method_async("to_front")
 
-    def to_front(self):
-        """
-        Brings the app window to the front.
-        """
-        asyncio.create_task(self.to_front_async())
-
     async def start_dragging_async(self):
         """
         Starts dragging the app window.
         """
         await self._invoke_method_async("start_dragging")
 
-    def start_dragging(self):
-        """
-        Starts dragging the app window.
-        """
-        asyncio.create_task(self.start_dragging_async())
-
     async def start_resizing_async(self, edge: WindowResizeEdge):
         """
         Starts resizing the app window.
         """
         await self._invoke_method_async("start_resizing", {"edge": edge})
-
-    def start_resizing(self, edge: WindowResizeEdge):
-        """
-        Starts resizing the app window.
-        """
-        asyncio.create_task(self.start_resizing_async(edge))

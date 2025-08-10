@@ -1,4 +1,4 @@
-Flet's client storage API allows storing key-value data on a client side in a persistent storage. 
+Flet's client storage API allows storing key-value data on a client side in a persistent storage.
 Flet implementation uses [`shared_preferences`](https://pub.dev/packages/shared_preferences) Flutter package.
 
 The actual storage mechanism depends on a platform where Flet app is running:
@@ -11,14 +11,14 @@ The actual storage mechanism depends on a platform where Flet app is running:
 Writing data to the storage:
 ```python
 # strings
-page.client_storage.set("key", "value")
+await page.shared_preferences.set("key", "value")
 
 # numbers, booleans
-page.client_storage.set("number.setting", 12345)
-page.client_storage.set("bool_setting", True)
+await page.shared_preferences.set("number.setting", 12345)
+await page.shared_preferences.set("bool_setting", True)
 
 # lists
-page.client_storage.set("favorite_colors", ["red", "green", "blue"])
+await page.shared_preferences.set("favorite_colors", ["red", "green", "blue"])
 ```
 
 /// admonition
@@ -36,30 +36,30 @@ It is responsibility of Flet app developer to encrypt sensitive data before send
 Reading data:
 ```python
 # The value is automatically converted back to the original type
-value = page.client_storage.get("key")
+value = await page.shared_preferences.get("key")
 
-colors = page.client_storage.get("favorite_colors")
+colors = await page.shared_preferences.get("favorite_colors")
 # colors = ["red", "green", "blue"]
 ```
 
 Check if a key exists:
 ```python
-page.client_storage.contains_key("key") # True if the key exists
+await page.shared_preferences.contains_key("key") # True if the key exists
 ```
 
 Get all keys:
 ```python
-page.client_storage.get_keys("key-prefix.")
+await page.shared_preferences.get_keys("key-prefix.")
 ```
 
 Remove a value:
 ```python
-page.client_storage.remove("key")
+await page.shared_preferences.remove("key")
 ```
 
 Clear the storage:
 ```python
-page.client_storage.clear()
+await page.shared_preferences.clear()
 ```
 
 /// admonition | Caution

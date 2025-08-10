@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -36,14 +35,15 @@ class DismissibleUpdateEvent(Event["Dismissible"]):
 @control("Dismissible")
 class Dismissible(ConstrainedControl, AdaptiveControl):
     """
-    A control that can be dismissed by dragging in the indicated [`dismiss_direction`][(c).].
-    When dragged or flung in the specified [`dismiss_direction`][(c).], its [`content`][(c).] smoothly
-    slides out of view.
+    A control that can be dismissed by dragging in the indicated
+    [`dismiss_direction`][(c).].
+    When dragged or flung in the specified [`dismiss_direction`][(c).],
+    its [`content`][(c).] smoothly slides out of view.
 
-    After completing the sliding animation, if a [`resize_duration`][(c).] is provided, this
-    control further animates its height (or width, depending on what is perpendicular
-    to the [`dismiss_direction`][(c).]), gradually reducing it to zero over the specified
-    [`resize_duration`][(c).].
+    After completing the sliding animation, if a [`resize_duration`][(c).] is provided,
+    this control further animates its height (or width, depending on what is
+    perpendicular to the [`dismiss_direction`][(c).]), gradually reducing it to zero
+    over the specified [`resize_duration`][(c).].
 
     Raises:
         AssertionError: If the [`content`][(c).] is not visible.
@@ -60,9 +60,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     """
     A control that is stacked behind the [`content`][flet.Dismissible.content].
 
-    If [`secondary_background`][flet.Dismissible.secondary_background] is also specified,
-    then this control only appears when
-    the content has been dragged down or to the right.
+    If [`secondary_background`][flet.Dismissible.secondary_background] is also
+    specified, then this control only appears when the content has been dragged
+    down or to the right.
     """
 
     secondary_background: Optional[Control] = None
@@ -71,7 +71,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     exposed when it has been dragged up or to the left.
 
     Note:
-        Can only be specified if [`background`][flet.Dismissible.background] is also specified/visible.
+        Can only be specified if [`background`][flet.Dismissible.background] is also
+        specified/visible.
     """
 
     dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
@@ -83,9 +84,10 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         default_factory=dict
     )
     """
-    The offset threshold the item has to be dragged in order to be considered as dismissed.
-    This is specified as a dictionary where the key is of type [`DismissDirection`][flet.DismissDirection]
-    and the value is the threshold (a fractional/decimal value between `0.0` and `1.0`, inclusive).
+    The offset threshold the item has to be dragged in order to be considered
+    as dismissed. This is specified as a dictionary where the key is of
+    type [`DismissDirection`][flet.DismissDirection] and the value is the threshold
+    (a fractional/decimal value between `0.0` and `1.0`, inclusive).
 
     Example:
         ```python
@@ -136,10 +138,11 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     on_confirm_dismiss: Optional[EventHandler[DismissibleDismissEvent]] = None
     """
-    Gives the app an opportunity to confirm or veto a pending dismissal. This dismissible
-    cannot be dragged again until this pending dismissal is resolved.
+    Gives the app an opportunity to confirm or veto a pending dismissal.
+    This dismissible cannot be dragged again until this pending dismissal is resolved.
 
-    To resolve the pending dismissal, call the [`confirm_dismiss()`][flet.Dismissible.confirm_dismiss] method
+    To resolve the pending dismissal, call the
+    [`confirm_dismiss()`][flet.Dismissible.confirm_dismiss] method
     passing it a boolean representing the decision. If `True`, then the control will be
     dismissed, otherwise it will be moved back to its original location.
     """
@@ -156,11 +159,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         assert not (
             self.secondary_background and self.secondary_background.visible
         ) or (self.background and self.background.visible), (
-            "secondary_background can only be specified if background is also specified/visible"
+            "secondary_background can only be specified if background is also "
+            "specified/visible"
         )
 
     async def confirm_dismiss_async(self, dismiss: bool):
         await self._invoke_method_async("confirm_dismiss", {"dismiss": dismiss})
-
-    def confirm_dismiss(self, dismiss: bool):
-        asyncio.create_task(self.confirm_dismiss_async(dismiss))

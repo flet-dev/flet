@@ -24,12 +24,12 @@ tasks:
     cmds:
       - uv venv
 
-  pytest:
-    desc: "Run tests."
+  tests:
+    desc: "Run unit tests."
     aliases:
       - test
     cmds:
-      - uv run --group test pytest
+      - uv run --group test pytest packages/flet/tests
 
   pyproject-setup:
     desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."

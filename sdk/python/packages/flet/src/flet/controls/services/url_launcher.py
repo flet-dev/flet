@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional, Union
 
 from flet.controls.base_control import control
@@ -29,25 +28,8 @@ class UrlLauncher(Service):
             },
         )
 
-    def launch_url(
-        self,
-        url: str,
-        web_window_name: Optional[Union[str, UrlTarget]] = None,
-        web_popup_window: Optional[bool] = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
-    ) -> None:
-        asyncio.create_task(
-            self.launch_url_async(
-                url, web_window_name, web_popup_window, window_width, window_height
-            )
-        )
-
     async def can_launch_url_async(self, url: str) -> bool:
         return await self._invoke_method_async("can_launch_url", {"url": url})
 
     async def close_in_app_web_view_async(self) -> None:
         await self._invoke_method_async("close_in_app_web_view")
-
-    def close_in_app_web_view(self) -> None:
-        asyncio.create_task(self.close_in_app_web_view_async())

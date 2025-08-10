@@ -1,3 +1,5 @@
+import asyncio
+
 import flet as ft
 
 sample = """
@@ -5,7 +7,8 @@ sample = """
 
 <img src="https://raw.githubusercontent.com/flet-dev/flet/flet-widget/media/logo/flet-logo.svg" width="50%"/>
 
-Flet is a framework for adding server-driven UI (SDUI) experiences to existing Flutter apps or building standalone web, mobile and desktop apps with Flutter UI.
+Flet is a framework for adding server-driven UI (SDUI) experiences to existing Flutter
+apps or building standalone web, mobile and desktop apps with Flutter UI.
 
 Add an interactive `FletApp` widget to your Flutter app whose content is controlled by a remote Python script.
 It is an ideal solution for building non-core or frequently changing functionality such as product catalog, feedback form, in-app survey or support chat. Flet enables your team to ship new features faster by reducing the number of App Store validation cycles. Just re-deploy a web app hosting a Python script and your users will get an instant update!
@@ -147,7 +150,7 @@ Coming soon.
 ## Adding custom Flutter widgets
 
 Coming soon.
-"""
+"""  # noqa: E501
 
 
 def main(page: ft.Page):
@@ -166,7 +169,7 @@ def main(page: ft.Page):
             code_style_sheet=ft.MarkdownStyleSheet(
                 code_text_style=ft.TextStyle(font_family="Roboto Mono")
             ),
-            on_tap_link=lambda e: page.launch_url(e.data),
+            on_tap_link=lambda e: asyncio.create_task(page.launch_url_async(e.data)),
         )
     )
 

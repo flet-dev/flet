@@ -272,7 +272,7 @@ class BasePage(AdaptiveControl):
         self.controls.clear()
         self.update()
 
-    def scroll_to(
+    async def scroll_to_async(
         self,
         offset: Optional[Number] = None,
         delta: Optional[Number] = None,
@@ -287,7 +287,7 @@ class BasePage(AdaptiveControl):
         See [`Column.scroll_to()`][flet.Column.scroll_to] for method details
         and examples.
         """
-        self.__default_view().scroll_to(
+        await self.__default_view().scroll_to_async(
             offset=offset,
             delta=delta,
             scroll_key=scroll_key,

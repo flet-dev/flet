@@ -4,11 +4,11 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_move_to_random(e: ft.Event[ft.FloatingActionButton]):
+    async def handle_move_to_random(e: ft.Event[ft.FloatingActionButton]):
         # random index, excluding the current one
         i = random.choice([i for i in range(tabs.length) if i != tabs.selected_index])
 
-        tabs.move_to(
+        await tabs.move_to_async(
             index=i,
             animation_curve=ft.AnimationCurve.FAST_OUT_SLOWIN,
             animation_duration=ft.Duration(seconds=3),

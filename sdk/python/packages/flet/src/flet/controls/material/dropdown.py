@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional
 
@@ -34,7 +33,8 @@ class DropdownOption(Control):
 
     key: Optional[str] = None
     """
-    Option's key. If not specified [`text`][flet.DropdownOption.text] will be used as fallback.
+    Option's key. If not specified [`text`][flet.DropdownOption.text] will
+    be used as fallback.
     """
 
     text: Optional[str] = None
@@ -295,7 +295,8 @@ class Dropdown(ConstrainedControl):
 
     filled: bool = False
     """
-    Whether the decoration's container is filled with theme [`fill_color`][flet.Dropdown.fill_color].
+    Whether the decoration's container is filled with theme
+    [`fill_color`][flet.Dropdown.fill_color].
     """
 
     fill_color: Optional[ColorValue] = None
@@ -352,6 +353,3 @@ class Dropdown(ConstrainedControl):
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())

@@ -2,9 +2,9 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_dialog_action_click(e: ft.Event[ft.TextButton]):
+    async def handle_dialog_action_click(e: ft.Event[ft.TextButton]):
         page.pop_dialog()
-        dlg.data.confirm_dismiss(e.control.data)
+        await dlg.data.confirm_dismiss_async(e.control.data)
 
     dlg = ft.AlertDialog(
         modal=True,
@@ -17,13 +17,14 @@ def main(page: ft.Page):
         actions_alignment=ft.MainAxisAlignment.CENTER,
     )
 
-    def handle_confirm_dismiss(e: ft.DismissibleDismissEvent):
+    async def handle_confirm_dismiss(e: ft.DismissibleDismissEvent):
         if e.direction == ft.DismissDirection.END_TO_START:  # right-to-left slide
-            # save current dismissible to dialog's data, for confirmation in handle_dialog_action_click
+            # save current dismissible to dialog's data, for confirmation in
+            # handle_dialog_action_click
             dlg.data = e.control
             page.show_dialog(dlg)
         else:  # left-to-right slide
-            e.control.confirm_dismiss(True)
+            await e.control.confirm_dismiss_async(True)
 
     def handle_dismiss(e):
         e.control.parent.controls.remove(e.control)

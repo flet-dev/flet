@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -216,9 +215,3 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         Moves focus to a button.
         """
         await self._invoke_method_async("focus")
-
-    def focus(self):
-        """
-        Moves focus to a button.
-        """
-        asyncio.create_task(self.focus_async())

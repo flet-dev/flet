@@ -1,3 +1,5 @@
+import asyncio
+
 import flet as ft
 
 
@@ -51,26 +53,34 @@ def main(page: ft.Page):
                     controls=[
                         ft.ElevatedButton(
                             content="Section A",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("A"), duration=1000
+                            on_click=lambda _: asyncio.create_task(
+                                column1.scroll_to_async(
+                                    scroll_key=ft.ScrollKey("A"), duration=1000
+                                ),
                             ),
                         ),
                         ft.ElevatedButton(
                             content="Section B",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("B"), duration=1000
+                            on_click=lambda _: asyncio.create_task(
+                                column1.scroll_to_async(
+                                    scroll_key=ft.ScrollKey("B"), duration=1000
+                                ),
                             ),
                         ),
                         ft.ElevatedButton(
                             content="Section C",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("C"), duration=1000
+                            on_click=lambda _: asyncio.create_task(
+                                column1.scroll_to_async(
+                                    scroll_key=ft.ScrollKey("C"), duration=1000
+                                ),
                             ),
                         ),
                         ft.ElevatedButton(
                             content="Section D",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("D"), duration=1000
+                            on_click=lambda _: asyncio.create_task(
+                                column1.scroll_to_async(
+                                    scroll_key=ft.ScrollKey("D"), duration=1000
+                                ),
                             ),
                         ),
                     ]

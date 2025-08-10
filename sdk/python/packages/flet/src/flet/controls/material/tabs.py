@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
@@ -272,37 +271,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
                 if animation_duration is not None
                 else self.animation_duration,
             },
-        )
-
-    def move_to(
-        self,
-        index: int,
-        animation_curve: AnimationCurve = AnimationCurve.EASE,
-        animation_duration: Optional[DurationValue] = None,
-    ):
-        """
-        Selects the tab at the given `index`.
-
-        Additionally, it triggers [`on_change`][flet.Tabs.on_change] event and updates
-        [`selected_index`][flet.Tabs.selected_index].
-
-        Note:
-            If `index` is negative, it is interpreted as a Python-style negative index
-            (e.g., -1 refers to the last tab). If the resolved index is already the
-            currently selected tab, the method returns immediately and does nothing.
-
-        Args:
-            index: The index of the tab to select. Must be between in range
-                `[-length, length - 1]`.
-            animation_curve: The curve to apply to the animation.
-            animation_duration: The duration of the animation. If `None` (the default),
-                [`Tabs.animation_duration`][flet.Tabs.animation_duration] will be used.
-
-        Raises:
-            IndexError: If the `index` is outside the range `[-length, length - 1]`.
-        """
-        asyncio.create_task(
-            self.move_to_async(index, animation_curve, animation_duration)
         )
 
 

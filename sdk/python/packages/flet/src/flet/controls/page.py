@@ -580,7 +580,7 @@ class Page(BasePage):
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
-                self.launch_url(
+                await self.launch_url_async(
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
         else:
@@ -603,10 +603,10 @@ class Page(BasePage):
         if not self.web:
             if self.platform in ["ios", "android"]:
                 # close web view on mobile
-                self.close_in_app_web_view()
+                await self.close_in_app_web_view_async()
             else:
                 # activate desktop window
-                self.window.to_front()
+                await self.window.to_front_async()
         e = LoginEvent(
             error=data.get("error"),
             error_description=data.get("error_description"),
@@ -641,37 +641,6 @@ class Page(BasePage):
                 asyncio.create_task(self.on_logout(e))
             elif callable(self.on_logout):
                 self.on_logout(e)
-
-    def launch_url(
-        self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: Optional[bool] = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
-    ) -> None:
-        """
-        Opens `url` in a new browser window.
-
-        Optional method arguments:
-
-        * `web_window_name` - window tab/name to open URL in:
-        [`UrlTarget.SELF`][flet.UrlTarget.SELF] - the
-        same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] -
-        a new browser tab (or in external
-        application on mobile device) or `<your name>` - a named tab.
-        * `web_popup_window` - set to `True` to display a URL in a browser popup
-        window. Defaults to `False`.
-        * `window_width` - optional, popup window width.
-        * `window_height` - optional, popup window height.
-        """
-        self.url_launcher.launch_url(
-            url,
-            web_window_name=web_window_name,
-            web_popup_window=web_popup_window,
-            window_width=window_width,
-            window_height=window_height,
-        )
 
     async def launch_url_async(
         self,
@@ -720,14 +689,6 @@ class Page(BasePage):
         never allowed to query installed applications.
         """
         return self.url_launcher.can_launch_url_async(url)
-
-    def close_in_app_web_view(self) -> None:
-        """
-        Closes in-app web view opened with `launch_url()`.
-
-        📱 Mobile only.
-        """
-        self.url_launcher.close_in_app_web_view()
 
     async def close_in_app_web_view_async(self) -> None:
         """

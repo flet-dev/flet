@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional
 
@@ -183,6 +182,3 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())

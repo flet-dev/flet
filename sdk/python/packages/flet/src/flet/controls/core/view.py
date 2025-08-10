@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional, Union
 
@@ -86,7 +85,8 @@ class View(ScrollableControl, ConstrainedControl):
 
     floating_action_button: Optional[FloatingActionButton] = None
     """
-    A [`FloatingActionButton`][flet.FloatingActionButton] control to display on top of `Page` content.
+    A [`FloatingActionButton`][flet.FloatingActionButton] control to display on top
+    of `Page` content.
     """
 
     floating_action_button_location: Optional[
@@ -130,7 +130,8 @@ class View(ScrollableControl, ConstrainedControl):
     The vertical spacing between [`controls`][flet.View.controls] on the `Page`.
 
     Note:
-        Has effect only when [`vertical_alignment`][flet.View.vertical_alignment] is set to
+        Has effect only when [`vertical_alignment`][flet.View.vertical_alignment]
+        is set to
         [`MainAxisAlignment.START`][flet.MainAxisAlignment.START],
         [`MainAxisAlignment.END`][flet.MainAxisAlignment.END],
         or [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER].
@@ -158,9 +159,6 @@ class View(ScrollableControl, ConstrainedControl):
 
     can_pop: bool = True
     on_confirm_pop: Optional[ControlEventHandler["View"]] = None
-
-    def confirm_pop(self, should_pop: bool) -> None:
-        asyncio.create_task(self.confirm_pop_async(should_pop))
 
     async def confirm_pop_async(self, should_pop: bool) -> None:
         await self._invoke_method_async("confirm_pop", {"should_pop": should_pop})

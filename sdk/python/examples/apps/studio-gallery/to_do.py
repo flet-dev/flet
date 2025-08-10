@@ -125,14 +125,14 @@ def example(page):
                 ],
             )
 
-        def add_clicked(self, e):
+        async def add_clicked(self, e):
             if self.new_task.value:
                 task = Task(
                     self.new_task.value, self.task_status_change, self.task_delete
                 )
                 self.tasks.controls.append(task)
                 self.new_task.value = ""
-                self.new_task.focus()
+                await self.new_task.focus_async()
                 self.update()
 
         def task_status_change(self, task):
@@ -156,7 +156,7 @@ def example(page):
             for task in self.tasks.controls:
                 task.visible = (
                     status == "all"
-                    or (status == "active" and task.completed == False)
+                    or (status == "active" and not task.completed)
                     or (status == "completed" and task.completed)
                 )
                 if not task.completed:
