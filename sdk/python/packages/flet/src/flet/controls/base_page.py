@@ -78,7 +78,7 @@ class PageMediaData:
 
 
 @dataclass
-class PageResizeEvent(Event["PageView"]):
+class PageResizeEvent(Event["BasePage"]):
     """
     Event fired when the size of the containing window or browser is changed.
 
@@ -97,12 +97,12 @@ class PageResizeEvent(Event["PageView"]):
     """
 
 
-@control("PageView", isolated=True, kw_only=True)
-class PageView(AdaptiveControl):
+@control("BasePage", isolated=True, kw_only=True)
+class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
 
-    `PageView` serves as the base class for [Page][flet.Page] and
+    `BasePage` serves as the base class for [Page][flet.Page] and
     [MultiView][flet.MultiView], and provides a unified surface for rendering
     application content, app bars,
     navigation elements, dialogs, overlays, and more. It manages one
@@ -110,7 +110,7 @@ class PageView(AdaptiveControl):
     scrolling, and theming properties.
 
     Unlike lower-level layout controls (e.g., [Column][flet.Column],
-    [Container][flet.Container]), [PageView][flet.PageView] represents
+    [Container][flet.Container]), [BasePage][flet.BasePage] represents
     an entire logical view or screen of the app. It provides direct access
     to view-level controls such as [AppBar][flet.AppBar],
     [NavigationBar][flet.NavigationBar],
@@ -284,7 +284,8 @@ class PageView(AdaptiveControl):
         Moves scroll position to either absolute `offset`, relative `delta` or jump to
         the control with specified `scroll_key`.
 
-        See [`Column.scroll_to()`][flet.Column.scroll_to] for method details and examples.
+        See [`Column.scroll_to()`][flet.Column.scroll_to] for method details
+        and examples.
         """
         self.__default_view().scroll_to(
             offset=offset,

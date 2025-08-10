@@ -17,6 +17,7 @@ from urllib.parse import urlparse
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.base_control import BaseControl, control
+from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -28,7 +29,6 @@ from flet.controls.control_event import (
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.multi_view import MultiView
-from flet.controls.page_view import PageView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.services.browser_context_menu import BrowserContextMenu
@@ -135,7 +135,7 @@ class MultiViewRemoveEvent(Event["Page"]):
 
 
 @control("Page", isolated=True, post_init_args=2)
-class Page(PageView):
+class Page(BasePage):
     """
     Page is a container for [`View`][flet.View] controls.
 
@@ -368,7 +368,7 @@ class Page(PageView):
         ref,
         sess: "Session",
     ) -> None:
-        PageView.__post_init__(self, ref)
+        BasePage.__post_init__(self, ref)
         self._i = 1
         self.__session = weakref.ref(sess)
 
@@ -557,8 +557,8 @@ class Page(PageView):
         """
         Starts OAuth flow.
 
-        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication) guide
-        for more information and examples.
+        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication)
+        guide for more information and examples.
         """
         self.__authorization = authorization(
             provider,
@@ -633,7 +633,7 @@ class Page(PageView):
         Clears current authentication context. See
         [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#signing-out) guide for more
         information and examples.
-        """
+        """  # noqa: E501
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
@@ -686,9 +686,11 @@ class Page(PageView):
 
         Args:
             url: The URL to open.
-            web_window_name: Window tab/name to open URL in. Use [`UrlTarget.SELF`][flet.UrlTarget.SELF]
-                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK] for a new browser
-                tab (or in external application on mobile device), or a custom name for a named tab.
+            web_window_name: Window tab/name to open URL in. Use
+                [`UrlTarget.SELF`][flet.UrlTarget.SELF]
+                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
+                for a new browser tab (or in external application on mobile device),
+                or a custom name for a named tab.
             web_popup_window: Display the URL in a browser popup window.
             window_width: Popup window width.
             window_height: Popup window height.
