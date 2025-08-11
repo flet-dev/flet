@@ -34,7 +34,7 @@ tasks:
   control-tests:
     desc: "Run integration tests for controls."
     cmds:
-      - FLET_TEST_USE_FVM=1 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls
 
   pyproject-setup:
     desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."

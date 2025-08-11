@@ -32,6 +32,7 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
       FLET_TEST_SCREENSHOTS_PIXEL_RATIO: 2.0
       FLET_TEST_SIMILARITY_THRESHOLD: 99.0
+      FLET_TEST_DISABLE_FVM: 1
 
     - job_name: Build Flet for Windows
       job_group: build_flet

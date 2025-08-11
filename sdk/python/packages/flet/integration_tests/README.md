@@ -56,4 +56,4 @@ Android device or simulator.
 
 `FLET_TEST_ASSETS_DIR` - path to assets directory.
 
-`FLET_TEST_USE_FVM` - `True` to use `fvm` to run Flutter process with tests.
+`FLET_TEST_DISABLE_FVM` - `True` to launch Flutter process directly, without `fvm`. This setting could be on in CI environment. Locally we normally want to run with `fvm`.
