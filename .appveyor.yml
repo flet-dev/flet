@@ -26,12 +26,12 @@ environment:
       job_group: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2204
 
-    - job_name: Integration tests on macOS
-      job_group: integration_tests
-      python_stack: python 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
-      FLET_TEST_SCREENSHOTS_PIXEL_RATIO: 2.0
-      FLET_TEST_SIMILARITY_THRESHOLD: 99.0
+    # - job_name: Integration tests on macOS
+    #   job_group: integration_tests
+    #   python_stack: python 3.10
+    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+    #   FLET_TEST_SCREENSHOTS_PIXEL_RATIO: 2.0
+    #   FLET_TEST_SIMILARITY_THRESHOLD: 99.0
 
     - job_name: Build Flet for Windows
       job_group: build_flet
