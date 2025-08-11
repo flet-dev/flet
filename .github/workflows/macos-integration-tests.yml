@@ -4,18 +4,24 @@ on:
   push:
   pull_request:
 
+env:
+  FLUTTER_VERSION: "3.32.8"
+
 jobs:
   test-macos:
     runs-on: macos-14
-    env:
-      HOMEBREW_NO_AUTO_UPDATE: "1"
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install CocoaPods
         run: brew install cocoapods
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
 
       - name: Install uv
         shell: bash
@@ -23,19 +29,12 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Install Flutter via repo scripts
-        shell: bash
-        run: |
-          set -euo pipefail
-          source ci/common.sh
-          source ci/install_flutter.sh
-          flutter --version
-
       - name: Show tool versions
         run: |
           python3 --version
           uv --version
           pod --version
+          flutter --version
 
       - name: Run integration tests
         working-directory: sdk/python
