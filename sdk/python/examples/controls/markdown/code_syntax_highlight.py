@@ -1,5 +1,3 @@
-import asyncio
-
 import flet as ft
 
 sample = """
@@ -160,6 +158,9 @@ def main(page: ft.Page):
         "Roboto Mono": "RobotoMono-VariableFont_wght.ttf",
     }
 
+    async def navigate_md_link(e: ft.Event[ft.Markdown]):
+        await page.launch_url(e.data)
+
     page.add(
         ft.Markdown(
             value=sample,
@@ -169,7 +170,7 @@ def main(page: ft.Page):
             code_style_sheet=ft.MarkdownStyleSheet(
                 code_text_style=ft.TextStyle(font_family="Roboto Mono")
             ),
-            on_tap_link=lambda e: asyncio.create_task(page.launch_url(e.data)),
+            on_tap_link=navigate_md_link,
         )
     )
 
