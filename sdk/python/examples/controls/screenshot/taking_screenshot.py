@@ -6,7 +6,7 @@ from flet.utils.files import get_current_script_dir
 
 def main(page: ft.Page):
     async def take_screenshot():
-        image = await scr.capture_async()
+        image = await scr.capture()
         with open(Path(get_current_script_dir(), "screenshot.png"), "wb") as f:
             f.write(image)
 

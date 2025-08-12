@@ -46,7 +46,7 @@ page.update()
 
 To open file picker dialog call one of the three methods:
 
-* `pick_files_async()`
+* `pick_files()`
 * `save_file()`
 * `get_directory_path()`
 
@@ -55,7 +55,7 @@ Lambda works pretty nice for that:
 ```python
 ft.ElevatedButton(
     content="Choose files...",
-    on_click=lambda _: file_picker.pick_files_async(allow_multiple=True)
+    on_click=lambda _: file_picker.pick_files(allow_multiple=True)
 )
 ```
 
@@ -90,7 +90,7 @@ To perform an actual upload you should call `FilePicker.upload()` method and pas
 ```python
 import flet as ft
 
-def upload_files(e):
+async def upload_files(e):
     upload_list = []
     if file_picker.result != None and file_picker.result.files != None:
         for f in file_picker.result.files:
@@ -100,7 +100,7 @@ def upload_files(e):
                     upload_url=page.get_upload_url(f.name, 600),
                 )
             )
-        file_picker.upload(upload_list)
+        await file_picker.upload(upload_list)
 
 ft.ElevatedButton("Upload", on_click=upload_files)
 ```

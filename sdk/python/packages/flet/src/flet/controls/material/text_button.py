@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -98,8 +97,5 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Called when the control has lost focus.
     """
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

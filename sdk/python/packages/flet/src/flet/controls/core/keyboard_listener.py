@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 from typing import Optional
 
@@ -16,7 +15,8 @@ class KeyDownEvent(Event["KeyboardListener"]):
     """
     Event triggered when a key is pressed down.
 
-    Typically used to detect the initial press of a key before it is released or repeated.
+    Typically used to detect the initial press of a key before it is released
+    or repeated.
     """
 
     key: str
@@ -101,8 +101,5 @@ class KeyboardListener(Control):
     Fires when a keyboard key is being hold, causing repeated events.
     """
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

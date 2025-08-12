@@ -21,7 +21,7 @@ async def main(page: ft.Page):
 ft.run(main)
 ```
 
-You can use `await ft.app_async(main)` if Flet app is part of a larger app and called from `async` code.
+You can use `await ft.run_async(main)` if Flet app is part of a larger app and called from `async` code.
 
 ## Control event handlers
 

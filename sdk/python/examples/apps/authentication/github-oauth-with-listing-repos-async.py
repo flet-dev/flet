@@ -2,12 +2,12 @@ import json
 import logging
 import os
 
-logging.basicConfig(level=logging.INFO)
-
 import flet as ft
 import httpx
 from flet.auth.providers import GitHubOAuthProvider
 from flet.security import decrypt, encrypt
+
+logging.basicConfig(level=logging.INFO)
 
 MY_APP_SECRET_KEY = os.getenv("MY_APP_SECRET_KEY")
 assert MY_APP_SECRET_KEY, "set MY_APP_SECRET_KEY environment variable"
@@ -34,7 +34,7 @@ async def main(page: ft.Page):
     async def perform_login(e):
         # perform login
         saved_token = None
-        ejt = await page.shared_preferences.get_async(AUTH_TOKEN_KEY)
+        ejt = await page.shared_preferences.get(AUTH_TOKEN_KEY)
         if ejt:
             saved_token = decrypt(ejt, secret_key)
         if e is not None or saved_token is not None:
@@ -47,7 +47,7 @@ async def main(page: ft.Page):
         # save token in a client storage
         jt = page.auth.token.to_json()
         ejt = encrypt(jt, secret_key)
-        await page.shared_preferences.set_async(AUTH_TOKEN_KEY, ejt)
+        await page.shared_preferences.set(AUTH_TOKEN_KEY, ejt)
 
         logged_user.value = f"Hello, {page.auth.user['name']}!"
         toggle_login_buttons()
@@ -76,7 +76,7 @@ async def main(page: ft.Page):
                     )
 
     async def logout_button_click(e):
-        await page.shared_preferences.remove_async(AUTH_TOKEN_KEY)
+        await page.shared_preferences.remove(AUTH_TOKEN_KEY)
         page.logout()
 
     async def on_logout(e):

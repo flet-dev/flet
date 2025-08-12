@@ -19,7 +19,7 @@ class Screenshot(Control):
     The control to be captured.
     """
 
-    async def capture_async(
+    async def capture(
         self,
         pixel_ratio: Optional[Number] = None,
         delay: Optional[DurationValue] = None,
@@ -36,6 +36,6 @@ class Screenshot(Control):
         Returns:
             Screenshot in PNG format.
         """
-        return await self._invoke_method_async(
+        return await self._invoke_method(
             "capture", arguments={"pixel_ratio": pixel_ratio, "delay": delay}
         )

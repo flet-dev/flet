@@ -10,8 +10,8 @@ def main(page: ft.Page):
     page.window.prevent_close = True
     page.window.on_event = window_event
 
-    def handle_yes_click(e: ft.Event[ft.ElevatedButton]):
-        page.window.destroy()
+    async def handle_yes_click(e: ft.Event[ft.ElevatedButton]):
+        await page.window.destroy()
 
     def handle_no_click(e: ft.Event[ft.OutlinedButton]):
         page.pop_dialog()

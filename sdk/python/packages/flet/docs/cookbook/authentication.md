@@ -329,14 +329,14 @@ $ export MY_APP_SECRET_KEY="<secret>"
 Now, encrypted value can be stored in a client storage:
 
 ```python
-page.client_storage.set("myapp.auth_token", ejt)
+await page.shared_preferences.set("myapp.auth_token", ejt)
 ```
 
 Next time a user opens the app you can read encrypted token from a client storage and, if it exists,
 decrypt it and use in `page.login()` method:
 
 ```python
-ejt = page.client_storage.get("myapp.auth_token")
+ejt = await page.shared_preferences.get("myapp.auth_token")
 if ejt:
     jt = decrypt(ejt, secret_key)
     page.login(provider, saved_token=jt)
@@ -351,8 +351,8 @@ Calling `page.logout()` resets `page.auth` reference and triggers `page.on_logou
 You can remove saved token in logout method, for example:
 
 ```python
-def logout_button_click(e):
-    page.client_storage.remove(AUTH_TOKEN_KEY)
+async def logout_button_click(e):
+    await page.shared_preferences.remove(AUTH_TOKEN_KEY)
     page.logout()
 ```
 
@@ -395,7 +395,7 @@ You can also change web app to open provider's authorization page in the same ta
 ```python
 page.login(
     provider,
-    on_open_authorization_url=lambda url: page.launch_url(url, web_window_name="_self"),
+    on_open_authorization_url=lambda url: asyncio.create_task(page.launch_url(url, web_window_name="_self")),
     redirect_to_page=True
 )
 ```
@@ -405,7 +405,7 @@ To open flow in a new tab (notice `_self` replaced with `_blank`):
 ```python
 page.login(
     provider,
-    on_open_authorization_url=lambda url: page.launch_url(url, web_window_name="_blank")
+    on_open_authorization_url=lambda url: asyncio.create_task(page.launch_url(url, web_window_name="_blank"))
 )
 ```
 

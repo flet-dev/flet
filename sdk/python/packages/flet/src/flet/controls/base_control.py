@@ -220,7 +220,7 @@ class BaseControl:
         )
         self.page.update(self)
 
-    async def _invoke_method_async(
+    async def _invoke_method(
         self,
         method_name: str,
         arguments: Optional[dict[str, Any]] = None,
