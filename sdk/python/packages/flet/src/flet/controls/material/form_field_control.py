@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
@@ -317,8 +316,5 @@ class FormFieldControl(ConstrainedControl):
     `suffix_text`.
     """
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

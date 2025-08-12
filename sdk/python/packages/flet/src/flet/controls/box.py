@@ -16,16 +16,16 @@ from flet.controls.types import (
 )
 
 __all__ = [
-    "BoxDecoration",
-    "BoxShadow",
-    "DecorationImage",
-    "ColorFilter",
-    "FilterQuality",
     "BlurStyle",
-    "BoxShape",
     "BoxConstraints",
+    "BoxDecoration",
     "BoxFit",
+    "BoxShadow",
     "BoxShadowValue",
+    "BoxShape",
+    "ColorFilter",
+    "DecorationImage",
+    "FilterQuality",
 ]
 
 
@@ -45,7 +45,7 @@ class ColorFilter:
     The blend mode to apply to the color filter.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         color: Optional[ColorValue] = None,
@@ -124,7 +124,7 @@ class BoxShadow:
 
     blur_style: BlurStyle = BlurStyle.NORMAL
 
-    def copy_with(
+    def copy(
         self,
         *,
         spread_radius: Optional[Number] = None,
@@ -240,7 +240,7 @@ class DecorationImage:
     Whether to paint the image in anti-aliased quality.
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         src: Optional[str] = None,
@@ -328,8 +328,10 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient],
-    and [`image`][flet.BoxDecoration.image] into and to cast as the [`shadows`][flet.BoxDecoration.shadows].
+    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor],
+    [`gradient`][flet.BoxDecoration.gradient], and [`image`][
+    flet.BoxDecoration.image] into and to cast as the
+    [`shadows`][flet.BoxDecoration.shadows].
     """
 
     blend_mode: Optional[BlendMode] = None
@@ -344,13 +346,14 @@ class BoxDecoration:
             or self.bgcolor is not None
             or self.gradient is not None
         ), (
-            "blend_mode applies to the BoxDecoration's background color or gradient, but no color or gradient was provided"
+            "blend_mode applies to the BoxDecoration's background color or gradient, "
+            "but no color or gradient was provided"
         )
         assert not (self.shape == BoxShape.CIRCLE and self.border_radius), (
             "border_radius must be None when shape is BoxShape.CIRCLE"
         )
 
-    def copy_with(
+    def copy(
         self,
         *,
         bgcolor: Optional[ColorValue] = None,
@@ -387,7 +390,8 @@ class BoxConstraints:
         min_width <= Size.width <= max_width
         min_height <= Size.height <= max_height
 
-    Read more about BoxConstraints [here](https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html).
+    Read more about BoxConstraints
+    [here](https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html).
     """
 
     min_width: Number = 0
@@ -424,7 +428,7 @@ class BoxConstraints:
             "and min_height must be less than or equal to max_height"
         )
 
-    def copy_with(
+    def copy(
         self,
         *,
         min_width: Optional[Number] = None,

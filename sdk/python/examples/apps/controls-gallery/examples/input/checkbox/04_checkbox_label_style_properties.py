@@ -23,7 +23,7 @@ def example():
                 blur_radius=5,
                 color=ft.Colors.RED,
                 offset=ft.Offset(5, 5),
-                blur_style=ft.ShadowBlurStyle.SOLID,
+                blur_style=ft.BlurStyle.SOLID,
             ),
             foreground=ft.Paint(
                 color=ft.Colors.GREEN_800,

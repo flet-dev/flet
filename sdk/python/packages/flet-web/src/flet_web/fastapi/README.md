@@ -27,7 +27,7 @@ async def main(page: ft.Page):
     page.floating_action_button = ft.FloatingActionButton(
         icon=ft.icons.ADD, on_click=add_click
     )
-    await page.add_async(
+    page.add(
         ft.Container(counter, alignment=ft.Alignment.CENTER, expand=True)
     )
 
@@ -70,11 +70,11 @@ import flet_fastapi
 
 
 async def root_main(page: ft.Page):
-    await page.add_async(ft.Text("This is root app!"))
+    page.add(ft.Text("This is root app!"))
 
 
 async def sub_main(page: ft.Page):
-    await page.add_async(ft.Text("This is sub app!"))
+    page.add(ft.Text("This is sub app!"))
 
 
 app = flet_fastapi.FastAPI()
@@ -106,7 +106,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 async def main(page: ft.Page):
-    await page.add_async(ft.Text("Hello, Flet!"))
+    page.add(ft.Text("Hello, Flet!"))
 
 app.mount("/flet-app", flet_fastapi.app(main))
 ```

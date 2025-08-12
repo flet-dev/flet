@@ -18,7 +18,7 @@ from typing import (
 if TYPE_CHECKING:
     from .base_control import BaseControl  # noqa
     from .page import Page
-    from .page_view import PageView
+    from .base_page import BasePage
 
 __all__ = [
     "ControlEvent",
@@ -80,7 +80,7 @@ class Event(Generic[EventControlType]):
     control: EventControlType = field(repr=False)
 
     @property
-    def page(self) -> Optional[Union["Page", "PageView"]]:
+    def page(self) -> Optional[Union["Page", "BasePage"]]:
         return self.control.page
 
     @property

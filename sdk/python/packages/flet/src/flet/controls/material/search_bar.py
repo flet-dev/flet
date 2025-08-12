@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional
 
@@ -31,7 +30,8 @@ class SearchBar(ConstrainedControl):
     controls: list[Control] = field(default_factory=list)
     """
     The list of controls to be displayed below the search bar when in search view.
-    These controls are usually [`ListTile`][flet.ListTile]s and will be displayed in a [`ListView`][flet.ListView].
+    These controls are usually [`ListTile`][flet.ListTile]s and will be displayed
+    in a [`ListView`][flet.ListView].
     """
 
     value: str = ""
@@ -47,7 +47,8 @@ class SearchBar(ConstrainedControl):
 
     bar_trailing: Optional[list[Control]] = None
     """
-    A list of controls to display after the text input field when the search view is close.
+    A list of controls to display after the text input field when
+    the search view is close.
 
     These controls can represent additional modes of searching (e.g voice search),
     an avatar, or an overflow menu and are usually not more than two.
@@ -258,28 +259,16 @@ class SearchBar(ConstrainedControl):
         super().before_update()
 
     # Public methods
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
+    async def focus(self):
+        await self._invoke_method("focus")
 
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def blur(self):
+        await self._invoke_method("blur")
 
-    async def blur_async(self):
-        await self._invoke_method_async("blur")
+    async def open_view(self):
+        await self._invoke_method("open_view")
 
-    def blur(self):
-        asyncio.create_task(self.blur_async())
-
-    def open_view(self):
-        asyncio.create_task(self.open_view_async())
-
-    async def open_view_async(self):
-        await self._invoke_method_async("open_view")
-
-    def close_view(self, text: Optional[str] = None):
-        asyncio.create_task(self.close_view_async(text))
-
-    async def close_view_async(self, text: Optional[str] = None):
-        await self._invoke_method_async(
+    async def close_view(self, text: Optional[str] = None):
+        await self._invoke_method(
             "close_view", {"text": text if text is not None else self.value}
         )

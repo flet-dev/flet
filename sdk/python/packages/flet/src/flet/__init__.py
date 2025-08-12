@@ -9,6 +9,7 @@ from flet.controls.animation import (
     AnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
+from flet.controls.base_page import BasePage, PageMediaData, PageResizeEvent
 from flet.controls.blur import (
     Blur,
     BlurTileMode,
@@ -350,7 +351,6 @@ from flet.controls.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
-from flet.controls.page_view import PageMediaData, PageResizeEvent, PageView
 from flet.controls.painting import (
     Paint,
     PaintGradient,
@@ -521,6 +521,7 @@ __all__ = [
     "Banner",
     "BannerTheme",
     "BaseControl",
+    "BasePage",
     "BeveledRectangleBorder",
     "BlendMode",
     "Blur",
@@ -754,7 +755,6 @@ __all__ = [
     "PageResizeEvent",
     "PageTransitionTheme",
     "PageTransitionsTheme",
-    "PageView",
     "Pagelet",
     "Paint",
     "PaintGradient",

@@ -5,16 +5,16 @@ def main(page: ft.Page):
     page.services.append(file_picker := ft.FilePicker())
 
     async def handle_pick_files(e: ft.Event[ft.Button]):
-        files = await file_picker.pick_files_async(allow_multiple=True)
+        files = await file_picker.pick_files(allow_multiple=True)
         selected_files.value = (
             ", ".join(map(lambda f: f.name, files)) if files else "Cancelled!"
         )
 
     async def handle_save_file(e: ft.Event[ft.Button]):
-        save_file_path.value = await file_picker.save_file_async()
+        save_file_path.value = await file_picker.save_file()
 
     async def handle_get_directory_path(e: ft.Event[ft.Button]):
-        directory_path.value = await file_picker.get_directory_path_async()
+        directory_path.value = await file_picker.get_directory_path()
 
     page.add(
         ft.Row(

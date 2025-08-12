@@ -60,10 +60,10 @@ class TodoAppState:
     def set_new_task_name(self, e: ft.Event[ft.TextField]):
         self.new_task_name = e.control.value
 
-    def add_task(self):
+    async def add_task(self):
         self.tasks.append(TaskItem(self.new_task_name))
         self.new_task_name = ""
-        cast(ft.TextField, self.new_task_field.current).focus()
+        await cast(ft.TextField, self.new_task_field.current).focus()
 
     def delete_task(self, task: TaskItem):
         self.tasks.remove(task)

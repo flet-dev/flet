@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
+from flet.controls.base_page import PageMediaData
 from flet.controls.padding import Padding
-from flet.controls.page_view import PageMediaData
 from flet.utils import from_dict
 
 

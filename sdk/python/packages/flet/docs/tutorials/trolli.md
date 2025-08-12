@@ -580,7 +580,7 @@ For now, we'll simply add the following login method and wire it up to the login
 
 ```python
 def login(self, e):
-    def close_dlg(e):
+    async def close_dlg(e):
         if user_name.value == "" or password.value == "":
             user_name.error_text = "Please provide username"
             password.error_text = "Please provide password"
@@ -591,11 +591,11 @@ def login(self, e):
             if user not in self.store.get_users():
                 self.store.add_user(user)
             self.user = user_name.value
-            self.page.client_storage.set("current_user", user_name.value)
+            await self.page.shared_preferences.set("current_user", user_name.value)
 
         self.page.close(dialog)
         self.appbar_items[0] = ft.PopupMenuItem(
-            text=f"{self.page.client_storage.get('current_user')}'s Profile"
+            text=f"{await self.page.shared_preferences.get('current_user')}'s Profile"
         )
         self.page.update()
 

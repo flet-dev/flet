@@ -10,12 +10,12 @@ def main(page):
     last_name = ft.TextField(label="Last name")
     greetings = ft.Column()
 
-    def btn_click(e):
+    async def btn_click(e):
         greetings.controls.append(ft.Text(f"Hello, {first_name.value} {last_name.value}!"))
         first_name.value = ""
         last_name.value = ""
         page.update()
-        first_name.focus()
+        await first_name.focus()
 
     page.add(
         first_name,
@@ -27,13 +27,13 @@ def main(page):
 ft.run(main)
 ```
 
-In the very beginning of `main()` method we create three controls which we are going to use in button's 
-`on_click` handler: two `TextField` for first and last names and a `Column` - container for greeting messages. 
-We create controls with all their properties set and in the end of `main()` method, in `page.add()` call, 
+In the very beginning of `main()` method we create three controls which we are going to use in button's
+`on_click` handler: two `TextField` for first and last names and a `Column` - container for greeting messages.
+We create controls with all their properties set and in the end of `main()` method, in `page.add()` call,
 we use their references (variables).
 
-When more and more controls and event handlers are added it becomes challenging to keep all control 
-definitions in one place, so they become scattered across `main()` body. Glancing at `page.add()` parameters it's 
+When more and more controls and event handlers are added it becomes challenging to keep all control
+definitions in one place, so they become scattered across `main()` body. Glancing at `page.add()` parameters it's
 hard to imagine (without constant jumping to variable definitions in IDE) what would the end form look like:
 
 ```python {2-5}
@@ -89,14 +89,14 @@ def main(page):
     last_name = ft.Ref[ft.TextField]()
     greetings = ft.Ref[ft.Column]()
 
-    def btn_click(e):
+    async def btn_click(e):
         greetings.current.controls.append(
             ft.Text(f"Hello, {first_name.current.value} {last_name.current.value}!")
         )
         first_name.current.value = ""
         last_name.current.value = ""
         page.update()
-        first_name.current.focus()
+        await first_name.current.focus()
 
     page.add(
         ft.TextField(ref=first_name, label="First name", autofocus=True),

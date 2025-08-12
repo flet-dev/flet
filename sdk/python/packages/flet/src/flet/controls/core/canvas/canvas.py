@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -63,9 +62,9 @@ class Canvas(ConstrainedControl):
             if self.height is None:
                 self.height = float("inf")
 
-    async def capture_async(self, pixel_ratio: Optional[Number] = None):
+    async def capture(self, pixel_ratio: Optional[Number] = None):
         """
-        Captures the current visual state of the canvas asynchronously.
+        Captures the current visual state of the canvas.
 
         The captured image is stored internally and will be rendered as a background
         beneath all subsequently drawn shapes.
@@ -77,27 +76,9 @@ class Canvas(ConstrainedControl):
                 Values greater than `1.0` produce higher-resolution captures.
                 If `None`, the device's default pixel ratio is used.
         """
-        await self._invoke_method_async(
-            "capture", arguments={"pixel_ratio": pixel_ratio}
-        )
+        await self._invoke_method("capture", arguments={"pixel_ratio": pixel_ratio})
 
-    def capture(self, pixel_ratio: Optional[Number] = None):
-        """
-        Initiates an asynchronous capture of the current canvas state.
-
-        This is a non-blocking version of `capture_async()` and should be used
-        in synchronous contexts.
-
-        Args:
-            pixel_ratio:
-                The pixel density multiplier to use when rendering the capture.
-                `1.0` means 1 device pixel per logical pixel (no scaling).
-                Values greater than `1.0` produce higher-resolution captures.
-                If `None`, the device's default pixel ratio is used.
-        """
-        asyncio.create_task(self.capture_async(pixel_ratio=pixel_ratio))
-
-    async def get_capture_async(self) -> bytes:
+    async def get_capture(self) -> bytes:
         """
         Retrieves the most recent canvas capture as PNG bytes.
 
@@ -105,21 +86,12 @@ class Canvas(ConstrainedControl):
             bytes: The captured image in PNG format, or an empty result
             if no capture has been made.
         """
-        return await self._invoke_method_async("get_capture")
+        return await self._invoke_method("get_capture")
 
-    async def clear_capture_async(self):
+    async def clear_capture(self):
         """
-        Clears the previously captured canvas image asynchronously.
+        Clears the previously captured canvas image.
 
         After clearing, no background will be rendered from a prior capture.
         """
-        await self._invoke_method_async("clear_capture")
-
-    def clear_capture(self):
-        """
-        Initiates an asynchronous operation to clear the captured canvas image.
-
-        This is a non-blocking version of `clear_capture_async()` and should
-        be used in synchronous contexts.
-        """
-        asyncio.create_task(self.clear_capture_async())
+        await self._invoke_method("clear_capture")

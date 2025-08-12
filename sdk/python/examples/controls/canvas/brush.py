@@ -41,7 +41,7 @@ def main(page: ft.Page):
         state.shapes_count += 1
 
         if state.shapes_count == MAX_SHAPES_PER_CAPTURE:
-            await canvas.capture_async()
+            await canvas.capture()
             canvas.shapes.clear()
             canvas.update()
             state.shapes_count = 0
@@ -62,10 +62,10 @@ def main(page: ft.Page):
     )
 
     async def save_image():
-        await canvas.capture_async()
-        capture = await canvas.get_capture_async()
+        await canvas.capture()
+        capture = await canvas.get_capture()
         if capture:
-            file_path = await file_picker.save_file_async(
+            file_path = await file_picker.save_file(
                 file_name="flet_picture.png", src_bytes=capture
             )
             if file_path and page.platform in [

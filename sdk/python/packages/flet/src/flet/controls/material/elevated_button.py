@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional
 
@@ -175,14 +174,11 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             or self.bgcolor is not None
             or self.elevation != 1
         ):
-            self._internals["style"] = (self.style or ButtonStyle()).copy_with(
+            self._internals["style"] = (self.style or ButtonStyle()).copy(
                 color=self.color,
                 bgcolor=self.bgcolor,
                 elevation=self.elevation,
             )
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

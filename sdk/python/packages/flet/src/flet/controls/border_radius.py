@@ -9,8 +9,8 @@ __all__ = [
     "BorderRadiusValue",
     "all",
     "horizontal",
-    "vertical",
     "only",
+    "vertical",
 ]
 
 
@@ -87,7 +87,7 @@ class BorderRadius:
 
     # Instance Methods
 
-    def copy_with(
+    def copy(
         self,
         *,
         top_left: Optional[Number] = None,
@@ -96,8 +96,7 @@ class BorderRadius:
         bottom_right: Optional[Number] = None,
     ) -> "BorderRadius":
         """
-        Returns a copy of this `BorderRadius` instance with the given fields replaced
-        with the new values.
+        Returns a copy of this object with the specified properties overridden.
         """
         return BorderRadius(
             top_left=top_left if top_left is not None else self.top_left,

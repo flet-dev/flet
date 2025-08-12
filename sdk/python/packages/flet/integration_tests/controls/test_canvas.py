@@ -435,7 +435,11 @@ async def test_draw_text(flet_app: ftt.FletTestApp, request):
                 fc.Text(
                     x=300,
                     y=400,
-                    value="Limited to max_width and right-aligned.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                    value="Limited to max_width and right-aligned.\n"
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
+                    "do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco "
+                    "laboris nisi ut aliquip ex ea commodo consequat.",
                     text_align=ft.TextAlign.RIGHT,
                     max_width=400,
                 ),
@@ -607,12 +611,12 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     # ensure there is no initial capture
-    capture_0 = await canvas.get_capture_async()
+    capture_0 = await canvas.get_capture()
     assert capture_0 is None
 
     # take capture and assert
-    await canvas.capture_async(pixel_ratio=flet_app.pixel_ratio)
-    capture_1 = await canvas.get_capture_async()
+    await canvas.capture(pixel_ratio=flet_app.screenshots_pixel_ratio)
+    capture_1 = await canvas.get_capture()
     assert capture_1 is not None
     flet_app.assert_screenshot("capture_1", capture_1)
 
@@ -623,18 +627,18 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
 
     # take screenshot
     # it must be a circle striked out with a line (capture + shapes)
-    capture_2 = await screenshot.capture_async(pixel_ratio=flet_app.pixel_ratio)
+    capture_2 = await screenshot.capture(pixel_ratio=flet_app.screenshots_pixel_ratio)
     flet_app.assert_screenshot("capture_2", capture_2)
 
     # clean current capture
-    await canvas.clear_capture_async()
+    await canvas.clear_capture()
     await flet_app.tester.pump_and_settle()
 
     # take screenshot
     # it must be just a single line
-    capture_3 = await screenshot.capture_async(pixel_ratio=flet_app.pixel_ratio)
+    capture_3 = await screenshot.capture(pixel_ratio=flet_app.screenshots_pixel_ratio)
     flet_app.assert_screenshot("capture_3", capture_3)
 
     # back to empty capture
-    capture_4 = await canvas.get_capture_async()
+    capture_4 = await canvas.get_capture()
     assert capture_4 is None

@@ -231,7 +231,7 @@ nav:
               - ControlBuilder: controls/controlbuilder.md
               - DialogControl: controls/dialogcontrol.md
               - MultiView: controls/multiview.md
-              - PageView: controls/pageview.md
+              - BasePage: controls/basepage.md
               - ScrollableControl: controls/scrollablecontrol.md
               - Service: controls/service.md
           - Buttons:

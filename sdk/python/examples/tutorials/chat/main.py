@@ -1,7 +1,7 @@
 import flet as ft
 
 
-class Message:
+class Message:  # noqa: B903
     def __init__(self, user_name: str, text: str, message_type: str):
         self.user_name = user_name
         self.text = text
@@ -74,7 +74,7 @@ def main(page: ft.Page):
             )
             page.update()
 
-    def send_message_click(e):
+    async def send_message_click(e):
         if new_message.value != "":
             page.pubsub.send_all(
                 Message(
@@ -84,7 +84,7 @@ def main(page: ft.Page):
                 )
             )
             new_message.value = ""
-            new_message.focus()
+            await new_message.focus()
             page.update()
 
     def on_message(message: Message):

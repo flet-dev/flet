@@ -26,8 +26,8 @@ class Board(ft.Container):
             width=(self.app.page.width - 310),
             height=(self.app.page.height - 95),
         )
-        for l in self.store.get_lists_by_board(self.board_id):
-            self.add_list(l)
+        for lst in self.store.get_lists_by_board(self.board_id):
+            self.add_list(lst)
 
         super().__init__(
             content=self.board_lists,
@@ -42,7 +42,7 @@ class Board(ft.Container):
         self.height = height
         self.update()
 
-    def create_list(self, e):
+    async def create_list(self, e):
         option_dict = {
             ft.Colors.LIGHT_GREEN: self.color_option_creator(ft.Colors.LIGHT_GREEN),
             ft.Colors.RED_200: self.color_option_creator(ft.Colors.RED_200),
@@ -79,7 +79,7 @@ class Board(ft.Container):
             color_options.controls.append(v)
 
         def close_dlg(e):
-            if (hasattr(e.control, "text") and not e.control.text == "Cancel") or (
+            if (hasattr(e.control, "text") and e.control.text != "Cancel") or (
                 type(e.control) is ft.TextField and e.control.value != ""
             ):
                 new_list = BoardList(
@@ -127,7 +127,7 @@ class Board(ft.Container):
             on_dismiss=lambda e: print("Modal dialog dismissed!"),
         )
         self.page.open(dialog)
-        dialog_text.focus()
+        await dialog_text.focus()
 
     def remove_list(self, list: BoardList, e):
         self.board_lists.controls.remove(list)

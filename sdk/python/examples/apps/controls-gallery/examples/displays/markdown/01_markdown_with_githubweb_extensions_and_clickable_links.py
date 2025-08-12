@@ -6,7 +6,8 @@ name = "Markdown with GitHubWeb extensions and clickable links"
 def example():
     md1 = """
 # Markdown Example
-Markdown allows you to easily include formatted text, images, and even formatted Dart code in your app.
+Markdown allows you to easily include formatted text, images, and even formatted
+Dart code in your app.
 
 ## Titles
 
@@ -123,5 +124,5 @@ line 3
         value=md1,
         selectable=True,
         extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-        # ßon_tap_link=lambda e: ft.page.launch_url(e.data),
+        # on_tap_link=lambda e: ft.page.launch_url(e.data),
     )

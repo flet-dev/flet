@@ -2,6 +2,18 @@ import flet as ft
 
 
 def main(page: ft.Page):
+    async def scroll_a():
+        await column1.scroll_to(scroll_key=ft.ScrollKey("A"), duration=1000)
+
+    async def scroll_b():
+        await column1.scroll_to(scroll_key=ft.ScrollKey("B"), duration=1000)
+
+    async def scroll_c():
+        await column1.scroll_to(scroll_key=ft.ScrollKey("C"), duration=1000)
+
+    async def scroll_d():
+        await column1.scroll_to(scroll_key=ft.ScrollKey("D"), duration=1000)
+
     page.add(
         ft.Container(
             border=ft.Border.all(1),
@@ -51,27 +63,19 @@ def main(page: ft.Page):
                     controls=[
                         ft.ElevatedButton(
                             content="Section A",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("A"), duration=1000
-                            ),
+                            on_click=scroll_a,
                         ),
                         ft.ElevatedButton(
                             content="Section B",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("B"), duration=1000
-                            ),
+                            on_click=scroll_b,
                         ),
                         ft.ElevatedButton(
                             content="Section C",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("C"), duration=1000
-                            ),
+                            on_click=scroll_c,
                         ),
                         ft.ElevatedButton(
                             content="Section D",
-                            on_click=lambda _: column1.scroll_to(
-                                scroll_key=ft.ScrollKey("D"), duration=1000
-                            ),
+                            on_click=scroll_d,
                         ),
                     ]
                 ),
