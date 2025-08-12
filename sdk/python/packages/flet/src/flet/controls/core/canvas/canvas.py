@@ -64,7 +64,7 @@ class Canvas(ConstrainedControl):
 
     async def capture(self, pixel_ratio: Optional[Number] = None):
         """
-        Captures the current visual state of the canvas asynchronously.
+        Captures the current visual state of the canvas.
 
         The captured image is stored internally and will be rendered as a background
         beneath all subsequently drawn shapes.
@@ -90,7 +90,7 @@ class Canvas(ConstrainedControl):
 
     async def clear_capture(self):
         """
-        Clears the previously captured canvas image asynchronously.
+        Clears the previously captured canvas image.
 
         After clearing, no background will be rendered from a prior capture.
         """

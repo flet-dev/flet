@@ -135,8 +135,8 @@ class Tester(Service):
         """
         await self._invoke_method("mouse_hover", {"id": finder.id})
 
-    def teardown(self):
+    async def teardown(self):
         """
         Teardown Flutter integration test and exit Flutter process.
         """
-        return self._invoke_method("teardown")
+        await self._invoke_method("teardown")
