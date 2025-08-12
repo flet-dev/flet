@@ -672,7 +672,7 @@ class Page(BasePage):
             window_height=window_height,
         )
 
-    def can_launch_url(self, url: str):
+    async def can_launch_url(self, url: str) -> bool:
         """
         Checks whether the specified URL can be handled by some app installed on the
         device.
@@ -688,7 +688,7 @@ class Page(BasePage):
         that are always assumed to be supported (such as http(s)), as web pages are
         never allowed to query installed applications.
         """
-        return self.url_launcher.can_launch_url(url)
+        return await self.url_launcher.can_launch_url(url)
 
     async def close_in_app_web_view(self) -> None:
         """

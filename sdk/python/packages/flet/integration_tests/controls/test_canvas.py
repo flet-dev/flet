@@ -615,7 +615,7 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
     assert capture_0 is None
 
     # take capture and assert
-    await canvas.capture(pixel_ratio=flet_app.pixel_ratio)
+    await canvas.capture(pixel_ratio=flet_app.screenshots_pixel_ratio)
     capture_1 = await canvas.get_capture()
     assert capture_1 is not None
     flet_app.assert_screenshot("capture_1", capture_1)
@@ -627,7 +627,7 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
 
     # take screenshot
     # it must be a circle striked out with a line (capture + shapes)
-    capture_2 = await screenshot.capture(pixel_ratio=flet_app.pixel_ratio)
+    capture_2 = await screenshot.capture(pixel_ratio=flet_app.screenshots_pixel_ratio)
     flet_app.assert_screenshot("capture_2", capture_2)
 
     # clean current capture
@@ -636,7 +636,7 @@ async def test_capture(flet_app: ftt.FletTestApp, request):
 
     # take screenshot
     # it must be just a single line
-    capture_3 = await screenshot.capture(pixel_ratio=flet_app.pixel_ratio)
+    capture_3 = await screenshot.capture(pixel_ratio=flet_app.screenshots_pixel_ratio)
     flet_app.assert_screenshot("capture_3", capture_3)
 
     # back to empty capture

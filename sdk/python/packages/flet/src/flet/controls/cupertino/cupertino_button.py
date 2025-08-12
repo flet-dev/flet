@@ -34,7 +34,7 @@ class CupertinoButton(ConstrainedControl):
 
     Raises:
         AssertionError: If [`opacity_on_click`][(c).] is not between `0.0`
-        and `1.0` inclusive.
+            and `1.0` inclusive.
     """
 
     content: Optional[StrOrControl] = None

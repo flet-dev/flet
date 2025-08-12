@@ -48,7 +48,7 @@ tasks:
     aliases:
       - docs
     cmds:
-      - uv run --directory packages/flet --group docs mkdocs serve
+      - uv run --directory packages/flet --group docs mkdocs serve --dirtyreload
 
   docs-coverage:
     desc: "Run docstring coverage report in the 'packages/flet' directory."

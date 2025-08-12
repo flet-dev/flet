@@ -99,7 +99,7 @@ class StoragePaths(Service):
 
         Raises:
             FletUnsupportedPlatformException: If called on the web or
-            non-Android platforms.
+                non-Android platforms.
 
         Returns:
             A List of external cache directory paths, or `None` if unavailable.
@@ -118,7 +118,7 @@ class StoragePaths(Service):
 
         Raises:
             FletUnsupportedPlatformException: If called on the web or
-            non-Android platforms.
+                non-Android platforms.
 
         Returns:
             A List of external storage directory paths, or `None` if unavailable.
@@ -137,7 +137,7 @@ class StoragePaths(Service):
 
         Raises:
             FletUnsupportedPlatformException: If called on the web or
-            non-Apple platforms.
+                non-Apple platforms.
 
         Returns:
             The path to the library directory.
@@ -153,7 +153,7 @@ class StoragePaths(Service):
 
         Raises:
             FletUnsupportedPlatformException: If called on the web or
-            non-Android platforms.
+                non-Android platforms.
 
         Returns:
             The path to the external storage directory, or `None` if unavailable.
