@@ -264,11 +264,20 @@ def test_button_basic_diff():
 
     # 2nd iteration
     patch, _, _, _ = make_diff(b2, b1)
-    assert len(patch) == 2
+    assert len(patch) == 3
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["scale"], "value": ft.Scale(0.2)},
+            {
+                "op": "add",
+                "path": ["_internals", "style"],
+                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
+            },
+            {
+                "op": "replace",
+                "path": ["scale"],
+                "value": ft.Scale(scale=0.2),
+            },
             {"op": "replace", "path": ["content"], "value": "Click me"},
         ],
     )
@@ -281,9 +290,12 @@ def test_button_basic_diff():
         patch,
         [
             {
-                "op": "add",
+                "op": "remove",
                 "path": ["_internals", "style"],
-                "value": ft.ButtonStyle(elevation=1),
+                "value": ft.ButtonStyle(
+                    color=ft.Colors.RED,
+                    elevation=1,
+                ),
             },
             {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
             {"op": "replace", "path": ["content"], "value": ft.Text("Text_1")},
@@ -641,14 +653,16 @@ def test_nested_control_builders():
                     state,
                     lambda state: ft.Text(
                         value=f"{state.count}",
-                        spans=[
-                            ft.TextSpan(
-                                f"SPAN {state.count}",
-                                on_click=lambda: print("span clicked!"),
-                            )
-                        ]
-                        if state.count > 0
-                        else [],
+                        spans=(
+                            [
+                                ft.TextSpan(
+                                    f"SPAN {state.count}",
+                                    on_click=lambda: print("span clicked!"),
+                                )
+                            ]
+                            if state.count > 0
+                            else []
+                        ),
                         size=50,
                     ),
                 ),
