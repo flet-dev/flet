@@ -1,7 +1,4 @@
-import math
-
 import flet as ft
-import flet.canvas as fc
 import flet.testing as ftt
 import pytest
 
@@ -20,8 +17,27 @@ async def test_drop(flet_app: ftt.FletTestApp, request):
         ],
         key="dd",
     )
-    flet_app.page.add(dd)
+    flet_app.page.enable_screenshots = True
+    flet_app.page.window.width = 400
+    flet_app.page.window.height = 600
+    flet_app.page.controls = [dd]
+    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
+
+    # normal state
+    flet_app.assert_screenshot(
+        "dropdown_0",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
+    # open state
     await flet_app.tester.tap(await flet_app.tester.find_by_key("dd"))
     await flet_app.tester.pump_and_settle()
-    await flet_app.assert_control_screenshot(request.node.name, dd)
+    flet_app.assert_screenshot(
+        "dropdown_1",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )

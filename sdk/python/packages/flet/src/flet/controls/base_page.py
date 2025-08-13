@@ -201,6 +201,11 @@ class BasePage(AdaptiveControl):
     Represents the environmental metrics of a page or window.
     """
 
+    enable_screenshots: bool = False
+    """
+    Enable taking screenshots of the entire page with `take_screenshot` method.
+    """
+
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
     Called when a user resizes a browser or native OS window containing Flet app, for
@@ -356,6 +361,27 @@ class BasePage(AdaptiveControl):
         dialog._force_close = True
         dialog.update()
         return dialog
+
+    async def take_screenshot(
+        self,
+        pixel_ratio: Optional[Number] = None,
+        delay: Optional[DurationValue] = None,
+    ) -> bytes:
+        """
+        Captures a screenshot of the entire page with overlays.
+
+        Args:
+            pixel_ratio: A pixel ratio of the captured screenshot.
+                If `None`, device-specific pixel ratio will be used.
+            delay: A delay before taking a screenshot.
+                The delay will be 20 milliseconds if not specified.
+
+        Returns:
+            Screenshot in PNG format.
+        """
+        return await self._invoke_method(
+            "take_screenshot", arguments={"pixel_ratio": pixel_ratio, "delay": delay}
+        )
 
     # overlay
     @property
