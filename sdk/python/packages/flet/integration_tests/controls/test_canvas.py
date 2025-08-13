@@ -7,6 +7,136 @@ import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
+async def test_draw_color(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [fc.Color(color=ft.Colors.DEEP_ORANGE_300)],
+            width=100,
+            height=100,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_points_as_points(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Points(
+                    points=[ft.Offset(10, 20), ft.Offset(20, 40), ft.Offset(30, 10)],
+                    point_mode=fc.PointMode.POINTS,
+                    paint=ft.Paint(
+                        stroke_width=6,
+                        stroke_cap=ft.StrokeCap.ROUND,
+                        color=ft.Colors.RED,
+                    ),
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_points_as_lines(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Points(
+                    points=[
+                        ft.Offset(10, 20),
+                        ft.Offset(20, 20),
+                        ft.Offset(30, 10),
+                        ft.Offset(30, 20),
+                    ],
+                    point_mode=fc.PointMode.LINES,
+                    paint=ft.Paint(
+                        stroke_width=3,
+                        color=ft.Colors.BLUE,
+                    ),
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_points_as_polygon(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Points(
+                    points=[ft.Offset(10, 20), ft.Offset(20, 40), ft.Offset(30, 10)],
+                    point_mode=fc.PointMode.POLYGON,
+                    paint=ft.Paint(
+                        stroke_width=3,
+                        color=ft.Colors.GREEN,
+                    ),
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_shadow(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Shadow(
+                    path=[
+                        fc.Path.SubPath(
+                            x=0,
+                            y=0,
+                            elements=[
+                                fc.Path.MoveTo(x=75, y=40),
+                                fc.Path.CubicTo(
+                                    cp1x=75, cp1y=37, cp2x=70, cp2y=25, x=50, y=25
+                                ),
+                                fc.Path.CubicTo(
+                                    cp1x=20, cp1y=25, cp2x=20, cp2y=62.5, x=20, y=62.5
+                                ),
+                                fc.Path.CubicTo(
+                                    cp1x=20, cp1y=80, cp2x=40, cp2y=102, x=75, y=120
+                                ),
+                                fc.Path.CubicTo(
+                                    cp1x=110, cp1y=102, cp2x=130, cp2y=80, x=130, y=62.5
+                                ),
+                                fc.Path.CubicTo(
+                                    cp1x=130, cp1y=62.5, cp2x=130, cp2y=25, x=100, y=25
+                                ),
+                                fc.Path.CubicTo(
+                                    cp1x=85, cp1y=25, cp2x=75, cp2y=37, x=75, y=40
+                                ),
+                            ],
+                        ),
+                    ],
+                    color=ft.Colors.PINK,
+                    elevation=10,
+                )
+            ],
+            width=150,
+            height=150,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
 async def test_draw_line(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
