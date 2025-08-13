@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
+async def test_bottom_sheet_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     bs = ft.BottomSheet(
         content=ft.Container(
