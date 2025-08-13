@@ -169,7 +169,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         ), "at least icon or content (string or visible Control) must be provided"
 
         if (
-            self.style is None
+            self.style is not None
             or self.color is not None
             or self.bgcolor is not None
             or self.elevation != 1

@@ -1,7 +1,6 @@
 from dataclasses import field
 from typing import Any, Optional
 
-import flet as ft
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
@@ -22,6 +21,8 @@ from flet.controls.services.service import Service
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
+
+import flet as ft
 
 from .common import (
     LineChart,
@@ -275,21 +276,7 @@ def test_simple_page():
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 0],
                 "value": SuperElevatedButton("Foo"),
-            },
-            {
-                "op": "replace",
-                "path": [
-                    "views",
-                    0,
-                    "controls",
-                    0,
-                    "controls",
-                    1,
-                    "_internals",
-                    "style",
-                ],
-                "value": ButtonStyle(elevation=1),
-            },
+            }
         ],
     )
 
@@ -311,34 +298,6 @@ def test_simple_page():
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 1, "content"],
                 "value": "Baz",
-            },
-            {
-                "op": "replace",
-                "path": [
-                    "views",
-                    0,
-                    "controls",
-                    0,
-                    "controls",
-                    1,
-                    "_internals",
-                    "style",
-                ],
-                "value": ButtonStyle(elevation=1),
-            },
-            {
-                "op": "replace",
-                "path": [
-                    "views",
-                    0,
-                    "controls",
-                    0,
-                    "controls",
-                    2,
-                    "_internals",
-                    "style",
-                ],
-                "value": ButtonStyle(elevation=1),
             },
         ],
     )
@@ -444,11 +403,6 @@ def test_changes_tracking():
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "height"],
                 "value": 100,
-            },
-            {
-                "op": "replace",
-                "path": ["views", 0, "controls", 0, "_internals", "style"],
-                "value": ft.ButtonStyle(elevation=1),
             },
             {
                 "op": "add",
