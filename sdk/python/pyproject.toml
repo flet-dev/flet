@@ -76,6 +76,9 @@ fix = true
 show-fixes = true
 
 [tool.ruff.lint]
+pydocstyle = { convention = 'google' }
+isort = { known-first-party = ["flet"] }
+preview = true
 select = [
     # pycodestyle
     "E",
@@ -90,8 +93,6 @@ select = [
     # isort
     "I"
 ]
-preview = true
-pydocstyle = { convention = 'google' }
 
 [tool.ruff.format]
 quote-style = "double"
