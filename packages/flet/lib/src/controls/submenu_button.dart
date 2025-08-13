@@ -82,7 +82,7 @@ class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
       leadingIcon: widget.control.buildWidget("leading"),
       trailingIcon: widget.control.buildWidget("trailing"),
       menuChildren: widget.control.buildWidgets("controls"),
-      child: widget.control.buildWidget("content"),
+      child: widget.control.buildTextOrWidget("content"),
     );
 
     var focusValue = widget.control.getString("focus");
