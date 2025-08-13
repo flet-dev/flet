@@ -38,7 +38,6 @@ from flet.controls.types import (
     ScrollMode,
     ThemeMode,
 )
-from flet.utils import deprecated
 
 logger = logging.getLogger("flet")
 
@@ -295,40 +294,41 @@ class BasePage(AdaptiveControl):
             curve=curve,
         )
 
-    @deprecated(
-        reason="Use Page.show_dialog() instead",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    def open(self, control: DialogControl) -> None:
-        self.show_dialog(control)
-
     def show_dialog(self, dialog: DialogControl) -> None:
         """
-        TBD
+        Displays a dialog and manages its dismissal lifecycle.
+
+        This method adds the specified `DialogControl` to the active dialog stack
+        and renders it on the page. If the dialog is already open, an exception
+        is raised.
+        The `on_dismiss` handler of the dialog is temporarily wrapped to ensure the
+        dialog is removed from the stack and its dismissal event is triggered
+        appropriately.
+
+        Args:
+            dialog (DialogControl):
+                The dialog instance to display. Must not already be open.
+
+        Raises:
+            Exception: If the specified dialog is already open.
         """
         if dialog in self._dialogs.controls:
             raise Exception("Dialog is already opened")
 
         original_on_dismiss = dialog.on_dismiss
 
-        def wrapped_on_dismiss(*args, **kwargs):
+        async def wrapped_on_dismiss(*args):
             if dialog in self._dialogs.controls:
                 self._dialogs.controls.remove(dialog)
                 self._dialogs.update()
-            if (
-                original_on_dismiss
-                and not hasattr(dialog, "_force_close")
-                and args[
-                    0
-                ].data  # e.data == False for TimePicker and DatePicker if they were
-                # dismissed without changing the value
-            ):
-                original_on_dismiss(*args, **kwargs)
             dialog.on_dismiss = original_on_dismiss
-            if hasattr(dialog, "_force_close"):
-                del dialog._force_close
+            e = args[0]
+            if (
+                original_on_dismiss and (e.data is None or e.data)  # e.data == True for
+                # TimePicker and DatePicker if they were dismissed without
+                # changing the value
+            ):
+                await dialog._trigger_event("dismiss", e)
 
         dialog.open = True
         dialog.on_dismiss = wrapped_on_dismiss
@@ -336,24 +336,24 @@ class BasePage(AdaptiveControl):
         self._dialogs.controls.append(dialog)
         self._dialogs.update()
 
-    @deprecated(
-        reason="Use Page.pop_dialog() instead",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    def close(self, control: DialogControl) -> None:
-        self.pop_dialog()
-
     def pop_dialog(self) -> Optional[DialogControl]:
-        # get the top most opened dialog
+        """
+        Closes the most recently opened dialog.
+
+        This method searches the active dialog stack for the topmost dialog
+        that is currently open, marks it as closed, updates its state,
+        and returns the closed dialog.
+
+        Returns:
+            Optional[DialogControl]:
+                The closed dialog instance if one was found, otherwise `None`.
+        """
         dialog = next(
             (dlg for dlg in reversed(self._dialogs.controls) if dlg.open), None
         )
         if not dialog:
             return None
         dialog.open = False
-        dialog._force_close = True
         dialog.update()
         return dialog
 
