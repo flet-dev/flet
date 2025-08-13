@@ -104,34 +104,20 @@ async def test_draw_shadow(flet_app: ftt.FletTestApp, request):
                             x=0,
                             y=0,
                             elements=[
-                                fc.Path.MoveTo(x=75, y=40),
-                                fc.Path.CubicTo(
-                                    cp1x=75, cp1y=37, cp2x=70, cp2y=25, x=50, y=25
-                                ),
-                                fc.Path.CubicTo(
-                                    cp1x=20, cp1y=25, cp2x=20, cp2y=62.5, x=20, y=62.5
-                                ),
-                                fc.Path.CubicTo(
-                                    cp1x=20, cp1y=80, cp2x=40, cp2y=102, x=75, y=120
-                                ),
-                                fc.Path.CubicTo(
-                                    cp1x=110, cp1y=102, cp2x=130, cp2y=80, x=130, y=62.5
-                                ),
-                                fc.Path.CubicTo(
-                                    cp1x=130, cp1y=62.5, cp2x=130, cp2y=25, x=100, y=25
-                                ),
-                                fc.Path.CubicTo(
-                                    cp1x=85, cp1y=25, cp2x=75, cp2y=37, x=75, y=40
-                                ),
+                                fc.Path.MoveTo(x=10, y=10),
+                                fc.Path.LineTo(x=40, y=10),
+                                fc.Path.LineTo(x=40, y=40),
+                                fc.Path.LineTo(x=10, y=40),
+                                fc.Path.LineTo(x=10, y=10),
                             ],
                         ),
                     ],
                     color=ft.Colors.PINK,
-                    elevation=10,
+                    elevation=1,
                 )
             ],
-            width=150,
-            height=150,
+            width=50,
+            height=50,
         ),
     )
 
