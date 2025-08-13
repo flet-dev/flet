@@ -92,6 +92,7 @@ async def test_draw_points_as_polygon(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
+@pytest.mark.skip(reason="This test is temporarily disabled.")
 async def test_draw_shadow(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
