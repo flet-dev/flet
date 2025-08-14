@@ -9,10 +9,9 @@ from typing import (
     Union,
 )
 
+from flet.controls.base_icon import BaseIcon
 from flet.controls.colors import Colors
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
-from flet.controls.cupertino.cupertino_icons import CupertinoIcons
-from flet.controls.material.icons import Icons
 
 if TYPE_CHECKING:
     from flet.controls.control import Control  # noqa
@@ -1035,7 +1034,7 @@ More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookb
 """
 
 # Icons
-IconValue = Union[Icons, CupertinoIcons]
+IconValue = BaseIcon
 """Type alias for icon values.
 
 Represents an icon and can be:

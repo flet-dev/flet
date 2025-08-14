@@ -8,44 +8,12 @@ sh ci/generate_material_icons.sh
 ```
 """
 
-import random
-from enum import Enum
-from typing import Optional
+from flet.controls.base_icon import BaseIcon
 
 __all__ = ["Icons"]
 
 
-class Icons(Enum):
-    @staticmethod
-    def random(
-        exclude: Optional[list["Icons"]] = None,
-        weights: Optional[dict["Icons", int]] = None,
-    ) -> Optional["Icons"]:
-        """
-        Selects a random icon, with optional exclusions and weights.
-
-        Args:
-            exclude: A list of icons members to exclude from the selection.
-            weights: A dictionary mapping icon members to their respective weights for
-                weighted random selection.
-
-        Returns:
-            A randomly selected icon, or `None` if all members are excluded.
-
-        Examples:
-            >>> Icons.random(exclude=[Icons.FAVORITE], weights={Icons.SCHOOL: 150})
-            Icons.SCHOOL
-        """
-        choices = list(Icons)
-        if exclude:
-            choices = [member for member in choices if member not in exclude]
-            if not choices:
-                return None
-        if weights:
-            weights_list = [weights.get(c, 1) for c in choices]
-            return random.choices(choices, weights=weights_list)[0]
-        return random.choice(choices)
-
+class Icons(BaseIcon):
     TEN_K = 0x1E000
     TEN_K_SHARP = 0x1E700
     TEN_K_ROUNDED = 0x1F4DF

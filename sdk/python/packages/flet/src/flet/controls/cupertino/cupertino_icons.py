@@ -8,46 +8,12 @@ sh ci/generate_cupertino_icons.sh
 ```
 """
 
-import random
-from enum import Enum
-from typing import Optional
+from flet.controls.base_icon import BaseIcon
 
 __all__ = ["CupertinoIcons"]
 
 
-class CupertinoIcons(Enum):
-    @staticmethod
-    def random(
-        exclude: Optional[list["CupertinoIcons"]] = None,
-        weights: Optional[dict["CupertinoIcons", int]] = None,
-    ) -> Optional["CupertinoIcons"]:
-        """
-        Selects a random icon, with optional exclusions and weights.
-
-        Args:
-            exclude: A list of icons members to exclude from the selection.
-            weights: A dictionary mapping icon members to their respective weights for
-                weighted random selection.
-
-        Returns:
-            A randomly selected icon, or `None` if all members are excluded.
-
-        Examples:
-            >>> CupertinoIcons.random(
-            ...     exclude=[CupertinoIcons.BOOK], weights={CupertinoIcons.INFO: 150}
-            ... )
-            CupertinoIcons.INFO
-        """
-        choices = list(CupertinoIcons)
-        if exclude:
-            choices = [member for member in choices if member not in exclude]
-            if not choices:
-                return None
-        if weights:
-            weights_list = [weights.get(c, 1) for c in choices]
-            return random.choices(choices, weights=weights_list)[0]
-        return random.choice(choices)
-
+class CupertinoIcons(BaseIcon):
     AIRPLANE = 0x2F4D4
     ALARM = 0x2F4D5
     ALARM_FILL = 0x2F4D6

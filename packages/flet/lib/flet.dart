@@ -42,7 +42,6 @@ export 'src/utils/launch_url.dart';
 export 'src/utils/locale.dart';
 export 'src/utils/lock.dart';
 export 'src/utils/markdown.dart';
-export 'src/utils/material_icons.dart';
 export 'src/utils/material_state.dart';
 export 'src/utils/menu.dart';
 export 'src/utils/misc.dart';

@@ -36,24 +36,25 @@ def parse_dart_icons(dart_content: str, set_id: int):
     return icons
 
 
-def generate_python_enum(icons, output_file: str):
+def generate_python_enum(icons, output_file: str, class_name: str):
     with open(output_file, "w", encoding="utf-8") as f:
-        # f.write(f"class {class_name}:\n")
+        f.write(f"class {class_name}(BaseIcon):\n")
         for name, code in icons:
             f.write(f"    {name} = {code}\n")
     print(f"✅ Enum written to {output_file}")
 
 
 def main():
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 5:
         print(
-            "Usage: python generate_icons.py <https://path/to/Icons.dart> <output-file> <set-id>"
+            "Usage: python generate_icons.py <https://path/to/Icons.dart> <output-file> <class-name> <set-id>"
         )
         sys.exit(1)
 
     url = sys.argv[1]
     output_file = sys.argv[2]
-    set_id = int(sys.argv[3])
+    class_name = sys.argv[3]
+    set_id = int(sys.argv[4])
 
     dart_content = download_dart_file(url)
 
@@ -63,7 +64,7 @@ def main():
         print("⚠️ No icons found. Please check the format.")
         sys.exit(1)
 
-    generate_python_enum(icons, output_file)
+    generate_python_enum(icons, output_file, class_name)
 
 
 if __name__ == "__main__":

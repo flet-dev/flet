@@ -9,6 +9,7 @@ from flet.controls.animation import (
     AnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
+from flet.controls.base_icon import BaseIcon
 from flet.controls.base_page import BasePage, PageMediaData, PageResizeEvent
 from flet.controls.blur import (
     Blur,
@@ -521,6 +522,7 @@ __all__ = [
     "Banner",
     "BannerTheme",
     "BaseControl",
+    "BaseIcon",
     "BasePage",
     "BeveledRectangleBorder",
     "BlendMode",
