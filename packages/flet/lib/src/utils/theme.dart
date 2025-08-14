@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/transforms.dart';
 import 'alignment.dart';
@@ -159,7 +160,7 @@ ThemeData parseTheme(
     checkboxTheme: parseCheckboxTheme(value?["checkbox_theme"], theme),
     radioTheme: parseRadioTheme(value?["radio_theme"], theme),
     badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
-    switchTheme: parseSwitchTheme(value?["switch_theme"], theme),
+    switchTheme: parseSwitchTheme(value?["switch_theme"], theme, context),
     dividerTheme: parseDividerTheme(value?["divider_theme"], theme),
     snackBarTheme: parseSnackBarTheme(value?["snackbar_theme"], theme),
     bannerTheme: parseBannerTheme(value?["banner_theme"], theme),
@@ -192,8 +193,8 @@ ThemeData parseTheme(
     filledButtonTheme:
         parseFilledButtonTheme(value?["filled_button_theme"], theme),
     iconButtonTheme: parseIconButtonTheme(value?["icon_button_theme"], theme),
-    segmentedButtonTheme:
-        parseSegmentedButtonTheme(value?["segmented_button_theme"], theme),
+    segmentedButtonTheme: parseSegmentedButtonTheme(
+        value?["segmented_button_theme"], theme, context),
     iconTheme: parseIconTheme(value?["icon_theme"], theme),
     timePickerTheme: parseTimePickerTheme(value?["time_picker_theme"], theme),
   );
@@ -659,7 +660,8 @@ BadgeThemeData? parseBadgeTheme(Map<dynamic, dynamic>? value, ThemeData theme,
   );
 }
 
-SwitchThemeData? parseSwitchTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+SwitchThemeData? parseSwitchTheme(
+    Map<dynamic, dynamic>? value, ThemeData theme, BuildContext context,
     [SwitchThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -668,7 +670,8 @@ SwitchThemeData? parseSwitchTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     trackColor: parseWidgetStateColor(value["track_color"], theme),
     overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
     splashRadius: parseDouble(value["splash_radius"]),
-    thumbIcon: parseWidgetStateIcon(value["thumb_icon"], theme),
+    thumbIcon: parseWidgetStateIcon(
+        value["thumb_icon"], FletBackend.of(context), theme),
     trackOutlineColor:
         parseWidgetStateColor(value["track_outline_color"], theme),
     trackOutlineWidth: parseWidgetStateDouble(value["track_outline_width"]),
@@ -1087,10 +1090,11 @@ NavigationBarThemeData? parseNavigationBarTheme(
 }
 
 SegmentedButtonThemeData? parseSegmentedButtonTheme(
-    Map<dynamic, dynamic>? value, ThemeData theme,
+    Map<dynamic, dynamic>? value, ThemeData theme, BuildContext context,
     [SegmentedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
-  var selectedIcon = parseIconData(value["selected_icon"]);
+  var selectedIcon =
+      parseIconData(value["selected_icon"], FletBackend.of(context));
 
   return theme.segmentedButtonTheme.copyWith(
     selectedIcon: selectedIcon != null ? Icon(selectedIcon) : null,
@@ -1388,9 +1392,10 @@ extension ThemeParsers on Control {
     return parseBadgeTheme(get(propertyName), theme, defaultValue);
   }
 
-  SwitchThemeData? getSwitchTheme(String propertyName, ThemeData theme,
+  SwitchThemeData? getSwitchTheme(
+      String propertyName, ThemeData theme, BuildContext context,
       [SwitchThemeData? defaultValue]) {
-    return parseSwitchTheme(get(propertyName), theme, defaultValue);
+    return parseSwitchTheme(get(propertyName), theme, context, defaultValue);
   }
 
   DividerThemeData? getDividerTheme(String propertyName, ThemeData theme,
@@ -1479,9 +1484,10 @@ extension ThemeParsers on Control {
   }
 
   SegmentedButtonThemeData? getSegmentedButtonTheme(
-      String propertyName, ThemeData theme,
+      String propertyName, ThemeData theme, BuildContext context,
       [SegmentedButtonThemeData? defaultValue]) {
-    return parseSegmentedButtonTheme(get(propertyName), theme, defaultValue);
+    return parseSegmentedButtonTheme(
+        get(propertyName), theme, context, defaultValue);
   }
 
   IconThemeData? getIconTheme(String propertyName, ThemeData theme,

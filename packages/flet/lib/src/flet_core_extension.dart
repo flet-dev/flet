@@ -371,5 +371,25 @@ class FletCoreExtension extends FletExtension {
   }
 
   @override
+  IconData? createIconData(iconCode) {
+    int setId = (iconCode >> 16) & 0xFF;
+    int codePoint = iconCode & 0xFFFF;
+    String? fontFamily;
+    String? fontPackage;
+
+    if (setId == 1) {
+      fontFamily = "MaterialIcons";
+    } else if (setId == 2) {
+      fontFamily = "CupertinoIcons";
+      fontPackage = "cupertino_icons";
+    } else {
+      return null;
+    }
+
+    return IconData(codePoint,
+        fontFamily: fontFamily, fontPackage: fontPackage);
+  }
+
+  @override
   void ensureInitialized() {}
 }

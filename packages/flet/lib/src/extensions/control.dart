@@ -50,7 +50,7 @@ extension WidgetFromControl on Control {
       if (c == null) return null;
       c.notifyParent = notifyParent;
       return ControlWidget(key: key, control: c);
-    } else if (icon is String) {
+    } else if (icon is int) {
       return Icon(getIconData(propertyName), color: color);
     }
     return null;

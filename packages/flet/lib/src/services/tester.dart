@@ -62,7 +62,7 @@ class TesterService extends FletService {
 
       case "find_by_icon":
         var iconCode = args["icon"];
-        var icon = parseIconData(iconCode);
+        var icon = parseIconData(iconCode, control.backend);
         if (icon == null) {
           throw Exception("Icon not found: $iconCode");
         }
