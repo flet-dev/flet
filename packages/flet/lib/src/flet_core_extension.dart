@@ -372,8 +372,8 @@ class FletCoreExtension extends FletExtension {
 
   @override
   IconData? createIconData(iconCode) {
-    int setId = (iconCode >> 16) & 0xFF;
-    int codePoint = iconCode & 0xFFFF;
+    int setId = (iconCode >> 24) & 0xFF;
+    int codePoint = iconCode & 0xFFFFFF;
     String? fontFamily;
     String? fontPackage;
 

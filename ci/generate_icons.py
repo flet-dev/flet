@@ -30,7 +30,7 @@ def parse_dart_icons(dart_content: str, set_id: int):
     for match in ICON_ENTRY_PATTERN.finditer(dart_content):
         var_name = match.group("var_name")
         codepoint = int(match.group("codepoint"), 16)
-        packed_value = (set_id << 16) | codepoint
+        packed_value = (set_id << 24) | codepoint
         icons.append((normalize_enum_name(var_name), hex(packed_value)))
     print(f"🔍 Found {len(icons)} icons for set ID {set_id}.")
     return icons
@@ -38,7 +38,7 @@ def parse_dart_icons(dart_content: str, set_id: int):
 
 def generate_python_enum(icons, output_file: str, class_name: str):
     with open(output_file, "w", encoding="utf-8") as f:
-        f.write(f"class {class_name}(BaseIcon):\n")
+        f.write(f"class {class_name}(IconData):\n")
         for name, code in icons:
             f.write(f"    {name} = {code}\n")
     print(f"✅ Enum written to {output_file}")
