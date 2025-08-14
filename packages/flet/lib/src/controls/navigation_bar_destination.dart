@@ -15,12 +15,11 @@ class NavigationBarDestinationControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("NavigationBarDestination build: ${control.id}");
 
-    var icon = parseIcon(control.getString("icon"));
-    var selectedIcon = parseIcon(control.getString("selected_icon"));
+    var selectedIcon = control.getIcon("selected_icon");
     var child = NavigationDestination(
         enabled: !control.disabled,
         tooltip: !control.disabled ? control.getString("tooltip") : null,
-        icon: control.buildWidget("icon") ?? Icon(icon),
+        icon: control.buildWidget("icon") ?? Icon(control.getIcon("icon")),
         selectedIcon: control.buildWidget("selected_icon") ??
             (selectedIcon != null ? Icon(selectedIcon) : null),
         label: control.getString("label", "")!);

@@ -126,7 +126,8 @@ class NotchShape:
     """
     A shape with a notch in its outline.
 
-    Typically used as the outline of a 'host' control to make a notch that accommodates a 'guest' control.
+    Typically used as the outline of a 'host' control to make a notch that
+    accommodates a 'guest' control.
     e.g the [`BottomAppBar`][flet.BottomAppBar] may have a notch to accommodate
     the [`FloatingActionButton`][flet.FloatingActionButton].
 
@@ -1034,7 +1035,7 @@ More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookb
 """
 
 # Icons
-IconValue = Union[str, Icons, CupertinoIcons]
+IconValue = Union[Icons, CupertinoIcons]
 """Type alias for icon values.
 
 Represents an icon and can be:
@@ -1051,8 +1052,11 @@ Represents an icon and can be:
 >>> ft.CupertinoIcons.BACK
 >>> ft.Icons.random()
 >>> ft.CupertinoIcons.random()
->>> ft.Icons.random(exclude=[ft.Icons.FAVORITE, ft.Icons.SCHOOL], weights={ft.Icons.SCHOOL: 150, ft.Icons.ADJUST: 5})
->>> ft.CupertinoIcons.random(exclude=[ft.CupertinoIcons.CAMERA, ft.CupertinoIcons.TABLE], weights={ft.CupertinoIcons.TABLE: 150, ft.CupertinoIcons.PENCIL: 5})
+>>> ft.Icons.random(exclude=[ft.Icons.FAVORITE, ft.Icons.SCHOOL],
+>>>     weights={ft.Icons.SCHOOL: 150, ft.Icons.ADJUST: 5})
+>>> ft.CupertinoIcons.random(exclude=[ft.CupertinoIcons.CAMERA,
+>>>     ft.CupertinoIcons.TABLE], weights={ft.CupertinoIcons.TABLE: 150,
+>>>     ft.CupertinoIcons.PENCIL: 5})
 ```
 ///
 """

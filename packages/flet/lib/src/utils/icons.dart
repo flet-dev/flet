@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'cupertino_icons.dart';
-import 'material_icons.dart';
 import 'material_state.dart';
 
-IconData? parseIcon(String? value, [IconData? defaultValue]) {
+IconData? parseIcon(int? value, [IconData? defaultValue]) {
   if (value == null) return defaultValue;
-  return materialIcons[value.toLowerCase()] ??
-      cupertinoIcons[value.toLowerCase()];
+
+  int setId = (value >> 16) & 0xFF;
+  int codePoint = value & 0xFFFF;
+  String? fontFamily;
+  String? fontPackage;
+
+  if (setId == 1) {
+    fontFamily = "MaterialIcons";
+  } else if (setId == 2) {
+    fontFamily = "CupertinoIcons";
+    fontPackage = "cupertino_icons";
+  }
+
+  return IconData(codePoint, fontFamily: fontFamily, fontPackage: fontPackage);
 }
 
-WidgetStateProperty<Icon?>? parseWidgetStateIcon(dynamic value,
-    ThemeData theme, {
-      Icon? defaultIcon,
-      WidgetStateProperty<Icon?>? defaultValue,
-    }) {
+WidgetStateProperty<Icon?>? parseWidgetStateIcon(
+  dynamic value,
+  ThemeData theme, {
+  Icon? defaultIcon,
+  WidgetStateProperty<Icon?>? defaultValue,
+}) {
   if (value == null) return defaultValue;
   return getWidgetStateProperty<Icon?>(
-      value, (jv) => Icon(parseIcon(jv as String)), defaultIcon);
+      value, (jv) => Icon(parseIcon(jv as int)), defaultIcon);
 }
 
 extension IconParsers on Control {

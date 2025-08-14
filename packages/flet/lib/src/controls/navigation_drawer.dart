@@ -74,7 +74,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                 ? ControlWidget(
                     control: selectedIcon,
                   )
-                : selectedIcon is String
+                : selectedIcon is int
                     ? Icon(parseIcon(selectedIcon))
                     : null,
           );
