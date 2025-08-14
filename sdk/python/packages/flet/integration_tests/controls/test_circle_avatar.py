@@ -3,6 +3,9 @@ import flet.testing as ftt
 import pytest
 
 
+@pytest.mark.skip(
+    reason="temporarily disabled due to reference image generation failure"
+)
 @pytest.mark.asyncio(loop_scope="module")
 async def test_circle_avatar(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
