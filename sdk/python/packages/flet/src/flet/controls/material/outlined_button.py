@@ -9,7 +9,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     StrOrControl,
     UrlTarget,
 )
@@ -30,7 +30,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     A Control representing custom button content.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     Icon shown in the button.
     """

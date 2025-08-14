@@ -8,12 +8,12 @@ sh ci/generate_material_icons.sh
 ```
 """
 
-from flet.controls.base_icon import BaseIcon
+from flet.controls.icon_data import IconData
 
 __all__ = ["Icons"]
 
 
-class Icons(BaseIcon):
+class Icons(IconData):
     TEN_K = 0x1E000
     TEN_K_SHARP = 0x1E700
     TEN_K_ROUNDED = 0x1F4DF

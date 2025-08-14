@@ -1090,7 +1090,7 @@ SegmentedButtonThemeData? parseSegmentedButtonTheme(
     Map<dynamic, dynamic>? value, ThemeData theme,
     [SegmentedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
-  var selectedIcon = parseIcon(value["selected_icon"]);
+  var selectedIcon = parseIconData(value["selected_icon"]);
 
   return theme.segmentedButtonTheme.copyWith(
     selectedIcon: selectedIcon != null ? Icon(selectedIcon) : null,

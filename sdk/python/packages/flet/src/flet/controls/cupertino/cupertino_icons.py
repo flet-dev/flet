@@ -8,12 +8,12 @@ sh ci/generate_cupertino_icons.sh
 ```
 """
 
-from flet.controls.base_icon import BaseIcon
+from flet.controls.icon_data import IconData
 
 __all__ = ["CupertinoIcons"]
 
 
-class CupertinoIcons(BaseIcon):
+class CupertinoIcons(IconData):
     AIRPLANE = 0x2F4D4
     ALARM = 0x2F4D5
     ALARM_FILL = 0x2F4D6

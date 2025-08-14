@@ -55,7 +55,7 @@ class _CupertinoNavigationBarControlState
           return BottomNavigationBarItem(
               tooltip: !dest.disabled ? dest.getString("tooltip") : null,
               backgroundColor: dest.getColor("bgcolor", context),
-              icon: dest.buildWidget("icon") ?? Icon(dest.getIcon("icon")),
+              icon: dest.buildWidget("icon") ?? Icon(dest.getIconData("icon")),
               activeIcon: dest.buildIconOrWidget("selected_icon"),
               label: dest.getString("label", "")!);
         }).toList());

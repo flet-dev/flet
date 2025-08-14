@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'material_state.dart';
 
-IconData? parseIcon(int? value, [IconData? defaultValue]) {
+IconData? parseIconData(int? value, [IconData? defaultValue]) {
   if (value == null) return defaultValue;
 
   int setId = (value >> 16) & 0xFF;
@@ -29,12 +29,12 @@ WidgetStateProperty<Icon?>? parseWidgetStateIcon(
 }) {
   if (value == null) return defaultValue;
   return getWidgetStateProperty<Icon?>(
-      value, (jv) => Icon(parseIcon(jv as int)), defaultIcon);
+      value, (jv) => Icon(parseIconData(jv as int)), defaultIcon);
 }
 
 extension IconParsers on Control {
-  IconData? getIcon(String propertyName, [IconData? defaultValue]) {
-    return parseIcon(get(propertyName), defaultValue);
+  IconData? getIconData(String propertyName, [IconData? defaultValue]) {
+    return parseIconData(get(propertyName), defaultValue);
   }
 
   WidgetStateProperty<Icon?>? getWidgetStateIcon(

@@ -20,7 +20,7 @@ class IconControl extends StatelessWidget {
     return ConstrainedControl(
         control: control,
         child: Icon(
-          control.getIcon("name"),
+          control.getIconData("name"),
           size: control.getDouble("size"),
           color: control.getColor("color", context),
           blendMode: control.getBlendMode("blend_mode"),

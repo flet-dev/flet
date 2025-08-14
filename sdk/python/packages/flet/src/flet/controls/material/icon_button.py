@@ -10,7 +10,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     UrlTarget,
@@ -30,7 +30,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     places as well.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     Icon shown in the button.
     """
@@ -58,7 +58,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     If True, it will show `selected_icon`, if False it will show `icon`.
     """
 
-    selected_icon: Optional[IconValueOrControl] = None
+    selected_icon: Optional[IconDataOrControl] = None
     """
     Icon shown in the button in selected state.
     """

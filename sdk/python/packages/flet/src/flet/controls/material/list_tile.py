@@ -10,7 +10,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     StrOrControl,
@@ -18,7 +18,7 @@ from flet.controls.types import (
     VisualDensity,
 )
 
-__all__ = ["ListTile", "ListTileTitleAlignment", "ListTileStyle"]
+__all__ = ["ListTile", "ListTileStyle", "ListTileTitleAlignment"]
 
 
 class ListTileTitleAlignment(Enum):
@@ -51,10 +51,11 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     subtitle: Optional[StrOrControl] = None
     """
-    Additional content displayed below the title. 
-    
-    If [`is_three_line`][flet.ListTile.is_three_line] is `False`, this should not wrap. 
-    If `is_three_line` is `True`, this should be configured to take a maximum of two lines. 
+    Additional content displayed below the title.
+
+    If [`is_three_line`][flet.ListTile.is_three_line] is `False`, this should not wrap.
+    If `is_three_line` is `True`, this should be configured to take a maximum of two
+    lines.
     For example, you can use [`Text.max_lines`][flet.Text.max_lines] to enforce the
     number of lines.
 
@@ -75,15 +76,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     using [`Text.max_lines`][flet.Text.max_lines].
     """
 
-    leading: Optional[IconValueOrControl] = None
+    leading: Optional[IconDataOrControl] = None
     """
     A control to display before the [`title`][flet.ListTile.title].
     """
 
-    trailing: Optional[IconValueOrControl] = None
+    trailing: Optional[IconDataOrControl] = None
     """
-    A control to display after the [`title`][flet.ListTile.title]. 
-    
+    A control to display after the [`title`][flet.ListTile.title].
+
     Typically an [`Icon`][flet.Icon] control.
     """
 
@@ -118,8 +119,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     dense: bool = False
     """
-    Whether this list tile is part of a vertically dense list. 
-    
+    Whether this list tile is part of a vertically dense list.
+
     Dense list tiles default to a smaller height.
     """
 
@@ -132,7 +133,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     toggle_inputs: bool = False
     """
-    Whether clicking on a list tile should toggle the state of [`Radio`][flet.Radio], 
+    Whether clicking on a list tile should toggle the state of [`Radio`][flet.Radio],
     [`Checkbox`][flet.Checkbox] or [`Switch`][flet.Switch] inside this tile.
     """
 
@@ -164,8 +165,9 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     horizontal_spacing: Number = 16.0
     """
-    The horizontal gap between the `title` and the 
-    [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing] controls.
+    The horizontal gap between the `title` and the
+    [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing]
+    controls.
     """
 
     min_leading_width: Number = 40.0
@@ -180,8 +182,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     url: Optional[str] = None
     """
-    The URL to open when the list tile is clicked. 
-    
+    The URL to open when the list tile is clicked.
+
     If registered, [`on_click`][flet.ListTile.on_click] event is called after that.
     """
 
@@ -202,13 +204,14 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     icon_color: Optional[ColorValue] = None
     """
     Defines the default color for the icons
-    present in [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing].
+    present in [`leading`][flet.ListTile.leading] and
+    [`trailing`][flet.ListTile.trailing].
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The color used for 
-    texts in [`title`][flet.ListTile.title], [`subtitle`][flet.ListTile.subtitle], 
+    The color used for
+    texts in [`title`][flet.ListTile.title], [`subtitle`][flet.ListTile.subtitle],
     [`leading`][flet.ListTile.leading], and [`trailing`][flet.ListTile.trailing].
     """
 

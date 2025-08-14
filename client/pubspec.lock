@@ -161,14 +161,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  data_table_2:
-    dependency: transitive
-    description:
-      name: data_table_2
-      sha256: b8dd157e4efe5f2beef092c9952a254b2192cf76a26ad1c6aa8b06c8b9d665da
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.6.0"
   dbus:
     dependency: transitive
     description:
@@ -306,15 +298,6 @@ packages:
       ref: v1
       resolved-ref: cb3c7b56ea13e078526190b07be9bc113ce10ace
       url: "https://github.com/flet-dev/flet-charts.git"
-    source: git
-    version: "0.1.0"
-  flet_datatable2:
-    dependency: "direct main"
-    description:
-      path: "src/flutter/flet_datatable2"
-      ref: v1
-      resolved-ref: "98c2b38801ddc131e30d2082b4fc9271201384a8"
-      url: "https://github.com/flet-dev/flet-datatable2.git"
     source: git
     version: "0.1.0"
   flet_flashlight:

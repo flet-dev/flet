@@ -127,7 +127,7 @@ class _IconButtonControlState extends State<IconButtonControl>
         iconWidget = ControlWidget(control: icon);
       } else if (icon is String) {
         iconWidget = Icon(
-          widget.control.getIcon("icon"),
+          widget.control.getIconData("icon"),
           color: iconColor,
         );
       } else if (content != null) {
@@ -140,7 +140,7 @@ class _IconButtonControlState extends State<IconButtonControl>
         selectedIconWidget = ControlWidget(control: selectedIcon);
       } else if (selectedIcon is String) {
         selectedIconWidget = Icon(
-          widget.control.getIcon("selected_icon"),
+          widget.control.getIconData("selected_icon"),
           color: selectedIconColor,
         );
       }

@@ -14,7 +14,7 @@ from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.margin import MarginValue
-from flet.controls.material.form_field_control import IconValueOrControl
+from flet.controls.material.form_field_control import IconDataOrControl
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -570,7 +570,7 @@ class Tab(AdaptiveControl):
     The tab's name. Can be either a string or a control.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     An icon to display on the left of Tab text.
     """

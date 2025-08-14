@@ -8,12 +8,8 @@ import sys
 from pathlib import Path
 from typing import Optional, cast
 
-import flet.version
 import flet_cli.utils.processes as processes
 import yaml
-from flet.utils import cleanup_path, copy_tree, is_windows, slugify
-from flet.utils.platform_utils import get_bool_env_var
-from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
@@ -31,6 +27,11 @@ from rich.progress import Progress
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
+
+import flet.version
+from flet.utils import cleanup_path, copy_tree, is_windows, slugify
+from flet.utils.platform_utils import get_bool_env_var
+from flet.version import update_version
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -1997,6 +1998,7 @@ class Command(BaseCommand):
             self.flutter_exe,
             "build",
             self.platforms[self.options.target_platform]["flutter_build_command"],
+            "--no-tree-shake-icons",
             "--no-version-check",
             "--suppress-analytics",
         ]

@@ -28,9 +28,9 @@ class _DatePickerControlState extends State<DatePickerControl> {
     var value = widget.control.getDateTime("value");
     var currentDate = widget.control.getDateTime("current_date");
     var switchToCalendarEntryModeIcon =
-        widget.control.getIcon("switch_to_calendar_icon");
+        widget.control.getIconData("switch_to_calendar_icon");
     var switchToInputEntryModeIcon =
-        widget.control.getIcon("switch_to_input_icon");
+        widget.control.getIconData("switch_to_input_icon");
 
     void onClosed(DateTime? dateValue) {
       widget.control.updateProperties({"_open": false}, python: false);

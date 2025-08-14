@@ -9,9 +9,9 @@ from typing import (
     Union,
 )
 
-from flet.controls.base_icon import BaseIcon
 from flet.controls.colors import Colors
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.icon_data import IconData
 
 if TYPE_CHECKING:
     from flet.controls.control import Control  # noqa
@@ -1034,32 +1034,7 @@ More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookb
 """
 
 # Icons
-IconValue = BaseIcon
-"""Type alias for icon values.
-
-Represents an icon and can be:
-- a string (icon name),
-- a material icon from the [`Icons`][flet.Icons] enum,
-- or a Cupertino icon from the [`CupertinoIcons`][flet.CupertinoIcons] enum.
-
-/// details | Example
-    type: example
-
-```python-repl
->>> import flet as ft
->>> ft.Icons.ABC
->>> ft.CupertinoIcons.BACK
->>> ft.Icons.random()
->>> ft.CupertinoIcons.random()
->>> ft.Icons.random(exclude=[ft.Icons.FAVORITE, ft.Icons.SCHOOL],
->>>     weights={ft.Icons.SCHOOL: 150, ft.Icons.ADJUST: 5})
->>> ft.CupertinoIcons.random(exclude=[ft.CupertinoIcons.CAMERA,
->>>     ft.CupertinoIcons.TABLE], weights={ft.CupertinoIcons.TABLE: 150,
->>>     ft.CupertinoIcons.PENCIL: 5})
-```
-///
-"""
-IconValueOrControl = Union[IconValue, "Control"]
+IconDataOrControl = Union[IconData, "Control"]
 
 # Content
 StrOrControl = Union[str, "Control"]

@@ -11,7 +11,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
 )
@@ -31,7 +31,7 @@ class NavigationRailDestination(Control):
     TBD
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
     destination.
@@ -44,7 +44,7 @@ class NavigationRailDestination(Control):
     should be set to the stroked version and `selected_icon` to the filled version.
     """
 
-    selected_icon: Optional[IconValueOrControl] = None
+    selected_icon: Optional[IconDataOrControl] = None
     """
     The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
     displayed when this destination is selected.
@@ -232,7 +232,7 @@ class NavigationRail(ConstrainedControl):
     If `None`, defaults to
     [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator].
     If that is also `None`, defaults to [`Theme.use_material3`][flet.Theme.use_material3].
-    """
+    """  # noqa: E501
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None
     """

@@ -10,7 +10,7 @@ from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
 )
 
@@ -32,7 +32,7 @@ class NavigationDrawerDestination(Control):
     The text label that appears below the icon of this `NavigationDrawerDestination`.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
     destination.
@@ -50,7 +50,7 @@ class NavigationDrawerDestination(Control):
     not selected.
     """
 
-    selected_icon: Optional[IconValueOrControl] = None
+    selected_icon: Optional[IconDataOrControl] = None
     """
     The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
     displayed when this destination is selected.

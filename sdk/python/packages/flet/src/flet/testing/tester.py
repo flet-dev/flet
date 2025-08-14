@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.duration import DurationValue
 from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
-from flet.controls.types import IconValue
+from flet.controls.types import IconData
 from flet.testing.finder import Finder
 
 __all__ = ["Tester"]
@@ -81,7 +81,7 @@ class Tester(Service):
         finder = await self._invoke_method("find_by_tooltip", {"value": value})
         return Finder(**finder)
 
-    async def find_by_icon(self, icon: IconValue) -> Finder:
+    async def find_by_icon(self, icon: IconData) -> Finder:
         """
         Finds controls by an icon.
 

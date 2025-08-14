@@ -12,7 +12,7 @@ from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
 )
 
@@ -44,7 +44,7 @@ class NavigationBarDestination(AdaptiveControl):
     The text label that appears below the icon of this `NavigationBarDestination`.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
     destination.
@@ -66,7 +66,7 @@ class NavigationBarDestination(AdaptiveControl):
     should be set to the stroked version and `selected_icon` to the filled version.
     """
 
-    selected_icon: Optional[IconValueOrControl] = None
+    selected_icon: Optional[IconDataOrControl] = None
     """
     The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
     displayed when this destination is selected.

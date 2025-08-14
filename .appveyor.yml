@@ -213,7 +213,7 @@ for:
 
       - cd client
       - set RELEASE_DIR=build\windows\x64\runner\Release
-      - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
+      - flutter build windows --no-tree-shake-icons --build-name=%APPVEYOR_BUILD_VERSION%
 
       - copy "%WINDIR%\system32\msvcp140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140.dll" %RELEASE_DIR%
@@ -277,7 +277,7 @@ for:
     build_script:
       # Flutter macOS client
       - pushd client
-      - flutter build macos --build-name=$APPVEYOR_BUILD_VERSION
+      - flutter build macos --no-tree-shake-icons --build-name=$APPVEYOR_BUILD_VERSION
       - tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
       - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
       - cp flet-macos.tar.gz $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
@@ -357,7 +357,7 @@ for:
             patch_flet_desktop_package_name "flet-desktop-light"
             artifact_suffix="-light"
           fi
-      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
+      - flutter build linux --no-tree-shake-icons --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/$build_arch/release/bundle build/linux/$build_arch/release/flet
       - tar -czvf flet-linux$artifact_suffix-$ARCH.tar.gz -C build/linux/$build_arch/release flet
       - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
@@ -412,7 +412,7 @@ for:
     build_script:
       # Flutter Web client
       - pushd client
-      - flutter build web --wasm
+      - flutter build web --wasm --no-tree-shake-icons
       - cp -R build/web $flet_sdk_root/packages/flet-web/src/flet_web
       # fix on mobile Safari: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
       - ls "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"

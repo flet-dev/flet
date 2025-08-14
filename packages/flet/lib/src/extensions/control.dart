@@ -51,7 +51,7 @@ extension WidgetFromControl on Control {
       c.notifyParent = notifyParent;
       return ControlWidget(key: key, control: c);
     } else if (icon is String) {
-      return Icon(getIcon(propertyName), color: color);
+      return Icon(getIconData(propertyName), color: color);
     }
     return null;
   }

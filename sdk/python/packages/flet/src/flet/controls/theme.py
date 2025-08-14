@@ -32,7 +32,7 @@ from flet.controls.types import (
     Brightness,
     ClipBehavior,
     ColorValue,
-    IconValue,
+    IconData,
     Locale,
     MainAxisAlignment,
     MouseCursor,
@@ -1612,7 +1612,7 @@ class SwitchTheme:
     [`Switch`][flet.Switch] controls.
     """
 
-    thumb_icon: Optional[ControlStateValue[IconValue]] = None
+    thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
     Overrides the default value of [`Switch.thumb_icon`][flet.Switch.thumb_icon] in all
     descendant [`Switch`][flet.Switch] controls.
@@ -2926,7 +2926,7 @@ class NavigationBarTheme:
 
 @dataclass
 class SegmentedButtonTheme:
-    selected_icon: Optional[IconValue] = None
+    selected_icon: Optional[IconData] = None
     style: Optional[ButtonStyle] = None
 
 
