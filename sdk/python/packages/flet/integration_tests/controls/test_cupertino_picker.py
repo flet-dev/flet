@@ -1,6 +1,7 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
@@ -8,13 +9,13 @@ async def test_cupertino_picker_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
 
     FRUITS = [
-    "Apple",
-    "Mango",
-    "Banana",
-    "Orange",
-    "Pineapple",
-    "Strawberry",
-]
+        "Apple",
+        "Mango",
+        "Banana",
+        "Orange",
+        "Pineapple",
+        "Strawberry",
+    ]
     picker = ft.CupertinoPicker(
         selected_index=3,
         magnification=1.22,
@@ -37,5 +38,3 @@ async def test_cupertino_picker_basic(flet_app: ftt.FletTestApp, request):
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
-
-    

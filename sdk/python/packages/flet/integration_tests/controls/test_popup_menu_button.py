@@ -1,12 +1,13 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_popup_menu_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-    
+
     pb = ft.PopupMenuButton(
         key="pb",
         items=[
@@ -19,13 +20,13 @@ async def test_popup_menu_basic(flet_app: ftt.FletTestApp, request):
                         ft.Text("Item with a custom content"),
                     ]
                 ),
-    
             ),
             ft.PopupMenuItem(),  # divider
             ft.PopupMenuItem(
-                content="Checked item", checked=False,
+                content="Checked item",
+                checked=False,
             ),
-        ]
+        ],
     )
 
     flet_app.page.enable_screenshots = True

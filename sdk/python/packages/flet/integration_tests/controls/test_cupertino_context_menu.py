@@ -1,36 +1,37 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_cupertino_context_menu_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-    
+
     ccm = ft.CupertinoContextMenu(
-            enable_haptic_feedback=True,
-            key="ccm",
-            content=ft.Button("Click me", key="button"),
-            actions=[
-                ft.CupertinoContextMenuAction(
-                    content="Action 1",
-                    default=True,
-                    trailing_icon=ft.Icons.CHECK,
-                    on_click=lambda e: print("Action 1"),
-                ),
-                ft.CupertinoContextMenuAction(
-                    content="Action 2",
-                    trailing_icon=ft.Icons.MORE,
-                    on_click=lambda e: print("Action 2"),
-                ),
-                ft.CupertinoContextMenuAction(
-                    content="Action 3",
-                    destructive=True,
-                    trailing_icon=ft.Icons.CANCEL,
-                    on_click=lambda e: print("Action 3"),
-                ),
-            ],
-        )
+        enable_haptic_feedback=True,
+        key="ccm",
+        content=ft.Button("Click me", key="button"),
+        actions=[
+            ft.CupertinoContextMenuAction(
+                content="Action 1",
+                default=True,
+                trailing_icon=ft.Icons.CHECK,
+                on_click=lambda e: print("Action 1"),
+            ),
+            ft.CupertinoContextMenuAction(
+                content="Action 2",
+                trailing_icon=ft.Icons.MORE,
+                on_click=lambda e: print("Action 2"),
+            ),
+            ft.CupertinoContextMenuAction(
+                content="Action 3",
+                destructive=True,
+                trailing_icon=ft.Icons.CANCEL,
+                on_click=lambda e: print("Action 3"),
+            ),
+        ],
+    )
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600
@@ -54,4 +55,3 @@ async def test_cupertino_context_menu_basic(flet_app: ftt.FletTestApp, request):
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
-

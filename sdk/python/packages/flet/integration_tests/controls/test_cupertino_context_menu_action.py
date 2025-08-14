@@ -1,6 +1,7 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
@@ -10,5 +11,3 @@ async def test_cupertino_context_menu_action_basic(flet_app: ftt.FletTestApp, re
         request.node.name,
         ft.CupertinoContextMenuAction("Click me"),
     )
-
-    
