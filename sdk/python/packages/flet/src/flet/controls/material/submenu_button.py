@@ -8,7 +8,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.transform import OffsetValue
-from flet.controls.types import ClipBehavior
+from flet.controls.types import ClipBehavior, StrOrControl
 
 __all__ = ["SubmenuButton"]
 
@@ -21,7 +21,7 @@ class SubmenuButton(ConstrainedControl):
     Typically used in a [`MenuBar`][flet.MenuBar] control.
     """
 
-    content: Optional[Control] = None
+    content: Optional[StrOrControl] = None
     """
     The child control to be displayed in the middle portion of this button.
 

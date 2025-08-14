@@ -75,6 +75,10 @@ class FlutterWidgetTester implements Tester {
       _tester.tap((finder as FlutterTestFinder).raw);
 
   @override
+  Future<void> longPress(TestFinder finder) =>
+      _tester.longPress((finder as FlutterTestFinder).raw);
+
+  @override
   Future<void> enterText(TestFinder finder, String text) =>
       _tester.enterText((finder as FlutterTestFinder).raw, text);
 

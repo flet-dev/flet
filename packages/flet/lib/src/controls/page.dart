@@ -1,9 +1,11 @@
+import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,7 @@ import '../utils/platform_utils_web.dart'
 import '../utils/session_store_web.dart'
     if (dart.library.io) "../utils/session_store_non_web.dart";
 import '../utils/theme.dart';
+import '../utils/time.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
 import '../widgets/loading_page.dart';
@@ -44,6 +47,7 @@ class PageControl extends StatefulWidget {
 
 class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   final _navigatorKey = GlobalKey<NavigatorState>();
+  final _rootKey = GlobalKey();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
@@ -52,7 +56,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   ServiceRegistry? _userServices;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
-
+  double _dpr = 1.0;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
@@ -87,13 +91,14 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         onRestart: () => _handleAppLifecycleTransition('restart'));
 
     _attachKeyboardListenerIfNeeded();
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
-
+    _dpr = MediaQuery.devicePixelRatioOf(context);
     _loadFontsIfNeeded(FletBackend.of(context));
   }
 
@@ -148,7 +153,28 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     if (_keyboardHandlerSubscribed) {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Page.$name($args)");
+    switch (name) {
+      case "take_screenshot":
+        if (_rootKey.currentContext == null) {
+          return null;
+        }
+        await Future.delayed(
+            parseDuration(args["delay"], const Duration(milliseconds: 20))!);
+        final boundary = _rootKey.currentContext!.findRenderObject()
+            as RenderRepaintBoundary;
+        final image = await boundary.toImage(
+            pixelRatio: parseDouble(args["pixel_ratio"], _dpr)!);
+        final data = await image.toByteData(format: ui.ImageByteFormat.png);
+        return data!.buffer.asUint8List();
+      default:
+        throw Exception("Unknown Page method: $name");
+    }
   }
 
   void _updateMultiViews() {
@@ -383,7 +409,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var showSemanticsDebugger =
         control.getBool("show_semantics_debugger", false)!;
 
-    var app = widgetsDesign == PageDesign.cupertino
+    Widget? app = widgetsDesign == PageDesign.cupertino
         ? home != null
             ? CupertinoApp(
                 debugShowCheckedModeBanner: false,
@@ -432,6 +458,14 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
               );
+
+    if (control.getBool("enable_screenshots") == true) {
+      app = RepaintBoundary(
+        key: _rootKey,
+        child: app,
+      );
+    }
+
     return PageContext(
       themeMode: themeMode,
       brightness: brightness,

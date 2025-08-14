@@ -2848,11 +2848,44 @@ class ProgressIndicatorTheme:
 
 @dataclass
 class PopupMenuTheme:
+    """
+    Customizes the appearance of [`PopupMenuButton`][flet.PopupMenuButton] across the 
+    app.
+    """
+    
     color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`PopupMenuButton.bgcolor`][flet.PopupMenuButton.bgcolor] in all descendant 
+    [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`PopupMenuButton.surface_tint_color`][flet.PopupMenuButton.surface_tint_color] in 
+    all descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`PopupMenuButton.shadow_color`][flet.PopupMenuButton.shadow_color] in all 
+    descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     icon_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of 
+    [`PopupMenuButton.icon_color`][flet.PopupMenuButton.icon_color] in all 
+    descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     text_style: Optional[TextStyle] = None
+    """
+    The text style of items in the popup menu.
+    """
+    
     label_text_style: Optional[TextStyle] = None
     enable_feedback: Optional[bool] = None
     elevation: Optional[Number] = None

@@ -114,6 +114,17 @@ class Tester(Service):
         """
         await self._invoke_method("tap", {"id": finder.id})
 
+    async def long_press(self, finder: Finder):
+        """
+        Dispatch a pointer down / pointer up sequence (with a delay of
+        600 ms between the two events) at the center of the given control,
+        assuming it is exposed.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method("long_press", {"id": finder.id})
+
     async def enter_text(self, finder: Finder, text: str):
         """
         Give the text input control specified by `finder` the focus and
