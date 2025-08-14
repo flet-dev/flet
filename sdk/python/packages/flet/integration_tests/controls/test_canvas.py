@@ -7,6 +7,123 @@ import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
+async def test_draw_color(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [fc.Color(color=ft.Colors.DEEP_ORANGE_300)],
+            width=100,
+            height=100,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_points_as_points(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Points(
+                    points=[ft.Offset(10, 20), ft.Offset(20, 40), ft.Offset(30, 10)],
+                    point_mode=fc.PointMode.POINTS,
+                    paint=ft.Paint(
+                        stroke_width=6,
+                        stroke_cap=ft.StrokeCap.ROUND,
+                        color=ft.Colors.RED,
+                    ),
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_points_as_lines(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Points(
+                    points=[
+                        ft.Offset(10, 20),
+                        ft.Offset(20, 20),
+                        ft.Offset(30, 10),
+                        ft.Offset(30, 20),
+                    ],
+                    point_mode=fc.PointMode.LINES,
+                    paint=ft.Paint(
+                        stroke_width=3,
+                        color=ft.Colors.BLUE,
+                    ),
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_draw_points_as_polygon(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Points(
+                    points=[ft.Offset(10, 20), ft.Offset(20, 40), ft.Offset(30, 10)],
+                    point_mode=fc.PointMode.POLYGON,
+                    paint=ft.Paint(
+                        stroke_width=3,
+                        color=ft.Colors.GREEN,
+                    ),
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+@pytest.mark.skip(reason="This test is temporarily disabled.")
+async def test_draw_shadow(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        fc.Canvas(
+            [
+                fc.Shadow(
+                    path=[
+                        fc.Path.SubPath(
+                            x=0,
+                            y=0,
+                            elements=[
+                                fc.Path.MoveTo(x=10, y=10),
+                                fc.Path.LineTo(x=40, y=10),
+                                fc.Path.LineTo(x=40, y=40),
+                                fc.Path.LineTo(x=10, y=40),
+                                fc.Path.LineTo(x=10, y=10),
+                            ],
+                        ),
+                    ],
+                    color=ft.Colors.PINK,
+                    elevation=1,
+                )
+            ],
+            width=50,
+            height=50,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
 async def test_draw_line(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(

@@ -79,6 +79,12 @@ class TesterService extends FletService {
           await control.backend.tester!.tap(finder);
         }
 
+      case "long_press":
+        var finder = _finders[args["id"]];
+        if (finder != null) {
+          await control.backend.tester!.longPress(finder);
+        }
+
       case "enter_text":
         var finder = _finders[args["id"]];
         if (finder != null) {
