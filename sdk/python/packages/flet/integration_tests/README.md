@@ -33,7 +33,7 @@ FLET_TEST_DEVICE=<simulator-name> FLET_TEST_PLATFORM=android uv run pytest -s -o
 Running test to create golden images:
 
 ```
-FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/test_controls.py
+FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/test_buttons.py
 ```
 
 Environment variables:
