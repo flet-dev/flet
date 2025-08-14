@@ -6,7 +6,7 @@ class PopupColorItem(ft.PopupMenuItem):
         super().__init__()
         self.content = ft.Row(
             controls=[
-                ft.Icon(name=ft.Icons.COLOR_LENS_OUTLINED, color=color),
+                ft.Icon(ft.Icons.COLOR_LENS_OUTLINED, color=color),
                 ft.Text(name),
             ],
         )

@@ -19,9 +19,9 @@ class Icon(ConstrainedControl):
         AssertionError: If [`optical_size`][(c).] is less than or equal to `0.0`.
     """
 
-    name: IconData
+    icon: IconData
     """
-    The name of the icon.
+    The icon to display.
 
     You can search through the list of all available icons using our
     [Icons browser](https://gallery.flet.dev/icons-browser/) app
