@@ -1,15 +1,16 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_cupertino_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     cad = ft.CupertinoAlertDialog(
-                    title=ft.Text("Cupertino Alert Dialog"),
-                    content=ft.Text("Do you want to delete this file?"),
-                )
+        title=ft.Text("Cupertino Alert Dialog"),
+        content=ft.Text("Do you want to delete this file?"),
+    )
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600

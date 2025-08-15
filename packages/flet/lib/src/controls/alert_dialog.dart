@@ -9,6 +9,7 @@ import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'control_widget.dart';
 
@@ -23,9 +24,9 @@ class AlertDialogControl extends StatefulWidget {
 }
 
 class _AlertDialogControlState extends State<AlertDialogControl> {
-  Widget? _dialog;
   bool _open = false;
   NavigatorState? _navigatorState;
+  String? _error;
 
   @override
   void didChangeDependencies() {
@@ -48,50 +49,50 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   }
 
   Widget _createAlertDialog() {
-    var title = widget.control.get("title");
-    var content = widget.control.buildWidget("content");
-    var actions = widget.control.buildWidgets("actions");
-    if (title == null && content == null && actions.isEmpty) {
-      return const ErrorControl(
-          "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
-    }
-
-    return AlertDialog(
-      title: title is Control
-          ? ControlWidget(control: title)
-          : title is String
-              ? Text(title)
-              : null,
-      titlePadding: widget.control.getPadding("title_padding"),
-      content: content,
-      contentPadding: widget.control.getPadding("content_padding",
-          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
-      actions: actions,
-      actionsPadding: widget.control.getPadding("actions_padding"),
-      actionsAlignment:
-          widget.control.getMainAxisAlignment("actions_alignment"),
-      shape: widget.control.getShape("shape", Theme.of(context)),
-      semanticLabel: widget.control.getString("semantics_label"),
-      insetPadding: widget.control.getPadding("inset_padding",
-          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
-      iconPadding: widget.control.getPadding("icon_padding"),
-      backgroundColor: widget.control.getColor("bgcolor", context),
-      buttonPadding: widget.control.getPadding("action_button_padding"),
-      surfaceTintColor: widget.control.getColor("surface_tint_color", context),
-      shadowColor: widget.control.getColor("shadow_color", context),
-      elevation: widget.control.getDouble("elevation"),
-      clipBehavior:
-          parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
-      icon: widget.control.buildIconOrWidget("icon"),
-      iconColor: widget.control.getColor("icon_color", context),
-      scrollable: widget.control.getBool("scrollable", false)!,
-      actionsOverflowButtonSpacing:
-          widget.control.getDouble("actions_overflow_button_spacing"),
-      alignment: widget.control.getAlignment("alignment"),
-      contentTextStyle:
-          widget.control.getTextStyle("content_text_style", Theme.of(context)),
-      titleTextStyle:
-          widget.control.getTextStyle("title_text_style", Theme.of(context)),
+    return ControlInheritedNotifier(
+      notifier: widget.control,
+      child: Builder(builder: (context) {
+        ControlInheritedNotifier.of(context);
+        var title = widget.control.get("title");
+        return AlertDialog(
+          title: title is Control
+              ? ControlWidget(control: title)
+              : title is String
+                  ? Text(title)
+                  : null,
+          titlePadding: widget.control.getPadding("title_padding"),
+          content: widget.control.buildWidget("content"),
+          contentPadding: widget.control.getPadding("content_padding",
+              const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
+          actions: widget.control.buildWidgets("actions"),
+          actionsPadding: widget.control.getPadding("actions_padding"),
+          actionsAlignment:
+              widget.control.getMainAxisAlignment("actions_alignment"),
+          shape: widget.control.getShape("shape", Theme.of(context)),
+          semanticLabel: widget.control.getString("semantics_label"),
+          insetPadding: widget.control.getPadding("inset_padding",
+              const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
+          iconPadding: widget.control.getPadding("icon_padding"),
+          backgroundColor: widget.control.getColor("bgcolor", context),
+          buttonPadding: widget.control.getPadding("action_button_padding"),
+          surfaceTintColor:
+              widget.control.getColor("surface_tint_color", context),
+          shadowColor: widget.control.getColor("shadow_color", context),
+          elevation: widget.control.getDouble("elevation"),
+          clipBehavior:
+              parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
+          icon: widget.control.buildIconOrWidget("icon"),
+          iconColor: widget.control.getColor("icon_color", context),
+          scrollable: widget.control.getBool("scrollable", false)!,
+          actionsOverflowButtonSpacing:
+              widget.control.getDouble("actions_overflow_button_spacing"),
+          alignment: widget.control.getAlignment("alignment"),
+          contentTextStyle: widget.control
+              .getTextStyle("content_text_style", Theme.of(context)),
+          titleTextStyle: widget.control
+              .getTextStyle("title_text_style", Theme.of(context)),
+        );
+      }),
     );
   }
 
@@ -102,11 +103,11 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
     var modal = widget.control.getBool("modal", false)!;
 
     if (open && (open != _open)) {
-      _dialog = _createAlertDialog();
-
-      if (_dialog is ErrorControl) {
-        debugPrint(
-            "AlertDialog: ErrorControl, not showing dialog: ${(_dialog as ErrorControl).message}");
+      if (widget.control.get("title") == null &&
+          widget.control.get("content") == null &&
+          widget.control.children("actions").isEmpty) {
+        _error =
+            "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions.";
         return;
       }
 
@@ -118,7 +119,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
             barrierColor: widget.control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
-            builder: (context) => _dialog!).then((value) {
+            builder: (context) => _createAlertDialog()).then((value) {
           debugPrint("Dismissing AlertDialog(${widget.control.id})");
           _open = false;
           widget.control.updateProperties({"open": false});
@@ -132,7 +133,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
   @override
   Widget build(BuildContext context) {
-    return _dialog is ErrorControl ? _dialog! : const SizedBox.shrink();
+    return _error != null ? ErrorControl(_error!) : const SizedBox.shrink();
   }
 
   void _closeDialog() {
@@ -142,7 +143,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
             "AlertDialog(${widget.control.id}): Closing dialog managed by this widget.");
         _navigatorState?.pop();
         _open = false;
-        _dialog = null;
+        _error = null;
       } else {
         debugPrint(
             "AlertDialog(${widget.control.id}): Dialog was not opened by this widget, skipping pop.");
