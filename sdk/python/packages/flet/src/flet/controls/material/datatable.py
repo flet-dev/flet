@@ -198,9 +198,8 @@ class DataCell(Control):
 
     def before_update(self):
         super().before_update()
-        assert isinstance(self.content, str) or (
-            isinstance(self.content, Control) and self.content.visible
-        ), "content must be a string or a visible control"
+        if isinstance(self.content, Control):
+            assert self.content.visible, "content must be visible"
 
 
 @control("DataRow")
