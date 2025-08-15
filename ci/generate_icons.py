@@ -19,9 +19,6 @@ ICON_VAR_PATTERN = re.compile(
 file_loader = FileSystemLoader(Path(__file__).parent / "templates")
 templates = Environment(loader=file_loader)
 
-# def normalize_enum_name(var_name: str) -> str:
-#     return var_name.upper()
-
 
 def download_dart_file(url: str) -> str:
     print(f"Downloading Dart file from: {url}")

@@ -126,6 +126,7 @@ class _IconButtonControlState extends State<IconButtonControl>
       if (icon is Control) {
         iconWidget = ControlWidget(control: icon);
       } else if (icon is int) {
+        // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
         iconWidget = Icon(
           widget.control.getIconData("icon"),
           color: iconColor,

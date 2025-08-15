@@ -51,6 +51,7 @@ extension WidgetFromControl on Control {
       c.notifyParent = notifyParent;
       return ControlWidget(key: key, control: c);
     } else if (icon is int) {
+      // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
       return Icon(getIconData(propertyName), color: color);
     }
     return null;

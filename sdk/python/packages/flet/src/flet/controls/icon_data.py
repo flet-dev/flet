@@ -17,13 +17,13 @@ class IconData(IntEnum):
     - the Cupertino icon set via the [`CupertinoIcons`][flet.CupertinoIcons] enum,
     - or a custom icon set defined by the developer.
 
-    Internally, an icon is stored as a 32-bit integer that encodes both the icon's
-    code point and its originating icon set.
+    Internally, an icon is stored as an integer that encodes icon's index
+    in its originating code set.
 
     Encoding structure:
 
-    - Lower 24 bits (bits 0-23): the icon's code point.
-    - Third byte (bits 24-32): the icon set identifier (set ID),
+    - Lower 16 bits (bits 0-15): the icon's index.
+    - Third byte (bits 16-24): the icon set identifier (set ID),
         which distinguishes between icon sets like Material, Cupertino, etc.
 
     This encoding scheme allows a single integer to uniquely represent any icon
