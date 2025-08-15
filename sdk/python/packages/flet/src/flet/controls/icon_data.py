@@ -30,6 +30,17 @@ class IconData(IntEnum):
     across multiple icon sets.
     """
 
+    def __new__(cls, value):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        return obj
+
+    @classmethod
+    def __init_subclass__(cls, **kwargs):
+        cls._package_name = kwargs.pop("package_name", "")
+        cls._class_name = kwargs.pop("class_name", "")
+        super().__init_subclass__(**kwargs)
+
     @classmethod
     def random(
         cls: type[T],
