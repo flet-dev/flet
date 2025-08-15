@@ -303,7 +303,7 @@ class BasePage(AdaptiveControl):
         """
         Displays a dialog and manages its dismissal lifecycle.
 
-        This method adds the specified `DialogControl` to the active dialog stack
+        This method adds the specified `dialog` to the active dialog stack
         and renders it on the page. If the dialog is already open, an exception
         is raised.
         The `on_dismiss` handler of the dialog is temporarily wrapped to ensure the
@@ -311,7 +311,7 @@ class BasePage(AdaptiveControl):
         appropriately.
 
         Args:
-            dialog (DialogControl):
+            dialog:
                 The dialog instance to display. Must not already be open.
 
         Raises:
@@ -350,8 +350,7 @@ class BasePage(AdaptiveControl):
         and returns the closed dialog.
 
         Returns:
-            Optional[DialogControl]:
-                The closed dialog instance if one was found, otherwise `None`.
+            The closed dialog instance if one was found, otherwise `None`.
         """
         dialog = next(
             (dlg for dlg in reversed(self._dialogs.controls) if dlg.open), None
