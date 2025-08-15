@@ -2,6 +2,9 @@ library flet;
 
 export 'dart:io';
 
+export 'package:flutter/cupertino.dart' show CupertinoIcons;
+export 'package:flutter/material.dart' show Icons;
+
 export 'src/controls/base_controls.dart';
 export 'src/extensions/control.dart';
 export 'src/flet_app.dart';

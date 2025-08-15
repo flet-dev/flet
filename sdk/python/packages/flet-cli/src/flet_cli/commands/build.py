@@ -1998,7 +1998,6 @@ class Command(BaseCommand):
             self.flutter_exe,
             "build",
             self.platforms[self.options.target_platform]["flutter_build_command"],
-            "--no-tree-shake-icons",
             "--no-version-check",
             "--suppress-analytics",
         ]

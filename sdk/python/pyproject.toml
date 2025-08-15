@@ -74,6 +74,7 @@ line-length = 88
 target-version = "py39"
 fix = true
 show-fixes = true
+exclude = ["ci/templates"]
 
 [tool.ruff.lint]
 pydocstyle = { convention = 'google' }

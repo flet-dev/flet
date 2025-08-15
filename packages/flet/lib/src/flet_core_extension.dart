@@ -115,6 +115,8 @@ import 'services/shared_preferences.dart';
 import 'services/storage_paths.dart';
 import 'services/tester.dart';
 import 'services/url_launcher.dart';
+import 'utils/cupertino_icons.dart';
+import 'utils/material_icons.dart';
 
 class FletCoreExtension extends FletExtension {
   @override
@@ -372,22 +374,16 @@ class FletCoreExtension extends FletExtension {
 
   @override
   IconData? createIconData(iconCode) {
-    int setId = (iconCode >> 24) & 0xFF;
-    int codePoint = iconCode & 0xFFFFFF;
-    String? fontFamily;
-    String? fontPackage;
+    int setId = (iconCode >> 16) & 0xFF;
+    int iconIndex = iconCode & 0xFFFF;
 
     if (setId == 1) {
-      fontFamily = "MaterialIcons";
+      return materialIcons[iconIndex];
     } else if (setId == 2) {
-      fontFamily = "CupertinoIcons";
-      fontPackage = "cupertino_icons";
+      return cupertinoIcons[iconIndex];
     } else {
       return null;
     }
-
-    return IconData(codePoint,
-        fontFamily: fontFamily, fontPackage: fontPackage);
   }
 
   @override

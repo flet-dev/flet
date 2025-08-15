@@ -17,7 +17,7 @@ def main(page: ft.Page):
         # cupertino
         ft.Row(
             controls=[
-                ft.Icon(ft.CupertinoIcons.AIRPLANE, color=ft.Colors.PINK),
+                ft.Icon(ft.CupertinoIcons.PROFILE_CIRCLED, color=ft.Colors.PINK),
                 ft.Icon(
                     icon=cast(ft.CupertinoIcons, ft.CupertinoIcons.random()),
                     color=ft.Colors.GREEN_400,
