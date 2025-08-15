@@ -92,7 +92,8 @@ class DataCell(Control):
     The data for a cell of a [`DataTable`][flet.DataTable].
 
     Raises:
-        AssertionError: If the [`content`][(c).] is neither a string nor a visible control.
+        AssertionError: If the [`content`][(c).] is neither a string nor a visible
+        control.
     """
 
     content: StrOrControl
@@ -102,11 +103,12 @@ class DataCell(Control):
     Typically a [`Text`][flet.Text] control or a [`Dropdown`][flet.Dropdown] control.
 
     If the cell has no data, then a `Text` widget with placeholder text should be
-    provided instead, and [`placeholder`][flet.DataCell.placeholder] should be set to `True`.
+    provided instead, and [`placeholder`][flet.DataCell.placeholder] should be set to
+    `True`.
 
     To lay out multiple children, let this
-    control's child be a container-like control such as [`Row`][flet.Row], [`Column`][flet.Column],
-    or [`Stack`][flet.Stack], which have `controls` property.
+    control's child be a container-like control such as [`Row`][flet.Row],
+    [`Column`][flet.Column], or [`Stack`][flet.Stack], which have `controls` property.
     """
 
     placeholder: bool = False
@@ -196,7 +198,9 @@ class DataCell(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        assert isinstance(self.content, str) or (
+            isinstance(self.content, Control) and self.content.visible
+        ), "content must be a string or a visible control"
 
 
 @control("DataRow")
@@ -247,7 +251,8 @@ class DataRow(Control):
     """
     Called if the row is long-pressed.
 
-    If a [`DataCell`][flet.DataCell] in the row has its [`DataCell.on_tap`][flet.DataCell.on_tap],
+    If a [`DataCell`][flet.DataCell] in the row has its
+    [`DataCell.on_tap`][flet.DataCell.on_tap],
     [`DataCell.on_double_tap`][flet.DataCell.on_double_tap],
     [`DataCell.on_long_press`][flet.DataCell.on_long_press],
     [`DataCell.on_tap_cancel`][flet.DataCell.on_tap_cancel]
@@ -260,8 +265,8 @@ class DataRow(Control):
     """
     Called when the user selects or unselects a selectable row.
 
-    If this is not null, then this row is selectable. The current selection state of this
-    row is given by selected.
+    If this is not null, then this row is selectable. The current selection state of
+    this row is given by selected.
 
     If any row is selectable, then the table's heading row will have a checkbox that
     can be checked to select all selectable rows (and which is checked if all the rows
@@ -272,7 +277,8 @@ class DataRow(Control):
 
     If a [`DataCell`][flet.DataCell] in the row has its
     [`DataCell.on_tap`][flet.DataCell.on_tap] callback defined, that
-    callback behavior overrides the gesture behavior of the row for that particular cell.
+    callback behavior overrides the gesture behavior of the row for that particular
+    cell.
     """
 
     def __contains__(self, item):
@@ -292,8 +298,10 @@ class DataTable(ConstrainedControl):
 
     Raises:
         AssertionError: If there are no visible [`columns`][(c).].
-        AssertionError: If any visible row does not contain exactly as many visible [`cells`][flet.DataRow.cells] as there are visible [`columns`][(c).].
-        AssertionError: If [`data_row_min_height`][(c).] is greater than [`data_row_max_height`][(c).].
+        AssertionError: If any visible row does not contain exactly as many visible
+        [`cells`][flet.DataRow.cells] as there are visible [`columns`][(c).].
+        AssertionError: If [`data_row_min_height`][(c).] is greater than
+        [`data_row_max_height`][(c).].
         AssertionError: If [`divider_thickness`][(c).] is negative.
         AssertionError: If [`sort_column_index`][(c).] is out of range.
     """
@@ -311,7 +319,8 @@ class DataTable(ConstrainedControl):
 
     sort_ascending: bool = False
     """
-    Whether the column mentioned in [`sort_column_index`][flet.DataTable.sort_column_index],
+    Whether the column mentioned in
+    [`sort_column_index`][flet.DataTable.sort_column_index],
     if any, is sorted in ascending order.
 
     If `True`, the order is ascending (meaning the rows with the smallest values for
@@ -390,7 +399,8 @@ class DataTable(ConstrainedControl):
     """
     The background color for the data rows.
 
-    The effective background color can be made to depend on the [`ControlState`][flet.ControlState]
+    The effective background color can be made to depend on the
+    [`ControlState`][flet.ControlState]
     state, i.e. if the row is selected, pressed, hovered, focused, disabled or enabled.
     The color is painted as an overlay to the row. To make sure that the row's InkWell
     is visible (when pressed, hovered and focused), it is recommended to use a
@@ -401,7 +411,8 @@ class DataTable(ConstrainedControl):
     """
     The minimum height of each row (excluding the row that contains column headings).
 
-    Defaults to `48.0` and must be less than or equal to [`data_row_max_height`][flet.DataTable.data_row_max_height].
+    Defaults to `48.0` and must be less than or equal to
+    [`data_row_max_height`][flet.DataTable.data_row_max_height].
     """
 
     data_row_max_height: Optional[Number] = None
@@ -440,10 +451,11 @@ class DataTable(ConstrainedControl):
     """
     The background color for the heading row.
 
-    The effective background color can be made to depend on the [`ControlState`][flet.ControlState]
-    state, i.e. if the row is pressed, hovered, focused when sorted. The color is
-    painted as an overlay to the row. To make sure that the row's InkWell is visible
-    (when pressed, hovered and focused), it is recommended to use a translucent color.
+    The effective background color can be made to depend on the
+    [`ControlState`][flet.ControlState] state, i.e. if the row is pressed, hovered,
+    focused when sorted. The color is painted as an overlay to the row. To make sure
+    that the row's InkWell is visible (when pressed, hovered and focused), it is
+    recommended to use a translucent color.
     """
 
     heading_row_height: Optional[Number] = None
@@ -475,7 +487,8 @@ class DataTable(ConstrainedControl):
     Invoked when the user selects or unselects every row, using the checkbox in the
     heading row.
 
-    If this is `None`, then the [`DataRow.on_select_change`][flet.DataRow.on_select_change]
+    If this is `None`, then the
+    [`DataRow.on_select_change`][flet.DataRow.on_select_change]
     callback of every row in the table is invoked appropriately instead.
 
     To control whether a particular row is selectable or not, see
@@ -509,14 +522,17 @@ class DataTable(ConstrainedControl):
             or self.data_row_max_height is None
             or (self.data_row_min_height <= self.data_row_max_height)
         ), (
-            f"data_row_min_height ({self.data_row_min_height}) must be less than or equal to data_row_max_height ({self.data_row_max_height})"
+            f"data_row_min_height ({self.data_row_min_height}) must be less than or "
+            f"equal to data_row_max_height ({self.data_row_max_height})"
         )
         assert self.divider_thickness is None or self.divider_thickness >= 0, (
-            f"divider_thickness must be greater than or equal to 0, got {self.divider_thickness}"
+            f"divider_thickness must be greater than or equal to 0, "
+            f"got {self.divider_thickness}"
         )
         assert self.sort_column_index is None or (
             0 <= self.sort_column_index < visible_columns_count
         ), (
-            f"sort_column_index ({self.sort_column_index}) must be greater than or equal to 0 and less than the "
-            f"number of visible columns ({visible_columns_count})"
+            f"sort_column_index ({self.sort_column_index}) must be greater than or "
+            f"equal to 0 and less than the number of visible columns "
+            f"({visible_columns_count})"
         )
