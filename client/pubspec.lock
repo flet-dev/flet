@@ -101,10 +101,10 @@ packages:
     dependency: transitive
     description:
       name: checked_yaml
-      sha256: feb6bed21949061731a7a75fc5d2aa727cf160b91af9a3e464c5e3a32e28b5ff
+      sha256: "959525d3162f249993882720d52b7e0c833978df229be20702b33d48d91de70f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   cli_util:
     dependency: transitive
     description:
@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  data_table_2:
+    dependency: transitive
+    description:
+      name: data_table_2
+      sha256: b8dd157e4efe5f2beef092c9952a254b2192cf76a26ad1c6aa8b06c8b9d665da
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   dbus:
     dependency: transitive
     description:
@@ -189,10 +197,10 @@ packages:
     dependency: transitive
     description:
       name: dio
-      sha256: "253a18bbd4851fecba42f7343a1df3a9a4c1d31a2c1b37e221086b4fa8c8dbc9"
+      sha256: d90ee57923d1828ac14e492ca49440f65477f4bb1263575900be731a3dac66a9
       url: "https://pub.dev"
     source: hosted
-    version: "5.8.0+1"
+    version: "5.9.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -237,10 +245,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: ef9908739bdd9c476353d6adff72e88fd00c625f5b959ae23f7567bd5137db0a
+      sha256: ef7d2a085c1b1d69d17b6842d0734aad90156de08df6bd3c12496d0bd6ddf8e2
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "10.3.1"
   fixnum:
     dependency: transitive
     description:
@@ -268,8 +276,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_ads"
-      ref: v1
-      resolved-ref: d52c10df46113a73669f0897cff1cc51f45c4df7
+      ref: main
+      resolved-ref: e847a431388733d6bcd81748c617a3b962c5efa9
       url: "https://github.com/flet-dev/flet-ads.git"
     source: git
     version: "0.2.0"
@@ -277,8 +285,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_audio"
-      ref: v1
-      resolved-ref: "35cffd36eb481ac4ac361d86a2d9ec1d8833804f"
+      ref: main
+      resolved-ref: aa29c5e0e342b4569201859c9e62b8acae620a2b
       url: "https://github.com/flet-dev/flet-audio.git"
     source: git
     version: "0.2.0"
@@ -286,8 +294,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_audio_recorder"
-      ref: v1
-      resolved-ref: "776e614815a581a49233fa4d799953d9f0279277"
+      ref: main
+      resolved-ref: "5bdaa07ff608f7a9de8cc92307aadaaa0261a7f1"
       url: "https://github.com/flet-dev/flet-audio-recorder.git"
     source: git
     version: "0.2.0"
@@ -295,17 +303,26 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_charts"
-      ref: v1
-      resolved-ref: cb3c7b56ea13e078526190b07be9bc113ce10ace
+      ref: main
+      resolved-ref: c34fbf906177fef58bfc77acb49f63ad5bedb142
       url: "https://github.com/flet-dev/flet-charts.git"
+    source: git
+    version: "0.2.0"
+  flet_datatable2:
+    dependency: "direct main"
+    description:
+      path: "src/flutter/flet_datatable2"
+      ref: main
+      resolved-ref: "1b459cf33f0ccb36a98ad14591eadfcad1ba6cb6"
+      url: "https://github.com/flet-dev/flet-datatable2.git"
     source: git
     version: "0.1.0"
   flet_flashlight:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_flashlight"
-      ref: v1
-      resolved-ref: ed8be1e10886a8e1cfffe444bff8c82999908125
+      ref: main
+      resolved-ref: d73e7bc8f373c5ce0efaa2728e10d17ef1ef3ac6
       url: "https://github.com/flet-dev/flet-flashlight.git"
     source: git
     version: "0.2.0"
@@ -313,8 +330,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_geolocator"
-      ref: v1
-      resolved-ref: "9f7c54c0a66a910a3ba3e325b3fef132c930015a"
+      ref: main
+      resolved-ref: "0e64efc7546cac99fcdcce6419ec0c34a9bbb32b"
       url: "https://github.com/flet-dev/flet-geolocator.git"
     source: git
     version: "0.25.2"
@@ -322,8 +339,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_lottie"
-      ref: v1
-      resolved-ref: "46f622d6af9b62a7938f1bc87297fde756535c49"
+      ref: main
+      resolved-ref: df503b249f8c592bcc7b9f09dc259c6e0431c385
       url: "https://github.com/flet-dev/flet-lottie.git"
     source: git
     version: "0.2.0"
@@ -331,8 +348,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_map"
-      ref: v1
-      resolved-ref: "163d73f4faa871acda0d2de20e454143ed4108d0"
+      ref: main
+      resolved-ref: f6aa55454634a00e1cccdbb47552c755230d0d40
       url: "https://github.com/flet-dev/flet-map.git"
     source: git
     version: "0.2.0"
@@ -340,8 +357,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_permission_handler"
-      ref: v1
-      resolved-ref: "64e95b8eb66b516935383c1365e0d8470acfcc96"
+      ref: main
+      resolved-ref: "23ce2b73f25ff1f734e05350b4ccabfcce8b7e5f"
       url: "https://github.com/flet-dev/flet-permission-handler.git"
     source: git
     version: "0.2.0"
@@ -349,8 +366,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_rive"
-      ref: v1
-      resolved-ref: d62927ad51f16c39cd6592bad34e983aee0f4d61
+      ref: main
+      resolved-ref: "8172c9bd2be612643250de0a2519f2831d29c38c"
       url: "https://github.com/flet-dev/flet-rive.git"
     source: git
     version: "0.2.0"
@@ -358,8 +375,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_video"
-      ref: v1
-      resolved-ref: "7c05efe78f0409b5b57dcfad13fa1ecafeb5788b"
+      ref: main
+      resolved-ref: ccad84d3e8a815dfa4360a53d6df9e4890ffec0f
       url: "https://github.com/flet-dev/flet-video.git"
     source: git
     version: "0.2.0"
@@ -367,8 +384,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_webview"
-      ref: v1
-      resolved-ref: "8d592b0485e4c137fdd5eae14f9395bb75df5984"
+      ref: main
+      resolved-ref: fbb41fd77ba7ea51dd49c508a8916e5c4b48cb2e
       url: "https://github.com/flet-dev/flet-webview.git"
     source: git
     version: "0.2.0"
@@ -431,10 +448,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_map_cancellable_tile_provider
-      sha256: "801760c104a3cfd9268cda7c9b1241223247e8182613a7e060ef4ffc0d825ac8"
+      sha256: "582df422f65c68216fcbc8f2d2c335ff3e8a014d9815382cfdde23ef772b4fb0"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   flutter_markdown:
     dependency: transitive
     description:
@@ -447,10 +464,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: f948e346c12f8d5480d2825e03de228d0eb8c3a737e4cdaa122267b89c022b5e
+      sha256: "6382ce712ff69b0f719640ce957559dde459e55ecd433c767e06d139ddf16cab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.28"
+    version: "2.0.29"
   flutter_svg:
     dependency: transitive
     description:
@@ -474,22 +491,30 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  geoclue:
+    dependency: transitive
+    description:
+      name: geoclue
+      sha256: c2a998c77474fc57aa00c6baa2928e58f4b267649057a1c76738656e9dbd2a7f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   geolocator:
     dependency: transitive
     description:
       name: geolocator
-      sha256: ee2212a3df8292ec4c90b91183b8001d3f5a800823c974b570c5f9344ca320dc
+      sha256: "79939537046c9025be47ec645f35c8090ecadb6fe98eba146a0d25e8c1357516"
       url: "https://pub.dev"
     source: hosted
-    version: "14.0.1"
+    version: "14.0.2"
   geolocator_android:
     dependency: transitive
     description:
       name: geolocator_android
-      sha256: "114072db5d1dce0ec0b36af2697f55c133bc89a2c8dd513e137c0afe59696ed4"
+      sha256: "179c3cb66dfa674fc9ccbf2be872a02658724d1c067634e2c427cf6df7df901a"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.1+1"
+    version: "5.0.2"
   geolocator_apple:
     dependency: transitive
     description:
@@ -498,6 +523,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.13"
+  geolocator_linux:
+    dependency: transitive
+    description:
+      name: geolocator_linux
+      sha256: c4e966f0a7a87e70049eac7a2617f9e16fd4c585a26e4330bdfc3a71e6a721f3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   geolocator_platform_interface:
     dependency: transitive
     description:
@@ -538,6 +571,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  gsettings:
+    dependency: transitive
+    description:
+      name: gsettings
+      sha256: "1b0ce661f5436d2db1e51f3c4295a49849f03d304003a7ba177d01e3a858249c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.8"
   highlight:
     dependency: transitive
     description:
@@ -643,10 +684,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: be4b23575aac7ebf01f225a241eb7f6b5641eeaf43c6a8613510fc2f8cf187d1
+      sha256: "55d6c23a6c15db14920e037fe7e0dc32e7cdaf3b64b4b25df2d541b5b6b81c0c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.1"
   logging:
     dependency: transitive
     description:
@@ -767,6 +808,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      sha256: "41a20518f0cb1256669420fdba0cd90d21561e560ac240f26ef8322e45bb7ed6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   msgpack_dart:
     dependency: transitive
     description:
@@ -787,18 +836,18 @@ packages:
     dependency: transitive
     description:
       name: package_info_plus
-      sha256: "7976bfe4c583170d6cdc7077e3237560b364149fcd268b5f53d95a991963b191"
+      sha256: "16eee997588c60225bda0488b6dcfac69280a6b7a3cf02c741895dd370a02968"
       url: "https://pub.dev"
     source: hosted
-    version: "8.3.0"
+    version: "8.3.1"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
       name: package_info_plus_platform_interface
-      sha256: "6c935fb612dff8e3cc9632c2b301720c77450a126114126ffaafe28d2e87956c"
+      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.0"
+    version: "3.2.1"
   path:
     dependency: transitive
     description:
@@ -867,10 +916,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler
-      sha256: "2d070d8684b68efb580a5997eb62f675e8a885ef0be6e754fb9ef489c177470f"
+      sha256: bc917da36261b00137bbc8896bf1482169cd76f866282368948f032c8c1caae1
       url: "https://pub.dev"
     source: hosted
-    version: "12.0.0+1"
+    version: "12.0.1"
   permission_handler_android:
     dependency: transitive
     description:
@@ -979,50 +1028,50 @@ packages:
     dependency: transitive
     description:
       name: record_android
-      sha256: "97d7122455f30de89a01c6c244c839085be6b12abca251fc0e78f67fed73628b"
+      sha256: "8b170e33d9866f9b51e01a767d7e1ecb97b9ecd629950bd87a47c79359ec57f8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.3"
+    version: "1.4.0"
   record_ios:
     dependency: transitive
     description:
       name: record_ios
-      sha256: "73706ebbece6150654c9d6f57897cf9b622c581148304132ba85dba15df0fdfb"
+      sha256: ad97d0a75933c44bcf5aff648e86e32fc05eb61f8fbef190f14968c8eaf86692
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   record_linux:
     dependency: transitive
     description:
       name: record_linux
-      sha256: "29e7735b05c1944bb6c9b72a36c08d4a1b24117e712d6a9523c003bde12bf484"
+      sha256: "785e8e8d6db109aa606d0669d95aaae416458aaa39782bb0abe0bee74eee17d7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   record_macos:
     dependency: transitive
     description:
       name: record_macos
-      sha256: "02240833fde16c33fcf2c589f3e08d4394b704761b4a3bb609d872ff3043fbbd"
+      sha256: f1399bca76a1634da109e5b0cba764ed8332a2b4da49c704c66d2c553405ed81
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   record_platform_interface:
     dependency: transitive
     description:
       name: record_platform_interface
-      sha256: "8a575828733d4c3cb5983c914696f40db8667eab3538d4c41c50cbb79e722ef4"
+      sha256: b0065fdf1ec28f5a634d676724d388a77e43ce7646fb049949f58c69f3fcb4ed
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.4.0"
   record_web:
     dependency: transitive
     description:
       name: record_web
-      sha256: "024c81eb7f51468b1833a3eca8b461c7ca25c04899dba37abe580bb57afd32e4"
+      sha256: "4f0adf20c9ccafcc02d71111fd91fba1ca7b17a7453902593e5a9b25b74a5c56"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.8"
+    version: "1.2.0"
   record_windows:
     dependency: transitive
     description:
@@ -1059,10 +1108,10 @@ packages:
     dependency: transitive
     description:
       name: screen_brightness_android
-      sha256: "6ba1b5812f66c64e9e4892be2d36ecd34210f4e0da8bdec6a2ea34f1aa42683e"
+      sha256: fb5fa43cb89d0c9b8534556c427db1e97e46594ac5d66ebdcf16063b773d54ed
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   screen_brightness_platform_interface:
     dependency: transitive
     description:
@@ -1123,10 +1172,10 @@ packages:
     dependency: transitive
     description:
       name: sensors_plus
-      sha256: "905282c917c6bb731c242f928665c2ea15445aa491249dea9d98d7c79dc8fd39"
+      sha256: "89e2bfc3d883743539ce5774a2b93df61effde40ff958ecad78cd66b1a8b8d52"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.1"
+    version: "6.1.2"
   sensors_plus_platform_interface:
     dependency: transitive
     description:
@@ -1147,10 +1196,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: "20cbd561f743a342c76c151d6ddb93a9ce6005751e7aa458baad3858bfbfb6ac"
+      sha256: "5bcf0772a761b04f8c6bf814721713de6f3e5d9d89caf8d3fe031b02a342379e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.10"
+    version: "2.4.11"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -1248,10 +1297,10 @@ packages:
     dependency: transitive
     description:
       name: synchronized
-      sha256: "0669c70faae6270521ee4f05bffd2919892d42d1276e6c495be80174b6bc0ef6"
+      sha256: c254ade258ec8282947a0acbbc90b9575b4f19673533ee46f2f6e9b3aeefd7c0
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.1"
+    version: "3.4.0"
   term_glyph:
     dependency: transitive
     description:
@@ -1320,10 +1369,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "8582d7f6fe14d2652b4c45c9b6c14c0b678c2af2d083a11b604caeba51930d79"
+      sha256: "0aedad096a85b49df2e4725fa32118f9fa580f3b14af7a2d2221896a02cd5656"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.16"
+    version: "6.3.17"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1400,10 +1449,10 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics_compiler
-      sha256: "557a315b7d2a6dbb0aaaff84d857967ce6bdc96a63dc6ee2a57ce5a6ee5d3331"
+      sha256: ca81fdfaf62a5ab45d7296614aea108d2c7d0efca8393e96174bf4d51e6725b0
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.17"
+    version: "1.1.18"
   vector_math:
     dependency: transitive
     description:
@@ -1488,18 +1537,18 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: f6e6afef6e234801da77170f7a1847ded8450778caf2fe13979d140484be3678
+      sha256: "0a42444056b24ed832bdf3442d65c5194f6416f7e782152384944053c2ecc9a3"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.0"
+    version: "4.10.0"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
-      sha256: f0dc2dc3a2b1e3a6abdd6801b9355ebfeb3b8f6cde6b9dc7c9235909c4a1f147
+      sha256: "63d26ee3aca7256a83ccb576a50272edd7cfc80573a4305caa98985feb493ee0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.1"
+    version: "2.14.0"
   webview_flutter_web:
     dependency: transitive
     description:
@@ -1512,18 +1561,18 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
-      sha256: a3d461fe3467014e05f3ac4962e5fdde2a4bf44c561cb53e9ae5c586600fdbc3
+      sha256: fb46db8216131a3e55bcf44040ca808423539bc6732e7ed34fb6d8044e3d512f
       url: "https://pub.dev"
     source: hosted
-    version: "3.22.0"
+    version: "3.23.0"
   win32:
     dependency: transitive
     description:
       name: win32
-      sha256: "329edf97fdd893e0f1e3b9e88d6a0e627128cc17cc316a8d67fda8f1451178ba"
+      sha256: "66814138c3562338d05613a6e368ed8cfb237ad6d64a9e9334be3f309acfca03"
       url: "https://pub.dev"
     source: hosted
-    version: "5.13.0"
+    version: "5.14.0"
   win32_registry:
     dependency: transitive
     description:
@@ -1536,10 +1585,10 @@ packages:
     dependency: transitive
     description:
       name: window_manager
-      sha256: "51d50168ab267d344b975b15390426b1243600d436770d3f13de67e55b05ec16"
+      sha256: "7eb6d6c4164ec08e1bf978d6e733f3cebe792e2a23fb07cbca25c2872bfdbdcd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   window_to_front:
     dependency: transitive
     description:
@@ -1581,5 +1630,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.7.0 <4.0.0"
+  dart: ">=3.8.0 <4.0.0"
   flutter: ">=3.29.0"

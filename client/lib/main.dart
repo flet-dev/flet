@@ -6,7 +6,7 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
 import 'package:flet_charts/flet_charts.dart' as flet_charts;
-//import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
+import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
@@ -27,10 +27,10 @@ const bool isProduction = bool.fromEnvironment('dart.vm.product');
 Tester? tester;
 
 void main([List<String>? args]) async {
-  // if (isProduction) {
-  //   // ignore: avoid_returning_null_for_void
-  //   debugPrint = (String? message, {int? wrapWidth}) => null;
-  // }
+  if (isProduction) {
+    // ignore: avoid_returning_null_for_void
+    debugPrint = (String? message, {int? wrapWidth}) => null;
+  }
 
   await setupDesktop();
 
@@ -45,7 +45,7 @@ void main([List<String>? args]) async {
     flet_rive.Extension(),
     flet_webview.Extension(),
     flet_flashlight.Extension(),
-    //flet_datatable2.Extension(),
+    flet_datatable2.Extension(),
     flet_charts.Extension(),
   ];
 
