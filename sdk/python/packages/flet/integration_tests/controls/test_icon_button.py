@@ -5,36 +5,36 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_icon_button(flet_app: ftt.FletTestApp, request):
+async def test_standard(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.IconButton(ft.Icons.HOME),
+        ft.IconButton(ft.Icons.HOME),
     )
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_filled_icon_button(flet_app: ftt.FletTestApp, request):
+async def test_filled(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.FilledIconButton(ft.Icons.HOME),
+        ft.FilledIconButton(ft.Icons.HOME),
     )
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_filled_tonal_icon_button(flet_app: ftt.FletTestApp, request):
+async def test_filled_tonal(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.FilledTonalIconButton(ft.Icons.HOME),
+        ft.FilledTonalIconButton(ft.Icons.HOME),
     )
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_outlined_icon_button(flet_app: ftt.FletTestApp, request):
+async def test_outlined(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.OutlinedIconButton(ft.Icons.HOME),
+        ft.OutlinedIconButton(ft.Icons.HOME),
     )

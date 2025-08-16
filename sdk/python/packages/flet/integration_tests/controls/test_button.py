@@ -9,7 +9,7 @@ async def test_button_1(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.Button("Click me"),
+        ft.Button("Click me"),
     )
 
 
@@ -18,5 +18,5 @@ async def test_button_2(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.Button("Something else!"),
+        ft.Button("Something else!"),
     )

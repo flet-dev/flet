@@ -9,7 +9,7 @@ async def test_basic_text(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.Text("Hello, world!"),
+        ft.Text("Hello, world!"),
     )
 
 
@@ -18,5 +18,5 @@ async def test_bold_text(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.Text("Hello, world!", weight=ft.FontWeight.BOLD),
+        ft.Text("Hello, world!", weight=ft.FontWeight.BOLD),
     )

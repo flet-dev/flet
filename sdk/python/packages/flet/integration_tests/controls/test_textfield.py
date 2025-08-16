@@ -9,5 +9,5 @@ async def test_basic_textfield(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
-        control=ft.TextField(),
+        ft.TextField(),
     )

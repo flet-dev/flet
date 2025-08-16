@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional, Union
 
@@ -12,7 +11,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     Url,
@@ -37,7 +36,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     places as well.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     Icon shown in the button.
     """
@@ -63,7 +62,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     (when `False`), and [`selected_icon`][flet.IconButton.selected_icon] (when `True`).
     """
 
-    selected_icon: Optional[IconValueOrControl] = None
+    selected_icon: Optional[IconDataOrControl] = None
     """
     The icon to be shown in this button for the 'selected' state.
     """
@@ -246,23 +245,17 @@ class IconButton(ConstrainedControl, AdaptiveControl):
             or self.visual_density is not None
             or self.mouse_cursor is not None
         ):
-            self._internals["style"] = (self.style or ButtonStyle()).copy_with(
+            self._internals["style"] = (self.style or ButtonStyle()).copy(
                 bgcolor=self.bgcolor,
                 visual_density=self.visual_density,
                 mouse_cursor=self.mouse_cursor,
             )
 
-    async def focus_async(self):
+    async def focus(self):
         """
         Moves focus to this button.
         """
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        """
-        Moves focus to this button.
-        """
-        asyncio.create_task(self.focus_async())
+        await self._invoke_method("focus")
 
 
 @control("FilledIconButton")
