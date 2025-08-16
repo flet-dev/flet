@@ -88,8 +88,7 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
     [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
   span.notifyParent = true;
   var onClick = span.getBool("on_click", false)!;
-  var url = span.getString("url");
-  var urlTarget = span.getString("url_target");
+  var url = span.getUrl("url");
 
   return TextSpan(
     text: span.getString("text"),
@@ -104,7 +103,7 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
         (onClick || url != null) && !span.disabled && sendControlEvent != null
             ? (TapGestureRecognizer()
               ..onTap = () {
-                if (url != null) openWebBrowser(url, webWindowName: urlTarget);
+                if (url != null) openWebBrowser(url);
                 if (onClick) sendControlEvent(span, "click");
               })
             : null,

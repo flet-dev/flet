@@ -97,4 +97,20 @@
     ---
     <!-- ![SubmenuButton](../../examples/controls/segmented_button/media/index.png){width="100%"} -->
 
+-   [:octicons-arrow-right-24: `FilledIconButton`][flet.FilledIconButton]
+
+    ---
+    <!-- ![FilledIconButton](../../examples/controls/filled_icon_button/media/index.png){width="100%"} -->
+
+-   [:octicons-arrow-right-24: `FilledTonalIconButton`][flet.FilledTonalIconButton]
+
+    ---
+    <!-- ![FilledTonalIconButton](../../examples/controls/filled_tonal_icon_button/media/index.png){width="100%"} -->
+
+-   [:octicons-arrow-right-24: `OutlinedIconButton`][flet.OutlinedIconButton]
+
+    ---
+    <!-- ![OutlinedIconButton](../../examples/controls/outlined_icon_button/media/index.png){width="100%"} -->
+
+
 </div>

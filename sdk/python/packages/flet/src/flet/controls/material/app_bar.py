@@ -199,8 +199,10 @@ class AppBar(AdaptiveControl):
             f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
         assert self.elevation_on_scroll is None or self.elevation_on_scroll >= 0, (
-            f"elevation_on_scroll must be greater than or equal to 0, got {self.elevation_on_scroll}"
+            f"elevation_on_scroll must be greater than or equal to 0, "
+            f"got {self.elevation_on_scroll}"
         )
         assert 0 <= self.toolbar_opacity <= 1, (
-            f"toolbar_opacity must be between 0.0 and 1.0 inclusive, got {self.toolbar_opacity}"
+            f"toolbar_opacity must be between 0.0 and 1.0 inclusive, "
+            f"got {self.toolbar_opacity}"
         )

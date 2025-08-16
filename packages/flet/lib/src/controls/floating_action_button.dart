@@ -25,8 +25,7 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     var content = control.buildTextOrWidget("content");
     var icon = control.buildIconOrWidget("icon");
-    var url = control.getString("url");
-    var urlTarget = control.getString("url_target");
+    var url = control.getUrl("url");
     var disabledElevation = control.getDouble("disabled_elevation");
     var elevation = control.getDouble("elevation");
     var hoverElevation = control.getDouble("hover_elevation");
@@ -49,7 +48,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         ? null
         : () {
             if (url != null) {
-              openWebBrowser(url, webWindowName: urlTarget);
+              openWebBrowser(url);
             }
             control.triggerEvent("click");
           };

@@ -53,7 +53,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     bool isTextButton = widget.control.type == "TextButton";
     bool isOutlinedButton = widget.control.type == "OutlinedButton";
 
-    var url = widget.control.getString("url");
+    var url = widget.control.getUrl("url");
     var iconColor = widget.control.getColor("icon_color", context);
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.none)!;
@@ -65,8 +65,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     Function()? onPressed = !widget.control.disabled
         ? () {
             if (url != null) {
-              openWebBrowser(url,
-                  webWindowName: widget.control.getString("url_target"));
+              openWebBrowser(url);
             }
             widget.control.triggerEvent("click");
           }

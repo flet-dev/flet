@@ -253,28 +253,6 @@ class _ViewControlState extends State<ViewControl> {
           child: scaffold);
     }
 
-    if (pageData?.widgetsDesign == PageDesign.material) {
-      scaffold = CupertinoTheme(
-        data: pageData?.themeMode == ThemeMode.light ||
-                ((pageData?.themeMode == null ||
-                        pageData?.themeMode == ThemeMode.system) &&
-                    pageData?.brightness == Brightness.light)
-            ? parseCupertinoTheme(
-                control.parent!.get("theme"), context, Brightness.light)
-            : control.parent!.getString("dark_theme") != null
-                ? parseCupertinoTheme(
-                    control.parent!.get("dark_theme"), context, Brightness.dark)
-                : parseCupertinoTheme(
-                    control.parent!.get("theme"), context, Brightness.dark),
-        child: scaffold,
-      );
-    } else if (pageData?.widgetsDesign == PageDesign.cupertino) {
-      scaffold = Theme(
-        data: materialTheme,
-        child: scaffold,
-      );
-    }
-
     var showAppStartupScreen =
         FletBackend.of(context).showAppStartupScreen ?? false;
     var appStartupScreenMessage =

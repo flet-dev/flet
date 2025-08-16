@@ -18,8 +18,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var ink = control.getBool("ink", false)!;
     var onClick = control.getBool("on_click", false)!;
     var onTapDown = control.getBool("on_tap_down", false)!;
-    var url = control.getString("url");
-    var urlTarget = control.getString("url_target");
+    var url = control.getUrl("url");
     var onLongPress = control.getBool("on_long_press", false)!;
     var onHover = control.getBool("on_hover", false)!;
     var ignoreInteractions = control.getBool("ignore_interactions", false)!;
@@ -66,7 +65,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             onTap: onClick || url != null || onTapDown
                 ? () {
                     if (url != null) {
-                      openWebBrowser(url, webWindowName: urlTarget);
+                      openWebBrowser(url);
                     }
                     if (onClick) {
                       control.triggerEvent("click");
@@ -162,7 +161,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             onTap: onClick || url != null
                 ? () {
                     if (url != null) {
-                      openWebBrowser(url, webWindowName: urlTarget);
+                      openWebBrowser(url);
                     }
                     if (onClick) {
                       control.triggerEvent("click");

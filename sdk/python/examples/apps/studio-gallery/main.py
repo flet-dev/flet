@@ -14,7 +14,7 @@ class AppTile(ft.ListTile):
     def __init__(self, name, view, icon_name, file_name):
         super().__init__()
         self.view = view
-        self.bgcolor = ft.Colors.SURFACE_VARIANT
+        self.bgcolor = ft.Colors.SURFACE_CONTAINER_HIGHEST
         self.title = ft.Text(name)
         self.leading = ft.Icon(icon_name)
         self.on_click = self.app_button_clicked

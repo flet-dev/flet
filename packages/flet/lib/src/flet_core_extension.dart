@@ -198,6 +198,9 @@ class FletCoreExtension extends FletExtension {
       case "InteractiveViewer":
         return InteractiveViewerControl(key: key, control: control);
       case "IconButton":
+      case "FilledIconButton":
+      case "FilledTonalIconButton":
+      case "OutlinedIconButton":
         return IconButtonControl(key: key, control: control);
       case "CupertinoActivityIndicator":
         return CupertinoActivityIndicatorControl(key: key, control: control);

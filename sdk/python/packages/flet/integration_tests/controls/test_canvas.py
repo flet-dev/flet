@@ -1,9 +1,10 @@
 import math
 
+import pytest
+
 import flet as ft
 import flet.canvas as fc
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
