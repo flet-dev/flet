@@ -5,10 +5,14 @@ on:
     paths:
       - 'sdk/python/packages/flet/src/**'
       - 'sdk/python/packages/flet/integration_tests/**'
+      - 'packages/flet/**'
+      - 'client/**'
   pull_request:
     paths:
       - 'sdk/python/packages/flet/src/**'
       - 'sdk/python/packages/flet/integration_tests/**'
+      - 'packages/flet/**'
+      - 'client/**'
 
 concurrency:
   group: macos-integration-tests-${{ github.ref }}
