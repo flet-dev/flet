@@ -816,4 +816,4 @@ def test_login_logout_view():
             )
         )
 
-    app = ft.View("/", [login_view(state)])
+    ft.View("/", [login_view(state)])
