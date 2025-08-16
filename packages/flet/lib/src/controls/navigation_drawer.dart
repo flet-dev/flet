@@ -68,14 +68,14 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                 ? ControlWidget(
                     control: icon,
                   )
-                : Icon(parseIcon(icon)),
+                : Icon(parseIconData(icon, widget.control.backend)),
             label: Text(dest.getString("label", "")!),
             selectedIcon: selectedIcon is Control
                 ? ControlWidget(
                     control: selectedIcon,
                   )
-                : selectedIcon is String
-                    ? Icon(parseIcon(selectedIcon))
+                : selectedIcon is int
+                    ? Icon(parseIconData(selectedIcon, widget.control.backend))
                     : null,
           );
         } else {

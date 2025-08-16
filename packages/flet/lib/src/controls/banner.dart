@@ -19,7 +19,7 @@ class BannerControl extends StatefulWidget {
 }
 
 class _BannerControlState extends State<BannerControl> {
-  Widget? _dialog;
+  String? _error;
 
   @override
   void initState() {
@@ -41,24 +41,13 @@ class _BannerControlState extends State<BannerControl> {
     _toggleBanner();
   }
 
-  Widget _createBanner() {
-    var leading = widget.control.buildIconOrWidget("leading");
-    var content = widget.control.buildTextOrWidget("content");
-    var actions = widget.control.buildWidgets("actions");
-
-    if (content == null) {
-      return const ErrorControl("Banner.content must be provided and visible");
-    } else if (actions.isEmpty) {
-      return const ErrorControl(
-          "Banner.actions must be provided and at least one action should be visible");
-    }
-
+  MaterialBanner _createBanner() {
     return MaterialBanner(
-      leading: leading,
+      leading: widget.control.buildIconOrWidget("leading"),
       leadingPadding: widget.control.getPadding("leading_padding"),
-      content: content,
+      content: widget.control.buildTextOrWidget("content")!,
       padding: widget.control.getPadding("content_padding"),
-      actions: actions,
+      actions: widget.control.buildWidgets("actions"),
       forceActionsBelow: widget.control.getBool("force_actions_below", false)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
       contentTextStyle:
@@ -87,11 +76,12 @@ class _BannerControlState extends State<BannerControl> {
     var open = widget.control.getBool("open", false)!;
 
     if (open && (open != lastOpen)) {
-      _dialog = _createBanner();
-
-      if (_dialog is ErrorControl) {
-        debugPrint(
-            "Banner: ErrorControl, not showing dialog: ${(_dialog as ErrorControl).message}");
+      if (widget.control.get("content") == null) {
+        _error = "Banner.content must be provided and visible";
+        return;
+      } else if (widget.control.children("actions").isEmpty) {
+        _error =
+            "Banner.actions must be provided and at least one action should be visible";
         return;
       }
 
@@ -100,7 +90,7 @@ class _BannerControlState extends State<BannerControl> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
         ScaffoldMessenger.of(context)
-            .showMaterialBanner(_dialog as MaterialBanner)
+            .showMaterialBanner(_createBanner())
             .closed
             .then((reason) {
           debugPrint(
@@ -127,6 +117,6 @@ class _BannerControlState extends State<BannerControl> {
 
   @override
   Widget build(BuildContext context) {
-    return _dialog is ErrorControl ? _dialog! : const SizedBox.shrink();
+    return _error != null ? ErrorControl(_error!) : const SizedBox.shrink();
   }
 }

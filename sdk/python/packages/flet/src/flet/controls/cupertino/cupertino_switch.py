@@ -6,7 +6,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.types import (
     ColorValue,
-    IconValue,
+    IconData,
     LabelPosition,
     Number,
 )
@@ -91,8 +91,9 @@ class CupertinoSwitch(ConstrainedControl):
     The color to use on the thumb when this
     switch is off.
 
-    If `None`, defaults to [`thumb_color`][flet.CupertinoSwitch.thumb_color], and if this is also `None`,
-    defaults to [`CupertinoColors.WHITE`][flet.CupertinoColors.WHITE].
+    If `None`, defaults to [`thumb_color`][flet.CupertinoSwitch.thumb_color],
+    and if this is also `None`, defaults to
+    [`CupertinoColors.WHITE`][flet.CupertinoColors.WHITE].
     """
 
     inactive_track_color: Optional[ColorValue] = None
@@ -125,7 +126,7 @@ class CupertinoSwitch(ConstrainedControl):
     and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
     """
 
-    thumb_icon: Optional[ControlStateValue[IconValue]] = None
+    thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
     The icon of this Switch's thumb in various
     [`ControlState`][flet.ControlState]s.
@@ -156,4 +157,4 @@ class CupertinoSwitch(ConstrainedControl):
     """
     Called when the image ([`active_thumb_image`][flet.CupertinoSwitch.active_thumb_image] or
     [`inactive_thumb_image`][flet.CupertinoSwitch.inactive_thumb_image]) fails to load.
-    """
+    """  # noqa: E501

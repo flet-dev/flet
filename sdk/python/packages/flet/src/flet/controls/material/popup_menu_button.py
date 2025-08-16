@@ -13,7 +13,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     StrOrControl,
@@ -32,7 +32,7 @@ class PopupMenuItem(Control):
     A `Control` representing custom content of this menu item.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     An icon to draw before the text label of this menu item.
     """
@@ -57,8 +57,8 @@ class PopupMenuItem(Control):
     Defaults to `Padding.symmetric(horizontal=12)`.
 
     Note:
-        The [`height`][flet.PopupMenuItem.height] value of this menu item may influence
-        the applied padding.
+        The [`height`][flet.PopupMenuItem.height] value of this menu item may
+        influence the applied padding.
 
         For example, if a `height` greater than the height of the sum of the padding
         and a [`content`][flet.PopupMenuItem.content] is provided, then the padding's
@@ -93,7 +93,7 @@ class PopupMenuButton(ConstrainedControl):
     A collection of `PopupMenuItem` controls to display in a dropdown menu.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     If provided, an icon to draw on the button.
     """
