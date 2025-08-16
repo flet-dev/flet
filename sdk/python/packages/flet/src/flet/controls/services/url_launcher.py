@@ -65,4 +65,10 @@ class UrlLauncher(Service):
         )
 
     async def close_in_app_web_view(self) -> None:
+        """
+        Closes the in-app web view if it is currently open.
+
+        This method invokes the platform-specific functionality to close
+        any web view that was previously opened within the application.
+        """
         await self._invoke_method("close_in_app_web_view")
