@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["wheel"]
+# ///
+
 import os
 import re
 import sys
@@ -27,7 +31,7 @@ def extract_version(wheel_file):
 
 # Process the METADATA file
 def update_metadata(metadata_file, version):
-    with open(metadata_file, "r") as file:
+    with open(metadata_file) as file:
         lines = file.readlines()
 
         i = 0

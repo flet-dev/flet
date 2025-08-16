@@ -2,7 +2,17 @@ name: macOS Integration Tests
 
 on:
   push:
+    paths:
+      - 'sdk/python/packages/flet/src/**'
+      - 'sdk/python/packages/flet/integration_tests/**'
   pull_request:
+    paths:
+      - 'sdk/python/packages/flet/src/**'
+      - 'sdk/python/packages/flet/integration_tests/**'
+
+concurrency:
+  group: macos-integration-tests-${{ github.ref }}
+  cancel-in-progress: true  # cancel previous runs still in progress
 
 env:
   FLUTTER_VERSION: "3.32.8"

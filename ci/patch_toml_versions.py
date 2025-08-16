@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["tomlkit"]
+# ///
+
 import os
 import pathlib
 import sys
@@ -14,7 +18,7 @@ ver = sys.argv[2]
 print(f"Patching TOML file {toml_path} to {ver}")
 
 # read
-with open(toml_path, "r") as f:
+with open(toml_path) as f:
     t = tomlkit.parse(f.read())
 
 # patch version

@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["tomlkit"]
+# ///
+
 import os
 import pathlib
 import sys
@@ -14,7 +18,7 @@ package_name = sys.argv[2]
 print(f"Patching TOML file {toml_path} to {package_name}")
 
 # read
-with open(toml_path, "r") as f:
+with open(toml_path) as f:
     t = tomlkit.parse(f.read())
 
 # patch name

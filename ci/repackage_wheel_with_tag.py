@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["wheel"]
+# ///
+
 import os
 import sys
 import tempfile
@@ -38,7 +42,7 @@ def repackage_wheel(wheel_path, new_tag):
         # Process metadata files and replace the tag
         metadata_files = list(wheel_dir.glob("*.dist-info/WHEEL"))
         for metadata_file in metadata_files:
-            with open(metadata_file, "r") as f:
+            with open(metadata_file) as f:
                 content = f.read()
             new_content = content.replace(
                 "Tag: py3-none-any",
