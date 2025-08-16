@@ -236,7 +236,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.splash_radius is None or self.splash_radius > 0.0, (
+        assert self.splash_radius is None or self.splash_radius > 0, (
             f"splash_radius must be greater than 0, got {self.splash_radius}"
         )
         if (
