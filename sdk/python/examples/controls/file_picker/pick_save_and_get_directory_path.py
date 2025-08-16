@@ -33,7 +33,7 @@ def main(page: ft.Page):
                     content="Save file",
                     icon=ft.Icons.SAVE,
                     on_click=handle_save_file,
-                    disabled=page.web,  # disable this button on web
+                    disabled=page.web,  # disable this button in web mode
                 ),
                 save_file_path := ft.Text(),
             ]
@@ -44,7 +44,7 @@ def main(page: ft.Page):
                     content="Open directory",
                     icon=ft.Icons.FOLDER_OPEN,
                     on_click=handle_get_directory_path,
-                    disabled=page.web,  # disable this button on web
+                    disabled=page.web,  # disable this button in web mode
                 ),
                 directory_path := ft.Text(),
             ]

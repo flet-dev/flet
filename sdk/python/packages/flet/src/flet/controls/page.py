@@ -704,9 +704,9 @@ class Page(BasePage):
             - On recent versions of Android and iOS, this will always return `False`
                 unless the application has been configuration to allow querying the
                 system for launch support.
-            - On web, this will always return `False` except for a few specific schemes
-                that are always assumed to be supported (such as http(s)), as web pages
-                are never allowed to query installed applications.
+            - In web mode, this will always return `False` except for a few specific
+                schemes that are always assumed to be supported (such as http(s)),
+                as web pages are never allowed to query installed applications.
         """
         return await self.url_launcher.can_launch_url(url)
 
