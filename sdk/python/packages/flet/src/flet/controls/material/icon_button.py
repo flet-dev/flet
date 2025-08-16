@@ -274,7 +274,7 @@ class FilledTonalIconButton(IconButton):
     A filled tonal variant of [`IconButton`][flet.IconButton].
 
     Filled tonal icon buttons are a middle ground between filled and
-    outlined icon buttons. They’re useful in contexts where the button requires
+    outlined icon buttons. They're useful in contexts where the button requires
     slightly more emphasis than an outline would give, such as a secondary action
     paired with a high emphasis action.
     """
@@ -286,6 +286,6 @@ class OutlinedIconButton(IconButton):
     An outlined variant of [`IconButton`][flet.IconButton].
 
     Outlined icon buttons are medium-emphasis buttons.
-    They’re useful when an icon button needs more emphasis than a
+    They're useful when an icon button needs more emphasis than a
     standard icon button but less than a filled or filled tonal icon button.
     """

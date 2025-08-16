@@ -1,7 +1,8 @@
 from pathlib import Path
 
-import flet.testing as ftt
 import pytest_asyncio
+
+import flet.testing as ftt
 
 
 @pytest_asyncio.fixture(scope="module")

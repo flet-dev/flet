@@ -80,7 +80,7 @@ class _IconButtonControlState extends State<IconButtonControl>
           widget.control.getBoxConstraints("size_constraints");
       var autofocus = widget.control.getBool("autofocus", false)!;
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
-      var selected = widget.control.getBool("selected", false)!;
+      var selected = widget.control.getBool("selected");
       var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
       var url = widget.control.getUrl("url");
 
