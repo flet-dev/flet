@@ -12,8 +12,8 @@
 ::: flet.DurationValue
 ::: flet.EventControlType
 ::: flet.EventHandler
-::: flet.IconValue
-::: flet.IconValueOrControl
+::: flet.IconData
+::: flet.IconDataOrControl
 ::: flet.KeyValue
 ::: flet.MarginValue
 ::: flet.Number

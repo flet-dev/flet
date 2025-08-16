@@ -9,7 +9,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
 )
 
@@ -58,9 +58,9 @@ class Option(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.key is not None or self.text is not None
-        ), "key or text must be specified"
+        assert self.key is not None or self.text is not None, (
+            "key or text must be specified"
+        )
 
 
 @control("DropdownM2")
@@ -99,11 +99,11 @@ class DropdownM2(FormFieldControl):
     `None`.
     """
 
-    select_icon: Optional[IconValueOrControl] = None
+    select_icon: Optional[IconDataOrControl] = None
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use
-    for the drop-down select button's icon. 
-    
+    for the drop-down select button's icon.
+
     Defaults to `Icon(ft.Icons.ARROW_DROP_DOWN)`.
     """
 

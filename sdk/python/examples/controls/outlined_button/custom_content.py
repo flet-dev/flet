@@ -11,9 +11,9 @@ def main(page: ft.Page):
             content=ft.Row(
                 alignment=ft.MainAxisAlignment.SPACE_AROUND,
                 controls=[
-                    ft.Icon(name=ft.Icons.FAVORITE, color=ft.Colors.PINK),
-                    ft.Icon(name=ft.Icons.AUDIOTRACK, color=ft.Colors.GREEN),
-                    ft.Icon(name=ft.Icons.BEACH_ACCESS, color=ft.Colors.BLUE),
+                    ft.Icon(ft.Icons.FAVORITE, color=ft.Colors.PINK),
+                    ft.Icon(ft.Icons.AUDIOTRACK, color=ft.Colors.GREEN),
+                    ft.Icon(ft.Icons.BEACH_ACCESS, color=ft.Colors.BLUE),
                 ],
             ),
         ),

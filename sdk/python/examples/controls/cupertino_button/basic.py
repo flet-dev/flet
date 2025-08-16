@@ -28,12 +28,12 @@ def main(page: ft.Page):
             content=ft.Text("Disabled CupertinoButton"),
         ),
         ft.ElevatedButton(
-            adaptive=True,  # a CupertinoButton will be rendered when running on apple-platform
+            adaptive=True,
             bgcolor=ft.CupertinoColors.SYSTEM_TEAL,
             content=ft.Row(
                 tight=True,
                 controls=[
-                    ft.Icon(name=ft.Icons.FAVORITE, color="pink"),
+                    ft.Icon(ft.Icons.FAVORITE, color="pink"),
                     ft.Text("ElevatedButton+adaptive"),
                 ],
             ),

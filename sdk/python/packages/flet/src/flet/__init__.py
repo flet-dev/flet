@@ -218,6 +218,7 @@ from flet.controls.gradients import (
     RadialGradient,
     SweepGradient,
 )
+from flet.controls.icon_data import IconData
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
@@ -459,8 +460,7 @@ from flet.controls.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
-    IconValue,
-    IconValueOrControl,
+    IconDataOrControl,
     ImageRepeat,
     LabelPosition,
     Locale,
@@ -677,9 +677,9 @@ __all__ = [
     "Icon",
     "IconButton",
     "IconButtonTheme",
+    "IconData",
+    "IconDataOrControl",
     "IconTheme",
-    "IconValue",
-    "IconValueOrControl",
     "Icons",
     "Image",
     "ImageRepeat",

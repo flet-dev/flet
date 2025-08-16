@@ -9,7 +9,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
 )
@@ -30,7 +30,8 @@ class Banner(DialogControl):
     Raises:
         AssertionError: if [`content`][(c).] is not visible.
         AssertionError: if [`elevation`][(c).] is negative.
-        AssertionError: if [`actions`][(c).] does not contain at least one visible action Control.
+        AssertionError: if [`actions`][(c).] does not contain at least one visible
+            action Control.
     """
 
     content: StrOrControl
@@ -48,7 +49,7 @@ class Banner(DialogControl):
     controls.
     """
 
-    leading: Optional[IconValueOrControl] = None
+    leading: Optional[IconDataOrControl] = None
     """
     The leading Control of this banner.
 
@@ -59,8 +60,8 @@ class Banner(DialogControl):
     """
     The amount of space by which to inset the [`leading`][flet.Banner.leading] control.
 
-    Defaults to [`BannerTheme.leading_padding`][flet.BannerTheme.leading_padding], or if that is `None`,
-    falls back to `Padding.only(end=16)`.
+    Defaults to [`BannerTheme.leading_padding`][flet.BannerTheme.leading_padding],
+    or if that is `None`, falls back to `Padding.only(end=16)`.
     """
 
     content_padding: Optional[PaddingValue] = None
@@ -76,8 +77,8 @@ class Banner(DialogControl):
 
     force_actions_below: bool = False
     """
-    An override to force the [`actions`][flet.Banner.actions] to be below the [`content`][flet.Banner.content]
-    regardless of how many there are.
+    An override to force the [`actions`][flet.Banner.actions] to be below the
+    [`content`][flet.Banner.content] regardless of how many there are.
 
     If this is `True`, the `actions` will be placed below the content. If this is
     `False`, the `actions` will be placed on the trailing side of the `content` if
@@ -117,7 +118,8 @@ class Banner(DialogControl):
 
     content_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the [`Text`][flet.Text] controls in the [`content`][flet.Banner.content].
+    The style to be used for the [`Text`][flet.Text] controls in the
+    [`content`][flet.Banner.content].
     """
 
     min_action_bar_height: Number = 52.0

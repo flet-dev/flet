@@ -11,7 +11,7 @@ from flet.controls.geometry import Size
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     StrOrControl,
@@ -42,7 +42,7 @@ class CupertinoButton(ConstrainedControl):
     The content of the button. Can be either a string or a control.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     Icon shown in the button.
     """

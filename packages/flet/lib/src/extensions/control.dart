@@ -50,8 +50,9 @@ extension WidgetFromControl on Control {
       if (c == null) return null;
       c.notifyParent = notifyParent;
       return ControlWidget(key: key, control: c);
-    } else if (icon is String) {
-      return Icon(getIcon(propertyName), color: color);
+    } else if (icon is int) {
+      // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
+      return Icon(getIconData(propertyName), color: color);
     }
     return null;
   }
