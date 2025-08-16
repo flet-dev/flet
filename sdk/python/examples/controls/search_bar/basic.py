@@ -2,8 +2,11 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_tile_click(e: ft.Event[ft.ListTile]):
-        anchor.close_view(e.control.title.value)
+    async def handle_tile_click(e: ft.Event[ft.ListTile]):
+        await anchor.close_view(e.control.title.value)
+
+    async def open_click():
+        await anchor.open_view()
 
     def handle_change(e: ft.Event[ft.SearchBar]):
         print(f"handle_change e.data: {e.data}")
@@ -11,9 +14,9 @@ def main(page: ft.Page):
     def handle_submit(e: ft.Event[ft.SearchBar]):
         print(f"handle_submit e.data: {e.data}")
 
-    def handle_tap(e: ft.Event[ft.SearchBar]):
+    async def handle_tap(e: ft.Event[ft.SearchBar]):
         print("handle_tap")
-        anchor.open_view()
+        await anchor.open_view()
 
     page.add(
         ft.Row(
@@ -21,7 +24,7 @@ def main(page: ft.Page):
             controls=[
                 ft.OutlinedButton(
                     content="Open Search View",
-                    on_click=lambda _: anchor.open_view(),
+                    on_click=open_click,
                 ),
             ],
         ),

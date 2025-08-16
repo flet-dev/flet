@@ -14,14 +14,14 @@ from flet.controls.duration import DateTimeValue
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
     ColorValue,
-    IconValue,
+    IconData,
 )
 
 __all__ = [
     "DatePicker",
-    "DatePickerMode",
     "DatePickerEntryMode",
     "DatePickerEntryModeChangeEvent",
+    "DatePickerMode",
 ]
 
 
@@ -50,7 +50,7 @@ class DatePicker(DialogControl):
     It is added to [`Page.overlay`][flet.Page.overlay] and can be opened by
     calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
-    Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar 
+    Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar
     or an Input (TextField) for picking a date.
     """
 
@@ -150,7 +150,7 @@ class DatePicker(DialogControl):
     Defaults to `"Enter Date"`.
     """
 
-    switch_to_calendar_icon: Optional[IconValue] = None
+    switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
     [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
@@ -162,7 +162,7 @@ class DatePicker(DialogControl):
     If `None`, [`Icons.CALENDAR_TODAY`][flet.Icons.CALENDAR_TODAY] is used.
     """
 
-    switch_to_input_icon: Optional[IconValue] = None
+    switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
     [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
@@ -194,6 +194,6 @@ class DatePicker(DialogControl):
 
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode] 
+    Called when the [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
     is changed.
     """

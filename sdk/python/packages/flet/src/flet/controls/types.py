@@ -11,8 +11,7 @@ from typing import (
 
 from flet.controls.colors import Colors
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
-from flet.controls.cupertino.cupertino_icons import CupertinoIcons
-from flet.controls.material.icons import Icons
+from flet.controls.icon_data import IconData
 
 if TYPE_CHECKING:
     from flet.controls.control import Control  # noqa
@@ -154,7 +153,8 @@ class NotchShape:
     """
     A shape with a notch in its outline.
 
-    Typically used as the outline of a 'host' control to make a notch that accommodates a 'guest' control.
+    Typically used as the outline of a 'host' control to make a notch that
+    accommodates a 'guest' control.
     e.g the [`BottomAppBar`][flet.BottomAppBar] may have a notch to accommodate
     the [`FloatingActionButton`][flet.FloatingActionButton].
 
@@ -1062,29 +1062,7 @@ More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookb
 """
 
 # Icons
-IconValue = Union[str, Icons, CupertinoIcons]
-"""Type alias for icon values.
-
-Represents an icon and can be:
-- a string (icon name),
-- a material icon from the [`Icons`][flet.Icons] enum,
-- or a Cupertino icon from the [`CupertinoIcons`][flet.CupertinoIcons] enum.
-
-/// details | Example
-    type: example
-
-```python-repl
->>> import flet as ft
->>> ft.Icons.ABC
->>> ft.CupertinoIcons.BACK
->>> ft.Icons.random()
->>> ft.CupertinoIcons.random()
->>> ft.Icons.random(exclude=[ft.Icons.FAVORITE, ft.Icons.SCHOOL], weights={ft.Icons.SCHOOL: 150, ft.Icons.ADJUST: 5})
->>> ft.CupertinoIcons.random(exclude=[ft.CupertinoIcons.CAMERA, ft.CupertinoIcons.TABLE], weights={ft.CupertinoIcons.TABLE: 150, ft.CupertinoIcons.PENCIL: 5})
-```
-///
-"""
-IconValueOrControl = Union[IconValue, "Control"]
+IconDataOrControl = Union[IconData, "Control"]
 
 # Content
 StrOrControl = Union[str, "Control"]

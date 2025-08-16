@@ -124,10 +124,10 @@ class ItemList(ft.Draggable):
     def handle_drag_accept(self, e: ft.DragTargetEvent):
         src = self.page.get_control(e.src_id)
 
-        l = self.list_row.current.controls
-        to_index = l.index(e.control.data)
-        from_index = l.index(src.content.data)
-        l[to_index], l[from_index] = l[from_index], l[to_index]
+        ctrls = self.list_row.current.controls
+        to_index = ctrls.index(e.control.data)
+        from_index = ctrls.index(src.content.data)
+        ctrls[to_index], ctrls[from_index] = ctrls[from_index], ctrls[to_index]
         self.end_indicator.opacity = 0.0
         self.page.update()
 
@@ -168,7 +168,7 @@ class Item(ft.Draggable):
                 content=ft.Row(
                     alignment=ft.MainAxisAlignment.START,
                     controls=[
-                        ft.Icon(name=ft.Icons.CIRCLE_OUTLINED),
+                        ft.Icon(ft.Icons.CIRCLE_OUTLINED),
                         ft.Text(value=f"{self.item_text}"),
                     ],
                 ),

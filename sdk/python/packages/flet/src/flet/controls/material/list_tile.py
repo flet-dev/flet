@@ -10,7 +10,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     StrOrControl,
@@ -54,7 +54,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     Additional content displayed below the title.
 
     If [`is_three_line`][flet.ListTile.is_three_line] is `False`, this should not wrap.
-    If `is_three_line` is `True`, this should be configured to take a maximum of two lines.
+    If `is_three_line` is `True`, this should be configured to take a maximum of two
+    lines.
     For example, you can use [`Text.max_lines`][flet.Text.max_lines] to enforce the
     number of lines.
 
@@ -75,12 +76,12 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     using [`Text.max_lines`][flet.Text.max_lines].
     """
 
-    leading: Optional[IconValueOrControl] = None
+    leading: Optional[IconDataOrControl] = None
     """
     A control to display before the [`title`][flet.ListTile.title].
     """
 
-    trailing: Optional[IconValueOrControl] = None
+    trailing: Optional[IconDataOrControl] = None
     """
     A control to display after the [`title`][flet.ListTile.title].
 
@@ -165,7 +166,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     horizontal_spacing: Number = 16.0
     """
     The horizontal gap between the `title` and the
-    [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing] controls.
+    [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing]
+    controls.
     """
 
     min_leading_width: Number = 40.0
@@ -198,7 +200,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     icon_color: Optional[ColorValue] = None
     """
     Defines the default color for the icons
-    present in [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing].
+    present in [`leading`][flet.ListTile.leading] and
+    [`trailing`][flet.ListTile.trailing].
     """
 
     text_color: Optional[ColorValue] = None

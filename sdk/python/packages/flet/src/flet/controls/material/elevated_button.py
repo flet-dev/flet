@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional, Union
 
@@ -11,7 +10,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
     Url,
@@ -37,7 +36,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     A Control representing custom button content.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     Icon shown in the button.
     """
@@ -170,14 +169,11 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             or self.bgcolor is not None
             or self.elevation != 1
         ):
-            self._internals["style"] = (self.style or ButtonStyle()).copy_with(
+            self._internals["style"] = (self.style or ButtonStyle()).copy(
                 color=self.color,
                 bgcolor=self.bgcolor,
                 elevation=self.elevation,
             )
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

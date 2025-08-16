@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.duration import DurationValue
 from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
-from flet.controls.types import IconValue
+from flet.controls.types import IconData
 from flet.testing.finder import Finder
 
 __all__ = ["Tester"]
@@ -23,7 +23,7 @@ class Tester(Service):
         Args:
             duration: A duration after which to trigger a frame.
         """
-        return await self._invoke_method_async("pump", {"duration": duration})
+        return await self._invoke_method("pump", {"duration": duration})
 
     async def pump_and_settle(self, duration: Optional[DurationValue] = None):
         """
@@ -37,9 +37,7 @@ class Tester(Service):
         Args:
             duration: A duration after which to trigger a frame.
         """
-        return await self._invoke_method_async(
-            "pump_and_settle", {"duration": duration}
-        )
+        return await self._invoke_method("pump_and_settle", {"duration": duration})
 
     async def find_by_text(self, text: str) -> Finder:
         """
@@ -48,7 +46,7 @@ class Tester(Service):
         Args:
             text: The exact text value to search control by.
         """
-        finder = await self._invoke_method_async("find_by_text", {"text": text})
+        finder = await self._invoke_method("find_by_text", {"text": text})
         return Finder(**finder)
 
     async def find_by_text_containing(self, pattern: str) -> Finder:
@@ -58,7 +56,7 @@ class Tester(Service):
         Args:
             pattern: Regular expression pattern.
         """
-        finder = await self._invoke_method_async(
+        finder = await self._invoke_method(
             "find_by_text_containing", {"pattern": pattern}
         )
         return Finder(**finder)
@@ -70,7 +68,7 @@ class Tester(Service):
         Args:
             key: A key instance or its name.
         """
-        finder = await self._invoke_method_async("find_by_key", {"key": key})
+        finder = await self._invoke_method("find_by_key", {"key": key})
         return Finder(**finder)
 
     async def find_by_tooltip(self, value: str) -> Finder:
@@ -80,17 +78,17 @@ class Tester(Service):
         Args:
             value: Tooltip value.
         """
-        finder = await self._invoke_method_async("find_by_tooltip", {"value": value})
+        finder = await self._invoke_method("find_by_tooltip", {"value": value})
         return Finder(**finder)
 
-    async def find_by_icon(self, icon: IconValue) -> Finder:
+    async def find_by_icon(self, icon: IconData) -> Finder:
         """
         Finds controls by an icon.
 
         Args:
             icon: The Icon to search by.
         """
-        finder = await self._invoke_method_async("find_by_icon", {"icon": icon})
+        finder = await self._invoke_method("find_by_icon", {"icon": icon})
         return Finder(**finder)
 
     async def take_screenshot(self, name: str) -> bytes:
@@ -104,7 +102,7 @@ class Tester(Service):
         Returns:
             Screenshot in PNG format.
         """
-        return await self._invoke_method_async("take_screenshot", {"name": name})
+        return await self._invoke_method("take_screenshot", {"name": name})
 
     async def tap(self, finder: Finder):
         """
@@ -114,7 +112,18 @@ class Tester(Service):
         Args:
             finder: Finder to search for a control.
         """
-        await self._invoke_method_async("tap", {"id": finder.id})
+        await self._invoke_method("tap", {"id": finder.id})
+
+    async def long_press(self, finder: Finder):
+        """
+        Dispatch a pointer down / pointer up sequence (with a delay of
+        600 ms between the two events) at the center of the given control,
+        assuming it is exposed.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method("long_press", {"id": finder.id})
 
     async def enter_text(self, finder: Finder, text: str):
         """
@@ -126,7 +135,7 @@ class Tester(Service):
             finder: Finder to search for a control.
             text: The text to enter.
         """
-        await self._invoke_method_async("enter_text", {"id": finder.id, "text": text})
+        await self._invoke_method("enter_text", {"id": finder.id, "text": text})
 
     async def mouse_hover(self, finder: Finder):
         """
@@ -135,10 +144,10 @@ class Tester(Service):
         Args:
             finder: Finder to search for a control.
         """
-        await self._invoke_method_async("mouse_hover", {"id": finder.id})
+        await self._invoke_method("mouse_hover", {"id": finder.id})
 
-    def teardown(self):
+    async def teardown(self):
         """
         Teardown Flutter integration test and exit Flutter process.
         """
-        return self._invoke_method_async("teardown")
+        await self._invoke_method("teardown")

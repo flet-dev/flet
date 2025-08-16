@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
@@ -12,7 +11,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
     VerticalAlignment,
@@ -64,7 +63,7 @@ class FormFieldControl(ConstrainedControl):
     `label`.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     The icon to show before the input field and outside of the decoration's container.
     """
@@ -255,7 +254,7 @@ class FormFieldControl(ConstrainedControl):
     The `prefix` appears after the `prefix_icon`, if both are specified.
     """
 
-    prefix_icon: Optional[IconValueOrControl] = None
+    prefix_icon: Optional[IconDataOrControl] = None
     """
     An icon that appears before the `prefix` or `prefix_text` and before the editable
     part of the text field, within the decoration's container.
@@ -285,7 +284,7 @@ class FormFieldControl(ConstrainedControl):
     The `suffix` appears before the `suffix_icon`, if both are specified.
     """
 
-    suffix_icon: Optional[IconValueOrControl] = None
+    suffix_icon: Optional[IconDataOrControl] = None
     """
     An icon that appears after the editable part of the text field and after the
     `suffix` or `suffix_text`, within the decoration's container.
@@ -317,8 +316,5 @@ class FormFieldControl(ConstrainedControl):
     `suffix_text`.
     """
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

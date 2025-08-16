@@ -40,14 +40,13 @@ class AuthorizationService(Authorization):
                 if s not in self.scope:
                     self.scope.append(s)
 
-    async def dehydrate_token_async(self, saved_token: str):
+    async def dehydrate_token(self, saved_token: str):
         self.__token = OAuthToken.from_json(saved_token)
-        await self.__refresh_token_async()
-        await self.__fetch_user_and_groups_async()
+        await self.__refresh_token()
+        await self.__fetch_user_and_groups()
 
-    # token_async
-    async def get_token_async(self):
-        await self.__refresh_token_async()
+    async def get_token(self):
+        await self.__refresh_token()
         return self.__token
 
     def get_authorization_data(self) -> tuple[str, str]:
@@ -63,7 +62,7 @@ class AuthorizationService(Authorization):
         )
         return authorization_url, self.state
 
-    async def request_token_async(self, code: str):
+    async def request_token(self, code: str):
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
             code=code,
@@ -83,20 +82,20 @@ class AuthorizationService(Authorization):
             client = WebApplicationClient(self.provider.client_id)
             t = client.parse_request_body_response(resp.text)
             self.__token = self.__convert_token(t)
-            await self.__fetch_user_and_groups_async()
+            await self.__fetch_user_and_groups()
 
-    async def __fetch_user_and_groups_async(self):
+    async def __fetch_user_and_groups(self):
         assert self.__token is not None
         if self.fetch_user:
-            self.user = await self.provider._fetch_user_async(self.__token.access_token)
+            self.user = await self.provider._fetch_user(self.__token.access_token)
             if self.user is None and self.provider.user_endpoint is not None:
                 if self.provider.user_id_fn is None:
                     raise Exception(
                         "user_id_fn must be specified too if user_endpoint is not None"
                     )
-                self.user = await self.__get_user_async()
+                self.user = await self.__get_user()
             if self.fetch_groups and self.user is not None:
-                self.user.groups = await self.provider._fetch_groups_async(
+                self.user.groups = await self.provider._fetch_groups(
                     self.__token.access_token
                 )
 
@@ -110,7 +109,7 @@ class AuthorizationService(Authorization):
             refresh_token=t.get("refresh_token"),
         )
 
-    async def __refresh_token_async(self):
+    async def __refresh_token(self):
         if (
             self.__token is None
             or self.__token.expires_at is None
@@ -143,7 +142,7 @@ class AuthorizationService(Authorization):
                     t["refresh_token"] = self.__token.refresh_token
                 self.__token = self.__convert_token(t)
 
-    async def __get_user_async(self):
+    async def __get_user(self):
         assert self.__token is not None
         assert self.provider.user_endpoint is not None
         headers = self.__get_default_headers()

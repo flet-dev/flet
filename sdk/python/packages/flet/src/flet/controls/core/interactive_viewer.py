@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional
 
 from flet.controls.alignment import Alignment
@@ -28,7 +27,8 @@ class InteractiveViewer(ConstrainedControl):
         AssertionError: If [`min_scale`][(c).] is not greater than `0`.
         AssertionError: If [`max_scale`][(c).] is not greater than `0`.
         AssertionError: If [`max_scale`][(c).] is less than `min_scale`.
-        AssertionError: If [`interaction_end_friction_coefficient`][(c).] is not greater than `0`.
+        AssertionError: If [`interaction_end_friction_coefficient`][(c).] is not
+            greater than `0`.
     """
 
     content: Control
@@ -63,14 +63,15 @@ class InteractiveViewer(ConstrainedControl):
 
     Note:
         Must be greater than or equal to [`min_scale`][flet.InteractiveViewer.min_scale].
-    """
+    """  # noqa: E501
 
     min_scale: Number = 0.8
     """
     The minimum allowed scale.
 
     Note:
-        Must be greater than `0` and less than or equal to [`max_scale`][flet.InteractiveViewer.max_scale].
+        Must be greater than `0` and less than or equal
+        to [`max_scale`][flet.InteractiveViewer.max_scale].
     """
 
     interaction_end_friction_coefficient: Number = 0.0000135
@@ -137,43 +138,30 @@ class InteractiveViewer(ConstrainedControl):
             f"max_scale must be greater than 0, got {self.max_scale}"
         )
         assert self.max_scale >= self.min_scale, (
-            f"max_scale must be greater than or equal to min_scale, got max_scale={self.max_scale}, min_scale={self.min_scale}"
+            "max_scale must be greater than or equal to min_scale, "
+            f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
         )
         assert (
             self.interaction_end_friction_coefficient is None
             or self.interaction_end_friction_coefficient > 0
         ), (
-            f"interaction_end_friction_coefficient must be greater than 0, got {self.interaction_end_friction_coefficient}"
+            "interaction_end_friction_coefficient must be greater than 0, "
+            f"got {self.interaction_end_friction_coefficient}"
         )
 
-    def reset(self, animation_duration: Optional[DurationValue] = None):
-        asyncio.create_task(self.reset_async(animation_duration))
-
-    async def reset_async(self, animation_duration: Optional[DurationValue] = None):
-        await self._invoke_method_async(
+    async def reset(self, animation_duration: Optional[DurationValue] = None):
+        await self._invoke_method(
             "reset", arguments={"animation_duration": animation_duration}
         )
 
-    def save_state(self):
-        asyncio.create_task(self.save_state_async())
+    async def save_state(self):
+        await self._invoke_method("save_state")
 
-    async def save_state_async(self):
-        await self._invoke_method_async("save_state")
+    async def restore_state(self):
+        await self._invoke_method("restore_state")
 
-    def restore_state(self):
-        asyncio.create_task(self.restore_state_async())
+    async def zoom(self, factor: Number):
+        await self._invoke_method("zoom", arguments={"factor": factor})
 
-    async def restore_state_async(self):
-        await self._invoke_method_async("restore_state")
-
-    def zoom(self, factor: Number):
-        asyncio.create_task(self.zoom_async(factor))
-
-    async def zoom_async(self, factor: Number):
-        await self._invoke_method_async("zoom", arguments={"factor": factor})
-
-    def pan(self, dx: Number, dy: Number = 0, dz: Number = 0):
-        asyncio.create_task(self.pan_async(dx, dy, dz))
-
-    async def pan_async(self, dx: Number, dy: Number = 0, dz: Number = 0):
-        await self._invoke_method_async("pan", arguments={"dx": dx, "dy": dy, "dz": dz})
+    async def pan(self, dx: Number, dy: Number = 0, dz: Number = 0):
+        await self._invoke_method("pan", arguments={"dx": dx, "dy": dy, "dz": dz})

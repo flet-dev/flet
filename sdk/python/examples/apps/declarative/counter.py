@@ -21,7 +21,10 @@ def main(page: ft.Page):
         ft.ControlBuilder(
             state,
             lambda state: ft.SafeArea(
-                ft.Center(ft.Text(value=f"{state.count}", size=50)),
+                ft.Container(
+                    ft.Text(value=f"{state.count}", size=50),
+                    alignment=ft.Alignment.CENTER,
+                ),
                 expand=True,
             ),
             expand=True,

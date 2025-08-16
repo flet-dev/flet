@@ -65,8 +65,8 @@ class TrelloApp(AppLayout):
             self.create_new_board("My First Board")
         self.page.go("/")
 
-    def login(self, e):
-        def close_dlg(e):
+    async def login(self, e):
+        async def close_dlg(e):
             if user_name.value == "" or password.value == "":
                 user_name.error_text = "Please provide username"
                 password.error_text = "Please provide password"
@@ -77,12 +77,11 @@ class TrelloApp(AppLayout):
                 if user not in self.store.get_users():
                     self.store.add_user(user)
                 self.user = user_name.value
-                self.page.shared_preferences.set("current_user", user_name.value)
+                await self.page.shared_preferences.set("current_user", user_name.value)
 
             self.page.close(dialog)
-            self.appbar_items[0] = ft.PopupMenuItem(
-                text=f"{self.page.shared_preferences.get('current_user')}'s Profile"
-            )
+            current_user = await self.page.shared_preferences.get("current_user")
+            self.appbar_items[0] = ft.PopupMenuItem(content=f"{current_user}'s Profile")
             self.page.update()
 
         user_name = ft.TextField(label="User name")
@@ -116,9 +115,9 @@ class TrelloApp(AppLayout):
             self.set_members_view()
         self.page.update()
 
-    def add_board(self, e):
+    async def add_board(self, e):
         def close_dlg(e):
-            if (hasattr(e.control, "text") and not e.control.text == "Cancel") or (
+            if (hasattr(e.control, "text") and e.control.text != "Cancel") or (
                 type(e.control) is ft.TextField and e.control.value != ""
             ):
                 self.create_new_board(dialog_text.value)
@@ -158,7 +157,7 @@ class TrelloApp(AppLayout):
         self.page.open(dialog)
         dialog.open = True
         self.page.update()
-        dialog_text.focus()
+        await dialog_text.focus()
 
     def create_new_board(self, board_name):
         new_board = Board(self, self.store, board_name, self.page)

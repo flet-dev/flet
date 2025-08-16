@@ -9,19 +9,19 @@ def main(page: ft.Page):
         ft.CupertinoListTile(
             additional_info=ft.Text("Wed Jan 24"),
             bgcolor_activated=ft.Colors.AMBER_ACCENT,
-            leading=ft.Icon(name=ft.CupertinoIcons.GAME_CONTROLLER),
+            leading=ft.Icon(ft.CupertinoIcons.GAME_CONTROLLER),
             title=ft.Text("CupertinoListTile: notched = False"),
             subtitle=ft.Text("Subtitle"),
-            trailing=ft.Icon(name=ft.CupertinoIcons.ALARM),
+            trailing=ft.Icon(ft.CupertinoIcons.ALARM),
             on_click=handle_tile_click,
         ),
         ft.CupertinoListTile(
             notched=True,
             additional_info=ft.Text("Thu Jan 25"),
-            leading=ft.Icon(name=ft.CupertinoIcons.GAME_CONTROLLER),
+            leading=ft.Icon(ft.CupertinoIcons.GAME_CONTROLLER),
             title=ft.Text("CupertinoListTile: notched = True"),
             subtitle=ft.Text("Subtitle"),
-            trailing=ft.Icon(name=ft.CupertinoIcons.ALARM),
+            trailing=ft.Icon(ft.CupertinoIcons.ALARM),
             on_click=handle_tile_click,
         ),
     )

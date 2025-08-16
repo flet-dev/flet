@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
@@ -14,7 +13,7 @@ from flet.controls.types import (
     ScrollMode,
 )
 
-__all__ = ["ScrollableControl", "OnScrollEvent", "ScrollType", "ScrollDirection"]
+__all__ = ["OnScrollEvent", "ScrollDirection", "ScrollType", "ScrollableControl"]
 
 
 class ScrollType(Enum):
@@ -70,86 +69,7 @@ class ScrollableControl(Control):
     class.
     """
 
-    def scroll_to(
-        self,
-        offset: Optional[Number] = None,
-        delta: Optional[Number] = None,
-        scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
-        duration: Optional[DurationValue] = None,
-        curve: Optional[AnimationCurve] = None,
-    ):
-        """
-        Moves scroll position to either absolute `offset`, relative `delta` or jump to
-        the control with specified `key`.
-
-        `offset` is an absolute value between minimum and maximum extents of a
-        scrollable control, for example:
-
-        ```python
-        products.scroll_to(offset=100, duration=1000)
-        ```
-
-        `offset` could be a negative to scroll from the end of a scrollable. For
-        example, to scroll to the very end:
-
-        ```python
-        products.scroll_to(offset=-1, duration=1000)
-        ```
-
-        `delta` allows moving scroll relatively to the current position. Use positive
-        `delta` to scroll forward and negative `delta` to scroll backward. For example,
-        to move scroll on 50 pixels forward:
-
-        ```python
-        products.scroll_to(delta=50)
-        ```
-
-        `key` allows moving scroll position to a control with specified `key`. Most of
-        Flet controls have `key` property which is translated to Flutter as
-        "global key". `key` must be unique for the entire page/view. For example:
-
-        ```python
-        import flet as ft
-
-
-        def main(page: ft.Page):
-            cl = ft.Column(
-                spacing=10,
-                height=200,
-                width=200,
-                scroll=ft.ScrollMode.ALWAYS,
-            )
-            for i in range(0, 50):
-                cl.controls.append(ft.Text(f"Text line {i}", key=str(i)))
-
-            def scroll_to_key(e):
-                cl.scroll_to(key="20", duration=1000)
-
-            page.add(
-                ft.Container(cl, border=ft.border.all(1)),
-                ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
-            )
-
-
-        ft.run(main)
-        ```
-
-        Note:
-            `scroll_to()` method won't work with `ListView` and `GridView` controls
-            building their items dynamically.
-
-        `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
-        no animation.
-
-        `curve` configures animation curve. Property value is [`AnimationCurve`][flet.AnimationCurve]
-        enum.
-        Defaults to `AnimationCurve.EASE`.
-        """
-        asyncio.create_task(
-            self.scroll_to_async(offset, delta, scroll_key, duration, curve)
-        )
-
-    async def scroll_to_async(
+    async def scroll_to(
         self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
@@ -165,14 +85,14 @@ class ScrollableControl(Control):
         scrollable control, for example:
 
         ```python
-        products.scroll_to(offset=100, duration=1000)
+        await products.scroll_to(offset=100, duration=1000)
         ```
 
         `offset` could be a negative to scroll from the end of a scrollable. For
         example, to scroll to the very end:
 
         ```python
-        products.scroll_to(offset=-1, duration=1000)
+        await products.scroll_to(offset=-1, duration=1000)
         ```
 
         `delta` allows moving scroll relatively to the current position. Use positive
@@ -180,7 +100,7 @@ class ScrollableControl(Control):
         to move scroll on 50 pixels forward:
 
         ```python
-        products.scroll_to(delta=50)
+        await products.scroll_to(delta=50)
         ```
 
         `key` allows moving scroll position to a control with specified `key`. Most of
@@ -201,8 +121,8 @@ class ScrollableControl(Control):
             for i in range(0, 50):
                 cl.controls.append(ft.Text(f"Text line {i}", key=str(i)))
 
-            def scroll_to_key(e):
-                cl.scroll_to(key="20", duration=1000)
+            async def scroll_to_key(e):
+                await cl.scroll_to(scroll_key="20", duration=1000)
 
             page.add(
                 ft.Container(cl, border=ft.border.all(1)),
@@ -220,12 +140,14 @@ class ScrollableControl(Control):
         `duration` is scrolling animation duration in milliseconds. Defaults to `0` -
         no animation.
 
-        `curve` configures animation curve. Property value is [`AnimationCurve`][flet.AnimationCurve]
+        `curve` configures animation curve. Property value is
+        [`AnimationCurve`][flet.AnimationCurve]
         enum.
+
         Defaults to `AnimationCurve.EASE`.
         """
 
-        await self._invoke_method_async(
+        await self._invoke_method(
             "scroll_to",
             {
                 "offset": offset,

@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.types import BlendMode, ColorValue, IconValue, Number
+from flet.controls.types import BlendMode, ColorValue, IconData, Number
 
 __all__ = ["Icon"]
 
@@ -11,7 +11,10 @@ __all__ = ["Icon"]
 @control("Icon")
 class Icon(ConstrainedControl):
     """
-    Displays a Material icon.
+    A control that displays an icon from a built-in or custom icon set.
+
+    Icons can be customized in color, size, and visual style using various
+    parameters such as stroke weight, fill level, and shadows.
 
     Raises:
         AssertionError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
@@ -19,85 +22,100 @@ class Icon(ConstrainedControl):
         AssertionError: If [`optical_size`][(c).] is less than or equal to `0.0`.
     """
 
-    name: IconValue
+    icon: IconData
     """
-    The name of the icon.
+    The icon to display, selected from a predefined icon set.
 
-    You can search through the list of all available icons using our
-    [Icons browser](https://gallery.flet.dev/icons-browser/) app
-    [written in Flet](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py).
+    You can explore available icons using the
+    [Flet Icons Browser](https://gallery.flet.dev/icons-browser/).
     """
 
     color: Optional[ColorValue] = None
     """
-    Icon color.
+    The color to use when drawing the icon.
     """
 
     size: Optional[Number] = None
     """
-    The icon's size.
+    The size (width and height) of the square area the icon will occupy.
 
-    Icons occupy a square with width and height equal to `size`.
-
-    Defaults to the nearest [`IconTheme.size`][flet.IconTheme.size].
-
-    If this `Icon` is being placed inside an [`IconButton`][flet.IconButton], then use
-    [`IconButton.icon_size`][flet.IconButton.icon_size] instead, so that the `IconButton` can make the splash
-    area the appropriate size as well. The `IconButton` uses an [`IconTheme`][flet.IconTheme] to
-    pass down the size to the `Icon`.
+    If not set, a default size will be used. When placing this icon
+    inside other controls (such as buttons), those controls may also affect sizing.
     """
 
     semantics_label: Optional[str] = None
     """
-    The semantics label for this icon.
+    An accessibility label for the icon.
 
-    It is not shown to the in the UI, but is announced in accessibility modes
-    (e.g. TalkBack/VoiceOver).
+    This text is not displayed visually but may be announced by screen readers
+    or other assistive technologies.
     """
 
     shadows: Optional[BoxShadowValue] = None
     """
-    TBD
+    A list of shadows to apply beneath the icon.
+
+    Use multiple shadows to simulate complex lighting effects.
+    The order of shadows matters for how transparency is blended.
     """
 
     fill: Optional[Number] = None
     """
-    TBD
+    The fill amount of the icon, between `0.0` (outline) and `1.0` (solid).
+
+    This feature requires the icon's font to support fill variation.
+    It can be used to indicate state transitions or selection visually.
     """
 
     apply_text_scaling: Optional[bool] = None
     """
-    TBD
+    Whether to scale the icon based on the system or user's preferred text size.
+
+    Useful when placing icons alongside text, ensuring both scale consistently
+    for better readability and accessibility.
     """
 
     grade: Optional[Number] = None
     """
-    TBD
+    A fine-tuning adjustment for the stroke thickness of the icon.
+
+    This requires support from the icon's font. Grade values can be negative or
+    positive.
+    It allows precise visual adjustments without changing icon size.
     """
 
     weight: Optional[Number] = None
     """
-    TBD
+    The stroke weight (thickness) of the icon's lines.
+
+    This requires the icon font to support weight variation.
+    Must be greater than `0`.
     """
 
     optical_size: Optional[Number] = None
     """
-    TBD
+    Adjusts the icon's visual style for different sizes to maintain clarity and balance.
+
+    This requires the icon font to support optical sizing.
+    Must be greater than `0`.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: Optional[BlendMode] = BlendMode.SRC_OVER
     """
-    TBD
+    The blend mode used when rendering the icon.
+
+    Blend modes control how the icon's color interacts with the background.
+    The default is normal blending (`SRC_OVER`).
     """
 
     def before_update(self):
         super().before_update()
-        assert self.fill is None or (
-            0.0 <= self.fill <= 1.0
-        ), f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
-        assert self.weight is None or (
-            self.weight > 0.0
-        ), f"weight must be strictly greater than 0.0, got {self.weight}"
-        assert self.optical_size is None or (
-            self.optical_size > 0.0
-        ), f"optical_size must be strictly greater than 0.0, got {self.optical_size}"
+        assert self.fill is None or (0.0 <= self.fill <= 1.0), (
+            f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
+        )
+        assert self.weight is None or (self.weight > 0.0), (
+            f"weight must be strictly greater than 0.0, got {self.weight}"
+        )
+        assert self.optical_size is None or (self.optical_size > 0.0), (
+            f"optical_size must be strictly greater than 0.0, got {self.optical_size}"
+        )

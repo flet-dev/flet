@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
@@ -129,12 +128,12 @@ class FilePicker(Service):
     Called when a file upload progress is updated.
     """
 
-    async def upload_async(self, files: list[FilePickerUploadFile]):
+    async def upload(self, files: list[FilePickerUploadFile]):
         """
         Uploads selected files to specified upload URLs.
 
         Before calling this method,
-        [`pick_files_async()`][flet.FilePicker.pick_files_async]
+        [`pick_files()`][flet.FilePicker.pick_files]
         must be called, so that the internal file picker selection is not empty.
 
         Args:
@@ -142,27 +141,12 @@ class FilePicker(Service):
                 each item specifies which file to upload, and where
                 (with PUT or POST).
         """
-        await self._invoke_method_async(
+        await self._invoke_method(
             "upload",
             {"files": files},
         )
 
-    def upload(self, files: list[FilePickerUploadFile]):
-        """
-        Uploads selected files to specified upload URLs.
-
-        Before calling this method,
-        [`pick_files_async()`][flet.FilePicker.pick_files_async]
-        must be called, so that the internal file picker selection is not empty.
-
-        Args:
-            files: A list of [`FilePickerUploadFile`][flet.FilePickerUploadFile], where
-                each item specifies which file to upload, and where
-                (with PUT or POST).
-        """
-        asyncio.create_task(self.upload_async(files))
-
-    async def get_directory_path_async(
+    async def get_directory_path(
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
@@ -182,7 +166,7 @@ class FilePicker(Service):
                 "get_directory_path is not supported on web"
             )
 
-        return await self._invoke_method_async(
+        return await self._invoke_method(
             "get_directory_path",
             {
                 "dialog_title": dialog_title,
@@ -191,7 +175,7 @@ class FilePicker(Service):
             timeout=3600,
         )
 
-    async def save_file_async(
+    async def save_file(
         self,
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
@@ -233,7 +217,7 @@ class FilePicker(Service):
         if self.page.web and not file_name:
             raise ValueError('"file_name" is required when saving a file on Web.')
 
-        return await self._invoke_method_async(
+        return await self._invoke_method(
             "save_file",
             {
                 "dialog_title": dialog_title,
@@ -246,7 +230,7 @@ class FilePicker(Service):
             timeout=3600,
         )
 
-    async def pick_files_async(
+    async def pick_files(
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
@@ -266,7 +250,7 @@ class FilePicker(Service):
                 `file_type` is
                 [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
         """
-        files = await self._invoke_method_async(
+        files = await self._invoke_method(
             "pick_files",
             {
                 "dialog_title": dialog_title,

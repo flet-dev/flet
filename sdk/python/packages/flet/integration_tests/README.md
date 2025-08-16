@@ -33,7 +33,7 @@ FLET_TEST_DEVICE=<simulator-name> FLET_TEST_PLATFORM=android uv run pytest -s -o
 Running test to create golden images:
 
 ```
-FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/test_controls.py
+FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/test_buttons.py
 ```
 
 Environment variables:
@@ -46,12 +46,10 @@ Environment variables:
 
 `FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - device pixel ration to use to take screenshots. Default is 2.0.
 
-`FLET_TEST_SIMILARITY_THRESHOLD` - a minimum value for comparison result of golden and actual screenshot for a test to pass. Default is 99.0.
+`FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD` - a minimum value for comparison result of golden and actual screenshot for a test to pass. Default is 99.0.
 
 `FLET_TEST_USE_HTTP` - run Flet app in a web server. By default, the app starts socket
 server, but if integration tests use assets they could be inaccessible via TCP from iOS or
 Android device or simulator.
 
-`FLET_TEST_PID_FILE_PATH` - path to a Flutter client PID file.
-
-`FLET_TEST_ASSETS_DIR` - path to assets directory.
+`FLET_TEST_DISABLE_FVM` - `True` to launch Flutter process directly, without `fvm`. This setting could be on in CI environment. Locally we normally want to run with `fvm`.

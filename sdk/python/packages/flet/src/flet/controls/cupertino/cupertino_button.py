@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
@@ -12,7 +11,7 @@ from flet.controls.geometry import Size
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     StrOrControl,
@@ -43,7 +42,7 @@ class CupertinoButton(ConstrainedControl):
     The content of this button.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     An icon shown in this button.
     """
@@ -95,8 +94,8 @@ class CupertinoButton(ConstrainedControl):
     """
     The alignment of this button's content.
 
-    Typically buttons are sized to be just big enough to contain the child and its padding.
-    If this button's size is constrained to a fixed size,
+    Typically buttons are sized to be just big enough to contain the child
+    and its padding. If the button's size is constrained to a fixed size,
     this property defines how the child is aligned within the available space.
     """
 
@@ -160,11 +159,9 @@ class CupertinoButton(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert 0 <= self.opacity_on_click <= 1, (
-            f"opacity_on_click must be between 0 and 1 inclusive, got {self.opacity_on_click}"
+            "opacity_on_click must be between 0 and 1 inclusive, "
+            f"got {self.opacity_on_click}"
         )
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -9,7 +8,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     StrOrControl,
     Url,
 )
@@ -30,7 +29,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     A Control representing custom button content.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     An icon to show in this button.
     """
@@ -94,8 +93,5 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Called when this button has lost focus.
     """
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

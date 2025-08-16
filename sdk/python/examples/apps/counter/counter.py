@@ -18,7 +18,7 @@ def main(page: ft.Page):
     page.add(
         ft.Row(
             [
-                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
+                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click, key="decrement"),
                 txt_number,
                 ft.IconButton(ft.Icons.ADD, on_click=plus_click),
             ],
@@ -27,4 +27,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

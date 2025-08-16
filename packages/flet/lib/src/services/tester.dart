@@ -61,10 +61,10 @@ class TesterService extends FletService {
         return finder.toMap();
 
       case "find_by_icon":
-        var iconName = args["icon"];
-        var icon = parseIcon(iconName);
+        var iconCode = args["icon"];
+        var icon = parseIconData(iconCode, control.backend);
         if (icon == null) {
-          throw Exception("Icon not found: $iconName");
+          throw Exception("Icon not found: $iconCode");
         }
         var finder = control.backend.tester!.findByIcon(icon);
         _finders[finder.id] = finder;
@@ -77,6 +77,12 @@ class TesterService extends FletService {
         var finder = _finders[args["id"]];
         if (finder != null) {
           await control.backend.tester!.tap(finder);
+        }
+
+      case "long_press":
+        var finder = _finders[args["id"]];
+        if (finder != null) {
+          await control.backend.tester!.longPress(finder);
         }
 
       case "enter_text":

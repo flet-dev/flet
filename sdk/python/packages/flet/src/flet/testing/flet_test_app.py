@@ -17,14 +17,77 @@ from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
-DEFAULT_SCREENSHOTS_PIXEL_RATIO = "2.0"
-DEFAULT_SIMILARITY_THRESHOLD = "99.0"
-
-USE_FVM = os.getenv("FLET_TEST_USE_FVM", False)
-"""Whether to use FVM to run the Flutter app."""
-
 
 class FletTestApp:
+    """
+    Flet app test controller coordinates running a Python-based
+    Flet app alongside a Flutter integration test.
+
+    This class launches the Python Flet app, starts the Flutter test process,
+    and facilitates programmatic interaction with the app's controls for
+    automated UI testing.
+
+    Args:
+        flutter_app_dir:
+            Path to the Flutter app directory containing integration tests.
+
+        flet_app_main:
+            A callable or coroutine function representing the main entry point
+            of the Flet app under test. This will be invoked with an
+            [`ft.Page`][flet.Page] instance when the app starts.
+
+        assets_dir:
+            Path to the directory containing static assets for the Flet app.
+            Defaults to `"assets"` if not provided.
+
+        test_path:
+            Path to the Python test file. Used to determine the location for
+            golden screenshot comparisons.
+
+        tcp_port:
+            TCP port to run the Flet server on. If not specified, a free port
+            is automatically selected.
+
+        test_platform:
+            Target platform for the Flutter integration test
+            (e.g., `"windows"`, `"linux"`, `"macos"`, `"android"`, `"ios"`).
+            Env override: `FLET_TEST_PLATFORM`.
+
+        test_device:
+            Target device ID or name for the Flutter integration test.
+            Env override: `FLET_TEST_DEVICE`.
+
+        capture_golden_screenshots:
+            If `True`, screenshots taken during tests are stored as golden
+            reference images. Env override: `FLET_TEST_GOLDEN=1`.
+
+        screenshots_pixel_ratio:
+            Device pixel ratio to use when capturing screenshots.
+            Env override: `FLET_TEST_SCREENSHOTS_PIXEL_RATIO`.
+
+        screenshots_similarity_threshold:
+            Minimum percentage similarity required for screenshot comparisons
+            to pass. Env override: `FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD`.
+
+        use_http:
+            If `True`, use HTTP transport instead of TCP for Flet client-server
+            communication. Env override: `FLET_TEST_USE_HTTP=1`.
+
+        disable_fvm:
+            If `True`, do not invoke `fvm` when running the Flutter test
+            process. Env override: `FLET_TEST_DISABLE_FVM=1`.
+
+    Environment Variables:
+        - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
+        - `FLET_TEST_DEVICE`: Overrides `test_device`.
+        - `FLET_TEST_GOLDEN`: Enables golden screenshot capture when set to `1`.
+        - `FLET_TEST_SCREENSHOTS_PIXEL_RATIO`: Overrides `screenshots_pixel_ratio`.
+        - `FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD`:
+            Overrides `screenshots_similarity_threshold`.
+        - `FLET_TEST_USE_HTTP`: Enables HTTP transport when set to `1`.
+        - `FLET_TEST_DISABLE_FVM`: Disables `fvm` usage when set to `1`.
+    """
+
     def __init__(
         self,
         flutter_app_dir: os.PathLike,
@@ -32,19 +95,30 @@ class FletTestApp:
         assets_dir: Optional[os.PathLike] = None,
         test_path: Optional[str] = None,
         tcp_port: Optional[int] = None,
+        test_platform: Optional[str] = None,
+        test_device: Optional[str] = None,
+        capture_golden_screenshots: bool = False,
+        screenshots_pixel_ratio: float = 2.0,
+        screenshots_similarity_threshold: float = 99.0,
+        use_http: bool = False,
+        disable_fvm: bool = False,
     ):
-        """
-        Flet app test controller is a bridge that connects together
-        a Flet app in Python and a running integration test in Flutter.
-        """
-        self.pixel_ratio = float(
+        self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
+        self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
+        self.__golden = (
+            get_bool_env_var("FLET_TEST_GOLDEN") or capture_golden_screenshots
+        )
+        self.screenshots_pixel_ratio = float(
+            os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", screenshots_pixel_ratio)
+        )
+        self.screenshots_similarity_threshold = float(
             os.getenv(
-                "FLET_TEST_SCREENSHOTS_PIXEL_RATIO", DEFAULT_SCREENSHOTS_PIXEL_RATIO
+                "FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD",
+                screenshots_similarity_threshold,
             )
         )
-        self.similarity_threshold = float(
-            os.getenv("FLET_TEST_SIMILARITY_THRESHOLD", DEFAULT_SIMILARITY_THRESHOLD)
-        )
+        self.__disable_fvm = get_bool_env_var("FLET_TEST_DISABLE_FVM") or disable_fvm
+        self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__flutter_app_dir = flutter_app_dir
@@ -93,9 +167,7 @@ class FletTestApp:
         if not self.__tcp_port:
             self.__tcp_port = get_free_tcp_port()
 
-        use_http = get_bool_env_var("FLET_TEST_USE_HTTP")
-
-        if use_http:
+        if self.__use_http:
             os.environ["FLET_FORCE_WEB_SERVER"] = "true"
 
         asyncio.create_task(
@@ -111,12 +183,11 @@ class FletTestApp:
             stdout = None
             stderr = None
 
-        flutter_args = ["flutter", "test", "integration_test"]
+        flutter_args = ["fvm", "flutter", "test", "integration_test"]
 
-        if USE_FVM:
-            flutter_args.insert(0, "fvm")
+        if self.__disable_fvm:
+            flutter_args.pop(0)
 
-        self.test_platform = os.getenv("FLET_TEST_PLATFORM")
         if self.test_platform is None:
             self.test_platform = {
                 "Windows": "windows",
@@ -124,10 +195,11 @@ class FletTestApp:
                 "Darwin": "macos",
             }.get(platform.system(), "unknown")
 
-        self.test_device = os.getenv("FLET_TEST_DEVICE", self.test_platform)
+        if not self.test_device:
+            self.test_device = self.test_platform
 
         tcp_addr = "10.0.2.2" if self.test_platform == "android" else "127.0.0.1"
-        protocol = "http" if use_http else "tcp"
+        protocol = "http" if self.__use_http else "tcp"
 
         if self.test_device:
             flutter_args += ["-d", self.test_device]
@@ -135,7 +207,7 @@ class FletTestApp:
         app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
         flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
 
-        if not use_http:
+        if not self.__use_http:
             temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
             flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
             if self.__assets_dir:
@@ -157,7 +229,7 @@ class FletTestApp:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
-                    f"Flutter process exited early with code "
+                    "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
 
@@ -209,10 +281,9 @@ class FletTestApp:
         await self.tester.pump_and_settle()
         for _ in range(0, pump_times):
             await self.tester.pump(duration=pump_duration)
-
         self.assert_screenshot(
             name,
-            await screenshot.capture_async(pixel_ratio=self.pixel_ratio),
+            await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
         )
 
     def assert_screenshot(self, name: str, screenshot: bytes):
@@ -229,7 +300,6 @@ class FletTestApp:
         )
         assert self.__test_path, "test_path must be set to test with screenshots"
 
-        golden_mode = get_bool_env_var("FLET_TEST_GOLDEN")
         golden_image_path = (
             Path(self.__test_path).parent
             / "golden"
@@ -238,41 +308,37 @@ class FletTestApp:
             / f"{name.removeprefix('test_')}.png"
         )
 
-        if golden_mode:
+        if self.__golden:
             golden_image_path.parent.mkdir(parents=True, exist_ok=True)
             with open(golden_image_path, "bw") as f:
                 f.write(screenshot)
         else:
             if not golden_image_path.exists():
                 raise Exception(
-                    f"Golden image for {name} not found at {golden_image_path}"
+                    f"Golden image for {name} not found: {golden_image_path}"
                 )
             golden_img = self._load_image_from_file(golden_image_path)
             img = self._load_image_from_bytes(screenshot)
             similarity = self._compare_images_rgb(golden_img, img)
             print(f"Similarity for {name}: {similarity}%")
-            if similarity <= self.similarity_threshold:
+            if similarity <= self.screenshots_similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
-                    / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"
+                    / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"  # noqa: E501
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
-
-            assert similarity > self.similarity_threshold, (
+            assert similarity > self.screenshots_similarity_threshold, (
                 f"{name} screenshots are not identical"
             )
 
-    @staticmethod
-    def _load_image_from_file(file_name):
+    def _load_image_from_file(self, file_name):
         return Image.open(file_name)
 
-    @staticmethod
-    def _load_image_from_bytes(data: bytes) -> Image.Image:
+    def _load_image_from_bytes(self, data: bytes) -> Image.Image:
         return Image.open(BytesIO(data))
 
-    @staticmethod
-    def _compare_images_rgb(img1, img2) -> float:
+    def _compare_images_rgb(self, img1, img2) -> float:
         if img1.size != img2.size:
             img2 = img2.resize(img1.size)
         arr1 = np.array(img1)

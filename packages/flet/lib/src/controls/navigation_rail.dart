@@ -91,10 +91,10 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               widget.control.children("destinations").map((destinationControl) {
             destinationControl.notifyParent = true;
             var icon = destinationControl.buildWidget("icon") ??
-                Icon(parseIcon(destinationControl.getString("icon")));
-            var selectedIcon = destinationControl
-                    .buildWidget("selected_icon") ??
-                Icon(parseIcon(destinationControl.getString("selected_icon")));
+                Icon(destinationControl.getIconData("icon"));
+            var selectedIcon =
+                destinationControl.buildWidget("selected_icon") ??
+                    Icon(destinationControl.getIconData("selected_icon"));
             return NavigationRailDestination(
                 disabled: disabled || destinationControl.disabled,
                 padding: destinationControl.getPadding("padding"),

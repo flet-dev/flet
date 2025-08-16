@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
@@ -15,7 +14,7 @@ from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.margin import MarginValue
-from flet.controls.material.form_field_control import IconValueOrControl
+from flet.controls.material.form_field_control import IconDataOrControl
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -223,7 +222,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
                 f"expected in range [-{self.length}, {self.length - 1}]"
             )
 
-    async def move_to_async(
+    async def move_to(
         self,
         index: int,
         animation_curve: AnimationCurve = AnimationCurve.EASE_IN,
@@ -263,7 +262,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         if self.selected_index == resolved_index:
             return
 
-        await self._invoke_method_async(
+        await self._invoke_method(
             method_name="move_to",
             arguments={
                 "index": index,
@@ -272,37 +271,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
                 if animation_duration is not None
                 else self.animation_duration,
             },
-        )
-
-    def move_to(
-        self,
-        index: int,
-        animation_curve: AnimationCurve = AnimationCurve.EASE,
-        animation_duration: Optional[DurationValue] = None,
-    ):
-        """
-        Selects the tab at the given `index`.
-
-        Additionally, it triggers [`on_change`][flet.Tabs.on_change] event and updates
-        [`selected_index`][flet.Tabs.selected_index].
-
-        Note:
-            If `index` is negative, it is interpreted as a Python-style negative index
-            (e.g., -1 refers to the last tab). If the resolved index is already the
-            currently selected tab, the method returns immediately and does nothing.
-
-        Args:
-            index: The index of the tab to select. Must be between in range
-                `[-length, length - 1]`.
-            animation_curve: The curve to apply to the animation.
-            animation_duration: The duration of the animation. If `None` (the default),
-                [`Tabs.animation_duration`][flet.Tabs.animation_duration] will be used.
-
-        Raises:
-            IndexError: If the `index` is outside the range `[-length, length - 1]`.
-        """
-        asyncio.create_task(
-            self.move_to_async(index, animation_curve, animation_duration)
         )
 
 
@@ -602,7 +570,7 @@ class Tab(AdaptiveControl):
     The tab's name. Can be either a string or a control.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     An icon to display on the left of Tab text.
     """

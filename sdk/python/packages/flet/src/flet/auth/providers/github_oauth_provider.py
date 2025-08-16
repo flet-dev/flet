@@ -1,5 +1,5 @@
 import json
-from typing import List, Optional
+from typing import Optional
 
 import httpx
 
@@ -21,7 +21,7 @@ class GitHubOAuthProvider(OAuthProvider):
             group_scopes=["read:org"],
         )
 
-    async def _fetch_groups_async(self, access_token: str) -> List[Group]:
+    async def _fetch_groups(self, access_token: str) -> list[Group]:
         async with httpx.AsyncClient(follow_redirects=True) as client:
             teams_resp = await client.send(
                 httpx.Request(
@@ -42,7 +42,7 @@ class GitHubOAuthProvider(OAuthProvider):
                 )
             return groups
 
-    async def _fetch_user_async(self, access_token: str) -> Optional[User]:
+    async def _fetch_user(self, access_token: str) -> Optional[User]:
         async with httpx.AsyncClient(follow_redirects=True) as client:
             user_resp = await client.send(
                 httpx.Request(

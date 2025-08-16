@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import field
 from typing import Optional
 
@@ -16,7 +15,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
     TextAlign,
@@ -34,7 +33,8 @@ class DropdownOption(Control):
 
     key: Optional[str] = None
     """
-    Option's key. If not specified [`text`][flet.DropdownOption.text] will be used as fallback.
+    Option's key. If not specified [`text`][flet.DropdownOption.text] will
+    be used as fallback.
     """
 
     text: Optional[str] = None
@@ -48,12 +48,12 @@ class DropdownOption(Control):
     fallback, else `text` will be ignored.
     """
 
-    leading_icon: Optional[IconValueOrControl] = None
+    leading_icon: Optional[IconDataOrControl] = None
     """
     An optional icon to display before the content or text.
     """
 
-    trailing_icon: Optional[IconValueOrControl] = None
+    trailing_icon: Optional[IconDataOrControl] = None
     """
     An optional icon to display after the content or text.
     """
@@ -163,12 +163,12 @@ class Dropdown(ConstrainedControl):
     TBD
     """
 
-    trailing_icon: IconValueOrControl = Icons.ARROW_DROP_DOWN
+    trailing_icon: IconDataOrControl = Icons.ARROW_DROP_DOWN
     """
     An icon to display at the end of the text field.
     """
 
-    leading_icon: Optional[IconValueOrControl] = None
+    leading_icon: Optional[IconDataOrControl] = None
     """
     An optional Icon at the front of the text input field inside the decoration box.
 
@@ -176,7 +176,7 @@ class Dropdown(ConstrainedControl):
     be aligned with the text in the text field.
     """
 
-    selected_trailing_icon: IconValueOrControl = Icons.ARROW_DROP_UP
+    selected_trailing_icon: IconDataOrControl = Icons.ARROW_DROP_UP
     """
     An optional icon at the end of the text field to indicate that the text field is
     pressed.
@@ -295,7 +295,8 @@ class Dropdown(ConstrainedControl):
 
     filled: bool = False
     """
-    Whether the decoration's container is filled with theme [`fill_color`][flet.Dropdown.fill_color].
+    Whether the decoration's container is filled with theme
+    [`fill_color`][flet.Dropdown.fill_color].
     """
 
     fill_color: Optional[ColorValue] = None
@@ -350,8 +351,5 @@ class Dropdown(ConstrainedControl):
     def __contains__(self, item):
         return item in self.options
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

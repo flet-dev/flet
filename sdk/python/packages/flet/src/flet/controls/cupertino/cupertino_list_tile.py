@@ -6,7 +6,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
     Url,
@@ -41,12 +41,12 @@ class CupertinoListTile(ConstrainedControl):
     Typically a [`Text`][flet.Text] control.
     """
 
-    leading: Optional[IconValueOrControl] = None
+    leading: Optional[IconDataOrControl] = None
     """
     A control to display before the [`title`][flet.CupertinoListTile.title].
     """
 
-    trailing: Optional[IconValueOrControl] = None
+    trailing: Optional[IconDataOrControl] = None
     """
     A control to display after the [`title`][flet.CupertinoListTile.title].
 
@@ -72,7 +72,7 @@ class CupertinoListTile(ConstrainedControl):
     [`subtitle`][flet.CupertinoListTile.subtitle],
     [`additional_info`][flet.CupertinoListTile.additional_info]
     and [`trailing`][flet.CupertinoListTile.trailing] controls.
-    """
+    """  # noqa: E501
 
     url: Optional[Union[str, Url]] = None
     """

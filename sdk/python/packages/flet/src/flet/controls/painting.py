@@ -59,8 +59,8 @@ class PaintLinearGradient(PaintGradient):
     the stops. This list must contain at least two colors.
 
     Note:
-        If [`color_stops`][flet.PaintLinearGradient.color_stops] is not `None`, this list must have 
-        the same length as `color_stops`.
+        If [`color_stops`][flet.PaintLinearGradient.color_stops] is not `None`,
+        this list must have the same length as `color_stops`.
     """
 
     color_stops: Optional[list[Number]] = None
@@ -68,10 +68,12 @@ class PaintLinearGradient(PaintGradient):
     A list of values from `0.0` to `1.0` that denote fractions along the gradient.
 
     Note:
-        If non-none, this list must have the same length as [`colors`][flet.PaintLinearGradient.colors]. 
-        If the first value is not `0.0`, then a stop with position `0.0` and a color equal to the first color
-        in `colors` is implied. If the last value is not `1.0`, then a stop with position
-        `1.0` and a color equal to the last color in `colors` is implied.
+        If non-none, this list must have the same length as
+        [`colors`][flet.PaintLinearGradient.colors].
+        If the first value is not `0.0`, then a stop with position `0.0` and a color
+        equal to the first color in `colors` is implied. If the last value is not
+        `1.0`, then a stop with position `1.0` and a color equal to the last color
+        in `colors` is implied.
     """
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
@@ -83,7 +85,7 @@ class PaintLinearGradient(PaintGradient):
     def __post_init__(self):
         self._type = "linear"
 
-    def copy_with(
+    def copy(
         self,
         *,
         begin: Optional[OffsetValue] = None,
@@ -166,7 +168,7 @@ class PaintRadialGradient(PaintGradient):
     def __post_init__(self):
         self._type = "radial"
 
-    def copy_with(
+    def copy(
         self,
         *,
         center: Optional[OffsetValue] = None,
@@ -252,7 +254,7 @@ class PaintSweepGradient(PaintGradient):
     def __post_init__(self):
         self._type = "sweep"
 
-    def copy_with(
+    def copy(
         self,
         *,
         center: Optional[OffsetValue] = None,
@@ -345,7 +347,7 @@ class Paint:
     TBD
     """
 
-    def copy_with(
+    def copy(
         self,
         *,
         color: Optional[ColorValue] = None,

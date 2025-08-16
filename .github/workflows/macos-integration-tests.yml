@@ -1,0 +1,53 @@
+name: macOS Integration Tests
+
+on:
+  push:
+  pull_request:
+
+env:
+  FLUTTER_VERSION: "3.32.8"
+  FLET_TEST_SCREENSHOTS_PIXEL_RATIO: "2.0"
+  FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD: "99.0"
+  FLET_TEST_DISABLE_FVM: "1"
+
+jobs:
+  test-macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CocoaPods
+        run: brew install cocoapods
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install uv
+        shell: bash
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Show tool versions
+        run: |
+          python3 --version
+          uv --version
+          pod --version
+          flutter --version
+
+      - name: Run integration tests
+        working-directory: sdk/python
+        run: |
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests
+
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-failures-macos
+          path: sdk/python/packages/flet/integration_tests/**/*_actual.png
+          if-no-files-found: ignore

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
-import flet as ft
 import pytest
+
+import flet as ft
 from flet.controls.base_control import BaseControl, control
 
 from .common import (
@@ -646,14 +647,16 @@ def test_nested_control_builders():
                     state,
                     lambda state: ft.Text(
                         value=f"{state.count}",
-                        spans=[
-                            ft.TextSpan(
-                                f"SPAN {state.count}",
-                                on_click=lambda: print("span clicked!"),
-                            )
-                        ]
-                        if state.count > 0
-                        else [],
+                        spans=(
+                            [
+                                ft.TextSpan(
+                                    f"SPAN {state.count}",
+                                    on_click=lambda: print("span clicked!"),
+                                )
+                            ]
+                            if state.count > 0
+                            else []
+                        ),
                         size=50,
                     ),
                 ),

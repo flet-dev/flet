@@ -10,8 +10,8 @@ def example():
         save_to_favourites.disabled = True
         save_to_favourites.update()
 
-    def open_google_maps(e):
-        e.control.page.launch_url("https://maps.google.com")
+    async def open_google_maps(e):
+        await e.control.page.launch_url("https://maps.google.com")
 
     save_to_favourites = ft.Chip(
         label=ft.Text("Save to favourites"),

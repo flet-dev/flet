@@ -18,6 +18,7 @@ from urllib.parse import urlparse
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.base_control import BaseControl, control
+from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -29,7 +30,6 @@ from flet.controls.control_event import (
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
 from flet.controls.multi_view import MultiView
-from flet.controls.page_view import PageView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.services.browser_context_menu import BrowserContextMenu
@@ -143,7 +143,7 @@ class MultiViewRemoveEvent(Event["Page"]):
 
 
 @control("Page", isolated=True, post_init_args=2)
-class Page(PageView):
+class Page(BasePage):
     """
     Page is a container for [`View`][flet.View] controls.
 
@@ -383,7 +383,7 @@ class Page(PageView):
         ref,
         sess: "Session",
     ) -> None:
-        PageView.__post_init__(self, ref)
+        BasePage.__post_init__(self, ref)
         self._i = 1
         self.__session = weakref.ref(sess)
 
@@ -555,7 +555,7 @@ class Page(PageView):
         """
         return self.get_session().connection.get_upload_url(file_name, expires)
 
-    async def login_async(
+    async def login(
         self,
         provider: OAuthProvider,
         fetch_user: bool = True,
@@ -572,8 +572,8 @@ class Page(PageView):
         """
         Starts OAuth flow.
 
-        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication) guide
-        for more information and examples.
+        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication)
+        guide for more information and examples.
         """
         self.__authorization = authorization(
             provider,
@@ -595,11 +595,11 @@ class Page(PageView):
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
-                self.launch_url(
+                await self.launch_url(
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
         else:
-            await self.__authorization.dehydrate_token_async(saved_token)
+            await self.__authorization.dehydrate_token(saved_token)
 
             e = LoginEvent(name="login", control=self, error="", error_description="")
             if self.on_login:
@@ -610,7 +610,7 @@ class Page(PageView):
 
         return self.__authorization
 
-    async def _authorize_callback_async(self, data: dict[str, Optional[str]]) -> None:
+    async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state
@@ -618,10 +618,10 @@ class Page(PageView):
         if not self.web:
             if self.platform in ["ios", "android"]:
                 # close web view on mobile
-                self.close_in_app_web_view()
+                await self.close_in_app_web_view()
             else:
                 # activate desktop window
-                self.window.to_front()
+                await self.window.to_front()
         e = LoginEvent(
             error=data.get("error"),
             error_description=data.get("error_description"),
@@ -634,7 +634,7 @@ class Page(PageView):
             code = data.get("code")
             assert code not in [None, ""]
             try:
-                await self.__authorization.request_token_async(code)
+                await self.__authorization.request_token(code)
             except Exception as ex:
                 e.error = str(ex)
         if self.on_login:
@@ -648,7 +648,7 @@ class Page(PageView):
         Clears current authentication context. See
         [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#signing-out) guide for more
         information and examples.
-        """
+        """  # noqa: E501
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
@@ -657,7 +657,7 @@ class Page(PageView):
             elif callable(self.on_logout):
                 self.on_logout(e)
 
-    def launch_url(
+    async def launch_url(
         self,
         url: Union[str, Url],
         *,
@@ -671,47 +671,24 @@ class Page(PageView):
 
         Args:
             url: The URL to open.
-            web_popup_window_name: Window tab/name to open URL in.
-            web_popup_window: Whether to open the URL in a browser popup window.
-            web_popup_window_width: Popup window width.
-            web_popup_window_height: Popup window height.
+            web_popup_window_name: Window tab/name to open URL in. Use
+                [`UrlTarget.SELF`][flet.UrlTarget.SELF]
+                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
+                for a new browser tab (or in external application on mobile device),
+                or a custom name for a named tab.
+            web_popup_window: Display the URL in a browser popup window.
+            window_width: Popup window width.
+            window_height: Popup window height.
         """
-        self.url_launcher.launch_url(
-            url=url,
+        await self.url_launcher.launch_url(
+            url,
             web_popup_window_name=web_popup_window_name,
             web_popup_window=web_popup_window,
             web_popup_window_width=web_popup_window_width,
             web_popup_window_height=web_popup_window_height,
         )
 
-    async def launch_url_async(
-        self,
-        url: Union[str, Url],
-        *,
-        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
-        web_popup_window: bool = False,
-        web_popup_window_width: Optional[int] = None,
-        web_popup_window_height: Optional[int] = None,
-    ) -> None:
-        """
-        Opens a web browser or popup window to a given `url`.
-
-        Args:
-            url: The URL to open.
-            web_popup_window_name: Window tab/name to open URL in.
-            web_popup_window: Whether to open the URL in a browser popup window.
-            web_popup_window_width: Popup window width.
-            web_popup_window_height: Popup window height.
-        """
-        await self.url_launcher.launch_url_async(
-            url=url,
-            web_popup_window_name=web_popup_window_name,
-            web_popup_window=web_popup_window,
-            web_popup_window_width=web_popup_window_width,
-            web_popup_window_height=web_popup_window_height,
-        )
-
-    async def can_launch_url_async(self, url: Union[str, Url]) -> bool:
+    async def can_launch_url(self, url: str) -> bool:
         """
         Checks whether the specified URL can be handled by some app
         installed on the device.
@@ -731,23 +708,15 @@ class Page(PageView):
                 that are always assumed to be supported (such as http(s)), as web pages
                 are never allowed to query installed applications.
         """
-        return await self.url_launcher.can_launch_url_async(url)
+        return await self.url_launcher.can_launch_url(url)
 
-    def close_in_app_web_view(self) -> None:
+    async def close_in_app_web_view(self) -> None:
         """
         Closes in-app web view opened with `launch_url()`.
 
         📱 Mobile only.
         """
-        self.url_launcher.close_in_app_web_view()
-
-    async def close_in_app_web_view_async(self) -> None:
-        """
-        Closes in-app web view opened with `launch_url()`.
-
-        📱 Mobile only.
-        """
-        await self.url_launcher.close_in_app_web_view_async()
+        await self.url_launcher.close_in_app_web_view()
 
     # query
     @property

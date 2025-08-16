@@ -8,7 +8,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     MouseCursor,
     Number,
     StrOrControl,
@@ -40,7 +40,7 @@ class FloatingActionButton(ConstrainedControl):
     The content of this button.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     Icon shown in this button.
     """
@@ -170,14 +170,18 @@ class FloatingActionButton(ConstrainedControl):
             f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
         assert self.disabled_elevation is None or self.disabled_elevation >= 0, (
-            f"disabled_elevation must be greater than or equal to 0, got {self.disabled_elevation}"
+            "disabled_elevation must be greater than or equal to 0, "
+            f"got {self.disabled_elevation}"
         )
         assert self.focus_elevation is None or self.focus_elevation >= 0, (
-            f"focus_elevation must be greater than or equal to 0, got {self.focus_elevation}"
+            "focus_elevation must be greater than or equal to 0, "
+            f"got {self.focus_elevation}"
         )
         assert self.highlight_elevation is None or self.highlight_elevation >= 0, (
-            f"highlight_elevation must be greater than or equal to 0, got {self.highlight_elevation}"
+            "highlight_elevation must be greater than or equal to 0, "
+            f"got {self.highlight_elevation}"
         )
         assert self.hover_elevation is None or self.hover_elevation >= 0, (
-            f"hover_elevation must be greater than or equal to 0, got {self.hover_elevation}"
+            "hover_elevation must be greater than or equal to 0, "
+            f"got {self.hover_elevation}"
         )

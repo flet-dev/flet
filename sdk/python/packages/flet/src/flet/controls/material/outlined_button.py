@@ -1,4 +1,3 @@
-import asyncio
 from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -10,7 +9,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    IconValueOrControl,
+    IconDataOrControl,
     StrOrControl,
     Url,
 )
@@ -31,7 +30,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     A Control representing custom button content.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     An icon to display in this button.
     """
@@ -102,8 +101,5 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
             or (isinstance(self.content, Control) and self.content.visible)
         ), "at minimum, icon or a visible content must be provided"
 
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())
+    async def focus(self):
+        await self._invoke_method("focus")

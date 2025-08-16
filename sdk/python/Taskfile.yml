@@ -7,6 +7,7 @@ tasks:
     desc: "Lists all available tasks."
     aliases:
       - ls
+      - help
       - tasks
     cmds:
       - task --list
@@ -24,12 +25,17 @@ tasks:
     cmds:
       - uv venv
 
-  pytest:
-    desc: "Run tests."
+  tests:
+    desc: "Run unit tests."
     aliases:
       - test
     cmds:
-      - uv run --group test pytest
+      - uv run --group test pytest packages/flet/tests
+
+  control-tests:
+    desc: "Run integration tests for controls."
+    cmds:
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls
 
   pyproject-setup:
     desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."
@@ -43,7 +49,7 @@ tasks:
     aliases:
       - docs
     cmds:
-      - uv run --directory packages/flet --group docs mkdocs serve
+      - uv run --directory packages/flet --group docs mkdocs serve --dirtyreload
 
   docs-coverage:
     desc: "Run docstring coverage report in the 'packages/flet' directory."
