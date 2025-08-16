@@ -60,9 +60,10 @@ class _NavigationRailControlState extends State<NavigationRailControl>
 
         if (constraints.maxHeight == double.infinity &&
             widget.control.getDouble("height") == null) {
-          return const ErrorControl("Error displaying NavigationRail",
+          return const ErrorControl(
+              "Error displaying NavigationRail: height is unbounded.",
               description:
-                  "Control's height is unbounded. Either set a fixed \"height\" or nest NavigationRail inside expanded control or control with a fixed height.");
+                  "Either set a fixed \"height\" or nest NavigationRail inside expanded control or control with a fixed height.");
         }
 
         return NavigationRail(
