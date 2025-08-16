@@ -39,12 +39,7 @@ class NavigationBarDestination(AdaptiveControl):
     The value must be a list of two or more NavigationBarDestination instances.
     """
 
-    label: Optional[str] = None
-    """
-    The text label that appears below the icon of this `NavigationBarDestination`.
-    """
-
-    icon: Optional[IconDataOrControl] = None
+    icon: IconDataOrControl
     """
     The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
     destination.
@@ -64,6 +59,11 @@ class NavigationBarDestination(AdaptiveControl):
     To make the NavigationBar more accessible, consider choosing an icon with a stroked
     and filled version, such as `ft.Icons.CLOUD` and `ft.Icons.CLOUD_QUEUE`. The icon
     should be set to the stroked version and `selected_icon` to the filled version.
+    """
+
+    label: Optional[str] = None
+    """
+    The text label that appears below the icon of this `NavigationBarDestination`.
     """
 
     selected_icon: Optional[IconDataOrControl] = None

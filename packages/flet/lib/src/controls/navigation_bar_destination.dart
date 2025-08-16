@@ -19,7 +19,7 @@ class NavigationBarDestinationControl extends StatelessWidget {
     var child = NavigationDestination(
         enabled: !control.disabled,
         tooltip: !control.disabled ? control.getString("tooltip") : null,
-        icon: control.buildWidget("icon") ?? Icon(control.getIconData("icon")),
+        icon: control.buildIconOrWidget("icon")!,
         selectedIcon: control.buildWidget("selected_icon") ??
             (selectedIcon != null ? Icon(selectedIcon) : null),
         label: control.getString("label", "")!);

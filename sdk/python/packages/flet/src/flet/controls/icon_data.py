@@ -31,12 +31,28 @@ class IconData(IntEnum):
     """
 
     def __new__(cls, value):
+        """
+        Create a new IconData enum member.
+
+        Args:
+            value: The encoded integer representing the icon.
+
+        Returns:
+            An instance of the enum with the encoded value.
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         return obj
 
     @classmethod
     def __init_subclass__(cls, **kwargs):
+        """
+        Hook called when a subclass is defined. Used to attach metadata.
+
+        Keyword Args:
+            package_name: The Flutter package where the icon set is defined.
+            class_name: The name of Flutter class with icon definitions.
+        """
         cls._package_name = kwargs.pop("package_name", "")
         cls._class_name = kwargs.pop("class_name", "")
         super().__init_subclass__(**kwargs)

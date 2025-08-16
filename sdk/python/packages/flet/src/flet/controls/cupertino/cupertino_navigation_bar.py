@@ -23,7 +23,8 @@ class CupertinoNavigationBar(ConstrainedControl):
     destinations in an app.
 
     Raises:
-        AssertionError: If [`destinations`][(c).] does not contain at least two visible [`NavigationBarDestination`][flet.NavigationBarDestination]s.
+        AssertionError: If [`destinations`][(c).] does not contain at least two visible
+        [`NavigationBarDestination`][flet.NavigationBarDestination]s.
         IndexError: If [`selected_index`][(c).] is out of range.
     """
 
@@ -33,15 +34,15 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     Note:
         Must be a list of two or more [`NavigationBarDestination`][flet.NavigationBarDestination]s.
-    """
+    """  # noqa: E501
 
     selected_index: int = 0
     """
-    The index into [`destinations`][flet.CupertinoNavigationBar.destinations] for the currently
-    selected [`NavigationBarDestination`][flet.NavigationBarDestination].
+    The index into [`destinations`][flet.CupertinoNavigationBar.destinations] for the
+    currently selected [`NavigationBarDestination`][flet.NavigationBarDestination].
 
     Note:
-        Must be a value between `0` and the length of visible 
+        Must be a value between `0` and the length of visible
         [`destinations`][flet.CupertinoNavigationBar.destinations], inclusive.
     """
 
@@ -87,5 +88,6 @@ class CupertinoNavigationBar(ConstrainedControl):
         if not (0 <= self.selected_index < visible_destinations_count):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
-                f"Expected a value between 0 and {visible_destinations_count - 1} inclusive."
+                f"Expected a value between 0 and {visible_destinations_count - 1} "
+                "inclusive."
             )

@@ -15,7 +15,7 @@ IconData? parseIconData(int? value, FletBackend backend,
     }
   }
 
-  return null;
+  return defaultValue;
 }
 
 WidgetStateProperty<Icon?>? parseWidgetStateIcon(

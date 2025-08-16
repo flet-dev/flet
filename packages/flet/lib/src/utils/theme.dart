@@ -160,7 +160,7 @@ ThemeData parseTheme(
     checkboxTheme: parseCheckboxTheme(value?["checkbox_theme"], theme),
     radioTheme: parseRadioTheme(value?["radio_theme"], theme),
     badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
-    switchTheme: parseSwitchTheme(value?["switch_theme"], theme, context),
+    switchTheme: parseSwitchTheme(value?["switch_theme"], context),
     dividerTheme: parseDividerTheme(value?["divider_theme"], theme),
     snackBarTheme: parseSnackBarTheme(value?["snackbar_theme"], theme),
     bannerTheme: parseBannerTheme(value?["banner_theme"], theme),
@@ -661,10 +661,10 @@ BadgeThemeData? parseBadgeTheme(Map<dynamic, dynamic>? value, ThemeData theme,
 }
 
 SwitchThemeData? parseSwitchTheme(
-    Map<dynamic, dynamic>? value, ThemeData theme, BuildContext context,
+    Map<dynamic, dynamic>? value, BuildContext context,
     [SwitchThemeData? defaultValue]) {
   if (value == null) return defaultValue;
-
+  var theme = Theme.of(context);
   return theme.switchTheme.copyWith(
     thumbColor: parseWidgetStateColor(value["thumb_color"], theme),
     trackColor: parseWidgetStateColor(value["track_color"], theme),
@@ -1392,10 +1392,9 @@ extension ThemeParsers on Control {
     return parseBadgeTheme(get(propertyName), theme, defaultValue);
   }
 
-  SwitchThemeData? getSwitchTheme(
-      String propertyName, ThemeData theme, BuildContext context,
+  SwitchThemeData? getSwitchTheme(String propertyName, BuildContext context,
       [SwitchThemeData? defaultValue]) {
-    return parseSwitchTheme(get(propertyName), theme, context, defaultValue);
+    return parseSwitchTheme(get(propertyName), context, defaultValue);
   }
 
   DividerThemeData? getDividerTheme(String propertyName, ThemeData theme,

@@ -5,7 +5,6 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
 import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
@@ -55,7 +54,7 @@ class _CupertinoNavigationBarControlState
           return BottomNavigationBarItem(
               tooltip: !dest.disabled ? dest.getString("tooltip") : null,
               backgroundColor: dest.getColor("bgcolor", context),
-              icon: dest.buildWidget("icon") ?? Icon(dest.getIconData("icon")),
+              icon: dest.buildIconOrWidget("icon")!,
               activeIcon: dest.buildIconOrWidget("selected_icon"),
               label: dest.getString("label", "")!);
         }).toList());
