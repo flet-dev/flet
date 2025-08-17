@@ -15,7 +15,7 @@ tasks:
   setup:
     desc: "Setup environment by installing all pyproject.toml dependencies and pre-commit hooks."
     cmds:
-      - task: pyproject-setup
+      - task: install
       - task: pre-commit-install
 
   venv-init:
@@ -25,22 +25,36 @@ tasks:
     cmds:
       - uv venv
 
-  tests:
-    desc: "Run unit tests."
+  unit-tests:
+    desc: "Run all unit tests."
     aliases:
       - test
+      - utest
+      - unit-test
     cmds:
       - uv run --group test pytest packages/flet/tests
 
-  control-tests:
-    desc: "Run integration tests for controls."
+  integration-tests:
+    desc: "Run all integration tests."
+    aliases:
+      - itest
+      - integration-test
+    cmds:
+      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
+
+  control-integration-tests:
+    desc: "Run all controls integration tests."
+    aliases:
+      - control-itest
+      - control-integration-test
     cmds:
       - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls
 
-  pyproject-setup:
+  install:
     desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."
     aliases:
       - pyproject
+      - pyproject-setup
     cmds:
       - uv pip install -r pyproject.toml --group all
 
