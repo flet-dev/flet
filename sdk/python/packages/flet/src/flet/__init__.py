@@ -48,6 +48,7 @@ from flet.controls.buttons import (
     ShapeBorder,
     StadiumBorder,
 )
+from flet.controls.cache import cache
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.context import context
@@ -182,7 +183,6 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
-from flet.controls.data_view import data_view
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import (
     DateTimeValue,
@@ -904,11 +904,11 @@ __all__ = [
     "app_async",
     "border",
     "border_radius",
+    "cache",
     "context",
     "control",
     "cupertino_colors",
     "cupertino_icons",
-    "data_view",
     "dropdown",
     "dropdownm2",
     "icons",

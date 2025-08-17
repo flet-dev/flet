@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
-import flet as ft
 import pytest
+
+import flet as ft
 from flet.controls.base_control import BaseControl, control
 
 from .common import (
@@ -728,7 +729,7 @@ def test_nested_control_builders():
 
 
 def test_data_view_with_cache():
-    @ft.data_view
+    @ft.cache(freeze=True)
     def user_details(user: User):
         return ft.Card(
             ft.Column(
@@ -741,7 +742,7 @@ def test_data_view_with_cache():
             key=user.id,
         )
 
-    @ft.data_view
+    @ft.cache(freeze=True)
     def users_list(users):
         return ft.Column([user_details(user) for user in users])
 
@@ -785,7 +786,7 @@ def test_data_view_with_cache():
 
 
 def test_empty_data_view():
-    @ft.data_view
+    @ft.cache
     def my_view():
         return None
 
@@ -805,7 +806,7 @@ def test_login_logout_view():
 
     state = AppState()
 
-    @ft.data_view
+    @ft.cache
     def login_view(state: AppState):
         return (
             ft.Column(
@@ -822,4 +823,4 @@ def test_login_logout_view():
             )
         )
 
-    app = ft.View("/", [login_view(state)])
+    ft.View("/", [login_view(state)])
