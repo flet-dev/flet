@@ -1,6 +1,7 @@
 from dataclasses import field
 from typing import Any, Optional
 
+import flet as ft
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
@@ -21,8 +22,6 @@ from flet.controls.services.service import Service
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
-
-import flet as ft
 
 from .common import (
     LineChart,
@@ -276,7 +275,7 @@ def test_simple_page():
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 0],
                 "value": SuperElevatedButton("Foo"),
-            }
+            },
         ],
     )
 
@@ -407,7 +406,7 @@ def test_changes_tracking():
             {
                 "op": "add",
                 "path": ["views", 0, "controls", 1],
-                "value": Text("Line 2"),
+                "value": ft.Text("Line 2"),
             },
         ],
     )

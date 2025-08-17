@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -9,7 +9,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
     StrOrControl,
-    UrlTarget,
+    Url,
 )
 
 __all__ = ["CupertinoListTile"]
@@ -20,8 +20,8 @@ class CupertinoListTile(ConstrainedControl):
     """
     An iOS-style list tile.
 
-    Can also serve as a cupertino equivalent of the Material
-    [`ListTile`][flet.ListTile].
+    Can also serve as a cupertino equivalent of the
+    Material [`ListTile`][flet.ListTile].
 
     Raises:
         AssertionError: If [`title`][(c).] is neither a string nor a visible Control.
@@ -67,23 +67,19 @@ class CupertinoListTile(ConstrainedControl):
     padding: Optional[PaddingValue] = None
     """
     The tile's internal padding. Insets a CupertinoListTile's contents: its
-    [`leading`][flet.CupertinoListTile.leading], [`title`][flet.CupertinoListTile.title],
+    [`leading`][flet.CupertinoListTile.leading],
+    [`title`][flet.CupertinoListTile.title],
     [`subtitle`][flet.CupertinoListTile.subtitle],
     [`additional_info`][flet.CupertinoListTile.additional_info]
     and [`trailing`][flet.CupertinoListTile.trailing] controls.
     """  # noqa: E501
 
-    url: Optional[str] = None
+    url: Optional[Union[str, Url]] = None
     """
-    The URL to open when the list tile is clicked.
+    The URL to open when this button is clicked.
 
-    If registered, [`on_click`][flet.CupertinoListTile.on_click] event is fired after
-    that.
-    """
-
-    url_target: UrlTarget = UrlTarget.BLANK
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.CupertinoListTile.on_click] event callback is
+    provided, it is fired after that.
     """
 
     toggle_inputs: bool = False
@@ -95,12 +91,14 @@ class CupertinoListTile(ConstrainedControl):
 
     additional_info: Optional[StrOrControl] = None
     """
-    A `Control` to display on the right of the list tile, before
-    [`trailing`][flet.CupertinoListTile.trailing].
+    A `Control` to display on the right of the list tile,
+    before [`trailing`][flet.CupertinoListTile.trailing].
 
     Similar to [`subtitle`][flet.CupertinoListTile.subtitle], an
-    [`additional_info`][flet.CupertinoListTile.additional_info] is used to display
-    additional information. Typically a [`Text`][flet.Text] control.
+    [`additional_info`][flet.CupertinoListTile.additional_info] is used to
+    display additional information.
+
+    Typically a [`Text`][flet.Text] control.
     """
 
     leading_size: Optional[Number] = None

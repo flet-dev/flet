@@ -11,6 +11,7 @@ from typing import (
     Callable,
     Optional,
     TypeVar,
+    Union,
 )
 from urllib.parse import urlparse
 
@@ -42,6 +43,8 @@ from flet.controls.types import (
     AppLifecycleState,
     Brightness,
     PagePlatform,
+    Url,
+    UrlTarget,
     Wrapper,
 )
 from flet.utils import is_pyodide
@@ -88,6 +91,11 @@ class ServiceRegistry(Service):
 @dataclass
 class RouteChangeEvent(Event["Page"]):
     route: str
+
+
+@dataclass
+class PlatformBrightnessChangeEvent(Event["Page"]):
+    brightness: Brightness
 
 
 @dataclass
@@ -248,26 +256,31 @@ class Page(BasePage):
 
     platform: Optional[PagePlatform] = None
     """
-    Operating system the application is running on.
+    The operating system the application is running on.
     """
 
     platform_brightness: Optional[Brightness] = None
     """
-    The current brightness mode of the host platform. (readonly)
+    The current brightness mode of the host platform.
+
+    Note:
+        This property is read-only.
     """
 
     client_ip: Optional[str] = None
     """
     IP address of the connected user.
 
-    🌎 Web only.
+    Note:
+        This property is web only.
     """
 
     client_user_agent: Optional[str] = None
     """
     Browser details of the connected user.
 
-    🌎 Web only.
+    Note:
+        This property is web only.
     """
 
     fonts: Optional[dict[str, str]] = None
@@ -284,7 +297,9 @@ class Page(BasePage):
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
-    on_platform_brightness_change: Optional[ControlEventHandler["Page"]] = None
+    on_platform_brightness_change: Optional[
+        EventHandler[PlatformBrightnessChangeEvent]
+    ] = None
     """
     Called when brightness of app host platform has changed.
     """
@@ -644,18 +659,19 @@ class Page(BasePage):
 
     async def launch_url(
         self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: Optional[bool] = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
+        url: Union[str, Url],
+        *,
+        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
+        web_popup_window: bool = False,
+        web_popup_window_width: Optional[int] = None,
+        web_popup_window_height: Optional[int] = None,
     ) -> None:
         """
-        Opens provided `url` in a new browser window.
+        Opens a web browser or popup window to a given `url`.
 
         Args:
             url: The URL to open.
-            web_window_name: Window tab/name to open URL in. Use
+            web_popup_window_name: Window tab/name to open URL in. Use
                 [`UrlTarget.SELF`][flet.UrlTarget.SELF]
                 for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
                 for a new browser tab (or in external application on mobile device),
@@ -666,27 +682,31 @@ class Page(BasePage):
         """
         await self.url_launcher.launch_url(
             url,
-            web_window_name=web_window_name,
+            web_popup_window_name=web_popup_window_name,
             web_popup_window=web_popup_window,
-            window_width=window_width,
-            window_height=window_height,
+            web_popup_window_width=web_popup_window_width,
+            web_popup_window_height=web_popup_window_height,
         )
 
     async def can_launch_url(self, url: str) -> bool:
         """
-        Checks whether the specified URL can be handled by some app installed on the
-        device.
+        Checks whether the specified URL can be handled by some app
+        installed on the device.
 
-        Returns `True` if it is possible to verify that there is a handler available.
-        A `False` return value can indicate either that there is no handler available,
-        or that the application does not have permission to check. For example:
+        Args:
+            url: The URL to check.
 
-        * On recent versions of Android and iOS, this will always return `False` unless
-        the application has been configuration to allow querying the system for launch
-        support.
-        * On web, this will always return `False` except for a few specific schemes
-        that are always assumed to be supported (such as http(s)), as web pages are
-        never allowed to query installed applications.
+        Returns:
+            `True` if it is possible to verify that there is a handler available.
+            `False` if there is no handler available,
+            or the application does not have permission to check. For example:
+
+            - On recent versions of Android and iOS, this will always return `False`
+                unless the application has been configuration to allow querying the
+                system for launch support.
+            - In web mode, this will always return `False` except for a few specific
+                schemes that are always assumed to be supported (such as http(s)),
+                as web pages are never allowed to query installed applications.
         """
         return await self.url_launcher.can_launch_url(url)
 

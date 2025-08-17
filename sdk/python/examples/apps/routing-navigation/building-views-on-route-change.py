@@ -1,8 +1,7 @@
-import flet
-from flet import AppBar, ElevatedButton, Page, Text, View, colors
+import flet as ft
 
 
-def main(page: Page):
+def main(page: ft.Page):
     page.title = "Routes Example"
 
     print("Initial route:", page.route)
@@ -11,36 +10,41 @@ def main(page: Page):
         print("Route change:", e.route)
         page.views.clear()
         page.views.append(
-            View(
-                "/",
-                [
-                    AppBar(title=Text("Flet app")),
-                    ElevatedButton("Go to settings", on_click=open_settings),
+            ft.View(
+                route="/",
+                controls=[
+                    ft.AppBar(title=ft.Text("Flet app")),
+                    ft.ElevatedButton("Go to settings", on_click=open_settings),
                 ],
             )
         )
         if page.route == "/settings" or page.route == "/settings/mail":
             page.views.append(
-                View(
-                    "/settings",
-                    [
-                        AppBar(title=Text("Settings"), bgcolor=colors.SURFACE_VARIANT),
-                        Text("Settings!", style="bodyMedium"),
-                        ElevatedButton(
-                            "Go to mail settings", on_click=open_mail_settings
+                ft.View(
+                    route="/settings",
+                    controls=[
+                        ft.AppBar(
+                            title=ft.Text("Settings"),
+                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                        ),
+                        ft.Text("Settings!", theme_style=ft.TextThemeStyle.BODY_MEDIUM),
+                        ft.ElevatedButton(
+                            content="Go to mail settings",
+                            on_click=open_mail_settings,
                         ),
                     ],
                 )
             )
         if page.route == "/settings/mail":
             page.views.append(
-                View(
-                    "/settings/mail",
-                    [
-                        AppBar(
-                            title=Text("Mail Settings"), bgcolor=colors.SURFACE_VARIANT
+                ft.View(
+                    route="/settings/mail",
+                    controls=[
+                        ft.AppBar(
+                            title=ft.Text("Mail Settings"),
+                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
                         ),
-                        Text("Mail settings!"),
+                        ft.Text("Mail settings!"),
                     ],
                 )
             )
@@ -64,4 +68,4 @@ def main(page: Page):
     page.go(page.route)
 
 
-flet.app(target=main, view=flet.AppView.WEB_BROWSER)
+ft.app(target=main, view=ft.AppView.WEB_BROWSER)

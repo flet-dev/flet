@@ -337,7 +337,7 @@ class FletBackend extends ChangeNotifier {
     debugPrint("Platform brightness updated: $newBrightness");
     platformBrightness = newBrightness;
     updateControl(page.id, {"platform_brightness": newBrightness.name});
-    triggerControlEvent(page, "platform_brightness_change");
+    triggerControlEvent(page, "platform_brightness_change", newBrightness.name);
     notifyListeners();
   }
 
