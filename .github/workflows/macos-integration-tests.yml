@@ -19,7 +19,6 @@ concurrency:
   cancel-in-progress: true  # cancel previous runs still in progress
 
 env:
-  FLUTTER_VERSION: "3.32.8"
   FLET_TEST_SCREENSHOTS_PIXEL_RATIO: "2.0"
   FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD: "99.0"
   FLET_TEST_DISABLE_FVM: "1"
@@ -33,12 +32,19 @@ jobs:
       - name: Install CocoaPods
         run: brew install cocoapods
 
+      - name: Configure FVM
+        uses: kuhnroyal/flutter-fvm-config-action/config@v3
+        id: fvm-config-action
+        with:
+          path: 'client/.fvmrc'
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
           cache: true
+
 
       - name: Install uv
         shell: bash
