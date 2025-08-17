@@ -487,7 +487,6 @@ from flet.controls.types import (
     VisualDensity,
     WebRenderer,
 )
-from flet.controls.update_behavior import UpdateBehavior
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -886,7 +885,6 @@ __all__ = [
     "TooltipValue",
     "TransparentPointer",
     "UnderlineTabIndicator",
-    "UpdateBehavior",
     "UrlLauncher",
     "UrlTarget",
     "ValueKey",

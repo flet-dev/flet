@@ -393,6 +393,7 @@ nav:
       - Types:
           # - types/index.md
           - Aliases: types/aliases.md
+          - Context: types/context.md
           - Dataclasses:
               - Alignment: types/alignment.md
               - Animation: types/animation.md
@@ -588,7 +589,6 @@ nav:
               - TileAffinity: types/tileaffinity.md
               - TimePickerEntryMode: types/timepickerentrymode.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
-              - UpdateBehavior: types/updatebehavior.md
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
               - VisualDensity: types/visualdensity.md

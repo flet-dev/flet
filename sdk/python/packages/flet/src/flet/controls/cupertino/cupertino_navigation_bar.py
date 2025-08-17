@@ -24,8 +24,8 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     Raises:
         AssertionError: If [`destinations`][(c).] does not contain at least two visible
-        [`NavigationBarDestination`][flet.NavigationBarDestination]s.
-        IndexError: If [`selected_index`][(c).] is out of range.
+            [`NavigationBarDestination`][flet.NavigationBarDestination]s.
+            IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     destinations: list[NavigationBarDestination]

@@ -10,10 +10,11 @@ from typing import Any, Optional
 
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
+
+import flet_web.fastapi as flet_fastapi
 from flet.controls.base_control import BaseControl
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
-from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -28,8 +29,6 @@ from flet.messaging.protocol import (
 )
 from flet.messaging.session import Session
 from flet.utils import random_string, sha1
-
-import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.flet_app_manager import app_manager
 from flet_web.fastapi.oauth_state import OAuthState
 from flet_web.uploads import build_upload_url
@@ -140,24 +139,24 @@ class FletApp(Connection):
         try:
             assert self.__main is not None
             _context_page.set(self.__session.page)
-            UpdateBehavior.reset()
+            context.reset_auto_update()
 
             if asyncio.iscoroutinefunction(self.__main):
                 await self.__main(self.__session.page)
 
             elif inspect.isasyncgenfunction(self.__main):
                 async for _ in self.__main(self.__session.page):
-                    if UpdateBehavior.auto_update_enabled():
+                    if context.auto_update_enabled():
                         await self.__session.auto_update(self.__session.page)
 
             elif inspect.isgeneratorfunction(self.__main):
                 for _ in self.__main(self.__session.page):
-                    if UpdateBehavior.auto_update_enabled():
+                    if context.auto_update_enabled():
                         await self.__session.auto_update(self.__session.page)
             else:
                 self.__main(self.__session.page)
 
-            if UpdateBehavior.auto_update_enabled():
+            if context.auto_update_enabled():
                 await self.__session.auto_update(self.__session.page)
         except FletPageDisconnectedException:
             logger.debug(
