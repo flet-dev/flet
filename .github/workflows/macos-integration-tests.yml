@@ -55,7 +55,7 @@ jobs:
       - name: Run integration tests
         working-directory: sdk/python
         run: |
-          uv run --no-group dev --group test pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests
 
       - name: Upload failure screenshots
         if: failure()
