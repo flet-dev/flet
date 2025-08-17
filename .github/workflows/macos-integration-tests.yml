@@ -14,9 +14,9 @@ on:
       - 'packages/flet/**'
       - 'client/**'
 
+# Ensure only one run per branch (PR or push), cancel older ones
 concurrency:
-  group: macos-integration-tests-${{ github.ref }}
-  cancel-in-progress: true  # cancel previous runs still in progress
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
 
 env:
   FLET_TEST_SCREENSHOTS_PIXEL_RATIO: "2.0"
