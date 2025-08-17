@@ -49,7 +49,7 @@ class ConstrainedControl extends StatelessWidget {
     w = _offsetControl(context, w, control);
     w = _aspectRatio(w, control);
     w = _alignedControl(context, w, control);
-    w = _marginedControl(context, w, control);
+    w = _marginControl(context, w, control);
     w = _positionedControl(context, w, control);
     w = _badge(w, Theme.of(context), control);
     return _expandable(w, control);
@@ -221,7 +221,7 @@ Widget _alignedControl(BuildContext context, Widget widget, Control control) {
   return widget;
 }
 
-Widget _marginedControl(BuildContext context, Widget widget, Control control) {
+Widget _marginControl(BuildContext context, Widget widget, Control control) {
   final skipProps = control.internals?["skip_properties"] as List?;
   if (skipProps?.contains("margin") == true) return widget;
 
