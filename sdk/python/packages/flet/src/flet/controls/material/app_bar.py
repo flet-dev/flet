@@ -22,7 +22,7 @@ class AppBar(AdaptiveControl):
     Raises:
         AssertionError: If [`elevation`][(c).] or [`elevation_on_scroll`][(c).] is negative.
         AssertionError: If [`toolbar_opacity`][(c).] is not between `0.0` and `1.0` inclusive.
-    """
+    """  # noqa: E501
 
     leading: Optional[Control] = None
     """
@@ -43,7 +43,7 @@ class AppBar(AdaptiveControl):
     - If `True` and `leading` is `None`, this app bar will automatically determine an appropriate leading control.
     - If `False` and `leading` is `None`, the space is allocated to the [`title`][flet.AppBar.title].
     - If a `leading` control is provided, this parameter has no effect.
-    """
+    """  # noqa: E501
 
     title: Optional[StrOrControl] = None
     """
@@ -53,15 +53,18 @@ class AppBar(AdaptiveControl):
     control that contains a description of the current contents of this app.
 
     Note:
-        If [`AppBar.adaptive=True`][flet.AppBar.adaptive] and this app is opened on an iOS or macOS
-        device, this [`title`][flet.AppBar.title] control will be automatically centered, independent
-        of the value of [`center_title`][flet.AppBar.center_title].
+        If [`AppBar.adaptive=True`][flet.AppBar.adaptive] and this app is opened on
+        an iOS or macOS device, this [`title`][flet.AppBar.title] control will be
+        automatically centered, independent of the value of
+        [`center_title`][flet.AppBar.center_title].
     """
 
-    center_title: bool = False
+    center_title: Optional[bool] = None
     """
     Whether the [`title`][flet.AppBar.title] should be centered.
-    """
+
+    Default value is defined by [`AppBarTheme.center_title`][flet.AppBarTheme.center_title]
+    """  # noqa: E501
 
     toolbar_height: Optional[Number] = None
     """
@@ -101,13 +104,14 @@ class AppBar(AdaptiveControl):
     """
     The color of the shadow below this app bar.
 
-    A shadow is only visible and displayed if the [`elevation`][flet.AppBar.elevation] is greater than zero.
+    A shadow is only visible and displayed if the [`elevation`][flet.AppBar.elevation]
+    is greater than zero.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    The color of the surface tint overlay applied to this app bar's [`bgcolor`][flet.AppBar.bgcolor] to
-    indicate elevation.
+    The color of the surface tint overlay applied to this app bar's
+    [`bgcolor`][flet.AppBar.bgcolor] to indicate elevation.
 
     By default, no overlay will be applied.
     """
@@ -144,7 +148,8 @@ class AppBar(AdaptiveControl):
 
     exclude_header_semantics: bool = False
     """
-    Whether the [`title`][flet.AppBar.title] should be wrapped with header [`Semantics`][flet.Semantics].
+    Whether the [`title`][flet.AppBar.title] should be wrapped with header
+    [`Semantics`][flet.Semantics].
     """
 
     actions: Optional[list[Control]] = None
@@ -157,8 +162,9 @@ class AppBar(AdaptiveControl):
     action.
 
     Info:
-        If [`AppBar.adaptive=True`][flet.AppBar.adaptive] and this app is opened on an iOS or macOS
-        device, these `actions` will be automatically placed in a [`Row`][flet.Row].
+        If [`AppBar.adaptive=True`][flet.AppBar.adaptive] and this app is opened on an
+        iOS or macOS device, these `actions` will be automatically placed in a
+        [`Row`][flet.Row].
         This is because [`CupertinoAppBar.trailing`][flet.CupertinoAppBar.trailing]
         (which is the counterpart property of `actions`) takes only a single `Control`.
     """
@@ -179,7 +185,8 @@ class AppBar(AdaptiveControl):
 
     title_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the [`Text`][flet.Text] controls in the [`title`][flet.AppBar.title].
+    The style to be used for the [`Text`][flet.Text] controls in the
+    [`title`][flet.AppBar.title].
     """
 
     toolbar_text_style: Optional[TextStyle] = None
@@ -199,8 +206,10 @@ class AppBar(AdaptiveControl):
             f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
         assert self.elevation_on_scroll is None or self.elevation_on_scroll >= 0, (
-            f"elevation_on_scroll must be greater than or equal to 0, got {self.elevation_on_scroll}"
+            "elevation_on_scroll must be greater than or equal to 0, "
+            f"got {self.elevation_on_scroll}"
         )
         assert 0 <= self.toolbar_opacity <= 1, (
-            f"toolbar_opacity must be between 0.0 and 1.0 inclusive, got {self.toolbar_opacity}"
+            "toolbar_opacity must be between 0.0 and 1.0 inclusive, "
+            f"got {self.toolbar_opacity}"
         )
