@@ -84,15 +84,20 @@ def example(page):
             )
             self.tasks = ft.Column(expand=True, scroll=ft.ScrollMode.AUTO)
 
-            self.filter = ft.Tabs(
-                selected_index=0,
+            self.filter = ft.TabBar(
                 scrollable=False,
-                on_change=self.tabs_changed,
                 tabs=[
-                    ft.Tab(text="all"),
-                    ft.Tab(text="active"),
-                    ft.Tab(text="completed"),
+                    ft.Tab(label="all"),
+                    ft.Tab(label="active"),
+                    ft.Tab(label="completed"),
                 ],
+            )
+
+            self.filter_tabs = ft.Tabs(
+                length=3,
+                selected_index=0,
+                on_change=lambda e: self.update(),
+                content=self.filter,
             )
 
             self.items_left = ft.Text("0 items left")
@@ -109,7 +114,7 @@ def example(page):
                             ),
                         ],
                     ),
-                    self.filter,
+                    self.filter_tabs,
                     self.tasks,
                     ft.Row(
                         alignment="spaceBetween",
@@ -151,7 +156,7 @@ def example(page):
                     self.task_delete(task)
 
         def update(self):
-            status = self.filter.tabs[self.filter.selected_index].text
+            status = self.filter.tabs[self.filter_tabs.selected_index].label
             count = 0
             for task in self.tasks.controls:
                 task.visible = (

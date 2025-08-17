@@ -1,23 +1,23 @@
+import 'package:flutter/material.dart';
+
 import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
-import '../utils/colors.dart';
+import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/tabs.dart';
 import '../utils/text.dart';
 import '../utils/time.dart';
-import 'package:flutter/material.dart';
-
-import '../models/control.dart';
-import '../utils/alignment.dart';
-import '../utils/mouse.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
 /// Default duration for tab animation if none is provided.
-const Duration kDefaultTabAnimationDuration = Duration(milliseconds: 250);
+const Duration kDefaultTabAnimationDuration = Duration(milliseconds: 100);
 
 class TabsControl extends StatefulWidget {
   final Control control;
