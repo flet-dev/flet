@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
 
+import '../flet_backend.dart';
 import '../models/control.dart';
-import 'cupertino_icons.dart';
-import 'material_icons.dart';
 import 'material_state.dart';
 
-IconData? parseIcon(String? value, [IconData? defaultValue]) {
+IconData? parseIconData(int? value, FletBackend backend,
+    [IconData? defaultValue]) {
   if (value == null) return defaultValue;
-  return materialIcons[value.toLowerCase()] ??
-      cupertinoIcons[value.toLowerCase()];
+
+  for (var extension in backend.extensions) {
+    var iconData = extension.createIconData(value);
+    if (iconData != null) {
+      return iconData;
+    }
+  }
+
+  return defaultValue;
 }
 
-WidgetStateProperty<Icon?>? parseWidgetStateIcon(dynamic value,
-    ThemeData theme, {
-      Icon? defaultIcon,
-      WidgetStateProperty<Icon?>? defaultValue,
-    }) {
+WidgetStateProperty<Icon?>? parseWidgetStateIcon(
+  dynamic value,
+  FletBackend backend,
+  ThemeData theme, {
+  Icon? defaultIcon,
+  WidgetStateProperty<Icon?>? defaultValue,
+}) {
   if (value == null) return defaultValue;
   return getWidgetStateProperty<Icon?>(
-      value, (jv) => Icon(parseIcon(jv as String)), defaultIcon);
+      value, (jv) => Icon(parseIconData(jv as int, backend)), defaultIcon);
 }
 
 extension IconParsers on Control {
-  IconData? getIcon(String propertyName, [IconData? defaultValue]) {
-    return parseIcon(get(propertyName), defaultValue);
+  IconData? getIconData(String propertyName, [IconData? defaultValue]) {
+    return parseIconData(get(propertyName), backend, defaultValue);
   }
 
   WidgetStateProperty<Icon?>? getWidgetStateIcon(
       String propertyName, ThemeData theme,
       {Icon? defaultIcon, WidgetStateProperty<Icon?>? defaultValue}) {
-    return parseWidgetStateIcon(get(propertyName), theme,
+    return parseWidgetStateIcon(get(propertyName), backend, theme,
         defaultIcon: defaultIcon, defaultValue: defaultValue);
   }
 }

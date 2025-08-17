@@ -7,6 +7,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/layout.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'base_controls.dart';
@@ -146,7 +147,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
       items: items,
     );
 
-    if (widget.control.getInt("expand", 0)! > 0) {
+    if (widget.control.getExpand("expand", 0)! > 0) {
       return ConstrainedControl(control: widget.control, child: dropDown);
     } else {
       return LayoutBuilder(

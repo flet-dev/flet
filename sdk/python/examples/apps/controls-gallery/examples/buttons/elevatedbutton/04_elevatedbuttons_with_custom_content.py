@@ -10,9 +10,9 @@ def example():
                 width=150,
                 content=ft.Row(
                     [
-                        ft.Icon(name=ft.Icons.FAVORITE, color="pink"),
-                        ft.Icon(name=ft.Icons.AUDIOTRACK, color="green"),
-                        ft.Icon(name=ft.Icons.BEACH_ACCESS, color="blue"),
+                        ft.Icon(ft.Icons.FAVORITE, color="pink"),
+                        ft.Icon(ft.Icons.AUDIOTRACK, color="green"),
+                        ft.Icon(ft.Icons.BEACH_ACCESS, color="blue"),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_AROUND,
                 ),

@@ -2,6 +2,9 @@ library flet;
 
 export 'dart:io';
 
+export 'package:flutter/cupertino.dart' show CupertinoIcons;
+export 'package:flutter/material.dart' show Icons;
+
 export 'src/controls/base_controls.dart';
 export 'src/extensions/control.dart';
 export 'src/flet_app.dart';
@@ -39,10 +42,10 @@ export 'src/utils/gradient.dart';
 export 'src/utils/icons.dart';
 export 'src/utils/images.dart';
 export 'src/utils/launch_url.dart';
+export 'src/utils/layout.dart';
 export 'src/utils/locale.dart';
 export 'src/utils/lock.dart';
 export 'src/utils/markdown.dart';
-export 'src/utils/material_icons.dart';
 export 'src/utils/material_state.dart';
 export 'src/utils/menu.dart';
 export 'src/utils/misc.dart';

@@ -9,7 +9,7 @@ from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    IconValue,
+    IconData,
     LabelPosition,
     MouseCursor,
     Number,
@@ -117,7 +117,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     `ControlState.DEFAULT` (fallback).
     """
 
-    thumb_icon: Optional[ControlStateValue[IconValue]] = None
+    thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
     The icon of this Switch's thumb in various
     [`ControlState`][flet.ControlState] states.
@@ -141,9 +141,10 @@ class Switch(ConstrainedControl, AdaptiveControl):
     """
     Whether an adaptive Switch should be created based on the target platform.
 
-    On iOS and macOS, a [`CupertinoSwitch`][flet.CupertinoSwitch] is created, which has matching
-    functionality and presentation as `Switch`, and the graphics as expected on
-    iOS. On other platforms, a Material Switch is created.
+    On iOS and macOS, a [`CupertinoSwitch`][flet.CupertinoSwitch] is created,
+    which has matching functionality and presentation as `Switch`,
+    and the graphics as expected on iOS. On other platforms,
+    a Material Switch is created.
 
     Defaults to `False`. See the example of usage
     [here](https://flet.dev/docs/controls/cupertinoswitch#cupertinoswitch-and-adaptive-switch).
@@ -224,6 +225,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.splash_radius is None or self.splash_radius >= 0
-        ), f"splash_radius must be greater than or equal to 0, got {self.splash_radius}"
+        assert self.splash_radius is None or self.splash_radius >= 0, (
+            "splash_radius must be greater than or equal to 0, "
+            f"got {self.splash_radius}"
+        )

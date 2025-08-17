@@ -21,7 +21,7 @@ def main(page: ft.Page):
                         value="What is your occupation?",
                     ),
                 ),
-                ft.Icon(name="settings", color="#c1c1c1"),
+                ft.Icon(ft.Icons.SETTINGS, color="#c1c1c1"),
             ]
         )
     )

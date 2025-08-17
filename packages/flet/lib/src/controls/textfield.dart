@@ -1,6 +1,21 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../models/control.dart';
+import '../utils/autofill.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/form_field.dart';
+import '../utils/layout.dart';
+import '../utils/misc.dart';
+import '../utils/mouse.dart';
+import '../utils/numbers.dart';
+import '../utils/platform.dart';
+import '../utils/text.dart';
+import '../utils/textfield.dart';
+import '../utils/theme.dart';
+import 'base_controls.dart';
 
 class TextFieldControl extends StatefulWidget {
   final Control control;
@@ -255,9 +270,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     textField =
         isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
-    if (widget.control.get("expand") == true ||
-        (widget.control.get("expand") is int &&
-            widget.control.getInt("expand", 0)! > 0)) {
+    if (widget.control.getExpand("expand", 0)! > 0) {
       return ConstrainedControl(control: widget.control, child: textField);
     } else {
       double? width = widget.control.getDouble("width");

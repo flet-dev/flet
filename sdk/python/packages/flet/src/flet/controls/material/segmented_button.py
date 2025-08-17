@@ -9,12 +9,12 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
-    IconValue,
-    IconValueOrControl,
+    IconData,
+    IconDataOrControl,
     StrOrControl,
 )
 
-__all__ = ["SegmentedButton", "Segment"]
+__all__ = ["Segment", "SegmentedButton"]
 
 
 @control("Segment")
@@ -31,7 +31,7 @@ class Segment(Control):
     Used to identify the `Segment`.
     """
 
-    icon: Optional[IconValueOrControl] = None
+    icon: Optional[IconDataOrControl] = None
     """
     The icon (typically an [`Icon`][flet.Icon]) to be
     displayed in the segment.
@@ -46,7 +46,7 @@ class Segment(Control):
     def before_update(self):
         super().before_update()
         assert (
-            (isinstance(self.icon, IconValue))
+            (isinstance(self.icon, IconData))
             or (isinstance(self.icon, Control) and self.icon.visible)
             or (isinstance(self.label, str))
             or (isinstance(self.label, Control) and self.label.visible)
@@ -63,7 +63,7 @@ class SegmentedButton(ConstrainedControl):
             least one visible `Segment`.
         AssertionError: If [`selected`][(c).] is empty and [`allow_empty_selection`][(c).] is `False`.
         AssertionError: If [`selected`][(c).] has more than one item and [`allow_multiple_selection`][(c).] is `False`.
-    """
+    """  # noqa: E501
 
     segments: list[Segment]
     """
@@ -146,19 +146,20 @@ class SegmentedButton(ConstrainedControl):
     on_change: Optional[ControlEventHandler["SegmentedButton"]] = None
     """
     Called when the selection changes.
-    
-    The [`data`][flet.Event.data] property of the event handler argument 
+
+    The [`data`][flet.Event.data] property of the event handler argument
     contains a list of strings identifying the selected segments.
     """
 
     def before_update(self):
         super().before_update()
-        assert any(
-            segment.visible for segment in self.segments
-        ), "segments must have at minimum one visible Segment"
-        assert (
-            len(self.selected) > 0 or self.allow_empty_selection
-        ), "allow_empty_selection must be True for selected to be empty"
-        assert (
-            len(self.selected) < 2 or self.allow_multiple_selection
-        ), "allow_multiple_selection must be True for selected to have more than one item"
+        assert any(segment.visible for segment in self.segments), (
+            "segments must have at minimum one visible Segment"
+        )
+        assert len(self.selected) > 0 or self.allow_empty_selection, (
+            "allow_empty_selection must be True for selected to be empty"
+        )
+        assert len(self.selected) < 2 or self.allow_multiple_selection, (
+            "allow_multiple_selection must be True for selected "
+            "to have more than one item"
+        )

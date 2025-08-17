@@ -13,7 +13,7 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     CrossAxisAlignment,
-    IconValueOrControl,
+    IconDataOrControl,
     Number,
     StrOrControl,
     VisualDensity,
@@ -56,12 +56,12 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Typically a [`Text`][flet.Text] control.
     """
 
-    leading: Optional[IconValueOrControl] = None
+    leading: Optional[IconDataOrControl] = None
     """
     A `Control` to display before the title.
     """
 
-    trailing: Optional[IconValueOrControl] = None
+    trailing: Optional[IconDataOrControl] = None
     """
     A `Control` to display after the title.
 

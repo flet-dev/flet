@@ -6,6 +6,7 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/badge.dart';
+import '../utils/layout.dart';
 import '../utils/numbers.dart';
 import '../utils/tooltip.dart';
 import '../utils/transforms.dart';
@@ -81,11 +82,7 @@ Widget _directionality(Widget widget, Control control) {
 }
 
 Widget _expandable(Widget widget, Control control) {
-  int? expand = control.get("expand") == true
-      ? 1
-      : control.get("expand") == false
-          ? 0
-          : control.getInt("expand");
+  int? expand = control.getExpand("expand");
   if (expand != null && control.parent?.internals?["host_expanded"] == true) {
     return (control.getBool("expand_loose") == true)
         ? Flexible(flex: expand, child: widget)

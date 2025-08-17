@@ -28,7 +28,7 @@ class CupertinoContextMenuActionControl extends StatelessWidget {
             Navigator.of(context).pop(); // Close the context menu
           }
         },
-        trailingIcon: control.getIcon("trailing_icon"),
+        trailingIcon: control.getIconData("trailing_icon"),
         child: content);
   }
 }

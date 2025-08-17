@@ -4,6 +4,8 @@ import 'flet_service.dart';
 import 'models/control.dart';
 
 abstract class FletExtension {
+  void ensureInitialized() {}
+
   Widget? createWidget(Key? key, Control control) {
     return null;
   }
@@ -12,5 +14,7 @@ abstract class FletExtension {
     return null;
   }
 
-  void ensureInitialized() {}
+  IconData? createIconData(int iconCode) {
+    return null;
+  }
 }
