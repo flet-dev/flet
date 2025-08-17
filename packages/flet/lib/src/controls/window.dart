@@ -10,6 +10,7 @@ import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
+import '../utils/platform.dart';
 import '../utils/theme.dart';
 import '../utils/window.dart';
 
@@ -140,7 +141,6 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       var maxHeight = widget.control.getDouble("max_height");
       var top = widget.control.getDouble("top");
       var left = widget.control.getDouble("left");
-      var center = widget.control.getString("center");
       var fullScreen = widget.control.getBool("full_screen");
       var minimized = widget.control.getBool("minimized");
       var maximized = widget.control.getBool("maximized");
@@ -184,10 +184,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       if ((width != null || height != null) &&
           (width != _width || height != _height) &&
           fullScreen != true &&
-          (defaultTargetPlatform != TargetPlatform.macOS ||
-              (defaultTargetPlatform == TargetPlatform.macOS &&
-                  widget.control.getBool("maximized") != true &&
-                  widget.control.getBool("minimized") != true))) {
+          (!isMacOSDesktop() ||
+              (isMacOSDesktop() && maximized != true && minimized != true))) {
         await setWindowSize(width, height);
         _width = width;
         _height = height;
@@ -213,11 +211,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       if ((top != null || left != null) &&
           (top != _top || left != _left) &&
           fullScreen != true &&
-          (center == null || center == "") &&
-          (defaultTargetPlatform != TargetPlatform.macOS ||
-              (defaultTargetPlatform == TargetPlatform.macOS &&
-                  widget.control.getBool("maximized") != true &&
-                  widget.control.getBool("minimized") != true))) {
+          (!isMacOSDesktop() ||
+              (isMacOSDesktop() && maximized != true && minimized != true))) {
         await setWindowPosition(top, left);
         _top = top;
         _left = left;
@@ -429,8 +424,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   @override
   void onWindowEvent(String eventName) {
     if (["resize", "resized", "move"].contains(eventName)) return;
-    getWindowState().then((wmd) {
-      widget.control.backend.onWindowEvent(eventName, wmd);
+    getWindowState().then((state) {
+      widget.control.backend.onWindowEvent(eventName, state);
     });
   }
 }
