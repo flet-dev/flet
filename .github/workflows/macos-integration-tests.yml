@@ -29,9 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install CocoaPods
-        run: brew install cocoapods
-
       - name: Configure FVM
         uses: kuhnroyal/flutter-fvm-config-action/config@v3
         id: fvm-config-action
