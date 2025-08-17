@@ -241,7 +241,7 @@ class FletTestApp:
         await self.tester.teardown()
 
         if self.__flutter_process:
-            print("Waiting for Flutter test process to exit...")
+            print("\nWaiting for Flutter test process to exit...")
             try:
                 await asyncio.wait_for(self.__flutter_process.wait(), timeout=10)
                 print("Flutter test process has exited.")
