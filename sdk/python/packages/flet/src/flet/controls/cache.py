@@ -26,23 +26,30 @@ def _freeze_controls(control):
     return control
 
 
-# --- Main decorator ---
-def data_view(fn: Callable):
-    cache = weakref.WeakValueDictionary()
+# --- Main decorator with `freeze` option ---
+def cache(_fn=None, *, freeze: bool = False):
+    def decorator(fn: Callable):
+        cache_store = weakref.WeakValueDictionary()
 
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        key = _hash_args(*args, **kwargs)
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            key = _hash_args(*args, **kwargs)
 
-        if key in cache:
-            return cache[key]
+            if key in cache_store:
+                return cache_store[key]
 
-        result = fn(*args, **kwargs)
-        if result is not None:
-            _freeze_controls(result)
-            cache[key] = result
-        elif key in cache:
-            del cache[key]
-        return result
+            result = fn(*args, **kwargs)
+            if result is not None:
+                if freeze:
+                    _freeze_controls(result)
+                cache_store[key] = result
+            elif key in cache_store:
+                del cache_store[key]
+            return result
 
-    return wrapper
+        return wrapper
+
+    if _fn is None:
+        return decorator
+    else:
+        return decorator(_fn)
