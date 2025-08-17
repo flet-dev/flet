@@ -163,7 +163,8 @@ class Page(BasePage):
 
     window: Window = field(default_factory=lambda: Window())
     """
-    A class with properties/methods/events to control app's native OS window.
+    Provides properties/methods/events to monitor and control the
+    app's native OS window.
     """
 
     browser_context_menu: BrowserContextMenu = field(
