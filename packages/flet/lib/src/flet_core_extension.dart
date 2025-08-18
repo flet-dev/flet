@@ -20,7 +20,6 @@ import 'controls/chip.dart';
 import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
-import 'controls/control_builder.dart';
 import 'controls/cupertino_action_sheet.dart';
 import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
@@ -93,6 +92,7 @@ import 'controls/semantics.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
+import 'controls/state_view.dart';
 import 'controls/submenu_button.dart';
 import 'controls/tabs.dart';
 import 'controls/text.dart';
@@ -158,8 +158,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoBottomSheetControl(key: key, control: control);
       case "PopupMenuButton":
         return PopupMenuButtonControl(key: key, control: control);
-      case "ControlBuilder":
-        return ControlBuilderControl(key: key, control: control);
+      case "StateView":
+        return StateViewControl(key: key, control: control);
       case "CupertinoSlidingSegmentedButton":
         return CupertinoSlidingSegmentedButtonControl(
             key: key, control: control);

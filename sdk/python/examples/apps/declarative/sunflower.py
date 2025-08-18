@@ -72,7 +72,7 @@ def main(page: ft.Page):
         appbar_theme=ft.AppBarTheme(center_title=True, elevation=2)
     )
     page.add(
-        ft.ControlBuilder(
+        ft.StateView(
             state,
             lambda state: ft.Column(
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

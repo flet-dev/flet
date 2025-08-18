@@ -6,13 +6,13 @@ from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.ref import Ref
 
-__all__ = ["ControlBuilder"]
+__all__ = ["StateView"]
 
 T = TypeVar("T")
 
 
-@control("ControlBuilder", post_init_args=4)
-class ControlBuilder(Control, Generic[T]):
+@control("StateView", post_init_args=4)
+class StateView(Control, Generic[T]):
     """
     Builds control tree on every update based on data.
     """
@@ -40,7 +40,7 @@ class ControlBuilder(Control, Generic[T]):
         self._state_key = state_key
 
     def before_update(self):
-        # print(f"ControlBuilder({self._i}).before_update")
+        # print(f"StateView({self._i}).before_update")
         frozen = getattr(self, "_frozen", None)
         if frozen:
             del self._frozen

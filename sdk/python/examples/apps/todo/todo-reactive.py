@@ -193,7 +193,7 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.AUTO
 
     state = TodoAppState()
-    page.add(ft.ControlBuilder(state, lambda state: TodoAppView(state)))
+    page.add(ft.StateView(state, lambda state: TodoAppView(state)))
 
 
 ft.run(main)

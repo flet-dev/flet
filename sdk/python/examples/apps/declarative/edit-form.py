@@ -32,7 +32,7 @@ def main(page: ft.Page):
     form = Form()
 
     page.add(
-        ft.ControlBuilder(
+        ft.StateView(
             form,
             lambda state: ft.Column(
                 cast(
