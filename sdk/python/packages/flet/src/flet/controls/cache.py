@@ -1,7 +1,10 @@
 import functools
 import hashlib
 import weakref
-from typing import Callable
+from typing import Callable, Optional, ParamSpec, TypeVar, overload
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 # --- Utility to create a hashable signature from args ---
@@ -27,12 +30,22 @@ def _freeze_controls(control):
 
 
 # --- Main decorator with `freeze` option ---
-def cache(_fn=None, *, freeze: bool = False):
-    def decorator(fn: Callable):
+
+
+@overload
+def cache(
+    _fn: None = ..., *, freeze: bool = False
+) -> Callable[[Callable[P, R]], Callable[P, R]]: ...
+@overload
+def cache(_fn: Callable[P, R], *, freeze: bool = False) -> Callable[P, R]: ...
+
+
+def cache(_fn: Optional[Callable[P, R]] = None, *, freeze: bool = False):
+    def decorator(fn: Callable[P, R]) -> Callable[P, R]:
         cache_store = weakref.WeakValueDictionary()
 
         @functools.wraps(fn)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             key = _hash_args(*args, **kwargs)
 
             if key in cache_store:
