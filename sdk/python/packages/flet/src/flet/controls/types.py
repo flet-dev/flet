@@ -54,9 +54,37 @@ class UrlTarget(Enum):
     """
 
     BLANK = "blank"
+    """
+    Opens the URL in a new browser tab or window.
+    """
+
     SELF = "_self"
+    """
+    Opens in the same browsing context (i.e., same tab).
+    """
+
     PARENT = "_parent"
+    """
+    Opens in the parent frame, useful with nested iframes.
+    """
+
     TOP = "_top"
+    """
+    Opens in the topmost frame, breaking out of any iframe.
+    """
+
+
+@dataclass
+class Url:
+    url: str
+    """
+    The url to open.
+    """
+
+    target: Optional[Union[UrlTarget, str]] = None
+    """
+    Where to open URL in the web mode.
+    """
 
 
 class FontWeight(Enum):

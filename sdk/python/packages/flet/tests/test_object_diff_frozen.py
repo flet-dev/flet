@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
-import flet as ft
 import pytest
+
+import flet as ft
 from flet.controls.base_control import BaseControl, control
 
 from .common import (
@@ -273,11 +274,7 @@ def test_button_basic_diff():
                 "path": ["_internals", "style"],
                 "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
             },
-            {
-                "op": "replace",
-                "path": ["scale"],
-                "value": ft.Scale(scale=0.2),
-            },
+            {"op": "replace", "path": ["scale"], "value": ft.Scale(0.2)},
             {"op": "replace", "path": ["content"], "value": "Click me"},
         ],
     )
@@ -292,10 +289,7 @@ def test_button_basic_diff():
             {
                 "op": "remove",
                 "path": ["_internals", "style"],
-                "value": ft.ButtonStyle(
-                    color=ft.Colors.RED,
-                    elevation=1,
-                ),
+                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
             },
             {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
             {"op": "replace", "path": ["content"], "value": ft.Text("Text_1")},
@@ -822,4 +816,4 @@ def test_login_logout_view():
             )
         )
 
-    app = ft.View("/", [login_view(state)])
+    ft.View("/", [login_view(state)])

@@ -30,13 +30,14 @@ class DataColumnSortEvent(Event["DataColumn"]):
     ascending: bool = field(metadata={"data_field": "asc"})
 
 
-@control("DataColumn", kw_only=True)
+@control("DataColumn")
 class DataColumn(Control):
     """
     Column configuration for a [`DataTable`][flet.DataTable].
 
     Raises:
-        AssertionError: if the [`label`][(c).] is neither a string nor a visible control
+        AssertionError: If the [`label`][(c).] is neither a string nor
+            a visible control.
     """
 
     label: StrOrControl
@@ -55,7 +56,7 @@ class DataColumn(Control):
     The contents of cells of columns containing numeric data are right-aligned.
     """
 
-    tooltip: Optional[str] = None
+    tooltip: Optional[str] = field(default=None, kw_only=True)
     """
     The column heading's tooltip.
 
@@ -93,7 +94,7 @@ class DataCell(Control):
 
     Raises:
         AssertionError: If the [`content`][(c).] is neither a string nor a visible
-        control.
+            control.
     """
 
     content: StrOrControl
@@ -198,8 +199,7 @@ class DataCell(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.content, Control):
-            assert self.content.visible, "content must be visible"
+        assert self.content.visible, "content must be visible"
 
 
 @control("DataRow")
@@ -298,9 +298,9 @@ class DataTable(ConstrainedControl):
     Raises:
         AssertionError: If there are no visible [`columns`][(c).].
         AssertionError: If any visible row does not contain exactly as many visible
-        [`cells`][flet.DataRow.cells] as there are visible [`columns`][(c).].
+            [`cells`][flet.DataRow.cells] as there are visible [`columns`][(c).].
         AssertionError: If [`data_row_min_height`][(c).] is greater than
-        [`data_row_max_height`][(c).].
+            [`data_row_max_height`][(c).].
         AssertionError: If [`divider_thickness`][(c).] is negative.
         AssertionError: If [`sort_column_index`][(c).] is out of range.
     """
@@ -410,8 +410,11 @@ class DataTable(ConstrainedControl):
     """
     The minimum height of each row (excluding the row that contains column headings).
 
-    Defaults to `48.0` and must be less than or equal to
-    [`data_row_max_height`][flet.DataTable.data_row_max_height].
+    Defaults to `48.0`.
+
+    Note:
+        Must be less than or equal to
+        [`data_row_max_height`][flet.DataTable.data_row_max_height].
     """
 
     data_row_max_height: Optional[Number] = None
@@ -420,7 +423,11 @@ class DataTable(ConstrainedControl):
     Set to `float("inf")` for the height of each row to adjust automatically with its
     content.
 
-    Defaults to `48.0` and must be greater than or equal to `data_row_min_height`.
+    Defaults to `48.0`.
+
+    Note:
+        Must be greater than or equal to
+        [`data_row_min_height`][flet.DataTable.data_row_min_height].
     """
 
     data_text_style: Optional[TextStyle] = None
@@ -532,6 +539,6 @@ class DataTable(ConstrainedControl):
             0 <= self.sort_column_index < visible_columns_count
         ), (
             f"sort_column_index ({self.sort_column_index}) must be greater than or "
-            f"equal to 0 and less than the number of visible columns "
-            f"({visible_columns_count})"
+            f"equal to 0 and less than the "
+            f"number of visible columns ({visible_columns_count})"
         )

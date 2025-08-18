@@ -2,7 +2,7 @@
 title: flet run
 ---
 
-The `flet run` command is used to start a Flet application in hot reload mode. It supports serving locally, watching for file changes, launching on web or mobile devices, and more.
+The `flet run` command is used to start a Flet application in hot reload mode. It supports serving locally, watching for file changes, launching in web mode or on mobile devices, and more.
 
 ## Usage
 
@@ -66,7 +66,7 @@ Launch the app on an iOS device (requires [Flet app for iOS](../getting-started/
 
 Launch the app on an Android device (requires [Flet app for Android](../getting-started/testing-on-mobile.md)).
 
-### `--assets ASSETS_DIR`, `-a` 
+### `--assets ASSETS_DIR`, `-a`
 
 Path to a directory containing static assets used by the app (e.g., images, fonts).
 
