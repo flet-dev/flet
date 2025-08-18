@@ -50,7 +50,7 @@ class State:
             self.seeds.append(Seed(key=j, x=x, y=y, inner=False))
 
 
-@ft.cache()
+@ft.cache
 def seed_view(seed: Seed):
     return ft.Container(
         key=seed.key,
@@ -86,7 +86,12 @@ def main(page: ft.Page):
                         expand=True,
                     ),
                     ft.Row(
-                        [ft.Text(f"Showing {state.seeds_count} seeds")],
+                        [
+                            ft.Text(
+                                f"Showing {state.seeds_count} "
+                                f"seed{'s' if state.seeds_count != 1 else ''}"
+                            )
+                        ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
                     ft.Row(
