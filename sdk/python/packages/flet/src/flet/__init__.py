@@ -51,7 +51,7 @@ from flet.controls.buttons import (
 from flet.controls.cache import cache
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.context import context
+from flet.controls.context import Context, context
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEvent,
@@ -262,7 +262,12 @@ from flet.controls.material.filled_button import FilledButton
 from flet.controls.material.filled_tonal_button import FilledTonalButton
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.form_field_control import InputBorder
-from flet.controls.material.icon_button import IconButton
+from flet.controls.material.icon_button import (
+    FilledIconButton,
+    FilledTonalIconButton,
+    IconButton,
+    OutlinedIconButton,
+)
 from flet.controls.material.icons import Icons
 from flet.controls.material.list_tile import (
     ListTile,
@@ -349,6 +354,7 @@ from flet.controls.page import (
     MultiViewAddEvent,
     MultiViewRemoveEvent,
     Page,
+    PlatformBrightnessChangeEvent,
     RouteChangeEvent,
     ViewPopEvent,
 )
@@ -482,6 +488,7 @@ from flet.controls.types import (
     SupportsStr,
     TextAlign,
     ThemeMode,
+    Url,
     UrlTarget,
     VerticalAlignment,
     VisualDensity,
@@ -567,6 +574,7 @@ __all__ = [
     "Column",
     "ConstrainedControl",
     "Container",
+    "Context",
     "ContinuousRectangleBorder",
     "Control",
     "ControlEvent",
@@ -655,7 +663,9 @@ __all__ = [
     "FilePickerUploadFile",
     "FilledButton",
     "FilledButtonTheme",
+    "FilledIconButton",
     "FilledTonalButton",
+    "FilledTonalIconButton",
     "FilterQuality",
     "FletApp",
     "FletException",
@@ -744,6 +754,7 @@ __all__ = [
     "OutlinedBorder",
     "OutlinedButton",
     "OutlinedButtonTheme",
+    "OutlinedIconButton",
     "OverlayVisibilityMode",
     "Padding",
     "PaddingValue",
@@ -761,6 +772,7 @@ __all__ = [
     "PaintSweepGradient",
     "PaintingStyle",
     "Placeholder",
+    "PlatformBrightnessChangeEvent",
     "PointerDeviceType",
     "PointerEvent",
     "PopupMenuButton",
@@ -885,6 +897,7 @@ __all__ = [
     "TooltipValue",
     "TransparentPointer",
     "UnderlineTabIndicator",
+    "Url",
     "UrlLauncher",
     "UrlTarget",
     "ValueKey",

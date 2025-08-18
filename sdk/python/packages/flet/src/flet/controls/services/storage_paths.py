@@ -12,7 +12,7 @@ __all__ = ["StoragePaths"]
 class StoragePaths(Service):
     """
     Note:
-        Its methods are not supported on web.
+        Its methods are not supported in web mode.
     """
 
     async def get_application_cache_directory(self) -> str:
@@ -28,7 +28,7 @@ class StoragePaths(Service):
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_application_cache_directory is not supported on web"
+                "get_application_cache_directory is not supported in web mode"
             )
         return await self._invoke_method("get_application_cache_directory")
 
@@ -51,7 +51,7 @@ class StoragePaths(Service):
         """  # noqa: E501
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_application_documents_directory is not supported on web"
+                "get_application_documents_directory is not supported in web mode"
             )
         return await self._invoke_method("get_application_documents_directory")
 
@@ -69,7 +69,7 @@ class StoragePaths(Service):
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_application_support_directory is not supported on web"
+                "get_application_support_directory is not supported in web mode"
             )
         return await self._invoke_method("get_application_support_directory")
 
@@ -87,7 +87,7 @@ class StoragePaths(Service):
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_downloads_directory is not supported on web"
+                "get_downloads_directory is not supported in web mode"
             )
         return await self._invoke_method("get_downloads_directory")
 
@@ -180,7 +180,7 @@ class StoragePaths(Service):
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_temporary_directory is not supported on web"
+                "get_temporary_directory is not supported in web mode"
             )
         return await self._invoke_method("get_temporary_directory")
 
@@ -198,6 +198,6 @@ class StoragePaths(Service):
         """  # noqa: E501
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_console_log_filename is not supported on web"
+                "get_console_log_filename is not supported in web mode"
             )
         return await self._invoke_method("get_console_log_filename")

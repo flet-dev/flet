@@ -641,20 +641,17 @@ class SystemOverlayStyle:
 
     system_navigation_bar_icon_brightness: Optional[Brightness] = None
     """
-    The [`Brightness`][flet.Brightness] of the system navigation bar icons. Either
-    `Brightness.DARK` or `Brightness.LIGHT`.
+    The brightness of the system navigation bar icons.
     """
 
     status_bar_brightness: Optional[Brightness] = None
     """
-    The [`Brightness`][flet.Brightness] of the status bar. Either `Brightness.DARK` or
-    `Brightness.LIGHT`.
+    The brightness of the status bar.
     """
 
     status_bar_icon_brightness: Optional[Brightness] = None
     """
-    The [`Brightness`][flet.Brightness] of the status bar icons. Either
-    `Brightness.DARK` or `Brightness.LIGHT`.
+    The brightness of the status bar icons.
     """
 
 
@@ -2849,35 +2846,35 @@ class ProgressIndicatorTheme:
 @dataclass
 class PopupMenuTheme:
     """
-    Customizes the appearance of [`PopupMenuButton`][flet.PopupMenuButton] across the 
+    Customizes the appearance of [`PopupMenuButton`][flet.PopupMenuButton] across the
     app.
     """
-    
+
     color: Optional[ColorValue] = None
     """
-    Overrides the default value of 
-    [`PopupMenuButton.bgcolor`][flet.PopupMenuButton.bgcolor] in all descendant 
+    Overrides the default value of
+    [`PopupMenuButton.bgcolor`][flet.PopupMenuButton.bgcolor] in all descendant
     [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
     surface_tint_color: Optional[ColorValue] = None
     """
-    Overrides the default value of 
-    [`PopupMenuButton.surface_tint_color`][flet.PopupMenuButton.surface_tint_color] in 
+    Overrides the default value of
+    [`PopupMenuButton.surface_tint_color`][flet.PopupMenuButton.surface_tint_color] in
     all descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of 
-    [`PopupMenuButton.shadow_color`][flet.PopupMenuButton.shadow_color] in all 
+    Overrides the default value of
+    [`PopupMenuButton.shadow_color`][flet.PopupMenuButton.shadow_color] in all
     descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value of 
-    [`PopupMenuButton.icon_color`][flet.PopupMenuButton.icon_color] in all 
+    Overrides the default value of
+    [`PopupMenuButton.icon_color`][flet.PopupMenuButton.icon_color] in all
     descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
@@ -2885,7 +2882,7 @@ class PopupMenuTheme:
     """
     The text style of items in the popup menu.
     """
-    
+
     label_text_style: Optional[TextStyle] = None
     enable_feedback: Optional[bool] = None
     elevation: Optional[Number] = None
@@ -3055,7 +3052,7 @@ class Theme:
     slider_theme: Optional[SliderTheme] = None
     snackbar_theme: Optional[SnackBarTheme] = None
     switch_theme: Optional[SwitchTheme] = None
-    system_overlay_style: SystemOverlayStyle = field(default_factory=SystemOverlayStyle)
+    system_overlay_style: Optional[SystemOverlayStyle] = None
     tab_bar_theme: Optional[TabBarTheme] = None
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None

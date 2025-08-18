@@ -68,7 +68,6 @@ class _IconButtonControlState extends State<IconButtonControl>
       var highlightColor = widget.control.getColor("highlight_color", context);
       var selectedIconColor =
           widget.control.getColor("selected_icon_color", context);
-      var bgcolor = widget.control.getColor("bgcolor", context);
       var disabledColor = widget.control.getColor("disabled_color", context);
       var hoverColor = widget.control.getColor("hover_color", context);
       var splashColor = widget.control.getColor("splash_color", context);
@@ -81,16 +80,14 @@ class _IconButtonControlState extends State<IconButtonControl>
           widget.control.getBoxConstraints("size_constraints");
       var autofocus = widget.control.getBool("autofocus", false)!;
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
-      var selected = widget.control.getBool("selected", false)!;
-      var url = widget.control.getString("url");
-      var urlTarget = widget.control.getString("url_target");
+      var selected = widget.control.getBool("selected");
       var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
-      var visualDensity = widget.control.getVisualDensity("visual_density");
+      var url = widget.control.getUrl("url");
 
       Function()? onPressed = !widget.control.disabled
           ? () {
               if (url != null) {
-                openWebBrowser(url, webWindowName: urlTarget);
+                openWebBrowser(url);
               }
               widget.control.triggerEvent("click");
             }
@@ -109,7 +106,7 @@ class _IconButtonControlState extends State<IconButtonControl>
 
       var theme = Theme.of(context);
       var style = parseButtonStyle(
-          widget.control.get("style"), Theme.of(context),
+          widget.control.internals?["style"], Theme.of(context),
           defaultForegroundColor: theme.colorScheme.primary,
           defaultBackgroundColor: Colors.transparent,
           defaultOverlayColor: Colors.transparent,
@@ -126,27 +123,96 @@ class _IconButtonControlState extends State<IconButtonControl>
       if (icon is Control) {
         iconWidget = ControlWidget(control: icon);
       } else if (icon is int) {
-        // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
-        iconWidget = Icon(
-          widget.control.getIconData("icon"),
-          color: iconColor,
-        );
+        iconWidget = Icon(widget.control.getIconData("icon"), color: iconColor);
       } else if (content != null) {
         iconWidget = ControlWidget(control: content);
       }
 
       Widget? selectedIconWidget;
-
       if (selectedIcon is Control) {
         selectedIconWidget = ControlWidget(control: selectedIcon);
       } else if (selectedIcon is int) {
-        selectedIconWidget = Icon(
-          widget.control.getIconData("selected_icon"),
-          color: selectedIconColor,
-        );
+        selectedIconWidget = Icon(widget.control.getIconData("selected_icon"),
+            color: selectedIconColor);
       }
 
-      if (iconWidget != null) {
+      if (iconWidget == null) {
+        return const ErrorControl(
+            "IconButton must have either icon or a visible content specified.");
+      }
+
+      var variant = widget.control.type;
+
+      if (variant == "FilledIconButton") {
+        button = IconButton.filled(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            highlightColor: highlightColor,
+            disabledColor: disabledColor,
+            hoverColor: hoverColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
+            icon: iconWidget,
+            iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            style: style,
+            isSelected: selected,
+            constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            selectedIcon: selectedIconWidget,
+            onPressed: onPressed);
+      } else if (variant == "FilledTonalIconButton") {
+        button = IconButton.filledTonal(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            highlightColor: highlightColor,
+            disabledColor: disabledColor,
+            hoverColor: hoverColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
+            icon: iconWidget,
+            iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            style: style,
+            isSelected: selected,
+            constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            selectedIcon: selectedIconWidget,
+            onPressed: onPressed);
+      } else if (variant == "OutlinedIconButton") {
+        button = IconButton.outlined(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            highlightColor: highlightColor,
+            disabledColor: disabledColor,
+            hoverColor: hoverColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
+            icon: iconWidget,
+            iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            style: style,
+            isSelected: selected,
+            constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            selectedIcon: selectedIconWidget,
+            onPressed: onPressed);
+      } else {
         button = IconButton(
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -162,7 +228,6 @@ class _IconButtonControlState extends State<IconButtonControl>
             icon: iconWidget,
             iconSize: iconSize,
             mouseCursor: mouseCursor,
-            visualDensity: visualDensity,
             style: style,
             isSelected: selected,
             constraints: sizeConstraints,
@@ -170,17 +235,6 @@ class _IconButtonControlState extends State<IconButtonControl>
             onHover: onHoverHandler,
             selectedIcon: selectedIconWidget,
             onPressed: onPressed);
-      } else {
-        return const ErrorControl(
-            "IconButton must have either icon or a visible content specified.");
-      }
-
-      if (bgcolor != null) {
-        button = Container(
-          decoration:
-              ShapeDecoration(color: bgcolor, shape: const CircleBorder()),
-          child: button,
-        );
       }
 
       return ConstrainedControl(control: widget.control, child: button);

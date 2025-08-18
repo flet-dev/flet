@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -26,7 +26,7 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     ThemeMode,
-    UrlTarget,
+    Url,
 )
 
 __all__ = ["Container"]
@@ -170,16 +170,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     The shadow(s) below this container.
     """
 
-    url: Optional[str] = None
+    url: Optional[Union[str, Url]] = None
     """
-    The URL to open when the container is clicked.
+    The URL to open when this container is clicked.
 
-    If provided, [`on_click`][flet.Container.on_click] event is fired after that.
-    """
-
-    url_target: Optional[UrlTarget] = UrlTarget.BLANK
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.Container.on_click] event callback is provided,
+    it is fired after that.
     """
 
     theme: Optional[Theme] = None

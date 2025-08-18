@@ -2,10 +2,24 @@ name: macOS Integration Tests
 
 on:
   push:
+    paths:
+      - 'sdk/python/packages/flet/src/**'
+      - 'sdk/python/packages/flet/integration_tests/**'
+      - 'packages/flet/**'
+      - 'client/**'
   pull_request:
+    paths:
+      - 'sdk/python/packages/flet/src/**'
+      - 'sdk/python/packages/flet/integration_tests/**'
+      - 'packages/flet/**'
+      - 'client/**'
+
+# Ensure only one run per branch (PR or push), cancel older ones
+concurrency:
+  group: macos-integration-tests-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
 
 env:
-  FLUTTER_VERSION: "3.32.8"
   FLET_TEST_SCREENSHOTS_PIXEL_RATIO: "2.0"
   FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD: "99.0"
   FLET_TEST_DISABLE_FVM: "1"
@@ -16,28 +30,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install CocoaPods
-        run: brew install cocoapods
+      - name: Configure FVM
+        uses: kuhnroyal/flutter-fvm-config-action/config@v3
+        id: fvm-config-action
+        with:
+          path: 'client/.fvmrc'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
           cache: true
 
       - name: Install uv
-        shell: bash
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        uses: astral-sh/setup-uv@v6
 
       - name: Show tool versions
         run: |
-          python3 --version
-          uv --version
-          pod --version
-          flutter --version
+          python3 --version && uv --version && pod --version && flutter --version
 
       - name: Run integration tests
         working-directory: sdk/python

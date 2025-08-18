@@ -1,6 +1,7 @@
 import apps.autoupdate as app
 import pytest
 
+import flet as ft
 import flet.testing as ftt
 
 
@@ -15,7 +16,7 @@ import flet.testing as ftt
 )
 class TestApp:
     @pytest.mark.asyncio(loop_scope="module")
-    async def test_app(self, flet_app: ftt.FletTestApp):
+    async def test_auto_update(self, flet_app: ftt.FletTestApp):
         tester = flet_app.tester
         await tester.pump_and_settle()
         auto_update_enabled = await tester.find_by_text("Auto update enabled: True")
@@ -36,3 +37,9 @@ class TestApp:
         await tester.pump_and_settle()
         assert (await tester.find_by_text("Auto update with update")).count == 1
         assert (await tester.find_by_text("Auto update no update")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_context_throws_exception_outside_flet_app():
+    with pytest.raises(Exception, match="The context is not associated with any page."):
+        p = ft.context.page  # noqa: F841
