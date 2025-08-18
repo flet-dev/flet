@@ -1,0 +1,50 @@
+import pytest
+
+import flet as ft
+import flet.testing as ftt
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_tabs_basic(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Tabs(
+            # selected_index=1,
+            length=2,
+            expand=True,
+            content=ft.Column(
+                expand=True,
+                controls=[
+                    ft.TabBar(
+                        tabs=[
+                            ft.Tab(label="Tab 1"),
+                            ft.Tab(label="Tab 2", icon=ft.Icons.SETTINGS),
+                            # ft.Tab(
+                            #     label=ft.CircleAvatar(
+                            #         foreground_image_src="https://avatars.githubusercontent.com/u/7119543?s=88&v=4"
+                            #     ),
+                            # ),
+                        ]
+                    ),
+                    ft.TabBarView(
+                        expand=True,
+                        controls=[
+                            ft.Container(
+                                content=ft.Text("This is Tab 1"),
+                                alignment=ft.Alignment.CENTER,
+                            ),
+                            # ft.Container(
+                            #     content=ft.Text("This is Tab 2"),
+                            #     alignment=ft.Alignment.CENTER,
+                            # ),
+                            ft.Container(
+                                content=ft.Text("This is Tab 3"),
+                                alignment=ft.Alignment.CENTER,
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+        ),
+    )
