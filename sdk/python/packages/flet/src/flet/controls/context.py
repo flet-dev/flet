@@ -10,7 +10,7 @@ class Context:
     Manages the context for Flet controls, including page reference
     and auto-update behavior.
 
-    Context instance is accessed via `ft.context`.
+    Context instance is accessed via [`ft.context`][flet.context].
     """
 
     @property
@@ -118,6 +118,7 @@ class UpdateBehavior:
     class interacts with UpdateBehavior to enable, disable, and query the
     auto-update state.
     """
+
     _auto_update_enabled: bool = True
 
 
