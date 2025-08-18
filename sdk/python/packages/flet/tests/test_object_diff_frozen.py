@@ -721,7 +721,7 @@ def test_nested_control_builders():
     )
 
 
-def test_data_view_with_cache():
+def test_view_with_cache():
     @ft.cache(freeze=True)
     def user_details(user: User):
         return ft.Card(
@@ -778,7 +778,7 @@ def test_data_view_with_cache():
     assert len(removed_controls) == 6
 
 
-def test_empty_data_view():
+def test_empty_view():
     @ft.cache
     def my_view():
         return None
