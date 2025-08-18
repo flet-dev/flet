@@ -5,6 +5,7 @@ def main(page: ft.Page):
     page.title = "Autoupdate test"
 
     def auto_update_global_enabled_click(e):
+        assert ft.context.page
         page.controls.append(ft.Text("Global auto update"))
 
     def disable_autoupdate_no_update_click(e):
@@ -16,6 +17,7 @@ def main(page: ft.Page):
         page.controls.append(ft.Text("Auto update with update"))
         page.update()
 
+    assert ft.context.page
     page.add(
         ft.Text(f"Auto update enabled: {ft.context.auto_update_enabled()}"),
         ft.Button(
