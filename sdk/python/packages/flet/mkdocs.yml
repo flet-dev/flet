@@ -134,7 +134,6 @@ plugins:
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
-              - "!get_event_field_type"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
@@ -247,11 +246,14 @@ nav:
               - CupertinoTintedButton: controls/cupertinotintedbutton.md
               - ElevatedButton: controls/elevatedbutton.md
               - FilledButton: controls/filledbutton.md
+              - FilledIconButton: controls/fillediconbutton.md
               - FilledTonalButton: controls/filledtonalbutton.md
+              - FilledTonalIconButton: controls/filledtonaliconbutton.md
               - FloatingActionButton: controls/floatingactionbutton.md
               - IconButton: controls/iconbutton.md
               - MenuItemButton: controls/menuitembutton.md
               - OutlinedButton: controls/outlinedbutton.md
+              - OutlinedIconButton: controls/outlinediconbutton.md
               - PopupMenuButton: controls/popupmenubutton.md
               - SegmentedButton: controls/segmentedbutton.md
               - SubmenuButton: controls/submenubutton.md
@@ -509,6 +511,7 @@ nav:
                   - TimePickerTheme: types/timepickertheme.md
                   - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
+              - Url: types/url.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
@@ -625,6 +628,7 @@ nav:
               - OnScrollEvent: types/onscrollevent.md
               - PageMediaData: types/pagemediadata.md
               - PageResizeEvent: types/pageresizeevent.md
+              - PlatformBrightnessChangeEvent: types/platformbrightnesschangeevent.md
               - PointerEvent: types/pointerevent.md
               - RouteChangeEvent: types/routechangeevent.md
               - ScaleEndEvent: types/scaleendevent.md

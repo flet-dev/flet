@@ -84,7 +84,7 @@ class FilePickerFile:
     Full path to a file.
 
     Note:
-        Works for desktop and mobile only. Will be `None` on web.
+        Works for desktop and mobile only. Will be `None` in web mode.
     """
 
 
@@ -159,11 +159,11 @@ class FilePicker(Service):
             initial_directory: The initial directory where the dialog should open.
 
         Raises:
-            NotImplementedError: if called in web app.
+            NotImplementedError: If called in web app.
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
-                "get_directory_path is not supported on web"
+                "get_directory_path is not supported in web mode"
             )
 
         return await self._invoke_method(
@@ -188,6 +188,11 @@ class FilePicker(Service):
         Opens a save file dialog which lets the user select a file path and a file name
         to save a file.
 
+        Note:
+            - On desktop this method only opens a dialog for the user to select
+                a location and file name, and returns the chosen path. The file
+                itself is not created or saved.
+
         Args:
             dialog_title: The title of the dialog window.
             file_name: The default file name.
@@ -199,22 +204,19 @@ class FilePicker(Service):
                 `file_type` is
                 [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
 
-        Note:
-            - On desktop this method only opens a dialog for the user to select
-              a location and file name, and returns the chosen path. The file
-              itself is not created or saved.
-
         Raises:
-            ValueError: if `src_bytes` is not provided in web, iOS or Android modes.
-            ValueError: if `file_name` is not provided in web mode.
+            ValueError: If `src_bytes` is not provided, when called in web mode,
+                on iOS or Android.
+            ValueError: If `file_name` is not provided in web mode.
         """
 
         if (self.page.web or self.page.platform.is_mobile()) and not src_bytes:
             raise ValueError(
-                '"src_bytes" is required when saving a file on Web, Android and iOS.'
+                '"src_bytes" is required when saving a file in web mode,'
+                "on Android and iOS."
             )
         if self.page.web and not file_name:
-            raise ValueError('"file_name" is required when saving a file on Web.')
+            raise ValueError('"file_name" is required when saving a file in web mode.')
 
         return await self._invoke_method(
             "save_file",

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -14,7 +14,7 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    UrlTarget,
+    Url,
     VisualDensity,
 )
 
@@ -180,16 +180,12 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     The minimum padding on the top and bottom of the `title` and `subtitle` controls.
     """
 
-    url: Optional[str] = None
+    url: Optional[Union[str, Url]] = None
     """
-    The URL to open when the list tile is clicked.
+    The URL to open when this button is clicked.
 
-    If registered, [`on_click`][flet.ListTile.on_click] event is called after that.
-    """
-
-    url_target: Optional[UrlTarget] = None
-    """
-    Where to open URL in the web mode.
+    Additionally, if [`on_click`][ft.ListTile.on_click] event callback is provided,
+    it is fired after that.
     """
 
     title_alignment: Optional[ListTileTitleAlignment] = None

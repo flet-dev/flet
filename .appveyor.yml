@@ -139,7 +139,7 @@ for:
             # patch pubspecs
             for dir in packages/flet*; do
               echo "Patching $dir/pubspec.yaml"
-              uv run --with pyyaml ci/patch_pubspec.py $dir/pubspec.yaml $PKG_VER
+              uv run ci/patch_pubspec.py $dir/pubspec.yaml $PKG_VER
             done
 
             cd packages/flet
@@ -209,7 +209,7 @@ for:
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "$env:flet_sdk_root/packages/flet-desktop/src/flet_desktop/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
-      - uv run --with tomlkit ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
+      - uv run ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
 
       - cd client
       - set RELEASE_DIR=build\windows\x64\runner\Release
@@ -230,8 +230,8 @@ for:
       - uv build --wheel --package flet-desktop
       - ps: |
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win_amd64"
-            Start-ProcessWithOutput "uv run --with wheel --no-project $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win32"
+            Start-ProcessWithOutput "uv run $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win_amd64"
+            Start-ProcessWithOutput "uv run $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $($_.FullName) py3-none-win32"
             Remove-Item $_.FullName
           }
       - dir dist
@@ -291,8 +291,8 @@ for:
       - uv build --wheel --package flet-desktop
       - sh: |
           for file in dist/*-py3-none-any.whl; do
-            uv run --with wheel --no-project $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
-            uv run --with wheel --no-project $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
+            uv run $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
+            uv run $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
             rm $file
           done
 
@@ -378,7 +378,7 @@ for:
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
               wheel_tag=$(echo "$tag" | sed "s/{arch}/$platform_arch/g")
-              uv run --with wheel --no-project $root/ci/repackage_wheel_with_tag.py $file $wheel_tag
+              uv run $root/ci/repackage_wheel_with_tag.py $file $wheel_tag
             done
             rm "$file"
           done
@@ -488,7 +488,7 @@ for:
       - uv build --wheel --package flet
 
       # update deps
-      - uv run --with wheel $root/ci/update-flet-wheel-deps.py dist
+      - uv run $root/ci/update-flet-wheel-deps.py dist
 
       # publish packages
       - publish_to_pypi dist/*.whl
