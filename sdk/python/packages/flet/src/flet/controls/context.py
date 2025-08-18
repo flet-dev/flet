@@ -110,6 +110,14 @@ class Context:
 
 
 class UpdateBehavior:
+    """
+    Internal class used by the Context API to manage auto-update behavior.
+
+    An instance of UpdateBehavior is stored in a context variable and tracks
+    whether automatic updates are enabled for the current context. The Context
+    class interacts with UpdateBehavior to enable, disable, and query the
+    auto-update state.
+    """
     _auto_update_enabled: bool = True
 
 
