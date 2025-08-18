@@ -23,6 +23,9 @@ class State:
     seeds_count: int = MAX_SEEDS // 2
     seeds: list[Seed] = field(default_factory=list)
 
+    def __post_init__(self):
+        self.compute_seeds()
+
     def update_seeds_count(self, new_seeds_count: int):
         self.seeds_count = new_seeds_count
         self.compute_seeds()
@@ -113,8 +116,6 @@ def main(page: ft.Page):
             expand=True,
         ),
     )
-
-    state.compute_seeds()
 
 
 ft.run(main)
