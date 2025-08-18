@@ -393,7 +393,6 @@ nav:
       - Types:
           # - types/index.md
           - Aliases: types/aliases.md
-          - Context: types/context.md
           - Dataclasses:
               - Alignment: types/alignment.md
               - Animation: types/animation.md
@@ -647,6 +646,8 @@ nav:
               # - types/pubsub/index.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
+          - Utility:
+              - Context: types/context.md
       - Environment Variables: environment-variables.md
   - Publish:
       - Build and Publish a Flet app: publish/index.md

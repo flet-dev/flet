@@ -1,3 +1,1 @@
-::: flet.context
-    options:
-        separate_signature: false
+::: flet.Context

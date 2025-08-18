@@ -51,7 +51,7 @@ from flet.controls.buttons import (
 from flet.controls.cache import cache
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.context import context
+from flet.controls.context import Context, context
 from flet.controls.control import Control
 from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import (
@@ -567,6 +567,7 @@ __all__ = [
     "Column",
     "ConstrainedControl",
     "Container",
+    "Context",
     "ContinuousRectangleBorder",
     "Control",
     "ControlBuilder",
