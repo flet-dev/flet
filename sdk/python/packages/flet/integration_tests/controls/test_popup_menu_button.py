@@ -1,11 +1,17 @@
 import pytest
+import pytest_asyncio
 
 import flet as ft
 import flet.testing as ftt
 
 
-@pytest.mark.asyncio(loop_scope="module")
-async def test_popup_menu_basic(flet_app: ftt.FletTestApp, request):
+@pytest_asyncio.fixture(scope="function", autouse=True)
+def flet_app(flet_app_function):
+    return flet_app_function
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_basic(flet_app: ftt.FletTestApp, request):
     pb = ft.PopupMenuButton(
         key="pb",
         items=[
@@ -36,7 +42,7 @@ async def test_popup_menu_basic(flet_app: ftt.FletTestApp, request):
 
     # normal state
     flet_app.assert_screenshot(
-        "popup_menu_button_0",
+        "basic",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -46,7 +52,7 @@ async def test_popup_menu_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.tap(await flet_app.tester.find_by_key("pb"))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "popup_menu_button_1",
+        "basic_opened",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
