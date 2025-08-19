@@ -17,11 +17,6 @@ async def test_tabs_basic(flet_app: ftt.FletTestApp, request):
                         tabs=[
                             ft.Tab(label="Tab 1"),
                             ft.Tab(label="Tab 2", icon=ft.Icons.SETTINGS),
-                            # ft.Tab(
-                            #     label=ft.CircleAvatar(
-                            #         foreground_image_src="https://avatars.githubusercontent.com/u/7119543?s=88&v=4"
-                            #     ),
-                            # ),
                         ]
                     ),
                     ft.Container(
@@ -32,10 +27,6 @@ async def test_tabs_basic(flet_app: ftt.FletTestApp, request):
                                     content=ft.Text("This is Tab 1"),
                                     alignment=ft.Alignment.CENTER,
                                 ),
-                                # ft.Container(
-                                #     content=ft.Text("This is Tab 2"),
-                                #     alignment=ft.Alignment.CENTER,
-                                # ),
                                 ft.Container(
                                     content=ft.Text("This is Tab 3"),
                                     alignment=ft.Alignment.CENTER,
