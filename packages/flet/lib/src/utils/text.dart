@@ -210,7 +210,7 @@ WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
     WidgetStateProperty<TextStyle?>? defaultValue}) {
   if (value == null) return defaultValue;
   return getWidgetStateProperty<TextStyle?>(
-      value, (jv) => parseTextStyle(theme, jv), defaultTextStyle);
+      value, (jv) => parseTextStyle(jv, theme), defaultTextStyle);
 }
 
 extension TextParsers on Control {

@@ -21,7 +21,7 @@ def main(page: ft.Page):
     state = AppState(counter=0)
 
     page.add(
-        ft.ControlBuilder(
+        ft.StateView(
             state,
             lambda state: ft.Column(
                 [

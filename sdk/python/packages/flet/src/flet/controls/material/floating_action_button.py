@@ -144,7 +144,7 @@ class FloatingActionButton(ConstrainedControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][ft.FloatingActionButton.on_click] event callback
+    Additionally, if [`on_click`][flet.FloatingActionButton.on_click] event callback
     is provided, it is fired after that.
     """
 

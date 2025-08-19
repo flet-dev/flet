@@ -195,14 +195,14 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
 
     animation_duration: DurationValue = field(
-        default_factory=lambda: Duration(milliseconds=250),
+        default_factory=lambda: Duration(milliseconds=100),
     )
     """
     The duration of tab animations. For example, the animation that occurs
     when the selected tab changes.
     """
 
-    on_change: Optional[ControlEventHandler["TabBar"]] = None
+    on_change: Optional[ControlEventHandler["Tabs"]] = None
     """
     Called when [`selected_index`][flet.Tabs.selected_index] changes.
 

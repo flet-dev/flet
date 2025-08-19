@@ -5,6 +5,7 @@
 ::: flet.BorderSideStrokeAlignValue
 ::: flet.BoxShadowValue
 ::: flet.ColorValue
+::: flet.context
 ::: flet.ControlEvent
 ::: flet.ControlEventHandler
 ::: flet.ControlStateValue

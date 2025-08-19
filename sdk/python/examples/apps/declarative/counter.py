@@ -18,7 +18,7 @@ def main(page: ft.Page):
         icon=ft.Icons.ADD, on_click=state.increment
     )
     page.add(
-        ft.ControlBuilder(
+        ft.StateView(
             state,
             lambda state: ft.SafeArea(
                 ft.Container(

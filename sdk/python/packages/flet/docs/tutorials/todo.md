@@ -355,10 +355,20 @@ class TodoApp(ft.Column):
         self.new_task = ft.TextField(hint_text="What's needs to be done?", expand=True)
         self.tasks = ft.Column()
 
-        self.filter = ft.Tabs(
+        self.filter_tabs = ft.Tabs(
+            length=3,
             selected_index=0,
-            on_change=self.tabs_changed,
-            tabs=[ft.Tab(text="all"), ft.Tab(text="active"), ft.Tab(text="completed")],
+            on_change=lambda e: self.update(),
+            content=self.filter,
+        )
+
+        self.filter = ft.TabBar(
+            scrollable=False,
+            tabs=[
+                ft.Tab(label="all"),
+                ft.Tab(label="active"),
+                ft.Tab(label="completed"),
+            ],
         )
 
     # ...

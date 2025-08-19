@@ -18,7 +18,7 @@ import '../widgets/error.dart';
 import 'base_controls.dart';
 
 /// Default duration for tab animation if none is provided.
-const Duration kDefaultTabAnimationDuration = Duration(milliseconds: 250);
+const Duration kDefaultTabAnimationDuration = Duration(milliseconds: 100);
 
 class TabsControl extends StatefulWidget {
   final Control control;

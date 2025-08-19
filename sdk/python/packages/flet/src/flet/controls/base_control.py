@@ -5,12 +5,11 @@ import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.control_id import ControlId
 from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
-from flet.controls.update_behavior import UpdateBehavior
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count
 
@@ -46,30 +45,40 @@ T = TypeVar("T", bound="BaseControl")
 
 @dataclass_transform()
 def control(
-    cls_or_type_name: Optional[Union[type[T], str]] = None,
+    dart_widget_name: Optional[Union[type[T], str]] = None,
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
     **dataclass_kwargs,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
-    """Decorator to optionally set 'type' and 'isolated' while behaving like @dataclass.
+    """
+    Decorator to optionally set widget name and 'isolated' while behaving
+    like [`@dataclass`][dataclasses.dataclass].
 
-    - Supports `@control` (without parentheses)
-    - Supports `@control("custom_type")` (with optional arguments)
-    - Supports `@control("custom_type", post_init_args=1, isolated=True)` to
-        specify the number of `InitVar` arguments and isolation
+    Parameters:
+        dart_widget_name: The name of widget on Dart side.
+        isolated: If `True`, marks the control as isolated. An isolated control
+            is excluded from page updates when its parent control is updated.
+        post_init_args: Number of InitVar arguments to pass to __post_init__.
+        **dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
+
+    Usage:
+        - Supports `@control` (without parentheses)
+        - Supports `@control("WidgetName")` (with optional arguments)
+        - Supports `@control("WidgetName", post_init_args=1, isolated=True)` to
+            specify the number of `InitVar` arguments and isolation
     """
 
     # Case 1: If used as `@control` (without parentheses)
-    if isinstance(cls_or_type_name, type):
+    if isinstance(dart_widget_name, type):
         return _apply_control(
-            cls_or_type_name, None, isolated, post_init_args, **dataclass_kwargs
+            dart_widget_name, None, isolated, post_init_args, **dataclass_kwargs
         )
 
     # Case 2: If used as `@control("custom_type", post_init_args=N, isolated=True)`
     def wrapper(cls: type[T]) -> type[T]:
         return _apply_control(
-            cls, cls_or_type_name, isolated, post_init_args, **dataclass_kwargs
+            cls, dart_widget_name, isolated, post_init_args, **dataclass_kwargs
         )
 
     return wrapper
@@ -260,7 +269,7 @@ class BaseControl:
 
         if handle_event is None or handle_event:
             _context_page.set(self.page)
-            UpdateBehavior.reset()
+            context.reset_auto_update()
 
             assert self.page, (
                 "Control must be added to a page before triggering events. "
@@ -279,22 +288,22 @@ class BaseControl:
             elif inspect.isasyncgenfunction(event_handler):
                 if get_param_count(event_handler) == 0:
                     async for _ in event_handler():
-                        if UpdateBehavior.auto_update_enabled():
+                        if context.auto_update_enabled():
                             await session.auto_update(session.index.get(self._i))
                 else:
                     async for _ in event_handler(e):
-                        if UpdateBehavior.auto_update_enabled():
+                        if context.auto_update_enabled():
                             await session.auto_update(session.index.get(self._i))
                 return
 
             elif inspect.isgeneratorfunction(event_handler):
                 if get_param_count(event_handler) == 0:
                     for _ in event_handler():
-                        if UpdateBehavior.auto_update_enabled():
+                        if context.auto_update_enabled():
                             await session.auto_update(session.index.get(self._i))
                 else:
                     for _ in event_handler(e):
-                        if UpdateBehavior.auto_update_enabled():
+                        if context.auto_update_enabled():
                             await session.auto_update(session.index.get(self._i))
                 return
 
@@ -304,5 +313,5 @@ class BaseControl:
                 else:
                     event_handler(e)
 
-            if UpdateBehavior.auto_update_enabled():
+            if context.auto_update_enabled():
                 await session.auto_update(session.index.get(self._i))

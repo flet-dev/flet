@@ -10,10 +10,9 @@ from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.page import Page
 from flet.controls.types import AppView, RouteUrlStrategy, WebRenderer
-from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
 from flet.utils import (
     get_bool_env_var,
@@ -254,24 +253,24 @@ def __get_on_session_created(main):
         try:
             assert main is not None
             _context_page.set(session.page)
-            UpdateBehavior.reset()
+            context.reset_auto_update()
             if asyncio.iscoroutinefunction(main):
                 await main(session.page)
 
             elif inspect.isasyncgenfunction(main):
                 async for _ in main(session.page):
-                    if UpdateBehavior.auto_update_enabled():
+                    if context.auto_update_enabled():
                         await session.auto_update(session.page)
 
             elif inspect.isgeneratorfunction(main):
                 for _ in main(session.page):
-                    if UpdateBehavior.auto_update_enabled():
+                    if context.auto_update_enabled():
                         await session.auto_update(session.page)
             else:
                 # run synchronously
                 main(session.page)
 
-            if UpdateBehavior.auto_update_enabled():
+            if context.auto_update_enabled():
                 await session.auto_update(session.page)
 
         except Exception as e:

@@ -227,7 +227,6 @@ nav:
               - BaseControl: controls/basecontrol.md
               - ConstrainedControl: controls/constrainedcontrol.md
               - Control: controls/control.md
-              - ControlBuilder: controls/controlbuilder.md
               - DialogControl: controls/dialogcontrol.md
               - MultiView: controls/multiview.md
               - BasePage: controls/basepage.md
@@ -385,6 +384,7 @@ nav:
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
               - Screenshot: controls/screenshot.md
+              - StateView: controls/stateview.md
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
@@ -513,6 +513,9 @@ nav:
               - Tooltip: types/tooltip.md
               - Url: types/url.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
+          - Decorators:
+              - cache: types/cache.md
+              - control: types/control.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
@@ -591,7 +594,6 @@ nav:
               - TileAffinity: types/tileaffinity.md
               - TimePickerEntryMode: types/timepickerentrymode.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
-              - UpdateBehavior: types/updatebehavior.md
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
               - VisualDensity: types/visualdensity.md
@@ -651,6 +653,8 @@ nav:
               # - types/pubsub/index.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
+          - Utility:
+              - Context: types/context.md
       - Environment Variables: environment-variables.md
   - Publish:
       - Build and Publish a Flet app: publish/index.md

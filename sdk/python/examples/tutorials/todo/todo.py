@@ -79,11 +79,22 @@ class TodoApp(ft.Column):
         self.new_task = ft.TextField(hint_text="Whats needs to be done?", expand=True)
         self.tasks = ft.Column()
 
-        self.filter = ft.Tabs(
-            selected_index=0,
-            on_change=self.tabs_changed,
-            tabs=[ft.Tab(text="all"), ft.Tab(text="active"), ft.Tab(text="completed")],
+        self.filter = ft.TabBar(
+            scrollable=False,
+            tabs=[
+                ft.Tab(label="all"),
+                ft.Tab(label="active"),
+                ft.Tab(label="completed"),
+            ],
         )
+
+        self.filter_tabs = ft.Tabs(
+            length=3,
+            selected_index=0,
+            on_change=lambda e: self.update(),
+            content=self.filter,
+        )
+
         self.width = 600
         self.controls = [
             ft.Row(
@@ -97,7 +108,7 @@ class TodoApp(ft.Column):
             ft.Column(
                 spacing=25,
                 controls=[
-                    self.filter,
+                    self.filter_tabs,
                     self.tasks,
                 ],
             ),
@@ -117,11 +128,11 @@ class TodoApp(ft.Column):
         self.update()
 
     def before_update(self):
-        status = self.filter.tabs[self.filter.selected_index].text
+        status = self.filter.tabs[self.filter_tabs.selected_index].label
         for task in self.tasks.controls:
             task.visible = (
                 status == "all"
-                or (status == "active" and task.completed == False)
+                or (status == "active" and not task.completed)
                 or (status == "completed" and task.completed)
             )
 

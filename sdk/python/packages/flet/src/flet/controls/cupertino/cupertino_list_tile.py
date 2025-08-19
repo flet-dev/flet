@@ -78,7 +78,7 @@ class CupertinoListTile(ConstrainedControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][ft.CupertinoListTile.on_click] event callback is
+    Additionally, if [`on_click`][flet.CupertinoListTile.on_click] event callback is
     provided, it is fired after that.
     """
 
