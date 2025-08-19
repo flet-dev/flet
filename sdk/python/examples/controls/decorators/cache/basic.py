@@ -37,7 +37,7 @@ def main(page: ft.Page):
         icon=ft.Icons.ADD, on_click=state.add_item
     )
     page.add(
-        ft.ControlBuilder(
+        ft.StateView(
             state,
             lambda state: ft.SafeArea(
                 ft.Row([item_view(i) for i in state.items], wrap=True)
