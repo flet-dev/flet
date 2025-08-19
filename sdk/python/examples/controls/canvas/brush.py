@@ -27,7 +27,7 @@ def main(page: ft.Page):
         state.y = e.local_position.y
 
     async def handle_pan_update(e: ft.DragUpdateEvent):
-        ft.UpdateBehavior.disable_auto_update()
+        ft.context.disable_auto_update()
         canvas.shapes.append(
             cv.Line(
                 x1=state.x,

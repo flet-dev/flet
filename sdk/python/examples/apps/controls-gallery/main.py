@@ -1,15 +1,16 @@
 import logging
 
-import flet as ft
-import flet.version
 from components.gallery_view import GalleryView
 from gallerydata import GalleryData
+
+import flet as ft
+import flet.version
 
 gallery = GalleryData()
 
 logging.basicConfig(level=logging.DEBUG)
 
-# ft.UpdateBehavior.disable_auto_update()
+ft.context.disable_auto_update()
 
 
 def main(page: ft.Page):

@@ -197,7 +197,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][ft.IconButton.on_click] event callback is provided,
+    Additionally, if [`on_click`][flet.IconButton.on_click] event callback is provided,
     it is fired after that.
     """
 

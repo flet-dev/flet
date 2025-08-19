@@ -611,13 +611,13 @@ def test_control_builder():
 
     state = State(msg="some text")
 
-    dv = ft.ControlBuilder(state, builder=lambda state: ft.Text(state.msg))
+    dv = ft.StateView(state, builder=lambda state: ft.Text(state.msg))
     _, patch, _, added_controls, removed_controls = make_msg(dv, {})
     assert len(added_controls) == 2
     assert len(removed_controls) == 0
     assert cmp_ops(
         patch,
-        [{"op": "replace", "path": [], "value_type": ft.ControlBuilder}],
+        [{"op": "replace", "path": [], "value_type": ft.StateView}],
     )
     assert isinstance(patch[0]["value"].content, ft.Text)
     assert hasattr(patch[0]["value"].content, "_frozen")
@@ -639,11 +639,11 @@ def test_nested_control_builders():
 
     state = AppState(count=0)
 
-    cb = ft.ControlBuilder(
+    cb = ft.StateView(
         state,
         lambda state: ft.SafeArea(
             ft.Container(
-                ft.ControlBuilder(
+                ft.StateView(
                     state,
                     lambda state: ft.Text(
                         value=f"{state.count}",
@@ -669,12 +669,12 @@ def test_nested_control_builders():
     _, patch, _, added_controls, removed_controls = make_msg(cb, {})
     assert len(added_controls) == 5
     assert len(removed_controls) == 0
-    assert not hasattr(patch[0]["value"], "_frozen")  # ControlBuilder
+    assert not hasattr(patch[0]["value"], "_frozen")  # StateView
     assert hasattr(patch[0]["value"].content, "_frozen")  # SafeArea
     assert hasattr(patch[0]["value"].content.content, "_frozen")  # Center
     assert hasattr(
         patch[0]["value"].content.content.content, "_frozen"
-    )  # ControlBuilder (nested)
+    )  # StateView (nested)
     assert hasattr(patch[0]["value"].content.content.content.content, "_frozen")  # Text
 
     state.count = 10
@@ -721,8 +721,8 @@ def test_nested_control_builders():
     )
 
 
-def test_data_view_with_cache():
-    @ft.data_view
+def test_view_with_cache():
+    @ft.cache(freeze=True)
     def user_details(user: User):
         return ft.Card(
             ft.Column(
@@ -735,7 +735,7 @@ def test_data_view_with_cache():
             key=user.id,
         )
 
-    @ft.data_view
+    @ft.cache(freeze=True)
     def users_list(users):
         return ft.Column([user_details(user) for user in users])
 
@@ -778,8 +778,8 @@ def test_data_view_with_cache():
     assert len(removed_controls) == 6
 
 
-def test_empty_data_view():
-    @ft.data_view
+def test_empty_view():
+    @ft.cache
     def my_view():
         return None
 
@@ -799,7 +799,7 @@ def test_login_logout_view():
 
     state = AppState()
 
-    @ft.data_view
+    @ft.cache
     def login_view(state: AppState):
         return (
             ft.Column(

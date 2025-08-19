@@ -1,5 +1,7 @@
 import flet as ft
 
+ft.context.disable_auto_update()
+
 
 def main(page: ft.Page):
     page.title = "Flet counter example"

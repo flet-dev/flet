@@ -78,15 +78,20 @@ class TodoApp(ft.Column):
         )
         self.tasks = ft.Column()
 
-        self.filter = ft.Tabs(
+        self.filter = ft.TabBar(
             scrollable=False,
-            selected_index=0,
-            on_change=lambda: self.update(),
             tabs=[
                 ft.Tab(label="all"),
                 ft.Tab(label="active"),
                 ft.Tab(label="completed"),
             ],
+        )
+
+        self.filter_tabs = ft.Tabs(
+            length=3,
+            selected_index=0,
+            on_change=lambda e: self.update(),
+            content=self.filter,
         )
 
         self.items_left = ft.Text("0 items left")
@@ -108,7 +113,7 @@ class TodoApp(ft.Column):
             ft.Column(
                 spacing=25,
                 controls=[
-                    self.filter,
+                    self.filter_tabs,
                     self.tasks,
                     ft.Row(
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -140,7 +145,7 @@ class TodoApp(ft.Column):
                 self.task_delete(task)
 
     def before_update(self):
-        status = self.filter.tabs[self.filter.selected_index].label
+        status = self.filter.tabs[self.filter_tabs.selected_index].label
         count = 0
         for task in self.tasks.controls:
             task.visible = (

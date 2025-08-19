@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
-import '../utils/debouncer.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 import 'base_controls.dart';
 
 class RangeSliderControl extends StatefulWidget {
@@ -19,8 +17,6 @@ class RangeSliderControl extends StatefulWidget {
 }
 
 class _SliderControlState extends State<RangeSliderControl> {
-  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
-
   @override
   void initState() {
     super.initState();
@@ -28,17 +24,13 @@ class _SliderControlState extends State<RangeSliderControl> {
 
   @override
   void dispose() {
-    _debouncer.dispose();
     super.dispose();
   }
 
   void onChange(double startValue, double endValue) {
     var props = {"start_value": startValue, "end_value": endValue};
-    widget.control.updateProperties(props, python: false, notify: true);
-    _debouncer.run(() {
-      widget.control.updateProperties(props, notify: true);
-      widget.control.triggerEvent("change");
-    });
+    widget.control.updateProperties(props, notify: true);
+    widget.control.triggerEvent("change");
   }
 
   @override

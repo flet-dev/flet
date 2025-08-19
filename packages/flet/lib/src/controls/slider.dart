@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
-import '../utils/debouncer.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 import 'base_controls.dart';
 
 class SliderControl extends StatefulWidget {
@@ -22,7 +20,6 @@ class SliderControl extends StatefulWidget {
 
 class _SliderControlState extends State<SliderControl> {
   double _value = 0;
-  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
   late final FocusNode _focusNode;
 
   @override
@@ -34,7 +31,6 @@ class _SliderControlState extends State<SliderControl> {
 
   @override
   void dispose() {
-    _debouncer.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     super.dispose();
@@ -47,11 +43,8 @@ class _SliderControlState extends State<SliderControl> {
   void onChange(double value) {
     _value = value;
     var props = {"value": value};
-    widget.control.updateProperties(props, python: false, notify: true);
-    _debouncer.run(() {
-      widget.control.updateProperties(props, notify: true);
-      widget.control.triggerEvent("change");
-    });
+    widget.control.updateProperties(props, notify: true);
+    widget.control.triggerEvent("change");
   }
 
   @override

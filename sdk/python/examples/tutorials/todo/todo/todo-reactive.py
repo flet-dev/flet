@@ -94,10 +94,13 @@ def TodoAppView(state: TodoAppState):
                 spacing=25,
                 controls=[
                     ft.Tabs(
-                        scrollable=False,
                         selected_index=state.statuses.index(state.status),
+                        length=len(state.statuses),
                         on_change=state.status_changed,
-                        tabs=[ft.Tab(label=tab) for tab in state.statuses],
+                        content=ft.TabBar(
+                            scrollable=False,
+                            tabs=[ft.Tab(label=tab) for tab in state.statuses],
+                        ),
                     ),
                     ft.Column(
                         [TaskItemView(state, task) for task in state.get_tasks()]
@@ -190,7 +193,7 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.AUTO
 
     state = TodoAppState()
-    page.add(ft.ControlBuilder(state, lambda state: TodoAppView(state)))
+    page.add(ft.StateView(state, lambda state: TodoAppView(state)))
 
 
 ft.run(main)

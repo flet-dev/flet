@@ -48,11 +48,11 @@ from flet.controls.buttons import (
     ShapeBorder,
     StadiumBorder,
 )
+from flet.controls.cache import cache
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.context import context
+from flet.controls.context import Context, context
 from flet.controls.control import Control
-from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import (
     ControlEvent,
     ControlEventHandler,
@@ -117,6 +117,7 @@ from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
+from flet.controls.core.state_view import StateView
 from flet.controls.core.text import (
     Text,
     TextAffinity,
@@ -182,7 +183,6 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
-from flet.controls.data_view import data_view
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import (
     DateTimeValue,
@@ -494,7 +494,6 @@ from flet.controls.types import (
     VisualDensity,
     WebRenderer,
 )
-from flet.controls.update_behavior import UpdateBehavior
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -575,9 +574,9 @@ __all__ = [
     "Column",
     "ConstrainedControl",
     "Container",
+    "Context",
     "ContinuousRectangleBorder",
     "Control",
-    "ControlBuilder",
     "ControlEvent",
     "ControlEventHandler",
     "ControlState",
@@ -843,6 +842,7 @@ __all__ = [
     "Stack",
     "StackFit",
     "StadiumBorder",
+    "StateView",
     "StoragePaths",
     "StrOrControl",
     "StrokeCap",
@@ -897,7 +897,6 @@ __all__ = [
     "TooltipValue",
     "TransparentPointer",
     "UnderlineTabIndicator",
-    "UpdateBehavior",
     "Url",
     "UrlLauncher",
     "UrlTarget",
@@ -918,11 +917,11 @@ __all__ = [
     "app_async",
     "border",
     "border_radius",
+    "cache",
     "context",
     "control",
     "cupertino_colors",
     "cupertino_icons",
-    "data_view",
     "dropdown",
     "dropdownm2",
     "icons",

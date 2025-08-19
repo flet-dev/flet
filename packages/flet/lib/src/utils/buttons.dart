@@ -3,14 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/text.dart';
-import '../utils/theme.dart';
-import '../utils/time.dart';
-import '../utils/transforms.dart';
+import 'text.dart';
+import 'theme.dart';
+import 'time.dart';
+import 'transforms.dart';
 import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
+import 'geometry.dart';
 import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
@@ -60,6 +61,9 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     iconSize: parseWidgetStateDouble(value["icon_size"]),
     visualDensity: parseVisualDensity(value["visual_density"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    fixedSize: parseWidgetStateSize(value["fixed_size"]),
+    maximumSize: parseWidgetStateSize(value["maximum_size"]),
+    minimumSize: parseWidgetStateSize(value["minimum_size"]),
   );
 }
 
