@@ -97,9 +97,10 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Defines how the [`content`][flet.Container.content] of the container is clipped.
 
-    Defaults to `ClipBehavior.ANTI_ALIAS` if [`border_radius`][flet.Container.border_radius] is not `None`;
+    Defaults to `ClipBehavior.ANTI_ALIAS` if
+    [`border_radius`][flet.Container.border_radius] is not `None`;
     otherwise `ClipBehavior.NONE`.
-    """  # noqa: E501
+    """
 
     ink: bool = False
     """

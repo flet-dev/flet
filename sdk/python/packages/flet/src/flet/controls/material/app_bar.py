@@ -38,12 +38,15 @@ class AppBar(AdaptiveControl):
 
     automatically_imply_leading: bool = True
     """
-    Whether we should try to imply the [`leading`][flet.AppBar.leading] control if it is `None`.
+    Whether we should try to imply the [`leading`][flet.AppBar.leading] control
+    if it is `None`.
 
-    - If `True` and `leading` is `None`, this app bar will automatically determine an appropriate leading control.
-    - If `False` and `leading` is `None`, the space is allocated to the [`title`][flet.AppBar.title].
+    - If `True` and `leading` is `None`, this app bar will automatically determine
+      an appropriate leading control.
+    - If `False` and `leading` is `None`, the space is allocated to the
+      [`title`][flet.AppBar.title].
     - If a `leading` control is provided, this parameter has no effect.
-    """  # noqa: E501
+    """
 
     title: Optional[StrOrControl] = None
     """
