@@ -678,8 +678,8 @@ class Page(BasePage):
                 for a new browser tab (or in external application on mobile device),
                 or a custom name for a named tab.
             web_popup_window: Display the URL in a browser popup window.
-            window_width: Popup window width.
-            window_height: Popup window height.
+            web_popup_window_width: Popup window width.
+            web_popup_window_height: Popup window height.
         """
         await self.url_launcher.launch_url(
             url,
