@@ -667,9 +667,15 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
-            [fc.Image(src="https://picsum.photos/id/237/100/100", x=10, y=10)],
-            width=120,
-            height=120,
+            [
+                fc.Image(
+                    src="https://raw.githubusercontent.com/flet-dev/media/refs/heads/main/pictures/minion.png",
+                    x=10,
+                    y=10,
+                )
+            ],
+            width=150,
+            height=150,
         ),
         pump_times=7,
         pump_duration=1000,
