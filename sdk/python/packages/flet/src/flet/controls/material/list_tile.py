@@ -184,7 +184,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][ft.ListTile.on_click] event callback is provided,
+    Additionally, if [`on_click`][flet.ListTile.on_click] event callback is provided,
     it is fired after that.
     """
 

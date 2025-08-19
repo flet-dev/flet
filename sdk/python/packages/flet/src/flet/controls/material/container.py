@@ -103,7 +103,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Defines how the [`content`][flet.Container.content] of the container is clipped.
 
-    Defaults to `ClipBehavior.ANTI_ALIAS` if [`border_radius`][flet.Container.border_radius] is not `None`;
+    Defaults to `ClipBehavior.ANTI_ALIAS` if
+    [`border_radius`][flet.Container.border_radius] is not `None`;
     otherwise `ClipBehavior.NONE`.
     """
 
@@ -180,7 +181,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     The URL to open when this container is clicked.
 
-    Additionally, if [`on_click`][ft.Container.on_click] event callback is provided,
+    Additionally, if [`on_click`][flet.Container.on_click] event callback is provided,
     it is fired after that.
     """
 
@@ -241,7 +242,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     theme_mode: Optional[ThemeMode] = None
     """
     "Resets" parent theme and creates a new, unique scheme for all
-    controls inside the container. Otherwise the styles defined in container's [`theme`][flet.Container.theme]
+    controls inside the container. Otherwise the styles defined in
+    container's [`theme`][flet.Container.theme]
     property override corresponding styles from the parent, inherited theme.
 
     Defaults to `ThemeMode.SYSTEM`.
@@ -321,8 +323,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists the container area.
 
-    The `data` property of the event handler argument is `True` when the cursor enters and
-    `False` when it exits.
+    The `data` property of the event handler argument is `True`
+    when the cursor enters and `False` when it exits.
 
     Example:
         A container changing its background color on mouse hover:
