@@ -9,7 +9,6 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_color(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -22,7 +21,6 @@ async def test_draw_color(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_points_as_points(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -45,7 +43,6 @@ async def test_draw_points_as_points(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_points_as_lines(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -72,7 +69,6 @@ async def test_draw_points_as_lines(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_points_as_polygon(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -95,7 +91,6 @@ async def test_draw_points_as_polygon(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.skip(reason="This test is temporarily disabled.")
 async def test_draw_shadow(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -126,7 +121,6 @@ async def test_draw_shadow(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_line(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -139,7 +133,6 @@ async def test_draw_line(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_line(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -162,7 +155,6 @@ async def test_draw_dashed_line(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_circle(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -182,7 +174,6 @@ async def test_draw_circle(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_circle(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -207,7 +198,6 @@ async def test_draw_dashed_circle(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_filled_circle_default_paint(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -220,7 +210,6 @@ async def test_draw_filled_circle_default_paint(flet_app: ftt.FletTestApp, reque
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_oval(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -241,7 +230,6 @@ async def test_draw_oval(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_oval(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -267,7 +255,6 @@ async def test_draw_dashed_oval(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_arc(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -294,7 +281,6 @@ async def test_draw_arc(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_arc(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -323,7 +309,6 @@ async def test_draw_dashed_arc(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_arc_with_center(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -352,7 +337,6 @@ async def test_draw_dashed_arc_with_center(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_filled_rect(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -377,7 +361,6 @@ async def test_draw_filled_rect(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_rect(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -404,7 +387,6 @@ async def test_draw_dashed_rect(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_flet_logo_with_path(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -444,7 +426,6 @@ async def test_draw_flet_logo_with_path(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_dashed_path_with_fill(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -484,7 +465,6 @@ async def test_draw_dashed_path_with_fill(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_text(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -604,7 +584,6 @@ async def test_draw_text(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_gradients(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -671,7 +650,6 @@ async def test_draw_gradients(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_asset_image(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
@@ -686,13 +664,18 @@ async def test_draw_asset_image(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
-            [fc.Image(src="https://picsum.photos/id/237/100/100", x=10, y=10)],
-            width=120,
-            height=120,
+            [
+                fc.Image(
+                    src="https://raw.githubusercontent.com/flet-dev/media/refs/heads/main/pictures/minion.png",
+                    x=10,
+                    y=10,
+                )
+            ],
+            width=150,
+            height=150,
         ),
         pump_times=7,
         pump_duration=1000,
@@ -701,7 +684,6 @@ async def test_draw_url_image(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_capture(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     canvas = fc.Canvas(
         [
             fc.Circle(

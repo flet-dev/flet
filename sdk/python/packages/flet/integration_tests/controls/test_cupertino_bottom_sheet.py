@@ -1,11 +1,11 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_cupertino_bottom_sheet_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     action_sheet = ft.CupertinoActionSheet(
         title=ft.Row(
             controls=[ft.Text("Title"), ft.Icon(ft.Icons.BEDTIME)],

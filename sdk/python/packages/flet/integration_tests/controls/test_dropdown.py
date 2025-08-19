@@ -1,11 +1,11 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_dropdown_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     colors = [ft.Colors.RED, ft.Colors.BLUE, ft.Colors.GREEN]
     dd = ft.Dropdown(
         label="Color",

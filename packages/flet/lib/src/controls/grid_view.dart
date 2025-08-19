@@ -4,8 +4,10 @@ import '../controls/control_widget.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
+import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
@@ -105,6 +107,17 @@ class _GridViewControlState extends State<GridViewControl> {
                       control: widget.control.children("controls")[index]);
                 },
               );
+
+        if (horizontal &&
+            constraints.maxHeight == double.infinity &&
+            widget.control.getDouble("height") == null &&
+            widget.control.getExpand("expand", 0)! <= 0) {
+          return const ErrorControl(
+              "Error displaying GridViewControl: height is unbounded.",
+              description:
+                  "Set a fixed height, a non-zero expand, or place inside "
+                  "a control with bounded height.");
+        }
 
         child = ScrollableControl(
             control: widget.control,

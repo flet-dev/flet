@@ -15,7 +15,6 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     ad = ft.AlertDialog(
         key="ad",
         title=ft.Text("Hello"),
@@ -41,7 +40,6 @@ async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_update_body(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     ad = ft.AlertDialog(
         key="ad",
         title=ft.Text("Test"),

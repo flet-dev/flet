@@ -156,6 +156,7 @@ class FletTestApp:
             self.__page = page
             self.__tester = Tester()
             page.services.append(self.__tester)
+            page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
 
             if asyncio.iscoroutinefunction(self.__flet_app_main):
@@ -261,6 +262,7 @@ class FletTestApp:
         control: Control,
         pump_times: int = 0,
         pump_duration: Optional[ft.DurationValue] = None,
+        expand_screenshot: bool = False,
     ):
         """
         Adds control to a clean page, takes a screenshot and compares it with
@@ -276,7 +278,7 @@ class FletTestApp:
         await self.tester.pump_and_settle()
 
         # add control and take screenshot
-        screenshot = ft.Screenshot(control)
+        screenshot = ft.Screenshot(control, expand=expand_screenshot)
         self.page.add(screenshot)
         await self.tester.pump_and_settle()
         for _ in range(0, pump_times):

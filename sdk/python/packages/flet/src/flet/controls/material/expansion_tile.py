@@ -209,4 +209,5 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.title.visible, "title must be visible"
+        if isinstance(self.title, Control):
+            assert self.title.visible, "title must be visible"

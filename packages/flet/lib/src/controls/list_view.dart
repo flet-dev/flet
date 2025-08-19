@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/layout.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -5,6 +6,7 @@ import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
+import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
@@ -120,6 +122,17 @@ class _ListViewControlState extends State<ListViewControl> {
                     },
                     prototypeItem: prototypeItem,
                   );
+
+        if (horizontal &&
+            constraints.maxHeight == double.infinity &&
+            widget.control.getDouble("height") == null &&
+            widget.control.getExpand("expand", 0)! <= 0) {
+          return const ErrorControl(
+              "Error displaying ListViewControl: height is unbounded.",
+              description:
+                  "Set a fixed height, a non-zero expand, or place inside "
+                  "a control with bounded height.");
+        }
 
         child = ScrollableControl(
             control: widget.control,
