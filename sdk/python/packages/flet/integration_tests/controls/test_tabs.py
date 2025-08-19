@@ -8,13 +8,11 @@ import flet.testing as ftt
 async def test_tabs_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
-        request.node.name,
-        ft.Tabs(
-            # selected_index=1,
+        name=request.node.name,
+        expand_screenshot=True,
+        control=ft.Tabs(
             length=2,
-            expand=True,
             content=ft.Column(
-                expand=True,
                 controls=[
                     ft.TabBar(
                         tabs=[
@@ -27,22 +25,24 @@ async def test_tabs_basic(flet_app: ftt.FletTestApp, request):
                             # ),
                         ]
                     ),
-                    ft.TabBarView(
+                    ft.Container(
                         expand=True,
-                        controls=[
-                            ft.Container(
-                                content=ft.Text("This is Tab 1"),
-                                alignment=ft.Alignment.CENTER,
-                            ),
-                            # ft.Container(
-                            #     content=ft.Text("This is Tab 2"),
-                            #     alignment=ft.Alignment.CENTER,
-                            # ),
-                            ft.Container(
-                                content=ft.Text("This is Tab 3"),
-                                alignment=ft.Alignment.CENTER,
-                            ),
-                        ],
+                        content=ft.TabBarView(
+                            controls=[
+                                ft.Container(
+                                    content=ft.Text("This is Tab 1"),
+                                    alignment=ft.Alignment.CENTER,
+                                ),
+                                # ft.Container(
+                                #     content=ft.Text("This is Tab 2"),
+                                #     alignment=ft.Alignment.CENTER,
+                                # ),
+                                ft.Container(
+                                    content=ft.Text("This is Tab 3"),
+                                    alignment=ft.Alignment.CENTER,
+                                ),
+                            ],
+                        ),
                     ),
                 ],
             ),

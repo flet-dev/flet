@@ -1,18 +1,19 @@
+import 'package:flutter/material.dart';
+
 import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
-import '../utils/misc.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/layout.dart';
+import '../utils/misc.dart';
+import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/tabs.dart';
 import '../utils/text.dart';
 import '../utils/time.dart';
-import 'package:flutter/material.dart';
-
-import '../models/control.dart';
-import '../utils/alignment.dart';
-import '../utils/mouse.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -159,15 +160,28 @@ class TabBarViewControl extends StatelessWidget {
     if (tabsState != null) {
       final tabController = tabsState._tabController;
 
-      return ConstrainedControl(
-          control: control,
-          child: TabBarView(
-            controller: tabController,
-            clipBehavior:
-                control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
-            viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
-            children: control.buildWidgets("controls"),
-          ));
+      return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxHeight == double.infinity &&
+            control.getDouble("height") == null &&
+            control.getExpand("expand", 0)! <= 0) {
+          return const ErrorControl(
+              "Error displaying TabBarView: height is unbounded.",
+              description:
+                  "Set a fixed height, a non-zero expand, or/and place inside "
+                  "a control with bounded height.");
+        }
+
+        return ConstrainedControl(
+            control: control,
+            child: TabBarView(
+              controller: tabController,
+              clipBehavior:
+                  control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+              viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
+              children: control.buildWidgets("controls"),
+            ));
+      });
     } else {
       return const ErrorControl(
           "TabBarView must be used within a Tabs control");
