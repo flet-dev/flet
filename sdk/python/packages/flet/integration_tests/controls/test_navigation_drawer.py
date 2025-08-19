@@ -6,8 +6,6 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_navigation_drawer_position_end(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-
     end_drawer = ft.NavigationDrawer(
         position=ft.NavigationDrawerPosition.END,
         controls=[
@@ -39,8 +37,6 @@ async def test_navigation_drawer_position_end(flet_app: ftt.FletTestApp, request
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_navigation_drawer_default_position(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-
     end_drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(

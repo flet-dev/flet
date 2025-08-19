@@ -1,12 +1,11 @@
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_chip(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Chip(
@@ -21,7 +20,6 @@ async def test_chip(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_chip_clicked(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app.page.clean()
     await flet_app.tester.pump_and_settle()
 

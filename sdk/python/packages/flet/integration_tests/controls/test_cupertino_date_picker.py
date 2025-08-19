@@ -8,7 +8,6 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_cupertino_date_picker_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     date_picker = ft.CupertinoDatePicker(
         value=datetime.datetime(year=2024, month=8, day=15),
         date_picker_mode=ft.CupertinoDatePickerMode.DATE_AND_TIME,

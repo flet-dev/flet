@@ -8,12 +8,11 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_time_picker_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     time_picker = ft.TimePicker(
         confirm_text="Confirm",
         error_invalid_text="Time out of range",
         help_text="Pick your time slot",
-        value=datetime.time(hour=1, minute=30, second=30)
+        value=datetime.time(hour=1, minute=30, second=30),
     )
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400

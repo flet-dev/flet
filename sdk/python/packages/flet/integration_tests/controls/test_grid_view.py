@@ -6,7 +6,6 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_grid_view_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.GridView(
@@ -19,7 +18,6 @@ async def test_grid_view_basic(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_grid_view_max_extent(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.GridView(
@@ -36,7 +34,6 @@ async def test_grid_view_max_extent(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_grid_view_horizontal_unbound(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.GridView(
@@ -53,7 +50,6 @@ async def test_grid_view_horizontal_unbound(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_grid_view_horizontal(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.GridView(

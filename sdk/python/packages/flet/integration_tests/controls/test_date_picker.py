@@ -8,12 +8,11 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_date_picker_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     dp = ft.DatePicker(
-                    current_date=datetime.datetime(year=2025, month=8, day=15),
-                    first_date=datetime.datetime(year=2000, month=10, day=1),
-                    last_date=datetime.datetime(year=2025, month=10, day=1),
-                )
+        current_date=datetime.datetime(year=2025, month=8, day=15),
+        first_date=datetime.datetime(year=2000, month=10, day=1),
+        last_date=datetime.datetime(year=2025, month=10, day=1),
+    )
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600

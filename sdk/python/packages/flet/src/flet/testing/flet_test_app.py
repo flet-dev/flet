@@ -156,6 +156,7 @@ class FletTestApp:
             self.__page = page
             self.__tester = Tester()
             page.services.append(self.__tester)
+            page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
 
             if asyncio.iscoroutinefunction(self.__flet_app_main):

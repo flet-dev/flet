@@ -6,8 +6,6 @@ import flet.testing as ftt
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_menu_ber_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-
     pb = ft.MenuBar(
         expand=True,
         style=ft.MenuStyle(
