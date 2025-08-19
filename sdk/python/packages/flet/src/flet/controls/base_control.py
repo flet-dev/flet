@@ -53,14 +53,14 @@ def control(
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
     Decorator to optionally set widget name and 'isolated' while behaving
-    like @dataclass.
+    like [`@dataclass`][dataclasses.dataclass].
 
     Parameters:
         dart_widget_name: The name of widget on Dart side.
         isolated: If `True`, marks the control as isolated. An isolated control
             is excluded from page updates when its parent control is updated.
         post_init_args: Number of InitVar arguments to pass to __post_init__.
-        dataclass_kwargs: Additional keyword arguments passed to @dataclass.
+        **dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Usage:
         - Supports `@control` (without parentheses)
