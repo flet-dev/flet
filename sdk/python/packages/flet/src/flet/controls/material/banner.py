@@ -137,7 +137,8 @@ class Banner(DialogControl):
         assert self.elevation is None or self.elevation >= 0, (
             f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
-        assert self.content.visible, "content must be visible"
+        if isinstance(self.content, Control):
+            assert self.content.visible, "content must be visible"
         assert any(a.visible for a in self.actions), (
             "actions must contain at minimum one visible action Control"
         )
