@@ -6,7 +6,6 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.margin import MarginValue
 from flet.controls.types import ClipBehavior, ColorValue, Number
 
 __all__ = ["Card", "CardVariant"]
@@ -31,15 +30,8 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     Tip:
         To display multiple children, wrap them in a control like [`Row`][flet.Row],
-        [`Column`][flet.Column], or [`Stack`][flet.Stack], which accept a `controls` list.
-    """
-
-    margin: Optional[MarginValue] = None
-    """
-    The empty space that surrounds the card.
-
-    Defaults to [`CardTheme.margin`][flet.CardTheme.margin], or if that is `None`,
-    falls back to `Margin.all(4.0)`.
+        [`Column`][flet.Column], or [`Stack`][flet.Stack], which accept
+        a `controls` list.
     """
 
     elevation: Optional[Number] = None
@@ -61,8 +53,9 @@ class Card(ConstrainedControl, AdaptiveControl):
     The color to paint the shadow below this
     card.
 
-    Defaults to [`CardTheme.shadow_color`][flet.CardTheme.shadow_color], or if that is `None`,
-    falls back to [`Theme.shadow_color`][flet.Theme.shadow_color] (which defaults to `Colors.BLACK`).
+    Defaults to [`CardTheme.shadow_color`][flet.CardTheme.shadow_color],
+    or if that is `None`, falls back to [`Theme.shadow_color`][flet.Theme.shadow_color]
+    (which defaults to `Colors.BLACK`).
     """
 
     surface_tint_color: Optional[ColorValue] = None
@@ -87,8 +80,8 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
     Defines how the [`content`][flet.Card.content] will be clipped.
 
-    Defaults to [`CardTheme.clip_behavior`][flet.CardTheme.clip_behavior], or if that is `None`,
-    falls back to `ClipBehavior.NONE`.
+    Defaults to [`CardTheme.clip_behavior`][flet.CardTheme.clip_behavior],
+    or if that is `None`, falls back to `ClipBehavior.NONE`.
     """
 
     semantic_container: bool = True
@@ -108,3 +101,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
     Defines the card variant to be used.
     """
+
+    def init(self):
+        super().init()
+        self._internals["skip_properties"] = ["margin"]
