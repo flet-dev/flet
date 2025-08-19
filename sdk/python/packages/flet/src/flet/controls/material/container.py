@@ -19,7 +19,6 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
-from flet.controls.margin import MarginValue
 from flet.controls.padding import PaddingValue
 from flet.controls.theme import Theme
 from flet.controls.types import (
@@ -53,11 +52,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Empty space to inscribe inside a container decoration (background, border). The
     child control is placed inside this padding.
-    """
-
-    margin: Optional[MarginValue] = None
-    """
-    Empty space to surround the decoration and child control.
     """
 
     alignment: Optional[Alignment] = None
@@ -242,9 +236,9 @@ class Container(ConstrainedControl, AdaptiveControl):
     theme_mode: Optional[ThemeMode] = None
     """
     "Resets" parent theme and creates a new, unique scheme for all
-    controls inside the container. Otherwise the styles defined in
-    container's [`theme`][flet.Container.theme]
-    property override corresponding styles from the parent, inherited theme.
+    controls inside the container. Otherwise the styles defined in container's
+    [`theme`][flet.Container.theme] property override corresponding styles from
+    the parent, inherited theme.
 
     Defaults to `ThemeMode.SYSTEM`.
     """
@@ -323,8 +317,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists the container area.
 
-    The `data` property of the event handler argument is `True`
-    when the cursor enters and `False` when it exits.
+    The `data` property of the event handler argument is `True` when the cursor
+    enters and `False` when it exits.
 
     Example:
         A container changing its background color on mouse hover:
@@ -353,4 +347,4 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     def init(self):
         super().init()
-        self._internals["skip_properties"] = ["width", "height"]
+        self._internals["skip_properties"] = ["width", "height", "margin"]

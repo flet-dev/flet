@@ -611,13 +611,13 @@ def test_control_builder():
 
     state = State(msg="some text")
 
-    dv = ft.ControlBuilder(state, builder=lambda state: ft.Text(state.msg))
+    dv = ft.StateView(state, builder=lambda state: ft.Text(state.msg))
     _, patch, _, added_controls, removed_controls = make_msg(dv, {})
     assert len(added_controls) == 2
     assert len(removed_controls) == 0
     assert cmp_ops(
         patch,
-        [{"op": "replace", "path": [], "value_type": ft.ControlBuilder}],
+        [{"op": "replace", "path": [], "value_type": ft.StateView}],
     )
     assert isinstance(patch[0]["value"].content, ft.Text)
     assert hasattr(patch[0]["value"].content, "_frozen")
@@ -639,11 +639,11 @@ def test_nested_control_builders():
 
     state = AppState(count=0)
 
-    cb = ft.ControlBuilder(
+    cb = ft.StateView(
         state,
         lambda state: ft.SafeArea(
             ft.Container(
-                ft.ControlBuilder(
+                ft.StateView(
                     state,
                     lambda state: ft.Text(
                         value=f"{state.count}",
@@ -669,12 +669,12 @@ def test_nested_control_builders():
     _, patch, _, added_controls, removed_controls = make_msg(cb, {})
     assert len(added_controls) == 5
     assert len(removed_controls) == 0
-    assert not hasattr(patch[0]["value"], "_frozen")  # ControlBuilder
+    assert not hasattr(patch[0]["value"], "_frozen")  # StateView
     assert hasattr(patch[0]["value"].content, "_frozen")  # SafeArea
     assert hasattr(patch[0]["value"].content.content, "_frozen")  # Center
     assert hasattr(
         patch[0]["value"].content.content.content, "_frozen"
-    )  # ControlBuilder (nested)
+    )  # StateView (nested)
     assert hasattr(patch[0]["value"].content.content.content.content, "_frozen")  # Text
 
     state.count = 10

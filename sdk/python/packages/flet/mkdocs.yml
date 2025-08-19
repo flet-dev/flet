@@ -227,7 +227,6 @@ nav:
               - BaseControl: controls/basecontrol.md
               - ConstrainedControl: controls/constrainedcontrol.md
               - Control: controls/control.md
-              - ControlBuilder: controls/controlbuilder.md
               - DialogControl: controls/dialogcontrol.md
               - MultiView: controls/multiview.md
               - BasePage: controls/basepage.md
@@ -385,6 +384,7 @@ nav:
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
               - Screenshot: controls/screenshot.md
+              - StateView: controls/stateview.md
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md

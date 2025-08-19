@@ -53,7 +53,6 @@ from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.context import Context, context
 from flet.controls.control import Control
-from flet.controls.control_builder import ControlBuilder
 from flet.controls.control_event import (
     ControlEvent,
     ControlEventHandler,
@@ -118,6 +117,7 @@ from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
+from flet.controls.core.state_view import StateView
 from flet.controls.core.text import (
     Text,
     TextAffinity,
@@ -577,7 +577,6 @@ __all__ = [
     "Context",
     "ContinuousRectangleBorder",
     "Control",
-    "ControlBuilder",
     "ControlEvent",
     "ControlEventHandler",
     "ControlState",
@@ -843,6 +842,7 @@ __all__ = [
     "Stack",
     "StackFit",
     "StadiumBorder",
+    "StateView",
     "StoragePaths",
     "StrOrControl",
     "StrokeCap",

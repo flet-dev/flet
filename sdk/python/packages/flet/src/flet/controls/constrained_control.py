@@ -1,9 +1,11 @@
 from typing import Optional
 
+from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.margin import MarginValue
 from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import Number
 
@@ -58,6 +60,16 @@ class ConstrainedControl(Control):
         [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
     """
 
+    align: Optional[Alignment] = None
+    """
+    Alignment of the control within its parent.
+    """
+
+    margin: Optional[MarginValue] = None
+    """
+    Sets the margin of the control.
+    """
+
     rotate: Optional[RotateValue] = None
     """
     Transforms this control using a rotation around its center.
@@ -86,9 +98,11 @@ class ConstrainedControl(Control):
 
     scale: Optional[ScaleValue] = None
     """
-    Scales this control along the 2D plane. Default scale factor is `1.0`, meaning no-scale.
+    Scales this control along the 2D plane. Default scale factor is `1.0`,
+    meaning no-scale.
 
-    Setting this property to `0.5`, for example, makes this control twice smaller, while `2.0` makes it twice larger.
+    Setting this property to `0.5`, for example, makes this control twice smaller,
+    while `2.0` makes it twice larger.
 
     Different scale multipliers can be specified for `x` and `y` axis, by setting
     `Control.scale` property to an instance of `Scale` class.
@@ -154,7 +168,8 @@ class ConstrainedControl(Control):
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`opacity`][flet.ConstrainedControl.opacity] property.
+    Enables implicit animation of the [`opacity`][flet.ConstrainedControl.opacity]
+    property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
@@ -168,14 +183,32 @@ class ConstrainedControl(Control):
     """
     Enables implicit animation of the positioning properties
     ([`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right],
-    [`top`][flet.ConstrainedControl.top] and [`bottom`][flet.ConstrainedControl.bottom]).
+    [`top`][flet.ConstrainedControl.top] and
+    [`bottom`][flet.ConstrainedControl.bottom]).
+
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    """
+
+    animate_align: Optional[AnimationValue] = None
+    """
+    Enables implicit animation of the [`align`][flet.ConstrainedControl.align]
+    property.
+
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    """
+
+    animate_margin: Optional[AnimationValue] = None
+    """
+    Enables implicit animation of the [`margin`][flet.ConstrainedControl.margin]
+    property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_rotation: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`rotate`][flet.ConstrainedControl.rotate] property.
+    Enables implicit animation of the [`rotate`][flet.ConstrainedControl.rotate]
+    property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
@@ -189,7 +222,8 @@ class ConstrainedControl(Control):
 
     animate_offset: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`offset`][flet.ConstrainedControl.offset] property.
+    Enables implicit animation of the [`offset`][flet.ConstrainedControl.offset]
+    property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
@@ -200,7 +234,8 @@ class ConstrainedControl(Control):
 
     Can be used to chain multiple animations.
 
-    The `data` property of the event handler argument contains the name of the animation.
+    The `data` property of the event handler argument contains the name
+    of the animation.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """

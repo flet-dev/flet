@@ -17,7 +17,7 @@ def main(page: ft.Page):
     state = AppState(strokes=False)
 
     page.add(
-        ft.ControlBuilder(
+        ft.StateView(
             state,
             lambda state: ft.SafeArea(
                 expand=True,

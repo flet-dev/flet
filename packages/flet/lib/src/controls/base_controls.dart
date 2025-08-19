@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/badge.dart';
+import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
 import '../utils/tooltip.dart';
 import '../utils/transforms.dart';
@@ -46,6 +48,8 @@ class ConstrainedControl extends StatelessWidget {
     w = _scaledControl(context, w, control);
     w = _offsetControl(context, w, control);
     w = _aspectRatio(w, control);
+    w = _alignedControl(context, w, control);
+    w = _marginControl(context, w, control);
     w = _positionedControl(context, w, control);
     w = _badge(w, Theme.of(context), control);
     return _expandable(w, control);
@@ -189,6 +193,57 @@ Widget _offsetControl(BuildContext context, Widget widget, Control control) {
     );
   } else if (offset != null) {
     return FractionalTranslation(translation: offset, child: widget);
+  }
+  return widget;
+}
+
+Widget _alignedControl(BuildContext context, Widget widget, Control control) {
+  var alignment = control.getAlignment("align");
+  var animation = control.getAnimation("animate_align");
+  if (alignment != null && animation != null) {
+    return AnimatedAlign(
+      alignment: alignment,
+      duration: animation.duration,
+      curve: animation.curve,
+      onEnd: control.getBool("on_animation_end", false)!
+          ? () {
+              control.triggerEvent("animation_end", "align");
+            }
+          : null,
+      child: widget,
+    );
+  } else if (alignment != null) {
+    return Align(
+      alignment: alignment,
+      child: widget,
+    );
+  }
+  return widget;
+}
+
+Widget _marginControl(BuildContext context, Widget widget, Control control) {
+  final skipProps = control.internals?["skip_properties"] as List?;
+  if (skipProps?.contains("margin") == true) return widget;
+
+  var margin = control.getEdgeInsets("margin");
+  var animation = control.getAnimation("animate_margin");
+  if (margin != null && animation != null) {
+    return AnimatedContainer(
+      margin: margin,
+      duration: animation.duration,
+      curve: animation.curve,
+      onEnd: control.getBool("on_animation_end", false)!
+          ? () {
+              control.triggerEvent("animation_end", "margin");
+            }
+          : null,
+      child: widget,
+    );
+  } else if (margin != null) {
+    return Container(
+      margin: margin,
+      child: widget,
+    );
   }
   return widget;
 }

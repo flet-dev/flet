@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
-import '../utils/debouncer.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 import 'base_controls.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
@@ -20,23 +18,18 @@ class CupertinoSliderControl extends StatefulWidget {
 
 class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   double _value = 0;
-  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
   late FletBackend backend;
 
   @override
   void dispose() {
-    _debouncer.dispose();
     super.dispose();
   }
 
   void onChange(double value) {
     _value = value;
     var props = {"value": value};
-    widget.control.updateProperties(props, python: false, notify: true);
-    _debouncer.run(() {
-      widget.control.updateProperties(props, notify: true);
-      widget.control.triggerEvent("change");
-    });
+    widget.control.updateProperties(props, notify: true);
+    widget.control.triggerEvent("change");
   }
 
   @override
