@@ -12,24 +12,15 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_checkbox_basic(flet_app: ftt.FletTestApp, request):
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.add(ft.Checkbox())
-    flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
-
-    flet_app.assert_screenshot(
-        "checkbox_basic",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+async def test_basic(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Checkbox(),
     )
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_checkbox_theme(flet_app: ftt.FletTestApp, request):
+async def test_theme(flet_app: ftt.FletTestApp):
     flet_app.page.theme = ft.Theme(
         checkbox_theme=ft.CheckboxTheme(
             check_color=ft.Colors.RED,
@@ -42,20 +33,18 @@ async def test_checkbox_theme(flet_app: ftt.FletTestApp, request):
             mouse_cursor=ft.MouseCursor.FORBIDDEN,
         )
     )
-
-    cb = ft.Checkbox(key="cb", value=True)
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600
-    flet_app.page.add(ft.Container(key="c", content=cb, padding=20))
+
+    scr_1 = ft.Screenshot(cb := ft.Checkbox(key="cb", value=True, margin=20))
+    flet_app.page.add(scr_1)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "checkbox_theme_1",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        "theme_1",
+        await scr_1.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     # hover to check overlay color and splash radius
@@ -65,10 +54,8 @@ async def test_checkbox_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "checkbox_theme_2",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        "theme_2",
+        await scr_1.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     # uncheck the checkbox to test border side
@@ -77,8 +64,6 @@ async def test_checkbox_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "checkbox_theme_3",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        "theme_3",
+        await scr_1.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
