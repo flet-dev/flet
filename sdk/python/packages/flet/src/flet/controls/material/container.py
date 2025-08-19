@@ -175,7 +175,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
     The URL to open when this container is clicked.
 
-    Additionally, if [`on_click`][ft.Container.on_click] event callback is provided,
+    Additionally, if [`on_click`][flet.Container.on_click] event callback is provided,
     it is fired after that.
     """
 

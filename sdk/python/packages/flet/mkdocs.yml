@@ -513,6 +513,9 @@ nav:
               - Tooltip: types/tooltip.md
               - Url: types/url.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
+          - Decorators:
+              - cache: types/cache.md
+              - control: types/control.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md

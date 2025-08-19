@@ -21,12 +21,11 @@ def set_default_subparser(
     This should be called after setting up the argument parser but before
     `parse_args()`.
 
-    Parameters:
-    - name (str): The name of the default subparser to use.
-    - args (list, optional): A list of arguments passed to `parse_args()`. Defaults
-      to None.
-    - index (int): Position in `sys.argv` where the default subparser should be
-      inserted. Defaults to 0.
+    Args:
+        name: The name of the default subparser to use.
+        args: A list of arguments passed to `parse_args()`.
+        index: Position in `sys.argv` where the default subparser should be
+            inserted.
     """
 
     # exit if help or version flags are present

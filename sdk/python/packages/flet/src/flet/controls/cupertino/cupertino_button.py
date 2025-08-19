@@ -110,7 +110,7 @@ class CupertinoButton(ConstrainedControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][ft.CupertinoButton.on_click] event callback is
+    Additionally, if [`on_click`][flet.CupertinoButton.on_click] event callback is
     provided, it is fired after that.
     """
 

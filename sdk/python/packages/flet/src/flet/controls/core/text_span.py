@@ -47,7 +47,7 @@ class TextSpan(Control):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][ft.TextSpan.on_click] event callback is provided,
+    Additionally, if [`on_click`][flet.TextSpan.on_click] event callback is provided,
     it is fired after that.
     """
 
@@ -61,18 +61,20 @@ class TextSpan(Control):
 
     spell_out: Optional[bool] = None
     """
-    Whether the assistive technologies should spell out this text character by character.
+    Whether the assistive technologies should spell out this text
+    character by character.
 
-    If the text is 'hello world', setting this to true causes the assistive technologies,
-    such as VoiceOver or TalkBack, to pronounce 'h-e-l-l-o-space-w-o-r-l-d' instead of complete words.
+    If the text is 'hello world', setting this to true causes the assistive
+    technologies, such as VoiceOver or TalkBack, to pronounce
+    'h-e-l-l-o-space-w-o-r-l-d' instead of complete words.
     This is useful for texts, such as passwords or verification codes.
 
     If this span contains other text span children, they also inherit the property from
     this span unless explicitly set.
 
-    If the property is not set, this text span inherits the spell out setting from its parent.
-    If this text span does not have a parent or the parent does not have a spell out setting,
-    this text span does not spell out the text by default.
+    If the property is not set, this text span inherits the spell out setting
+    from its parent. If this text span does not have a parent or the parent does
+    not have a spell out setting, this text span does not spell out the text by default.
     """
 
     on_click: Optional[ControlEventHandler["TextSpan"]] = None
