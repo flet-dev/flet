@@ -2884,13 +2884,59 @@ class PopupMenuTheme:
     """
 
     label_text_style: Optional[TextStyle] = None
+    """
+    You can use this to specify a different style of the label when the popup menu item
+    is enabled and disabled.
+    """
+
     enable_feedback: Optional[bool] = None
+    """
+    Overrides the default value of
+    [`PopupMenuButton.enable_feedback`][flet.PopupMenuButton.enable_feedback] in all
+    descendant [`PopupMenuButton`][flet.PopupMenuButton] controls
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`PopupMenuButton.elevation`][flet.PopupMenuButton.elevation] in all descendant
+    [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     icon_size: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`PopupMenuButton.icon_size`][flet.PopupMenuButton.icon_size] in all descendant
+    [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`PopupMenuButton.shape`][flet.PopupMenuButton.shape] in all descendant
+    [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     menu_position: Optional[PopupMenuPosition] = None
+    """
+    Overrides the default value of
+    [`PopupMenuButton.menu_position`][flet.PopupMenuButton.menu_position] in all
+    descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value of
+    [`PopupMenuItem.mouse_cursor`][flet.PopupMenuItem.mouse_cursor] in all
+    descendant [`PopupMenuItem`][flet.PopupMenuItem] controls.
+    """
+
     menu_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`PopupMenuButton.menu_padding`][flet.PopupMenuButton.menu_padding] in all
+    descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
+    """
 
 
 @dataclass
