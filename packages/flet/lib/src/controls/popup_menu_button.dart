@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -62,6 +63,8 @@ class PopupMenuButtonControl extends StatelessWidget {
               var itemContent = item.buildTextOrWidget("content");
               var itemIcon = item.buildIconOrWidget("icon");
               var mouseCursor = item.getMouseCursor("mouse_cursor");
+              var labelTextStyle = item.getWidgetStateTextStyle(
+                  "label_text_style", Theme.of(context));
 
               Widget? child;
               if (itemContent != null && itemIcon == null) {
@@ -84,6 +87,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       padding: padding,
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
+                      labelTextStyle: labelTextStyle,
                       onTap: () => item.triggerEvent("click", !checked),
                       child: child,
                     )
@@ -91,6 +95,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       value: item.id.toString(),
                       height: height,
                       padding: padding,
+                      labelTextStyle: labelTextStyle,
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
                       onTap: () {

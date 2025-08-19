@@ -2878,15 +2878,11 @@ class PopupMenuTheme:
     descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
-    text_style: Optional[TextStyle] = None
-    """
-    The text style of items in the popup menu.
-    """
-
     label_text_style: Optional[TextStyle] = None
     """
-    You can use this to specify a different style of the label when the popup menu item
-    is enabled and disabled.
+    Overrides the default value of
+    [`PopupMenuItem.label_text_style`][flet.PopupMenuItem.label_text_style]
+    in all descendant [`PopupMenuItem`][flet.PopupMenuItem] controls.
     """
 
     enable_feedback: Optional[bool] = None

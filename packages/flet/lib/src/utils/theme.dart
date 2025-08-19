@@ -995,7 +995,6 @@ PopupMenuThemeData? parsePopupMenuTheme(
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
-    textStyle: parseTextStyle(value["text_style"], theme),
     labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
     elevation: parseDouble(value["elevation"]),

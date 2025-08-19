@@ -10,6 +10,7 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
+from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
@@ -64,6 +65,10 @@ class PopupMenuItem(Control):
         and a [`content`][flet.PopupMenuItem.content] is provided, then the padding's
         effect will not be visible.
     """
+
+    label_text_style: Optional[TextStyle] = None
+    """
+    The text style of the label of this menu item."""
 
     mouse_cursor: Optional[MouseCursor] = None
     """
