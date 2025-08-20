@@ -15,12 +15,16 @@ foreach($line in $lines) {
         $section = 'plain'
     } elseif ($line.Contains('Map<String, MaterialColor> _materialColors')) {
         $section = 'primary'
-    } elseif ($line.Contains('Map<String, MaterialAccentColor> _materialAccentColors')) {
+    } elseif ($line.Contains('Map<String, MaterialAccentColor> _materialAccentColors'))
+    {
         $section = 'accent'
     } elseif ($line.startswith('  "')) {
         $color = $line.split('"')[1]
-        $ucolor = $color.replace('deep', 'deep_').replace('light', 'light_').replace('grey', '_grey').replace('accent', '_accent').toUpper()
-
+        $ucolor = $color.replace('deep', 'deep_') \
+               .replace('light', 'light_') \
+               .replace('grey', '_grey') \
+               .replace('accent', '_accent')
+        $ucolor = $ucolor.upper()
         "$ucolor = `"$color`""
         if ($section -eq 'primary') {
             $shades = @(50, 100, 200, 300, 400, 500, 600, 700, 800, 900)
@@ -43,7 +47,7 @@ Code to sort the members:
 ```
 s = sorted(Colors, key=lambda i: i.value)
 for i in s:
-    print(f"{i.name} = \"{i.value}\"")
+    print(f'{i.name} = "{i.value}"')
 ```
 """
 
@@ -108,7 +112,8 @@ class Colors(str, Enum):
             color: The color to apply opacity to.
 
         Returns:
-            A string representing the color with opacity, in the format `"color,opacity"`.
+            A string representing the color with opacity, in the format
+            `"color,opacity"`.
 
         Examples:
             >>> Colors.with_opacity(0.5, Colors.RED)
@@ -122,6 +127,62 @@ class Colors(str, Enum):
         )
         color_str = color.value if isinstance(color, Enum) else color
         return f"{color_str},{opacity}"
+
+    from enum import Enum
+
+
+class ColorSchemeName(Enum):
+    PRIMARY = "primary"
+    ON_PRIMARY = "onprimary"
+    PRIMARY_CONTAINER = "primarycontainer"
+    ON_PRIMARY_CONTAINER = "onprimarycontainer"
+    PRIMARY_FIXED = "primaryfixed"
+    PRIMARY_FIXED_DIM = "primaryfixeddim"
+    ON_PRIMARY_FIXED = "onprimaryfixed"
+    ON_PRIMARY_FIXED_VARIANT = "onprimaryfixedvariant"
+
+    SECONDARY = "secondary"
+    ON_SECONDARY = "onsecondary"
+    SECONDARY_CONTAINER = "secondarycontainer"
+    ON_SECONDARY_CONTAINER = "onsecondarycontainer"
+    SECONDARY_FIXED = "secondaryfixed"
+    SECONDARY_FIXED_DIM = "secondaryfixeddim"
+    ON_SECONDARY_FIXED = "onsecondaryfixed"
+    ON_SECONDARY_FIXED_VARIANT = "onsecondaryfixedvariant"
+
+    TERTIARY = "tertiary"
+    ON_TERTIARY = "ontertiary"
+    TERTIARY_CONTAINER = "tertiarycontainer"
+    ON_TERTIARY_CONTAINER = "ontertiarycontainer"
+    TERTIARY_FIXED = "tertiaryfixed"
+    TERTIARY_FIXED_DIM = "tertiaryfixeddim"
+    ON_TERTIARY_FIXED = "ontertiaryfixed"
+    ON_TERTIARY_FIXED_VARIANT = "ontertiaryfixedvariant"
+
+    ERROR = "error"
+    ON_ERROR = "onerror"
+    ERROR_CONTAINER = "errorcontainer"
+    ON_ERROR_CONTAINER = "onerrorcontainer"
+
+    SURFACE = "surface"
+    ON_SURFACE = "onsurface"
+    ON_SURFACE_VARIANT = "onsurfacevariant"
+    SURFACE_TINT = "surfacetint"
+    SURFACE_DIM = "surfacedim"
+    SURFACE_BRIGHT = "surfacebright"
+    SURFACE_CONTAINER = "surfacecontainer"
+    SURFACE_CONTAINER_LOW = "surfacecontainerlow"
+    SURFACE_CONTAINER_LOWEST = "surfacecontainerlowest"
+    SURFACE_CONTAINER_HIGH = "surfacecontainerhigh"
+    SURFACE_CONTAINER_HIGHEST = "surfacecontainerhighest"
+
+    OUTLINE = "outline"
+    OUTLINE_VARIANT = "outlinevariant"
+    SHADOW = "shadow"
+    SCRIM = "scrim"
+    INVERSE_SURFACE = "inversesurface"
+    ON_INVERSE_SURFACE = "oninversesurface"
+    INVERSE_PRIMARY = "inverseprimary"
 
     AMBER = "amber"
     AMBER_100 = "amber100"
@@ -232,8 +293,6 @@ class Colors(str, Enum):
     DEEP_PURPLE_ACCENT_200 = "deeppurpleaccent200"
     DEEP_PURPLE_ACCENT_400 = "deeppurpleaccent400"
     DEEP_PURPLE_ACCENT_700 = "deeppurpleaccent700"
-    ERROR = "error"
-    ERROR_CONTAINER = "errorcontainer"
     GREEN = "green"
     GREEN_100 = "green100"
     GREEN_200 = "green200"
@@ -277,8 +336,6 @@ class Colors(str, Enum):
     INDIGO_ACCENT_200 = "indigoaccent200"
     INDIGO_ACCENT_400 = "indigoaccent400"
     INDIGO_ACCENT_700 = "indigoaccent700"
-    INVERSE_PRIMARY = "inverseprimary"
-    INVERSE_SURFACE = "inversesurface"
     LIGHT_BLUE = "lightblue"
     LIGHT_BLUE_100 = "lightblue100"
     LIGHT_BLUE_200 = "lightblue200"
@@ -327,17 +384,6 @@ class Colors(str, Enum):
     LIME_ACCENT_200 = "limeaccent200"
     LIME_ACCENT_400 = "limeaccent400"
     LIME_ACCENT_700 = "limeaccent700"
-    ON_ERROR = "onerror"
-    ON_ERROR_CONTAINER = "onerrorcontainer"
-    ON_INVERSE_SURFACE = "oninversesurface"
-    ON_PRIMARY = "onprimary"
-    ON_PRIMARY_CONTAINER = "onprimarycontainer"
-    ON_SECONDARY = "onsecondary"
-    ON_SECONDARY_CONTAINER = "onsecondarycontainer"
-    ON_SURFACE = "onsurface"
-    ON_SURFACE_VARIANT = "onsurfacevariant"
-    ON_TERTIARY = "ontertiary"
-    ON_TERTIARY_CONTAINER = "ontertiarycontainer"
     ORANGE = "orange"
     ORANGE_100 = "orange100"
     ORANGE_200 = "orange200"
@@ -354,8 +400,6 @@ class Colors(str, Enum):
     ORANGE_ACCENT_200 = "orangeaccent200"
     ORANGE_ACCENT_400 = "orangeaccent400"
     ORANGE_ACCENT_700 = "orangeaccent700"
-    OUTLINE = "outline"
-    OUTLINE_VARIANT = "outlinevariant"
     PINK = "pink"
     PINK_100 = "pink100"
     PINK_200 = "pink200"
@@ -372,8 +416,6 @@ class Colors(str, Enum):
     PINK_ACCENT_200 = "pinkaccent200"
     PINK_ACCENT_400 = "pinkaccent400"
     PINK_ACCENT_700 = "pinkaccent700"
-    PRIMARY = "primary"
-    PRIMARY_CONTAINER = "primarycontainer"
     PURPLE = "purple"
     PURPLE_100 = "purple100"
     PURPLE_200 = "purple200"
@@ -406,13 +448,6 @@ class Colors(str, Enum):
     RED_ACCENT_200 = "redaccent200"
     RED_ACCENT_400 = "redaccent400"
     RED_ACCENT_700 = "redaccent700"
-    SCRIM = "scrim"
-    SECONDARY = "secondary"
-    SECONDARY_CONTAINER = "secondarycontainer"
-    SHADOW = "shadow"
-    SURFACE = "surface"
-    SURFACE_CONTAINER_HIGHEST = "surfaceContainerHighest"
-    SURFACE_TINT = "surfacetint"
     TEAL = "teal"
     TEAL_100 = "teal100"
     TEAL_200 = "teal200"
@@ -429,8 +464,6 @@ class Colors(str, Enum):
     TEAL_ACCENT_200 = "tealaccent200"
     TEAL_ACCENT_400 = "tealaccent400"
     TEAL_ACCENT_700 = "tealaccent700"
-    TERTIARY = "tertiary"
-    TERTIARY_CONTAINER = "tertiarycontainer"
     TRANSPARENT = "transparent"
     WHITE = "white"
     WHITE10 = "white10"
