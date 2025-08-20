@@ -286,7 +286,7 @@ packages:
     description:
       path: "src/flutter/flet_audio"
       ref: main
-      resolved-ref: aa29c5e0e342b4569201859c9e62b8acae620a2b
+      resolved-ref: "5611fa1ef47c2faeeb6317671932cfd3ee2888c3"
       url: "https://github.com/flet-dev/flet-audio.git"
     source: git
     version: "0.2.0"
@@ -295,7 +295,7 @@ packages:
     description:
       path: "src/flutter/flet_audio_recorder"
       ref: main
-      resolved-ref: "5bdaa07ff608f7a9de8cc92307aadaaa0261a7f1"
+      resolved-ref: "10c9108060410c3c4e2435311c8e4ee70daf24bf"
       url: "https://github.com/flet-dev/flet-audio-recorder.git"
     source: git
     version: "0.2.0"
@@ -304,7 +304,7 @@ packages:
     description:
       path: "src/flutter/flet_charts"
       ref: main
-      resolved-ref: c34fbf906177fef58bfc77acb49f63ad5bedb142
+      resolved-ref: d1303e03a6e39ab72ea888eb22219ba330704313
       url: "https://github.com/flet-dev/flet-charts.git"
     source: git
     version: "0.2.0"
@@ -313,7 +313,7 @@ packages:
     description:
       path: "src/flutter/flet_datatable2"
       ref: main
-      resolved-ref: "1b459cf33f0ccb36a98ad14591eadfcad1ba6cb6"
+      resolved-ref: ebd7adc75486b276df382ae6401037c45a6df2a3
       url: "https://github.com/flet-dev/flet-datatable2.git"
     source: git
     version: "0.1.0"
@@ -322,7 +322,7 @@ packages:
     description:
       path: "src/flutter/flet_flashlight"
       ref: main
-      resolved-ref: d73e7bc8f373c5ce0efaa2728e10d17ef1ef3ac6
+      resolved-ref: "88fb80a6b4032956282a4be9c60f3c25f3cfccb5"
       url: "https://github.com/flet-dev/flet-flashlight.git"
     source: git
     version: "0.2.0"
@@ -331,7 +331,7 @@ packages:
     description:
       path: "src/flutter/flet_geolocator"
       ref: main
-      resolved-ref: "0e64efc7546cac99fcdcce6419ec0c34a9bbb32b"
+      resolved-ref: "94ed74df1a8b791d0afaccc2f9caac3456698f78"
       url: "https://github.com/flet-dev/flet-geolocator.git"
     source: git
     version: "0.25.2"
@@ -340,7 +340,7 @@ packages:
     description:
       path: "src/flutter/flet_lottie"
       ref: main
-      resolved-ref: df503b249f8c592bcc7b9f09dc259c6e0431c385
+      resolved-ref: "86eaa0b59f3cc54f9b2fb57abce9c0d22de253ca"
       url: "https://github.com/flet-dev/flet-lottie.git"
     source: git
     version: "0.2.0"
@@ -349,7 +349,7 @@ packages:
     description:
       path: "src/flutter/flet_map"
       ref: main
-      resolved-ref: f6aa55454634a00e1cccdbb47552c755230d0d40
+      resolved-ref: "8507cda6616f555974fbdcd3df05c3f2b02c043f"
       url: "https://github.com/flet-dev/flet-map.git"
     source: git
     version: "0.2.0"
@@ -358,7 +358,7 @@ packages:
     description:
       path: "src/flutter/flet_permission_handler"
       ref: main
-      resolved-ref: "23ce2b73f25ff1f734e05350b4ccabfcce8b7e5f"
+      resolved-ref: "2a56423dd77d220a0067f4097f9e25659b2f9b36"
       url: "https://github.com/flet-dev/flet-permission-handler.git"
     source: git
     version: "0.2.0"
@@ -367,7 +367,7 @@ packages:
     description:
       path: "src/flutter/flet_rive"
       ref: main
-      resolved-ref: "8172c9bd2be612643250de0a2519f2831d29c38c"
+      resolved-ref: "67256e81ec7c906ae03790b0c180c9be018ed7a4"
       url: "https://github.com/flet-dev/flet-rive.git"
     source: git
     version: "0.2.0"
@@ -376,7 +376,7 @@ packages:
     description:
       path: "src/flutter/flet_video"
       ref: main
-      resolved-ref: ccad84d3e8a815dfa4360a53d6df9e4890ffec0f
+      resolved-ref: a086b89d74f96e052a450d6c2a50c812a035ce45
       url: "https://github.com/flet-dev/flet-video.git"
     source: git
     version: "0.2.0"
@@ -385,7 +385,7 @@ packages:
     description:
       path: "src/flutter/flet_webview"
       ref: main
-      resolved-ref: fbb41fd77ba7ea51dd49c508a8916e5c4b48cb2e
+      resolved-ref: "9e2b64171f81cbe72a8a61ee9ba9d2af69587837"
       url: "https://github.com/flet-dev/flet-webview.git"
     source: git
     version: "0.2.0"
@@ -644,26 +644,26 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: "6bb818ecbdffe216e81182c2f0714a2e62b593f4a4f13098713ff1685dfb6ab0"
+      sha256: "8dcda04c3fc16c14f48a7bb586d4be1f0d1572731b6d81d51772ef47c02081e0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.9"
+    version: "11.0.1"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
       name: leak_tracker_flutter_testing
-      sha256: f8b613e7e6a13ec79cfdc0e97638fddb3ab848452eff057653abd3edba760573
+      sha256: "1dbc140bb5a23c75ea9c4811222756104fbcd1a27173f0c34ca01e16bea473c1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.9"
+    version: "3.0.10"
   leak_tracker_testing:
     dependency: transitive
     description:
       name: leak_tracker_testing
-      sha256: "6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3"
+      sha256: "8d5a2d49f4a66b49744b23b018848400d23e54caf9463f4eb20df3eb8acb2eb1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   lints:
     dependency: transitive
     description:
@@ -884,10 +884,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "4843174df4d288f5e29185bd6e72a6fbdf5a4a4602717eed565497429f179942"
+      sha256: "16eef174aacb07e09c351502740fa6254c165757638eba1e9116b0a781201bbd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   path_provider_linux:
     dependency: transitive
     description:
@@ -996,10 +996,10 @@ packages:
     dependency: transitive
     description:
       name: process
-      sha256: "107d8be718f120bbba9dcd1e95e3bd325b1b4a4f07db64154635ba03f2567a0d"
+      sha256: c6248e4526673988586e8c00bb22a49210c258dc91df5227d5da9748ecf79744
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.5"
   proj4dart:
     dependency: transitive
     description:
@@ -1012,10 +1012,10 @@ packages:
     dependency: transitive
     description:
       name: provider
-      sha256: "4abbd070a04e9ddc287673bf5a030c7ca8b685ff70218720abab8b092f53dd84"
+      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.5"
+    version: "6.1.5+1"
   record:
     dependency: transitive
     description:
@@ -1044,10 +1044,10 @@ packages:
     dependency: transitive
     description:
       name: record_linux
-      sha256: "785e8e8d6db109aa606d0669d95aaae416458aaa39782bb0abe0bee74eee17d7"
+      sha256: "235b1f1fb84e810f8149cc0c2c731d7d697f8d1c333b32cb820c449bf7bb72d8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   record_macos:
     dependency: transitive
     description:
@@ -1313,10 +1313,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: fb31f383e2ee25fbbfe06b40fe21e1e458d14080e3c67e7ba0acfde4df4e0bbd
+      sha256: "522f00f556e73044315fa4585ec3270f1808a4b186c936e612cab0b565ff1e00"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.6"
   torch_light:
     dependency: transitive
     description:
@@ -1377,10 +1377,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_ios
-      sha256: "7f2022359d4c099eea7df3fdf739f7d3d3b9faf3166fb1dd390775176e0b76cb"
+      sha256: d80b3f567a617cb923546034cc94bfe44eb15f989fe670b37f26abdb9d939cb7
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.3"
+    version: "6.3.4"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1393,10 +1393,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_macos
-      sha256: "17ba2000b847f334f16626a574c702b196723af2a289e7a93ffcb79acff855c2"
+      sha256: c043a77d6600ac9c38300567f33ef12b0ef4f4783a2c1f00231d2b1941fea13f
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.2"
+    version: "3.2.3"
   url_launcher_platform_interface:
     dependency: transitive
     description:
@@ -1457,18 +1457,18 @@ packages:
     dependency: transitive
     description:
       name: vector_math
-      sha256: "80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803"
+      sha256: d530bd74fea330e6e364cda7a85019c434070188383e1cd8d9777ee586914c5b
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.2.0"
   vm_service:
     dependency: transitive
     description:
       name: vm_service
-      sha256: ddfa8d30d89985b96407efce8acbdd124701f96741f2d981ca860662f1c0dc02
+      sha256: "45caa6c5917fa127b5dbcfbd1fa60b14e583afdc08bfc96dda38886ca252eb60"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.0"
+    version: "15.0.2"
   volume_controller:
     dependency: transitive
     description:
