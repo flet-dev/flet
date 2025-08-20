@@ -2937,8 +2937,24 @@ class PopupMenuTheme:
 
 @dataclass
 class SearchBarTheme:
+    """
+    Customizes the appearance of [`SearchBar`][flet.SearchBar] controls across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_bgcolor`][flet.SearchBar.bar_bgcolor] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     text_capitalization: Optional[TextCapitalization] = None
+    """
+    Overrides the default value of
+    [`SearchBar.capitalization`][flet.SearchBar.capitalization] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
     surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
