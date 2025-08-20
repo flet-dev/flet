@@ -128,10 +128,6 @@ class Colors(str, Enum):
         color_str = color.value if isinstance(color, Enum) else color
         return f"{color_str},{opacity}"
 
-    from enum import Enum
-
-
-class ColorSchemeName(Enum):
     PRIMARY = "primary"
     ON_PRIMARY = "onprimary"
     PRIMARY_CONTAINER = "primarycontainer"
