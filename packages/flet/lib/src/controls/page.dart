@@ -387,13 +387,13 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         : parseTheme(control.get("dark_theme"), context, Brightness.dark);
 
     var lightTheme = control.get("_lightTheme");
-    if (lightTheme == null || !themesEqual(lightTheme!, newLightTheme)) {
+    if (lightTheme == null || newLightTheme != lightTheme) {
       control.updateProperties({"_lightTheme": newLightTheme}, python: false);
       lightTheme = newLightTheme;
     }
 
     var darkTheme = control.get("_darkTheme");
-    if (darkTheme == null || !themesEqual(darkTheme!, newDarkTheme)) {
+    if (darkTheme == null || newDarkTheme != darkTheme) {
       control.updateProperties({"_darkTheme": newDarkTheme}, python: false);
       darkTheme = newDarkTheme;
     }
