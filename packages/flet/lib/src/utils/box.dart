@@ -63,7 +63,7 @@ BoxDecoration? parseBoxDecoration(dynamic value, BuildContext context,
 
   var shape = parseBoxShape(value["shape"], BoxShape.rectangle)!;
   var borderRadius = parseBorderRadius(value["border_radius"]);
-  var color = parseColor(value["color"], theme);
+  var color = parseColor(value["bgcolor"], theme);
   var gradient = parseGradient(value["gradient"], theme);
   var blendMode = parseBlendMode(value["blend_mode"]);
 
