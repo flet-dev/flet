@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flet/src/utils/tabs.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -577,8 +576,8 @@ NavigationRailThemeData? parseNavigationRailTheme(
   );
 }
 
-AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
-    [AppBarTheme? defaultValue]) {
+AppBarThemeData? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
+    [AppBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
   return theme.appBarTheme.copyWith(
@@ -598,9 +597,9 @@ AppBarTheme? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
   );
 }
 
-BottomAppBarTheme? parseBottomAppBarTheme(
+BottomAppBarThemeData? parseBottomAppBarTheme(
     Map<dynamic, dynamic>? value, ThemeData theme,
-    [BottomAppBarTheme? defaultValue]) {
+    [BottomAppBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
   return theme.bottomAppBarTheme.copyWith(
@@ -1147,94 +1146,6 @@ class NoPageTransitionsBuilder extends PageTransitionsBuilder {
   }
 }
 
-// Trying to fix https://github.com/flutter/flutter/issues/165455
-// TODO: remove this when the fix is available
-bool themesEqual(ThemeData a, ThemeData b) {
-  return mapEquals(a.adaptationMap, b.adaptationMap) &&
-      a.applyElevationOverlayColor == b.applyElevationOverlayColor &&
-      //a.cupertinoOverrideTheme == b.cupertinoOverrideTheme &&
-      mapEquals(a.extensions, b.extensions) &&
-      a.inputDecorationTheme == b.inputDecorationTheme &&
-      a.materialTapTargetSize == b.materialTapTargetSize &&
-      a.pageTransitionsTheme == b.pageTransitionsTheme &&
-      a.platform == b.platform &&
-      a.scrollbarTheme == b.scrollbarTheme &&
-      a.splashFactory == b.splashFactory &&
-      a.useMaterial3 == b.useMaterial3 &&
-      a.visualDensity == b.visualDensity &&
-      // COLOR
-      a.canvasColor == b.canvasColor &&
-      a.cardColor == b.cardColor &&
-      a.colorScheme == b.colorScheme &&
-      a.disabledColor == b.disabledColor &&
-      a.dividerColor == b.dividerColor &&
-      a.focusColor == b.focusColor &&
-      a.highlightColor == b.highlightColor &&
-      a.hintColor == b.hintColor &&
-      a.hoverColor == b.hoverColor &&
-      a.indicatorColor == b.indicatorColor &&
-      a.primaryColor == b.primaryColor &&
-      a.primaryColorDark == b.primaryColorDark &&
-      a.primaryColorLight == b.primaryColorLight &&
-      a.scaffoldBackgroundColor == b.scaffoldBackgroundColor &&
-      a.secondaryHeaderColor == b.secondaryHeaderColor &&
-      a.shadowColor == b.shadowColor &&
-      a.splashColor == b.splashColor &&
-      a.unselectedWidgetColor == b.unselectedWidgetColor &&
-      // TYPOGRAPHY & ICONOGRAPHY
-      a.iconTheme == b.iconTheme &&
-      a.primaryIconTheme == b.primaryIconTheme &&
-      a.primaryTextTheme == b.primaryTextTheme &&
-      a.textTheme == b.textTheme &&
-      a.typography == b.typography &&
-      // COMPONENT THEMES
-      a.actionIconTheme == b.actionIconTheme &&
-      a.appBarTheme == b.appBarTheme &&
-      a.badgeTheme == b.badgeTheme &&
-      a.bannerTheme == b.bannerTheme &&
-      a.bottomAppBarTheme == b.bottomAppBarTheme &&
-      a.bottomNavigationBarTheme == b.bottomNavigationBarTheme &&
-      a.bottomSheetTheme == b.bottomSheetTheme &&
-      a.buttonTheme == b.buttonTheme &&
-      a.cardTheme == b.cardTheme &&
-      a.checkboxTheme == b.checkboxTheme &&
-      a.chipTheme == b.chipTheme &&
-      a.dataTableTheme == b.dataTableTheme &&
-      a.datePickerTheme == b.datePickerTheme &&
-      a.dialogTheme == b.dialogTheme &&
-      a.dividerTheme == b.dividerTheme &&
-      a.drawerTheme == b.drawerTheme &&
-      a.dropdownMenuTheme == b.dropdownMenuTheme &&
-      a.elevatedButtonTheme == b.elevatedButtonTheme &&
-      a.expansionTileTheme == b.expansionTileTheme &&
-      a.filledButtonTheme == b.filledButtonTheme &&
-      a.floatingActionButtonTheme == b.floatingActionButtonTheme &&
-      a.iconButtonTheme == b.iconButtonTheme &&
-      a.listTileTheme == b.listTileTheme &&
-      a.menuBarTheme == b.menuBarTheme &&
-      a.menuButtonTheme == b.menuButtonTheme &&
-      a.menuTheme == b.menuTheme &&
-      a.navigationBarTheme == b.navigationBarTheme &&
-      a.navigationDrawerTheme == b.navigationDrawerTheme &&
-      a.navigationRailTheme == b.navigationRailTheme &&
-      a.outlinedButtonTheme == b.outlinedButtonTheme &&
-      a.popupMenuTheme == b.popupMenuTheme &&
-      a.progressIndicatorTheme == b.progressIndicatorTheme &&
-      a.radioTheme == b.radioTheme &&
-      a.searchBarTheme == b.searchBarTheme &&
-      a.searchViewTheme == b.searchViewTheme &&
-      a.segmentedButtonTheme == b.segmentedButtonTheme &&
-      a.sliderTheme == b.sliderTheme &&
-      a.snackBarTheme == b.snackBarTheme &&
-      a.switchTheme == b.switchTheme &&
-      a.tabBarTheme == b.tabBarTheme &&
-      a.textButtonTheme == b.textButtonTheme &&
-      a.textSelectionTheme == b.textSelectionTheme &&
-      a.timePickerTheme == b.timePickerTheme &&
-      a.toggleButtonsTheme == b.toggleButtonsTheme &&
-      a.tooltipTheme == b.tooltipTheme;
-}
-
 extension ThemeParsers on Control {
   Brightness? getBrightness(String propertyName, [Brightness? defaultValue]) {
     return parseBrightness(get(propertyName), defaultValue);
@@ -1366,13 +1277,14 @@ extension ThemeParsers on Control {
     return parseNavigationRailTheme(get(propertyName), theme, defaultValue);
   }
 
-  AppBarTheme? getAppBarTheme(String propertyName, ThemeData theme,
-      [AppBarTheme? defaultValue]) {
+  AppBarThemeData? getAppBarTheme(String propertyName, ThemeData theme,
+      [AppBarThemeData? defaultValue]) {
     return parseAppBarTheme(get(propertyName), theme, defaultValue);
   }
 
-  BottomAppBarTheme? getBottomAppBarTheme(String propertyName, ThemeData theme,
-      [BottomAppBarTheme? defaultValue]) {
+  BottomAppBarThemeData? getBottomAppBarTheme(
+      String propertyName, ThemeData theme,
+      [BottomAppBarThemeData? defaultValue]) {
     return parseBottomAppBarTheme(get(propertyName), theme, defaultValue);
   }
 
