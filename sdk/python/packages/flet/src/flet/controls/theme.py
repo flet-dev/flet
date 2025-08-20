@@ -153,16 +153,6 @@ class ColorScheme:
     A color that's clearly legible when drawn on `error_container`.
     """
 
-    background: Optional[ColorValue] = None
-    """
-    A color that typically appears behind scrollable content.
-    """
-
-    on_background: Optional[ColorValue] = None
-    """
-    A color that's clearly legible when drawn on `background`.
-    """
-
     surface: Optional[ColorValue] = None
     """
     The background color for widgets like `Card`.
@@ -171,12 +161,6 @@ class ColorScheme:
     on_surface: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `surface`.
-    """
-
-    surface_variant: Optional[ColorValue] = None
-    """
-    A color variant of `surface` that can be used for differentiation against a
-    component using `surface`.
     """
 
     on_surface_variant: Optional[ColorValue] = None
@@ -304,6 +288,12 @@ class ColorScheme:
     surface_container_high: Optional[ColorValue] = None
     """
     A surface container color with a darker tone.
+    """
+
+    surface_container_highest: Optional[ColorValue] = None
+    """
+    A surface container color with the darkest tone. It is used to create the most
+    emphasis against the surface.
     """
 
     surface_container_low: Optional[ColorValue] = None
