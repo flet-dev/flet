@@ -28,8 +28,10 @@ class Chip(ConstrainedControl):
     Chips are compact elements that represent an attribute, text, entity, or action.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is negative.
-        AssertionError: If callback for both [`on_click`][(c).] and [`on_select`][(c).] are specified.
+        AssertionError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is
+        negative.
+        AssertionError: If callback for both [`on_click`][(c).] and [`on_select`][(c).]
+        are specified.
     """
 
     label: StrOrControl
@@ -94,8 +96,8 @@ class Chip(ConstrainedControl):
     """
     The shape of the border around the chip.
 
-    Defaults to [`ChipTheme.shape`][flet.ChipTheme.shape], or if that is resolves to `None`,
-    falls back to `RoundedRectangleBorder(radius=8)`.
+    Defaults to [`ChipTheme.shape`][flet.ChipTheme.shape], or if that is resolves to
+    `None`, falls back to `RoundedRectangleBorder(radius=8)`.
     """
 
     padding: Optional[PaddingValue] = None
@@ -155,12 +157,6 @@ class Chip(ConstrainedControl):
     then the first one added to the page will get focus.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay on [`bgcolor`][flet.Chip.bgcolor]
-    to indicate elevation.
-    """
-
     color: Optional[ControlStateValue[ColorValue]] = None
     """
     The color that fills the chip in various [`ControlState`][flet.ControlState].
@@ -168,8 +164,8 @@ class Chip(ConstrainedControl):
 
     elevation_on_click: Optional[Number] = None
     """
-    The elevation to be applied on the chip relative to its parent during the press motion.
-    This controls the size of the shadow below the chip.
+    The elevation to be applied on the chip relative to its parent during the press
+    motion. This controls the size of the shadow below the chip.
 
     Defaults to `8.0`.
 
@@ -268,5 +264,6 @@ class Chip(ConstrainedControl):
             f"elevation must be greater than or equal to 0, got {self.elevation}"
         )
         assert self.elevation_on_click is None or self.elevation_on_click >= 0.0, (
-            f"elevation_on_click must be greater than or equal to 0, got {self.elevation_on_click}"
+            "elevation_on_click must be greater than or equal to 0, got "
+            "{self.elevation_on_click}"
         )

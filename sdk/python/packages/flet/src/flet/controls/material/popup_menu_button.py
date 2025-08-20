@@ -119,12 +119,6 @@ class PopupMenuButton(ConstrainedControl):
     the menu.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay on color to
-    indicate elevation.
-    """
-
     icon_size: Optional[Number] = None
     """
     The `icon`'s size.

@@ -87,7 +87,6 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme = ft.Theme(
         popup_menu_theme=ft.PopupMenuTheme(
             # color=ft.Colors.RED,
-            surface_tint_color=ft.Colors.GREEN,
             elevation=20,
             shadow_color=ft.Colors.BLUE,
             icon_color=ft.Colors.ORANGE_600,

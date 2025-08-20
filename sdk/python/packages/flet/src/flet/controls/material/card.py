@@ -58,16 +58,6 @@ class Card(ConstrainedControl, AdaptiveControl):
     (which defaults to `Colors.BLACK`).
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay on `color`
-    to indicate elevation.
-
-    If this is `None`, no overlay will be applied. Otherwise this color will be
-    composited on top of `color` with an opacity related to `elevation` and used to
-    paint the background of the card.
-    """
-
     shape: Optional[OutlinedBorder] = None
     """
     The shape of this card.

@@ -90,12 +90,6 @@ class Banner(DialogControl):
     The color of the surface of this banner.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay on [`bgcolor`][flet.Banner.bgcolor]
-    to indicate elevation.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     The color of the shadow below this banner.

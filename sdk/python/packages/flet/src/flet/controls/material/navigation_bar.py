@@ -148,11 +148,6 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     The shape of the selected destination indicator.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The surface tint of the Material that holds the NavigationDrawer's contents.
-    """
-
     border: Optional[Border] = None
     """
     TBD

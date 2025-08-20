@@ -111,14 +111,6 @@ class AppBar(AdaptiveControl):
     is greater than zero.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color of the surface tint overlay applied to this app bar's
-    [`bgcolor`][flet.AppBar.bgcolor] to indicate elevation.
-
-    By default, no overlay will be applied.
-    """
-
     clip_behavior: Optional[ClipBehavior] = None
     """
     The content will be clipped (or not) according to this option.

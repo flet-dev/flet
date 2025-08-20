@@ -133,11 +133,6 @@ class NavigationDrawer(DialogControl):
     indicate `elevation`.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The surface tint of the Material that holds the NavigationDrawer's contents.
-    """
-
     tile_padding: Optional[PaddingValue] = None
     """
     Defines the padding for `destination` controls.
