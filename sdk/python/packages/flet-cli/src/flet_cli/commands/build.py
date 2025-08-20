@@ -8,16 +8,7 @@ import sys
 from pathlib import Path
 from typing import Optional, cast
 
-import flet_cli.utils.processes as processes
 import yaml
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.hash_stamp import HashStamp
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from packaging.requirements import Requirement
 from rich.console import Console, Group
@@ -29,14 +20,23 @@ from rich.table import Column, Table
 from rich.theme import Theme
 
 import flet.version
+import flet_cli.utils.processes as processes
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.32.4")
+MINIMAL_FLUTTER_VERSION = version.Version("3.35.1")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 

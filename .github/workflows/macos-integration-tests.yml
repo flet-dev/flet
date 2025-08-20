@@ -34,7 +34,7 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action/config@v3
         id: fvm-config-action
         with:
-          path: 'client/.fvmrc'
+          path: '.fvmrc'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
