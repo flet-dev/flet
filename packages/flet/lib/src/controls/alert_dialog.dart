@@ -75,8 +75,6 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           iconPadding: widget.control.getPadding("icon_padding"),
           backgroundColor: widget.control.getColor("bgcolor", context),
           buttonPadding: widget.control.getPadding("action_button_padding"),
-          surfaceTintColor:
-              widget.control.getColor("surface_tint_color", context),
           shadowColor: widget.control.getColor("shadow_color", context),
           elevation: widget.control.getDouble("elevation"),
           clipBehavior:

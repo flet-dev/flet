@@ -194,8 +194,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
                 widget.control.triggerEvent("change", value);
               }
             : null,
-        viewSurfaceTintColor:
-            widget.control.getColor("view_surface_tint_color", context),
         textCapitalization: _textCapitalization,
         keyboardType: keyboardType,
         builder: (BuildContext context, SearchController controller) {
@@ -216,8 +214,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
                 .getWidgetStateTextStyle("bar_hint_text_style", theme),
             shadowColor:
                 widget.control.getWidgetStateColor("bar_shadow_color", theme),
-            surfaceTintColor: widget.control
-                .getWidgetStateColor("bar_surface_tint_color", theme),
             side: widget.control
                 .getWidgetStateBorderSide("bar_border_side", theme),
             backgroundColor:

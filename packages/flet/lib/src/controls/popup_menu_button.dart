@@ -32,7 +32,6 @@ class PopupMenuButtonControl extends StatelessWidget {
         iconSize: control.getDouble("icon_size"),
         splashRadius: control.getDouble("splash_radius"),
         shadowColor: control.getColor("shadow_color", context),
-        surfaceTintColor: control.getColor("surface_tint_color", context),
         iconColor: control.getColor("icon_color", context),
         elevation: control.getDouble("elevation"),
         enableFeedback: control.getBool("enable_feedback"),

@@ -57,8 +57,6 @@ class _NavigationBarControlState extends State<NavigationBarControl>
           elevation: widget.control.getDouble("elevation"),
           labelPadding: widget.control.getPadding("label_padding"),
           shadowColor: widget.control.getColor("shadow_color", context),
-          surfaceTintColor:
-              widget.control.getColor("surface_tint_color", context),
           overlayColor: widget.control
               .getWidgetStateColor("overlay_color", Theme.of(context)),
           indicatorColor: widget.control.getColor("indicator_color", context),

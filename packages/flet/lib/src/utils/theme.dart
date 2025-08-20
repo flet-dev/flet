@@ -439,7 +439,6 @@ DialogThemeData? parseDialogTheme(Map<dynamic, dynamic>? value, ThemeData theme,
   return theme.dialogTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
     elevation: parseDouble(value["elevation"]),
     shape: parseShape(value["shape"], theme),
@@ -467,7 +466,6 @@ BottomSheetThemeData? parseBottomSheetTheme(
     constraints: parseBoxConstraints(value["size_constraints"]),
     modalBarrierColor: parseColor(value["barrier_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dragHandleColor: parseColor(value["drag_handle_color"], theme),
     modalElevation: parseDouble(value["elevation"]),
     // elevation: parseDouble(value["elevation"]),
@@ -481,7 +479,6 @@ CardThemeData? parseCardTheme(Map<dynamic, dynamic>? value, ThemeData theme,
   return theme.cardTheme.copyWith(
       color: parseColor(value["color"], theme),
       shadowColor: parseColor(value["shadow_color"], theme),
-      surfaceTintColor: parseColor(value["surface_tint_color"], theme),
       elevation: parseDouble(value["elevation"]),
       shape: parseShape(value["shape"], theme),
       clipBehavior: parseClip(value["clip_behavior"]),
@@ -496,7 +493,6 @@ ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     color: parseWidgetStateColor(value["color"], theme),
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
     shape: parseShape(value["shape"], theme),
     padding: parsePadding(value["padding"]),
@@ -584,7 +580,6 @@ AppBarThemeData? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     foregroundColor: parseColor(value["color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     titleTextStyle: parseTextStyle(value["title_text_style"], theme),
     toolbarTextStyle: parseTextStyle(value["toolbar_text_style"], theme),
     shape: parseShape(value["shape"], theme),
@@ -605,7 +600,6 @@ BottomAppBarThemeData? parseBottomAppBarTheme(
   return theme.bottomAppBarTheme.copyWith(
     color: parseColor(value["color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
     padding: parsePadding(value["padding"]),
@@ -730,7 +724,6 @@ MaterialBannerThemeData? parseBannerTheme(
     dividerColor: parseColor(value["divider_color"], theme),
     padding: parsePadding(value["padding"]),
     leadingPadding: parsePadding(value["leading_padding"]),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     contentTextStyle: parseTextStyle(value["content_text_style"], theme),
   );
@@ -745,7 +738,6 @@ DatePickerThemeData? parseDatePickerTheme(
     backgroundColor: parseColor(value["bgcolor"], theme),
     elevation: parseDouble(value["elevation"]),
     dividerColor: parseColor(value["divider_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     cancelButtonStyle: parseButtonStyle(value["cancel_button_style"], theme),
     confirmButtonStyle: parseButtonStyle(value["confirm_button_style"], theme),
@@ -778,8 +770,6 @@ DatePickerThemeData? parseDatePickerTheme(
         parseTextStyle(value["range_picker_header_help_text_style"], theme),
     rangePickerHeaderHeadlineStyle:
         parseTextStyle(value["range_picker_header_headline_text_style"], theme),
-    rangePickerSurfaceTintColor:
-        parseColor(value["range_picker_surface_tint_color"], theme),
     rangeSelectionBackgroundColor:
         parseColor(value["range_selection_bgcolor"], theme),
     rangeSelectionOverlayColor:
@@ -991,7 +981,6 @@ PopupMenuThemeData? parsePopupMenuTheme(
 
   return theme.popupMenuTheme.copyWith(
     color: parseColor(value["color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
     labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
@@ -1011,7 +1000,6 @@ SearchBarThemeData? parseSearchBarTheme(
   if (value == null) return defaultValue;
 
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme),
     shadowColor: parseWidgetStateColor(value["shadow_color"], theme),
     elevation: parseWidgetStateDouble(value["elevation"]),
     backgroundColor: parseWidgetStateColor(value["bgcolor"], theme),
@@ -1033,7 +1021,6 @@ SearchViewThemeData? parseSearchViewTheme(
 
   return theme.searchViewTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dividerColor: parseColor(value["divider_color"], theme),
     elevation: parseDouble(value["elevation"]),
     headerHintStyle: parseTextStyle(value["header_hint_text_style"], theme),
@@ -1056,7 +1043,6 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
   return theme.navigationDrawerTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     indicatorColor: parseColor(value["indicator_color"], theme),
     elevation: parseDouble(value["elevation"]),
     indicatorSize: parseSize(value["indicator_size"]),
@@ -1074,7 +1060,6 @@ NavigationBarThemeData? parseNavigationBarTheme(
   return theme.navigationBarTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     indicatorColor: parseColor(value["indicator_color"], theme),
     overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
     elevation: parseDouble(value["elevation"]),
