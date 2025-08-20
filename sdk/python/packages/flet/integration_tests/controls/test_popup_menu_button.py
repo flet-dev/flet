@@ -65,7 +65,9 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         size_constraints=ft.BoxConstraints(min_width=200, max_width=300),
         key="pb",
         items=[
-            ft.PopupMenuItem("Item 1"),
+            ft.PopupMenuItem(
+                "Item 1", label_text_style=ft.TextStyle(color=ft.Colors.BLUE_700)
+            ),
             ft.PopupMenuItem(icon=ft.Icons.POWER_INPUT, content="Check power"),
             ft.PopupMenuItem(
                 content=ft.Row(
