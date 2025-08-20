@@ -5,7 +5,7 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_styled_cupertino_checkboxes(flet_app: ftt.FletTestApp, request):
+async def test_cupertino_radio(flet_app: ftt.FletTestApp, request):
     group = ft.RadioGroup(
         content=ft.Column(
             controls=[
