@@ -2875,14 +2875,67 @@ class SearchBarTheme:
     """
 
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_shadow_color`][flet.SearchBar.bar_shadow_color] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_overlay_color`][flet.SearchBar.bar_overlay_color] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_elevation`][flet.SearchBar.bar_elevation] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     text_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_text_style`][flet.SearchBar.bar_text_style] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     hint_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_hint_style`][flet.SearchBar.bar_hint_style] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_shape`][flet.SearchBar.bar_shape] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     padding: Optional[ControlStateValue[PaddingValue]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_padding`][flet.SearchBar.bar_padding] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`SearchBar.size_constraints`][flet.SearchBar.size_constraints] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     border_side: Optional[ControlStateValue[BorderSide]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_border_side`][flet.SearchBar.bar_border_side] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
 
 
 @dataclass

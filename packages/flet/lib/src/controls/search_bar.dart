@@ -208,6 +208,8 @@ class _SearchBarControlState extends State<SearchBarControl> {
             shape:
                 widget.control.getWidgetStateOutlinedBorder("bar_shape", theme),
             padding: widget.control.getWidgetStatePadding("bar_padding"),
+            constraints:
+                widget.control.getBoxConstraints("bar_size_constraints"),
             textStyle:
                 widget.control.getWidgetStateTextStyle("bar_text_style", theme),
             hintStyle: widget.control
