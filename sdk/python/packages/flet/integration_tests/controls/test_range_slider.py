@@ -18,7 +18,7 @@ async def test_range_slider(flet_app: ftt.FletTestApp, request):
         label="{value}%",
         key="rs",
     )
-    c = ft.Container(content=rs, padding=ft.padding.only(top=40))
+    c = ft.Container(content=rs, padding=ft.Padding.only(top=40))
 
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
