@@ -3031,14 +3031,56 @@ class SearchViewTheme:
 
 @dataclass
 class NavigationDrawerTheme:
+    """
+    Customizes the appearance of descendant [`NavigationDrawer`][flet.NavigationDrawer]
+    controls."""
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.bgcolor`][flet.NavigationDrawer.bgcolor].
+    """
+
     shadow_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.shadow_color`][flet.NavigationDrawer.shadow_color].
+    """
+
     indicator_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.indicator_color`][flet.NavigationDrawer.indicator_color].
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.elevation`][flet.NavigationDrawer.elevation].
+    """
+
     tile_height: Optional[Number] = None
+    """
+    Overrides the default height of
+    [`NavigationDrawerDestination`][flet.NavigationDrawerDestination].
+    """
+
     label_text_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    The style to merge with the default text style for
+    [`NavigationDrawerDestination`][flet.NavigationDrawerDestination] labels.
+    """
+
     indicator_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.indicator_shape`][flet.NavigationDrawer.indicator_shape].
+    """
+
     indicator_size: Optional[Size] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.indicator_size`][flet.NavigationDrawer.indicator_size]."""
 
 
 @dataclass

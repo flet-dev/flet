@@ -12,9 +12,6 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
-    async def handle_tile_click(e: ft.Event[ft.ListTile]):
-        await sb.close_view(e.control.title.value)
-
     async def handle_tap(e: ft.Event[ft.SearchBar]):
         print("handle_tap")
         await sb.open_view()
@@ -24,10 +21,7 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
         bar_hint_text="Search colors...",
         view_hint_text="Choose a color from the suggestions...",
         on_tap=handle_tap,
-        controls=[
-            ft.ListTile(title=ft.Text(f"Color {i}"), on_click=handle_tile_click)
-            for i in range(10)
-        ],
+        controls=[ft.ListTile(title=ft.Text(f"Color {i}")) for i in range(10)],
     )
 
     flet_app.page.enable_screenshots = True
@@ -93,9 +87,6 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         ),
     )
 
-    async def handle_tile_click(e: ft.Event[ft.ListTile]):
-        await sb.close_view(e.control.title.value)
-
     async def handle_tap(e: ft.Event[ft.SearchBar]):
         print("handle_tap")
         await sb.open_view()
@@ -105,10 +96,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         bar_hint_text="Search colors...",
         view_hint_text="Choose a color from the suggestions...",
         on_tap=handle_tap,
-        controls=[
-            ft.ListTile(title=ft.Text(f"Color {i}"), on_click=handle_tile_click)
-            for i in range(10)
-        ],
+        controls=[ft.ListTile(title=ft.Text(f"Color {i}")) for i in range(10)],
     )
 
     flet_app.page.enable_screenshots = True
