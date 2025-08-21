@@ -5,49 +5,53 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_radio(flet_app: ftt.FletTestApp, request):
-    group = ft.RadioGroup(
-        content=ft.Column(
-            controls=[
-                ft.Radio(value="one", label="One"),
-                ft.Radio(value="two", label="Two"),
-                ft.Radio(value="three", label="Three"),
-            ]
-        )
+async def test_range_slider(flet_app: ftt.FletTestApp, request):
+    rs = ft.RangeSlider(
+        min=0,
+        max=50,
+        start_value=0,
+        divisions=10,
+        end_value=50,
+        inactive_color=ft.Colors.GREEN_300,
+        active_color=ft.Colors.GREEN_700,
+        overlay_color=ft.Colors.GREEN_100,
+        label="{value}%",
+        key="rs",
     )
+    c = ft.Container(content=rs, padding=ft.padding.only(top=40))
 
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600
-    flet_app.page.controls = [group]
+    flet_app.page.controls = [c]
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
-    # one chosen
-    await flet_app.tester.tap(await flet_app.tester.find_by_text("One"))
-    await flet_app.tester.pump_and_settle()
+    # default
     flet_app.assert_screenshot(
-        "one",
+        "default",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
 
-    # two chosen
-    await flet_app.tester.tap(await flet_app.tester.find_by_text("Two"))
+    # move slider
+    rs.end_value = 20
+    rs.start_value = 10
+    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "two",
+        "slider_move",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
 
-    # three chosen
-    await flet_app.tester.tap(await flet_app.tester.find_by_text("Three"))
+    # tap
+    await flet_app.tester.tap(await flet_app.tester.find_by_key("rs"))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "three",
+        "tap",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
