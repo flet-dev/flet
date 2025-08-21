@@ -7,7 +7,7 @@ skip_commits:
     - docs/**/*
     - media/**/*
     - "*.md"
-    - sdk/python/packages/flet/integraion_tests/**/*
+    - sdk/python/packages/flet/integration_tests/**/*
 
 environment:
   PYTHON_VERSION: 3.12
