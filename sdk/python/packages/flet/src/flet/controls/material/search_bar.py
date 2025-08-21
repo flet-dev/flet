@@ -188,12 +188,36 @@ class SearchBar(ConstrainedControl):
 
     view_size_constraints: Optional[BoxConstraints] = None
     """
-    TBD
+    Optional size constraints for the search view.
+
+    By default, the search view has the same width as the search bar and is 2/3 the
+    height of the screen. If the width and height of the view are within the
+    view_size_constraints, the view will show its default size. Otherwise, the size of
+    the view will be constrained by this property.
     """
 
     view_header_height: Optional[Number] = None
     """
-    TBD
+    The height of the search field on the search view.
+    """
+
+    view_padding: Optional[PaddingValue] = None
+    """
+    The padding to use for the search view.
+
+    Has no effect if the search view is full-screen.
+    """
+
+    view_bar_padding: Optional[PaddingValue] = None
+    """
+    The padding to use for the search view's search bar.
+
+    If null, then the default value is 8.0 horizontally.
+    """
+
+    shrink_wrap: Optional[bool] = None
+    """
+    Whether the search view should shrink-wrap its contents.
     """
 
     divider_color: Optional[ColorValue] = None

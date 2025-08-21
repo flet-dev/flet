@@ -72,7 +72,25 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
                 radius=ft.BorderRadius.all(50),
             ),
             border_side=ft.BorderSide(color=ft.Colors.PURPLE, width=2),
-        )
+        ),
+        search_view_theme=ft.SearchViewTheme(
+            bgcolor=ft.Colors.PURPLE_200,
+            divider_color=ft.Colors.BLUE_800,
+            elevation=30,
+            header_hint_text_style=ft.TextStyle(
+                color=ft.Colors.BLUE, size=20, italic=True
+            ),
+            header_text_style=ft.TextStyle(color=ft.Colors.GREEN, size=20, italic=True),
+            shape=ft.RoundedRectangleBorder(radius=ft.BorderRadius.all(20)),
+            border_side=ft.BorderSide(color=ft.Colors.PURPLE, width=2),
+            size_constraints=ft.BoxConstraints(
+                min_width=400, max_width=400, min_height=400, max_height=400
+            ),
+            header_height=100,
+            padding=ft.Padding(10, 20, 50, 20),
+            bar_padding=ft.Padding.all(5),
+            shrink_wrap=True,
+        ),
     )
 
     async def handle_tile_click(e: ft.Event[ft.ListTile]):

@@ -2940,18 +2940,93 @@ class SearchBarTheme:
 
 @dataclass
 class SearchViewTheme:
+    """
+    Customizes the appearance of [`SearchView`][flet.SearchView] controls across the
+    app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_bgcolor`][flet.SearchBar.view_bgcolor] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     divider_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.divider_color`][flet.SearchBar.divider_color] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_elevation`][flet.SearchBar.view_elevation] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     header_hint_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_hint_text_style`][flet.SearchBar.view_hint_text_style] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     header_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_header_text_style`][flet.SearchBar.view_header_text_style] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_shape`][flet.SearchBar.view_shape] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     border_side: Optional[BorderSide] = None
+    """ Overrides the default value of
+    [`SearchBar.view_side`][flet.SearchBar.view_side] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_size_constraints`][flet.SearchBar.view_size_constraints] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     header_height: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_header_height`][flet.SearchBar.view_header_height] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_padding`][flet.SearchBar.view_padding] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     bar_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_bar_padding`][flet.SearchBar.view_bar_padding] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shrink_wrap: Optional[bool] = None
+    """
+    Overrides the default value of
+    [`SearchBar.shrink_wrap`][flet.SearchBar.shrink_wrap] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
 
 
 @dataclass
