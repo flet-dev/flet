@@ -23,8 +23,9 @@ class SearchBarControl extends StatefulWidget {
 
 class _SearchBarControlState extends State<SearchBarControl> {
   late final SearchController _controller;
+
   bool _focused = false;
-  TextCapitalization _textCapitalization = TextCapitalization.none;
+  TextCapitalization? _textCapitalization;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
   String? _lastBlurValue;
@@ -57,8 +58,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
   }
 
   void _searchTextChanged() {
-    _textCapitalization = parseTextCapitalization(
-        widget.control.getString("capitalization"), TextCapitalization.none)!;
     _updateValue(_controller.text);
   }
 
@@ -126,6 +125,8 @@ class _SearchBarControlState extends State<SearchBarControl> {
       /// No change.
       case TextCapitalization.none:
         return text;
+      case null:
+        return text;
     }
   }
 
@@ -159,6 +160,10 @@ class _SearchBarControlState extends State<SearchBarControl> {
 
     var theme = Theme.of(context);
 
+    _textCapitalization = parseTextCapitalization(
+        widget.control.getString("capitalization"),
+        theme.searchBarTheme.textCapitalization);
+
     Widget anchor = SearchAnchor(
         searchController: _controller,
         headerHintStyle:
@@ -189,8 +194,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
                 widget.control.triggerEvent("change", value);
               }
             : null,
-        viewSurfaceTintColor:
-            widget.control.getColor("view_surface_tint_color", context),
         textCapitalization: _textCapitalization,
         keyboardType: keyboardType,
         builder: (BuildContext context, SearchController controller) {
@@ -211,8 +214,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
                 .getWidgetStateTextStyle("bar_hint_text_style", theme),
             shadowColor:
                 widget.control.getWidgetStateColor("bar_shadow_color", theme),
-            surfaceTintColor: widget.control
-                .getWidgetStateColor("bar_surface_tint_color", theme),
             side: widget.control
                 .getWidgetStateBorderSide("bar_border_side", theme),
             backgroundColor:

@@ -10,6 +10,7 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.padding import PaddingValue
+from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
@@ -65,6 +66,10 @@ class PopupMenuItem(Control):
         effect will not be visible.
     """
 
+    label_text_style: Optional[TextStyle] = None
+    """
+    The text style of the label of this menu item."""
+
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor to be displayed when a mouse pointer enters or
@@ -112,12 +117,6 @@ class PopupMenuButton(ConstrainedControl):
     """
     The color used to paint the shadow below
     the menu.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay on color to
-    indicate elevation.
     """
 
     icon_size: Optional[Number] = None

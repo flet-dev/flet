@@ -219,11 +219,6 @@ class ButtonStyle:
     The shadow color of the button's Material.
     """
 
-    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
-    """
-    The surface tint color of the button's Material.
-    """
-
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The elevation of the button's Material.
@@ -295,7 +290,6 @@ class ButtonStyle:
         bgcolor: Optional[ControlStateValue[ColorValue]] = None,
         overlay_color: Optional[ControlStateValue[ColorValue]] = None,
         shadow_color: Optional[ControlStateValue[ColorValue]] = None,
-        surface_tint_color: Optional[ControlStateValue[ColorValue]] = None,
         elevation: Optional[ControlStateValue[Optional[Number]]] = None,
         animation_duration: Optional[DurationValue] = None,
         padding: Optional[ControlStateValue[PaddingValue]] = None,
@@ -321,9 +315,6 @@ class ButtonStyle:
             shadow_color=shadow_color
             if shadow_color is not None
             else self.shadow_color,
-            surface_tint_color=surface_tint_color
-            if surface_tint_color is not None
-            else self.surface_tint_color,
             elevation=elevation if elevation is not None else self.elevation,
             animation_duration=animation_duration
             if animation_duration is not None

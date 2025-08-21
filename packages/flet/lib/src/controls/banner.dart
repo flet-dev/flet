@@ -52,7 +52,6 @@ class _BannerControlState extends State<BannerControl> {
       backgroundColor: widget.control.getColor("bgcolor", context),
       contentTextStyle:
           widget.control.getTextStyle("content_text_style", Theme.of(context)),
-      surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       dividerColor: widget.control.getColor("divider_color", context),
       elevation: widget.control.getDouble("elevation"),

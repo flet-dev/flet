@@ -81,11 +81,6 @@ class SearchBar(ConstrainedControl):
     TBD
     """
 
-    bar_surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
-    """
-    TBD
-    """
-
     bar_elevation: Optional[ControlStateValue[Optional[Number]]] = None
     """
     TBD
@@ -208,11 +203,6 @@ class SearchBar(ConstrainedControl):
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
     The type of action button to use for the keyboard.
-    """
-
-    view_surface_tint_color: Optional[ColorValue] = None
-    """
-    Defines the color of the search view's surface tint.
     """
 
     autofocus: bool = False

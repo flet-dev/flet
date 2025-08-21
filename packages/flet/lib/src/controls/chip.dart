@@ -8,10 +8,10 @@ import '../utils/box.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
-import '../utils/mouse.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -97,7 +97,6 @@ class _ChipControlState extends State<ChipControl> {
       shadowColor: widget.control.getColor("shadow_color", context),
       shape: widget.control.getShape("shape", Theme.of(context)),
       color: widget.control.getWidgetStateColor("color", Theme.of(context)),
-      surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       pressElevation: widget.control.getDouble("elevation_on_click"),
       side: widget.control.getBorderSide("border_side", Theme.of(context)),
       clipBehavior:

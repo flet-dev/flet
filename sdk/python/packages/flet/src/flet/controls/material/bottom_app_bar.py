@@ -28,24 +28,13 @@ class BottomAppBar(ConstrainedControl):
     The content of this bottom app bar.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay
-    on [`bgcolor`][flet.BottomAppBar.bgcolor] to indicate elevation.
-
-    If this is `None`, no overlay will be applied. Otherwise this color will be
-    composited on top of `bgcolor` with an opacity related
-    to [`elevation`][flet.BottomAppBar.elevation] and used to
-    paint this app bar's background.
-    """
-
     bgcolor: Optional[ColorValue] = None
     """
     The fill color to use for this
     app bar.
 
-    Defaults to [`BottomAppBarTheme.bgcolor`][flet.BottomAppBarTheme.bgcolor], or if that is `None`,
-    falls back to [`ColorScheme.surface`][flet.ColorScheme.surface].
+    Defaults to [`BottomAppBarTheme.bgcolor`][flet.BottomAppBarTheme.bgcolor], or if
+    that is `None`, falls back to [`ColorScheme.surface`][flet.ColorScheme.surface].
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -57,13 +46,14 @@ class BottomAppBar(ConstrainedControl):
     """
     Empty space to inscribe inside a container decoration (background, border).
 
-    Defaults to [`BottomAppBarTheme.padding`][flet.BottomAppBarTheme.padding], or if that is `None`,
-    falls back to `Padding.symmetric(vertical=12.0, horizontal=16.0)`.
+    Defaults to [`BottomAppBarTheme.padding`][flet.BottomAppBarTheme.padding], or if
+    that is `None`, falls back to `Padding.symmetric(vertical=12.0, horizontal=16.0)`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    Defines how the [`content`][flet.BottomAppBar.content] of this app bar should be clipped.
+    Defines how the [`content`][flet.BottomAppBar.content] of this app bar should be
+    clipped.
     """
 
     shape: Optional[NotchShape] = None
@@ -73,7 +63,8 @@ class BottomAppBar(ConstrainedControl):
 
     notch_margin: Number = 4.0
     """
-    The margin between the [`FloatingActionButton`][flet.FloatingActionButton] and this app bar's notch.
+    The margin between the [`FloatingActionButton`][flet.FloatingActionButton] and this
+    app bar's notch.
 
     Can be visible only if `shape=None`.
     """

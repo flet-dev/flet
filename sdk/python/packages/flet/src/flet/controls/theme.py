@@ -153,16 +153,6 @@ class ColorScheme:
     A color that's clearly legible when drawn on `error_container`.
     """
 
-    background: Optional[ColorValue] = None
-    """
-    A color that typically appears behind scrollable content.
-    """
-
-    on_background: Optional[ColorValue] = None
-    """
-    A color that's clearly legible when drawn on `background`.
-    """
-
     surface: Optional[ColorValue] = None
     """
     The background color for widgets like `Card`.
@@ -171,12 +161,6 @@ class ColorScheme:
     on_surface: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `surface`.
-    """
-
-    surface_variant: Optional[ColorValue] = None
-    """
-    A color variant of `surface` that can be used for differentiation against a
-    component using `surface`.
     """
 
     on_surface_variant: Optional[ColorValue] = None
@@ -304,6 +288,12 @@ class ColorScheme:
     surface_container_high: Optional[ColorValue] = None
     """
     A surface container color with a darker tone.
+    """
+
+    surface_container_highest: Optional[ColorValue] = None
+    """
+    A surface container color with the darkest tone. It is used to create the most
+    emphasis against the surface.
     """
 
     surface_container_low: Optional[ColorValue] = None
@@ -674,13 +664,6 @@ class DialogTheme:
     [`AlertDialog`][flet.AlertDialog] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`AlertDialog.surface_tint_color`][flet.AlertDialog.surface_tint_color] in all
-    descendant [`AlertDialog`][flet.AlertDialog] controls.
-    """
-
     icon_color: Optional[ColorValue] = None
     """
     Used to configure the [`IconTheme`][flet.IconTheme] for the
@@ -878,12 +861,6 @@ class BottomSheetTheme:
     [`BottomSheet`][flet.BottomSheet] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of surface tint color in all descendant
-    [`BottomSheet`][flet.BottomSheet] controls.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of shadow color in all descendant
@@ -907,13 +884,6 @@ class CardTheme:
     """
     Overrides the default value of [`Card.shadow_color`][flet.Card.shadow_color] in
     all descendant [`Card`][flet.Card] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Card.surface_tint_color`][flet.Card.surface_tint_color] in all descendant
-    [`Card`][flet.Card] controls.
     """
 
     elevation: Optional[Number] = None
@@ -970,13 +940,6 @@ class ChipTheme:
     """
     Overrides the default value of
     [`Chip.selected_shadow_color`][flet.Chip.selected_shadow_color] in all descendant
-    [`Chip`][flet.Chip] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Chip.surface_tint_color`][flet.Chip.surface_tint_color] in all descendant
     [`Chip`][flet.Chip] controls.
     """
 
@@ -1302,13 +1265,6 @@ class AppBarTheme:
     all descendant [`AppBar`][flet.AppBar] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`AppBar.surface_tint_color`][flet.AppBar.surface_tint_color] in all descendant
-    [`AppBar`][flet.AppBar] controls.
-    """
-
     elevation: Optional[Number] = None
     """
     Overrides the default value of [`AppBar.elevation`][flet.AppBar.elevation] in all
@@ -1388,13 +1344,6 @@ class BottomAppBarTheme:
     Overrides the default value of
     [`BottomAppBar.shadow_color`][flet.BottomAppBar.shadow_color] in all descendant
     [`BottomAppBar`][flet.BottomAppBar] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`BottomAppBar.surface_tint_color`][flet.BottomAppBar.surface_tint_color] in all
-    descendant [`BottomAppBar`][flet.BottomAppBar] controls.
     """
 
     elevation: Optional[Number] = None
@@ -1801,13 +1750,6 @@ class BannerTheme:
     descendant [`Banner`][flet.Banner] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Banner.surface_tint_color`][flet.Banner.surface_tint_color] in all descendant
-    [`Banner`][flet.Banner] controls.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of [`Banner.shadow_color`][flet.Banner.shadow_color] in
@@ -1858,12 +1800,6 @@ class DatePickerTheme:
     bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color of the surface in all descendant
-    [`DatePicker`][flet.DatePicker] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default surface tint color in all descendant
     [`DatePicker`][flet.DatePicker] controls.
     """
 
@@ -2073,16 +2009,6 @@ class DatePickerTheme:
 
     The color of `range_picker_header_headline_text_style` is not used,
     `range_picker_header_foreground_color` is used instead.
-    """
-
-    range_picker_surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default color of the surface tint overlay applied to the
-    background color of a full screen DateRangePicker (TBD)'s to indicate elevation.
-
-    This is not recommended for use. Material 3 spec introduced a set of tone-based
-    surfaces and surface containers in its ColorScheme, which provide more flexibility.
-    The intention is to eventually remove surface tint color from the framework.
     """
 
     range_selection_bgcolor: Optional[ColorValue] = None
@@ -2857,13 +2783,6 @@ class PopupMenuTheme:
     [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`PopupMenuButton.surface_tint_color`][flet.PopupMenuButton.surface_tint_color] in
-    all descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of
@@ -2878,15 +2797,11 @@ class PopupMenuTheme:
     descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
-    text_style: Optional[TextStyle] = None
-    """
-    The text style of items in the popup menu.
-    """
-
     label_text_style: Optional[TextStyle] = None
     """
-    You can use this to specify a different style of the label when the popup menu item
-    is enabled and disabled.
+    Overrides the default value of
+    [`PopupMenuItem.label_text_style`][flet.PopupMenuItem.label_text_style]
+    in all descendant [`PopupMenuItem`][flet.PopupMenuItem] controls.
     """
 
     enable_feedback: Optional[bool] = None
@@ -2941,10 +2856,25 @@ class PopupMenuTheme:
 
 @dataclass
 class SearchBarTheme:
+    """
+    Customizes the appearance of [`SearchBar`][flet.SearchBar] controls across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_bgcolor`][flet.SearchBar.bar_bgcolor] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     text_capitalization: Optional[TextCapitalization] = None
+    """
+    Overrides the default value of
+    [`SearchBar.capitalization`][flet.SearchBar.capitalization] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
-    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
     text_style: Optional[ControlStateValue[TextStyle]] = None
@@ -2958,7 +2888,6 @@ class SearchBarTheme:
 @dataclass
 class SearchViewTheme:
     bgcolor: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
     elevation: Optional[Number] = None
     header_hint_text_style: Optional[TextStyle] = None
@@ -2976,7 +2905,6 @@ class SearchViewTheme:
 class NavigationDrawerTheme:
     bgcolor: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
     indicator_color: Optional[ColorValue] = None
     elevation: Optional[Number] = None
     tile_height: Optional[Number] = None
@@ -2989,7 +2917,6 @@ class NavigationDrawerTheme:
 class NavigationBarTheme:
     bgcolor: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
     indicator_color: Optional[ColorValue] = None
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: Optional[Number] = None

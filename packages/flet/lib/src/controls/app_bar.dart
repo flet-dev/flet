@@ -36,7 +36,6 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
           .extension<SystemUiOverlayStyleTheme>()
           ?.systemUiOverlayStyle,
       shadowColor: control.getColor("shadow_color", context),
-      surfaceTintColor: control.getColor("surface_tint_color", context),
       scrolledUnderElevation: control.getDouble("elevation_on_scroll"),
       forceMaterialTransparency:
           control.getBool("force_material_transparency", false)!,
