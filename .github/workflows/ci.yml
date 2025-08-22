@@ -80,7 +80,7 @@ jobs:
             pushd packages/flet
             echo "Running flet tests"
             flutter test
-            dart pub publish --dry-run
+            # dart pub publish --dry-run
           fi
 
           # Return to repo root

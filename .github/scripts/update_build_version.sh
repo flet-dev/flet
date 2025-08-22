@@ -41,8 +41,6 @@ else
     # Remove leading "v" if present
     cv=${cv#v}
 
-    echo "cv=$cv"
-
     # Split into major/minor components
     major=$(echo "$cv" | cut -d. -f1)
     minor=$(echo "$cv" | cut -d. -f2)
