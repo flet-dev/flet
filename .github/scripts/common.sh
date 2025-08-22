@@ -22,13 +22,16 @@ function patch_flet_desktop_package_name() {
 }
 
 function publish_to_pypi() {
-    # If (branch == main OR tag) AND not a PR -> upload to PyPI
-    # Else if not a PR -> upload to Gemfury
-    if { [[ ${GITHUB_EVENT_NAME:-} != "pull_request" ]] && { [[ ${GITHUB_REF_NAME:-} == "main" ]] || [[ ${GITHUB_REF_TYPE:-} == "tag" ]]; }; }; then
-        uvx twine upload "$@"
-    elif [[ ${GITHUB_EVENT_NAME:-} != "pull_request" ]]; then
-        for wheel in "$@"; do
-            curl -F package=@$wheel https://$GEMFURY_TOKEN@push.fury.io/flet/
-        done
+    # If not a PR:
+    if [[ ${GITHUB_EVENT_NAME:-} != "pull_request" ]]; then
+        if [[ ${GITHUB_REF_NAME:-} == "main" || ${GITHUB_REF_TYPE:-} == "tag" ]]; then
+            # On main branch or a tag -> upload to PyPI
+            uvx twine upload "$@"
+        else
+            # Otherwise -> upload to Gemfury
+            for wheel in "$@"; do
+                curl -F package=@$wheel "https://${GEMFURY_TOKEN}@push.fury.io/flet/"
+            done
+        fi
     fi
 }
