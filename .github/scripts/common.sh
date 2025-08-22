@@ -5,9 +5,9 @@ function patch_python_package_versions() {
     sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet-desktop/src/flet_desktop/version.py
     sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet-web/src/flet_web/version.py
 
-    uv run --verbose --no-dev
+    uv run --verbose --no-dev || true
     echo "BOOM"
-    uv version --help
+    uv run --help
     uv version --verbose --package flet $PYPI_VER
     uv version --verbose --package flet-cli $PYPI_VER
     uv version --verbose --package flet-desktop $PYPI_VER
