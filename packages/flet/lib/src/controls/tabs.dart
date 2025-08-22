@@ -157,35 +157,48 @@ class TabBarViewControl extends StatelessWidget {
 
     // Find the TabController from the nearest TabsControl ancestor
     final tabsState = context.findAncestorStateOfType<_TabsControlState>();
-    if (tabsState != null) {
-      final tabController = tabsState._tabController;
-
-      return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxHeight == double.infinity &&
-            control.getDouble("height") == null &&
-            control.getExpand("expand", 0)! <= 0) {
-          return const ErrorControl(
-              "Error displaying TabBarView: height is unbounded.",
-              description:
-                  "Set a fixed height, a non-zero expand, or/and place inside "
-                  "a control with bounded height.");
-        }
-
-        return ConstrainedControl(
-            control: control,
-            child: TabBarView(
-              controller: tabController,
-              clipBehavior:
-                  control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
-              viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
-              children: control.buildWidgets("controls"),
-            ));
-      });
-    } else {
+    if (tabsState == null) {
       return const ErrorControl(
           "TabBarView must be used within a Tabs control");
     }
+
+    final tabController = tabsState._tabController;
+
+    Widget buildConstrainedTabView() {
+      return ConstrainedControl(
+          control: control,
+          child: TabBarView(
+            controller: tabController,
+            clipBehavior:
+                control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+            viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
+            children: control.buildWidgets("controls"),
+          ));
+    }
+
+    // If expand property was set, we return the result directly.
+    // Because having Expanded as direct child of LayoutBuilder is not allowed.
+    if (control.getExpand("expand", 0)! > 0) {
+      return buildConstrainedTabView();
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final hasFixedHeight = control.getDouble("height") != null;
+        final hasUnboundedHeight =
+            constraints.maxHeight == double.infinity && !hasFixedHeight;
+
+        if (hasUnboundedHeight) {
+          return const ErrorControl(
+            "Error displaying TabBarView: height is unbounded.",
+            description:
+                "Set a fixed height, a non-zero expand, or place it inside a control with bounded height.",
+          );
+        }
+
+        return buildConstrainedTabView();
+      },
+    );
   }
 }
 
