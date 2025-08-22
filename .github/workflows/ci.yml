@@ -54,7 +54,7 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Build & (optionally) publish Dart packages
+      - name: Build and Publish Dart Packages
         env:
           PUB_DEV_TOKEN: ${{ secrets.PUB_DEV_TOKEN }}
         shell: bash
@@ -102,19 +102,6 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Pin Python
-        shell: pwsh
-        run: |
-          uv --version
-          uv python install $env:PYTHON_VERSION
-          uv python pin $env:PYTHON_VERSION
-          uv run python --version
-
-      - name: Twine (uvx)
-        shell: pwsh
-        if: false
-        run: uvx twine --version
-
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
@@ -148,7 +135,7 @@ jobs:
           robocopy flet "$Env:GITHUB_WORKSPACE\sdk\python\packages\flet-desktop\src\flet_desktop\app\flet" /e
           echo "done"
 
-      - name: Build wheel(s)
+      - name: Build wheels
         shell: pwsh
         run: |
           cd sdk\python
@@ -168,7 +155,7 @@ jobs:
             client/build/windows/x64/runner/flet-windows.zip
             sdk/python/dist/*.whl
 
-      - name: Publish wheels (PyPI or Gemfury)
+      - name: Publish wheels
         if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
@@ -215,8 +202,8 @@ jobs:
           pushd client
           flutter build macos --build-name="${GITHUB_RUN_NUMBER}"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
-          mkdir -p "$flet_sdk_root/packages/flet-desktop/src/flet_desktop/app"
-          cp flet-macos.tar.gz "$flet_sdk_root/packages/flet-desktop/src/flet_desktop/app"
+          mkdir -p "sdk/python/packages/flet-desktop/src/flet_desktop/app"
+          cp flet-macos.tar.gz "sdk/python/packages/flet-desktop/src/flet_desktop/app"
           popd
 
       - name: Patch Python package versions
@@ -225,11 +212,11 @@ jobs:
           source .github/scripts/common.sh
           patch_python_package_versions
 
-      - name: Build wheel(s)
+      - name: Build wheels
         shell: bash
         run: |
           set -e
-          cd "$flet_sdk_root"
+          cd "sdk/python"
           uv build --wheel --package flet-desktop
           for file in dist/*-py3-none-any.whl; do
             uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_12_0_arm64"
@@ -278,7 +265,7 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Install deps
+      - name: Install dependencies
         shell: bash
         run: |
           source .github/scripts/common.sh
@@ -307,8 +294,8 @@ jobs:
           flutter build linux --build-name="${GITHUB_RUN_NUMBER}"
           mv build/linux/x64/release/bundle build/linux/x64/release/flet
           tar -czvf "flet-linux${artifact_suffix:-}-amd64.tar.gz" -C build/linux/x64/release flet
-          mkdir -p "$flet_sdk_root/packages/flet-desktop/src/flet_desktop/app"
-          cp "flet-linux${artifact_suffix:-}-amd64.tar.gz" "$flet_sdk_root/packages/flet-desktop/src/flet_desktop/app/flet-linux-amd64.tar.gz"
+          mkdir -p "sdk/python/packages/flet-desktop/src/flet_desktop/app"
+          cp "flet-linux${artifact_suffix:-}-amd64.tar.gz" "sdk/python/packages/flet-desktop/src/flet_desktop/app/flet-linux-amd64.tar.gz"
           popd
 
       - name: Patch Python package versions
@@ -317,14 +304,14 @@ jobs:
           source .github/scripts/common.sh
           patch_python_package_versions
           if [[ "${PACKAGE_NAME}" == "flet-desktop-light" ]]; then
-            sed -i 's/flet-desktop/flet-desktop-light/g' "$flet_sdk_root/pyproject.toml"
+            sed -i 's/flet-desktop/flet-desktop-light/g' "sdk/python/pyproject.toml"
           fi
 
-      - name: Build wheel(s)
+      - name: Build wheels
         shell: bash
         run: |
           set -e
-          cd "$flet_sdk_root"
+          cd "sdk/python"
           uv build --wheel --package "${PACKAGE_NAME}"
           for file in dist/*-py3-none-any.whl; do
             uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-manylinux_2_17_x86_64,py3-none-manylinux2014_x86_64"
@@ -401,8 +388,8 @@ jobs:
           flutter build linux --build-name="${GITHUB_RUN_NUMBER}"
           mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
           tar -czvf "flet-linux${artifact_suffix:-}-arm64.tar.gz" -C build/linux/arm64/release flet
-          mkdir -p "$flet_sdk_root/packages/flet-desktop/src/flet_desktop/app"
-          cp "flet-linux${artifact_suffix:-}-arm64.tar.gz" "$flet_sdk_root/packages/flet-desktop/src/flet_desktop/app/flet-linux-arm64.tar.gz"
+          mkdir -p "sdk/python/packages/flet-desktop/src/flet_desktop/app"
+          cp "flet-linux${artifact_suffix:-}-arm64.tar.gz" "sdk/python/packages/flet-desktop/src/flet_desktop/app/flet-linux-arm64.tar.gz"
           popd
 
       - name: Patch versions & build wheels
@@ -412,9 +399,9 @@ jobs:
           source .github/scripts/common.sh
           patch_python_package_versions
           if [[ "${PACKAGE_NAME}" == "flet-desktop-light" ]]; then
-            sed -i 's/flet-desktop/flet-desktop-light/g' "$flet_sdk_root/pyproject.toml"
+            sed -i 's/flet-desktop/flet-desktop-light/g' "sdk/python/pyproject.toml"
           fi
-          cd "$flet_sdk_root"
+          cd "sdk/python"
           uv build --wheel --package "${PACKAGE_NAME}"
           for file in dist/*-py3-none-any.whl; do
             uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-manylinux_2_17_aarch64,py3-none-manylinux2014_aarch64"
@@ -471,18 +458,18 @@ jobs:
           set -e
           pushd client
           flutter build web --wasm
-          cp -R build/web "$flet_sdk_root/packages/flet-web/src/flet_web"
+          cp -R build/web "sdk/python/packages/flet-web/src/flet_web"
           # Safari mobile workaround + pyodide extras
           ls "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
-          cp "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js/flutter.js.map" "$flet_sdk_root/packages/flet-web/src/flet_web/web"
-          curl -L "$PYODIDE_URL" | tar -xj -C "$flet_sdk_root/packages/flet-web/src/flet_web/web"
-          curl -L "$PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl" -o "$flet_sdk_root/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
-          curl -L "$PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl" -o "$flet_sdk_root/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
+          cp "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js/flutter.js.map" "sdk/python/packages/flet-web/src/flet_web/web"
+          curl -L "$PYODIDE_URL" | tar -xj -C "sdk/python/packages/flet-web/src/flet_web/web"
+          curl -L "$PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl" -o "sdk/python/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
+          curl -L "$PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl" -o "sdk/python/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
           popd
           tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
           patch_python_package_versions
-          cd "$flet_sdk_root"
+          cd "sdk/python"
           uv build --wheel --package flet-web
 
       - name: Upload artifacts
@@ -548,13 +535,10 @@ jobs:
       - build_linux_amd64
       - build_linux_arm64
       - build_web
-    if: ${{ github.event_name != 'pull_request' }} # mirrors AppVeyor behavior
+    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # fetch all history
-          fetch-tags: true # ensure tags are available
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
@@ -568,7 +552,7 @@ jobs:
           set -e
           source .github/scripts/common.sh
           patch_python_package_versions
-          cd "$flet_sdk_root"
+          cd "sdk/python"
           uv build --wheel --package flet-cli
           uv build --wheel --package flet
           uv run "$root/.github/scripts/update_flet_wheel_deps.py" dist
