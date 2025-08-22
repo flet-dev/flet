@@ -446,11 +446,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup env
-        shell: bash
-        run: |
-          source .github/scripts/common.sh
-
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
@@ -461,6 +456,7 @@ jobs:
         shell: bash
         run: |
           set -e
+          source .github/scripts/common.sh
           pushd client
           flutter build web --wasm
           cp -R build/web "${SDK_PYTHON_PATH}/packages/flet-web/src/flet_web"
