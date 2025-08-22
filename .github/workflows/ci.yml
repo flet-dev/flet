@@ -510,7 +510,7 @@ jobs:
   # Python test jobs
   # ================
   python_tests:
-    name: Python ${{ matrix.py }} tests
+    name: Python ${{ matrix.python-version }} tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
