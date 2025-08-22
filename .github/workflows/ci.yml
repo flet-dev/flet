@@ -112,8 +112,7 @@ jobs:
         shell: pwsh
         run: |
           $Env:flet_sdk_root = "$Env:GITHUB_WORKSPACE\sdk\python"
-          $Env:PYPI_VER = "${{ needs.build_flet_package.outputs.version || '' }}"
-          if ([string]::IsNullOrEmpty($Env:PYPI_VER)) { $Env:PYPI_VER = "${env:GITHUB_RUN_NUMBER}" }
+          $Env:PYPI_VER = "${{ needs.build_flet_package.outputs.PYPI_VER || github.run_number }}"
           $Env:PYPI_VER = "$($Env:PYPI_VER)".Replace("+", ".dev")
           $vp = "$Env:flet_sdk_root\packages\flet-desktop\src\flet_desktop\version.py"
           (Get-Content $vp).Replace('version = ""', "version = `"$Env:PYPI_VER`"") | Set-Content $vp
@@ -124,7 +123,7 @@ jobs:
         run: |
           cd client
           $Env:RELEASE_DIR="build\windows\x64\runner\Release"
-          flutter build windows --build-name="${{ env.PYPI_VER || github.run_number }}"
+          flutter build windows --build-name="${{ needs.build_flet_package.outputs.PYPI_VER || github.run_number }}"
           Copy-Item "$Env:WINDIR\system32\msvcp140.dll" $Env:RELEASE_DIR
           Copy-Item "$Env:WINDIR\system32\vcruntime140.dll" $Env:RELEASE_DIR
           Copy-Item "$Env:WINDIR\system32\vcruntime140_1.dll" $Env:RELEASE_DIR
