@@ -6,10 +6,10 @@ function patch_python_package_versions() {
     sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet-web/src/flet_web/version.py
 
     uv run --no-dev
-    uv version --package flet $PYPI_VER
-    uv version --package flet-cli $PYPI_VER
-    uv version --package flet-desktop $PYPI_VER
-    uv version --package flet-web $PYPI_VER
+    uv version --package flet $PYPI_VER || exit 1
+    uv version --package flet-cli $PYPI_VER || exit 1
+    uv version --package flet-desktop $PYPI_VER || exit 1
+    uv version --package flet-web $PYPI_VER || exit 1
 }
 
 function patch_flet_desktop_package_name() {
