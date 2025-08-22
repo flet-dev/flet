@@ -3152,8 +3152,22 @@ class NavigationBarTheme:
 
 @dataclass
 class SegmentedButtonTheme:
+    """
+    Customizes the appearance of descendant [`SegmentedButton`][flet.SegmentedButton]
+    controls.
+    """
+
     selected_icon: Optional[IconData] = None
+    """
+    Overrides the default value for
+    [`SegmentedButton.selected_icon`][flet.SegmentedButton.selected_icon].
+    """
+
     style: Optional[ButtonStyle] = None
+    """
+    Overrides the default value for
+    [`SegmentedButton.style`][flet.SegmentedButton.style].
+    """
 
 
 @dataclass

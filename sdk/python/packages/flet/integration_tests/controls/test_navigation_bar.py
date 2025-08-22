@@ -34,8 +34,8 @@ async def test_theme(flet_app: ftt.FletTestApp):
     flet_app.page.theme = ft.Theme(
         navigation_bar_theme=ft.NavigationBarTheme(
             bgcolor=ft.Colors.GREEN_200,
-            shadow_color=ft.Colors.ORANGE_500,
-            elevation=50,
+            shadow_color=ft.Colors.ORANGE_500,  # not shows in the screenshot
+            elevation=50,  # not shows in the screenshot
             indicator_color=ft.Colors.GREEN,
             overlay_color=ft.Colors.YELLOW_300,
             height=200,

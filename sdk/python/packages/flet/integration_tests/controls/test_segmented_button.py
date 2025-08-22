@@ -1,23 +1,27 @@
 import pytest
+import pytest_asyncio
 
 import flet as ft
 import flet.testing as ftt
 
 
-@pytest.mark.asyncio(loop_scope="module")
-async def test_segmented_button_basic(flet_app: ftt.FletTestApp, request):
+# Create a new flet_app instance for each test method
+@pytest_asyncio.fixture(scope="function", autouse=True)
+def flet_app(flet_app_function):
+    return flet_app_function
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.SegmentedButton(
-            selected_icon=ft.Icon(ft.Icons.CHECK_SHARP),
             selected=["1"],
-            allow_empty_selection=True,
-            allow_multiple_selection=True,
             segments=[
                 ft.Segment(
                     value="1",
-                    label=ft.Text("1"),
-                    icon=ft.Icon(ft.Icons.LOOKS_ONE),
+                    label="1",
+                    icon=ft.Icons.LOOKS_ONE,
                 ),
                 ft.Segment(
                     value="2",
@@ -27,13 +31,61 @@ async def test_segmented_button_basic(flet_app: ftt.FletTestApp, request):
                 ft.Segment(
                     value="3",
                     label=ft.Text("3"),
-                    icon=ft.Icon(ft.Icons.LOOKS_3),
                 ),
                 ft.Segment(
                     value="4",
-                    label=ft.Text("4"),
-                    icon=ft.Icon(ft.Icons.LOOKS_4),
+                    icon=ft.Icons.LOOKS_4,
                 ),
             ],
         ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_theme(flet_app: ftt.FletTestApp):
+    flet_app.page.theme = ft.Theme(
+        segmented_button_theme=ft.SegmentedButtonTheme(
+            selected_icon=ft.Icons.HOME,
+            style=ft.ButtonStyle(
+                bgcolor=ft.Colors.BLUE, shape=ft.BeveledRectangleBorder()
+            ),
+        )
+    )
+    flet_app.page.enable_screenshots = True
+    flet_app.page.window.width = 400
+    flet_app.page.window.height = 600
+
+    scr_1 = ft.Screenshot(
+        ft.SegmentedButton(
+            selected=["1"],
+            segments=[
+                ft.Segment(
+                    value="1",
+                    label="1",
+                    icon=ft.Icons.LOOKS_ONE,
+                ),
+                ft.Segment(
+                    value="2",
+                    label=ft.Text("2"),
+                    icon=ft.Icon(ft.Icons.LOOKS_TWO),
+                ),
+                ft.Segment(
+                    value="3",
+                    label=ft.Text("3"),
+                ),
+                ft.Segment(
+                    value="4",
+                    icon=ft.Icons.LOOKS_4,
+                ),
+            ],
+        ),
+        key="sb",
+    )
+    flet_app.page.add(scr_1)
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+
+    flet_app.assert_screenshot(
+        "theme_1",
+        await scr_1.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
