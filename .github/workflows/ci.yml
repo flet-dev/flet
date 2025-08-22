@@ -49,11 +49,6 @@ jobs:
         run: |
           source .github/scripts/update_build_version.sh
 
-      - name: Source .github/scripts/common.sh
-        shell: bash
-        run: |
-          source .github/scripts/common.sh
-
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
@@ -188,11 +183,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Source .github/scripts/common.sh
-        shell: bash
-        run: |
-          source .github/scripts/common.sh
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -472,8 +462,8 @@ jobs:
           popd
           tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
-          patch_python_package_versions
           cd "${SDK_PYTHON_PATH}"
+          patch_python_package_versions
           uv build --wheel --package flet-web
 
       - name: Upload artifacts
