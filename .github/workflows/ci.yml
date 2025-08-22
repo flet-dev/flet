@@ -66,25 +66,34 @@ jobs:
           PUB_DEV_TOKEN: ${{ secrets.PUB_DEV_TOKEN }}
         shell: bash
         run: |
-          set -euo pipefail
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+          # If this is a tag build (release)
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            # Configure Dart credentials from secret
             mkdir -p "$HOME/.config/dart"
-            echo "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
+            echo -n "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json" || exit 1
+          
+            # Patch pubspecs with release version
             for dir in packages/flet*; do
               echo "Patching $dir/pubspec.yaml"
-              uv run .github/scripts/patch_pubspec.py "$dir/pubspec.yaml" "${PKG_VER}"
+              uv run ci/patch_pubspec.py "$dir/pubspec.yaml" "$PKG_VER" || exit 1
             done
+          
+            # Run Flutter tests and publish to pub.dev
+            cd packages/flet || exit 1
+            echo "Running flet tests"
+            flutter test || exit 1
+            dart pub publish --force || exit 1
+            cd "$GITHUB_WORKSPACE" || exit 1
+          
+          else
+            # Not a tag: run tests and do a dry-run publish
+            cd packages/flet || exit 1
+            echo "Running flet tests"
+            flutter test || exit 1
+            dart pub publish --dry-run || exit 1
+            cd "$GITHUB_WORKSPACE" || exit 1
           fi
 
-          pushd packages/flet
-          echo "Running flet tests"
-          flutter test
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            dart pub publish --force
-          else
-            dart pub publish --dry-run
-          fi
-          popd
 
   # ======================
   # Build Flet - Windows
