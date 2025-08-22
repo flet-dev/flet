@@ -36,19 +36,9 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Compute PKG_VER
-        id: ver
-        shell: bash
+      - name: Compute versions
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            PKG_VER="${GITHUB_REF_NAME#v}"
-          else
-            last="$(git describe --abbrev=0 --tags 2>/dev/null || echo v0.0.0)"
-            IFS=. read -r major minor patch <<<"${last#v}"
-            PKG_VER="${major}.$((minor+1)).0+${GITHUB_RUN_NUMBER}"
-          fi
-          echo "PKG_VER=$PKG_VER" | tee -a $GITHUB_ENV
-          echo "version=$PKG_VER" >> $GITHUB_OUTPUT
+          source .github/scripts/update_build_version.sh
 
       - name: Source .github/scripts/common.sh
         shell: bash
@@ -71,20 +61,20 @@ jobs:
             # Configure Dart credentials from secret
             mkdir -p "$HOME/.config/dart"
             echo -n "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json" || exit 1
-          
+
             # Patch pubspecs with release version
             for dir in packages/flet*; do
               echo "Patching $dir/pubspec.yaml"
               uv run ci/patch_pubspec.py "$dir/pubspec.yaml" "$PKG_VER" || exit 1
             done
-          
+
             # Run Flutter tests and publish to pub.dev
             cd packages/flet || exit 1
             echo "Running flet tests"
             flutter test || exit 1
             dart pub publish --force || exit 1
             cd "$GITHUB_WORKSPACE" || exit 1
-          
+
           else
             # Not a tag: run tests and do a dry-run publish
             cd packages/flet || exit 1
@@ -279,9 +269,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
-          fetch-depth: 0   # fetch all history
-          fetch-tags: true # ensure tags are available
+          path: '.fvmrc'
+          cache: true
 
       - name: Install deps
         shell: bash
@@ -293,8 +286,6 @@ jobs:
           if [[ "${PACKAGE_NAME}" == "flet-desktop" ]]; then
             sudo apt install -y libmpv-dev mpv libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
           fi
-          source .github/scripts/install_flutter.sh
-          flutter --version
 
       - name: Build Flutter Linux client
         shell: bash
@@ -376,7 +367,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install deps & Flutter
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Install dependencies
         shell: bash
         run: |
           source .github/scripts/common.sh
@@ -387,8 +384,6 @@ jobs:
           fi
           git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
           echo "$HOME/flutter/bin" >> $GITHUB_PATH
-          source .github/scripts/install_flutter.sh
-          flutter --version
 
       - name: Build Flutter Linux client
         shell: bash
@@ -518,12 +513,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
-        
+
       - name: Run tests
         shell: bash
         run: |
@@ -531,7 +526,7 @@ jobs:
           cd sdk/python
           uv run --group test pytest packages/flet/tests
           uv run --directory packages/flet --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
-          
+
       - name: Upload test logs
         uses: actions/upload-artifact@v4
         with:
