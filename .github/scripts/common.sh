@@ -1,12 +1,11 @@
-export root=$GITHUB_WORKSPACE
-
 function patch_python_package_versions() {
-    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $SDK_PYTHON_PATH/packages/flet/src/flet/version.py
-    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $SDK_PYTHON_PATH/packages/flet-cli/src/flet_cli/version.py
-    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $SDK_PYTHON_PATH/packages/flet-desktop/src/flet_desktop/version.py
-    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $SDK_PYTHON_PATH/packages/flet-web/src/flet_web/version.py
+    cd "$SDK_PYTHON_PATH" || exit 1
+    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet/src/flet/version.py
+    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet-cli/src/flet_cli/version.py
+    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet-desktop/src/flet_desktop/version.py
+    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/flet-web/src/flet_web/version.py
 
-    uv run --directory $SDK_PYTHON_PATH --no-dev
+    uv run --no-dev
     uv version --package flet $PYPI_VER
     uv version --package flet-cli $PYPI_VER
     uv version --package flet-desktop $PYPI_VER
@@ -14,7 +13,7 @@ function patch_python_package_versions() {
 }
 
 function patch_flet_desktop_package_name() {
-    uv run $root/ci/patch_toml_package_name.py $SDK_PYTHON_PATH/packages/flet-desktop/pyproject.toml $1
+    uv run $ROOT/ci/patch_toml_package_name.py $SDK_PYTHON_PATH/packages/flet-desktop/pyproject.toml $1
 }
 
 function publish_to_pypi() {
