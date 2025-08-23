@@ -171,6 +171,9 @@ class _SearchBarControlState extends State<SearchBarControl> {
         headerTextStyle:
             widget.control.getTextStyle("view_header_text_style", theme),
         viewSide: widget.control.getBorderSide("view_side", theme),
+        viewPadding: widget.control.getPadding("view_padding"),
+        viewBarPadding: widget.control.getPadding("view_bar_padding"),
+        shrinkWrap: widget.control.getBool("shrink_wrap"),
         isFullScreen: widget.control.getBool("full_screen", false),
         viewBackgroundColor: widget.control.getColor("view_bgcolor", context),
         dividerColor: widget.control.getColor("divider_color", context),
@@ -208,6 +211,8 @@ class _SearchBarControlState extends State<SearchBarControl> {
             shape:
                 widget.control.getWidgetStateOutlinedBorder("bar_shape", theme),
             padding: widget.control.getWidgetStatePadding("bar_padding"),
+            constraints:
+                widget.control.getBoxConstraints("bar_size_constraints"),
             textStyle:
                 widget.control.getWidgetStateTextStyle("bar_text_style", theme),
             hintStyle: widget.control

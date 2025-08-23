@@ -413,8 +413,7 @@ class TabBar(ConstrainedControl, AdaptiveControl):
     The selected tab's location appearance can be refined further with
     the [`indicator_color`][flet.TabBar.indicator_color],
     [`indicator_thickness`][flet.TabBar.indicator_thickness],
-    [`indicator_padding`][flet.TabBar.indicator_padding], and
-    [`indicator`][flet.TabBar.indicator] properties.
+    and [`indicator`][flet.TabBar.indicator] properties.
     """
 
     indicator_animation: Optional[TabIndicatorAnimation] = None
