@@ -194,6 +194,11 @@ class Dropdown(ConstrainedControl):
     Called when the selected item of this dropdown has changed.
     """
 
+    on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
+    """
+    Called when the text input of this dropdown has changed.
+    """
+
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
     """
     Called when the control has received focus.
@@ -346,7 +351,8 @@ class Dropdown(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self.expand_loose = self.expand  # to fix a display issue
+        if isinstance(self.expand, bool):
+            self.expand_loose = self.expand  # to fix a display issue
 
     def __contains__(self, item):
         return item in self.options
