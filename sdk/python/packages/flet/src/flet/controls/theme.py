@@ -5,7 +5,7 @@ from typing import Optional
 from flet.controls.alignment import Alignment
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
-from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadow
+from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
@@ -3217,7 +3217,7 @@ class IconTheme:
     Overrides the default value for [`Icon.weight`][flet.Icon.weight].
     """
 
-    shadows: Optional[list[BoxShadow]] = None
+    shadows: Optional[BoxShadowValue] = None
     """
     Overrides the default value for [`Icon.shadows`][flet.Icon.shadows].
     """
