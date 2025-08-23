@@ -9,7 +9,7 @@ def example():
         t.update()
 
     t = ft.Text()
-    b = ft.ElevatedButton(content="Submit", on_click=button_clicked)
+    b = ft.Button(content="Submit", on_click=button_clicked)
     cg = ft.RadioGroup(
         content=ft.Column(
             [
@@ -30,7 +30,8 @@ def example():
                     adaptive=True,
                     active_color=ft.Colors.BLUE,
                     tooltip=ft.Tooltip(
-                        message="Adaptive Radio shows as CupertinoRadio on macOS and iOS and as Radio on other platforms"
+                        message="Adaptive Radio shows as CupertinoRadio on macOS and "
+                        "iOS and as Radio on other platforms"
                     ),
                 ),
             ]

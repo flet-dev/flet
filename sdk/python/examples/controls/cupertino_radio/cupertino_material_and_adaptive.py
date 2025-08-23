@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
+    def handle_button_click(e: ft.Event[ft.Button]):
         message.value = f"Your favorite color is:  {group.value}"
         page.update()
 
@@ -31,7 +31,7 @@ def main(page: ft.Page):
                 ]
             )
         ),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

@@ -42,9 +42,9 @@ def main(page: ft.Page):
 
     page.add(
         switcher,
-        ft.ElevatedButton("Scale", on_click=scale),
-        ft.ElevatedButton("Fade", on_click=fade),
-        ft.ElevatedButton("Rotate", on_click=rotate),
+        ft.Button("Scale", on_click=scale),
+        ft.Button("Fade", on_click=fade),
+        ft.Button("Rotate", on_click=rotate),
     )
 
 

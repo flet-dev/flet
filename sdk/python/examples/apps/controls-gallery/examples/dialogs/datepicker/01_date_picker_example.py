@@ -18,7 +18,7 @@ def example():
             self.selected_date = ft.Text()
 
             self.controls = [
-                ft.ElevatedButton(
+                ft.Button(
                     "Pick date",
                     icon=ft.Icons.CALENDAR_MONTH,
                     on_click=self.open_date_picker,
@@ -34,12 +34,14 @@ def example():
             self.selected_date.value = f"Selected date: {self.datepicker.value}"
             e.control.page.update()
 
-        # happens when example is added to the page (when user chooses the DatePicker control from the grid)
+        # happens when example is added to the page (when user chooses
+        # the DatePicker control from the grid)
         def did_mount(self):
             self.page.overlay.append(self.datepicker)
             self.page.update()
 
-        # happens when example is removed from the page (when user chooses different control group on the navigation rail)
+        # happens when example is removed from the page (when user chooses
+        # different control group on the navigation rail)
         def will_unmount(self):
             self.page.overlay.remove(self.datepicker)
             self.page.update()

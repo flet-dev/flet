@@ -17,10 +17,10 @@ def main(page: ft.Page):
         await hf.vibrate()
 
     page.add(
-        ft.ElevatedButton("Heavy impact", on_click=heavy_impact),
-        ft.ElevatedButton("Medium impact", on_click=medium_impact),
-        ft.ElevatedButton("Light impact", on_click=light_impact),
-        ft.ElevatedButton("Vibrate", on_click=vibrate),
+        ft.Button("Heavy impact", on_click=heavy_impact),
+        ft.Button("Medium impact", on_click=medium_impact),
+        ft.Button("Light impact", on_click=light_impact),
+        ft.Button("Vibrate", on_click=vibrate),
     )
 
 

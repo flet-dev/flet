@@ -169,7 +169,7 @@ def main(page: ft.Page):
 
     page.add(
         sw,
-        ft.ElevatedButton("Animate!", on_click=animate),
+        ft.Button("Animate!", on_click=animate),
     )
 
 ft.run(main)

@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def add_text_box(e: ft.Event[ft.ElevatedButton]):
+    def add_text_box(e: ft.Event[ft.Button]):
         text_field = ft.TextField(
             label=f"Text Box {len(left_column.controls)}",
             label_style=ft.TextStyle(color=ft.Colors.GREEN),
@@ -12,27 +12,26 @@ def main(page: ft.Page):
         left_column.controls.append(text_field)
         page.update()
 
-    def remove_text_box(e: ft.Event[ft.ElevatedButton]):
+    def remove_text_box(e: ft.Event[ft.Button]):
         if left_column.controls:
             left_column.controls.pop()
         page.update()
 
     def scroll_generator(scroll_mode_list: list):
         while True:
-            for mode in scroll_mode_list:
-                yield mode
+            yield from scroll_mode_list
 
     def change_scroll(_):
         left_column.scroll = next(scroll_mode)
         scroll_mode_text.value = str(left_column.scroll)
         page.update()
 
-    add_text_box_button = ft.ElevatedButton("Add TextBox", on_click=add_text_box)
-    remove_text_box_button = ft.ElevatedButton(
+    add_text_box_button = ft.Button("Add TextBox", on_click=add_text_box)
+    remove_text_box_button = ft.Button(
         content="Remove TextBox",
         on_click=remove_text_box,
     )
-    scroll_change_button = ft.ElevatedButton(
+    scroll_change_button = ft.Button(
         content="Change Scroll Mode",
         on_click=change_scroll,
     )

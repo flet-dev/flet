@@ -13,7 +13,7 @@ def main(page: ft.Page):
         page.add(ft.Text("DatePicker dismissed"))
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Pick date",
             icon=ft.Icons.CALENDAR_MONTH,
             on_click=lambda e: page.show_dialog(

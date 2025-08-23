@@ -2,11 +2,11 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "ElevatedButton Example"
+    page.title = "Button Example"
 
     page.add(
-        ft.ElevatedButton(content="Elevated button"),
-        ft.ElevatedButton(content="Disabled button", disabled=True),
+        ft.Button(content="Elevated button"),
+        ft.Button(content="Disabled button", disabled=True),
     )
 
 

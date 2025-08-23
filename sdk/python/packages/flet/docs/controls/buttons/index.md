@@ -47,10 +47,10 @@
     ---
     <!-- ![CupertinoTintedButton](../../examples/controls/cupertino_tinted_button/media/index.png){width="100%"} -->
 
--   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
+-   [:octicons-arrow-right-24: `Button`][flet.Button]
 
     ---
-    ![ElevatedButton](../../examples/controls/button/media/index.png){width="100%"}
+    ![Button](../../examples/controls/button/media/index.png){width="100%"}
 
 -   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
 

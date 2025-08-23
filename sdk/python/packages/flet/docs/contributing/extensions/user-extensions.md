@@ -597,7 +597,7 @@ In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/contr
 
 ##### Events
 
-For example, `on_click` event for `ElevatedButton`.
+For example, `on_click` event for `Button`.
 
 In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/button.py):
 

@@ -5,7 +5,7 @@ def main(page: ft.Page):
     page.title = "Calc App"
     result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
 
-    class CalcButton(ft.ElevatedButton):
+    class CalcButton(ft.Button):
         def __init__(self, text, expand=1):
             super().__init__()
             self.text = text

@@ -8,7 +8,7 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.spacing = 30
 
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         container.rotate.angle += pi / 2
         page.update()
 
@@ -23,7 +23,7 @@ def main(page: ft.Page):
                 duration=300, curve=ft.AnimationCurve.BOUNCE_OUT
             ),
         ),
-        ft.ElevatedButton("Animate!", on_click=animate),
+        ft.Button("Animate!", on_click=animate),
     )
 
 

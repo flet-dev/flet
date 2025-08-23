@@ -14,9 +14,7 @@ async def test_bottom_sheet_basic(flet_app: ftt.FletTestApp, request):
                 tight=True,
                 controls=[
                     ft.Text("Here is a bottom sheet!"),
-                    ft.ElevatedButton(
-                        "Dismiss", on_click=lambda _: flet_app.page.pop_dialog()
-                    ),
+                    ft.Button("Dismiss", on_click=lambda _: flet_app.page.pop_dialog()),
                 ],
             ),
         ),

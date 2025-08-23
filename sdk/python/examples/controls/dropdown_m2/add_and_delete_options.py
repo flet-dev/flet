@@ -8,14 +8,14 @@ def main(page: ft.Page):
                 return option
         return None
 
-    def handle_addition(e: ft.Event[ft.ElevatedButton]):
+    def handle_addition(e: ft.Event[ft.Button]):
         dropdown.options.append(ft.dropdownm2.Option(input_field.value))
         dropdown.value = input_field.value
         input_field.value = ""
         page.update()
 
     def handle_deletion(e: ft.Event[ft.OutlinedButton]):
-        option = find_option(d.value)
+        option = find_option(dropdown.value)
         if option is not None:
             dropdown.options.remove(option)
             # d.value = None
@@ -26,7 +26,7 @@ def main(page: ft.Page):
         ft.Row(
             controls=[
                 input_field := ft.TextField(hint_text="Enter item name"),
-                ft.ElevatedButton(content="Add", on_click=handle_addition),
+                ft.Button(content="Add", on_click=handle_addition),
                 ft.OutlinedButton(
                     content="Delete selected",
                     on_click=handle_deletion,

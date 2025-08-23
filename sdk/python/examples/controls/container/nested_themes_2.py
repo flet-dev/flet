@@ -12,7 +12,7 @@ def main(page: ft.Page):
     page.add(
         ft.Row(
             controls=[
-                ft.ElevatedButton("Page theme"),
+                ft.Button("Page theme"),
                 ft.TextButton("Page theme text button"),
                 ft.Text(
                     "Text in primary container color",
@@ -25,7 +25,7 @@ def main(page: ft.Page):
             theme=ft.Theme(color_scheme=ft.ColorScheme(primary=ft.Colors.PINK)),
             content=ft.Row(
                 controls=[
-                    ft.ElevatedButton("Inherited theme with primary color overriden"),
+                    ft.Button("Inherited theme with primary color overriden"),
                     ft.TextButton("Button 2"),
                 ]
             ),
@@ -40,7 +40,7 @@ def main(page: ft.Page):
             ),
             content=ft.Row(
                 controls=[
-                    ft.ElevatedButton("Always DARK theme"),
+                    ft.Button("Always DARK theme"),
                     ft.TextButton("Text button"),
                     ft.Text(
                         "Text in primary container color",
@@ -57,7 +57,7 @@ def main(page: ft.Page):
             theme=ft.Theme(),
             content=ft.Row(
                 controls=[
-                    ft.ElevatedButton("Always LIGHT theme"),
+                    ft.Button("Always LIGHT theme"),
                     ft.TextButton("Text button"),
                     ft.Text(
                         "Text in primary container color",
@@ -75,7 +75,7 @@ def main(page: ft.Page):
             theme=ft.Theme(),
             content=ft.Row(
                 controls=[
-                    ft.ElevatedButton("SYSTEM theme"),
+                    ft.Button("SYSTEM theme"),
                     ft.TextButton("Text button"),
                     ft.Text(
                         "Text in primary container color",

@@ -12,7 +12,7 @@ def main(page: ft.Page):
 
     page.add(
         chat,
-        ft.Row(controls=[new_message, ft.ElevatedButton("Send", on_click=send_click)]),
+        ft.Row(controls=[new_message, ft.Button("Send", on_click=send_click)]),
     )
 
 

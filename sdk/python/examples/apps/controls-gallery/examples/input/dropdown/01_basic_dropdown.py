@@ -9,7 +9,7 @@ def example():
         t.update()
 
     t = ft.Text()
-    b = ft.ElevatedButton(content="Submit", on_click=button_clicked)
+    b = ft.Button(content="Submit", on_click=button_clicked)
     dd = ft.Dropdown(
         width=100,
         options=[

@@ -1,8 +1,8 @@
 import flet as ft
 from flet import (
+    Button,
     Column,
     Container,
-    ElevatedButton,
     Row,
     Text,
     UserControl,
@@ -27,7 +27,7 @@ class CalculatorApp(UserControl):
                     Row(controls=[self.result], alignment="end"),
                     Row(
                         controls=[
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="AC",
                                 bgcolor=colors.BLUE_GREY_100,
@@ -36,7 +36,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="AC",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="+/-",
                                 bgcolor=colors.BLUE_GREY_100,
@@ -45,7 +45,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="+/-",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="%",
                                 bgcolor=colors.BLUE_GREY_100,
@@ -54,7 +54,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="%",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="/",
                                 bgcolor=colors.ORANGE,
@@ -67,7 +67,7 @@ class CalculatorApp(UserControl):
                     ),
                     Row(
                         controls=[
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="7",
                                 bgcolor=colors.WHITE24,
@@ -76,7 +76,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="7",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="8",
                                 bgcolor=colors.WHITE24,
@@ -85,7 +85,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="8",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="9",
                                 bgcolor=colors.WHITE24,
@@ -94,7 +94,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="9",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="*",
                                 bgcolor=colors.ORANGE,
@@ -107,7 +107,7 @@ class CalculatorApp(UserControl):
                     ),
                     Row(
                         controls=[
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="4",
                                 bgcolor=colors.WHITE24,
@@ -116,7 +116,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="4",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="5",
                                 bgcolor=colors.WHITE24,
@@ -125,7 +125,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="5",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="6",
                                 bgcolor=colors.WHITE24,
@@ -134,7 +134,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="6",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="-",
                                 bgcolor=colors.ORANGE,
@@ -147,7 +147,7 @@ class CalculatorApp(UserControl):
                     ),
                     Row(
                         controls=[
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="1",
                                 bgcolor=colors.WHITE24,
@@ -156,7 +156,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="1",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="2",
                                 bgcolor=colors.WHITE24,
@@ -165,7 +165,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="2",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="3",
                                 bgcolor=colors.WHITE24,
@@ -174,7 +174,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="3",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="+",
                                 bgcolor=colors.ORANGE,
@@ -187,7 +187,7 @@ class CalculatorApp(UserControl):
                     ),
                     Row(
                         controls=[
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="0",
                                 bgcolor=colors.WHITE24,
@@ -196,7 +196,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data="0",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text=".",
                                 bgcolor=colors.WHITE24,
@@ -205,7 +205,7 @@ class CalculatorApp(UserControl):
                                 on_click=self.button_clicked,
                                 data=".",
                             ),
-                            ElevatedButton(
+                            Button(
                                 style=ft.ButtonStyle(padding=0),
                                 text="=",
                                 bgcolor=colors.ORANGE,
@@ -227,7 +227,7 @@ class CalculatorApp(UserControl):
             self.reset()
 
         elif data in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."):
-            if self.result.value == "0" or self.new_operand == True:
+            if self.result.value == "0" or self.new_operand:
                 self.result.value = data
                 self.new_operand = False
             else:

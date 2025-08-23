@@ -1,8 +1,9 @@
 import base64
 import time
 
-import flet as ft
 import httpx
+
+import flet as ft
 
 
 class BufferingSwitcher(ft.AnimatedSwitcher):
@@ -62,7 +63,7 @@ def main(page: ft.Page):
 
     page.add(
         switcher,
-        ft.ElevatedButton("Animate!", on_click=switcher.animate),
+        ft.Button("Animate!", on_click=switcher.animate),
     )
 
 

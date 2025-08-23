@@ -1,8 +1,8 @@
 import flet
 from flet import (
+    Button,
     Column,
     Container,
-    ElevatedButton,
     IconButton,
     Page,
     Row,
@@ -66,8 +66,8 @@ def main(page: Page):
 
     resizable = Switch(label="Resizable", value=True, on_change=resizable_changed)
 
-    maximize = ElevatedButton(text="Maximize", on_click=maximize_clicked)
-    minimize = ElevatedButton(text="Minimize", on_click=minimize_clicked)
+    maximize = Button(text="Maximize", on_click=maximize_clicked)
+    minimize = Button(text="Minimize", on_click=minimize_clicked)
 
     def width_changed(e):
         page.window.width = e.control.value

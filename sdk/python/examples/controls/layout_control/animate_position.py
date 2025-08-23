@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate_container(e: ft.Event[ft.ElevatedButton]):
+    def animate_container(e: ft.Event[ft.Button]):
         c1.top = 20
         c1.left = 200
         c2.top = 100
@@ -36,7 +36,7 @@ def main(page: ft.Page):
                 ),
             ],
         ),
-        ft.ElevatedButton("Animate!", on_click=animate_container),
+        ft.Button("Animate!", on_click=animate_container),
     )
 
 
