@@ -105,7 +105,7 @@ class SegmentedButton(LayoutControl):
     when the user (un)selects a segment.
     """
 
-    selected_icon: Optional[Control] = None
+    selected_icon: Optional[IconDataOrControl] = None
     """
     An `Icon` control that is used to indicate a segment is selected.
 

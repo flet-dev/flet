@@ -15,13 +15,27 @@ class DropdownControl extends StatefulWidget {
 
 class _DropdownControlState extends State<DropdownControl> {
   late final FocusNode _focusNode;
+  late final TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
+
+    _controller =
+        TextEditingController(text: widget.control.getString("value"));
     _focusNode.addListener(_onFocusChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
+
+    _controller.addListener(_onTextChange);
+  }
+
+  void _onTextChange() {
+    debugPrint("Typed text: ${_controller.text}");
+    if (_controller.text != widget.control.getString("value")) {
+      widget.control.updateProperties({"value": _controller.text});
+      widget.control.triggerEvent("text_change", _controller.text);
+    }
   }
 
   void _onFocusChange() {
@@ -33,6 +47,7 @@ class _DropdownControlState extends State<DropdownControl> {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     widget.control.removeInvokeMethodListener(_invokeMethod);
+    _controller.dispose();
     super.dispose();
   }
 
@@ -182,6 +197,7 @@ class _DropdownControlState extends State<DropdownControl> {
     Widget dropDown = DropdownMenu<String>(
       enabled: !widget.control.disabled,
       focusNode: _focusNode,
+      controller: _controller,
       initialSelection: value,
       enableFilter: widget.control.getBool("enable_filter", false)!,
       enableSearch: widget.control.getBool("enable_search", true)!,

@@ -84,7 +84,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
         selected: selected,
         showSelectedIcon: widget.control.getBool("show_selected_icon", true)!,
         style: style,
-        selectedIcon: widget.control.buildWidget("selected_icon"),
+        selectedIcon: widget.control.buildIconOrWidget("selected_icon"),
         onSelectionChanged: !widget.control.disabled
             ? (newSelection) => onChange(newSelection)
             : null,

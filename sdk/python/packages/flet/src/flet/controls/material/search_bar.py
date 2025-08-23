@@ -78,37 +78,44 @@ class SearchBar(LayoutControl):
 
     bar_shadow_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    TBD
+    The shadow color of the search bar.
     """
 
     bar_elevation: Optional[ControlStateValue[Optional[Number]]] = None
     """
-    TBD
+    The elevation of the search bar.
     """
 
     bar_border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    TBD
+    The color and weight of the search bar's outline.
+
+    This value is combined with [`SearchBar.bar_shape`][flet.SearchBar.bar_shape] to
+    create a shape decorated with an outline.
     """
 
     bar_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
-    TBD
+    The shape of the search bar.
+
+    This shape is combined with
+    [`SearchBar.bar_border_side`][flet.SearchBar.bar_border_side] to create a shape
+    decorated with an outline.
     """
 
     bar_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    TBD
+    The style to use for the text being edited.
     """
 
     bar_hint_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    TBD
+    The style to use for the [`SearchBar.bar_hint_text`][flet.SearchBar.bar_hint_text].
     """
 
     bar_padding: Optional[ControlStateValue[PaddingValue]] = None
     """
-    TBD
+    The padding between the search bar's boundary and its contents.
     """
 
     bar_scroll_padding: PaddingValue = 20
@@ -118,6 +125,11 @@ class SearchBar(LayoutControl):
     If the bar's text field is partially off-screen or covered (e.g., by the
     keyboard), it scrolls into view, ensuring it is positioned at the specified
     distance from the Scrollable edges.
+    """
+
+    bar_size_constraints: Optional[BoxConstraints] = None
+    """
+    Optional size constraints for the search bar.
     """
 
     view_leading: Optional[Control] = None
@@ -176,12 +188,36 @@ class SearchBar(LayoutControl):
 
     view_size_constraints: Optional[BoxConstraints] = None
     """
-    TBD
+    Optional size constraints for the search view.
+
+    By default, the search view has the same width as the search bar and is 2/3 the
+    height of the screen. If the width and height of the view are within the
+    view_size_constraints, the view will show its default size. Otherwise, the size of
+    the view will be constrained by this property.
     """
 
     view_header_height: Optional[Number] = None
     """
-    TBD
+    The height of the search field on the search view.
+    """
+
+    view_padding: Optional[PaddingValue] = None
+    """
+    The padding to use for the search view.
+
+    Has no effect if the search view is full-screen.
+    """
+
+    view_bar_padding: Optional[PaddingValue] = None
+    """
+    The padding to use for the search view's search bar.
+
+    If null, then the default value is 8.0 horizontally.
+    """
+
+    shrink_wrap: Optional[bool] = None
+    """
+    Whether the search view should shrink-wrap its contents.
     """
 
     divider_color: Optional[ColorValue] = None

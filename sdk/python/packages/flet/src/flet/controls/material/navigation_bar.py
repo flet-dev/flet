@@ -10,6 +10,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
 from flet.controls.layout_control import LayoutControl
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
     IconDataOrControl,
@@ -126,6 +127,12 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     Defaults to `NavigationBarLabelBehavior.ALWAYS_SHOW`.
     """
 
+    label_padding: Optional[PaddingValue] = None
+    """
+    The padding around the
+    [`NavigationBarDestination.label`][flet.NavigationBarDestination.label].
+    """
+
     elevation: Optional[Number] = None
     """
     The elevation of the navigation bar itself.
@@ -160,8 +167,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight color of the
-    `NavigationDestination` in various
+    The highlight color of the `NavigationBarDestination` in various
     [`ControlState`][flet.ControlState] states.
 
     The following [`ControlState`][flet.ControlState]
