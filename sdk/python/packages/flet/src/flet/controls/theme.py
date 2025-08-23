@@ -3172,15 +3172,55 @@ class SegmentedButtonTheme:
 
 @dataclass
 class IconTheme:
+    """
+    Customizes the appearance of descendant [`Icon`][flet.Icon] controls.
+    """
+
     color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`Icon.color`][flet.Icon.color].
+    """
+
     apply_text_scaling: Optional[bool] = None
+    """
+    Overrides the default value for
+    [`Icon.apply_text_scaling`][flet.Icon.apply_text_scaling].
+    """
+
     fill: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.fill`][flet.Icon.fill].
+    """
+
     opacity: Optional[Number] = None
+    """
+    An opacity to apply to both explicit and default icon colors.
+    """
+
     size: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.size`][flet.Icon.size].
+    """
+
     optical_size: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.optical_size`][flet.Icon.optical_size].
+    """
+
     grade: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.grade`][flet.Icon.grade].
+    """
+
     weight: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.weight`][flet.Icon.weight].
+    """
+
     shadows: Optional[list[BoxShadow]] = None
+    """
+    Overrides the default value for [`Icon.shadows`][flet.Icon.shadows].
+    """
 
 
 @dataclass

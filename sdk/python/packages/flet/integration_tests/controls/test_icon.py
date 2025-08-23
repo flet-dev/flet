@@ -1,11 +1,18 @@
 import pytest
+import pytest_asyncio
 
 import flet as ft
 import flet.testing as ftt
 
 
-@pytest.mark.asyncio(loop_scope="module")
-async def test_icon_basic(flet_app: ftt.FletTestApp, request):
+# Create a new flet_app instance for each test method
+@pytest_asyncio.fixture(scope="function", autouse=True)
+def flet_app(flet_app_function):
+    return flet_app_function
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Column(
