@@ -3033,7 +3033,8 @@ class SearchViewTheme:
 class NavigationDrawerTheme:
     """
     Customizes the appearance of descendant [`NavigationDrawer`][flet.NavigationDrawer]
-    controls."""
+    controls.
+    """
 
     bgcolor: Optional[ColorValue] = None
     """
@@ -3087,8 +3088,9 @@ class NavigationDrawerTheme:
 @dataclass
 class NavigationBarTheme:
     """
-    Customizes the appearance of descendant [`NavigationBar`][flet.NavigationBar]
-    controls.
+    Customizes the appearance of [`NavigationBar`][flet.NavigationBar]
+    controls across the
+    app.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -3153,8 +3155,8 @@ class NavigationBarTheme:
 @dataclass
 class SegmentedButtonTheme:
     """
-    Customizes the appearance of descendant [`SegmentedButton`][flet.SegmentedButton]
-    controls.
+    Customizes the appearance of [`SegmentedButton`][flet.SegmentedButton]
+    controls across the app.
     """
 
     selected_icon: Optional[IconData] = None
@@ -3173,7 +3175,7 @@ class SegmentedButtonTheme:
 @dataclass
 class IconTheme:
     """
-    Customizes the appearance of descendant [`Icon`][flet.Icon] controls.
+    Customizes the appearance of [`Icon`][flet.Icon] controls across the app.
     """
 
     color: Optional[ColorValue] = None
@@ -3225,21 +3227,97 @@ class IconTheme:
 
 @dataclass
 class DataTableTheme:
+    """
+    Customizes the appearance of [`DataTable`][flet.DataTable] controls across the app.
+    """
+
     checkbox_horizontal_margin: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.checkbox_horizontal_margin`][flet.DataTable.checkbox_horizontal_margin].
+    """
+
     column_spacing: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.column_spacing`][flet.DataTable.column_spacing].
+    """
+
     data_row_max_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_row_max_height`][flet.DataTable.data_row_max_height].
+    """
+
     data_row_min_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_row_min_height`][flet.DataTable.data_row_min_height].
+    """
+
     data_row_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_row_color`][flet.DataTable.data_row_color].
+    """
+
     data_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_text_style`][flet.DataTable.data_text_style].
+    """
+
     divider_thickness: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.divider_thickness`][flet.DataTable.divider_thickness].
+    """
+
     horizontal_margin: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.horizontal_margin`][flet.DataTable.horizontal_margin].
+    """
+
     heading_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for
+    [`DataTable.heading_text_style`][flet.DataTable.heading_text_style].
+    """
+
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value for
+    [`DataTable.heading_row_color`][flet.DataTable.heading_row_color].
+    """
+
     heading_row_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.heading_row_height`][flet.DataTable.heading_row_height].
+    """
+
     data_row_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value for [`DataRow`][flet.DataRow] mouse cursor.
+    """
+
     decoration: Optional[BoxDecoration] = None
+    """
+    Overrides the default value for [`DataTable`][flet.DataTable] decoration.
+    """
+
     heading_row_alignment: Optional[MainAxisAlignment] = None
+    """
+    Overrides the default value for
+    [`DataColumn.heading_row_alignment`][flet.DataColumn.heading_row_alignment].
+    """
+
     heading_cell_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value for
+    [`DataColumn`][flet.DataColumn] mouse cursor.
+    """
 
 
 @dataclass
