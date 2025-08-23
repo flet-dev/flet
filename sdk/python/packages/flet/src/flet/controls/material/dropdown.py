@@ -349,11 +349,6 @@ class Dropdown(ConstrainedControl):
     [`helper_text`][flet.Dropdown.helper_text].
     """
 
-    def before_update(self):
-        super().before_update()
-        if isinstance(self.expand, bool):
-            self.expand_loose = self.expand  # to fix a display issue
-
     def __contains__(self, item):
         return item in self.options
 
