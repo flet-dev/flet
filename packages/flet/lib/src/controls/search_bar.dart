@@ -248,6 +248,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
           return widget.control.buildWidgets("controls");
         });
 
-    return ConstrainedControl(control: widget.control, child: anchor);
+    return LayoutControl(control: widget.control, child: anchor);
   }
 }

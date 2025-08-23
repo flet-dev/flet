@@ -107,7 +107,7 @@ class PopupMenuButtonControl extends StatelessWidget {
             }).toList(),
         child: content);
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: control,
         child: TooltipVisibility(
             visible: control.getString("tooltip") == null,

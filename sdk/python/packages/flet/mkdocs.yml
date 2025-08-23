@@ -225,11 +225,11 @@ nav:
           - Base:
               - AdaptiveControl: controls/adaptivecontrol.md
               - BaseControl: controls/basecontrol.md
-              - ConstrainedControl: controls/constrainedcontrol.md
+              - BasePage: controls/basepage.md
               - Control: controls/control.md
               - DialogControl: controls/dialogcontrol.md
+              - LayoutControl: controls/layoutcontrol.md
               - MultiView: controls/multiview.md
-              - BasePage: controls/basepage.md
               - ScrollableControl: controls/scrollablecontrol.md
               - Service: controls/service.md
           - Buttons:

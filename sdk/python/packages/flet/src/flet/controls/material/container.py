@@ -14,11 +14,11 @@ from flet.controls.box import (
     ColorFilter,
     DecorationImage,
 )
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.theme import Theme
 from flet.controls.types import (
@@ -33,7 +33,7 @@ __all__ = ["Container"]
 
 
 @control("Container")
-class Container(ConstrainedControl, AdaptiveControl):
+class Container(LayoutControl, AdaptiveControl):
     """
     Allows to decorate a control with background color and border and
     position it with padding, margin and alignment.

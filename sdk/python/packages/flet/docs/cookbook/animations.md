@@ -16,7 +16,7 @@ beginning of the animation and then slows down until the target value is reached
 /// caption
 ///
 
-[`ConstrainedControl`][flet.ConstrainedControl] (and its subclasses) provides a number of `animate_{something}`
+[`LayoutControl`][flet.LayoutControl] (and its subclasses) provides a number of `animate_{something}`
 properties, described below, to enable implicit animation of its appearance:
 
 * `animate_opacity`
@@ -49,46 +49,46 @@ properties, described below, to enable implicit animation of its appearance:
 ### Opacity animation
 
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`ConstrainedControl.opacity`][flet.ConstrainedControl.opacity] property.
+enables implicit animation of [`LayoutControl.opacity`][flet.LayoutControl.opacity] property.
 
 ```python
---8<-- "../../examples/controls/constrained_control/animate_opacity.py"
+--8<-- "../../examples/controls/layout_control/animate_opacity.py"
 ```
 
-![animate-opacity](../examples/controls/constrained_control/media/animate_opacity.gif){width="80%"}
+![animate-opacity](../examples/controls/layout_control/media/animate_opacity.gif){width="80%"}
 /// caption
 ///
 
 ### Rotation animation
 
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`ConstrainedControl.rotate`][flet.ConstrainedControl.rotate] property.
+enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate] property.
 
 ```python
 --8<-- "../../examples/controls/constrained-control/animate_rotation.py"
 ```
 
-![animate-rotation](../examples/controls/constrained_control/media/animate_rotation.gif){width="80%"}
+![animate-rotation](../examples/controls/layout_control/media/animate_rotation.gif){width="80%"}
 /// caption
 ///
 
 ### Scale animation
 
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`ConstrainedControl.scale`][flet.ConstrainedControl.scale] property.
+enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] property.
 
 ```python
---8<-- "../../examples/controls/constrained_control/animate_scale.py"
+--8<-- "../../examples/controls/layout_control/animate_scale.py"
 ```
 
-![animate-scale](../examples/controls/constrained_control/media/animate_scale.gif){width="80%"}
+![animate-scale](../examples/controls/layout_control/media/animate_scale.gif){width="80%"}
 /// caption
 ///
 
 ### Offset animation
 
 Setting control's `animate_offset` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`ConstrainedControl.offset`][flet.ConstrainedControl.offset] property.
+enables implicit animation of [`LayoutControl.offset`][flet.LayoutControl.offset] property.
 
 `offset` property is an instance of `Offset` class which specifies horizontal `x` and vertical `y`
 offset of a control scaled to control's size. For example, an offset `Offset(-0.25, 0)` will result in
@@ -97,19 +97,19 @@ a horizontal translation of one quarter the width of the control.
 Offset animation is used for various sliding effects:
 
 ```python
---8<-- "../../examples/controls/constrained_control/animate_offset.py"
+--8<-- "../../examples/controls/layout_control/animate_offset.py"
 ```
 
-![animate-offset](../examples/controls/constrained_control/media/animate_offset.gif){width="80%"}
+![animate-offset](../examples/controls/layout_control/media/animate_offset.gif){width="80%"}
 /// caption
 ///
 
 ### Position animation
 
 Setting control's `animate_position` to either `True`, number or an instance of `Animation` class
-(see above) enables implicit animation of the following `ConstrainedControl` properties:
-[`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right],
-[`bottom`][flet.ConstrainedControl.bottom], [`top`][flet.ConstrainedControl.top].
+(see above) enables implicit animation of the following `LayoutControl` properties:
+[`left`][flet.LayoutControl.left], [`right`][flet.LayoutControl.right],
+[`bottom`][flet.LayoutControl.bottom], [`top`][flet.LayoutControl.top].
 
 
 Note:
@@ -119,10 +119,10 @@ Note:
     - [`Page.overlay`][flet.Page.overlay] list
 
 ```python
---8<-- "../../examples/controls/constrained_control/animate_position.py"
+--8<-- "../../examples/controls/layout_control/animate_position.py"
 ```
 
-![animate-position](../examples/controls/constrained_control/media/animate_position.gif){width="80%"}
+![animate-position](../examples/controls/layout_control/media/animate_position.gif){width="80%"}
 /// caption
 ///
 
@@ -181,8 +181,8 @@ ft.run(main)
 
 ### Animation end callback
 
-[`ConstrainedControl`][flet.ConstrainedControl] also has an
-[`on_animation_end`][flet.ConstrainedControl.on_animation_end] event handler, which is called
+[`LayoutControl`][flet.LayoutControl] also has an
+[`on_animation_end`][flet.LayoutControl.on_animation_end] event handler, which is called
 when an animation is complete. It can be used to chain multiple animations.
 
 Event's [`data`][flet.Event.data] field/property contains the name of animation:

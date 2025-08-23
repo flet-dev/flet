@@ -99,6 +99,6 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
               label: segment.buildTextOrWidget("label"));
         }).toList());
 
-    return ConstrainedControl(control: widget.control, child: segmentedButton);
+    return LayoutControl(control: widget.control, child: segmentedButton);
   }
 }

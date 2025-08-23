@@ -56,6 +56,6 @@ class WindowDragAreaControl extends StatelessWidget {
       child: content,
     );
 
-    return ConstrainedControl(control: control, child: wda);
+    return LayoutControl(control: control, child: wda);
   }
 }

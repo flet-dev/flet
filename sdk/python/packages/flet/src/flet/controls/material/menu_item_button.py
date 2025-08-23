@@ -3,16 +3,16 @@ from typing import Optional
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ClipBehavior, StrOrControl
 
 __all__ = ["MenuItemButton"]
 
 
 @control("MenuItemButton")
-class MenuItemButton(ConstrainedControl):
+class MenuItemButton(LayoutControl):
     """
     A button for use in a MenuBar or on its own, that can be activated by click or
     keyboard navigation.

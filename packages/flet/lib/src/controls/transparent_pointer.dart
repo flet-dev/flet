@@ -17,7 +17,7 @@ class TransparentPointerControl extends StatelessWidget {
     var pointer = TransparentPointer(
         transparent: true, child: control.buildWidget("content"));
 
-    return ConstrainedControl(control: control, child: pointer);
+    return LayoutControl(control: control, child: pointer);
   }
 }
 

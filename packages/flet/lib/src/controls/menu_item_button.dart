@@ -86,6 +86,6 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
       _focusNode.requestFocus();
     }
 
-    return ConstrainedControl(control: widget.control, child: menuItem);
+    return LayoutControl(control: widget.control, child: menuItem);
   }
 }

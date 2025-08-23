@@ -3,8 +3,8 @@ from typing import Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
@@ -13,19 +13,19 @@ from flet.controls.types import (
     ResponsiveRowBreakpoint,
 )
 
-__all__ = ["ResponsiveRow", "ResponsiveRowBreakpoint", "ResponsiveNumber"]
+__all__ = ["ResponsiveNumber", "ResponsiveRow", "ResponsiveRowBreakpoint"]
 
 
 @control("ResponsiveRow")
-class ResponsiveRow(ConstrainedControl, AdaptiveControl):
+class ResponsiveRow(LayoutControl, AdaptiveControl):
     """
     Allows aligning child controls to virtual columns.
 
     By default, a virtual grid has 12 columns, but that can be customized with
     [`columns`][(c).] property.
 
-    Similar to `expand` property, every control has [`col`][flet.Control.col] property which allows
-    specifying how many columns a control should span.
+    Similar to `expand` property, every control has [`col`][flet.Control.col]
+    property which allows specifying how many columns a control should span.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -40,12 +40,14 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed horizontally.
+    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be
+    placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed vertically.
+    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed
+    vertically.
     """
 
     spacing: ResponsiveNumber = 10

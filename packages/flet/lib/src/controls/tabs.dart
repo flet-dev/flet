@@ -142,7 +142,7 @@ class _TabsControlState extends State<TabsControl>
       return const ErrorControl("Tabs.content must be provided and visible");
     }
 
-    return ConstrainedControl(control: widget.control, child: content);
+    return LayoutControl(control: widget.control, child: content);
   }
 }
 
@@ -164,8 +164,8 @@ class TabBarViewControl extends StatelessWidget {
 
     final tabController = tabsState._tabController;
 
-    Widget buildConstrainedTabView() {
-      return ConstrainedControl(
+    Widget buildLayoutTabView() {
+      return LayoutControl(
           control: control,
           child: TabBarView(
             controller: tabController,
@@ -179,7 +179,7 @@ class TabBarViewControl extends StatelessWidget {
     // If expand property was set, we return the result directly.
     // Because having Expanded as direct child of LayoutBuilder is not allowed.
     if (control.getExpand("expand", 0)! > 0) {
-      return buildConstrainedTabView();
+      return buildLayoutTabView();
     }
 
     return LayoutBuilder(
@@ -196,7 +196,7 @@ class TabBarViewControl extends StatelessWidget {
           );
         }
 
-        return buildConstrainedTabView();
+        return buildLayoutTabView();
       },
     );
   }

@@ -5,9 +5,9 @@ from typing import Optional, Union
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadius, BorderRadiusValue
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.geometry import Size
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -28,7 +28,7 @@ class CupertinoButtonSize(Enum):
 
 
 @control("CupertinoButton")
-class CupertinoButton(ConstrainedControl):
+class CupertinoButton(LayoutControl):
     """
     An iOS-style button.
 

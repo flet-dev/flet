@@ -77,6 +77,6 @@ class _SliderControlState extends State<RangeSliderControl> {
               }
             : null);
 
-    return ConstrainedControl(control: widget.control, child: rangeSlider);
+    return LayoutControl(control: widget.control, child: rangeSlider);
   }
 }

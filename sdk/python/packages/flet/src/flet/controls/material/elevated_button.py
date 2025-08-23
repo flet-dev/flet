@@ -4,9 +4,9 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
@@ -20,7 +20,7 @@ __all__ = ["ElevatedButton"]
 
 
 @control("ElevatedButton")
-class ElevatedButton(ConstrainedControl, AdaptiveControl):
+class ElevatedButton(LayoutControl, AdaptiveControl):
     """
     Elevated buttons are essentially filled tonal buttons with a shadow. To prevent
     shadow creep, only use them when absolutely necessary, such as when the button

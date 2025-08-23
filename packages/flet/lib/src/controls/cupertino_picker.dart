@@ -63,6 +63,6 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
       }).toList(),
     );
 
-    return ConstrainedControl(control: widget.control, child: picker);
+    return LayoutControl(control: widget.control, child: picker);
   }
 }

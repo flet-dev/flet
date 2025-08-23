@@ -162,6 +162,6 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
   }
 }

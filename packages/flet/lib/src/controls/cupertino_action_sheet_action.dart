@@ -34,6 +34,6 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
       child: content,
     );
 
-    return ConstrainedControl(control: control, child: actionSheet);
+    return LayoutControl(control: control, child: actionSheet);
   }
 }

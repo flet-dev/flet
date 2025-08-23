@@ -3,9 +3,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.transform import OffsetValue
 from flet.controls.types import ClipBehavior, StrOrControl
@@ -14,7 +14,7 @@ __all__ = ["SubmenuButton"]
 
 
 @control("SubmenuButton")
-class SubmenuButton(ConstrainedControl):
+class SubmenuButton(LayoutControl):
     """
     A menu button that displays a cascading menu.
 
@@ -32,7 +32,7 @@ class SubmenuButton(ConstrainedControl):
     """
     A list of controls that appear in the menu when it is opened.
 
-    Typically either [`MenuItemButton`][flet.MenuItemButton] or 
+    Typically either [`MenuItemButton`][flet.MenuItemButton] or
     `SubMenuButton` controls.
 
     If this list is empty, then the button for this menu item will be disabled.
@@ -70,7 +70,7 @@ class SubmenuButton(ConstrainedControl):
     alignment_offset: Optional[OffsetValue] = None
     """
     The offset of the menu relative to the alignment origin determined by
-    [`MenuStyle.alignment`][flet.MenuStyle.alignment] on the 
+    [`MenuStyle.alignment`][flet.MenuStyle.alignment] on the
     [`style`][flet.SubmenuButton.style] attribute.
     """
 

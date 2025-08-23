@@ -94,8 +94,10 @@ class CupertinoTextField(TextField):
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
-    The padding around the text entry area between the [`prefix`][flet.CupertinoTextField.prefix]
+    The padding around the text entry area between the
+    [`prefix`][flet.CupertinoTextField.prefix]
     and [`suffix`][flet.CupertinoTextField.suffix] or the
-    clear button when [`clear_button_visibility_mode`][flet.CupertinoTextField.clear_button_visibility_mode]
+    clear button when
+    [`clear_button_visibility_mode`][flet.CupertinoTextField.clear_button_visibility_mode]
     is not [`OverlayVisibilityMode.NEVER`][flet.OverlayVisibilityMode.NEVER].
     """

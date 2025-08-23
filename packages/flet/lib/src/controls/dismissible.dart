@@ -102,7 +102,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
             .getDismissThresholds("dismiss_thresholds", const {})!,
         child: content);
 
-    return ConstrainedControl(control: widget.control, child: dismissible);
+    return LayoutControl(control: widget.control, child: dismissible);
   }
 }
 

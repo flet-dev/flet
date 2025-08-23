@@ -1,14 +1,14 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 
 __all__ = ["TransparentPointer"]
 
 
 @control("TransparentPointer")
-class TransparentPointer(ConstrainedControl):
+class TransparentPointer(LayoutControl):
     """
     TransparentPointer is the solution to ["How to pass through all gestures between
     two widgets in Stack"](https://stackoverflow.com/questions/65269190/pass-trough-all-

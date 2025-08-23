@@ -2,10 +2,10 @@ from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -15,14 +15,15 @@ __all__ = ["CupertinoSlidingSegmentedButton"]
 
 
 @control("CupertinoSlidingSegmentedButton")
-class CupertinoSlidingSegmentedButton(ConstrainedControl):
+class CupertinoSlidingSegmentedButton(LayoutControl):
     """
     A cupertino sliding segmented button.
 
     Raises:
-        AssertionError: If [`controls`][(c).] does not contain at least two visible controls.
+        AssertionError: If [`controls`][(c).] does not contain at least two
+            visible controls.
         IndexError: If [`selected_index`][flet.CupertinoSlidingSegmentedButton.selected_index] is out of range.
-    """
+    """  # noqa: E501
 
     controls: list[Control]
     """
@@ -52,7 +53,8 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         default_factory=lambda: Padding.symmetric(vertical=2, horizontal=3)
     )
     """
-    The amount of space by which to inset the [`controls`][flet.CupertinoSlidingSegmentedButton.controls].
+    The amount of space by which to inset the
+    [`controls`][flet.CupertinoSlidingSegmentedButton.controls].
     """
 
     proportional_width: bool = False
@@ -86,5 +88,6 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         if not (0 <= self.selected_index < visible_controls_count):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
-                f"Expected a value between 0 and {visible_controls_count - 1}, inclusive."
+                f"Expected a value between 0 and {visible_controls_count - 1}, "
+                "inclusive."
             )

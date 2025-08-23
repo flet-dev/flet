@@ -6,10 +6,10 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
     IconDataOrControl,
@@ -90,7 +90,7 @@ class NavigationBarDestination(AdaptiveControl):
 
 
 @control("NavigationBar")
-class NavigationBar(ConstrainedControl, AdaptiveControl):
+class NavigationBar(LayoutControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.
 

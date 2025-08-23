@@ -119,7 +119,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
 
     tile = Material(type: MaterialType.transparency, child: tile);
 
-    return ConstrainedControl(control: control, child: tile);
+    return LayoutControl(control: control, child: tile);
   }
 }
 
