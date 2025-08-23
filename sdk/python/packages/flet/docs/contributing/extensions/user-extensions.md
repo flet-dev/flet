@@ -599,7 +599,7 @@ In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/contr
 
 For example, `on_click` event for `ElevatedButton`.
 
-In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/elevated_button.py):
+In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/button.py):
 
 ```python
 # on_click
@@ -612,7 +612,7 @@ def on_click(self, handler):
     self._add_event_handler("click", handler)
 ```
 
-In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/elevated_button.dart):
+In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/button.dart):
 
 ```dart
 Function()? onPressed = !disabled

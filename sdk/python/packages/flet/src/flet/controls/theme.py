@@ -73,7 +73,7 @@ class ColorScheme:
 
     primary: Optional[ColorValue] = None
     """
-    The color displayed most frequently across your app’s screens and components.
+    The color displayed most frequently across your app's screens and components.
     """
 
     on_primary: Optional[ColorValue] = None
@@ -382,7 +382,7 @@ class TextTheme:
     Largest of the label styles. Label styles are smaller, utilitarian styles, used for
     areas of the UI such as text inside of components or very small supporting text in
     the content body, like captions. Used for text on
-    [`ElevatedButton`][flet.ElevatedButton], [`TextButton`][flet.TextButton] and
+    [`Button`][flet.Button], [`TextButton`][flet.TextButton] and
     [`OutlinedButton`][flet.OutlinedButton].
     """
 
@@ -733,16 +733,16 @@ class DialogTheme:
 
 
 @dataclass
-class ElevatedButtonTheme:
+class ButtonTheme:
     """
-    Customizes the appearance of [`ElevatedButton`][flet.ElevatedButton] across the app.
+    Customizes the appearance of [`Button`][flet.Button] across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
     Overrides the default value of
-    [`ElevatedButton.style`][flet.ElevatedButton.style] in all descendant
-    [`ElevatedButton`][flet.ElevatedButton] controls.
+    [`Button.style`][flet.Button.style] in all descendant
+    [`Button`][flet.Button] controls.
     """
 
 
@@ -2985,7 +2985,7 @@ class Theme:
     dialog_theme: Optional[DialogTheme] = None
     divider_theme: Optional[DividerTheme] = None
     dropdown_theme: Optional[DropdownTheme] = None
-    elevated_button_theme: Optional[ElevatedButtonTheme] = None
+    button_theme: Optional[ButtonTheme] = None
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
     text_button_theme: Optional[TextButtonTheme] = None
     filled_button_theme: Optional[FilledButtonTheme] = None

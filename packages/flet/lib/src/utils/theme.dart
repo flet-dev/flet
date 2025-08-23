@@ -184,8 +184,7 @@ ThemeData parseTheme(
     navigationBarTheme:
         parseNavigationBarTheme(value?["navigation_bar_theme"], theme),
     dataTableTheme: parseDataTableTheme(value?["data_table_theme"], context),
-    elevatedButtonTheme:
-        parseElevatedButtonTheme(value?["elevated_button_theme"], theme),
+    elevatedButtonTheme: parseButtonTheme(value?["button_theme"], theme),
     outlinedButtonTheme:
         parseOutlinedButtonTheme(value?["outlined_button_theme"], theme),
     textButtonTheme: parseTextButtonTheme(value?["text_button_theme"], theme),
@@ -284,7 +283,7 @@ TextTheme? parseTextTheme(
   );
 }
 
-ElevatedButtonThemeData? parseElevatedButtonTheme(
+ElevatedButtonThemeData? parseButtonTheme(
     Map<dynamic, dynamic>? value, ThemeData theme,
     [ElevatedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
@@ -1185,10 +1184,9 @@ extension ThemeParsers on Control {
     );
   }
 
-  ElevatedButtonThemeData? getElevatedButtonTheme(
-      String propertyName, ThemeData theme,
+  ElevatedButtonThemeData? getButtonTheme(String propertyName, ThemeData theme,
       [ElevatedButtonThemeData? defaultValue]) {
-    return parseElevatedButtonTheme(get(propertyName), theme, defaultValue);
+    return parseButtonTheme(get(propertyName), theme, defaultValue);
   }
 
   OutlinedButtonThemeData? getOutlinedButtonTheme(

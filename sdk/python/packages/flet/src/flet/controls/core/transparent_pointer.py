@@ -14,7 +14,7 @@ class TransparentPointer(LayoutControl):
     two widgets in Stack"](https://stackoverflow.com/questions/65269190/pass-trough-all-
     gestures-between-two-widgets-in-stack) problem.
 
-    For example, if there is an [`ElevatedButton`][flet.ElevatedButton]
+    For example, if there is an [`Button`][flet.Button]
     inside [`Container`][flet.Container] with
     [`GestureDetector`][flet.GestureDetector] then tapping on
     a button won't be "visible" to a gesture detector behind it. With

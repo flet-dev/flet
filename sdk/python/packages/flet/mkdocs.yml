@@ -243,7 +243,6 @@ nav:
               - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
               - CupertinoSlidingSegmentedButton: controls/cupertinoslidingsegmentedbutton.md
               - CupertinoTintedButton: controls/cupertinotintedbutton.md
-              - ElevatedButton: controls/elevatedbutton.md
               - FilledButton: controls/filledbutton.md
               - FilledIconButton: controls/fillediconbutton.md
               - FilledTonalButton: controls/filledtonalbutton.md
@@ -472,6 +471,7 @@ nav:
                   - BannerTheme: types/bannertheme.md
                   - BottomAppBarTheme: types/bottomappbartheme.md
                   - BottomSheetTheme: types/bottomsheettheme.md
+                  - ButtonTheme: types/buttontheme.md
                   - CardTheme: types/cardtheme.md
                   - CheckboxTheme: types/checkboxtheme.md
                   - ChipTheme: types/chiptheme.md
@@ -481,7 +481,6 @@ nav:
                   - DialogTheme: types/dialogtheme.md
                   - DividerTheme: types/dividertheme.md
                   - DropdownTheme: types/dropdowntheme.md
-                  - ElevatedButtonTheme: types/elevatedbuttontheme.md
                   - ExpansionTileTheme: types/expansiontiletheme.md
                   - FilledButtonTheme: types/filledbuttontheme.md
                   - FloatingActionButtonTheme: types/floatingactionbuttontheme.md

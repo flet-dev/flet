@@ -5,7 +5,7 @@
 -   [:octicons-arrow-right-24: `Button`][flet.Button]
 
     ---
-    ![Button](../../examples/controls/elevated_button/media/index.png){width="100%"}
+    ![Button](../../examples/controls/button/media/index.png){width="100%"}
 
 -   [:octicons-arrow-right-24: `CupertinoActionSheetAction`][flet.CupertinoActionSheetAction]
 
@@ -50,7 +50,7 @@
 -   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
 
     ---
-    ![ElevatedButton](../../examples/controls/elevated_button/media/index.png){width="100%"}
+    ![ElevatedButton](../../examples/controls/button/media/index.png){width="100%"}
 
 -   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
 
