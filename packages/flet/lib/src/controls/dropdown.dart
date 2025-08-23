@@ -32,8 +32,10 @@ class _DropdownControlState extends State<DropdownControl> {
 
   void _onTextChange() {
     debugPrint("Typed text: ${_controller.text}");
-    widget.control.updateProperties({"value": _controller.text});
-    widget.control.triggerEvent("text_change", _controller.text);
+    if (_controller.text != widget.control.getString("value")) {
+      widget.control.updateProperties({"value": _controller.text});
+      widget.control.triggerEvent("text_change", _controller.text);
+    }
   }
 
   void _onFocusChange() {
