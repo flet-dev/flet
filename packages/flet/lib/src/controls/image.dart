@@ -57,7 +57,7 @@ class ImageControl extends StatelessWidget {
       disabled: control.disabled,
       errorCtrl: errorContent,
     );
-    return ConstrainedControl(
+    return LayoutControl(
         control: control,
         child: _clipCorners(image, control.getBorderRadius("border_radius")));
   }

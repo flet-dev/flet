@@ -11,7 +11,7 @@ def main(page: ft.Page):
         height=300,
     )
 
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
+    def handle_button_click(e: ft.Event[ft.Button]):
         nonlocal i
         img_container.image = ft.DecorationImage(
             src=f"https://picsum.photos/300/300?random={i}"
@@ -46,7 +46,7 @@ def main(page: ft.Page):
                     border_radius=10,
                     border=ft.Border.all(2, ft.Colors.BLACK),
                 ),
-                ft.ElevatedButton(
+                ft.Button(
                     content="Change Background",
                     bottom=5,
                     right=5,

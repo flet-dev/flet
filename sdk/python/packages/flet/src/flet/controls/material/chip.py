@@ -5,10 +5,10 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -23,7 +23,7 @@ __all__ = ["Chip"]
 
 
 @control("Chip")
-class Chip(ConstrainedControl):
+class Chip(LayoutControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
 

@@ -5,7 +5,7 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         image.scale = 30
         image.opacity = 0
         image.update()
@@ -23,7 +23,7 @@ def main(page: ft.Page):
                     opacity=1.0,
                     animate_opacity=ft.Animation(300, ft.AnimationCurve.EASE_IN_QUINT),
                 ),
-                ft.ElevatedButton("Boom!", on_click=animate),
+                ft.Button("Boom!", on_click=animate),
             ],
         )
     )

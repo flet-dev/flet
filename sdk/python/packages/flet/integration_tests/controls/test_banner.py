@@ -19,7 +19,7 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
         flet_app.page.pop_dialog()
         flet_app.page.add(ft.Text(f"Action clicked: {e.control.content}"))
 
-    eb = ft.ElevatedButton(
+    eb = ft.Button(
         "Show Banner", on_click=lambda e: flet_app.page.show_dialog(banner), key="eb"
     )
     banner = ft.Banner(

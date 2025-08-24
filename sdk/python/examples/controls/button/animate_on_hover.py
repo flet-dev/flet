@@ -2,12 +2,12 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         e.control.rotate = 0.1 if e.data else 0
         page.update()
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Hover over me, I'm animated!",
             rotate=0,
             animate_rotation=100,

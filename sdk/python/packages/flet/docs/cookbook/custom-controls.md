@@ -6,10 +6,10 @@ You can create custom controls in Python by styling and/or combining existing Fl
 
 The most simple custom control you can create is a styled control, for example, a button of a certain color and behaviour that will be used multiple times throughout your app.
 
-To create a styled control, you need to create a new class in Python that inherits from the Flet control you are going to customize, `ElevatedButton` in this case:
+To create a styled control, you need to create a new class in Python that inherits from the Flet control you are going to customize, `Button` in this case:
 
 ```python
-class MyButton(ft.ElevatedButton):
+class MyButton(ft.Button):
     def __init__(self, text):
         super().__init__()
         self.bgcolor = ft.Colors.ORANGE_300
@@ -42,7 +42,7 @@ Similar to properties, you can pass event handlers as parameters into your custo
 ```python
 import flet as ft
 
-class MyButton(ft.ElevatedButton):
+class MyButton(ft.Button):
     def __init__(self, text, on_click):
         super().__init__()
         self.bgcolor = ft.Colors.ORANGE_300

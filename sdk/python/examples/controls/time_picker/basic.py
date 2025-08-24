@@ -23,7 +23,7 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Pick time",
             icon=ft.Icons.TIME_TO_LEAVE,
             on_click=lambda _: page.show_dialog(time_picker),

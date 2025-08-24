@@ -5,9 +5,9 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
@@ -29,7 +29,7 @@ class TileAffinity(Enum):
 
 
 @control("ExpansionTile")
-class ExpansionTile(ConstrainedControl, AdaptiveControl):
+class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A single-line ListTile with an expansion arrow icon that expands or collapses the
     tile to reveal or hide its controls.

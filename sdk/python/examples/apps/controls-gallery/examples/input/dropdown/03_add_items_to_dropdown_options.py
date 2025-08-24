@@ -13,6 +13,6 @@ def example():
 
     d = ft.Dropdown()
     option_textbox = ft.TextField(hint_text="Enter item name")
-    add = ft.ElevatedButton("Add", on_click=add_clicked)
+    add = ft.Button("Add", on_click=add_clicked)
 
     return ft.Column(controls=[d, ft.Row(controls=[option_textbox, add])])

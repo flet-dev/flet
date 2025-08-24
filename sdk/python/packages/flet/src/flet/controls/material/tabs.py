@@ -8,11 +8,11 @@ from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import Duration, DurationValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.margin import MarginValue
 from flet.controls.material.form_field_control import IconDataOrControl
 from flet.controls.padding import Padding, PaddingValue
@@ -148,7 +148,7 @@ class UnderlineTabIndicator:
 
 
 @control("Tabs")
-class Tabs(ConstrainedControl, AdaptiveControl):
+class Tabs(LayoutControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
@@ -275,7 +275,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
 
 @control("TabBarView")
-class TabBarView(ConstrainedControl, AdaptiveControl):
+class TabBarView(LayoutControl, AdaptiveControl):
     """
     A page view with one child per tab.
 
@@ -310,7 +310,7 @@ class TabBarView(ConstrainedControl, AdaptiveControl):
 
 
 @control("TabBar")
-class TabBar(ConstrainedControl, AdaptiveControl):
+class TabBar(LayoutControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies

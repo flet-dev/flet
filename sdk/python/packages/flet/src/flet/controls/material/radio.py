@@ -2,9 +2,9 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
@@ -18,7 +18,7 @@ __all__ = ["Radio"]
 
 
 @control("Radio")
-class Radio(ConstrainedControl, AdaptiveControl):
+class Radio(LayoutControl, AdaptiveControl):
     """
     Radio buttons let people select a single option from two or more choices.
     """

@@ -24,8 +24,8 @@ def main(page: ft.Page):
       page.add(ft.Text("Async handler clicked"))
 
     page.add(
-        ft.ElevatedButton("Call handler", on_click=handler),
-        ft.ElevatedButton("Call async handler", on_click=handler_async)
+        ft.Button("Call handler", on_click=handler),
+        ft.Button("Call async handler", on_click=handler_async)
     )
 
 ft.run(main)

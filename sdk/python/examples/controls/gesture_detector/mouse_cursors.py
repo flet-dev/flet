@@ -21,7 +21,7 @@ def main(page: ft.Page):
         top=0,
     )
 
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
+    def handle_button_click(e: ft.Event[ft.Button]):
         gesture_detector.mouse_cursor = next(
             generate_mouse_cursors(list(ft.MouseCursor))
         )
@@ -30,12 +30,11 @@ def main(page: ft.Page):
 
     def generate_mouse_cursors(m_list):
         while True:
-            for i in m_list:
-                yield i
+            yield from m_list
 
     page.add(
         ft.Stack(controls=[container], width=1000, height=500),
-        ft.ElevatedButton("Change mouse Cursor", on_click=handle_button_click),
+        ft.Button("Change mouse Cursor", on_click=handle_button_click),
         text := ft.Text(f"Mouse Cursor:  {gesture_detector.mouse_cursor}"),
     )
 

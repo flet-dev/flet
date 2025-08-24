@@ -2,14 +2,14 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue
-from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import BlendMode, ColorValue, IconData, Number
 
 __all__ = ["Icon"]
 
 
 @control("Icon")
-class Icon(ConstrainedControl):
+class Icon(LayoutControl):
     """
     A control that displays an icon from a built-in or custom icon set.
 

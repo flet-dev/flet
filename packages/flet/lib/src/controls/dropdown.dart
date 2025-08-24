@@ -238,6 +238,6 @@ class _DropdownControlState extends State<DropdownControl> {
       });
     }
 
-    return ConstrainedControl(control: widget.control, child: dropDown);
+    return LayoutControl(control: widget.control, child: dropDown);
   }
 }

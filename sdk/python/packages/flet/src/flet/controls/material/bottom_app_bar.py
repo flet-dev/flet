@@ -1,8 +1,8 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ClipBehavior,
@@ -15,7 +15,7 @@ __all__ = ["BottomAppBar"]
 
 
 @control("BottomAppBar")
-class BottomAppBar(ConstrainedControl):
+class BottomAppBar(LayoutControl):
     """
     A material design bottom app bar.
 

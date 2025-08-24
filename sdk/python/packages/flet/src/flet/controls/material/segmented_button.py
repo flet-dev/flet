@@ -4,9 +4,9 @@ from typing import Optional
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     IconData,
@@ -54,7 +54,7 @@ class Segment(Control):
 
 
 @control("SegmentedButton")
-class SegmentedButton(ConstrainedControl):
+class SegmentedButton(LayoutControl):
     """
     A segmented button control.
 

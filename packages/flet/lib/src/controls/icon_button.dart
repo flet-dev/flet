@@ -237,7 +237,7 @@ class _IconButtonControlState extends State<IconButtonControl>
             onPressed: onPressed);
       }
 
-      return ConstrainedControl(control: widget.control, child: button);
+      return LayoutControl(control: widget.control, child: button);
     });
   }
 }

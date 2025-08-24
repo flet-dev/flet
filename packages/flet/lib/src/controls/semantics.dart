@@ -104,6 +104,6 @@ class SemanticsControl extends StatelessWidget {
           : null,
     );
 
-    return ConstrainedControl(control: control, child: semantics);
+    return LayoutControl(control: control, child: semantics);
   }
 }

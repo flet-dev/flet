@@ -45,7 +45,7 @@ async def main(page: ft.Page):
         await some_async_method()
         page.add(ft.Text("Hello!"))
 
-    page.add(ft.ElevatedButton("Say hello!", on_click=button_click))
+    page.add(ft.Button("Say hello!", on_click=button_click))
 
 ft.run(main)
 ```
@@ -74,7 +74,7 @@ def main(page: ft.Page):
         page.add(ft.Text("Hello!"))
 
     page.add(
-        ft.ElevatedButton("Say hello with delay!", on_click=button_click)
+        ft.Button("Say hello with delay!", on_click=button_click)
     )
 
 ft.run(main)

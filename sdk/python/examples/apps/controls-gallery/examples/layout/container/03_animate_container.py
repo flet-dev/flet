@@ -18,5 +18,5 @@ def example():
         c.update()
 
     return ft.Column(
-        controls=[c, ft.ElevatedButton("Animate container", on_click=animate_container)]
+        controls=[c, ft.Button("Animate container", on_click=animate_container)]
     )

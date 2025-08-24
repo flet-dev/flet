@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
-from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import ColorValue, Number, StrokeCap
 
@@ -10,7 +10,7 @@ __all__ = ["ProgressRing"]
 
 
 @control("ProgressRing")
-class ProgressRing(ConstrainedControl):
+class ProgressRing(LayoutControl):
     """
     A material design circular progress indicator, which spins to indicate that the
     application is busy.
@@ -53,7 +53,7 @@ class ProgressRing(ConstrainedControl):
 
     A value of 0 (center stroke) will center the border on the edge of the control.
 
-    If [`ProgressRing.year_2023`][flet.ProgressRing.year_2023] is `True`, then the 
+    If [`ProgressRing.year_2023`][flet.ProgressRing.year_2023] is `True`, then the
     default value is `0`. Otherwise, the default value is `-1`.
     """
 
@@ -64,66 +64,66 @@ class ProgressRing(ConstrainedControl):
 
     semantics_label: Optional[str] = None
     """
-    Used to identify the purpose of this progress bar for screen reading software. 
+    Used to identify the purpose of this progress bar for screen reading software.
     """
 
     semantics_value: Optional[Number] = None
     """
-    Used for determinate progress indicators to indicate how much progress has been 
+    Used for determinate progress indicators to indicate how much progress has been
     made.
     """
 
     track_gap: Optional[Number] = None
     """
     The gap between the active indicator and the background track.
-    
-    If [`year_2023`][flet.ProgressRing.year_2023] is `True` or `Theme.use_material3` is 
+
+    If [`year_2023`][flet.ProgressRing.year_2023] is `True` or `Theme.use_material3` is
     `False`, then no track gap will be drawn.
-    
+
     Set `track_gap` to `0` to hide this track gap.
 
-    If `None`, 
+    If `None`,
     [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] is used.
-    
+
     If that's is also `None`, defaults to `4.0`.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     Defines the minimum and maximum size of the progress indicator.
-    
-    If `None`, 
-    [`ProgressIndicatorTheme.size_constraints`][flet.ProgressIndicatorTheme.size_constraints] 
+
+    If `None`,
+    [`ProgressIndicatorTheme.size_constraints`][flet.ProgressIndicatorTheme.size_constraints]
     is used.
-    
+
     If that's is also `None`, defaults to a minimum width and height of `36`.
     """
 
     padding: Optional[PaddingValue] = None
     """
     The padding around the indicator track.
-    
-    If `None`, 
-    [`ProgressIndicatorTheme.circular_track_padding`][flet.ProgressIndicatorTheme.circular_track_padding] 
+
+    If `None`,
+    [`ProgressIndicatorTheme.circular_track_padding`][flet.ProgressIndicatorTheme.circular_track_padding]
     is used.
-    
-    If that's is also `None` and [`year_2023`][flet.ProgressRing.year_2023] is `False`, 
+
+    If that's is also `None` and [`year_2023`][flet.ProgressRing.year_2023] is `False`,
     defaults to `Padding.all(4.0)`.
-    
+
     Otherwise, defaults to `Padding.all(0.0)`.
     """
 
     year_2023: Optional[bool] = None
     """
-    If this is set to `False`, the `ProgressRing` will use the latest Material Design 3 
+    If this is set to `False`, the `ProgressRing` will use the latest Material Design 3
     appearance, which was introduced in December 2023.
 
     When `True`, the `ProgressRing` will use the 2023 Material Design 3 appearance.
 
-    If not set, then the 
-    [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be 
+    If not set, then the
+    [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property 
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property
     is ignored.
     """

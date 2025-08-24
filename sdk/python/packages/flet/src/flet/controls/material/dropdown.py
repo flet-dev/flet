@@ -4,10 +4,10 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons
 from flet.controls.material.textfield import InputFilter, TextCapitalization
@@ -74,7 +74,7 @@ Option = DropdownOption
 
 
 @control("Dropdown")
-class Dropdown(ConstrainedControl):
+class Dropdown(LayoutControl):
     """
     A dropdown control that allows users to select a single option from a list of
     options.

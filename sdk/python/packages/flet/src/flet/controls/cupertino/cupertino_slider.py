@@ -1,8 +1,8 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
     Number,
@@ -12,7 +12,7 @@ __all__ = ["CupertinoSlider"]
 
 
 @control("CupertinoSlider")
-class CupertinoSlider(ConstrainedControl):
+class CupertinoSlider(LayoutControl):
     """
     An iOS-type slider.
 
@@ -42,7 +42,8 @@ class CupertinoSlider(ConstrainedControl):
 
     Note:
         - Must be less than or equal to [`max`][flet.CupertinoSlider.max].
-        - If the [`max`][flet.CupertinoSlider.max] is equal to the `min`, then the slider is disabled.
+        - If the [`max`][flet.CupertinoSlider.max] is equal to the `min`,
+            then the slider is disabled.
     """
 
     max: Number = 1.0
@@ -51,7 +52,8 @@ class CupertinoSlider(ConstrainedControl):
 
     Note:
         - Must be greater than or equal to [`min`][flet.CupertinoSlider.min].
-        - If the [`min`][flet.CupertinoSlider.min] is equal to the `max`, then the slider is disabled.
+        - If the [`min`][flet.CupertinoSlider.min] is equal to the `max`,
+            then the slider is disabled.
     """
 
     divisions: Optional[int] = None

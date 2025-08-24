@@ -14,7 +14,6 @@ from flet.controls.material.button import Button
 # import flet as ft
 # import flet.canvas as cv
 from flet.controls.material.container import Container
-from flet.controls.material.elevated_button import ElevatedButton
 from flet.controls.page import Page
 from flet.controls.painting import Paint, PaintLinearGradient
 from flet.controls.ref import Ref
@@ -35,20 +34,20 @@ from .common import (
 
 
 @control
-class SuperElevatedButton(ElevatedButton):
+class SuperButton(Button):
     prop_2: Optional[str] = None
 
     def init(self):
-        print("SuperElevatedButton.init()")
+        print("SuperButton.init()")
         assert not self.page
 
     def build(self):
-        print("SuperElevatedButton.build()")
+        print("SuperButton.build()")
         assert self.page
 
 
 @control("MyButton")
-class MyButton(ElevatedButton):
+class MyButton(Button):
     prop_1: Optional[str] = None
 
 
@@ -74,18 +73,18 @@ class Div(Control):
 
 
 def test_control_type():
-    btn = ElevatedButton("some button")
-    assert btn._c == "ElevatedButton"
+    btn = Button("some button")
+    assert btn._c == "Button"
 
 
 def test_control_id():
-    btn = ElevatedButton("some button")
+    btn = Button("some button")
     assert btn._i > 0
 
 
 def test_inherited_control_has_the_same_type():
-    btn = SuperElevatedButton(prop_2="2")
-    assert btn._c == "ElevatedButton"
+    btn = SuperButton(prop_2="2")
+    assert btn._c == "Button"
 
 
 def test_inherited_control_with_overridden_type():
@@ -203,14 +202,14 @@ def test_simple_page():
     page.on_login = None
     page.controls[0].some_value = "Another text"
     page.controls[0].controls = [
-        SuperElevatedButton(
+        SuperButton(
             "Button 😬",
             style=ButtonStyle(color=Colors.RED),
             on_click=lambda e: print(e),
             opacity=1,
             ref=None,
         ),
-        SuperElevatedButton("Another Button"),
+        SuperButton("Another Button"),
     ]
     del page.fonts["font2"]
     assert page.controls[0].controls[0].page is None
@@ -235,7 +234,7 @@ def test_simple_page():
             {
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls"],
-                # "value": [SuperElevatedButton, SuperElevatedButton],
+                # "value": [SuperButton, SuperButton],
             },
             {"op": "remove", "path": ["fonts", "font2"], "value": "font_url_2"},
             {
@@ -256,11 +255,11 @@ def test_simple_page():
         ],
     )
     assert len(patch[2]["value"]) == 2
-    assert isinstance(patch[2]["value"][0], SuperElevatedButton)
-    assert isinstance(patch[2]["value"][1], SuperElevatedButton)
+    assert isinstance(patch[2]["value"][0], SuperButton)
+    assert isinstance(patch[2]["value"][1], SuperButton)
 
     # replace control in a list
-    page.controls[0].controls[0] = SuperElevatedButton("Foo")
+    page.controls[0].controls[0] = SuperButton("Foo")
     _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
     # for ac in added_controls:
     #     print("\nADDED CONTROL:", ac)
@@ -274,13 +273,13 @@ def test_simple_page():
             {
                 "op": "replace",
                 "path": ["views", 0, "controls", 0, "controls", 0],
-                "value": SuperElevatedButton("Foo"),
+                "value": SuperButton("Foo"),
             },
         ],
     )
 
     # insert a new button to the start of a list
-    page.controls[0].controls.insert(0, SuperElevatedButton("Bar"))
+    page.controls[0].controls.insert(0, SuperButton("Bar"))
     page.controls[0].controls[1].content = "Baz"
     _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
     assert len(added_controls) == 1
@@ -291,7 +290,7 @@ def test_simple_page():
             {
                 "op": "add",
                 "path": ["views", 0, "controls", 0, "controls", 0],
-                "value": SuperElevatedButton("Bar"),
+                "value": SuperButton("Bar"),
             },
             {
                 "op": "replace",

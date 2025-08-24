@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         container.offset = ft.Offset(0, 0)
         container.update()
 
@@ -15,7 +15,7 @@ def main(page: ft.Page):
             offset=ft.Offset(x=-2, y=0),
             animate_offset=ft.Animation(duration=1000),
         ),
-        ft.ElevatedButton("Reveal!", on_click=animate),
+        ft.Button("Reveal!", on_click=animate),
     )
 
 

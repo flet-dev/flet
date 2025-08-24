@@ -152,7 +152,7 @@ class _SwitchControlState extends State<SwitchControl> {
       );
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
     //  });
   }
 }

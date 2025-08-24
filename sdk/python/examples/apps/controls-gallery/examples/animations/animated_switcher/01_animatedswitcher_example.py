@@ -31,4 +31,4 @@ def example():
         c.content = c2 if c.content == c1 else c1
         c.update()
 
-    return ft.Column(controls=[c, ft.ElevatedButton("Animate!", on_click=animate)])
+    return ft.Column(controls=[c, ft.Button("Animate!", on_click=animate)])

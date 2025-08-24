@@ -4,8 +4,8 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -35,7 +35,7 @@ class ListTileStyle(Enum):
 
 
 @control("ListTile")
-class ListTile(ConstrainedControl, AdaptiveControl):
+class ListTile(LayoutControl, AdaptiveControl):
     """
     A single fixed-height row that typically contains some text as well as a leading or
     trailing icon.

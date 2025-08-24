@@ -1,9 +1,10 @@
-import flet as ft
 from app_layout import AppLayout
 from board import Board
 from data_store import DataStore
 from memory_store import InMemoryStore
 from user import User
+
+import flet as ft
 
 
 class TrelloApp(AppLayout):
@@ -92,7 +93,7 @@ class TrelloApp(AppLayout):
                 [
                     user_name,
                     password,
-                    ft.ElevatedButton(text="Login", on_click=close_dlg),
+                    ft.Button(text="Login", on_click=close_dlg),
                 ],
                 tight=True,
             ),
@@ -134,7 +135,7 @@ class TrelloApp(AppLayout):
         dialog_text = ft.TextField(
             label="New Board Name", on_submit=close_dlg, on_change=textfield_change
         )
-        create_button = ft.ElevatedButton(
+        create_button = ft.Button(
             text="Create", bgcolor=ft.Colors.BLUE_200, on_click=close_dlg, disabled=True
         )
         dialog = ft.AlertDialog(
@@ -144,7 +145,7 @@ class TrelloApp(AppLayout):
                     dialog_text,
                     ft.Row(
                         [
-                            ft.ElevatedButton(text="Cancel", on_click=close_dlg),
+                            ft.Button(text="Cancel", on_click=close_dlg),
                             create_button,
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,

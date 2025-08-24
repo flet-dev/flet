@@ -3,9 +3,9 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
@@ -18,7 +18,7 @@ __all__ = ["OutlinedButton"]
 
 
 @control("OutlinedButton")
-class OutlinedButton(ConstrainedControl, AdaptiveControl):
+class OutlinedButton(LayoutControl, AdaptiveControl):
     """
     Outlined buttons are medium-emphasis buttons. They contain actions that are
     important, but aren’t the primary action in an app. Outlined buttons pair well with

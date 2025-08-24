@@ -91,6 +91,6 @@ class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
       _focusNode.requestFocus();
     }
 
-    return ConstrainedControl(control: widget.control, child: subMenuButton);
+    return LayoutControl(control: widget.control, child: subMenuButton);
   }
 }
