@@ -279,9 +279,9 @@ class Dropdown(ConstrainedControl):
     hide the border.
     """
 
-    The border radius applied to the corners of the dropdown input field.
-    Accepts a value in virtual pixels or a `BorderRadiusValue` object.
-    If set to `None`, the default border radius defined by the theme or system is used.
+    border_radius: Optional[BorderRadiusValue] = None
+    """
+    The border radius of the dropdown input field.
     """
 
     focused_border_width: Optional[Number] = None
