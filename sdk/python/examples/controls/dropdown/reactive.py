@@ -32,7 +32,7 @@ def main(page: ft.Page):
                                         editable=True,
                                         label="Color",
                                         value=form.color,
-                                        on_change=lambda e: form.change_color(
+                                        on_select=lambda e: form.change_color(
                                             cast(str, e.control.value)
                                         ),
                                         options=[

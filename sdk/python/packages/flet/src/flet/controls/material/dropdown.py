@@ -90,6 +90,11 @@ class Dropdown(ConstrainedControl):
     A list of options to display in the dropdown.
     """
 
+    text: Optional[str] = None
+    """
+    The text entered in the text field.
+    """
+
     autofocus: bool = False
     """
     Whether the control will be selected as the initial focus. If there is more than
@@ -124,7 +129,7 @@ class Dropdown(ConstrainedControl):
 
     editable: bool = False
     """
-    TBD
+    Whether the dropdown allows editing of the text input field.
     """
 
     menu_height: Optional[Number] = None
@@ -145,22 +150,22 @@ class Dropdown(ConstrainedControl):
 
     expanded_insets: Optional[PaddingValue] = None
     """
-    TBD
+    The insets for the expanded dropdown menu.
     """
 
     selected_suffix: Optional[Control] = None
     """
-    TBD
+    A control to display after the selected item in the dropdown.
     """
 
     input_filter: Optional[InputFilter] = None
     """
-    TBD
+    A filter to apply to the text input field.
     """
 
     capitalization: Optional[TextCapitalization] = None
     """
-    TBD
+    Configures how the text input should be capitalized.
     """
 
     trailing_icon: IconDataOrControl = Icons.ARROW_DROP_DOWN
@@ -189,12 +194,12 @@ class Dropdown(ConstrainedControl):
     states.
     """
 
-    on_change: Optional[ControlEventHandler["Dropdown"]] = None
+    on_select: Optional[ControlEventHandler["Dropdown"]] = None
     """
     Called when the selected item of this dropdown has changed.
     """
 
-    on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
+    on_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
     Called when the text input of this dropdown has changed.
     """
@@ -276,6 +281,7 @@ class Dropdown(ConstrainedControl):
 
     border_radius: Optional[BorderRadiusValue] = None
     """
+    The border radius of the dropdown input field.
     """
 
     focused_border_width: Optional[Number] = None

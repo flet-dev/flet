@@ -11,7 +11,6 @@ class SourceCode(ft.Text):
         self.update_source_code(self.control)
 
     def update_source_code(self, control):
-        text = ""
         # for property in self.properties:
         #     if type(getattr(self.control, property["name"])).__name__ == "str":
         #         property_value = f"""'{getattr(self.control, property["name"])}'"""
@@ -45,7 +44,7 @@ class PropertiesList(ft.ListView):
         self.divider_thickness = 3
         self.width = 500
         self.auto_scroll = True
-        if top_control == None:
+        if top_control is None:
             self.top_control = control
         else:
             self.top_control = top_control
@@ -59,7 +58,7 @@ class PropertiesList(ft.ListView):
                 setattr(self.control, property["name"], None)
             self.top_control.update()
 
-        if getattr(self.control, property["name"]) == None:
+        if getattr(self.control, property["name"]) is None:
             switch_value = False
         else:
             switch_value = True
@@ -89,9 +88,9 @@ class PropertiesList(ft.ListView):
 
         for property in self.properties:
 
-            def add_list_item(e):
+            def add_list_item(e, property=property):
                 items_list = getattr(self.control, property["name"])
-                if items_list == None:
+                if items_list is None:
                     items_list = []
                 dataclass_type = property["dataclass"]
                 # adding new item to a list
@@ -106,10 +105,10 @@ class PropertiesList(ft.ListView):
             if "list" in property["value_type"]:
                 list_items = []
                 n = 0
-                if value != None:
-                    for item in value:
+                if value is not None:
+                    for _ in value:
 
-                        def delete_item(e):
+                        def delete_item(e, property=property):
                             items_list = getattr(self.control, property["name"])
                             # removing item from the list
                             items_list.remove(items_list[e.control.data])
@@ -173,7 +172,7 @@ class PropertiesList(ft.ListView):
                     )
                 )
             elif property["value_type"] == "dataclass":
-                if value == None:
+                if value is None:
                     dataclass_type = property["dataclass"]
                     value = dataclass_type()
                     print(value)
@@ -216,62 +215,58 @@ class PropertiesList(ft.ListView):
     def get_value_control(self, property):
         value = getattr(self.control, property["name"])
 
-        match property["value_type"]:
-            case "str":
-                return ft.TextField(
-                    border_color=ft.Colors.SECONDARY,
-                    content_padding=3,
-                    value=value,
-                    data=property["name"],
-                    on_change=self.value_changed,
-                )
-            case "number":
-                return ft.Row(
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    controls=[
-                        ft.Text(property["min"]),
-                        ft.Slider(
-                            min=property["min"],
-                            max=property["max"],
-                            label="{value}%",
-                            value=value,
-                            data=property["name"],
-                            on_change=self.value_changed,
-                        ),
-                        ft.Text(property["max"]),
-                    ],
-                )
-            case "bool":
-                return ft.Checkbox(
-                    value=value,
-                    data=property["name"],
-                    on_change=self.value_changed,
-                )
-            case "enum":
-                options = []
+        if property["value_type"] == "str":
+            return ft.TextField(
+                border_color=ft.Colors.SECONDARY,
+                content_padding=3,
+                value=value,
+                data=property["name"],
+                on_change=self.value_changed,
+            )
+        elif property["value_type"] == "number":
+            return ft.Row(
+                alignment=ft.MainAxisAlignment.CENTER,
+                controls=[
+                    ft.Text(property["min"]),
+                    ft.Slider(
+                        min=property["min"],
+                        max=property["max"],
+                        label="{value}%",
+                        value=value,
+                        data=property["name"],
+                        on_change=self.value_changed,
+                    ),
+                    ft.Text(property["max"]),
+                ],
+            )
+        elif property["value_type"] == "bool":
+            return ft.Checkbox(
+                value=value,
+                data=property["name"],
+                on_change=self.value_changed,
+            )
+        elif property["value_type"] == "enum":
+            options = []
 
-                options_list = property["values"]
-                for item in options_list:
-                    options.append(ft.dropdown.Option(item.value))
+            options_list = property["values"]
+            for item in options_list:
+                options.append(ft.dropdown.Option(item.value))
 
-                return ft.Dropdown(
-                    options=options,
-                    value=value,
-                    data=property["name"],
-                    on_change=self.value_changed,
-                )
+            return ft.Dropdown(
+                options=options,
+                value=value,
+                data=property["name"],
+                on_select=self.value_changed,
+            )
+        elif property["value_type"] == "dataclass":
+            if value is None:
+                print("This dataclass value is None")
 
-            case "dataclass":
-                if value == None:
-                    print("This dataclass value is None")
+            properties_list = PropertiesList(
+                properties=property["properties"], control=value
+            )
 
-                properties_list = PropertiesList(
-                    properties=property["properties"], control=value
-                )
-
-                return properties_list
-                # ft.Container(bgcolor=ft.Colors.YELLOW, width=30, height=30)
-
-            # If an exact match is not confirmed, this last case will be used if provided
-            case _:
-                return ft.Text("Something's wrong with the type")
+            return properties_list
+            # ft.Container(bgcolor=ft.Colors.YELLOW, width=30, height=30)
+        else:
+            return ft.Text("Something's wrong with the type")
