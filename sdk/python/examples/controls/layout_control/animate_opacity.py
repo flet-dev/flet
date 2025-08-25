@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate_opacity(e: ft.Event[ft.ElevatedButton]):
+    def animate_opacity(e: ft.Event[ft.Button]):
         container.opacity = 0 if container.opacity == 1 else 1
         container.update()
 
@@ -14,7 +14,7 @@ def main(page: ft.Page):
             border_radius=10,
             animate_opacity=300,
         ),
-        ft.ElevatedButton(
+        ft.Button(
             content="Animate opacity",
             on_click=animate_opacity,
         ),

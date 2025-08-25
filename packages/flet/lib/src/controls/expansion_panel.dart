@@ -55,6 +55,6 @@ class ExpansionPanelListControl extends StatelessWidget {
           );
         }).toList());
 
-    return ConstrainedControl(control: control, child: panelList);
+    return LayoutControl(control: control, child: panelList);
   }
 }

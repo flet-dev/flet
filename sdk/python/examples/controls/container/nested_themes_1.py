@@ -10,7 +10,7 @@ def main(page: ft.Page):
     page.add(
         # Page theme
         ft.Container(
-            content=ft.ElevatedButton("Page theme button"),
+            content=ft.Button("Page theme button"),
             bgcolor=ft.Colors.SURFACE_TINT,
             padding=20,
             width=300,
@@ -18,7 +18,7 @@ def main(page: ft.Page):
         # Inherited theme with primary color overridden
         ft.Container(
             theme=ft.Theme(color_scheme=ft.ColorScheme(primary=ft.Colors.PINK)),
-            content=ft.ElevatedButton("Inherited theme button"),
+            content=ft.Button("Inherited theme button"),
             bgcolor=ft.Colors.SURFACE_TINT,
             padding=20,
             width=300,
@@ -27,7 +27,7 @@ def main(page: ft.Page):
         ft.Container(
             theme=ft.Theme(color_scheme_seed=ft.Colors.INDIGO),
             theme_mode=ft.ThemeMode.DARK,
-            content=ft.ElevatedButton("Unique theme button"),
+            content=ft.Button("Unique theme button"),
             bgcolor=ft.Colors.SURFACE_TINT,
             padding=20,
             width=300,

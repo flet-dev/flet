@@ -112,6 +112,6 @@ class FloatingActionButtonControl extends StatelessWidget {
           "FloatingActionButton has nothing to display. Provide at minimum icon or content.");
     }
 
-    return ConstrainedControl(control: control, child: button);
+    return LayoutControl(control: control, child: button);
   }
 }

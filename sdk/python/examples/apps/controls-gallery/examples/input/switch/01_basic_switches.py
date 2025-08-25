@@ -16,6 +16,6 @@ def example():
         label="Switch with rendered label_position='left'",
         label_position=ft.LabelPosition.LEFT,
     )
-    b = ft.ElevatedButton(content="Submit", on_click=button_clicked)
+    b = ft.Button(content="Submit", on_click=button_clicked)
 
     return ft.Column(controls=[c1, c2, c3, c4, b, t])

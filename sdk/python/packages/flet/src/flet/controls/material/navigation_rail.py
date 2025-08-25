@@ -4,9 +4,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -77,7 +77,7 @@ class NavigationRailDestination(Control):
 
 
 @control("NavigationRail")
-class NavigationRail(ConstrainedControl):
+class NavigationRail(LayoutControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to
     navigate between a small number of views, typically between three and five.

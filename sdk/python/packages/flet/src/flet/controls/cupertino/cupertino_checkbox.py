@@ -3,10 +3,10 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
@@ -17,7 +17,7 @@ __all__ = ["CupertinoCheckbox"]
 
 
 @control("CupertinoCheckbox")
-class CupertinoCheckbox(ConstrainedControl):
+class CupertinoCheckbox(LayoutControl):
     """
     A macOS style checkbox. Checkbox allows to select one or more items from a group,
     or switch between two mutually exclusive options (checked or unchecked, on or off).
@@ -30,7 +30,8 @@ class CupertinoCheckbox(ConstrainedControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Defines on which side of the checkbox the [`label`][flet.CupertinoCheckbox.label] should be shown.
+    Defines on which side of the checkbox the [`label`][flet.CupertinoCheckbox.label]
+    should be shown.
     """
 
     value: Optional[bool] = False
@@ -39,12 +40,14 @@ class CupertinoCheckbox(ConstrainedControl):
 
     - If `True` the checkbox is checked.
     - If `False` the checkbox is unchecked.
-    - If `None` and [`tristate`][flet.CupertinoCheckbox.tristate] is `True` the checkbox is indeterminate. (displayed as a dash)
+    - If `None` and [`tristate`][flet.CupertinoCheckbox.tristate] is `True`
+        the checkbox is indeterminate. (displayed as a dash)
     """
 
     tristate: bool = False
     """
-    If `True` the checkbox's [`value`][flet.CupertinoCheckbox.value] can be `True`, `False`, or `None`.
+    If `True` the checkbox's [`value`][flet.CupertinoCheckbox.value] can be `True`,
+    `False`, or `None`.
     """
 
     autofocus: bool = False
@@ -89,9 +92,10 @@ class CupertinoCheckbox(ConstrainedControl):
     [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
     and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
 
-    [`active_color`][flet.CupertinoCheckbox.active_color] is used as fallback color when the checkbox is in the `SELECTED`
-    state, `CupertinoColors.WHITE` at 50% opacity is used as fallback color when this
-    checkbox is in the `DISABLED` state, and `CupertinoColors.WHITE` otherwise.
+    [`active_color`][flet.CupertinoCheckbox.active_color] is used as fallback color when
+    the checkbox is in the `SELECTED` state, `CupertinoColors.WHITE` at 50% opacity
+    is used as fallback color when this checkbox is in the `DISABLED` state,
+    and `CupertinoColors.WHITE` otherwise.
     """
 
     shape: Optional[OutlinedBorder] = None

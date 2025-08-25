@@ -2,8 +2,9 @@ import datetime
 from dataclasses import field
 from typing import Any, Optional
 
-import flet as ft
 import msgpack
+
+import flet as ft
 
 # import flet as ft
 # import flet.canvas as cv
@@ -27,7 +28,7 @@ class LineChartData(ft.BaseControl):
 
 
 @ft.control("LineChart")
-class LineChart(ft.ConstrainedControl):
+class LineChart(ft.LayoutControl):
     data_series: list[LineChartData] = field(default_factory=list)
     animation: ft.AnimationValue = field(
         default_factory=lambda: ft.Animation(

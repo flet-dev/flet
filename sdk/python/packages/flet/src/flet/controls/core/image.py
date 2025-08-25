@@ -3,8 +3,8 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxFit, FilterQuality
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     BlendMode,
     ColorValue,
@@ -15,7 +15,7 @@ __all__ = ["Image"]
 
 
 @control("Image")
-class Image(ConstrainedControl):
+class Image(LayoutControl):
     """
     Displays an image. The following popular formats are supported: JPEG, PNG, SVG,
     GIF, Animated GIF, WebP, Animated WebP, BMP, and WBMP.

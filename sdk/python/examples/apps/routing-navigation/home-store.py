@@ -1,28 +1,31 @@
-import flet
-from flet import AppBar, ElevatedButton, Page, Text, View, colors
+import flet as ft
 
 
-def main(page: Page):
+def main(page: ft.Page):
     page.title = "Routes Example"
 
     def route_change(e):
         page.views.clear()
         page.views.append(
-            View(
+            ft.View(
                 "/",
                 [
-                    AppBar(title=Text("Flet app"), bgcolor=colors.SURFACE_VARIANT),
-                    ElevatedButton("Visit Store", on_click=lambda _: page.go("/store")),
+                    ft.AppBar(
+                        title=ft.Text("Flet app"), bgcolor=ft.Colors.SURFACE_BRIGHT
+                    ),
+                    ft.Button("Visit Store", on_click=lambda _: page.go("/store")),
                 ],
             )
         )
         if page.route == "/store":
             page.views.append(
-                View(
+                ft.View(
                     "/store",
                     [
-                        AppBar(title=Text("Store"), bgcolor=colors.SURFACE_VARIANT),
-                        ElevatedButton("Go Home", on_click=lambda _: page.go("/")),
+                        ft.AppBar(
+                            title=ft.Text("Store"), bgcolor=ft.Colors.SURFACE_BRIGHT
+                        ),
+                        ft.Button("Go Home", on_click=lambda _: page.go("/")),
                     ],
                 )
             )
@@ -39,4 +42,4 @@ def main(page: Page):
     page.go(page.route)
 
 
-flet.app(main)
+ft.run(main)

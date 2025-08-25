@@ -7,7 +7,7 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         container.rotate.angle -= 0.5 * pi
         container.content.scale = 2.0 if container.content.scale == 1.0 else 1.0
         container.content.opacity = 0.4 if container.content.scale == 1.0 else 1.0
@@ -36,7 +36,7 @@ def main(page: ft.Page):
                         ),
                     ),
                 ),
-                ft.ElevatedButton("Launch!", on_click=animate),
+                ft.Button("Launch!", on_click=animate),
             ],
         )
     )

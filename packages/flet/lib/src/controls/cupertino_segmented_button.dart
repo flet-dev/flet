@@ -55,6 +55,6 @@ class _CupertinoSegmentedButtonControlState
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: segmnetedButton);
+    return LayoutControl(control: widget.control, child: segmnetedButton);
   }
 }

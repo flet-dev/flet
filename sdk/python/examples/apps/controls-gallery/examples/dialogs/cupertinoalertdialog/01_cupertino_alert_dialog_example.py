@@ -19,4 +19,4 @@ def example():
     def open_dlg(e):
         e.control.page.show_dialog(cupertino_alert_dialog)
 
-    return ft.ElevatedButton("Open CupertinoAlertDialog", on_click=open_dlg)
+    return ft.Button("Open CupertinoAlertDialog", on_click=open_dlg)

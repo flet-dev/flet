@@ -24,14 +24,14 @@ def main(page: ft.Page):
         on_action=lambda e: data.decrement(),
     )
 
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
+    def handle_button_click(e: ft.Event[ft.Button]):
         data.increment()
         snack_bar.content.value = f"You did it x {data.counter}"
         if not snack_bar.open:
             page.show_dialog(snack_bar)
         page.update()
 
-    page.add(ft.ElevatedButton("Open SnackBar", on_click=handle_button_click))
+    page.add(ft.Button("Open SnackBar", on_click=handle_button_click))
 
 
 ft.run(main)

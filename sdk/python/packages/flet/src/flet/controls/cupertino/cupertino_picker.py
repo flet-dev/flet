@@ -2,10 +2,10 @@ from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
     Number,
@@ -15,12 +15,13 @@ __all__ = ["CupertinoPicker"]
 
 
 @control("CupertinoPicker")
-class CupertinoPicker(ConstrainedControl):
+class CupertinoPicker(LayoutControl):
     """
     An iOS-styled picker.
 
     Raises:
-        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c).], or [`magnification`][(c).] is not strictly greater than `0.0`.
+        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c).],
+            or [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -35,7 +36,8 @@ class CupertinoPicker(ConstrainedControl):
 
     selected_index: int = 0
     """
-    The index (starting from `0`) of the selected item in the [`controls`][flet.CupertinoPicker.controls] list.
+    The index (starting from `0`) of the selected item in
+    the [`controls`][flet.CupertinoPicker.controls] list.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -86,7 +88,7 @@ class CupertinoPicker(ConstrainedControl):
 
     Defaults to a rounded rectangle in iOS 14 style with
     [`default_selection_overlay_bgcolor`][flet.CupertinoPicker.default_selection_overlay_bgcolor] as background color.
-    """
+    """  # noqa: E501
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """

@@ -6,7 +6,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Styled button 1",
             style=ft.ButtonStyle(
                 color={

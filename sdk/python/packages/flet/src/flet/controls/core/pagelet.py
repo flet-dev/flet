@@ -2,10 +2,10 @@ from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.navigation_bar import NavigationBar
@@ -17,12 +17,13 @@ __all__ = ["Pagelet"]
 
 
 @control("Pagelet")
-class Pagelet(ConstrainedControl, AdaptiveControl):
+class Pagelet(LayoutControl, AdaptiveControl):
     """
     Implements the basic Material Design visual layout structure.
 
-    Use it for projects that require a "page within a page" layouts with its own [`AppBar`][flet..],
-    [`BottomAppBar`][flet..], [`NavigationDrawer`][flet..], such as demos and galleries.
+    Use it for projects that require a "page within a page" layouts with its own
+    [`AppBar`][flet..], [`BottomAppBar`][flet..], [`NavigationDrawer`][flet..],
+    such as demos and galleries.
 
     Raises:
         AssertionError: If [`content`][(c).] is not visible.
@@ -50,7 +51,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     Note:
         If both the `navigation_bar` and [`bottom_appbar`][flet.Pagelet.bottom_appbar]
-        properties are specified, `navigation_bar` takes precedence and will be displayed.
+        properties are specified, `navigation_bar` takes precedence and will
+        be displayed.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
@@ -60,7 +62,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     Note:
         If both the `bottom_appbar` and [`navigation_bar`][flet.Pagelet.navigation_bar]
-        properties are specified, `bottom_appbar` takes precedence and will be displayed.
+        properties are specified, `bottom_appbar` takes precedence and will
+        be displayed.
     """
 
     bottom_sheet: Optional[Control] = None

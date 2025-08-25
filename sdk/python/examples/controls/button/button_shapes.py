@@ -6,23 +6,23 @@ def main(page: ft.Page):
     page.spacing = 30
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Stadium",
             style=ft.ButtonStyle(shape=ft.StadiumBorder()),
         ),
-        ft.ElevatedButton(
+        ft.Button(
             content="Rounded rectangle",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
         ),
-        ft.ElevatedButton(
+        ft.Button(
             content="Continuous rectangle",
             style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=30)),
         ),
-        ft.ElevatedButton(
+        ft.Button(
             content="Beveled rectangle",
             style=ft.ButtonStyle(shape=ft.BeveledRectangleBorder(radius=10)),
         ),
-        ft.ElevatedButton(
+        ft.Button(
             content="Circle",
             style=ft.ButtonStyle(shape=ft.CircleBorder(), padding=30),
         ),

@@ -1,6 +1,6 @@
 import flet as ft
 
-name = "ElevatedButton with 'click' event"
+name = "Button with 'click' event"
 
 
 def example():
@@ -9,7 +9,7 @@ def example():
         t.value = f"Button clicked {b.data} time(s)"
         t.update()
 
-    b = ft.ElevatedButton("Button with 'click' event", on_click=button_clicked, data=0)
+    b = ft.Button("Button with 'click' event", on_click=button_clicked, data=0)
     t = ft.Text()
 
     return ft.Column(controls=[b, t])

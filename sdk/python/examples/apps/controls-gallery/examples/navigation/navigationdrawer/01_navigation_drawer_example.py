@@ -31,7 +31,7 @@ def example():
 
     return ft.Column(
         [
-            ft.ElevatedButton("Open end drawer", on_click=open_end_drawer),
-            ft.ElevatedButton("Open drawer", on_click=open_drawer),
+            ft.Button("Open end drawer", on_click=open_end_drawer),
+            ft.Button("Open drawer", on_click=open_drawer),
         ]
     )

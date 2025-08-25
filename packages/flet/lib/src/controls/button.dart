@@ -218,6 +218,6 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
       }
     }
 
-    return ConstrainedControl(control: widget.control, child: button);
+    return LayoutControl(control: widget.control, child: button);
   }
 }

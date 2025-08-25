@@ -2,7 +2,6 @@ from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import EventHandler
 from flet.controls.duration import DurationValue
@@ -11,6 +10,7 @@ from flet.controls.events import (
     ScaleStartEvent,
     ScaleUpdateEvent,
 )
+from flet.controls.layout_control import LayoutControl
 from flet.controls.margin import MarginValue
 from flet.controls.types import ClipBehavior, Number
 
@@ -18,7 +18,7 @@ __all__ = ["InteractiveViewer"]
 
 
 @control("InteractiveViewer")
-class InteractiveViewer(ConstrainedControl):
+class InteractiveViewer(LayoutControl):
     """
     Allows you to pan, zoom, and rotate its [`content`][(c).].
 

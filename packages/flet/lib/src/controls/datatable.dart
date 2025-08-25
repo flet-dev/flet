@@ -127,6 +127,6 @@ class DataTableControl extends StatelessWidget {
       }).toList(),
     );
 
-    return ConstrainedControl(control: control, child: datatable);
+    return LayoutControl(control: control, child: datatable);
   }
 }

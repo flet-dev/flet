@@ -126,7 +126,7 @@ class ScrollableControl(Control):
 
             page.add(
                 ft.Container(cl, border=ft.border.all(1)),
-                ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
+                ft.Button("Scroll to key '20'", on_click=scroll_to_key),
             )
 
 

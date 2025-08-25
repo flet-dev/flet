@@ -110,6 +110,6 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
                   : Row(children: [labelWidget, cupertinoRadio])));
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
   }
 }

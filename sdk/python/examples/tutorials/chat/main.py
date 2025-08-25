@@ -108,7 +108,7 @@ def main(page: ft.Page):
         modal=True,
         title=ft.Text("Welcome!"),
         content=ft.Column([join_user_name], width=300, height=70, tight=True),
-        actions=[ft.ElevatedButton(content="Join chat", on_click=join_chat_click)],
+        actions=[ft.Button(content="Join chat", on_click=join_chat_click)],
         actions_alignment=ft.MainAxisAlignment.END,
     )
 

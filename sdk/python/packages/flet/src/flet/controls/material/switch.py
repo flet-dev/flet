@@ -2,9 +2,9 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -20,7 +20,7 @@ __all__ = ["Switch"]
 
 
 @control("Switch")
-class Switch(ConstrainedControl, AdaptiveControl):
+class Switch(LayoutControl, AdaptiveControl):
     """
     A toggle represents a physical switch that allows someone to choose between
     two mutually exclusive options.

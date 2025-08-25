@@ -4,7 +4,6 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import BorderRadiusValue
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEventHandler,
@@ -14,6 +13,7 @@ from flet.controls.control_event import (
 from flet.controls.control_state import ControlStateValue
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
+from flet.controls.layout_control import LayoutControl
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
@@ -292,7 +292,7 @@ class DataRow(Control):
 
 
 @control("DataTable")
-class DataTable(ConstrainedControl):
+class DataTable(LayoutControl):
     """
     A Material Design data table.
 
