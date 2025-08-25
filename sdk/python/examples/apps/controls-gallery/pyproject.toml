@@ -7,7 +7,7 @@ authors = [
 ]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "flet",
     "flet-contrib==2024.12.3"
