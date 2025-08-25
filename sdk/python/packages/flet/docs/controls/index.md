@@ -10,7 +10,7 @@ Page
  │   └─ Image
  └─ Row
      ├─ Checkbox
-     └─ ElevatedButton
+     └─ Button
 ```
 
 The [control gallery](https://flet-controls-gallery.fly.dev/layout) provides a live demo of most of our controls.

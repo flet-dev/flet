@@ -26,6 +26,6 @@ class StackControl extends StatelessWidget {
           control.getAlignment("alignment") ?? AlignmentDirectional.topStart,
       children: control.buildWidgets("controls"),
     );
-    return ConstrainedControl(control: control, child: stack);
+    return LayoutControl(control: control, child: stack);
   }
 }

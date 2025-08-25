@@ -167,7 +167,7 @@ class _CanvasControlState extends State<CanvasControl> {
       child: widget.control.buildWidget("content"),
     );
 
-    return ConstrainedControl(control: widget.control, child: paint);
+    return LayoutControl(control: widget.control, child: paint);
   }
 }
 

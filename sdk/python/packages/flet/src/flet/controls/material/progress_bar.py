@@ -2,14 +2,14 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
-from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
 
 __all__ = ["ProgressBar"]
 
 
 @control("ProgressBar")
-class ProgressBar(ConstrainedControl):
+class ProgressBar(LayoutControl):
     """
     A material design linear progress indicator, also known as a progress bar.
 
@@ -64,67 +64,70 @@ class ProgressBar(ConstrainedControl):
     """
     The color of the stop indicator.
 
-    If [`ProgressBar.year2023`][flet.ProgressBar.year_2023] is `True` or 
-    [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then no stop 
+    If [`ProgressBar.year2023`][flet.ProgressBar.year_2023] is `True` or
+    [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then no stop
     indicator will be drawn.
 
-    If not set, then the 
-    [`ProgressIndicatorTheme.stop_indicator_color`][flet.ProgressIndicatorTheme.stop_indicator_color] 
-    will be used. If that is not set, then the 
-    [`ColorScheme.primary`][flet.ColorScheme.primary] will be used.   
+    If not set, then the
+    [`ProgressIndicatorTheme.stop_indicator_color`][flet.ProgressIndicatorTheme.stop_indicator_color]
+    will be used. If that is not set, then the
+    [`ColorScheme.primary`][flet.ColorScheme.primary] will be used.
     """
 
     stop_indicator_radius: Optional[Number] = None
     """
     The radius of the stop indicator.
 
-    If [`ProgressBar.year2023`][flet.ProgressBar.year_2023] is `True` or 
-    [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then no stop 
+    If [`ProgressBar.year2023`][flet.ProgressBar.year_2023] is `True` or
+    [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then no stop
     indicator will be drawn.
 
     Set `stop_indicator_radius` to `0` to hide the stop indicator.
 
-    If not set, then the 
-    [`ProgressIndicatorTheme.stop_indicator_radius`][flet.ProgressIndicatorTheme.stop_indicator_radius] 
+    If not set, then the
+    [`ProgressIndicatorTheme.stop_indicator_radius`][flet.ProgressIndicatorTheme.stop_indicator_radius]
     will be used. If that is not set, then defaults to `2`.
     """
 
     track_gap: Optional[Number] = None
     """
-    The gap between the indicator and the track. 
-    
-    If [`ProgressBar.year2023`][flet.ProgressBar.year_2023] is `True` or 
-    [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then no track gap 
+    The gap between the indicator and the track.
+
+    If [`ProgressBar.year2023`][flet.ProgressBar.year_2023] is `True` or
+    [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then no track gap
     will be drawn.
 
     Set `track_gap` to `0` to hide the track gap.
 
-    If not set, then the 
-    [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] will be 
+    If not set, then the
+    [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] will be
     used. If that is not set, then defaults to `4`.
     """
 
     year_2023: Optional[bool] = None
     """
-    If this is set to `False`, the ProgressBar will use the latest Material Design 3 
+    If this is set to `False`, the ProgressBar will use the latest Material Design 3
     appearance, which was introduced in December 2023.
 
     When `True`, the ProgressBar will use the 2023 Material Design 3 appearance.
 
-    If not set, then the 
-    [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be 
+    If not set, then the
+    [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property 
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property
     is ignored.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.value is None or self.value >= 0, f"value must be greater than or equal to 0, got {self.value}"
+        assert self.value is None or self.value >= 0, (
+            f"value must be greater than or equal to 0, got {self.value}"
+        )
         assert self.bar_height is None or self.bar_height >= 0, (
             f"bar_height must be greater than or equal to 0, got {self.bar_height}"
         )
         assert self.semantics_value is None or self.semantics_value >= 0, (
-            f"semantics_value must be greater than or equal to 0, got {self.semantics_value}"
+            f"semantics_value must be greater than or equal to 0, "
+            f"got {self.semantics_value}"
         )

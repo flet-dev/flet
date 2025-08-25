@@ -12,15 +12,11 @@ class MyPanel(ft.Container):
         print(self.page.platform)
         self.content = ft.Column(
             [
-                ft.ElevatedButton(
+                ft.Button(
                     f"Make {self.color.value}", on_click=self.on_change_color_click
                 ),
                 ft.Row(
-                    [
-                        ft.ElevatedButton(
-                            f"Say {self.greeting}!", on_click=self.on_say_click
-                        )
-                    ]
+                    [ft.Button(f"Say {self.greeting}!", on_click=self.on_say_click)]
                 ),
             ]
         )

@@ -8,12 +8,13 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.margin import MarginValue
 from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import Number
+from flet.utils import deprecated_class
 
-__all__ = ["ConstrainedControl"]
+__all__ = ["LayoutControl"]
 
 
 @control(kw_only=True)
-class ConstrainedControl(Control):
+class LayoutControl(Control):
     width: Optional[Number] = None
     """
     Imposed Control width in virtual pixels.
@@ -168,7 +169,7 @@ class ConstrainedControl(Control):
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`opacity`][flet.ConstrainedControl.opacity]
+    Enables implicit animation of the [`opacity`][flet.LayoutControl.opacity]
     property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
@@ -182,16 +183,16 @@ class ConstrainedControl(Control):
     animate_position: Optional[AnimationValue] = None
     """
     Enables implicit animation of the positioning properties
-    ([`left`][flet.ConstrainedControl.left], [`right`][flet.ConstrainedControl.right],
-    [`top`][flet.ConstrainedControl.top] and
-    [`bottom`][flet.ConstrainedControl.bottom]).
+    ([`left`][flet.LayoutControl.left], [`right`][flet.LayoutControl.right],
+    [`top`][flet.LayoutControl.top] and
+    [`bottom`][flet.LayoutControl.bottom]).
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_align: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`align`][flet.ConstrainedControl.align]
+    Enables implicit animation of the [`align`][flet.LayoutControl.align]
     property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
@@ -199,7 +200,7 @@ class ConstrainedControl(Control):
 
     animate_margin: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`margin`][flet.ConstrainedControl.margin]
+    Enables implicit animation of the [`margin`][flet.LayoutControl.margin]
     property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
@@ -207,7 +208,7 @@ class ConstrainedControl(Control):
 
     animate_rotation: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`rotate`][flet.ConstrainedControl.rotate]
+    Enables implicit animation of the [`rotate`][flet.LayoutControl.rotate]
     property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
@@ -215,20 +216,20 @@ class ConstrainedControl(Control):
 
     animate_scale: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`scale`][flet.ConstrainedControl.scale] property.
+    Enables implicit animation of the [`scale`][flet.LayoutControl.scale] property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
     animate_offset: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`offset`][flet.ConstrainedControl.offset]
+    Enables implicit animation of the [`offset`][flet.LayoutControl.offset]
     property.
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
 
-    on_animation_end: Optional[ControlEventHandler["ConstrainedControl"]] = None
+    on_animation_end: Optional[ControlEventHandler["LayoutControl"]] = None
     """
     Called when animation completes.
 
@@ -239,3 +240,12 @@ class ConstrainedControl(Control):
 
     More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
     """
+
+
+@deprecated_class(
+    reason="Inherit from LayoutControl instead.",
+    version="0.70.0",
+    delete_version="1.0",
+)
+class ConstrainedControl(LayoutControl):
+    pass

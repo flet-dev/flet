@@ -1,9 +1,9 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
     IconData,
@@ -15,7 +15,7 @@ __all__ = ["CupertinoSwitch"]
 
 
 @control("CupertinoSwitch")
-class CupertinoSwitch(ConstrainedControl):
+class CupertinoSwitch(LayoutControl):
     """
     An iOS-style switch. Used to toggle the on/off state of a single setting.
     """

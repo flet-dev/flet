@@ -244,7 +244,7 @@ class FletCoreExtension extends FletExtension {
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
         return ExpansionTileControl(key: key, control: control);
-      case "ElevatedButton":
+      case "Button":
       case "FilledButton":
       case "FilledTonalButton":
       case "TextButton":

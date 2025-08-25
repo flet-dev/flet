@@ -1,14 +1,14 @@
 from typing import Any, Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 
 __all__ = ["FletApp"]
 
 
 @control("FletApp")
-class FletApp(ConstrainedControl):
+class FletApp(LayoutControl):
     """
     Renders another Flet app in the current app, similar to HTML IFrame, but for Flet.
     """

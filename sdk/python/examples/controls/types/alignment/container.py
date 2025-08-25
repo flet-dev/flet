@@ -8,7 +8,7 @@ def main(page: ft.Page):
         ft.Row(
             controls=[
                 ft.Container(
-                    content=ft.ElevatedButton("Center"),
+                    content=ft.Button("Center"),
                     bgcolor=ft.Colors.AMBER,
                     padding=15,
                     alignment=ft.Alignment.CENTER,
@@ -16,7 +16,7 @@ def main(page: ft.Page):
                     height=150,
                 ),
                 ft.Container(
-                    content=ft.ElevatedButton("Top left"),
+                    content=ft.Button("Top left"),
                     bgcolor=ft.Colors.AMBER,
                     padding=15,
                     alignment=ft.Alignment.TOP_LEFT,
@@ -24,7 +24,7 @@ def main(page: ft.Page):
                     height=150,
                 ),
                 ft.Container(
-                    content=ft.ElevatedButton("-0.5, -0.5"),
+                    content=ft.Button("-0.5, -0.5"),
                     bgcolor=ft.Colors.AMBER,
                     padding=15,
                     alignment=ft.alignment.Alignment(-0.5, -0.5),

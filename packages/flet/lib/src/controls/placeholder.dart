@@ -22,6 +22,6 @@ class PlaceholderControl extends StatelessWidget {
         strokeWidth: control.getDouble("stroke_width", 2.0)!,
         child: control.buildWidget("content"));
 
-    return ConstrainedControl(control: control, child: placeholder);
+    return LayoutControl(control: control, child: placeholder);
   }
 }

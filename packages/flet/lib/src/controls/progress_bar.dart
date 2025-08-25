@@ -31,6 +31,6 @@ class ProgressBarControl extends StatelessWidget {
       year2023: control.getBool(
           "year_2023"), // todo: deprecated and to be removed in future versions
     );
-    return ConstrainedControl(control: control, child: indicator);
+    return LayoutControl(control: control, child: indicator);
   }
 }

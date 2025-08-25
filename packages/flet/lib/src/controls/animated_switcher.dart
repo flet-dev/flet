@@ -47,6 +47,6 @@ class AnimatedSwitcherControl extends StatelessWidget {
       },
       child: content,
     );
-    return ConstrainedControl(control: control, child: animatedSwitcher);
+    return LayoutControl(control: control, child: animatedSwitcher);
   }
 }

@@ -17,7 +17,7 @@ def main(page: ft.Page):
 
     message = ft.Text("Animate me!")
 
-    def animate_container(e: ft.Event[ft.ElevatedButton]):
+    def animate_container(e: ft.Event[ft.Button]):
         message.value = (
             "Animate me back!" if message.value == "Animate me!" else "Animate me!"
         )
@@ -48,7 +48,7 @@ def main(page: ft.Page):
             border_radius=10,
             padding=10,
         ),
-        ft.ElevatedButton("Animate container", on_click=animate_container),
+        ft.Button("Animate container", on_click=animate_container),
     )
 
 

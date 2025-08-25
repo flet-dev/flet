@@ -31,7 +31,7 @@ def example():
 
     return ft.Column(
         [
-            ft.ElevatedButton("Open dialog", on_click=open_dlg),
-            ft.ElevatedButton("Open modal dialog", on_click=open_dlg_modal),
+            ft.Button("Open dialog", on_click=open_dlg),
+            ft.Button("Open modal dialog", on_click=open_dlg_modal),
         ]
     )

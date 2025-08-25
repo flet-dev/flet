@@ -6,8 +6,8 @@ from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -27,7 +27,7 @@ __all__ = [
 
 
 @control("IconButton")
-class IconButton(ConstrainedControl, AdaptiveControl):
+class IconButton(LayoutControl, AdaptiveControl):
     """
     An icon button is a round button with an icon in the middle that reacts to touches
     by filling with color (ink).

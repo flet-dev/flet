@@ -2,8 +2,9 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
-        message.value = f"Textboxes values are:  '{prefix_field.value}', '{suffix_field.value}', '{prefix_suffix_field.value}', '{color_field.value}'."
+    def handle_button_click(e: ft.Event[ft.Button]):
+        message.value = f"Textboxes values are:  '{prefix_field.value}', "
+        f"'{suffix_field.value}', '{prefix_suffix_field.value}', '{color_field.value}'."
         page.update()
 
     page.add(
@@ -25,7 +26,7 @@ def main(page: ft.Page):
             suffix="...is your color",
             max_length=20,
         ),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

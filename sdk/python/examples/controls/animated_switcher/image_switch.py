@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         switcher.content = ft.Image(
             src=f"https://picsum.photos/200/300?{time.time()}",
             width=200,
@@ -25,7 +25,7 @@ def main(page: ft.Page):
             switch_in_curve=ft.AnimationCurve.BOUNCE_OUT,
             switch_out_curve=ft.AnimationCurve.BOUNCE_IN,
         ),
-        ft.ElevatedButton("Animate!", on_click=animate),
+        ft.Button("Animate!", on_click=animate),
     )
 
 

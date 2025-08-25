@@ -1,11 +1,13 @@
+from dataclasses import dataclass
+
 import flet as ft
 
 
+@dataclass
 class Message:
-    def __init__(self, user: str, text: str, message_type: str):
-        self.user = user
-        self.text = text
-        self.message_type = message_type
+    user: str
+    text: str
+    message_type: str
 
 
 def main(page: ft.Page):
@@ -57,13 +59,11 @@ def main(page: ft.Page):
         modal=True,
         title=ft.Text("Welcome!"),
         content=ft.Column([user_name], tight=True),
-        actions=[ft.ElevatedButton(content="Join chat", on_click=join_click)],
+        actions=[ft.Button(content="Join chat", on_click=join_click)],
         actions_alignment=ft.MainAxisAlignment.END,
     )
 
-    page.add(
-        chat, ft.Row([new_message, ft.ElevatedButton("Send", on_click=send_click)])
-    )
+    page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
 
 
 ft.run(main)

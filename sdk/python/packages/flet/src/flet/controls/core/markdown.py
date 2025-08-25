@@ -4,10 +4,10 @@ from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.box import BoxDecoration
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.core.text import TextSelectionChangeEvent
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -19,10 +19,10 @@ from flet.controls.types import (
 
 __all__ = [
     "Markdown",
-    "MarkdownExtensionSet",
-    "MarkdownStyleSheet",
     "MarkdownCodeTheme",
     "MarkdownCustomCodeTheme",
+    "MarkdownExtensionSet",
+    "MarkdownStyleSheet",
 ]
 
 
@@ -230,7 +230,7 @@ class MarkdownCustomCodeTheme:
 
 
 @control("Markdown")
-class Markdown(ConstrainedControl):
+class Markdown(LayoutControl):
     """
     Renders text in markdown format.
     """
@@ -317,7 +317,8 @@ class Markdown(ConstrainedControl):
     """
     Called when a link within Markdown document is clicked/tapped.
 
-    The [`data`][flet.Event.data] property of the event handler argument contains the clickedURL.
+    The [`data`][flet.Event.data] property of the event handler argument
+    contains the clickedURL.
 
     Example:
     https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py

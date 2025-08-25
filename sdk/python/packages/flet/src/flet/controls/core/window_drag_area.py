@@ -1,15 +1,15 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import EventHandler
 from flet.controls.core.window import WindowEvent
 from flet.controls.events import DragEndEvent, DragStartEvent
+from flet.controls.layout_control import LayoutControl
 
 
 @control("WindowDragArea")
-class WindowDragArea(ConstrainedControl):
+class WindowDragArea(LayoutControl):
     """
     It mimics the behavior (drag, move, maximize, restore) of a native OS window
     title bar on the [`content`][(c).] control.
@@ -36,9 +36,9 @@ class WindowDragArea(ConstrainedControl):
     Called when the `WindowDragArea` is double-tapped and `maximizable=True`.
 
     Info:
-        When a double-tap event is fired, the [`type`][flet.WindowEvent.type] property of the
-        event handler argument can only be one of the following: `WindowEventType.MAXIMIZE`,
-        `WindowEventType.UNMAXIMIZE`.
+        When a double-tap event is fired, the [`type`][flet.WindowEvent.type]
+        property of the event handler argument can only be one of the following:
+        `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`.
     """
 
     on_drag_start: Optional[EventHandler[DragStartEvent["WindowDragArea"]]] = None

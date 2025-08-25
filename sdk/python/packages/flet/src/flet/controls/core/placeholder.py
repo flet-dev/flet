@@ -2,15 +2,15 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.colors import Colors
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
 
 __all__ = ["Placeholder"]
 
 
 @control("Placeholder")
-class Placeholder(ConstrainedControl):
+class Placeholder(LayoutControl):
     """
     A placeholder box.
     """

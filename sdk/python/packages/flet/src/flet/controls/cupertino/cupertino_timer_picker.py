@@ -4,9 +4,9 @@ from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
 
 __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
@@ -19,7 +19,7 @@ class CupertinoTimerPickerMode(Enum):
 
 
 @control("CupertinoTimerPicker")
-class CupertinoTimerPicker(ConstrainedControl):
+class CupertinoTimerPicker(LayoutControl):
     """
     A countdown timer picker in iOS style.
 
@@ -29,10 +29,14 @@ class CupertinoTimerPicker(ConstrainedControl):
     Raises:
         AssertionError: If [`value`][(c).] is negative.
         AssertionError: If [`value`][(c).] is 24 hours or more.
-        AssertionError: If [`minute_interval`][(c).] is not a positive integer factor of `60`.
-        AssertionError: If [`second_interval`][(c).] is not a positive integer factor of `60`.
-        AssertionError: If [`value`][(c).] is not a multiple of [`minute_interval`][(c).].
-        AssertionError: If [`value`][(c).] is not a multiple of [`second_interval`][(c).].
+        AssertionError: If [`minute_interval`][(c).] is not a positive integer
+            factor of `60`.
+        AssertionError: If [`second_interval`][(c).] is not a positive integer
+            factor of `60`.
+        AssertionError: If [`value`][(c).] is not a multiple
+            of [`minute_interval`][(c).].
+        AssertionError: If [`value`][(c).] is not a multiple
+            of [`second_interval`][(c).].
         AssertionError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
     """
 
@@ -80,9 +84,10 @@ class CupertinoTimerPicker(ConstrainedControl):
     on_change: Optional[ControlEventHandler["CupertinoTimerPicker"]] = None
     """
     Called when the timer's duration changes.
-    
+
     The [`data`][flet.Event] property of the event handler argument is the new duration.
-    It has the same [type][flet.DurationValue] as [`value`][flet.CupertinoTimerPicker.value].
+    It has the same [type][flet.DurationValue] as
+    [`value`][flet.CupertinoTimerPicker.value].
     """
 
     def before_update(self):
@@ -94,21 +99,25 @@ class CupertinoTimerPicker(ConstrainedControl):
             else Duration(seconds=self.value)
         )
         assert value >= Duration(), "value must be a non-negative duration"
-        assert value < Duration(
-            hours=24
-        ), f"value must be strictly less than 24 hours, got {value.in_hours} hours"
-        assert (
-            self.minute_interval > 0 and 60 % self.minute_interval == 0
-        ), f"minute_interval ({self.minute_interval}) must be a positive integer factor of 60"
-        assert (
-            self.second_interval > 0 and 60 % self.second_interval == 0
-        ), f"second_interval ({self.second_interval}) must be a positive integer factor of 60"
-        assert (
-            value.in_minutes % self.minute_interval == 0
-        ), f"value ({value.in_minutes} minutes) must be a multiple of minute_interval ({self.minute_interval})"
-        assert (
-            value.in_seconds % self.second_interval == 0
-        ), f"value ({value.in_seconds} seconds) must be a multiple of second_interval ({self.second_interval})"
-        assert (
-            self.item_extent > 0
-        ), f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
+        assert value < Duration(hours=24), (
+            f"value must be strictly less than 24 hours, got {value.in_hours} hours"
+        )
+        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
+            f"minute_interval ({self.minute_interval}) must be a positive "
+            "integer factor of 60"
+        )
+        assert self.second_interval > 0 and 60 % self.second_interval == 0, (
+            f"second_interval ({self.second_interval}) must be a positive "
+            "integer factor of 60"
+        )
+        assert value.in_minutes % self.minute_interval == 0, (
+            f"value ({value.in_minutes} minutes) must be a multiple "
+            f"of minute_interval ({self.minute_interval})"
+        )
+        assert value.in_seconds % self.second_interval == 0, (
+            f"value ({value.in_seconds} seconds) must be a multiple "
+            f"of second_interval ({self.second_interval})"
+        )
+        assert self.item_extent > 0, (
+            f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
+        )

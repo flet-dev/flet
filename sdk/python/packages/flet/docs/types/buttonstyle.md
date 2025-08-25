@@ -81,7 +81,7 @@ import flet as ft
 def main(page: ft.Page):
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             "Styled button 1",
             style=ft.ButtonStyle(
                 color={

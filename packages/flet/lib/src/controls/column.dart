@@ -59,6 +59,6 @@ class ColumnControl extends StatelessWidget {
       child = ScrollNotificationControl(control: control, child: child);
     }
 
-    return ConstrainedControl(control: control, child: child);
+    return LayoutControl(control: control, child: child);
   }
 }

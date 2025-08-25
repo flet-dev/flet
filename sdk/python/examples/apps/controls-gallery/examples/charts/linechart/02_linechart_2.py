@@ -133,4 +133,4 @@ def example():
         s.toggle = not s.toggle
         chart.update()
 
-    return ft.Column(controls=[ft.ElevatedButton("avg", on_click=toggle_data), chart])
+    return ft.Column(controls=[ft.Button("avg", on_click=toggle_data), chart])

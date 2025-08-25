@@ -68,7 +68,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               widget.control.disabled ? null : _destinationChanged,
           destinations: widget.control.buildWidgets("destinations"));
 
-      return ConstrainedControl(control: widget.control, child: navBar);
+      return LayoutControl(control: widget.control, child: navBar);
     });
   }
 }

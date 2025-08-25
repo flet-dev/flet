@@ -12,7 +12,7 @@ def main(page: ft.Page):
     # add to services
     page.services.append(file_picker := ft.FilePicker(on_upload=on_upload_progress))
 
-    async def handle_files_pick(e: ft.Event[ft.ElevatedButton]):
+    async def handle_files_pick(e: ft.Event[ft.Button]):
         files = await file_picker.pick_files(allow_multiple=True)
         print("Picked files:", files)
         state["picked_files"] = files
@@ -26,7 +26,7 @@ def main(page: ft.Page):
             prog_bars[f.name] = prog
             upload_progress.controls.append(ft.Row([prog, ft.Text(f.name)]))
 
-    async def handle_file_upload(e: ft.Event[ft.ElevatedButton]):
+    async def handle_file_upload(e: ft.Event[ft.Button]):
         upload_button.disabled = True
         await file_picker.upload(
             files=[
@@ -40,13 +40,13 @@ def main(page: ft.Page):
 
     page.add(
         ft.Text("test"),
-        ft.ElevatedButton(
+        ft.Button(
             content="Select files...",
             icon=ft.Icons.FOLDER_OPEN,
             on_click=handle_files_pick,
         ),
         upload_progress := ft.Column(),
-        upload_button := ft.ElevatedButton(
+        upload_button := ft.Button(
             content="Upload",
             icon=ft.Icons.UPLOAD,
             on_click=handle_file_upload,

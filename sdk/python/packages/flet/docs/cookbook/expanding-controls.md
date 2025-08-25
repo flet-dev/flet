@@ -18,13 +18,13 @@ You can set `expand` to one of the following values:
 ### Example 1
 
 In this example, a [`TextField`][flet.TextField] stretches to fill all remaining space in the row,
-while the [`ElevatedButton`][flet.ElevatedButton] stays sized to its content:
+while the [`Button`][flet.Button] stays sized to its content:
 
 ```python
 ft.Row(
     controls=[
       ft.TextField(hint_text="Enter your name", expand=True),
-      ft.ElevatedButton(text="Join chat")
+      ft.Button(text="Join chat")
     ]
 )
 ```

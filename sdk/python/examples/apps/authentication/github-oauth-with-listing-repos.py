@@ -2,8 +2,9 @@ import json
 import logging
 import os
 
-import flet as ft
 import httpx
+
+import flet as ft
 from flet.auth.providers import GitHubOAuthProvider
 from flet.security import decrypt, encrypt
 
@@ -86,8 +87,8 @@ async def main(page: ft.Page):
         logged_user.visible = logout_button.visible = page.auth is not None
 
     logged_user = ft.Text()
-    login_button = ft.ElevatedButton("Login with GitHub", on_click=perform_login)
-    logout_button = ft.ElevatedButton("Logout", on_click=logout_button_click)
+    login_button = ft.Button("Login with GitHub", on_click=perform_login)
+    logout_button = ft.Button("Logout", on_click=logout_button_click)
     repos_view = ft.ListView(expand=True)
     page.on_login = on_login
     page.on_logout = on_logout

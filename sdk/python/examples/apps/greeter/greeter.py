@@ -13,7 +13,7 @@ def main(page: ft.Page):
 
     txt_name = ft.TextField(label="Your name")
 
-    page.add(txt_name, ft.ElevatedButton("Say hello!", on_click=btn_click))
+    page.add(txt_name, ft.Button("Say hello!", on_click=btn_click))
 
 
 ft.run(main)

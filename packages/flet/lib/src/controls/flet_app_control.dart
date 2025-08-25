@@ -32,7 +32,7 @@ class _FletAppControlState extends State<FletAppControl> {
     var appStartupScreenMessage =
         widget.control.getString("app_startup_screen_message");
 
-    return ConstrainedControl(
+    return LayoutControl(
       control: widget.control,
       child: FletApp(
         controlId: widget.control.id,

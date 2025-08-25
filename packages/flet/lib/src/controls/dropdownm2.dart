@@ -148,7 +148,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
     );
 
     if (widget.control.getExpand("expand", 0)! > 0) {
-      return ConstrainedControl(control: widget.control, child: dropDown);
+      return LayoutControl(control: widget.control, child: dropDown);
     } else {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -159,7 +159,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
                 child: dropDown);
           }
 
-          return ConstrainedControl(control: widget.control, child: dropDown);
+          return LayoutControl(control: widget.control, child: dropDown);
         },
       );
     }

@@ -100,7 +100,7 @@ class MarkdownControl extends StatelessWidget {
           control.triggerEvent("tap_link", href);
         });
 
-    return ConstrainedControl(control: control, child: markdown);
+    return LayoutControl(control: control, child: markdown);
   }
 }
 

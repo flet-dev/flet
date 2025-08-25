@@ -199,6 +199,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       container = IgnorePointer(child: container);
     }
 
-    return ConstrainedControl(control: control, child: container);
+    return LayoutControl(control: control, child: container);
   }
 }

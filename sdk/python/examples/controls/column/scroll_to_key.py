@@ -61,19 +61,19 @@ def main(page: ft.Page):
                 ft.Text("Scroll to:"),
                 ft.Row(
                     controls=[
-                        ft.ElevatedButton(
+                        ft.Button(
                             content="Section A",
                             on_click=scroll_a,
                         ),
-                        ft.ElevatedButton(
+                        ft.Button(
                             content="Section B",
                             on_click=scroll_b,
                         ),
-                        ft.ElevatedButton(
+                        ft.Button(
                             content="Section C",
                             on_click=scroll_c,
                         ),
-                        ft.ElevatedButton(
+                        ft.Button(
                             content="Section D",
                             on_click=scroll_d,
                         ),

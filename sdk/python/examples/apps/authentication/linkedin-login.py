@@ -1,11 +1,10 @@
 import os
 
-import flet
-from flet import ElevatedButton, Page
+import flet as ft
 from flet.auth import OAuthProvider
 
 
-def main(page: Page):
+def main(page: ft.Page):
     provider = OAuthProvider(
         client_id=os.getenv("LINKEDIN_CLIENT_ID"),
         client_secret=os.getenv("LINKEDIN_CLIENT_SECRET"),
@@ -27,7 +26,7 @@ def main(page: Page):
         print("Access token:", page.auth.token.access_token)
 
     page.on_login = on_login
-    page.add(ElevatedButton("Login with LinkedIn", on_click=login_click))
+    page.add(ft.Button("Login with LinkedIn", on_click=login_click))
 
 
-flet.app(target=main, port=8550, view=flet.AppView.WEB_BROWSER)
+ft.app(target=main, port=8550, view=ft.AppView.WEB_BROWSER)

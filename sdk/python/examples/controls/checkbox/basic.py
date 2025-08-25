@@ -2,8 +2,9 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
-        message.value = f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}, {c5.value}."
+    def handle_button_click(e: ft.Event[ft.Button]):
+        message.value = f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, "
+        f"{c4.value}, {c5.value}."
         page.update()
 
     page.add(
@@ -17,7 +18,7 @@ def main(page: ft.Page):
             label="Checkbox with LEFT label_position",
             label_position=ft.LabelPosition.LEFT,
         ),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

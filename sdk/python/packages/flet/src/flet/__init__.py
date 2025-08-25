@@ -50,7 +50,6 @@ from flet.controls.buttons import (
 )
 from flet.controls.cache import cache
 from flet.controls.colors import Colors
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.context import Context, context
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -220,6 +219,7 @@ from flet.controls.gradients import (
 )
 from flet.controls.icon_data import IconData
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
+from flet.controls.layout_control import ConstrainedControl, LayoutControl
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
@@ -406,6 +406,7 @@ from flet.controls.theme import (
     BannerTheme,
     BottomAppBarTheme,
     BottomSheetTheme,
+    ButtonTheme,
     CardTheme,
     CheckboxTheme,
     ChipTheme,
@@ -415,7 +416,6 @@ from flet.controls.theme import (
     DialogTheme,
     DividerTheme,
     DropdownTheme,
-    ElevatedButtonTheme,
     ExpansionTileTheme,
     FilledButtonTheme,
     FloatingActionButtonTheme,
@@ -555,6 +555,7 @@ __all__ = [
     "BrowserContextMenu",
     "Button",
     "ButtonStyle",
+    "ButtonTheme",
     "Card",
     "CardTheme",
     "CardVariant",
@@ -648,7 +649,6 @@ __all__ = [
     "Duration",
     "DurationValue",
     "ElevatedButton",
-    "ElevatedButtonTheme",
     "Event",
     "EventControlType",
     "EventHandler",
@@ -703,6 +703,7 @@ __all__ = [
     "KeyboardListener",
     "KeyboardType",
     "LabelPosition",
+    "LayoutControl",
     "LinearGradient",
     "ListTile",
     "ListTileStyle",

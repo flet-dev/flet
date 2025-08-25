@@ -3,8 +3,8 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import ClipBehavior, Number
@@ -13,7 +13,7 @@ __all__ = ["ListView"]
 
 
 @control("ListView")
-class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     A scrollable list of controls arranged linearly.
 
@@ -36,7 +36,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     Whether the scroll view scrolls in the reading direction.
 
-    For example, if the reading direction is left-to-right and [`horizontal`][flet.ListView.horizontal] is `True`,
+    For example, if the reading direction is left-to-right and
+    [`horizontal`][flet.ListView.horizontal] is `True`,
     then the scroll view scrolls from left to right when `reverse` is `False`
     and from right to left when `reverse` is `True`.
 

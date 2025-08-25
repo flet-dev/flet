@@ -49,6 +49,6 @@ class _CupertinoDatePickerControlState
       return ErrorControl("CupertinoDatePicker Error: ${e.toString()}");
     }
 
-    return ConstrainedControl(control: widget.control, child: dialog);
+    return LayoutControl(control: widget.control, child: dialog);
   }
 }

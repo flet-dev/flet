@@ -1,14 +1,14 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
 
 __all__ = ["CupertinoActivityIndicator"]
 
 
 @control("CupertinoActivityIndicator")
-class CupertinoActivityIndicator(ConstrainedControl):
+class CupertinoActivityIndicator(LayoutControl):
     """
     An iOS-style activity indicator that spins clockwise.
 

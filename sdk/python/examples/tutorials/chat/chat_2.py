@@ -1,10 +1,12 @@
+from dataclasses import dataclass
+
 import flet as ft
 
 
+@dataclass
 class Message:
-    def __init__(self, user: str, text: str):
-        self.user = user
-        self.text = text
+    user: str
+    text: str
 
 
 def main(page: ft.Page):
@@ -22,9 +24,7 @@ def main(page: ft.Page):
         new_message.value = ""
         page.update()
 
-    page.add(
-        chat, ft.Row([new_message, ft.ElevatedButton("Send", on_click=send_click)])
-    )
+    page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
 
 
 ft.run(main)

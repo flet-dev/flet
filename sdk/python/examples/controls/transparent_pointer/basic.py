@@ -14,7 +14,7 @@ def main(page: ft.Page):
                 ),
                 ft.TransparentPointer(
                     content=ft.Container(
-                        content=ft.ElevatedButton("Test button"),
+                        content=ft.Button("Test button"),
                         padding=50,
                     )
                 ),

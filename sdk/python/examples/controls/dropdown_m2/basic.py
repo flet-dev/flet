@@ -17,7 +17,7 @@ def main(page: ft.Page):
                 ft.dropdownm2.Option("Blue"),
             ],
         ),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

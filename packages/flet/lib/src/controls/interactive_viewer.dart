@@ -147,7 +147,6 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
               "InteractiveViewer.content must be provided and visible"),
     );
 
-    return ConstrainedControl(
-        control: widget.control, child: interactiveViewer);
+    return LayoutControl(control: widget.control, child: interactiveViewer);
   }
 }

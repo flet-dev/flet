@@ -89,7 +89,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
         }
       });
 
-      return ConstrainedControl(control: control, child: result);
+      return LayoutControl(control: control, child: result);
     });
   }
 }

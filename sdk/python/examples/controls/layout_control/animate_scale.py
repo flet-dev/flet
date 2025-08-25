@@ -6,7 +6,7 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.spacing = 30
 
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         container.scale = 2 if container.scale == 1 else 1
         page.update()
 
@@ -22,7 +22,7 @@ def main(page: ft.Page):
                 curve=ft.AnimationCurve.BOUNCE_OUT,
             ),
         ),
-        ft.ElevatedButton("Animate!", on_click=animate),
+        ft.Button("Animate!", on_click=animate),
     )
 
 

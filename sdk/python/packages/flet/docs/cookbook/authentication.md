@@ -93,7 +93,7 @@ def main(page: ft.Page):
         print("User ID:", page.auth.user.id)
 
     page.on_login = on_login
-    page.add(ft.ElevatedButton("Login with GitHub", on_click=login_click))
+    page.add(ft.Button("Login with GitHub", on_click=login_click))
 
 ft.run(main, port=8550, view=ft.WEB_BROWSER)
 ```
@@ -187,7 +187,7 @@ You can use this event handler to toggle signed in/out UI, for example:
 import os
 
 import flet
-from flet import ElevatedButton, LoginEvent, Page
+from flet import Button, LoginEvent, Page
 from flet.auth.providers import GitHubOAuthProvider
 
 def main(page: Page):
@@ -215,8 +215,8 @@ def main(page: Page):
         logout_button.visible = page.auth is not None
         page.update()
 
-    login_button = ElevatedButton("Login with GitHub", on_click=login_button_click)
-    logout_button = ElevatedButton("Logout", on_click=logout_button_click)
+    login_button = Button("Login with GitHub", on_click=login_button_click)
+    logout_button = Button("Logout", on_click=logout_button_click)
     toggle_login_buttons()
     page.on_login = on_login
     page.on_logout = on_logout
@@ -421,7 +421,7 @@ with their LinkedIn accounts:
 import os
 
 import flet
-from flet import ElevatedButton, Page
+from flet import Button, Page
 from flet.auth import OAuthProvider
 
 def main(page: Page):
@@ -446,7 +446,7 @@ def main(page: Page):
         print("Access token:", page.auth.token.access_token)
 
     page.on_login = on_login
-    page.add(ElevatedButton("Login with LinkedIn", on_click=login_click))
+    page.add(Button("Login with LinkedIn", on_click=login_click))
 
 flet.app(main, port=8550, view=flet.WEB_BROWSER)
 ```

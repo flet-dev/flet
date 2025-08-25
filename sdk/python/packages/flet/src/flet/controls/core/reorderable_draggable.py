@@ -1,11 +1,11 @@
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 
 
 @control("ReorderableDraggable")
-class ReorderableDraggable(ConstrainedControl, AdaptiveControl):
+class ReorderableDraggable(LayoutControl, AdaptiveControl):
     """
     Used to drag an item in a [`ReorderableListView`][flet.ReorderableListView].
 

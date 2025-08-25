@@ -6,14 +6,15 @@ def main(page: ft.Page):
 
     def handle_banner_close(e: ft.Event[ft.TextButton]):
         page.pop_dialog()
-        page.add(ft.Text("Action clicked: " + e.control.content))
+        page.add(ft.Text("Action clicked: " + e.control.data))
 
     action_button_style = ft.ButtonStyle(color=ft.Colors.BLUE)
     banner = ft.Banner(
         bgcolor=ft.Colors.AMBER_100,
         leading=ft.Icon(ft.Icons.WARNING_AMBER_ROUNDED, color=ft.Colors.AMBER, size=40),
         content=ft.Text(
-            value="Oops, there were some errors while trying to delete the file. What would you like to do?",
+            value="Oops, there were some errors while trying to delete the file. "
+            "What would you like to do?",
             color=ft.Colors.BLACK,
         ),
         actions=[
@@ -21,23 +22,24 @@ def main(page: ft.Page):
                 content="Retry",
                 style=action_button_style,
                 on_click=handle_banner_close,
+                data="retry",
             ),
             ft.TextButton(
                 content="Ignore",
                 style=action_button_style,
                 on_click=handle_banner_close,
+                data="ignore",
             ),
             ft.TextButton(
                 content="Cancel",
                 style=action_button_style,
                 on_click=handle_banner_close,
+                data="cancel",
             ),
         ],
     )
 
-    page.add(
-        ft.ElevatedButton("Show Banner", on_click=lambda e: page.show_dialog(banner))
-    )
+    page.add(ft.Button("Show Banner", on_click=lambda e: page.show_dialog(banner)))
 
 
 ft.run(main)

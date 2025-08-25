@@ -37,18 +37,18 @@ def example():
     return ft.Column(
         [
             ft.Container(cl, border=ft.Border.all(1)),
-            ft.ElevatedButton("Scroll to offset 100", on_click=scroll_to_offset),
+            ft.Button("Scroll to offset 100", on_click=scroll_to_offset),
             ft.Row(
                 [
-                    ft.ElevatedButton("Scroll to start", on_click=scroll_to_start),
-                    ft.ElevatedButton("Scroll to end", on_click=scroll_to_end),
+                    ft.Button("Scroll to start", on_click=scroll_to_start),
+                    ft.Button("Scroll to end", on_click=scroll_to_end),
                 ]
             ),
-            # ft.ElevatedButton("Scroll to key '20'", on_click=scroll_to_key),
+            # ft.Button("Scroll to key '20'", on_click=scroll_to_key),
             ft.Row(
                 [
-                    ft.ElevatedButton("Scroll -40", on_click=scroll_to_minus_delta),
-                    ft.ElevatedButton("Scroll +40", on_click=scroll_to_delta),
+                    ft.Button("Scroll -40", on_click=scroll_to_minus_delta),
+                    ft.Button("Scroll +40", on_click=scroll_to_delta),
                 ]
             ),
         ]

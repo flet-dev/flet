@@ -59,6 +59,6 @@ class _CupertinoNavigationBarControlState
               label: dest.getString("label", "")!);
         }).toList());
 
-    return ConstrainedControl(control: widget.control, child: navBar);
+    return LayoutControl(control: widget.control, child: navBar);
   }
 }

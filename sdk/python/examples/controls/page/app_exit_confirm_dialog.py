@@ -10,7 +10,7 @@ def main(page: ft.Page):
     page.window.prevent_close = True
     page.window.on_event = window_event
 
-    async def handle_yes_click(e: ft.Event[ft.ElevatedButton]):
+    async def handle_yes_click(e: ft.Event[ft.Button]):
         await page.window.destroy()
 
     def handle_no_click(e: ft.Event[ft.OutlinedButton]):
@@ -22,7 +22,7 @@ def main(page: ft.Page):
         title=ft.Text("Please confirm"),
         content=ft.Text("Do you really want to exit this app?"),
         actions=[
-            ft.ElevatedButton(content="Yes", on_click=handle_yes_click),
+            ft.Button(content="Yes", on_click=handle_yes_click),
             ft.OutlinedButton(content="No", on_click=handle_no_click),
         ],
         actions_alignment=ft.MainAxisAlignment.END,

@@ -1,15 +1,15 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor, StrOrControl
 
 __all__ = ["CupertinoActionSheetAction"]
 
 
 @control("CupertinoActionSheetAction")
-class CupertinoActionSheetAction(ConstrainedControl):
+class CupertinoActionSheetAction(LayoutControl):
     """
     An action button typically used in a CupertinoActionSheet.
 

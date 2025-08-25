@@ -1,8 +1,9 @@
 import itertools
 
-import flet as ft
 from board_list import BoardList
 from data_store import DataStore
+
+import flet as ft
 
 
 class Board(ft.Container):
@@ -102,7 +103,7 @@ class Board(ft.Container):
         dialog_text = ft.TextField(
             label="New List Name", on_submit=close_dlg, on_change=textfield_change
         )
-        create_button = ft.ElevatedButton(
+        create_button = ft.Button(
             text="Create", bgcolor=ft.Colors.BLUE_200, on_click=close_dlg, disabled=True
         )
         dialog = ft.AlertDialog(
@@ -115,7 +116,7 @@ class Board(ft.Container):
                     color_options,
                     ft.Row(
                         [
-                            ft.ElevatedButton(text="Cancel", on_click=close_dlg),
+                            ft.Button(text="Cancel", on_click=close_dlg),
                             create_button,
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,

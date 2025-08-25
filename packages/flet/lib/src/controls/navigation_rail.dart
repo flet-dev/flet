@@ -114,6 +114,6 @@ class _NavigationRailControlState extends State<NavigationRailControl>
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: rail);
+    return LayoutControl(control: widget.control, child: rail);
   }
 }

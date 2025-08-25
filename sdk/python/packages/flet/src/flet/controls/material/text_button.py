@@ -3,8 +3,8 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
@@ -17,7 +17,7 @@ __all__ = ["TextButton"]
 
 
 @control("TextButton")
-class TextButton(ConstrainedControl, AdaptiveControl):
+class TextButton(LayoutControl, AdaptiveControl):
     """
     Text buttons are used for the lowest priority actions, especially when presenting
     multiple options. Text buttons can be placed on a variety of backgrounds. Until the

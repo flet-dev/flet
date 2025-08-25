@@ -20,7 +20,7 @@ def main(page):
     page.add(
         first_name,
         last_name,
-        ft.ElevatedButton("Say hello!", on_click=btn_click),
+        ft.Button("Say hello!", on_click=btn_click),
         greetings,
     )
 
@@ -40,7 +40,7 @@ hard to imagine (without constant jumping to variable definitions in IDE) what w
     page.add(
         first_name,
         last_name,
-        ft.ElevatedButton("Say hello!", on_click=btn_click),
+        ft.Button("Say hello!", on_click=btn_click),
         greetings,
     )
 ```
@@ -101,7 +101,7 @@ def main(page):
     page.add(
         ft.TextField(ref=first_name, label="First name", autofocus=True),
         ft.TextField(ref=last_name, label="Last name"),
-        ft.ElevatedButton("Say hello!", on_click=btn_click),
+        ft.Button("Say hello!", on_click=btn_click),
         ft.Column(ref=greetings),
     )
 

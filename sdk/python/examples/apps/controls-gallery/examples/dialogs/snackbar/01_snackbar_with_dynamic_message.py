@@ -19,4 +19,4 @@ def example():
         d.counter += 1
         e.control.page.update()
 
-    return ft.ElevatedButton("Open SnackBar", on_click=on_click)
+    return ft.Button("Open SnackBar", on_click=on_click)

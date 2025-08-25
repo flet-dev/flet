@@ -2,10 +2,10 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.canvas.shape import Shape
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import Number
 
 __all__ = ["Canvas", "CanvasResizeEvent"]
@@ -25,7 +25,7 @@ class CanvasResizeEvent(Event["Canvas"]):
 
 
 @control("Canvas")
-class Canvas(ConstrainedControl):
+class Canvas(LayoutControl):
     """
     Canvas is a control for drawing arbitrary graphics using a set of primitives or
     "shapes" such as line, arc, path and text.

@@ -6,9 +6,9 @@ from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -83,7 +83,7 @@ class PopupMenuItem(Control):
 
 
 @control("PopupMenuButton")
-class PopupMenuButton(ConstrainedControl):
+class PopupMenuButton(LayoutControl):
     """
     An icon button which displays a menu when clicked.
     """

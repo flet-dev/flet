@@ -72,6 +72,6 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
               }
             : null);
 
-    return ConstrainedControl(control: widget.control, child: cupertinoSlider);
+    return LayoutControl(control: widget.control, child: cupertinoSlider);
   }
 }

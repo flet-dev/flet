@@ -75,7 +75,7 @@ def main(page: ft.Page):
         page.update()
 
     page.on_route_change = route_change
-    page.add(ft.ElevatedButton("Go to Store", on_click=go_store))
+    page.add(ft.Button("Go to Store", on_click=go_store))
 
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
@@ -122,7 +122,7 @@ def main(page: ft.Page):
                 "/",
                 [
                     ft.AppBar(title=ft.Text("Flet app"), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
-                    ft.ElevatedButton("Visit Store", on_click=lambda _: page.go("/store")),
+                    ft.Button("Visit Store", on_click=lambda _: page.go("/store")),
                 ],
             )
         )
@@ -132,7 +132,7 @@ def main(page: ft.Page):
                     "/store",
                     [
                         ft.AppBar(title=ft.Text("Store"), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
-                        ft.ElevatedButton("Go Home", on_click=lambda _: page.go("/")),
+                        ft.Button("Go Home", on_click=lambda _: page.go("/")),
                     ],
                 )
             )

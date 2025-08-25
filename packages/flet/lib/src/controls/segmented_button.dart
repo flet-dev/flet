@@ -84,7 +84,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
         selected: selected,
         showSelectedIcon: widget.control.getBool("show_selected_icon", true)!,
         style: style,
-        selectedIcon: widget.control.buildWidget("selected_icon"),
+        selectedIcon: widget.control.buildIconOrWidget("selected_icon"),
         onSelectionChanged: !widget.control.disabled
             ? (newSelection) => onChange(newSelection)
             : null,
@@ -99,6 +99,6 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
               label: segment.buildTextOrWidget("label"));
         }).toList());
 
-    return ConstrainedControl(control: widget.control, child: segmentedButton);
+    return LayoutControl(control: widget.control, child: segmentedButton);
   }
 }

@@ -1,12 +1,12 @@
 import flet as ft
 
-name = "Basic ElevatedButtons"
+name = "Basic Buttons"
 
 
 def example():
     return ft.Column(
         controls=[
-            ft.ElevatedButton(content="Elevated button"),
-            ft.ElevatedButton("Disabled button", disabled=True),
+            ft.Button(content="Elevated button"),
+            ft.Button("Disabled button", disabled=True),
         ]
     )

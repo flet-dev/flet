@@ -4,7 +4,7 @@ name = "Simple BottomSheet"
 
 
 def example():
-    class Example(ft.ElevatedButton):
+    class Example(ft.Button):
         def __init__(self):
             super().__init__()
             self.content = "Display bottom sheet"
@@ -14,9 +14,7 @@ def example():
                     ft.Column(
                         [
                             ft.Text("This is sheet's content!"),
-                            ft.ElevatedButton(
-                                "Close bottom sheet", on_click=self.close_bs
-                            ),
+                            ft.Button("Close bottom sheet", on_click=self.close_bs),
                         ],
                         tight=True,
                     ),

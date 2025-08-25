@@ -2,8 +2,8 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.colors import Colors
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
     LabelPosition,
@@ -14,9 +14,10 @@ __all__ = ["CupertinoRadio"]
 
 
 @control("CupertinoRadio")
-class CupertinoRadio(ConstrainedControl):
+class CupertinoRadio(LayoutControl):
     """
-    A macOS-styled radio button, allowing the user to select a single option from two or more choices.
+    A macOS-styled radio button, allowing the user to select a single option from two
+    or more choices.
     """
 
     label: Optional[str] = None
@@ -26,7 +27,8 @@ class CupertinoRadio(ConstrainedControl):
 
     value: str = ""
     """
-    The value to set to [`RadioGroup`][flet.RadioGroup] ancestor/parent when the radio is selected.
+    The value to set to [`RadioGroup`][flet.RadioGroup] ancestor/parent when the radio
+    is selected.
     """
 
     label_position: LabelPosition = LabelPosition.RIGHT

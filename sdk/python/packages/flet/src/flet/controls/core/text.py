@@ -3,7 +3,6 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import (
     ControlEventHandler,
     Event,
@@ -11,6 +10,7 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.core.text_span import TextSpan
+from flet.controls.layout_control import LayoutControl
 from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.controls.types import (
     ColorValue,
@@ -21,10 +21,10 @@ from flet.controls.types import (
 
 __all__ = [
     "Text",
-    "TextSelection",
-    "TextSelectionChangeEvent",
-    "TextSelectionChangeCause",
     "TextAffinity",
+    "TextSelection",
+    "TextSelectionChangeCause",
+    "TextSelectionChangeEvent",
 ]
 
 
@@ -172,7 +172,7 @@ class TextSelectionChangeEvent(Event[EventControlType]):
 
 
 @control("Text")
-class Text(ConstrainedControl):
+class Text(LayoutControl):
     """
     Display text.
 
@@ -319,8 +319,8 @@ class Text(ConstrainedControl):
 
     The cursor will be drawn under the text.
     The cursor width will extend to the right of the boundary between characters for
-    left-to-right text and to the left for right-to-left text. This corresponds to extending
-    downstream relative to the selected position.
+    left-to-right text and to the left for right-to-left text. This corresponds
+    to extending downstream relative to the selected position.
     Negative values may be used to reverse this behavior.
 
     Note:

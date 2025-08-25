@@ -77,6 +77,6 @@ class CardControl extends StatelessWidget {
           child: contentWidget);
     }
 
-    return ConstrainedControl(control: control, child: card);
+    return LayoutControl(control: control, child: card);
   }
 }

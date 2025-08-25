@@ -13,7 +13,7 @@ class MergeSemanticsControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("MergeSemantics build: ${control.id}");
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: control,
         child: MergeSemantics(child: control.buildWidget("content")));
   }

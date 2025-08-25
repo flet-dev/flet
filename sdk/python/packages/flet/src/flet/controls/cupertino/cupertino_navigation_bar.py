@@ -2,9 +2,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import Border
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.navigation_bar import NavigationBarDestination
 from flet.controls.types import (
     ColorValue,
@@ -15,7 +15,7 @@ __all__ = ["CupertinoNavigationBar"]
 
 
 @control("CupertinoNavigationBar")
-class CupertinoNavigationBar(ConstrainedControl):
+class CupertinoNavigationBar(LayoutControl):
     """
     An iOS-styled bottom navigation tab bar.
 

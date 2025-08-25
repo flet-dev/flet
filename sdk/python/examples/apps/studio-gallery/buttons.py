@@ -13,15 +13,16 @@ def example(page):
                     ft.Text("Common buttons"),
                     ft.IconButton(
                         ft.Icons.INFO_OUTLINED,
-                        tooltip="There are five types of common buttons: elevated, filled, filled tonal, outlined, and text",
+                        tooltip="There are five types of common buttons: elevated, "
+                        "filled, filled tonal, outlined, and text",
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             ft.Row(
                 controls=[
-                    ft.ElevatedButton(text="Elevated", expand=1),
-                    ft.ElevatedButton(text="Elevated", disabled=True, expand=1),
+                    ft.Button(text="Elevated", expand=1),
+                    ft.Button(text="Elevated", disabled=True, expand=1),
                 ],
             ),
             ft.Row(
@@ -53,7 +54,8 @@ def example(page):
                     ft.Text("Icon buttons"),
                     ft.IconButton(
                         ft.Icons.INFO_OUTLINED,
-                        tooltip="Icon buttons help people take supplementary actions with a single tap",
+                        tooltip="Icon buttons help people take supplementary actions "
+                        "with a single tap",
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -73,7 +75,8 @@ def example(page):
                     ft.Text("Floating action buttons"),
                     ft.IconButton(
                         ft.Icons.INFO_OUTLINED,
-                        tooltip="The FAB represents the most important action on a screen. It puts key actions within reach",
+                        tooltip="The FAB represents the most important action "
+                        "on a screen. It puts key actions within reach",
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -96,8 +99,8 @@ def example(page):
 
 def main(page: ft.Page):
     page.title = "Flet buttons example"
-    page.window_width = 390
-    page.window_height = 844
+    page.window.width = 390
+    page.window.height = 844
     page.add(example(page))
 
 

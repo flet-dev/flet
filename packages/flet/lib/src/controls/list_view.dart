@@ -149,6 +149,6 @@ class _ListViewControlState extends State<ListViewControl> {
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: listView);
+    return LayoutControl(control: widget.control, child: listView);
   }
 }

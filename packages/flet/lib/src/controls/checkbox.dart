@@ -136,6 +136,6 @@ class _CheckboxControlState extends State<CheckboxControl> {
           child: FittedBox(fit: BoxFit.fill, child: result));
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
   }
 }

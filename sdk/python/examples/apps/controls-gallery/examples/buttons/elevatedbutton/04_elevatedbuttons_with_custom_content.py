@@ -1,12 +1,12 @@
 import flet as ft
 
-name = "ElevatedButtons with custom content"
+name = "Buttons with custom content"
 
 
 def example():
     return ft.Column(
         controls=[
-            ft.ElevatedButton(
+            ft.Button(
                 width=150,
                 content=ft.Row(
                     [
@@ -17,7 +17,7 @@ def example():
                     alignment=ft.MainAxisAlignment.SPACE_AROUND,
                 ),
             ),
-            ft.ElevatedButton(
+            ft.Button(
                 content=ft.Container(
                     content=ft.Column(
                         [

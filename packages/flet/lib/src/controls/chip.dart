@@ -136,6 +136,6 @@ class _ChipControlState extends State<ChipControl> {
           : null,
     );
 
-    return ConstrainedControl(control: widget.control, child: chip);
+    return LayoutControl(control: widget.control, child: chip);
   }
 }

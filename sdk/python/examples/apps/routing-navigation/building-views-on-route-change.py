@@ -14,7 +14,7 @@ def main(page: ft.Page):
                 route="/",
                 controls=[
                     ft.AppBar(title=ft.Text("Flet app")),
-                    ft.ElevatedButton("Go to settings", on_click=open_settings),
+                    ft.Button("Go to settings", on_click=open_settings),
                 ],
             )
         )
@@ -28,7 +28,7 @@ def main(page: ft.Page):
                             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
                         ),
                         ft.Text("Settings!", theme_style=ft.TextThemeStyle.BODY_MEDIUM),
-                        ft.ElevatedButton(
+                        ft.Button(
                             content="Go to mail settings",
                             on_click=open_mail_settings,
                         ),

@@ -134,6 +134,6 @@ class _GridViewControlState extends State<GridViewControl> {
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: gridView);
+    return LayoutControl(control: widget.control, child: gridView);
   }
 }

@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         shader.rotate = 1
         shader.scale = 3
         page.update()
@@ -32,7 +32,7 @@ def main(page: ft.Page):
                 )
             ],
         ),
-        ft.ElevatedButton("Animate!", on_click=animate),
+        ft.Button("Animate!", on_click=animate),
     )
 
 

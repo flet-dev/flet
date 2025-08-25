@@ -2,8 +2,8 @@ from dataclasses import field
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import CrossAxisAlignment, MainAxisAlignment, Number
 
@@ -11,7 +11,7 @@ __all__ = ["Column"]
 
 
 @control("Column")
-class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class Column(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     Container allows to decorate a control with background color and border and
     position it with padding, margin and alignment.
@@ -36,8 +36,8 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     Spacing between the `controls`.
 
-    It is applied only when [`alignment`][flet.Column.alignment] is `MainAxisAlignment.START`,
-    `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
+    It is applied only when [`alignment`][flet.Column.alignment] is
+    `MainAxisAlignment.START`, `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
     """
 
     tight: bool = False
@@ -50,8 +50,8 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     wrap: bool = False
     """
-    Whether the [`controls`][flet.Column.controls] should wrap into additional columns (runs)
-    when they don't fit in a single vertical column.
+    Whether the [`controls`][flet.Column.controls] should wrap into additional
+    columns (runs) when they don't fit in a single vertical column.
     """
 
     run_spacing: Number = 10
@@ -61,7 +61,8 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap] is `True`.
+    How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap]
+    is `True`.
     """
 
     def init(self):

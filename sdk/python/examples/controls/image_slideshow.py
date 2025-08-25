@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def animate(e: ft.Event[ft.ElevatedButton]):
+    def animate(e: ft.Event[ft.Button]):
         image1.left = 400 if image1.left == 0 else 0
         image2.left = 0 if image2.left == -400 else -400
         page.update()
@@ -30,7 +30,7 @@ def main(page: ft.Page):
                 ),
             ],
         ),
-        ft.ElevatedButton("Slide!", on_click=animate),
+        ft.Button("Slide!", on_click=animate),
     )
 
 

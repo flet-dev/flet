@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
+    def handle_button_click(e: ft.Event[ft.Button]):
         message.value = (
             f"Switch values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}."
         )
@@ -16,7 +16,7 @@ def main(page: ft.Page):
             label="Switch with rendered label_position='left'",
             label_position=ft.LabelPosition.LEFT,
         ),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

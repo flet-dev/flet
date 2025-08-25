@@ -2,8 +2,9 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_button_click(e: ft.Event[ft.ElevatedButton]):
-        message.value = f"Textboxes values are:  '{tb1.value}', '{tb2.value}', '{tb3.value}', '{tb4.value}', '{tb5.value}'."
+    def handle_button_click(e: ft.Event[ft.Button]):
+        message.value = f"Textboxes values are:  '{tb1.value}', '{tb2.value}', "
+        f"'{tb3.value}', '{tb4.value}', '{tb5.value}'."
         page.update()
 
     page.add(
@@ -14,7 +15,7 @@ def main(page: ft.Page):
             label="With placeholder", hint_text="Please enter text here"
         ),
         tb5 := ft.TextField(label="With an icon", icon=ft.Icons.EMOJI_EMOTIONS),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

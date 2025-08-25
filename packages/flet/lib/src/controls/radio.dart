@@ -116,6 +116,6 @@ class _RadioControlState extends State<RadioControl> {
                   : Row(children: [labelWidget, radio])));
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
   }
 }

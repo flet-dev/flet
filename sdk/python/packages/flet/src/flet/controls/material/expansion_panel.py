@@ -3,9 +3,9 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -16,7 +16,7 @@ __all__ = ["ExpansionPanel", "ExpansionPanelList"]
 
 
 @control("ExpansionPanel")
-class ExpansionPanel(ConstrainedControl, AdaptiveControl):
+class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
     A material expansion panel. It can either be expanded or collapsed. Its body is
     only visible when it is expanded.
@@ -68,7 +68,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
 
 @control("ExpansionPanelList")
-class ExpansionPanelList(ConstrainedControl):
+class ExpansionPanelList(LayoutControl):
     """
     A material expansion panel list that lays out its children and animates expansions.
     """

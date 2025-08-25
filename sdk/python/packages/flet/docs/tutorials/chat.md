@@ -63,8 +63,8 @@ To implement this layout, we will be using these Flet controls:
 * [`Column`][flet.Column] - a container to display chat messages (`Text` controls) vertically.
 * [`Text`][flet.Text] - chat message displayed in the chat Column.
 * [`TextField`][flet.TextField] - input control used for taking new message input from the user.
-* [`ElevatedButton`][flet.ElevatedButton] - "Send" button that will add new message to the chat Column.
-* [`Row`][flet.Row] - a container to display `TextField` and `ElevatedButton` horizontally.
+* [`Button`][flet.Button] - "Send" button that will add new message to the chat Column.
+* [`Row`][flet.Row] - a container to display `TextField` and `Button` horizontally.
 
 Create `chat.py` with the following contents:
 
@@ -81,13 +81,13 @@ def main(page: ft.Page):
         page.update()
 
     page.add(
-        chat, ft.Row(controls=[new_message, ft.ElevatedButton("Send", on_click=send_click)])
+        chat, ft.Row(controls=[new_message, ft.Button("Send", on_click=send_click)])
     )
 
 ft.run(main)
 ```
 
-When user clicks on the "Send" button, it triggers [`on_click`][flet.ElevatedButton.on_click] event which calls `send_click` method. `send_click`
+When user clicks on the "Send" button, it triggers [`on_click`][flet.Button.on_click] event which calls `send_click` method. `send_click`
 then adds new [`Text`][flet.Text] control to the list of [`Column.controls`][flet.Column.controls] and clears `new_message` text field value.
 
 /// admonition | Note
@@ -142,7 +142,7 @@ Finally, you need to call `pubsub.send_all()` method when the user clicks on "Se
         new_message.value = ""
         page.update()
 
-    page.add(chat, ft.Row([new_message, ft.ElevatedButton("Send", on_click=send_click)]))
+    page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
 ```
 
 `pubsub.send_all()` will call the `on_message()` and pass on the Message object down to it.
@@ -173,7 +173,7 @@ def main(page: ft.Page):
         new_message.value = ""
         page.update()
 
-    page.add(chat, ft.Row([new_message, ft.ElevatedButton("Send", on_click=send_click)]))
+    page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
 
 ft.run(main)
 ```
@@ -199,7 +199,7 @@ we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the 
         modal=True,
         title=ft.Text("Welcome!"),
         content=ft.Column([user_name], tight=True),
-        actions=[ft.ElevatedButton(text="Join chat", on_click=join_click)],
+        actions=[ft.Button(text="Join chat", on_click=join_click)],
         actions_alignment="end",
     )
 ```
@@ -384,7 +384,7 @@ Other improvements suggested with the new layout are:
 
 * [`ListView`][flet.ListView] instead of [`Column`][flet.Column] for displaying messages, to be able to scroll through the messages later
 * [`Container`][flet.Container] for displaying border around [`ListView`][flet.ListView]
-* [`IconButton`][flet.IconButton] instead of [`ElevatedButton`][flet.ElevatedButton] to send messages
+* [`IconButton`][flet.IconButton] instead of [`Button`][flet.Button] to send messages
 * Use of [`expand`][flet.Control.expand] property for controls to fill available space
 
 Here is how you can implement this layout:

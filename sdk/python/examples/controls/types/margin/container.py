@@ -9,7 +9,7 @@ def main(page: ft.Page):
             spacing=0,
             controls=[
                 ft.Container(
-                    content=ft.ElevatedButton("container_1"),
+                    content=ft.Button("container_1"),
                     bgcolor=ft.Colors.AMBER,
                     # padding=ft.Padding.all(10),
                     margin=ft.Margin.all(10),
@@ -17,7 +17,7 @@ def main(page: ft.Page):
                     height=200,
                 ),
                 ft.Container(
-                    content=ft.ElevatedButton("container_2"),
+                    content=ft.Button("container_2"),
                     bgcolor=ft.Colors.AMBER,
                     # padding=ft.Padding.all(20),
                     margin=ft.Margin.all(20),
@@ -25,7 +25,7 @@ def main(page: ft.Page):
                     height=200,
                 ),
                 ft.Container(
-                    content=ft.ElevatedButton("container_3"),
+                    content=ft.Button("container_3"),
                     bgcolor=ft.Colors.AMBER,
                     # padding=ft.Padding.symmetric(horizontal=10),
                     margin=ft.Margin.symmetric(vertical=10),
@@ -33,7 +33,7 @@ def main(page: ft.Page):
                     height=200,
                 ),
                 ft.Container(
-                    content=ft.ElevatedButton("container_4"),
+                    content=ft.Button("container_4"),
                     bgcolor=ft.Colors.AMBER,
                     # padding=ft.Padding.only(left=10),
                     margin=ft.Margin.only(left=10),

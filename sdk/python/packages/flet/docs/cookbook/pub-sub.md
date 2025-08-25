@@ -35,7 +35,7 @@ def main(page: ft.Page):
     messages = ft.Column()
     user = ft.TextField(hint_text="Your name", width=150)
     message = ft.TextField(hint_text="Your message...", expand=True)  # fill all the space
-    send = ft.ElevatedButton("Send", on_click=send_click)
+    send = ft.Button("Send", on_click=send_click)
     page.add(messages, ft.Row(controls=[user, message, send]))
 
 ft.run(main, view=ft.AppView.WEB_BROWSER)

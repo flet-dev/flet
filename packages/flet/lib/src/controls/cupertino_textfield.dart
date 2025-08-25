@@ -314,11 +314,11 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     }
 
     if (widget.control.getExpand("expand", 0)! > 0) {
-      return ConstrainedControl(control: widget.control, child: textField);
+      return LayoutControl(control: widget.control, child: textField);
     } else {
       double? width = widget.control.getDouble("width");
 
-      return ConstrainedControl(
+      return LayoutControl(
         control: widget.control,
         child: width == null
             ? ConstrainedBox(

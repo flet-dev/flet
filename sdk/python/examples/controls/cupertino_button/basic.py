@@ -27,14 +27,14 @@ def main(page: ft.Page):
             opacity_on_click=0.5,
             content=ft.Text("Disabled CupertinoButton"),
         ),
-        ft.ElevatedButton(
+        ft.Button(
             adaptive=True,
             bgcolor=ft.CupertinoColors.SYSTEM_TEAL,
             content=ft.Row(
                 tight=True,
                 controls=[
                     ft.Icon(ft.Icons.FAVORITE, color="pink"),
-                    ft.Text("ElevatedButton+adaptive"),
+                    ft.Text("Button+adaptive"),
                 ],
             ),
         ),

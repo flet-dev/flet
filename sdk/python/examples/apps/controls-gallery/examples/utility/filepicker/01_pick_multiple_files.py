@@ -14,7 +14,7 @@ def example():
                 self.pick_files_dialog.pick_files(allow_multiple=True)
 
             self.controls = [
-                ft.ElevatedButton(
+                ft.Button(
                     "Pick files",
                     icon=ft.Icons.UPLOAD_FILE,
                     on_click=pick_files,
@@ -28,12 +28,14 @@ def example():
             )
             self.selected_files.update()
 
-        # happens when example is added to the page (when user chooses the FilePicker control from the grid)
+        # happens when example is added to the page (when user chooses
+        # the FilePicker control from the grid)
         def did_mount(self):
             self.page.overlay.append(self.pick_files_dialog)
             self.page.update()
 
-        # happens when example is removed from the page (when user chooses different control group on the navigation rail)
+        # happens when example is removed from the page (when user chooses
+        # different control group on the navigation rail)
         def will_unmount(self):
             self.page.overlay.remove(self.pick_files_dialog)
             self.page.update()

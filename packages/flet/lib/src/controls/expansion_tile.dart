@@ -103,6 +103,6 @@ class ExpansionTileControl extends StatelessWidget {
       children: controls,
     );
 
-    return ConstrainedControl(control: control, child: tile);
+    return LayoutControl(control: control, child: tile);
   }
 }

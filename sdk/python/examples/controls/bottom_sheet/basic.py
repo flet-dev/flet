@@ -17,14 +17,14 @@ def main(page: ft.Page):
                 tight=True,
                 controls=[
                     ft.Text("Here is a bottom sheet!"),
-                    ft.ElevatedButton("Dismiss", on_click=lambda _: page.pop_dialog()),
+                    ft.Button("Dismiss", on_click=lambda _: page.pop_dialog()),
                 ],
             ),
         ),
     )
     page.overlay.append(sheet)
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Display bottom sheet",
             on_click=lambda e: page.show_dialog(sheet),
         )

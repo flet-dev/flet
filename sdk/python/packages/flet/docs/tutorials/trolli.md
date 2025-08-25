@@ -607,7 +607,7 @@ def login(self, e):
             [
                 user_name,
                 password,
-                ft.ElevatedButton(text="Login", on_click=close_dlg),
+                ft.Button(text="Login", on_click=close_dlg),
             ],
             tight=True,
         ),

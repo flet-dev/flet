@@ -25,7 +25,7 @@ def main(page: ft.Page):
         print("User ID:", page.auth.user.id)
 
     page.on_login = on_login
-    page.add(ft.ElevatedButton("Login with GitHub", on_click=login_click))
+    page.add(ft.Button("Login with GitHub", on_click=login_click))
 
 
 ft.run(target=main, port=8550, view=ft.WEB_BROWSER)

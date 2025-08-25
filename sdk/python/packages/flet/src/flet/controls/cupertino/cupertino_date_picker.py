@@ -4,15 +4,15 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
 
 __all__ = [
     "CupertinoDatePicker",
-    "CupertinoDatePickerMode",
     "CupertinoDatePickerDateOrder",
+    "CupertinoDatePickerMode",
 ]
 
 
@@ -31,7 +31,7 @@ class CupertinoDatePickerDateOrder(Enum):
 
 
 @control("CupertinoDatePicker")
-class CupertinoDatePicker(ConstrainedControl):
+class CupertinoDatePicker(LayoutControl):
     """
     An iOS-styled date picker.
     """
@@ -52,7 +52,8 @@ class CupertinoDatePicker(ConstrainedControl):
     Defaults to `None` - no limit.
 
     When not `None` (no limit), one can still scroll the picker to dates earlier than
-    `first_date`, with the exception that the [`on_change`][flet.CupertinoDatePicker.on_change] will not be called.
+    `first_date`, with the exception that the
+    [`on_change`][flet.CupertinoDatePicker.on_change] will not be called.
     Once let go, the picker will scroll back to `first_date`.
 
     In `CupertinoDatePickerMode.TIME` mode, a time becomes unselectable if the
@@ -69,7 +70,8 @@ class CupertinoDatePicker(ConstrainedControl):
     `last_date`, with the exception that the `on_change` will not be called.
     Once let go, the picker will scroll back to `last_date`.
 
-    In [`CupertinoDatePickerMode.TIME`][flet.CupertinoDatePickerMode.TIME] mode, a time becomes unselectable if the
+    In [`CupertinoDatePickerMode.TIME`][flet.CupertinoDatePickerMode.TIME] mode,
+    a time becomes unselectable if the
     datetime produced by combining that particular time and the date part of
     initialDateTime is later than `last_date`. So typically `last_date` needs to
     be set to a datetime that is on the same date as initialDateTime.
@@ -133,18 +135,20 @@ class CupertinoDatePicker(ConstrainedControl):
 
     Note:
         The final order in which the columns are displayed is also influenced by
-        the [`date_picker_mode`][flet.CupertinoDatePicker.date_picker_mode]. For example, if
-        `date_picker_mode` is [`CupertinoDatePickerMode.MONTH_YEAR`][flet.CupertinoDatePickerMode.MONTH_YEAR]
+        the [`date_picker_mode`][flet.CupertinoDatePicker.date_picker_mode].
+        For example,if `date_picker_mode` is
+        [`CupertinoDatePickerMode.MONTH_YEAR`][flet.CupertinoDatePickerMode.MONTH_YEAR]
         both [`CupertinoDatePickerDateOrder.DAY_MONTH_YEAR`][flet.CupertinoDatePickerDateOrder.DAY_MONTH_YEAR] and
         [`CupertinoDatePickerDateOrder.MONTH_DAY_YEAR`][flet.CupertinoDatePickerDateOrder.MONTH_DAY_YEAR] will result in the month|year order.
-    """
+    """  # noqa: E501
 
     on_change: Optional[ControlEventHandler["CupertinoDatePicker"]] = None
     """
     Called when the selected date and/or time changes.
 
     Will not fire if the new
-    selected value is not valid, or is not in the range of [`first_date`][flet.CupertinoDatePicker.first_date] and
+    selected value is not valid, or is not in the range of
+    [`first_date`][flet.CupertinoDatePicker.first_date] and
     [`last_date`][flet.CupertinoDatePicker.last_date].
     """
 
@@ -161,7 +165,8 @@ class CupertinoDatePicker(ConstrainedControl):
             f"item_extent must be strictly greater than 0, got {self.item_extent}"
         )
         assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
-            f"minute_interval must be a positive integer factor of 60, got {self.minute_interval}"
+            f"minute_interval must be a positive integer factor of 60, "
+            f"got {self.minute_interval}"
         )
 
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
@@ -201,7 +206,8 @@ class CupertinoDatePicker(ConstrainedControl):
 
         if self.date_picker_mode != CupertinoDatePickerMode.DATE:
             assert not self.show_day_of_week, (
-                "show_day_of_week is only supported when date_picker_mode is CupertinoDatePickerMode.DATE"
+                "show_day_of_week is only supported when date_picker_mode is "
+                "CupertinoDatePickerMode.DATE"
             )
 
         assert value.minute % self.minute_interval == 0, (

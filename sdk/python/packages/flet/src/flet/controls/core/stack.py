@@ -5,8 +5,8 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ClipBehavior
 
 __all__ = ["Stack", "StackFit"]
@@ -19,9 +19,10 @@ class StackFit(Enum):
 
 
 @control("Stack")
-class Stack(ConstrainedControl, AdaptiveControl):
+class Stack(LayoutControl, AdaptiveControl):
     """
-    Positions its children on top of each other, following a LIFO (Last In First Out) order.
+    Positions its children on top of each other, following a LIFO (Last In First Out)
+    order.
 
     This control is useful if you want to overlap several children in a simple way.
     For example having some text and an image, overlaid with a gradient and a button
@@ -48,8 +49,8 @@ class Stack(ConstrainedControl, AdaptiveControl):
     alignment: Optional[Alignment] = None
     """
     Specifies the alignment for non-positioned (those without explicit
-    alignment properties such as [`top`][flet.ConstrainedControl.top]
-    or [`bottom`][flet.ConstrainedControl.bottom]) and
+    alignment properties such as [`top`][flet.LayoutControl.top]
+    or [`bottom`][flet.LayoutControl.bottom]) and
     partially-positioned [`controls`][flet.Stack.controls].
     """
 

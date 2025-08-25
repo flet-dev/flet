@@ -49,6 +49,6 @@ class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
       },
     );
 
-    return ConstrainedControl(control: control, child: button);
+    return LayoutControl(control: control, child: button);
   }
 }

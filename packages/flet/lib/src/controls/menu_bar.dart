@@ -27,6 +27,6 @@ class _MenuBarControlState extends State<MenuBarControl> {
             widget.control.getClipBehavior("clip_behavior", Clip.none)!,
         children: controls);
 
-    return ConstrainedControl(control: widget.control, child: menuBar);
+    return LayoutControl(control: widget.control, child: menuBar);
   }
 }

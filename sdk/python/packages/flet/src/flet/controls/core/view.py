@@ -3,11 +3,11 @@ from typing import Optional, Union
 
 from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
@@ -28,7 +28,7 @@ __all__ = ["View"]
 
 
 @control("View")
-class View(ScrollableControl, ConstrainedControl):
+class View(ScrollableControl, LayoutControl):
     """
     View is the top most container for all other controls.
 

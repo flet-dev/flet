@@ -1,17 +1,17 @@
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 
 __all__ = ["SafeArea"]
 
 
 @control("SafeArea")
-class SafeArea(ConstrainedControl, AdaptiveControl):
+class SafeArea(LayoutControl, AdaptiveControl):
     """
-    A control that insets its [`content`][(c).] by sufficient padding to avoid intrusions by
-    the operating system.
+    A control that insets its [`content`][(c).] by sufficient padding to avoid
+    intrusions by the operating system.
 
     For example, this will indent the `content` by enough to avoid the status bar at
     the top of the screen.
@@ -19,8 +19,8 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     It will also indent the `content` by the amount necessary to avoid the Notch on the
     iPhone X, or other similar creative physical features of the display.
 
-    When a [`minimum_padding`][(c).] is specified, the greater of the minimum padding or the
-    safe area padding will be applied.
+    When a [`minimum_padding`][(c).] is specified, the greater of the minimum padding
+    or the safe area padding will be applied.
 
     Raises:
         AssertionError: If [`content`][(c).] is not visible.

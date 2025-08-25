@@ -159,6 +159,6 @@ class _PageletControlState extends State<PageletControl> {
           child: scaffold);
     }
 
-    return ConstrainedControl(control: widget.control, child: scaffold);
+    return LayoutControl(control: widget.control, child: scaffold);
   }
 }

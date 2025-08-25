@@ -2,10 +2,10 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "ElevatedButton Example"
+    page.title = "Button Example"
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             width=150,
             content=ft.Row(
                 alignment=ft.MainAxisAlignment.SPACE_AROUND,
@@ -16,7 +16,7 @@ def main(page: ft.Page):
                 ],
             ),
         ),
-        ft.ElevatedButton(
+        ft.Button(
             content=ft.Container(
                 padding=ft.Padding.all(10),
                 content=ft.Column(

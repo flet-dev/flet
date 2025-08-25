@@ -4,8 +4,8 @@ from flet.controls.base_page import PageResizeEvent
 from flet.controls.control_event import ControlEvent, Event, get_event_field_type
 from flet.controls.core.column import Column
 from flet.controls.events import TapEvent
+from flet.controls.material.button import Button
 from flet.controls.material.container import Container
-from flet.controls.material.elevated_button import ElevatedButton
 from flet.controls.material.reorderable_list_view import (
     OnReorderEvent,
     ReorderableListView,
@@ -20,10 +20,10 @@ from flet.utils.from_dict import from_dict
 
 
 def test_get_event_field_type():
-    btn = ElevatedButton()
+    btn = Button()
     on_click_type = get_event_field_type(btn, "on_click")
     assert get_origin(on_click_type) is Event
-    assert get_args(on_click_type)[0] == ForwardRef("ElevatedButton")
+    assert get_args(on_click_type)[0] == ForwardRef("Button")
 
     c = Container()
     on_tap_down_type = get_event_field_type(c, "on_tap_down")

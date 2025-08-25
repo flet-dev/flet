@@ -2,7 +2,6 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import EventHandler
 from flet.controls.events import (
@@ -19,20 +18,21 @@ from flet.controls.events import (
     ScrollEvent,
     TapEvent,
 )
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor, PointerDeviceType
 
 __all__ = ["GestureDetector"]
 
 
 @control("GestureDetector")
-class GestureDetector(ConstrainedControl, AdaptiveControl):
+class GestureDetector(LayoutControl, AdaptiveControl):
     """
     A control that detects gestures.
 
     Attempts to recognize gestures that correspond to its non-None callbacks.
 
-    If this control has a [`content`][(c).], it defers to that child control for its sizing
-    behavior, else it grows to fit the parent instead.
+    If this control has a [`content`][(c).], it defers to that child control for
+    its sizing behavior, else it grows to fit the parent instead.
     """
 
     content: Optional[Control] = None
@@ -89,14 +89,14 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_tap_down: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
-    Called when a pointer that might cause a tap with a primary button has contacted the screen
-    at a particular location.
+    Called when a pointer that might cause a tap with a primary button has contacted
+    the screen at a particular location.
     """
 
     on_tap_up: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
-    Called when a pointer that will trigger a tap with a primary button has stopped contacting the
-    screen at a particular location.
+    Called when a pointer that will trigger a tap with a primary button has stopped
+    contacting the screen at a particular location.
     """
 
     on_multi_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
@@ -118,14 +118,14 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_secondary_tap_down: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
-    Called when a pointer that might cause a tap with a secondary button has contacted the screen
-    at a particular location.
+    Called when a pointer that might cause a tap with a secondary button has contacted
+    the screen at a particular location.
     """
 
     on_secondary_tap_up: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
-    Called when a pointer that will trigger a tap with a secondary button has stopped contacting the
-    screen at a particular location.
+    Called when a pointer that will trigger a tap with a secondary button has stopped
+    contacting the screen at a particular location.
     """
 
     on_long_press_start: Optional[
@@ -142,8 +142,8 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         None
     )
     """
-    Called when a pointer that has triggered a long-press with a primary button has stopped
-    contacting the screen.
+    Called when a pointer that has triggered a long-press with a primary button has
+    stopped contacting the screen.
     """
 
     on_secondary_long_press_start: Optional[
@@ -160,8 +160,8 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         EventHandler[LongPressEndEvent["GestureDetector"]]
     ] = None
     """
-    Called when a pointer that has triggered a long-press with a secondary button has stopped
-    contacting the screen.
+    Called when a pointer that has triggered a long-press with a secondary button has
+    stopped contacting the screen.
     """
 
     on_double_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
@@ -172,8 +172,8 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_double_tap_down: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
-    Called when a pointer that might cause a double tap has contacted the screen at a particular
-    location.
+    Called when a pointer that might cause a double tap has contacted the screen at
+    a particular location.
 
     Triggered immediately after the down event of the second tap.
     """
@@ -182,24 +182,24 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         EventHandler[DragStartEvent["GestureDetector"]]
     ] = None
     """
-    Called when a pointer has contacted the screen with a primary button and has begun to move
-    horizontally.
+    Called when a pointer has contacted the screen with a primary button and has
+    begun to move horizontally.
     """
 
     on_horizontal_drag_update: Optional[
         EventHandler[DragUpdateEvent["GestureDetector"]]
     ] = None
     """
-    Called when a pointer that is in contact with the screen and moving horizontally has moved in
-    the horizontal direction.
+    Called when a pointer that is in contact with the screen and moving horizontally
+    has moved in the horizontal direction.
     """
 
     on_horizontal_drag_end: Optional[EventHandler[DragEndEvent["GestureDetector"]]] = (
         None
     )
     """
-    Called when a pointer moving horizontally is no longer in contact and was moving at a specific
-    velocity.
+    Called when a pointer moving horizontally is no longer in contact and was
+    moving at a specific velocity.
     """
 
     on_vertical_drag_start: Optional[
@@ -218,8 +218,8 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_vertical_drag_end: Optional[EventHandler[DragEndEvent["GestureDetector"]]] = None
     """
-    Called when a pointer moving vertically is no longer in contact and was moving at a specific
-    velocity.
+    Called when a pointer moving vertically is no longer in contact and was
+    moving at a specific velocity.
     """
 
     on_pan_start: Optional[EventHandler[DragStartEvent["GestureDetector"]]] = None
@@ -257,8 +257,8 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     on_scale_start: Optional[EventHandler[ScaleStartEvent["GestureDetector"]]] = None
     """
-    Called when the pointers in contact with the screen have established a focal point and initial
-    scale of `1.0`.
+    Called when the pointers in contact with the screen have established a focal
+    point and initial scale of `1.0`.
     """
 
     on_scale_update: Optional[EventHandler[ScaleUpdateEvent["GestureDetector"]]] = None

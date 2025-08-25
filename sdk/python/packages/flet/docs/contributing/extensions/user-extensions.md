@@ -146,7 +146,7 @@ class FletSpinkitControl extends StatelessWidget {
     );
 
 
-    return constrainedControl(context, myControl, parent, control);
+    return LayoutControl(context, myControl, parent, control);
   }
 }
 ```
@@ -326,17 +326,17 @@ Generally, there are two types of controls in Flet:
 
 Flet `Control` class has properties common for all controls such as `visible`, `opacity` and `tooltip`, to name a few.
 
-Flet `ConstrainedControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
+Flet `LayoutControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
 
 When creating non-visual control, your Python control should be inherited from ['Control](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/control.py). Then, to be able to use `Control` properties in your app, you need to add them to the constructor of your Python Control. In its dart counterpart (`src/flet_spinkit.dart`) use `baseControl()` to wrap your Flutter widget.
 
-When creating visual control, your Python control should be inherited from [`ConstrainedControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/constrained_control.py). In its dart counterpart (`src/flet_spinkit.dart`) use `constrainedControl()`  to wrap your Flutter widget.
+When creating visual control, your Python control should be inherited from [`LayoutControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/layout_control.py). In its dart counterpart (`src/flet_spinkit.dart`) use `LayoutControl()` to wrap your Flutter widget.
 
-Then, to be able to use `Control` and `ConstrainedControl` properties in your app, you need to add them to the constructor of your Python Control.
+Then, to be able to use `Control` and `LayoutControl` properties in your app, you need to add them to the constructor of your Python Control.
 
 See reference for the common Control properties [here](https://flet.dev/docs/controls).
 
-If you have created your extension project from Flet extension template, your Python Control is already inherited from `ConstrainedControl` and you can use its properties in your example app:
+If you have created your extension project from Flet extension template, your Python Control is already inherited from `LayoutControl` and you can use its properties in your example app:
 
 ```python
 import flet as ft
@@ -365,7 +365,7 @@ ft.run(main)
 
 ### Control-specific properties
 
-Now that you have taken full advantage of the properties Flet `Control` and `ConstrainedControl` offer, let's define the properties that are specific to the new Control you are building.
+Now that you have taken full advantage of the properties Flet `Control` and `LayoutControl` offer, let's define the properties that are specific to the new Control you are building.
 
 In the FletSpinkit example, let's define its `color` and `size`.
 
@@ -375,12 +375,12 @@ In Python class, define new `color` and `size` properties:
 from enum import Enum
 from typing import Any, Optional
 
-from flet.core.constrained_control import ConstrainedControl
+from flet.core.layout_control import LayoutControl
 from flet.core.control import OptionalNumber
 from flet.core.types import ColorEnums, ColorValue
 
 
-class FletSpinkit(ConstrainedControl):
+class FletSpinkit(LayoutControl):
     """
     FletSpinkit Control.
     """
@@ -395,7 +395,7 @@ class FletSpinkit(ConstrainedControl):
         visible: Optional[bool] = None,
         data: Any = None,
         #
-        # ConstrainedControl
+        # LayoutControl
         #
         left: OptionalNumber = None,
         top: OptionalNumber = None,
@@ -407,7 +407,7 @@ class FletSpinkit(ConstrainedControl):
         color: Optional[ColorValue] = None,
         size: OptionalNumber = None,
     ):
-        ConstrainedControl.__init__(
+        LayoutControl.__init__(
             self,
             tooltip=tooltip,
             opacity=opacity,
@@ -472,7 +472,7 @@ class FletSpinkitControl extends StatelessWidget {
     );
 
 
-    return constrainedControl(context, myControl, parent, control);
+    return LayoutControl(context, myControl, parent, control);
   }
 }
 ```
@@ -597,9 +597,9 @@ In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/contr
 
 ##### Events
 
-For example, `on_click` event for `ElevatedButton`.
+For example, `on_click` event for `Button`.
 
-In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/elevated_button.py):
+In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/button.py):
 
 ```python
 # on_click
@@ -612,7 +612,7 @@ def on_click(self, handler):
     self._add_event_handler("click", handler)
 ```
 
-In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/elevated_button.dart):
+In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/button.dart):
 
 ```dart
 Function()? onPressed = !disabled

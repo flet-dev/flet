@@ -43,6 +43,6 @@ class _CupertinoTimerPickerControlState
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: picker);
+    return LayoutControl(control: widget.control, child: picker);
   }
 }

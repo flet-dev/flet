@@ -136,7 +136,7 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
                   : Row(children: [labelWidget, swtch])));
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
     //});
   }
 }

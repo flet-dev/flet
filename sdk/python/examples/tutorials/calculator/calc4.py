@@ -1,7 +1,7 @@
 import flet as ft
 
 
-class CalcButton(ft.ElevatedButton):
+class CalcButton(ft.Button):
     def __init__(self, text, expand=1):
         super().__init__()
         self.text = text
