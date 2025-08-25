@@ -94,23 +94,15 @@ ThemeData parseTheme(
     {ThemeData? parentTheme}) {
   ThemeData? theme = parentTheme;
 
-  var primarySwatch = parseColor(value?["primary_swatch"], theme);
-  var colorSchemeSeed = parseColor(value?["color_scheme_seed"], theme);
-
-  if (colorSchemeSeed != null) primarySwatch = null;
-
-  if (colorSchemeSeed == null && primarySwatch == null) {
-    colorSchemeSeed = Colors.blue;
-  }
+  var colorSchemeSeed =
+      parseColor(value?["color_scheme_seed"], theme) ?? Colors.blue;
 
   // create new theme
   theme ??= ThemeData(
-    primarySwatch:
-        primarySwatch != null ? primarySwatch as MaterialColor : null,
     colorSchemeSeed: colorSchemeSeed,
     fontFamily: value?["font_family"],
     brightness: brightness,
-    useMaterial3: value?["use_material3"] ?? primarySwatch == null,
+    useMaterial3: value?["use_material3"],
   );
 
   theme = theme.copyWith(
@@ -144,9 +136,6 @@ ThemeData parseTheme(
     hintColor: parseColor(value?["hint_color"], theme),
     shadowColor: parseColor(value?["shadow_color"], theme),
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
-    primaryColor: parseColor(value?["primary_color"], theme),
-    primaryColorLight: parseColor(value?["primary_color_light"], theme),
-    primaryColorDark: parseColor(value?["primary_color_dark"], theme),
     dialogTheme: parseDialogTheme(value?["dialog_theme"], theme),
     bottomSheetTheme:
         parseBottomSheetTheme(value?["bottom_sheet_theme"], theme),

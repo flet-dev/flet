@@ -3322,8 +3322,16 @@ class DataTableTheme:
 
 @dataclass
 class Theme:
+    """
+    Customizes the overall appearance of the application.
+    """
+
     color_scheme_seed: Optional[ColorValue] = None
-    primary_swatch: Optional[ColorValue] = None
+    """
+    Overrides the default color scheme seed used to generate
+    [`ColorScheme`][flet.ColorScheme]. The default color is blue.
+    """
+
     font_family: Optional[str] = None
     use_material3: Optional[bool] = None
     appbar_theme: Optional[AppBarTheme] = None
