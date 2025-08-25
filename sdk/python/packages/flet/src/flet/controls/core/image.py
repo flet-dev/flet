@@ -43,19 +43,16 @@ class Image(LayoutControl):
     [Here](https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/image/image-base64.py)
     is an example.
 
-    /// details | Tip
-        type: tip
-
-    - Use `base64` command (on Linux, macOS or WSL) to convert file to Base64 format:
-        ```bash
-        base64 -i <image.png> -o <image-base64.txt>
-        ```
-
-    - On Windows you can use PowerShell to encode string into Base64 format:
-        ```posh
-        [convert]::ToBase64String((Get-Content -path "your_file_path" -Encoding byte))
-        ```
-    ///
+    Tip:
+        - Use `base64` command (on Linux, macOS or WSL) to convert
+            file to Base64 format:
+            ```bash
+            base64 -i <image.png> -o <image-base64.txt>
+            ```
+        - On Windows you can use PowerShell to encode string into Base64 format:
+            ```posh
+            [convert]::ToBase64String((Get-Content -path "your_file_path" -Encoding byte))
+            ```
     """
 
     src_bytes: Optional[bytes] = None
@@ -149,3 +146,16 @@ class Image(LayoutControl):
     def init(self):
         super().init()
         self._internals["skip_properties"] = ["width", "height"]
+
+    async def clear_cache(self):
+        """
+        Evicts all pending and keepAlive entries from the cache.
+
+        This is useful if, for instance, an image source (for example, a file) has been
+        updated and therefore the new image must be obtained.
+
+        Note:
+            Images which have not finished loading yet will not be removed from
+            the cache, and when they complete they will be inserted as normal.
+        """
+        await self._invoke_method("clear_cache")
