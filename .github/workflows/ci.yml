@@ -259,6 +259,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
@@ -357,6 +360,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -587,6 +593,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: dist
+
       - name: Create/Update Release
         uses: softprops/action-gh-release@v2
         with:
