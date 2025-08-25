@@ -3354,7 +3354,18 @@ class Theme:
     data_table_theme: Optional[DataTableTheme] = None
     date_picker_theme: Optional[DatePickerTheme] = None
     dialog_theme: Optional[DialogTheme] = None
+    """
+    Customizes the appearance of [`AlertDialog`][flet.AlertDialog] across the app.
+    """
+
     divider_theme: Optional[DividerTheme] = None
+    """
+    Defines the visual properties of [`Divider`][flet.Divider],
+    [`VerticalDivider`][flet.VerticalDivider], dividers between
+    [`ListTile`][flet.ListTile]s, and dividers between rows in
+    [`DataTable`][flet.DataTable].
+    """
+
     dropdown_theme: Optional[DropdownTheme] = None
     button_theme: Optional[ButtonTheme] = None
     outlined_button_theme: Optional[OutlinedButtonTheme] = None

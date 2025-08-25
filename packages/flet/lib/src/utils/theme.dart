@@ -106,6 +106,8 @@ ThemeData parseTheme(
   );
 
   ColorScheme? colorScheme = parseColorScheme(value?["color_scheme"], theme);
+  DividerThemeData? dividerTheme =
+      parseDividerTheme(value?["divider_theme"], theme);
 
   theme = theme.copyWith(
     extensions: {
@@ -134,7 +136,7 @@ ThemeData parseTheme(
     canvasColor: parseColor(value?["canvas_color"], theme),
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
     cardColor: parseColor(value?["card_bgcolor"], theme),
-    dividerColor: parseColor(value?["divider_color"], theme),
+    dividerColor: dividerTheme?.color,
     hintColor: parseColor(value?["hint_color"], theme),
     shadowColor: colorScheme?.shadow,
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
@@ -151,7 +153,7 @@ ThemeData parseTheme(
     radioTheme: parseRadioTheme(value?["radio_theme"], theme),
     badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
     switchTheme: parseSwitchTheme(value?["switch_theme"], context),
-    dividerTheme: parseDividerTheme(value?["divider_theme"], theme),
+    dividerTheme: dividerTheme,
     snackBarTheme: parseSnackBarTheme(value?["snackbar_theme"], theme),
     bannerTheme: parseBannerTheme(value?["banner_theme"], theme),
     datePickerTheme: parseDatePickerTheme(value?["date_picker_theme"], theme),
