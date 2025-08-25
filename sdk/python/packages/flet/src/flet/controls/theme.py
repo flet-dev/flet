@@ -3342,7 +3342,15 @@ class Theme:
     card_theme: Optional[CardTheme] = None
     checkbox_theme: Optional[CheckboxTheme] = None
     chip_theme: Optional[ChipTheme] = None
+    """
+    Customizes the appearance of [`Chip`][flet.Chip] across the app.
+    """
+
     color_scheme: Optional[ColorScheme] = None
+    """
+    Overrides the default [`ColorScheme`][flet.ColorScheme] used for the application.
+    """
+
     data_table_theme: Optional[DataTableTheme] = None
     date_picker_theme: Optional[DatePickerTheme] = None
     dialog_theme: Optional[DialogTheme] = None
@@ -3373,11 +3381,7 @@ class Theme:
     card_bgcolor: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
     secondary_header_color: Optional[ColorValue] = None
-    primary_color: Optional[ColorValue] = None
-    primary_color_dark: Optional[ColorValue] = None
-    primary_color_light: Optional[ColorValue] = None
     primary_text_theme: Optional[TextTheme] = None
     progress_indicator_theme: Optional[ProgressIndicatorTheme] = None
     radio_theme: Optional[RadioTheme] = None

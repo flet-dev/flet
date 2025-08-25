@@ -105,6 +105,8 @@ ThemeData parseTheme(
     useMaterial3: value?["use_material3"],
   );
 
+  ColorScheme? colorScheme = parseColorScheme(value?["color_scheme"], theme);
+
   theme = theme.copyWith(
     extensions: {
       SystemUiOverlayStyleTheme(value?["system_overlay_style"] != null
@@ -116,7 +118,7 @@ ThemeData parseTheme(
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
     pageTransitionsTheme: parsePageTransitions(
         value?["page_transitions"], theme.pageTransitionsTheme)!,
-    colorScheme: parseColorScheme(value?["color_scheme"], theme),
+    colorScheme: colorScheme,
     textTheme: parseTextTheme(value?["text_theme"], theme, theme.textTheme),
     primaryTextTheme: parseTextTheme(
         value?["primary_text_theme"], theme, theme.primaryTextTheme),
@@ -134,7 +136,7 @@ ThemeData parseTheme(
     cardColor: parseColor(value?["card_bgcolor"], theme),
     dividerColor: parseColor(value?["divider_color"], theme),
     hintColor: parseColor(value?["hint_color"], theme),
-    shadowColor: parseColor(value?["shadow_color"], theme),
+    shadowColor: colorScheme?.shadow,
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
     dialogTheme: parseDialogTheme(value?["dialog_theme"], theme),
     bottomSheetTheme:
