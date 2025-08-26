@@ -9,6 +9,7 @@ async def test_dropdown_basic(flet_app: ftt.FletTestApp, request):
     colors = [ft.Colors.RED, ft.Colors.BLUE, ft.Colors.GREEN]
     dd = ft.Dropdown(
         label="Color",
+        text="Select a color",
         options=[
             ft.DropdownOption(
                 key=color.value, content=ft.Text(value=color.value, color=color)
