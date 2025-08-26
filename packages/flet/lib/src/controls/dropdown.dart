@@ -22,8 +22,7 @@ class _DropdownControlState extends State<DropdownControl> {
     super.initState();
     _focusNode = FocusNode();
 
-    _controller =
-        TextEditingController(text: widget.control.getString("value"));
+    _controller = TextEditingController(text: widget.control.getString("text"));
     _focusNode.addListener(_onFocusChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
 
@@ -32,9 +31,9 @@ class _DropdownControlState extends State<DropdownControl> {
 
   void _onTextChange() {
     debugPrint("Typed text: ${_controller.text}");
-    if (_controller.text != widget.control.getString("value")) {
-      widget.control.updateProperties({"value": _controller.text});
-      widget.control.triggerEvent("text_change", _controller.text);
+    if (_controller.text != widget.control.getString("text")) {
+      widget.control.updateProperties({"text": _controller.text});
+      widget.control.triggerEvent("change", _controller.text);
     }
   }
 
@@ -224,7 +223,7 @@ class _DropdownControlState extends State<DropdownControl> {
           ? null
           : (String? value) {
               widget.control.updateProperties({"value": value});
-              widget.control.triggerEvent("change", value);
+              widget.control.triggerEvent("select", value);
             },
       dropdownMenuEntries: items,
     );

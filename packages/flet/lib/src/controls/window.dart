@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -425,6 +424,24 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   void onWindowEvent(String eventName) {
     if (["resize", "resized", "move"].contains(eventName)) return;
     getWindowState().then((state) {
+      _width = state.width;
+      _height = state.height;
+      _top = state.top;
+      _left = state.left;
+      _opacity = state.opacity;
+      _minimized = state.minimized;
+      _maximized = state.maximized;
+      _minimizable = state.minimizable;
+      _maximizable = state.maximizable;
+      _fullScreen = state.fullScreen;
+      _resizable = state.resizable;
+      _alwaysOnTop = state.alwaysOnTop;
+      _preventClose = state.preventClose;
+      _visible = state.visible;
+      _focused = state.focused;
+      _skipTaskBar = state.skipTaskBar;
+
+      // notify
       widget.control.backend.onWindowEvent(eventName, state);
     });
   }

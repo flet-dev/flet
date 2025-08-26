@@ -1,7 +1,6 @@
 import argparse
 import os
 import platform
-import shutil
 import signal
 import subprocess
 import sys
@@ -12,6 +11,9 @@ from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
 from flet.utils import (
     get_free_tcp_port,
     get_local_ip,
@@ -21,8 +23,6 @@ from flet.utils import (
 )
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 
 
 class Command(BaseCommand):
@@ -195,12 +195,7 @@ class Command(BaseCommand):
         )
 
         flet_app_data_dir = project_dir / "storage" / "data"
-        flet_app_data_dir.mkdir(parents=True, exist_ok=True)
-
         flet_app_temp_dir = project_dir / "storage" / "temp"
-        if flet_app_temp_dir.exists():
-            shutil.rmtree(str(flet_app_temp_dir), ignore_errors=True)
-        flet_app_temp_dir.mkdir(parents=True, exist_ok=True)
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
