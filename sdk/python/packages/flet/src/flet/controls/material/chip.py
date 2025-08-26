@@ -29,9 +29,9 @@ class Chip(LayoutControl):
 
     Raises:
         AssertionError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is
-        negative.
+            negative.
         AssertionError: If callback for both [`on_click`][(c).] and [`on_select`][(c).]
-        are specified.
+            are specified.
     """
 
     label: StrOrControl
