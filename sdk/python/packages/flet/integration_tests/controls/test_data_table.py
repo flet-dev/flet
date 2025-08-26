@@ -57,7 +57,11 @@ async def test_theme(flet_app: ftt.FletTestApp):
                 bgcolor=ft.Colors.PURPLE_100,
                 border=ft.Border.all(color=ft.Colors.RED),
             ),
-        )
+        ),
+        divider_theme=ft.DividerTheme(
+            color=ft.Colors.GREEN,
+            thickness=5,
+        ),
     )
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400

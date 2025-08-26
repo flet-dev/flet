@@ -2225,8 +2225,7 @@ class TimePickerTheme:
 @dataclass
 class DropdownTheme:
     """
-    Overrides the default values of visual properties for descendant
-    [`Dropdown`][flet.Dropdown] controls.
+    Customizes the appearance of [`Dropdown`][flet.Dropdown] across the app.
     """
 
     menu_style: Optional[MenuStyle] = None
@@ -3367,6 +3366,10 @@ class Theme:
     """
 
     dropdown_theme: Optional[DropdownTheme] = None
+    """
+    Customizes the appearance of [`Dropdown`][flet.Dropdown] across the app.
+    """
+
     button_theme: Optional[ButtonTheme] = None
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
     text_button_theme: Optional[TextButtonTheme] = None
@@ -3390,7 +3393,6 @@ class Theme:
     canvas_color: Optional[ColorValue] = None
     scaffold_bgcolor: Optional[ColorValue] = None
     card_bgcolor: Optional[ColorValue] = None
-    divider_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
     secondary_header_color: Optional[ColorValue] = None
     primary_text_theme: Optional[TextTheme] = None
