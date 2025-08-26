@@ -44,7 +44,6 @@ async def test_theme(flet_app: ftt.FletTestApp):
             trailing_indent=20,
         ),
     )
-    flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600
 
