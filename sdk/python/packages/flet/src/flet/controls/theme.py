@@ -2230,12 +2230,8 @@ class DropdownTheme:
 
     menu_style: Optional[MenuStyle] = None
     """
-    The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`,
-    `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle]
-    then they will override the default values for
-    [`DropdownMenu.elevation`][flet.Dropdown.elevation],
-    [`DropdownMenu.bgcolor`][flet.Dropdown.bgcolor] and
-    [`DropdownMenu.menu_width`][flet.Dropdown.menu_width].
+    Overrides the default value for
+    [`Dropdown.menu_style`][flet.Dropdown.menu_style].
     """
 
     text_style: Optional[TextStyle] = None

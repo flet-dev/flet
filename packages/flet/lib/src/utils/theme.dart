@@ -160,8 +160,7 @@ ThemeData parseTheme(
     navigationRailTheme:
         parseNavigationRailTheme(value?["navigation_rail_theme"], theme),
     appBarTheme: parseAppBarTheme(value?["appbar_theme"], theme),
-    dropdownMenuTheme:
-        parseDropdownMenuTheme(value?["dropdown_menu_theme"], theme),
+    dropdownMenuTheme: parseDropdownMenuTheme(value?["dropdown_theme"], theme),
     listTileTheme: parseListTileTheme(value?["list_tile_theme"], theme),
     tooltipTheme: parseTooltipTheme(value?["tooltip_theme"], context),
     expansionTileTheme:

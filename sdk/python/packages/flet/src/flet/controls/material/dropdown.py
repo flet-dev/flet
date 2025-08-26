@@ -10,6 +10,7 @@ from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons
+from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.textfield import InputFilter, TextCapitalization
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
@@ -146,6 +147,13 @@ class Dropdown(LayoutControl):
 
     If this is `None`, the menu width will be the same as
     input textfield width.
+    """
+
+    menu_style: Optional[MenuStyle] = None
+    """
+    The menu style that defines the visual attributes of the menu.
+
+    The default width of the menu is set to the width of the text field.
     """
 
     expanded_insets: Optional[PaddingValue] = None
