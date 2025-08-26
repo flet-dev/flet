@@ -11,7 +11,7 @@ __all__ = ["ServiceHost"]
 @control("ServiceHost")
 class ServiceHost(Control):
     """
-    Hosts services and make them available to children.
+    Hosts services and makes them available to children.
 
     Example:
 
