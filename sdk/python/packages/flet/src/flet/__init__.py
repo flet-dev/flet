@@ -114,6 +114,7 @@ from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
+from flet.controls.core.service_host import ServiceHost
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
 from flet.controls.core.state_view import StateView
@@ -828,6 +829,7 @@ __all__ = [
     "Semantics",
     "SemanticsService",
     "Service",
+    "ServiceHost",
     "ShaderMask",
     "ShakeDetector",
     "ShapeBorder",

@@ -40,4 +40,12 @@ class ServiceRegistry {
       }
     }
   }
+
+  void dispose() {
+    control.removeListener(_onServicesUpdated);
+    for (var service in _services.values) {
+      service.dispose();
+    }
+    _services.clear();
+  }
 }

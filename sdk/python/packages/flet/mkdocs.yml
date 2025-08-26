@@ -381,6 +381,7 @@ nav:
               - MergeSemantics: controls/mergesemantics.md
               - SelectionArea: controls/selectionarea.md
               - Semantics: controls/semantics.md
+              - ServiceHost: controls/servicehost.md
               - ShaderMask: controls/shadermask.md
               - Screenshot: controls/screenshot.md
               - StateView: controls/stateview.md
