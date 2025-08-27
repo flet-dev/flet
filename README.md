@@ -145,3 +145,24 @@ flet run --web counter.py
 ## Contributing
 
 Want to help improve Flet? Check out the [contribution guide](https://docs.flet.dev/contributing).
+
+
+<!-- GitHub Frontend Bot Testing Improvement Contribution -->
+
+This comment was added by GitHub Frontend Bot as part of a testing infrastructure improvement initiative.
+
+**Suggested Testing Improvements:**
+
+**Recommended Testing Stack:**
+- **pytest** - Modern, flexible testing framework
+- **unittest** - Built-in Python testing
+- **coverage.py** - Code coverage measurement
+- **tox** - Test automation across Python versions
+
+**Example setup:**
+```bash
+pip install pytest pytest-cov
+```
+
+---
+*Generated on 2025-08-27T18:34:23.220Z*
