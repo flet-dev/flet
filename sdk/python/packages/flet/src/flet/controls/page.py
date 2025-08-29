@@ -231,7 +231,7 @@ class Page(BasePage):
     TBD
     """
 
-    _page_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _services: list[Service] = field(default_factory=list)
     """
     TBD
     """
@@ -414,7 +414,7 @@ class Page(BasePage):
         self.__session = weakref.ref(sess)
 
         # page services
-        self._page_services._services = [
+        self._services = [
             self.browser_context_menu,
             self.shared_preferences,
             self.clipboard,
