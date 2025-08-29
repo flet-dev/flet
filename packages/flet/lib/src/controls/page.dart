@@ -117,7 +117,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                   pageServicesControl.internals?["uid"])) {
         _pageServices = ServiceRegistry(
             control: pageServicesControl,
-            propertyName: "services",
+            propertyName: "_services",
             backend: FletBackend.of(context));
       }
     }
@@ -130,7 +130,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
               userServicesControl.internals?["uid"]) {
         _userServices = ServiceRegistry(
             control: userServicesControl,
-            propertyName: "services",
+            propertyName: "_services",
             backend: FletBackend.of(context));
       }
     }
