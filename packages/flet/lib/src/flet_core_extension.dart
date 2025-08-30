@@ -89,7 +89,6 @@ import 'controls/search_bar.dart';
 import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
 import 'controls/semantics.dart';
-import 'controls/service_host.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
@@ -319,8 +318,6 @@ class FletCoreExtension extends FletExtension {
         return SelectionAreaControl(key: key, control: control);
       case "Semantics":
         return SemanticsControl(key: key, control: control);
-      case "ServiceHost":
-        return ServiceHostControl(key: key, control: control);
       case "ShaderMask":
         return ShaderMaskControl(key: key, control: control);
       case "Slider":
