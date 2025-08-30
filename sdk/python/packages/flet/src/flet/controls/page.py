@@ -98,7 +98,7 @@ class ServiceRegistry(Service):
             self._services.append(service)
             self.update()
 
-    def cleanup(self):
+    def unregister_services(self):
         with self._lock:
             original_len = len(self._services)
             self._services = [
