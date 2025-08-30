@@ -110,7 +110,7 @@ def test_simple_page():
     page.bgcolor = Colors.GREEN
     page.fonts = {"font1": "font_url_1", "font2": "font_url_2"}
     page.on_login = lambda e: print("on login")
-    page.services.append(MyService(prop_1="Hello", prop_2=[1, 2, 3]))
+    page._user_services._services.append(MyService(prop_1="Hello", prop_2=[1, 2, 3]))
 
     # page and window have hard-coded IDs
     assert page._i == 1
@@ -118,7 +118,7 @@ def test_simple_page():
 
     msg, _, _, added_controls, removed_controls = make_msg(page, {}, show_details=True)
     u_msg = b_unpack(msg)
-    assert len(added_controls) == 14
+    assert len(added_controls) == 13
     assert len(removed_controls) == 0
 
     assert page.parent is None
@@ -214,7 +214,7 @@ def test_simple_page():
     del page.fonts["font2"]
     assert page.controls[0].controls[0].page is None
 
-    page.services[0].prop_2 = [2, 6]
+    page._user_services._services[0].prop_2 = [2, 6]
 
     # add 2 new buttons to a list
     _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
@@ -239,17 +239,17 @@ def test_simple_page():
             {"op": "remove", "path": ["fonts", "font2"], "value": "font_url_2"},
             {
                 "op": "remove",
-                "path": ["_user_services", "services", 0, "prop_2", 0],
+                "path": ["_user_services", "_services", 0, "prop_2", 0],
                 "value": 1,
             },
             {
                 "op": "add",
-                "path": ["_user_services", "services", 0, "prop_2", 1],
+                "path": ["_user_services", "_services", 0, "prop_2", 1],
                 "value": 6,
             },
             {
                 "op": "remove",
-                "path": ["_user_services", "services", 0, "prop_2", 2],
+                "path": ["_user_services", "_services", 0, "prop_2", 2],
                 "value": 3,
             },
         ],

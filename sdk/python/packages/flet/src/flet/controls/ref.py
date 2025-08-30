@@ -18,3 +18,6 @@ class Ref(Generic[T]):
     @current.setter
     def current(self, value: Optional[T]):
         self._ref = weakref.ref(value) if value is not None else None
+
+    def __call__(self) -> Optional[T]:
+        return self.current

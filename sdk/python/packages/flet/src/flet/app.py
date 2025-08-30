@@ -259,19 +259,16 @@ def __get_on_session_created(main):
 
             elif inspect.isasyncgenfunction(main):
                 async for _ in main(session.page):
-                    if context.auto_update_enabled():
-                        await session.auto_update(session.page)
+                    await session.after_event(session.page)
 
             elif inspect.isgeneratorfunction(main):
                 for _ in main(session.page):
-                    if context.auto_update_enabled():
-                        await session.auto_update(session.page)
+                    await session.after_event(session.page)
             else:
                 # run synchronously
                 main(session.page)
 
-            if context.auto_update_enabled():
-                await session.auto_update(session.page)
+            await session.after_event(session.page)
 
         except Exception as e:
             print(
