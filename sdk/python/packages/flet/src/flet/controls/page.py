@@ -783,10 +783,3 @@ class Page(BasePage):
     @property
     def session(self) -> SessionStorage:
         return self.__session_storage
-
-    def bind(
-        self,
-        model: ModelT,
-        builder: Callable[[ModelT], Union[list[View], View, list[Control], Control]],
-    ):
-        pass
