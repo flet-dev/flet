@@ -14,6 +14,7 @@ from typing import (
     Optional,
     TypeVar,
     Union,
+    cast,
 )
 from urllib.parse import urlparse
 
@@ -443,6 +444,61 @@ class Page(BasePage):
         ```
         """
         return self.get_session().index.get(id)
+
+    def bind(
+        self,
+        content_builder: Callable[..., Union[list[View], View, list[Control], Control]],
+        *args,
+        **kwargs,
+    ):
+        logger.debug("Page.bind()")
+        self.__content_builder = content_builder
+        self.__content_builder_args = args
+        self.__content_builder_kwargs = kwargs
+
+    def before_update(self):
+        # print("Page.before_update()")
+
+        if not hasattr(self, "_Page__content_builder"):
+            return
+
+        content = self.__content_builder(
+            *self.__content_builder_args, **self.__content_builder_kwargs
+        )
+
+        views: list[View] = []
+        if isinstance(content, list):
+            if all(isinstance(c, View) for c in content):
+                views = cast(list[View], content)
+            elif all(isinstance(c, BaseControl) for c in content):
+                views = [View(controls=cast(list[BaseControl], content))]
+        elif isinstance(content, View):
+            views = [content]
+        elif isinstance(content, BaseControl):
+            views = [View(controls=[content])]
+        elif not content:
+            views = [View(controls=[])]
+        else:
+            raise ValueError(
+                "content_builder must return View or list of Views "
+                "or list of Controls or Control"
+            )
+
+        # common case - 1 view
+        if len(views) == 1 and views[0].route is None:
+            views[0].route = "/"
+
+        # make sure all views have unique routes
+        seen_routes = set()
+        for view in views:
+            if view.route in seen_routes:
+                raise ValueError(f"Duplicate route found: {view.route}")
+            seen_routes.add(view.route)
+            object.__setattr__(view, "_frozen", True)
+
+        print("VIEWS:", views)
+
+        self.views = views
 
     def update(self, *controls) -> None:
         if len(controls) == 0:
