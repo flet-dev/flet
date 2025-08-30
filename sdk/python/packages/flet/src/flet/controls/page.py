@@ -164,9 +164,6 @@ class MultiViewRemoveEvent(Event["Page"]):
     view_id: int
 
 
-ModelT = TypeVar("ModelT")
-
-
 @control("Page", isolated=True, post_init_args=2)
 class Page(BasePage):
     """
