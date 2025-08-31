@@ -4,16 +4,16 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import 'base_controls.dart';
 
-class StateViewControl extends StatelessWidget {
+class ModelViewControl extends StatelessWidget {
   final Control control;
 
-  const StateViewControl({super.key, required this.control});
+  const ModelViewControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("StateView.build: ${control.id}");
+    debugPrint("ModelView.build: ${control.id}");
     return BaseControl(
         control: control,
-        child: control.buildWidget("content") ?? const SizedBox.shrink());
+        child: control.buildWidget("_content") ?? const SizedBox.shrink());
   }
 }

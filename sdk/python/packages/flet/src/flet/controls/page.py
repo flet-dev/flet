@@ -22,6 +22,7 @@ from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
+from flet.controls.components import render
 from flet.controls.context import _context_page
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -445,25 +446,25 @@ class Page(BasePage):
         """
         return self.get_session().index.get(id)
 
-    def bind(
+    def render(
         self,
-        content_builder: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Union[list[View], View, list[Control], Control]],
         *args,
         **kwargs,
     ):
-        logger.debug("Page.bind()")
-        self.__content_builder = content_builder
-        self.__content_builder_args = args
-        self.__content_builder_kwargs = kwargs
+        logger.debug("Page.render()")
+        self.__component = component
+        self.__component_args = args
+        self.__component_kwargs = kwargs
 
     def before_update(self):
-        # print("Page.before_update()")
+        print("Page.before_update()")
 
-        if not hasattr(self, "_Page__content_builder"):
+        if not hasattr(self, "_Page__component"):
             return
 
-        content = self.__content_builder(
-            *self.__content_builder_args, **self.__content_builder_kwargs
+        content = render(
+            self.__component, *self.__component_args, **self.__component_kwargs
         )
 
         views: list[View] = []
@@ -495,8 +496,6 @@ class Page(BasePage):
                 raise ValueError(f"Duplicate route found: {view.route}")
             seen_routes.add(view.route)
             object.__setattr__(view, "_frozen", True)
-
-        print("VIEWS:", views)
 
         self.views = views
 

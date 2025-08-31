@@ -50,6 +50,7 @@ from flet.controls.buttons import (
 )
 from flet.controls.cache import cache
 from flet.controls.colors import Colors
+from flet.controls.components import component, use_state
 from flet.controls.context import Context, context
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -345,6 +346,7 @@ from flet.controls.material.time_picker import (
 )
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
+from flet.controls.model_view import ModelView
 from flet.controls.multi_view import MultiView
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
@@ -727,6 +729,7 @@ __all__ = [
     "MenuItemButton",
     "MenuStyle",
     "MergeSemantics",
+    "ModelView",
     "MouseCursor",
     "MultiTapEvent",
     "MultiView",
@@ -919,6 +922,7 @@ __all__ = [
     "border",
     "border_radius",
     "cache",
+    "component",
     "context",
     "control",
     "cupertino_colors",
@@ -930,4 +934,5 @@ __all__ = [
     "padding",
     "run",
     "run_async",
+    "use_state",
 ]

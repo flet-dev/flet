@@ -67,6 +67,7 @@ import 'controls/markdown.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
+import 'controls/model_view.dart';
 import 'controls/navigation_bar.dart';
 import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
@@ -92,7 +93,6 @@ import 'controls/semantics.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
-import 'controls/state_view.dart';
 import 'controls/submenu_button.dart';
 import 'controls/tabs.dart';
 import 'controls/text.dart';
@@ -272,6 +272,8 @@ class FletCoreExtension extends FletExtension {
         return MenuItemButtonControl(key: key, control: control);
       case "MergeSemantics":
         return MergeSemanticsControl(key: key, control: control);
+      case "ModelView":
+        return ModelViewControl(key: key, control: control);
       case "NavigationBar":
         return NavigationBarControl(key: key, control: control);
       case "NavigationBarDestination":
@@ -326,8 +328,6 @@ class FletCoreExtension extends FletExtension {
         return SnackBarControl(key: key, control: control);
       case "Stack":
         return StackControl(key: key, control: control);
-      case "StateView":
-        return StateViewControl(key: key, control: control);
       case "SubmenuButton":
         return SubmenuButtonControl(key: key, control: control);
       case "Switch":
