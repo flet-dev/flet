@@ -1,4 +1,5 @@
 from flet.app import app, app_async, run, run_async
+from flet.components.observable import Observable
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis
@@ -750,6 +751,7 @@ __all__ = [
     "NotchShape",
     "Number",
     "NumbersOnlyInputFilter",
+    "Observable",
     "Offset",
     "OffsetValue",
     "OnReorderEvent",

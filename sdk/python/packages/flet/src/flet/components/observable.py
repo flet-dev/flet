@@ -15,8 +15,15 @@ class Observable:
     Base class: notifies when fields change; auto-wraps lists/dicts to be observable.
     """
 
-    def __init__(self):
-        self.__listeners = weakref.WeakSet()
+    @property
+    def __listeners(self):
+        storage_name = "_Observable__listeners_storage"  # different name
+        try:
+            return object.__getattribute__(self, storage_name)
+        except AttributeError:
+            ws = weakref.WeakSet()
+            object.__setattr__(self, storage_name, ws)
+            return ws
 
     # --- subscribe / batching ---
     def subscribe(self, fn: Listener) -> Callable[[], None]:
@@ -33,7 +40,7 @@ class Observable:
             fn(self, field)
 
     # --- collection wrappers ---
-    def __wrap_if_collection(self, name: str, value: Any) -> Any:
+    def _wrap_if_collection(self, name: str, value: Any) -> Any:
         # Wrap plain list/dict so in-place mutations notify this object
         if isinstance(value, list) and not isinstance(value, ObservableList):
             return ObservableList(self, name, value)
@@ -46,7 +53,7 @@ class Observable:
         if name.startswith("_Observable__"):
             object.__setattr__(self, name, value)
             return
-        value = self.__wrap_if_collection(name, value)
+        value = self._wrap_if_collection(name, value)
         old = object.__getattribute__(self, name) if hasattr(self, name) else None
         if old is not value:  # identity check; use != if you prefer value semantics
             object.__setattr__(self, name, value)
@@ -81,7 +88,7 @@ class ObservableList(list):
     # ensure nested collections get wrapped, too
     def _wrap(self, v):
         owner = self._owner_ref()
-        return owner.__wrap_if_collection(self._field, v) if owner else v
+        return owner._wrap_if_collection(self._field, v) if owner else v
 
     # mutators
     def append(self, x):
@@ -143,7 +150,7 @@ class ObservableDict(dict):
 
     def _wrap(self, v):
         owner = self._owner_ref()
-        return owner.__wrap_if_collection(self._field, v) if owner else v
+        return owner._wrap_if_collection(self._field, v) if owner else v
 
     # mutators
     def __setitem__(self, k, v):
