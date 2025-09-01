@@ -1,7 +1,5 @@
 from dataclasses import dataclass, field, fields
 
-import flet as ft
-
 
 @dataclass
 class Foo:
@@ -17,3 +15,9 @@ def test_default_values():
     assert len(foo_fields) == 2
     assert foo_fields[0].default == "default_a"
     assert foo_fields[1].default == "default_b"
+
+
+def test_equality():
+    foo1 = Foo()
+    foo2 = Foo()
+    assert foo1 == foo2
