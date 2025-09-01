@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Any
 
 import msgpack
+
 from flet.controls.duration import Duration
 
 

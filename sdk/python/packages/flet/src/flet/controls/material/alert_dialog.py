@@ -30,7 +30,7 @@ class AlertDialog(DialogControl):
 
     Raises:
         AssertionError: If none of [`title`][(c).], [`content`][(c).], or
-        [`actions`][(c).] are provided, as the dialog would have nothing to display.
+            [`actions`][(c).] are provided, as the dialog would have nothing to display.
     """
 
     content: Optional[Control] = None

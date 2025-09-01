@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import sys
+import threading
 import weakref
 from collections.abc import Awaitable, Coroutine
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
@@ -81,11 +83,31 @@ RetT = TypeVar("RetT")
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
-    services: list[Service] = field(default_factory=list)
+    _services: list[Service] = field(default_factory=list)
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
         self._internals["uid"] = random_string(10)
+        self._lock: threading.Lock = threading.Lock()
+
+    def register_service(self, service: Service):
+        with self._lock:
+            logger.debug(
+                f"Registering service {service._c}({service._i}) to registry {self._i}"
+            )
+            self._services.append(service)
+            self.update()
+
+    def unregister_services(self):
+        with self._lock:
+            original_len = len(self._services)
+            self._services = [
+                service for service in self._services if sys.getrefcount(service) > 4
+            ]
+            removed_count = original_len - len(self._services)
+            if removed_count > 0:
+                logger.debug(f"Removed {removed_count} services from the registry")
+                self.update()
 
 
 @dataclass
@@ -206,12 +228,12 @@ class Page(BasePage):
     TBD
     """
 
-    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _services: list[Service] = field(default_factory=list)
     """
     TBD
     """
 
-    _page_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
     """
     TBD
     """
@@ -389,7 +411,7 @@ class Page(BasePage):
         self.__session = weakref.ref(sess)
 
         # page services
-        self._page_services.services = [
+        self._services = [
             self.browser_context_menu,
             self.shared_preferences,
             self.clipboard,
@@ -758,12 +780,3 @@ class Page(BasePage):
     @property
     def session(self) -> SessionStorage:
         return self.__session_storage
-
-    # services
-    @property
-    def services(self) -> list[Service]:
-        return self._user_services.services
-
-    @services.setter
-    def services(self, value: list[Service]):
-        self._user_services.services = value

@@ -32,7 +32,12 @@ class Context:
             AssertionError: if property is called outside of Flet app.
         """
         page = _context_page.get()
-        assert page, "The context is not associated with any page."
+        if page is None:
+            raise RuntimeError(
+                "The context is not associated with any page. "
+                "Make sure you are accessing ft.context.page "
+                "inside a Flet app callback."
+            )
         return page
 
     def enable_auto_update(self):
