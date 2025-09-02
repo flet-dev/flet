@@ -20,9 +20,9 @@ from urllib.parse import urlparse
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
+from flet.components.component import render
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
-from flet.controls.components import render
 from flet.controls.context import _context_page
 from flet.controls.control import Control
 from flet.controls.control_event import (

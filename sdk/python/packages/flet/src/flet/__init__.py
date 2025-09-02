@@ -1,4 +1,5 @@
 from flet.app import app, app_async, run, run_async
+from flet.components.component import component, use_state
 from flet.components.observable import Observable
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
@@ -51,7 +52,6 @@ from flet.controls.buttons import (
 )
 from flet.controls.cache import cache
 from flet.controls.colors import Colors
-from flet.controls.components import component, use_state
 from flet.controls.context import Context, context
 from flet.controls.control import Control
 from flet.controls.control_event import (

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
 
 # -----------------------------
 # Core fiber/runtime structures
@@ -64,7 +64,7 @@ class _Frame:
 
     def __init__(self, fiber: Fiber):
         self.fiber = fiber
-        # print("ENTER FRAME:", fiber.identity)
+        print("ENTER FRAME:", fiber.identity)
 
     def __enter__(self):
         self.fiber.cursor = 0
@@ -153,7 +153,10 @@ def _current_fiber() -> Fiber:
     return _render_stack[-1]
 
 
-def use_state(initial: Any):
+UseStateT = TypeVar("UseStateT")
+
+
+def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None]]:
     fiber = _current_fiber()
     i = fiber.cursor
     fiber.cursor += 1
