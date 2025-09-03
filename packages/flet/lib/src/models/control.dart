@@ -8,6 +8,9 @@ import '../flet_backend.dart';
 typedef InvokeControlMethodCallback = Future<dynamic> Function(
     String name, dynamic args);
 
+const String componentType = "C";
+const String componentBodyProp = "_b";
+
 enum OperationType {
   unknown(-1),
   replace(0),
@@ -66,33 +69,54 @@ class Control extends ChangeNotifier {
     _backend = WeakReference(backend);
   }
 
-  Control? get parent => _parent?.target;
+  Control? get parent {
+    var current = _parent?.target;
+    while (current != null && current.type == componentType) {
+      current = current._parent?.target;
+    }
+    return current;
+  }
 
   FletBackend get backend => _backend.target!;
 
   bool get disabled =>
-      properties["disabled"] == true || (parent?.disabled ?? false);
+      get<bool>("disabled") == true || (parent?.disabled ?? false);
 
-  bool? get adaptive => properties["adaptive"] ?? parent?.adaptive;
+  bool? get adaptive => get<bool>("adaptive") ?? parent?.adaptive;
 
-  bool get visible =>
-      !properties.containsKey("visible") || properties["visible"];
+  bool get visible => get<bool>("visible", true)!;
 
   T? get<T>(String propertyName, [T? defaultValue]) {
-    return properties.containsKey(propertyName) &&
-            properties[propertyName] != null
-        ? T == double && properties[propertyName] is int
-            ? properties[propertyName].toDouble()
-            : T == String
-                ? properties[propertyName].toString()
-                : properties[propertyName]
-        : defaultValue;
+    if (properties.containsKey(propertyName) &&
+        properties[propertyName] != null) {
+      var v = properties[propertyName];
+      if (v is Control && v.type == componentType) {
+        v = v.get(componentBodyProp);
+        if (v == null) {
+          return defaultValue;
+        }
+      }
+      return T == double && v is int
+          ? v.toDouble()
+          : T == String
+              ? v.toString()
+              : v;
+    }
+    return defaultValue;
+  }
+
+  Control unwrapComponent() {
+    var v = this;
+    while (v.type == componentType) {
+      v = v.get(componentBodyProp);
+    }
+    return v;
   }
 
   /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],
   /// or not visible when [visibleOnly] is `true` (default).
   Control? child(String propertyName, {bool visibleOnly = true}) {
-    final child = properties[propertyName];
+    final child = get(propertyName);
     if (child is! Control) return null;
     return (visibleOnly && !child.visible) ? null : child;
   }
@@ -103,7 +127,8 @@ class Control extends ChangeNotifier {
   ///
   /// Returns an empty list if the property is missing or null.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
-    return List<Control>.from(properties[propertyName] ?? [])
+    return List<Control>.from(get(propertyName) ?? [])
+        .map((c) => c.unwrapComponent())
         .where((c) => !visibleOnly || c.visible)
         .toList();
   }
