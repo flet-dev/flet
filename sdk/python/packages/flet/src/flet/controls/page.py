@@ -14,16 +14,15 @@ from typing import (
     Optional,
     TypeVar,
     Union,
-    cast,
 )
 from urllib.parse import urlparse
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
-from flet.components.component import render
+from flet.components.component import _Component
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEvent,
@@ -453,51 +452,55 @@ class Page(BasePage):
         **kwargs,
     ):
         logger.debug("Page.render()")
-        self.__component = component
-        self.__component_args = args
-        self.__component_kwargs = kwargs
 
-    def before_update(self):
-        print("Page.before_update()")
+        def wrap_views(b):
+            def unwrap_component(comp):
+                while isinstance(comp, _Component):
+                    comp = comp._b
+                return comp
 
-        if not hasattr(self, "_Page__component"):
-            return
+            content = unwrap_component(b)
 
-        content = render(
-            self.__component, *self.__component_args, **self.__component_kwargs
+            views: list[View] = []
+            if isinstance(content, list):
+                if all(isinstance(unwrap_component(c), View) for c in content):
+                    views = b
+                elif all(isinstance(unwrap_component(c), BaseControl) for c in content):
+                    views = [View(controls=b)]
+            elif isinstance(content, View):
+                views = [b]
+            elif isinstance(content, BaseControl):
+                views = [View(controls=[b])]
+            elif not content:
+                views = [View(controls=[])]
+            else:
+                raise ValueError(
+                    "content_builder must return View or list of Views "
+                    "or list of Controls or Control"
+                )
+
+            # common case - 1 view
+            if (
+                len(unwrap_component(views)) == 1
+                and unwrap_component(views[0]).route is None
+            ):
+                unwrap_component(views[0]).route = "/"
+
+            # make sure all views have unique routes
+            seen_routes = set()
+            for wrapped_view in unwrap_component(views):
+                view = unwrap_component(wrapped_view)
+                if view.route in seen_routes:
+                    raise ValueError(f"Duplicate route found: {view.route}")
+                seen_routes.add(view.route)
+
+            return views
+
+        self.views = _Component(
+            _fn=component, _args=args, _kwargs=kwargs, _after_fn=wrap_views
         )
-
-        views: list[View] = []
-        if isinstance(content, list):
-            if all(isinstance(c, View) for c in content):
-                views = cast(list[View], content)
-            elif all(isinstance(c, BaseControl) for c in content):
-                views = [View(controls=cast(list[BaseControl], content))]
-        elif isinstance(content, View):
-            views = [content]
-        elif isinstance(content, BaseControl):
-            views = [View(controls=[content])]
-        elif not content:
-            views = [View(controls=[])]
-        else:
-            raise ValueError(
-                "content_builder must return View or list of Views "
-                "or list of Controls or Control"
-            )
-
-        # common case - 1 view
-        if len(views) == 1 and views[0].route is None:
-            views[0].route = "/"
-
-        # make sure all views have unique routes
-        seen_routes = set()
-        for view in views:
-            if view.route in seen_routes:
-                raise ValueError(f"Duplicate route found: {view.route}")
-            seen_routes.add(view.route)
-            object.__setattr__(view, "_frozen", True)
-
-        self.views = views
+        context.permanently_disable_auto_update()
+        self.update()
 
     def update(self, *controls) -> None:
         if len(controls) == 0:

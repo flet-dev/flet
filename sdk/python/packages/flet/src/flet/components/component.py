@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import contextvars
+import weakref
 from dataclasses import dataclass, field
 from typing import Any, Callable, TypeVar
 
-# -----------------------------
-# Core fiber/runtime structures
-# -----------------------------
+from flet.controls.base_control import BaseControl, control
 
 
 @dataclass
@@ -14,28 +14,64 @@ class StateCell:
     version: int = 0
 
 
-@dataclass
-class Fiber:
-    fn: Callable[..., Any]  # component function
-    identity: tuple[Any, ...]  # (parent_id, fn, key)
-    parent_id: int | None
-    key: Any
-    state: list[StateCell] = field(default_factory=list)
-    cursor: int = 0  # where the next hook reads/writes
-    seen: bool = False  # mark in current render
-    children_count: int = 0  # incremental index for child identities
+@control("C")
+class _Component(BaseControl):
+    _fn: Callable[..., Any] = field(metadata={"skip": True})
+    _args: tuple[Any, ...] = field(metadata={"skip": True})
+    _kwargs: dict[str, Any] = field(metadata={"skip": True})
+    _after_fn: Callable[..., Any] | None = field(default=None, metadata={"skip": True})
+    _parent_component: weakref.ref[_Component] | None = field(
+        default=None, metadata={"skip": True}
+    )
+
+    _state_cursor: int = 0
+    _state: list[StateCell] = field(default_factory=list, metadata={"skip": True})
+
+    _b: Any = None  # body
+
+    def update(self):
+        print("Component.update() called:", self)
+        del self._frozen
+        super().update()
+
+    def before_update(self):
+        print("_Component.before_update:", self._fn, self._args, self._kwargs)
+        if self._b is None:
+            r = Renderer(self)
+            b = r.render(self._fn, *self._args, **self._kwargs)
+            if self._after_fn:
+                b = self._after_fn(b, *self._args, **self._kwargs)
+            if isinstance(b, list):
+                for item in b:
+                    object.__setattr__(item, "_frozen", True)
+            elif b:
+                object.__setattr__(b, "_frozen", True)
+            self._b = b
+
+    def did_mount(self):
+        return super().did_mount()
+
+    def will_unmount(self):
+        return super().will_unmount()
 
 
-# Global, single-threaded “renderer” state
-_fibers: dict[tuple[Any, ...], Fiber] = {}
-_render_stack: list[Fiber] = []
-_schedule_render: Callable[[], None] | None = None
+# -----------------------------
+# Current renderer pointer (per task)
+# -----------------------------
+
+_CURRENT_RENDERER: contextvars.ContextVar[Renderer | None] = contextvars.ContextVar(
+    "CURRENT_RENDERER", default=None
+)
 
 
-def install_scheduler(schedule_render: Callable[[], None]) -> None:
-    """Give the runtime a way to trigger a re-render."""
-    global _schedule_render
-    _schedule_render = schedule_render
+def _get_renderer() -> Renderer:
+    r = _CURRENT_RENDERER.get()
+    if r is None:
+        raise RuntimeError(
+            "No current renderer is set. Call via Renderer.render(...) "
+            "or Renderer.with_context(...)."
+        )
+    return r
 
 
 # -----------------------------
@@ -44,10 +80,15 @@ def install_scheduler(schedule_render: Callable[[], None]) -> None:
 
 
 def component(fn: Callable[..., Any]) -> Callable[..., Any]:
-    fn.__is_component__ = True  # marker (useful if you want to distinguish later)
+    """
+    Marks a function as a component. When called, it will render through
+    the *current* Renderer.
+    """
+    fn.__is_component__ = True
 
     def wrapper(*args, key=None, **kwargs):
-        return _render_component(fn, args, kwargs, key=key)
+        r = _get_renderer()
+        return r._render_component(fn, args, kwargs, key=key)
 
     wrapper.__name__ = fn.__name__
     wrapper.__is_component__ = True
@@ -55,124 +96,162 @@ def component(fn: Callable[..., Any]) -> Callable[..., Any]:
 
 
 # -----------------------------
-# Rendering + reconciliation
+# Renderer (all state is instance-bound)
 # -----------------------------
 
 
-class _Frame:
-    """Context around entering a component (push/pop on _render_stack)."""
+class Renderer:
+    """Owns fibers, stacks, and scheduling for a single session/page."""
 
-    def __init__(self, fiber: Fiber):
-        self.fiber = fiber
-        print("ENTER FRAME:", fiber.identity)
+    _ROOT_TOKEN = ("__root__",)
 
-    def __enter__(self):
-        self.fiber.cursor = 0
-        self.fiber.children_count = 0
-        self.fiber.seen = True
-        _render_stack.append(self.fiber)
-        return self.fiber
+    def __init__(self, root_component):
+        self._root_component = root_component
+        self._render_stack: list[_Component] = []
 
-    def __exit__(self, exc_type, exc, tb):
-        _render_stack.pop()
+    def with_context(self):
+        """Context manager to make this renderer the 'current' one."""
 
+        class _C:
+            def __init__(_s, r: Renderer):
+                _s._tok = None
+                _s._r = r
 
-def _render_component(fn: Callable[..., Any], args: tuple, kwargs: dict, key=None):
-    parent = _render_stack[-1] if _render_stack else None
+            def __enter__(_s):
+                _s._tok = _CURRENT_RENDERER.set(_s._r)
+                return _s._r
 
-    auto_index = parent.children_count if parent else 0
-    if parent:
-        parent.children_count += 1
+            def __exit__(_s, exc_type, exc, tb):
+                if _s._tok is not None:
+                    _CURRENT_RENDERER.reset(_s._tok)
 
-    # use parent's stable identity token
-    parent_token = parent.identity if parent else _ROOT_ID
-    child_key = key if key is not None else auto_index
-    identity = (parent_token, fn, child_key)
+        return _C(self)
 
-    fiber = _fibers.get(identity)
-    if fiber is None:
-        fiber = Fiber(
-            fn=fn,
-            identity=identity,
-            parent_id=id(parent) if parent else None,  # optional, not used for identity
+    def render(self, root_fn: Callable[..., Any], *args, **kwargs):
+        # run with this renderer bound as current
+        with self.with_context(), self._Frame(self, self._root_component):
+            return root_fn(*args, **kwargs)
+
+    class _Frame:
+        """Context around entering a component; pushes/pops on renderer's stack."""
+
+        def __init__(self, renderer: Renderer, c: _Component):
+            self.r = renderer
+            self.c = c
+            print("\n\nFRAME CREATED:", self.c._fn.__name__)
+
+        def __enter__(self):
+            self.r._render_stack.append(self.c)
+            return self.c
+
+        def __exit__(self, exc_type, exc, tb):
+            self.r._render_stack.pop()
+
+    def _render_component(
+        self,
+        fn: Callable[..., Any],
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+        key=None,
+    ):
+        c = _Component(
+            _fn=fn,
+            _args=args,
+            _kwargs=kwargs,
+            _parent_component=weakref.ref(self._render_stack[-1]),
             key=key,
         )
-        _fibers[identity] = fiber
 
-    with _Frame(fiber):
-        return fn(*args, **kwargs)
+        # (re)subscribe to observable args for this fiber
+        # fiber.clear_subscriptions()
+        # self._subscribe_observable_args(fiber, args, kwargs)
 
+        with self._Frame(self, c):
+            c._b = fn(*args, **kwargs)
+            return c
 
-# 1) Make a single, stable synthetic root identity
-_ROOT_ID = ("__root__",)  # constant, hashable
+    # def _subscribe_observable_args(
+    #     self, fiber: Fiber, args: tuple[Any, ...], kwargs: dict[str, Any]
+    # ):
+    #     """
+    #     If an arg is an Observable (duck-typed: has .subscribe),
+    #     subscribe and mark this fiber dirty on notify.
+    #     """
 
-# Create one synthetic root fiber and reuse it
-_root_fiber: Fiber | None = None
+    #     def is_observable(o: Any) -> bool:
+    #         return hasattr(o, "subscribe") and callable(o.subscribe)
 
+    #     for a in args:
+    #         if is_observable(a):
+    #             self._attach_subscription(fiber, a)
+    #     for v in kwargs.values():
+    #         if is_observable(v):
+    #             self._attach_subscription(fiber, v)
 
-def render(root_fn: Callable[..., Any], *args, **kwargs):
-    global _root_fiber
+    def _attach_subscription(self, fiber: _Component, observable: Any):
+        # Use weak refs to avoid cycles
+        print("Attaching subscription to observable:", observable)
+        rfiber = weakref.ref(fiber)
+        rself = weakref.ref(self)
 
-    # mark all unseen
-    for f in _fibers.values():
-        f.seen = False
+        def on_change(_sender, _field):
+            print("Observable changed:", _sender, _field)
+            r = rself()
+            f = rfiber()
+            if not r or not f:
+                return
+            r.mark_dirty(f)
 
-    # create once; reuse each render so identity is stable
-    if _root_fiber is None:
-        _root_fiber = Fiber(
-            fn=lambda: None,
-            identity=_ROOT_ID,
-            parent_id=None,
-            key="__root__",
-        )
+        try:
+            dispose = observable.subscribe(on_change)
+            fiber._disposers.append(dispose)
+        except Exception:
+            # If it's not exactly our Observable but has compatible API,
+            # ignore failures gracefully.
+            pass
 
-    with _Frame(_root_fiber):
-        tree = _render_component(root_fn, args, kwargs, key="__app__")
-
-    _sweep_unseen()
-    return tree
-
-
-def _sweep_unseen():
-    """Remove state for fibers not visited this render (simple global mark/sweep)."""
-    # Optional: two-pass to avoid mutating dict during iteration
-    to_delete = [identity for identity, f in _fibers.items() if not f.seen]
-    for identity in to_delete:
-        print("SWEEPING:", identity)
-        del _fibers[identity]
+    def mark_dirty(self, component: _Component):
+        print("Marking _Component as dirty:", _Component._i)
+        # self._pending.add(fiber.identity)
+        # cb = self._schedule_render_cb
+        # if cb:
+        #     with contextlib.suppress(Exception):
+        #         cb()
 
 
 # -----------------------------
-# Hooks
+# Hooks (renderer-aware via contextvar)
 # -----------------------------
-
-
-def _current_fiber() -> Fiber:
-    if not _render_stack:
-        raise RuntimeError("Hooks must be called inside a component render.")
-    return _render_stack[-1]
 
 
 UseStateT = TypeVar("UseStateT")
 
 
+def _current_component() -> _Component:
+    r = _get_renderer()
+    if not r._render_stack:
+        raise RuntimeError("Hooks must be called inside a component render.")
+    return r._render_stack[-1]
+
+
 def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None]]:
-    fiber = _current_fiber()
-    i = fiber.cursor
-    fiber.cursor += 1
+    component = _current_component()
+    # r = _get_renderer()
+    print("USE_STATE HOOK CALLED:", component)
 
-    # Grow the state list as needed
-    if i >= len(fiber.state):
-        fiber.state.append(StateCell(initial))
+    i = component._state_cursor
+    component._state_cursor += 1
 
-    cell = fiber.state[i]
+    if i >= len(component._state):
+        component._state.append(StateCell(initial))
+
+    cell = component._state[i]
 
     def set_state(new_value: Any):
-        # Shallow equality; customize if needed
+        # shallow equality; swap to "is" or custom comparator if needed
         if new_value != cell.value:
             cell.value = new_value
             cell.version += 1
-            if _schedule_render:
-                _schedule_render()
+            component.update()
 
     return cell.value, set_state
