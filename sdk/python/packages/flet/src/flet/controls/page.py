@@ -453,7 +453,7 @@ class Page(BasePage):
     ):
         logger.debug("Page.render()")
 
-        def wrap_views(b):
+        def wrap_views(b, *args, **kwargs):
             def unwrap_component(comp):
                 while isinstance(comp, _Component):
                     comp = comp._b
@@ -482,9 +482,9 @@ class Page(BasePage):
             # common case - 1 view
             if (
                 len(unwrap_component(views)) == 1
-                and unwrap_component(views[0]).route is None
+                and unwrap_component(unwrap_component(views)[0]).route is None
             ):
-                unwrap_component(views[0]).route = "/"
+                unwrap_component(unwrap_component(views)[0]).route = "/"
 
             # make sure all views have unique routes
             seen_routes = set()
