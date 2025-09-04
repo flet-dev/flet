@@ -22,11 +22,11 @@ async def test_button_theme(flet_app: ftt.FletTestApp):
                 ),
                 side=ft.BorderSide(width=5, color=ft.Colors.GREEN_900),
                 padding=ft.Padding.all(10),
-                # text_style=ft.TextStyle(
-                #     size=15,
-                #     italic=True,
-                #     color=ft.Colors.ORANGE,
-                # ),
+                text_style=ft.TextStyle(
+                    size=15,
+                    italic=True,
+                    color=ft.Colors.ORANGE,
+                ),
             ),
         )
     )
