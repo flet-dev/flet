@@ -18,7 +18,7 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
         ft.ExpansionTile(
             title="ExpansionTile Title",
             subtitle="ExpansionTile Subtitle",
-            leading=ft.Icons.UMBRELLA,
+            # leading=ft.Icons.UMBRELLA,
             trailing=ft.Icons.SUNNY,
             controls=[
                 ft.Text("ExpansionTile Content"),
@@ -26,6 +26,6 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
             ],
             controls_padding=ft.Padding.all(10),
             tile_padding=ft.Padding.all(20),
-            affinity=ft.TileAffinity.TRAILING,
+            affinity=ft.TileAffinity.LEADING,
         ),
     )
