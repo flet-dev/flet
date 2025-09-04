@@ -155,7 +155,6 @@ class FletTestApp:
         async def main(page: ft.Page):
             self.__page = page
             self.__tester = Tester()
-            page.services.append(self.__tester)
             page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
 
