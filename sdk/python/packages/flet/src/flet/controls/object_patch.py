@@ -32,6 +32,7 @@
 import dataclasses
 import weakref
 from enum import Enum
+from typing import Any, Optional
 
 from flet.controls.keys import Key
 
@@ -228,13 +229,16 @@ class ObjectPatch:
         src,
         dst,
         control_cls,
+        parent: Any = None,
+        path: Optional[list[Any]] = None,
+        frozen: bool = False,
     ):
         builder = DiffBuilder(
             src,
             dst,
             control_cls=control_cls,
         )
-        builder._compare_values(None, [], None, src, dst, False)
+        builder._compare_values(parent, path or [], None, src, dst, frozen=frozen)
 
         ops = list(builder.execute())
         added = list(builder.get_added_controls())
@@ -682,17 +686,18 @@ class DiffBuilder:
         if self.control_cls and isinstance(dst, self.control_cls):
             if frozen and hasattr(src, "_i"):
                 dst._i = src._i
+                dst.data = src.data
+                if hasattr(src, "_state"):
+                    dst._state = src._state
                 if not hasattr(dst, "_initialized"):
                     orig_frozen = getattr(dst, "_frozen", None)
                     if orig_frozen is not None:
                         del dst._frozen
                     dst.build()
-                    dst.before_update()
                     if orig_frozen is not None:
                         object.__setattr__(dst, "_frozen", orig_frozen)
                     object.__setattr__(dst, "_initialized", True)
-            elif not frozen:
-                dst.before_update()
+            dst.before_update()
 
         if not frozen:
             # in-place comparison
@@ -816,6 +821,7 @@ class DiffBuilder:
             self._dataclass_added(dst, parent, frozen)
 
     def _dataclass_added(self, item, parent, frozen):
+        # print("\n\nDataclass added:", item, parent, frozen)
         if dataclasses.is_dataclass(item):
             if parent:
                 if parent is item:

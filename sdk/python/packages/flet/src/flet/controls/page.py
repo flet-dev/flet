@@ -452,53 +452,20 @@ class Page(BasePage):
         **kwargs,
     ):
         logger.debug("Page.render()")
+        self.views[0].controls = _Component(_fn=component, _args=args, _kwargs=kwargs)
+        self.__render()
 
-        def wrap_views(b, *args, **kwargs):
-            def unwrap_component(comp):
-                while isinstance(comp, _Component):
-                    comp = comp._b
-                return comp
+    def render_views(
+        self,
+        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        *args,
+        **kwargs,
+    ):
+        logger.debug("Page.render_views()")
+        self.views = _Component(_fn=component, _args=args, _kwargs=kwargs)
+        self.__render()
 
-            content = unwrap_component(b)
-
-            views: list[View] = []
-            if isinstance(content, list):
-                if all(isinstance(unwrap_component(c), View) for c in content):
-                    views = b
-                elif all(isinstance(unwrap_component(c), BaseControl) for c in content):
-                    views = [View(controls=b)]
-            elif isinstance(content, View):
-                views = [b]
-            elif isinstance(content, BaseControl):
-                views = [View(controls=[b])]
-            elif not content:
-                views = [View(controls=[])]
-            else:
-                raise ValueError(
-                    "content_builder must return View or list of Views "
-                    "or list of Controls or Control"
-                )
-
-            # common case - 1 view
-            if (
-                len(unwrap_component(views)) == 1
-                and unwrap_component(unwrap_component(views)[0]).route is None
-            ):
-                unwrap_component(unwrap_component(views)[0]).route = "/"
-
-            # make sure all views have unique routes
-            seen_routes = set()
-            for wrapped_view in unwrap_component(views):
-                view = unwrap_component(wrapped_view)
-                if view.route in seen_routes:
-                    raise ValueError(f"Duplicate route found: {view.route}")
-                seen_routes.add(view.route)
-
-            return views
-
-        self.views = _Component(
-            _fn=component, _args=args, _kwargs=kwargs, _after_fn=wrap_views
-        )
+    def __render(self):
         context.permanently_disable_auto_update()
         self.get_session().start_updates_scheduler()
         self.update()

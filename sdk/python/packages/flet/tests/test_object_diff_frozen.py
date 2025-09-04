@@ -4,7 +4,9 @@ from typing import Optional
 import pytest
 
 import flet as ft
+from flet.components.component import _Component
 from flet.controls.base_control import BaseControl, control
+from flet.controls.object_patch import ObjectPatch
 
 from .common import (
     LineChart,
@@ -817,3 +819,45 @@ def test_login_logout_view():
         )
 
     ft.View("/", [login_view(state)])
+
+
+def test_component_single_control_diff():
+    comp = _Component(_fn=lambda: None, _args=(), _kwargs={})
+    old = ft.Button("Hey there!")
+    new = ft.Button("Hello, world!")
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl, parent=comp, path=["_b"], frozen=True
+    )
+    assert cmp_ops(
+        patch.patch,
+        [{"op": "replace", "path": ["_b", "content"], "value": "Hello, world!"}],
+    )
+
+
+def test_component_list_diff():
+    comp = _Component(_fn=lambda: None, _args=(), _kwargs={})
+    old = [ft.Column([ft.Button("Hey there!")])]
+    new = [
+        c1 := ft.Column([btn1 := ft.Button("Hello, world!")]),
+        txt1 := ft.Text("New control"),
+    ]
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl, parent=comp, path=["_b"], frozen=True
+    )
+    assert cmp_ops(
+        patch.patch,
+        [
+            {
+                "op": "replace",
+                "path": ["_b", 0, "controls", 0, "content"],
+                "value": "Hello, world!",
+            },
+            {"op": "add", "path": ["_b", 1], "value_type": ft.Text},
+        ],
+    )
+    assert c1._frozen
+    assert btn1._frozen
+    assert txt1._frozen
+    assert c1.parent == comp
+    assert btn1.parent == c1
+    assert txt1.parent == comp

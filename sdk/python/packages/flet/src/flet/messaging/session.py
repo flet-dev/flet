@@ -101,10 +101,19 @@ class Session:
         asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
 
     def patch_control(
-        self, control: BaseControl, prev_control: Optional[BaseControl] = None
+        self,
+        control: BaseControl,
+        prev_control: Optional[BaseControl] = None,
+        parent: Any = None,
+        path: Optional[list[Any]] = None,
+        frozen: bool = False,
     ):
         patch, added_controls, removed_controls = self.__get_update_control_patch(
-            control=control, prev_control=prev_control or control
+            control=control,
+            prev_control=prev_control or control,
+            parent=parent,
+            path=path,
+            frozen=frozen,
         )
 
         # print(f"\n\nremoved_controls: ({len(removed_controls)})")
@@ -119,7 +128,8 @@ class Session:
         if len(patch) > 1:
             self.__send_message(
                 ClientMessage(
-                    ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
+                    ClientAction.PATCH_CONTROL,
+                    PatchControlBody(parent._i if parent else control._i, patch),
                 )
             )
 
@@ -264,13 +274,21 @@ class Session:
             self.__send_buffer.append(message)
 
     def __get_update_control_patch(
-        self, control: BaseControl, prev_control: Optional[BaseControl]
+        self,
+        control: BaseControl,
+        prev_control: Optional[BaseControl],
+        parent: Any = None,
+        path: Optional[list[Any]] = None,
+        frozen: bool = False,
     ):
         # calculate patch
         patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
             control,
             control_cls=BaseControl,
+            parent=parent,
+            path=path,
+            frozen=frozen,
         )
 
         # print("\n\npatch:", patch)

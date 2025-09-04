@@ -106,8 +106,8 @@ class Control extends ChangeNotifier {
   }
 
   Control unwrapComponent() {
-    var v = this;
-    while (v.type == componentType) {
+    dynamic v = this;
+    while (v is Control && v.type == componentType) {
       v = v.get(componentBodyProp);
     }
     return v;
@@ -127,7 +127,12 @@ class Control extends ChangeNotifier {
   ///
   /// Returns an empty list if the property is missing or null.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
-    return List<Control>.from(get(propertyName) ?? [])
+    var elems = get(propertyName);
+    return List<Control>.from(elems is List
+            ? elems
+            : elems != null
+                ? [elems]
+                : [])
         .map((c) => c.unwrapComponent())
         .where((c) => !visibleOnly || c.visible)
         .toList();
@@ -181,6 +186,10 @@ class Control extends ChangeNotifier {
       if (key == "_i" || key == "_c") return;
       props[key] = _transformIfControl(value, newControl, backend);
     });
+    if (newControl.type == componentType) {
+      // components always notify their parent on changes
+      newControl.notifyParent = true;
+    }
     return newControl;
   }
 

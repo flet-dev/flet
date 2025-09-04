@@ -19,13 +19,9 @@ class _Component(BaseControl):
     _fn: Callable[..., Any] = field(metadata={"skip": True})
     _args: tuple[Any, ...] = field(metadata={"skip": True})
     _kwargs: dict[str, Any] = field(metadata={"skip": True})
-    _after_fn: Callable[..., Any] | None = field(default=None, metadata={"skip": True})
     _parent_component: weakref.ref[_Component] | None = field(
         default=None, metadata={"skip": True}
     )
-
-    _state_cursor: int = 0
-    _state: list[StateCell] = field(default_factory=list, metadata={"skip": True})
 
     _b: Any = None  # body
 
@@ -35,16 +31,30 @@ class _Component(BaseControl):
 
     def update(self):
         print("Component.update() called:", self)
-        del self._frozen
-        super().update()
+
+        # new rendering
+        r = Renderer(self)
+        b = r.render(self._fn, *self._args, **self._kwargs)
+
+        # print("\n\nPREV:", self._b)
+
+        # patch component
+        self.page.get_session().patch_control(
+            prev_control=self._b, control=b, parent=self, path=["_b"], frozen=True
+        )
+
+        self._b = b
 
     def before_update(self):
-        print("_Component.before_update:", self._fn, self._args, self._kwargs)
+        print(
+            f"_Component.before_update: {self._i}", self._fn, self._args, self._kwargs
+        )
         if self._b is None:
             r = Renderer(self)
             b = r.render(self._fn, *self._args, **self._kwargs)
-            if self._after_fn:
-                b = self._after_fn(b, *self._args, **self._kwargs)
+            # if self._after_fn:
+            #     b = self._after_fn(b, *self._args, **self._kwargs)
+            # print("\n\nBEFORE UPDATE RENDER:", b)
             if isinstance(b, list):
                 for item in b:
                     object.__setattr__(item, "_frozen", True)
@@ -158,11 +168,14 @@ class Renderer:
         kwargs: dict[str, Any],
         key=None,
     ):
+        parent_component = self._render_stack[-1]
+        # print("\n\nParent component:", parent_component)
+
         c = _Component(
             _fn=fn,
             _args=args,
             _kwargs=kwargs,
-            _parent_component=weakref.ref(self._render_stack[-1]),
+            _parent_component=weakref.ref(parent_component),
             key=key,
         )
 
@@ -170,9 +183,11 @@ class Renderer:
         # fiber.clear_subscriptions()
         # self._subscribe_observable_args(fiber, args, kwargs)
 
-        with self._Frame(self, c):
-            c._b = fn(*args, **kwargs)
-            return c
+        # if len(self._render_stack) < 1:
+        #     with self._Frame(self, c):
+        #         c._b = fn(*args, **kwargs)
+        #         return c
+        return c
 
     # def _subscribe_observable_args(
     #     self, fiber: Fiber, args: tuple[Any, ...], kwargs: dict[str, Any]
@@ -243,13 +258,23 @@ def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None
     # r = _get_renderer()
     print("USE_STATE HOOK CALLED:", component)
 
-    i = component._state_cursor
-    component._state_cursor += 1
+    # _state_cursor: int = field(default=0, metadata={"skip": True})
+    # _state: list[StateCell] = field(default_factory=list, metadata={"skip": True})
 
-    if i >= len(component._state):
-        component._state.append(StateCell(initial))
+    _use_state_cursor = component._state.setdefault("_use_state_cursor", 0)
+    _use_state = component._state.setdefault("_use_state", [])
 
-    cell = component._state[i]
+    print("USE_STATE_CURSOR:", _use_state_cursor)
+    print("USE_STATE:", _use_state)
+
+    i = _use_state_cursor
+    _use_state_cursor += 1
+
+    if i >= len(_use_state):
+        _use_state.append(StateCell(initial))
+
+    cell = _use_state[i]
+    component._state["_use_state_cursor"] = _use_state_cursor
 
     def set_state(new_value: Any):
         # shallow equality; swap to "is" or custom comparator if needed

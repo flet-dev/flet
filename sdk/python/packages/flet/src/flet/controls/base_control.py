@@ -119,7 +119,6 @@ class BaseControl:
     """
     Arbitrary data of any type.
     """
-
     key: Optional[KeyValue] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
@@ -128,6 +127,7 @@ class BaseControl:
     _internals: dict = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
+    _state: dict[str, Any] = field(default_factory=dict, metadata={"skip": True})
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
