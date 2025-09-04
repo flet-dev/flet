@@ -29,6 +29,10 @@ class _Component(BaseControl):
 
     _b: Any = None  # body
 
+    def schedule_update(self):
+        print("Schedule update")
+        self.page.get_session().schedule_update(self)
+
     def update(self):
         print("Component.update() called:", self)
         del self._frozen
@@ -252,6 +256,6 @@ def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None
         if new_value != cell.value:
             cell.value = new_value
             cell.version += 1
-            component.update()
+            component.schedule_update()
 
     return cell.value, set_state

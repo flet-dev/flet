@@ -40,6 +40,9 @@ class Session:
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
         self.__method_calls: dict[str, asyncio.Event] = {}
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        self.__updates_ready: asyncio.Event = asyncio.Event()
+        self.__pending_updates: set[BaseControl] = set()
+        self.__closed = False
 
         session_id = self.__id
         weakref.finalize(
@@ -92,13 +95,16 @@ class Session:
 
     def close(self):
         logger.debug(f"Closing expired session: {self.id}")
+        self.__closed = True
         self.__pubsub_client.unsubscribe_all()
         self.__cancel_method_calls()
         asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
 
-    def patch_control(self, control: BaseControl):
+    def patch_control(
+        self, control: BaseControl, prev_control: Optional[BaseControl] = None
+    ):
         patch, added_controls, removed_controls = self.__get_update_control_patch(
-            control=control, prev_control=control
+            control=control, prev_control=prev_control or control
         )
 
         # print(f"\n\nremoved_controls: ({len(removed_controls)})")
@@ -270,3 +276,22 @@ class Session:
         # print("\n\npatch:", patch)
 
         return patch.to_message(), added_controls, removed_controls
+
+    def schedule_update(self, control: BaseControl):
+        self.__pending_updates.add(control)
+        self.__updates_ready.set()
+
+    def start_updates_scheduler(self):
+        logger.debug(f"Starting updates scheduler: {self.id}")
+        asyncio.create_task(self.__updates_scheduler())
+
+    async def __updates_scheduler(self):
+        while not self.__closed:
+            await self.__updates_ready.wait()
+            self.__updates_ready.clear()
+
+            # Process pending updates
+            for control in self.__pending_updates:
+                control.update()
+
+            self.__pending_updates.clear()

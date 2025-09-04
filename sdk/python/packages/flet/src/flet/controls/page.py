@@ -229,16 +229,6 @@ class Page(BasePage):
     TBD
     """
 
-    _services: list[Service] = field(default_factory=list)
-    """
-    TBD
-    """
-
-    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
-    """
-    TBD
-    """
-
     route: Optional[str] = None
     """
     Get or sets page's navigation route. See
@@ -402,6 +392,16 @@ class Page(BasePage):
     TBD
     """
 
+    _services: list[Service] = field(default_factory=list)
+    """
+    TBD
+    """
+
+    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    """
+    TBD
+    """
+
     def __post_init__(
         self,
         ref,
@@ -500,6 +500,7 @@ class Page(BasePage):
             _fn=component, _args=args, _kwargs=kwargs, _after_fn=wrap_views
         )
         context.permanently_disable_auto_update()
+        self.get_session().start_updates_scheduler()
         self.update()
 
     def update(self, *controls) -> None:
