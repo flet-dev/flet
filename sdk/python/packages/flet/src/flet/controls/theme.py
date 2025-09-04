@@ -3382,6 +3382,9 @@ class Theme:
     """
 
     filled_button_theme: Optional[FilledButtonTheme] = None
+    """
+    Customizes the appearance of [`FilledButton`][flet.FilledButton] across the app.
+    """
     icon_button_theme: Optional[IconButtonTheme] = None
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
