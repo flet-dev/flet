@@ -3377,6 +3377,10 @@ class Theme:
     """
 
     text_button_theme: Optional[TextButtonTheme] = None
+    """
+    Customizes the appearance of [`TextButton`][flet.TextButton] across the app.
+    """
+
     filled_button_theme: Optional[FilledButtonTheme] = None
     icon_button_theme: Optional[IconButtonTheme] = None
     expansion_tile_theme: Optional[ExpansionTileTheme] = None

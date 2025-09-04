@@ -12,9 +12,9 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_button_theme(flet_app: ftt.FletTestApp):
+async def test_text_button_theme(flet_app: ftt.FletTestApp):
     flet_app.page.theme = ft.Theme(
-        button_theme=ft.ButtonTheme(
+        text_button_theme=ft.TextButtonTheme(
             style=ft.ButtonStyle(
                 bgcolor=ft.Colors.GREEN,
                 shape=ft.BeveledRectangleBorder(
@@ -36,7 +36,7 @@ async def test_button_theme(flet_app: ftt.FletTestApp):
     flet_app.page.window.height = 600
 
     scr_1 = ft.Screenshot(
-        ft.Button(content="Button"),
+        ft.TextButton(content="Button"),
     )
     flet_app.page.add(scr_1)
     # flet_app.page.update()
