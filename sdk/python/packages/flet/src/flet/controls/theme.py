@@ -3392,6 +3392,10 @@ class Theme:
     """
 
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
+    """
+    Customizes the appearance of [`ExpansionTile`][flet.ExpansionTile] across the app.
+    """
+
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
     icon_theme: Optional[IconTheme] = None
     list_tile_theme: Optional[ListTileTheme] = None
