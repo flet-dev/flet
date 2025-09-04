@@ -3372,6 +3372,10 @@ class Theme:
     """
 
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
+    """
+    Customizes the appearance of [`OutlinedButton`][flet.OutlinedButton] across the app.
+    """
+
     text_button_theme: Optional[TextButtonTheme] = None
     filled_button_theme: Optional[FilledButtonTheme] = None
     icon_button_theme: Optional[IconButtonTheme] = None
