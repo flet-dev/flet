@@ -52,8 +52,7 @@ class ExpansionTileControl extends StatelessWidget {
 
     var affinity = control.getListTileControlAffinity(
         "affinity", ListTileControlAffinity.platform)!;
-    var clipBehavior =
-        parseClip(control.getString("clip_behavior"), Clip.none)!;
+    var clipBehavior = parseClip(control.getString("clip_behavior"));
 
     var expandedCrossAxisAlignment = control.getCrossAxisAlignment(
         "expanded_cross_axis_alignment", CrossAxisAlignment.center)!;
