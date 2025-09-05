@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
-from flet.components.component import _Component
+from flet.components.component import Renderer
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page, context
@@ -452,7 +452,7 @@ class Page(BasePage):
         **kwargs,
     ):
         logger.debug("Page.render()")
-        self.views[0].controls = _Component(_fn=component, _args=args, _kwargs=kwargs)
+        self.views[0].controls = Renderer().render(component, *args, **kwargs)
         self.__render()
 
     def render_views(
@@ -462,7 +462,7 @@ class Page(BasePage):
         **kwargs,
     ):
         logger.debug("Page.render_views()")
-        self.views = _Component(_fn=component, _args=args, _kwargs=kwargs)
+        self.views = Renderer().render(component, *args, **kwargs)
         self.__render()
 
     def __render(self):

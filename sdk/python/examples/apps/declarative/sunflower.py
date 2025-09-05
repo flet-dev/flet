@@ -1,9 +1,12 @@
+import logging
 import math
 import random
 from dataclasses import dataclass, field
 from typing import cast
 
 import flet as ft
+
+logging.basicConfig(level=logging.INFO)
 
 MAX_SEEDS = 250
 
@@ -19,11 +22,13 @@ class Seed:
 
 
 @dataclass
-class State:
+class State(ft.Observable):
     seeds_count: int = MAX_SEEDS // 2
     seeds: list[Seed] = field(default_factory=list)
 
     def __post_init__(self):
+        ft.context.page.title = "Sunflower"
+        ft.context.page.update()
         self.compute_seeds()
 
     def update_seeds_count(self, new_seeds_count: int):
@@ -31,13 +36,14 @@ class State:
         self.compute_seeds()
 
     def compute_seeds(self):
+        count = round(self.seeds_count)
         self.seeds.clear()
         tau = math.pi * 2
         scale_factor = 1 / 40
         phi = (math.sqrt(5) + 1) / 2
 
         # inner orange seeds
-        for i in range(0, self.seeds_count):
+        for i in range(0, count):
             theta = i * tau / phi
             r = math.sqrt(i) * scale_factor
             self.seeds.append(
@@ -47,13 +53,13 @@ class State:
             )
 
         # outer gray seeds
-        for j in range(self.seeds_count, MAX_SEEDS):
+        for j in range(count, MAX_SEEDS):
             x = math.cos(tau * j / (MAX_SEEDS - 1)) * 0.9
             y = math.sin(tau * j / (MAX_SEEDS - 1)) * 0.9
             self.seeds.append(Seed(key=j, x=x, y=y, inner=False))
 
 
-@ft.cache
+@ft.component
 def seed_view(seed: Seed):
     return ft.Container(
         key=seed.key,
@@ -118,4 +124,51 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+@ft.component
+def Sunflower(state: State):
+    return ft.View(
+        route="/",
+        appbar=ft.AppBar(title=ft.Text("Sunflower")),
+        controls=[
+            ft.Column(
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                expand=True,
+                controls=[
+                    ft.Container(
+                        content=ft.Stack(
+                            controls=[seed_view(s) for s in state.seeds],
+                            aspect_ratio=1.0,
+                        ),
+                        alignment=ft.Alignment.CENTER,
+                        expand=True,
+                    ),
+                    ft.Row(
+                        [
+                            ft.Text(
+                                f"Showing {round(state.seeds_count)} "
+                                f"seed{'s' if state.seeds_count != 1 else ''}"
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    ft.Row(
+                        [
+                            ft.Slider(
+                                min=1,
+                                max=MAX_SEEDS,
+                                value=state.seeds_count,
+                                width=300,
+                                on_change=lambda e: state.update_seeds_count(
+                                    e.control.value
+                                ),
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                ],
+            )
+        ],
+    )
+
+
+ft.run(lambda page: page.render_views(Sunflower, State()))

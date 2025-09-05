@@ -5,13 +5,8 @@ import weakref
 from dataclasses import dataclass, field
 from typing import Any, Callable, TypeVar
 
+from flet.components.observable import Observable
 from flet.controls.base_control import BaseControl, control
-
-
-@dataclass
-class StateCell:
-    value: Any
-    version: int = 0
 
 
 @control("C")
@@ -26,18 +21,18 @@ class _Component(BaseControl):
     _b: Any = None  # body
 
     def schedule_update(self):
-        print("Schedule update")
+        # print("Schedule update:", self._i)
         self.page.get_session().schedule_update(self)
 
     def update(self):
-        print("Component.update() called:", self)
+        print("Component.update() called:", self._i)
 
         # new rendering
-        self.__reset_hook_cursor()
-        r = Renderer(self)
-        b = r.render(self._fn, *self._args, **self._kwargs)
+        self._reset_hook_cursor()
+        # self._detach_subscriptions()
+        b = Renderer(self).render(self._fn, *self._args, **self._kwargs)
 
-        print("\n\nNEW:", b)
+        # print("\n\n** UPDATE ***:\n\n", b)
 
         # patch component
         self.page.get_session().patch_control(
@@ -47,16 +42,18 @@ class _Component(BaseControl):
         self._b = b
 
     def before_update(self):
-        print(
-            f"_Component.before_update: {self._i}", self._fn, self._args, self._kwargs
-        )
+        # print(
+        #     f"_Component.before_update: {self._i}", self._fn, self._args, self._kwargs
+        # )
         if self._b is None:
-            self.__reset_hook_cursor()
-            r = Renderer(self)
-            b = r.render(self._fn, *self._args, **self._kwargs)
+            self._reset_hook_cursor()
+            self._detach_subscriptions()
+            self._subscribe_observable_args(self._args, self._kwargs)
+            # print("DISPOSERS:", len(self.get_subscription_disposers()))
+            b = Renderer(self).render(self._fn, *self._args, **self._kwargs)
             # if self._after_fn:
             #     b = self._after_fn(b, *self._args, **self._kwargs)
-            print("\n\nBEFORE UPDATE RENDER:", b)
+            # print("\n\n*** NEW ***:\n\n", b)
             if isinstance(b, list):
                 for item in b:
                     object.__setattr__(item, "_frozen", True)
@@ -64,7 +61,38 @@ class _Component(BaseControl):
                 object.__setattr__(b, "_frozen", True)
             self._b = b
 
-    def __reset_hook_cursor(self):
+    def _subscribe_observable_args(self, args: tuple[Any, ...], kwargs: dict[str, Any]):
+        for a in args:
+            if isinstance(a, Observable):
+                self._attach_subscription(a)
+        for v in kwargs.values():
+            if isinstance(v, Observable):
+                self._attach_subscription(v)
+
+    def _attach_subscription(self, observable: Observable):
+        # Use weak refs to avoid cycles
+        # print("Attaching subscription to observable:", observable)
+        rself = weakref.ref(self)
+
+        def on_change(_sender, _field):
+            # print("Observable changed:", _sender, _field)
+            r = rself()
+            if not r:
+                return
+            r.schedule_update()
+
+        dispose = observable.subscribe(on_change)
+        self.get_subscription_disposers().append(dispose)
+
+    def get_subscription_disposers(self):
+        return self._state.setdefault("_subscription_disposers", [])
+
+    def _detach_subscriptions(self):
+        for dispose in self.get_subscription_disposers():
+            dispose()
+        self.get_subscription_disposers().clear()
+
+    def _reset_hook_cursor(self):
         self._state["_hook_cursor"] = 0
 
     def use_hook(self, default: Callable[..., Any]):
@@ -137,7 +165,7 @@ class Renderer:
 
     _ROOT_TOKEN = ("__root__",)
 
-    def __init__(self, root_component):
+    def __init__(self, root_component=None):
         self._root_component = root_component
         self._render_stack: list[_Component] = []
 
@@ -167,17 +195,20 @@ class Renderer:
     class _Frame:
         """Context around entering a component; pushes/pops on renderer's stack."""
 
-        def __init__(self, renderer: Renderer, c: _Component):
+        def __init__(self, renderer: Renderer, c: _Component | None = None):
             self.r = renderer
             self.c = c
-            print("\n\nFRAME CREATED:", self.c._fn.__name__)
+            # if self.c:
+            #     print("\n\nFRAME CREATED:", self.c._fn.__name__)
 
         def __enter__(self):
-            self.r._render_stack.append(self.c)
+            if self.c:
+                self.r._render_stack.append(self.c)
             return self.c
 
         def __exit__(self, exc_type, exc, tb):
-            self.r._render_stack.pop()
+            if self.c:
+                self.r._render_stack.pop()
 
     def _render_component(
         self,
@@ -186,14 +217,16 @@ class Renderer:
         kwargs: dict[str, Any],
         key=None,
     ):
-        parent_component = self._render_stack[-1]
+        parent_component = len(self._render_stack) and self._render_stack[-1]
         # print("\n\nParent component:", parent_component)
 
         c = _Component(
             _fn=fn,
             _args=args,
             _kwargs=kwargs,
-            _parent_component=weakref.ref(parent_component),
+            _parent_component=weakref.ref(parent_component)
+            if parent_component
+            else None,
             key=key,
         )
 
@@ -207,58 +240,16 @@ class Renderer:
         #         return c
         return c
 
-    # def _subscribe_observable_args(
-    #     self, fiber: Fiber, args: tuple[Any, ...], kwargs: dict[str, Any]
-    # ):
-    #     """
-    #     If an arg is an Observable (duck-typed: has .subscribe),
-    #     subscribe and mark this fiber dirty on notify.
-    #     """
-
-    #     def is_observable(o: Any) -> bool:
-    #         return hasattr(o, "subscribe") and callable(o.subscribe)
-
-    #     for a in args:
-    #         if is_observable(a):
-    #             self._attach_subscription(fiber, a)
-    #     for v in kwargs.values():
-    #         if is_observable(v):
-    #             self._attach_subscription(fiber, v)
-
-    def _attach_subscription(self, fiber: _Component, observable: Any):
-        # Use weak refs to avoid cycles
-        print("Attaching subscription to observable:", observable)
-        rfiber = weakref.ref(fiber)
-        rself = weakref.ref(self)
-
-        def on_change(_sender, _field):
-            print("Observable changed:", _sender, _field)
-            r = rself()
-            f = rfiber()
-            if not r or not f:
-                return
-            r.mark_dirty(f)
-
-        try:
-            dispose = observable.subscribe(on_change)
-            fiber._disposers.append(dispose)
-        except Exception:
-            # If it's not exactly our Observable but has compatible API,
-            # ignore failures gracefully.
-            pass
-
-    def mark_dirty(self, component: _Component):
-        print("Marking _Component as dirty:", _Component._i)
-        # self._pending.add(fiber.identity)
-        # cb = self._schedule_render_cb
-        # if cb:
-        #     with contextlib.suppress(Exception):
-        #         cb()
-
 
 # -----------------------------
 # Hooks (renderer-aware via contextvar)
 # -----------------------------
+
+
+@dataclass
+class StateCell:
+    value: Any
+    version: int = 0
 
 
 UseStateT = TypeVar("UseStateT")
