@@ -3397,6 +3397,11 @@ class Theme:
     """
 
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
+    """
+    Customizes the appearance of [`FloatingActionButton`][flet.FloatingActionButton]
+    across the app.
+    """
+
     icon_theme: Optional[IconTheme] = None
     list_tile_theme: Optional[ListTileTheme] = None
     navigation_bar_theme: Optional[NavigationBarTheme] = None
