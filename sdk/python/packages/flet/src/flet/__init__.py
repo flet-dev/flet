@@ -1,5 +1,5 @@
 from flet.app import app, app_async, run, run_async
-from flet.components.component import component, use_state
+from flet.components.component import component, effect, state
 from flet.components.observable import Observable
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
@@ -931,10 +931,11 @@ __all__ = [
     "cupertino_icons",
     "dropdown",
     "dropdownm2",
+    "effect",
     "icons",
     "margin",
     "padding",
     "run",
     "run_async",
-    "use_state",
+    "state",
 ]

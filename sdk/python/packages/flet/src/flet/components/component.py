@@ -25,7 +25,7 @@ class _Component(BaseControl):
         self.page.get_session().schedule_update(self)
 
     def update(self):
-        print("Component.update() called:", self._i)
+        print(f"{self._fn.__name__}({self._i}).update()")
 
         # new rendering
         self._reset_hook_cursor()
@@ -40,26 +40,28 @@ class _Component(BaseControl):
         )
 
         self._b = b
+        self._run_render_effects()
 
     def before_update(self):
-        # print(
-        #     f"_Component.before_update: {self._i}", self._fn, self._args, self._kwargs
-        # )
-        if self._b is None:
-            self._reset_hook_cursor()
-            self._detach_subscriptions()
-            self._subscribe_observable_args(self._args, self._kwargs)
-            # print("DISPOSERS:", len(self.get_subscription_disposers()))
-            b = Renderer(self).render(self._fn, *self._args, **self._kwargs)
-            # if self._after_fn:
-            #     b = self._after_fn(b, *self._args, **self._kwargs)
-            # print("\n\n*** NEW ***:\n\n", b)
-            if isinstance(b, list):
-                for item in b:
-                    object.__setattr__(item, "_frozen", True)
-            elif b:
-                object.__setattr__(b, "_frozen", True)
-            self._b = b
+        print(f"{self._fn.__name__}({self._i}).before_update()")
+        if self._b is not None:
+            return
+
+        self._reset_hook_cursor()
+        self._detach_subscriptions()
+        self._subscribe_observable_args(self._args, self._kwargs)
+        # print("DISPOSERS:", len(self.get_subscription_disposers()))
+        b = Renderer(self).render(self._fn, *self._args, **self._kwargs)
+        # if self._after_fn:
+        #     b = self._after_fn(b, *self._args, **self._kwargs)
+        # print("\n\n*** NEW ***:\n\n", b)
+        if isinstance(b, list):
+            for item in b:
+                object.__setattr__(item, "_frozen", True)
+        elif b:
+            object.__setattr__(b, "_frozen", True)
+        self._b = b
+        self._run_render_effects()
 
     def _subscribe_observable_args(self, args: tuple[Any, ...], kwargs: dict[str, Any]):
         for a in args:
@@ -83,9 +85,15 @@ class _Component(BaseControl):
 
         dispose = observable.subscribe(on_change)
         self.get_subscription_disposers().append(dispose)
+        return dispose
 
     def get_subscription_disposers(self):
         return self._state.setdefault("_subscription_disposers", [])
+
+    def _detach_subscription(self, dispose: Callable[[], Any]):
+        if dispose in self.get_subscription_disposers():
+            dispose()
+            self.get_subscription_disposers().remove(dispose)
 
     def _detach_subscriptions(self):
         for dispose in self.get_subscription_disposers():
@@ -108,16 +116,58 @@ class _Component(BaseControl):
         self._state["_hook_cursor"] = hook_cursor
         return hooks[i]
 
+    def _run_mount_effects(self):
+        hooks = self._state.get("_hooks", [])
+        for hook in hooks:
+            if isinstance(hook, EffectHook):
+                # all effects are running on mount
+                res = hook.fn()
+                if callable(res):
+                    hook.cleanup = res
+
+    def _run_render_effects(self):
+        if not self._state.get("_mounted", False):
+            return
+        hooks = self._state.get("_hooks", [])
+        for hook in hooks:
+            if isinstance(hook, EffectHook) and hook.deps != []:
+                if callable(hook.cleanup):
+                    hook.cleanup()
+                    hook.cleanup = None
+                if (
+                    hook.deps is None
+                    or hook.prev_deps is None
+                    or hook.deps != hook.prev_deps
+                ):
+                    res = hook.fn()
+                    if callable(res):
+                        hook.cleanup = res
+
+    def _run_unmount_effects(self):
+        hooks = self._state.get("_hooks", [])
+        for hook in hooks:
+            # all effects are running on unmount
+            if isinstance(hook, EffectHook) and callable(hook.cleanup):
+                hook.cleanup()
+
     def did_mount(self):
-        return super().did_mount()
+        super().did_mount()
+        print("Component.did_mount():", self._i)
+        self._state["_mounted"] = True
+        self._run_mount_effects()
 
     def will_unmount(self):
-        return super().will_unmount()
+        super().will_unmount()
+        self._state["_mounted"] = False
+        print("Component.will_unmount():", self._i)
+        self._detach_subscriptions()
+        self._run_unmount_effects()
 
 
 # -----------------------------
 # Current renderer pointer (per task)
 # -----------------------------
+
 
 _CURRENT_RENDERER: contextvars.ContextVar[Renderer | None] = contextvars.ContextVar(
     "CURRENT_RENDERER", default=None
@@ -247,12 +297,21 @@ class Renderer:
 
 
 @dataclass
-class StateCell:
+class StateHook:
     value: Any
+    disposer: Callable[[], Any] | None = None
     version: int = 0
 
 
-UseStateT = TypeVar("UseStateT")
+@dataclass
+class EffectHook:
+    fn: Callable[[], Any]
+    deps: list[Any] | None = None
+    cleanup: Callable[[], Any] | None = None
+    prev_deps: list[Any] | None = None
+
+
+StateT = TypeVar("StateT")
 
 
 def _current_component() -> _Component:
@@ -262,9 +321,9 @@ def _current_component() -> _Component:
     return r._render_stack[-1]
 
 
-def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None]]:
+def state(initial: StateT) -> tuple[StateT, Callable[[StateT], None]]:
     component = _current_component()
-    hook = component.use_hook(lambda: StateCell(initial))
+    hook = component.use_hook(lambda: StateHook(initial))
 
     def set_state(new_value: Any):
         # shallow equality; swap to "is" or custom comparator if needed
@@ -274,3 +333,13 @@ def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None
             component.schedule_update()
 
     return hook.value, set_state
+
+
+def effect(fn: Callable[[], Any], deps: list[Any] | None = None):
+    component = _current_component()
+    hook = component.use_hook(lambda: EffectHook(fn=fn, deps=deps))
+
+    # update effect hook
+    hook.fn = fn
+    hook.prev_deps = hook.deps
+    hook.deps = deps
