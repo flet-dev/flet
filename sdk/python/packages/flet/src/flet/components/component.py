@@ -33,10 +33,11 @@ class _Component(BaseControl):
         print("Component.update() called:", self)
 
         # new rendering
+        self.__reset_hook_cursor()
         r = Renderer(self)
         b = r.render(self._fn, *self._args, **self._kwargs)
 
-        # print("\n\nPREV:", self._b)
+        print("\n\nNEW:", b)
 
         # patch component
         self.page.get_session().patch_control(
@@ -50,17 +51,34 @@ class _Component(BaseControl):
             f"_Component.before_update: {self._i}", self._fn, self._args, self._kwargs
         )
         if self._b is None:
+            self.__reset_hook_cursor()
             r = Renderer(self)
             b = r.render(self._fn, *self._args, **self._kwargs)
             # if self._after_fn:
             #     b = self._after_fn(b, *self._args, **self._kwargs)
-            # print("\n\nBEFORE UPDATE RENDER:", b)
+            print("\n\nBEFORE UPDATE RENDER:", b)
             if isinstance(b, list):
                 for item in b:
                     object.__setattr__(item, "_frozen", True)
             elif b:
                 object.__setattr__(b, "_frozen", True)
             self._b = b
+
+    def __reset_hook_cursor(self):
+        self._state["_hook_cursor"] = 0
+
+    def use_hook(self, default: Callable[..., Any]):
+        hook_cursor = self._state.setdefault("_hook_cursor", 0)
+        hooks = self._state.setdefault("_hooks", [])
+
+        i = hook_cursor
+        hook_cursor += 1
+
+        if i >= len(hooks):
+            hooks.append(default())
+
+        self._state["_hook_cursor"] = hook_cursor
+        return hooks[i]
 
     def did_mount(self):
         return super().did_mount()
@@ -255,32 +273,13 @@ def _current_component() -> _Component:
 
 def use_state(initial: UseStateT) -> tuple[UseStateT, Callable[[UseStateT], None]]:
     component = _current_component()
-    # r = _get_renderer()
-    print("USE_STATE HOOK CALLED:", component)
-
-    # _state_cursor: int = field(default=0, metadata={"skip": True})
-    # _state: list[StateCell] = field(default_factory=list, metadata={"skip": True})
-
-    _use_state_cursor = component._state.setdefault("_use_state_cursor", 0)
-    _use_state = component._state.setdefault("_use_state", [])
-
-    print("USE_STATE_CURSOR:", _use_state_cursor)
-    print("USE_STATE:", _use_state)
-
-    i = _use_state_cursor
-    _use_state_cursor += 1
-
-    if i >= len(_use_state):
-        _use_state.append(StateCell(initial))
-
-    cell = _use_state[i]
-    component._state["_use_state_cursor"] = _use_state_cursor
+    hook = component.use_hook(lambda: StateCell(initial))
 
     def set_state(new_value: Any):
         # shallow equality; swap to "is" or custom comparator if needed
-        if new_value != cell.value:
-            cell.value = new_value
-            cell.version += 1
+        if new_value != hook.value:
+            hook.value = new_value
+            hook.version += 1
             component.schedule_update()
 
-    return cell.value, set_state
+    return hook.value, set_state
