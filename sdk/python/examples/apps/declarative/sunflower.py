@@ -22,7 +22,7 @@ class Seed:
 
 
 @dataclass
-class State(ft.Observable):
+class AppModel(ft.Observable):
     seeds_count: int = MAX_SEEDS // 2
     seeds: list[Seed] = field(default_factory=list)
 
@@ -60,7 +60,7 @@ class State(ft.Observable):
 
 
 @ft.component
-def seed_view(seed: Seed):
+def SeedView(seed: Seed):
     return ft.Container(
         key=seed.key,
         width=5,
@@ -73,7 +73,7 @@ def seed_view(seed: Seed):
 
 
 def main(page: ft.Page):
-    state = State()
+    state = AppModel()
     page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
     page.appbar = ft.AppBar(title=ft.Text("Sunflower"))
@@ -88,7 +88,7 @@ def main(page: ft.Page):
                 controls=[
                     ft.Container(
                         content=ft.Stack(
-                            controls=[seed_view(s) for s in state.seeds],
+                            controls=[SeedView(s) for s in state.seeds],
                             aspect_ratio=1.0,
                         ),
                         alignment=ft.Alignment.CENTER,
@@ -125,9 +125,8 @@ def main(page: ft.Page):
 
 
 @ft.component
-def Sunflower(state: State):
+def Sunflower(state: AppModel):
     return ft.View(
-        route="/",
         appbar=ft.AppBar(title=ft.Text("Sunflower")),
         controls=[
             ft.Column(
@@ -136,7 +135,7 @@ def Sunflower(state: State):
                 controls=[
                     ft.Container(
                         content=ft.Stack(
-                            controls=[seed_view(s) for s in state.seeds],
+                            controls=[SeedView(s) for s in state.seeds],
                             aspect_ratio=1.0,
                         ),
                         alignment=ft.Alignment.CENTER,
@@ -171,4 +170,4 @@ def Sunflower(state: State):
     )
 
 
-ft.run(lambda page: page.render_views(Sunflower, State()))
+ft.run(lambda page: page.render_views(Sunflower, AppModel()))

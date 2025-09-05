@@ -109,12 +109,10 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _updateMultiViews();
 
     // page services
-    if (_pageServices == null) {
-      _pageServices = ServiceRegistry(
-          control: widget.control,
-          propertyName: "_services",
-          backend: FletBackend.of(context));
-    }
+    _pageServices ??= ServiceRegistry(
+        control: widget.control,
+        propertyName: "_services",
+        backend: FletBackend.of(context));
 
     // user services
     var userServicesControl = widget.control.child("_user_services");
