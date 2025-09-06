@@ -51,6 +51,13 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
         elevation=20,
         focus_elevation=50,
         disabled_elevation=30,
+        hover_elevation=100,
+        hover_color=ft.Colors.BLUE,
+        highlight_elevation=50,  # is not shown on screenshots
+        splash_color=ft.Colors.ORANGE,  # is not shown on screenshots
+        enable_feedback=True,  # is not shown on screenshots
+        url="https://example.com",  # is not shown on screenshots
+        mouse_cursor=ft.MouseCursor.COPY,  # is not shown on screenshots
     )
     flet_app.page.add(fab)
     flet_app.page.update()
@@ -83,6 +90,22 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
 
     flet_app.assert_screenshot(
         "disabled",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
+    # test hover
+    fab.disabled = False
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    button = await flet_app.tester.find_by_key("fab")
+    assert button.count == 1
+    await flet_app.tester.mouse_hover(button)
+    await flet_app.tester.pump_and_settle()
+
+    flet_app.assert_screenshot(
+        "hover",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
