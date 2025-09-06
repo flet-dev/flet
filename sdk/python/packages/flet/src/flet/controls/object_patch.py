@@ -30,11 +30,15 @@
 #
 
 import dataclasses
+import logging
 import weakref
 from enum import Enum
 from typing import Any, Optional
 
 from flet.controls.keys import Key
+
+logger = logging.getLogger("flet_object_patch")
+logger.setLevel(logging.INFO)
 
 _ST_ADD = 0
 _ST_REMOVE = 1
@@ -434,12 +438,12 @@ class DiffBuilder:
             curr = curr[1]
 
     def _item_added(self, parent, path, key, item, item_key=None, frozen=False):
-        # print("\n\n_item_added:", path, key, item, item_key)
+        logger.debug("\n\n_item_added %s %s %s %s:", path, key, item, item_key)
         index_key = item_key if item_key is not None else item
         index = self.take_index(index_key, _ST_REMOVE)
         if index is not None:
             op = index[2]
-            # print("\n\n_ST_REMOVE:", op.__dict__, item)
+            logger.debug("\n\n_ST_REMOVE %s %s:", op.__dict__, item)
 
             # compare moved item
             src = op.operation["value"]
@@ -487,7 +491,7 @@ class DiffBuilder:
             self._dataclass_added(item, parent, frozen)
 
     def _item_removed(self, path, key, item, item_key=None, frozen=False):
-        # print("\n\n_item_removed:", path, key, item, item_key)
+        logger.debug("\n\n_item_removed: %s %s %s %s:", path, key, item, item_key)
         new_op = RemoveOperation(
             {"op": "remove", "path": _path_join(path, key), "value": item}
         )
@@ -496,7 +500,7 @@ class DiffBuilder:
         new_index = self.insert(new_op)
         if index is not None:
             op = index[2]
-            # print("\n\n_ST_ADD:", op.__dict__)
+            logger.debug("\n\n_ST_ADD %s:", op.__dict__)
 
             # compare moved item
             src = item
@@ -545,7 +549,7 @@ class DiffBuilder:
             self._dataclass_removed(item)
 
     def _item_replaced(self, path, key, item):
-        # print("_item_replaced:", path, key, item, frozen)
+        logger.debug("_item_replaced: %s %s %s:", path, key, item)
         self.insert(
             ReplaceOperation(
                 {
@@ -557,7 +561,7 @@ class DiffBuilder:
         )
 
     def _compare_dicts(self, parent, path, src, dst, frozen):
-        # print("\n_compare_dicts:", path, src, dst)
+        logger.debug("\n_compare_dicts: %s %s %s", path, src, dst)
 
         src_keys = set(src.keys())
         dst_keys = set(dst.keys())
@@ -574,7 +578,7 @@ class DiffBuilder:
             self._compare_values(parent, path, key, src[key], dst[key], frozen)
 
     def _compare_lists(self, parent, path, src, dst, frozen):
-        # print("\n_compare_lists:", path, src, dst)
+        logger.debug("\n_compare_lists: %s %s %s", path, src, dst)
 
         len_src, len_dst = len(src), len(dst)
         max_len = max(len_src, len_dst)
@@ -582,7 +586,9 @@ class DiffBuilder:
         for key in range(max_len):
             if key < min_len:
                 old, new = src[key], dst[key]
-                # print("\n\nCOMPARE LIST ITEM:", key, "\n\nOLD:", old, "\n\nNEW:", new)
+                logger.debug(
+                    "\n\nCOMPARE LIST ITEM: %s\n\nOLD: %s\n\nNEW: %s", key, old, new
+                )
 
                 if isinstance(old, dict) and isinstance(new, dict):
                     self._compare_dicts(parent, _path_join(path, key), old, new, frozen)
@@ -610,18 +616,16 @@ class DiffBuilder:
                             or old_control_key == new_control_key
                         )  # same list key or both None
                     ):
-                        # print("\n\ncompare list dataclasses:", new)
+                        logger.debug("\n\ncompare list dataclasses: %s", new)
                         self._compare_dataclasses(
                             parent, _path_join(path, key), old, new, frozen
                         )
                     elif (not frozen and old is not new) or (frozen and old is not new):
-                        # print(
-                        #     "\n\ndataclass removed and added:",
-                        #     "\n\nOLD:",
-                        #     old,
-                        #     "\n\nNEW:",
-                        #     new,
-                        # )
+                        logger.debug(
+                            "\n\ndataclass removed and added: \n\nOLD: %s\n\nNEW: %s",
+                            old,
+                            new,
+                        )
                         self._item_removed(
                             path,
                             key,
@@ -643,7 +647,7 @@ class DiffBuilder:
                         )
 
                 elif type(old) is not type(new) or old != new:
-                    # print("removed and added:", old, new)
+                    logger.debug("removed and added: %s %s", old, new)
                     self._item_removed(path, key, old, frozen=frozen)
                     self._item_added(parent, path, key, new, frozen=frozen)
 
@@ -673,7 +677,9 @@ class DiffBuilder:
                 )
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
-        # print("\n_compare_dataclasses:", path, src, dst, frozen)
+        logger.debug(
+            "\n_compare_dataclasses: %s \n\nSRC: %s \n\nDST: %s", path, src, dst
+        )
 
         if (
             self.control_cls
@@ -713,9 +719,16 @@ class DiffBuilder:
                     old = change[0]
                     new = change[1]
 
-                    # print("_compare_values:changes", old, new)
+                    logger.debug("\n\n_compare_values:changes %s %s", old, new)
 
                     self._compare_values(dst, path, field_name, old, new, frozen)
+
+                    if field_name in prev_lists:
+                        del prev_lists[field_name]
+                    if field_name in prev_dicts:
+                        del prev_dicts[field_name]
+                    if field_name in prev_classes:
+                        del prev_classes[field_name]
 
                     # update prev value
                     if isinstance(new, list):
@@ -734,8 +747,11 @@ class DiffBuilder:
                         del prev_lists[field_name]
                     continue
                 new = getattr(dst, field_name)
+                if not isinstance(new, list):
+                    del prev_lists[field_name]
+                else:
+                    prev_lists[field_name] = new[:]
                 self._compare_values(dst, path, field_name, old, new, frozen)
-                prev_lists[field_name] = new[:]
 
             # compare dicts
             for field_name, old in list(prev_dicts.items()):
@@ -744,8 +760,11 @@ class DiffBuilder:
                         del prev_dicts[field_name]
                     continue
                 new = getattr(dst, field_name)
+                if not isinstance(new, dict):
+                    del prev_dicts[field_name]
+                else:
+                    prev_dicts[field_name] = new.copy()
                 self._compare_values(dst, path, field_name, old, new, frozen)
-                prev_dicts[field_name] = new.copy()
 
             # compare dataclasses
             for field_name, old in list(prev_classes.items()):
@@ -754,20 +773,21 @@ class DiffBuilder:
                         del prev_classes[field_name]
                     continue
                 new = getattr(dst, field_name)
+                if not dataclasses.is_dataclass(new):
+                    del prev_classes[field_name]
+                else:
+                    prev_classes[field_name] = new
                 self._compare_values(dst, path, field_name, old, new, frozen)
-                prev_classes[field_name] = new
 
             changes.clear()
         else:
             # frozen comparison
-            # print(
-            #     "\nfrozen dataclass compare:",
-            #     src,
-            #     "\n\ndst:",
-            #     dst,
-            #     "\n\nparent:",
-            #     parent,
-            # )
+            logger.debug(
+                "\nfrozen dataclass compare:%s\n\n    dst:%s\n\n    parent:%s",
+                src,
+                dst,
+                parent,
+            )
             for field in dataclasses.fields(dst):
                 if "skip" not in field.metadata:
                     old = getattr(src, field.name)
@@ -780,7 +800,9 @@ class DiffBuilder:
             self._dataclass_added(dst, parent, frozen)
 
     def _compare_values(self, parent, path, key, src, dst, frozen):
-        # print("\n_compare_values:", path, key, src, dst, frozen)
+        logger.debug(
+            "\n_compare_values: %s %s %s\n\n%s %s", path, key, src, dst, frozen
+        )
 
         if isinstance(src, dict) and isinstance(dst, dict):
             self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
@@ -800,7 +822,13 @@ class DiffBuilder:
                 or frozen
             )
 
-            # print("\n_compare_values:dataclasses", src, dst, frozen)
+            logger.debug(
+                "\n_compare_values:dataclasses %s %s %s %s",
+                id(src),
+                id(dst),
+                src is dst,
+                frozen,
+            )
 
             if (not frozen and src is dst) or (
                 frozen and src is not dst and type(src) is type(dst)
@@ -816,12 +844,38 @@ class DiffBuilder:
                 self._dataclass_added(dst, parent, frozen)
 
         elif type(src) is not type(dst) or src != dst:
+            logger.debug(
+                "\n_compare_values:replaced %s %s %s\n\n%s %s",
+                path,
+                key,
+                src,
+                dst,
+                frozen,
+            )
             self._item_replaced(path, key, dst)
             self._dataclass_removed(src)
             self._dataclass_added(dst, parent, frozen)
 
+            if not frozen:
+                prev_lists = getattr(dst, "__prev_lists", {})
+                prev_dicts = getattr(dst, "__prev_dicts", {})
+                prev_classes = getattr(dst, "__prev_classes", {})
+
+                if isinstance(src, list) and key in prev_lists:
+                    del prev_lists[key]
+                if isinstance(src, dict) and key in prev_dicts:
+                    del prev_dicts[key]
+                if dataclasses.is_dataclass(src) and key in prev_classes:
+                    del prev_classes[key]
+                if isinstance(dst, list):
+                    prev_lists[key] = dst[:]
+                if isinstance(dst, dict):
+                    prev_dicts[key] = dst.copy()
+                if dataclasses.is_dataclass(dst):
+                    prev_classes[key] = dst
+
     def _dataclass_added(self, item, parent, frozen):
-        # print("\n\nDataclass added:", item, parent, frozen)
+        logger.debug("\n\nDataclass added: %s %s %s", item, parent, frozen)
         if dataclasses.is_dataclass(item):
             if parent:
                 if parent is item:
@@ -830,7 +884,7 @@ class DiffBuilder:
             if frozen:
                 item._frozen = frozen
 
-            # print("\n_dataclass_added:", self._get_dataclass_key(item))
+            logger.debug("\n_dataclass_added: %s", self._get_dataclass_key(item))
             self._added_dataclasses[self._get_dataclass_key(item)] = item
 
         elif isinstance(item, dict):
@@ -842,12 +896,10 @@ class DiffBuilder:
                 self._dataclass_added(v, parent, frozen)
 
     def _undo_dataclass_added(self, item):
-        # print("\n_undo_dataclass_added:", self._get_dataclass_key(item))
         self._added_dataclasses.pop(self._get_dataclass_key(item), None)
 
     def _dataclass_removed(self, item):
         if dataclasses.is_dataclass(item):
-            # print("\n_dataclass_removed:", self._get_dataclass_key(item))
             self._removed_dataclasses[self._get_dataclass_key(item)] = item
 
         elif isinstance(item, dict):
@@ -860,7 +912,6 @@ class DiffBuilder:
 
     def _undo_dataclass_removed(self, item):
         if dataclasses.is_dataclass(item):
-            # print("\n_undo_dataclass_removed:", self._get_dataclass_key(item))
             self._removed_dataclasses.pop(self._get_dataclass_key(item), None)
 
     def _get_dataclass_key(self, item):
@@ -872,7 +923,9 @@ class DiffBuilder:
 
     def _configure_dataclass(self, item, parent, frozen, configure_setattr_only=False):
         if dataclasses.is_dataclass(item):
-            # print("\n_configure_dataclass:", item, frozen, configure_setattr_only)
+            logger.debug(
+                "\n_configure_dataclass: %s %s %s", item, frozen, configure_setattr_only
+            )
 
             if parent:
                 if parent is item:

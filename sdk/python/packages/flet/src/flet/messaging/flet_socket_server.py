@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import msgpack
+
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -236,17 +237,23 @@ class FletSocketServer(Connection):
 
         logger.debug("Cancelling pending tasks...")
 
-        tasks = [task for task in [
-            self.__receive_loop_task,
-            self.__send_loop_task,
-            self.__serve_task,
-        ] if task]
+        tasks = [
+            task
+            for task in [
+                self.__receive_loop_task,
+                self.__send_loop_task,
+                self.__serve_task,
+            ]
+            if task
+        ]
 
         for task in tasks:
             task.cancel()
 
         try:
-            await asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=1.0)
+            await asyncio.wait_for(
+                asyncio.gather(*tasks, return_exceptions=True), timeout=1.0
+            )
         except asyncio.TimeoutError:
             logger.warning("Some tasks did not exit in time, skipping.")
         except asyncio.CancelledError:

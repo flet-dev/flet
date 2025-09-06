@@ -467,8 +467,11 @@ class Page(BasePage):
 
     def __render(self):
         context.permanently_disable_auto_update()
-        self.get_session().start_updates_scheduler()
         self.update()
+        self.get_session().start_updates_scheduler()
+
+    def schedule_update(self):
+        self.get_session().schedule_update(self)
 
     def update(self, *controls) -> None:
         if len(controls) == 0:
@@ -482,6 +485,7 @@ class Page(BasePage):
         raise Exception("An attempt to fetch destroyed session.")
 
     def __update(self, *controls: Control):
+        logger.debug("Page.__update()")
         for c in controls:
             self.get_session().patch_control(c)
 

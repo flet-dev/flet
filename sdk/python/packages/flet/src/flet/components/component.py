@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 import contextvars
+import logging
 import weakref
 from dataclasses import dataclass, field
 from typing import Any, Callable, TypeVar
 
 from flet.components.observable import Observable
 from flet.controls.base_control import BaseControl, control
+from flet.controls.context import context
+
+logger = logging.getLogger("flet_components")
+logger.setLevel(logging.INFO)
 
 
 @control("C")
@@ -21,18 +26,23 @@ class _Component(BaseControl):
     _b: Any = None  # body
 
     def schedule_update(self):
-        # print("Schedule update:", self._i)
-        self.page.get_session().schedule_update(self)
+        logger.debug("%s(%d).schedule_update()", self._fn.__name__, self._i)
+        context.page.get_session().schedule_update(self)
+
+    def schedule_effect(self, hook: EffectHook, fn: Callable):
+        logger.debug("%s(%d).schedule_effect(%s)", self._fn.__name__, self._i, fn)
+        context.page.get_session().schedule_effect(hook, fn)
 
     def update(self):
-        print(f"{self._fn.__name__}({self._i}).update()")
+        logger.debug("%s(%d).update()", self._fn.__name__, self._i)
 
         # new rendering
         self._reset_hook_cursor()
         # self._detach_subscriptions()
         b = Renderer(self).render(self._fn, *self._args, **self._kwargs)
 
-        # print("\n\n** UPDATE ***:\n\n", b)
+        for item in b if isinstance(b, list) else [b]:
+            object.__setattr__(item, "_frozen", True)
 
         # patch component
         self.page.get_session().patch_control(
@@ -43,23 +53,18 @@ class _Component(BaseControl):
         self._run_render_effects()
 
     def before_update(self):
-        print(f"{self._fn.__name__}({self._i}).before_update()")
-        if self._b is not None:
-            return
+        logger.debug("%s(%d).before_update()", self._fn.__name__, self._i)
+        # if self._b is not None:
+        #     return
 
         self._reset_hook_cursor()
         self._detach_subscriptions()
         self._subscribe_observable_args(self._args, self._kwargs)
-        # print("DISPOSERS:", len(self.get_subscription_disposers()))
         b = Renderer(self).render(self._fn, *self._args, **self._kwargs)
-        # if self._after_fn:
-        #     b = self._after_fn(b, *self._args, **self._kwargs)
-        # print("\n\n*** NEW ***:\n\n", b)
-        if isinstance(b, list):
-            for item in b:
-                object.__setattr__(item, "_frozen", True)
-        elif b:
-            object.__setattr__(b, "_frozen", True)
+
+        for item in b if isinstance(b, list) else [b]:
+            object.__setattr__(item, "_frozen", True)
+
         self._b = b
         self._run_render_effects()
 
@@ -73,11 +78,12 @@ class _Component(BaseControl):
 
     def _attach_subscription(self, observable: Observable):
         # Use weak refs to avoid cycles
-        # print("Attaching subscription to observable:", observable)
+        logger.debug(
+            "%s(%d)._attach_subscription(%s)", self._fn.__name__, self._i, observable
+        )
         rself = weakref.ref(self)
 
         def on_change(_sender, _field):
-            # print("Observable changed:", _sender, _field)
             r = rself()
             if not r:
                 return
@@ -121,45 +127,41 @@ class _Component(BaseControl):
         for hook in hooks:
             if isinstance(hook, EffectHook):
                 # all effects are running on mount
-                res = hook.fn()
-                if callable(res):
-                    hook.cleanup = res
+                self.schedule_effect(hook, hook.fn)
 
     def _run_render_effects(self):
+        logger.debug("%s(%d)._run_render_effects():", self._fn.__name__, self._i)
         if not self._state.get("_mounted", False):
             return
         hooks = self._state.get("_hooks", [])
         for hook in hooks:
             if isinstance(hook, EffectHook) and hook.deps != []:
                 if callable(hook.cleanup):
-                    hook.cleanup()
-                    hook.cleanup = None
+                    self.schedule_effect(hook, hook.cleanup)
                 if (
                     hook.deps is None
                     or hook.prev_deps is None
                     or hook.deps != hook.prev_deps
                 ):
-                    res = hook.fn()
-                    if callable(res):
-                        hook.cleanup = res
+                    self.schedule_effect(hook, hook.fn)
 
     def _run_unmount_effects(self):
         hooks = self._state.get("_hooks", [])
         for hook in hooks:
             # all effects are running on unmount
             if isinstance(hook, EffectHook) and callable(hook.cleanup):
-                hook.cleanup()
+                self.schedule_effect(hook, hook.cleanup)
 
     def did_mount(self):
         super().did_mount()
-        print("Component.did_mount():", self._i)
+        logger.debug("%s(%d).did_mount()", self._fn.__name__, self._i)
         self._state["_mounted"] = True
         self._run_mount_effects()
 
     def will_unmount(self):
         super().will_unmount()
         self._state["_mounted"] = False
-        print("Component.will_unmount():", self._i)
+        logger.debug("%s(%d).will_unmount()", self._fn.__name__, self._i)
         self._detach_subscriptions()
         self._run_unmount_effects()
 
@@ -248,8 +250,6 @@ class Renderer:
         def __init__(self, renderer: Renderer, c: _Component | None = None):
             self.r = renderer
             self.c = c
-            # if self.c:
-            #     print("\n\nFRAME CREATED:", self.c._fn.__name__)
 
         def __enter__(self):
             if self.c:
@@ -268,7 +268,6 @@ class Renderer:
         key=None,
     ):
         parent_component = len(self._render_stack) and self._render_stack[-1]
-        # print("\n\nParent component:", parent_component)
 
         c = _Component(
             _fn=fn,
@@ -279,6 +278,7 @@ class Renderer:
             else None,
             key=key,
         )
+        c._frozen = True
 
         # (re)subscribe to observable args for this fiber
         # fiber.clear_subscriptions()
@@ -325,10 +325,22 @@ def state(initial: StateT) -> tuple[StateT, Callable[[StateT], None]]:
     component = _current_component()
     hook = component.use_hook(lambda: StateHook(initial))
 
+    def update_subscriptions(hook: StateHook):
+        if callable(hook.disposer):
+            component._detach_subscription(hook.disposer)
+            hook.disposer = None
+        if isinstance(hook.value, Observable):
+            hook.disposer = component._attach_subscription(hook.value)
+        else:
+            hook.disposer = None
+
+    update_subscriptions(hook)
+
     def set_state(new_value: Any):
         # shallow equality; swap to "is" or custom comparator if needed
         if new_value != hook.value:
             hook.value = new_value
+            update_subscriptions(hook)
             hook.version += 1
             component.schedule_update()
 

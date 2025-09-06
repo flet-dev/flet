@@ -3,8 +3,9 @@ import logging
 import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
+from flet.components.component import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
@@ -42,6 +43,9 @@ class Session:
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
+        self.__pending_effects: list[
+            tuple[weakref.ref[EffectHook], weakref.ref[Callable]]
+        ] = []
         self.__closed = False
 
         session_id = self.__id
@@ -299,6 +303,11 @@ class Session:
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
+    def schedule_effect(self, hook: EffectHook, fn: Callable):
+        # print(f"**** Scheduling effect: {hook} {fn}")
+        self.__pending_effects.append((weakref.ref(hook), weakref.ref(fn)))
+        self.__updates_ready.set()
+
     def start_updates_scheduler(self):
         logger.debug(f"Starting updates scheduler: {self.id}")
         asyncio.create_task(self.__updates_scheduler())
@@ -313,3 +322,19 @@ class Session:
                 control.update()
 
             self.__pending_updates.clear()
+
+            # Process pending effects
+            for effect in self.__pending_effects:
+                try:
+                    hook = effect[0]()
+                    fn = effect[1]()
+                    # print(f"**** Running effect: {hook} {fn}")
+                    if hook and fn:
+                        res = fn()
+                        if callable(res):
+                            hook.cleanup = res
+                except Exception as ex:
+                    tb = traceback.format_exc()
+                    self.error(f"Exception in effect: {ex}\n{tb}")
+
+            self.__pending_effects.clear()

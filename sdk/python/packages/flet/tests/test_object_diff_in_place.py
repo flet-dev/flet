@@ -2,6 +2,7 @@ from dataclasses import field
 from typing import Any, Optional
 
 import flet as ft
+from flet.components.component import _Component
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
@@ -515,3 +516,41 @@ def test_reverse_list():
             {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
         ],
     )
+
+
+def test_overriding_controls_with_component():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+
+    # initial update
+    make_msg(page, {}, show_details=True)
+
+    # replace .controls with a component
+    page.controls = _Component(
+        _fn=lambda: ft.Text("Hello from component"), _args=(), _kwargs={}
+    )
+
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls"],
+                "value_type": _Component,
+            },
+        ],
+    )
+
+    # second update
+    page.title = "Something"
+    page.theme_mode = ft.ThemeMode.DARK
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    print(patch)
+
+    # 3rd update
+    page.title = "Bar"
+    page.theme_mode = ft.ThemeMode.DARK
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    print(patch)
