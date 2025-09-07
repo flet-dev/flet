@@ -5,7 +5,7 @@ import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, Optional
 
-from flet.components.component import EffectHook
+from flet.components.hooks import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
@@ -304,7 +304,7 @@ class Session:
         self.__updates_ready.set()
 
     def schedule_effect(self, hook: EffectHook, fn: Callable):
-        # print(f"**** Scheduling effect: {hook} {fn}")
+        # logger.debug("Schedule_effect(%s, %s)", hook, fn.__name__)
         self.__pending_effects.append((weakref.ref(hook), weakref.ref(fn)))
         self.__updates_ready.set()
 

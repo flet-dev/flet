@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Any, Optional
 
 import flet as ft
-from flet.components.component import _Component
+from flet.components.component import Component
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
@@ -527,8 +527,8 @@ def test_overriding_controls_with_component():
     make_msg(page, {}, show_details=True)
 
     # replace .controls with a component
-    page.controls = _Component(
-        _fn=lambda: ft.Text("Hello from component"), _args=(), _kwargs={}
+    page.controls = Component(
+        fn=lambda: ft.Text("Hello from component"), args=(), kwargs={}
     )
 
     patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
@@ -538,7 +538,7 @@ def test_overriding_controls_with_component():
             {
                 "op": "replace",
                 "path": ["views", 0, "controls"],
-                "value_type": _Component,
+                "value_type": Component,
             },
         ],
     )

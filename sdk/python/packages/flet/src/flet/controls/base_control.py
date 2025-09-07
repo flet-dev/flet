@@ -127,7 +127,6 @@ class BaseControl:
     _internals: dict = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
-    _state: dict[str, Any] = field(default_factory=dict, metadata={"skip": True})
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
@@ -310,3 +309,10 @@ class BaseControl:
                     event_handler(e)
 
             await session.after_event(session.index.get(self._i))
+
+    def _copy_state(self, other: "BaseControl"):
+        if not isinstance(other, BaseControl):
+            return
+        self._i = other._i
+        if self.data is None:
+            self.data = other.data

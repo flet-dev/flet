@@ -4,7 +4,7 @@ from typing import Optional
 import pytest
 
 import flet as ft
-from flet.components.component import _Component
+from flet.components.component import Component
 from flet.controls.base_control import BaseControl, control
 from flet.controls.object_patch import ObjectPatch
 
@@ -822,7 +822,7 @@ def test_login_logout_view():
 
 
 def test_component_single_control_diff():
-    comp = _Component(_fn=lambda: None, _args=(), _kwargs={})
+    comp = Component(fn=lambda: None, args=(), kwargs={})
     old = ft.Button("Hey there!")
     new = ft.Button("Hello, world!")
     patch, added_controls, removed_controls = ObjectPatch.from_diff(
@@ -835,7 +835,7 @@ def test_component_single_control_diff():
 
 
 def test_component_list_diff():
-    comp = _Component(_fn=lambda: None, _args=(), _kwargs={})
+    comp = Component(fn=lambda: None, args=(), kwargs={})
     old = [ft.Column([ft.Button("Hey there!")])]
     new = [
         c1 := ft.Column([btn1 := ft.Button("Hello, world!")]),

@@ -1,6 +1,8 @@
 from flet.app import app, app_async, run, run_async
-from flet.components.component import component, effect, state
+from flet.components.component import Component, component
 from flet.components.observable import Observable
+from flet.components.use_effect import use_effect
+from flet.components.use_state import use_state
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis
@@ -576,6 +578,7 @@ __all__ = [
     "ColorValue",
     "Colors",
     "Column",
+    "Component",
     "ConstrainedControl",
     "Container",
     "Context",
@@ -931,11 +934,11 @@ __all__ = [
     "cupertino_icons",
     "dropdown",
     "dropdownm2",
-    "effect",
     "icons",
     "margin",
     "padding",
     "run",
     "run_async",
-    "state",
+    "use_effect",
+    "use_state",
 ]

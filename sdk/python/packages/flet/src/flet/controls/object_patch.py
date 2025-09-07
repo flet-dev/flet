@@ -691,10 +691,7 @@ class DiffBuilder:
 
         if self.control_cls and isinstance(dst, self.control_cls):
             if frozen and hasattr(src, "_i"):
-                dst._i = src._i
-                dst.data = src.data
-                if hasattr(src, "_state"):
-                    dst._state = src._state
+                dst._copy_state(src)
                 if not hasattr(dst, "_initialized"):
                     orig_frozen = getattr(dst, "_frozen", None)
                     if orig_frozen is not None:
