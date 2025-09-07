@@ -271,10 +271,6 @@ class BaseControl:
             context.reset_auto_update()
 
             controls_log.debug(f"Trigger event {self}.{field_name} {e}")
-            if self.parent is not None:
-                controls_log.debug(f"   self.parent: {self.parent}")
-                if self.parent.parent is not None:
-                    controls_log.debug(f"   self.parent.parent: {self.parent.parent}")
 
             assert self.page, (
                 "Control must be added to a page before triggering events. "
