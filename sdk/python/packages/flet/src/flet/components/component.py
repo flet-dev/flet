@@ -3,7 +3,7 @@ from __future__ import annotations
 import contextvars
 import logging
 import weakref
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from flet.components.hooks import EffectHook
@@ -15,6 +15,25 @@ logger = logging.getLogger("flet_components")
 logger.setLevel(logging.INFO)
 
 
+@dataclass
+class _ComponentState:
+    hooks: list[Any] = field(default_factory=list)
+    hook_cursor: int = 0
+    mounted: bool = False
+    is_dirty: bool = False
+    subscription_disposers: list[Callable[[], Any]] = field(default_factory=list)
+    last_args: tuple[Any, ...] = field(default_factory=tuple)
+    last_kwargs: dict[str, Any] = field(default_factory=dict)
+    last_b: Any = None
+
+    def change_owner(self, new_owner: Any):
+        # change owner for all disposers
+        # for disposer in self.subscription_disposers:
+        #     if hasattr(disposer, "change_owner"):
+        #         disposer.change_owner(new_owner)
+        pass
+
+
 @control("C")
 class Component(BaseControl):
     fn: Callable[..., Any] = field(metadata={"skip": True})
@@ -24,69 +43,92 @@ class Component(BaseControl):
         default=None, metadata={"skip": True}
     )
 
-    _state: dict[str, Any] = field(default_factory=dict, metadata={"skip": True})
+    _state: _ComponentState = field(
+        default_factory=_ComponentState, metadata={"skip": True}
+    )
 
     _b: Any = None  # body
 
-    def _copy_state(self, other: BaseControl):
-        super()._copy_state(other)
+    def _migrate_state(self, other: BaseControl):
+        super()._migrate_state(other)
         if not isinstance(other, Component):
             return
-        self._state = other._state.copy()
+        self._state = other._state
+        self._state.change_owner(self)
 
     def update(self):
         logger.debug(
-            "%s(%d).update(), memo: %s",
-            self.fn.__name__,
-            self._i,
+            "%s.update(), memo: %s",
+            self,
             self._is_memo(),
         )
 
+        logger.debug("self.parent: %s", self.parent)
+
         # new rendering
         self._reset_hook_cursor()
-        # self._detach_subscriptions()
+        self._detach_subscriptions()
+        self._subscribe_observable_args(self.args, self.kwargs)
+
         b = Renderer(self).render(self.fn, *self.args, **self.kwargs)
 
-        for item in b if isinstance(b, list) else [b]:
+        for item in b if isinstance(b, list) else [b] if b is not None else []:
             object.__setattr__(item, "_frozen", True)
 
         if self._is_memo() and b is not None:
             logger.debug("%s(%d).update(): memoizing", self.fn.__name__, self._i)
-            self._state["last_b"] = b
-            self._state["last_args"] = self.args
-            self._state["last_kwargs"] = self.kwargs
+            self._state.last_b = b
+            self._state.last_args = self.args
+            self._state.last_kwargs = self.kwargs
 
         # patch component
-        context.page.get_session().patch_control(
-            prev_control=self._b, control=b, parent=self, path=["_b"], frozen=True
-        )
+        if b is not None:
+            context.page.get_session().patch_control(
+                prev_control=self._b, control=b, parent=self, path=["_b"], frozen=True
+            )
 
         self._b = b
         self._run_render_effects()
 
     def before_update(self):
         logger.debug(
-            "%s(%d).before_update(), memo: %s",
-            self.fn.__name__,
-            self._i,
+            "%s.before_update(), memo: %s",
+            self,
             self._is_memo(),
         )
-        # if self._b is not None:
-        #     return
+        is_dirty = self._state.is_dirty
+        self._state.is_dirty = False
 
-        self._reset_hook_cursor()
         self._detach_subscriptions()
         self._subscribe_observable_args(self.args, self.kwargs)
+
+        if (
+            self._is_memo()
+            and not is_dirty
+            and self._compare_args(
+                self._state.last_args, self._state.last_kwargs, self.args, self.kwargs
+            )
+        ):
+            logger.debug("%s.before_update(): skipping (memo)", self)
+            self._b = self._state.last_b
+
+            # restore parent?
+            print("\n\nSELF.PARENT:", self.parent)
+            for item in self._b if isinstance(self._b, list) else [self._b]:
+                object.__setattr__(item, "_parent", weakref.ref(self))
+            return
+
+        self._reset_hook_cursor()
         b = Renderer(self).render(self.fn, *self.args, **self.kwargs)
 
-        for item in b if isinstance(b, list) else [b]:
+        for item in b if isinstance(b, list) else [b] if b is not None else []:
             object.__setattr__(item, "_frozen", True)
 
         if self._is_memo() and b is not None:
-            logger.debug("%s(%d).update(): memoizing", self.fn.__name__, self._i)
-            self._state["last_b"] = b
-            self._state["last_args"] = self.args
-            self._state["last_kwargs"] = self.kwargs
+            logger.debug("%s.before_update(): memoizing", self)
+            self._state.last_b = b
+            self._state.last_args = self.args
+            self._state.last_kwargs = self.kwargs
 
         self._b = b
         self._run_render_effects()
@@ -95,13 +137,12 @@ class Component(BaseControl):
         return getattr(self.fn, "__is_memo__", False)
 
     def _schedule_update(self):
-        logger.debug("%s(%d).schedule_update()", self.fn.__name__, self._i)
+        logger.debug("%s.schedule_update()", self)
+        self._state.is_dirty = True
         context.page.get_session().schedule_update(self)
 
     def _schedule_effect(self, hook: EffectHook, fn: Callable):
-        logger.debug(
-            "%s(%d).schedule_effect(%s)", self.fn.__name__, self._i, fn.__name__
-        )
+        logger.debug("%s.schedule_effect(%s)", self, fn.__name__)
         context.page.get_session().schedule_effect(hook, fn)
 
     def _subscribe_observable_args(self, args: tuple[Any, ...], kwargs: dict[str, Any]):
@@ -114,9 +155,7 @@ class Component(BaseControl):
 
     def _attach_subscription(self, observable: Observable):
         # Use weak refs to avoid cycles
-        logger.debug(
-            "%s(%d)._attach_subscription(%s)", self.fn.__name__, self._i, observable
-        )
+        logger.debug("%d._attach_subscription(%s)", self, observable)
         rself = weakref.ref(self)
 
         def on_change(_sender, _field):
@@ -126,51 +165,46 @@ class Component(BaseControl):
             r._schedule_update()
 
         dispose = observable.subscribe(on_change)
-        self._get_subscription_disposers().append(dispose)
+        self._state.subscription_disposers.append(dispose)
         return dispose
 
-    def _get_subscription_disposers(self):
-        return self._state.setdefault("_subscription_disposers", [])
-
     def _detach_subscription(self, dispose: Callable[[], Any]):
-        if dispose in self._get_subscription_disposers():
+        if dispose in self._state.subscription_disposers:
             dispose()
-            self._get_subscription_disposers().remove(dispose)
+            self._state.subscription_disposers.remove(dispose)
 
     def _detach_subscriptions(self):
-        for dispose in self._get_subscription_disposers():
+        for dispose in self._state.subscription_disposers:
             dispose()
-        self._get_subscription_disposers().clear()
+        self._state.subscription_disposers.clear()
 
     def _reset_hook_cursor(self):
-        self._state["_hook_cursor"] = 0
+        self._state.hook_cursor = 0
 
     def use_hook(self, default: Callable[..., Any]):
-        hook_cursor = self._state.setdefault("_hook_cursor", 0)
-        hooks = self._state.setdefault("_hooks", [])
+        hook_cursor = self._state.hook_cursor
 
         i = hook_cursor
         hook_cursor += 1
 
-        if i >= len(hooks):
-            hooks.append(default())
+        if i >= len(self._state.hooks):
+            self._state.hooks.append(default())
 
-        self._state["_hook_cursor"] = hook_cursor
-        return hooks[i]
+        self._state.hook_cursor = hook_cursor
+        return self._state.hooks[i]
 
     def _run_mount_effects(self):
-        hooks = self._state.get("_hooks", [])
-        for hook in hooks:
+        logger.debug("%s._run_mount_effects()", self)
+        for hook in self._state.hooks:
             if isinstance(hook, EffectHook):
                 # all effects are running on mount
                 self._schedule_effect(hook, hook.fn)
 
     def _run_render_effects(self):
-        logger.debug("%s(%d)._run_render_effects():", self.fn.__name__, self._i)
-        if not self._state.get("_mounted", False):
+        logger.debug("%s._run_render_effects()", self)
+        if not self._state.mounted:
             return
-        hooks = self._state.get("_hooks", [])
-        for hook in hooks:
+        for hook in self._state.hooks:
             if isinstance(hook, EffectHook) and hook.deps != []:
                 if callable(hook.cleanup):
                     self._schedule_effect(hook, hook.cleanup)
@@ -182,24 +216,61 @@ class Component(BaseControl):
                     self._schedule_effect(hook, hook.fn)
 
     def _run_unmount_effects(self):
-        hooks = self._state.get("_hooks", [])
-        for hook in hooks:
+        logger.debug("%s._run_unmount_effects()", self)
+        for hook in self._state.hooks:
             # all effects are running on unmount
             if isinstance(hook, EffectHook) and callable(hook.cleanup):
                 self._schedule_effect(hook, hook.cleanup)
 
     def did_mount(self):
         super().did_mount()
-        logger.debug("%s(%d).did_mount()", self.fn.__name__, self._i)
-        self._state["_mounted"] = True
+        self._state.mounted = True
         self._run_mount_effects()
 
     def will_unmount(self):
         super().will_unmount()
-        self._state["_mounted"] = False
-        logger.debug("%s(%d).will_unmount()", self.fn.__name__, self._i)
+        self._state.mounted = False
         self._detach_subscriptions()
         self._run_unmount_effects()
+
+    def _compare_args(
+        self,
+        prev_args: tuple[Any, ...],
+        prev_kwargs: dict[str, Any],
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+    ):
+        if len(prev_args) != len(args):
+            return False
+        for pa, a in zip(prev_args, args):
+            if (
+                not isinstance(pa, type(a))
+                or (
+                    isinstance(pa, Observable)
+                    and isinstance(a, Observable)
+                    and pa.__version__ != a.__version__
+                )
+                or pa != a
+            ):
+                return False
+        if len(prev_kwargs) != len(kwargs):
+            return False
+        for k, v in kwargs.items():
+            if k not in prev_kwargs or (
+                not isinstance(prev_kwargs[k], type(v))
+                or (
+                    prev_kwargs[k] is v
+                    and isinstance(prev_kwargs[k], Observable)
+                    and isinstance(v, Observable)
+                    and prev_kwargs[k].__version__ != v.__version__
+                )
+                or prev_kwargs[k] != v
+            ):
+                return False
+        return True
+
+    def __str__(self):
+        return f"{self._c}:{self.fn.__name__}({self._i} - {id(self)})"
 
 
 #

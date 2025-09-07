@@ -212,11 +212,11 @@ class BaseControl:
         return True
 
     def did_mount(self):
-        controls_log.debug(f"{self._c}({self._i}).did_mount")
+        controls_log.debug(f"{self}.did_mount()")
         pass
 
     def will_unmount(self):
-        controls_log.debug(f"{self._c}({self._i}).will_unmount")
+        controls_log.debug(f"{self}.will_unmount()")
         pass
 
     # public methods
@@ -270,6 +270,12 @@ class BaseControl:
             _context_page.set(self.page)
             context.reset_auto_update()
 
+            controls_log.debug(f"Trigger event {self}.{field_name} {e}")
+            if self.parent is not None:
+                controls_log.debug(f"   self.parent: {self.parent}")
+                if self.parent.parent is not None:
+                    controls_log.debug(f"   self.parent.parent: {self.parent.parent}")
+
             assert self.page, (
                 "Control must be added to a page before triggering events. "
                 "Use page.add(control) or add it to a parent control that's on a page."
@@ -310,9 +316,12 @@ class BaseControl:
 
             await session.after_event(session.index.get(self._i))
 
-    def _copy_state(self, other: "BaseControl"):
+    def _migrate_state(self, other: "BaseControl"):
         if not isinstance(other, BaseControl):
             return
         self._i = other._i
         if self.data is None:
             self.data = other.data
+
+    def __str__(self):
+        return f"{self._c}({self._i} - {id(self)})"

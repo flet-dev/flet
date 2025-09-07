@@ -23,6 +23,7 @@ from flet.utils.object_model import patch_dataclass
 from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
+patch_logger = logging.getLogger("flet_object_patch")
 
 __all__ = ["Session"]
 
@@ -120,9 +121,9 @@ class Session:
             frozen=frozen,
         )
 
-        # print(f"\n\nremoved_controls: ({len(removed_controls)})")
-        # for c in removed_controls:
-        #     print(f"\n\nremoved_control: {c._c}({c._i} - {id(c)})")
+        patch_logger.debug(f"\npatch removed_controls ({len(removed_controls)}):")
+        for c in removed_controls:
+            patch_logger.debug("   %s", c)
 
         for removed_control in removed_controls:
             if not any(added._i == removed_control._i for added in added_controls):
@@ -137,9 +138,9 @@ class Session:
                 )
             )
 
-        # print(f"\n\nadded_controls: ({len(added_controls)})")
-        # for ac in added_controls:
-        #     print(f"\n\nadded_control: {ac._c}({ac._i} - {id(ac)})")
+        patch_logger.debug(f"\npatch added_controls: ({len(added_controls)})")
+        for ac in added_controls:
+            patch_logger.debug("   %s", ac)
 
         for added_control in added_controls:
             self.__index[added_control._i] = added_control

@@ -677,9 +677,7 @@ class DiffBuilder:
                 )
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
-        logger.debug(
-            "\n_compare_dataclasses: %s \n\nSRC: %s \n\nDST: %s", path, src, dst
-        )
+        logger.debug("\n_compare_dataclasses: %s \n\n%s\n%s\n", path, src, dst)
 
         if (
             self.control_cls
@@ -691,7 +689,7 @@ class DiffBuilder:
 
         if self.control_cls and isinstance(dst, self.control_cls):
             if frozen and hasattr(src, "_i"):
-                dst._copy_state(src)
+                dst._migrate_state(src)
                 if not hasattr(dst, "_initialized"):
                     orig_frozen = getattr(dst, "_frozen", None)
                     if orig_frozen is not None:
@@ -798,7 +796,12 @@ class DiffBuilder:
 
     def _compare_values(self, parent, path, key, src, dst, frozen):
         logger.debug(
-            "\n_compare_values: %s %s %s\n\n%s %s", path, key, src, dst, frozen
+            "\n_compare_values: %s %s (Frozen: %s)\n\n%s\n%s\n",
+            path,
+            key,
+            frozen,
+            src,
+            dst,
         )
 
         if isinstance(src, dict) and isinstance(dst, dict):
@@ -820,11 +823,7 @@ class DiffBuilder:
             )
 
             logger.debug(
-                "\n_compare_values:dataclasses %s %s %s %s",
-                id(src),
-                id(dst),
-                src is dst,
-                frozen,
+                "\n_compare_values:dataclasses (Frozen: %s) %s %s", frozen, src, dst
             )
 
             if (not frozen and src is dst) or (
@@ -875,9 +874,12 @@ class DiffBuilder:
         logger.debug("\n\nDataclass added: %s %s %s", item, parent, frozen)
         if dataclasses.is_dataclass(item):
             if parent:
+                logger.debug("\n\nAdding parent %s to item: %s", parent, item)
                 if parent is item:
                     raise Exception(f"Parent is the same as item: {item}")
                 item._parent = weakref.ref(parent)
+            else:
+                logger.debug("\n\nSkip adding parent to item: %s", item)
             if frozen:
                 item._frozen = frozen
 
@@ -896,6 +898,7 @@ class DiffBuilder:
         self._added_dataclasses.pop(self._get_dataclass_key(item), None)
 
     def _dataclass_removed(self, item):
+        logger.debug("\n\nDataclass removed: %s", item)
         if dataclasses.is_dataclass(item):
             self._removed_dataclasses[self._get_dataclass_key(item)] = item
 
