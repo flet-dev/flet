@@ -44,11 +44,10 @@ class Component(BaseControl):
     _parent_component: weakref.ref[Component] | None = field(
         default=None, metadata={"skip": True}
     )
-
     _state: _ComponentState = field(
         default_factory=_ComponentState, metadata={"skip": True}
     )
-
+    memoized: bool = field(default=False, metadata={"skip": True})
     _b: Any = None  # body
 
     def _migrate_state(self, other: BaseControl):
@@ -60,12 +59,11 @@ class Component(BaseControl):
 
     def update(self):
         logger.debug(
-            "%s.update(), memo: %s",
+            "%s.update(), memoized: %s",
             self,
-            self._is_memo(),
+            self.memoized,
         )
-
-        logger.debug("self.parent: %s", self.parent)
+        self._state.is_dirty = False
 
         # new rendering
         self._state.hook_cursor = 0
@@ -77,7 +75,7 @@ class Component(BaseControl):
         for item in b if isinstance(b, list) else [b] if b is not None else []:
             object.__setattr__(item, "_frozen", True)
 
-        if self._is_memo() and b is not None:
+        if self.memoized and b is not None:
             logger.debug("%s.update(): memoizing", self)
             self._state.last_b = b
             self._state.last_args = self.args
@@ -94,9 +92,9 @@ class Component(BaseControl):
 
     def before_update(self):
         logger.debug(
-            "%s.before_update(), memo: %s",
+            "%s.before_update(), memoized: %s",
             self,
-            self._is_memo(),
+            self.memoized,
         )
         is_dirty = self._state.is_dirty
         self._state.is_dirty = False
@@ -105,11 +103,12 @@ class Component(BaseControl):
         self._subscribe_observable_args(self.args, self.kwargs)
 
         if (
-            self._is_memo()
+            self.memoized
             and not is_dirty
-            and self._compare_args(
+            and self._shallow_compare_args(
                 self._state.last_args, self._state.last_kwargs, self.args, self.kwargs
             )
+            and self._state.last_b is not None
         ):
             logger.debug("%s.before_update(): skipping (memo)", self)
             self._b = self._state.last_b
@@ -125,17 +124,13 @@ class Component(BaseControl):
         for item in b if isinstance(b, list) else [b] if b is not None else []:
             object.__setattr__(item, "_frozen", True)
 
-        if self._is_memo() and b is not None:
+        if self.memoized and b is not None:
             logger.debug("%s.before_update(): memoizing", self)
             self._state.last_b = b
             self._state.last_args = self.args
             self._state.last_kwargs = self.kwargs
-
         self._b = b
         self._run_render_effects()
-
-    def _is_memo(self):
-        return getattr(self.fn, "__is_memo__", False)
 
     def _schedule_update(self):
         logger.debug("%s.schedule_update()", self)
@@ -183,7 +178,7 @@ class Component(BaseControl):
             self._state.hooks.append(default())
 
         self._state.hook_cursor = hook_cursor
-        return self._state.hooks[i]
+        return self._state.hooks[i]  # type: ignore
 
     def _run_mount_effects(self):
         logger.debug("%s._run_mount_effects()", self)
@@ -225,39 +220,25 @@ class Component(BaseControl):
         self._detach_observable_subscriptions()
         self._run_unmount_effects()
 
-    def _compare_args(
+    def _shallow_compare_args(
         self,
         prev_args: tuple[Any, ...],
         prev_kwargs: dict[str, Any],
         args: tuple[Any, ...],
         kwargs: dict[str, Any],
-    ):
+    ) -> bool:
+        if prev_args is args and prev_kwargs is kwargs:
+            return True
         if len(prev_args) != len(args):
             return False
-        for pa, a in zip(prev_args, args):
-            if (
-                not isinstance(pa, type(a))
-                or (
-                    isinstance(pa, Observable)
-                    and isinstance(a, Observable)
-                    and pa.__version__ != a.__version__
-                )
-                or pa != a
-            ):
+        for a, b in zip(prev_args, args):
+            if a is not b and a != b:
                 return False
-        if len(prev_kwargs) != len(kwargs):
+        if prev_kwargs.keys() != kwargs.keys():
             return False
-        for k, v in kwargs.items():
-            if k not in prev_kwargs or (
-                not isinstance(prev_kwargs[k], type(v))
-                or (
-                    prev_kwargs[k] is v
-                    and isinstance(prev_kwargs[k], Observable)
-                    and isinstance(v, Observable)
-                    and prev_kwargs[k].__version__ != v.__version__
-                )
-                or prev_kwargs[k] != v
-            ):
+        for k in prev_kwargs:
+            a, b = prev_kwargs[k], kwargs[k]
+            if a is not b and a != b:
                 return False
         return True
 
@@ -277,14 +258,14 @@ def component(fn: Callable[..., Any]) -> Callable[..., Any]:
     """
     fn.__is_component__ = True
 
-    def wrapper(*args, key=None, **kwargs):
+    def component_wrapper(*args, key=None, **kwargs):
         r = _get_renderer()
         return r._render_component(fn, args, kwargs, key=key)
 
-    wrapper.__name__ = fn.__name__
-    wrapper.__is_component__ = True
-    wrapper.__component_impl__ = fn
-    return wrapper
+    component_wrapper.__name__ = fn.__name__
+    component_wrapper.__is_component__ = True
+    component_wrapper.__component_impl__ = fn
+    return component_wrapper
 
 
 #
@@ -322,6 +303,10 @@ class Renderer:
     def __init__(self, root_component=None):
         self._root_component = root_component
         self._render_stack: list[Component] = []
+        self._is_memo = False
+
+    def set_memo(self):
+        self._is_memo = True
 
     def with_context(self):
         """Context manager to make this renderer the 'current' one."""
@@ -381,16 +366,11 @@ class Renderer:
             _parent_component=weakref.ref(parent_component)
             if parent_component
             else None,
+            memoized=self._is_memo,
             key=key,
         )
         c._frozen = True
 
-        # (re)subscribe to observable args for this fiber
-        # fiber.clear_subscriptions()
-        # self._subscribe_observable_args(fiber, args, kwargs)
+        self._is_memo = False
 
-        # if len(self._render_stack) < 1:
-        #     with self._Frame(self, c):
-        #         c._b = fn(*args, **kwargs)
-        #         return c
         return c

@@ -117,3 +117,17 @@ def test_qux_observable():
     assert len(changes) == 3
     assert changes[2][0] == qux
     assert changes[2][1] == "prop_e"
+
+
+def test_observable_repr():
+    foo = Foo()
+    initial_repr = repr(foo)
+    assert "version=0" in initial_repr
+
+    foo.prop_a = "value1"
+    updated_repr = repr(foo)
+    assert "version=1" in updated_repr
+
+    foo.prop_b = "value2"
+    updated_repr_2 = repr(foo)
+    assert "version=2" in updated_repr_2

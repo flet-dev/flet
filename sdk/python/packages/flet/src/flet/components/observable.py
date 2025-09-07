@@ -92,6 +92,10 @@ class Observable:
         if existed:
             self._notify(name)
 
+    def __repr__(self):
+        original_repr = super().__repr__()
+        return f"{original_repr} (version={self.__version__})"
+
 
 # ---------- Observable collections ----------
 
