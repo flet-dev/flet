@@ -35,7 +35,12 @@ class Component(BaseControl):
         self._state = other._state.copy()
 
     def update(self):
-        logger.debug("%s(%d).update()", self.fn.__name__, self._i)
+        logger.debug(
+            "%s(%d).update(), memo: %s",
+            self.fn.__name__,
+            self._i,
+            self._is_memo(),
+        )
 
         # new rendering
         self._reset_hook_cursor()
@@ -44,6 +49,12 @@ class Component(BaseControl):
 
         for item in b if isinstance(b, list) else [b]:
             object.__setattr__(item, "_frozen", True)
+
+        if self._is_memo() and b is not None:
+            logger.debug("%s(%d).update(): memoizing", self.fn.__name__, self._i)
+            self._state["last_b"] = b
+            self._state["last_args"] = self.args
+            self._state["last_kwargs"] = self.kwargs
 
         # patch component
         context.page.get_session().patch_control(
@@ -54,7 +65,12 @@ class Component(BaseControl):
         self._run_render_effects()
 
     def before_update(self):
-        logger.debug("%s(%d).before_update()", self.fn.__name__, self._i)
+        logger.debug(
+            "%s(%d).before_update(), memo: %s",
+            self.fn.__name__,
+            self._i,
+            self._is_memo(),
+        )
         # if self._b is not None:
         #     return
 
@@ -66,8 +82,17 @@ class Component(BaseControl):
         for item in b if isinstance(b, list) else [b]:
             object.__setattr__(item, "_frozen", True)
 
+        if self._is_memo() and b is not None:
+            logger.debug("%s(%d).update(): memoizing", self.fn.__name__, self._i)
+            self._state["last_b"] = b
+            self._state["last_args"] = self.args
+            self._state["last_kwargs"] = self.kwargs
+
         self._b = b
         self._run_render_effects()
+
+    def _is_memo(self):
+        return getattr(self.fn, "__is_memo__", False)
 
     def _schedule_update(self):
         logger.debug("%s(%d).schedule_update()", self.fn.__name__, self._i)
@@ -195,6 +220,7 @@ def component(fn: Callable[..., Any]) -> Callable[..., Any]:
 
     wrapper.__name__ = fn.__name__
     wrapper.__is_component__ = True
+    wrapper.__component_impl__ = fn
     return wrapper
 
 
@@ -218,7 +244,7 @@ def _get_renderer() -> Renderer:
     return r
 
 
-def _current_component() -> Component:
+def current_component() -> Component:
     r = _get_renderer()
     if not r._render_stack:
         raise RuntimeError("Hooks must be called inside a component render.")
@@ -281,6 +307,9 @@ class Renderer:
         key=None,
     ):
         parent_component = len(self._render_stack) and self._render_stack[-1]
+
+        if not hasattr(fn, "__is_component__"):
+            raise ValueError(f"Function {fn} is not a component (missing @component?)")
 
         c = Component(
             fn=fn,

@@ -15,6 +15,8 @@ class Observable:
     Base class: notifies when fields change; auto-wraps lists/dicts to be observable.
     """
 
+    __version__ = 0  # version
+
     @property
     def __listeners(self):
         storage_name = "_Observable__listeners_storage"  # different name
@@ -36,6 +38,7 @@ class Observable:
         return dispose
 
     def _notify(self, field: str | None):
+        self.__version__ = self.__version__ + 1
         for fn in list(self.__listeners):
             fn(self, field)
 
@@ -50,7 +53,7 @@ class Observable:
 
     # --- attribute interception ---
     def __setattr__(self, name: str, value: Any):
-        if name.startswith("_Observable__"):
+        if name.startswith("_"):  # private, skip
             object.__setattr__(self, name, value)
             return
         value = self._wrap_if_collection(name, value)

@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any, TypeVar
 
-from flet.components.component import _current_component
+from flet.components.component import current_component
 from flet.components.hooks import StateHook
 from flet.components.observable import Observable
 
@@ -9,7 +9,7 @@ StateT = TypeVar("StateT")
 
 
 def use_state(initial: StateT) -> tuple[StateT, Callable[[StateT], None]]:
-    component = _current_component()
+    component = current_component()
     hook = component.use_hook(lambda: StateHook(initial))
 
     def update_subscriptions(hook: StateHook):

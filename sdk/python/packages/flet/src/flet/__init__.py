@@ -1,5 +1,6 @@
 from flet.app import app, app_async, run, run_async
 from flet.components.component import Component, component
+from flet.components.memo import memo
 from flet.components.observable import Observable
 from flet.components.use_effect import use_effect
 from flet.components.use_state import use_state
@@ -936,6 +937,7 @@ __all__ = [
     "dropdownm2",
     "icons",
     "margin",
+    "memo",
     "padding",
     "run",
     "run_async",
