@@ -4,10 +4,10 @@ import contextvars
 import logging
 import weakref
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
 
-from flet.components.hooks import EffectHook
-from flet.components.observable import Observable
+from flet.components.hooks import EffectHook, Hook
+from flet.components.observable import Observable, ObservableSubscription
 from flet.controls.base_control import BaseControl, control
 from flet.controls.context import context
 
@@ -17,21 +17,23 @@ logger.setLevel(logging.INFO)
 
 @dataclass
 class _ComponentState:
-    hooks: list[Any] = field(default_factory=list)
+    hooks: list[Hook] = field(default_factory=list)
     hook_cursor: int = 0
     mounted: bool = False
     is_dirty: bool = False
-    subscription_disposers: list[Callable[[], Any]] = field(default_factory=list)
+    observable_subscriptions: list[ObservableSubscription] = field(default_factory=list)
     last_args: tuple[Any, ...] = field(default_factory=tuple)
     last_kwargs: dict[str, Any] = field(default_factory=dict)
     last_b: Any = None
 
     def change_owner(self, new_owner: Any):
-        # change owner for all disposers
-        # for disposer in self.subscription_disposers:
-        #     if hasattr(disposer, "change_owner"):
-        #         disposer.change_owner(new_owner)
-        pass
+        for hook in self.hooks:
+            hook.component = new_owner
+        for sub in self.observable_subscriptions:
+            sub.component = new_owner
+
+
+HookTypeT = TypeVar("HookTypeT", bound=Hook)
 
 
 @control("C")
@@ -66,8 +68,8 @@ class Component(BaseControl):
         logger.debug("self.parent: %s", self.parent)
 
         # new rendering
-        self._reset_hook_cursor()
-        self._detach_subscriptions()
+        self._state.hook_cursor = 0
+        self._detach_observable_subscriptions()
         self._subscribe_observable_args(self.args, self.kwargs)
 
         b = Renderer(self).render(self.fn, *self.args, **self.kwargs)
@@ -76,7 +78,7 @@ class Component(BaseControl):
             object.__setattr__(item, "_frozen", True)
 
         if self._is_memo() and b is not None:
-            logger.debug("%s(%d).update(): memoizing", self.fn.__name__, self._i)
+            logger.debug("%s.update(): memoizing", self)
             self._state.last_b = b
             self._state.last_args = self.args
             self._state.last_kwargs = self.kwargs
@@ -99,7 +101,7 @@ class Component(BaseControl):
         is_dirty = self._state.is_dirty
         self._state.is_dirty = False
 
-        self._detach_subscriptions()
+        self._detach_observable_subscriptions()
         self._subscribe_observable_args(self.args, self.kwargs)
 
         if (
@@ -112,13 +114,12 @@ class Component(BaseControl):
             logger.debug("%s.before_update(): skipping (memo)", self)
             self._b = self._state.last_b
 
-            # restore parent?
-            print("\n\nSELF.PARENT:", self.parent)
+            # fix parent
             for item in self._b if isinstance(self._b, list) else [self._b]:
                 object.__setattr__(item, "_parent", weakref.ref(self))
             return
 
-        self._reset_hook_cursor()
+        self._state.hook_cursor = 0
         b = Renderer(self).render(self.fn, *self.args, **self.kwargs)
 
         for item in b if isinstance(b, list) else [b] if b is not None else []:
@@ -148,40 +149,31 @@ class Component(BaseControl):
     def _subscribe_observable_args(self, args: tuple[Any, ...], kwargs: dict[str, Any]):
         for a in args:
             if isinstance(a, Observable):
-                self._attach_subscription(a)
+                self._attach_observable_subscription(a)
         for v in kwargs.values():
             if isinstance(v, Observable):
-                self._attach_subscription(v)
+                self._attach_observable_subscription(v)
 
-    def _attach_subscription(self, observable: Observable):
+    def _attach_observable_subscription(self, observable: Observable):
         # Use weak refs to avoid cycles
-        logger.debug("%d._attach_subscription(%s)", self, observable)
-        rself = weakref.ref(self)
+        logger.debug("%s._attach_observable_subscription(%s)", self, observable)
 
-        def on_change(_sender, _field):
-            r = rself()
-            if not r:
-                return
-            r._schedule_update()
+        self._state.observable_subscriptions.append(
+            ObservableSubscription(owner=self, observable=observable)
+        )
+        return self._state.observable_subscriptions[-1]
 
-        dispose = observable.subscribe(on_change)
-        self._state.subscription_disposers.append(dispose)
-        return dispose
+    def _detach_observable_subscription(self, subscription: ObservableSubscription):
+        if subscription in self._state.observable_subscriptions:
+            subscription.dispose()
+            self._state.observable_subscriptions.remove(subscription)
 
-    def _detach_subscription(self, dispose: Callable[[], Any]):
-        if dispose in self._state.subscription_disposers:
-            dispose()
-            self._state.subscription_disposers.remove(dispose)
+    def _detach_observable_subscriptions(self):
+        for subscription in self._state.observable_subscriptions:
+            subscription.dispose()
+        self._state.observable_subscriptions.clear()
 
-    def _detach_subscriptions(self):
-        for dispose in self._state.subscription_disposers:
-            dispose()
-        self._state.subscription_disposers.clear()
-
-    def _reset_hook_cursor(self):
-        self._state.hook_cursor = 0
-
-    def use_hook(self, default: Callable[..., Any]):
+    def use_hook(self, default: Callable[[], HookTypeT]) -> HookTypeT:
         hook_cursor = self._state.hook_cursor
 
         i = hook_cursor
@@ -230,7 +222,7 @@ class Component(BaseControl):
     def will_unmount(self):
         super().will_unmount()
         self._state.mounted = False
-        self._detach_subscriptions()
+        self._detach_observable_subscriptions()
         self._run_unmount_effects()
 
     def _compare_args(

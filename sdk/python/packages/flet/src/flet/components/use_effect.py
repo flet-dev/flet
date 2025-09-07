@@ -7,7 +7,7 @@ from flet.components.hooks import EffectHook
 
 def use_effect(fn: Callable[[], Any], deps: list[Any] | None = None):
     component = current_component()
-    hook = component.use_hook(lambda: EffectHook(fn=fn, deps=deps))
+    hook = component.use_hook(lambda: EffectHook(component, fn=fn, deps=deps))
 
     # update effect hook
     hook.fn = fn

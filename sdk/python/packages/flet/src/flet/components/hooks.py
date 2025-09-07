@@ -1,17 +1,28 @@
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+from flet.components.component_owned import ComponentOwned
+from flet.components.observable import ObservableSubscription
+
+if TYPE_CHECKING:
+    pass
+
+
+@dataclass()
+class Hook(ComponentOwned):
+    pass
 
 
 @dataclass
-class StateHook:
+class StateHook(Hook):
     value: Any
-    disposer: Callable[[], Any] | None = None
+    subscription: ObservableSubscription | None = None
     version: int = 0
 
 
 @dataclass
-class EffectHook:
+class EffectHook(Hook):
     fn: Callable[[], Any]
     deps: list[Any] | None = None
     cleanup: Callable[[], Any] | None = None

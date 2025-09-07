@@ -3,11 +3,35 @@ from __future__ import annotations
 import contextlib
 import weakref
 from collections.abc import Iterable
-from typing import Any, Callable, Optional
+from dataclasses import InitVar, dataclass
+from typing import TYPE_CHECKING, Any, Callable, Optional
+
+if TYPE_CHECKING:
+    from flet.components.component import Component
+
+from flet.components.component_owned import ComponentOwned
 
 # ---------- Core notifier ----------
 
 Listener = Callable[[Any, Optional[str]], None]  # (sender, field|None)
+
+
+@dataclass
+class ObservableSubscription(ComponentOwned):
+    observable: InitVar[Observable]
+
+    def __post_init__(self, owner: Component, observable: Observable) -> None:
+        super().__post_init__(owner)
+        self.__disposer = observable.subscribe(self.__on_change)
+
+    def dispose(self):
+        if callable(self.__disposer):
+            self.__disposer()
+            self.__disposer = None
+
+    def __on_change(self, _sender, _field):
+        if self.component:
+            self.component._schedule_update()
 
 
 class Observable:
