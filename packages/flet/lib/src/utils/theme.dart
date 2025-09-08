@@ -530,8 +530,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     shape: parseShape(value["shape"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
     extendedPadding: parsePadding(value["extended_padding"]),
-    extendedTextStyle: parseTextStyle(value["extended_text_style"], theme),
-    extendedIconLabelSpacing: parseDouble(value["extended_icon_label_spacing"]),
+    extendedTextStyle: parseTextStyle(value["text_style"], theme),
+    extendedIconLabelSpacing: parseDouble(value["icon_label_spacing"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     iconSize: parseDouble(value["icon_size"]),
     extendedSizeConstraints:

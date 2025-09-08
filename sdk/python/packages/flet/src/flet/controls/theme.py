@@ -1131,28 +1131,29 @@ class FloatingActionButtonTheme:
     content.
     """
 
-    extended_text_style: Optional[TextStyle] = None
+    text_style: Optional[TextStyle] = None
     """
-    The text style for an extended
-    [`FloatingActionButton`][flet.FloatingActionButton].
+    Text style merged into default text style of
+    [`FloatingActionButton.label`][flet.FloatingActionButton.label].
     """
 
-    extended_icon_label_spacing: Optional[Number] = None
+    icon_label_spacing: Optional[Number] = None
     """
-    The spacing between the icon and the label for an extended
+    The spacing between the icon and the label for
     [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    extended [`FloatingActionButton`][flet.FloatingActionButton].
+    [`FloatingActionButton`][flet.FloatingActionButton] that has both icon and label.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    [`FloatingActionButton`][flet.FloatingActionButton].
+    [`FloatingActionButton`][flet.FloatingActionButton] that has either icon or label
+    and is not a mini button.
     """
 
     # large_size_constraints: Optional[BoxConstraints] = None
