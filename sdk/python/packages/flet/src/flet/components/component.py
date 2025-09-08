@@ -9,6 +9,7 @@ from typing import Any, Callable, TypeVar
 
 from flet.components.hooks import EffectHook, Hook
 from flet.components.observable import Observable, ObservableSubscription
+from flet.components.utils import shallow_compare_args_and_kwargs
 from flet.controls.base_control import BaseControl, control
 from flet.controls.context import context
 
@@ -111,7 +112,7 @@ class Component(BaseControl):
         if (
             self.memoized
             and not is_dirty
-            and self._shallow_compare_args(
+            and shallow_compare_args_and_kwargs(
                 self._state.last_args, self._state.last_kwargs, self.args, self.kwargs
             )
             and self._state.last_b is not None
@@ -193,7 +194,7 @@ class Component(BaseControl):
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook):
                 # all effects are running on mount
-                self._schedule_effect(hook, hook.fn)
+                self._schedule_effect(hook, hook.setup)
 
     def _run_render_effects(self):
         logger.debug("%s._run_render_effects()", self)
@@ -208,7 +209,7 @@ class Component(BaseControl):
                     or hook.prev_deps is None
                     or hook.deps != hook.prev_deps
                 ):
-                    self._schedule_effect(hook, hook.fn)
+                    self._schedule_effect(hook, hook.setup)
 
     def _run_unmount_effects(self):
         logger.debug("%s._run_unmount_effects()", self)
@@ -227,28 +228,6 @@ class Component(BaseControl):
         self._state.mounted = False
         self._detach_observable_subscriptions()
         self._run_unmount_effects()
-
-    def _shallow_compare_args(
-        self,
-        prev_args: tuple[Any, ...],
-        prev_kwargs: dict[str, Any],
-        args: tuple[Any, ...],
-        kwargs: dict[str, Any],
-    ) -> bool:
-        if prev_args is args and prev_kwargs is kwargs:
-            return True
-        if len(prev_args) != len(args):
-            return False
-        for a, b in zip(prev_args, args):
-            if a is not b and a != b:
-                return False
-        if prev_kwargs.keys() != kwargs.keys():
-            return False
-        for k in prev_kwargs:
-            a, b = prev_kwargs[k], kwargs[k]
-            if a is not b and a != b:
-                return False
-        return True
 
     def __str__(self):
         return f"{self._c}:{self.fn.__name__}({self._i} - {id(self)})"

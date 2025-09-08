@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from flet.components.component_owned import ComponentOwned
 from flet.components.observable import ObservableSubscription
@@ -23,7 +23,7 @@ class StateHook(Hook):
 
 @dataclass
 class EffectHook(Hook):
-    fn: Callable[[], Any]
+    setup: Callable[[], Any]
     deps: list[Any] | None = None
     cleanup: Callable[[], Any] | None = None
     prev_deps: list[Any] | None = None
@@ -32,3 +32,12 @@ class EffectHook(Hook):
 @dataclass
 class ContextHook(Hook):
     pass
+
+
+MemoValueT = TypeVar("MemoValueT")
+
+
+@dataclass
+class MemoHook(Hook, Generic[MemoValueT]):
+    value: MemoValueT | None = None
+    prev_deps: list[Any] | None = None
