@@ -4,7 +4,7 @@ from flet.components.memo import memo
 from flet.components.observable import Observable
 from flet.components.use_callback import use_callback
 from flet.components.use_context import create_context, use_context
-from flet.components.use_effect import use_effect
+from flet.components.use_effect import on_mounted, on_unmounted, on_updated, use_effect
 from flet.components.use_memo import use_memo
 from flet.components.use_state import use_state
 from flet.controls import alignment, border, border_radius, margin, padding
@@ -942,6 +942,9 @@ __all__ = [
     "icons",
     "margin",
     "memo",
+    "on_mounted",
+    "on_unmounted",
+    "on_updated",
     "padding",
     "run",
     "run_async",
