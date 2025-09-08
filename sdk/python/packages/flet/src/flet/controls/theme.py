@@ -1127,8 +1127,8 @@ class FloatingActionButtonTheme:
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for an extended [`FloatingActionButton`][flet.FloatingActionButton]'s
-    content.
+    The padding for a [`FloatingActionButton`][flet.FloatingActionButton]'s
+    that has both icon and content.
     """
 
     text_style: Optional[TextStyle] = None
@@ -1146,13 +1146,13 @@ class FloatingActionButtonTheme:
     extended_size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    [`FloatingActionButton`][flet.FloatingActionButton] that has both icon and label.
+    [`FloatingActionButton`][flet.FloatingActionButton] that has both icon and content.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    [`FloatingActionButton`][flet.FloatingActionButton] that has either icon or label
+    [`FloatingActionButton`][flet.FloatingActionButton] that has either icon or content
     and is not a mini button.
     """
 
@@ -3404,7 +3404,15 @@ class Theme:
     """
 
     icon_theme: Optional[IconTheme] = None
+    """
+    Customizes the appearance of [`Icon`][flet.Icon] across the app.
+    """
+
     list_tile_theme: Optional[ListTileTheme] = None
+    """
+    Customizes the appearance of [`ListTile`][flet.ListTile] across the app.
+    """
+
     navigation_bar_theme: Optional[NavigationBarTheme] = None
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = None
     navigation_rail_theme: Optional[NavigationRailTheme] = None
