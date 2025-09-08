@@ -2,6 +2,7 @@ from flet.app import app, app_async, run, run_async
 from flet.components.component import Component, component
 from flet.components.memo import memo
 from flet.components.observable import Observable
+from flet.components.use_context import create_context, use_context
 from flet.components.use_effect import use_effect
 from flet.components.use_state import use_state
 from flet.controls import alignment, border, border_radius, margin, padding
@@ -931,6 +932,7 @@ __all__ = [
     "component",
     "context",
     "control",
+    "create_context",
     "cupertino_colors",
     "cupertino_icons",
     "dropdown",
@@ -941,6 +943,7 @@ __all__ = [
     "padding",
     "run",
     "run_async",
+    "use_context",
     "use_effect",
     "use_state",
 ]
