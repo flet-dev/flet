@@ -23,30 +23,69 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
 async def test_properties1(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
-        ft.ListTile(
-            "List Tile",
-            subtitle="Subtitle",
-            leading=ft.Icon(ft.Icons.STAR),
-            trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-            bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-            shape=ft.RoundedRectangleBorder(radius=10),
-        ),
-    )
-
-
-@pytest.mark.asyncio(loop_scope="function")
-async def test_selected(flet_app: ftt.FletTestApp, request):
-    await flet_app.assert_control_screenshot(
-        request.node.name,
-        ft.ListTile(
-            "List Tile",
-            subtitle="Subtitle",
-            leading=ft.Icon(ft.Icons.STAR),
-            trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-            bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-            selected=True,
-            selected_color=ft.Colors.PINK_200,
-            selected_tile_color=ft.Colors.PURPLE_200,
+        ft.Column(
+            [
+                ft.ListTile(
+                    "List Tile with custom shape",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    shape=ft.RoundedRectangleBorder(
+                        radius=10, side=ft.BorderSide(color=ft.Colors.RED, width=2.0)
+                    ),
+                ),
+                ft.ListTile(
+                    "Dense List Tile",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    dense=True,
+                ),
+                ft.ListTile(
+                    "List Tile with Content Padding",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    content_padding=ft.Padding.all(20),
+                ),
+                ft.ListTile(
+                    "List Tile with autofocus",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    autofocus=True,
+                ),
+                ft.ListTile(
+                    "Disabled List Tile",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    disabled=True,
+                ),
+                ft.ListTile(
+                    "Selected List Tile",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    selected=True,
+                    selected_color=ft.Colors.PINK_200,
+                    selected_tile_color=ft.Colors.PURPLE_200,
+                ),
+                ft.ListTile(
+                    "Drawer style List Tile",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    style=ft.ListTileStyle.DRAWER,
+                ),
+            ]
         ),
     )
 
@@ -70,8 +109,7 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
         hover_color=ft.Colors.YELLOW_200,
         selected_color=ft.Colors.PINK_200,
         selected_tile_color=ft.Colors.PURPLE_200,
-        selected=True,
-        dense=True,
+        selected=False,
         toggle_inputs=True,
         style=ft.ListTileStyle.DRAWER,
         shape=ft.RoundedRectangleBorder(radius=10),
@@ -82,39 +120,13 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme1",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
-    )
-
-    # test focus color
-    lt.autofocus = True
-    flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
-
-    flet_app.assert_screenshot(
-        "focus",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
-    )
-
-    # test disabled
-    lt.autofocus = False
-    lt.disabled = True
-    flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
-
-    flet_app.assert_screenshot(
-        "disabled",
+        "properties_2_normal",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
 
     # test hover
-    lt.disabled = False
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
     tile = await flet_app.tester.find_by_key("lt")
@@ -123,7 +135,7 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "hover",
+        "properties_2_hover",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

@@ -30,6 +30,14 @@ class ListTileTitleAlignment(Enum):
 
 
 class ListTileStyle(Enum):
+    """
+    Defines the title font used for ListTile descendants of a ListTileTheme.
+
+    List tiles that appear in a Drawer use the theme's TextTheme.body_large text style,
+    which is a little smaller than the theme's TextTheme.title_medium text style, which
+    is used by default.
+    """
+
     LIST = "list"
     DRAWER = "drawer"
 
