@@ -27,3 +27,8 @@ class EffectHook(Hook):
     deps: list[Any] | None = None
     cleanup: Callable[[], Any] | None = None
     prev_deps: list[Any] | None = None
+
+
+@dataclass
+class ContextHook(Hook):
+    pass

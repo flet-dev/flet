@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextvars
 import logging
 import weakref
+from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Callable, TypeVar
 
@@ -22,6 +23,7 @@ class _ComponentState:
     mounted: bool = False
     is_dirty: bool = False
     observable_subscriptions: list[ObservableSubscription] = field(default_factory=list)
+    contexts: dict[object, Any] = field(default_factory=dict)
     last_args: tuple[Any, ...] = field(default_factory=tuple)
     last_kwargs: dict[str, Any] = field(default_factory=dict)
     last_b: Any = None
@@ -48,14 +50,18 @@ class Component(BaseControl):
         default_factory=_ComponentState, metadata={"skip": True}
     )
     memoized: bool = field(default=False, metadata={"skip": True})
+    _stale: bool = field(default=False, metadata={"skip": True})
+
     _b: Any = None  # body
 
     def _migrate_state(self, other: BaseControl):
         super()._migrate_state(other)
+        logger.debug("%s._migrate_state(%s)", self, other)
         if not isinstance(other, Component):
             return
         self._state = other._state
         self._state.change_owner(self)
+        other._stale = True
 
     def update(self):
         logger.debug(
@@ -63,6 +69,9 @@ class Component(BaseControl):
             self,
             self.memoized,
         )
+        if self._stale:
+            return
+
         self._state.is_dirty = False
 
         # new rendering
@@ -99,9 +108,6 @@ class Component(BaseControl):
         is_dirty = self._state.is_dirty
         self._state.is_dirty = False
 
-        self._detach_observable_subscriptions()
-        self._subscribe_observable_args(self.args, self.kwargs)
-
         if (
             self.memoized
             and not is_dirty
@@ -119,6 +125,8 @@ class Component(BaseControl):
             return
 
         self._state.hook_cursor = 0
+        self._detach_observable_subscriptions()
+        self._subscribe_observable_args(self.args, self.kwargs)
         b = Renderer(self).render(self.fn, *self.args, **self.kwargs)
 
         for item in b if isinstance(b, list) else [b] if b is not None else []:
@@ -278,8 +286,12 @@ _CURRENT_RENDERER: contextvars.ContextVar[Renderer | None] = contextvars.Context
 )
 
 
+def _try_get_renderer() -> Renderer | None:
+    return _CURRENT_RENDERER.get()
+
+
 def _get_renderer() -> Renderer:
-    r = _CURRENT_RENDERER.get()
+    r = _try_get_renderer()
     if r is None:
         raise RuntimeError(
             "No current renderer is set. Call via Renderer.render(...) "
@@ -304,9 +316,26 @@ class Renderer:
         self._root_component = root_component
         self._render_stack: list[Component] = []
         self._is_memo = False
+        self._contexts: dict[object, list[object]] = defaultdict(list)
 
     def set_memo(self):
         self._is_memo = True
+
+    def _push_context(self, key: object, value: object) -> None:
+        logger.debug("Renderer._push_context(%s, %s)", key, value)
+        self._contexts[key].append(value)
+
+    def _pop_context(self, key: object) -> None:
+        logger.debug("Renderer._pop_context(%s)", key)
+        stack = self._contexts.get(key)
+        if stack:
+            stack.pop()
+            if not stack:
+                del self._contexts[key]
+
+    def _snapshot_contexts(self) -> dict[object, object]:
+        # take top of each stack
+        return {k: v[-1] for k, v in self._contexts.items() if v}
 
     def with_context(self):
         """Context manager to make this renderer the 'current' one."""
@@ -354,6 +383,7 @@ class Renderer:
         kwargs: dict[str, Any],
         key=None,
     ):
+        logger.debug("Renderer._render_component(%s, %s, %s)", fn, args, kwargs)
         parent_component = len(self._render_stack) and self._render_stack[-1]
 
         if not hasattr(fn, "__is_component__"):
@@ -369,6 +399,7 @@ class Renderer:
             memoized=self._is_memo,
             key=key,
         )
+        c._state.contexts = self._snapshot_contexts()
         c._frozen = True
 
         self._is_memo = False
