@@ -89,7 +89,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       selectedColor: control.getColor("selected_color", context),
       focusColor: control.getColor("focus_color", context),
       tileColor: control.getColor("bgcolor", context),
-      splashColor: control.getColor("bgcolor_activated", context),
+      splashColor: control.getColor("splash_color", context),
       hoverColor: control.getColor("hover_color", context),
       iconColor: control.getColor("icon_color", context),
       textColor: control.getColor("text_color", context),

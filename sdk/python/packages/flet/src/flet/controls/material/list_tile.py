@@ -108,10 +108,9 @@ class ListTile(LayoutControl, AdaptiveControl):
     The list tile's background color.
     """
 
-    bgcolor_activated: Optional[str] = None
+    splash_color: Optional[ColorValue] = None
     """
-    The list tile's splash color after the
-    being was tapped.
+    The list tile's splash color after the control has been tapped.
     """
 
     hover_color: Optional[ColorValue] = None
