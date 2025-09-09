@@ -115,7 +115,7 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The tile's color when hovered.
+    The tile's color when hovered. Only shows if `toggle_inputs` is True.
     """
 
     selected: bool = False
