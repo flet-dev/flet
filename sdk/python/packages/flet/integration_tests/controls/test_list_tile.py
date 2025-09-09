@@ -172,70 +172,52 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_properties3(flet_app: ftt.FletTestApp, request):
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-
-    lt = ft.ListTile(
-        key="lt",
-        title="List Tile without three line",
-        subtitle="Long Long Long Long Long Long Long Long Long Long Long "
-        "Long Long Long Long Long Long Long Long Long Long Long"
-        "Long Subtitle with is_three_line = False",
-        # is_three_line=True,
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
-        hover_color=ft.Colors.YELLOW_200,
-    )
-
-    lt1 = ft.ListTile(
-        title="List Tile with three line",
-        subtitle="Long Long Long Long Long Long Long Long Long Long Long "
-        "Long Long Long Long Long Long Long Long Long Long Long"
-        "Long Subtitle with is_three_line = True",
-        is_three_line=True,  # not sure if this behaviour is correct or not.
-        # Tested it in flutter, it also shows more than 3 lines
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
-        hover_color=ft.Colors.YELLOW_200,
-    )
-
-    lt2 = ft.ListTile(
-        title="List Tile with Compact visual density",
-        subtitle="Long Long Long Long Long Long Long Long Long Long Long "
-        "Long Long Long Long Long Long Long Long Long Long Long"
-        "Long Subtitle with is_three_line = False",
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        visual_density=ft.VisualDensity.COMPACT,
-    )
-
-    flet_app.page.add(lt, lt1, lt2)
-    flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
-
-    flet_app.assert_screenshot(
-        "properties_3_normal",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
-    )
-
-    # test hover
-    tile = await flet_app.tester.find_by_key("lt")
-    assert tile.count == 1
-    await flet_app.tester.mouse_hover(tile)
-    await flet_app.tester.pump_and_settle()
-
-    flet_app.assert_screenshot(
-        "properties_3_hover",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            controls=[
+                ft.ListTile(
+                    title="List Tile without three line",
+                    subtitle="Long Long Long Long Long Long Long Long Long Long Long "
+                    "Long Long Long Long Long Long Long Long Long Long Long"
+                    "Long Subtitle with is_three_line = False",
+                    # is_three_line=True,
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                ),
+                ft.ListTile(
+                    title="List Tile with three line",
+                    subtitle="Long Long Long Long Long Long Long Long Long Long Long "
+                    "Long Long Long Long Long Long Long Long Long Long Long"
+                    "Long Subtitle with is_three_line = True",
+                    is_three_line=True,  # not sure if this behaviour is correct or not.
+                    # Tested it in flutter, it also shows more than 3 lines
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                ),
+                ft.ListTile(
+                    title="List Tile with Compact visual density",
+                    subtitle="Long Long Long Long Long Long Long Long Long Long Long "
+                    "Long Long Long Long Long Long Long Long Long Long Long"
+                    "Long Subtitle with is_three_line = False",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    visual_density=ft.VisualDensity.COMPACT,
+                ),
+                ft.ListTile(
+                    title="List Tile with Standard visual density",
+                    subtitle="Long Long Long Long Long Long Long Long Long Long Long "
+                    "Long Long Long Long Long Long Long Long Long Long Long"
+                    "Long Subtitle with is_three_line = False",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    visual_density=ft.VisualDensity.STANDARD,
+                ),
+            ]
         ),
     )
 
@@ -254,6 +236,7 @@ async def test_toggle_inputs(flet_app: ftt.FletTestApp, request):
         trailing=ft.Checkbox(),
         bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
         style=ft.ListTileStyle.LIST,
+        hover_color=ft.Colors.YELLOW_200,
         toggle_inputs=True,
     )
 
@@ -262,20 +245,30 @@ async def test_toggle_inputs(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "toggle_initial",
+        "toggle_inputs_initial",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
 
-    # test click1
+    # test hover
     tile = await flet_app.tester.find_by_key("lt")
     assert tile.count == 1
+    await flet_app.tester.mouse_hover(tile)
+    await flet_app.tester.pump_and_settle()
+
+    flet_app.assert_screenshot(
+        "toggle_inputs_hover",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
     await flet_app.tester.tap(tile)
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "toggle_click1",
+        "toggle_inputs_click1",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
