@@ -1,4 +1,5 @@
-from collections.abc import Callable
+import asyncio
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
@@ -23,10 +24,20 @@ class StateHook(Hook):
 
 @dataclass
 class EffectHook(Hook):
-    setup: Callable[[], Any]
-    cleanup: Callable[[], Any] | None = None
+    setup: Callable[[], Any | Awaitable[Any]]
+    cleanup: Callable[[], Any | Awaitable[Any]] | None = None
     deps: list[Any] | None = None
     prev_deps: list[Any] | None = None
+
+    # runtime
+    _setup_task: asyncio.Task | None = None  # last scheduled setup task
+    _cleanup_task: asyncio.Task | None = None  # last scheduled cleanup task
+
+    def cancel(self):
+        if self._setup_task and not self._setup_task.done():
+            self._setup_task.cancel()
+        if self._cleanup_task and not self._cleanup_task.done():
+            self._cleanup_task.cancel()
 
 
 @dataclass

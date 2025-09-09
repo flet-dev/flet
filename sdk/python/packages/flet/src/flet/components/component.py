@@ -146,9 +146,9 @@ class Component(BaseControl):
         self._state.is_dirty = True
         context.page.get_session().schedule_update(self)
 
-    def _schedule_effect(self, hook: EffectHook, fn: Callable):
-        logger.debug("%s.schedule_effect(%s)", self, fn.__name__)
-        context.page.get_session().schedule_effect(hook, fn)
+    def _schedule_effect(self, hook: EffectHook, is_cleanup: bool = False):
+        logger.debug("%s.schedule_effect(%s)", self, is_cleanup)
+        context.page.get_session().schedule_effect(hook, is_cleanup)
 
     def _subscribe_observable_args(self, args: tuple[Any, ...], kwargs: dict[str, Any]):
         for a in args:
@@ -194,29 +194,29 @@ class Component(BaseControl):
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook):
                 # all effects are running on mount
-                self._schedule_effect(hook, hook.setup)
+                self._schedule_effect(hook, is_cleanup=False)
 
     def _run_render_effects(self):
-        logger.debug("%s._run_render_effects()", self)
         if not self._state.mounted:
             return
+        logger.debug("%s._run_render_effects()", self)
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook) and hook.deps != []:
                 if callable(hook.cleanup):
-                    self._schedule_effect(hook, hook.cleanup)
+                    self._schedule_effect(hook, is_cleanup=False)
                 if (
                     hook.deps is None
                     or hook.prev_deps is None
                     or hook.deps != hook.prev_deps
                 ):
-                    self._schedule_effect(hook, hook.setup)
+                    self._schedule_effect(hook, is_cleanup=False)
 
     def _run_unmount_effects(self):
         logger.debug("%s._run_unmount_effects()", self)
         for hook in self._state.hooks:
             # all effects are running on unmount
             if isinstance(hook, EffectHook) and callable(hook.cleanup):
-                self._schedule_effect(hook, hook.cleanup)
+                self._schedule_effect(hook, is_cleanup=True)
 
     def did_mount(self):
         super().did_mount()

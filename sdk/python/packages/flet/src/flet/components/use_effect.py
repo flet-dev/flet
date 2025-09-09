@@ -1,4 +1,4 @@
-from collections.abc import Callable, Sequence
+from collections.abc import Awaitable, Callable, Sequence
 from typing import Any
 
 from flet.components.component import current_component
@@ -6,9 +6,9 @@ from flet.components.hooks import EffectHook
 
 
 def use_effect(
-    setup: Callable[[], Any],
+    setup: Callable[[], Any | Awaitable[Any]],
     dependencies: Sequence[Any] | None = None,
-    cleanup: Callable[[], Any] | None = None,
+    cleanup: Callable[[], Any | Awaitable[Any]] | None = None,
 ):
     component = current_component()
     deps = list(dependencies) if dependencies is not None else None
@@ -30,14 +30,14 @@ def use_effect(
     hook.cleanup = cleanup
 
 
-def on_mounted(fn: Callable[[], Any]) -> None:
+def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once after the component mounts.
     """
     use_effect(fn, dependencies=[])
 
 
-def on_unmounted(fn: Callable[[], Any]) -> None:
+def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once when the component unmounts.
     """
@@ -46,7 +46,7 @@ def on_unmounted(fn: Callable[[], Any]) -> None:
 
 
 def on_updated(
-    fn: Callable[[], Any], dependencies: Sequence[Any] | None = None
+    fn: Callable[[], Any | Awaitable[Any]], dependencies: Sequence[Any] | None = None
 ) -> None:
     """
     Run after each post-mount render (or when dependencies change).

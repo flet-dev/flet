@@ -3,7 +3,7 @@ import logging
 import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 from flet.components.hooks import EffectHook
 from flet.controls.base_control import BaseControl
@@ -44,9 +44,7 @@ class Session:
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
-        self.__pending_effects: list[
-            tuple[weakref.ref[EffectHook], weakref.ref[Callable]]
-        ] = []
+        self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
         self.__closed = False
 
         session_id = self.__id
@@ -304,9 +302,9 @@ class Session:
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
-    def schedule_effect(self, hook: EffectHook, fn: Callable):
-        # logger.debug("Schedule_effect(%s, %s)", hook, fn.__name__)
-        self.__pending_effects.append((weakref.ref(hook), weakref.ref(fn)))
+    def schedule_effect(self, hook: EffectHook, is_cleanup: bool):
+        logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
+        self.__pending_effects.append((weakref.ref(hook), is_cleanup))
         self.__updates_ready.set()
 
     def start_updates_scheduler(self):
@@ -328,12 +326,22 @@ class Session:
             for effect in self.__pending_effects:
                 try:
                     hook = effect[0]()
-                    fn = effect[1]()
-                    # print(f"**** Running effect: {hook} {fn}")
-                    if hook and fn:
-                        res = fn()
+                    is_cleanup = effect[1]
+                    # print(f"**** Running effect: {hook} {is_cleanup}")
+                    if hook and hook.setup and not is_cleanup:
+                        hook.cancel()
+                        if asyncio.iscoroutinefunction(hook.setup):
+                            hook._setup_task = asyncio.create_task(hook.setup())
+                        else:
+                            res = hook.setup()
                         if callable(res):
                             hook.cleanup = res
+                    elif hook and hook.cleanup and is_cleanup:
+                        hook.cancel()
+                        if asyncio.iscoroutinefunction(hook.cleanup):
+                            hook._cleanup_task = asyncio.create_task(hook.cleanup())
+                        else:
+                            hook.cleanup()
                 except Exception as ex:
                     tb = traceback.format_exc()
                     self.error(f"Exception in effect: {ex}\n{tb}")
