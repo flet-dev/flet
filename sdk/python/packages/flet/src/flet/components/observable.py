@@ -16,6 +16,13 @@ from flet.components.component_owned import ComponentOwned
 Listener = Callable[[Any, Optional[str]], None]  # (sender, field|None)
 
 
+def observable(cls):
+    if Observable in cls.__mro__:
+        return cls
+    # create a new class that mixes Observable before cls
+    return type(cls.__name__, (Observable, cls), dict(cls.__dict__))
+
+
 @dataclass
 class ObservableSubscription(ComponentOwned):
     observable: InitVar[Observable]

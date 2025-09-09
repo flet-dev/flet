@@ -54,3 +54,9 @@ def on_updated(
     on changes.
     """
     use_effect(fn, dependencies=dependencies)
+
+
+effect = use_effect  # alias
+mounted = on_mounted  # alias
+unmounted = on_unmounted  # alias
+updated = on_updated  # alias
