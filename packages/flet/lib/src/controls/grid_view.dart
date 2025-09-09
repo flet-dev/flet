@@ -51,6 +51,7 @@ class _GridViewControlState extends State<GridViewControl> {
     final childAspectRatio = widget.control.getDouble("child_aspect_ratio", 1)!;
     final reverse = widget.control.getBool("reverse", false)!;
     final cacheExtent = widget.control.getDouble("cache_extent");
+    final controls = widget.control.children("controls");
 
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
@@ -89,7 +90,12 @@ class _GridViewControlState extends State<GridViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 gridDelegate: gridDelegate,
-                children: widget.control.buildWidgets("controls"),
+                children: controls
+                    .map((item) => ControlWidget(
+                          key: ValueKey(item.id),
+                          control: item,
+                        ))
+                    .toList(),
               )
             : GridView.builder(
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
@@ -101,10 +107,12 @@ class _GridViewControlState extends State<GridViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 gridDelegate: gridDelegate,
-                itemCount: widget.control.children("controls").length,
+                itemCount: controls.length,
                 itemBuilder: (context, index) {
                   return ControlWidget(
-                      control: widget.control.children("controls")[index]);
+                    key: ValueKey(controls[index].id),
+                    control: controls[index],
+                  );
                 },
               );
 
