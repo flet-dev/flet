@@ -850,7 +850,7 @@ ListTileThemeData? parseListTileTheme(
     leadingAndTrailingTextStyle:
         parseTextStyle(value["leading_and_trailing_text_style"], theme),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
-    minTileHeight: parseDouble(value["min_tile_height"]),
+    minTileHeight: parseDouble(value["min_height"]),
   );
 }
 

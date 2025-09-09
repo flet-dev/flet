@@ -74,9 +74,9 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
     Widget tile = ListTile(
       autofocus: control.getBool("autofocus", false)!,
       contentPadding: control.getPadding("content_padding"),
-      isThreeLine: control.getBool("is_three_line", false)!,
+      isThreeLine: control.getBool("is_three_line"),
       selected: control.getBool("selected", false)!,
-      dense: control.getBool("dense", false)!,
+      dense: control.getBool("dense"),
       onTap: onPressed,
       onLongPress: onLongPress,
       enabled: !control.disabled,

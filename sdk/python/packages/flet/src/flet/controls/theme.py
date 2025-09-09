@@ -2351,7 +2351,7 @@ class ListTileTheme:
     [`ListTile.mouse_cursor`][flet.ListTile.mouse_cursor].
     """
 
-    min_tile_height: Optional[Number] = None
+    min_height: Optional[Number] = None
     """
     Overrides the default value for
     [`ListTile.min_height`][flet.ListTile.min_height].
