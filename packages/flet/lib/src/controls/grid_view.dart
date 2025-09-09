@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 import '../controls/control_widget.dart';
-import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
 import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
@@ -92,7 +92,7 @@ class _GridViewControlState extends State<GridViewControl> {
                 gridDelegate: gridDelegate,
                 children: controls
                     .map((item) => ControlWidget(
-                          key: ValueKey(item.id),
+                          key: ValueKey(item.getKey("key")?.value ?? item.id),
                           control: item,
                         ))
                     .toList(),
@@ -110,7 +110,8 @@ class _GridViewControlState extends State<GridViewControl> {
                 itemCount: controls.length,
                 itemBuilder: (context, index) {
                   return ControlWidget(
-                    key: ValueKey(controls[index].id),
+                    key: ValueKey(controls[index].getKey("key")?.value ??
+                        controls[index].id),
                     control: controls[index],
                   );
                 },

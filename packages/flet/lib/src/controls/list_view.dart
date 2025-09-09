@@ -1,9 +1,10 @@
-import 'package:flet/src/utils/layout.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
+import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
@@ -82,7 +83,7 @@ class _ListViewControlState extends State<ListViewControl> {
                 prototypeItem: prototypeItem,
                 children: controls
                     .map((item) => ControlWidget(
-                          key: ValueKey(item.id),
+                          key: ValueKey(item.getKey("key")?.value ?? item.id),
                           control: item,
                         ))
                     .toList(),
@@ -99,7 +100,8 @@ class _ListViewControlState extends State<ListViewControl> {
                     itemCount: controls.length,
                     itemBuilder: (context, index) {
                       return ControlWidget(
-                        key: ValueKey(controls[index].id),
+                        key: ValueKey(controls[index].getKey("key")?.value ??
+                            controls[index].id),
                         control: controls[index],
                       );
                     },
@@ -128,7 +130,8 @@ class _ListViewControlState extends State<ListViewControl> {
                     itemExtent: itemExtent,
                     itemBuilder: (context, index) {
                       return ControlWidget(
-                        key: ValueKey(controls[index].id),
+                        key: ValueKey(controls[index].getKey("key")?.value ??
+                            controls[index].id),
                         control: controls[index],
                       );
                     },

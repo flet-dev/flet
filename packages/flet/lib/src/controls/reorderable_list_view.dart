@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -121,7 +122,8 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorderStart: onReorderStart,
                 itemBuilder: (context, index) {
                   return ControlWidget(
-                    key: ValueKey(_controls[index].id),
+                    key: ValueKey(_controls[index].getKey("key")?.value ??
+                        _controls[index].id),
                     control: _controls[index],
                   );
                 },
@@ -147,7 +149,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorderStart: onReorderStart,
                 children: _controls
                     .map((item) => ControlWidget(
-                          key: ValueKey(item.id),
+                          key: ValueKey(item.getKey("key")?.value ?? item.id),
                           control: item,
                         ))
                     .toList(),
