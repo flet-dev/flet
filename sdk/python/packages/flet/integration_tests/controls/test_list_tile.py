@@ -92,6 +92,86 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_properties2(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            [
+                ft.ListTile(
+                    title="List Tile with horizontal spacing",
+                    subtitle="Subtitle",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
+                    hover_color=ft.Colors.YELLOW_200,
+                    horizontal_spacing=50,
+                    title_alignment=ft.ListTileTitleAlignment.THREE_LINE,
+                ),
+                ft.ListTile(
+                    title="List Tile with minimum leading width",
+                    subtitle="Top Title Alignment",
+                    is_three_line=True,
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
+                    hover_color=ft.Colors.YELLOW_200,
+                    min_leading_width=100,
+                    title_alignment=ft.ListTileTitleAlignment.TOP,  # default value
+                ),
+                ft.ListTile(
+                    title="List Tile with minimum vertical padding",
+                    subtitle="Center Title Alignment",
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
+                    hover_color=ft.Colors.YELLOW_200,
+                    min_vertical_padding=30,
+                    title_alignment=ft.ListTileTitleAlignment.CENTER,
+                ),
+                ft.ListTile(
+                    title="List Tile with icon color and text color and styles",
+                    subtitle="Bottom Title Alignment",
+                    icon_color=ft.Colors.RED,
+                    text_color=ft.Colors.PURPLE,
+                    title_text_style=ft.TextStyle(size=20, weight=ft.FontWeight.BOLD),
+                    subtitle_text_style=ft.TextStyle(size=10, italic=True),
+                    leading=ft.Icon(ft.Icons.STAR),
+                    trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    title_alignment=ft.ListTileTitleAlignment.BOTTOM,
+                ),
+                ft.ListTile(
+                    title="List Tile with leading and trailing text style",
+                    subtitle="Title Height Title Alignment",
+                    icon_color=ft.Colors.PINK,
+                    leading=ft.Text("Leading"),
+                    trailing=ft.Text("Trailing"),
+                    leading_and_trailing_text_style=ft.TextStyle(
+                        color=ft.Colors.RED,
+                        size=12,
+                    ),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    title_alignment=ft.ListTileTitleAlignment.TITLE_HEIGHT,
+                ),
+                ft.ListTile(
+                    title="List Tile with minimum height",
+                    subtitle="Title Height Title Alignment",
+                    icon_color=ft.Colors.RED,
+                    leading=ft.Text("Leading"),
+                    trailing=ft.Text("Trailing"),
+                    bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
+                    min_height=150,
+                    title_alignment=ft.ListTileTitleAlignment.TITLE_HEIGHT,
+                ),
+            ]
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_properties3(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600
@@ -135,82 +215,12 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
         visual_density=ft.VisualDensity.COMPACT,
     )
 
-    lt3 = ft.ListTile(
-        title="List Tile with horizontal spacing",
-        subtitle="Subtitle",
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
-        hover_color=ft.Colors.YELLOW_200,
-        horizontal_spacing=50,
-        title_alignment=ft.ListTileTitleAlignment.THREE_LINE,  # default value
-    )
-
-    lt4 = ft.ListTile(
-        title="List Tile with minimum leading width",
-        subtitle="Top Title Alignment",
-        is_three_line=True,
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
-        hover_color=ft.Colors.YELLOW_200,
-        min_leading_width=100,
-        title_alignment=ft.ListTileTitleAlignment.TOP,  # default value
-    )
-
-    lt5 = ft.ListTile(
-        title="List Tile with minimum vertical padding",
-        subtitle="Center Title Alignment",
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        splash_color=ft.Colors.GREEN_200,  # is not shown on screenshot
-        hover_color=ft.Colors.YELLOW_200,
-        min_vertical_padding=30,
-        title_alignment=ft.ListTileTitleAlignment.CENTER,
-    )
-
-    lt6 = ft.ListTile(
-        title="List Tile with icon color and text color and styles",
-        subtitle="Bottom Title Alignment",
-        icon_color=ft.Colors.RED,
-        text_color=ft.Colors.PURPLE,
-        title_text_style=ft.TextStyle(size=20, weight=ft.FontWeight.BOLD),
-        subtitle_text_style=ft.TextStyle(size=10, italic=True),
-        leading=ft.Icon(ft.Icons.STAR),
-        trailing=ft.Icon(ft.Icons.ARROW_FORWARD),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        title_alignment=ft.ListTileTitleAlignment.BOTTOM,
-    )
-
-    lt7 = ft.ListTile(
-        title="List Tile with leading and trailing text style",
-        subtitle="Title Height Title Alignment",
-        icon_color=ft.Colors.RED,
-        leading=ft.Text("Leading"),
-        trailing=ft.Text("Trailing"),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        title_alignment=ft.ListTileTitleAlignment.TITLE_HEIGHT,
-    )
-
-    lt8 = ft.ListTile(
-        title="List Tile with minimum height",
-        subtitle="Title Height Title Alignment",
-        icon_color=ft.Colors.RED,
-        leading=ft.Text("Leading"),
-        trailing=ft.Text("Trailing"),
-        bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_100,
-        min_height=150,
-    )
-
-    flet_app.page.add(lt, lt1, lt2, lt3, lt4, lt5, lt6, lt7, lt8)
+    flet_app.page.add(lt, lt1, lt2)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "properties_2_normal",
+        "properties_3_normal",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -223,7 +233,7 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "properties_2_hover",
+        "properties_3_hover",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
