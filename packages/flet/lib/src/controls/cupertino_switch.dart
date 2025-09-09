@@ -29,13 +29,19 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    ListTileClicks.of(context)?.notifier.addListener(_toggleValue);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    ListTileClicks.of(context)?.notifier.removeListener(_toggleValue);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _toggleValue() {
+    _onChange(!_value);
   }
 
   void _onChange(bool value) {
@@ -113,10 +119,6 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
                 _onChange(value);
               }
             : null);
-
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _onChange(!_value);
-    });
 
     Widget result = swtch;
     if (label != "") {

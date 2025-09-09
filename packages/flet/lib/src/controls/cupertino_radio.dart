@@ -33,6 +33,12 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
     _focusNode.addListener(_onFocusChange);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ListTileClicks.of(context)?.notifier.addListener(_toggleRadio);
+  }
+
   void _onFocusChange() {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
@@ -40,8 +46,17 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    ListTileClicks.of(context)?.notifier.removeListener(_toggleRadio);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _toggleRadio() {
+    var radioGroup = RadioGroupProvider.of(context);
+    if (radioGroup != null) {
+      String value = widget.control.getString("value", "")!;
+      _onChange(radioGroup, value);
+    }
   }
 
   void _onChange(Control radioGroup, String? value) {
@@ -62,7 +77,6 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
     debugPrint("CupertinoRadio build: ${widget.control.id}");
 
     var radioGroup = RadioGroupProvider.of(context);
-
     if (radioGroup == null) {
       return const ErrorControl(
           "CupertinoRadio must be enclosed within RadioGroup");
@@ -87,10 +101,6 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
         onChanged: !widget.control.disabled
             ? (String? value) => _onChange(radioGroup, value)
             : null);
-
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _onChange(radioGroup, value);
-    });
 
     Widget result = cupertinoRadio;
     if (label != "") {
