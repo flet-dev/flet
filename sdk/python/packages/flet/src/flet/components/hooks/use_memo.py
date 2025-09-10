@@ -2,8 +2,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any, Callable, Generic, TypeVar
 
+from flet.components.hooks.hook import Hook
 from flet.components.utils import current_component, shallow_compare_args
-from flet.hooks.hook import Hook
 
 MemoValueT = TypeVar("MemoValueT")
 

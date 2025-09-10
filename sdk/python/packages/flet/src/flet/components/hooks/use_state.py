@@ -2,9 +2,9 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, TypeVar
 
+from flet.components.hooks.hook import Hook
 from flet.components.observable import Observable, ObservableSubscription
 from flet.components.utils import current_component
-from flet.hooks.hook import Hook
 
 
 @dataclass

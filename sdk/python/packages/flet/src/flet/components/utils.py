@@ -11,12 +11,8 @@ _CURRENT_RENDERER: "contextvars.ContextVar[Renderer | None]" = contextvars.Conte
 )
 
 
-def _try_get_renderer() -> "Renderer | None":
-    return _CURRENT_RENDERER.get()
-
-
-def _get_renderer() -> "Renderer":
-    r = _try_get_renderer()
+def current_renderer() -> "Renderer":
+    r = _CURRENT_RENDERER.get()
     if r is None:
         raise RuntimeError(
             "No current renderer is set. Call via Renderer.render(...) "
@@ -26,7 +22,7 @@ def _get_renderer() -> "Renderer":
 
 
 def current_component() -> "Component":
-    r = _get_renderer()
+    r = current_renderer()
     if not r._render_stack:
         raise RuntimeError("Hooks must be called inside a component render.")
     return r._render_stack[-1]

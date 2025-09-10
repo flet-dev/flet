@@ -4,9 +4,9 @@ from typing import TypeVar, cast
 
 from typing_extensions import Protocol
 
+from flet.components.hooks.hook import Hook
 from flet.components.observable import Observable
-from flet.components.utils import _get_renderer, current_component
-from flet.hooks.hook import Hook
+from flet.components.utils import current_component, current_renderer
 
 
 @dataclass
@@ -37,12 +37,12 @@ def create_context(default_value: T) -> ContextProvider[T]:
     key = object()
 
     def provider(value: T, callback: Callable[[], ProviderResultT]) -> ProviderResultT:  # type: ignore[type-var]
-        r = _get_renderer()
-        r._push_context(key, value)
+        r = current_renderer()
+        r.push_context(key, value)
         try:
             return callback()  # type: ignore[return-value]
         finally:
-            r._pop_context(key)
+            r.pop_context(key)
 
     p = cast(ContextProvider[T], provider)
     p.default_value = default_value

@@ -4,19 +4,17 @@ import logging
 import weakref
 from collections import defaultdict
 from dataclasses import dataclass, field
-from functools import wraps
-from typing import Any, Callable, ParamSpec, TypeVar
+from typing import Any, Callable, TypeVar
 
+from flet.components.hooks.hook import Hook
+from flet.components.hooks.use_effect import EffectHook
 from flet.components.observable import Observable, ObservableSubscription
 from flet.components.utils import (
     _CURRENT_RENDERER,
-    _get_renderer,
     shallow_compare_args_and_kwargs,
 )
 from flet.controls.base_control import BaseControl, control
 from flet.controls.context import context
-from flet.hooks.hook import Hook
-from flet.hooks.use_effect import EffectHook
 
 logger = logging.getLogger("flet_components")
 logger.setLevel(logging.INFO)
@@ -239,40 +237,11 @@ class Component(BaseControl):
 
 
 #
-# Component decorator
-#
-
-
-P = ParamSpec("P")
-R = TypeVar("R")
-
-
-def component(fn: Callable[P, R]) -> Callable[P, R]:
-    """
-    Marks a function as a component. When called, it will render through
-    the *current* Renderer.
-    """
-    fn.__is_component__ = True
-
-    @wraps(fn)
-    def component_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
-        key = kwargs.pop("key", None)
-        r = _get_renderer()
-        return r._render_component(fn, args, kwargs, key=key)
-
-    component_wrapper.__is_component__ = True
-    component_wrapper.__component_impl__ = fn
-    return component_wrapper
-
-
-#
 # Renderer
 #
 
 
 class Renderer:
-    """Owns fibers, stacks, and scheduling for a single session/page."""
-
     _ROOT_TOKEN = ("__root__",)
 
     def __init__(self, root_component=None):
@@ -284,11 +253,11 @@ class Renderer:
     def set_memo(self):
         self._is_memo = True
 
-    def _push_context(self, key: object, value: object) -> None:
+    def push_context(self, key: object, value: object) -> None:
         logger.debug("Renderer._push_context(%s, %s)", key, value)
         self._contexts[key].append(value)
 
-    def _pop_context(self, key: object) -> None:
+    def pop_context(self, key: object) -> None:
         logger.debug("Renderer._pop_context(%s)", key)
         stack = self._contexts.get(key)
         if stack:
@@ -323,23 +292,7 @@ class Renderer:
         with self.with_context(), self._Frame(self, self._root_component):
             return root_fn(*args, **kwargs)
 
-    class _Frame:
-        """Context around entering a component; pushes/pops on renderer's stack."""
-
-        def __init__(self, renderer: Renderer, c: Component | None = None):
-            self.r = renderer
-            self.c = c
-
-        def __enter__(self):
-            if self.c:
-                self.r._render_stack.append(self.c)
-            return self.c
-
-        def __exit__(self, exc_type, exc, tb):
-            if self.c:
-                self.r._render_stack.pop()
-
-    def _render_component(
+    def render_component(
         self,
         fn: Callable[..., Any],
         args: tuple[Any, ...],
@@ -368,3 +321,19 @@ class Renderer:
         self._is_memo = False
 
         return c
+
+    class _Frame:
+        """Context around entering a component; pushes/pops on renderer's stack."""
+
+        def __init__(self, renderer: Renderer, c: Component | None = None):
+            self.r = renderer
+            self.c = c
+
+        def __enter__(self):
+            if self.c:
+                self.r._render_stack.append(self.c)
+            return self.c
+
+        def __exit__(self, exc_type, exc, tb):
+            if self.c:
+                self.r._render_stack.pop()

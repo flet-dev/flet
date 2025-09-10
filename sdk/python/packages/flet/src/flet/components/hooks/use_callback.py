@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any, Callable, ParamSpec, TypeVar
 
-from flet.hooks.use_memo import use_memo
+from flet.components.hooks.use_memo import use_memo
 
 P = ParamSpec("P")
 R = TypeVar("R")

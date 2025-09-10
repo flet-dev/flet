@@ -3,8 +3,8 @@ from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
+from flet.components.hooks.hook import Hook
 from flet.components.utils import current_component
-from flet.hooks.hook import Hook
 
 
 @dataclass
