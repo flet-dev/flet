@@ -1127,32 +1127,33 @@ class FloatingActionButtonTheme:
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for an extended [`FloatingActionButton`][flet.FloatingActionButton]'s
-    content.
+    The padding for a [`FloatingActionButton`][flet.FloatingActionButton]'s
+    that has both icon and content.
     """
 
-    extended_text_style: Optional[TextStyle] = None
+    text_style: Optional[TextStyle] = None
     """
-    The text style for an extended
-    [`FloatingActionButton`][flet.FloatingActionButton].
+    Text style merged into default text style of
+    [`FloatingActionButton.label`][flet.FloatingActionButton.label].
     """
 
-    extended_icon_label_spacing: Optional[Number] = None
+    icon_label_spacing: Optional[Number] = None
     """
-    The spacing between the icon and the label for an extended
+    The spacing between the icon and the label for
     [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    extended [`FloatingActionButton`][flet.FloatingActionButton].
+    [`FloatingActionButton`][flet.FloatingActionButton] that has both icon and content.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    [`FloatingActionButton`][flet.FloatingActionButton].
+    [`FloatingActionButton`][flet.FloatingActionButton] that has either icon or content
+    and is not a mini button.
     """
 
     # large_size_constraints: Optional[BoxConstraints] = None
@@ -2225,18 +2226,13 @@ class TimePickerTheme:
 @dataclass
 class DropdownTheme:
     """
-    Overrides the default values of visual properties for descendant
-    [`Dropdown`][flet.Dropdown] controls.
+    Customizes the appearance of [`Dropdown`][flet.Dropdown] across the app.
     """
 
     menu_style: Optional[MenuStyle] = None
     """
-    The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`,
-    `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle]
-    then they will override the default values for
-    [`DropdownMenu.elevation`][flet.Dropdown.elevation],
-    [`DropdownMenu.bgcolor`][flet.Dropdown.bgcolor] and
-    [`DropdownMenu.menu_width`][flet.Dropdown.menu_width].
+    Overrides the default value for
+    [`Dropdown.menu_style`][flet.Dropdown.menu_style].
     """
 
     text_style: Optional[TextStyle] = None
@@ -2355,7 +2351,7 @@ class ListTileTheme:
     [`ListTile.mouse_cursor`][flet.ListTile.mouse_cursor].
     """
 
-    min_tile_height: Optional[Number] = None
+    min_height: Optional[Number] = None
     """
     Overrides the default value for
     [`ListTile.min_height`][flet.ListTile.min_height].
@@ -3322,8 +3318,16 @@ class DataTableTheme:
 
 @dataclass
 class Theme:
+    """
+    Customizes the overall appearance of the application.
+    """
+
     color_scheme_seed: Optional[ColorValue] = None
-    primary_swatch: Optional[ColorValue] = None
+    """
+    Overrides the default color scheme seed used to generate
+    [`ColorScheme`][flet.ColorScheme]. The default color is blue.
+    """
+
     font_family: Optional[str] = None
     use_material3: Optional[bool] = None
     appbar_theme: Optional[AppBarTheme] = None
@@ -3334,21 +3338,81 @@ class Theme:
     card_theme: Optional[CardTheme] = None
     checkbox_theme: Optional[CheckboxTheme] = None
     chip_theme: Optional[ChipTheme] = None
+    """
+    Customizes the appearance of [`Chip`][flet.Chip] across the app.
+    """
+
     color_scheme: Optional[ColorScheme] = None
+    """
+    Overrides the default [`ColorScheme`][flet.ColorScheme] used for the application.
+    """
+
     data_table_theme: Optional[DataTableTheme] = None
     date_picker_theme: Optional[DatePickerTheme] = None
     dialog_theme: Optional[DialogTheme] = None
+    """
+    Customizes the appearance of [`AlertDialog`][flet.AlertDialog] across the app.
+    """
+
     divider_theme: Optional[DividerTheme] = None
+    """
+    Defines the visual properties of [`Divider`][flet.Divider],
+    [`VerticalDivider`][flet.VerticalDivider], dividers between
+    [`ListTile`][flet.ListTile]s, and dividers between rows in
+    [`DataTable`][flet.DataTable].
+    """
+
     dropdown_theme: Optional[DropdownTheme] = None
+    """
+    Customizes the appearance of [`Dropdown`][flet.Dropdown] across the app.
+    """
+
     button_theme: Optional[ButtonTheme] = None
+    """
+    Customizes the appearance of [`Button`][flet.Button] across the app.
+    """
+
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
+    """
+    Customizes the appearance of [`OutlinedButton`][flet.OutlinedButton] across the app.
+    """
+
     text_button_theme: Optional[TextButtonTheme] = None
+    """
+    Customizes the appearance of [`TextButton`][flet.TextButton] across the app.
+    """
+
     filled_button_theme: Optional[FilledButtonTheme] = None
+    """
+    Customizes the appearance of [`FilledButton`][flet.FilledButton] across the app.
+    """
+
     icon_button_theme: Optional[IconButtonTheme] = None
+    """
+    Customizes the appearance of [`IconButton`][flet.IconButton] across the app.
+    """
+
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
+    """
+    Customizes the appearance of [`ExpansionTile`][flet.ExpansionTile] across the app.
+    """
+
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
+    """
+    Customizes the appearance of [`FloatingActionButton`][flet.FloatingActionButton]
+    across the app.
+    """
+
     icon_theme: Optional[IconTheme] = None
+    """
+    Customizes the appearance of [`Icon`][flet.Icon] across the app.
+    """
+
     list_tile_theme: Optional[ListTileTheme] = None
+    """
+    Customizes the appearance of [`ListTile`][flet.ListTile] across the app.
+    """
+
     navigation_bar_theme: Optional[NavigationBarTheme] = None
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = None
     navigation_rail_theme: Optional[NavigationRailTheme] = None
@@ -3363,13 +3427,8 @@ class Theme:
     canvas_color: Optional[ColorValue] = None
     scaffold_bgcolor: Optional[ColorValue] = None
     card_bgcolor: Optional[ColorValue] = None
-    divider_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
     secondary_header_color: Optional[ColorValue] = None
-    primary_color: Optional[ColorValue] = None
-    primary_color_dark: Optional[ColorValue] = None
-    primary_color_light: Optional[ColorValue] = None
     primary_text_theme: Optional[TextTheme] = None
     progress_indicator_theme: Optional[ProgressIndicatorTheme] = None
     radio_theme: Optional[RadioTheme] = None
