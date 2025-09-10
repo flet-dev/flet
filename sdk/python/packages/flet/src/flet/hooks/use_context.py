@@ -1,11 +1,18 @@
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import TypeVar, cast
 
 from typing_extensions import Protocol
 
-from flet.components.component import _get_renderer, current_component
-from flet.components.hooks import ContextHook
 from flet.components.observable import Observable
+from flet.components.utils import _get_renderer, current_component
+from flet.hooks.hook import Hook
+
+
+@dataclass
+class ContextHook(Hook):
+    pass
+
 
 ContextValueT = TypeVar("ContextValueT")
 
@@ -60,3 +67,6 @@ def use_context(context: ContextProvider[T]) -> T:
         component._attach_observable_subscription(value)
 
     return value
+
+
+context = use_context  # alias for convenience

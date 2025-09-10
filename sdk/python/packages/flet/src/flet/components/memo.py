@@ -1,4 +1,4 @@
-from flet.components.component import _get_renderer
+from flet.components.utils import _get_renderer
 
 
 def memo(fn):

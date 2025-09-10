@@ -1,9 +1,18 @@
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any, TypeVar
 
-from flet.components.component import current_component
-from flet.components.hooks import StateHook
-from flet.components.observable import Observable
+from flet.components.observable import Observable, ObservableSubscription
+from flet.components.utils import current_component
+from flet.hooks.hook import Hook
+
+
+@dataclass
+class StateHook(Hook):
+    value: Any
+    subscription: ObservableSubscription | None = None
+    version: int = 0
+
 
 StateT = TypeVar("StateT")
 
@@ -31,3 +40,6 @@ def use_state(initial: StateT) -> tuple[StateT, Callable[[StateT], None]]:
                 hook.component._schedule_update()
 
     return hook.value, set_state
+
+
+state = use_state  # alias for convenience

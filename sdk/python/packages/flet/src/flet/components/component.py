@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import contextvars
 import logging
 import weakref
 from collections import defaultdict
@@ -8,11 +7,16 @@ from dataclasses import dataclass, field
 from functools import wraps
 from typing import Any, Callable, ParamSpec, TypeVar
 
-from flet.components.hooks import EffectHook, Hook
 from flet.components.observable import Observable, ObservableSubscription
-from flet.components.utils import shallow_compare_args_and_kwargs
+from flet.components.utils import (
+    _CURRENT_RENDERER,
+    _get_renderer,
+    shallow_compare_args_and_kwargs,
+)
 from flet.controls.base_control import BaseControl, control
 from flet.controls.context import context
+from flet.hooks.hook import Hook
+from flet.hooks.use_effect import EffectHook
 
 logger = logging.getLogger("flet_components")
 logger.setLevel(logging.INFO)
@@ -264,32 +268,6 @@ def component(fn: Callable[P, R]) -> Callable[P, R]:
 #
 # Renderer
 #
-
-
-_CURRENT_RENDERER: contextvars.ContextVar[Renderer | None] = contextvars.ContextVar(
-    "CURRENT_RENDERER", default=None
-)
-
-
-def _try_get_renderer() -> Renderer | None:
-    return _CURRENT_RENDERER.get()
-
-
-def _get_renderer() -> Renderer:
-    r = _try_get_renderer()
-    if r is None:
-        raise RuntimeError(
-            "No current renderer is set. Call via Renderer.render(...) "
-            "or Renderer.with_context(...)."
-        )
-    return r
-
-
-def current_component() -> Component:
-    r = _get_renderer()
-    if not r._render_stack:
-        raise RuntimeError("Hooks must be called inside a component render.")
-    return r._render_stack[-1]
 
 
 class Renderer:

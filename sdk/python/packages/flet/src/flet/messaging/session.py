@@ -5,11 +5,11 @@ import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
-from flet.components.hooks import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
+from flet.hooks.use_effect import EffectHook
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,

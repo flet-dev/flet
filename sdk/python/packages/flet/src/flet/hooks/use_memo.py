@@ -1,9 +1,17 @@
 from collections.abc import Sequence
-from typing import Any, Callable
+from dataclasses import dataclass
+from typing import Any, Callable, Generic, TypeVar
 
-from flet.components.component import current_component
-from flet.components.hooks import MemoHook, MemoValueT
-from flet.components.utils import shallow_compare_args
+from flet.components.utils import current_component, shallow_compare_args
+from flet.hooks.hook import Hook
+
+MemoValueT = TypeVar("MemoValueT")
+
+
+@dataclass
+class MemoHook(Hook, Generic[MemoValueT]):
+    value: MemoValueT | None = None
+    prev_deps: list[Any] | None = None
 
 
 def use_memo(
@@ -36,3 +44,6 @@ def use_memo(
         hook.prev_deps = list(dependencies)
 
     return hook.value  # type: ignore[return-value]
+
+
+memo = use_memo  # alias for convenience

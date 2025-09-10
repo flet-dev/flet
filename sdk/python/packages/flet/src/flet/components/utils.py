@@ -1,5 +1,35 @@
+import contextvars
 from collections.abc import Sequence
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from flet.components.component import Component, Renderer
+
+
+_CURRENT_RENDERER: "contextvars.ContextVar[Renderer | None]" = contextvars.ContextVar(
+    "CURRENT_RENDERER", default=None
+)
+
+
+def _try_get_renderer() -> "Renderer | None":
+    return _CURRENT_RENDERER.get()
+
+
+def _get_renderer() -> "Renderer":
+    r = _try_get_renderer()
+    if r is None:
+        raise RuntimeError(
+            "No current renderer is set. Call via Renderer.render(...) "
+            "or Renderer.with_context(...)."
+        )
+    return r
+
+
+def current_component() -> "Component":
+    r = _get_renderer()
+    if not r._render_stack:
+        raise RuntimeError("Hooks must be called inside a component render.")
+    return r._render_stack[-1]
 
 
 def shallow_compare_args(

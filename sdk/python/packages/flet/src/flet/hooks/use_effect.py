@@ -1,8 +1,28 @@
+import asyncio
 from collections.abc import Awaitable, Callable, Sequence
+from dataclasses import dataclass
 from typing import Any
 
-from flet.components.component import current_component
-from flet.components.hooks import EffectHook
+from flet.components.utils import current_component
+from flet.hooks.hook import Hook
+
+
+@dataclass
+class EffectHook(Hook):
+    setup: Callable[[], Any | Awaitable[Any]]
+    cleanup: Callable[[], Any | Awaitable[Any]] | None = None
+    deps: list[Any] | None = None
+    prev_deps: list[Any] | None = None
+
+    # runtime
+    _setup_task: asyncio.Task | None = None  # last scheduled setup task
+    _cleanup_task: asyncio.Task | None = None  # last scheduled cleanup task
+
+    def cancel(self):
+        if self._setup_task and not self._setup_task.done():
+            self._setup_task.cancel()
+        if self._cleanup_task and not self._cleanup_task.done():
+            self._cleanup_task.cancel()
 
 
 def use_effect(
@@ -30,14 +50,14 @@ def use_effect(
     hook.cleanup = cleanup
 
 
-def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
+def mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once after the component mounts.
     """
     use_effect(fn, dependencies=[])
 
 
-def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
+def unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once when the component unmounts.
     """
@@ -45,7 +65,7 @@ def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     use_effect(lambda: None, dependencies=[], cleanup=fn)
 
 
-def on_updated(
+def updated(
     fn: Callable[[], Any | Awaitable[Any]], dependencies: Sequence[Any] | None = None
 ) -> None:
     """
@@ -57,6 +77,6 @@ def on_updated(
 
 
 effect = use_effect  # alias
-mounted = on_mounted  # alias
-unmounted = on_unmounted  # alias
-updated = on_updated  # alias
+mounted = mounted  # alias
+unmounted = unmounted  # alias
+updated = updated  # alias
