@@ -5,7 +5,8 @@ import logging
 import weakref
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, TypeVar
+from functools import wraps
+from typing import Any, Callable, ParamSpec, TypeVar
 
 from flet.components.hooks import EffectHook, Hook
 from flet.components.observable import Observable, ObservableSubscription
@@ -238,18 +239,23 @@ class Component(BaseControl):
 #
 
 
-def component(fn: Callable[..., Any]) -> Callable[..., Any]:
+P = ParamSpec("P")
+R = TypeVar("R")
+
+
+def component(fn: Callable[P, R]) -> Callable[P, R]:
     """
     Marks a function as a component. When called, it will render through
     the *current* Renderer.
     """
     fn.__is_component__ = True
 
-    def component_wrapper(*args, key=None, **kwargs):
+    @wraps(fn)
+    def component_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        key = kwargs.pop("key", None)
         r = _get_renderer()
         return r._render_component(fn, args, kwargs, key=key)
 
-    component_wrapper.__name__ = fn.__name__
     component_wrapper.__is_component__ = True
     component_wrapper.__component_impl__ = fn
     return component_wrapper
