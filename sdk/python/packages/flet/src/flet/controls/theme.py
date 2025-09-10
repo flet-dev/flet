@@ -3348,7 +3348,15 @@ class Theme:
     """
 
     data_table_theme: Optional[DataTableTheme] = None
+    """
+    Customizes the appearance of [`DataTable`][flet.DataTable] across the app.
+    """
+
     date_picker_theme: Optional[DatePickerTheme] = None
+    """
+    Customizes the appearance of [`DatePicker`][flet.DatePicker] across the app.
+    """
+
     dialog_theme: Optional[DialogTheme] = None
     """
     Customizes the appearance of [`AlertDialog`][flet.AlertDialog] across the app.
