@@ -33,7 +33,6 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     IconData,
-    Locale,
     MainAxisAlignment,
     MouseCursor,
     NotchShape,
@@ -1856,10 +1855,10 @@ class DatePickerTheme:
     Overrides the default value of [`DatePicker`][flet.DatePicker] elevation.
     """
 
-    range_picker_elevation: Optional[Number] = None
-    """
-    Overrides the default elevation of the full screen DateRangePicker (TBD).
-    """
+    # range_picker_elevation: Optional[Number] = None
+    # """
+    # Overrides the default elevation of the full screen DateRangePicker (TBD).
+    # """
 
     day_text_style: Optional[TextStyle] = None
     """
@@ -1948,28 +1947,29 @@ class DatePickerTheme:
     is used instead.
     """
 
-    range_picker_bgcolor: Optional[ColorValue] = None
-    """
-    Overrides the default background color for DateRangePicker (TBD).
-    """
+    # range_picker_bgcolor: Optional[ColorValue] = None
+    # """
+    # Overrides the default background color for DateRangePicker (TBD).
+    # """
 
-    range_picker_header_bgcolor: Optional[ColorValue] = None
-    """
-    Overrides the default background fill color for DateRangePicker (TBD).
+    # range_picker_header_bgcolor: Optional[ColorValue] = None
+    # """
+    # Overrides the default background fill color for DateRangePicker (TBD).
 
-    The dialog's header displays the currently selected date range.
-    """
+    # The dialog's header displays the currently selected date range.
+    # """
 
-    range_picker_header_foreground_color: Optional[ColorValue] = None
-    """
-    Overrides the default color used for text labels and icons in the header of a full
-    screen DateRangePicker (TBD)
+    # range_picker_header_foreground_color: Optional[ColorValue] = None
+    # """
+    # Overrides the default color used for text labels and icons in the header of a full
+    # screen DateRangePicker (TBD)
 
-    The dialog's header displays the currently selected date range.
+    # The dialog's header displays the currently selected date range.
 
-    This is used instead of any colors provided by
-    `range_picker_header_headline_text_style` or `range_picker_header_help_text_style`.
-    """
+    # This is used instead of any colors provided by
+    # `range_picker_header_headline_text_style` or
+    # `range_picker_header_help_text_style`.
+    # """
 
     today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
@@ -1981,48 +1981,49 @@ class DatePickerTheme:
     [`DatePickerTheme.day_text_style`][flet.DatePickerTheme.day_text_style].
     """
 
-    range_picker_shape: Optional[OutlinedBorder] = None
-    """
-    Overrides the default overall shape of a full screen DateRangePicker (TBD).
+    # range_picker_shape: Optional[OutlinedBorder] = None
+    # """
+    # Overrides the default overall shape of a full screen DateRangePicker (TBD).
 
-    If elevation is greater than zero then a shadow is shown and the shadow's shape
-    mirrors the shape of the dialog.
-    """
+    # If elevation is greater than zero then a shadow is shown and the shadow's shape
+    # mirrors the shape of the dialog.
+    # """
 
-    range_picker_header_help_text_style: Optional[TextStyle] = None
-    """
-    Overrides the default text style used for the help text of the header of a full
-    screen DateRangePicker (TBD).
+    # range_picker_header_help_text_style: Optional[TextStyle] = None
+    # """
+    # Overrides the default text style used for the help text of the header of a full
+    # screen DateRangePicker (TBD).
 
-    The help text (also referred to as "supporting text" in the Material spec) is
-    usually a prompt to the user at the top of the header (i.e. 'Select date').
+    # The help text (also referred to as "supporting text" in the Material spec) is
+    # usually a prompt to the user at the top of the header (i.e. 'Select date').
 
-    The color of the `range_picker_header_help_text_style` is not used,
-    `range_picker_header_foreground_color` is used instead.
-    """
+    # The color of the `range_picker_header_help_text_style` is not used,
+    # `range_picker_header_foreground_color` is used instead.
+    # """
 
-    range_picker_header_headline_text_style: Optional[TextStyle] = None
-    """
-    Overrides the default text style used for the headline text in the header of a full
-    screen DateRangePicker (TBD).
+    # range_picker_header_headline_text_style: Optional[TextStyle] = None
+    # """
+    # Overrides the default text style used for the headline text in the header of a
+    # full screen DateRangePicker (TBD).
 
-    The dialog's header displays the currently selected date range.
+    # The dialog's header displays the currently selected date range.
 
-    The color of `range_picker_header_headline_text_style` is not used,
-    `range_picker_header_foreground_color` is used instead.
-    """
+    # The color of `range_picker_header_headline_text_style` is not used,
+    # `range_picker_header_foreground_color` is used instead.
+    # """
 
-    range_selection_bgcolor: Optional[ColorValue] = None
-    """
-    Overrides the default background color used to paint days selected between the
-    start and end dates in a DateRangePicker (TBD).
-    """
+    # range_selection_bgcolor: Optional[ColorValue] = None
+    # """
+    # Overrides the default background color used to paint days selected between the
+    # start and end dates in a DateRangePicker (TBD).
+    # """
 
-    range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
-    """
-    Overrides the default highlight color that's typically used to indicate that a date
-    in the selected range of a DateRangePicker (TBD) is focused, hovered, or pressed.
-    """
+    # range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    # """
+    # Overrides the default highlight color that's typically used to indicate that a
+    # date in the selected range of a DateRangePicker (TBD) is focused, hovered, or
+    # pressed.
+    # """
 
     today_border_side: Optional[BorderSide] = None
     """
@@ -2071,12 +2072,6 @@ class DatePickerTheme:
     If the selected day is not the current day, the provided shape with the value of
     [`DatePickerTheme.day_bgcolor`][flet.DatePickerTheme.day_bgcolor] is used to paint
     the shape decoration of the day label.
-    """
-
-    locale: Optional[Locale] = None
-    """
-    An optional locale argument can be used to set the locale for the date picker. It
-    defaults to the ambient locale provided by Localizations.
     """
 
 
