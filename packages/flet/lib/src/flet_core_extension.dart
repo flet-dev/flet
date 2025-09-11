@@ -44,6 +44,7 @@ import 'controls/cupertino_textfield.dart';
 import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
+import 'controls/date_range_picker.dart';
 import 'controls/dismissible.dart';
 import 'controls/divider.dart';
 import 'controls/drag_target.dart';
@@ -223,6 +224,8 @@ class FletCoreExtension extends FletExtension {
         return DataTableControl(key: key, control: control);
       case "DatePicker":
         return DatePickerControl(key: key, control: control);
+      case "DateRangePicker":
+        return DateRangePickerControl(key: key, control: control);
       case "Dismissible":
         return DismissibleControl(key: key, control: control);
       case "Divider":
