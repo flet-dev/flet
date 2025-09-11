@@ -25,47 +25,62 @@ class _DateRangePickerControlState extends State<DateRangePickerControl> {
     bool lastOpen = widget.control.getBool("_open", false)!;
 
     var open = widget.control.getBool("open", false)!;
-    var value = widget.control.getDateTime("value");
     var currentDate = widget.control.getDateTime("current_date");
+    //var value = widget.control.getDateTime("value");
+    var startValue = widget.control.getDateTime("start_value");
+    var endValue = widget.control.getDateTime("end_value");
+    var value = DateTimeRange<DateTime>(
+        start: startValue ?? currentDate ?? DateTime.now(),
+        end: endValue ?? currentDate ?? DateTime.now());
+
     var switchToCalendarEntryModeIcon =
         widget.control.getIconData("switch_to_calendar_icon");
     var switchToInputEntryModeIcon =
         widget.control.getIconData("switch_to_input_icon");
 
-    void onClosed(DateTime? dateValue) {
+    void onClosed(DateTimeRange<DateTime>? dateRangeValue) {
       widget.control.updateProperties({"_open": false}, python: false);
-      widget.control
-          .updateProperties({"value": dateValue ?? value, "open": false});
-      if (dateValue != null) {
-        widget.control.triggerEvent("change", dateValue);
+      var props = {
+        "start_value": dateRangeValue?.start ?? startValue,
+        "end_value": dateRangeValue?.end ?? endValue,
+        "open": false
+      };
+      widget.control.updateProperties(props);
+      // widget.control
+      //     .updateProperties({"value": dateValue ?? value, "open": false});
+      if (dateRangeValue != null) {
+        widget.control.triggerEvent("change");
       }
-      widget.control.triggerEvent("dismiss", dateValue == null);
+      widget.control.triggerEvent("dismiss");
+
+      // if (dateValue != null) {
+      //   widget.control.triggerEvent("change", dateValue);
+      // }
+      //widget.control.triggerEvent("dismiss", dateValue == null);
     }
 
     Widget createSelectDateDialog() {
       Widget dialog = DateRangePickerDialog(
-        //initialDate: value ?? currentDate ?? DateTime.now(),
-        initialDateRange: DateTimeRange(
-            start: value ?? DateTime.now(), end: value ?? DateTime.now()),
+        initialDateRange: value,
         firstDate: widget.control.getDateTime("first_date", DateTime(1900))!,
         lastDate: widget.control.getDateTime("last_date", DateTime(2050))!,
         currentDate: currentDate ?? DateTime.now(),
         helpText: widget.control.getString("help_text"),
         cancelText: widget.control.getString("cancel_text"),
         confirmText: widget.control.getString("confirm_text"),
+        saveText: widget.control.getString("save_text"),
+        errorInvalidRangeText:
+            widget.control.getString("error_invalid_range_text"),
         errorFormatText: widget.control.getString("error_format_text"),
         errorInvalidText: widget.control.getString("error_invalid_text"),
+        fieldStartHintText: widget.control.getString("field_start_hint_text"),
+        fieldEndHintText: widget.control.getString("field_end_hint_text"),
+        fieldStartLabelText: widget.control.getString("field_start_label_text"),
+        fieldEndLabelText: widget.control.getString("field_end_label_text"),
         keyboardType: parseTextInputType(
             widget.control.getString("keyboard_type"), TextInputType.text)!,
-        // initialCalendarMode: widget.control
-        //     .getDatePickerMode("date_picker_mode", DatePickerMode.day)!,
         initialEntryMode: widget.control.getDatePickerEntryMode(
             "date_picker_entry_mode", DatePickerEntryMode.calendar)!,
-        //fieldHintText: widget.control.getString("field_hint_text"),
-        //fieldLabelText: widget.control.getString("field_label_text"),
-        // onDatePickerModeChange: (DatePickerEntryMode mode) {
-        //   widget.control.triggerEvent("entry_mode_change", mode.name);
-        // },
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)
             : null,
@@ -81,7 +96,7 @@ class _DateRangePickerControlState extends State<DateRangePickerControl> {
       widget.control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog<DateTime>(
+        showDialog<DateTimeRange<DateTime>>(
             barrierDismissible: !widget.control.getBool("modal", false)!,
             barrierColor: widget.control.getColor("barrier_color", context),
             useRootNavigator: false,

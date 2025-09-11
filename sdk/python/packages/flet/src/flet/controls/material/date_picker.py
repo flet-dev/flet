@@ -47,8 +47,7 @@ class DatePicker(DialogControl):
     """
     A Material-style date picker dialog.
 
-    It is added to [`Page.overlay`][flet.Page.overlay] and can be opened by
-    calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
+    It can be opened by calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
     Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar
     or an Input (TextField) for picking a date.
