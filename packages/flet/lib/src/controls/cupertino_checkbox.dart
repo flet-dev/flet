@@ -34,6 +34,12 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     _focusNode.addListener(_onFocusChange);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ListTileClicks.of(context)?.notifier.addListener(_toggleValue);
+  }
+
   void _onFocusChange() {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
@@ -41,6 +47,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    ListTileClicks.of(context)?.notifier.removeListener(_toggleValue);
     _focusNode.dispose();
     super.dispose();
   }
@@ -92,11 +99,6 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
             ? (bool? value) => _onChange(value)
             : null);
 
-    // Add listener to ListTile clicks
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _toggleValue();
-    });
-
     Widget result = cupertinoCheckbox;
 
     var labelStyle =
@@ -130,6 +132,6 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
           child: FittedBox(fit: BoxFit.fill, child: result));
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
   }
 }

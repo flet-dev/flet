@@ -36,7 +36,6 @@ class CardControl extends StatelessWidget {
         control.getBool("show_border_on_foreground", true)!;
     var bgcolor = control.getColor("bgcolor", context);
     var shadowColor = control.getColor("shadow_color", context);
-    var surfaceTintColor = control.getColor("surface_tint_color", context);
 
     Widget? card;
 
@@ -53,7 +52,6 @@ class CardControl extends StatelessWidget {
           clipBehavior: clipBehavior,
           color: bgcolor,
           shadowColor: shadowColor,
-          surfaceTintColor: surfaceTintColor,
           child: contentWidget);
     } else if (variant == CardVariant.filled) {
       card = Card.filled(
@@ -65,7 +63,6 @@ class CardControl extends StatelessWidget {
           clipBehavior: clipBehavior,
           color: bgcolor,
           shadowColor: shadowColor,
-          surfaceTintColor: surfaceTintColor,
           child: contentWidget);
     } else {
       card = Card(
@@ -77,10 +74,9 @@ class CardControl extends StatelessWidget {
           clipBehavior: clipBehavior,
           color: bgcolor,
           shadowColor: shadowColor,
-          surfaceTintColor: surfaceTintColor,
           child: contentWidget);
     }
 
-    return ConstrainedControl(control: control, child: card);
+    return LayoutControl(control: control, child: card);
   }
 }

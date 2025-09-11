@@ -20,7 +20,7 @@ def main(page: ft.Page):
             for color in colors
         ]
 
-    def handle_dropdown_change(e: ft.Event[ft.Dropdown]):
+    def handle_dropdown_select(e: ft.Event[ft.Dropdown]):
         e.control.color = e.control.value
         page.update()
 
@@ -29,7 +29,7 @@ def main(page: ft.Page):
             editable=True,
             label="Color",
             options=get_options(),
-            on_change=handle_dropdown_change,
+            on_select=handle_dropdown_select,
         )
     )
 

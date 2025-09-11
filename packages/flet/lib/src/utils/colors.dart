@@ -8,6 +8,7 @@ import 'numbers.dart';
 Color? _getThemeColor(ThemeData theme, String colorName) {
   var scheme = theme.colorScheme;
   switch (colorName.toLowerCase()) {
+    // Primary colors
     case "primary":
       return scheme.primary;
     case "onprimary":
@@ -16,6 +17,16 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.primaryContainer;
     case "onprimarycontainer":
       return scheme.onPrimaryContainer;
+    case "primaryfixed":
+      return scheme.primaryFixed;
+    case "primaryfixeddim":
+      return scheme.primaryFixedDim;
+    case "onprimaryfixed":
+      return scheme.onPrimaryFixed;
+    case "onprimaryfixedvariant":
+      return scheme.onPrimaryFixedVariant;
+
+    // Secondary colors
     case "secondary":
       return scheme.secondary;
     case "onsecondary":
@@ -24,6 +35,16 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.secondaryContainer;
     case "onsecondarycontainer":
       return scheme.onSecondaryContainer;
+    case "secondaryfixed":
+      return scheme.secondaryFixed;
+    case "secondaryfixeddim":
+      return scheme.secondaryFixedDim;
+    case "onsecondaryfixed":
+      return scheme.onSecondaryFixed;
+    case "onsecondaryfixedvariant":
+      return scheme.onSecondaryFixedVariant;
+
+    // Tertiary colors
     case "tertiary":
       return scheme.tertiary;
     case "ontertiary":
@@ -32,6 +53,16 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.tertiaryContainer;
     case "ontertiarycontainer":
       return scheme.onTertiaryContainer;
+    case "tertiaryfixed":
+      return scheme.tertiaryFixed;
+    case "tertiaryfixeddim":
+      return scheme.tertiaryFixedDim;
+    case "ontertiaryfixed":
+      return scheme.onTertiaryFixed;
+    case "ontertiaryfixedvariant":
+      return scheme.onTertiaryFixedVariant;
+
+    // Error colors
     case "error":
       return scheme.error;
     case "onerror":
@@ -40,33 +71,48 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.errorContainer;
     case "onerrorcontainer":
       return scheme.onErrorContainer;
+
+    // Surface colors
+    case "surface":
+      return scheme.surface;
+    case "onsurface":
+      return scheme.onSurface;
+    case "surfacebright":
+      return scheme.surfaceBright;
+    case "surfacedim":
+      return scheme.surfaceDim;
+    case "surfacecontainer":
+      return scheme.surfaceContainer;
+    case "surfacecontainerhigh":
+      return scheme.surfaceContainerHigh;
+    case "surfacecontainerlow":
+      return scheme.surfaceContainerLow;
+    case "surfacecontainerlowest":
+      return scheme.surfaceContainerLowest;
+    case "surfacecontainerhighest":
+      return scheme.surfaceContainerHighest;
+
+    // Utility colors
     case "outline":
       return scheme.outline;
     case "outlinevariant":
       return scheme.outlineVariant;
-    case "background":
-    case "surface":
-      return scheme.surface;
-    case "onbackground":
-    case "onsurface":
-      return scheme.onSurface;
-    case "surfacevariant":
-    case "surfacecontainerhighest":
-      return scheme.surfaceContainerHighest;
+    case "shadow":
+      return scheme.shadow;
+    case "scrim":
+      return scheme.scrim;
     case "onsurfacevariant":
       return scheme.onSurfaceVariant;
     case "surfacetint":
       return scheme.surfaceTint;
+
+    // Inverse colors
     case "inversesurface":
       return scheme.inverseSurface;
     case "oninversesurface":
       return scheme.onInverseSurface;
     case "inverseprimary":
       return scheme.inversePrimary;
-    case "shadow":
-      return scheme.shadow;
-    case "scrim":
-      return scheme.scrim;
   }
   return null;
 }
@@ -237,8 +283,8 @@ extension ColorExtension on Color {
   }
 }
 
-WidgetStateProperty<Color?>? parseWidgetStateColor(dynamic value,
-    ThemeData theme,
+WidgetStateProperty<Color?>? parseWidgetStateColor(
+    dynamic value, ThemeData theme,
     {Color? defaultColor, WidgetStateProperty<Color?>? defaultValue}) {
   if (value == null) return defaultValue;
 

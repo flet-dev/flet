@@ -24,7 +24,7 @@ class ShaderMaskControl extends StatelessWidget {
         shaderCallback: (bounds) => gradient.createShader(bounds),
         blendMode: control.getBlendMode("blend_mode", BlendMode.modulate)!,
         child: control.buildWidget("content"));
-    return ConstrainedControl(
+    return LayoutControl(
         control: control,
         child: _clipCorners(shaderMask,
             borderRadius: control.getBorderRadius("border_radius")));

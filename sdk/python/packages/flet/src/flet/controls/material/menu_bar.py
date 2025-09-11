@@ -25,7 +25,6 @@ class MenuStyle:
     alignment: Optional[Alignment] = None
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
-    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
     padding: Optional[ControlStateValue[PaddingValue]] = None
     side: Optional[ControlStateValue[BorderSide]] = None

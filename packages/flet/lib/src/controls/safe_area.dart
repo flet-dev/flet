@@ -28,6 +28,6 @@ class SafeAreaControl extends StatelessWidget {
             const ErrorControl(
                 "SafeArea.content must be provided and visible"));
 
-    return ConstrainedControl(control: control, child: safeArea);
+    return LayoutControl(control: control, child: safeArea);
   }
 }

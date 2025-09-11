@@ -1,7 +1,7 @@
 import functools
 import hashlib
 import weakref
-from typing import Callable, Optional, ParamSpec, TypeVar, overload
+from typing import Callable, Optional, ParamSpec, TypeVar, Union, overload
 
 P = ParamSpec("P")
 R = TypeVar("R")
@@ -35,7 +35,9 @@ def cache(
 def cache(_fn: Callable[P, R], *, freeze: bool = False) -> Callable[P, R]: ...
 
 
-def cache(_fn: Optional[Callable[P, R]] = None, *, freeze: bool = False):
+def cache(
+    _fn: Optional[Callable[P, R]] = None, *, freeze: bool = False
+) -> Union[Callable[[Callable[P, R]], Callable[P, R]], Callable[P, R]]:
     """
     A decorator to cache the results of a function based on its arguments.
     Used with Flet controls to optimize comparisons in declarative apps.

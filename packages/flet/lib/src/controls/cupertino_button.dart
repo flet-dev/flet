@@ -68,7 +68,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     if (icon != null) {
       if (content != null) {
         child = Row(
-          mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
             children: [icon, const SizedBox(width: 8), content]);
       } else {
         child = icon;
@@ -208,6 +208,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       );
     }
 
-    return ConstrainedControl(control: widget.control, child: button);
+    return LayoutControl(control: widget.control, child: button);
   }
 }

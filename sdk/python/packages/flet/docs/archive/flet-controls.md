@@ -55,14 +55,14 @@ page.add(
 )
 ```
 
-or `TextField` and `ElevatedButton` next to it:
+or `TextField` and `Button` next to it:
 
 ```python
 page.add(
     ft.Row(
         controls=[
             ft.TextField(label="Your name"),
-            ft.ElevatedButton(text="Say my name!")
+            ft.Button(text="Say my name!")
         ]
     )
 )
@@ -79,13 +79,13 @@ for i in range(10):
     time.sleep(0.3)
 ```
 
-Some controls, like buttons, could have event handlers reacting on a user input, for example `ElevatedButton.on_click`:
+Some controls, like buttons, could have event handlers reacting on a user input, for example `Button.on_click`:
 
 ```python
 def button_clicked(e):
     page.add(ft.Text("Clicked!"))
 
-page.add(ft.ElevatedButton(text="Click me", on_click=button_clicked))
+page.add(ft.Button(text="Click me", on_click=button_clicked))
 ```
 
 and more advanced example for a simple To-Do:
@@ -101,7 +101,7 @@ def main(page):
         new_task.update()
 
     new_task = ft.TextField(hint_text="What's needs to be done?", width=300)
-    page.add(ft.Row([new_task, ft.ElevatedButton("Add", on_click=add_clicked)]))
+    page.add(ft.Row([new_task, ft.Button("Add", on_click=add_clicked)]))
 
 ft.run(main)
 ```
@@ -150,7 +150,7 @@ page.add(c)
 `Button` is the most essential input control which generates `click` event when pressed:
 
 ```python
-btn = ft.ElevatedButton("Click me!")
+btn = ft.Button("Click me!")
 page.add(btn)
 ```
 
@@ -199,7 +199,7 @@ ft.run(main)
 
 Flet provides a number of [controls](../controls/index.md) for building forms:
 [`TextField`][flet.TextField], [`Checkbox`][flet.Checkbox], [`Dropdown`][flet.Dropdown],
-[`ElevatedButton`][flet.ElevatedButton].
+[`Button`][flet.Button].
 
 Let's ask a user for a name:
 
@@ -218,7 +218,7 @@ def main(page):
 
     txt_name = ft.TextField(label="Your name")
 
-    page.add(txt_name, ft.ElevatedButton("Say hello!", on_click=btn_click))
+    page.add(txt_name, ft.Button("Say hello!", on_click=btn_click))
 
 ft.run(main)
 ```
@@ -263,7 +263,7 @@ def main(page: ft.Page):
         page.update()
 
     output_text = ft.Text()
-    submit_btn = ft.ElevatedButton(text="Submit", on_click=button_clicked)
+    submit_btn = ft.Button(text="Submit", on_click=button_clicked)
     color_dropdown = ft.Dropdown(
         width=100,
         options=[

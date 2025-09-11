@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -31,18 +32,16 @@ class PopupMenuButtonControl extends StatelessWidget {
         iconSize: control.getDouble("icon_size"),
         splashRadius: control.getDouble("splash_radius"),
         shadowColor: control.getColor("shadow_color", context),
-        surfaceTintColor: control.getColor("surface_tint_color", context),
         iconColor: control.getColor("icon_color", context),
         elevation: control.getDouble("elevation"),
         enableFeedback: control.getBool("enable_feedback"),
         padding: control.getPadding("padding", const EdgeInsets.all(8))!,
         color: control.getColor("bgcolor", context),
         clipBehavior: control.getClipBehavior("clip_behavior", Clip.none)!,
-        shape: control.getShape("shape", Theme.of(context),
-            defaultValue: (Theme.of(context).useMaterial3
-                ? RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10))
-                : null))!,
+        shape: control.getShape(
+          "shape",
+          Theme.of(context),
+        ),
         constraints: control.getBoxConstraints("size_constraints"),
         style: control.getButtonStyle("style", Theme.of(context)),
         popUpAnimationStyle: control.getAnimationStyle("popup_animation_style"),
@@ -62,6 +61,8 @@ class PopupMenuButtonControl extends StatelessWidget {
               var itemContent = item.buildTextOrWidget("content");
               var itemIcon = item.buildIconOrWidget("icon");
               var mouseCursor = item.getMouseCursor("mouse_cursor");
+              var labelTextStyle = item.getWidgetStateTextStyle(
+                  "label_text_style", Theme.of(context));
 
               Widget? child;
               if (itemContent != null && itemIcon == null) {
@@ -84,6 +85,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       padding: padding,
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
+                      labelTextStyle: labelTextStyle,
                       onTap: () => item.triggerEvent("click", !checked),
                       child: child,
                     )
@@ -91,6 +93,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       value: item.id.toString(),
                       height: height,
                       padding: padding,
+                      labelTextStyle: labelTextStyle,
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
                       onTap: () {
@@ -104,7 +107,7 @@ class PopupMenuButtonControl extends StatelessWidget {
             }).toList(),
         child: content);
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: control,
         child: TooltipVisibility(
             visible: control.getString("tooltip") == null,

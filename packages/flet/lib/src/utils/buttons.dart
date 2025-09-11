@@ -3,10 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'text.dart';
-import 'theme.dart';
-import 'time.dart';
-import 'transforms.dart';
 import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
@@ -15,6 +11,10 @@ import 'geometry.dart';
 import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
+import 'text.dart';
+import 'theme.dart';
+import 'time.dart';
+import 'transforms.dart';
 
 ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     {Color? defaultForegroundColor,
@@ -38,8 +38,6 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
         defaultColor: defaultOverlayColor),
     shadowColor: parseWidgetStateColor(value["shadow_color"], theme,
         defaultColor: defaultShadowColor),
-    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme,
-        defaultColor: defaultSurfaceTintColor),
     elevation: parseWidgetStateDouble(value["elevation"],
         defaultDouble: defaultElevation),
     animationDuration: parseDuration(value["animation_duration"]),

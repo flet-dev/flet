@@ -5,7 +5,7 @@ from typing import Optional
 from flet.controls.alignment import Alignment
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
-from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadow
+from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
@@ -73,7 +73,7 @@ class ColorScheme:
 
     primary: Optional[ColorValue] = None
     """
-    The color displayed most frequently across your app’s screens and components.
+    The color displayed most frequently across your app's screens and components.
     """
 
     on_primary: Optional[ColorValue] = None
@@ -153,16 +153,6 @@ class ColorScheme:
     A color that's clearly legible when drawn on `error_container`.
     """
 
-    background: Optional[ColorValue] = None
-    """
-    A color that typically appears behind scrollable content.
-    """
-
-    on_background: Optional[ColorValue] = None
-    """
-    A color that's clearly legible when drawn on `background`.
-    """
-
     surface: Optional[ColorValue] = None
     """
     The background color for widgets like `Card`.
@@ -171,12 +161,6 @@ class ColorScheme:
     on_surface: Optional[ColorValue] = None
     """
     A color that's clearly legible when drawn on `surface`.
-    """
-
-    surface_variant: Optional[ColorValue] = None
-    """
-    A color variant of `surface` that can be used for differentiation against a
-    component using `surface`.
     """
 
     on_surface_variant: Optional[ColorValue] = None
@@ -306,6 +290,12 @@ class ColorScheme:
     A surface container color with a darker tone.
     """
 
+    surface_container_highest: Optional[ColorValue] = None
+    """
+    A surface container color with the darkest tone. It is used to create the most
+    emphasis against the surface.
+    """
+
     surface_container_low: Optional[ColorValue] = None
     """
     A surface container color with a lighter tone that creates less emphasis than
@@ -392,7 +382,7 @@ class TextTheme:
     Largest of the label styles. Label styles are smaller, utilitarian styles, used for
     areas of the UI such as text inside of components or very small supporting text in
     the content body, like captions. Used for text on
-    [`ElevatedButton`][flet.ElevatedButton], [`TextButton`][flet.TextButton] and
+    [`Button`][flet.Button], [`TextButton`][flet.TextButton] and
     [`OutlinedButton`][flet.OutlinedButton].
     """
 
@@ -674,13 +664,6 @@ class DialogTheme:
     [`AlertDialog`][flet.AlertDialog] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`AlertDialog.surface_tint_color`][flet.AlertDialog.surface_tint_color] in all
-    descendant [`AlertDialog`][flet.AlertDialog] controls.
-    """
-
     icon_color: Optional[ColorValue] = None
     """
     Used to configure the [`IconTheme`][flet.IconTheme] for the
@@ -750,16 +733,16 @@ class DialogTheme:
 
 
 @dataclass
-class ElevatedButtonTheme:
+class ButtonTheme:
     """
-    Customizes the appearance of [`ElevatedButton`][flet.ElevatedButton] across the app.
+    Customizes the appearance of [`Button`][flet.Button] across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
     Overrides the default value of
-    [`ElevatedButton.style`][flet.ElevatedButton.style] in all descendant
-    [`ElevatedButton`][flet.ElevatedButton] controls.
+    [`Button.style`][flet.Button.style] in all descendant
+    [`Button`][flet.Button] controls.
     """
 
 
@@ -878,12 +861,6 @@ class BottomSheetTheme:
     [`BottomSheet`][flet.BottomSheet] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of surface tint color in all descendant
-    [`BottomSheet`][flet.BottomSheet] controls.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of shadow color in all descendant
@@ -907,13 +884,6 @@ class CardTheme:
     """
     Overrides the default value of [`Card.shadow_color`][flet.Card.shadow_color] in
     all descendant [`Card`][flet.Card] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Card.surface_tint_color`][flet.Card.surface_tint_color] in all descendant
-    [`Card`][flet.Card] controls.
     """
 
     elevation: Optional[Number] = None
@@ -970,13 +940,6 @@ class ChipTheme:
     """
     Overrides the default value of
     [`Chip.selected_shadow_color`][flet.Chip.selected_shadow_color] in all descendant
-    [`Chip`][flet.Chip] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Chip.surface_tint_color`][flet.Chip.surface_tint_color] in all descendant
     [`Chip`][flet.Chip] controls.
     """
 
@@ -1164,32 +1127,33 @@ class FloatingActionButtonTheme:
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for an extended [`FloatingActionButton`][flet.FloatingActionButton]'s
-    content.
+    The padding for a [`FloatingActionButton`][flet.FloatingActionButton]'s
+    that has both icon and content.
     """
 
-    extended_text_style: Optional[TextStyle] = None
+    text_style: Optional[TextStyle] = None
     """
-    The text style for an extended
-    [`FloatingActionButton`][flet.FloatingActionButton].
+    Text style merged into default text style of
+    [`FloatingActionButton.label`][flet.FloatingActionButton.label].
     """
 
-    extended_icon_label_spacing: Optional[Number] = None
+    icon_label_spacing: Optional[Number] = None
     """
-    The spacing between the icon and the label for an extended
+    The spacing between the icon and the label for
     [`FloatingActionButton`][flet.FloatingActionButton].
     """
 
     extended_size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    extended [`FloatingActionButton`][flet.FloatingActionButton].
+    [`FloatingActionButton`][flet.FloatingActionButton] that has both icon and content.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
     Overrides the default size constraints of
-    [`FloatingActionButton`][flet.FloatingActionButton].
+    [`FloatingActionButton`][flet.FloatingActionButton] that has either icon or content
+    and is not a mini button.
     """
 
     # large_size_constraints: Optional[BoxConstraints] = None
@@ -1302,13 +1266,6 @@ class AppBarTheme:
     all descendant [`AppBar`][flet.AppBar] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`AppBar.surface_tint_color`][flet.AppBar.surface_tint_color] in all descendant
-    [`AppBar`][flet.AppBar] controls.
-    """
-
     elevation: Optional[Number] = None
     """
     Overrides the default value of [`AppBar.elevation`][flet.AppBar.elevation] in all
@@ -1388,13 +1345,6 @@ class BottomAppBarTheme:
     Overrides the default value of
     [`BottomAppBar.shadow_color`][flet.BottomAppBar.shadow_color] in all descendant
     [`BottomAppBar`][flet.BottomAppBar] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`BottomAppBar.surface_tint_color`][flet.BottomAppBar.surface_tint_color] in all
-    descendant [`BottomAppBar`][flet.BottomAppBar] controls.
     """
 
     elevation: Optional[Number] = None
@@ -1801,13 +1751,6 @@ class BannerTheme:
     descendant [`Banner`][flet.Banner] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`Banner.surface_tint_color`][flet.Banner.surface_tint_color] in all descendant
-    [`Banner`][flet.Banner] controls.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of [`Banner.shadow_color`][flet.Banner.shadow_color] in
@@ -1858,12 +1801,6 @@ class DatePickerTheme:
     bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color of the surface in all descendant
-    [`DatePicker`][flet.DatePicker] controls.
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default surface tint color in all descendant
     [`DatePicker`][flet.DatePicker] controls.
     """
 
@@ -2073,16 +2010,6 @@ class DatePickerTheme:
 
     The color of `range_picker_header_headline_text_style` is not used,
     `range_picker_header_foreground_color` is used instead.
-    """
-
-    range_picker_surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default color of the surface tint overlay applied to the
-    background color of a full screen DateRangePicker (TBD)'s to indicate elevation.
-
-    This is not recommended for use. Material 3 spec introduced a set of tone-based
-    surfaces and surface containers in its ColorScheme, which provide more flexibility.
-    The intention is to eventually remove surface tint color from the framework.
     """
 
     range_selection_bgcolor: Optional[ColorValue] = None
@@ -2299,18 +2226,13 @@ class TimePickerTheme:
 @dataclass
 class DropdownTheme:
     """
-    Overrides the default values of visual properties for descendant
-    [`Dropdown`][flet.Dropdown] controls.
+    Customizes the appearance of [`Dropdown`][flet.Dropdown] across the app.
     """
 
     menu_style: Optional[MenuStyle] = None
     """
-    The menu style for descendant [`Dropdown`][flet.Dropdown] controls. If `elevation`,
-    `bgcolor` and/or `menu_width` are provided for the [`MenuStyle`][flet.MenuStyle]
-    then they will override the default values for
-    [`DropdownMenu.elevation`][flet.Dropdown.elevation],
-    [`DropdownMenu.bgcolor`][flet.Dropdown.bgcolor] and
-    [`DropdownMenu.menu_width`][flet.Dropdown.menu_width].
+    Overrides the default value for
+    [`Dropdown.menu_style`][flet.Dropdown.menu_style].
     """
 
     text_style: Optional[TextStyle] = None
@@ -2429,7 +2351,7 @@ class ListTileTheme:
     [`ListTile.mouse_cursor`][flet.ListTile.mouse_cursor].
     """
 
-    min_tile_height: Optional[Number] = None
+    min_height: Optional[Number] = None
     """
     Overrides the default value for
     [`ListTile.min_height`][flet.ListTile.min_height].
@@ -2857,13 +2779,6 @@ class PopupMenuTheme:
     [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    Overrides the default value of
-    [`PopupMenuButton.surface_tint_color`][flet.PopupMenuButton.surface_tint_color] in
-    all descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
-    """
-
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of
@@ -2878,15 +2793,11 @@ class PopupMenuTheme:
     descendant [`PopupMenuButton`][flet.PopupMenuButton] controls.
     """
 
-    text_style: Optional[TextStyle] = None
-    """
-    The text style of items in the popup menu.
-    """
-
     label_text_style: Optional[TextStyle] = None
     """
-    You can use this to specify a different style of the label when the popup menu item
-    is enabled and disabled.
+    Overrides the default value of
+    [`PopupMenuItem.label_text_style`][flet.PopupMenuItem.label_text_style]
+    in all descendant [`PopupMenuItem`][flet.PopupMenuItem] controls.
     """
 
     enable_feedback: Optional[bool] = None
@@ -2941,107 +2852,482 @@ class PopupMenuTheme:
 
 @dataclass
 class SearchBarTheme:
+    """
+    Customizes the appearance of [`SearchBar`][flet.SearchBar] controls across the app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_bgcolor`][flet.SearchBar.bar_bgcolor] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     text_capitalization: Optional[TextCapitalization] = None
+    """
+    Overrides the default value of
+    [`SearchBar.capitalization`][flet.SearchBar.capitalization] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
-    surface_tint_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_shadow_color`][flet.SearchBar.bar_shadow_color] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_overlay_color`][flet.SearchBar.bar_overlay_color] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_elevation`][flet.SearchBar.bar_elevation] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     text_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_text_style`][flet.SearchBar.bar_text_style] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     hint_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_hint_text_style`][flet.SearchBar.bar_hint_text_style] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_shape`][flet.SearchBar.bar_shape] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     padding: Optional[ControlStateValue[PaddingValue]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_padding`][flet.SearchBar.bar_padding] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_size_constraints`][flet.SearchBar.bar_size_constraints] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     border_side: Optional[ControlStateValue[BorderSide]] = None
+    """
+    Overrides the default value of
+    [`SearchBar.bar_border_side`][flet.SearchBar.bar_border_side] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
 
 
 @dataclass
 class SearchViewTheme:
+    """
+    Customizes the appearance of [`SearchBar`][flet.SearchBar] controls across the
+    app.
+    """
+
     bgcolor: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_bgcolor`][flet.SearchBar.view_bgcolor] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     divider_color: Optional[ColorValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.divider_color`][flet.SearchBar.divider_color] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_elevation`][flet.SearchBar.view_elevation] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     header_hint_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_hint_text_style`][flet.SearchBar.view_hint_text_style] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     header_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_header_text_style`][flet.SearchBar.view_header_text_style] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_shape`][flet.SearchBar.view_shape] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     border_side: Optional[BorderSide] = None
+    """ Overrides the default value of
+    [`SearchBar.view_side`][flet.SearchBar.view_side] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_size_constraints`][flet.SearchBar.view_size_constraints] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     header_height: Optional[Number] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_header_height`][flet.SearchBar.view_header_height] in all
+    descendant [`SearchBar`][flet.SearchBar] controls.
+    """
+
     padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_padding`][flet.SearchBar.view_padding] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     bar_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value of
+    [`SearchBar.view_bar_padding`][flet.SearchBar.view_bar_padding] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
+
     shrink_wrap: Optional[bool] = None
+    """
+    Overrides the default value of
+    [`SearchBar.shrink_wrap`][flet.SearchBar.shrink_wrap] in all descendant
+    [`SearchBar`][flet.SearchBar] controls.
+    """
 
 
 @dataclass
 class NavigationDrawerTheme:
+    """
+    Customizes the appearance of descendant [`NavigationDrawer`][flet.NavigationDrawer]
+    controls.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.bgcolor`][flet.NavigationDrawer.bgcolor].
+    """
+
     shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.shadow_color`][flet.NavigationDrawer.shadow_color].
+    """
+
     indicator_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.indicator_color`][flet.NavigationDrawer.indicator_color].
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.elevation`][flet.NavigationDrawer.elevation].
+    """
+
     tile_height: Optional[Number] = None
+    """
+    Overrides the default height of
+    [`NavigationDrawerDestination`][flet.NavigationDrawerDestination].
+    """
+
     label_text_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    The style to merge with the default text style for
+    [`NavigationDrawerDestination`][flet.NavigationDrawerDestination] labels.
+    """
+
     indicator_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for
+    [`NavigationDrawer.indicator_shape`][flet.NavigationDrawer.indicator_shape].
+    """
+
     indicator_size: Optional[Size] = None
+    """
+    Overrides the default size of the [`NavigationDrawer`][flet.NavigationDrawer]'s
+    selection indicator.
+    """
 
 
 @dataclass
 class NavigationBarTheme:
+    """
+    Customizes the appearance of [`NavigationBar`][flet.NavigationBar]
+    controls across the
+    app.
+    """
+
     bgcolor: Optional[ColorValue] = None
+    """Overrides the default value for
+    [`NavigationBar.bgcolor`][flet.NavigationBar.bgcolor].
+    """
+
     shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.shadow_color`][flet.NavigationBar.shadow_color].
+    """
+
     indicator_color: Optional[ColorValue] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.indicator_color`][flet.NavigationBar.indicator_color].
+    """
+
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.overlay_color`][flet.NavigationBar.overlay_color].
+    """
+
     elevation: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.elevation`][flet.NavigationBar.elevation].
+    """
+
     height: Optional[Number] = None
+    """
+    Overrides the default value for NavigationBar height.
+    """
+
     label_text_style: Optional[ControlStateValue[TextStyle]] = None
+    """
+    The style to merge with the default text style for
+    [`NavigationBarDestination`][flet.NavigationBarDestination] labels.
+    """
+
     indicator_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.indicator_shape`][flet.NavigationBar.indicator_shape].
+    """
+
     label_behavior: Optional[NavigationBarLabelBehavior] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.label_behavior`][flet.NavigationBar.label_behavior].
+    """
+
     label_padding: Optional[PaddingValue] = None
+    """
+    Overrides the default value for
+    [`NavigationBar.label_padding`][flet.NavigationBar.label_padding].
+    """
 
 
 @dataclass
 class SegmentedButtonTheme:
+    """
+    Customizes the appearance of [`SegmentedButton`][flet.SegmentedButton]
+    controls across the app.
+    """
+
     selected_icon: Optional[IconData] = None
+    """
+    Overrides the default value for
+    [`SegmentedButton.selected_icon`][flet.SegmentedButton.selected_icon].
+    """
+
     style: Optional[ButtonStyle] = None
+    """
+    Overrides the default value for
+    [`SegmentedButton.style`][flet.SegmentedButton.style].
+    """
 
 
 @dataclass
 class IconTheme:
+    """
+    Customizes the appearance of [`Icon`][flet.Icon] controls across the app.
+    """
+
     color: Optional[ColorValue] = None
+    """
+    Overrides the default value for [`Icon.color`][flet.Icon.color].
+    """
+
     apply_text_scaling: Optional[bool] = None
+    """
+    Overrides the default value for
+    [`Icon.apply_text_scaling`][flet.Icon.apply_text_scaling].
+    """
+
     fill: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.fill`][flet.Icon.fill].
+    """
+
     opacity: Optional[Number] = None
+    """
+    An opacity to apply to both explicit and default icon colors.
+    """
+
     size: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.size`][flet.Icon.size].
+    """
+
     optical_size: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.optical_size`][flet.Icon.optical_size].
+    """
+
     grade: Optional[Number] = None
+    """
+    Overrides the default value for [`Icon.grade`][flet.Icon.grade].
+    """
+
     weight: Optional[Number] = None
-    shadows: Optional[list[BoxShadow]] = None
+    """
+    Overrides the default value for [`Icon.weight`][flet.Icon.weight].
+    """
+
+    shadows: Optional[BoxShadowValue] = None
+    """
+    Overrides the default value for [`Icon.shadows`][flet.Icon.shadows].
+    """
 
 
 @dataclass
 class DataTableTheme:
+    """
+    Customizes the appearance of [`DataTable`][flet.DataTable] controls across the app.
+    """
+
     checkbox_horizontal_margin: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.checkbox_horizontal_margin`][flet.DataTable.checkbox_horizontal_margin].
+    """
+
     column_spacing: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.column_spacing`][flet.DataTable.column_spacing].
+    """
+
     data_row_max_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_row_max_height`][flet.DataTable.data_row_max_height].
+    """
+
     data_row_min_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_row_min_height`][flet.DataTable.data_row_min_height].
+    """
+
     data_row_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_row_color`][flet.DataTable.data_row_color].
+    """
+
     data_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for
+    [`DataTable.data_text_style`][flet.DataTable.data_text_style].
+    """
+
     divider_thickness: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.divider_thickness`][flet.DataTable.divider_thickness].
+    """
+
     horizontal_margin: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.horizontal_margin`][flet.DataTable.horizontal_margin].
+    """
+
     heading_text_style: Optional[TextStyle] = None
+    """
+    Overrides the default value for
+    [`DataTable.heading_text_style`][flet.DataTable.heading_text_style].
+    """
+
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    Overrides the default value for
+    [`DataTable.heading_row_color`][flet.DataTable.heading_row_color].
+    """
+
     heading_row_height: Optional[Number] = None
+    """
+    Overrides the default value for
+    [`DataTable.heading_row_height`][flet.DataTable.heading_row_height].
+    """
+
     data_row_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value for [`DataRow`][flet.DataRow] mouse cursor.
+    """
+
     decoration: Optional[BoxDecoration] = None
+    """
+    Overrides the default value for [`DataTable`][flet.DataTable] decoration.
+    """
+
     heading_row_alignment: Optional[MainAxisAlignment] = None
+    """
+    Overrides the default value for
+    [`DataColumn.heading_row_alignment`][flet.DataColumn.heading_row_alignment].
+    """
+
     heading_cell_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    Overrides the default value for
+    [`DataColumn`][flet.DataColumn] mouse cursor.
+    """
 
 
 @dataclass
 class Theme:
+    """
+    Customizes the overall appearance of the application.
+    """
+
     color_scheme_seed: Optional[ColorValue] = None
-    primary_swatch: Optional[ColorValue] = None
+    """
+    Overrides the default color scheme seed used to generate
+    [`ColorScheme`][flet.ColorScheme]. The default color is blue.
+    """
+
     font_family: Optional[str] = None
     use_material3: Optional[bool] = None
     appbar_theme: Optional[AppBarTheme] = None
@@ -3052,21 +3338,81 @@ class Theme:
     card_theme: Optional[CardTheme] = None
     checkbox_theme: Optional[CheckboxTheme] = None
     chip_theme: Optional[ChipTheme] = None
+    """
+    Customizes the appearance of [`Chip`][flet.Chip] across the app.
+    """
+
     color_scheme: Optional[ColorScheme] = None
+    """
+    Overrides the default [`ColorScheme`][flet.ColorScheme] used for the application.
+    """
+
     data_table_theme: Optional[DataTableTheme] = None
     date_picker_theme: Optional[DatePickerTheme] = None
     dialog_theme: Optional[DialogTheme] = None
+    """
+    Customizes the appearance of [`AlertDialog`][flet.AlertDialog] across the app.
+    """
+
     divider_theme: Optional[DividerTheme] = None
+    """
+    Defines the visual properties of [`Divider`][flet.Divider],
+    [`VerticalDivider`][flet.VerticalDivider], dividers between
+    [`ListTile`][flet.ListTile]s, and dividers between rows in
+    [`DataTable`][flet.DataTable].
+    """
+
     dropdown_theme: Optional[DropdownTheme] = None
-    elevated_button_theme: Optional[ElevatedButtonTheme] = None
+    """
+    Customizes the appearance of [`Dropdown`][flet.Dropdown] across the app.
+    """
+
+    button_theme: Optional[ButtonTheme] = None
+    """
+    Customizes the appearance of [`Button`][flet.Button] across the app.
+    """
+
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
+    """
+    Customizes the appearance of [`OutlinedButton`][flet.OutlinedButton] across the app.
+    """
+
     text_button_theme: Optional[TextButtonTheme] = None
+    """
+    Customizes the appearance of [`TextButton`][flet.TextButton] across the app.
+    """
+
     filled_button_theme: Optional[FilledButtonTheme] = None
+    """
+    Customizes the appearance of [`FilledButton`][flet.FilledButton] across the app.
+    """
+
     icon_button_theme: Optional[IconButtonTheme] = None
+    """
+    Customizes the appearance of [`IconButton`][flet.IconButton] across the app.
+    """
+
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
+    """
+    Customizes the appearance of [`ExpansionTile`][flet.ExpansionTile] across the app.
+    """
+
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
+    """
+    Customizes the appearance of [`FloatingActionButton`][flet.FloatingActionButton]
+    across the app.
+    """
+
     icon_theme: Optional[IconTheme] = None
+    """
+    Customizes the appearance of [`Icon`][flet.Icon] across the app.
+    """
+
     list_tile_theme: Optional[ListTileTheme] = None
+    """
+    Customizes the appearance of [`ListTile`][flet.ListTile] across the app.
+    """
+
     navigation_bar_theme: Optional[NavigationBarTheme] = None
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = None
     navigation_rail_theme: Optional[NavigationRailTheme] = None
@@ -3081,13 +3427,8 @@ class Theme:
     canvas_color: Optional[ColorValue] = None
     scaffold_bgcolor: Optional[ColorValue] = None
     card_bgcolor: Optional[ColorValue] = None
-    divider_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
     secondary_header_color: Optional[ColorValue] = None
-    primary_color: Optional[ColorValue] = None
-    primary_color_dark: Optional[ColorValue] = None
-    primary_color_light: Optional[ColorValue] = None
     primary_text_theme: Optional[TextTheme] = None
     progress_indicator_theme: Optional[ProgressIndicatorTheme] = None
     radio_theme: Optional[RadioTheme] = None

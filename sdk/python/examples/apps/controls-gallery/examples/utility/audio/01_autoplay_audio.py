@@ -16,17 +16,20 @@ def example():
 
             self.controls = [
                 ft.Text(
-                    "This is an app with background audio. Note: this example doesn't work in Safari browser."
+                    "This is an app with background audio. Note: this example "
+                    "doesn't work in Safari browser."
                 ),
-                ft.ElevatedButton("Stop playing", on_click=pause_audio),
+                ft.Button("Stop playing", on_click=pause_audio),
             ]
 
-        # happens when example is added to the page (when user chooses the Audio control from the grid)
+        # happens when example is added to the page (when user chooses
+        # the Audio control from the grid)
         def did_mount(self):
             self.page.overlay.append(self.audio1)
             self.page.update()
 
-        # happens when example is removed from the page (when user chooses different control group on the navigation rail)
+        # happens when example is removed from the page (when user chooses
+        # different control group on the navigation rail)
         def will_unmount(self):
             self.page.overlay.remove(self.audio1)
             self.page.update()

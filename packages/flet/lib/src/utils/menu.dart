@@ -34,8 +34,6 @@ MenuStyle? parseMenuStyle(dynamic value, ThemeData theme,
         defaultColor: defaultBackgroundColor),
     shadowColor: parseWidgetStateColor(value["shadow_color"], theme,
         defaultColor: defaultShadowColor),
-    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme,
-        defaultColor: defaultSurfaceTintColor),
     elevation: parseWidgetStateDouble(value["elevation"],
         defaultDouble: defaultElevation),
     padding: getWidgetStateProperty<EdgeInsetsGeometry?>(

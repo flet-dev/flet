@@ -31,13 +31,19 @@ class _SwitchControlState extends State<SwitchControl> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    ListTileClicks.of(context)?.notifier.addListener(_toggleValue);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    ListTileClicks.of(context)?.notifier.removeListener(_toggleValue);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _toggleValue() {
+    _onChange(!_value);
   }
 
   void _onChange(bool value) {
@@ -78,7 +84,7 @@ class _SwitchControlState extends State<SwitchControl> {
         autofocus: autofocus,
         padding: widget.control.getPadding("padding"),
         focusNode: _focusNode,
-        activeColor: widget.control.getColor("active_color", context),
+        activeThumbColor: widget.control.getColor("active_color", context),
         activeTrackColor:
             widget.control.getColor("active_track_color", context),
         inactiveThumbColor:
@@ -104,10 +110,6 @@ class _SwitchControlState extends State<SwitchControl> {
                 _onChange(value);
               }
             : null);
-
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _onChange(!_value);
-    });
 
     Widget result = s;
 
@@ -152,7 +154,7 @@ class _SwitchControlState extends State<SwitchControl> {
       );
     }
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
     //  });
   }
 }

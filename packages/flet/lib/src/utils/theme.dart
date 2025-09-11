@@ -94,24 +94,20 @@ ThemeData parseTheme(
     {ThemeData? parentTheme}) {
   ThemeData? theme = parentTheme;
 
-  var primarySwatch = parseColor(value?["primary_swatch"], theme);
-  var colorSchemeSeed = parseColor(value?["color_scheme_seed"], theme);
-
-  if (colorSchemeSeed != null) primarySwatch = null;
-
-  if (colorSchemeSeed == null && primarySwatch == null) {
-    colorSchemeSeed = Colors.blue;
-  }
+  var colorSchemeSeed =
+      parseColor(value?["color_scheme_seed"], theme) ?? Colors.blue;
 
   // create new theme
   theme ??= ThemeData(
-    primarySwatch:
-        primarySwatch != null ? primarySwatch as MaterialColor : null,
     colorSchemeSeed: colorSchemeSeed,
     fontFamily: value?["font_family"],
     brightness: brightness,
-    useMaterial3: value?["use_material3"] ?? primarySwatch == null,
+    useMaterial3: value?["use_material3"],
   );
+
+  ColorScheme? colorScheme = parseColorScheme(value?["color_scheme"], theme);
+  DividerThemeData? dividerTheme =
+      parseDividerTheme(value?["divider_theme"], theme);
 
   theme = theme.copyWith(
     extensions: {
@@ -124,7 +120,7 @@ ThemeData parseTheme(
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
     pageTransitionsTheme: parsePageTransitions(
         value?["page_transitions"], theme.pageTransitionsTheme)!,
-    colorScheme: parseColorScheme(value?["color_scheme"], theme),
+    colorScheme: colorScheme,
     textTheme: parseTextTheme(value?["text_theme"], theme, theme.textTheme),
     primaryTextTheme: parseTextTheme(
         value?["primary_text_theme"], theme, theme.primaryTextTheme),
@@ -140,13 +136,10 @@ ThemeData parseTheme(
     canvasColor: parseColor(value?["canvas_color"], theme),
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
     cardColor: parseColor(value?["card_bgcolor"], theme),
-    dividerColor: parseColor(value?["divider_color"], theme),
+    dividerColor: dividerTheme?.color,
     hintColor: parseColor(value?["hint_color"], theme),
-    shadowColor: parseColor(value?["shadow_color"], theme),
+    shadowColor: colorScheme?.shadow,
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
-    primaryColor: parseColor(value?["primary_color"], theme),
-    primaryColorLight: parseColor(value?["primary_color_light"], theme),
-    primaryColorDark: parseColor(value?["primary_color_dark"], theme),
     dialogTheme: parseDialogTheme(value?["dialog_theme"], theme),
     bottomSheetTheme:
         parseBottomSheetTheme(value?["bottom_sheet_theme"], theme),
@@ -160,15 +153,14 @@ ThemeData parseTheme(
     radioTheme: parseRadioTheme(value?["radio_theme"], theme),
     badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
     switchTheme: parseSwitchTheme(value?["switch_theme"], context),
-    dividerTheme: parseDividerTheme(value?["divider_theme"], theme),
+    dividerTheme: dividerTheme,
     snackBarTheme: parseSnackBarTheme(value?["snackbar_theme"], theme),
     bannerTheme: parseBannerTheme(value?["banner_theme"], theme),
     datePickerTheme: parseDatePickerTheme(value?["date_picker_theme"], theme),
     navigationRailTheme:
         parseNavigationRailTheme(value?["navigation_rail_theme"], theme),
     appBarTheme: parseAppBarTheme(value?["appbar_theme"], theme),
-    dropdownMenuTheme:
-        parseDropdownMenuTheme(value?["dropdown_menu_theme"], theme),
+    dropdownMenuTheme: parseDropdownMenuTheme(value?["dropdown_theme"], theme),
     listTileTheme: parseListTileTheme(value?["list_tile_theme"], theme),
     tooltipTheme: parseTooltipTheme(value?["tooltip_theme"], context),
     expansionTileTheme:
@@ -184,8 +176,7 @@ ThemeData parseTheme(
     navigationBarTheme:
         parseNavigationBarTheme(value?["navigation_bar_theme"], theme),
     dataTableTheme: parseDataTableTheme(value?["data_table_theme"], context),
-    elevatedButtonTheme:
-        parseElevatedButtonTheme(value?["elevated_button_theme"], theme),
+    elevatedButtonTheme: parseButtonTheme(value?["button_theme"], theme),
     outlinedButtonTheme:
         parseOutlinedButtonTheme(value?["outlined_button_theme"], theme),
     textButtonTheme: parseTextButtonTheme(value?["text_button_theme"], theme),
@@ -225,7 +216,6 @@ ColorScheme? parseColorScheme(Map<dynamic, dynamic>? value, ThemeData theme,
     onErrorContainer: parseColor(value["on_error_container"], theme),
     surface: parseColor(value["surface"], theme),
     onSurface: parseColor(value["on_surface"], theme),
-    surfaceContainerHighest: parseColor(value["surface_variant"], theme),
     onSurfaceVariant: parseColor(value["on_surface_variant"], theme),
     outline: parseColor(value["outline"], theme),
     outlineVariant: parseColor(value["outline_variant"], theme),
@@ -251,6 +241,8 @@ ColorScheme? parseColorScheme(Map<dynamic, dynamic>? value, ThemeData theme,
     surfaceBright: parseColor(value["surface_bright"], theme),
     surfaceContainer: parseColor(value["surface_container"], theme),
     surfaceContainerHigh: parseColor(value["surface_container_high"], theme),
+    surfaceContainerHighest:
+        parseColor(value["surface_container_highest"], theme),
     surfaceContainerLow: parseColor(value["surface_container_low"], theme),
     surfaceContainerLowest:
         parseColor(value["surface_container_lowest"], theme),
@@ -283,7 +275,7 @@ TextTheme? parseTextTheme(
   );
 }
 
-ElevatedButtonThemeData? parseElevatedButtonTheme(
+ElevatedButtonThemeData? parseButtonTheme(
     Map<dynamic, dynamic>? value, ThemeData theme,
     [ElevatedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
@@ -439,7 +431,6 @@ DialogThemeData? parseDialogTheme(Map<dynamic, dynamic>? value, ThemeData theme,
   return theme.dialogTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
     elevation: parseDouble(value["elevation"]),
     shape: parseShape(value["shape"], theme),
@@ -467,7 +458,6 @@ BottomSheetThemeData? parseBottomSheetTheme(
     constraints: parseBoxConstraints(value["size_constraints"]),
     modalBarrierColor: parseColor(value["barrier_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dragHandleColor: parseColor(value["drag_handle_color"], theme),
     modalElevation: parseDouble(value["elevation"]),
     // elevation: parseDouble(value["elevation"]),
@@ -481,7 +471,6 @@ CardThemeData? parseCardTheme(Map<dynamic, dynamic>? value, ThemeData theme,
   return theme.cardTheme.copyWith(
       color: parseColor(value["color"], theme),
       shadowColor: parseColor(value["shadow_color"], theme),
-      surfaceTintColor: parseColor(value["surface_tint_color"], theme),
       elevation: parseDouble(value["elevation"]),
       shape: parseShape(value["shape"], theme),
       clipBehavior: parseClip(value["clip_behavior"]),
@@ -496,7 +485,6 @@ ChipThemeData? parseChipTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     color: parseWidgetStateColor(value["color"], theme),
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
     shape: parseShape(value["shape"], theme),
     padding: parsePadding(value["padding"]),
@@ -542,8 +530,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     shape: parseShape(value["shape"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
     extendedPadding: parsePadding(value["extended_padding"]),
-    extendedTextStyle: parseTextStyle(value["extended_text_style"], theme),
-    extendedIconLabelSpacing: parseDouble(value["extended_icon_label_spacing"]),
+    extendedTextStyle: parseTextStyle(value["text_style"], theme),
+    extendedIconLabelSpacing: parseDouble(value["icon_label_spacing"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     iconSize: parseDouble(value["icon_size"]),
     extendedSizeConstraints:
@@ -584,7 +572,6 @@ AppBarThemeData? parseAppBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     foregroundColor: parseColor(value["color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     titleTextStyle: parseTextStyle(value["title_text_style"], theme),
     toolbarTextStyle: parseTextStyle(value["toolbar_text_style"], theme),
     shape: parseShape(value["shape"], theme),
@@ -605,7 +592,6 @@ BottomAppBarThemeData? parseBottomAppBarTheme(
   return theme.bottomAppBarTheme.copyWith(
     color: parseColor(value["color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
     padding: parsePadding(value["padding"]),
@@ -730,7 +716,6 @@ MaterialBannerThemeData? parseBannerTheme(
     dividerColor: parseColor(value["divider_color"], theme),
     padding: parsePadding(value["padding"]),
     leadingPadding: parsePadding(value["leading_padding"]),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     contentTextStyle: parseTextStyle(value["content_text_style"], theme),
   );
@@ -745,7 +730,6 @@ DatePickerThemeData? parseDatePickerTheme(
     backgroundColor: parseColor(value["bgcolor"], theme),
     elevation: parseDouble(value["elevation"]),
     dividerColor: parseColor(value["divider_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     cancelButtonStyle: parseButtonStyle(value["cancel_button_style"], theme),
     confirmButtonStyle: parseButtonStyle(value["confirm_button_style"], theme),
@@ -778,8 +762,6 @@ DatePickerThemeData? parseDatePickerTheme(
         parseTextStyle(value["range_picker_header_help_text_style"], theme),
     rangePickerHeaderHeadlineStyle:
         parseTextStyle(value["range_picker_header_headline_text_style"], theme),
-    rangePickerSurfaceTintColor:
-        parseColor(value["range_picker_surface_tint_color"], theme),
     rangeSelectionBackgroundColor:
         parseColor(value["range_selection_bgcolor"], theme),
     rangeSelectionOverlayColor:
@@ -868,7 +850,7 @@ ListTileThemeData? parseListTileTheme(
     leadingAndTrailingTextStyle:
         parseTextStyle(value["leading_and_trailing_text_style"], theme),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
-    minTileHeight: parseDouble(value["min_tile_height"]),
+    minTileHeight: parseDouble(value["min_height"]),
   );
 }
 
@@ -991,10 +973,8 @@ PopupMenuThemeData? parsePopupMenuTheme(
 
   return theme.popupMenuTheme.copyWith(
     color: parseColor(value["color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
-    textStyle: parseTextStyle(value["text_style"], theme),
     labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
     elevation: parseDouble(value["elevation"]),
@@ -1012,7 +992,6 @@ SearchBarThemeData? parseSearchBarTheme(
   if (value == null) return defaultValue;
 
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme),
     shadowColor: parseWidgetStateColor(value["shadow_color"], theme),
     elevation: parseWidgetStateDouble(value["elevation"]),
     backgroundColor: parseWidgetStateColor(value["bgcolor"], theme),
@@ -1034,7 +1013,6 @@ SearchViewThemeData? parseSearchViewTheme(
 
   return theme.searchViewTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dividerColor: parseColor(value["divider_color"], theme),
     elevation: parseDouble(value["elevation"]),
     headerHintStyle: parseTextStyle(value["header_hint_text_style"], theme),
@@ -1057,7 +1035,6 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
   return theme.navigationDrawerTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     indicatorColor: parseColor(value["indicator_color"], theme),
     elevation: parseDouble(value["elevation"]),
     indicatorSize: parseSize(value["indicator_size"]),
@@ -1075,7 +1052,6 @@ NavigationBarThemeData? parseNavigationBarTheme(
   return theme.navigationBarTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
-    surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     indicatorColor: parseColor(value["indicator_color"], theme),
     overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
     elevation: parseDouble(value["elevation"]),
@@ -1200,10 +1176,9 @@ extension ThemeParsers on Control {
     );
   }
 
-  ElevatedButtonThemeData? getElevatedButtonTheme(
-      String propertyName, ThemeData theme,
+  ElevatedButtonThemeData? getButtonTheme(String propertyName, ThemeData theme,
       [ElevatedButtonThemeData? defaultValue]) {
-    return parseElevatedButtonTheme(get(propertyName), theme, defaultValue);
+    return parseButtonTheme(get(propertyName), theme, defaultValue);
   }
 
   OutlinedButtonThemeData? getOutlinedButtonTheme(

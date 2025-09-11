@@ -6,10 +6,11 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
+from flet.controls.layout_control import LayoutControl
+from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
     IconDataOrControl,
@@ -90,7 +91,7 @@ class NavigationBarDestination(AdaptiveControl):
 
 
 @control("NavigationBar")
-class NavigationBar(ConstrainedControl, AdaptiveControl):
+class NavigationBar(LayoutControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.
 
@@ -126,6 +127,12 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     Defaults to `NavigationBarLabelBehavior.ALWAYS_SHOW`.
     """
 
+    label_padding: Optional[PaddingValue] = None
+    """
+    The padding around the
+    [`NavigationBarDestination.label`][flet.NavigationBarDestination.label].
+    """
+
     elevation: Optional[Number] = None
     """
     The elevation of the navigation bar itself.
@@ -148,11 +155,6 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     The shape of the selected destination indicator.
     """
 
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The surface tint of the Material that holds the NavigationDrawer's contents.
-    """
-
     border: Optional[Border] = None
     """
     TBD
@@ -165,8 +167,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight color of the
-    `NavigationDestination` in various
+    The highlight color of the `NavigationBarDestination` in various
     [`ControlState`][flet.ControlState] states.
 
     The following [`ControlState`][flet.ControlState]

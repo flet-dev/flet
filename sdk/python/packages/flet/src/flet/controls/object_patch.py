@@ -235,13 +235,14 @@ class ObjectPatch:
             control_cls=control_cls,
         )
         builder._compare_values(None, [], None, src, dst, False)
-        ops = list(builder.execute())
 
-        return (
-            cls(ops),
-            list(builder.get_added_controls()),
-            list(builder.get_removed_controls()),
-        )
+        ops = list(builder.execute())
+        added = list(builder.get_added_controls())
+        removed = list(builder.get_removed_controls())
+
+        builder.teardown()
+
+        return cls(ops), added, removed
 
     def to_message(self):
         state = {"i": 0}
@@ -271,11 +272,28 @@ class ObjectPatch:
         ops = []
         for op in self.patch:
             if op["op"] == "remove":
-                ops.append([Operation.Remove, *encode_path(op["path"])])
+                ops.append(
+                    [
+                        Operation.Remove,
+                        *encode_path(op["path"]),
+                    ]
+                )
             elif op["op"] == "replace":
-                ops.append([Operation.Replace, *encode_path(op["path"]), op["value"]])
+                ops.append(
+                    [
+                        Operation.Replace,
+                        *encode_path(op["path"]),
+                        op["value"],
+                    ]
+                )
             elif op["op"] == "add":
-                ops.append([Operation.Add, *encode_path(op["path"]), op["value"]])
+                ops.append(
+                    [
+                        Operation.Add,
+                        *encode_path(op["path"]),
+                        op["value"],
+                    ]
+                )
             elif op["op"] == "move":
                 ops.append(
                     [
@@ -306,6 +324,23 @@ class DiffBuilder:
         self.src_doc = src_doc
         self.dst_doc = dst_doc
         root[:] = [root, root, None]
+
+    def teardown(self):
+        """Break cycles and release strong references to allow GC."""
+        # clear indexes
+        self.index_storage = [{}, {}]
+        self.index_storage2 = [[], []]
+        self._added_dataclasses.clear()
+        self._removed_dataclasses.clear()
+
+        # break the doubly linked list cycle
+        root = self.__root
+        if root:
+            root[:] = [root, root, None]
+
+        # drop references to source/target docs
+        self.src_doc = None
+        self.dst_doc = None
 
     def get_added_controls(self):
         for key, dc in self._added_dataclasses.items():
@@ -843,11 +878,13 @@ class DiffBuilder:
             elif frozen:
                 item._frozen = frozen
 
+            control_cls = self.control_cls
+
             def control_setattr(obj, name, value):
                 if not name.startswith("_") and (
                     name != "data"
-                    or not self.control_cls
-                    or not isinstance(obj, self.control_cls)
+                    or not control_cls
+                    or not isinstance(obj, control_cls)
                 ):
                     if hasattr(obj, "_frozen"):
                         raise Exception("Frozen controls cannot be updated.") from None

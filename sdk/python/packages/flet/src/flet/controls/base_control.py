@@ -288,23 +288,19 @@ class BaseControl:
             elif inspect.isasyncgenfunction(event_handler):
                 if get_param_count(event_handler) == 0:
                     async for _ in event_handler():
-                        if context.auto_update_enabled():
-                            await session.auto_update(session.index.get(self._i))
+                        await session.after_event(session.index.get(self._i))
                 else:
                     async for _ in event_handler(e):
-                        if context.auto_update_enabled():
-                            await session.auto_update(session.index.get(self._i))
+                        await session.after_event(session.index.get(self._i))
                 return
 
             elif inspect.isgeneratorfunction(event_handler):
                 if get_param_count(event_handler) == 0:
                     for _ in event_handler():
-                        if context.auto_update_enabled():
-                            await session.auto_update(session.index.get(self._i))
+                        await session.after_event(session.index.get(self._i))
                 else:
                     for _ in event_handler(e):
-                        if context.auto_update_enabled():
-                            await session.auto_update(session.index.get(self._i))
+                        await session.after_event(session.index.get(self._i))
                 return
 
             elif callable(event_handler):
@@ -313,5 +309,4 @@ class BaseControl:
                 else:
                     event_handler(e)
 
-            if context.auto_update_enabled():
-                await session.auto_update(session.index.get(self._i))
+            await session.after_event(session.index.get(self._i))

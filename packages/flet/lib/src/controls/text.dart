@@ -146,6 +146,6 @@ class TextControl extends StatelessWidget {
                 overflow: overflow,
               );
 
-    return ConstrainedControl(control: control, child: textWidget);
+    return LayoutControl(control: control, child: textWidget);
   }
 }

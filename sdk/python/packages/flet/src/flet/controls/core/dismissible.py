@@ -3,7 +3,6 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEventHandler,
@@ -11,6 +10,7 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.duration import Duration, DurationValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
     Number,
@@ -33,7 +33,7 @@ class DismissibleUpdateEvent(Event["Dismissible"]):
 
 
 @control("Dismissible")
-class Dismissible(ConstrainedControl, AdaptiveControl):
+class Dismissible(LayoutControl, AdaptiveControl):
     """
     A control that can be dismissed by dragging in the indicated
     [`dismiss_direction`][(c).].

@@ -88,6 +88,6 @@ class CupertinoListTileControl extends StatelessWidget {
       tile = ListTileClicks(notifier: _clickNotifier, child: tile);
     }
 
-    return ConstrainedControl(control: control, child: tile);
+    return LayoutControl(control: control, child: tile);
   }
 }

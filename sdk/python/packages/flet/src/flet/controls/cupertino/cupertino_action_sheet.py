@@ -1,15 +1,15 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import StrOrControl
 
 __all__ = ["CupertinoActionSheet"]
 
 
 @control("CupertinoActionSheet")
-class CupertinoActionSheet(ConstrainedControl):
+class CupertinoActionSheet(LayoutControl):
     """
     An iOS-style action sheet.
     """
@@ -33,7 +33,8 @@ class CupertinoActionSheet(ConstrainedControl):
     """
     A list of action buttons to be shown in the sheet.
 
-    These actions are typically [`CupertinoActionSheetAction`][flet.CupertinoActionSheetAction]s.
+    These actions are typically
+    [`CupertinoActionSheetAction`][flet.CupertinoActionSheetAction]s.
 
     This list must have at least one action.
     """

@@ -26,7 +26,7 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.ElevatedButton(
+        ft.Button(
             content="Show end drawer",
             on_click=lambda e: page.show_dialog(end_drawer),
         )

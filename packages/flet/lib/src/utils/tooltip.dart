@@ -32,14 +32,25 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
 
   /// The tooltip shape defaults to a rounded rectangle with a border radius of
   /// 4.0. Tooltips will also default to an opacity of 90%
+  var defaultDecoration = BoxDecoration(
+    borderRadius: BorderRadius.circular(4.0),
+    color: parseColor(
+        value["bgcolor"],
+        theme,
+        theme.brightness == Brightness.light
+            ? Colors.grey[700]
+            : Colors.white));
   var decoration = parseBoxDecoration(value["decoration"], context);
-  decoration?.copyWith(
-      color: parseColor(
-          value["bgcolor"],
-          theme,
-          theme.brightness == Brightness.light
-              ? Colors.grey[700]
-              : Colors.white)!);
+  var finalDecoration = defaultDecoration.copyWith(
+    color: decoration?.color,
+    borderRadius: decoration?.borderRadius,
+    border: decoration?.border,
+    boxShadow: decoration?.boxShadow,
+    gradient: decoration?.gradient,
+    image: decoration?.image,
+    shape: decoration?.shape,
+    backgroundBlendMode: decoration?.backgroundBlendMode,
+  );
   return Tooltip(
     message: value["message"],
     enableFeedback: parseBool(value["enable_feedback"]),
@@ -49,7 +60,7 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
     exitDuration: parseDuration(value["exit_duration"]),
     preferBelow: parseBool(value["prefer_below"]),
     padding: parseEdgeInsets(value["padding"]),
-    decoration: decoration,
+    decoration: finalDecoration,
     textStyle: parseTextStyle(value["text_style"], theme),
     verticalOffset: parseDouble(value["vertical_offset"]),
     margin: parseEdgeInsets(value["margin"]),

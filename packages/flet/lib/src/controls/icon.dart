@@ -17,7 +17,7 @@ class IconControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Icon build: ${control.id}");
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: control,
         child: Icon(
           control.getIconData("icon"),

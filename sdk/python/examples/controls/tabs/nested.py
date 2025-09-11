@@ -18,6 +18,7 @@ def main(page: ft.Page):
                     ft.TabBarView(
                         expand=True,
                         controls=[
+                            ft.Text("Main Tab 1 content"),
                             ft.Tabs(
                                 length=2,
                                 expand=True,
@@ -41,7 +42,6 @@ def main(page: ft.Page):
                                     ],
                                 ),
                             ),
-                            ft.Text("Main Tab 1 content"),
                         ],
                     ),
                 ],

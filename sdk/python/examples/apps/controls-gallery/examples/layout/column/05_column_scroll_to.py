@@ -61,19 +61,19 @@ def example():
                     ft.Text("Scroll to:"),
                     ft.Row(
                         [
-                            ft.ElevatedButton(
+                            ft.Button(
                                 "Section A",
                                 on_click=scroll_to_a,
                             ),
-                            ft.ElevatedButton(
+                            ft.Button(
                                 "Section B",
                                 on_click=scroll_to_b,
                             ),
-                            ft.ElevatedButton(
+                            ft.Button(
                                 "Section C",
                                 on_click=scroll_to_c,
                             ),
-                            ft.ElevatedButton(
+                            ft.Button(
                                 "Section D",
                                 on_click=scroll_to_d,
                             ),

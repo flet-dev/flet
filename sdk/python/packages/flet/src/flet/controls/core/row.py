@@ -2,8 +2,8 @@ from dataclasses import field
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import CrossAxisAlignment, MainAxisAlignment, Number
 
@@ -11,7 +11,7 @@ __all__ = ["Row"]
 
 
 @control("Row")
-class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     Displays its children in a horizontal array.
 

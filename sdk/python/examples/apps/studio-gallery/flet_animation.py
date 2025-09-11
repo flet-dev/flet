@@ -2,7 +2,6 @@ import random
 from math import pi
 
 import flet as ft
-from flet import Container, ElevatedButton, Stack, colors
 
 
 def example(page):
@@ -10,27 +9,27 @@ def example(page):
     gap = 3
     duration = 2000
 
-    c1 = colors.PINK_500
-    c2 = colors.AMBER_500
-    c3 = colors.LIGHT_GREEN_500
-    c4 = colors.DEEP_PURPLE_500
+    c1 = ft.Colors.PINK_500
+    c2 = ft.Colors.AMBER_500
+    c3 = ft.Colors.LIGHT_GREEN_500
+    c4 = ft.Colors.DEEP_PURPLE_500
 
     all_colors = [
-        colors.AMBER_400,
-        colors.AMBER_ACCENT_400,
-        colors.BLUE_400,
-        colors.BROWN_400,
-        colors.CYAN_700,
-        colors.DEEP_ORANGE_500,
-        colors.CYAN_500,
-        colors.INDIGO_600,
-        colors.ORANGE_ACCENT_100,
-        colors.PINK,
-        colors.RED_600,
-        colors.GREEN_400,
-        colors.GREEN_ACCENT_200,
-        colors.TEAL_ACCENT_200,
-        colors.LIGHT_BLUE_500,
+        ft.Colors.AMBER_400,
+        ft.Colors.AMBER_ACCENT_400,
+        ft.Colors.BLUE_400,
+        ft.Colors.BROWN_400,
+        ft.Colors.CYAN_700,
+        ft.Colors.DEEP_ORANGE_500,
+        ft.Colors.CYAN_500,
+        ft.Colors.INDIGO_600,
+        ft.Colors.ORANGE_ACCENT_100,
+        ft.Colors.PINK,
+        ft.Colors.RED_600,
+        ft.Colors.GREEN_400,
+        ft.Colors.GREEN_ACCENT_200,
+        ft.Colors.TEAL_ACCENT_200,
+        ft.Colors.LIGHT_BLUE_500,
     ]
 
     parts = [
@@ -77,7 +76,7 @@ def example(page):
     # height = 5 * (size + gap)
     height = 15 * (size + gap)
 
-    canvas = Stack(
+    canvas = ft.Stack(
         width=width,
         height=height,
         animate_scale=duration,
@@ -85,9 +84,9 @@ def example(page):
     )
 
     # spread parts randomly
-    for i in range(len(parts)):
+    for _ in range(len(parts)):
         canvas.controls.append(
-            Container(
+            ft.Container(
                 animate=duration,
                 animate_position=duration,
                 animate_rotation=duration,
@@ -113,8 +112,7 @@ def example(page):
         page.update()
 
     def assemble(e):
-        i = 0
-        for left, top, bgcolor in parts:
+        for i, (left, top, bgcolor) in enumerate(parts):
             c = canvas.controls[i]
             c.left = left * (size + gap)
             c.top = top * (size + gap)
@@ -123,33 +121,20 @@ def example(page):
             c.height = size
             c.border_radius = 5
             c.rotate = 0
-            i += 1
         canvas.scale = 1
         canvas.opacity = 1
         go_button.visible = False
         again_button.visible = True
         page.update()
 
-    go_button = ElevatedButton("Go!", on_click=assemble, visible=True)
-    again_button = ElevatedButton("Again!", on_click=randomize, visible=False)
+    go_button = ft.Button("Go!", on_click=assemble, visible=True)
+    again_button = ft.Button("Again!", on_click=randomize, visible=False)
 
     randomize(None)
 
-    # return ft.Column(
-    #     expand=True,
-    #     alignment=ft.MainAxisAlignment.CENTER,
-    #     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-    #     tight=True,
-    #     controls=[
-    #         canvas,
-    #         go_button,
-    #         again_button,
-    #     ],
-    # )
-
     return ft.Container(
         expand=True,
-        alignment=ft.alignment.center,
+        alignment=ft.Alignment.CENTER,
         content=ft.Column(
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -168,8 +153,8 @@ def main(page: ft.Page):
     # page.horizontal_alignment = "center"
     # page.vertical_alignment = "center"
     page.spacing = 30
-    page.window_width = 390
-    page.window_height = 844
+    page.window.width = 390
+    page.window.height = 844
     page.add(example(page=page))
 
 

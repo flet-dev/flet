@@ -1,8 +1,8 @@
 from typing import Optional, Union
 
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -16,7 +16,7 @@ __all__ = ["CupertinoListTile"]
 
 
 @control("CupertinoListTile")
-class CupertinoListTile(ConstrainedControl):
+class CupertinoListTile(LayoutControl):
     """
     An iOS-style list tile.
 

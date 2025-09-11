@@ -3,9 +3,9 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -24,7 +24,7 @@ class SliderInteraction(Enum):
 
 
 @control("Slider")
-class Slider(ConstrainedControl, AdaptiveControl):
+class Slider(LayoutControl, AdaptiveControl):
     """
     A slider provides a visual indication of adjustable content, as well as the
     current setting in the total range of content.
@@ -66,16 +66,18 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     Note:
         - Must be less than or equal to [`max`][flet.Slider.max].
-        - If the [`max`][flet.Slider.max] is equal to the `min`, then this slider is disabled.
+        - If the [`max`][flet.Slider.max] is equal to the `min`, then this slider
+            is disabled.
     """
 
     max: Number = 1.0
     """
     The maximum value the user can select.
-    
+
     Note:
         - Must be greater than or equal to [`min`][flet.Slider.min].
-        - If the [`min`][flet.Slider.min] is equal to the `max`, then this slider is disabled.
+        - If the [`min`][flet.Slider.min] is equal to the `max`, then this slider
+            is disabled.
     """
 
     divisions: Optional[int] = None
@@ -89,7 +91,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     round: int = 0
     """
-    The number of decimals displayed on the [`label`][flet.Slider.label] 
+    The number of decimals displayed on the [`label`][flet.Slider.label]
     containing [`value`][flet.Slider.value].
 
     Defaults to `0`, which displays value rounded to the nearest integer.
@@ -127,25 +129,26 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     interaction: Optional[SliderInteraction] = None
     """
-    The allowed way for the user to interact with this slider. 
-    
+    The allowed way for the user to interact with this slider.
+
     If `None`, [`SliderTheme.interaction`][flet.SliderTheme.interaction] is used.
-    If that's is also `None`, defaults to 
+    If that's is also `None`, defaults to
     [`SliderInteraction.TAP_AND_SLIDE`][flet.SliderInteraction.TAP_AND_SLIDE].
     """
 
     secondary_active_color: Optional[ColorValue] = None
     """
     The color to use for the portion of
-    the slider track between the thumb and 
+    the slider track between the thumb and
     the [`secondary_track_value`][flet.Slider.secondary_track_value].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color that's typically
-    used to indicate that the range slider thumb is in [`ControlState.HOVERED`][flet.ControlState.HOVERED]
-    or [`ControlState.DRAGGED`][flet.ControlState.DRAGGED] states.
+    used to indicate that the range slider thumb is in
+    [`ControlState.HOVERED`][flet.ControlState.HOVERED] or
+    [`ControlState.DRAGGED`][flet.ControlState.DRAGGED] states.
     """
 
     secondary_track_value: Optional[Number] = None
@@ -173,16 +176,16 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     year_2023: Optional[bool] = None
     """
-    If this is set to `False`, this slider will use the latest 
+    If this is set to `False`, this slider will use the latest
     Material Design 3 appearance, which was introduced in December 2023.
 
     When `True`, the Slider will use the 2023 Material Design 3 appearance.
-    
-    If not set, then the 
-    [`SliderTheme.year_2023`][flet.SliderTheme.year_2023] will be 
+
+    If not set, then the
+    [`SliderTheme.year_2023`][flet.SliderTheme.year_2023] will be
     used, which is `False` by default.
-    
-    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, 
+
+    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`,
     then this property is ignored.
     """
 

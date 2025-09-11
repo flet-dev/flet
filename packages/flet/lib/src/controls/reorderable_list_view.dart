@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -62,14 +63,12 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var anchor = widget.control.getDouble("anchor", 0.0)!;
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
-    var controls = _controls
-        .map((child) => ControlWidget(key: ValueKey(child.id), control: child))
-        .toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
     var header = widget.control.buildWidget("header");
     var footer = widget.control.buildWidget("footer");
-    var prototypeItem =
-        firstItemPrototype && controls.isNotEmpty ? controls[0] : null;
+    var prototypeItem = firstItemPrototype && _controls.isNotEmpty
+        ? ControlWidget(key: ValueKey(_controls[0].id), control: _controls[0])
+        : null;
     var autoScrollerVelocityScalar =
         widget.control.getDouble("auto_scroller_velocity_scalar");
     var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
@@ -110,7 +109,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
-                itemCount: controls.length,
+                itemCount: _controls.length,
                 itemExtent: itemExtent,
                 mouseCursor: mouseCursor,
                 anchor: anchor,
@@ -122,7 +121,11 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
                 itemBuilder: (context, index) {
-                  return controls[index];
+                  return ControlWidget(
+                    key: ValueKey(_controls[index].getKey("key")?.value ??
+                        _controls[index].id),
+                    control: _controls[index],
+                  );
                 },
               )
             : ReorderableListView(
@@ -144,7 +147,12 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
-                children: controls,
+                children: _controls
+                    .map((item) => ControlWidget(
+                          key: ValueKey(item.getKey("key")?.value ?? item.id),
+                          control: item,
+                        ))
+                    .toList(),
               );
 
         child = ScrollableControl(
@@ -162,6 +170,6 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: result);
+    return LayoutControl(control: widget.control, child: result);
   }
 }

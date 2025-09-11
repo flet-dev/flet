@@ -109,17 +109,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _updateMultiViews();
 
     // page services
-    var pageServicesControl = widget.control.child("_page_services");
-    if (pageServicesControl != null) {
-      if (_pageServices == null ||
-          (_pageServices != null &&
-              _pageServices?.control.internals?["uid"] !=
-                  pageServicesControl.internals?["uid"])) {
-        _pageServices = ServiceRegistry(
-            control: pageServicesControl,
-            propertyName: "services",
-            backend: FletBackend.of(context));
-      }
+    if (_pageServices == null) {
+      _pageServices = ServiceRegistry(
+          control: widget.control,
+          propertyName: "_services",
+          backend: FletBackend.of(context));
     }
 
     // user services
@@ -130,7 +124,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
               userServicesControl.internals?["uid"]) {
         _userServices = ServiceRegistry(
             control: userServicesControl,
-            propertyName: "services",
+            propertyName: "_services",
             backend: FletBackend.of(context));
       }
     }

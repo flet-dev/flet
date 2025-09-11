@@ -1,13 +1,15 @@
-import 'package:flet/src/utils/layout.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
+import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -57,7 +59,7 @@ class _ListViewControlState extends State<ListViewControl> {
     var prototypeItem = firstItemPrototype
         ? widget.control.buildWidget("prototype_item")
         : null;
-    List<Widget> controls = widget.control.buildWidgets("controls");
+    var controls = widget.control.children("controls");
 
     Widget listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -79,7 +81,12 @@ class _ListViewControlState extends State<ListViewControl> {
                 semanticChildCount: semanticChildCount,
                 itemExtent: itemExtent,
                 prototypeItem: prototypeItem,
-                children: controls,
+                children: controls
+                    .map((item) => ControlWidget(
+                          key: ValueKey(item.getKey("key")?.value ?? item.id),
+                          control: item,
+                        ))
+                    .toList(),
               )
             : spacing > 0
                 ? ListView.separated(
@@ -92,7 +99,11 @@ class _ListViewControlState extends State<ListViewControl> {
                     padding: padding,
                     itemCount: controls.length,
                     itemBuilder: (context, index) {
-                      return controls[index];
+                      return ControlWidget(
+                        key: ValueKey(controls[index].getKey("key")?.value ??
+                            controls[index].id),
+                        control: controls[index],
+                      );
                     },
                     separatorBuilder: (context, index) {
                       return horizontal
@@ -118,7 +129,11 @@ class _ListViewControlState extends State<ListViewControl> {
                     itemCount: controls.length,
                     itemExtent: itemExtent,
                     itemBuilder: (context, index) {
-                      return controls[index];
+                      return ControlWidget(
+                        key: ValueKey(controls[index].getKey("key")?.value ??
+                            controls[index].id),
+                        control: controls[index],
+                      );
                     },
                     prototypeItem: prototypeItem,
                   );
@@ -149,6 +164,6 @@ class _ListViewControlState extends State<ListViewControl> {
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: listView);
+    return LayoutControl(control: widget.control, child: listView);
   }
 }

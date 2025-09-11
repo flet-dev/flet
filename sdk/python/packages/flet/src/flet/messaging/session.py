@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from flet.controls.base_control import BaseControl
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
@@ -227,7 +227,15 @@ class Session:
             self.__method_call_results[evt] = (None, "Session closed")
             evt.set()
 
-    async def auto_update(self, control: BaseControl | None):
+    async def after_event(self, control: BaseControl | None):
+        # call auto-update
+        if context.auto_update_enabled():
+            await self.__auto_update(control)
+
+        # unregister unreferenced services
+        self.page._user_services.unregister_services()
+
+    async def __auto_update(self, control: BaseControl | None):
         while control:
             if (
                 control.is_isolated()

@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def show_menu(e: ft.Event[ft.ElevatedButton]):
+    def show_menu(e: ft.Event[ft.Button]):
         container.offset = ft.Offset(0, 0)
         container.update()
 
@@ -41,7 +41,7 @@ def main(page: ft.Page):
         )
     )
 
-    page.add(ft.ElevatedButton("Show menu", on_click=show_menu))
+    page.add(ft.Button("Show menu", on_click=show_menu))
 
 
 ft.run(main)

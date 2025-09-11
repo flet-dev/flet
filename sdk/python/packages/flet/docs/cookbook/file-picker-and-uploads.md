@@ -53,7 +53,7 @@ To open file picker dialog call one of the three methods:
 Lambda works pretty nice for that:
 
 ```python
-ft.ElevatedButton(
+ft.Button(
     content="Choose files...",
     on_click=lambda _: file_picker.pick_files(allow_multiple=True)
 )
@@ -102,7 +102,7 @@ async def upload_files(e):
             )
         await file_picker.upload(upload_list)
 
-ft.ElevatedButton("Upload", on_click=upload_files)
+ft.Button("Upload", on_click=upload_files)
 ```
 
 /// admonition

@@ -54,7 +54,7 @@ Run this app and you will see a new window with a greeting:
 Now you are ready to create a calculator app.
 
 To start, you'll need a [`Text`][flet.Text] control for showing the result of calculation,
-and a few [`ElevatedButton`][flet.ElevatedButton]s with all the numbers and actions on them.
+and a few [`Button`][flet.Button]s with all the numbers and actions on them.
 
 Create `calc.py` with the following contents:
 
@@ -67,25 +67,25 @@ def main(page: ft.Page):
 
     page.add(
         result,
-        ft.ElevatedButton(text="AC"),
-        ft.ElevatedButton(text="+/-"),
-        ft.ElevatedButton(text="%"),
-        ft.ElevatedButton(text="/"),
-        ft.ElevatedButton(text="7"),
-        ft.ElevatedButton(text="8"),
-        ft.ElevatedButton(text="9"),
-        ft.ElevatedButton(text="*"),
-        ft.ElevatedButton(text="4"),
-        ft.ElevatedButton(text="5"),
-        ft.ElevatedButton(text="6"),
-        ft.ElevatedButton(text="-"),
-        ft.ElevatedButton(text="1"),
-        ft.ElevatedButton(text="2"),
-        ft.ElevatedButton(text="3"),
-        ft.ElevatedButton(text="+"),
-        ft.ElevatedButton(text="0"),
-        ft.ElevatedButton(text="."),
-        ft.ElevatedButton(text="="),
+        ft.Button(text="AC"),
+        ft.Button(text="+/-"),
+        ft.Button(text="%"),
+        ft.Button(text="/"),
+        ft.Button(text="7"),
+        ft.Button(text="8"),
+        ft.Button(text="9"),
+        ft.Button(text="*"),
+        ft.Button(text="4"),
+        ft.Button(text="5"),
+        ft.Button(text="6"),
+        ft.Button(text="-"),
+        ft.Button(text="1"),
+        ft.Button(text="2"),
+        ft.Button(text="3"),
+        ft.Button(text="+"),
+        ft.Button(text="0"),
+        ft.Button(text="."),
+        ft.Button(text="="),
     )
 
 ft.run(main)
@@ -115,41 +115,41 @@ def main(page: ft.Page):
         ft.Row(controls=[result]),
         ft.Row(
             controls=[
-                ft.ElevatedButton(text="AC"),
-                ft.ElevatedButton(text="+/-"),
-                ft.ElevatedButton(text="%"),
-                ft.ElevatedButton(text="/"),
+                ft.Button(text="AC"),
+                ft.Button(text="+/-"),
+                ft.Button(text="%"),
+                ft.Button(text="/"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.ElevatedButton(text="7"),
-                ft.ElevatedButton(text="8"),
-                ft.ElevatedButton(text="9"),
-                ft.ElevatedButton(text="*"),
+                ft.Button(text="7"),
+                ft.Button(text="8"),
+                ft.Button(text="9"),
+                ft.Button(text="*"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.ElevatedButton(text="4"),
-                ft.ElevatedButton(text="5"),
-                ft.ElevatedButton(text="6"),
-                ft.ElevatedButton(text="-"),
+                ft.Button(text="4"),
+                ft.Button(text="5"),
+                ft.Button(text="6"),
+                ft.Button(text="-"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.ElevatedButton(text="1"),
-                ft.ElevatedButton(text="2"),
-                ft.ElevatedButton(text="3"),
-                ft.ElevatedButton(text="+"),
+                ft.Button(text="1"),
+                ft.Button(text="2"),
+                ft.Button(text="3"),
+                ft.Button(text="+"),
             ]
         ),
         ft.Row(
              controls=[
-                ft.ElevatedButton(text="0"),
-                ft.ElevatedButton(text="."),
-                ft.ElevatedButton(text="="),
+                ft.Button(text="0"),
+                ft.Button(text="."),
+                ft.Button(text="="),
             ]
         ),
     )
@@ -208,9 +208,9 @@ For the buttons, if we look again at the UI we are aiming to achieve, there are 
 The buttons will be used multiple time in the program, so we will be creating
 custom [Styled Controls](../cookbook/custom-controls.md#styled-controls) to reuse the code.
 
-Since all those types should inherit from `ElevatedButton` class and have common `text` and `expand` properties, let's create a parent `CalcButton` class:
+Since all those types should inherit from `Button` class and have common `text` and `expand` properties, let's create a parent `CalcButton` class:
 ```python
-class CalcButton(ft.ElevatedButton):
+class CalcButton(ft.Button):
     def __init__(self, text, expand=1):
         super().__init__()
         self.text = text
@@ -340,7 +340,7 @@ depending on the button clicked. For `CalcButton` class, let's specify `on_click
 event and set `data` property equal to button's text:
 
 ```python
-class CalcButton(ft.ElevatedButton):
+class CalcButton(ft.Button):
     def __init__(self, text, button_clicked, expand=1):
         super().__init__()
         self.text = text

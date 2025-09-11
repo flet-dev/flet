@@ -3,8 +3,8 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import ClipBehavior, Number
@@ -13,12 +13,13 @@ __all__ = ["GridView"]
 
 
 @control("GridView")
-class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     A scrollable, 2D array of controls.
 
     It is very effective for large lists (thousands of items).
-    Prefer it over wrapping [`Column`][flet.Column]s or [`Row`][flet.Row]s for smooth scrolling.
+    Prefer it over wrapping [`Column`][flet.Column]s or
+    [`Row`][flet.Row]s for smooth scrolling.
     """
 
     controls: list[Control] = field(default_factory=list)

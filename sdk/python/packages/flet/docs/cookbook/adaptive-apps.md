@@ -236,9 +236,9 @@ Below is the list of adaptive Material controls and their matching Cupertino con
     ---
     ![CupertinoIconButton](../examples/controls/cupertino_button/media/adaptive_icon_button.png){width="45%"}
 
--   [:octicons-arrow-right-24: `ElevatedButton`][flet.ElevatedButton]
+-   [:octicons-arrow-right-24: `Button`][flet.Button]
 
-    ![ElevatedButton](../examples/controls/elevated_button/media/adaptive.png){width="45%"}
+    ![Button](../examples/controls/button/media/adaptive.png){width="45%"}
 
     ---
     [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]

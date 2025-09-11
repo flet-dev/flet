@@ -4,8 +4,8 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
+from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ClipBehavior, ColorValue, Number
 
 __all__ = ["Card", "CardVariant"]
@@ -18,7 +18,7 @@ class CardVariant(Enum):
 
 
 @control("Card")
-class Card(ConstrainedControl, AdaptiveControl):
+class Card(LayoutControl, AdaptiveControl):
     """
     A material design card: a panel with slightly rounded corners and an elevation
     shadow.
@@ -56,16 +56,6 @@ class Card(ConstrainedControl, AdaptiveControl):
     Defaults to [`CardTheme.shadow_color`][flet.CardTheme.shadow_color],
     or if that is `None`, falls back to [`Theme.shadow_color`][flet.Theme.shadow_color]
     (which defaults to `Colors.BLACK`).
-    """
-
-    surface_tint_color: Optional[ColorValue] = None
-    """
-    The color used as an overlay on `color`
-    to indicate elevation.
-
-    If this is `None`, no overlay will be applied. Otherwise this color will be
-    composited on top of `color` with an opacity related to `elevation` and used to
-    paint the background of the card.
     """
 
     shape: Optional[OutlinedBorder] = None

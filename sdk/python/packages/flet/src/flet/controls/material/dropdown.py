@@ -4,12 +4,13 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.buttons import ButtonStyle
-from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
+from flet.controls.layout_control import LayoutControl
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons
+from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.textfield import InputFilter, TextCapitalization
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
@@ -74,7 +75,7 @@ Option = DropdownOption
 
 
 @control("Dropdown")
-class Dropdown(ConstrainedControl):
+class Dropdown(LayoutControl):
     """
     A dropdown control that allows users to select a single option from a list of
     options.
@@ -88,6 +89,11 @@ class Dropdown(ConstrainedControl):
     options: list[DropdownOption] = field(default_factory=list)
     """
     A list of options to display in the dropdown.
+    """
+
+    text: Optional[str] = None
+    """
+    The text entered in the text field.
     """
 
     autofocus: bool = False
@@ -124,7 +130,7 @@ class Dropdown(ConstrainedControl):
 
     editable: bool = False
     """
-    TBD
+    Whether the dropdown allows editing of the text input field.
     """
 
     menu_height: Optional[Number] = None
@@ -143,24 +149,31 @@ class Dropdown(ConstrainedControl):
     input textfield width.
     """
 
+    menu_style: Optional[MenuStyle] = None
+    """
+    The menu style that defines the visual attributes of the menu.
+
+    The default width of the menu is set to the width of the text field.
+    """
+
     expanded_insets: Optional[PaddingValue] = None
     """
-    TBD
+    The insets for the expanded dropdown menu.
     """
 
     selected_suffix: Optional[Control] = None
     """
-    TBD
+    A control to display after the selected item in the dropdown.
     """
 
     input_filter: Optional[InputFilter] = None
     """
-    TBD
+    A filter to apply to the text input field.
     """
 
     capitalization: Optional[TextCapitalization] = None
     """
-    TBD
+    Configures how the text input should be capitalized.
     """
 
     trailing_icon: IconDataOrControl = Icons.ARROW_DROP_DOWN
@@ -189,9 +202,14 @@ class Dropdown(ConstrainedControl):
     states.
     """
 
-    on_change: Optional[ControlEventHandler["Dropdown"]] = None
+    on_select: Optional[ControlEventHandler["Dropdown"]] = None
     """
     Called when the selected item of this dropdown has changed.
+    """
+
+    on_change: Optional[ControlEventHandler["Dropdown"]] = None
+    """
+    Called when the text input of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
@@ -271,6 +289,9 @@ class Dropdown(ConstrainedControl):
 
     border_radius: Optional[BorderRadiusValue] = None
     """
+    The border radius applied to the corners of the dropdown input field.
+    Accepts a value in virtual pixels or a `BorderRadiusValue` object.
+    If set to `None`, the default border radius defined by the theme or system is used.
     """
 
     focused_border_width: Optional[Number] = None
@@ -343,10 +364,6 @@ class Dropdown(ConstrainedControl):
     The [`TextStyle`][flet.TextStyle] to use for
     [`helper_text`][flet.Dropdown.helper_text].
     """
-
-    def before_update(self):
-        super().before_update()
-        self.expand_loose = self.expand  # to fix a display issue
 
     def __contains__(self, item):
         return item in self.options
