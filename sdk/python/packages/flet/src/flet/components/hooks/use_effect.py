@@ -50,14 +50,14 @@ def use_effect(
     hook.cleanup = cleanup
 
 
-def mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
+def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once after the component mounts.
     """
     use_effect(fn, dependencies=[])
 
 
-def unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
+def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once when the component unmounts.
     """
@@ -65,7 +65,7 @@ def unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     use_effect(lambda: None, dependencies=[], cleanup=fn)
 
 
-def updated(
+def on_updated(
     fn: Callable[[], Any | Awaitable[Any]], dependencies: Sequence[Any] | None = None
 ) -> None:
     """
@@ -76,7 +76,6 @@ def updated(
     use_effect(fn, dependencies=dependencies)
 
 
-effect = use_effect  # alias
-mounted = mounted  # alias
-unmounted = unmounted  # alias
-updated = updated  # alias
+on_mounted = on_mounted  # alias
+on_unmounted = on_unmounted  # alias
+on_updated = on_updated  # alias

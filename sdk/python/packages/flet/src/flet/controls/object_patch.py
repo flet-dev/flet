@@ -863,11 +863,11 @@ class DiffBuilder:
                     del prev_dicts[key]
                 if dataclasses.is_dataclass(src) and key in prev_classes:
                     del prev_classes[key]
-                if isinstance(dst, list):
+                if isinstance(dst, list) and key is not None:
                     prev_lists[key] = dst[:]
-                if isinstance(dst, dict):
+                if isinstance(dst, dict) and key is not None:
                     prev_dicts[key] = dst.copy()
-                if dataclasses.is_dataclass(dst):
+                if dataclasses.is_dataclass(dst) and key is not None:
                     prev_classes[key] = dst
 
     def _dataclass_added(self, item, parent, frozen):
@@ -962,6 +962,8 @@ class DiffBuilder:
                             # )
                             changes = getattr(obj, "__changes")
                             changes[name] = (old_value, new_value)
+                            if hasattr(obj, "_notify"):
+                                obj._notify(name, new_value)
                 object.__setattr__(obj, name, value)
 
             item.__class__.__setattr__ = control_setattr  # type: ignore

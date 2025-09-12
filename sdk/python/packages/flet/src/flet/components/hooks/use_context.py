@@ -58,8 +58,8 @@ def use_context(context: ContextProvider[T]) -> T:
     # look up the component tree for the nearest context provider
     comp = component
     while comp:
-        if context._key in comp._state.contexts:
-            value = cast(T, comp._state.contexts[context._key])
+        if context._key in comp._contexts:
+            value = cast(T, comp._contexts[context._key])
             break
         comp = comp._parent_component() if comp._parent_component else None
 
@@ -67,6 +67,3 @@ def use_context(context: ContextProvider[T]) -> T:
         component._attach_observable_subscription(value)
 
     return value
-
-
-context = use_context  # alias for convenience

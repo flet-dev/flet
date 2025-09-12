@@ -1,9 +1,9 @@
 from typing import Any
 
-__all__ = ["SessionStorage"]
+__all__ = ["SessionStore"]
 
 
-class SessionStorage:
+class SessionStore:
     def __init__(self):
         self.__store: dict[str, Any] = {}
 

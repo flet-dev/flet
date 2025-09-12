@@ -5,6 +5,7 @@ import flet as ft
 
 
 @dataclass
+@ft.observable
 class Form:
     first_name: str = ""
     last_name: str = ""
@@ -15,7 +16,7 @@ class Form:
     def set_last_name(self, value):
         self.last_name = value
 
-    async def submit(self, e: ft.ControlEvent):
+    async def submit(self, e: ft.Event[ft.Button]):
         e.page.show_dialog(
             ft.AlertDialog(
                 title="Hello",
@@ -28,37 +29,31 @@ class Form:
         self.last_name = ""
 
 
-def main(page: ft.Page):
-    form = Form()
+@ft.component
+def App():
+    form, _ = ft.use_state(Form())
 
-    page.add(
-        ft.StateView(
-            form,
-            lambda state: ft.Column(
-                cast(
-                    list[ft.Control],
-                    [
-                        ft.TextField(
-                            label="First name",
-                            value=form.first_name,
-                            on_change=lambda e: form.set_first_name(e.control.value),
-                        ),
-                        ft.TextField(
-                            label="Last name",
-                            value=form.last_name,
-                            on_change=lambda e: form.set_last_name(e.control.value),
-                        ),
-                        ft.Row(
-                            [
-                                ft.FilledButton("Submit", on_click=form.submit),
-                                ft.FilledTonalButton("Reset", on_click=form.reset),
-                            ]
-                        ),
-                    ],
-                )
-            ),
-        )
-    )
+    return [
+        ft.TextField(
+            label="First name",
+            value=form.first_name,
+            on_change=lambda e: form.set_first_name(e.control.value),
+        ),
+        ft.TextField(
+            label="Last name",
+            value=form.last_name,
+            on_change=lambda e: form.set_last_name(e.control.value),
+        ),
+        ft.Row(
+            cast(
+                list[ft.Control],
+                [
+                    ft.FilledButton("Submit", on_click=form.submit),
+                    ft.FilledTonalButton("Reset", on_click=form.reset),
+                ],
+            )
+        ),
+    ]
 
 
-ft.run(main)
+ft.run(lambda page: page.render(App))

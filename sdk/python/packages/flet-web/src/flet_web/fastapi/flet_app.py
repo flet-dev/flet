@@ -108,8 +108,10 @@ class FletApp(Connection):
         """
         self.__websocket = websocket
 
-        self.client_ip = self.__websocket.client.host if self.__websocket.client else ""
-        self.client_user_agent = self.__websocket.headers.get("user-agent", "")
+        self.__client_ip = (
+            self.__websocket.client.host if self.__websocket.client else ""
+        )
+        self.__client_user_agent = self.__websocket.headers.get("user-agent", "")
         self.__oauth_state_id = self.__websocket.cookies.get("flet_oauth_state")
 
         self.pubsubhub = app_manager.get_pubsubhub(self.__main, loop=self.loop)
@@ -245,6 +247,8 @@ class FletApp(Connection):
                     self.__session,
                 )
 
+            _context_page.set(self.__session.page)
+
             original_route = self.__session.page.route
 
             # apply page patch
@@ -252,8 +256,8 @@ class FletApp(Connection):
 
             if new_session:
                 # update IP and user-agent
-                self.__session.page.client_ip = self.client_ip
-                self.__session.page.client_user_agent = self.client_user_agent
+                self.__session.page.client_ip = self.__client_ip
+                self.__session.page.client_user_agent = self.__client_user_agent
 
                 # run before_main
                 if asyncio.iscoroutinefunction(self.__before_main):
@@ -267,7 +271,9 @@ class FletApp(Connection):
                     ClientAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.__session.id,
-                        page_patch=self.__session.get_page_patch(),
+                        page_patch=self.__session.get_page_patch()
+                        if new_session
+                        else self.__session.page,
                         error="",
                     ),
                 )
@@ -285,7 +291,11 @@ class FletApp(Connection):
                     self.__session.page.route
                     and self.__session.page.route != original_route
                 ):
-                    self.__session.page.go(self.__session.page.route)
+                    asyncio.create_task(
+                        self.__session.page._trigger_event(
+                            "route_change", {"route": self.__session.page.route}
+                        )
+                    )
 
                 if oauth_state:
                     await self.__session.page._authorize_callback(
@@ -352,10 +362,10 @@ class FletApp(Connection):
         app_manager.store_state(state_id, state)
 
     def __get_unique_session_id(self, session_id: str):
-        ip = self.client_ip
+        ip = self.__client_ip
         if ip in ["127.0.0.1", "::1"]:
             ip = ""
-        client_hash = sha1(f"{ip}{self.client_user_agent}")
+        client_hash = sha1(f"{ip}{self.__client_user_agent}")
         return f"{self.page_name}_{session_id}_{client_hash}"
 
     def dispose(self):

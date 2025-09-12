@@ -149,6 +149,17 @@ class Control extends ChangeNotifier {
     return backend.triggerControlEvent(this, eventName, data);
   }
 
+  /// Triggers a control event without checking for subscribers.
+  ///
+  /// This method directly triggers the event for the control identified by its
+  /// [id] without verifying if there are any subscribers for the event.
+  ///
+  /// - [eventName]: The name of the event to trigger.
+  /// - [data]: Optional data to pass along with the event.
+  void triggerEventWithoutSubscribers(String eventName, [dynamic data]) {
+    return backend.triggerControlEventById(id, eventName, data);
+  }
+
   /// Updates the properties of this control.
   ///
   /// The [props] map contains key-value pairs where the key is the property

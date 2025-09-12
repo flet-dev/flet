@@ -187,22 +187,22 @@ class FletBackend extends ChangeNotifier {
         Message(
             action: MessageAction.registerClient,
             payload: RegisterClientRequestBody(
-                sessionId: SessionStore.getSessionId(pageUri.toString()),
+                sessionId: SessionStore.getSessionId(),
                 pageName: getWebPageName(pageUri),
                 page: {
-                  'route': page.get("route"),
-                  'pwa': page.get("pwa"),
-                  'web': page.get("web"),
-                  'debug': page.get("debug"),
-                  'wasm': page.get("wasm"),
-                  'test': page.get("test"),
-                  'multi_view': page.get("multi_view"),
-                  'platform_brightness': page.get("platform_brightness"),
-                  'width': page.get("width"),
-                  'height': page.get("height"),
-                  'platform': page.get("platform"),
-                  'window': page.child("window")!.toMap(),
-                  'media': page.get("media"),
+                  "route": page.get("route"),
+                  "pwa": page.get("pwa"),
+                  "web": page.get("web"),
+                  "debug": page.get("debug"),
+                  "wasm": page.get("wasm"),
+                  "test": page.get("test"),
+                  "multi_view": page.get("multi_view"),
+                  "platform_brightness": page.get("platform_brightness"),
+                  "width": page.get("width"),
+                  "height": page.get("height"),
+                  "platform": page.get("platform"),
+                  "window": page.child("window")!.toMap(),
+                  "media": page.get("media"),
                 }).toMap()),
         unbuffered: true);
   }
@@ -211,7 +211,7 @@ class FletBackend extends ChangeNotifier {
     if (resp.error?.isEmpty ?? true) {
       // all good!
       // store session ID in a cookie
-      SessionStore.setSessionId(pageUri.toString(), resp.sessionId);
+      SessionStore.setSessionId(resp.sessionId);
       isLoading = false;
       _reconnectDelayMs = 0;
       error = "";
@@ -337,7 +337,8 @@ class FletBackend extends ChangeNotifier {
     debugPrint("Platform brightness updated: $newBrightness");
     platformBrightness = newBrightness;
     updateControl(page.id, {"platform_brightness": newBrightness.name});
-    triggerControlEvent(page, "platform_brightness_change", newBrightness.name);
+    triggerControlEventById(
+        page.id, "platform_brightness_change", newBrightness.name);
     notifyListeners();
   }
 

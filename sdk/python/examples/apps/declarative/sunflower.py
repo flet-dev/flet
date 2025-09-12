@@ -23,7 +23,7 @@ class Seed:
 
 @dataclass
 class AppModel(ft.Observable):
-    seeds_count: int = MAX_SEEDS // 2
+    seeds_count: float = MAX_SEEDS // 2
     seeds: list[Seed] = field(default_factory=list)
 
     def __post_init__(self):
@@ -31,7 +31,7 @@ class AppModel(ft.Observable):
         ft.context.page.update()
         self.compute_seeds()
 
-    def update_seeds_count(self, new_seeds_count: int):
+    def update_seeds_count(self, new_seeds_count: float):
         self.seeds_count = new_seeds_count
         self.compute_seeds()
 
@@ -72,60 +72,9 @@ def SeedView(seed: Seed):
     )
 
 
-def main(page: ft.Page):
-    state = AppModel()
-    page.theme_mode = ft.ThemeMode.DARK
-    page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
-    page.appbar = ft.AppBar(title=ft.Text("Sunflower"))
-    page.dark_theme = ft.Theme(
-        appbar_theme=ft.AppBarTheme(center_title=True, elevation=2)
-    )
-    page.add(
-        ft.StateView(
-            state,
-            lambda state: ft.Column(
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.Container(
-                        content=ft.Stack(
-                            controls=[SeedView(s) for s in state.seeds],
-                            aspect_ratio=1.0,
-                        ),
-                        alignment=ft.Alignment.CENTER,
-                        expand=True,
-                    ),
-                    ft.Row(
-                        [
-                            ft.Text(
-                                f"Showing {state.seeds_count} "
-                                f"seed{'s' if state.seeds_count != 1 else ''}"
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                    ),
-                    ft.Row(
-                        [
-                            ft.Slider(
-                                min=1,
-                                max=MAX_SEEDS,
-                                value=state.seeds_count,
-                                width=300,
-                                on_change=lambda e: state.update_seeds_count(
-                                    round(cast(float, e.control.value))
-                                ),
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                    ),
-                ],
-            ),
-            expand=True,
-        ),
-    )
-
-
 @ft.component
-def Sunflower(state: AppModel):
+def Sunflower():
+    app, _ = ft.use_state(AppModel())
     return ft.View(
         appbar=ft.AppBar(title=ft.Text("Sunflower")),
         controls=[
@@ -135,7 +84,7 @@ def Sunflower(state: AppModel):
                 controls=[
                     ft.Container(
                         content=ft.Stack(
-                            controls=[SeedView(s) for s in state.seeds],
+                            controls=[SeedView(s) for s in app.seeds],
                             aspect_ratio=1.0,
                         ),
                         alignment=ft.Alignment.CENTER,
@@ -144,8 +93,8 @@ def Sunflower(state: AppModel):
                     ft.Row(
                         [
                             ft.Text(
-                                f"Showing {round(state.seeds_count)} "
-                                f"seed{'s' if state.seeds_count != 1 else ''}"
+                                f"Showing {round(app.seeds_count)} "
+                                f"seed{'s' if app.seeds_count != 1 else ''}"
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
@@ -155,10 +104,10 @@ def Sunflower(state: AppModel):
                             ft.Slider(
                                 min=1,
                                 max=MAX_SEEDS,
-                                value=state.seeds_count,
+                                value=app.seeds_count,
                                 width=300,
-                                on_change=lambda e: state.update_seeds_count(
-                                    e.control.value
+                                on_change=lambda e: app.update_seeds_count(
+                                    cast(float, e.control.value)
                                 ),
                             )
                         ],
@@ -170,4 +119,4 @@ def Sunflower(state: AppModel):
     )
 
 
-ft.run(lambda page: page.render_views(Sunflower, AppModel()))
+ft.run(lambda page: page.render_views(Sunflower))

@@ -422,7 +422,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def _migrate_state(self, other: BaseControl):
         super()._migrate_state(other)
-        if isinstance(other, TextField) and self.value != other.value:
+        if (
+            isinstance(other, TextField)
+            and self.value is None
+            and self.value != other.value
+        ):
             self.value = other.value
 
     def before_update(self):

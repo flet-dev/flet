@@ -1,5 +1,4 @@
 import flet as ft
-import flet.hooks as hx
 
 
 @ft.component
@@ -56,8 +55,8 @@ def Board(x_is_next: bool, squares: list[str], on_play):
 
 @ft.component
 def Game():
-    history, set_history = hx.state([[""] * 9])
-    current_move, set_current_move = hx.state(0)
+    history, set_history = ft.use_state([[""] * 9])
+    current_move, set_current_move = ft.use_state(0)
     x_is_next = current_move % 2 == 0
 
     def handle_play(next_squares: list[str]):

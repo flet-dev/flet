@@ -40,6 +40,3 @@ def use_state(initial: StateT) -> tuple[StateT, Callable[[StateT], None]]:
                 hook.component._schedule_update()
 
     return hook.value, set_state
-
-
-state = use_state  # alias for convenience

@@ -164,6 +164,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             pixelRatio: parseDouble(args["pixel_ratio"], _dpr)!);
         final data = await image.toByteData(format: ui.ImageByteFormat.png);
         return data!.buffer.asUint8List();
+      case "push_route":
+        _routeState.route = args["route"];
       default:
         throw Exception("Unknown Page method: $name");
     }
@@ -184,9 +186,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         _multiViews[view.viewId] = MultiView(
             viewId: view.viewId, flutterView: view, initialData: initialData);
         if (triggerAddViewEvent) {
-          widget.control.backend.triggerControlEventById(
-              widget.control.id,
-              "multi_view_add",
+          widget.control.triggerEventWithoutSubscribers("multi_view_add",
               {"view_id": view.viewId, "initial_data": initialData});
         }
         changed = true;
@@ -197,8 +197,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           .any((view) => view.viewId == viewId)) {
         _multiViews.remove(viewId);
         if (triggerAddViewEvent) {
-          widget.control.backend.triggerControlEventById(
-              widget.control.id, "multi_view_remove", viewId);
+          widget.control
+              .triggerEventWithoutSubscribers("multi_view_remove", viewId);
         }
         changed = true;
       }
@@ -218,7 +218,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _handleAppLifecycleTransition(String state) {
-    widget.control.triggerEvent("app_lifecycle_state_change", {"state": state});
+    widget.control.triggerEventWithoutSubscribers(
+        "app_lifecycle_state_change", {"state": state});
   }
 
   bool _handleKeyDown(KeyEvent e) {
@@ -238,7 +239,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        widget.control.triggerEvent(
+        widget.control.triggerEventWithoutSubscribers(
             "keyboard_event",
             KeyboardEvent(
                     key: k.keyLabel,
@@ -291,15 +292,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     // clear hrefs index
     FletBackend.of(context).globalKeys.clear();
-
-    // page route
-    var route = widget.control.getString("route");
-    if (route != null && _routeState.route != route) {
-      // update route
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _routeState.route = route;
-      });
-    }
 
     if (!widget.control.backend.multiView) {
       // single page mode
@@ -529,7 +521,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         pages: pages,
         onDidRemovePage: (page) {
           if (page.key != null) {
-            widget.control.triggerEvent(
+            widget.control.triggerEventWithoutSubscribers(
                 "view_pop", {"route": (page.key as ValueKey).value});
           }
         });

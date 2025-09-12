@@ -18,6 +18,7 @@ from flet.messaging.protocol import (
     PatchControlBody,
     SessionCrashedBody,
 )
+from flet.messaging.session_store import SessionStore
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils.object_model import patch_dataclass
 from flet.utils.strings import random_string
@@ -39,6 +40,7 @@ class Session:
         )
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
+        self.__store: SessionStore = SessionStore()
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
         self.__method_calls: dict[str, asyncio.Event] = {}
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
@@ -75,6 +77,10 @@ class Session:
     @property
     def pubsub_client(self) -> PubSubClient:
         return self.__pubsub_client
+
+    @property
+    def store(self) -> SessionStore:
+        return self.__store
 
     async def connect(self, conn: Connection) -> None:
         logger.debug(f"Connect session: {self.id}")
@@ -299,6 +305,7 @@ class Session:
         return patch.to_message(), added_controls, removed_controls
 
     def schedule_update(self, control: BaseControl):
+        logger.debug("Schedule_update(%s)", control)
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 

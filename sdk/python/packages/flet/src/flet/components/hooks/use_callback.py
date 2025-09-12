@@ -21,6 +21,3 @@ def use_callback(
     """
     # Just memoize the function object itself
     return use_memo(lambda: fn, dependencies)
-
-
-callback = use_callback  # alias for convenience

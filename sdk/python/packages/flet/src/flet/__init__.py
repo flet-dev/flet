@@ -3,11 +3,17 @@ from flet.components.component import Component
 from flet.components.component_decorator import component
 from flet.components.hooks.use_callback import use_callback
 from flet.components.hooks.use_context import create_context, use_context
-from flet.components.hooks.use_effect import use_effect
+from flet.components.hooks.use_effect import (
+    on_mounted,
+    on_unmounted,
+    on_updated,
+    use_effect,
+)
 from flet.components.hooks.use_memo import use_memo
 from flet.components.hooks.use_state import use_state
 from flet.components.memo import memo
 from flet.components.observable import Observable, observable
+from flet.components.public_utils import unwrap_component
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis
@@ -944,9 +950,13 @@ __all__ = [
     "margin",
     "memo",
     "observable",
+    "on_mounted",
+    "on_unmounted",
+    "on_updated",
     "padding",
     "run",
     "run_async",
+    "unwrap_component",
     "use_callback",
     "use_context",
     "use_effect",

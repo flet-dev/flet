@@ -44,6 +44,3 @@ def use_memo(
         hook.prev_deps = list(dependencies)
 
     return hook.value  # type: ignore[return-value]
-
-
-memo = use_memo  # alias for convenience

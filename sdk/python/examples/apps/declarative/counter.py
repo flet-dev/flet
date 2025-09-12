@@ -4,6 +4,7 @@ import flet as ft
 
 
 @dataclass
+@ft.observable
 class AppState:
     count: int
 
@@ -11,25 +12,24 @@ class AppState:
         self.count += 1
 
 
-def main(page: ft.Page):
-    state = AppState(count=0)
+@ft.component
+def App():
+    state, _ = ft.use_state(AppState(count=0))
 
-    page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD, on_click=state.increment
-    )
-    page.add(
-        ft.StateView(
-            state,
-            lambda state: ft.SafeArea(
+    return ft.View(
+        floating_action_button=ft.FloatingActionButton(
+            icon=ft.Icons.ADD, on_click=state.increment
+        ),
+        controls=[
+            ft.SafeArea(
                 ft.Container(
                     ft.Text(value=f"{state.count}", size=50),
                     alignment=ft.Alignment.CENTER,
                 ),
                 expand=True,
-            ),
-            expand=True,
-        )
+            )
+        ],
     )
 
 
-ft.run(main)
+ft.run(lambda page: page.render_views(App))

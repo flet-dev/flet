@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import contextlib
 import weakref
-from collections.abc import Iterable
 from dataclasses import InitVar, dataclass
 from typing import TYPE_CHECKING, Any, Callable, Optional
+
+from flet.components.utils import value_equal
 
 if TYPE_CHECKING:
     from flet.components.component import Component
 
 from flet.components.component_owned import ComponentOwned
-
-# ---------- Core notifier ----------
 
 Listener = Callable[[Any, Optional[str]], None]  # (sender, field|None)
 
@@ -19,8 +18,16 @@ Listener = Callable[[Any, Optional[str]], None]  # (sender, field|None)
 def observable(cls):
     if Observable in cls.__mro__:
         return cls
-    # create a new class that mixes Observable before cls
-    return type(cls.__name__, (Observable, cls), dict(cls.__dict__))
+    # Build a new class whose MRO is (Observable, cls)
+    ns = dict(cls.__dict__)
+    # Defensive: avoid carrying these special slots over
+    ns.pop("__dict__", None)
+    ns.pop("__weakref__", None)
+
+    Mixed = type(cls.__name__, (Observable, cls), ns)
+    Mixed.__module__ = cls.__module__
+    Mixed.__qualname__ = cls.__qualname__
+    return Mixed
 
 
 @dataclass
@@ -43,14 +50,17 @@ class ObservableSubscription(ComponentOwned):
 
 class Observable:
     """
-    Base class: notifies when fields change; auto-wraps lists/dicts to be observable.
+    Mixin: notifies when fields change; auto-wraps lists/dicts to be observable.
+    No ctor suppression; notifications will fire on any assignment
+    (incl. dataclass __init__).
     """
 
-    __version__ = 0  # version
+    __version__ = 0  # optional version counter
 
+    # listeners store (lazy)
     @property
     def __listeners(self):
-        storage_name = "_Observable__listeners_storage"  # different name
+        storage_name = "_Observable__listeners_storage"
         try:
             return object.__getattribute__(self, storage_name)
         except AttributeError:
@@ -58,7 +68,7 @@ class Observable:
             object.__setattr__(self, storage_name, ws)
             return ws
 
-    # --- subscribe / batching ---
+    # subscribe / notify
     def subscribe(self, fn: Listener) -> Callable[[], None]:
         self.__listeners.add(fn)
 
@@ -69,27 +79,27 @@ class Observable:
         return dispose
 
     def _notify(self, field: str | None):
-        self.__version__ = self.__version__ + 1
+        self.__version__ += 1
         for fn in list(self.__listeners):
             fn(self, field)
 
-    # --- collection wrappers ---
+    # collection wrapping
     def _wrap_if_collection(self, name: str, value: Any) -> Any:
-        # Wrap plain list/dict so in-place mutations notify this object
         if isinstance(value, list) and not isinstance(value, ObservableList):
             return ObservableList(self, name, value)
         if isinstance(value, dict) and not isinstance(value, ObservableDict):
             return ObservableDict(self, name, value)
         return value
 
-    # --- attribute interception ---
+    # attribute interception
     def __setattr__(self, name: str, value: Any):
-        if name.startswith("_"):  # private, skip
+        if name.startswith("_"):  # private/internal, don't notify
             object.__setattr__(self, name, value)
             return
         value = self._wrap_if_collection(name, value)
-        old = object.__getattribute__(self, name) if hasattr(self, name) else None
-        if old is not value:  # identity check; use != if you prefer value semantics
+        had = hasattr(self, name)
+        old = object.__getattribute__(self, name) if had else None
+        if not value_equal(old, value):
             object.__setattr__(self, name, value)
             self._notify(name)
 
@@ -100,35 +110,29 @@ class Observable:
             self._notify(name)
 
     def __repr__(self):
-        original_repr = super().__repr__()
-        return f"{original_repr} (version={self.__version__})"
+        return f"{super().__repr__()} (version={self.__version__})"
 
 
-# ---------- Observable collections ----------
+# Observable collections -----------------------------------------
 
 
 class ObservableList(list):
-    """List that notifies its owner Observable on mutation."""
-
     __slots__ = ("_owner_ref", "_field")
 
-    def __init__(self, owner: Observable, field: str, iterable: Iterable = ()):
+    def __init__(self, owner: Observable, field: str, iterable=()):
         super().__init__(iterable)
         self._owner_ref = weakref.ref(owner)
         self._field = field
 
-    # mark owner dirty
     def _touch(self):
         owner = self._owner_ref()
         if owner:
             owner._notify(self._field)
 
-    # ensure nested collections get wrapped, too
     def _wrap(self, v):
         owner = self._owner_ref()
         return owner._wrap_if_collection(self._field, v) if owner else v
 
-    # mutators
     def append(self, x):
         super().append(self._wrap(x))
         self._touch()
@@ -172,11 +176,9 @@ class ObservableList(list):
 
 
 class ObservableDict(dict):
-    """Dict that notifies its owner Observable on mutation."""
-
     __slots__ = ("_owner_ref", "_field")
 
-    def __init__(self, owner: Observable, field: str, mapping: dict | Iterable = ()):
+    def __init__(self, owner: Observable, field: str, mapping=()):
         super().__init__(mapping)
         self._owner_ref = weakref.ref(owner)
         self._field = field
@@ -190,7 +192,6 @@ class ObservableDict(dict):
         owner = self._owner_ref()
         return owner._wrap_if_collection(self._field, v) if owner else v
 
-    # mutators
     def __setitem__(self, k, v):
         super().__setitem__(k, self._wrap(v))
         self._touch()

@@ -27,7 +27,6 @@ class _ComponentState:
     mounted: bool = False
     is_dirty: bool = False
     observable_subscriptions: list[ObservableSubscription] = field(default_factory=list)
-    contexts: dict[object, Any] = field(default_factory=dict)
     last_args: tuple[Any, ...] = field(default_factory=tuple)
     last_kwargs: dict[str, Any] = field(default_factory=dict)
     last_b: Any = None
@@ -53,6 +52,7 @@ class Component(BaseControl):
     _state: _ComponentState = field(
         default_factory=_ComponentState, metadata={"skip": True}
     )
+    _contexts: dict[object, Any] = field(default_factory=dict, metadata={"skip": True})
     memoized: bool = field(default=False, metadata={"skip": True})
     _stale: bool = field(default=False, metadata={"skip": True})
 
@@ -68,13 +68,15 @@ class Component(BaseControl):
         other._stale = True
 
     def update(self):
+        if self._stale:
+            logger.debug("%s.update(): skipping (stale)", self)
+            return
+
         logger.debug(
             "%s.update(), memoized: %s",
             self,
             self.memoized,
         )
-        if self._stale:
-            return
 
         self._state.is_dirty = False
 
@@ -96,7 +98,7 @@ class Component(BaseControl):
 
         # patch component
         if b is not None:
-            context.page.get_session().patch_control(
+            context.page.session.patch_control(
                 prev_control=self._b, control=b, parent=self, path=["_b"], frozen=True
             )
 
@@ -147,11 +149,11 @@ class Component(BaseControl):
     def _schedule_update(self):
         logger.debug("%s.schedule_update()", self)
         self._state.is_dirty = True
-        context.page.get_session().schedule_update(self)
+        context.page.session.schedule_update(self)
 
     def _schedule_effect(self, hook: EffectHook, is_cleanup: bool = False):
-        logger.debug("%s.schedule_effect(%s)", self, is_cleanup)
-        context.page.get_session().schedule_effect(hook, is_cleanup)
+        logger.debug("%s.schedule_effect(%s, %s)", self, hook, is_cleanup)
+        context.page.session.schedule_effect(hook, is_cleanup)
 
     def _subscribe_observable_args(self, args: tuple[Any, ...], kwargs: dict[str, Any]):
         for a in args:
@@ -193,7 +195,8 @@ class Component(BaseControl):
         return self._state.hooks[i]  # type: ignore
 
     def _run_mount_effects(self):
-        logger.debug("%s._run_mount_effects()", self)
+        if self._state.hooks:
+            logger.debug("%s._run_mount_effects()", self)
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook):
                 # all effects are running on mount
@@ -202,7 +205,8 @@ class Component(BaseControl):
     def _run_render_effects(self):
         if not self._state.mounted:
             return
-        logger.debug("%s._run_render_effects()", self)
+        if self._state.hooks:
+            logger.debug("%s._run_render_effects()", self)
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook) and hook.deps != []:
                 if callable(hook.cleanup):
@@ -215,7 +219,8 @@ class Component(BaseControl):
                     self._schedule_effect(hook, is_cleanup=False)
 
     def _run_unmount_effects(self):
-        logger.debug("%s._run_unmount_effects()", self)
+        if self._state.hooks:
+            logger.debug("%s._run_unmount_effects()", self)
         for hook in self._state.hooks:
             # all effects are running on unmount
             if isinstance(hook, EffectHook) and callable(hook.cleanup):
@@ -315,7 +320,7 @@ class Renderer:
             memoized=self._is_memo,
             key=key,
         )
-        c._state.contexts = self._snapshot_contexts()
+        c._contexts = self._snapshot_contexts()
         c._frozen = True
 
         self._is_memo = False

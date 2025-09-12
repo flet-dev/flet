@@ -80,7 +80,8 @@ class Event(Generic[EventControlType]):
     control: EventControlType = field(repr=False)
 
     @property
-    def page(self) -> Optional[Union["Page", "BasePage"]]:
+    def page(self) -> Union["Page", "BasePage"]:
+        assert self.control.page
         return self.control.page
 
     @property

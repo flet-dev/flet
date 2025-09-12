@@ -1,4 +1,5 @@
 import contextvars
+import math
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
@@ -26,6 +27,25 @@ def current_component() -> "Component":
     if not r._render_stack:
         raise RuntimeError("Hooks must be called inside a component render.")
     return r._render_stack[-1]
+
+
+def value_equal(a, b) -> bool:
+    # Fast path
+    if a is b:
+        return True
+    # Handle normal equality
+    try:
+        if a == b:
+            return True
+    except Exception:
+        pass
+    # Treat NaN == NaN as equal (like JS Object.is)
+    return (
+        isinstance(a, float)
+        and isinstance(b, float)
+        and math.isnan(a)
+        and math.isnan(b)
+    )
 
 
 def shallow_compare_args(

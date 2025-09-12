@@ -238,7 +238,7 @@ class BaseControl:
             f"{self.__class__.__qualname__} Control must be added to the page first"
         )
 
-        return await self.page.get_session().invoke_method(
+        return await self.page.session.invoke_method(
             self._i, method_name, arguments, timeout
         )
 
@@ -276,7 +276,7 @@ class BaseControl:
                 "Control must be added to a page before triggering events. "
                 "Use page.add(control) or add it to a parent control that's on a page."
             )
-            session = self.page.get_session()
+            session = self.page.session
 
             # Handle async and sync event handlers accordingly
             event_handler = getattr(self, field_name)
