@@ -61,7 +61,7 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
         modal=False,
         barrier_color=ft.Colors.RED,
         keyboard_type=ft.KeyboardType.EMAIL,
-        date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR,
+        # date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR,
     )
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
@@ -71,7 +71,19 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "properties1",
+        "properties_calendar",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
+    # change to input mode
+    input_icon = await flet_app.tester.find_by_icon(ft.Icons.ACCESS_ALARM)
+    assert input_icon.count == 1
+    await flet_app.tester.tap(input_icon)
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        "properties_input",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
