@@ -8,7 +8,7 @@
 --8<-- "../../examples/controls/date_range_picker/basic.py"
 ```
 
-![basic](../examples/controls/date_picker/media/basic.png){width="80%"}
+![basic](../test-images/controls/golden/macos/date_range_picker/basic.png){width="60%"}
 /// caption
 ///
 

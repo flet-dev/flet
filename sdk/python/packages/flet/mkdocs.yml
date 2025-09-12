@@ -146,6 +146,9 @@ plugins:
         - source_dir: ../../examples
           target_url_path: examples
           include_exts: [".png", ".gif", ".svg"]
+        - source_dir: integration_tests
+          target_url_path: test-images
+          include_exts: [".png", ".gif", ".svg"]
 
 # Markdown Extensions
 markdown_extensions:

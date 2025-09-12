@@ -1,6 +1,5 @@
 from dataclasses import field
 from datetime import datetime
-from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
@@ -9,6 +8,7 @@ from flet.controls.control_event import (
 )
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DateTimeValue
+from flet.controls.material.date_picker import DatePickerEntryMode
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
     ColorValue,
@@ -26,11 +26,11 @@ __all__ = [
 #     YEAR = "year"
 
 
-class DatePickerEntryMode(Enum):
-    CALENDAR = "calendar"
-    INPUT = "input"
-    CALENDAR_ONLY = "calendarOnly"
-    INPUT_ONLY = "inputOnly"
+# class DatePickerEntryMode(Enum):
+#     CALENDAR = "calendar"
+#     INPUT = "input"
+#     CALENDAR_ONLY = "calendarOnly"
+#     INPUT_ONLY = "inputOnly"
 
 
 # @dataclass
