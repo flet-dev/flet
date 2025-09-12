@@ -21,23 +21,6 @@ __all__ = [
 ]
 
 
-# class DatePickerMode(Enum):
-#     DAY = "day"
-#     YEAR = "year"
-
-
-# class DatePickerEntryMode(Enum):
-#     CALENDAR = "calendar"
-#     INPUT = "input"
-#     CALENDAR_ONLY = "calendarOnly"
-#     INPUT_ONLY = "inputOnly"
-
-
-# @dataclass
-# class DatePickerEntryModeChangeEvent(Event["DateRangePicker"]):
-#     entry_mode: Optional[DatePickerEntryMode]
-
-
 @control("DateRangePicker")
 class DateRangePicker(DialogControl):
     """
@@ -102,11 +85,6 @@ class DateRangePicker(DialogControl):
     The type of keyboard to use for editing the text.
     """
 
-    # date_picker_mode: DatePickerMode = DatePickerMode.DAY
-    # """
-    # Initial display of a calendar date picker.
-    # """
-
     date_picker_entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
@@ -141,14 +119,6 @@ class DateRangePicker(DialogControl):
     `first_date` or later than `last_date`.
     """
 
-    # field_hint_text: Optional[str] = None
-    # """
-    # The hint text displayed in the text field.
-
-    # The default value is the date format string that depends on your locale. For
-    # example, 'mm/dd/yyyy' for en_US.
-    # """
-
     field_start_hint_text: Optional[str] = None
     """
     The text used to prompt the user when no text has been entered in the start field.
@@ -158,13 +128,6 @@ class DateRangePicker(DialogControl):
     """
     The text used to prompt the user when no text has been entered in the end field.
     """
-
-    # field_label_text: Optional[str] = None
-    # """
-    # The label text displayed in the TextField.
-
-    # Defaults to `"Enter Date"`.
-    # """
 
     field_start_label_text: Optional[str] = None
     """

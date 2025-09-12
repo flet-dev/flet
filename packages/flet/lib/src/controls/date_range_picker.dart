@@ -26,7 +26,6 @@ class _DateRangePickerControlState extends State<DateRangePickerControl> {
 
     var open = widget.control.getBool("open", false)!;
     var currentDate = widget.control.getDateTime("current_date");
-    //var value = widget.control.getDateTime("value");
     var startValue = widget.control.getDateTime("start_value");
     var endValue = widget.control.getDateTime("end_value");
     var value = DateTimeRange<DateTime>(
@@ -46,17 +45,10 @@ class _DateRangePickerControlState extends State<DateRangePickerControl> {
         "open": false
       };
       widget.control.updateProperties(props);
-      // widget.control
-      //     .updateProperties({"value": dateValue ?? value, "open": false});
       if (dateRangeValue != null) {
-        widget.control.triggerEvent("change");
+        widget.control.triggerEvent("change", dateRangeValue);
       }
-      widget.control.triggerEvent("dismiss");
-
-      // if (dateValue != null) {
-      //   widget.control.triggerEvent("change", dateValue);
-      // }
-      //widget.control.triggerEvent("dismiss", dateValue == null);
+      widget.control.triggerEvent("dismiss", dateRangeValue == null);
     }
 
     Widget createSelectDateDialog() {

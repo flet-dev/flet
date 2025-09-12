@@ -740,31 +740,31 @@ DatePickerThemeData? parseDatePickerTheme(
     headerBackgroundColor: parseColor(value["header_bgcolor"], theme),
     dayForegroundColor:
         parseWidgetStateColor(value["day_foreground_color"], theme),
-    //rangePickerElevation: parseDouble(value["range_picker_elevation"]),
+    rangePickerElevation: parseDouble(value["range_picker_elevation"]),
     todayBackgroundColor: parseWidgetStateColor(value["today_bgcolor"], theme),
     headerForegroundColor: parseColor(value["header_foreground_color"], theme),
     headerHeadlineStyle:
         parseTextStyle(value["header_headline_text_style"], theme),
     headerHelpStyle: parseTextStyle(value["header_help_text_style"], theme),
-    // rangePickerBackgroundColor:
-    //     parseColor(value["range_picker_bgcolor"], theme),
-    // rangePickerHeaderBackgroundColor:
-    //     parseColor(value["range_picker_header_bgcolor"], theme),
-    // rangePickerHeaderForegroundColor:
-    //     parseColor(value["range_picker_header_foreground_color"], theme),
-    // rangePickerShadowColor:
-    //     parseColor(value["range_picker_shadow_color"], theme),
+    rangePickerBackgroundColor:
+        parseColor(value["range_picker_bgcolor"], theme),
+    rangePickerHeaderBackgroundColor:
+        parseColor(value["range_picker_header_bgcolor"], theme),
+    rangePickerHeaderForegroundColor:
+        parseColor(value["range_picker_header_foreground_color"], theme),
+    rangePickerShadowColor:
+        parseColor(value["range_picker_shadow_color"], theme),
     todayForegroundColor:
         parseWidgetStateColor(value["today_foreground_color"], theme),
-    // rangePickerShape: parseShape(value["range_picker_shape"], theme),
-    // rangePickerHeaderHelpStyle:
-    //     parseTextStyle(value["range_picker_header_help_text_style"], theme),
-    // rangePickerHeaderHeadlineStyle:
-    //     parseTextStyle(value["range_picker_header_headline_text_style"], theme),
-    // rangeSelectionBackgroundColor:
-    //     parseColor(value["range_selection_bgcolor"], theme),
-    // rangeSelectionOverlayColor:
-    //     parseWidgetStateColor(value["range_selection_overlay_color"], theme),
+    rangePickerShape: parseShape(value["range_picker_shape"], theme),
+    rangePickerHeaderHelpStyle:
+        parseTextStyle(value["range_picker_header_help_text_style"], theme),
+    rangePickerHeaderHeadlineStyle:
+        parseTextStyle(value["range_picker_header_headline_text_style"], theme),
+    rangeSelectionBackgroundColor:
+        parseColor(value["range_selection_bgcolor"], theme),
+    rangeSelectionOverlayColor:
+        parseWidgetStateColor(value["range_selection_overlay_color"], theme),
     todayBorder: parseBorderSide(value["today_border_side"], theme),
     yearBackgroundColor: parseWidgetStateColor(value["year_bgcolor"], theme),
     yearForegroundColor:
