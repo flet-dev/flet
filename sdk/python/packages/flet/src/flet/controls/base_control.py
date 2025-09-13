@@ -210,6 +210,16 @@ class BaseControl:
         """
         pass
 
+    def _before_update_safe(self):
+        frozen = getattr(self, "_frozen", None)
+        if frozen is not None:
+            del self._frozen
+
+        self.before_update()
+
+        if frozen is not None:
+            self._frozen = frozen
+
     def before_event(self, e: ControlEvent):
         return True
 

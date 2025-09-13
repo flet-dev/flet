@@ -698,7 +698,7 @@ class DiffBuilder:
                     if orig_frozen is not None:
                         object.__setattr__(dst, "_frozen", orig_frozen)
                     object.__setattr__(dst, "_initialized", True)
-            dst.before_update()
+            dst._before_update_safe()
 
         if not frozen:
             # in-place comparison
@@ -971,7 +971,7 @@ class DiffBuilder:
             if self.control_cls and isinstance(item, self.control_cls):
                 if not configure_setattr_only:
                     item.build()
-                    item.before_update()
+                    item._before_update_safe()
                     object.__setattr__(item, "_initialized", True)
                 yield item
 
