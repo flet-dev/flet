@@ -7,24 +7,22 @@ import flet as ft
 @ft.observable
 class TargetState:
     bgcolor: ft.Colors = ft.Colors.BLUE_GREY_100
-    border: ft.Border | None = None
+    is_drag_over: bool = False
 
 
 @ft.component
 def App():
     target, _ = ft.use_state(TargetState())
 
-    def handle_drag_will_accept(e: ft.DragWillAcceptEvent):
-        target.border = ft.Border.all(
-            2, ft.Colors.BLACK45 if e.accept else ft.Colors.RED
-        )
+    def on_will_accept(e: ft.DragWillAcceptEvent):
+        target.is_drag_over = True
 
-    def handle_drag_accept(e: ft.DragTargetEvent):
+    def on_accept(e: ft.DragTargetEvent):
         target.bgcolor = e.src.data
-        target.border = None
+        target.is_drag_over = False
 
-    def handle_drag_leave(e: ft.DragTargetLeaveEvent):
-        target.border = None
+    def on_leave(e: ft.DragTargetLeaveEvent):
+        target.is_drag_over = False
 
     return ft.Row(
         controls=[
@@ -71,14 +69,16 @@ def App():
             ft.Container(width=100),
             ft.DragTarget(
                 group="color",
-                on_will_accept=handle_drag_will_accept,
-                on_accept=handle_drag_accept,
-                on_leave=handle_drag_leave,
+                on_will_accept=on_will_accept,
+                on_accept=on_accept,
+                on_leave=on_leave,
                 content=ft.Container(
                     width=50,
                     height=50,
                     bgcolor=target.bgcolor,
-                    border=target.border,
+                    border=ft.Border.all(2, ft.Colors.BLACK45)
+                    if target.is_drag_over
+                    else None,
                     border_radius=5,
                 ),
             ),
