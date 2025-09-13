@@ -61,9 +61,9 @@ def ItemView(item: Item):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.Container(
-                bgcolor=ft.Colors.BLACK26,
+                bgcolor=ft.Colors.BLACK38,
                 border_radius=ft.border_radius.all(30),
-                height=3,
+                height=2,
                 width=180,
                 opacity=1.0 if item.is_item_over else 0.0,
             ),
@@ -120,70 +120,83 @@ def GroupView(group: Group):
     def on_item_leave(e: ft.DragTargetLeaveEvent):
         group.is_item_over = False
 
-    # print("Rendering GroupView:", group)
-
-    return ft.Draggable(
-        group="groups",
-        data=group,
-        content=ft.DragTarget(
-            group="items",
-            data=group,
-            on_will_accept=on_item_will_accept,
-            on_accept=on_item_accept,
-            on_leave=on_item_leave,
-            content=ft.DragTarget(
+    return ft.Row(
+        spacing=4,
+        controls=[
+            ft.Container(
+                bgcolor=ft.Colors.BLACK54,
+                border_radius=ft.border_radius.all(30),
+                width=2,
+                height=100,
+                opacity=1.0 if group.is_group_over else 0.0,
+            ),
+            ft.Draggable(
                 group="groups",
                 data=group,
-                on_will_accept=on_group_will_accept,
-                on_accept=on_group_accept,
-                on_leave=on_group_leave,
-                content=ft.Container(
-                    border=ft.Border.all(2, ft.Colors.BLACK12)
-                    if not group.is_group_over
-                    else ft.Border.all(3, ft.Colors.BLACK26),
-                    border_radius=ft.BorderRadius.all(15),
-                    bgcolor=group.color,
-                    padding=ft.Padding.all(20),
-                    content=ft.Column(
-                        spacing=4,
-                        controls=[
-                            ft.Text(
-                                group.title, theme_style=ft.TextThemeStyle.TITLE_LARGE
-                            ),
-                            ft.TextField(
-                                label="New item",
-                                width=200,
-                                bgcolor=ft.Colors.WHITE,
-                                value=group.new_item_text,
-                                on_change=lambda e: group.change_new_item_text(
-                                    e.control.value
-                                ),
-                                on_submit=group.on_add_item,
-                            ),
-                            ft.TextButton(
-                                content="Add",
-                                icon=ft.Icons.ADD,
-                                on_click=group.on_add_item,
-                            ),
-                            ft.Column(
-                                spacing=2,
-                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                content=ft.DragTarget(
+                    group="items",
+                    data=group,
+                    on_will_accept=on_item_will_accept,
+                    on_accept=on_item_accept,
+                    on_leave=on_item_leave,
+                    content=ft.DragTarget(
+                        group="groups",
+                        data=group,
+                        on_will_accept=on_group_will_accept,
+                        on_accept=on_group_accept,
+                        on_leave=on_group_leave,
+                        content=ft.Container(
+                            border=ft.Border.all(2, ft.Colors.BLACK12)
+                            if not group.is_group_over
+                            else ft.Border.all(2, ft.Colors.BLACK38),
+                            border_radius=ft.BorderRadius.all(15),
+                            bgcolor=group.color,
+                            padding=ft.Padding.all(20),
+                            content=ft.Column(
+                                spacing=4,
                                 controls=[
-                                    *[ItemView(item) for item in group.items],
-                                    ft.Container(
-                                        bgcolor=ft.Colors.BLACK26,
-                                        border_radius=ft.border_radius.all(30),
-                                        height=3,
-                                        width=180,
-                                        opacity=1.0 if group.is_item_over else 0.0,
+                                    ft.Text(
+                                        group.title,
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
+                                    ),
+                                    ft.TextField(
+                                        label="New item",
+                                        width=200,
+                                        bgcolor=ft.Colors.WHITE,
+                                        value=group.new_item_text,
+                                        on_change=lambda e: group.change_new_item_text(
+                                            e.control.value
+                                        ),
+                                        on_submit=group.on_add_item,
+                                    ),
+                                    ft.TextButton(
+                                        content="Add",
+                                        icon=ft.Icons.ADD,
+                                        on_click=group.on_add_item,
+                                    ),
+                                    ft.Column(
+                                        spacing=2,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                        controls=[
+                                            *[ItemView(item) for item in group.items],
+                                            ft.Container(
+                                                bgcolor=ft.Colors.BLACK38,
+                                                border_radius=ft.border_radius.all(30),
+                                                height=2,
+                                                width=180,
+                                                opacity=1.0
+                                                if group.is_item_over
+                                                else 0.0,
+                                            ),
+                                        ],
                                     ),
                                 ],
                             ),
-                        ],
+                        ),
                     ),
                 ),
             ),
-        ),
+        ],
     )
 
 
@@ -202,6 +215,7 @@ def App():
     app, _ = ft.use_state(AppState(groups=[group_1, group_2, group_3]))
 
     return ft.Row(
+        spacing=4,
         vertical_alignment=ft.CrossAxisAlignment.START,
         controls=[GroupView(group) for group in app.groups],
     )
