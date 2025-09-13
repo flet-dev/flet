@@ -1,28 +1,37 @@
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import Optional, cast
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
+from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
 
 __all__ = [
     "DragTarget",
     "DragTargetEvent",
-    "DragWillAcceptEvent",
     "DragTargetLeaveEvent",
+    "DragWillAcceptEvent",
 ]
 
 
 @dataclass
-class DragWillAcceptEvent(Event["DragTarget"]):
-    accept: bool
-    src_id: int
+class DragEventBase(Event["DragTarget"]):
+    src_id: Optional[int]
+    src: Draggable = field(init=False)
+
+    def __post_init__(self):
+        if self.src_id is not None:
+            self.src = cast(Draggable, self.page.get_control(self.src_id))
 
 
 @dataclass
-class DragTargetEvent(Event["DragTarget"]):
-    src_id: int
+class DragWillAcceptEvent(DragEventBase):
+    accept: bool
+
+
+@dataclass
+class DragTargetEvent(DragEventBase):
     x: float
     y: float
 
@@ -32,14 +41,15 @@ class DragTargetEvent(Event["DragTarget"]):
 
 
 @dataclass
-class DragTargetLeaveEvent(Event["DragTarget"]):
-    src_id: Optional[int]
+class DragTargetLeaveEvent(DragEventBase):
+    pass
 
 
 @control("DragTarget")
 class DragTarget(Control):
     """
-    A control that completes drag operation when a [`Draggable`][flet.Draggable] control is dropped.
+    A control that completes drag operation when a [`Draggable`][flet.Draggable]
+    control is dropped.
 
     When a `Draggable` is dragged on top of a `DragTarget`, the `DragTarget` is asked
     whether it will accept the data the `Draggable` is carrying. The `DragTarget` will
@@ -62,8 +72,8 @@ class DragTarget(Control):
     The group this target belongs to.
 
     Note:
-        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.Draggable],
-        they must both be in the same `group`.
+        For a `DragTarget` to accept an incoming drop from a
+        [`Draggable`][flet.Draggable], they must both be in the same `group`.
     """
 
     on_will_accept: Optional[EventHandler[DragWillAcceptEvent]] = None
@@ -73,8 +83,8 @@ class DragTarget(Control):
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when the user does drop an acceptable (same [`group`][flet.DragTarget.group]) draggable on
-    this target.
+    Called when the user does drop an acceptable (same
+    [`group`][flet.DragTarget.group]) draggable on this target.
 
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """

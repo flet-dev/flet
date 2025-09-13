@@ -172,7 +172,7 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> Optional[Union["Page", "BasePage"]]:
+    def page(self) -> Union["Page", "BasePage"]:
         """
         The page to which this control belongs to.
         """
@@ -183,7 +183,9 @@ class BaseControl:
             if isinstance(parent, (Page, BasePage)):
                 return parent
             parent = parent.parent
-        return None
+        raise RuntimeError(
+            f"{self.__class__.__qualname__} Control must be added to the page first"
+        )
 
     def is_isolated(self):
         return hasattr(self, "_isolated") and self._isolated
