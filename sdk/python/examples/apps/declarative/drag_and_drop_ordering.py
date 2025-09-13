@@ -14,6 +14,7 @@ class AppState:
 
     def move_group(self, src: "Group", dst: "Group"):
         print("Move group", src.title, "to position of", dst.title)
+        dst.set_is_group_over(False)
         src_index = self.groups.index(src)
         dst_index = self.groups.index(dst)
         if src_index != dst_index:
@@ -30,6 +31,12 @@ class Group:
     is_group_over: bool = False
     is_item_over: bool = False
 
+    def set_is_item_over(self, value: bool):
+        self.is_item_over = value
+
+    def set_is_group_over(self, value: bool):
+        self.is_group_over = value
+
     def add_item(self, text: str):
         self.items.append(Item(text=text, group=self))
 
@@ -43,6 +50,7 @@ class Group:
 
     def move_item_into(self, item: "Item"):
         print("Move item", item.text, "from", item.group.title, "to", self.title)
+        self.set_is_item_over(False)
         item.group.items.remove(item)
         item.group = self
         self.items.append(item)
@@ -55,6 +63,9 @@ class Item:
     group: Group
     is_item_over: bool = False
 
+    def set_is_item_over(self, value: bool):
+        self.is_item_over = value
+
     def move_item_at(self, item: "Item", to_item: "Item"):
         if item == to_item:
             return
@@ -62,6 +73,7 @@ class Item:
             f"Move item {item.text} from {item.group.title} "
             f"to {to_item.group.title} at position of {to_item.text}"
         )
+        self.set_is_item_over(False)
         item.group.items.remove(item)
         item.group = to_item.group
         to_index = to_item.group.items.index(to_item)
@@ -70,16 +82,6 @@ class Item:
 
 @ft.component
 def ItemView(item: Item):
-    def on_will_accept(e: ft.DragWillAcceptEvent):
-        item.is_item_over = e.accept and e.src.data != item
-
-    def on_accept(e: ft.DragTargetEvent):
-        item.move_item_at(e.src.data, item)
-        item.is_item_over = False
-
-    def on_leave(e: ft.DragTargetLeaveEvent):
-        item.is_item_over = False
-
     return ft.Column(
         spacing=2,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -97,9 +99,11 @@ def ItemView(item: Item):
                 content=ft.DragTarget(
                     group="items",
                     data=item,
-                    on_will_accept=on_will_accept,
-                    on_accept=on_accept,
-                    on_leave=on_leave,
+                    on_will_accept=lambda e: item.set_is_item_over(
+                        e.accept and e.src.data != item
+                    ),
+                    on_accept=lambda e: item.move_item_at(e.src.data, item),
+                    on_leave=lambda: item.set_is_item_over(False),
                     content=ft.Card(
                         elevation=1,
                         content=ft.Container(
@@ -122,26 +126,6 @@ def ItemView(item: Item):
 
 @ft.component
 def GroupView(group: Group, move_group):
-    def on_group_will_accept(e: ft.DragWillAcceptEvent):
-        group.is_group_over = e.accept and e.src.data != group
-
-    def on_group_accept(e: ft.DragTargetEvent):
-        move_group(e.src.data, group)
-        group.is_group_over = False
-
-    def on_group_leave(e: ft.DragTargetLeaveEvent):
-        group.is_group_over = False
-
-    def on_item_will_accept(e: ft.DragWillAcceptEvent):
-        group.is_item_over = e.accept
-
-    def on_item_accept(e: ft.DragTargetEvent):
-        group.move_item_into(e.src.data)
-        group.is_item_over = False
-
-    def on_item_leave(e: ft.DragTargetLeaveEvent):
-        group.is_item_over = False
-
     return ft.Row(
         spacing=4,
         controls=[
@@ -158,15 +142,17 @@ def GroupView(group: Group, move_group):
                 content=ft.DragTarget(
                     group="items",
                     data=group,
-                    on_will_accept=on_item_will_accept,
-                    on_accept=on_item_accept,
-                    on_leave=on_item_leave,
+                    on_will_accept=lambda e: group.set_is_item_over(e.accept),
+                    on_accept=lambda e: group.move_item_into(e.src.data),
+                    on_leave=lambda: group.set_is_item_over(False),
                     content=ft.DragTarget(
                         group="groups",
                         data=group,
-                        on_will_accept=on_group_will_accept,
-                        on_accept=on_group_accept,
-                        on_leave=on_group_leave,
+                        on_will_accept=lambda e: group.set_is_group_over(
+                            e.accept and e.src.data != group
+                        ),
+                        on_accept=lambda e: move_group(e.src.data, group),
+                        on_leave=lambda: group.set_is_group_over(False),
                         content=ft.Container(
                             border=ft.Border.all(2, ft.Colors.BLACK12)
                             if not group.is_group_over
