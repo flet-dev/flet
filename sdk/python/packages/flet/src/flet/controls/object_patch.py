@@ -458,7 +458,7 @@ class DiffBuilder:
             ):
                 self._compare_dataclasses(
                     parent,
-                    _path_join(path, key),
+                    op.location,
                     src,
                     dst,
                     frozen,
@@ -515,7 +515,7 @@ class DiffBuilder:
             ):
                 self._compare_dataclasses(
                     dst.parent,
-                    _path_join(op.path, op.key),
+                    _path_join(path, key),
                     src,
                     dst,
                     frozen,
