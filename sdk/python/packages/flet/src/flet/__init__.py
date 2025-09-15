@@ -233,6 +233,7 @@ from flet.controls.gradients import (
     SweepGradient,
 )
 from flet.controls.icon_data import IconData
+from flet.controls.id_counter import IdCounter
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
 from flet.controls.layout_control import ConstrainedControl, LayoutControl
 from flet.controls.margin import Margin, MarginValue
@@ -706,6 +707,7 @@ __all__ = [
     "IconDataOrControl",
     "IconTheme",
     "Icons",
+    "IdCounter",
     "Image",
     "ImageRepeat",
     "InputBorder",

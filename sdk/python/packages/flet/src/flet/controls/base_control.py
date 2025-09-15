@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
-from flet.controls.control_id import ControlId
+from flet.controls.id_counter import ControlId
 from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
 from flet.utils.from_dict import from_dict
