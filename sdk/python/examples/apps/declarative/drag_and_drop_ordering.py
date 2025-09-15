@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 import flet as ft
 
 logging.basicConfig(level=logging.INFO)
+logging.getLogger("flet_object_patch").setLevel(logging.INFO)
 logging.getLogger("flet_components").setLevel(logging.INFO)
 
 
@@ -56,11 +57,15 @@ class Group:
         self.items.append(item)
 
 
+ItemID = ft.IdCounter()
+
+
 @ft.observable
 @dataclass
 class Item:
     text: str
     group: Group
+    id: int = field(default_factory=ItemID)
     is_item_over: bool = False
 
     def set_is_item_over(self, value: bool):
@@ -81,7 +86,7 @@ class Item:
 
 
 @ft.component
-def ItemView(item: Item):
+def ItemView(item: Item, **kwargs):
     return ft.Column(
         spacing=2,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -125,7 +130,7 @@ def ItemView(item: Item):
 
 
 @ft.component
-def GroupView(group: Group, move_group):
+def GroupView(group: Group, move_group, **kwargs):
     return ft.Row(
         spacing=4,
         controls=[
@@ -186,7 +191,10 @@ def GroupView(group: Group, move_group):
                                         spacing=2,
                                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                         controls=[
-                                            *[ItemView(item) for item in group.items],
+                                            *[
+                                                ItemView(item, key=item.id)
+                                                for item in group.items
+                                            ],
                                             ft.Container(
                                                 bgcolor=ft.Colors.BLACK38,
                                                 border_radius=ft.BorderRadius.all(30),
@@ -225,7 +233,10 @@ def App():
     return ft.Row(
         spacing=4,
         vertical_alignment=ft.CrossAxisAlignment.START,
-        controls=[GroupView(group, move_group=app.move_group) for group in app.groups],
+        controls=[
+            GroupView(group, move_group=app.move_group, key=group.title)
+            for group in app.groups
+        ],
     )
 
 
