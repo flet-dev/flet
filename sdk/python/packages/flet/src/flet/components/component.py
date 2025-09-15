@@ -99,18 +99,18 @@ class Component(BaseControl):
         # patch component
         if b is not None:
             context.page.session.patch_control(
-                prev_control=self._b, control=b, parent=self, path=["_b"], frozen=True
+                prev_control={"_b": self._b},
+                control={"_b": b},
+                parent=self,
+                path=[],
+                frozen=True,
             )
 
         self._b = b
         self._run_render_effects()
 
     def before_update(self):
-        logger.debug(
-            "%s.before_update(), memoized: %s",
-            self,
-            self.memoized,
-        )
+        logger.debug("%s.before_update(), memoized: %s", self, self.memoized)
         is_dirty = self._state.is_dirty
         self._state.is_dirty = False
 
@@ -304,7 +304,9 @@ class Renderer:
         kwargs: dict[str, Any],
         key=None,
     ):
-        logger.debug("Renderer._render_component(%s, %s, %s)", fn, args, kwargs)
+        logger.debug(
+            "Renderer._render_component(%s, %s, %s, %s)", fn, args, kwargs, key
+        )
         parent_component = len(self._render_stack) and self._render_stack[-1]
 
         if not hasattr(fn, "__is_component__"):

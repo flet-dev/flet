@@ -457,7 +457,7 @@ class DiffBuilder:
                 and ((not frozen and src is dst) or (frozen and src is not dst))
             ):
                 self._compare_dataclasses(
-                    src.parent,
+                    parent,
                     _path_join(path, key),
                     src,
                     dst,

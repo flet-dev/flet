@@ -184,7 +184,8 @@ class BaseControl:
                 return parent
             parent = parent.parent
         raise RuntimeError(
-            f"{self.__class__.__qualname__} Control must be added to the page first"
+            f"{self.__class__.__qualname__}({self._i}) "
+            "Control must be added to the page first"
         )
 
     def is_isolated(self):
