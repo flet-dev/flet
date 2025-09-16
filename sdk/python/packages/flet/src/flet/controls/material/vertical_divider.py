@@ -1,6 +1,7 @@
 from typing import Optional
 
 from flet.controls.base_control import control
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
 from flet.controls.types import ColorValue, Number
 
@@ -19,7 +20,7 @@ class VerticalDivider(Control):
     """
     The divider's width. The divider itself is always drawn as a vertical line
     that is centered within the width specified by this value.
-    
+
     If `None`, [`DividerTheme.space`][flet.DividerTheme.space] is used.
     If that's is also `None`, defaults to `16.0`.
     """
@@ -40,25 +41,33 @@ class VerticalDivider(Control):
     """
     The color to use when painting the
     line.
-    
+
     If `None`, [`DividerTheme.color`][flet.DividerTheme.color] is used.
-    If that's is also `None`, defaults to [`Theme.divider_color`][flet.Theme.divider_color].
+    If that's is also `None`, defaults to
+    [`Theme.divider_color`][flet.Theme.divider_color].
     """
 
     leading_indent: Optional[Number] = None
     """
     The amount of empty space to the leading edge of the divider.
-    
-    If `None`, [`DividerTheme.leading_indent`][flet.DividerTheme.leading_indent] is used.
+
+    If `None`, [`DividerTheme.leading_indent`][flet.DividerTheme.leading_indent]
+    is used.
     If that's is also `None`, defaults to `0.0`.
     """
 
     trailing_indent: Optional[Number] = None
     """
     The amount of empty space to the trailing edge of the divider.
-    
-    If `None`, [`DividerTheme.trailing_indent`][flet.DividerTheme.trailing_indent] is used.
+
+    If `None`, [`DividerTheme.trailing_indent`][flet.DividerTheme.trailing_indent]
+    is used.
     If that's is also `None`, defaults to `0.0`.
+    """
+
+    radius: Optional[BorderRadiusValue] = None
+    """
+    The border radius of the divider.
     """
 
     def before_update(self):
