@@ -91,11 +91,11 @@ def ItemView(item: Item, **kwargs):
         spacing=2,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            ft.Container(
-                bgcolor=ft.Colors.BLACK38,
-                border_radius=ft.BorderRadius.all(30),
+            ft.Divider(
+                color=ft.Colors.BLACK38,
+                thickness=2,
                 height=2,
-                width=180,
+                radius=2,
                 opacity=1.0 if item.is_item_over else 0.0,
             ),
             ft.Draggable(
@@ -110,10 +110,9 @@ def ItemView(item: Item, **kwargs):
                     on_accept=lambda e: item.move_item_at(e.src.data, item),
                     on_leave=lambda: item.set_is_item_over(False),
                     content=ft.Card(
-                        elevation=1,
                         content=ft.Container(
-                            width=200,
                             padding=7,
+                            width=200,
                             content=ft.Row(
                                 alignment=ft.MainAxisAlignment.START,
                                 controls=[
@@ -133,12 +132,15 @@ def ItemView(item: Item, **kwargs):
 def GroupView(group: Group, move_group, **kwargs):
     return ft.Row(
         spacing=4,
+        intrinsic_height=True,
         controls=[
-            ft.Container(
-                bgcolor=ft.Colors.BLACK54,
-                border_radius=ft.BorderRadius.all(30),
+            ft.VerticalDivider(
+                color=ft.Colors.BLACK54,
                 width=2,
-                height=100,
+                thickness=2,
+                radius=2,
+                leading_indent=15,
+                trailing_indent=15,
                 opacity=1.0 if group.is_group_over else 0.0,
             ),
             ft.Draggable(
@@ -165,6 +167,7 @@ def GroupView(group: Group, move_group, **kwargs):
                             border_radius=ft.BorderRadius.all(15),
                             bgcolor=group.color,
                             padding=ft.Padding.all(20),
+                            width=220,
                             content=ft.Column(
                                 spacing=4,
                                 controls=[
@@ -174,7 +177,6 @@ def GroupView(group: Group, move_group, **kwargs):
                                     ),
                                     ft.TextField(
                                         label="New item",
-                                        width=200,
                                         bgcolor=ft.Colors.WHITE,
                                         value=group.new_item_text,
                                         on_change=lambda e: group.change_new_item_text(
@@ -195,11 +197,11 @@ def GroupView(group: Group, move_group, **kwargs):
                                                 ItemView(item, key=item.id)
                                                 for item in group.items
                                             ],
-                                            ft.Container(
-                                                bgcolor=ft.Colors.BLACK38,
-                                                border_radius=ft.BorderRadius.all(30),
+                                            ft.Divider(
+                                                color=ft.Colors.BLACK38,
+                                                thickness=2,
                                                 height=2,
-                                                width=180,
+                                                radius=2,
                                                 opacity=1.0
                                                 if group.is_item_over
                                                 else 0.0,
