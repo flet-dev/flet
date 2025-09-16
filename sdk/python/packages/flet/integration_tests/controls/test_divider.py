@@ -24,3 +24,18 @@ async def test_divider_properties(flet_app: ftt.FletTestApp, request):
             trailing_indent=20,
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_divider_radius(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Divider(
+            color=ft.Colors.RED,
+            height=40,
+            radius=20,
+            thickness=30,
+            leading_indent=20,
+            trailing_indent=20,
+        ),
+    )
