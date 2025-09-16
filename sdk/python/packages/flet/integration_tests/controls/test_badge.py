@@ -21,9 +21,11 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
             icon=ft.Icons.PHONE,
             badge=ft.Badge(
                 label="1",
-                offset=ft.Offset(0, 0),
+                offset=ft.Offset(5, 5),
                 alignment=ft.Alignment(-1, -1),
                 bgcolor=ft.Colors.GREEN,
+                # label_visible=False,
+                large_size=20,
             ),
         ),
     )
