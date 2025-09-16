@@ -26,47 +26,42 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
                 bgcolor=ft.Colors.GREEN,
                 # label_visible=False,
                 large_size=20,
+                small_size=10,
+                padding=ft.Padding.all(5),
+                text_color=ft.Colors.YELLOW,
+                text_style=ft.TextStyle(
+                    size=10,
+                    weight=ft.FontWeight.BOLD,
+                    color=ft.Colors.BLACK,
+                    italic=True,
+                ),
             ),
         ),
     )
 
 
-# @pytest.mark.asyncio(loop_scope="module")
-# async def test_button_style(flet_app: ftt.FletTestApp, request):
-#     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-#     await flet_app.assert_control_screenshot(
-#         request.node.name,
-#         ft.Button(
-#             content="Test Button",
-#             style=ft.ButtonStyle(
-#                 bgcolor=ft.Colors.BLUE,
-#                 shape=ft.RoundedRectangleBorder(radius=10),
-#                 side=ft.BorderSide(width=3, color=ft.Colors.YELLOW),
-#                 padding=ft.Padding.all(20),
-#                 text_style=ft.TextStyle(
-#                     size=15,
-#                     weight=ft.FontWeight.BOLD,
-#                     color=ft.Colors.WHITE,
-#                 ),
-#             ),
-#         ),
-#     )
-
-
-# @pytest.mark.asyncio(loop_scope="module")
-# async def test_button_style_conflicts(flet_app: ftt.FletTestApp, request):
-#     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
-#     await flet_app.assert_control_screenshot(
-#         request.node.name,
-#         ft.Button(
-#             content="Test Button",
-#             elevation=10,
-#             color=ft.Colors.BLACK,
-#             bgcolor=ft.Colors.BLUE,
-#             style=ft.ButtonStyle(
-#                 elevation=2,
-#                 color=ft.Colors.WHITE,
-#                 bgcolor=ft.Colors.RED,
-#             ),
-#         ),
-#     )
+@pytest.mark.asyncio(loop_scope="module")
+async def test_small_size(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.IconButton(
+            icon=ft.Icons.PHONE,
+            badge=ft.Badge(
+                # label="1",
+                offset=ft.Offset(5, 5),
+                alignment=ft.Alignment(-1, -1),
+                bgcolor=ft.Colors.GREEN,
+                # label_visible=False,
+                large_size=20,
+                small_size=10,
+                # padding=ft.Padding.all(5),
+                # text_color=ft.Colors.YELLOW,
+                # text_style=ft.TextStyle(
+                #     size=10,
+                #     weight=ft.FontWeight.BOLD,
+                #     color=ft.Colors.BLACK,
+                #     italic=True,
+                # ),
+            ),
+        ),
+    )
