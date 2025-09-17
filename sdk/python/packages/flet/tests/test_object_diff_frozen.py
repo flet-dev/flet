@@ -861,3 +861,73 @@ def test_component_list_diff():
     assert c1.parent == comp
     assert btn1.parent == c1
     assert txt1.parent == comp
+
+
+def test_list_insertions_no_keys():
+    col_1 = ft.Column(
+        [
+            ft.Text("Line 2", key=2),
+            ft.Text("Line 4", key=4),
+            ft.Text("Line 6", key=6),
+            ft.Text("Line 8", key=8),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            ft.Text("Line 1", key=1),
+            ft.Text("Line 2 (updated)", key=2),
+            ft.Text("Line 3", key=3),
+            ft.Text("Line 4 (updated)", key=4),
+            ft.Text("Line 5", key=5),
+            ft.Text("Line 6 (updated)", key=6),
+            ft.Text("Line 7", key=7),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "add",
+                "path": ["controls", 0],
+                "value": ft.Text(value="Line 1", key=1),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 1, "value"],
+                "value": "Line 2 (updated)",
+            },
+            {
+                "op": "add",
+                "path": ["controls", 2],
+                "value": ft.Text(value="Line 3", key=3),
+            },
+            {
+                "op": "remove",
+                "path": ["controls", 5],
+                "value": ft.Text(value="Line 8", key=8),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {
+                "op": "add",
+                "path": ["controls", 4],
+                "value": ft.Text(value="Line 5", key=5),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 5, "value"],
+                "value": "Line 6 (updated)",
+            },
+            {
+                "op": "add",
+                "path": ["controls", 6],
+                "value": ft.Text(value="Line 7", key=7),
+            },
+        ],
+    )

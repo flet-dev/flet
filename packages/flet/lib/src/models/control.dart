@@ -305,35 +305,43 @@ class Control extends ChangeNotifier {
           "Patch must be a list with at least 2 elements: tree_index, operation");
     }
 
-    // build map of "to-be-patched" tree nodes
-    Map<int, PatchTarget> treeIndex = {};
-    buildTreeIndex(Control control, dynamic obj, List<dynamic> node) {
+    Map<int, List<dynamic>> pathIndex = {};
+
+    buildPathIndex(List<dynamic> node, List<dynamic> path) {
       // node[0] - index
       // node[1] - map of child properties or indexes
-      treeIndex[node[0]] =
-          PatchTarget(obj is Control ? obj.properties : obj, control);
+      pathIndex[node[0]] = path;
       if (node.length > 1 && node[1] is Map) {
         for (var entry in (node[1] as Map).entries) {
           // key - property name or list index
           // value - child node
-          dynamic child;
-          if (obj is Control) {
-            child = obj.properties[entry.key];
-          } else if (obj is Map) {
-            child = obj[entry.key];
-          } else if (obj is List) {
-            child = obj[entry.key];
-          }
-          if (child is Control) {
-            control = child;
-          }
-          buildTreeIndex(control, child, entry.value);
+          buildPathIndex(entry.value, [...path, entry.key]);
         }
       }
     }
 
-    buildTreeIndex(this, this, patch[0]);
-    //debugPrint("TREE INDEX: $treeIndex");
+    buildPathIndex(patch[0], []);
+
+    //debugPrint("PATH INDEX: $pathIndex");
+
+    getPatchTarget(int index) {
+      var path = pathIndex[index]!;
+      dynamic obj = this;
+      Control? control = this;
+      for (var p in path) {
+        if (obj is Control) {
+          obj = obj.properties[p];
+        } else if (obj is Map) {
+          obj = obj[p];
+        } else if (obj is List) {
+          obj = obj[p];
+        }
+        if (obj is Control) {
+          control = obj;
+        }
+      }
+      return PatchTarget(obj is Control ? obj.properties : obj, control!);
+    }
 
     // apply patch commands
     for (int i = 1; i < patch.length; i++) {
@@ -341,7 +349,7 @@ class Control extends ChangeNotifier {
       var opType = OperationType.fromInt(op[0]);
       if (opType == OperationType.replace) {
         // REPLACE
-        var node = treeIndex[op[1]]!;
+        var node = getPatchTarget(op[1]);
         var key = op[2];
         var value = op[3];
         node.obj[key] = _transformIfControl(value, node.control, backend);
@@ -353,7 +361,7 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.add) {
         // ADD
-        var node = treeIndex[op[1]]!;
+        var node = getPatchTarget(op[1]);
         var index = op[2];
         var value = op[3];
         if (node.obj is! List) {
@@ -366,7 +374,7 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.remove) {
         // REMOVE
-        var node = treeIndex[op[1]]!;
+        var node = getPatchTarget(op[1]);
         var index = op[2];
         if (node.obj is! List) {
           throw Exception("Remove operation can be applied to lists only: $op");
@@ -377,9 +385,9 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.move) {
         // MOVE
-        var fromNode = treeIndex[op[1]]!;
+        var fromNode = getPatchTarget(op[1]);
         var fromIndex = op[2];
-        var toNode = treeIndex[op[3]]!;
+        var toNode = getPatchTarget(op[3]);
         var toIndex = op[4];
         if (fromNode.obj is! List || toNode.obj is! List) {
           throw Exception("Move operation can be applied to lists only: $op");
