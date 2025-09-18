@@ -8,7 +8,7 @@ import flet as ft
 
 logging.basicConfig(level=logging.INFO)
 
-MAX_SEEDS = 250
+MAX_SEEDS = 500
 
 rnd = random.Random()
 
@@ -28,7 +28,6 @@ class AppModel(ft.Observable):
 
     def __post_init__(self):
         ft.context.page.title = "Sunflower"
-        ft.context.page.update()
         self.compute_seeds()
 
     def update_seeds_count(self, new_seeds_count: float):
@@ -60,9 +59,8 @@ class AppModel(ft.Observable):
 
 
 @ft.component
-def SeedView(seed: Seed):
+def SeedView(seed: Seed, key=None) -> ft.Control:
     return ft.Container(
-        key=seed.key,
         width=5,
         height=5,
         bgcolor=ft.Colors.ORANGE if seed.inner else ft.Colors.GREY_700,
@@ -84,7 +82,7 @@ def Sunflower():
                 controls=[
                     ft.Container(
                         content=ft.Stack(
-                            controls=[SeedView(s) for s in app.seeds],
+                            controls=[SeedView(s, key=s.key) for s in app.seeds],
                             aspect_ratio=1.0,
                         ),
                         alignment=ft.Alignment.CENTER,

@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 import flet as ft
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("flet_object_patch").setLevel(logging.INFO)
 logging.getLogger("flet_components").setLevel(logging.INFO)
 
@@ -15,7 +15,6 @@ class AppState:
 
     def move_group(self, src: "Group", dst: "Group"):
         print("Move group", src.title, "to position of", dst.title)
-        dst.set_is_group_over(False)
         src_index = self.groups.index(src)
         dst_index = self.groups.index(dst)
         if src_index != dst_index:
@@ -29,14 +28,6 @@ class Group:
     color: ft.Colors
     items: list["Item"] = field(default_factory=list)
     new_item_text: str = ""
-    is_group_over: bool = False
-    is_item_over: bool = False
-
-    def set_is_item_over(self, value: bool):
-        self.is_item_over = value
-
-    def set_is_group_over(self, value: bool):
-        self.is_group_over = value
 
     def add_item(self, text: str):
         self.items.append(Item(text=text, group=self))
@@ -51,7 +42,6 @@ class Group:
 
     def move_item_into(self, item: "Item"):
         print("Move item", item.text, "from", item.group.title, "to", self.title)
-        self.set_is_item_over(False)
         item.group.items.remove(item)
         item.group = self
         self.items.append(item)
@@ -66,10 +56,6 @@ class Item:
     text: str
     group: Group
     id: int = field(default_factory=ItemID)
-    is_item_over: bool = False
-
-    def set_is_item_over(self, value: bool):
-        self.is_item_over = value
 
     def move_item_at(self, item: "Item", to_item: "Item"):
         if item == to_item:
@@ -78,7 +64,6 @@ class Item:
             f"Move item {item.text} from {item.group.title} "
             f"to {to_item.group.title} at position of {to_item.text}"
         )
-        self.set_is_item_over(False)
         item.group.items.remove(item)
         item.group = to_item.group
         to_index = to_item.group.items.index(to_item)
@@ -87,6 +72,12 @@ class Item:
 
 @ft.component
 def ItemView(item: Item, **kwargs):
+    is_item_over, set_is_item_over = ft.use_state(False)
+
+    def on_accept(e: ft.DragTargetEvent):
+        item.move_item_at(e.src.data, item)
+        set_is_item_over(False)
+
     return ft.Column(
         spacing=2,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -96,7 +87,7 @@ def ItemView(item: Item, **kwargs):
                 thickness=2,
                 height=2,
                 radius=2,
-                opacity=1.0 if item.is_item_over else 0.0,
+                opacity=1.0 if is_item_over else 0.0,
             ),
             ft.Draggable(
                 group="items",
@@ -104,11 +95,11 @@ def ItemView(item: Item, **kwargs):
                 content=ft.DragTarget(
                     group="items",
                     data=item,
-                    on_will_accept=lambda e: item.set_is_item_over(
+                    on_will_accept=lambda e: set_is_item_over(
                         e.accept and e.src.data != item
                     ),
-                    on_accept=lambda e: item.move_item_at(e.src.data, item),
-                    on_leave=lambda: item.set_is_item_over(False),
+                    on_accept=on_accept,
+                    on_leave=lambda: set_is_item_over(False),
                     content=ft.Card(
                         content=ft.Container(
                             padding=7,
@@ -130,6 +121,17 @@ def ItemView(item: Item, **kwargs):
 
 @ft.component
 def GroupView(group: Group, move_group, **kwargs):
+    is_group_over, set_is_group_over = ft.use_state(False)
+    is_item_over, set_is_item_over = ft.use_state(False)
+
+    def on_item_accept(e: ft.DragTargetEvent):
+        group.move_item_into(e.src.data)
+        set_is_item_over(False)
+
+    def on_group_accept(e: ft.DragTargetEvent):
+        move_group(e.src.data, group)
+        set_is_group_over(False)
+
     return ft.Row(
         spacing=4,
         intrinsic_height=True,
@@ -141,7 +143,7 @@ def GroupView(group: Group, move_group, **kwargs):
                 radius=2,
                 leading_indent=15,
                 trailing_indent=15,
-                opacity=1.0 if group.is_group_over else 0.0,
+                opacity=1.0 if is_group_over else 0.0,
             ),
             ft.Draggable(
                 group="groups",
@@ -149,20 +151,20 @@ def GroupView(group: Group, move_group, **kwargs):
                 content=ft.DragTarget(
                     group="items",
                     data=group,
-                    on_will_accept=lambda e: group.set_is_item_over(e.accept),
-                    on_accept=lambda e: group.move_item_into(e.src.data),
-                    on_leave=lambda: group.set_is_item_over(False),
+                    on_will_accept=lambda e: set_is_item_over(e.accept),
+                    on_accept=on_item_accept,
+                    on_leave=lambda: set_is_item_over(False),
                     content=ft.DragTarget(
                         group="groups",
                         data=group,
-                        on_will_accept=lambda e: group.set_is_group_over(
+                        on_will_accept=lambda e: set_is_group_over(
                             e.accept and e.src.data != group
                         ),
-                        on_accept=lambda e: move_group(e.src.data, group),
-                        on_leave=lambda: group.set_is_group_over(False),
+                        on_accept=on_group_accept,
+                        on_leave=lambda: set_is_group_over(False),
                         content=ft.Container(
                             border=ft.Border.all(2, ft.Colors.BLACK12)
-                            if not group.is_group_over
+                            if not is_group_over
                             else ft.Border.all(2, ft.Colors.BLACK38),
                             border_radius=ft.BorderRadius.all(15),
                             bgcolor=group.color,
@@ -202,9 +204,7 @@ def GroupView(group: Group, move_group, **kwargs):
                                                 thickness=2,
                                                 height=2,
                                                 radius=2,
-                                                opacity=1.0
-                                                if group.is_item_over
-                                                else 0.0,
+                                                opacity=1.0 if is_item_over else 0.0,
                                             ),
                                         ],
                                     ),
@@ -230,7 +230,24 @@ def App():
     group_3 = Group(title="Group 3", color=ft.Colors.CYAN_400)
     group_3.add_item("Item 4")
 
-    app, _ = ft.use_state(AppState(groups=[group_1, group_2, group_3]))
+    group_4 = Group(title="Group 4", color=ft.Colors.GREEN_400)
+    group_4.add_item("Item 5")
+
+    app, _ = ft.use_state(
+        AppState(
+            groups=[
+                group_1,
+                group_2,
+                group_3,
+                group_4,
+            ]
+        )
+    )
+
+    def on_mounted():
+        ft.context.page.theme_mode = ft.ThemeMode.LIGHT
+
+    ft.on_mounted(on_mounted)
 
     return ft.Row(
         spacing=4,

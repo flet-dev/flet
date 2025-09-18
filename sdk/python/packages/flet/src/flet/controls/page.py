@@ -476,8 +476,8 @@ class Page(BasePage):
         self.__render()
 
     def __render(self):
-        context.permanently_disable_auto_update()
         self.update()
+        context.enable_components_mode()
         self.session.start_updates_scheduler()
 
     def schedule_update(self):

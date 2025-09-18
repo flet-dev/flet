@@ -8,7 +8,7 @@ from typing import Any, Optional
 from flet.components.hooks.use_effect import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
-from flet.controls.object_patch import ObjectPatch
+from flet.controls.object_patch_old import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -290,6 +290,8 @@ class Session:
         path: Optional[list[Any]] = None,
         frozen: bool = False,
     ):
+        start_time = datetime.now()
+
         # calculate patch
         patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
@@ -298,6 +300,13 @@ class Session:
             parent=parent,
             path=path,
             frozen=frozen,
+        )
+
+        end_time = datetime.now()
+        elapsed_time = end_time - start_time
+        logger.debug(
+            "Time spent calculating patch: "
+            f"{elapsed_time.total_seconds() * 1000:.3f} ms"
         )
 
         # print("\n\npatch:", patch)

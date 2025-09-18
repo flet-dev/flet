@@ -8,8 +8,16 @@ import flet as ft
 
 # import flet as ft
 # import flet.canvas as cv
-from flet.controls.object_patch import ObjectPatch
+from flet.controls.object_patch_old import ObjectPatch
 from flet.messaging.protocol import configure_encode_object_for_msgpack
+
+
+@ft.control("MyText")
+class MyText(ft.BaseControl):
+    value: str
+
+    def __str__(self):
+        return f"{self._c}({self.value}, key={self.key} - {id(self)})"
 
 
 @ft.control("LineChartDataPoint")
