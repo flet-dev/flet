@@ -15,6 +15,15 @@ class Card:
 
 @dataclass
 @ft.observable
+class Slot:
+    id: str
+    left: float
+    top: float
+    home: str = "deck"  # "deck" or "slot"
+
+
+@dataclass
+@ft.observable
 class GameState:
     slot_left: float = 200
     slot_top: float = 0
@@ -23,6 +32,11 @@ class GameState:
         default_factory=lambda: [
             Card(id="card1", left=0, top=0, color=ft.Colors.GREEN),
             Card(id="card2", left=100, top=0, color=ft.Colors.YELLOW),
+        ]
+    )
+    slots: list[Slot] = field(
+        default_factory=lambda: [
+            Slot(id="slot1", left=200, top=0),
         ]
     )
 
@@ -75,6 +89,19 @@ def CardView(card: Card, state: GameState, key=None) -> ft.Control:
 
 
 @ft.component
+def SlotView(slot: Slot, state: GameState, key=None) -> ft.Control:
+    return ft.Container(
+        key=slot.id,
+        left=slot.left,
+        top=slot.top,
+        width=70,
+        height=100,
+        border=ft.Border.all(1, ft.Colors.PRIMARY),
+        border_radius=5,
+    )
+
+
+@ft.component
 def App():
     state, _ = ft.use_state(GameState())
 
@@ -91,6 +118,8 @@ def App():
                 border=ft.Border.all(1, ft.Colors.BLACK45),
                 border_radius=5,
             ),
+            # Slots (order in list = z-order)
+            *[SlotView(s, state, key=s.id) for s in state.slots],
             # Cards (order in list = z-order)
             *[CardView(c, state, key=c.id) for c in state.cards],
         ],
