@@ -1,21 +1,7 @@
 name: docs
 
 on:
-  push:
-    branches:
-      - v1-improve-cross-refs
-
   workflow_dispatch:    # Allow manual trigger from the GitHub Actions UI
-
-concurrency:
-  group: "docs"                   # Prevent multiple overlapping deploys
-  cancel-in-progress: false       # Allow in-progress deploys to finish
-
-permissions:
-  contents: write  # Required to push to the gh-pages branch
-
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}         # Token used by mkdocs for pushing
 
 jobs:
   deploy:
@@ -27,11 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Configure Git for mkdocs
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
