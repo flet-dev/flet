@@ -53,22 +53,17 @@ class Radio(LayoutControl, AdaptiveControl):
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color that fills the radio, in all or
-    specific [`ControlState`][flet.ControlState]
-    states.
+    The color that fills the radio, in all or specific [`ControlState`][flet.] states.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The color used to fill this radio when it
-    is selected.
+    The color used to fill this radio when it is selected.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The overlay color of this radio in all or
-    specific [`ControlState`][flet.ControlState]
-    states.
+    The overlay color of this radio in all or specific [`ControlState`][flet.] states.
     """
 
     hover_color: Optional[ColorValue] = None

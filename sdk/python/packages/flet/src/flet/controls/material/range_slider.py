@@ -100,7 +100,7 @@ class RangeSlider(LayoutControl):
     """
     The highlight color that's typically
     used to indicate that the range slider thumb is in `HOVERED` or `DRAGGED`
-    [`ControlState`][flet.ControlState] .
+    [`ControlState`][flet.] .
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None

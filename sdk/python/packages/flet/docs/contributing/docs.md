@@ -1,14 +1,16 @@
-# Docs Guide
+# Contributing Documentation
 
 We make use of [mkdocs-material](https://squidfunk.github.io/mkdocs-material/reference/), [mkdocstrings-python](https://mkdocstrings.github.io/python/) and their extensions.
 
 ## Docstring Style
 
-We use the google style for documentation. More info and examples [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
+We use the google style for documentation.
+More info and examples [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
 
 ## Cross References
 
-The class must be present in our topmost `__init__.py`, and can then be (cross-)referenced from anywhere as follows:
+Typically, the class to be cross-referenced must be present/exposed in the topmost
+`__init__.py`, and can then be (cross-)referenced from anywhere as follows:
 ```
 [`Row`][flet.Row]
 [`Row.controls`][flet.Row.controls]
@@ -31,9 +33,9 @@ Message.
 ```
 
 `type` can be: 'note' (default), 'attention', 'caution', 'danger', 'error', 'tip', 'hint', 'warning'
- ([Visual example](https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types))
+([Visual example](https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types))
 
- ### Method 2
+### Method 2
 
 [Docs](https://mkdocstrings.github.io/griffe/reference/docstrings/#google-syntax)
 

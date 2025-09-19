@@ -9,8 +9,8 @@ from flet.controls.transform import Offset
 __all__ = [
     "DragTarget",
     "DragTargetEvent",
-    "DragWillAcceptEvent",
     "DragTargetLeaveEvent",
+    "DragWillAcceptEvent",
 ]
 
 
@@ -39,7 +39,8 @@ class DragTargetLeaveEvent(Event["DragTarget"]):
 @control("DragTarget")
 class DragTarget(Control):
     """
-    A control that completes drag operation when a [`Draggable`][flet.Draggable] control is dropped.
+    A control that completes drag operation when a [`Draggable`][flet.] control
+    is dropped.
 
     When a `Draggable` is dragged on top of a `DragTarget`, the `DragTarget` is asked
     whether it will accept the data the `Draggable` is carrying. The `DragTarget` will
@@ -62,7 +63,7 @@ class DragTarget(Control):
     The group this target belongs to.
 
     Note:
-        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.Draggable],
+        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.],
         they must both be in the same `group`.
     """
 
@@ -73,7 +74,7 @@ class DragTarget(Control):
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when the user does drop an acceptable (same [`group`][flet.DragTarget.group]) draggable on
+    Called when the user does drop an acceptable (same [`group`][(c).]) draggable on
     this target.
 
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.

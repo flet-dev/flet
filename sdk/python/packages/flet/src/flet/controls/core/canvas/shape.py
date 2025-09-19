@@ -9,14 +9,14 @@ class Shape(BaseControl):
 
     See subclasses/implementations:
 
-    - [`Arc`][flet.canvas.Arc]
-    - [`Circle`][flet.canvas.Circle]
-    - [`Color`][flet.canvas.Color]
-    - [`Fill`][flet.canvas.Fill]
-    - [`Line`][flet.canvas.Line]
-    - [`Oval`][flet.canvas.Oval]
-    - [`Path`][flet.canvas.Path]
-    - [`Points`][flet.canvas.Points]
-    - [`Rect`][flet.canvas.Rect]
-    - [`Text`][flet.canvas.Text]
+    - [`Arc`][flet.canvas.]
+    - [`Circle`][flet.canvas.]
+    - [`Color`][flet.canvas.]
+    - [`Fill`][flet.canvas.]
+    - [`Line`][flet.canvas.]
+    - [`Oval`][flet.canvas.]
+    - [`Path`][flet.canvas.]
+    - [`Points`][flet.canvas.]
+    - [`Rect`][flet.canvas.]
+    - [`Text`][flet.canvas.]
     """

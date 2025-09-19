@@ -141,7 +141,7 @@ class ScrollableControl(Control):
         no animation.
 
         `curve` configures animation curve. Property value is
-        [`AnimationCurve`][flet.AnimationCurve]
+        [`AnimationCurve`][flet.]
         enum.
 
         Defaults to `AnimationCurve.EASE`.

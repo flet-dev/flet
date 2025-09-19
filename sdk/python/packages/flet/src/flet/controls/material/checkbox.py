@@ -36,26 +36,25 @@ class Checkbox(LayoutControl, AdaptiveControl):
     """
     The value of this checkbox.
 
-    - If `True` the checkbox is checked.
-    - If `False` the checkbox is unchecked.
-    - If `None` and [`tristate`][flet.Checkbox.tristate] is `True` the checkbox
-        is indeterminate. (displayed as a dash)
+    - If `True`, this checkbox is checked.
+    - If `False`, this checkbox is unchecked.
+    - If `None` and [`tristate`][(c).] is `True`, this checkbox
+        is indeterminate (displayed as a dash).
     """
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Defines on which side of the checkbox the `label` should be shown.
+    Defines on which side of the checkbox the [`label`][(c).] should be shown.
     """
 
     label_style: Optional[TextStyle] = None
     """
-    The label's style.
+    The [`label`][(c).]'s text style.
     """
 
     tristate: bool = False
     """
-    If `True` the checkbox's [`value`][flet.Checkbox.value] can be `True`, `False`,
-    or `None`.
+    If `True` the checkbox's [`value`][(c).] can be `True`, `False`, or `None`.
     """
 
     autofocus: bool = False
@@ -67,52 +66,48 @@ class Checkbox(LayoutControl, AdaptiveControl):
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color that fills the checkbox in
-    all or specific [`ControlState`][flet.ControlState]s.
+    The color that fills this checkbox in all or specific [`ControlState`][flet.]s.
 
-    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
-    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
-    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
-    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
-    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
+    Note:
+        Supported states: [`ControlState.SELECTED`][flet.],
+        [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
+        [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color of the checkbox's overlay in
-    various [`ControlState`][flet.ControlState] states.
+    The color of this checkbox's overlay in various [`ControlState`][flet.] states.
 
-    This property supports the following `ControlState` values: `PRESSED`, `SELECTED`,
-    `HOVERED` and `FOCUSED`.
+    Note:
+        Supported states: [`ControlState.PRESSED`][flet.],
+        [`ControlState.SELECTED`][flet.], [`ControlState.HOVERED`][flet.],
+        [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
     """
 
     check_color: Optional[ColorValue] = None
     """
-    The color to use for the check icon when
-    this checkbox is checked.
+    The color to use for the check icon when this checkbox is checked.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The color to use when this checkbox is
-    checked.
+    The color to use when this checkbox is checked.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The color to use when this checkbox is
-    hovered.
+    The color to use when this checkbox is hovered.
     """
 
     focus_color: Optional[ColorValue] = None
     """
     The color for the checkbox's Material when it has the input focus.
-    If [`overlay_color`][flet.Checkbox.overlay_color] returns a non-None color in the
-    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED] state, it will be used instead.
+    If [`overlay_color`][(c).] returns a non-None color in the
+    [`ControlState.FOCUSED`][flet.] state, it will be used instead.
 
-    Defaults to [`CheckboxTheme.overlay_color`][flet.CheckboxTheme.overlay_color] in the
-    [`FOCUSED`][flet.ControlState.FOCUSED] state, or if that is `None`,
-    falls back to [`Theme.focus_color`][flet.Theme.focus_color].
+    Defaults to [`CheckboxTheme.overlay_color`][flet.] in the
+    [`ControlState.FOCUSED`][flet.] state, or if that is `None`,
+    falls back to [`Theme.focus_color`][flet.].
     """
 
     semantics_label: Optional[str] = None
@@ -125,7 +120,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
     """
     The shape of the checkbox.
 
-    Defaults to [`CheckboxTheme.shape`][flet.CheckboxTheme.shape], or if that is `None`,
+    Defaults to [`CheckboxTheme.shape`][flet.], or if that is `None`,
     falls back to `RoundedRectangleBorder(radius=2)`.
     """
 
@@ -133,26 +128,23 @@ class Checkbox(LayoutControl, AdaptiveControl):
     """
     The radius of the circular Material ink response (ripple) in logical pixels.
 
-    Defaults to [`CheckboxTheme.splash_radius`][flet.CheckboxTheme.splash_radius],
+    Defaults to [`CheckboxTheme.splash_radius`][flet.],
     or if that is `None`, falls back to `20.0`.
     """
 
     border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    The color and width of the checkbox's border in all or specific
-    [`ControlState`][flet.ControlState]s.
+    The color and width of this checkbox's border in all or specific
+    [`ControlState`][flet.]s.
 
-    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
-    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
-    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
-    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
-    [`ControlState.PRESSED`][flet.ControlState.PRESSED],
-    [`ControlState.ERROR`][flet.ControlState.ERROR],
-    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
-
-    Defaults to [`CheckboxTheme.border_side`][flet.CheckboxTheme.border_side],
-    or if that is `None`,
+    Defaults to [`CheckboxTheme.border_side`][flet.], or if that is `None`,
     falls back to `BorderSide` with a width of `2.0`.
+
+    Note:
+        Supported states: [`ControlState.SELECTED`][flet.],
+        [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
+        [`ControlState.FOCUSED`][flet.], [`ControlState.PRESSED`][flet.],
+        [`ControlState.ERROR`][flet.], and [`ControlState.DEFAULT`][flet.].
     """
 
     error: bool = False
@@ -171,23 +163,23 @@ class Checkbox(LayoutControl, AdaptiveControl):
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this
-    control.
+    checkbox.
 
-    Defaults to [`CheckboxTheme.mouse_cursor`][flet.CheckboxTheme.mouse_cursor],
+    Defaults to [`CheckboxTheme.mouse_cursor`][flet.],
     or if that is `None`, falls back to `MouseCursor.CLICK`.
     """
 
     on_change: Optional[ControlEventHandler["Checkbox"]] = None
     """
-    Called when the state of the Checkbox is changed.
+    Called when the state of this checkbox is changed.
     """
 
     on_focus: Optional[ControlEventHandler["Checkbox"]] = None
     """
-    Called when the control has received focus.
+    Called when this checkbox has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["Checkbox"]] = None
     """
-    Called when the control has lost focus.
+    Called when this checkbox has lost focus.
     """

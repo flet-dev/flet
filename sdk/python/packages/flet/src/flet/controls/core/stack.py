@@ -49,14 +49,14 @@ class Stack(LayoutControl, AdaptiveControl):
     alignment: Optional[Alignment] = None
     """
     Specifies the alignment for non-positioned (those without explicit
-    alignment properties such as [`top`][flet.LayoutControl.top]
-    or [`bottom`][flet.LayoutControl.bottom]) and
-    partially-positioned [`controls`][flet.Stack.controls].
+    alignment properties such as [`top`][flet.LayoutControl.]
+    or [`bottom`][flet.LayoutControl.]) and
+    partially-positioned [`controls`][(c).].
     """
 
     fit: StackFit = StackFit.LOOSE
     """
-    How to size the non-positioned [`controls`][flet.Stack.controls].
+    How to size the non-positioned [`controls`][(c).].
     """
 
     def init(self):

@@ -155,13 +155,13 @@ class NotchShape:
 
     Typically used as the outline of a 'host' control to make a notch that
     accommodates a 'guest' control.
-    e.g the [`BottomAppBar`][flet.BottomAppBar] may have a notch to accommodate
-    the [`FloatingActionButton`][flet.FloatingActionButton].
+    e.g the [`BottomAppBar`][flet.] may have a notch to accommodate
+    the [`FloatingActionButton`][flet.].
 
     This class is not intended to be used directly. See usable derivatives:
 
-    - [`AutomaticNotchShape`][flet.AutomaticNotchShape]
-    - [`CircularRectangleNotchShape`][flet.CircularRectangleNotchShape]
+    - [`AutomaticNotchShape`][flet.]
+    - [`CircularRectangleNotchShape`][flet.]
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
@@ -185,7 +185,7 @@ class CircularRectangleNotchShape(NotchShape):
 @dataclass
 class AutomaticNotchShape(NotchShape):
     """
-    A notch sahpe created from [`ShapeBorder`][flet.ShapeBorder]s.
+    A notch sahpe created from [`ShapeBorder`][flet.]s.
     """
 
     host: "ShapeBorder"
@@ -307,8 +307,8 @@ class VerticalAlignment(Enum):
 
 class LabelPosition(Enum):
     """
-    Position of label in a [`Checkbox`][flet.Checkbox], [`Radio`][flet.Radio] or
-    [`Switch`][flet.Switch]
+    Position of label in a [`Checkbox`][flet.], [`Radio`][flet.] or
+    [`Switch`][flet.]
     """
 
     RIGHT = "right"
@@ -560,7 +560,7 @@ class Orientation(Enum):
 
 class FloatingActionButtonLocation(Enum):
     """
-    Defines a position for the [`FloatingActionButton`][flet.FloatingActionButton].
+    Defines a position for the [`FloatingActionButton`][flet.].
 
     See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
     from Flutter documentation for placement location examples.
@@ -1055,8 +1055,8 @@ ColorValue = Union[str, Colors, CupertinoColors]
 
 Represents a color and can be:
 - a string (representing a color name or hex value),
-- a material color from the [`Colors`][flet.Colors] enum,
-- or a Cupertino color from the [`CupertinoColors`][flet.CupertinoColors] enum.
+- a material color from the [`Colors`][flet.] enum,
+- or a Cupertino color from the [`CupertinoColors`][flet.] enum.
 
 More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookbook/colors).
 """
@@ -1070,7 +1070,7 @@ StrOrControl = Union[str, "Control"]
 Type alias for string or control values.
 
 Represents a string or a control and can be:
-- a string, which will be converted internally into a [`Text`][flet.Text] control,
+- a string, which will be converted internally into a [`Text`][flet.] control,
 - or a control.
 
 """

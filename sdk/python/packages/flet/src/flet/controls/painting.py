@@ -59,7 +59,7 @@ class PaintLinearGradient(PaintGradient):
     the stops. This list must contain at least two colors.
 
     Note:
-        If [`color_stops`][flet.PaintLinearGradient.color_stops] is not `None`,
+        If [`color_stops`][(c).] is not `None`,
         this list must have the same length as `color_stops`.
     """
 
@@ -69,7 +69,7 @@ class PaintLinearGradient(PaintGradient):
 
     Note:
         If non-none, this list must have the same length as
-        [`colors`][flet.PaintLinearGradient.colors].
+        [`colors`][(c).].
         If the first value is not `0.0`, then a stop with position `0.0` and a color
         equal to the first color in `colors` is implied. If the last value is not
         `1.0`, then a stop with position `1.0` and a color equal to the last color

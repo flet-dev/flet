@@ -300,15 +300,13 @@ class BoxDecoration:
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the background [`bgcolor`][flet.BoxDecoration.bgcolor]
-    or [`gradient`][flet.BoxDecoration.gradient].
+    An image to paint above the background [`bgcolor`][(c).] or [`gradient`][(c).].
     """
 
     border: Optional[Border] = None
     """
-    A border to draw above the background
-    [`bgcolor`][flet.BoxDecoration.bgcolor], [`gradient`][flet.BoxDecoration.gradient],
-    and [`image`][flet.BoxDecoration.image].
+    A border to draw above the background [`bgcolor`][(c).], [`gradient`][(c).],
+    and [`image`][(c).].
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -328,16 +326,13 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the [`bgcolor`][flet.BoxDecoration.bgcolor],
-    [`gradient`][flet.BoxDecoration.gradient], and [`image`][
-    flet.BoxDecoration.image] into and to cast as the
-    [`shadows`][flet.BoxDecoration.shadows].
+    The shape to fill the [`bgcolor`][(c).], [`gradient`][(c).], and [`image`][(c).]
+    into and to cast as the [`shadows`][(c).].
     """
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode to apply to the background [`bgcolor`][flet.BoxDecoration.bgcolor]
-    or [`gradient`][flet.BoxDecoration.gradient].
+    The blend mode to apply to the background [`bgcolor`][(c).] or [`gradient`][(c).].
     """
 
     def __post_init__(self):

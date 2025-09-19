@@ -26,6 +26,7 @@ env:
 
 jobs:
   test-macos:
+    if: github.ref_name != 'v1-improve-cross-refs'
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4

@@ -18,8 +18,7 @@ class CupertinoSegmentedButton(LayoutControl):
     Raises:
         AssertionError: If [`controls`][(c).] does not contain at least two visible
             controls.
-        IndexError: If [`selected_index`][flet.CupertinoSegmentedButton.selected_index]
-            is out of range.
+        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     controls: list[Control]
@@ -33,29 +32,27 @@ class CupertinoSegmentedButton(LayoutControl):
     selected_index: int = 0
     """
     The index (starting from 0) of the selected segment in the
-    [`controls`][flet.CupertinoSegmentedButton.controls] list.
+    [`controls`][(c).] list.
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    The color of the button when it is
-    selected.
+    The color of this button when it is selected.
     """
 
     unselected_color: Optional[ColorValue] = None
     """
-    The color of the button when it is not
-    selected.
+    The color of this button when it is not selected.
     """
 
     border_color: Optional[ColorValue] = None
     """
-    The color of the button's border.
+    The color of this button's border.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The button's padding.
+    This button's padding.
     """
 
     click_color: Optional[ColorValue] = None
@@ -63,7 +60,7 @@ class CupertinoSegmentedButton(LayoutControl):
     The color used to fill the background
     of this control when temporarily interacting with through a long press or drag.
 
-    Defaults to the [`selected_color`][flet.CupertinoSegmentedButton.selected_color]
+    Defaults to the [`selected_color`][(c).]
     with 20% opacity.
     """
 
@@ -72,9 +69,9 @@ class CupertinoSegmentedButton(LayoutControl):
     The color used to fill the background of the segment when it is disabled.
 
     If `None`, this color will be 50% opacity of the
-    [`selected_color`][flet.CupertinoSegmentedButton.selected_color] when
+    [`selected_color`][(c).] when
     the segment is selected. If the segment is unselected, this color will be
-    set to the [`unselected_color`][flet.CupertinoSegmentedButton.unselected_color].
+    set to the [`unselected_color`][(c).].
     """
 
     disabled_text_color: Optional[ColorValue] = None
