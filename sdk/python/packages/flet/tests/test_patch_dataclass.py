@@ -4,7 +4,7 @@ import msgpack
 
 from flet.controls.base_control import BaseControl
 from flet.controls.base_page import PageMediaData
-from flet.controls.object_patch_old import ObjectPatch
+from flet.controls.object_patch import ObjectPatch
 from flet.controls.padding import Padding
 from flet.controls.page import Page
 from flet.controls.types import Brightness, PagePlatform

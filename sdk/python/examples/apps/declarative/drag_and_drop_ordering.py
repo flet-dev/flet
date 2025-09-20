@@ -230,8 +230,8 @@ def App():
     group_3 = Group(title="Group 3", color=ft.Colors.CYAN_400)
     group_3.add_item("Item 4")
 
-    group_4 = Group(title="Group 4", color=ft.Colors.GREEN_400)
-    group_4.add_item("Item 5")
+    # group_4 = Group(title="Group 4", color=ft.Colors.GREEN_400)
+    # group_4.add_item("Item 5")
 
     app, _ = ft.use_state(
         AppState(
@@ -239,7 +239,7 @@ def App():
                 group_1,
                 group_2,
                 group_3,
-                group_4,
+                # group_4,
             ]
         )
     )

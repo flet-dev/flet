@@ -169,10 +169,25 @@ class AddOperation(PatchOperation):
 class ReplaceOperation(PatchOperation):
     """Replaces an object property or an array element by a new value."""
 
+    @property
+    def path(self):
+        return self.location[:-2]
+
+    @property
+    def key(self):
+        return self.location[-2]
+
+    @key.setter
+    def key(self, value):
+        self.location[-2] = value
+        self.operation["path"] = self.location
+
     def _on_undo_remove(self, path, key):
+        print(f"\n\nReplaceOperation._on_undo_remove: {self.__dict__} {path} {key}")
         return key
 
     def _on_undo_add(self, path, key):
+        print(f"\n\nReplaceOperation._on_undo_add: {self.__dict__} {path} {key}")
         return key
 
 
@@ -437,155 +452,122 @@ class DiffBuilder:
             yield curr[2].operation
             curr = curr[1]
 
-    def _index_key(self, item, item_key, path):
-        """
-        Return the composite key used to pair add/remove
-        (by control key if present).
-        """
-        return item_key if item_key is not None else item
-
-    def _maybe_compare_dataclasses(self, parent, path, src, dst, frozen):
-        """
-        Compare dataclasses only when both are dataclasses and
-        identity/"frozen" rules allow it.
-        """
-        if (
-            dataclasses.is_dataclass(src)
-            and dataclasses.is_dataclass(dst)
-            and ((not frozen and src is dst) or (frozen and src is not dst))
-        ):
-            self._compare_dataclasses(parent, path, src, dst, frozen)
-
-    def _affected_is_list(self, op):
-        """
-        Return True if the item the op affects lives in a list in the destination doc.
-        We must not rely on op.key’s type because PatchOperation coerces to int.
-        """
-        container = op.to_last(self.dst_doc)
-        return isinstance(container, list)
-
-    def _emit_move(self, from_loc, to_loc):
-        """Create and insert a move operation."""
-        self.insert(MoveOperation({"op": "move", "from": from_loc, "path": to_loc}))
-
     def _item_added(self, parent, path, key, item, item_key=None, frozen=False):
-        logger.debug(
-            f"_item_added: path={path} key={key} item={item} item_key={item_key}"
-        )
+        print(f"\n\n_item_added {path} {key} {item} {item_key}")
+        index_key = item_key if item_key is not None else item
+        index = self.take_index(index_key, _ST_REMOVE)
+        if index is not None:
+            op = index[2]
+            print(f"\n\n_ST_REMOVE {op.__dict__} {item}")
 
-        index_key = self._index_key(item, item_key, path)
-        paired_idx = self.take_index(index_key, _ST_REMOVE)
-
-        # A matching 'remove' exists: it's a move (or an in-place update)
-        if paired_idx is not None:
-            rem_op: RemoveOperation = paired_idx[2]  # the earlier remove
-            src = rem_op.operation["value"]
+            # compare moved item
+            src = op.operation["value"]
             dst = item
 
-            # undo bookkeeping for the removed dataclass (it’s coming back)
             self._undo_dataclass_removed(src)
 
-            # If the affected sequence is a list, adjust later op indices after removal
-            if isinstance(rem_op.key, int) and isinstance(key, int):
-                for v in self.iter_from(paired_idx):
-                    rem_op.key = v._on_undo_remove(rem_op.path, rem_op.key)
+            if (
+                dataclasses.is_dataclass(src)
+                and dataclasses.is_dataclass(dst)
+                and ((not frozen and src is dst) or (frozen and src is not dst))
+            ):
+                self._compare_dataclasses(
+                    parent,
+                    _path_join(path, key),
+                    src,
+                    dst,
+                    frozen,
+                )
 
-            # Drop the paired remove from the chain: we’re going to emit either
-            # compares or a move
-            self.remove(paired_idx)
+            if isinstance(op.key, int) and isinstance(key, int):
+                for v in self.iter_from(index):
+                    op.key = v._on_undo_remove(op.path, op.key)
 
-            src_loc = rem_op.location
-            dst_loc = _path_join(path, key)
-
-            # Compare first (for dataclasses), anchored at source or dest depending
-            # on whether we move
-            if src_loc != dst_loc:
-                # Compare on the source location before we move (matches your tests’
-                # expectations)
-                self._maybe_compare_dataclasses(parent, src_loc, src, dst, frozen)
-                # Then emit the move
-                self._emit_move(src_loc, dst_loc)
+            self.remove(index)
+            if op.location != _path_join(path, key):
+                new_op = MoveOperation(
+                    {
+                        "op": "move",
+                        "from": op.location,
+                        "path": _path_join(path, key),
+                    }
+                )
+                self.insert(new_op)
+                print(f"\n\n_ST_REMOVE -> MOVE {new_op.__dict__}")
                 return
-            else:
-                # No move, just in-place updates
-                self._maybe_compare_dataclasses(parent, dst_loc, src, dst, frozen)
-                return
 
-        # No matching remove: this is a plain add
-        add_op = AddOperation(
-            {"op": "add", "path": _path_join(path, key), "value": item}
-        )
-        add_idx = self.insert(add_op)
-        self.store_index(index_key, add_idx, _ST_ADD)
-        self._dataclass_added(item, parent, frozen)
+        else:
+            new_op = AddOperation(
+                {
+                    "op": "add",
+                    "path": _path_join(path, key),
+                    "value": item,
+                }
+            )
+            new_index = self.insert(new_op)
+            self.store_index(index_key, new_index, _ST_ADD)
+            self._dataclass_added(item, parent, frozen)
 
     def _item_removed(self, path, key, item, item_key=None, frozen=False):
-        logger.debug(
-            f"_item_removed: path={path} key={key} item={item} item_key={item_key}"
-        )
-
-        index_key = self._index_key(item, item_key, path)
-        rem_op = RemoveOperation(
+        print(f"\n\n_item_removed: {path} {key} {item} {item_key}:")
+        new_op = RemoveOperation(
             {"op": "remove", "path": _path_join(path, key), "value": item}
         )
-        rem_idx = self.insert(rem_op)
+        index_key = item_key if item_key is not None else item
+        index = self.take_index(index_key, _ST_ADD)
+        new_index = self.insert(new_op)
+        if index is not None:
+            op = index[2]
+            print(f"\n\n_ST_ADD {op.__dict__}")
 
-        paired_idx = self.take_index(index_key, _ST_ADD)
-
-        # A matching 'add' exists: it's a move (or an in-place update)
-        if paired_idx is not None:
-            add_op: AddOperation = paired_idx[2]  # the earlier add
+            # compare moved item
             src = item
-            dst = add_op.operation["value"]
+            dst = op.operation["value"]
 
-            # undo bookkeeping for the added dataclass (it’s being consumed by the move)
             self._undo_dataclass_added(dst)
 
-            # If the added op affects a list, adjust later ops after that add
-            if self._affected_is_list(add_op):
-                for v in self.iter_from(paired_idx):
-                    add_op.key = v._on_undo_add(add_op.path, add_op.key)
-
-            src_loc = rem_op.location
-            dst_loc = add_op.location
-
-            # The earlier add no longer stands on its own
-            self.remove(paired_idx)
-
-            if src_loc != dst_loc:
-                # If we’re moving, compare anchored at the source BEFORE the move
-                # (matches your tests)
-                self._maybe_compare_dataclasses(
-                    dst.parent if hasattr(dst, "parent") else None,
-                    src_loc,
+            if (
+                dataclasses.is_dataclass(src)
+                and dataclasses.is_dataclass(dst)
+                and ((not frozen and src is dst) or (frozen and src is not dst))
+            ):
+                self._compare_dataclasses(
+                    dst.parent,
+                    _path_join(path, key),
                     src,
                     dst,
                     frozen,
                 )
-                # Turn the just-inserted remove into a move (reuse node)
-                rem_idx[2] = MoveOperation(
-                    {"op": "move", "from": src_loc, "path": dst_loc}
+
+            # We can't rely on the op.key type since PatchOperation casts
+            # the .key property to int and this path wrongly ends up being taken
+            # for numeric string dict keys while the intention is to only handle lists.
+            # So we do an explicit check on the item affected by the op instead.
+            added_item = op.to_last(self.dst_doc)
+            if isinstance(added_item, list):
+                for v in self.iter_from(index):
+                    op.key = v._on_undo_add(op.path, op.key)
+
+            self.remove(index)
+            if new_op.location != op.location:
+                new_op = MoveOperation(
+                    {
+                        "op": "move",
+                        "from": new_op.location,
+                        "path": op.location,
+                    }
                 )
-                return
+                new_index[2] = new_op
+                print(f"\n\n_ST_ADD -> MOVE {new_op.__dict__}")
             else:
-                # No move after all; drop the remove from the chain (pair consumed)
-                self.remove(rem_idx)
-                # In-place updates only
-                self._maybe_compare_dataclasses(
-                    dst.parent if hasattr(dst, "parent") else None,
-                    _path_join(add_op.path, add_op.key),
-                    src,
-                    dst,
-                    frozen,
-                )
-                return
+                self.remove(new_index)
 
-        # No matching add: keep the remove and remember this dataclass
-        self.store_index(index_key, rem_idx, _ST_REMOVE)
-        self._dataclass_removed(item)
+        else:
+            self.store_index(index_key, new_index, _ST_REMOVE)
+            self._dataclass_removed(item)
 
     def _item_replaced(self, path, key, item):
-        logger.debug("_item_replaced: %s %s %s:", path, key, item)
+        print(f"_item_replaced: {path} {key} {item}")
         self.insert(
             ReplaceOperation(
                 {
@@ -614,207 +596,104 @@ class DiffBuilder:
             self._compare_values(parent, path, key, src[key], dst[key], frozen)
 
     def _compare_lists(self, parent, path, src, dst, frozen):
-        logger.debug(f"\n_compare_lists: {path} {src} {dst}")
+        logger.debug("\n_compare_lists: %s %s %s", path, src, dst)
 
-        # ----- helper: get keys quickly -----
-        def k(obj):
-            return get_control_key(obj)
+        len_src, len_dst = len(src), len(dst)
+        max_len = max(len_src, len_dst)
+        min_len = min(len_src, len_dst)
+        for key in range(max_len):
+            if key < min_len:
+                old, new = src[key], dst[key]
+                print(f"\n\nCOMPARE LIST ITEM: {key}\n\nOLD: {old}\nNEW: {new}")
 
-        # Use keyed algorithm only if any item have key (old or new)
-        all_keyed = any(k(x) is not None for x in src) and any(
-            k(x) is not None for x in dst
-        )
-        if not all_keyed:
-            # fall back to your existing element-wise logic
-            len_src, len_dst = len(src), len(dst)
-            max_len = max(len_src, len_dst)
-            min_len = min(len_src, len_dst)
-            for key in range(max_len):
-                if key < min_len:
-                    old, new = src[key], dst[key]
-                    logger.debug(
-                        f"\n\nCOMPARE LIST ITEM: {key}\n\nOLD: {old}\n\nNEW: {new}"
+                if isinstance(old, dict) and isinstance(new, dict):
+                    self._compare_dicts(parent, _path_join(path, key), old, new, frozen)
+
+                elif isinstance(old, list) and isinstance(new, list):
+                    self._compare_lists(parent, _path_join(path, key), old, new, frozen)
+
+                elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
+                    frozen = (
+                        (old is not None and hasattr(old, "_frozen"))
+                        or (new is not None and hasattr(new, "_frozen"))
+                        or frozen
                     )
 
-                    if isinstance(old, dict) and isinstance(new, dict):
-                        self._compare_dicts(
-                            parent, _path_join(path, key), old, new, frozen
-                        )
+                    old_control_key = get_control_key(old)
+                    new_control_key = get_control_key(new)
 
-                    elif isinstance(old, list) and isinstance(new, list):
-                        self._compare_lists(
-                            parent, _path_join(path, key), old, new, frozen
-                        )
-
-                    elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(
-                        new
+                    if (not frozen and old is new) or (
+                        frozen
+                        and old is not new  # not a cached control tree
+                        and type(old) is type(new)  # iteams are of the same type
+                        and (
+                            old_control_key is None
+                            or new_control_key is None
+                            or old_control_key == new_control_key
+                        )  # same list key or both None
                     ):
-                        frozen_local = (
-                            (old is not None and hasattr(old, "_frozen"))
-                            or (new is not None and hasattr(new, "_frozen"))
-                            or frozen
+                        logger.debug("\n\ncompare list dataclasses: %s", new)
+                        self._compare_dataclasses(
+                            parent, _path_join(path, key), old, new, frozen
                         )
-                        old_control_key = k(old)
-                        new_control_key = k(new)
-                        if (not frozen_local and old is new) or (
-                            frozen_local
-                            and old is not new
-                            and type(old) is type(new)
-                            and (
-                                old_control_key is None
-                                or new_control_key is None
-                                or old_control_key == new_control_key
-                            )
-                        ):
-                            self._compare_dataclasses(
-                                parent, _path_join(path, key), old, new, frozen_local
-                            )
-                        else:
-                            self._item_removed(path, key, old, frozen=frozen)
-                            self._item_added(parent, path, key, new, frozen=frozen)
+                    elif (not frozen and old is not new) or (frozen and old is not new):
+                        logger.debug(
+                            "\n\ndataclass removed and added: \n\nOLD: %s\n\nNEW: %s",
+                            old,
+                            new,
+                        )
+                        self._item_removed(
+                            path,
+                            key,
+                            old,
+                            item_key=(old_control_key, path)
+                            if old_control_key is not None
+                            else old,
+                            frozen=frozen,
+                        )
+                        self._item_added(
+                            parent,
+                            path,
+                            key,
+                            new,
+                            item_key=(new_control_key, path)
+                            if new_control_key is not None
+                            else new,
+                            frozen=frozen,
+                        )
 
-                    elif type(old) is not type(new) or old != new:
-                        self._item_removed(path, key, old, frozen=frozen)
-                        self._item_added(parent, path, key, new, frozen=frozen)
+                elif type(old) is not type(new) or old != new:
+                    logger.debug("removed and added: %s %s", old, new)
+                    self._item_removed(path, key, old, frozen=frozen)
+                    self._item_added(parent, path, key, new, frozen=frozen)
 
-                elif len_src > len_dst:
-                    control_key = k(src[key])
-                    self._item_removed(
-                        path,
-                        len_dst,
-                        src[key],
-                        item_key=(control_key, path)
-                        if control_key is not None
-                        else src[key],
-                        frozen=frozen,
-                    )
-                else:
-                    control_key = k(dst[key])
-                    self._item_added(
-                        parent,
-                        path,
-                        key,
-                        dst[key],
-                        item_key=(control_key, path)
-                        if control_key is not None
-                        else dst[key],
-                        frozen=frozen,
-                    )
-            return
-
-        # -------- Keyed, React-style reconciliation --------
-        # We’ll mutate a working copy of the old list so emitted indices are “live”.
-        work = list(src)
-        # Map key -> current index in `work`
-        pos = {k(item): i for i, item in enumerate(work)}
-        new_index_by_key = {k(item): i for i, item in enumerate(dst)}
-        new_keys_set = set(new_index_by_key.keys())
-
-        def emit_replace_at(idx, old_item, new_item):
-            # For dataclasses we delegate to your existing field diff.
-            if (
-                dataclasses.is_dataclass(old_item)
-                and dataclasses.is_dataclass(new_item)
-                and old_item is not new_item
-            ):
-                # Force field-wise compare even if different instances:
-                self._compare_dataclasses(
-                    parent, _path_join(path, idx), old_item, new_item, True
+            elif len_src > len_dst:
+                control_key = get_control_key(src[key])
+                self._item_removed(
+                    path,
+                    len_dst,
+                    src[key],
+                    item_key=(control_key, path)
+                    if control_key is not None
+                    else src[key],
+                    frozen=frozen,
                 )
-            elif type(old_item) is not type(new_item) or old_item != new_item:
-                self._item_replaced(path, idx, new_item)
 
-        # Scan forward through desired new order.
-        i = 0
-        while i < len(dst):
-            target_key = k(dst[i])
-
-            # First, delete any items currently at position i that should NOT be here:
-            # - keys that don't exist anymore
-            # - or keys that exist but must appear BEFORE i in the new order
-            #   (they are out of place here)
-            while i < len(work):
-                cur_key = k(work[i])
-                if cur_key not in new_keys_set:
-                    # remove disappearing item at i
-                    self._item_removed(
-                        path, i, work[i], item_key=(cur_key, path), frozen=True
-                    )
-                    del work[i]
-                    # rebuild indices from i onward
-                    pos = {k(item): idx for idx, item in enumerate(work)}
-                    continue
-                desired_pos = new_index_by_key[cur_key]
-                if desired_pos < i:
-                    # this item belongs earlier; it should have already been moved
-                    # before.
-                    # remove it here; it will be re-inserted (moved) where needed.
-                    self._item_removed(
-                        path, i, work[i], item_key=(cur_key, path), frozen=True
-                    )
-                    del work[i]
-                    pos = {k(item): idx for idx, item in enumerate(work)}
-                    continue
-                break  # current slot is ok to fill with target
-
-            if target_key in pos:
-                cur_idx = pos[target_key]
-                old_item = work[cur_idx]
-                new_item = dst[i]
-
-                if cur_idx == i:
-                    # in place: just emit updates
-                    emit_replace_at(i, old_item, new_item)
-                else:
-                    # move from cur_idx -> i
-                    # Emit updates anchored at SOURCE (cur_idx) before the move
-                    # (matches your tests)
-                    emit_replace_at(cur_idx, old_item, new_item)
-
-                    # Emit move
-                    move_op = MoveOperation(
-                        {
-                            "op": "move",
-                            "from": _path_join(path, cur_idx),
-                            "path": _path_join(path, i),
-                        }
-                    )
-                    self.insert(move_op)
-
-                    # Apply the move in our working model
-                    moved = work.pop(cur_idx)
-                    work.insert(i, moved)
-                    # Recompute positions from min(i,cur_idx)
-                    pos = {k(item): idx for idx, item in enumerate(work)}
             else:
-                # brand-new key: add at i
+                control_key = get_control_key(dst[key])
                 self._item_added(
                     parent,
                     path,
-                    i,
-                    dst[i],
-                    item_key=(target_key, path),
-                    frozen=True,
+                    key,
+                    dst[key],
+                    item_key=(control_key, path)
+                    if control_key is not None
+                    else dst[key],
+                    frozen=frozen,
                 )
-                work.insert(i, dst[i])
-                pos = {k(item): idx for idx, item in enumerate(work)}
-
-            i += 1
-
-        # Finally, remove any trailing leftovers (present in old but not in new)
-        # We remove from the end so indices stay valid.
-        j = len(work) - 1
-        while j >= 0:
-            key_j = k(work[j])
-            if key_j not in new_keys_set:
-                self._item_removed(
-                    path, j, work[j], item_key=(key_j, path), frozen=True
-                )
-                del work[j]
-            j -= 1
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
-        logger.debug(f"\n_compare_dataclasses: {path} \n\n{src}\n{dst}\n")
+        print(f"\n_compare_dataclasses: {path} \n\n{src}\n{dst}\n")
 
         if (
             self.control_cls
@@ -1093,7 +972,7 @@ class DiffBuilder:
                             value if not name.startswith("on_") else value is not None
                         )
                         if old_value != new_value:
-                            # logger.debug(
+                            # print(
                             #     f"\n\nset_attr: {obj.__class__.__name__}.{name} = "
                             #     f"{new_value}, old: {old_value}"
                             # )

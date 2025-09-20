@@ -8,7 +8,7 @@ import flet as ft
 
 # import flet as ft
 # import flet.canvas as cv
-from flet.controls.object_patch_old import ObjectPatch
+from flet.controls.object_patch import ObjectPatch
 from flet.messaging.protocol import configure_encode_object_for_msgpack
 
 

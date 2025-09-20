@@ -8,7 +8,7 @@ from typing import Any, Optional
 from flet.components.hooks.use_effect import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
-from flet.controls.object_patch_old import ObjectPatch
+from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -304,7 +304,7 @@ class Session:
 
         end_time = datetime.now()
         elapsed_time = end_time - start_time
-        logger.debug(
+        print(
             "Time spent calculating patch: "
             f"{elapsed_time.total_seconds() * 1000:.3f} ms"
         )

@@ -6,7 +6,7 @@ import pytest
 import flet as ft
 from flet.components.component import Component
 from flet.controls.base_control import BaseControl, control
-from flet.controls.object_patch_old import ObjectPatch
+from flet.controls.object_patch import ObjectPatch
 
 from .common import (
     LineChart,
@@ -948,7 +948,7 @@ def test_list_move_1a():
     col_1 = ft.Column(
         [
             MyText("Line 1", key=1),
-            MyText("Line 2", key=2),
+            MyText("Line 2 (divider)", key=2),
             MyText("Line 3", key=3),
         ]
     )
@@ -957,7 +957,7 @@ def test_list_move_1a():
         [
             MyText("Line 1", key=1),
             MyText("Line 3", key=3),
-            MyText("Line 2 (updated)", key=2),
+            MyText("Line 2", key=2),
         ]
     )
     patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
@@ -965,12 +965,77 @@ def test_list_move_1a():
     assert cmp_ops(
         patch,
         [
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
-            {
-                "op": "replace",
-                "path": ["controls", 2, "value"],
-                "value": "Line 2 (updated)",
-            },
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 2"},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+        ],
+    )
+
+
+def test_list_move_1b():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3 (divider)", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 3", key=3),
+            MyText("Line 2", key=2),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 3"},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+        ],
+    )
+
+
+def test_list_move_1c():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1 (divider)", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3 (divider)", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 5", key=5),
+            MyText("Line 6 (divider)", key=6),
+            MyText("Line 7 (divider)", key=7),
+            MyText("Line 8", key=8),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 8", key=8),
+            MyText("Line 5", key=5),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 6", key=6),
+            MyText("Line 7", key=7),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0, "value"], "value": "Line 1"},
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 2"},
+            {"op": "move", "from": ["controls", 4], "path": ["controls", 0]},
+            {"op": "replace", "path": ["controls", 3, "value"], "value": "Line 3"},
+            {"op": "replace", "path": ["controls", 5, "value"], "value": "Line 6"},
+            {"op": "move", "from": ["controls", 7], "path": ["controls", 0]},
+            {"op": "replace", "path": ["controls", 7, "value"], "value": "Line 7"},
         ],
     )
 
@@ -981,6 +1046,7 @@ def test_list_move_2():
             MyText("Line 1", key=1),
             MyText("Line 2", key=2),
             MyText("Line 3", key=3),
+            MyText("Line 0", key=0),
         ]
     )
     col_1._frozen = True
@@ -989,6 +1055,7 @@ def test_list_move_2():
             MyText("Line 1", key=1),
             MyText("Line 3 (updated)", key=3),
             MyText("Line 2 (updated)", key=2),
+            MyText("Line 0", key=0),
         ]
     )
     patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
