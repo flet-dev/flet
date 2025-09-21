@@ -45,7 +45,7 @@ jobs:
           channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
           cache: true
 
-      - name: Install uv
+      - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
       - name: Show tool versions
