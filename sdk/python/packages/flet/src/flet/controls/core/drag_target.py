@@ -9,8 +9,8 @@ from flet.controls.transform import Offset
 __all__ = [
     "DragTarget",
     "DragTargetEvent",
-    "DragWillAcceptEvent",
     "DragTargetLeaveEvent",
+    "DragWillAcceptEvent",
 ]
 
 
@@ -49,7 +49,7 @@ class DragTarget(Control):
     asked to accept the `Draggable`'s data.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -91,4 +91,5 @@ class DragTarget(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

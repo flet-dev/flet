@@ -487,7 +487,8 @@ class Page(BasePage):
         current page.
         """
         _context_page.set(self)
-        assert asyncio.iscoroutinefunction(handler)
+        if not asyncio.iscoroutinefunction(handler):
+            raise TypeError("handler must be a coroutine function")
 
         future = asyncio.run_coroutine_threadsafe(
             handler(*args, **kwargs), self.get_session().connection.loop

@@ -13,7 +13,7 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
     event over the given [`content`][(c).] control.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     index: int
@@ -29,4 +29,5 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

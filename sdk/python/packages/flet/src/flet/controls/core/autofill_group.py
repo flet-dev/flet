@@ -3,7 +3,7 @@ from enum import Enum
 from flet.controls.base_control import control
 from flet.controls.control import Control
 
-__all__ = ["AutofillGroup", "AutofillHint", "AutofillGroupDisposeAction"]
+__all__ = ["AutofillGroup", "AutofillGroupDisposeAction", "AutofillHint"]
 
 
 class AutofillHint(Enum):
@@ -84,6 +84,9 @@ class AutofillGroupDisposeAction(Enum):
 class AutofillGroup(Control):
     """
     Used to group autofill controls together.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -99,4 +102,5 @@ class AutofillGroup(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

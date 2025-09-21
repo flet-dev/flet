@@ -46,9 +46,9 @@ class Dismissible(LayoutControl, AdaptiveControl):
     over the specified [`resize_duration`][(c).].
 
     Raises:
-        AssertionError: If the [`content`][(c).] is not visible.
-        AssertionError: If the [`secondary_background`][(c).] is specified but the
-            [`background`][(c).] is not specified/visible.
+        ValueError: If the [`content`][(c).] is not visible.
+        ValueError: If the [`secondary_background`][(c).] is provided and visible
+            but the [`background`][(c).] is not provided and visible.
     """
 
     content: Control
@@ -155,13 +155,15 @@ class Dismissible(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
-        assert not (
-            self.secondary_background and self.secondary_background.visible
-        ) or (self.background and self.background.visible), (
-            "secondary_background can only be specified if background is also "
-            "specified/visible"
-        )
+        if not self.content.visible:
+            raise ValueError("content must be visible")
+        if (self.secondary_background and self.secondary_background.visible) and not (
+            self.background and self.background.visible
+        ):
+            raise ValueError(
+                "secondary_background can only be specified if background is also "
+                "specified/visible"
+            )
 
     async def confirm_dismiss(self, dismiss: bool):
         await self._invoke_method("confirm_dismiss", {"dismiss": dismiss})

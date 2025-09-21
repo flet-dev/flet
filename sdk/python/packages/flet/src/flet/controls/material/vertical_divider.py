@@ -13,13 +13,19 @@ class VerticalDivider(Control):
     A thin vertical line, with padding on either side.
 
     In the material design language, this represents a divider.
+
+    Raises:
+        ValueError: If [`width`][(c).] is negative.
+        ValueError: If [`thickness`][(c).] is negative.
+        ValueError: If [`leading_indent`][(c).] is negative.
+        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     width: Optional[Number] = None
     """
     The divider's width. The divider itself is always drawn as a vertical line
     that is centered within the width specified by this value.
-    
+
     If `None`, [`DividerTheme.space`][flet.DividerTheme.space] is used.
     If that's is also `None`, defaults to `16.0`.
     """
@@ -40,7 +46,7 @@ class VerticalDivider(Control):
     """
     The color to use when painting the
     line.
-    
+
     If `None`, [`DividerTheme.color`][flet.DividerTheme.color] is used.
     If that's is also `None`, defaults to [`Theme.divider_color`][flet.Theme.divider_color].
     """
@@ -48,7 +54,7 @@ class VerticalDivider(Control):
     leading_indent: Optional[Number] = None
     """
     The amount of empty space to the leading edge of the divider.
-    
+
     If `None`, [`DividerTheme.leading_indent`][flet.DividerTheme.leading_indent] is used.
     If that's is also `None`, defaults to `0.0`.
     """
@@ -56,22 +62,18 @@ class VerticalDivider(Control):
     trailing_indent: Optional[Number] = None
     """
     The amount of empty space to the trailing edge of the divider.
-    
+
     If `None`, [`DividerTheme.trailing_indent`][flet.DividerTheme.trailing_indent] is used.
     If that's is also `None`, defaults to `0.0`.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.width is None or self.width >= 0, (
-            "width must be greater than or equal to 0"
-        )
-        assert self.thickness is None or self.thickness >= 0, (
-            "thickness must be greater than or equal to 0"
-        )
-        assert self.leading_indent is None or self.leading_indent >= 0, (
-            "leading_indent must be greater than or equal to 0"
-        )
-        assert self.trailing_indent is None or self.trailing_indent >= 0, (
-            "trailing_indent must be greater than or equal to 0"
-        )
+        if self.width is not None and self.width < 0:
+            raise ValueError("width must be greater than or equal to 0")
+        if self.thickness is not None and self.thickness < 0:
+            raise ValueError("thickness must be greater than or equal to 0")
+        if self.leading_indent is not None and self.leading_indent < 0:
+            raise ValueError("leading_indent must be greater than or equal to 0")
+        if self.trailing_indent is not None and self.trailing_indent < 0:
+            raise ValueError("trailing_indent must be greater than or equal to 0")

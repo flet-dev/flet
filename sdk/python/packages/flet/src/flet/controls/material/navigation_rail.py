@@ -241,9 +241,9 @@ class NavigationRail(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        if self.elevation is not None:
-            assert self.elevation >= 0, "elevation cannot be negative"
-        if self.min_width is not None:
-            assert self.min_width >= 0, "min_width cannot be negative"
-        if self.min_extended_width is not None:
-            assert self.min_extended_width >= 0, "min_extended_width cannot be negative"
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError("elevation cannot be negative")
+        if self.min_width is not None and self.min_width < 0:
+            raise ValueError("min_width cannot be negative")
+        if self.min_extended_width is not None and self.min_extended_width < 0:
+            raise ValueError("min_extended_width cannot be negative")

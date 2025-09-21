@@ -15,6 +15,10 @@ class Control(BaseControl):
     Base class for controls.
 
     Not meant to be used directly.
+
+    Raises:
+        ValueError: If [`opacity`][(c).] is not between `0.0` and `1.0` inclusive.
+        ValueError: If [`expand`][(c).] is not None and not of type `bool` or `int`.
     """
 
     expand: Optional[Union[bool, int]] = None
@@ -45,13 +49,13 @@ class Control(BaseControl):
 
     col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     """
-    If a parent of this control is a [`ResponsiveRow`][flet.ResponsiveRow], 
+    If a parent of this control is a [`ResponsiveRow`][flet.ResponsiveRow],
     this property is used to determine
     how many virtual columns of a screen this control will span.
 
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.
-    
+
     This control spans the 12 virtual columns by default.
 
     /// details | Dimensions
@@ -125,12 +129,14 @@ class Control(BaseControl):
 
     def before_update(self):
         super().before_update()
-        assert 0.0 <= self.opacity <= 1.0, (
-            f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-        )
-        assert self.expand is None or isinstance(self.expand, (bool, int)), (
-            f"expand must be of type bool or int, got {type(self.expand)}"
-        )
+        if not (0.0 <= self.opacity <= 1.0):
+            raise ValueError(
+                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
+            )
+        if self.expand is not None and not isinstance(self.expand, (bool, int)):
+            raise ValueError(
+                f"expand must be of type bool or int, got {type(self.expand)}"
+            )
 
     def clean(self) -> None:
         raise Exception("Deprecated!")

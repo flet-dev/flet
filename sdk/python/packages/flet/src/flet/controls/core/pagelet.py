@@ -26,7 +26,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
     such as demos and galleries.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -104,7 +104,8 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")
 
     # todo: deprecate show_* in favor of a open/close methods, or page.open/close
     # Drawer

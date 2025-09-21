@@ -23,11 +23,11 @@ class InteractiveViewer(LayoutControl):
     Allows you to pan, zoom, and rotate its [`content`][(c).].
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
-        AssertionError: If [`min_scale`][(c).] is not greater than `0`.
-        AssertionError: If [`max_scale`][(c).] is not greater than `0`.
-        AssertionError: If [`max_scale`][(c).] is less than `min_scale`.
-        AssertionError: If [`interaction_end_friction_coefficient`][(c).] is not
+        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If [`min_scale`][(c).] is not greater than `0`.
+        ValueError: If [`max_scale`][(c).] is not greater than `0`.
+        ValueError: If [`max_scale`][(c).] is less than `min_scale`.
+        ValueError: If [`interaction_end_friction_coefficient`][(c).] is not
             greater than `0`.
     """
 
@@ -130,24 +130,25 @@ class InteractiveViewer(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
-        assert self.min_scale > 0, (
-            f"min_scale must be greater than 0, got {self.min_scale}"
-        )
-        assert self.max_scale > 0, (
-            f"max_scale must be greater than 0, got {self.max_scale}"
-        )
-        assert self.max_scale >= self.min_scale, (
-            "max_scale must be greater than or equal to min_scale, "
-            f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
-        )
-        assert (
-            self.interaction_end_friction_coefficient is None
-            or self.interaction_end_friction_coefficient > 0
-        ), (
-            "interaction_end_friction_coefficient must be greater than 0, "
-            f"got {self.interaction_end_friction_coefficient}"
-        )
+        if not self.content.visible:
+            raise ValueError("content must be visible")
+        if self.min_scale <= 0:
+            raise ValueError(f"min_scale must be greater than 0, got {self.min_scale}")
+        if self.max_scale <= 0:
+            raise ValueError(f"max_scale must be greater than 0, got {self.max_scale}")
+        if self.max_scale < self.min_scale:
+            raise ValueError(
+                "max_scale must be greater than or equal to min_scale, "
+                f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
+            )
+        if (
+            self.interaction_end_friction_coefficient is not None
+            and self.interaction_end_friction_coefficient <= 0
+        ):
+            raise ValueError(
+                "interaction_end_friction_coefficient must be greater than 0, "
+                f"got {self.interaction_end_friction_coefficient}"
+            )
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         await self._invoke_method(

@@ -23,9 +23,9 @@ class CupertinoNavigationBar(LayoutControl):
     destinations in an app.
 
     Raises:
-        AssertionError: If [`destinations`][(c).] does not contain at least two visible
+        ValueError: If [`destinations`][(c).] does not contain at least two visible
             [`NavigationBarDestination`][flet.NavigationBarDestination]s.
-            IndexError: If [`selected_index`][(c).] is out of range.
+        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     destinations: list[NavigationBarDestination]
@@ -81,10 +81,11 @@ class CupertinoNavigationBar(LayoutControl):
     def before_update(self):
         super().before_update()
         visible_destinations_count = len([d for d in self.destinations if d.visible])
-        assert visible_destinations_count >= 2, (
-            f"destinations must contain at minimum two visible controls, "
-            f"got {visible_destinations_count}"
-        )
+        if visible_destinations_count < 2:
+            raise ValueError(
+                f"destinations must contain at minimum two visible controls, "
+                f"got {visible_destinations_count}"
+            )
         if not (0 <= self.selected_index < visible_destinations_count):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "

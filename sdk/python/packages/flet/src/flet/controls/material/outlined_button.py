@@ -21,8 +21,11 @@ __all__ = ["OutlinedButton"]
 class OutlinedButton(LayoutControl, AdaptiveControl):
     """
     Outlined buttons are medium-emphasis buttons. They contain actions that are
-    important, but aren’t the primary action in an app. Outlined buttons pair well with
+    important, but aren't the primary action in an app. Outlined buttons pair well with
     filled buttons to indicate an alternative, secondary action.
+
+    Raises:
+        ValueError: If neither [`icon`][(c).] nor [`content`][(c).] is provided.
     """
 
     content: Optional[StrOrControl] = None
@@ -95,11 +98,12 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
+        if not (
             self.icon
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
-        ), "at minimum, icon or a visible content must be provided"
+        ):
+            raise ValueError("at minimum, icon or a visible content must be provided")
 
     async def focus(self):
         await self._invoke_method("focus")

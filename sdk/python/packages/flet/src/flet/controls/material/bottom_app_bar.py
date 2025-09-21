@@ -20,7 +20,7 @@ class BottomAppBar(LayoutControl):
     A material design bottom app bar.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] is negative.
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: Optional[Control] = None
@@ -76,6 +76,7 @@ class BottomAppBar(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to 0, got {self.elevation}"
-        )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to 0, got {self.elevation}"
+            )

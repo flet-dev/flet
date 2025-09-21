@@ -24,9 +24,9 @@ class CupertinoSlider(LayoutControl):
     setting changes.
 
     Raises:
-        AssertionError: If [`min`][(c).] is greater than or equal to [`max`][(c).].
-        AssertionError: If [`min`][(c).] is greater than or equal to [`value`][(c).].
-        AssertionError: If [`max`][(c).] is less than or equal to [`value`][(c).].
+        ValueError: If [`min`][(c).] is greater than [`max`][(c).].
+        ValueError: If [`value`][(c).] is less than [`min`][(c).].
+        ValueError: If [`value`][(c).] is greater than [`max`][(c).].
     """
 
     value: Optional[Number] = None
@@ -105,12 +105,16 @@ class CupertinoSlider(LayoutControl):
     def before_update(self):
         super().before_update()
         self.value = self.value if self.value is not None else self.min
-        assert self.min <= self.max, (
-            f"min ({self.min}) must be less than or equal to max ({self.max})"
-        )
-        assert self.value is None or (self.value >= self.min), (
-            f"value ({self.value}) must be greater than or equal to min ({self.min})"
-        )
-        assert self.value is None or (self.value <= self.max), (
-            f"value ({self.value}) must be less than or equal to max ({self.max})"
-        )
+        if self.min > self.max:
+            raise ValueError(
+                f"min ({self.min}) must be less than or equal to max ({self.max})"
+            )
+        if self.value is not None and self.value < self.min:
+            raise ValueError(
+                f"value ({self.value}) must be greater than or "
+                f"equal to min ({self.min})"
+            )
+        if self.value is not None and self.value > self.max:
+            raise ValueError(
+                f"value ({self.value}) must be less than or equal to max ({self.max})"
+            )

@@ -17,7 +17,7 @@ from flet.controls.types import (
     StrOrControl,
 )
 
-__all__ = ["SnackBar", "SnackBarBehavior", "DismissDirection", "SnackBarAction"]
+__all__ = ["DismissDirection", "SnackBar", "SnackBarAction", "SnackBarBehavior"]
 
 
 class SnackBarBehavior(Enum):
@@ -56,7 +56,7 @@ class SnackBarAction(Control):
     text_color: Optional[ColorValue] = None
     """
     The button label color.
-    
+
     If `None`, [`SnackBarTheme.action_text_color`][flet.SnackBarTheme.action_text_color] is used.
     """
 
@@ -69,7 +69,7 @@ class SnackBarAction(Control):
     bgcolor: Optional[ColorValue] = None
     """
     The button background fill color.
-    
+
     If `None`, [`SnackBarTheme.action_bgcolor`][flet.SnackBarTheme.action_bgcolor] is used.
     """
 
@@ -92,6 +92,11 @@ class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
     bottom of the screen.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not a string or visible control.
+        ValueError: If [`action_overflow_threshold`][(c).] is not between 0 and 1.
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: StrOrControl
@@ -113,10 +118,10 @@ class SnackBar(DialogControl):
     If that's is also `None`, defaults to [`SnackBarBehavior.FIXED`][flet.SnackBarBehavior.FIXED].
 
     Note:
-        - If [`behavior`][flet.SnackBar.behavior] is [`SnackBarBehavior.FLOATING`][flet.SnackBarBehavior.FLOATING], 
-          the length of the bar is defined by either [`width`][flet.SnackBar.width] and 
+        - If [`behavior`][flet.SnackBar.behavior] is [`SnackBarBehavior.FLOATING`][flet.SnackBarBehavior.FLOATING],
+          the length of the bar is defined by either [`width`][flet.SnackBar.width] and
           [`margin`][flet.SnackBar.margin], and if both are specified, `width` takes precedence over `margin`.
-        - [`width`][flet.SnackBar.width] and [`margin`][flet.SnackBar.margin] 
+        - [`width`][flet.SnackBar.width] and [`margin`][flet.SnackBar.margin]
           are ignored if `behavior!=SnackBarBehavior.FLOATING`.
     """
 
@@ -181,7 +186,7 @@ class SnackBar(DialogControl):
     available space.
 
     Note:
-        Has effect only when [`behavior`][flet.SnackBar.behavior] is [`SnackBarBehavior.FLOATING`][flet.SnackBarBehavior.FLOATING]. 
+        Has effect only when [`behavior`][flet.SnackBar.behavior] is [`SnackBarBehavior.FLOATING`][flet.SnackBarBehavior.FLOATING].
         It can not be used if `margin` is specified.
     """
 
@@ -211,7 +216,7 @@ class SnackBar(DialogControl):
     appear below the `content`.
 
     At a value of `0.0`, the `action` will not overflow to a new line.
-    
+
     Note:
         Must be between `0.0` and `1.0` inclusive.
     """
@@ -228,13 +233,16 @@ class SnackBar(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert isinstance(self.content, str) or (
-            isinstance(self.content, Control) and self.content.visible
-        ), "content must be a string or a visible control"
-        assert (
-            self.action_overflow_threshold is None
-            or 0 <= self.action_overflow_threshold <= 1
-        ), "action_overflow_threshold must be between 0 and 1 inclusive"
-        assert (
-            self.elevation is None or self.elevation >= 0
-        ), "elevation cannot be negative"
+        if not (
+            isinstance(self.content, str)
+            or (isinstance(self.content, Control) and self.content.visible)
+        ):
+            raise ValueError("content must be a string or a visible control")
+        if self.action_overflow_threshold is not None and not (
+            0 <= self.action_overflow_threshold <= 1
+        ):
+            raise ValueError(
+                "action_overflow_threshold must be between 0 and 1 inclusive"
+            )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError("elevation cannot be negative")

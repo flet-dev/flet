@@ -22,7 +22,7 @@ class AnimatedSwitcher(LayoutControl):
     Used to switch between controls with an animation.
 
     Raises:
-        AssertionError: The [`content`][(c).] must be provided and visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -64,4 +64,5 @@ class AnimatedSwitcher(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

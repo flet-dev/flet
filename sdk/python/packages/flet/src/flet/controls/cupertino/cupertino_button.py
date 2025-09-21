@@ -33,7 +33,7 @@ class CupertinoButton(LayoutControl):
     An iOS-style button.
 
     Raises:
-        AssertionError: If [`opacity_on_click`][(c).] is not between `0.0`
+        ValueError: If [`opacity_on_click`][(c).] is not between `0.0`
             and `1.0` inclusive.
     """
 
@@ -158,10 +158,11 @@ class CupertinoButton(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert 0 <= self.opacity_on_click <= 1, (
-            "opacity_on_click must be between 0 and 1 inclusive, "
-            f"got {self.opacity_on_click}"
-        )
+        if not (0 <= self.opacity_on_click <= 1):
+            raise ValueError(
+                "opacity_on_click must be between 0 and 1 inclusive, "
+                f"got {self.opacity_on_click}"
+            )
 
     async def focus(self):
         await self._invoke_method("focus")

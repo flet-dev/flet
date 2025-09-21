@@ -11,6 +11,9 @@ __all__ = ["RadioGroup"]
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -33,4 +36,5 @@ class RadioGroup(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

@@ -30,6 +30,9 @@ class DropdownOption(Control):
     """
     Represents an item in a dropdown. Either `key` or `text` must be specified, else an
     `AssertionError` will be raised.
+
+    Raises:
+        ValueError: If neither [`key`][(c).] nor [`text`][(c).] are provided.
     """
 
     key: Optional[str] = None
@@ -66,9 +69,8 @@ class DropdownOption(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.key is not None or self.text is not None, (
-            "key or text must be specified"
-        )
+        if self.key is None and self.text is None:
+            raise ValueError("key or text must be specified")
 
 
 Option = DropdownOption
