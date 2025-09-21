@@ -46,15 +46,18 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
   Widget build(BuildContext context) {
     debugPrint("CupertinoRadio build: ${widget.control.id}");
 
-    if (RadioGroup.maybeOf<String>(context) == null) {
+    final radioGroup = RadioGroup.maybeOf<String>(context);
+    if (radioGroup == null) {
       return const ErrorControl(
           "CupertinoRadio must be enclosed within RadioGroup");
     }
 
+    var value = widget.control.getString("value", "")!;
+
     var cupertinoRadio = CupertinoRadio<String>(
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
-      value: widget.control.getString("value", "")!,
+      value: value,
       useCheckmarkStyle: widget.control.getBool("use_checkmark_style", false)!,
       fillColor: widget.control.getColor("fill_color", context),
       focusColor: widget.control.getColor("focus_color", context),
@@ -78,9 +81,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
       result = MergeSemantics(
           child: GestureDetector(
               onTap: !widget.control.disabled
-                  ? () {
-                      // RadioGroup handles the state management automatically
-                    }
+                  ? () => radioGroup.onChanged(value)
                   : null,
               child: labelPosition == LabelPosition.right
                   ? Row(children: [cupertinoRadio, labelWidget])

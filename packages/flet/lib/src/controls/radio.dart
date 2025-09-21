@@ -45,10 +45,12 @@ class _RadioControlState extends State<RadioControl> {
   Widget build(BuildContext context) {
     debugPrint("Radio build: ${widget.control.id}");
 
-    if (RadioGroup.maybeOf<String>(context) == null) {
+    final radioGroup = RadioGroup.maybeOf<String>(context);
+    if (radioGroup == null) {
       return const ErrorControl("Radio must be enclosed within RadioGroup");
     }
 
+    var value = widget.control.getString("value", "")!;
     var label = widget.control.getString("label", "")!;
     var labelPosition =
         widget.control.getLabelPosition("label_position", LabelPosition.right)!;
@@ -62,7 +64,7 @@ class _RadioControlState extends State<RadioControl> {
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
       mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
-      value: widget.control.getString("value", "")!,
+      value: value,
       activeColor: widget.control.getColor("active_color", context),
       focusColor: widget.control.getColor("focus_color", context),
       hoverColor: widget.control.getColor("hover_color", context),
@@ -84,6 +86,9 @@ class _RadioControlState extends State<RadioControl> {
               child: Text(label, style: labelStyle));
       result = MergeSemantics(
           child: GestureDetector(
+              onTap: !widget.control.disabled
+                  ? () => radioGroup.onChanged(value)
+                  : null,
               child: labelPosition == LabelPosition.right
                   ? Row(children: [radio, labelWidget])
                   : Row(children: [labelWidget, radio])));
