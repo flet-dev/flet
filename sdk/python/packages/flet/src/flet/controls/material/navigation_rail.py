@@ -28,7 +28,7 @@ class NavigationRailLabelType(Enum):
 @control("NavigationRailDestination")
 class NavigationRailDestination(Control):
     """
-    TBD
+    Represents a destination in a `NavigationRail`.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -81,6 +81,11 @@ class NavigationRail(LayoutControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to
     navigate between a small number of views, typically between three and five.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If [`min_width`][(c).] is negative.
+        ValueError: If [`min_extended_width`][(c).] is negative.
     """
 
     destinations: list[NavigationRailDestination] = field(default_factory=list)
@@ -130,14 +135,12 @@ class NavigationRail(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets the color of the Container that holds
-    all of the NavigationRail's contents.
+    Sets the color of the Container that holds all of the NavigationRail's contents.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the navigation rail's
-    indicator.
+    The color of the navigation rail's indicator.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
