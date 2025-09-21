@@ -382,7 +382,7 @@ class DataTable(LayoutControl):
     [`ControlState`][flet.] state, i.e. if the row is selected, pressed, hovered,
     focused, disabled or enabled. The color is painted as an overlay to the row.
     To make sure that the row's InkWell is visible (when pressed, hovered and focused),
-    it is recommended to use atranslucent background color.
+    it is recommended to use a translucent background color.
     """
 
     data_row_min_height: Optional[Number] = None
