@@ -193,7 +193,7 @@ class LayoutControl(Control):
     """
     Enables implicit animation of the [`align`][flet.LayoutControl.] property.
 
-    More information[here](https://docs.flet-docs.pages.dev/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_margin: Optional[AnimationValue] = None
