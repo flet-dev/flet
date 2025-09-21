@@ -41,7 +41,7 @@ class Container(LayoutControl, AdaptiveControl):
     ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/container/media/overview-padding-margin-border.png){width="80%"}
     /// caption
     ///
-    """  # noqa
+    """  # noqa: E501
 
     content: Optional[Control] = None
     """
