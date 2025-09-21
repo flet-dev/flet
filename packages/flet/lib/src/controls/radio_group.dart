@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../widgets/error.dart';
-import '../widgets/radio_group_provider.dart';
 
 class RadioGroupControl extends StatelessWidget {
   final Control control;
@@ -14,10 +13,16 @@ class RadioGroupControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("RadioGroupControl build: ${control.id}");
 
-    return RadioGroupProvider(
-        radioGroupControl: control,
-        child: control.buildWidget("content") ??
-            const ErrorControl(
-                "RadioGroup.content must be provided and visible"));
+    return RadioGroup<String>(
+      groupValue: control.get<String>("value"),
+      onChanged: (String? value) {
+        if (!control.disabled) {
+          control.updateProperties({"value": value}, notify: true);
+          control.triggerEvent("change", value);
+        }
+      },
+      child: control.buildWidget("content") ??
+          const ErrorControl("RadioGroup.content must be provided and visible"),
+    );
   }
 }
