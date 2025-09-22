@@ -46,11 +46,13 @@ def CardView(card: Card) -> ft.Control:
 @ft.component
 def App():
     state, _ = ft.use_state(Game())
-    dragging, set_dragging = ft.use_state(False)
+    dragging, set_dragging = ft.use_state(None)  # None or Card being dragged
 
-    def point_in_card(x: float, y: float) -> bool:
-        c = state.cards[0]
-        return (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H)
+    def point_in_card(x: float, y: float) -> Card | None:
+        for c in state.cards:
+            if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
+                return c
+        return None
 
     def on_pan_start(e: ft.DragStartEvent):
         # Only start dragging if pointer is inside the card
@@ -58,14 +60,14 @@ def App():
         set_dragging(point_in_card(e.local_position.x, e.local_position.y))
 
     def on_pan_update(e: ft.DragUpdateEvent):
-        if not dragging:
+        if dragging is None:
             return
-        c = state.cards[0]
+        c = dragging
         c.left = max(0, c.left + e.local_delta.x)
         c.top = max(0, c.top + e.local_delta.y)
 
     def on_pan_end(e: ft.DragEndEvent):
-        set_dragging(False)
+        set_dragging(None)
 
     return ft.GestureDetector(
         on_pan_start=on_pan_start,
