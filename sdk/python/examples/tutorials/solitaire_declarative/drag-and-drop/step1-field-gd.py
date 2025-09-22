@@ -11,24 +11,29 @@ class Card:
     left: float = 0
 
 
-@dataclass
 @ft.observable
+@dataclass
 class Game:
     cards: list[Card] = field(
-        default_factory=lambda: [Card(left=0, top=0)],
+        default_factory=lambda: [Card(left=0, top=0), Card(left=100, top=0)]
     )
+
+
+# Card visual constants
+CARD_W = 70
+CARD_H = 100
 
 
 # ---------- View (pure) ----------
 @ft.component
 def CardView(card: Card) -> ft.Control:
-    # Pure view: no event handlers here, just render the card from state
+    # Pure view: just render from state
     return ft.Container(
         bgcolor=ft.Colors.GREEN,
         left=card.left,
         top=card.top,
-        width=70,
-        height=100,
+        width=CARD_W,
+        height=CARD_H,
         border_radius=5,
     )
 
@@ -37,19 +42,37 @@ def CardView(card: Card) -> ft.Control:
 @ft.component
 def App():
     state, _ = ft.use_state(Game())
+    dragging, set_dragging = ft.use_state(False)
+
+    def point_in_card(x: float, y: float) -> bool:
+        c = state.cards[0]
+        return (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H)
+
+    def on_pan_start(e: ft.DragStartEvent):
+        # Only start dragging if pointer is inside the card
+        # e.local_x / e.local_y are relative to the GestureDetector content (the Stack)
+        set_dragging(point_in_card(e.local_position.x, e.local_position.y))
 
     def on_pan_update(e: ft.DragUpdateEvent):
-        # Mutate nested observable; CardView is subscribed to Card, so it re-renders
-        state.cards[0].top = max(0, state.cards[0].top + e.local_delta.y)
-        state.cards[0].left = max(0, state.cards[0].left + e.local_delta.x)
+        if not dragging:
+            return
+        c = state.cards[0]
+        c.left = max(0, c.left + e.local_delta.x)
+        c.top = max(0, c.top + e.local_delta.y)
+
+    def on_pan_end(e: ft.DragEndEvent):
+        set_dragging(False)
 
     return ft.GestureDetector(
+        on_pan_start=on_pan_start,
         on_pan_update=on_pan_update,
+        on_pan_end=on_pan_end,
         drag_interval=5,
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
             controls=[
-                CardView(state.cards[0]),  # depends directly on Card observable
+                CardView(state.cards[0]),
+                CardView(state.cards[1]),  # depends directly on Card observable
             ],
             width=1000,
             height=500,
