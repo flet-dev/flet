@@ -112,12 +112,20 @@ def App():
         if c is None:
             return
         # snap to slot if close enough
+        moved = False
         for s in state.slots:
             near_x = abs(c.left - s.left) < state.snap_threshold
             near_y = abs(c.top - s.top) < state.snap_threshold
             if near_x and near_y:
                 c.left = s.left
                 c.top = s.top
+                c.home = s.id
+                moved = True
+        if not moved:
+            # bounce back to deck position
+            c.left = 0
+            c.top = 0
+            c.home = "deck"
 
         set_dragging(None)
 
