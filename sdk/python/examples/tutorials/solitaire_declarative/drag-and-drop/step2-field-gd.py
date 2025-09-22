@@ -9,13 +9,17 @@ import flet as ft
 class Card:
     top: float = 0
     left: float = 0
+    color: str = ft.Colors.GREEN
 
 
 @dataclass
 @ft.observable
 class Game:
     cards: list[Card] = field(
-        default_factory=lambda: [Card(left=0, top=0)],
+        default_factory=lambda: [
+            Card(left=0, top=0, color=ft.Colors.GREEN),
+            Card(left=100, top=0, color=ft.Colors.RED),
+        ],
     )
 
 
@@ -24,7 +28,7 @@ class Game:
 def CardView(card: Card) -> ft.Control:
     # Pure view: no event handlers here, just render the card from state
     return ft.Container(
-        bgcolor=ft.Colors.GREEN,
+        bgcolor=card.color,
         left=card.left,
         top=card.top,
         width=70,
@@ -49,7 +53,8 @@ def App():
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
             controls=[
-                CardView(state.cards[0]),  # depends directly on Card observable
+                CardView(state.cards[0]),
+                CardView(state.cards[1]),  # depends directly on Card observable
             ],
             width=1000,
             height=500,
