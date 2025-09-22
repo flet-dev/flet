@@ -13,11 +13,13 @@ class Card:
     top: float = 0
     left: float = 0
     color: str = ft.Colors.GREEN
+    home: str = "deck"  # "deck" or Slot.id
 
 
 @ft.observable
 @dataclass
 class Slot:
+    id: str = "slot1"
     top: float = 200
     left: float = 0
 
@@ -27,16 +29,19 @@ class Slot:
 class Game:
     cards: list[Card] = field(
         default_factory=lambda: [
-            Card(left=0, top=0, color=ft.Colors.GREEN),
-            Card(left=100, top=0, color=ft.Colors.RED),
+            Card(left=0, top=0, color=ft.Colors.GREEN, home="deck"),
+            Card(left=100, top=0, color=ft.Colors.RED, home="waste"),
         ]
     )
     slots: list[Slot] = field(
         default_factory=lambda: [
-            Slot(left=0, top=200),
-            Slot(left=100, top=200),
+            Slot(left=0, top=0, id="deck"),
+            Slot(left=100, top=0, id="waste"),
+            Slot(left=0, top=200, id="slot1"),
+            Slot(left=100, top=200, id="slot2"),
         ],
     )
+    snap_threshold: float = 20  # px
 
 
 # Card visual constants
@@ -103,6 +108,17 @@ def App():
         c.top = max(0, c.top + e.local_delta.y)
 
     def on_pan_end(e: ft.DragEndEvent):
+        c = dragging
+        if c is None:
+            return
+        # snap to slot if close enough
+        for s in state.slots:
+            near_x = abs(c.left - s.left) < state.snap_threshold
+            near_y = abs(c.top - s.top) < state.snap_threshold
+            if near_x and near_y:
+                c.left = s.left
+                c.top = s.top
+
         set_dragging(None)
 
     return ft.GestureDetector(
