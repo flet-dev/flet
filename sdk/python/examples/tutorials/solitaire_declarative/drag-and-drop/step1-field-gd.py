@@ -1,3 +1,5 @@
+# Step 1: Basic drag-and-drop of rectangles (cards) within a bounded area.
+
 from dataclasses import dataclass, field
 
 import flet as ft
@@ -54,10 +56,18 @@ def App():
                 return c
         return None
 
+    def move_to_top(card: Card):
+        state.cards.remove(card)
+        state.cards.append(card)
+
     def on_pan_start(e: ft.DragStartEvent):
         # Only start dragging if pointer is inside the card
-        # e.local_x / e.local_y are relative to the GestureDetector content (the Stack)
-        set_dragging(point_in_card(e.local_position.x, e.local_position.y))
+        # e.local_position.x / e.local_position.y are relative to the GestureDetector
+        # content (the Stack)
+        grabbed = point_in_card(e.local_position.x, e.local_position.y)
+        set_dragging(grabbed)
+        if grabbed is not None:
+            move_to_top(grabbed)
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
@@ -76,10 +86,7 @@ def App():
         drag_interval=5,
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
-            controls=[
-                CardView(state.cards[0]),
-                CardView(state.cards[1]),  # depends directly on Card observable
-            ],
+            controls=[CardView(c) for c in state.cards],
             width=1000,
             height=500,
         ),
