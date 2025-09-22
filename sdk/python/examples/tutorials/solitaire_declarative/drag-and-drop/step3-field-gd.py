@@ -1,5 +1,5 @@
-# Step 2: Place the card into a slot if close enough when dropped, otherwise bounce
-# to deck.
+# Step 3: Place the card into a slot if close enough when dropped, otherwise bounce
+# back to slot.
 
 from dataclasses import dataclass, field
 
@@ -42,6 +42,12 @@ class Game:
         ],
     )
     snap_threshold: float = 20  # px
+
+    def find_slot_by_id(self, slot_id: str) -> Slot | None:
+        for s in self.slots:
+            if s.id == slot_id:
+                return s
+        return None
 
 
 # Card visual constants
@@ -122,10 +128,10 @@ def App():
                 c.home = s.id
                 moved = True
         if not moved:
-            # bounce back to deck position
-            c.left = 0
-            c.top = 0
-            c.home = "deck"
+            # bounce back to home position
+            home_slot = state.find_slot_by_id(c.home)
+            c.left = home_slot.left if home_slot else 0
+            c.top = home_slot.top if home_slot else 0
 
         set_dragging(None)
 
