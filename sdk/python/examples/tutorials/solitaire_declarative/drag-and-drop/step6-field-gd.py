@@ -144,7 +144,17 @@ def App():
             near_x = abs(c.left - s.left) < SNAP_THRESHOLD
             near_y = abs(c.top - s.top) < SNAP_THRESHOLD
             if near_x and near_y:
-                c.left, c.top = s.left, s.top
+                c.left, c.top = (
+                    s.left,
+                    s.top + OFFSET_Y * len(s.cards)
+                    if s.id
+                    in (
+                        "slot1",
+                        "slot2",
+                        "slot3",
+                    )
+                    else s.top,
+                )
                 c.home.cards.remove(c)  # Remove card from previous slot's pile
                 c.home = s  # <-- update to the Slot object
                 s.cards.append(c)  # Add card to the slot's pile
