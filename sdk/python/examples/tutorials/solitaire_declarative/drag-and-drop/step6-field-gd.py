@@ -71,6 +71,7 @@ CARD_W = 70
 CARD_H = 100
 SNAP_THRESHOLD = 20  # px
 OFFSET_Y = 20  # px
+STACKABLE_SLOTS = {"slot1", "slot2", "slot3"}  # slots that stack cards with offset
 
 
 # ---------- View (pure) ----------
@@ -141,18 +142,18 @@ def App():
         # Try to snap to a nearby slot; otherwise bounce back to c.home
         snapped = False
         for s in state.slots:
+            offset = (
+                (len(s.cards) - 1) * OFFSET_Y
+                if s.id in STACKABLE_SLOTS and len(s.cards) > 0
+                else 0
+            )
             near_x = abs(c.left - s.left) < SNAP_THRESHOLD
-            near_y = abs(c.top - s.top) < SNAP_THRESHOLD
+            near_y = abs(c.top - (s.top + offset)) < SNAP_THRESHOLD
             if near_x and near_y:
                 c.left, c.top = (
                     s.left,
                     s.top + OFFSET_Y * len(s.cards)
-                    if s.id
-                    in (
-                        "slot1",
-                        "slot2",
-                        "slot3",
-                    )
+                    if s.id in STACKABLE_SLOTS
                     else s.top,
                 )
                 c.home.cards.remove(c)  # Remove card from previous slot's pile
