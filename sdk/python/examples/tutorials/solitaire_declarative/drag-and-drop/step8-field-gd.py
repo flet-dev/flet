@@ -1,4 +1,4 @@
-# Step 7: Refactor calculations to be more readable and maintainable.
+# Step 8: Move piles of cards from stackable slots to stackable slots.
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -35,6 +35,9 @@ class Game:
             Card(color=ft.Colors.RED),
             Card(color=ft.Colors.BLUE),
             Card(color=ft.Colors.YELLOW),
+            Card(color=ft.Colors.PURPLE),
+            Card(color=ft.Colors.ORANGE),
+            Card(color=ft.Colors.BROWN),
         ]
     )
     slots: list[Slot] = field(
@@ -110,7 +113,20 @@ def App():
 
     print("Current cards in deck:", len(state.slots[0].cards))
 
-    def point_in_card(x: float, y: float) -> Optional[Card]:
+    # def point_in_card(x: float, y: float) -> Optional[Card]:
+    #     # Check topmost first so you can grab the card on top
+    #     for c in reversed(state.cards):
+    #         if (
+    #             (c.left <= x <= c.left + CARD_W)
+    #             and (c.top <= y <= c.top + CARD_H)
+    #             and (
+    #                 c.home.cards.index(c) == len(c.home.cards) - 1
+    #             )  # is topmost in its slot
+    #         ):
+    #             return c
+    #     return None
+
+    def point_in_card_stack(x: float, y: float) -> Optional[list[Card]]:
         # Check topmost first so you can grab the card on top
         for c in reversed(state.cards):
             if (
@@ -120,7 +136,7 @@ def App():
                     c.home.cards.index(c) == len(c.home.cards) - 1
                 )  # is topmost in its slot
             ):
-                return c
+                return [c]
         return None
 
     def move_to_top(card: Card):
@@ -143,13 +159,13 @@ def App():
         return None
 
     def on_pan_start(e: ft.DragStartEvent):
-        grabbed = point_in_card(e.local_position.x, e.local_position.y)
+        grabbed = point_in_card_stack(e.local_position.x, e.local_position.y)
         print("grabbed", grabbed)
-        set_dragging(grabbed)
+        set_dragging(grabbed[0] if grabbed else None)
         if grabbed is not None:
-            move_to_top(grabbed)
-            set_start_x(grabbed.left)  # remember initial x of the card being dragged
-            set_start_y(grabbed.top)  # remember initial y of the card being dragged
+            move_to_top(grabbed[0])
+            set_start_x(grabbed[0].left)  # remember initial x of the card being dragged
+            set_start_y(grabbed[0].top)  # remember initial y of the card being dragged
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
