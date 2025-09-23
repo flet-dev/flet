@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 import flet as ft
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logging.getLogger("flet_object_patch").setLevel(logging.INFO)
 logging.getLogger("flet_components").setLevel(logging.INFO)
 
