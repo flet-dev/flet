@@ -67,7 +67,6 @@ import 'controls/markdown.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
-import 'controls/model_view.dart';
 import 'controls/navigation_bar.dart';
 import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
@@ -272,8 +271,6 @@ class FletCoreExtension extends FletExtension {
         return MenuItemButtonControl(key: key, control: control);
       case "MergeSemantics":
         return MergeSemanticsControl(key: key, control: control);
-      case "ModelView":
-        return ModelViewControl(key: key, control: control);
       case "NavigationBar":
         return NavigationBarControl(key: key, control: control);
       case "NavigationBarDestination":

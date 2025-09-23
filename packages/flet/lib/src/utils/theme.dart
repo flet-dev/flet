@@ -94,24 +94,20 @@ ThemeData parseTheme(
     {ThemeData? parentTheme}) {
   ThemeData? theme = parentTheme;
 
-  var primarySwatch = parseColor(value?["primary_swatch"], theme);
-  var colorSchemeSeed = parseColor(value?["color_scheme_seed"], theme);
-
-  if (colorSchemeSeed != null) primarySwatch = null;
-
-  if (colorSchemeSeed == null && primarySwatch == null) {
-    colorSchemeSeed = Colors.blue;
-  }
+  var colorSchemeSeed =
+      parseColor(value?["color_scheme_seed"], theme) ?? Colors.blue;
 
   // create new theme
   theme ??= ThemeData(
-    primarySwatch:
-        primarySwatch != null ? primarySwatch as MaterialColor : null,
     colorSchemeSeed: colorSchemeSeed,
     fontFamily: value?["font_family"],
     brightness: brightness,
-    useMaterial3: value?["use_material3"] ?? primarySwatch == null,
+    useMaterial3: value?["use_material3"],
   );
+
+  ColorScheme? colorScheme = parseColorScheme(value?["color_scheme"], theme);
+  DividerThemeData? dividerTheme =
+      parseDividerTheme(value?["divider_theme"], theme);
 
   theme = theme.copyWith(
     extensions: {
@@ -124,7 +120,7 @@ ThemeData parseTheme(
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
     pageTransitionsTheme: parsePageTransitions(
         value?["page_transitions"], theme.pageTransitionsTheme)!,
-    colorScheme: parseColorScheme(value?["color_scheme"], theme),
+    colorScheme: colorScheme,
     textTheme: parseTextTheme(value?["text_theme"], theme, theme.textTheme),
     primaryTextTheme: parseTextTheme(
         value?["primary_text_theme"], theme, theme.primaryTextTheme),
@@ -140,13 +136,10 @@ ThemeData parseTheme(
     canvasColor: parseColor(value?["canvas_color"], theme),
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
     cardColor: parseColor(value?["card_bgcolor"], theme),
-    dividerColor: parseColor(value?["divider_color"], theme),
+    dividerColor: dividerTheme?.color,
     hintColor: parseColor(value?["hint_color"], theme),
-    shadowColor: parseColor(value?["shadow_color"], theme),
+    shadowColor: colorScheme?.shadow,
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
-    primaryColor: parseColor(value?["primary_color"], theme),
-    primaryColorLight: parseColor(value?["primary_color_light"], theme),
-    primaryColorDark: parseColor(value?["primary_color_dark"], theme),
     dialogTheme: parseDialogTheme(value?["dialog_theme"], theme),
     bottomSheetTheme:
         parseBottomSheetTheme(value?["bottom_sheet_theme"], theme),
@@ -160,15 +153,14 @@ ThemeData parseTheme(
     radioTheme: parseRadioTheme(value?["radio_theme"], theme),
     badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
     switchTheme: parseSwitchTheme(value?["switch_theme"], context),
-    dividerTheme: parseDividerTheme(value?["divider_theme"], theme),
+    dividerTheme: dividerTheme,
     snackBarTheme: parseSnackBarTheme(value?["snackbar_theme"], theme),
     bannerTheme: parseBannerTheme(value?["banner_theme"], theme),
     datePickerTheme: parseDatePickerTheme(value?["date_picker_theme"], theme),
     navigationRailTheme:
         parseNavigationRailTheme(value?["navigation_rail_theme"], theme),
     appBarTheme: parseAppBarTheme(value?["appbar_theme"], theme),
-    dropdownMenuTheme:
-        parseDropdownMenuTheme(value?["dropdown_menu_theme"], theme),
+    dropdownMenuTheme: parseDropdownMenuTheme(value?["dropdown_theme"], theme),
     listTileTheme: parseListTileTheme(value?["list_tile_theme"], theme),
     tooltipTheme: parseTooltipTheme(value?["tooltip_theme"], context),
     expansionTileTheme:
@@ -538,8 +530,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     shape: parseShape(value["shape"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
     extendedPadding: parsePadding(value["extended_padding"]),
-    extendedTextStyle: parseTextStyle(value["extended_text_style"], theme),
-    extendedIconLabelSpacing: parseDouble(value["extended_icon_label_spacing"]),
+    extendedTextStyle: parseTextStyle(value["text_style"], theme),
+    extendedIconLabelSpacing: parseDouble(value["icon_label_spacing"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     iconSize: parseDouble(value["icon_size"]),
     extendedSizeConstraints:
@@ -858,7 +850,7 @@ ListTileThemeData? parseListTileTheme(
     leadingAndTrailingTextStyle:
         parseTextStyle(value["leading_and_trailing_text_style"], theme),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
-    minTileHeight: parseDouble(value["min_tile_height"]),
+    minTileHeight: parseDouble(value["min_height"]),
   );
 }
 

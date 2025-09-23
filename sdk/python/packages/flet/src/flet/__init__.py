@@ -63,7 +63,6 @@ from flet.controls.buttons import (
     ShapeBorder,
     StadiumBorder,
 )
-from flet.controls.cache import cache
 from flet.controls.colors import Colors
 from flet.controls.context import Context, context
 from flet.controls.control import Control
@@ -131,7 +130,6 @@ from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
-from flet.controls.core.state_view import StateView
 from flet.controls.core.text import (
     Text,
     TextAffinity,
@@ -361,7 +359,6 @@ from flet.controls.material.time_picker import (
 )
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
-from flet.controls.model_view import ModelView
 from flet.controls.multi_view import MultiView
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
@@ -746,7 +743,6 @@ __all__ = [
     "MenuItemButton",
     "MenuStyle",
     "MergeSemantics",
-    "ModelView",
     "MouseCursor",
     "MultiTapEvent",
     "MultiView",
@@ -864,7 +860,6 @@ __all__ = [
     "Stack",
     "StackFit",
     "StadiumBorder",
-    "StateView",
     "StoragePaths",
     "StrOrControl",
     "StrokeCap",
@@ -939,7 +934,6 @@ __all__ = [
     "app_async",
     "border",
     "border_radius",
-    "cache",
     "component",
     "context",
     "control",

@@ -7,6 +7,8 @@ logging.basicConfig(level=logging.INFO)
 logging.getLogger("flet_object_patch").setLevel(logging.INFO)
 logging.getLogger("flet_components").setLevel(logging.INFO)
 
+ItemID = ft.IdCounter()
+
 
 @ft.observable
 @dataclass
@@ -14,10 +16,10 @@ class AppState:
     groups: list["Group"] = field(default_factory=list)
 
     def move_group(self, src: "Group", dst: "Group"):
-        print("Move group", src.title, "to position of", dst.title)
         src_index = self.groups.index(src)
         dst_index = self.groups.index(dst)
         if src_index != dst_index:
+            print("Move group", src.title, "to position of", dst.title)
             self.groups.insert(dst_index, self.groups.pop(src_index))
 
 
@@ -27,27 +29,15 @@ class Group:
     title: str
     color: ft.Colors
     items: list["Item"] = field(default_factory=list)
-    new_item_text: str = ""
 
     def add_item(self, text: str):
         self.items.append(Item(text=text, group=self))
-
-    def change_new_item_text(self, new_item_text: str):
-        self.new_item_text = new_item_text
-
-    def on_add_item(self):
-        if stripped_text := self.new_item_text.strip():
-            self.add_item(stripped_text)
-            self.new_item_text = ""
 
     def move_item_into(self, item: "Item"):
         print("Move item", item.text, "from", item.group.title, "to", self.title)
         item.group.items.remove(item)
         item.group = self
         self.items.append(item)
-
-
-ItemID = ft.IdCounter()
 
 
 @ft.observable
@@ -123,6 +113,7 @@ def ItemView(item: Item, **kwargs):
 def GroupView(group: Group, move_group, **kwargs):
     is_group_over, set_is_group_over = ft.use_state(False)
     is_item_over, set_is_item_over = ft.use_state(False)
+    new_item_text, set_new_item_text = ft.use_state("")
 
     def on_item_accept(e: ft.DragTargetEvent):
         group.move_item_into(e.src.data)
@@ -131,6 +122,11 @@ def GroupView(group: Group, move_group, **kwargs):
     def on_group_accept(e: ft.DragTargetEvent):
         move_group(e.src.data, group)
         set_is_group_over(False)
+
+    def on_add_item(self):
+        if stripped_text := new_item_text.strip():
+            group.add_item(stripped_text)
+            set_new_item_text("")
 
     return ft.Row(
         spacing=4,
@@ -180,16 +176,16 @@ def GroupView(group: Group, move_group, **kwargs):
                                     ft.TextField(
                                         label="New item",
                                         bgcolor=ft.Colors.WHITE,
-                                        value=group.new_item_text,
-                                        on_change=lambda e: group.change_new_item_text(
+                                        value=new_item_text,
+                                        on_change=lambda e: set_new_item_text(
                                             e.control.value
                                         ),
-                                        on_submit=group.on_add_item,
+                                        on_submit=on_add_item,
                                     ),
                                     ft.TextButton(
                                         content="Add",
                                         icon=ft.Icons.ADD,
-                                        on_click=group.on_add_item,
+                                        on_click=on_add_item,
                                     ),
                                     ft.Column(
                                         spacing=2,
@@ -234,7 +230,7 @@ def App():
     # group_4.add_item("Item 5")
 
     app, _ = ft.use_state(
-        AppState(
+        lambda: AppState(
             groups=[
                 group_1,
                 group_2,
