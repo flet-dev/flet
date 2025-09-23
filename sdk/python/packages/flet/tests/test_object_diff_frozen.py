@@ -137,14 +137,13 @@ def test_compare_objects_replaced_with_control_keys():
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["controls", 0], "value": Item(key=3, y=1)},
             {"op": "replace", "path": ["controls", 0], "value": Item(key=1, y=0)},
-            {"op": "add", "path": ["controls", 1], "value": Item(key=2, y=0)},
+            {"op": "replace", "path": ["controls", 1], "value": Item(key=2, y=0)},
         ],
     )
-    assert patch[0]["value"].key == 3
-    assert patch[0]["value"].y == 1
-    assert patch[1]["value"].key == 1
+    assert patch[0]["value"].key == 1
+    assert patch[0]["value"].y == 0
+    assert patch[1]["value"].key == 2
     assert patch[1]["value"].y == 0
 
 
@@ -174,7 +173,7 @@ def test_compare_objects_updated_and_moved_with_control_keys():
         patch,
         [
             {"op": "replace", "path": ["controls", 1, "y"], "value": 1},
-            {"op": "move", "from": ["controls", 1], "path": ["controls", 0]},
+            {"op": "move", "from": ["controls", 0], "path": ["controls", 1]},
             {"op": "replace", "path": ["controls", 1, "y"], "value": 2},
         ],
     )
@@ -200,8 +199,8 @@ def test_compare_objects_added():
         [
             Item(key=1, y=0),
             Item(key=2, y=0),
-            Item(key=4, y=0),
-            Item(key=3, y=0),
+            Item(key=4, y=40),
+            Item(key=3, y=30),
             Item(key=5, y=0),
             Item(key=6, y=0),
             Item(key=7, y=0),
@@ -921,6 +920,11 @@ def test_list_insertions_with_keys():
                 "value": MyText(key=3, value="Line 3"),
             },
             {
+                "op": "remove",
+                "path": ["controls", 5],
+                "value": MyText(key=8, value="Line 8"),
+            },
+            {
                 "op": "replace",
                 "path": ["controls", 3, "value"],
                 "value": "Line 4 (updated)",
@@ -936,7 +940,7 @@ def test_list_insertions_with_keys():
                 "value": "Line 6 (updated)",
             },
             {
-                "op": "replace",
+                "op": "add",
                 "path": ["controls", 6],
                 "value": MyText(key=7, value="Line 7"),
             },
@@ -965,8 +969,8 @@ def test_list_move_1a():
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 2"},
             {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
         ],
     )
 
@@ -1040,12 +1044,70 @@ def test_list_move_1c():
     )
 
 
+def test_list_move_1d():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1 (divider)", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 4", key=4),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0, "value"], "value": "Line 1"},
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 2"},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 0]},
+        ],
+    )
+
+
+def test_list_move_2a():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 3", key=3),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
+        ],
+    )
+
+
 def test_list_move_2():
     col_1 = ft.Column(
         [
             MyText("Line 1", key=1),
             MyText("Line 2", key=2),
             MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
             MyText("Line 0", key=0),
         ]
     )
@@ -1053,8 +1115,9 @@ def test_list_move_2():
     col_2 = ft.Column(
         [
             MyText("Line 1", key=1),
-            MyText("Line 3 (updated)", key=3),
             MyText("Line 2 (updated)", key=2),
+            MyText("Line 4 (updated)", key=4),
+            MyText("Line 3 (updated)", key=3),
             MyText("Line 0", key=0),
         ]
     )
@@ -1065,14 +1128,19 @@ def test_list_move_2():
         [
             {
                 "op": "replace",
-                "path": ["controls", 2, "value"],
-                "value": "Line 3 (updated)",
+                "path": ["controls", 1, "value"],
+                "value": "Line 2 (updated)",
             },
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
             {
                 "op": "replace",
-                "path": ["controls", 2, "value"],
-                "value": "Line 2 (updated)",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 3 (updated)",
             },
         ],
     )
@@ -1100,7 +1168,7 @@ def test_list_move_3():
         patch,
         [
             {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
             {
                 "op": "replace",
                 "path": ["controls", 2, "value"],
@@ -1131,13 +1199,13 @@ def test_list_move_4():
     assert cmp_ops(
         patch,
         [
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
             {
                 "op": "replace",
-                "path": ["controls", 2, "value"],
+                "path": ["controls", 1, "value"],
                 "value": "Line 2 (updated)",
             },
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
         ],
     )
 
@@ -1177,7 +1245,7 @@ def test_list_move_5():
                 "path": ["controls", 3, "value"],
                 "value": "Line 4 (updated)",
             },
-            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
         ],
     )
 
@@ -1252,13 +1320,13 @@ def test_list_move_7():
     assert cmp_ops(
         patch,
         [
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 1]},
             {
                 "op": "replace",
-                "path": ["controls", 3, "value"],
+                "path": ["controls", 1, "value"],
                 "value": "Line 4 (updated)",
             },
-            {"op": "move", "from": ["controls", 3], "path": ["controls", 1]},
-            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
         ],
     )
 
@@ -1374,7 +1442,49 @@ def test_list_move_10():
         patch,
         [
             {"op": "replace", "path": ["controls", 2, "value"], "value": "Group 3"},
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
             {"op": "replace", "path": ["controls", 2, "value"], "value": "Group 2"},
+        ],
+    )
+
+
+def test_list_move_11():
+    col_1 = ft.Column(
+        [
+            # MyText("Group -4", key=-4),
+            # MyText("Group -3", key=-3),
+            # MyText("Group -2", key=-2),
+            # MyText("Group -1", key=-1),
+            MyText("Group 0", key=0),
+            MyText("Group 1 (divider)", key=1),
+            MyText("Group 2 (divider)", key=2),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Group 1", key=1),
+            MyText("Group 2", key=2),
+            MyText("Group 3", key=3),
+            # MyText("Group 4", key=4),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "remove",
+                "path": ["controls", 0],
+                "value": MyText(key=0, value="Group 0"),
+            },
+            {"op": "replace", "path": ["controls", 0, "value"], "value": "Group 1"},
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Group 2"},
+            {
+                "op": "add",
+                "path": ["controls", 2],
+                "value": MyText(key=3, value="Group 3"),
+            },
         ],
     )

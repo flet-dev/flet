@@ -80,6 +80,9 @@ class PatchOperation:
     def __ne__(self, other):
         return not (self == other)
 
+    def __repr__(self) -> str:
+        return self.__dict__.__str__()
+
     @property
     def path(self):
         return self.location[:-1]
@@ -133,6 +136,9 @@ class RemoveOperation(PatchOperation):
         if self.path == path:
             if self.key >= key:
                 self.key += 1
+                print(
+                    f"\n\nRemoveOperation._on_undo_remove: {self.__dict__} {path} {key}"
+                )
             else:
                 key -= 1
         return key
@@ -141,6 +147,7 @@ class RemoveOperation(PatchOperation):
         if self.path == path:
             if self.key > key:
                 self.key -= 1
+                print(f"\n\nRemoveOperation._on_undo_add: {self.__dict__} {path} {key}")
             else:
                 key -= 1
         return key
@@ -153,6 +160,7 @@ class AddOperation(PatchOperation):
         if self.path == path:
             if self.key > key:
                 self.key += 1
+                print(f"\n\nAddOperation._on_undo_remove: {self.__dict__} {path} {key}")
             else:
                 key += 1
         return key
@@ -161,6 +169,7 @@ class AddOperation(PatchOperation):
         if self.path == path:
             if self.key > key:
                 self.key -= 1
+                print(f"\n\nAddOperation._on_undo_add: {self.__dict__} {path} {key}")
             else:
                 key += 1
         return key
@@ -184,10 +193,15 @@ class ReplaceOperation(PatchOperation):
 
     def _on_undo_remove(self, path, key):
         print(f"\n\nReplaceOperation._on_undo_remove: {self.__dict__} {path} {key}")
+        # if self.path == path:
+        #     if self.key > key:
+        #         self.key += 1
         return key
 
     def _on_undo_add(self, path, key):
         print(f"\n\nReplaceOperation._on_undo_add: {self.__dict__} {path} {key}")
+        if self.path == path and self.key > key:
+            self.key -= 1
         return key
 
 
@@ -210,11 +224,17 @@ class MoveOperation(PatchOperation):
         if self.from_path == path:
             if self.from_key >= key:
                 self.from_key += 1
+                print(
+                    f"\n\nMoveOperation._on_undo_remove: {self.__dict__} {path} {key}"
+                )
             else:
                 key -= 1
         if self.path == path:
             if self.key > key:
                 self.key += 1
+                print(
+                    f"\n\nMoveOperation._on_undo_remove: {self.__dict__} {path} {key}"
+                )
             else:
                 key += 1
         return key
@@ -223,11 +243,13 @@ class MoveOperation(PatchOperation):
         if self.from_path == path:
             if self.from_key > key:
                 self.from_key -= 1
+                print(f"\n\nMoveOperation._on_undo_add: {self.__dict__} {path} {key}")
             else:
                 key -= 1
         if self.path == path:
             if self.key > key:
                 self.key -= 1
+                print(f"\n\nMoveOperation._on_undo_add: {self.__dict__} {path} {key}")
             else:
                 key += 1
         return key
@@ -456,28 +478,17 @@ class DiffBuilder:
         print(f"\n\n_item_added {path} {key} {item} {item_key}")
         index_key = item_key if item_key is not None else item
         index = self.take_index(index_key, _ST_REMOVE)
+        repl_op = None
         if index is not None:
             op = index[2]
             print(f"\n\n_ST_REMOVE {op.__dict__} {item}")
+            repl_op = op
 
             # compare moved item
             src = op.operation["value"]
             dst = item
 
             self._undo_dataclass_removed(src)
-
-            if (
-                dataclasses.is_dataclass(src)
-                and dataclasses.is_dataclass(dst)
-                and ((not frozen and src is dst) or (frozen and src is not dst))
-            ):
-                self._compare_dataclasses(
-                    parent,
-                    _path_join(path, key),
-                    src,
-                    dst,
-                    frozen,
-                )
 
             if isinstance(op.key, int) and isinstance(key, int):
                 for v in self.iter_from(index):
@@ -494,7 +505,20 @@ class DiffBuilder:
                 )
                 self.insert(new_op)
                 print(f"\n\n_ST_REMOVE -> MOVE {new_op.__dict__}")
-                return
+                # repl_op = new_op
+
+            if (
+                dataclasses.is_dataclass(src)
+                and dataclasses.is_dataclass(dst)
+                and ((not frozen and src is dst) or (frozen and src is not dst))
+            ):
+                self._compare_dataclasses(
+                    parent,
+                    _path_join(path, key),
+                    src,
+                    dst,
+                    frozen,
+                )
 
         else:
             new_op = AddOperation(
@@ -507,6 +531,7 @@ class DiffBuilder:
             new_index = self.insert(new_op)
             self.store_index(index_key, new_index, _ST_ADD)
             self._dataclass_added(item, parent, frozen)
+        return repl_op
 
     def _item_removed(self, path, key, item, item_key=None, frozen=False):
         print(f"\n\n_item_removed: {path} {key} {item} {item_key}:")
@@ -516,28 +541,16 @@ class DiffBuilder:
         index_key = item_key if item_key is not None else item
         index = self.take_index(index_key, _ST_ADD)
         new_index = self.insert(new_op)
+        repl_op = None
         if index is not None:
             op = index[2]
             print(f"\n\n_ST_ADD {op.__dict__}")
-
+            repl_op = op
             # compare moved item
             src = item
             dst = op.operation["value"]
 
             self._undo_dataclass_added(dst)
-
-            if (
-                dataclasses.is_dataclass(src)
-                and dataclasses.is_dataclass(dst)
-                and ((not frozen and src is dst) or (frozen and src is not dst))
-            ):
-                self._compare_dataclasses(
-                    dst.parent,
-                    _path_join(path, key),
-                    src,
-                    dst,
-                    frozen,
-                )
 
             # We can't rely on the op.key type since PatchOperation casts
             # the .key property to int and this path wrongly ends up being taken
@@ -559,12 +572,41 @@ class DiffBuilder:
                 )
                 new_index[2] = new_op
                 print(f"\n\n_ST_ADD -> MOVE {new_op.__dict__}")
+                # repl_op = new_op
+
+                if (
+                    dataclasses.is_dataclass(src)
+                    and dataclasses.is_dataclass(dst)
+                    and ((not frozen and src is dst) or (frozen and src is not dst))
+                ):
+                    self._compare_dataclasses(
+                        dst.parent,
+                        _path_join(op.path, op.key),
+                        src,
+                        dst,
+                        frozen,
+                    )
+                return
             else:
                 self.remove(new_index)
+
+            if (
+                dataclasses.is_dataclass(src)
+                and dataclasses.is_dataclass(dst)
+                and ((not frozen and src is dst) or (frozen and src is not dst))
+            ):
+                self._compare_dataclasses(
+                    dst.parent,
+                    _path_join(path, key),
+                    src,
+                    dst,
+                    frozen,
+                )
 
         else:
             self.store_index(index_key, new_index, _ST_REMOVE)
             self._dataclass_removed(item)
+        return repl_op
 
     def _item_replaced(self, path, key, item):
         print(f"_item_replaced: {path} {key} {item}")
@@ -601,10 +643,15 @@ class DiffBuilder:
         len_src, len_dst = len(src), len(dst)
         max_len = max(len_src, len_dst)
         min_len = min(len_src, len_dst)
+        ops = []
         for key in range(max_len):
+            op = None
             if key < min_len:
                 old, new = src[key], dst[key]
-                print(f"\n\nCOMPARE LIST ITEM: {key}\n\nOLD: {old}\nNEW: {new}")
+                print(
+                    f"\n\n===== COMPARE LIST ITEM: {key} =====\n\n"
+                    f"OLD: {old}\nNEW: {new}"
+                )
 
                 if isinstance(old, dict) and isinstance(new, dict):
                     self._compare_dicts(parent, _path_join(path, key), old, new, frozen)
@@ -642,7 +689,7 @@ class DiffBuilder:
                             old,
                             new,
                         )
-                        self._item_removed(
+                        op = self._item_removed(
                             path,
                             key,
                             old,
@@ -651,7 +698,9 @@ class DiffBuilder:
                             else old,
                             frozen=frozen,
                         )
-                        self._item_added(
+                        if op:
+                            ops.append(op)
+                        op = self._item_added(
                             parent,
                             path,
                             key,
@@ -661,15 +710,21 @@ class DiffBuilder:
                             else new,
                             frozen=frozen,
                         )
+                        if op:
+                            ops.append(op)
 
                 elif type(old) is not type(new) or old != new:
                     logger.debug("removed and added: %s %s", old, new)
-                    self._item_removed(path, key, old, frozen=frozen)
-                    self._item_added(parent, path, key, new, frozen=frozen)
+                    op = self._item_removed(path, key, old, frozen=frozen)
+                    if op:
+                        ops.append(op)
+                    op = self._item_added(parent, path, key, new, frozen=frozen)
+                    if op:
+                        ops.append(op)
 
             elif len_src > len_dst:
                 control_key = get_control_key(src[key])
-                self._item_removed(
+                op = self._item_removed(
                     path,
                     len_dst,
                     src[key],
@@ -678,10 +733,12 @@ class DiffBuilder:
                     else src[key],
                     frozen=frozen,
                 )
+                if op:
+                    ops.append(op)
 
             else:
                 control_key = get_control_key(dst[key])
-                self._item_added(
+                op = self._item_added(
                     parent,
                     path,
                     key,
@@ -691,6 +748,13 @@ class DiffBuilder:
                     else dst[key],
                     frozen=frozen,
                 )
+                if op:
+                    ops.append(op)
+
+        # do replace operations for items that changed their position
+        print("\n\nLIST OPS:")
+        for op in ops:
+            print(f"  {op}")
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
         print(f"\n_compare_dataclasses: {path} \n\n{src}\n{dst}\n")
