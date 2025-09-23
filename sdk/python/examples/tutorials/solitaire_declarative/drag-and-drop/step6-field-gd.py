@@ -10,9 +10,9 @@ import flet as ft
 @ft.observable
 @dataclass
 class Slot:
-    id: str = "slot1"
-    top: float = 200
-    left: float = 0
+    id: str
+    top: float
+    left: float
     cards: list["Card"] = field(default_factory=list)
     stacking: bool = False  # whether cards in this slot stack with offset
 
