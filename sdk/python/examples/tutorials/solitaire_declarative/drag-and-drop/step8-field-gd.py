@@ -5,6 +5,12 @@ from typing import Optional
 
 import flet as ft
 
+# Card visual constants
+CARD_W = 70
+CARD_H = 100
+SNAP_THRESHOLD = 20  # px
+OFFSET_Y = 20  # px
+
 
 # ---------- Model ----------
 @ft.observable
@@ -51,7 +57,6 @@ class Game:
             Slot(left=200, top=200, id="slot3", stacking=True),
         ],
     )
-    # snap_threshold: float = 20  # px
 
     def __post_init__(self):
         """Initialize homes & coordinates: place cards in the deck slot."""
@@ -62,14 +67,35 @@ class Game:
 
         # Add cards to deck card list
         self.slots[0].cards = self.cards.copy()
-        print("deck has cards:", len(self.slots[0].cards))
 
+    def move_to_top(self, cards: list[Card]):
+        for card in cards:
+            self.cards.remove(card)
+            self.cards.append(card)
 
-# Card visual constants
-CARD_W = 70
-CARD_H = 100
-SNAP_THRESHOLD = 20  # px
-OFFSET_Y = 20  # px
+    def nearest_slot(self, card: Card) -> Optional[Slot]:
+        """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
+        for s in self.slots:
+            if s != card.home:
+                offset = (
+                    (len(s.cards) - 1) * OFFSET_Y
+                    if s.stacking and len(s.cards) > 0
+                    else 0
+                )
+                near_x = abs(card.left - s.left) < SNAP_THRESHOLD
+                near_y = abs(card.top - (s.top + offset)) < SNAP_THRESHOLD
+                if near_x and near_y:
+                    return s
+        return None
+
+    def point_in_card_stack(self, x: float, y: float) -> Optional[list[Card]]:
+        # Check topmost first so you can grab the card on top
+        for c in reversed(self.cards):
+            if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
+                return [c] + c.home.cards[
+                    c.home.cards.index(c) + 1 :
+                ]  # return the card and all cards below it
+        return None
 
 
 # ---------- View (pure) ----------
@@ -106,44 +132,12 @@ def App():
     start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
     start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
 
-    print("Current cards in deck:", len(game.slots[0].cards))
-
-    def point_in_card_stack(x: float, y: float) -> Optional[list[Card]]:
-        # Check topmost first so you can grab the card on top
-        for c in reversed(game.cards):
-            if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
-                return [c] + c.home.cards[
-                    c.home.cards.index(c) + 1 :
-                ]  # return the card and all cards below it
-        return None
-
-    def move_to_top(cards: list[Card]):
-        for card in cards:
-            game.cards.remove(card)
-            game.cards.append(card)
-
-    def nearest_slot(card: Card) -> Optional[Slot]:
-        """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
-        for s in game.slots:
-            if s != card.home:
-                offset = (
-                    (len(s.cards) - 1) * OFFSET_Y
-                    if s.stacking and len(s.cards) > 0
-                    else 0
-                )
-                near_x = abs(card.left - s.left) < SNAP_THRESHOLD
-                near_y = abs(card.top - (s.top + offset)) < SNAP_THRESHOLD
-                if near_x and near_y:
-                    return s
-        return None
-
     def on_pan_start(e: ft.DragStartEvent):
-        grabbed = point_in_card_stack(e.local_position.x, e.local_position.y)
-        print("grabbed", grabbed)
+        grabbed = game.point_in_card_stack(e.local_position.x, e.local_position.y)
         # set_dragging(grabbed[0] if grabbed else None)
         set_dragging(grabbed)
         if grabbed is not None:
-            move_to_top(grabbed)
+            game.move_to_top(grabbed)
             set_start_x(
                 grabbed[0].left
             )  # remember initial x of the top card being dragged
@@ -163,7 +157,7 @@ def App():
         if dragging is None:
             return
 
-        s = nearest_slot(dragging[0])
+        s = game.nearest_slot(dragging[0])
         if s is not None:  # snap to this slot
             for c in dragging:
                 c.left = s.left
