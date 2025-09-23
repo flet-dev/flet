@@ -54,18 +54,13 @@ class Game:
     # snap_threshold: float = 20  # px
 
     def __post_init__(self):
-        """Initialize homes & coordinates: card1 -> deck, card2 -> waste."""
+        """Initialize homes & coordinates: place cards in the deck slot."""
 
-        # Set initial homes and positions
-        # self.cards[0].home = self.slots[0]
-        # self.cards[0].left, self.cards[0].top = self.slots[0].left, self.slots[0].top
-        # self.cards[1].home = self.slots[1]
-        # self.cards[1].left, self.cards[1].top = self.slots[1].left, self.slots[1].top
         for card in self.cards:
             card.home = self.slots[0]
             card.left, card.top = self.slots[0].left, self.slots[0].top
 
-        # Add cards to slots' card lists
+        # Add cards to deck card list
         self.slots[0].cards = self.cards.copy()
         print("deck has cards:", len(self.slots[0].cards))
 
@@ -113,28 +108,10 @@ def App():
 
     print("Current cards in deck:", len(state.slots[0].cards))
 
-    # def point_in_card(x: float, y: float) -> Optional[Card]:
-    #     # Check topmost first so you can grab the card on top
-    #     for c in reversed(state.cards):
-    #         if (
-    #             (c.left <= x <= c.left + CARD_W)
-    #             and (c.top <= y <= c.top + CARD_H)
-    #             and (
-    #                 c.home.cards.index(c) == len(c.home.cards) - 1
-    #             )  # is topmost in its slot
-    #         ):
-    #             return c
-    #     return None
-
     def point_in_card_stack(x: float, y: float) -> Optional[list[Card]]:
         # Check topmost first so you can grab the card on top
         for c in reversed(state.cards):
-            if (
-                (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H)
-                # and (
-                #     c.home.cards.index(c) == len(c.home.cards) - 1
-                # )  # is topmost in its slot
-            ):
+            if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
                 return [c] + c.home.cards[
                     c.home.cards.index(c) + 1 :
                 ]  # return the card and all cards below it
@@ -167,8 +144,12 @@ def App():
         set_dragging(grabbed)
         if grabbed is not None:
             move_to_top(grabbed)
-            set_start_x(grabbed[0].left)  # remember initial x of the card being dragged
-            set_start_y(grabbed[0].top)  # remember initial y of the card being dragged
+            set_start_x(
+                grabbed[0].left
+            )  # remember initial x of the top card being dragged
+            set_start_y(
+                grabbed[0].top
+            )  # remember initial y of the top card being dragged
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
@@ -177,8 +158,6 @@ def App():
         for c in dragging:
             c.left = max(0, c.left + e.local_delta.x)
             c.top = max(0, c.top + e.local_delta.y)
-        # dragging[0].left = max(0, dragging[0].left + e.local_delta.x)
-        # dragging[0].top = max(0, dragging[0].top + e.local_delta.y)
 
     def on_pan_end(_: ft.DragEndEvent):
         if dragging is None:
@@ -192,20 +171,10 @@ def App():
                 c.home.cards.remove(c)  # Remove card from previous slot's pile
                 c.home = s  # <-- update to the Slot object
                 s.cards.append(c)  # Add card to the slot's pile
-            #
-            # dragging[0].left, dragging[0].top = (
-            #     s.left,
-            #     s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
-            # )
-            # dragging[0].home.cards.remove(
-            #     dragging[0]
-            # )  # Remove card from previous slot's pile
-            # dragging[0].home = s  # <-- update to the Slot object
-            # s.cards.append(dragging[0])  # Add card to the slot's pile
+
         else:  # bounce back to where it was picked up
             for i, c in enumerate(dragging):
                 c.left, c.top = start_x, start_y + i * OFFSET_Y
-            # dragging[0].left, dragging[0].top = start_x, start_y
 
         set_dragging(None)
 
