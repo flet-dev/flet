@@ -81,7 +81,9 @@ class _DropdownControlState extends State<DropdownControl> {
         widget.control.getColor("focused_border_color", context);
     var borderWidth = widget.control.getDouble("border_width");
     var focusedBorderWidth = widget.control.getDouble("focused_border_width");
-    var menuWidth = widget.control.getDouble("menu_width", double.infinity)!;
+    var menuWidth = widget.control.getDouble("menu_width");
+    var bgColor = widget.control.getWidgetStateColor("bgcolor", theme);
+    var elevation = widget.control.getWidgetStateDouble("elevation");
 
     FormFieldInputBorder inputBorder = widget.control
         .getFormFieldInputBorder("border", FormFieldInputBorder.outline)!;
@@ -148,8 +150,30 @@ class _DropdownControlState extends State<DropdownControl> {
 
     TextStyle? textStyle = widget.control.getTextStyle("text_style", theme);
     if (textSize != null || color != null) {
-      textStyle = (textStyle ?? const TextStyle()).copyWith(
-          fontSize: textSize, color: color ?? theme.colorScheme.onSurface);
+      textStyle =
+          (textStyle ?? theme.dropdownMenuTheme.textStyle ?? const TextStyle())
+              .copyWith(
+                  fontSize: textSize,
+                  color: color ?? theme.colorScheme.onSurface);
+    }
+
+    MenuStyle? menuStyle = widget.control.getMenuStyle("menu_style", theme);
+    if (bgColor != null || elevation != null || menuWidth != null) {
+      menuStyle =
+          (menuStyle ?? theme.dropdownMenuTheme.menuStyle ?? const MenuStyle())
+              .copyWith(
+                  backgroundColor: bgColor,
+                  elevation: elevation,
+                  fixedSize: WidgetStateProperty.all(
+                      Size.fromWidth(menuWidth ?? double.infinity)));
+    }
+
+    if (textSize != null || color != null) {
+      textStyle =
+          (textStyle ?? theme.dropdownMenuTheme.textStyle ?? const TextStyle())
+              .copyWith(
+                  fontSize: textSize,
+                  color: color ?? theme.colorScheme.onSurface);
     }
 
     var items = widget.control
@@ -213,11 +237,12 @@ class _DropdownControlState extends State<DropdownControl> {
       errorText: widget.control.getString("error_text"),
       hintText: widget.control.getString("hint_text"),
       helperText: widget.control.getString("helper_text"),
-      menuStyle: MenuStyle(
-        backgroundColor: widget.control.getWidgetStateColor("bgcolor", theme),
-        elevation: widget.control.getWidgetStateDouble("elevation"),
-        fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
-      ),
+      // menuStyle: MenuStyle(
+      //   backgroundColor: widget.control.getWidgetStateColor("bgcolor", theme),
+      //   elevation: widget.control.getWidgetStateDouble("elevation"),
+      //   fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
+      // ),
+      menuStyle: menuStyle,
       inputDecorationTheme: inputDecorationTheme,
       onSelected: widget.control.disabled
           ? null

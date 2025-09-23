@@ -30,6 +30,14 @@ class ListTileTitleAlignment(Enum):
 
 
 class ListTileStyle(Enum):
+    """
+    Defines the title font used for ListTile descendants of a ListTileTheme.
+
+    List tiles that appear in a Drawer use the theme's TextTheme.body_large text style,
+    which is a little smaller than the theme's TextTheme.title_medium text style, which
+    is used by default.
+    """
+
     LIST = "list"
     DRAWER = "drawer"
 
@@ -62,7 +70,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     Typically a [`Text`][flet.Text] control.
     """
 
-    is_three_line: bool = False
+    is_three_line: Optional[bool] = None
     """
     Whether this list tile is intended to display three lines of text.
 
@@ -100,15 +108,14 @@ class ListTile(LayoutControl, AdaptiveControl):
     The list tile's background color.
     """
 
-    bgcolor_activated: Optional[str] = None
+    splash_color: Optional[ColorValue] = None
     """
-    The list tile's splash color after the
-    being was tapped.
+    The list tile's splash color after the control has been tapped.
     """
 
     hover_color: Optional[ColorValue] = None
     """
-    The tile's color when hovered.
+    The tile's color when hovered. Only shows if `toggle_inputs` is True.
     """
 
     selected: bool = False
@@ -117,7 +124,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     By default the selected color is the theme's primary color.
     """
 
-    dense: bool = False
+    dense: Optional[bool] = None
     """
     Whether this list tile is part of a vertically dense list.
 
@@ -156,26 +163,26 @@ class ListTile(LayoutControl, AdaptiveControl):
     Defaults to `ListTileStyle.LIST`.
     """
 
-    enable_feedback: bool = True
+    enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback.
     On Android, for example, setting this to `True` produce a click sound and a
     long-press will produce a short vibration.
     """
 
-    horizontal_spacing: Number = 16.0
+    horizontal_spacing: Optional[Number] = None
     """
     The horizontal gap between the `title` and the
     [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing]
     controls.
     """
 
-    min_leading_width: Number = 40.0
+    min_leading_width: Optional[Number] = None
     """
     The minimum width allocated for the `leading` control.
     """
 
-    min_vertical_padding: Number = 4.0
+    min_vertical_padding: Optional[Number] = None
     """
     The minimum padding on the top and bottom of the `title` and `subtitle` controls.
     """
