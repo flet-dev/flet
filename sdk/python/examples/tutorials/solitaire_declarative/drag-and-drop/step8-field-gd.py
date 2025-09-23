@@ -1,4 +1,4 @@
-# Step 7: Refactor calculations to be more readable and maintainable.
+# Step 8: Move piles of cards from stackable slots to stackable slots.
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -35,6 +35,9 @@ class Game:
             Card(color=ft.Colors.RED),
             Card(color=ft.Colors.BLUE),
             Card(color=ft.Colors.YELLOW),
+            Card(color=ft.Colors.PURPLE),
+            Card(color=ft.Colors.ORANGE),
+            Card(color=ft.Colors.BROWN),
         ]
     )
     slots: list[Slot] = field(
@@ -104,28 +107,43 @@ def SlotView(slot: Slot) -> ft.Control:
 @ft.component
 def App():
     state, _ = ft.use_state(lambda: Game())
-    dragging, set_dragging = ft.use_state(None)  # None or Card being dragged
-    start_x, set_start_x = ft.use_state(0)  # initial x of the card being dragged
-    start_y, set_start_y = ft.use_state(0)  # initial y of the card being dragged
+    dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
+    start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
+    start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
 
     print("Current cards in deck:", len(state.slots[0].cards))
 
-    def point_in_card(x: float, y: float) -> Optional[Card]:
+    # def point_in_card(x: float, y: float) -> Optional[Card]:
+    #     # Check topmost first so you can grab the card on top
+    #     for c in reversed(state.cards):
+    #         if (
+    #             (c.left <= x <= c.left + CARD_W)
+    #             and (c.top <= y <= c.top + CARD_H)
+    #             and (
+    #                 c.home.cards.index(c) == len(c.home.cards) - 1
+    #             )  # is topmost in its slot
+    #         ):
+    #             return c
+    #     return None
+
+    def point_in_card_stack(x: float, y: float) -> Optional[list[Card]]:
         # Check topmost first so you can grab the card on top
         for c in reversed(state.cards):
             if (
-                (c.left <= x <= c.left + CARD_W)
-                and (c.top <= y <= c.top + CARD_H)
-                and (
-                    c.home.cards.index(c) == len(c.home.cards) - 1
-                )  # is topmost in its slot
+                (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H)
+                # and (
+                #     c.home.cards.index(c) == len(c.home.cards) - 1
+                # )  # is topmost in its slot
             ):
-                return c
+                return [c] + c.home.cards[
+                    c.home.cards.index(c) + 1 :
+                ]  # return the card and all cards below it
         return None
 
-    def move_to_top(card: Card):
-        state.cards.remove(card)
-        state.cards.append(card)
+    def move_to_top(cards: list[Card]):
+        for card in cards:
+            state.cards.remove(card)
+            state.cards.append(card)
 
     def nearest_slot(card: Card) -> Optional[Slot]:
         """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
@@ -143,37 +161,51 @@ def App():
         return None
 
     def on_pan_start(e: ft.DragStartEvent):
-        grabbed = point_in_card(e.local_position.x, e.local_position.y)
+        grabbed = point_in_card_stack(e.local_position.x, e.local_position.y)
         print("grabbed", grabbed)
+        # set_dragging(grabbed[0] if grabbed else None)
         set_dragging(grabbed)
         if grabbed is not None:
             move_to_top(grabbed)
-            set_start_x(grabbed.left)  # remember initial x of the card being dragged
-            set_start_y(grabbed.top)  # remember initial y of the card being dragged
+            set_start_x(grabbed[0].left)  # remember initial x of the card being dragged
+            set_start_y(grabbed[0].top)  # remember initial y of the card being dragged
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
             return
-        dragging.left = max(0, dragging.left + e.local_delta.x)
-        dragging.top = max(0, dragging.top + e.local_delta.y)
+        print("length of dragging", len(dragging))
+        for c in dragging:
+            c.left = max(0, c.left + e.local_delta.x)
+            c.top = max(0, c.top + e.local_delta.y)
+        # dragging[0].left = max(0, dragging[0].left + e.local_delta.x)
+        # dragging[0].top = max(0, dragging[0].top + e.local_delta.y)
 
     def on_pan_end(_: ft.DragEndEvent):
         if dragging is None:
             return
 
-        s = nearest_slot(dragging)
+        s = nearest_slot(dragging[0])
         if s is not None:  # snap to this slot
-            dragging.left, dragging.top = (
-                s.left,
-                s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
-            )
-            dragging.home.cards.remove(
-                dragging
-            )  # Remove card from previous slot's pile
-            dragging.home = s  # <-- update to the Slot object
-            s.cards.append(dragging)  # Add card to the slot's pile
+            for c in dragging:
+                c.left = s.left
+                c.top = s.top + OFFSET_Y * (len(s.cards)) if s.stacking else s.top
+                c.home.cards.remove(c)  # Remove card from previous slot's pile
+                c.home = s  # <-- update to the Slot object
+                s.cards.append(c)  # Add card to the slot's pile
+            #
+            # dragging[0].left, dragging[0].top = (
+            #     s.left,
+            #     s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
+            # )
+            # dragging[0].home.cards.remove(
+            #     dragging[0]
+            # )  # Remove card from previous slot's pile
+            # dragging[0].home = s  # <-- update to the Slot object
+            # s.cards.append(dragging[0])  # Add card to the slot's pile
         else:  # bounce back to where it was picked up
-            dragging.left, dragging.top = start_x, start_y
+            for i, c in enumerate(dragging):
+                c.left, c.top = start_x, start_y + i * OFFSET_Y
+            # dragging[0].left, dragging[0].top = start_x, start_y
 
         set_dragging(None)
 
