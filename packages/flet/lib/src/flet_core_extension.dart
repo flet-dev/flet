@@ -272,8 +272,6 @@ class FletCoreExtension extends FletExtension {
         return MenuItemButtonControl(key: key, control: control);
       case "MergeSemantics":
         return MergeSemanticsControl(key: key, control: control);
-      case "ModelView":
-        return ModelViewControl(key: key, control: control);
       case "NavigationBar":
         return NavigationBarControl(key: key, control: control);
       case "NavigationBarDestination":
