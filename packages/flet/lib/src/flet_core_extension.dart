@@ -67,7 +67,6 @@ import 'controls/markdown.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
-import 'controls/model_view.dart';
 import 'controls/navigation_bar.dart';
 import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
