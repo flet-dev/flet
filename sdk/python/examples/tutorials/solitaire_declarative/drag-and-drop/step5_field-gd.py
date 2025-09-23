@@ -45,26 +45,8 @@ class Game:
     )
     snap_threshold: float = 20  # px
 
-    # def find_slot_by_id(self, slot_id: str) -> Optional[Slot]:
-    #     for s in self.slots:
-    #         if s.id == slot_id:
-    #             return s
-    #     return None
-
     def __post_init__(self):
         """Initialize homes & coordinates: card1 -> deck, card2 -> waste."""
-        # deck = self.find_slot_by_id("deck")
-        # waste = self.find_slot_by_id("waste")
-
-        # if len(self.cards) >= 1 and deck:
-        #     c1 = self.cards[0]
-        #     c1.home = deck
-        #     c1.left, c1.top = deck.left, deck.top
-
-        # if len(self.cards) >= 2 and waste:
-        #     c2 = self.cards[1]
-        #     c2.home = waste
-        #     c2.left, c2.top = waste.left, waste.top
 
         # Set initial homes and positions
         self.cards[0].home = self.slots[0]
@@ -113,8 +95,6 @@ def SlotView(slot: Slot) -> ft.Control:
 def App():
     state, _ = ft.use_state(Game())
     dragging, set_dragging = ft.use_state(None)  # None or Card
-    # dx, set_dx = ft.use_state(0.0)
-    # dy, set_dy = ft.use_state(0.0)
 
     def point_in_card(x: float, y: float) -> Optional[Card]:
         # Check topmost first so you can grab the card on top
@@ -133,8 +113,6 @@ def App():
         set_dragging(grabbed)
         if grabbed is not None:
             move_to_top(grabbed)
-            # set_dx(grabbed.left)
-            # set_dy(grabbed.top)
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
@@ -143,10 +121,6 @@ def App():
         print("moving", c)
         c.left = max(0, c.left + e.local_delta.x)
         c.top = max(0, c.top + e.local_delta.y)
-        # set_dx(dx + e.local_delta.x)
-        # set_dy(dy + e.local_delta.y)
-        # c.left = max(0, dx)
-        # c.top = max(0, dy)
 
     def on_pan_end(_: ft.DragEndEvent):
         c = dragging
@@ -171,7 +145,7 @@ def App():
 
         set_dragging(None)
         print("dropped", c)
-        print("slot now has cards:", c.home.cards if c.home else None)
+        print("slot now has cards:", len(c.home.cards) if c.home else None)
 
     return ft.GestureDetector(
         on_pan_start=on_pan_start,
