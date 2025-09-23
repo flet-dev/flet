@@ -127,6 +127,21 @@ def App():
         state.cards.remove(card)
         state.cards.append(card)
 
+    def nearest_slot(card: Card) -> Optional[Slot]:
+        """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
+        for s in state.slots:
+            if s != card.home:
+                offset = (
+                    (len(s.cards) - 1) * OFFSET_Y
+                    if s.stacking and len(s.cards) > 0
+                    else 0
+                )
+                near_x = abs(card.left - s.left) < SNAP_THRESHOLD
+                near_y = abs(card.top - (s.top + offset)) < SNAP_THRESHOLD
+                if near_x and near_y:
+                    return s
+        return None
+
     def on_pan_start(e: ft.DragStartEvent):
         grabbed = point_in_card(e.local_position.x, e.local_position.y)
         print("grabbed", grabbed)
@@ -146,39 +161,21 @@ def App():
         if dragging is None:
             return
 
-        # Try to snap to a nearby slot; otherwise bounce back to dragging.home
-        # with offset if stacking
-        snapped = False
-        for s in state.slots:
-            if s != dragging.home:
-                offset = (
-                    (len(s.cards) - 1) * OFFSET_Y
-                    if s.stacking and len(s.cards) > 0
-                    else 0
-                )
-                near_x = abs(dragging.left - s.left) < SNAP_THRESHOLD
-                near_y = abs(dragging.top - (s.top + offset)) < SNAP_THRESHOLD
-                if near_x and near_y:
-                    dragging.left, dragging.top = (
-                        s.left,
-                        s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
-                    )
-                    dragging.home.cards.remove(
-                        dragging
-                    )  # Remove card from previous slot's pile
-                    dragging.home = s  # <-- update to the Slot object
-                    s.cards.append(dragging)  # Add card to the slot's pile
-                    snapped = True
-                    break
-
-        if not snapped:
+        s = nearest_slot(dragging)
+        if s is not None:  # snap to this slot
+            dragging.left, dragging.top = (
+                s.left,
+                s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
+            )
+            dragging.home.cards.remove(
+                dragging
+            )  # Remove card from previous slot's pile
+            dragging.home = s  # <-- update to the Slot object
+            s.cards.append(dragging)  # Add card to the slot's pile
+        else:  # bounce back to where it was picked up
             dragging.left, dragging.top = start_x, start_y
 
         set_dragging(None)
-        print("dropped", dragging)
-        print(
-            "slot now has cards:", len(dragging.home.cards) if dragging.home else None
-        )
 
     return ft.GestureDetector(
         on_pan_start=on_pan_start,
