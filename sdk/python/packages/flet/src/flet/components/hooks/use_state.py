@@ -17,9 +17,16 @@ class StateHook(Hook):
 StateT = TypeVar("StateT")
 
 
-def use_state(initial: StateT) -> tuple[StateT, Callable[[StateT], None]]:
+def use_state(
+    initial: StateT | Callable[[], StateT],
+) -> tuple[StateT, Callable[[StateT], None]]:
     component = current_component()
-    hook = component.use_hook(lambda: StateHook(component, initial))
+    hook = component.use_hook(
+        lambda: StateHook(
+            component,
+            initial() if callable(initial) else initial,
+        )
+    )
 
     def update_subscription(hook: StateHook):
         if hook.subscription:
