@@ -137,14 +137,15 @@ def test_compare_objects_replaced_with_control_keys():
     assert cmp_ops(
         patch,
         [
+            {"op": "remove", "path": ["controls", 0], "value": Item(key=3, y=1)},
             {"op": "replace", "path": ["controls", 0], "value": Item(key=1, y=0)},
-            {"op": "replace", "path": ["controls", 1], "value": Item(key=2, y=0)},
+            {"op": "add", "path": ["controls", 1], "value": Item(key=2, y=0)},
         ],
     )
-    assert patch[0]["value"].key == 1
-    assert patch[0]["value"].y == 0
-    assert patch[1]["value"].key == 2
+    assert patch[1]["value"].key == 1
     assert patch[1]["value"].y == 0
+    assert patch[2]["value"].key == 2
+    assert patch[2]["value"].y == 0
 
 
 def test_compare_objects_updated_and_moved_with_control_keys():
@@ -173,7 +174,7 @@ def test_compare_objects_updated_and_moved_with_control_keys():
         patch,
         [
             {"op": "replace", "path": ["controls", 1, "y"], "value": 1},
-            {"op": "move", "from": ["controls", 0], "path": ["controls", 1]},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 0]},
             {"op": "replace", "path": ["controls", 1, "y"], "value": 2},
         ],
     )
@@ -214,9 +215,9 @@ def test_compare_objects_added():
         [
             {"op": "add", "path": ["controls", 0], "value": Item(key=1, y=0)},
             {"op": "add", "path": ["controls", 1], "value": Item(key=2, y=0)},
-            {"op": "replace", "path": ["controls", 3, "y"], "value": 0},
+            {"op": "replace", "path": ["controls", 3, "y"], "value": 40},
             {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
-            {"op": "replace", "path": ["controls", 3, "y"], "value": 0},
+            {"op": "replace", "path": ["controls", 3, "y"], "value": 30},
             {"op": "replace", "path": ["controls", 4, "y"], "value": 0},
             {"op": "replace", "path": ["controls", 5, "y"], "value": 0},
             {"op": "add", "path": ["controls", 6], "value": Item(key=7, y=0)},
@@ -920,11 +921,6 @@ def test_list_insertions_with_keys():
                 "value": MyText(key=3, value="Line 3"),
             },
             {
-                "op": "remove",
-                "path": ["controls", 5],
-                "value": MyText(key=8, value="Line 8"),
-            },
-            {
                 "op": "replace",
                 "path": ["controls", 3, "value"],
                 "value": "Line 4 (updated)",
@@ -940,7 +936,7 @@ def test_list_insertions_with_keys():
                 "value": "Line 6 (updated)",
             },
             {
-                "op": "add",
+                "op": "replace",
                 "path": ["controls", 6],
                 "value": MyText(key=7, value="Line 7"),
             },
@@ -969,7 +965,7 @@ def test_list_move_1a():
     assert cmp_ops(
         patch,
         [
-            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
             {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
         ],
     )
@@ -997,7 +993,7 @@ def test_list_move_1b():
         patch,
         [
             {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 3"},
-            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
         ],
     )
 
@@ -1033,12 +1029,12 @@ def test_list_move_1c():
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["controls", 0, "value"], "value": "Line 1"},
-            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 2"},
-            {"op": "move", "from": ["controls", 4], "path": ["controls", 0]},
-            {"op": "replace", "path": ["controls", 3, "value"], "value": "Line 3"},
-            {"op": "replace", "path": ["controls", 5, "value"], "value": "Line 6"},
             {"op": "move", "from": ["controls", 7], "path": ["controls", 0]},
+            {"op": "move", "from": ["controls", 5], "path": ["controls", 1]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 1"},
+            {"op": "replace", "path": ["controls", 3, "value"], "value": "Line 2"},
+            {"op": "replace", "path": ["controls", 4, "value"], "value": "Line 3"},
+            {"op": "replace", "path": ["controls", 6, "value"], "value": "Line 6"},
             {"op": "replace", "path": ["controls", 7, "value"], "value": "Line 7"},
         ],
     )
@@ -1067,9 +1063,9 @@ def test_list_move_1d():
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["controls", 0, "value"], "value": "Line 1"},
-            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 2"},
             {"op": "move", "from": ["controls", 3], "path": ["controls", 0]},
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 1"},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
         ],
     )
 
@@ -1136,7 +1132,7 @@ def test_list_move_2():
                 "path": ["controls", 3, "value"],
                 "value": "Line 4 (updated)",
             },
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
             {
                 "op": "replace",
                 "path": ["controls", 3, "value"],
@@ -1168,7 +1164,7 @@ def test_list_move_3():
         patch,
         [
             {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
-            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
             {
                 "op": "replace",
                 "path": ["controls", 2, "value"],
@@ -1199,13 +1195,13 @@ def test_list_move_4():
     assert cmp_ops(
         patch,
         [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
             {
                 "op": "replace",
-                "path": ["controls", 1, "value"],
+                "path": ["controls", 2, "value"],
                 "value": "Line 2 (updated)",
             },
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
-            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
         ],
     )
 
@@ -1245,7 +1241,7 @@ def test_list_move_5():
                 "path": ["controls", 3, "value"],
                 "value": "Line 4 (updated)",
             },
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
         ],
     )
 
@@ -1320,13 +1316,13 @@ def test_list_move_7():
     assert cmp_ops(
         patch,
         [
-            {"op": "move", "from": ["controls", 3], "path": ["controls", 1]},
             {
                 "op": "replace",
-                "path": ["controls", 1, "value"],
+                "path": ["controls", 3, "value"],
                 "value": "Line 4 (updated)",
             },
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 1]},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
         ],
     )
 
@@ -1442,7 +1438,7 @@ def test_list_move_10():
         patch,
         [
             {"op": "replace", "path": ["controls", 2, "value"], "value": "Group 3"},
-            {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
             {"op": "replace", "path": ["controls", 2, "value"], "value": "Group 2"},
         ],
     )
