@@ -1,4 +1,4 @@
-# Step 5: Put cards into slot1, slot2, slot3 with offset, in other slots without offset.
+# Step 6: Put cards into slot1, slot2, slot3 with offset, in other slots without offset.
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -69,6 +69,8 @@ class Game:
 # Card visual constants
 CARD_W = 70
 CARD_H = 100
+SNAP_THRESHOLD = 20  # px
+OFFSET_Y = 20  # px
 
 
 # ---------- View (pure) ----------
@@ -139,8 +141,8 @@ def App():
         # Try to snap to a nearby slot; otherwise bounce back to c.home
         snapped = False
         for s in state.slots:
-            near_x = abs(c.left - s.left) < state.snap_threshold
-            near_y = abs(c.top - s.top) < state.snap_threshold
+            near_x = abs(c.left - s.left) < SNAP_THRESHOLD
+            near_y = abs(c.top - s.top) < SNAP_THRESHOLD
             if near_x and near_y:
                 c.left, c.top = s.left, s.top
                 c.home.cards.remove(c)  # Remove card from previous slot's pile
