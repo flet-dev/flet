@@ -101,16 +101,16 @@ def SlotView(slot: Slot) -> ft.Control:
 # ---------- App ----------
 @ft.component
 def App():
-    state, _ = ft.use_state(lambda: Game())
+    game, _ = ft.use_state(lambda: Game())
     dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
     start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
     start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
 
-    print("Current cards in deck:", len(state.slots[0].cards))
+    print("Current cards in deck:", len(game.slots[0].cards))
 
     def point_in_card_stack(x: float, y: float) -> Optional[list[Card]]:
         # Check topmost first so you can grab the card on top
-        for c in reversed(state.cards):
+        for c in reversed(game.cards):
             if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
                 return [c] + c.home.cards[
                     c.home.cards.index(c) + 1 :
@@ -119,12 +119,12 @@ def App():
 
     def move_to_top(cards: list[Card]):
         for card in cards:
-            state.cards.remove(card)
-            state.cards.append(card)
+            game.cards.remove(card)
+            game.cards.append(card)
 
     def nearest_slot(card: Card) -> Optional[Slot]:
         """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
-        for s in state.slots:
+        for s in game.slots:
             if s != card.home:
                 offset = (
                     (len(s.cards) - 1) * OFFSET_Y
@@ -186,8 +186,8 @@ def App():
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
             controls=[
-                *(SlotView(s) for s in state.slots),
-                *(CardView(c) for c in state.cards),
+                *(SlotView(s) for s in game.slots),
+                *(CardView(c) for c in game.cards),
             ],
             width=1000,
             height=500,
