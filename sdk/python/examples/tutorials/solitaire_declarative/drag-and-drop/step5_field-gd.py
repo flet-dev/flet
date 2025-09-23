@@ -1,4 +1,5 @@
-# Step 5: Move card with temp coordinates.
+# Step 5: Slot has piles of Cards. When a Card is dropped into a Slot, it becomes part
+# of that Slot's pile (Slot.cards).
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -13,6 +14,7 @@ class Slot:
     id: str = "slot1"
     top: float = 200
     left: float = 0
+    cards: list["Card"] = field(default_factory=list)
 
 
 @ft.observable
@@ -63,10 +65,16 @@ class Game:
         #     c2 = self.cards[1]
         #     c2.home = waste
         #     c2.left, c2.top = waste.left, waste.top
+
+        # Set initial homes and positions
         self.cards[0].home = self.slots[0]
         self.cards[0].left, self.cards[0].top = self.slots[0].left, self.slots[0].top
         self.cards[1].home = self.slots[1]
         self.cards[1].left, self.cards[1].top = self.slots[1].left, self.slots[1].top
+
+        # Add cards to slots' card lists
+        self.slots[0].cards.append(self.cards[0])
+        self.slots[1].cards.append(self.cards[1])
 
 
 # Card visual constants
@@ -105,8 +113,8 @@ def SlotView(slot: Slot) -> ft.Control:
 def App():
     state, _ = ft.use_state(Game())
     dragging, set_dragging = ft.use_state(None)  # None or Card
-    dx, set_dx = ft.use_state(0.0)
-    dy, set_dy = ft.use_state(0.0)
+    # dx, set_dx = ft.use_state(0.0)
+    # dy, set_dy = ft.use_state(0.0)
 
     def point_in_card(x: float, y: float) -> Optional[Card]:
         # Check topmost first so you can grab the card on top
@@ -125,20 +133,20 @@ def App():
         set_dragging(grabbed)
         if grabbed is not None:
             move_to_top(grabbed)
-            set_dx(grabbed.left)
-            set_dy(grabbed.top)
+            # set_dx(grabbed.left)
+            # set_dy(grabbed.top)
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
             return
         c = dragging
         print("moving", c)
-        # c.left = max(0, c.left + e.local_delta.x)
-        # c.top = max(0, c.top + e.local_delta.y)
-        set_dx(dx + e.local_delta.x)
-        set_dy(dy + e.local_delta.y)
-        c.left = max(0, dx)
-        c.top = max(0, dy)
+        c.left = max(0, c.left + e.local_delta.x)
+        c.top = max(0, c.top + e.local_delta.y)
+        # set_dx(dx + e.local_delta.x)
+        # set_dy(dy + e.local_delta.y)
+        # c.left = max(0, dx)
+        # c.top = max(0, dy)
 
     def on_pan_end(_: ft.DragEndEvent):
         c = dragging
@@ -152,7 +160,9 @@ def App():
             near_y = abs(c.top - s.top) < state.snap_threshold
             if near_x and near_y:
                 c.left, c.top = s.left, s.top
+                c.home.cards.remove(c)  # Remove card from previous slot's pile
                 c.home = s  # <-- update to the Slot object
+                s.cards.append(c)  # Add card to the slot's pile
                 snapped = True
                 break
 
@@ -160,6 +170,8 @@ def App():
             c.left, c.top = c.home.left, c.home.top
 
         set_dragging(None)
+        print("dropped", c)
+        print("slot now has cards:", c.home.cards if c.home else None)
 
     return ft.GestureDetector(
         on_pan_start=on_pan_start,
