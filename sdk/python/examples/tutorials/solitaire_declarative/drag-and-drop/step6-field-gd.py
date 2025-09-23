@@ -105,6 +105,8 @@ def SlotView(slot: Slot) -> ft.Control:
 def App():
     state, _ = ft.use_state(lambda: Game())
     dragging, set_dragging = ft.use_state(None)  # None or Card
+    start_x, set_start_x = ft.use_state(0)
+    start_y, set_start_y = ft.use_state(0)
 
     print("Current cards in deck:", len(state.slots[0].cards))
 
@@ -130,50 +132,53 @@ def App():
         set_dragging(grabbed)
         if grabbed is not None:
             move_to_top(grabbed)
+            set_start_x(grabbed.left)
+            set_start_y(grabbed.top)
+            print("start pos", grabbed.left, grabbed.top)
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
             return
-        c = dragging
-        # print("moving", c)
-        c.left = max(0, c.left + e.local_delta.x)
-        c.top = max(0, c.top + e.local_delta.y)
+        dragging.left = max(0, dragging.left + e.local_delta.x)
+        dragging.top = max(0, dragging.top + e.local_delta.y)
 
     def on_pan_end(_: ft.DragEndEvent):
-        c = dragging
-        if c is None:
+        if dragging is None:
             return
 
-        # Try to snap to a nearby slot; otherwise bounce back to c.home
+        # Try to snap to a nearby slot; otherwise bounce back to dragging.home
+        # with offset if stacking
         snapped = False
         for s in state.slots:
-            offset = (
-                (len(s.cards) - 1) * OFFSET_Y if s.stacking and len(s.cards) > 0 else 0
-            )
-            near_x = abs(c.left - s.left) < SNAP_THRESHOLD
-            near_y = abs(c.top - (s.top + offset)) < SNAP_THRESHOLD
-            if near_x and near_y:
-                c.left, c.top = (
-                    s.left,
-                    s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
+            if s != dragging.home:
+                offset = (
+                    (len(s.cards) - 1) * OFFSET_Y
+                    if s.stacking and len(s.cards) > 0
+                    else 0
                 )
-                c.home.cards.remove(c)  # Remove card from previous slot's pile
-                c.home = s  # <-- update to the Slot object
-                s.cards.append(c)  # Add card to the slot's pile
-                snapped = True
-                break
+                near_x = abs(dragging.left - s.left) < SNAP_THRESHOLD
+                near_y = abs(dragging.top - (s.top + offset)) < SNAP_THRESHOLD
+                if near_x and near_y:
+                    dragging.left, dragging.top = (
+                        s.left,
+                        s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
+                    )
+                    dragging.home.cards.remove(
+                        dragging
+                    )  # Remove card from previous slot's pile
+                    dragging.home = s  # <-- update to the Slot object
+                    s.cards.append(dragging)  # Add card to the slot's pile
+                    snapped = True
+                    break
 
-        if not snapped and c.home is not None:
-            c.left, c.top = (
-                c.home.left,
-                c.home.top + OFFSET_Y * (len(c.home.cards) - 1)
-                if c.home.stacking and len(c.home.cards) > 0
-                else c.home.top,
-            )
+        if not snapped:
+            dragging.left, dragging.top = start_x, start_y
 
         set_dragging(None)
-        print("dropped", c)
-        print("slot now has cards:", len(c.home.cards) if c.home else None)
+        print("dropped", dragging)
+        print(
+            "slot now has cards:", len(dragging.home.cards) if dragging.home else None
+        )
 
     return ft.GestureDetector(
         on_pan_start=on_pan_start,
