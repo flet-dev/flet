@@ -8,7 +8,7 @@ import flet as ft
 
 logging.basicConfig(level=logging.INFO)
 
-MAX_SEEDS = 500
+MAX_SEEDS = 250
 
 rnd = random.Random()
 
@@ -72,7 +72,8 @@ def SeedView(seed: Seed, key=None) -> ft.Control:
 
 @ft.component
 def Sunflower():
-    app, _ = ft.use_state(AppModel())
+    app, _ = ft.use_state(lambda: AppModel())
+    MemoSeedView = ft.memo(SeedView)
     return ft.View(
         appbar=ft.AppBar(title=ft.Text("Sunflower")),
         controls=[
@@ -82,7 +83,7 @@ def Sunflower():
                 controls=[
                     ft.Container(
                         content=ft.Stack(
-                            controls=[SeedView(s, key=s.key) for s in app.seeds],
+                            controls=[MemoSeedView(s, key=s.key) for s in app.seeds],
                             aspect_ratio=1.0,
                         ),
                         alignment=ft.Alignment.CENTER,

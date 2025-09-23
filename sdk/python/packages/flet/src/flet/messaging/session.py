@@ -290,7 +290,7 @@ class Session:
         path: Optional[list[Any]] = None,
         frozen: bool = False,
     ):
-        start_time = datetime.now()
+        # start_time = datetime.now()
 
         # calculate patch
         patch, added_controls, removed_controls = ObjectPatch.from_diff(
@@ -302,12 +302,12 @@ class Session:
             frozen=frozen,
         )
 
-        end_time = datetime.now()
-        elapsed_time = end_time - start_time
-        print(
-            "Time spent calculating patch: "
-            f"{elapsed_time.total_seconds() * 1000:.3f} ms"
-        )
+        # end_time = datetime.now()
+        # elapsed_time = end_time - start_time
+        # print(
+        #     "Time spent calculating patch: "
+        #     f"{elapsed_time.total_seconds() * 1000:.3f} ms"
+        # )
 
         # print("\n\npatch:", patch)
 
