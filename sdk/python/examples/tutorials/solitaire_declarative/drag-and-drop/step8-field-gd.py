@@ -186,17 +186,26 @@ def App():
 
         s = nearest_slot(dragging[0])
         if s is not None:  # snap to this slot
-            dragging[0].left, dragging[0].top = (
-                s.left,
-                s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
-            )
-            dragging[0].home.cards.remove(
-                dragging[0]
-            )  # Remove card from previous slot's pile
-            dragging[0].home = s  # <-- update to the Slot object
-            s.cards.append(dragging[0])  # Add card to the slot's pile
+            for c in dragging:
+                c.left = s.left
+                c.top = s.top + OFFSET_Y * (len(s.cards)) if s.stacking else s.top
+                c.home.cards.remove(c)  # Remove card from previous slot's pile
+                c.home = s  # <-- update to the Slot object
+                s.cards.append(c)  # Add card to the slot's pile
+            #
+            # dragging[0].left, dragging[0].top = (
+            #     s.left,
+            #     s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
+            # )
+            # dragging[0].home.cards.remove(
+            #     dragging[0]
+            # )  # Remove card from previous slot's pile
+            # dragging[0].home = s  # <-- update to the Slot object
+            # s.cards.append(dragging[0])  # Add card to the slot's pile
         else:  # bounce back to where it was picked up
-            dragging[0].left, dragging[0].top = start_x, start_y
+            for i, c in enumerate(dragging):
+                c.left, c.top = start_x, start_y + i * OFFSET_Y
+            # dragging[0].left, dragging[0].top = start_x, start_y
 
         set_dragging(None)
 
