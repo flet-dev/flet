@@ -103,7 +103,7 @@ def SlotView(slot: Slot) -> ft.Control:
 # ---------- App ----------
 @ft.component
 def App():
-    state, _ = ft.use_state(Game())
+    state, _ = ft.use_state(lambda: Game())
     dragging, set_dragging = ft.use_state(None)  # None or Card
 
     print("Current cards in deck:", len(state.slots[0].cards))
