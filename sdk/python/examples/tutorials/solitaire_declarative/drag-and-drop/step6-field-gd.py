@@ -1,4 +1,4 @@
-# Step 5: Put cards into slot1, slot2, slot3 with offset, in other slots without offset.
+# Step 6: Put cards into slot1, slot2, slot3 with offset, in other slots without offset.
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -14,6 +14,7 @@ class Slot:
     top: float = 200
     left: float = 0
     cards: list["Card"] = field(default_factory=list)
+    stacking: bool = False  # whether cards in this slot stack with offset
 
 
 @ft.observable
@@ -42,9 +43,9 @@ class Game:
             Slot(left=100, top=0, id="waste"),
             Slot(left=200, top=0, id="foundation1"),
             Slot(left=300, top=0, id="foundation2"),
-            Slot(left=0, top=200, id="slot1"),
-            Slot(left=100, top=200, id="slot2"),
-            Slot(left=200, top=200, id="slot3"),
+            Slot(left=0, top=200, id="slot1", stacking=True),
+            Slot(left=100, top=200, id="slot2", stacking=True),
+            Slot(left=200, top=200, id="slot3", stacking=True),
         ],
     )
     snap_threshold: float = 20  # px
@@ -69,6 +70,8 @@ class Game:
 # Card visual constants
 CARD_W = 70
 CARD_H = 100
+SNAP_THRESHOLD = 20  # px
+OFFSET_Y = 20  # px
 
 
 # ---------- View (pure) ----------
@@ -139,10 +142,16 @@ def App():
         # Try to snap to a nearby slot; otherwise bounce back to c.home
         snapped = False
         for s in state.slots:
-            near_x = abs(c.left - s.left) < state.snap_threshold
-            near_y = abs(c.top - s.top) < state.snap_threshold
+            offset = (
+                (len(s.cards) - 1) * OFFSET_Y if s.stacking and len(s.cards) > 0 else 0
+            )
+            near_x = abs(c.left - s.left) < SNAP_THRESHOLD
+            near_y = abs(c.top - (s.top + offset)) < SNAP_THRESHOLD
             if near_x and near_y:
-                c.left, c.top = s.left, s.top
+                c.left, c.top = (
+                    s.left,
+                    s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
+                )
                 c.home.cards.remove(c)  # Remove card from previous slot's pile
                 c.home = s  # <-- update to the Slot object
                 s.cards.append(c)  # Add card to the slot's pile
@@ -150,7 +159,12 @@ def App():
                 break
 
         if not snapped and c.home is not None:
-            c.left, c.top = c.home.left, c.home.top
+            c.left, c.top = (
+                c.home.left,
+                c.home.top + OFFSET_Y * (len(c.home.cards) - 1)
+                if c.home.stacking and len(c.home.cards) > 0
+                else c.home.top,
+            )
 
         set_dragging(None)
         print("dropped", c)
