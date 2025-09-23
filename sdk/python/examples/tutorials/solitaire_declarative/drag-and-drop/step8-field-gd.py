@@ -107,7 +107,7 @@ def SlotView(slot: Slot) -> ft.Control:
 @ft.component
 def App():
     state, _ = ft.use_state(lambda: Game())
-    dragging, set_dragging = ft.use_state(None)  # None or Card being dragged
+    dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
     start_x, set_start_x = ft.use_state(0)  # initial x of the card being dragged
     start_y, set_start_y = ft.use_state(0)  # initial y of the card being dragged
 
@@ -161,7 +161,8 @@ def App():
     def on_pan_start(e: ft.DragStartEvent):
         grabbed = point_in_card_stack(e.local_position.x, e.local_position.y)
         print("grabbed", grabbed)
-        set_dragging(grabbed[0] if grabbed else None)
+        # set_dragging(grabbed[0] if grabbed else None)
+        set_dragging(grabbed)
         if grabbed is not None:
             move_to_top(grabbed[0])
             set_start_x(grabbed[0].left)  # remember initial x of the card being dragged
@@ -170,26 +171,26 @@ def App():
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
             return
-        dragging.left = max(0, dragging.left + e.local_delta.x)
-        dragging.top = max(0, dragging.top + e.local_delta.y)
+        dragging[0].left = max(0, dragging[0].left + e.local_delta.x)
+        dragging[0].top = max(0, dragging[0].top + e.local_delta.y)
 
     def on_pan_end(_: ft.DragEndEvent):
         if dragging is None:
             return
 
-        s = nearest_slot(dragging)
+        s = nearest_slot(dragging[0])
         if s is not None:  # snap to this slot
-            dragging.left, dragging.top = (
+            dragging[0].left, dragging[0].top = (
                 s.left,
                 s.top + OFFSET_Y * len(s.cards) if s.stacking else s.top,
             )
-            dragging.home.cards.remove(
-                dragging
+            dragging[0].home.cards.remove(
+                dragging[0]
             )  # Remove card from previous slot's pile
-            dragging.home = s  # <-- update to the Slot object
-            s.cards.append(dragging)  # Add card to the slot's pile
+            dragging[0].home = s  # <-- update to the Slot object
+            s.cards.append(dragging[0])  # Add card to the slot's pile
         else:  # bounce back to where it was picked up
-            dragging.left, dragging.top = start_x, start_y
+            dragging[0].left, dragging[0].top = start_x, start_y
 
         set_dragging(None)
 
