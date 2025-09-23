@@ -111,7 +111,12 @@ def App():
     def point_in_card(x: float, y: float) -> Optional[Card]:
         # Check topmost first so you can grab the card on top
         for c in reversed(state.cards):
-            if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
+            if (
+                (c.left <= x <= c.left + CARD_W)
+                and (c.top <= y <= c.top + CARD_H)
+                and (c.home.cards.index(c) == len(c.home.cards) - 1)
+            ):
+                print("card is on top")
                 return c
         return None
 
