@@ -29,6 +29,7 @@ from .common import (
     LineChart,
     LineChartData,
     LineChartDataPoint,
+    MyText,
     b_unpack,
     cmp_ops,
     make_diff,
@@ -604,5 +605,53 @@ def test_list_insertions():
             },
             {"op": "add", "path": ["controls", 4], "value": ft.Text("Line 5")},
             {"op": "add", "path": ["controls", 6], "value": ft.Text("Line 7")},
+        ],
+    )
+
+
+def test_list_move_1_no_keys():
+    line_1 = MyText("Line 1")
+    line_2 = MyText("Line 2")
+    line_3 = MyText("Line 3")
+    line_4 = MyText("Line 4")
+    line_5 = MyText("Line 5")
+
+    col_1 = [
+        line_1,
+        line_2,
+        line_3,
+        line_4,
+        line_5,
+    ]
+
+    col_2 = [
+        MyText("Line 0"),
+        line_4,
+        line_3,
+        line_5,
+        MyText("Line 6"),
+    ]
+
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": [0],
+                "value": MyText(value="Line 0"),
+            },
+            {
+                "op": "remove",
+                "path": [1],
+                "value": MyText(value="Line 2"),
+            },
+            {"op": "move", "from": [2], "path": [1]},
+            {
+                "op": "add",
+                "path": [4],
+                "value": MyText(value="Line 6"),
+            },
         ],
     )

@@ -14,7 +14,7 @@ class Context:
     """
 
     def __init__(self) -> None:
-        self.__auto_update_disabled_permanently = False
+        self.__components_mode = False
 
     @property
     def page(self) -> "Page":
@@ -98,11 +98,20 @@ class Context:
         """
         _update_behavior_context_var.get()._auto_update_enabled = False
 
-    def permanently_disable_auto_update(self):
+    def enable_components_mode(self):
         """
-        Permanently disables auto-update behavior for the entire app.
+        Enables components mode in the current context.
         """
-        self.__auto_update_disabled_permanently = True
+        self.__components_mode = True
+
+    def is_components_mode(self) -> bool:
+        """
+        Returns whether the current context is in components mode.
+
+        Returns:
+            `True` if in components mode, `False` otherwise.
+        """
+        return self.__components_mode
 
     def auto_update_enabled(self) -> bool:
         """
@@ -112,7 +121,7 @@ class Context:
             `True` if auto-update is enabled, `False` otherwise.
         """
         return (
-            not self.__auto_update_disabled_permanently
+            not self.__components_mode
             and _update_behavior_context_var.get()._auto_update_enabled
         )
 
