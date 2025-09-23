@@ -12,7 +12,7 @@ class TargetState:
 
 @ft.component
 def App():
-    target, _ = ft.use_state(TargetState())
+    target, _ = ft.use_state(lambda: TargetState())
 
     def on_will_accept(e: ft.DragWillAcceptEvent):
         target.is_drag_over = True

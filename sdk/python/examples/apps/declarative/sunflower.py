@@ -7,6 +7,7 @@ from typing import cast
 import flet as ft
 
 logging.basicConfig(level=logging.INFO)
+logging.getLogger("flet_components").setLevel(logging.INFO)
 
 MAX_SEEDS = 250
 
