@@ -620,10 +620,17 @@ class DiffBuilder:
         def k(obj):
             return get_control_key(obj)
 
-        # Use keyed algorithm only if any item have key (old or new)
-        all_keyed = any(k(x) is not None for x in src) and any(
-            k(x) is not None for x in dst
+        src_keys = [k(item) for item in src]
+        dst_keys = [k(item) for item in dst]
+
+        # Use keyed algorithm only when every element provides a key on both sides
+        all_keyed = (
+            src_keys
+            and dst_keys
+            and all(key is not None for key in src_keys)
+            and all(key is not None for key in dst_keys)
         )
+        # print("list info", path, len(src_keys), len(dst_keys), all_keyed)
         if not all_keyed:
             # fall back to your existing element-wise logic
             len_src, len_dst = len(src), len(dst)
@@ -702,13 +709,50 @@ class DiffBuilder:
                     )
             return
 
+        if src_keys == dst_keys:
+            # print("keyed fast path", path, len(src))
+            # Keys are identical and in the same order: treat as positional diff
+            for idx, (old, new) in enumerate(zip(src, dst)):
+                if isinstance(old, dict) and isinstance(new, dict):
+                    self._compare_dicts(parent, _path_join(path, idx), old, new, frozen)
+                elif isinstance(old, list) and isinstance(new, list):
+                    self._compare_lists(parent, _path_join(path, idx), old, new, frozen)
+                elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
+                    self._compare_dataclasses(
+                        parent, _path_join(path, idx), old, new, frozen
+                    )
+                elif type(old) is not type(new) or old != new:
+                    self._item_replaced(path, idx, new)
+            return
+
         # -------- Keyed, React-style reconciliation --------
         # We’ll mutate a working copy of the old list so emitted indices are “live”.
         work = list(src)
+        work_keys = src_keys[:]
         # Map key -> current index in `work`
-        pos = {k(item): i for i, item in enumerate(work)}
-        new_index_by_key = {k(item): i for i, item in enumerate(dst)}
+        pos = {key: i for i, key in enumerate(work_keys)}
+        dst_keys = dst_keys  # renamed for clarity
+        new_index_by_key = {key: i for i, key in enumerate(dst_keys)}
         new_keys_set = set(new_index_by_key.keys())
+
+        def _reindex(start_idx: int) -> None:
+            for j in range(start_idx, len(work_keys)):
+                pos[work_keys[j]] = j
+
+        def _remove_from_work(idx: int):
+            removed_item = work.pop(idx)
+            removed_key = work_keys.pop(idx)
+            pos.pop(removed_key, None)
+            if idx < len(work_keys):
+                _reindex(idx)
+            return removed_item, removed_key
+
+        def _insert_into_work(idx: int, item, key):
+            work.insert(idx, item)
+            work_keys.insert(idx, key)
+            pos[key] = idx
+            if idx + 1 <= len(work_keys):
+                _reindex(idx + 1)
 
         def emit_replace_at(idx, old_item, new_item):
             # For dataclasses we delegate to your existing field diff.
@@ -727,22 +771,20 @@ class DiffBuilder:
         # Scan forward through desired new order.
         i = 0
         while i < len(dst):
-            target_key = k(dst[i])
+            target_key = dst_keys[i]
 
             # First, delete any items currently at position i that should NOT be here:
             # - keys that don't exist anymore
             # - or keys that exist but must appear BEFORE i in the new order
             #   (they are out of place here)
             while i < len(work):
-                cur_key = k(work[i])
+                cur_key = work_keys[i]
                 if cur_key not in new_keys_set:
                     # remove disappearing item at i
                     self._item_removed(
                         path, i, work[i], item_key=(cur_key, path), frozen=True
                     )
-                    del work[i]
-                    # rebuild indices from i onward
-                    pos = {k(item): idx for idx, item in enumerate(work)}
+                    _remove_from_work(i)
                     continue
                 desired_pos = new_index_by_key[cur_key]
                 if desired_pos < i:
@@ -752,8 +794,7 @@ class DiffBuilder:
                     self._item_removed(
                         path, i, work[i], item_key=(cur_key, path), frozen=True
                     )
-                    del work[i]
-                    pos = {k(item): idx for idx, item in enumerate(work)}
+                    _remove_from_work(i)
                     continue
                 break  # current slot is ok to fill with target
 
@@ -782,10 +823,9 @@ class DiffBuilder:
                     self.insert(move_op)
 
                     # Apply the move in our working model
-                    moved = work.pop(cur_idx)
-                    work.insert(i, moved)
-                    # Recompute positions from min(i,cur_idx)
-                    pos = {k(item): idx for idx, item in enumerate(work)}
+                    moved_item, _ = _remove_from_work(cur_idx)
+                    insert_idx = i if cur_idx >= i else i
+                    _insert_into_work(insert_idx, moved_item, target_key)
             else:
                 # brand-new key: add at i
                 self._item_added(
@@ -796,8 +836,7 @@ class DiffBuilder:
                     item_key=(target_key, path),
                     frozen=True,
                 )
-                work.insert(i, dst[i])
-                pos = {k(item): idx for idx, item in enumerate(work)}
+                _insert_into_work(i, dst[i], target_key)
 
             i += 1
 
@@ -805,12 +844,12 @@ class DiffBuilder:
         # We remove from the end so indices stay valid.
         j = len(work) - 1
         while j >= 0:
-            key_j = k(work[j])
+            key_j = work_keys[j]
             if key_j not in new_keys_set:
                 self._item_removed(
                     path, j, work[j], item_key=(key_j, path), frozen=True
                 )
-                del work[j]
+                _remove_from_work(j)
             j -= 1
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
