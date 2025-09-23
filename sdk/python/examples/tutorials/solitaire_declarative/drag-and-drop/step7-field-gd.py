@@ -1,4 +1,4 @@
-# Step 6: Put cards into slot1, slot2, slot3 with offset, in other slots without offset.
+# Step 7: Refactor calculations to be more readable and maintainable.
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -20,9 +20,9 @@ class Slot:
 @ft.observable
 @dataclass
 class Card:
+    color: str
     top: float = 0
     left: float = 0
-    color: str = ft.Colors.GREEN
     home: Optional[Slot] = None  # <-- reference to a Slot, not a string
 
 
@@ -48,7 +48,7 @@ class Game:
             Slot(left=200, top=200, id="slot3", stacking=True),
         ],
     )
-    snap_threshold: float = 20  # px
+    # snap_threshold: float = 20  # px
 
     def __post_init__(self):
         """Initialize homes & coordinates: card1 -> deck, card2 -> waste."""
@@ -104,9 +104,9 @@ def SlotView(slot: Slot) -> ft.Control:
 @ft.component
 def App():
     state, _ = ft.use_state(lambda: Game())
-    dragging, set_dragging = ft.use_state(None)  # None or Card
-    start_x, set_start_x = ft.use_state(0)
-    start_y, set_start_y = ft.use_state(0)
+    dragging, set_dragging = ft.use_state(None)  # None or Card being dragged
+    start_x, set_start_x = ft.use_state(0)  # initial x of the card being dragged
+    start_y, set_start_y = ft.use_state(0)  # initial y of the card being dragged
 
     print("Current cards in deck:", len(state.slots[0].cards))
 
@@ -116,7 +116,9 @@ def App():
             if (
                 (c.left <= x <= c.left + CARD_W)
                 and (c.top <= y <= c.top + CARD_H)
-                and (c.home.cards.index(c) == len(c.home.cards) - 1)
+                and (
+                    c.home.cards.index(c) == len(c.home.cards) - 1
+                )  # is topmost in its slot
             ):
                 return c
         return None
