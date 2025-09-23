@@ -108,8 +108,8 @@ def SlotView(slot: Slot) -> ft.Control:
 def App():
     state, _ = ft.use_state(lambda: Game())
     dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
-    start_x, set_start_x = ft.use_state(0)  # initial x of the card being dragged
-    start_y, set_start_y = ft.use_state(0)  # initial y of the card being dragged
+    start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
+    start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
 
     print("Current cards in deck:", len(state.slots[0].cards))
 
@@ -130,18 +130,20 @@ def App():
         # Check topmost first so you can grab the card on top
         for c in reversed(state.cards):
             if (
-                (c.left <= x <= c.left + CARD_W)
-                and (c.top <= y <= c.top + CARD_H)
-                and (
-                    c.home.cards.index(c) == len(c.home.cards) - 1
-                )  # is topmost in its slot
+                (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H)
+                # and (
+                #     c.home.cards.index(c) == len(c.home.cards) - 1
+                # )  # is topmost in its slot
             ):
-                return [c]
+                return [c] + c.home.cards[
+                    c.home.cards.index(c) + 1 :
+                ]  # return the card and all cards below it
         return None
 
-    def move_to_top(card: Card):
-        state.cards.remove(card)
-        state.cards.append(card)
+    def move_to_top(cards: list[Card]):
+        for card in cards:
+            state.cards.remove(card)
+            state.cards.append(card)
 
     def nearest_slot(card: Card) -> Optional[Slot]:
         """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
@@ -164,15 +166,19 @@ def App():
         # set_dragging(grabbed[0] if grabbed else None)
         set_dragging(grabbed)
         if grabbed is not None:
-            move_to_top(grabbed[0])
+            move_to_top(grabbed)
             set_start_x(grabbed[0].left)  # remember initial x of the card being dragged
             set_start_y(grabbed[0].top)  # remember initial y of the card being dragged
 
     def on_pan_update(e: ft.DragUpdateEvent):
         if dragging is None:
             return
-        dragging[0].left = max(0, dragging[0].left + e.local_delta.x)
-        dragging[0].top = max(0, dragging[0].top + e.local_delta.y)
+        print("length of dragging", len(dragging))
+        for c in dragging:
+            c.left = max(0, c.left + e.local_delta.x)
+            c.top = max(0, c.top + e.local_delta.y)
+        # dragging[0].left = max(0, dragging[0].left + e.local_delta.x)
+        # dragging[0].top = max(0, dragging[0].top + e.local_delta.y)
 
     def on_pan_end(_: ft.DragEndEvent):
         if dragging is None:
