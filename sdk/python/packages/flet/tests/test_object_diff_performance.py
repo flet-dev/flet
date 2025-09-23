@@ -2,6 +2,8 @@ import math
 import random
 import time
 
+import pytest
+
 import flet as ft
 from flet.controls.base_control import BaseControl, control
 from flet.controls.object_patch import ObjectPatch
@@ -113,6 +115,7 @@ def _sunflower_stack(count: int) -> tuple[ft.Stack, ft.Stack]:
     return old_stack, new_stack
 
 
+@pytest.mark.skip(reason="Performance test, not a unit test")
 def test_sunflower_like_update_is_fast():
     best, runs = _time_diff(lambda: _sunflower_stack(250))
     print("sunflower diff timings", [round(d * 1000, 3) for d in runs])
