@@ -164,6 +164,17 @@ class Game:
         card.top = (
             slot.top + OFFSET_Y * (len(slot.cards) - 1) if slot.stacking else slot.top
         )
+        if self.check_win():
+            ft.context.page.show_dialog(
+                ft.AlertDialog(
+                    title=ft.Text("You won!"),
+                    actions=[
+                        ft.TextButton(
+                            "OK", on_click=lambda e: ft.context.page.pop_dialog()
+                        )
+                    ],
+                )
+            )
 
     def open_card(self, card: Card):
         # Only flip/move if: face-down, in deck, and it's the top card of the deck
@@ -225,6 +236,10 @@ class Game:
             return False  # otherwise not allowed
         else:  # moving to deck or waste (not allowed)
             return False
+
+    def check_win(self):
+        # Win if all 4 foundation slots have 13 cards each
+        return all(len(slot.cards) == 13 for slot in self.slots[2:6])
 
 
 # ---------- View (pure) ----------
