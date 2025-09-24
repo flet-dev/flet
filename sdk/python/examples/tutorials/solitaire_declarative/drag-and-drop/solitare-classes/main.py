@@ -66,6 +66,7 @@ class Card:
     id: str
     suite: Suite
     rank: Rank
+    face_up: bool = False
     top: float = 0
     left: float = 0
     home: Optional[Slot] = None  # <-- reference to a Slot, not a string
@@ -103,12 +104,41 @@ class Game:
         """Initialize homes & coordinates: place cards in the deck slot."""
         random.shuffle(self.cards)
 
+        n = 6  # place first n cards in tableau1 for easier testing
+        i = 0
         for card in self.cards:
-            card.home = self.slots[0]
-            card.left, card.top = self.slots[0].left, self.slots[0].top
+            card.home = self.slots[n]
+            self.slots[n].cards.append(card)
+            card.left, card.top = (
+                self.slots[n].left,
+                self.slots[n].top + OFFSET_Y * (len(self.slots[n].cards) - 1),
+            )
+            n = n + 1 if n < 12 else 6 + i
+            if n >= 12:
+                if i < 7:
+                    i = i + 1
+                else:
+                    print(
+                        "number of cards in each tableau:", self.cards.index(card) + 1
+                    )
+                    break
+
+        # Place remaining cards in the deck
+        for c in self.cards[self.cards.index(card) + 1 :]:
+            c.home = self.slots[0]
+            self.slots[0].cards.append(c)
+            c.left, c.top = self.slots[0].left, self.slots[0].top
+
+        # Turn last card in each tableau face up
+        for slot in self.slots[6:]:
+            slot.cards[-1].face_up = True
+
+        # for card in self.cards:
+        #     card.home = self.slots[0]
+        #     card.left, card.top = self.slots[0].left, self.slots[0].top
 
         # Add cards to deck card list
-        self.slots[0].cards = self.cards.copy()
+        # self.slots[0].cards = self.cards.copy()
 
     def move_to_top(self, cards: list[Card]):
         for card in cards:
@@ -143,6 +173,10 @@ class Game:
 # ---------- View (pure) ----------
 @ft.component
 def CardView(card: Card) -> ft.Control:
+    def click_on_card(_e):
+        if not card.face_up:
+            card.face_up = True
+
     return ft.Container(
         left=card.left,
         top=card.top,
@@ -150,7 +184,10 @@ def CardView(card: Card) -> ft.Control:
         height=CARD_H,
         margin=5,
         border_radius=5,
-        content=ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg"),
+        content=ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg")
+        if card.face_up
+        else ft.Image(src="/images/card_back.png"),
+        on_click=click_on_card,
     )
 
 
@@ -180,7 +217,7 @@ def App():
         grabbed = game.point_in_card_stack(e.local_position.x, e.local_position.y)
         # set_dragging(grabbed[0] if grabbed else None)
         set_dragging(grabbed)
-        if grabbed is not None:
+        if grabbed is not None and grabbed[0].face_up:
             game.move_to_top(grabbed)
             set_start_x(
                 grabbed[0].left
@@ -190,15 +227,14 @@ def App():
             )  # remember initial y of the top card being dragged
 
     def on_pan_update(e: ft.DragUpdateEvent):
-        if dragging is None:
+        if dragging is None or not dragging[0].face_up:
             return
-        print("length of dragging", len(dragging))
         for c in dragging:
             c.left = max(0, c.left + e.local_delta.x)
             c.top = max(0, c.top + e.local_delta.y)
 
     def on_pan_end(_: ft.DragEndEvent):
-        if dragging is None:
+        if dragging is None or not dragging[0].face_up:
             return
 
         s = game.nearest_slot(dragging[0])
