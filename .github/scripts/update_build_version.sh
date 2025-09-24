@@ -71,3 +71,10 @@ echo "PYPI_VER=$PYPI_VER"
 echo "PKG_VER=$PKG_VER" >> $GITHUB_ENV
 echo "BUILD_VER=$BUILD_VER" >> $GITHUB_ENV
 echo "PYPI_VER=$PYPI_VER" >> $GITHUB_ENV
+
+# set GitHub Actions output variables for use in other jobs
+{
+  echo "PKG_VER=$PKG_VER"
+  echo "BUILD_VER=$BUILD_VER"
+  echo "PYPI_VER=$PYPI_VER"
+} >> $GITHUB_OUTPUT

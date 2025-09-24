@@ -2,12 +2,16 @@ name: macOS Integration Tests
 
 on:
   push:
+    branches-ignore:
+      - v1-migrate-to-github-action
     paths:
       - 'sdk/python/packages/flet/src/**'
       - 'sdk/python/packages/flet/integration_tests/**'
       - 'packages/flet/**'
       - 'client/**'
   pull_request:
+    branches-ignore:
+      - v1-migrate-to-github-action
     paths:
       - 'sdk/python/packages/flet/src/**'
       - 'sdk/python/packages/flet/integration_tests/**'

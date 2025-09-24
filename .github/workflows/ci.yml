@@ -2,38 +2,81 @@ name: CI
 
 on:
   push:
+    branches:
+      - v1-migrate-to-github-action
+    tags:
+      - '*'
     paths-ignore:
       - "**/*.md"
   pull_request:
+    branches:
+      - v1-migrate-to-github-action
     paths-ignore:
       - "**/*.md"
   workflow_dispatch:
 
-# Ensure only one run per branch (PR or push), cancel older ones
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
-  cancel-in-progress: true
-
 permissions:
-  # id-token: write
+  id-token: write
   contents: write
 
 env:
-  PYTHON_VERSION: "3.12"
   ROOT: "${{ github.workspace }}"
-  SDK_PYTHON_PATH: "${{ github.workspace }}/sdk/python"
-  #  - GEMFURY_TOKEN
-  #  - PUB_DEV_TOKEN (base64-encoded dart pub credentials json, like in AppVeyor)
-  #  - (optional) PYODIDE_URL, PYODIDE_CDN_URL override at job-level for web build
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  UV_PYTHON: "3.12"
+  PYODIDE_VERSION: "0.28.3"
+  # PUB_DEV_TOKEN
 
 jobs:
-  # ==============================
-  # Build Flet package for Flutter
-  # ==============================
-  build_flet_package:
-    name: Build Flet package for Flutter
+  # ================
+  # Python test jobs
+  # ================
+  python_tests:
+    name: Python ${{ matrix.python-version }} tests
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' || github.base_ref != github.ref_name }} # mimic skip_branch_with_pr
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.10", "3.11", "3.12", "3.13" ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run tests
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          uv run --no-dev --group test pytest packages/flet/tests
+          uv run --directory packages/flet --no-dev --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
+
+      - name: Run docs coverage
+        if: matrix.python-version == '3.12'
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: uv run --directory packages/flet --no-dev --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
+
+      - name: Upload docs-coverage logs
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-coverage
+          path: sdk/python/docstr_coverage.log
+
+  # ===========================
+  # Build Flet Flutter package
+  # ===========================
+  build_flet_package:
+    name: Build Flet Flutter package
+    runs-on: ubuntu-latest
+    outputs:
+      PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
+      BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
+      PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,8 +88,8 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Compute versions
-        run: |
-          source .github/scripts/update_build_version.sh
+        id: versions
+        run: source $SCRIPTS/update_build_version.sh
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -59,42 +102,43 @@ jobs:
           PUB_DEV_TOKEN: ${{ secrets.PUB_DEV_TOKEN }}
         shell: bash
         run: |
-          set -euo pipefail
-
           if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
             mkdir -p "$HOME/.config/dart"
+
             # PUB_DEV_TOKEN should be a base64 of pub-credentials.json in repo secrets
             printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
 
             # patch pubspecs
             for dir in packages/flet*; do
               echo "Patching $dir/pubspec.yaml"
-              uv run .github/scripts/patch_pubspec.py "$dir/pubspec.yaml" "$PKG_VER"
+              uv run $SCRIPTS/patch_pubspec_version.py "$dir/pubspec.yaml" "$PKG_VER"
             done
 
-            pushd packages/flet
             echo "Running flet tests"
+            cd packages/flet
             flutter test
             dart pub publish --force
+
           else
-            pushd packages/flet
             echo "Running flet tests"
+            cd packages/flet
             flutter test
-            # dart pub publish --dry-run
+            dart pub publish --dry-run || exit 0
           fi
 
-          # Return to repo root
-          cd "$ROOT"
-
-
-  # ======================
-  # Build Flet - Windows
-  # ======================
+  # =============================
+  # Build Flet Client for Windows
+  # =============================
   build_windows:
-    name: Build Flet for Windows
+    name: Build Flet Client for Windows
     runs-on: windows-latest
-    needs: [build_flet_package]
+    needs:
+      - python_tests
+      - build_flet_package
     if: ${{ github.event_name != 'pull_request' || github.base_ref != github.ref_name }}
+    env:
+      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -109,76 +153,102 @@ jobs:
           cache: true
 
       - name: Prepare env and patch versions
-        shell: pwsh
+        shell: bash
         run: |
-          $Env:flet_sdk_root = "$Env:ROOT\sdk\python"
-          $Env:PYPI_VER = "${{ needs.build_flet_package.outputs.PYPI_VER || github.run_number }}"
-          $Env:PYPI_VER = "$($Env:PYPI_VER)".Replace("+", ".dev")
-          $vp = "$Env:flet_sdk_root\packages\flet-desktop\src\flet_desktop\version.py"
-          (Get-Content $vp).Replace('version = ""', "version = `"$Env:PYPI_VER`"") | Set-Content $vp
-          uv run .github/scripts/patch_toml_versions.py "$Env:flet_sdk_root/packages/flet-desktop/pyproject.toml" "$Env:PYPI_VER"
+          set -euo pipefail
+
+          # Convert to POSIX for bash compatibility
+          SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
+          SCRIPTS_POSIX="$(cygpath -u "$SCRIPTS")"
+
+          # print
+          echo "SDK_PYTHON: $SDK_PYTHON"
+          echo "SCRIPTS: $SCRIPTS"
+
+          # Replace: version = ""  -> version = "<PYPI_VER>"
+          vp="$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/version.py"
+          sed -i 's/^version = ""$/version = "'"$PYPI_VER"'"/' "$vp"
+
+          uv run "$SCRIPTS/patch_toml_versions.py" \
+            "$SDK_PYTHON_POSIX/packages/flet-desktop/pyproject.toml" \
+            "$PYPI_VER"
 
       - name: Build Flutter Windows client
-        shell: pwsh
+        env:
+          RELEASE_DIR: ${{ env.ROOT }}\client\build\windows\x64\runner\Release
+        shell: bash
         run: |
-          cd client
-          $Env:RELEASE_DIR="build\windows\x64\runner\Release"
-          flutter build windows --build-name="${{ needs.build_flet_package.outputs.PYPI_VER || github.run_number }}"
-          Copy-Item "$Env:WINDIR\system32\msvcp140.dll" $Env:RELEASE_DIR
-          Copy-Item "$Env:WINDIR\system32\vcruntime140.dll" $Env:RELEASE_DIR
-          Copy-Item "$Env:WINDIR\system32\vcruntime140_1.dll" $Env:RELEASE_DIR
-          Rename-Item "build\windows\x64\runner\Release" "flet"
-          cd build\windows\x64\runner
-          7z a flet-windows.zip flet
-          New-Item -ItemType Directory -Force -Path "$Env:GITHUB_WORKSPACE\sdk\python\packages\flet-desktop\src\flet_desktop\app" | Out-Null
-          robocopy flet "$Env:GITHUB_WORKSPACE\sdk\python\packages\flet-desktop\src\flet_desktop\app\flet" /e
-          echo "done"
+          # Normalize paths for bash
+          RELEASE_DIR_POSIX="$(cygpath -u "$RELEASE_DIR")"
+          SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
+          WINDIR_POSIX="$(cygpath -u "$WINDIR")"
 
-      - name: Build wheels
-        shell: pwsh
+          cd client
+          flutter build windows --build-name=$BUILD_VER
+
+          # Copy needed runtime DLLs
+          cp "$WINDIR_POSIX/system32/msvcp140.dll" "$RELEASE_DIR_POSIX"
+          cp "$WINDIR_POSIX/system32/vcruntime140.dll" "$RELEASE_DIR_POSIX"
+          cp "$WINDIR_POSIX/system32/vcruntime140_1.dll" "$RELEASE_DIR_POSIX"
+
+          ls -la "$RELEASE_DIR_POSIX"
+
+          # Rename Release folder to flet
+          RUNNER_DIR="$(dirname "$RELEASE_DIR_POSIX")"
+          mv "$RELEASE_DIR_POSIX" "$RUNNER_DIR/flet"
+
+          cd build/windows/x64/runner
+          7z a flet-windows.zip flet
+
+          # Stage app into Python package
+          mkdir -p "$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/app"
+          cp -r flet "$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/app/flet"
+
+      - name: Build Python wheels
+        shell: bash
         run: |
-          cd sdk\python
+          # Convert Windows env paths to POSIX for bash
+          SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
+
+          cd "$SDK_PYTHON"
           uv build --wheel --package flet-desktop
-          Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-            uv run $Env:GITHUB_WORKSPACE\.github\scripts\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64"
-            uv run $Env:GITHUB_WORKSPACE\.github\scripts\repackage_wheel_with_tag.py $_.FullName "py3-none-win32"
-            Remove-Item $_.FullName
-          }
-          dir dist
+
+          # Ensure glob expands
+          shopt -s nullglob
+
+          for wheel in dist/*-py3-none-any.whl; do
+            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$wheel" "py3-none-win_amd64"
+            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$wheel" "py3-none-win32"
+            rm -f "$wheel"
+          done
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-artifacts
+          if-no-files-found: error
           path: |
             client/build/windows/x64/runner/flet-windows.zip
             sdk/python/dist/*.whl
 
-      - name: Publish wheels
+      - name: Publish Python wheels to PyPI
         if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-          GEMFURY_TOKEN: ${{ secrets.GEMFURY_TOKEN }}
-        shell: pwsh
-        run: |
-          uvx twine --version
-          if ("${{ startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' }}" -eq "True") {
-            uvx twine upload "$Env:GITHUB_WORKSPACE\sdk\python\dist\*"
-          } else {
-            $wheels = Get-ChildItem "$Env:GITHUB_WORKSPACE\sdk\python\dist\*.whl" | Select-Object -ExpandProperty FullName
-            foreach ($wheel in $wheels) {
-              curl.exe -s -F "package=@$wheel" "https://${env:GEMFURY_TOKEN}@push.fury.io/flet/"
-            }
-          }
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: uv publish
 
-  # =====================
-  # Build Flet - macOS
-  # =====================
+  # ===========================
+  # Build Flet Client for macOS
+  # ===========================
   build_macos:
-    name: Build Flet for macOS
+    name: Build Flet Client for macOS
     runs-on: macos-latest
-    needs: [build_flet_package]
+    needs:
+      - python_tests
+      - build_flet_package
+    env:
+      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -195,31 +265,27 @@ jobs:
       - name: Build Flutter macOS client
         shell: bash
         run: |
-          set -e
           pushd client
-          flutter build macos --build-name="${GITHUB_RUN_NUMBER}"
+          flutter build macos --build-name=$BUILD_VER
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
-          mkdir -p "${SDK_PYTHON_PATH}/packages/flet-desktop/src/flet_desktop/app"
-          cp flet-macos.tar.gz "${SDK_PYTHON_PATH}/packages/flet-desktop/src/flet_desktop/app"
+          mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+          cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           popd
 
       - name: Patch Python package versions
-        env:
-          PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
         shell: bash
         run: |
-          source .github/scripts/common.sh
+          source $SCRIPTS/common.sh
           patch_python_package_versions
 
-      - name: Build wheels
+      - name: Build Python wheels
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          set -e
-          cd "${SDK_PYTHON_PATH}"
           uv build --wheel --package flet-desktop
           for file in dist/*-py3-none-any.whl; do
-            uv run "$ROOT/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_12_0_arm64"
-            uv run "$ROOT/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_10_14_x86_64"
+            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_12_0_arm64"
+            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_10_14_x86_64"
             rm "$file"
           done
 
@@ -227,33 +293,47 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-artifacts
+          if-no-files-found: error
           path: |
+            sdk/python/dist/*.whl
             client/flet-macos.tar.gz
-            ${SDK_PYTHON_PATH}/dist/*.whl
 
-      - name: Publish to PyPI
-        if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          source .github/scripts/common.sh
-          publish_to_pypi dist/*.whl
-        working-directory: sdk/python
+      - name: Publish Python wheels to PyPI
+        if: >
+          github.event_name != 'pull_request' && (
+            startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+          )
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: uv publish
 
-  # =========================
-  # Build Flet - Linux (x64)
-  # =========================
-  build_linux_amd64:
-    name: Build Flet for Linux (x64)${{ matrix.light && ' Light' || '' }}
-    runs-on: ubuntu-latest
-    needs: [build_flet_package]
+  # ===========================
+  # Build Flet Client for Linux
+  # ===========================
+  build_linux:
+    name: Build Flet Client for Linux ${{ matrix.title }}
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - python_tests
+      - build_flet_package
     strategy:
       matrix:
-        light: [false, true]
+        include:
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            title: ARM64
+          - arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            title: AMD64
     env:
-      ARCH: amd64
-      PACKAGE_NAME: ${{ matrix.light && 'flet-desktop-light' || 'flet-desktop' }}
+      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+      ARCH: ${{ matrix.arch }}
+      BUILD_ARCH: ${{ matrix.build_arch }}
+      PLATFORM_ARCH: ${{ matrix.platform_arch }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -261,10 +341,17 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+      - name: Get Flutter version from ".fvmrc"
+        uses: kuhnroyal/flutter-fvm-config-action/config@v3
+        id: fvm-config-action
         with:
           path: '.fvmrc'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ matrix.arch == 'arm64' && 'master' || 'stable' }}  # https://github.com/subosito/flutter-action/issues/345#issuecomment-2657332687
           cache: true
 
       - name: Install dependencies
@@ -273,179 +360,142 @@ jobs:
           sudo sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           sudo apt update --allow-releaseinfo-change
           sudo apt install -y clang libgtk-3-dev libasound2-dev
-          if [[ "${PACKAGE_NAME}" == "flet-desktop" ]]; then
-            sudo apt install -y libmpv-dev mpv libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-          fi
+          sudo apt install -y \
+            libmpv-dev mpv \
+            libgstreamer1.0-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libgstreamer-plugins-bad1.0-dev \
+            gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+            gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+            gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x \
+            gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
+            gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 
-      - name: Build Flutter Linux client
+      - name: Build Flutter Linux clients
         shell: bash
+        working-directory: client
         run: |
-          set -e
-          source .github/scripts/common.sh
-          pushd client
-          if [[ "${PACKAGE_NAME}" == "flet-desktop-light" ]]; then
-            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
-            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
-            patch_flet_desktop_package_name "flet-desktop-light"
-            artifact_suffix="-light"
-          fi
-          wheel_tags=(
-            "py3-none-manylinux_2_17_x86_64,py3-none-manylinux2014_x86_64"
-            "py3-none-musllinux_1_2_x86_64"
+          build_flutter() {
+            local PACKAGE_NAME="$1"
+            local ARTIFACT_SUFFIX=""
+            if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+              ARTIFACT_SUFFIX="-light"
+            fi
+
+            echo "::group::($PACKAGE_NAME) Preparing sources"
+            # Reset Flutter app files so light edits don't leak into full or vice-versa
+            git checkout -- pubspec.yaml lib/main.dart || true
+
+            if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+              # Strip FAT_CLIENT blocks for the light flavor
+              sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+              sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
+            fi
+            echo "::endgroup::"
+
+            echo "::group::($PACKAGE_NAME) Flutter build"
+            flutter build linux --build-name="$BUILD_VER"
+            mv "build/linux/$BUILD_ARCH/release/bundle" "build/linux/$BUILD_ARCH/release/flet"
+            tar -czvf "flet-linux${ARTIFACT_SUFFIX}-$ARCH.tar.gz" -C "build/linux/$BUILD_ARCH/release" flet
+            # Ship the archive into the Python package so the wheels can bundle it later
+            mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+            cp "flet-linux${ARTIFACT_SUFFIX}-$ARCH.tar.gz" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz"
+            echo "::endgroup::"
+          }
+
+          build_flutter "flet-desktop-light"
+          build_flutter "flet-desktop"
+
+      - name: Build Python wheels
+        shell: bash
+        working-directory: client
+        run: |
+          source $SCRIPTS/common.sh
+
+          echo "::group::Patch Python package versions"
+          pushd "${SDK_PYTHON}"
+          patch_python_package_versions
+          popd
+          echo "::endgroup::"
+
+          # directory for output artifacts
+          output_dir="${SDK_PYTHON}/dist"
+
+          build_wheels() {
+            local PACKAGE_NAME="$1"
+            local FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
+
+            echo "::group::($PACKAGE_NAME) Build wheels"
+            uv run $SCRIPTS/patch_toml_package_name.py "${FLET_DESKTOP}/pyproject.toml" $PACKAGE_NAME
+
+            # Build the wheel (uv writes to $SDK_PYTHON_PATH/dist)
+            pushd "${FLET_DESKTOP}"
+            uv build --wheel
+            popd
+
+            # Ensure glob expands
+            shopt -s nullglob
+
+            # Find all universal wheels for the current package
+            universal=( "${output_dir}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
+
+            if (( ${#universal[@]} == 0 )); then
+              echo "ERROR: No universal wheels found in ${output_dir} for ${PACKAGE_NAME}."
+              ls -la "${output_dir}" || true
+              exit 1
+            fi
+
+            # Wheel tags to generate from the universal wheel
+            wheel_tags=(
+              "py3-none-manylinux_2_17_${PLATFORM_ARCH},py3-none-manylinux2014_${PLATFORM_ARCH}"
+              "py3-none-musllinux_1_2_${PLATFORM_ARCH}"
+            )
+
+            # Repackage each universal wheel with all specified platform tags
+            for wheel in "${universal[@]}"; do
+              echo "Retagging $wheel"
+              for tag in "${wheel_tags[@]}"; do
+                echo "Tagging $wheel with $tag"
+                uv run "${SCRIPTS}/repackage_wheel_with_tag.py" $wheel $tag
+              done
+              # Delete the original universal wheel
+              rm -f $wheel
+            done
+
+            echo "::endgroup::"
+          }
+
+          build_wheels "flet-desktop-light"
+          build_wheels "flet-desktop"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.arch }}-artifacts
+          if-no-files-found: error
+          path: |
+            client/flet-linux*.tar.gz
+            sdk/python/dist/*.whl
+
+      - name: Publish Python wheels to PyPI
+        if: >
+          github.event_name != 'pull_request' && (
+            startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
           )
-          flutter build linux --build-name="${GITHUB_RUN_NUMBER}"
-          mv build/linux/x64/release/bundle build/linux/x64/release/flet
-          tar -czvf "flet-linux${artifact_suffix:-}-amd64.tar.gz" -C build/linux/x64/release flet
-          mkdir -p "${SDK_PYTHON_PATH}/packages/flet-desktop/src/flet_desktop/app"
-          cp "flet-linux${artifact_suffix:-}-amd64.tar.gz" "${SDK_PYTHON_PATH}/packages/flet-desktop/src/flet_desktop/app/flet-linux-amd64.tar.gz"
-          popd
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: uv publish
 
-      - name: Patch Python package versions
-        env:
-          PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-        shell: bash
-        run: |
-          source .github/scripts/common.sh
-          patch_python_package_versions
-          if [[ "${PACKAGE_NAME}" == "flet-desktop-light" ]]; then
-            sed -i 's/flet-desktop/flet-desktop-light/g' "${SDK_PYTHON_PATH}/pyproject.toml"
-          fi
-
-      - name: Build wheels
-        shell: bash
-        run: |
-          set -e
-          cd "sdk/python"
-          uv build --wheel --package "${PACKAGE_NAME}"
-          for file in dist/*-py3-none-any.whl; do
-            uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-manylinux_2_17_x86_64,py3-none-manylinux2014_x86_64"
-            uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-musllinux_1_2_x86_64"
-            rm "$file"
-          done
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-amd64${{ matrix.light && '-light' || '' }}-artifacts
-          path: |
-            client/flet-linux*.tar.gz
-            sdk/python/dist/*.whl
-
-      - name: Publish to PyPI
-        if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          source .github/scripts/common.sh
-          publish_to_pypi dist/*.whl
-        working-directory: sdk/python
-
-  # ============================
-  # Build Flet - Linux (ARM64)
-  # ============================
-  build_linux_arm64:
-    name: Build Flet for Linux (ARM64)${{ matrix.light && ' Light' || '' }}
-    # NOTE: Requires an ARM64 hosted runner or self-hosted runner.
-    runs-on: ubuntu-latest
-    needs: [build_flet_package]
-    strategy:
-      matrix:
-        light: [false, true]
-    env:
-      ARCH: arm64
-      PACKAGE_NAME: ${{ matrix.light && 'flet-desktop-light' || 'flet-desktop' }}
-      PYTHON_VERSION: "3.10"  # matches AppVeyor override for ARM64
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          path: '.fvmrc'
-          cache: true
-
-      - name: Install dependencies
-        shell: bash
-        run: |
-          sudo apt update
-          sudo apt install -y clang libgtk-3-dev libasound2-dev
-          if [[ "${PACKAGE_NAME}" == "flet-desktop" ]]; then
-            sudo apt install -y libmpv-dev mpv libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-          fi
-          git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
-          echo "$HOME/flutter/bin" >> $GITHUB_PATH
-
-      - name: Build Flutter Linux client
-        shell: bash
-        run: |
-          set -e
-          source .github/scripts/common.sh
-          pushd client
-          if [[ "${PACKAGE_NAME}" == "flet-desktop-light" ]]; then
-            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
-            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
-            patch_flet_desktop_package_name "flet-desktop-light"
-            artifact_suffix="-light"
-          fi
-          flutter build linux --build-name="${GITHUB_RUN_NUMBER}"
-          mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
-          tar -czvf "flet-linux${artifact_suffix:-}-arm64.tar.gz" -C build/linux/arm64/release flet
-          mkdir -p "sdk/python/packages/flet-desktop/src/flet_desktop/app"
-          cp "flet-linux${artifact_suffix:-}-arm64.tar.gz" "sdk/python/packages/flet-desktop/src/flet_desktop/app/flet-linux-arm64.tar.gz"
-          popd
-
-      - name: Patch versions & build wheels
-        env:
-          PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-        shell: bash
-        run: |
-          set -e
-          source .github/scripts/common.sh
-          patch_python_package_versions
-          if [[ "${PACKAGE_NAME}" == "flet-desktop-light" ]]; then
-            sed -i 's/flet-desktop/flet-desktop-light/g' "sdk/python/pyproject.toml"
-          fi
-          cd "sdk/python"
-          uv build --wheel --package "${PACKAGE_NAME}"
-          for file in dist/*-py3-none-any.whl; do
-            uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-manylinux_2_17_aarch64,py3-none-manylinux2014_aarch64"
-            uv run "$root/.github/scripts/repackage_wheel_with_tag.py" "$file" "py3-none-musllinux_1_2_aarch64"
-            rm "$file"
-          done
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-arm64${{ matrix.light && '-light' || '' }}-artifacts
-          path: |
-            client/flet-linux*.tar.gz
-            sdk/python/dist/*.whl
-
-      - name: Publish to PyPI
-        if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          source .github/scripts/common.sh
-          publish_to_pypi dist/*.whl
-        working-directory: sdk/python
-
-  # =================
-  # Build Flet - Web
-  # =================
+  # =========================
+  # Build Flet Client for Web
+  # =========================
   build_web:
-    name: Build Flet for web
+    name: Build Flet Client for Web
     runs-on: ubuntu-latest
-    needs: [build_flet_package]
+    needs:
+      - python_tests
+      - build_flet_package
     env:
-      PYODIDE_URL: "https://github.com/pyodide/pyodide/releases/download/0.27.7/pyodide-core-0.27.7.tar.bz2"
-      PYODIDE_CDN_URL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -459,26 +509,42 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Build web client + Python package
-        shell: bash
-        env:
-          PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+      - name: Compute Pyodide URLs
         run: |
-          set -e
-          source .github/scripts/common.sh
+          echo "PYODIDE_URL=https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2" >> "$GITHUB_ENV"
+          echo "PYODIDE_CDN_URL=https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full" >> "$GITHUB_ENV"
+
+      - name: Build web client
+        shell: bash
+        run: |
+          # Flutter Web client
           pushd client
           flutter build web --wasm
-          cp -R build/web "${SDK_PYTHON_PATH}/packages/flet-web/src/flet_web"
-          # Safari mobile workaround + pyodide extras
-          ls "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
-          cp "$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js/flutter.js.map" "${SDK_PYTHON_PATH}/packages/flet-web/src/flet_web/web"
-          curl -L "$PYODIDE_URL" | tar -xj -C "${SDK_PYTHON_PATH}/packages/flet-web/src/flet_web/web"
-          curl -L "$PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl" -o "${SDK_PYTHON_PATH}/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
-          curl -L "$PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON_PATH}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
+          cp -R build/web "${SDK_PYTHON}/packages/flet-web/src/flet_web"
+
+          # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
+          FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
+          ls "$FLUTTER_JS_DIR"
+          cp "$FLUTTER_JS_DIR/flutter.js.map" "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
+
+          # Download the Pyodide tarball and extract its contents into the web build folder of the Python SDK.
+          curl -L "$PYODIDE_URL" | tar -xj -C "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
+
+          # Download the prebuilt 'packaging' wheel
+          curl -L "$PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
+
+          # Download the prebuilt 'micropip' wheel
+          curl -L "$PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
+
           popd
+
+          # Archive the entire built Flutter web client into a gzipped tarball
           tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
-          cd "${SDK_PYTHON_PATH}"
+      - name: Build Python package
+        shell: bash
+        run: |
+          source $SCRIPTS/common.sh
           patch_python_package_versions
           uv build --wheel --package flet-web
 
@@ -486,66 +552,35 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: web-artifacts
+          if-no-files-found: error
           path: |
             client/build/flet-web.tar.gz
             sdk/python/dist/*.whl
 
-      - name: Publish to PyPI
-        if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          source .github/scripts/common.sh
-          publish_to_pypi dist/*.whl
-        working-directory: sdk/python
+      - name: Publish Python wheels to PyPI
+        if: >
+          github.event_name != 'pull_request' && (
+            startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+          )
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: uv publish
 
-  # ================
-  # Python test jobs
-  # ================
-  python_tests:
-    name: Python ${{ matrix.python-version }} tests
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Run tests
-        shell: bash
-        run: |
-          source .github/scripts/common.sh
-          cd sdk/python
-          uv run --group test pytest packages/flet/tests
-          uv run --directory packages/flet --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
-
-      - name: Upload test logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs-coverage-${{ matrix.py }}
-          path: sdk/python/packages/flet/*.log
-
-  # ===========================
-  # Build & publish Python bits
-  # ===========================
+  # ============
+  # Python Build
+  # ============
   python_build:
-    name: Build Python wheels (flet & flet-cli)
+    name: Build flet and flet-cli Python wheels
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
+    env:
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     needs:
       - python_tests
+      - build_flet_package
       - build_windows
       - build_macos
-      - build_linux_amd64
-      - build_linux_arm64
+      - build_linux
       - build_web
-    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -553,51 +588,51 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Build & publish
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-          PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+      - name: Build wheels
         shell: bash
         run: |
-          set -e
-          source .github/scripts/common.sh
+          source $SCRIPTS/common.sh
           patch_python_package_versions
-          cd "sdk/python"
           uv build --wheel --package flet-cli
           uv build --wheel --package flet
-          uv run "$root/.github/scripts/update_flet_wheel_deps.py" dist
-          publish_to_pypi dist/*.whl
-      - name: Upload wheels
+          uv run "$SCRIPTS/update_flet_wheel_deps.py" dist
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: python-wheels
+          name: flet-and-flet-cli-wheels
           path: sdk/python/dist/*.whl
 
-  # ======================
-  # Attach artifacts to GH Release on tag
-  # ======================
+      - name: Publish wheels to PyPI
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          ls -la
+          uv publish
+
+  # ==============
+  # GitHub Release
+  # ==============
   release:
-    name: Attach artifacts to GitHub Release
+    name: Publish GitHub Release
     runs-on: ubuntu-latest
-    needs:
-      - build_windows
-      - build_macos
-      - build_linux_amd64
-      - build_linux_arm64
-      - build_web
-      - python_build
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: python_build
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           path: dist
 
-      - name: Create/Update Release
+      - name: Create/Update GitHub Release
         uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: |
-            dist/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          files: dist/**/*
+          generate_release_notes: true
+          preserve_order: true
+          overwrite_files: true
+          fail_on_unmatched_files: true
