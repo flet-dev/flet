@@ -176,14 +176,22 @@ class Game:
                 self.place_card_in_slot(card, self.slots[1])  # move to waste slot
 
     def reset_deck(self, slot: Slot):
-        # Move all cards from waste back to deck, face down
+        # Move all cards from waste back to deck in REVERSED order, face down.
         if slot.id != "deck":
             return
-        waste = self.slots[1]
-        deck = self.slots[0]
-        for card in waste.cards[:]:  # copy the list since we'll modify it
+
+        if len(slot.cards) > 0:
+            return  # only reset if deck is empty
+
+        # deck = self.slots[0]  # or self.find_slot_by_id("deck")
+        # waste = self.slots[1]  # or self.find_slot_by_id("waste")
+
+        while len(self.slots[1].cards) > 0:
+            card = self.slots[1].cards[-1]
             card.face_up = False
-            self.place_card_in_slot(card, deck)
+            self.move_to_top([card])
+            self.place_card_in_slot(card, self.slots[0])
+
         print("Current cards in deck:", len(self.slots[0].cards))
 
     def rules_allow_move(self, cards: list[Card], slot: Slot) -> bool:
