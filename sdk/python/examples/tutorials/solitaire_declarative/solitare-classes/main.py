@@ -9,8 +9,8 @@ import flet as ft
 # Card visual constants
 CARD_W = 70
 CARD_H = 100
-SNAP_THRESHOLD = 20  # px
-OFFSET_Y = 20  # px
+SNAP_THRESHOLD = 25  # px
+OFFSET_Y = 15  # px
 
 
 # ---------- Model ----------
@@ -277,7 +277,7 @@ def SlotView(slot: Slot, on_slot_click) -> ft.Control:
 # ---------- App ----------
 @ft.component
 def App():
-    game, _ = ft.use_state(lambda: Game())
+    game, set_game = ft.use_state(lambda: Game())
     dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
     start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
     start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
@@ -318,7 +318,7 @@ def App():
 
         set_dragging(None)
 
-    return ft.GestureDetector(
+    board = ft.GestureDetector(
         on_pan_start=on_pan_start,
         on_pan_update=on_pan_update,
         on_pan_end=on_pan_end,
@@ -333,6 +333,23 @@ def App():
             width=1000,
             height=500,
         ),
+    )
+
+    bottom_bar = ft.Row(
+        controls=[
+            ft.FilledButton("New Game", on_click=lambda _: set_game(Game())),
+            ft.Text(f"Cards in deck: {len(game.slots[0].cards)}"),
+            ft.Text(f"Cards in waste: {len(game.slots[1].cards)}"),
+        ]
+    )
+
+    return ft.Column(
+        expand=True,
+        spacing=0,
+        controls=[
+            ft.Container(expand=True, content=board),
+            bottom_bar,
+        ],
     )
 
 
