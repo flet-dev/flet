@@ -104,41 +104,24 @@ class Game:
         """Initialize homes & coordinates: place cards in the deck slot."""
         random.shuffle(self.cards)
 
-        n = 6  # place first n cards in tableau1 for easier testing
+        n = 6  # place cards in tableau1..tableau7
         i = 0
         for card in self.cards:
-            card.home = self.slots[n]
-            self.slots[n].cards.append(card)
-            card.left, card.top = (
-                self.slots[n].left,
-                self.slots[n].top + OFFSET_Y * (len(self.slots[n].cards) - 1),
-            )
+            self.place_card_in_slot(card, self.slots[n])
             n = n + 1 if n < 12 else 6 + i
             if n >= 12:
                 if i < 7:
                     i = i + 1
                 else:
-                    print(
-                        "number of cards in each tableau:", self.cards.index(card) + 1
-                    )
                     break
 
         # Place remaining cards in the deck
         for c in self.cards[self.cards.index(card) + 1 :]:
-            c.home = self.slots[0]
-            self.slots[0].cards.append(c)
-            c.left, c.top = self.slots[0].left, self.slots[0].top
+            self.place_card_in_slot(c, self.slots[0])
 
         # Turn last card in each tableau face up
         for slot in self.slots[6:]:
             slot.cards[-1].face_up = True
-
-        # for card in self.cards:
-        #     card.home = self.slots[0]
-        #     card.left, card.top = self.slots[0].left, self.slots[0].top
-
-        # Add cards to deck card list
-        # self.slots[0].cards = self.cards.copy()
 
     def move_to_top(self, cards: list[Card]):
         for card in cards:
@@ -168,6 +151,17 @@ class Game:
                     c.home.cards.index(c) + 1 :
                 ]  # return the card and all cards below it
         return None
+
+    def place_card_in_slot(self, card: Card, slot: Slot):
+        """Place a card in a slot, updating its home and position."""
+        if card.home is not None:
+            card.home.cards.remove(card)  # Remove card from previous slot's pile
+        card.home = slot  # <-- update to the Slot object
+        slot.cards.append(card)  # Add card to the slot's pile
+        card.left = slot.left
+        card.top = (
+            slot.top + OFFSET_Y * (len(slot.cards) - 1) if slot.stacking else slot.top
+        )
 
 
 # ---------- View (pure) ----------
@@ -240,11 +234,12 @@ def App():
         s = game.nearest_slot(dragging[0])
         if s is not None:  # snap to this slot
             for c in dragging:
-                c.left = s.left
-                c.top = s.top + OFFSET_Y * (len(s.cards)) if s.stacking else s.top
-                c.home.cards.remove(c)  # Remove card from previous slot's pile
-                c.home = s  # <-- update to the Slot object
-                s.cards.append(c)  # Add card to the slot's pile
+                # c.left = s.left
+                # c.top = s.top + OFFSET_Y * (len(s.cards)) if s.stacking else s.top
+                # c.home.cards.remove(c)  # Remove card from previous slot's pile
+                # c.home = s  # <-- update to the Slot object
+                # s.cards.append(c)  # Add card to the slot's pile
+                game.place_card_in_slot(c, s)
 
         else:  # bounce back to where it was picked up
             for i, c in enumerate(dragging):
