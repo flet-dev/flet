@@ -16,6 +16,26 @@ Listener = Callable[[Any, Optional[str]], None]  # (sender, field|None)
 
 
 def observable(cls):
+    """
+    Makes a class observable by mixing in [`Observable`][flet.Observable].
+    Can be applied to any class including [`dataclass`][dataclasses.dataclass].
+    For dataclasses, decorator can be placed either above or below
+    the `@dataclass` decorator.
+
+    Example:
+
+    ```python
+    from dataclasses import dataclass
+    import flet as ft
+
+
+    @ft.observable
+    @dataclass
+    class MyDataClass:
+        x: int
+        y: int
+    ```
+    """
     if Observable in cls.__mro__:
         return cls
     # Build a new class whose MRO is (Observable, cls)
@@ -51,8 +71,32 @@ class ObservableSubscription(ComponentOwned):
 class Observable:
     """
     Mixin: notifies when fields change; auto-wraps lists/dicts to be observable.
-    No ctor suppression; notifications will fire on any assignment
-    (incl. dataclass __init__).
+
+    Example:
+
+    ```python
+    import flet as ft
+    from dataclasses import dataclass
+
+
+    @ft.observable
+    @dataclass
+    class MyDataClass:
+        x: int
+        y: int
+
+
+    obj = MyDataClass(1, 2)
+
+
+    def listener(sender, field):
+        print(f"Changed: {field} in {sender}")
+
+
+    obj.subscribe(listener)
+    obj.x = 3
+    obj.y = 4
+    ```
     """
 
     __version__ = 0  # optional version counter

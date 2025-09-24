@@ -9,8 +9,7 @@ R = TypeVar("R")
 
 def component(fn: Callable[P, R]) -> Callable[P, R]:
     """
-    Marks a function as a component. When called, it will render through
-    the *current* Renderer.
+    Marks a function as a component.
     """
     fn.__is_component__ = True
 

@@ -15,9 +15,14 @@ def use_callback(
 ) -> Callable[P, R]:
     """
     Memoize a function identity between renders.
-    - dependencies is None: new function each render
-    - dependencies == []  : same function forever (until unmount)
-    - else                : new function only when any dep changes
+
+    Args:
+        fn: A function to memoize.
+        dependencies: If present, fn is only re-memoized when one of the dependencies
+            has changed. If absent, fn is only memoized on initial render.
+
+    Returns:
+        A memoized version of the function whose identity is stable between renders.
     """
     # Just memoize the function object itself
     return use_memo(lambda: fn, dependencies)
