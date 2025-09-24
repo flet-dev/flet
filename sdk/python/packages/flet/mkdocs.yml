@@ -386,6 +386,24 @@ nav:
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
+      - Components:
+          - Hooks:
+              - on_mounted: types/on_mounted.md
+              - on_unmounted: types/on_unmounted.md
+              - on_updated: types/on_updated.md
+              - use_callback: types/use_callback.md
+              - use_context: types/use_context.md
+              - use_effect: types/use_effect.md
+              - use_memo: types/use_memo.md
+              - use_state: types/use_state.md
+          - Decorators:
+              - component: types/component.md
+              - observable: types/observabledecorator.md
+          - Methods:
+              - create_context: types/create_context.md
+              - memo: types/memo.md
+          - Types:
+              - Observable: types/observable.md
       - Testing:
           - Finder: testing/finder.md
           - FletTestApp: testing/flettestapp.md

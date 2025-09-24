@@ -30,6 +30,17 @@ def use_effect(
     dependencies: Sequence[Any] | None = None,
     cleanup: Callable[[], Any | Awaitable[Any]] | None = None,
 ):
+    """
+    Perform side effects in function components.
+
+    Args:
+        setup: A function that performs the side effect. It may optionally return
+            a cleanup function.
+        dependencies: If present, the effect is only re-run when one of the dependencies
+            has changed. If absent, the effect is only run on initial render.
+        cleanup: An optional function that cleans up after the effect. It is run
+            before the effect is re-run, and when the component unmounts.
+    """
     component = current_component()
     deps = list(dependencies) if dependencies is not None else None
 
@@ -53,6 +64,9 @@ def use_effect(
 def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once after the component mounts.
+
+    Args:
+        fn: A function to run after the component mounts.
     """
     use_effect(fn, dependencies=[])
 
@@ -60,6 +74,9 @@ def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
 def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
     Run exactly once when the component unmounts.
+
+    Args:
+        fn: A function to run when the component unmounts.
     """
     # No-op setup; only need cleanup to fire on unmount
     use_effect(lambda: None, dependencies=[], cleanup=fn)
@@ -72,6 +89,12 @@ def on_updated(
     Run after each post-mount render (or when dependencies change).
     With dependencies=None this fires every update; with dependencies=[...] only
     on changes.
+
+    Args:
+        fn: A function to run after each post-mount render (or when dependencies
+            change).
+        dependencies: If present, fn is only run when one of the dependencies has
+            changed. If absent, fn is run after every render.
     """
     use_effect(fn, dependencies=dependencies)
 

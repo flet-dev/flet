@@ -20,6 +20,15 @@ StateT = TypeVar("StateT")
 def use_state(
     initial: StateT | Callable[[], StateT],
 ) -> tuple[StateT, Callable[[StateT], None]]:
+    """
+    Add state to function components.
+
+    Args:
+        initial: Initial state value or a function that returns the initial state value.
+
+    Returns:
+        A tuple of the current state value and a function to update it.
+    """
     component = current_component()
     hook = component.use_hook(
         lambda: StateHook(

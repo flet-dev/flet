@@ -34,6 +34,16 @@ class ContextProvider(Protocol[T]):
 
 
 def create_context(default_value: T) -> ContextProvider[T]:
+    """
+    Create a context provider.
+
+    Args:
+        default_value: Default context value when no provider is found.
+
+    Returns:
+        A context provider that can be used with `use_context` and to wrap
+            parts of the component tree that should share the same context value.
+    """
     key = object()
 
     def provider(value: T, callback: Callable[[], ProviderResultT]) -> ProviderResultT:  # type: ignore[type-var]
@@ -51,6 +61,15 @@ def create_context(default_value: T) -> ContextProvider[T]:
 
 
 def use_context(context: ContextProvider[T]) -> T:
+    """
+    Access the current context value.
+
+    Args:
+        context: A context provider created by `create_context`.
+
+    Returns:
+        The current context value, or the default value if no provider is found.
+    """
     component = current_component()
     component.use_hook(lambda: ContextHook(component))
 

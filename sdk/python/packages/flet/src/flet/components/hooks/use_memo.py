@@ -19,9 +19,15 @@ def use_memo(
 ) -> MemoValueT:
     """
     Memoize a computed value between renders.
-    - deps is None: recompute every render
-    - deps == []  : compute once (mount), keep forever
-    - else        : recompute when any dep changes (Object.is-like compare)
+
+    Args:
+        calculate_value: A function that computes the value to be memoized.
+        dependencies: If present, the value is only recomputed when one of
+            the dependencies has changed. If absent, the value is only computed
+            on initial render.
+
+    Returns:
+        A memoized value whose identity is stable between renders.
     """
     component = current_component()
 
