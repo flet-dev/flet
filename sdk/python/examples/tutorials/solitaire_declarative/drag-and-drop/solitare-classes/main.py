@@ -163,10 +163,20 @@ class Game:
             slot.top + OFFSET_Y * (len(slot.cards) - 1) if slot.stacking else slot.top
         )
 
+    def open_card(self, card: Card):
+        # Only flip/move if: face-down, in deck, and it's the top card of the deck
+        if (
+            not card.face_up and card.home.cards[-1] == card
+        ):  # flip only if it's face down and the top card in the slot
+            card.face_up = True
+            if card.home.id == "deck":  # move to waste
+                # self.place_card_in_slot(card, self.slots[1])  # move to waste slot
+                print("Move to waste not implemented yet")
+
 
 # ---------- View (pure) ----------
 @ft.component
-def CardView(card: Card) -> ft.Control:
+def CardView(card: Card, on_card_click) -> ft.Control:
     def click_on_card(_e):
         if (
             not card.face_up and card.home.cards[-1] == card
@@ -183,7 +193,7 @@ def CardView(card: Card) -> ft.Control:
         content=ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg")
         if card.face_up
         else ft.Image(src="/images/card_back.png"),
-        on_click=click_on_card,
+        on_click=lambda _e: on_card_click(card),
     )
 
 
@@ -260,7 +270,7 @@ def App():
                 ft.Container(expand=True, bgcolor="#207F4C")
             ]  # to capture full area
             + [SlotView(s) for s in game.slots]
-            + [CardView(c) for c in game.cards],
+            + [CardView(c, game.open_card) for c in game.cards],
             width=1000,
             height=500,
         ),
