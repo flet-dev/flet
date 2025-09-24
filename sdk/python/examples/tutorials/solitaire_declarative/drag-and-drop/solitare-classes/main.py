@@ -168,7 +168,9 @@ class Game:
 @ft.component
 def CardView(card: Card) -> ft.Control:
     def click_on_card(_e):
-        if not card.face_up:
+        if (
+            not card.face_up and card.home.cards[-1] == card
+        ):  # flip only if it's face down and the top card in the slot
             card.face_up = True
 
     return ft.Container(
