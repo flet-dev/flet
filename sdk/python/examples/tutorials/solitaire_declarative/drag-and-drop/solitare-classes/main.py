@@ -32,6 +32,7 @@ suites = [
     Suite("clubs", "BLACK"),
     Suite("spades", "BLACK"),
 ]
+
 ranks = [
     Rank("Ace", 1),
     Rank("2", 2),
@@ -104,7 +105,8 @@ class Game:
         """Initialize homes & coordinates: place cards in the deck slot."""
         random.shuffle(self.cards)
 
-        n = 6  # place cards in tableau1..tableau7
+        # Deal cards in tableau1..tableau7
+        n = 6
         i = 0
         for card in self.cards:
             self.place_card_in_slot(card, self.slots[n])
@@ -169,20 +171,57 @@ class Game:
             not card.face_up and card.home.cards[-1] == card
         ):  # flip only if it's face down and the top card in the slot
             card.face_up = True
+            self.move_to_top([card])
             if card.home.id == "deck":  # move to waste
-                # self.place_card_in_slot(card, self.slots[1])  # move to waste slot
-                print("Move to waste not implemented yet")
+                self.place_card_in_slot(card, self.slots[1])  # move to waste slot
+
+    def reset_deck(self, slot: Slot):
+        # Move all cards from waste back to deck, face down
+        if slot.id != "deck":
+            return
+        waste = self.slots[1]
+        deck = self.slots[0]
+        for card in waste.cards[:]:  # copy the list since we'll modify it
+            card.face_up = False
+            self.place_card_in_slot(card, deck)
+        print("Current cards in deck:", len(self.slots[0].cards))
+
+    def rules_allow_move(self, cards: list[Card], slot: Slot) -> bool:
+        """Basic Solitaire rules for moving cards between slots"""
+        # Moving to foundation slots
+        if slot.id.startswith("foundation"):
+            if len(cards) != 1:
+                return False  # can move only one card at a time to foundation
+            else:
+                if len(slot.cards) == 0 and cards[0].rank.value == 1:
+                    return True  # Ace can be placed in empty foundation
+                elif len(slot.cards) > 0:
+                    top_card = slot.cards[-1]
+                    if (
+                        cards[0].suite == top_card.suite
+                        and cards[0].rank.value == top_card.rank.value + 1
+                    ):
+                        return True  # same suite, one rank higher
+            return False  # otherwise not allowed
+        elif slot.id.startswith("tableau"):
+            # Moving to tableau slots
+            if len(slot.cards) == 0:
+                return cards[0].rank.value == 13  # King can be placed in empty tableau
+            else:
+                top_card = slot.cards[-1]
+                if (
+                    cards[0].suite.color != top_card.suite.color
+                    and cards[0].rank.value == top_card.rank.value - 1
+                ):
+                    return True  # alternating colors, one rank lower
+            return False  # otherwise not allowed
+        else:  # moving to deck or waste (not allowed)
+            return False
 
 
 # ---------- View (pure) ----------
 @ft.component
 def CardView(card: Card, on_card_click) -> ft.Control:
-    def click_on_card(_e):
-        if (
-            not card.face_up and card.home.cards[-1] == card
-        ):  # flip only if it's face down and the top card in the slot
-            card.face_up = True
-
     return ft.Container(
         left=card.left,
         top=card.top,
@@ -198,7 +237,7 @@ def CardView(card: Card, on_card_click) -> ft.Control:
 
 
 @ft.component
-def SlotView(slot: Slot) -> ft.Control:
+def SlotView(slot: Slot, on_slot_click) -> ft.Control:
     return ft.Container(
         margin=5,
         left=slot.left,
@@ -208,6 +247,7 @@ def SlotView(slot: Slot) -> ft.Control:
         border=ft.Border.all(1, ft.Colors.SECONDARY_CONTAINER),
         border_radius=5,
         content=ft.Text(slot.id, size=10, color=ft.Colors.BLACK45),
+        on_click=lambda _e: on_slot_click(slot),
     )
 
 
@@ -244,14 +284,10 @@ def App():
             return
 
         s = game.nearest_slot(dragging[0])
-        if s is not None:  # snap to this slot
+
+        if s is not None and game.rules_allow_move(dragging, s):
             for c in dragging:
-                # c.left = s.left
-                # c.top = s.top + OFFSET_Y * (len(s.cards)) if s.stacking else s.top
-                # c.home.cards.remove(c)  # Remove card from previous slot's pile
-                # c.home = s  # <-- update to the Slot object
-                # s.cards.append(c)  # Add card to the slot's pile
-                game.place_card_in_slot(c, s)
+                game.place_card_in_slot(c, s)  # snap to this slot
 
         else:  # bounce back to where it was picked up
             for i, c in enumerate(dragging):
@@ -269,7 +305,7 @@ def App():
             controls=[
                 ft.Container(expand=True, bgcolor="#207F4C")
             ]  # to capture full area
-            + [SlotView(s) for s in game.slots]
+            + [SlotView(s, game.reset_deck) for s in game.slots]
             + [CardView(c, game.open_card) for c in game.cards],
             width=1000,
             height=500,
