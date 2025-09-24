@@ -85,16 +85,17 @@ class Game:
         default_factory=lambda: [
             Slot(left=0, top=0, id="deck"),
             Slot(left=100, top=0, id="waste"),
-            Slot(left=200, top=0, id="foundation1"),
-            Slot(left=300, top=0, id="foundation2"),
-            Slot(left=400, top=0, id="foundation3"),
-            Slot(left=500, top=0, id="foundation4"),
+            Slot(left=300, top=0, id="foundation1"),
+            Slot(left=400, top=0, id="foundation2"),
+            Slot(left=500, top=0, id="foundation3"),
+            Slot(left=600, top=0, id="foundation4"),
             Slot(left=0, top=200, id="tableau1", stacking=True),
             Slot(left=100, top=200, id="tableau2", stacking=True),
             Slot(left=200, top=200, id="tableau3", stacking=True),
             Slot(left=300, top=200, id="tableau4", stacking=True),
             Slot(left=400, top=200, id="tableau5", stacking=True),
             Slot(left=500, top=200, id="tableau6", stacking=True),
+            Slot(left=600, top=200, id="tableau7", stacking=True),
         ],
     )
 
@@ -143,33 +144,25 @@ class Game:
 @ft.component
 def CardView(card: Card) -> ft.Control:
     return ft.Container(
-        # bgcolor=ft.Colors.GREEN_100
-        # if card.suite.color == "RED"
-        # else ft.Colors.GREEN_500,
         left=card.left,
         top=card.top,
         width=CARD_W,
         height=CARD_H,
-        # border=ft.Border.all(1, ft.Colors.PRIMARY),
+        margin=5,
         border_radius=5,
-        # content=ft.Text(
-        #     value=f"{card.rank.name} {card.suite.name}",
-        #     size=10,
-        #     color=ft.Colors.BLACK45,
-        # ),
         content=ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg"),
-        # content.content.src = f"/images/{self.rank.name}_{self.suite.name}.svg"
     )
 
 
 @ft.component
 def SlotView(slot: Slot) -> ft.Control:
     return ft.Container(
+        margin=5,
         left=slot.left,
         top=slot.top,
         width=CARD_W,
         height=CARD_H,
-        border=ft.Border.all(1, ft.Colors.PRIMARY),
+        border=ft.Border.all(1, ft.Colors.SECONDARY_CONTAINER),
         border_radius=5,
         content=ft.Text(slot.id, size=10, color=ft.Colors.BLACK45),
     )
@@ -231,9 +224,10 @@ def App():
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
             controls=[
-                *(SlotView(s, key=s.id) for s in game.slots),
-                *(CardView(c, key=c.id) for c in game.cards),
-            ],
+                ft.Container(expand=True, bgcolor="#207F4C")
+            ]  # to capture full area
+            + [SlotView(s) for s in game.slots]
+            + [CardView(c) for c in game.cards],
             width=1000,
             height=500,
         ),
