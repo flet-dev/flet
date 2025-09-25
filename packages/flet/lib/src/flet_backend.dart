@@ -312,12 +312,13 @@ class FletBackend extends ChangeNotifier {
     }
   }
 
-  void updatePageSize(Size newSize) async {
+  void updatePageSize(Size newSize, {Control? view}) async {
     debugPrint("Page size updated: $newSize");
     pageSize = newSize;
     var newProps = {"width": newSize.width, "height": newSize.height};
-    updateControl(page.id, newProps);
-    triggerControlEvent(page, "resize", newProps);
+    var ctrl = view ?? page;
+    updateControl(ctrl.id, newProps);
+    triggerControlEvent(ctrl, "resize", newProps);
 
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
@@ -342,11 +343,12 @@ class FletBackend extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateMedia(PageMediaData newMedia) {
+  void updateMedia(PageMediaData newMedia, {Control? view}) {
     debugPrint("Page media updated: $newMedia");
     media = newMedia;
-    updateControl(page.id, {"media": newMedia.toMap()});
-    triggerControlEvent(page, "media_change", newMedia.toMap());
+    var ctrl = view ?? page;
+    updateControl(ctrl.id, {"media": newMedia.toMap()});
+    triggerControlEvent(ctrl, "media_change", newMedia.toMap());
     notifyListeners();
   }
 

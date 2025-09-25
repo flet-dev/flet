@@ -176,11 +176,11 @@ class BaseControl:
         """
         The page to which this control belongs to.
         """
-        from .page import BasePage, Page
+        from .page import Page
 
         parent = self
         while parent:
-            if isinstance(parent, (Page, BasePage)):
+            if isinstance(parent, (Page)):
                 return parent
             parent = parent.parent
         raise RuntimeError(

@@ -72,10 +72,6 @@ except ImportError:
 
 
 logger = logging.getLogger("flet")
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
 
 
 AT = TypeVar("AT", bound=Authorization)
