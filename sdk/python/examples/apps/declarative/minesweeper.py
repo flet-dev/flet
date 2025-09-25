@@ -101,7 +101,7 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
             if (square.revealed and square.mine and square.tapped)
             else ft.Colors.GREY_300
             if square.revealed
-            else ft.Colors.GREY
+            else ft.Colors.GREY_400
         ),
         align=ft.Alignment.CENTER,
         foreground_decoration=ft.BoxDecoration(
@@ -158,7 +158,8 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
 # ---------- App ----------
 @ft.component
 def App():
-    game, _ = ft.use_state(lambda: Game())
+    game, set_game = ft.use_state(lambda: Game())
+    new_game_tapped, set_new_game_tapped = ft.use_state(False)
 
     def on_tap_down(e: ft.TapEvent):
         # e.local_position.x / e.local_position.y are relative to the GestureDetector
@@ -183,7 +184,7 @@ def App():
                 game.square_flagged(s)
                 break
 
-    return ft.GestureDetector(
+    board = ft.GestureDetector(
         drag_interval=5,
         mouse_cursor=ft.MouseCursor.MOVE,
         on_tap_down=on_tap_down,
@@ -193,6 +194,46 @@ def App():
             width=1000,
             height=500,
         ),
+    )
+
+    top_menu = ft.Row(
+        controls=[
+            ft.Text("000", size=20, weight=ft.FontWeight.BOLD),
+            ft.Container(
+                content=ft.Image(
+                    src="/images/neutral.png" if not game.over else "/images/cry.png",
+                    width=30,
+                ),
+                bgcolor=ft.Colors.GREY_400,
+                on_tap_down=lambda e: set_new_game_tapped(True),
+                on_click=lambda e: (set_game(Game()), set_new_game_tapped(False)),
+                width=60,
+                height=60,
+                foreground_decoration=ft.BoxDecoration(
+                    border=ft.Border(
+                        bottom=ft.BorderSide(4, ft.Colors.BLACK38),
+                        right=ft.BorderSide(4, ft.Colors.BLACK38),
+                        top=ft.BorderSide(4, ft.Colors.WHITE70),
+                        left=ft.BorderSide(4, ft.Colors.WHITE70),
+                    )
+                    if not new_game_tapped
+                    else None
+                ),
+            ),
+            ft.Text(f"Mines: {game.mine_count}"),
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        width=300,
+    )
+
+    return ft.Column(
+        controls=[
+            top_menu,
+            board,
+        ],
+        alignment=ft.MainAxisAlignment.START,
+        horizontal_alignment=ft.CrossAxisAlignment.START,
+        spacing=10,
     )
 
 
