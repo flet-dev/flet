@@ -9,6 +9,23 @@ import flet as ft
 # ----------- Visual constants ----------
 SQUARE_SIZE = 40
 
+LIGHT = ft.Colors.WHITE70
+DARK = ft.Colors.BLACK38
+
+BEVEL_RAISED = ft.Border(
+    bottom=ft.BorderSide(4, DARK),
+    right=ft.BorderSide(4, DARK),
+    top=ft.BorderSide(4, LIGHT),
+    left=ft.BorderSide(4, LIGHT),
+)
+
+BEVEL_SUNKEN = ft.Border(
+    bottom=ft.BorderSide(4, LIGHT),
+    right=ft.BorderSide(4, LIGHT),
+    top=ft.BorderSide(4, DARK),
+    left=ft.BorderSide(4, DARK),
+)
+
 
 # ---------- Model ----------
 @ft.observable
@@ -103,16 +120,9 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
             if square.revealed
             else ft.Colors.GREY_400
         ),
-        align=ft.Alignment.CENTER,
+        alignment=ft.Alignment.CENTER,
         foreground_decoration=ft.BoxDecoration(
-            border=ft.Border(
-                bottom=ft.BorderSide(4, ft.Colors.BLACK38),
-                right=ft.BorderSide(4, ft.Colors.BLACK38),
-                top=ft.BorderSide(4, ft.Colors.WHITE70),
-                left=ft.BorderSide(4, ft.Colors.WHITE70),
-            )
-            if not square.revealed
-            else None
+            border=BEVEL_RAISED if not square.revealed else None
         ),
         content=ft.Text(
             "💣"
@@ -122,9 +132,9 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
             else str(square.adjacent_mines)
             if square.revealed and square.adjacent_mines > 0
             else "",
-            size=30,
-            text_align=ft.TextAlign.CENTER,
-            align=ft.Alignment.CENTER,
+            size=25,
+            # text_align=ft.TextAlign.CENTER,
+            # align=ft.Alignment.CENTER,
             weight=ft.FontWeight.BOLD,
             color=(
                 ft.Colors.BLUE
@@ -191,8 +201,8 @@ def App():
         on_right_pan_start=on_right_pan_start,
         content=ft.Stack(
             controls=[SquareView(c, game.square_revealed) for c in game.squares],
-            width=1000,
-            height=500,
+            # width=1000,
+            # height=500,
         ),
     )
 
@@ -207,33 +217,49 @@ def App():
                 bgcolor=ft.Colors.GREY_400,
                 on_tap_down=lambda e: set_new_game_tapped(True),
                 on_click=lambda e: (set_game(Game()), set_new_game_tapped(False)),
-                width=60,
-                height=60,
+                width=SQUARE_SIZE * 1.5,
+                height=SQUARE_SIZE * 1.5,
                 foreground_decoration=ft.BoxDecoration(
-                    border=ft.Border(
-                        bottom=ft.BorderSide(4, ft.Colors.BLACK38),
-                        right=ft.BorderSide(4, ft.Colors.BLACK38),
-                        top=ft.BorderSide(4, ft.Colors.WHITE70),
-                        left=ft.BorderSide(4, ft.Colors.WHITE70),
-                    )
-                    if not new_game_tapped
-                    else None
+                    border=BEVEL_RAISED if not new_game_tapped else None
                 ),
             ),
             ft.Text(f"Mines: {game.mine_count}"),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
-        width=300,
+        expand=True,
     )
 
-    return ft.Column(
-        controls=[
-            top_menu,
-            board,
-        ],
-        alignment=ft.MainAxisAlignment.START,
-        horizontal_alignment=ft.CrossAxisAlignment.START,
-        spacing=10,
+    return ft.Container(
+        content=ft.Column(
+            controls=[
+                ft.Container(
+                    content=top_menu,
+                    foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+                    padding=10,
+                ),
+                ft.Container(
+                    content=ft.Text("Right-click to flag/unflag squares"),
+                    foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+                    padding=10,
+                ),
+                ft.Container(
+                    content=board,
+                    # alignment=ft.Alignment.TOP_CENTER,
+                    # content=ft.Text("sdfsdfsfd"),
+                    foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+                    padding=20,
+                    # height=SQUARE_SIZE * game.rows + 4,
+                ),
+            ],
+            alignment=ft.MainAxisAlignment.START,
+            horizontal_alignment=ft.CrossAxisAlignment.START,
+            spacing=10,
+        ),
+        bgcolor=ft.Colors.GREY_400,
+        foreground_decoration=ft.BoxDecoration(border=BEVEL_RAISED),
+        width=SQUARE_SIZE * (game.cols) + 30,
+        height=SQUARE_SIZE * (game.rows + 1) + 200,
+        padding=10,
     )
 
 
