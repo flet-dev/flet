@@ -281,6 +281,14 @@ class Page(BasePage):
         This property is read-only.
     """
 
+    pyodide: bool = False
+    """
+    `True` if the application is running in Pyodide (WebAssembly) mode.
+
+    Note:
+        This property is read-only.
+    """
+
     platform_brightness: Optional[Brightness] = None
     """
     The current brightness mode of the host platform.

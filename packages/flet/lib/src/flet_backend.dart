@@ -113,6 +113,7 @@ class FletBackend extends ChangeNotifier {
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
       "test": tester != null,
       "multi_view": multiView,
+      "pyodide": isPyodideMode(),
       "window": {
         "_c": "Window",
         "_i": 2,
@@ -197,6 +198,7 @@ class FletBackend extends ChangeNotifier {
                   "wasm": page.get("wasm"),
                   "test": page.get("test"),
                   "multi_view": page.get("multi_view"),
+                  "pyodide": page.get("pyodide"),
                   "platform_brightness": page.get("platform_brightness"),
                   "width": page.get("width"),
                   "height": page.get("height"),
