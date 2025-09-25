@@ -178,7 +178,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     bool changed = false;
 
     bool triggerAddViewEvent =
-        SessionStore.get("triggerAddViewEvent") == null && !isPyodideMode();
+        SessionStore.get("triggerAddViewEvent") == null || isPyodideMode();
     for (final FlutterView view
         in WidgetsBinding.instance.platformDispatcher.views) {
       if (!_multiViews.containsKey(view.viewId)) {
