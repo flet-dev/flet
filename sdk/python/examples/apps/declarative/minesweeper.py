@@ -19,6 +19,7 @@ class Square:
     mine: bool = False
     revealed: bool = False
     flagged: bool = False
+    tapped: bool = False
     adjacent_mines: int = 0
 
 
@@ -63,10 +64,12 @@ class Game:
 
     def square_revealed(self, square: Square):
         square.revealed = True
+        square.tapped = True
         if square.mine:
             self.over = True
             for sq in self.squares:
-                sq.revealed = True
+                if sq.mine:
+                    sq.revealed = True
             print("Game Over!")
         elif square.adjacent_mines == 0:
             # reveal adjacent squares
@@ -83,6 +86,10 @@ class Game:
                         if not nsq.revealed and not nsq.mine:
                             self.square_revealed(nsq)
 
+    def square_flagged(self, square: Square):
+        if not square.revealed:
+            square.flagged = not square.flagged
+
 
 # ---------- View (pure) ----------
 @ft.component
@@ -91,7 +98,7 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
     return ft.Container(
         bgcolor=(
             ft.Colors.RED_400
-            if (square.revealed and square.mine)
+            if (square.revealed and square.mine and square.tapped)
             else ft.Colors.GREY_300
             if square.revealed
             else ft.Colors.GREY
@@ -117,6 +124,7 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
             else "",
             size=30,
             text_align=ft.TextAlign.CENTER,
+            align=ft.Alignment.CENTER,
             weight=ft.FontWeight.BOLD,
             color=(
                 ft.Colors.BLUE
@@ -125,6 +133,16 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
                 if square.adjacent_mines == 2
                 else ft.Colors.RED
                 if square.adjacent_mines == 3
+                else ft.Colors.ORANGE
+                if square.adjacent_mines == 4
+                else ft.Colors.PURPLE
+                if square.adjacent_mines == 5
+                else ft.Colors.BROWN
+                if square.adjacent_mines == 6
+                else ft.Colors.TEAL
+                if square.adjacent_mines == 7
+                else ft.Colors.BLACK
+                if square.adjacent_mines == 8
                 else ft.Colors.BLACK
             ),
         ),
@@ -155,10 +173,21 @@ def App():
                 game.square_revealed(s)
                 break
 
+    def on_right_pan_start(e):
+        print("right pan start", e)
+        for s in game.squares:
+            if (
+                s.left <= e.local_position.x <= s.left + SQUARE_SIZE
+                and s.top <= e.local_position.y <= s.top + SQUARE_SIZE
+            ):
+                game.square_flagged(s)
+                break
+
     return ft.GestureDetector(
         drag_interval=5,
         mouse_cursor=ft.MouseCursor.MOVE,
         on_tap_down=on_tap_down,
+        on_right_pan_start=on_right_pan_start,
         content=ft.Stack(
             controls=[SquareView(c, game.square_revealed) for c in game.squares],
             width=1000,
