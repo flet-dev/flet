@@ -29,6 +29,7 @@ class Game:
     rows: int = 9
     cols: int = 9
     mine_count: int = 10
+    over = False
 
     def __post_init__(self):
         """Initialize the grid of squares."""
@@ -62,6 +63,25 @@ class Game:
 
     def square_revealed(self, square: Square):
         square.revealed = True
+        if square.mine:
+            self.over = True
+            for sq in self.squares:
+                sq.revealed = True
+            print("Game Over!")
+        elif square.adjacent_mines == 0:
+            # reveal adjacent squares
+            r = int(square.top / SQUARE_SIZE)
+            c = int(square.left / SQUARE_SIZE)
+            for dr in (-1, 0, 1):
+                for dc in (-1, 0, 1):
+                    if dr == 0 and dc == 0:
+                        continue
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                        nidx = nr * self.cols + nc
+                        nsq = self.squares[nidx]
+                        if not nsq.revealed and not nsq.mine:
+                            self.square_revealed(nsq)
 
 
 # ---------- View (pure) ----------
@@ -96,6 +116,17 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
             if square.revealed and square.adjacent_mines > 0
             else "",
             size=30,
+            text_align=ft.TextAlign.CENTER,
+            weight=ft.FontWeight.BOLD,
+            color=(
+                ft.Colors.BLUE
+                if square.adjacent_mines == 1
+                else ft.Colors.GREEN
+                if square.adjacent_mines == 2
+                else ft.Colors.RED
+                if square.adjacent_mines == 3
+                else ft.Colors.BLACK
+            ),
         ),
         left=square.left,
         top=square.top,
@@ -114,6 +145,8 @@ def App():
     def on_tap_down(e: ft.TapEvent):
         # e.local_position.x / e.local_position.y are relative to the GestureDetector
         # content (the Stack)
+        if game.over:
+            return
         for s in game.squares:
             if (
                 s.left <= e.local_position.x <= s.left + SQUARE_SIZE
