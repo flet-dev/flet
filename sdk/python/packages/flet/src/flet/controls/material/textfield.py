@@ -19,11 +19,11 @@ from flet.controls.types import (
 )
 
 __all__ = [
-    "TextField",
-    "KeyboardType",
-    "TextCapitalization",
     "InputFilter",
+    "KeyboardType",
     "NumbersOnlyInputFilter",
+    "TextCapitalization",
+    "TextField",
     "TextOnlyInputFilter",
 ]
 
@@ -142,9 +142,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
-    The type of keyboard to use for editing the text. The property value is
-    [`KeyboardType`][flet.KeyboardType] and defaults
-    to `KeyboardType.TEXT`.
+    The type of keyboard to use for editing the text.
     """
 
     multiline: bool = False

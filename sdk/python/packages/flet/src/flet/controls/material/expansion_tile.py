@@ -39,21 +39,21 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A `Control` to display as primary content of the tile.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     controls: Optional[list[Control]] = None
     """
     The controls to be displayed when the tile expands.
 
-    Typically a list of [`ListTile`][flet.ListTile] controls.
+    Typically a list of [`ListTile`][flet.] controls.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     leading: Optional[IconDataOrControl] = None
@@ -65,7 +65,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A `Control` to display after the title.
 
-    Typically an [`Icon`][flet.Icon] control.
+    Typically an [`Icon`][flet.] control.
     """
 
     controls_padding: Optional[PaddingValue] = None
@@ -163,8 +163,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     collapsed_shape: Optional[OutlinedBorder] = None
     """
-    The tile's border shape when the sublist is collapsed. The value is an instance
-    of [`OutlinedBorder`][flet.OutlinedBorder]
+    The tile's border shape when the sublist is collapsed.
     """
 
     dense: Optional[bool] = None

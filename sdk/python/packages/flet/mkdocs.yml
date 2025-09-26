@@ -108,7 +108,6 @@ plugins:
       alias_type: symlink
   - glightbox:
       background: none
-  # - section-index
   - markdown-exec
   - mkdocstrings:
       default_handler: python_xref

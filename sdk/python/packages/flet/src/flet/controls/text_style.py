@@ -139,7 +139,7 @@ class TextStyle:
     """
     The typeface thickness to use when painting the text (e.g., bold).
 
-    Defaults to [`FontWeight.NORMAL`][flet.FontWeight.NORMAL].
+    Defaults to [`FontWeight.NORMAL`][flet.].
     """
 
     italic: bool = False

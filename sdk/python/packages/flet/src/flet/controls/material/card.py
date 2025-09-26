@@ -29,8 +29,8 @@ class Card(LayoutControl, AdaptiveControl):
     The Control to display inside the card.
 
     Tip:
-        To display multiple children, wrap them in a control like [`Row`][flet.Row],
-        [`Column`][flet.Column], or [`Stack`][flet.Stack], which accept
+        To display multiple children, wrap them in a control like [`Row`][flet.],
+        [`Column`][flet.], or [`Stack`][flet.], which accept
         a `controls` list.
     """
 
@@ -39,7 +39,7 @@ class Card(LayoutControl, AdaptiveControl):
     The z-coordinate at which to place this card.
     Defines the size of the shadow below the card.
 
-    Defaults to [`CardTheme.elevation`][flet.CardTheme.elevation], or if that is `None`,
+    Defaults to [`CardTheme.elevation`][flet.], or if that is `None`,
     falls back to `1.0`.
     """
 
@@ -50,11 +50,10 @@ class Card(LayoutControl, AdaptiveControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color to paint the shadow below this
-    card.
+    The color to paint the shadow below this card.
 
-    Defaults to [`CardTheme.shadow_color`][flet.CardTheme.shadow_color],
-    or if that is `None`, falls back to [`Theme.shadow_color`][flet.Theme.shadow_color]
+    Defaults to [`CardTheme.shadow_color`][flet.],
+    or if that is `None`, falls back to [`Theme.shadow_color`][flet.]
     (which defaults to `Colors.BLACK`).
     """
 
@@ -62,15 +61,15 @@ class Card(LayoutControl, AdaptiveControl):
     """
     The shape of this card.
 
-    Defaults to [`CardTheme.shape`][flet.CardTheme.shape], or if that is `None`,
+    Defaults to [`CardTheme.shape`][flet.], or if that is `None`,
     falls back to `RoundedRectangleBorder(radius=12.0)`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Defines how the [`content`][flet.Card.content] will be clipped.
+    Defines how the [`content`][(c).] will be clipped.
 
-    Defaults to [`CardTheme.clip_behavior`][flet.CardTheme.clip_behavior],
+    Defaults to [`CardTheme.clip_behavior`][flet.],
     or if that is `None`, falls back to `ClipBehavior.NONE`.
     """
 
@@ -84,7 +83,7 @@ class Card(LayoutControl, AdaptiveControl):
     show_border_on_foreground: bool = True
     """
     Whether the shape of the border should be painted in front of the
-    [`content`][flet.Card.content] or behind.
+    [`content`][(c).] or behind.
     """
 
     variant: CardVariant = CardVariant.ELEVATED

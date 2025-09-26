@@ -13,8 +13,8 @@ class IconData(IntEnum):
 
     An icon can come from:
 
-    - the Material icon set via the [`Icons`][flet.Icons] enum,
-    - the Cupertino icon set via the [`CupertinoIcons`][flet.CupertinoIcons] enum,
+    - the Material icon set via the [`Icons`][flet.] enum,
+    - the Cupertino icon set via the [`CupertinoIcons`][flet.] enum,
     - or a custom icon set defined by the developer.
 
     Internally, an icon is stored as an integer that encodes icon's index

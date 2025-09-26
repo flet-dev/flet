@@ -167,7 +167,7 @@ class MultiViewRemoveEvent(Event["Page"]):
 @control("Page", isolated=True, post_init_args=2)
 class Page(BasePage):
     """
-    Page is a container for [`View`][flet.View] controls.
+    Page is a container for [`View`][flet.] controls.
 
     A page instance and the root view are automatically created when a new
     user session started.
@@ -343,7 +343,7 @@ class Page(BasePage):
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
     Called when the user clicks automatic "Back" button in
-    [`AppBar`][flet.AppBar] control.
+    [`AppBar`][flet.] control.
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
@@ -695,8 +695,8 @@ class Page(BasePage):
         Args:
             url: The URL to open.
             web_popup_window_name: Window tab/name to open URL in. Use
-                [`UrlTarget.SELF`][flet.UrlTarget.SELF]
-                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
+                [`UrlTarget.SELF`][flet.]
+                for the same browser tab, [`UrlTarget.BLANK`][flet.]
                 for a new browser tab (or in external application on mobile device),
                 or a custom name for a named tab.
             web_popup_window: Display the URL in a browser popup window.
