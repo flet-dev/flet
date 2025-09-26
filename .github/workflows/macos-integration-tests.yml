@@ -27,6 +27,11 @@ env:
 jobs:
   test-macos:
     runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [core, material, cupertino, layout, theme]
+    name: macOS Integration Tests (${{ matrix.suite }})
     steps:
       - uses: actions/checkout@v4
 
@@ -50,10 +55,10 @@ jobs:
         run: |
           python3 --version && uv --version && pod --version && flutter --version
 
-      - name: Run integration tests
+      - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/${{ matrix.suite }}
 
       - name: Upload failure screenshots
         if: failure()
