@@ -14,6 +14,8 @@ on:
       - 'packages/flet/**'
       - 'client/**'
 
+  workflow_dispatch:
+
 # Ensure only one run per branch (PR or push), cancel older ones
 concurrency:
   group: macos-integration-tests-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}

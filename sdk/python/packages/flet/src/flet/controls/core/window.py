@@ -63,7 +63,7 @@ class Window(BaseControl):
     Sets background color of an application window.
 
     Tip:
-        Can be used together with [`Page.bgcolor`][flet.Page.bgcolor] to make
+        Can be used together with [`Page.bgcolor`][flet.] to make
         a window transparent.
     """
 

@@ -10,13 +10,13 @@ class Context:
     Manages the context for Flet controls, including page reference
     and auto-update behavior.
 
-    Context instance is accessed via [`ft.context`][flet.context].
+    Context instance is accessed via [`flet.context`][flet.context].
     """
 
     @property
     def page(self) -> "Page":
         """
-        Returns the current [`Page`][flet.Page] associated with the context.
+        Returns the current [`Page`][flet.] associated with the context.
 
         For example:
 

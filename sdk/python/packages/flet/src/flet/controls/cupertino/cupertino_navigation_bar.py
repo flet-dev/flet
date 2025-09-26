@@ -24,8 +24,8 @@ class CupertinoNavigationBar(LayoutControl):
 
     Raises:
         AssertionError: If [`destinations`][(c).] does not contain at least two visible
-            [`NavigationBarDestination`][flet.NavigationBarDestination]s.
-            IndexError: If [`selected_index`][(c).] is out of range.
+            [`NavigationBarDestination`][flet.]s.
+        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     destinations: list[NavigationBarDestination]
@@ -33,17 +33,17 @@ class CupertinoNavigationBar(LayoutControl):
     The destinations of this navigation bar.
 
     Note:
-        Must be a list of two or more [`NavigationBarDestination`][flet.NavigationBarDestination]s.
-    """  # noqa: E501
+        Must be a list of two or more [`NavigationBarDestination`][flet.]s.
+    """
 
     selected_index: int = 0
     """
-    The index into [`destinations`][flet.CupertinoNavigationBar.destinations] for the
-    currently selected [`NavigationBarDestination`][flet.NavigationBarDestination].
+    The index into [`destinations`][(c).] for the
+    currently selected [`NavigationBarDestination`][flet.].
 
     Note:
         Must be a value between `0` and the length of visible
-        [`destinations`][flet.CupertinoNavigationBar.destinations], inclusive.
+        [`destinations`][(c).], inclusive.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -53,14 +53,13 @@ class CupertinoNavigationBar(LayoutControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The foreground color of the icon and
-    title of the selected destination.
+    The foreground color of the icon and title of the
+    selected [`destination`][(c).destinations].
     """
 
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
     """
-    The foreground color of the icon and
-    title of the unselected destinations.
+    The foreground color of the icon and title of the unselected [`destinations`][(c).].
     """
 
     border: Optional[Border] = None

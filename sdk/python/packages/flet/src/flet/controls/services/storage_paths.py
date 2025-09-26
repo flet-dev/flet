@@ -39,9 +39,9 @@ class StoragePaths(Service):
 
         For non-user-generated data, consider using:
 
-        - [`get_application_support_directory()`][flet.StoragePaths.get_application_support_directory]
-        - [`get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory]
-        - [`get_external_storage_directory()`][flet.StoragePaths.get_external_storage_directory]
+        - [`get_application_support_directory()`][(c).get_application_support_directory]
+        - [`get_application_cache_directory()`][(c).get_application_cache_directory]
+        - [`get_external_storage_directory()`][(c).get_external_storage_directory]
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.

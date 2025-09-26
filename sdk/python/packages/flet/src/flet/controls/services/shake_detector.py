@@ -14,7 +14,7 @@ class ShakeDetector(Service):
     Detects phone shakes.
 
     It is non-visual and should be added to
-    [`Page.services`][flet.Page.services] list before it can be used.
+    [`Page.services`][flet.] list before it can be used.
     """
 
     minimum_shake_count: int = 1

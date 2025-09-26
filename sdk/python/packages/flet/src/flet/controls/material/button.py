@@ -22,31 +22,9 @@ __all__ = ["Button"]
 @control("Button")
 class Button(LayoutControl, AdaptiveControl):
     """
-    A customizable button control that can display text, icons, or both. It supports
-    various styles, colors, and event handlers for user interaction.
+    A customizable button control that can display text, icons, or both.
 
-    Example:
-        ```python
-        import flet as ft
-
-
-        def main(page: ft.Page):
-            def on_click(e):
-                print("Button clicked!")
-
-            page.add(
-                ft.Button(
-                    content="Click Me",
-                    icon=ft.Icons.ADD,
-                    color="white",
-                    bgcolor="blue",
-                    on_click=on_click,
-                )
-            )
-
-
-        ft.run(main)
-        ```
+    It supports various styles, colors, and event handlers for user interaction.
     """
 
     content: Optional[StrOrControl] = None

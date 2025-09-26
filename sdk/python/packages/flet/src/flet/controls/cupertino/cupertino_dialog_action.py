@@ -14,7 +14,7 @@ class CupertinoDialogAction(Control):
     """
     A dialog action button.
 
-    Typically used as a child of [`CupertinoAlertDialog.actions`][flet.CupertinoAlertDialog.actions].
+    Typically used as a child of [`CupertinoAlertDialog.actions`][flet.].
 
     Raises:
         AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
@@ -27,29 +27,32 @@ class CupertinoDialogAction(Control):
 
     default: bool = False
     """
-    Whether this action is a default action. In this case, the button will have bold text.
+    Whether this action is a default action.
+    In this case, the button will have bold text.
 
     Info:
-        More than one action can have
-        this property set to `True` in [`CupertinoAlertDialog`][flet.CupertinoAlertDialog].
+        Multiple actions can have this property set to `True`
+        in a [`CupertinoAlertDialog`][flet.].
     """
 
     destructive: bool = False
     """
-    If set to True, the button's text color will be red. Use it for actions that
-    destroy objects, such as an delete that deletes an email etc.
+    If set to `True`, this button's text color will be red.
+
+    Typically used for actions that destroy objects,
+    such as an delete that deletes an email etc.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    The text style to use for text in the button.
+    The text style to use for text in this button.
 
-    Can be useful when [`content`][flet.CupertinoDialogAction.content] is a string.
+    Can be useful when [`content`][(c).] is a string.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None
     """
-    Called when a user clicks the button.
+    Called when a user clicks this button.
     """
 
     def before_update(self):

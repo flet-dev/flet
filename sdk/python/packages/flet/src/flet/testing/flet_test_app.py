@@ -35,8 +35,8 @@ class FletTestApp:
 
         flet_app_main:
             A callable or coroutine function representing the main entry point
-            of the Flet app under test. This will be invoked with an
-            [`ft.Page`][flet.Page] instance when the app starts.
+            of the Flet app under test. This will be invoked with a
+            [`Page`][flet.] instance when the app starts.
 
         assets_dir:
             Path to the directory containing static assets for the Flet app.
@@ -133,7 +133,7 @@ class FletTestApp:
     @property
     def page(self) -> ft.Page:
         """
-        Returns an instance of Flet's app [`Page`][flet.Page].
+        Returns an instance of Flet's app [`Page`][flet.].
         """
         assert self.__page
         return self.__page
@@ -141,7 +141,7 @@ class FletTestApp:
     @property
     def tester(self) -> Tester:
         """
-        Returns an instance of [`Tester`][flet.testing.Tester] class
+        Returns an instance of [`Tester`][flet.testing.] class
         that programmatically interacts with page controls and the test environment.
         """
         assert self.__tester

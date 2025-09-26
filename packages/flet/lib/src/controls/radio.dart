@@ -8,9 +8,7 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
-import '../widgets/radio_group_provider.dart';
 import 'base_controls.dart';
-import 'list_tile.dart';
 
 class RadioControl extends StatefulWidget {
   final Control control;
@@ -32,12 +30,6 @@ class _RadioControlState extends State<RadioControl> {
     _focusNode.addListener(_onFocusChange);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ListTileClicks.of(context)?.notifier.addListener(_toggleRadio);
-  }
-
   void _onFocusChange() {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
@@ -45,70 +37,45 @@ class _RadioControlState extends State<RadioControl> {
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
-    ListTileClicks.of(context)?.notifier.removeListener(_toggleRadio);
     _focusNode.dispose();
     super.dispose();
-  }
-
-  void _toggleRadio() {
-    var radioGroup = RadioGroupProvider.of(context);
-    if (radioGroup != null) {
-      String value = widget.control.getString("value", "")!;
-      _onChange(radioGroup, value);
-    }
-  }
-
-  void _onChange(Control radioGroup, String? value) {
-    radioGroup.updateProperties({"value": value}, notify: true);
-    radioGroup.triggerEvent("change", value);
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Radio build: ${widget.control.id}");
 
-    var label = widget.control.getString("label", "")!;
+    final radioGroup = RadioGroup.maybeOf<String>(context);
+    if (radioGroup == null) {
+      return const ErrorControl("Radio must be enclosed within RadioGroup");
+    }
+
     var value = widget.control.getString("value", "")!;
+    var label = widget.control.getString("label", "")!;
     var labelPosition =
         widget.control.getLabelPosition("label_position", LabelPosition.right)!;
-    var visualDensity = widget.control.getVisualDensity("visual_density");
-    bool autofocus = widget.control.getBool("autofocus", false)!;
-
     var labelStyle =
         widget.control.getTextStyle("label_style", Theme.of(context));
     if (widget.control.disabled && labelStyle != null) {
       labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
     }
 
-    debugPrint("Radio StoreConnector build: ${widget.control.id}");
-
-    var radioGroup = RadioGroupProvider.of(context);
-
-    if (radioGroup == null) {
-      return const ErrorControl("Radio must be enclosed within RadioGroup");
-    }
-
-    String groupValue = radioGroup.getString("value", "")!;
-
     var radio = Radio<String>(
-        autofocus: autofocus,
-        focusNode: _focusNode,
-        groupValue: groupValue,
-        mouseCursor: parseMouseCursor(widget.control.getString("mouseCursor")),
-        value: value,
-        activeColor: widget.control.getColor("active_color", context),
-        focusColor: widget.control.getColor("focus_color", context),
-        hoverColor: widget.control.getColor("hover_color", context),
-        splashRadius: widget.control.getDouble("splash_radius"),
-        toggleable: widget.control.getBool("toggleable", false)!,
-        fillColor:
-            widget.control.getWidgetStateColor("fill_color", Theme.of(context)),
-        overlayColor: widget.control
-            .getWidgetStateColor("overlay_color", Theme.of(context)),
-        visualDensity: visualDensity,
-        onChanged: !widget.control.disabled
-            ? (String? value) => _onChange(radioGroup, value)
-            : null);
+      autofocus: widget.control.getBool("autofocus", false)!,
+      focusNode: _focusNode,
+      mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
+      value: value,
+      activeColor: widget.control.getColor("active_color", context),
+      focusColor: widget.control.getColor("focus_color", context),
+      hoverColor: widget.control.getColor("hover_color", context),
+      splashRadius: widget.control.getDouble("splash_radius"),
+      toggleable: widget.control.getBool("toggleable", false)!,
+      fillColor:
+          widget.control.getWidgetStateColor("fill_color", Theme.of(context)),
+      overlayColor: widget.control
+          .getWidgetStateColor("overlay_color", Theme.of(context)),
+      visualDensity: widget.control.getVisualDensity("visual_density"),
+    );
 
     Widget result = radio;
     if (label != "") {
@@ -120,7 +87,7 @@ class _RadioControlState extends State<RadioControl> {
       result = MergeSemantics(
           child: GestureDetector(
               onTap: !widget.control.disabled
-                  ? () => _onChange(radioGroup, value)
+                  ? () => radioGroup.onChanged(value)
                   : null,
               child: labelPosition == LabelPosition.right
                   ? Row(children: [radio, labelWidget])
