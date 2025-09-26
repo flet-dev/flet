@@ -85,7 +85,7 @@ class FloatingActionButton(LayoutControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    Defines how the [`content`][flet.FloatingActionButton.content] is clipped.
+    Defines how the [`content`][(c).] is clipped.
     """
 
     elevation: Optional[Number] = None
@@ -144,7 +144,7 @@ class FloatingActionButton(LayoutControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.FloatingActionButton.on_click] event callback
+    Additionally, if [`on_click`][(c).] event callback
     is provided, it is fired after that.
     """
 

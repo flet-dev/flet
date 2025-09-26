@@ -22,7 +22,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
     Implements the basic Material Design visual layout structure.
 
     Use it for projects that require a "page within a page" layouts with its own
-    [`AppBar`][flet..], [`BottomAppBar`][flet..], [`NavigationDrawer`][flet..],
+    [`AppBar`][flet.], [`BottomAppBar`][flet.], [`NavigationDrawer`][flet.],
     such as demos and galleries.
 
     Raises:
@@ -39,29 +39,29 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    An [`AppBar`][flet.AppBar] control to display at the top
+    An [`AppBar`][flet.] control to display at the top
     of the Pagelet.
     """
 
     navigation_bar: Optional[Union[NavigationBar, CupertinoNavigationBar]] = None
     """
-    A navigation bar ([`NavigationBar`][flet.NavigationBar] or
-    [`CupertinoNavigationBar`][flet.CupertinoNavigationBar]) control to display
+    A navigation bar ([`NavigationBar`][flet.] or
+    [`CupertinoNavigationBar`][flet.]) control to display
     at the bottom of the `Pagelet`.
 
     Note:
-        If both the `navigation_bar` and [`bottom_appbar`][flet.Pagelet.bottom_appbar]
+        If both the `navigation_bar` and [`bottom_appbar`][(c).]
         properties are specified, `navigation_bar` takes precedence and will
         be displayed.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    A [`BottomAppBar`][flet.BottomAppBar] control to display at
+    A [`BottomAppBar`][flet.] control to display at
     the bottom of the `Pagelet`.
 
     Note:
-        If both the `bottom_appbar` and [`navigation_bar`][flet.Pagelet.navigation_bar]
+        If both the `bottom_appbar` and [`navigation_bar`][(c).]
         properties are specified, `bottom_appbar` takes precedence and will
         be displayed.
     """
@@ -74,19 +74,19 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.NavigationDrawer] control to
+    A [`NavigationDrawer`][flet.] control to
     display as a panel sliding from the start edge of the page.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.NavigationDrawer] control to
+    A [`NavigationDrawer`][flet.] control to
     display as a panel sliding from the end edge of the page.
     """
 
     floating_action_button: Optional[Control] = None
     """
-    A [`FloatingActionButton`][flet.FloatingActionButton]
+    A [`FloatingActionButton`][flet.]
     control to display on top of Pagelet content.
     """
 

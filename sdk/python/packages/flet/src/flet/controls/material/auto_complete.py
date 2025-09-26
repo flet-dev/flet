@@ -6,7 +6,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.types import Number
 
-__all__ = ["AutoComplete", "AutoCompleteSuggestion", "AutoCompleteSelectEvent"]
+__all__ = ["AutoComplete", "AutoCompleteSelectEvent", "AutoCompleteSuggestion"]
 
 
 @dataclass
@@ -29,16 +29,18 @@ class AutoComplete(Control):
 
     suggestions: list[AutoCompleteSuggestion] = field(default_factory=list)
     """
-    A list of [`AutoCompleteSuggestion`][flet.AutoCompleteSuggestion]
+    A list of [`AutoCompleteSuggestion`][flet.]
     controls representing the suggestions to be displayed.
 
     Note:
-        - The internal filtration process of the suggestions (based on their `key`s) with
-          respect to the user's input is case-insensitive because the comparison is done
-          in lowercase.
-        - A valid `AutoCompleteSuggestion` must have at least a `key` or `value` specified,
-          else it will be ignored. If only `key` is provided, `value` will be set to `key`
-          as fallback and vice versa.
+        - A valid [`AutoCompleteSuggestion`][flet.] must have at least a
+            [`key`][flet.AutoCompleteSuggestion.] or
+            [`value`][flet.AutoCompleteSuggestion.] specified, else it will be
+            ignored. If only `key` is provided, `value` will be set to `key` as
+            fallback and vice versa.
+        - The internal filtration process of the suggestions (based on their `key`s)
+            with respect to the user's input is case-insensitive because the
+            comparison is done in lowercase.
     """
 
     suggestions_max_height: Number = 200

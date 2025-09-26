@@ -56,7 +56,7 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.TextButton.on_click] event callback is
+    Additionally, if [`on_click`][(c).] event callback is
     provided, it is fired after that.
     """
 
@@ -79,7 +79,7 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists this button's response area.
 
-    The [`data`][flet.Event.data] property of event object is `True` when cursor
+    The [`data`][flet.Event.] property of event object is `True` when cursor
     enters and `False` when it exits.
     """
 

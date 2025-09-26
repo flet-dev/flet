@@ -20,8 +20,7 @@ class CupertinoListTile(LayoutControl):
     """
     An iOS-style list tile.
 
-    Can also serve as a cupertino equivalent of the
-    Material [`ListTile`][flet.ListTile].
+    Can also serve as a cupertino equivalent of the Material [`ListTile`][flet.].
 
     Raises:
         ValueError: If [`title`][(c).] is neither a string nor a visible Control.
@@ -31,92 +30,81 @@ class CupertinoListTile(LayoutControl):
     """
     The primary content of this list tile.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
-    Additional content displayed below the [`title`][flet.CupertinoListTile.title].
+    Additional content displayed below the [`title`][(c).].
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     leading: Optional[IconDataOrControl] = None
     """
-    A control to display before the [`title`][flet.CupertinoListTile.title].
+    A control to display before the [`title`][(c).].
     """
 
     trailing: Optional[IconDataOrControl] = None
     """
-    A control to display after the [`title`][flet.CupertinoListTile.title].
+    A control to display after the [`title`][(c).].
 
-    Typically an [`Icon`][flet.Icon] control.
+    Typically an [`Icon`][flet.] control.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The list tile's background color.
+    The background color of this list tile.
     """
 
     bgcolor_activated: Optional[ColorValue] = None
     """
-    The list tile's background color
-    after the tile was tapped.
+    The background color of this list tile after it was tapped.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The tile's internal padding. Insets a CupertinoListTile's contents: its
-    [`leading`][flet.CupertinoListTile.leading],
-    [`title`][flet.CupertinoListTile.title],
-    [`subtitle`][flet.CupertinoListTile.subtitle],
-    [`additional_info`][flet.CupertinoListTile.additional_info]
-    and [`trailing`][flet.CupertinoListTile.trailing] controls.
-    """  # noqa: E501
+    The tile's internal padding. Insets a CupertinoListTile's contents:
+    its [`leading`][(c).], [`title`][(c).], [`subtitle`][(c).],
+    [`additional_info`][(c).] and [`trailing`][(c).] controls.
+    """
 
     url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.CupertinoListTile.on_click] event callback is
+    Additionally, if [`on_click`][(c).] event callback is
     provided, it is fired after that.
     """
 
     toggle_inputs: bool = False
     """
-    Whether clicking on a list tile should toggle the state of togglable controls
-    like [`Radio`][flet.Radio], [`Checkbox`][flet.Checkbox]
-    or [`Switch`][flet.Switch] inside the tile.
+    Whether clicking on this tile should toggle the state of (visible) toggleable
+    controls like [`Radio`][flet.], [`Checkbox`][flet.] or [`Switch`][flet.] inside it.
     """
 
     additional_info: Optional[StrOrControl] = None
     """
-    A `Control` to display on the right of the list tile,
-    before [`trailing`][flet.CupertinoListTile.trailing].
+    A `Control` to display on the right of the list tile, before [`trailing`][(c).].
 
-    Similar to [`subtitle`][flet.CupertinoListTile.subtitle], an
-    [`additional_info`][flet.CupertinoListTile.additional_info] is used to
-    display additional information.
+    Similar to [`subtitle`][(c).], an [`additional_info`][(c).]
+    is used to display additional information.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     leading_size: Optional[Number] = None
     """
-    Used to constrain the width and height of
-    [`leading`][flet.CupertinoListTile.leading] control.
+    Used to constrain the width and height of [`leading`][(c).] control.
 
-    Defaults to `30.0`, if [`notched=True`][flet.CupertinoListTile.notched],
-    else `28.0`.
+    Defaults to `30.0`, if [`notched`][(c).] is `True`, else `28.0`.
     """
 
     leading_to_title: Optional[Number] = None
     """
-    The horizontal space between [`leading`][flet.CupertinoListTile.leading]
-    and `[`title`][flet.CupertinoListTile.title].
+    The horizontal space between [`leading`][(c).] and `[`title`][(c).].
 
-    Defaults to `12.0`, if [`notched=True`][flet.CupertinoListTile.notched],
-    else `16.0`.
+    Defaults to `12.0`, if [`notched`][(c).] is `True`, else `16.0`.
     """
 
     notched: bool = False

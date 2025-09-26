@@ -66,8 +66,9 @@ class BorderSide:
     This means that it will render faster than otherwise, but it might
     double-hit pixels, giving it a slightly darker/lighter result.
 
-    To omit the border entirely, set the [`style`][flet.BorderSide.style]
-    to [`BorderStyle.NONE`][flet.BorderStyle.NONE].
+    Tip:
+        To omit the border entirely, set the [`style`][(c).]
+        to [`BorderStyle.NONE`][flet.].
     """
 
     color: ColorValue = Colors.BLACK
@@ -161,7 +162,7 @@ class Border:
     A border comprised of four sides: `top`, `right`, `bottom`, `left`.
 
     Each side of the border is an instance of
-    [`BorderSide`][flet.BorderSide].
+    [`BorderSide`][flet.].
 
     Example:
         ```python

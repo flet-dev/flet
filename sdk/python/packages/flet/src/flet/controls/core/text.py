@@ -177,7 +177,7 @@ class Text(LayoutControl):
     Display text.
 
     It consists of two sources combined to produce the final text:
-    [`value`][(c).] and [`spans`][(c)].
+    [`value`][(c).] and [`spans`][(c).].
     """
 
     value: str = ""
@@ -187,7 +187,7 @@ class Text(LayoutControl):
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`][flet.TextSpan]
+    The list of [`TextSpan`][flet.]
     objects to build a rich text paragraph.
     """
 
@@ -297,7 +297,7 @@ class Text(LayoutControl):
     Whether to show cursor (blinking caret) when the text is selected.
 
     Note:
-        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
+        Has effect only when [`selectable`][(c).] is `True`.
     """
 
     enable_interactive_selection: bool = True
@@ -310,7 +310,7 @@ class Text(LayoutControl):
     the user, text cannot be copied.
 
     Note:
-        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
+        Has effect only when [`selectable`][(c).] is `True`.
     """
 
     selection_cursor_width: Number = 2.0
@@ -324,7 +324,7 @@ class Text(LayoutControl):
     Negative values may be used to reverse this behavior.
 
     Note:
-        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
+        Has effect only when [`selectable`][(c).] is `True`.
     """
 
     selection_cursor_height: Optional[Number] = None
@@ -344,7 +344,7 @@ class Text(LayoutControl):
     Called when the user taps on this selectable text.
 
     Note:
-        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
+        Has effect only when [`selectable`][(c).] is `True`.
     """
 
     on_selection_change: Optional[EventHandler[TextSelectionChangeEvent["Text"]]] = None
@@ -352,5 +352,5 @@ class Text(LayoutControl):
     Called when the user changes the selection of text (including the cursor location).
 
     Note:
-        Has effect only when [`selectable`][flet.Text.selectable] is `True`.
+        Has effect only when [`selectable`][(c).] is `True`.
     """

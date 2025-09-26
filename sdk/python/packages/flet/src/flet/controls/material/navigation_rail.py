@@ -66,7 +66,7 @@ class NavigationRailDestination(Control):
     indicator_color: Optional[ColorValue] = None
     """
     The color of the
-    [`indicator_shape`][flet.NavigationRailDestination.indicator_shape] when
+    [`indicator_shape`][(c).] when
     this destination is selected.
     """
 
@@ -156,7 +156,7 @@ class NavigationRail(LayoutControl):
 
     Its location is not affected by `group_alignment`.
 
-    Typically a [`FloatingActionButton`][flet.FloatingActionButton], but
+    Typically a [`FloatingActionButton`][flet.], but
     may also be a non-button, such as a logo.
     """
 
@@ -207,7 +207,7 @@ class NavigationRail(LayoutControl):
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] of a
+    The [`TextStyle`][flet.] of a
     destination's label when it is selected.
 
     When a destination is not selected, `unselected_label_text_style` will instead be
@@ -216,7 +216,7 @@ class NavigationRail(LayoutControl):
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] of a
+    The [`TextStyle`][flet.] of a
     destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
@@ -226,15 +226,15 @@ class NavigationRail(LayoutControl):
     """
     Whether to add a rounded navigation indicator behind the selected destination's icon.
 
-    The indicator's shape will be circular if [`label_type`][flet.NavigationRail.label_type]
-    is [`NavigationRailLabelType.NONE`][flet.NavigationRailLabelType.NONE], or a
-    [`StadiumBorder`][flet.StadiumBorder] if [`label_type`][flet.NavigationRail.label_type]
-    is [`NavigationRailLabelType.ALL`][flet.NavigationRailLabelType.ALL] or
-    [`NavigationRailLabelType.SELECTED`][flet.NavigationRailLabelType.SELECTED].
+    The indicator's shape will be circular if [`label_type`][(c).]
+    is [`NavigationRailLabelType.NONE`][flet.], or a
+    [`StadiumBorder`][flet.] if [`label_type`][(c).]
+    is [`NavigationRailLabelType.ALL`][flet.] or
+    [`NavigationRailLabelType.SELECTED`][flet.].
 
     If `None`, defaults to
-    [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator].
-    If that is also `None`, defaults to [`Theme.use_material3`][flet.Theme.use_material3].
+    [`NavigationRailTheme.use_indicator`][flet.].
+    If that is also `None`, defaults to [`Theme.use_material3`][flet.].
     """  # noqa: E501
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None

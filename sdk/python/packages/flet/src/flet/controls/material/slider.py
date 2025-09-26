@@ -45,7 +45,7 @@ class Slider(LayoutControl, AdaptiveControl):
 
     The slider's thumb is drawn at a position that corresponds to this value.
 
-    Defaults to value of [`min`][flet.Slider.min].
+    Defaults to value of [`min`][(c).].
     """
 
     label: Optional[str] = None
@@ -65,8 +65,8 @@ class Slider(LayoutControl, AdaptiveControl):
     The minimum value the user can select.
 
     Note:
-        - Must be less than or equal to [`max`][flet.Slider.max].
-        - If the [`max`][flet.Slider.max] is equal to the `min`, then this slider
+        - Must be less than or equal to [`max`][(c).].
+        - If the [`max`][(c).] is equal to the `min`, then this slider
             is disabled.
     """
 
@@ -75,8 +75,8 @@ class Slider(LayoutControl, AdaptiveControl):
     The maximum value the user can select.
 
     Note:
-        - Must be greater than or equal to [`min`][flet.Slider.min].
-        - If the [`min`][flet.Slider.min] is equal to the `max`, then this slider
+        - Must be greater than or equal to [`min`][(c).].
+        - If the [`min`][(c).] is equal to the `max`, then this slider
             is disabled.
     """
 
@@ -84,15 +84,15 @@ class Slider(LayoutControl, AdaptiveControl):
     """
     The number of discrete divisions.
 
-    Typically used with [`label`][flet.Slider.label] to show the current discrete value.
+    Typically used with [`label`][(c).] to show the current discrete value.
 
     If `None`, this slider is continuous.
     """
 
     round: int = 0
     """
-    The number of decimals displayed on the [`label`][flet.Slider.label]
-    containing [`value`][flet.Slider.value].
+    The number of decimals displayed on the [`label`][(c).]
+    containing [`value`][(c).].
 
     Defaults to `0`, which displays value rounded to the nearest integer.
     """
@@ -131,24 +131,24 @@ class Slider(LayoutControl, AdaptiveControl):
     """
     The allowed way for the user to interact with this slider.
 
-    If `None`, [`SliderTheme.interaction`][flet.SliderTheme.interaction] is used.
+    If `None`, [`SliderTheme.interaction`][flet.] is used.
     If that's is also `None`, defaults to
-    [`SliderInteraction.TAP_AND_SLIDE`][flet.SliderInteraction.TAP_AND_SLIDE].
+    [`SliderInteraction.TAP_AND_SLIDE`][flet.].
     """
 
     secondary_active_color: Optional[ColorValue] = None
     """
     The color to use for the portion of
     the slider track between the thumb and
-    the [`secondary_track_value`][flet.Slider.secondary_track_value].
+    the [`secondary_track_value`][(c).].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color that's typically
     used to indicate that the range slider thumb is in
-    [`ControlState.HOVERED`][flet.ControlState.HOVERED] or
-    [`ControlState.DRAGGED`][flet.ControlState.DRAGGED] states.
+    [`ControlState.HOVERED`][flet.] or
+    [`ControlState.DRAGGED`][flet.] states.
     """
 
     secondary_track_value: Optional[Number] = None
@@ -182,10 +182,10 @@ class Slider(LayoutControl, AdaptiveControl):
     When `True`, the Slider will use the 2023 Material Design 3 appearance.
 
     If not set, then the
-    [`SliderTheme.year_2023`][flet.SliderTheme.year_2023] will be
+    [`SliderTheme.year_2023`][flet.] will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`,
+    If [`Theme.use_material3`][flet.] is `False`,
     then this property is ignored.
     """
 

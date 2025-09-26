@@ -36,8 +36,7 @@ class CupertinoTextField(TextField):
 
     placeholder_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    [`placeholder_text`][flet.CupertinoTextField.placeholder_text].
+    The [`TextStyle`][flet.] to use for [`placeholder_text`][(c).].
     """
 
     gradient: Optional[Gradient] = None
@@ -47,36 +46,37 @@ class CupertinoTextField(TextField):
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode applied to the [`bgcolor`][flet.CupertinoTextField.bgcolor] or
-    [`gradient`][flet.CupertinoTextField.gradient] background.
+    The blend mode applied to the [`bgcolor`][(c).] or [`gradient`][(c).] background.
     """
 
     shadows: Optional[BoxShadowValue] = None
     """
-    A list of shadows behind the text field.
+    A list of shadows behind this text field.
     """
 
     prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the [`prefix`][flet.CupertinoTextField.prefix] control
+    Defines the visibility of the [`prefix`][(c).] control
     based on the state of text entry.
 
-    Has no effect if `prefix` is not specified.
+    Note:
+        Has no effect if [`prefix`][(c).] is not specified.
     """
 
     suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the [`suffix`][flet.CupertinoTextField.suffix] control
+    Defines the visibility of the [`suffix`][(c).] control
     based on the state of text entry.
 
-    Has no effect if `suffix` is not specified.
+    Note:
+        Has no effect if [`suffix`][(c).] is not specified.
     """
 
     clear_button_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.NEVER
     """
     Defines the visibility of the clear button based on the state of text entry.
 
-    Will appear only if no [`suffix`][flet.CupertinoTextField.suffix] is provided.
+    Will appear only if no [`suffix`][(c).] is provided.
     """
 
     clear_button_semantics_label: Optional[str] = "Clear"
@@ -88,16 +88,12 @@ class CupertinoTextField(TextField):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the [`bgcolor`][flet.CupertinoTextField.bgcolor] or
-    [`gradient`][flet.CupertinoTextField.gradient] background.
+    An image to paint above the [`bgcolor`][(c).] or [`gradient`][(c).] background.
     """
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
-    The padding around the text entry area between the
-    [`prefix`][flet.CupertinoTextField.prefix]
-    and [`suffix`][flet.CupertinoTextField.suffix] or the
-    clear button when
-    [`clear_button_visibility_mode`][flet.CupertinoTextField.clear_button_visibility_mode]
-    is not [`OverlayVisibilityMode.NEVER`][flet.OverlayVisibilityMode.NEVER].
+    The padding around the text entry area between the [`prefix`][(c).]
+    and [`suffix`][(c).] or the clear button when [`clear_button_visibility_mode`][(c).]
+    is not [`OverlayVisibilityMode.NEVER`][flet.].
     """

@@ -7,7 +7,7 @@ from flet.controls.layout_control import LayoutControl
 @control("ReorderableDraggable")
 class ReorderableDraggable(LayoutControl, AdaptiveControl):
     """
-    Used to drag an item in a [`ReorderableListView`][flet.ReorderableListView].
+    Used to drag an item in a [`ReorderableListView`][flet.].
 
     It creates a listener for a drag immediately following a pointer down
     event over the given [`content`][(c).] control.

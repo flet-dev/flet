@@ -31,17 +31,17 @@ class CircleAvatar(LayoutControl):
     """
     The content of this avatar.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
 
-    If this avatar is to have an image, use
-    [`background_image_src`][flet.CircleAvatar.background_image_src] instead.
+    Tip:
+        If this avatar is to have an image, use [`background_image_src`][(c).] instead.
     """
 
     foreground_image_src: Optional[str] = None
     """
     The source (local asset file or URL) of the foreground image in the circle.
 
-    Fallbacks to [`background_image_src`][flet.CircleAvatar.background_image_src].
+    Fallbacks to [`background_image_src`][(c).].
 
     Typically used as profile image.
     """
@@ -51,17 +51,16 @@ class CircleAvatar(LayoutControl):
     The source (local asset file or URL) of the background image in the circle.
     Changing the background image will cause the avatar to animate to the new image.
 
-    Typically used as a fallback image for
-    [`foreground_image_src`][flet.CircleAvatar.foreground_image_src].
-    If this avatar is to have the user's initials, use
-    [`content`][flet.CircleAvatar.content] instead.
+    If this avatar is to have the user's initials, use [`content`][(c).] instead.
+
+    Typically used as a fallback image for [`foreground_image_src`][(c).].
     """
 
     color: Optional[ColorValue] = None
     """
     The default color for text in this avatar.
 
-    Defaults to the primary text theme color if no `bgcolor` is specified.
+    Defaults to the primary text theme color if no [`bgcolor`][(c).] is specified.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -74,15 +73,14 @@ class CircleAvatar(LayoutControl):
     radius: Optional[Number] = None
     """
     The size of the avatar, expressed as the radius (half the diameter). If `radius` is
-    specified, then neither [`min_radius`][flet.CircleAvatar.min_radius] nor
-    [`max_radius`][flet.CircleAvatar.max_radius] may be specified.
+    specified, then neither [`min_radius`][(c).] nor
+    [`max_radius`][(c).] may be specified.
     """
 
     min_radius: Optional[Number] = None
     """
     The minimum size of the avatar, expressed as the radius (half the diameter). If
-    `min_radius` is specified, then [`radius`][flet.CircleAvatar.radius] should not
-    be specified.
+    `min_radius` is specified, then [`radius`][(c).] should not be specified.
 
     Defaults to `0.0`.
     """
@@ -91,21 +89,20 @@ class CircleAvatar(LayoutControl):
     """
     The maximum size of the avatar, expressed as the radius (half the diameter).
 
-    If `max_radius` is specified, then [`radius`][flet.CircleAvatar.radius] should
-    not be specified.
-
     Defaults to "infinity".
+
+    Note:
+        If `max_radius` is specified, then [`radius`][(c).] should not be specified.
     """
 
     on_image_error: Optional[ControlEventHandler["CircleAvatar"]] = None
     """
-    Called when an error occurs while loading the
-    [`background_image_src`][flet.CircleAvatar.background_image_src] or
-    [`foreground_image_src`][flet.CircleAvatar.foreground_image_src].
+    Called when an error occurs while loading the [`background_image_src`][(c).] or
+    [`foreground_image_src`][(c).].
 
-    The [`data`][flet.Event.data] property of the event handler argument is
-    a string whose value is either `"background"` or `"foreground"` indicating
-    the error's origin.
+    The [`data`][flet.Event.] property of the event handler argument is
+    a string whose value is either `"background"` or `"foreground"`
+    indicating the error's origin.
     """
 
     def before_update(self):

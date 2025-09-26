@@ -24,7 +24,7 @@ class CupertinoTimerPicker(LayoutControl):
     A countdown timer picker in iOS style.
 
     It can show a countdown duration with hour, minute and second spinners. The
-    duration is bound between 0 and 23 hours 59 minutes 59 seconds.
+    duration is bound between `0` and `23` hours `59` minutes `59` seconds.
 
     Raises:
         ValueError: If [`value`][(c).] is negative.
@@ -42,12 +42,14 @@ class CupertinoTimerPicker(LayoutControl):
 
     value: DurationValue = field(default_factory=lambda: Duration())
     """
-    The initial duration in seconds of the countdown timer.
+    The initial duration of the countdown timer.
+
+    If specified as an integer, it will be assumed to be in seconds.
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
     """
-    Defines how the timer picker should be positioned within its parent.
+    Defines how this picker should be positioned within its parent.
     """
 
     second_interval: int = 1
@@ -68,12 +70,12 @@ class CupertinoTimerPicker(LayoutControl):
 
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
     """
-    The mode of the timer picker.
+    The mode of this picker.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background color of this timer picker.
+    The background color of this picker.
     """
 
     item_extent: Number = 32.0
@@ -85,9 +87,10 @@ class CupertinoTimerPicker(LayoutControl):
     """
     Called when the timer's duration changes.
 
-    The [`data`][flet.Event] property of the event handler argument is the new duration.
-    It has the same [type][flet.DurationValue] as
-    [`value`][flet.CupertinoTimerPicker.value].
+    The [`data`][flet.Event.] property of the event
+    handler contains the new duration value.
+    Its type matches [`value`][(c).]: if `value` is a `Duration`,
+    then `data` is also a `Duration`; otherwise, it is an `int` (seconds).
     """
 
     def before_update(self):

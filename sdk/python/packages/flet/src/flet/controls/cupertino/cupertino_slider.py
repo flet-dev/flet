@@ -41,9 +41,8 @@ class CupertinoSlider(LayoutControl):
     The minimum value the user can select.
 
     Note:
-        - Must be less than or equal to [`max`][flet.CupertinoSlider.max].
-        - If the [`max`][flet.CupertinoSlider.max] is equal to the `min`,
-            then the slider is disabled.
+        - Must be less than or equal to [`max`][(c).].
+        - If the [`max`][(c).] is equal to the `min`, then this slider is disabled.
     """
 
     max: Number = 1.0
@@ -51,9 +50,8 @@ class CupertinoSlider(LayoutControl):
     The maximum value the user can select.
 
     Note:
-        - Must be greater than or equal to [`min`][flet.CupertinoSlider.min].
-        - If the [`min`][flet.CupertinoSlider.min] is equal to the `max`,
-            then the slider is disabled.
+        - Must be greater than or equal to [`min`][(c).].
+        - If the [`min`][(c).] is equal to the `max`, then this slider is disabled.
     """
 
     divisions: Optional[int] = None
@@ -65,8 +63,7 @@ class CupertinoSlider(LayoutControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The color to use for the portion of the
-    slider track that is active.
+    The color to use for the portion of the slider track that is active.
 
     The "active" side of the slider is the side between the thumb and the minimum
     value.
@@ -74,7 +71,7 @@ class CupertinoSlider(LayoutControl):
 
     thumb_color: Optional[ColorValue] = None
     """
-    The color of the thumb.
+    The color of this slider's thumb.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSlider"]] = None

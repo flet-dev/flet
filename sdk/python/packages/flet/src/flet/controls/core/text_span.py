@@ -14,7 +14,7 @@ class TextSpan(Control):
     """
     A text span.
 
-    Usage Example: As a child of [`Text.spans`][flet.Text.spans].
+    Usage Example: As a child of [`Text.spans`][flet.].
 
     For the object to be useful, at least one of [`text`][(c).] or
     [`spans`][(c).] should be set.
@@ -28,7 +28,7 @@ class TextSpan(Control):
     The text contained in this span.
 
     Note:
-        If both `text` and [`spans`][flet.TextSpan.spans] are defined,
+        If both `text` and [`spans`][(c).] are defined,
         the `text` takes precedence.
     """
 
@@ -42,7 +42,7 @@ class TextSpan(Control):
     Additional spans to include as children.
 
     Note:
-        If both `spans` and [`text`][flet.TextSpan.text] are defined,
+        If both `spans` and [`text`][(c).] are defined,
         the `text` takes precedence.
     """
 
@@ -50,7 +50,7 @@ class TextSpan(Control):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.TextSpan.on_click] event callback is provided,
+    Additionally, if [`on_click`][(c).] event callback is provided,
     it is fired after that.
     """
 

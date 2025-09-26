@@ -18,21 +18,21 @@ class SubmenuButton(LayoutControl):
     """
     A menu button that displays a cascading menu.
 
-    Typically used in a [`MenuBar`][flet.MenuBar] control.
+    Typically used in a [`MenuBar`][flet.] control.
     """
 
     content: Optional[StrOrControl] = None
     """
     The child control to be displayed in the middle portion of this button.
 
-    Typically this is the button's label, using a [`Text`][flet.Text] control.
+    Typically this is the button's label, using a [`Text`][flet.] control.
     """
 
     controls: list[Control] = field(default_factory=list)
     """
     A list of controls that appear in the menu when it is opened.
 
-    Typically either [`MenuItemButton`][flet.MenuItemButton] or
+    Typically either [`MenuItemButton`][flet.] or
     `SubMenuButton` controls.
 
     If this list is empty, then the button for this menu item will be disabled.
@@ -40,16 +40,16 @@ class SubmenuButton(LayoutControl):
 
     leading: Optional[Control] = None
     """
-    An optional control to display before the [`content`][flet.SubmenuButton.content].
+    An optional control to display before the [`content`][(c).].
 
-    Typically an [`Icon`][flet.Icon] control.
+    Typically an [`Icon`][flet.] control.
     """
 
     trailing: Optional[Control] = None
     """
-    An optional control to display after the [`content`][flet.SubmenuButton.content].
+    An optional control to display after the [`content`][(c).].
 
-    Typically an [`Icon`][flet.Icon] control.
+    Typically an [`Icon`][flet.] control.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -70,8 +70,8 @@ class SubmenuButton(LayoutControl):
     alignment_offset: Optional[OffsetValue] = None
     """
     The offset of the menu relative to the alignment origin determined by
-    [`MenuStyle.alignment`][flet.MenuStyle.alignment] on the
-    [`style`][flet.SubmenuButton.style] attribute.
+    [`MenuStyle.alignment`][flet.] on the
+    [`style`][(c).] attribute.
     """
 
     on_open: Optional[ControlEventHandler["SubmenuButton"]] = None

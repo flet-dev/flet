@@ -20,7 +20,7 @@ __all__ = ["Segment", "SegmentedButton"]
 @control("Segment")
 class Segment(Control):
     """
-    A segment for a [`SegmentedButton`][flet.SegmentedButton].
+    A segment for a [`SegmentedButton`][flet.].
 
     Raises:
         ValueError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
@@ -33,13 +33,13 @@ class Segment(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The icon (typically an [`Icon`][flet.Icon]) to be
+    The icon (typically an [`Icon`][flet.]) to be
     displayed in the segment.
     """
 
     label: Optional[StrOrControl] = None
     """
-    The label (usually a [`Text`][flet.Text]) to be
+    The label (usually a [`Text`][flet.]) to be
     displayed in the segment.
     """
 
@@ -150,7 +150,7 @@ class SegmentedButton(LayoutControl):
     """
     Called when the selection changes.
 
-    The [`data`][flet.Event.data] property of the event handler argument
+    The [`data`][flet.Event.] property of the event handler argument
     contains a list of strings identifying the selected segments.
     """
 

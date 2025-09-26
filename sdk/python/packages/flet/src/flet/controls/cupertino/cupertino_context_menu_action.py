@@ -13,8 +13,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
     """
     A cupertino context menu action.
 
-    Typically used as a child of
-    [`CupertinoContextMenu.actions`][flet.CupertinoContextMenu.actions].
+    Typically used as a child of [`CupertinoContextMenu.actions`][flet.].
 
     Raises:
         ValueError: If [`content`][(c).] is neither a string nor a visible Control.
@@ -37,8 +36,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     trailing_icon: Optional[IconData] = None
     """
-    An optional icon to display at the right of the
-    [`content`][flet.CupertinoContextMenuAction.content] control.
+    An icon to display at the right of the [`content`][(c).] control.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoContextMenuAction"]] = None

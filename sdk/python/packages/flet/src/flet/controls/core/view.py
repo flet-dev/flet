@@ -33,14 +33,14 @@ class View(ScrollableControl, LayoutControl):
     View is the top most container for all other controls.
 
     A root view is automatically created when a new user session started. From layout
-    perspective the View represents a [`Column`][flet.Column]
+    perspective the View represents a [`Column`][flet.]
     control, so it has a similar behavior and shares same properties.
     """
 
     route: Optional[str] = None
     """
     View's route - not currently used by Flet framework, but can be used in a user
-    program to update [`Page.route`][flet.Page.route] when a view popped.
+    program to update [`Page.route`][flet.] when a view popped.
     """
 
     controls: list[BaseControl] = field(default_factory=list)
@@ -73,19 +73,19 @@ class View(ScrollableControl, LayoutControl):
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    An [`AppBar`][flet.AppBar] control to display at the top of
+    An [`AppBar`][flet.] control to display at the top of
     the `Page`.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    A [`BottomAppBar`][flet.BottomAppBar] control to display at the bottom of
+    A [`BottomAppBar`][flet.] control to display at the bottom of
     the `Page`.
     """
 
     floating_action_button: Optional[FloatingActionButton] = None
     """
-    A [`FloatingActionButton`][flet.FloatingActionButton] control to display on top
+    A [`FloatingActionButton`][flet.] control to display on top
     of `Page` content.
     """
 
@@ -93,31 +93,31 @@ class View(ScrollableControl, LayoutControl):
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = None
     """
-    Describes position of [`floating_action_button`][flet.View.floating_action_button]
+    Describes position of [`floating_action_button`][(c).]
     """
 
     navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None
     """
-    A navigation bar ([`NavigationBar`][flet.NavigationBar] or
-    [`CupertinoNavigationBar`][flet.CupertinoNavigationBar]) control to display
+    A navigation bar ([`NavigationBar`][flet.] or
+    [`CupertinoNavigationBar`][flet.]) control to display
     at the bottom of the `Page`.
     """
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.NavigationDrawer] control to
+    A [`NavigationDrawer`][flet.] control to
     display as a panel sliding from the start edge of the view.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.NavigationDrawer] control to
+    A [`NavigationDrawer`][flet.] control to
     display as a panel sliding from the end edge of the view.
     """
 
     vertical_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][flet.View.controls] should be placed vertically.
+    Defines how the child [`controls`][(c).] should be placed vertically.
     """
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
@@ -127,14 +127,14 @@ class View(ScrollableControl, LayoutControl):
 
     spacing: Number = 10
     """
-    The vertical spacing between [`controls`][flet.View.controls] on the `Page`.
+    The vertical spacing between [`controls`][(c).] on the `Page`.
 
     Note:
-        Has effect only when [`vertical_alignment`][flet.View.vertical_alignment]
+        Has effect only when [`vertical_alignment`][(c).]
         is set to
-        [`MainAxisAlignment.START`][flet.MainAxisAlignment.START],
-        [`MainAxisAlignment.END`][flet.MainAxisAlignment.END],
-        or [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER].
+        [`MainAxisAlignment.START`][flet.],
+        [`MainAxisAlignment.END`][flet.],
+        or [`MainAxisAlignment.CENTER`][flet.].
     """
 
     padding: Optional[PaddingValue] = field(default_factory=lambda: Padding.all(10))

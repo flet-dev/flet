@@ -130,7 +130,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     label_padding: Optional[PaddingValue] = None
     """
     The padding around the
-    [`NavigationBarDestination.label`][flet.NavigationBarDestination.label].
+    [`NavigationBarDestination.label`][flet.].
     """
 
     elevation: Optional[Number] = None
@@ -168,9 +168,9 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color of the `NavigationBarDestination` in various
-    [`ControlState`][flet.ControlState] states.
+    [`ControlState`][flet.] states.
 
-    The following [`ControlState`][flet.ControlState]
+    The following [`ControlState`][flet.]
     values are supported: `PRESSED`, `HOVERED` and `FOCUSED`.
     """
 

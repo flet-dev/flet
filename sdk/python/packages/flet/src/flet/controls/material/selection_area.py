@@ -22,7 +22,8 @@ class SelectionArea(Control):
     The child control this selection area applies to.
 
     If you need to have multiple selectable controls, use container-like controls
-    like [`Row`][flet.Row] or [`Column`][flet.Column], which have a `controls` property for this purpose.
+    like [`Row`][flet.] or [`Column`][flet.], which have a `controls` property
+    for this purpose.
     """
 
     on_change: Optional[ControlEventHandler["SelectionArea"]] = None

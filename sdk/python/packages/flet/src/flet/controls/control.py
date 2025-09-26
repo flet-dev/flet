@@ -23,13 +23,16 @@ class Control(BaseControl):
 
     expand: Optional[Union[bool, int]] = None
     """
-    Specifies whether/how this control should expand to fill available space in its parent layout.
+    Specifies whether/how this control should expand to fill available space in its
+    parent layout.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/expanding-controls/#expand).
+    More information
+    [here](https://docs.flet-docs.pages.dev/cookbook/expanding-controls/#expand).
 
     Note:
-        Has effect only if the direct parent of this control is one of the following controls, or their subclasses:
-        [`Column`][flet.Column], [`Row`][flet.Row], [`View`][flet.View], [`Page`][flet.Page].
+        Has effect only if the direct parent of this control is one of the following
+        controls, or their subclasses: [`Column`][flet.], [`Row`][flet.],
+        [`View`][flet.], [`Page`][flet.].
     """
 
     expand_loose: bool = False
@@ -37,19 +40,22 @@ class Control(BaseControl):
     Allows the control to expand along the main axis if space is available,
     but does not require it to fill all available space.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/expanding-controls/#expand_loose).
+    More information
+    [here](https://docs.flet-docs.pages.dev/cookbook/expanding-controls/#expand_loose).
 
     Note:
         If `expand_loose` is `True`, it will have effect only if:
 
         - `expand` is not `None` and
-        - the direct parent of this control is one of the following controls, or their subclasses:
-            [`Column`][flet.Column], [`Row`][flet.Row], [`View`][flet.View], [`Page`][flet.Page].
+        - the direct parent of this control is one of the following controls, or their
+            subclasses: [`Column`][flet.], [`Row`][flet.], [`View`][flet.],
+            [`Page`][flet.].
     """
 
-    col: ResponsiveNumber = 12  # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
+    # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
+    col: ResponsiveNumber = 12
     """
-    If a parent of this control is a [`ResponsiveRow`][flet.ResponsiveRow],
+    If a parent of this control is a [`ResponsiveRow`][flet.],
     this property is used to determine
     how many virtual columns of a screen this control will span.
 
@@ -103,7 +109,8 @@ class Control(BaseControl):
     its children are enabled.
 
     Note:
-        The value of this property will be propagated down to all children controls recursively.
+        The value of this property will be propagated down to all children controls
+        recursively.
 
     /// details | Example
         type: example
