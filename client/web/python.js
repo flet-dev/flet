@@ -12,8 +12,8 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
     };
     console.log(`Starting up Python worker: ${appId}, args: ${args}`);
     _apps[appId] = app;
-    app.worker = new Worker((flet.entryPointBaseUrl.endsWith("/") ?
-        flet.entryPointBaseUrl.slice(0, -1) : flet.entryPointBaseUrl) + "/python-worker.js");
+    app.worker = new Worker((flet.entrypointBaseUrl.endsWith("/") ?
+        flet.entrypointBaseUrl.slice(0, -1) : flet.entrypointBaseUrl) + "/python-worker.js");
 
     var error;
     app.worker.onmessage = (event) => {

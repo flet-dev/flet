@@ -98,7 +98,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
-    //_dpr = MediaQuery.devicePixelRatioOf(context);
     _loadFontsIfNeeded(FletBackend.of(context));
   }
 
@@ -151,21 +150,38 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Page.$name($args)");
+
     switch (name) {
       case "take_screenshot":
-        if (_rootKey.currentContext == null) {
-          return null;
+        {
+          // Capture context up front
+          final ctx = _rootKey.currentContext;
+          if (ctx == null) return null;
+
+          // Read everything you can before awaiting
+          final delay =
+              parseDuration(args["delay"], const Duration(milliseconds: 20))!;
+          final pixelRatio = parseDouble(
+              args["pixel_ratio"], MediaQuery.of(ctx).devicePixelRatio)!;
+
+          // Wait, then ensure the widget is still mounted
+          await Future.delayed(delay);
+          if (!ctx.mounted) {
+            return null;
+          }
+
+          // Use the same (still-mounted) context
+          final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
+          if (boundary == null) return null;
+
+          final image = await boundary.toImage(pixelRatio: pixelRatio);
+          final data = await image.toByteData(format: ui.ImageByteFormat.png);
+          return data?.buffer.asUint8List();
         }
-        await Future.delayed(
-            parseDuration(args["delay"], const Duration(milliseconds: 20))!);
-        final boundary = _rootKey.currentContext!.findRenderObject()
-            as RenderRepaintBoundary;
-        final image = await boundary.toImage(
-            pixelRatio: parseDouble(args["pixel_ratio"], _dpr)!);
-        final data = await image.toByteData(format: ui.ImageByteFormat.png);
-        return data!.buffer.asUint8List();
+
       case "push_route":
         _routeState.route = args["route"];
+
       default:
         throw Exception("Unknown Page method: $name");
     }
