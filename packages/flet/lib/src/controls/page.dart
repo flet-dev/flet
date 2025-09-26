@@ -56,7 +56,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   ServiceRegistry? _userServices;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
-  final double _dpr = 1.0;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
