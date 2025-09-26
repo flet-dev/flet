@@ -30,8 +30,8 @@ class SearchBar(LayoutControl):
     controls: list[Control] = field(default_factory=list)
     """
     The list of controls to be displayed below the search bar when in search view.
-    These controls are usually [`ListTile`][flet.ListTile]s and will be displayed
-    in a [`ListView`][flet.ListView].
+    These controls are usually [`ListTile`][flet.]s and will be displayed
+    in a [`ListView`][flet.].
     """
 
     value: str = ""
@@ -57,23 +57,22 @@ class SearchBar(LayoutControl):
     bar_hint_text: Optional[str] = None
     """
     Defines the text to be shown in the search bar when it is empty and the search
-    view is close. Usually some text that suggests what sort of input the field
-    accepts.
+    view is close.
+
+    Usually some text that suggests what sort of input the field accepts.
     """
 
     bar_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the background color of the
-    search bar in all or specific
-    [`ControlState`][flet.ControlState] states.
+    Defines the background color of the search bar in all or specific
+    [`ControlState`][flet.] states.
     """
 
     bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the highlight color that's
-    typically used to indicate that the search bar is in `FOCUSED`, `HOVERED`, or
-    `PRESSED` [`ControlState`][flet.ControlState]
-    states.
+    Defines the highlight color that's typically used to indicate that the
+    search bar is in [`FOCUSED`][flet.ControlState.], [`HOVERED`][flet.ControlState.],
+    or [`PRESSED`][flet.ControlState.] states.
     """
 
     bar_shadow_color: Optional[ControlStateValue[ColorValue]] = None
@@ -90,7 +89,7 @@ class SearchBar(LayoutControl):
     """
     The color and weight of the search bar's outline.
 
-    This value is combined with [`SearchBar.bar_shape`][flet.SearchBar.bar_shape] to
+    This value is combined with [`SearchBar.bar_shape`][flet.] to
     create a shape decorated with an outline.
     """
 
@@ -99,7 +98,7 @@ class SearchBar(LayoutControl):
     The shape of the search bar.
 
     This shape is combined with
-    [`SearchBar.bar_border_side`][flet.SearchBar.bar_border_side] to create a shape
+    [`SearchBar.bar_border_side`][flet.] to create a shape
     decorated with an outline.
     """
 
@@ -110,7 +109,7 @@ class SearchBar(LayoutControl):
 
     bar_hint_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    The style to use for the [`SearchBar.bar_hint_text`][flet.SearchBar.bar_hint_text].
+    The style to use for the [`SearchBar.bar_hint_text`][flet.].
     """
 
     bar_padding: Optional[ControlStateValue[PaddingValue]] = None
@@ -176,13 +175,13 @@ class SearchBar(LayoutControl):
 
     view_header_text_style: Optional[TextStyle] = None
     """
-    Defines the [`TextStyle`][flet.TextStyle] of the
+    Defines the [`TextStyle`][flet.] of the
     text being edited on the search view.
     """
 
     view_hint_text_style: Optional[TextStyle] = None
     """
-    Defines the [`TextStyle`][flet.TextStyle] of
+    Defines the [`TextStyle`][flet.] of
     `view_hint_text`.
     """
 

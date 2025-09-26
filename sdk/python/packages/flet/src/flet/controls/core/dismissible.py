@@ -58,20 +58,20 @@ class Dismissible(LayoutControl, AdaptiveControl):
 
     background: Optional[Control] = None
     """
-    A control that is stacked behind the [`content`][flet.Dismissible.content].
+    A control that is stacked behind the [`content`][(c).].
 
-    If [`secondary_background`][flet.Dismissible.secondary_background] is also
+    If [`secondary_background`][(c).] is also
     specified, then this control only appears when the content has been dragged
     down or to the right.
     """
 
     secondary_background: Optional[Control] = None
     """
-    A control that is stacked behind the [`content`][flet.Dismissible.content] and is
+    A control that is stacked behind the [`content`][(c).] and is
     exposed when it has been dragged up or to the left.
 
     Note:
-        Can only be specified if [`background`][flet.Dismissible.background] is also
+        Can only be specified if [`background`][(c).] is also
         specified/visible.
     """
 
@@ -86,7 +86,7 @@ class Dismissible(LayoutControl, AdaptiveControl):
     """
     The offset threshold the item has to be dragged in order to be considered
     as dismissed. This is specified as a dictionary where the key is of
-    type [`DismissDirection`][flet.DismissDirection] and the value is the threshold
+    type [`DismissDirection`][flet.] and the value is the threshold
     (a fractional/decimal value between `0.0` and `1.0`, inclusive).
 
     Example:
@@ -105,7 +105,7 @@ class Dismissible(LayoutControl, AdaptiveControl):
         default_factory=lambda: Duration(milliseconds=200)
     )
     """
-    The duration for [`content`][flet.Dismissible.content] to dismiss or
+    The duration for [`content`][(c).] to dismiss or
     to come back to original position if not dismissed.
     """
 
@@ -114,13 +114,13 @@ class Dismissible(LayoutControl, AdaptiveControl):
     )
     """
     The amount of time the control will spend contracting
-    before [`on_dismiss`][flet.Dismissible.on_dismiss] is called.
+    before [`on_dismiss`][(c).] is called.
     """
 
     cross_axis_end_offset: Number = 0.0
     """
     Specifies the end offset along the main axis once the
-    [`content`][flet.Dismissible.content] has been dismissed.
+    [`content`][(c).] has been dismissed.
 
     If set to a non-zero value, then this dismissible moves in cross direction
     depending on whether it is positive or negative.

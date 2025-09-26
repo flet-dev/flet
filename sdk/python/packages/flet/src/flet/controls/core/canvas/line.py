@@ -14,9 +14,8 @@ class Line(Shape):
     Draws a line between the given points using the given paint.
 
     Note:
-        The line is always rendered as a stroke,
-        regardless of the value of [`paint`][(c).]'s
-        [`style`][flet.Paint.style] property.
+        The line is always rendered as a stroke, regardless of the value
+        of [`paint`][(c).]'s [`style`][flet.Paint.] property.
     """
 
     x1: Number

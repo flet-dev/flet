@@ -108,7 +108,6 @@ plugins:
       alias_type: symlink
   - glightbox:
       background: none
-  # - section-index
   - markdown-exec
   - mkdocstrings:
       default_handler: python_xref
@@ -130,7 +129,7 @@ plugins:
             show_labels: false
             show_if_no_docstring: true
             docstring_section_style: spacy
-            inherited_members: true
+            inherited_members: false
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore
@@ -145,6 +144,9 @@ plugins:
       mappings:
         - source_dir: ../../examples
           target_url_path: examples
+          include_exts: [".png", ".gif", ".svg"]
+        - source_dir: integration_tests
+          target_url_path: test-images
           include_exts: [".png", ".gif", ".svg"]
 
 # Markdown Extensions
@@ -268,6 +270,7 @@ nav:
               - CupertinoPicker: controls/cupertinopicker.md
               - CupertinoTimerPicker: controls/cupertinotimerpicker.md
               - DatePicker: controls/datepicker.md
+              - DateRangePicker: controls/daterangepicker.md
               - SnackBar: controls/snackbar.md
               - TimePicker: controls/timepicker.md
           - Information Displays:

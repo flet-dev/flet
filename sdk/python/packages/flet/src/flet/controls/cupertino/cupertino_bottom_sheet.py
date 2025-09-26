@@ -12,23 +12,23 @@ __all__ = ["CupertinoBottomSheet"]
 @control("CupertinoBottomSheet")
 class CupertinoBottomSheet(DialogControl):
     """
-    A Cupertino version of modal bottom sheet.
+    A Cupertino bottom sheet.
     """
 
     content: Control
     """
-    The control to be displayed.
+    The control to be displayed in this bottom sheet.
     """
 
     modal: bool = False
     """
-    Whether this bottom sheet can be dismissed/closed by clicking the area outside of
-    it.
+    Whether this bottom sheet can be dismissed/closed by
+    clicking the area outside of it.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The sheet's background color.
+    The background color of this bottom sheet.
     """
 
     height: Optional[Number] = None

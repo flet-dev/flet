@@ -45,7 +45,7 @@ class Canvas(LayoutControl):
     """
     Sampling interval in milliseconds for `on_resize` event.
 
-    Setting to `0` calls [`on_resize`][flet.canvas.Canvas.on_resize] immediately
+    Setting to `0` calls [`on_resize`][(c).] immediately
     on every change.
     """
 

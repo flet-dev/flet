@@ -31,7 +31,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
+        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
     """
 
     top: Optional[Number] = None
@@ -40,7 +40,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
+        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
     """
 
     right: Optional[Number] = None
@@ -49,7 +49,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
+        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
     """
 
     bottom: Optional[Number] = None
@@ -58,7 +58,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.Stack] control, [`Page.overlay`][flet.Page.overlay] list.
+        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
     """
 
     align: Optional[Alignment] = None
@@ -164,15 +164,15 @@ class LayoutControl(Control):
     """
     aspect_ratio: Optional[Number] = None
     """
-    TBD
+    The aspect ratio of the control.
+    It is defined as the ratio of the width to the height.
     """
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`opacity`][flet.LayoutControl.opacity]
-    property.
+    Enables implicit animation of the [`opacity`][flet.LayoutControl.] property.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_size: Optional[AnimationValue] = None
@@ -183,50 +183,45 @@ class LayoutControl(Control):
     animate_position: Optional[AnimationValue] = None
     """
     Enables implicit animation of the positioning properties
-    ([`left`][flet.LayoutControl.left], [`right`][flet.LayoutControl.right],
-    [`top`][flet.LayoutControl.top] and
-    [`bottom`][flet.LayoutControl.bottom]).
+    ([`left`][flet.LayoutControl.], [`right`][flet.LayoutControl.],
+    [`top`][flet.LayoutControl.] and [`bottom`][flet.LayoutControl.]).
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_align: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`align`][flet.LayoutControl.align]
-    property.
+    Enables implicit animation of the [`align`][flet.LayoutControl.] property.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_margin: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`margin`][flet.LayoutControl.margin]
-    property.
+    Enables implicit animation of the [`margin`][flet.LayoutControl.] property.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_rotation: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`rotate`][flet.LayoutControl.rotate]
-    property.
+    Enables implicit animation of the [`rotate`][flet.LayoutControl.] property.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_scale: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`scale`][flet.LayoutControl.scale] property.
+    Enables implicit animation of the [`scale`][flet.LayoutControl.] property.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     animate_offset: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`offset`][flet.LayoutControl.offset]
-    property.
+    Enables implicit animation of the [`offset`][flet.LayoutControl.] property.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
     on_animation_end: Optional[ControlEventHandler["LayoutControl"]] = None
@@ -238,7 +233,7 @@ class LayoutControl(Control):
     The `data` property of the event handler argument contains the name
     of the animation.
 
-    More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/animations).
+    More information [here](https://docs.flet-docs.pages.dev/cookbook/animations).
     """
 
 

@@ -53,7 +53,7 @@ class ProgressRing(LayoutControl):
 
     A value of 0 (center stroke) will center the border on the edge of the control.
 
-    If [`ProgressRing.year_2023`][flet.ProgressRing.year_2023] is `True`, then the
+    If [`ProgressRing.year_2023`][flet.] is `True`, then the
     default value is `0`. Otherwise, the default value is `-1`.
     """
 
@@ -77,13 +77,13 @@ class ProgressRing(LayoutControl):
     """
     The gap between the active indicator and the background track.
 
-    If [`year_2023`][flet.ProgressRing.year_2023] is `True` or `Theme.use_material3` is
+    If [`year_2023`][(c).] is `True` or `Theme.use_material3` is
     `False`, then no track gap will be drawn.
 
     Set `track_gap` to `0` to hide this track gap.
 
     If `None`,
-    [`ProgressIndicatorTheme.track_gap`][flet.ProgressIndicatorTheme.track_gap] is used.
+    [`ProgressIndicatorTheme.track_gap`][flet.] is used.
 
     If that's is also `None`, defaults to `4.0`.
     """
@@ -93,7 +93,7 @@ class ProgressRing(LayoutControl):
     Defines the minimum and maximum size of the progress indicator.
 
     If `None`,
-    [`ProgressIndicatorTheme.size_constraints`][flet.ProgressIndicatorTheme.size_constraints]
+    [`ProgressIndicatorTheme.size_constraints`][flet.]
     is used.
 
     If that's is also `None`, defaults to a minimum width and height of `36`.
@@ -104,10 +104,10 @@ class ProgressRing(LayoutControl):
     The padding around the indicator track.
 
     If `None`,
-    [`ProgressIndicatorTheme.circular_track_padding`][flet.ProgressIndicatorTheme.circular_track_padding]
+    [`ProgressIndicatorTheme.circular_track_padding`][flet.]
     is used.
 
-    If that's is also `None` and [`year_2023`][flet.ProgressRing.year_2023] is `False`,
+    If that's is also `None` and [`year_2023`][(c).] is `False`,
     defaults to `Padding.all(4.0)`.
 
     Otherwise, defaults to `Padding.all(0.0)`.
@@ -121,9 +121,9 @@ class ProgressRing(LayoutControl):
     When `True`, the `ProgressRing` will use the 2023 Material Design 3 appearance.
 
     If not set, then the
-    [`ProgressIndicatorTheme.year_2023`][flet.ProgressIndicatorTheme.year_2023] will be
+    [`ProgressIndicatorTheme.year_2023`][flet.] will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.Theme.use_material3] is `False`, then this property
+    If [`Theme.use_material3`][flet.] is `False`, then this property
     is ignored.
     """

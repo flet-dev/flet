@@ -317,7 +317,7 @@ class Markdown(LayoutControl):
     """
     Called when a link within Markdown document is clicked/tapped.
 
-    The [`data`][flet.Event.data] property of the event handler argument
+    The [`data`][flet.Event.] property of the event handler argument
     contains the clickedURL.
 
     Example:
