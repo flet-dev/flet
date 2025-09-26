@@ -335,16 +335,13 @@ class FletTestApp:
                 f"{name} screenshots are not identical"
             )
 
-    @staticmethod
-    def _load_image_from_file(file_name):
+    def _load_image_from_file(self, file_name):
         return Image.open(file_name)
 
-    @staticmethod
-    def _load_image_from_bytes(data: bytes) -> Image.Image:
+    def _load_image_from_bytes(self, data: bytes) -> Image.Image:
         return Image.open(BytesIO(data))
 
-    @staticmethod
-    def _compare_images_rgb(img1, img2) -> float:
+    def _compare_images_rgb(self, img1, img2) -> float:
         if img1.size != img2.size:
             img2 = img2.resize(img1.size)
         arr1 = np.array(img1)
