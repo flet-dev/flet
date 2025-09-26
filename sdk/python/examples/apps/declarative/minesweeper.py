@@ -7,7 +7,7 @@ from typing import Optional
 import flet as ft
 
 # ----------- Visual constants ----------
-SQUARE_SIZE = 40
+SQUARE_SIZE = 30
 
 LIGHT = ft.Colors.WHITE70
 DARK = ft.Colors.BLACK38
@@ -36,7 +36,8 @@ class Square:
     mine: bool = False
     revealed: bool = False
     flagged: bool = False
-    tapped: bool = False
+    # tapped: bool = False
+    exploded: bool = False
     adjacent_mines: int = 0
 
 
@@ -47,7 +48,13 @@ class Game:
     rows: int = 9
     cols: int = 9
     mine_count: int = 10
+    mines_left: int = 10
     over = False
+    won = False
+    # timer
+    seconds: int = 0  # elapsed time
+    running: bool = False  # ticking or not
+    first_click_done: bool = False
 
     def __post_init__(self):
         """Initialize the grid of squares."""
@@ -81,8 +88,9 @@ class Game:
 
     def square_revealed(self, square: Square):
         square.revealed = True
-        square.tapped = True
+        # square.tapped = True
         if square.mine:
+            square.exploded = True
             self.over = True
             for sq in self.squares:
                 if sq.mine:
@@ -100,23 +108,31 @@ class Game:
                     if 0 <= nr < self.rows and 0 <= nc < self.cols:
                         nidx = nr * self.cols + nc
                         nsq = self.squares[nidx]
-                        if not nsq.revealed and not nsq.mine:
+                        if not nsq.revealed and not nsq.mine and not nsq.flagged:
                             self.square_revealed(nsq)
+        # check for win
+        if all(sq.revealed or sq.mine for sq in self.squares):
+            self.over = True
+            self.won = True
+            print("You Win!")
 
     def square_flagged(self, square: Square):
         if not square.revealed:
             square.flagged = not square.flagged
+            self.mines_left += -1 if square.flagged else 1
 
 
 # ---------- View (pure) ----------
 @ft.component
-def SquareView(square: Square, square_revealed) -> ft.Control:
+def SquareView(square: Square) -> ft.Control:
     # Pure view: just render from state
     return ft.Container(
         bgcolor=(
-            ft.Colors.RED_400
-            if (square.revealed and square.mine and square.tapped)
+            ft.Colors.RED_900
+            # if (square.revealed and square.mine and square.tapped)
+            if square.exploded
             else ft.Colors.GREY_300
+            # ft.Colors.GREY_300
             if square.revealed
             else ft.Colors.GREY_400
         ),
@@ -125,14 +141,16 @@ def SquareView(square: Square, square_revealed) -> ft.Control:
             border=BEVEL_RAISED if not square.revealed else None
         ),
         content=ft.Text(
-            "💣"
+            "💥"
+            if square.exploded
+            else "💣"
             if square.revealed and square.mine
             else "🚩"
             if square.flagged
             else str(square.adjacent_mines)
             if square.revealed and square.adjacent_mines > 0
             else "",
-            size=25,
+            size=SQUARE_SIZE * 0.6,
             # text_align=ft.TextAlign.CENTER,
             # align=ft.Alignment.CENTER,
             weight=ft.FontWeight.BOLD,
@@ -176,16 +194,30 @@ def App():
         # content (the Stack)
         if game.over:
             return
+
+        if not game.first_click_done:
+            game.first_click_done = True
+            game.running = True  # <-- start ticking
+            print("Timer started")
+
         for s in game.squares:
             if (
                 s.left <= e.local_position.x <= s.left + SQUARE_SIZE
                 and s.top <= e.local_position.y <= s.top + SQUARE_SIZE
             ):
+                if s.flagged:
+                    print("square is flagged, cannot reveal")
+                    return
                 game.square_revealed(s)
                 break
 
     def on_right_pan_start(e):
-        print("right pan start", e)
+        if game.over:
+            return
+        if not game.first_click_done:
+            game.first_click_done = True
+            game.running = True  # <-- start ticking
+            print("Timer started")
         for s in game.squares:
             if (
                 s.left <= e.local_position.x <= s.left + SQUARE_SIZE
@@ -200,32 +232,59 @@ def App():
         on_tap_down=on_tap_down,
         on_right_pan_start=on_right_pan_start,
         content=ft.Stack(
-            controls=[SquareView(c, game.square_revealed) for c in game.squares],
-            # width=1000,
-            # height=500,
+            controls=[SquareView(c) for c in game.squares],
+            # width=300,
+            # height=300,
         ),
     )
 
     top_menu = ft.Row(
         controls=[
-            ft.Text("000", size=20, weight=ft.FontWeight.BOLD),
             ft.Container(
-                content=ft.Image(
-                    src="/images/neutral.png" if not game.over else "/images/cry.png",
-                    width=30,
+                height=50,
+                width=90,
+                alignment=ft.Alignment.CENTER,
+                content=ft.Text(
+                    f"{game.mines_left:03d}",
+                    size=25,
+                    weight=ft.FontWeight.BOLD,
+                    color=ft.Colors.RED,
                 ),
+                foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+            ),
+            ft.Container(
+                # content=ft.Image(
+                #     src="/images/neutral.png" if not game.over else "/images/cry.png",
+                #     # width=30,
+                # ),
+                content=ft.Text(
+                    "🙂" if not game.over else "😎" if game.won else "😵", size=35
+                ),
+                # 😎 😵😢
+                alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.GREY_400,
                 on_tap_down=lambda e: set_new_game_tapped(True),
                 on_click=lambda e: (set_game(Game()), set_new_game_tapped(False)),
-                width=SQUARE_SIZE * 1.5,
-                height=SQUARE_SIZE * 1.5,
+                width=50,
+                height=50,
                 foreground_decoration=ft.BoxDecoration(
                     border=BEVEL_RAISED if not new_game_tapped else None
                 ),
             ),
-            ft.Text(f"Mines: {game.mine_count}"),
+            ft.Container(
+                height=50,
+                width=90,
+                alignment=ft.Alignment.CENTER,
+                content=ft.Text(
+                    f"{game.mines_left:03d}",
+                    size=25,
+                    weight=ft.FontWeight.BOLD,
+                    color=ft.Colors.RED,
+                ),
+                foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+            ),
         ],
-        alignment=ft.MainAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
         expand=True,
     )
 
@@ -238,17 +297,13 @@ def App():
                     padding=10,
                 ),
                 ft.Container(
-                    content=ft.Text("Right-click to flag/unflag squares"),
-                    foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
-                    padding=10,
-                ),
-                ft.Container(
                     content=board,
                     # alignment=ft.Alignment.TOP_CENTER,
                     # content=ft.Text("sdfsdfsfd"),
                     foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
-                    padding=20,
-                    # height=SQUARE_SIZE * game.rows + 4,
+                    padding=5,
+                    height=SQUARE_SIZE * game.rows + 10,
+                    width=SQUARE_SIZE * game.cols + 10,
                 ),
             ],
             alignment=ft.MainAxisAlignment.START,
@@ -257,8 +312,8 @@ def App():
         ),
         bgcolor=ft.Colors.GREY_400,
         foreground_decoration=ft.BoxDecoration(border=BEVEL_RAISED),
-        width=SQUARE_SIZE * (game.cols) + 30,
-        height=SQUARE_SIZE * (game.rows + 1) + 200,
+        width=SQUARE_SIZE * (game.cols + 1),
+        height=SQUARE_SIZE * (game.rows + 1) + 100,
         padding=10,
     )
 
