@@ -33,7 +33,6 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     IconData,
-    Locale,
     MainAxisAlignment,
     MouseCursor,
     NotchShape,
@@ -1969,7 +1968,8 @@ class DatePickerTheme:
     The dialog's header displays the currently selected date range.
 
     This is used instead of any colors provided by
-    `range_picker_header_headline_text_style` or `range_picker_header_help_text_style`.
+    `range_picker_header_headline_text_style` or
+    `range_picker_header_help_text_style`.
     """
 
     today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
@@ -2004,8 +2004,8 @@ class DatePickerTheme:
 
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
-    Overrides the default text style used for the headline text in the header of a full
-    screen DateRangePicker (TBD).
+    Overrides the default text style used for the headline text in the header of a
+    full screen DateRangePicker (TBD).
 
     The dialog's header displays the currently selected date range.
 
@@ -2021,8 +2021,9 @@ class DatePickerTheme:
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default highlight color that's typically used to indicate that a date
-    in the selected range of a DateRangePicker (TBD) is focused, hovered, or pressed.
+    Overrides the default highlight color that's typically used to indicate that a
+    date in the selected range of a DateRangePicker (TBD) is focused, hovered, or
+    pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
@@ -2072,12 +2073,6 @@ class DatePickerTheme:
     If the selected day is not the current day, the provided shape with the value of
     [`DatePickerTheme.day_bgcolor`][flet.] is used to paint
     the shape decoration of the day label.
-    """
-
-    locale: Optional[Locale] = None
-    """
-    An optional locale argument can be used to set the locale for the date picker. It
-    defaults to the ambient locale provided by Localizations.
     """
 
 
@@ -3347,7 +3342,15 @@ class Theme:
     """
 
     data_table_theme: Optional[DataTableTheme] = None
+    """
+    Customizes the appearance of [`DataTable`][flet.DataTable] across the app.
+    """
+
     date_picker_theme: Optional[DatePickerTheme] = None
+    """
+    Customizes the appearance of [`DatePicker`][flet.DatePicker] across the app.
+    """
+
     dialog_theme: Optional[DialogTheme] = None
     """
     Customizes the appearance of [`AlertDialog`][flet.] across the app.

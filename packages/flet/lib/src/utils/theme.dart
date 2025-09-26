@@ -16,7 +16,6 @@ import 'dismissible.dart';
 import 'edge_insets.dart';
 import 'geometry.dart';
 import 'icons.dart';
-import 'locale.dart';
 import 'material_state.dart';
 import 'menu.dart';
 import 'misc.dart';
@@ -773,7 +772,7 @@ DatePickerThemeData? parseDatePickerTheme(
     yearOverlayColor: parseWidgetStateColor(value["year_overlay_color"], theme),
     weekdayStyle: parseTextStyle(value["weekday_text_style"], theme),
     dayShape: parseWidgetStateOutlinedBorder(value["day_shape"], theme),
-    locale: parseLocale(value["locale"]),
+    //locale: parseLocale(value["locale"]),
   );
 }
 
