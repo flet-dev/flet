@@ -301,11 +301,15 @@ class FletTestApp:
         )
         assert self.__test_path, "test_path must be set to test with screenshots"
 
+        # Resolve golden base directory at controls root to support tests in subfolders
+        test_file_path = Path(self.__test_path)
+        controls_root = self._find_controls_root(test_file_path)
+
         golden_image_path = (
-            Path(self.__test_path).parent
+            controls_root
             / "golden"
             / self.test_platform
-            / Path(self.__test_path).stem.removeprefix("test_")
+            / test_file_path.stem.removeprefix("test_")
             / f"{name.removeprefix('test_')}.png"
         )
 
@@ -333,16 +337,31 @@ class FletTestApp:
                 f"{name} screenshots are not identical"
             )
 
-    def _load_image_from_file(self, file_name):
+    @staticmethod
+    def _load_image_from_file(file_name):
         return Image.open(file_name)
 
-    def _load_image_from_bytes(self, data: bytes) -> Image.Image:
+    @staticmethod
+    def _load_image_from_bytes(data: bytes) -> Image.Image:
         return Image.open(BytesIO(data))
 
-    def _compare_images_rgb(self, img1, img2) -> float:
+    @staticmethod
+    def _compare_images_rgb(img1, img2) -> float:
         if img1.size != img2.size:
             img2 = img2.resize(img1.size)
         arr1 = np.array(img1)
         arr2 = np.array(img2)
         similarity, _ = ssim(arr1, arr2, channel_axis=-1, full=True)
         return similarity * 100
+
+    @staticmethod
+    def _find_controls_root(test_file_path: Path) -> Path:
+        """
+        Find the controls root directory by walking up from the test file path.
+        Looks for .../integration_tests/controls pattern.
+        """
+        for parent in test_file_path.parents:
+            if parent.name == "controls" and parent.parent.name == "integration_tests":
+                return parent
+        # Fallback to immediate parent
+        return test_file_path.parent
