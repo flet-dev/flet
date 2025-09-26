@@ -1,5 +1,6 @@
 # Step 1: Basic drag-and-drop of rectangles (cards) within a bounded area.
 
+import asyncio
 import random
 from dataclasses import dataclass
 from typing import Optional
@@ -192,6 +193,25 @@ def App():
     game, set_game = ft.use_state(lambda: Game())
     new_game_tapped, set_new_game_tapped = ft.use_state(False)
 
+    ticker_task, set_ticker_task = ft.use_state(None)
+
+    async def tick_loop():
+        try:
+            while True:
+                await asyncio.sleep(1)
+                if not game.running or game.over:
+                    break
+                game.seconds += 1
+                print("Timer:", game.seconds)
+        except asyncio.CancelledError:
+            pass
+
+    def ensure_ticker():
+        # call with the function, not tick_loop()
+        if ticker_task is None or ticker_task.done():
+            t = ft.context.page.run_task(tick_loop)  # <-- no parentheses
+            set_ticker_task(t)
+
     def on_tap_down(e: ft.TapEvent):
         # e.local_position.x / e.local_position.y are relative to the GestureDetector
         # content (the Stack)
@@ -201,6 +221,7 @@ def App():
         if not game.first_click_done:
             game.first_click_done = True
             game.running = True  # <-- start ticking
+            ensure_ticker()
             print("Timer started")
 
         for s in game.squares:
@@ -256,10 +277,6 @@ def App():
                 foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
             ),
             ft.Container(
-                # content=ft.Image(
-                #     src="/images/neutral.png" if not game.over else "/images/cry.png",
-                #     # width=30,
-                # ),
                 content=ft.Text(
                     "🙂" if not game.over else "😎" if game.won else "😵", size=35
                 ),
@@ -267,7 +284,13 @@ def App():
                 alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.GREY_400,
                 on_tap_down=lambda e: set_new_game_tapped(True),
-                on_click=lambda e: (set_game(Game()), set_new_game_tapped(False)),
+                on_click=lambda e: (
+                    set_game(Game()),
+                    set_new_game_tapped(False),
+                    ticker_task.cancel()
+                    if ticker_task and not ticker_task.done()
+                    else None,
+                ),
                 width=50,
                 height=50,
                 foreground_decoration=ft.BoxDecoration(
@@ -279,7 +302,7 @@ def App():
                 width=90,
                 alignment=ft.Alignment.CENTER,
                 content=ft.Text(
-                    f"{game.mines_left:03d}",
+                    f"{game.seconds:03d}",
                     size=25,
                     weight=ft.FontWeight.BOLD,
                     color=ft.Colors.RED,
