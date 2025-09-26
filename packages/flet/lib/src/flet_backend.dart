@@ -113,6 +113,7 @@ class FletBackend extends ChangeNotifier {
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
       "test": tester != null,
       "multi_view": multiView,
+      "pyodide": isPyodideMode(),
       "window": {
         "_c": "Window",
         "_i": 2,
@@ -197,6 +198,7 @@ class FletBackend extends ChangeNotifier {
                   "wasm": page.get("wasm"),
                   "test": page.get("test"),
                   "multi_view": page.get("multi_view"),
+                  "pyodide": page.get("pyodide"),
                   "platform_brightness": page.get("platform_brightness"),
                   "width": page.get("width"),
                   "height": page.get("height"),
@@ -312,12 +314,13 @@ class FletBackend extends ChangeNotifier {
     }
   }
 
-  void updatePageSize(Size newSize) async {
+  void updatePageSize(Size newSize, {Control? view}) async {
     debugPrint("Page size updated: $newSize");
     pageSize = newSize;
     var newProps = {"width": newSize.width, "height": newSize.height};
-    updateControl(page.id, newProps);
-    triggerControlEvent(page, "resize", newProps);
+    var ctrl = view ?? page;
+    updateControl(ctrl.id, newProps);
+    triggerControlEvent(ctrl, "resize", newProps);
 
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
@@ -342,11 +345,12 @@ class FletBackend extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateMedia(PageMediaData newMedia) {
+  void updateMedia(PageMediaData newMedia, {Control? view}) {
     debugPrint("Page media updated: $newMedia");
     media = newMedia;
-    updateControl(page.id, {"media": newMedia.toMap()});
-    triggerControlEvent(page, "media_change", newMedia.toMap());
+    var ctrl = view ?? page;
+    updateControl(ctrl.id, {"media": newMedia.toMap()});
+    triggerControlEvent(ctrl, "media_change", newMedia.toMap());
     notifyListeners();
   }
 

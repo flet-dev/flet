@@ -72,10 +72,6 @@ except ImportError:
 
 
 logger = logging.getLogger("flet")
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -280,6 +276,14 @@ class Page(BasePage):
     multi_view: bool = False
     """
     `True` if the application is running with multi-view support.
+
+    Note:
+        This property is read-only.
+    """
+
+    pyodide: bool = False
+    """
+    `True` if the application is running in Pyodide (WebAssembly) mode.
 
     Note:
         This property is read-only.

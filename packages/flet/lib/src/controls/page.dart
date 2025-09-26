@@ -56,7 +56,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   ServiceRegistry? _userServices;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
-  double _dpr = 1.0;
+  final double _dpr = 1.0;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
@@ -98,7 +98,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
-    _dpr = MediaQuery.devicePixelRatioOf(context);
+    //_dpr = MediaQuery.devicePixelRatioOf(context);
     _loadFontsIfNeeded(FletBackend.of(context));
   }
 
@@ -177,7 +177,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     bool changed = false;
 
-    bool triggerAddViewEvent = SessionStore.get("triggerAddViewEvent") == null;
+    bool triggerAddViewEvent =
+        SessionStore.get("triggerAddViewEvent") == null || isPyodideMode();
     for (final FlutterView view
         in WidgetsBinding.instance.platformDispatcher.views) {
       if (!_multiViews.containsKey(view.viewId)) {
@@ -203,13 +204,19 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         changed = true;
       }
     }
-    SessionStore.set("triggerAddViewEvent", "true");
+    if (!isPyodideMode()) {
+      SessionStore.set("triggerAddViewEvent", "true");
+    }
     if (changed && !_registeredFromMultiViews) {
       _registeredFromMultiViews = true;
-      widget.control.backend.onRouteUpdated("/");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.control.backend.onRouteUpdated("/");
+      });
     } else {
       // re-draw
-      setState(() {});
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 
@@ -318,7 +325,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           child: viewControl != null
               ? ControlWidget(control: viewControl)
               : Stack(children: [
-                  const PageMedia(),
+                  PageMedia(view: multiViewControl),
                   LoadingPage(
                     isLoading: appStatus.isLoading,
                     message: appStatus.isLoading
