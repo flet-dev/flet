@@ -30,26 +30,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [core, material, cupertino, layout, theme]
-    name: macOS Integration Tests (${{ matrix.suite }})
+        suite: [core, material, cupertino, theme, types]
+    name: ${{ matrix.suite }} Integration Tests
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure FVM
-        uses: kuhnroyal/flutter-fvm-config-action/config@v3
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         id: fvm-config-action
         with:
           path: '.fvmrc'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
           cache: true
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
 
       - name: Show tool versions
         run: |
