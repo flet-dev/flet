@@ -15,7 +15,7 @@ from flet.controls.box import (
     DecorationImage,
 )
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler, Event, EventHandler
+from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.layout_control import LayoutControl
@@ -220,16 +220,9 @@ class Container(LayoutControl, AdaptiveControl):
     It will not be called if this container is long pressed.
     """
 
-    on_tap_down: Optional[
-        EventHandler[Union[TapEvent["Container"], Event["Container"]]]
-    ] = None
+    on_tap_down: Optional[EventHandler[TapEvent["Container"]]] = None
     """
     Called when a user clicks the container with or without a long press.
-
-    Info:
-        If [`ink`][(c).] is `True`, the event handler argument will be a plain
-        [`Event`][flet.] with its [`data`][flet.Event.] being `None` instead of
-        a [`TapEvent`][flet.].
     """
 
     on_long_press: Optional[ControlEventHandler["Container"]] = None
