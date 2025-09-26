@@ -129,7 +129,7 @@ plugins:
             show_labels: false
             show_if_no_docstring: true
             docstring_section_style: spacy
-            inherited_members: true
+            inherited_members: false
             separate_signature: true
             filters:
               - "!^_"   # Exclude private members starting with only one underscore

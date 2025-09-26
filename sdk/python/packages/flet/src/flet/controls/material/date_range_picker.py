@@ -115,8 +115,8 @@ class DateRangePicker(DialogControl):
     error_invalid_text: Optional[str] = None
     """
     The error message displayed below the TextField if the date is earlier than
-    [`first_date`][ft.DateRangePicker.first_date] or
-    later than [`last_date`][ft.DateRangePicker.last_date].
+    [`first_date`][(c).] or
+    later than [`last_date`][(c).].
     """
 
     field_start_hint_text: Optional[str] = None

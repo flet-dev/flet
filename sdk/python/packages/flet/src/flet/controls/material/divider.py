@@ -18,7 +18,6 @@ class Divider(Control):
     The color to use when painting the line.
 
     If `None`, [`DividerTheme.color`][flet.] is used.
-    If that's is also `None`, defaults to [`Theme.divider_color`][flet.].
     """
 
     height: Optional[Number] = None
