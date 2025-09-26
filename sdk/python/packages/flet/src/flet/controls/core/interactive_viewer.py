@@ -62,7 +62,7 @@ class InteractiveViewer(LayoutControl):
     The maximum allowed scale.
 
     Note:
-        Must be greater than or equal to [`min_scale`][flet.InteractiveViewer.min_scale].
+        Must be greater than or equal to [`min_scale`][(c).].
     """  # noqa: E501
 
     min_scale: Number = 0.8
@@ -71,7 +71,7 @@ class InteractiveViewer(LayoutControl):
 
     Note:
         Must be greater than `0` and less than or equal
-        to [`max_scale`][flet.InteractiveViewer.max_scale].
+        to [`max_scale`][(c).].
     """
 
     interaction_end_friction_coefficient: Number = 0.0000135

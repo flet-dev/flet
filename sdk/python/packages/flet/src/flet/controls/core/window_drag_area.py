@@ -36,7 +36,7 @@ class WindowDragArea(LayoutControl):
     Called when the `WindowDragArea` is double-tapped and `maximizable=True`.
 
     Info:
-        When a double-tap event is fired, the [`type`][flet.WindowEvent.type]
+        When a double-tap event is fired, the [`type`][flet.WindowEvent.]
         property of the event handler argument can only be one of the following:
         `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`.
     """

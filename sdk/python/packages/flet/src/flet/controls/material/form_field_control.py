@@ -33,7 +33,7 @@ class FormFieldControl(LayoutControl):
 
     text_style: TextStyle = field(default_factory=lambda: TextStyle())
     """
-    The [`TextStyle`][flet.TextStyle] to use for the
+    The [`TextStyle`][flet.] to use for the
     text being edited.
     """
 
@@ -42,7 +42,7 @@ class FormFieldControl(LayoutControl):
     Defines how the text should be aligned vertically.
 
     Value can either be a number ranging from `-1.0` (topmost location) to `1.0`
-    (bottommost location) or of type [`VerticalAlignment`][flet.VerticalAlignment]
+    (bottommost location) or of type [`VerticalAlignment`][flet.]
     Defaults to `VerticalAlignment.CENTER`.
     """
 
@@ -59,8 +59,7 @@ class FormFieldControl(LayoutControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `label`.
+    The text style to use for `label`.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -80,8 +79,10 @@ class FormFieldControl(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    TextField background color. Will not be
-    visible if `filled=False`.
+    TextField background color.
+
+    Note:
+        Will not be visible if [`filled`][flet.FormFieldControl.] is `False`.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -90,27 +91,33 @@ class FormFieldControl(LayoutControl):
 
     border_width: Optional[Number] = None
     """
-    The width of the border in virtual pixels. Set to `0` to completely remove the
-    border.
+    The width of the border in virtual pixels.
 
     Defaults to `1`.
+
+    Tip:
+        Set to `0` to completely remove the border.
     """
 
     border_color: Optional[ColorValue] = None
     """
-    Border color. Could be `transparent` to
-    hide the border.
+    The border color.
+
+    Tip:
+        Set to [`Colors.TRANSPARENT`][flet.] to invisible/hide the border.
     """
 
     focused_color: Optional[ColorValue] = None
     """
-    Text color when TextField is focused.
+    The text's color when focused.
     """
 
     focused_bgcolor: Optional[ColorValue] = None
     """
-    Background color of TextField in focused
-    state. Will not be visible if `filled=False`.
+    Background color in focused state.
+
+    Note:
+        Will not be visible if [`filled`][flet.FormFieldControl.] is `False`.
     """
 
     focused_border_width: Optional[Number] = None
@@ -130,22 +137,26 @@ class FormFieldControl(LayoutControl):
 
     dense: Optional[bool] = None
     """
-    Whether the TextField is part of a dense form (ie, uses less vertical space).
+    Whether this control is part of a dense form (ie, uses less vertical space).
     """
 
     filled: Optional[bool] = None
     """
-    If `True` the decoration's container is filled with theme `fill_color`.
+    If `True` the decoration's container is filled with theme
+    [`fill_color`][flet.FormFieldControl.].
 
-    If `filled=None`(default), then it is implicitly set to `True` when at least one of
-    the following is not `None`: `fill_color`, `focused_bgcolor`, `hover_color` and
-    `bgcolor`.
+    If `filled=None` (the default), then it is implicitly set to `True` when at least
+    one of the following is not `None`: [`fill_color`][flet.FormFieldControl.],
+    [`focused_bgcolor`][flet.FormFieldControl.],
+    [`hover_color`][flet.FormFieldControl.] and [`bgcolor`][flet.FormFieldControl.].
     """
 
     fill_color: Optional[ColorValue] = None
     """
-    Background color of TextField. Will not
-    be visible if `filled=False`.
+    Background color of TextField.
+
+    Note:
+        Will not be visible if [`filled`][flet.FormFieldControl.] is `False`.
     """
 
     focus_color: Optional[ColorValue] = None
@@ -160,22 +171,23 @@ class FormFieldControl(LayoutControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    Background color of TextField when
-    hovered. Will not be visible if `filled=False`.
+    Background color of TextField when hovered.
+
+    Note:
+        Will not be visible if [`filled`][flet.FormFieldControl.] is `False`.
     """
 
     hint_text: Optional[str] = None
     """
     Text that suggests what sort of input the field accepts.
 
-    Displayed on top of the input when the it's empty and either (a) `label` is null or
-    (b) the input has the focus.
+    Displayed on top of the input when the it's empty and either
+    (a) [`label`][flet.FormFieldControl.] is `None` or (b) the input has the focus.
     """
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `hint_text`.
+    The text style to use for [`hint_text`][flet.FormFieldControl.].
     """
 
     hint_fade_duration: Optional[DurationValue] = None
@@ -194,14 +206,14 @@ class FormFieldControl(LayoutControl):
     used.
 
     If non-null, the text is displayed below the input decorator, in the same location
-    as `error_text`. If a non-null `error_text` value is specified then the helper text
-    is not shown.
+    as [`error`][flet.FormFieldControl.]. If a non-null
+    [`error`][flet.FormFieldControl.] value is specified then the helper text is not
+    shown.
     """
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `helper_text`.
+    The text style to use for [`helper`][flet.FormFieldControl.].
     """
 
     helper_max_lines: Optional[int] = None
@@ -213,27 +225,25 @@ class FormFieldControl(LayoutControl):
     """
     A `Control` to place below the line as a character count.
 
-    If `None` or an empty string and `counter_text` isn't specified, then nothing will
-    appear in the counter's location.
+    If `None` or an empty string then nothing will appear in the counter's location.
     """
 
     counter_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `counter_text`.
+    The text style to use for `counter`.
     """
 
     error: Optional[StrOrControl] = None
     """
     Text that appears below the input border.
 
-    If non-null, the border's color animates to red and the `helper_text` is not shown.
+    If non-null, the border's color animates to red
+    and the [`helper`][flet.FormFieldControl.] is not shown.
     """
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `error_text`.
+    The text style to use for [`error`][flet.FormFieldControl.].
     """
 
     error_max_lines: Optional[int] = None
@@ -243,21 +253,22 @@ class FormFieldControl(LayoutControl):
 
     prefix: Optional[StrOrControl] = None
     """
-    Optional `Control` to place on the line before the input.
+    A `Control` to place on the line before the input.
+
+    It appears after the [`prefix_icon`][flet.FormFieldControl.], if both are specified.
 
     This can be used, for example, to add some padding to text that would otherwise be
-    specified using `prefix_text`, or to add a custom control in front of the input.
+    specified using `prefix`, or to add a custom control in front of the input.
     The control's baseline is lined up with the input baseline.
-
-    Only one of `prefix` and `prefix_text` can be specified.
-
-    The `prefix` appears after the `prefix_icon`, if both are specified.
     """
 
     prefix_icon: Optional[IconDataOrControl] = None
     """
-    An icon that appears before the `prefix` or `prefix_text` and before the editable
-    part of the text field, within the decoration's container.
+    An icon that appears before the editable part of the text field,
+    within the decoration's container.
+
+    If [`prefix`][flet.FormFieldControl.] is specified and visible,
+    this icon will appear to its left.
     """
 
     prefix_icon_size_constraints: Optional[BoxConstraints] = None
@@ -267,27 +278,25 @@ class FormFieldControl(LayoutControl):
 
     prefix_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `prefix_text`.
+    The text style to use for [`prefix`][flet.FormFieldControl.].
     """
 
     suffix: Optional[StrOrControl] = None
     """
-    Optional `Control` to place on the line after the input.
+    A `Control` to place on the line after the input.
+
+    It appears before the [`suffix_icon`][flet.FormFieldControl.],
+    if both are specified.
 
     This can be used, for example, to add some padding to the text that would otherwise
-    be specified using `suffix_text`, or to add a custom control after the input.
+    be specified using `suffix`, or to add a custom control after the input.
     The control's baseline is lined up with the input baseline.
-
-    Only one of `suffix` and `suffix_text` can be specified.
-
-    The `suffix` appears before the `suffix_icon`, if both are specified.
     """
 
     suffix_icon: Optional[IconDataOrControl] = None
     """
     An icon that appears after the editable part of the text field and after the
-    `suffix` or `suffix_text`, within the decoration's container.
+    [`suffix`][flet.FormFieldControl.], within the decoration's container.
     """
 
     suffix_icon_size_constraints: Optional[BoxConstraints] = None
@@ -312,8 +321,7 @@ class FormFieldControl(LayoutControl):
 
     suffix_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    `suffix_text`.
+    The text style to use for [`suffix`][flet.FormFieldControl.].
     """
 
     async def focus(self):

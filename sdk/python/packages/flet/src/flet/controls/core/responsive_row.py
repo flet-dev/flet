@@ -24,7 +24,7 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     By default, a virtual grid has 12 columns, but that can be customized with
     [`columns`][(c).] property.
 
-    Similar to `expand` property, every control has [`col`][flet.Control.col]
+    Similar to `expand` property, every control has [`col`][flet.Control.]
     property which allows specifying how many columns a control should span.
     """
 
@@ -40,13 +40,13 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be
+    Defines how the child [`controls`][(c).] should be
     placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    Defines how the child [`controls`][flet.ResponsiveRow.controls] should be placed
+    Defines how the child [`controls`][(c).] should be placed
     vertically.
     """
 
@@ -55,10 +55,10 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     The spacing between controls in a row in virtual pixels.
 
     Note:
-        Has effect only when [`alignment`][flet.ResponsiveRow.alignment] is set to
-        [`MainAxisAlignment.START`][flet.MainAxisAlignment.START],
-        [`MainAxisAlignment.END`][flet.MainAxisAlignment.END],
-        or [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER].
+        Has effect only when [`alignment`][(c).] is set to
+        [`MainAxisAlignment.START`][flet.],
+        [`MainAxisAlignment.END`][flet.],
+        or [`MainAxisAlignment.CENTER`][flet.].
     """
 
     run_spacing: ResponsiveNumber = 10

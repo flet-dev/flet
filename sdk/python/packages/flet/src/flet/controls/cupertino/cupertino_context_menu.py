@@ -13,18 +13,19 @@ class CupertinoContextMenu(AdaptiveControl):
 
     content: Control
     """
-    The child control to be shown.
+    The content of this context menu.
 
-    When the `CupertinoContextMenu` is long-pressed, the menu will open and this control
-    will be moved to the new route and be expanded. This allows the child to resize to
-    fit in its place in the new route, if it doesn't size itself.
+    Info:
+        When this context menu is long-pressed, the menu will open and this control
+        will be moved to the new route and be expanded. This allows the content
+        to resize to fit in its place in the new route, if it doesn't size itself.
     """
 
     actions: list[Control]
     """
     A list of action buttons to be shown in the menu.
 
-    Typically [`CupertinoContextMenuAction`][flet.CupertinoContextMenuAction]s.
+    Typically [`CupertinoContextMenuAction`][flet.]s.
 
     Note:
         This list must have at least one visible action.
@@ -32,7 +33,7 @@ class CupertinoContextMenu(AdaptiveControl):
 
     enable_haptic_feedback: bool = True
     """
-    Whether a click on the `actions` should produce haptic feedback.
+    Whether a click on the [`actions`][(c).] should produce haptic feedback.
     """
 
     def before_update(self):

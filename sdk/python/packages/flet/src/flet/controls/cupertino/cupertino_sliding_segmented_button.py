@@ -22,8 +22,8 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     Raises:
         AssertionError: If [`controls`][(c).] does not contain at least two
             visible controls.
-        IndexError: If [`selected_index`][flet.CupertinoSlidingSegmentedButton.selected_index] is out of range.
-    """  # noqa: E501
+        IndexError: If [`selected_index`][(c).] is out of range.
+    """
 
     controls: list[Control]
     """
@@ -35,47 +35,44 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected segment in the `controls` list.
+    The index (starting from 0) of the selected segment in the [`controls`][(c).] list.
     """
 
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The background color of the button.
+    The background color of this button.
     """
 
     thumb_color: Optional[ColorValue] = None
     """
-    The color of the button when it is not
-    selected.
+    The color of this button when it is not selected.
     """
 
     padding: PaddingValue = field(
         default_factory=lambda: Padding.symmetric(vertical=2, horizontal=3)
     )
     """
-    The amount of space by which to inset the
-    [`controls`][flet.CupertinoSlidingSegmentedButton.controls].
+    The amount of space by which to inset the [`controls`][(c).].
     """
 
     proportional_width: bool = False
     """
     Determine whether segments have proportional widths based on their content.
 
-    If false, all segments will have the same width, determined by the longest
-    segment. If true, each segment's width will be determined by its individual
+    If `False`, all segments will have the same width, determined by the longest
+    segment. If `True`, each segment's width will be determined by its individual
     content.
 
-    If the max width of parent constraints is smaller than the width that the
-    segmented control needs, The segment widths will scale down proportionally
-    to ensure the segment control fits within the boundaries; similarly, if
-    the min width of parent constraints is larger, the segment width will scales
-    up to meet the min width requirement.
+    If the max width of parent constraints is smaller than the width that this control
+    needs, the segment widths will scale down proportionally to ensure this control
+    fits within the boundaries; similarly, if the min width of parent constraints is
+    larger, the segment width will scales up to meet the min width requirement.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
     """
-    Called when the state of the button is changed - when one of the `controls` is
-    clicked.
+    Called when the state of the button is changed -
+    when one of the [`controls`][(c).] is clicked.
     """
 
     def before_update(self):
