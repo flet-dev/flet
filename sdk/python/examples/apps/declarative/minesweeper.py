@@ -114,6 +114,9 @@ class Game:
         if all(sq.revealed or sq.mine for sq in self.squares):
             self.over = True
             self.won = True
+            for sq in self.squares:
+                if sq.mine and not sq.flagged:
+                    sq.flagged = True
             print("You Win!")
 
     def square_flagged(self, square: Square):
