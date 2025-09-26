@@ -35,14 +35,14 @@ class DateRangePicker(DialogControl):
     """
     The selected start date that the picker should display.
 
-    Defaults to [`current_date`][flet.DateRangePicker.current_date].
+    Defaults to [`current_date`][(c).].
     """
 
     end_value: Optional[DateTimeValue] = None
     """
     The selected end date that the picker should display.
 
-    Defaults to [`current_date`][flet.DateRangePicker.current_date].
+    Defaults to [`current_date`][(c).].
     """
 
     save_text: Optional[str] = None
@@ -142,7 +142,7 @@ class DateRangePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][flet.DateRangePicker.date_picker_entry_mode]
+    [`date_picker_entry_mode`][(c).]
     is [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
 
     Clicking on this icon changes the `date_picker_entry_mode` to
@@ -154,7 +154,7 @@ class DateRangePicker(DialogControl):
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][flet.DateRangePicker.date_picker_entry_mode]
+    [`date_picker_entry_mode`][(c).]
     is [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
 
     Clicking on this icon changes the `date_picker_entry_mode` to
@@ -176,8 +176,8 @@ class DateRangePicker(DialogControl):
     on_change: Optional[ControlEventHandler["DateRangePicker"]] = None
     """
     Called when user clicks confirm button.
-    [`start_value`][flet.DateRangePicker.start_value] and
-    [`end_value`][flet.DateRangePicker.end_value] are updated with selected dates.
+    [`start_value`][(c).] and
+    [`end_value`][(c).] are updated with selected dates.
 
     The `data` property of the event handler argument contains the selected dates.
     """

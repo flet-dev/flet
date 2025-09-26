@@ -86,12 +86,12 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     leading: Optional[IconDataOrControl] = None
     """
-    A control to display before the [`title`][flet.ListTile.title].
+    A control to display before the [`title`][(c).].
     """
 
     trailing: Optional[IconDataOrControl] = None
     """
-    A control to display after the [`title`][flet.ListTile.title].
+    A control to display after the [`title`][(c).].
 
     Typically an [`Icon`][flet.Icon] control.
     """
@@ -116,8 +116,8 @@ class ListTile(LayoutControl, AdaptiveControl):
     hover_color: Optional[ColorValue] = None
     """
     The tile's color when hovered. Only takes effect if
-    [`toggle_inputs`][flet.ListTile.toggle_inputs] is True or if
-    [`on_click`][flet.ListTile.on_click] is provided.
+    [`toggle_inputs`][(c).] is True or if
+    [`on_click`][(c).] is provided.
     """
 
     selected: bool = False
@@ -175,7 +175,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     horizontal_spacing: Optional[Number] = None
     """
     The horizontal gap between the `title` and the
-    [`leading`][flet.ListTile.leading] and [`trailing`][flet.ListTile.trailing]
+    [`leading`][(c).] and [`trailing`][(c).]
     controls.
     """
 
@@ -193,7 +193,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.ListTile.on_click] event callback is provided,
+    Additionally, if [`on_click`][(c).] event callback is provided,
     it is fired after that.
     """
 
@@ -209,15 +209,15 @@ class ListTile(LayoutControl, AdaptiveControl):
     icon_color: Optional[ColorValue] = None
     """
     Defines the default color for the icons
-    present in [`leading`][flet.ListTile.leading] and
-    [`trailing`][flet.ListTile.trailing].
+    present in [`leading`][(c).] and
+    [`trailing`][(c).].
     """
 
     text_color: Optional[ColorValue] = None
     """
     The color used for
-    texts in [`title`][flet.ListTile.title], [`subtitle`][flet.ListTile.subtitle],
-    [`leading`][flet.ListTile.leading], and [`trailing`][flet.ListTile.trailing].
+    texts in [`title`][(c).], [`subtitle`][(c).],
+    [`leading`][(c).], and [`trailing`][(c).].
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -239,7 +239,7 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     title_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] for the [`title`][flet.ListTile.title]
+    The [`TextStyle`][(c).] for the [`title`][(c).]
     control.
     """
 
@@ -261,7 +261,7 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     If `None` or not set, default tile heights are `56.0`, `72.0`, and `88.0` for one,
     two, and three lines of text respectively.
-    If [`dense`][flet.ListTile.dense] is `True`, these
+    If [`dense`][(c).] is `True`, these
     defaults are changed to `48.0`, `64.0`, and `76.0`.
 
     Note that, a visual density value or a large title will also adjust the default
