@@ -9,6 +9,6 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.ProgressBar(
-            width=400, color=ft.Colors.GREEN_400, bgcolor=ft.Colors.GREY_400
+            width=400, color=ft.Colors.GREEN_400, bgcolor=ft.Colors.GREY_400, value=None
         ),
     )
