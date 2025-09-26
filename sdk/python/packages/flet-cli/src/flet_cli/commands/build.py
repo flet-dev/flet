@@ -33,7 +33,7 @@ from flet_cli.utils.project_dependencies import (
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
-PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full"
+PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
 MINIMAL_FLUTTER_VERSION = version.Version("3.35.1")
