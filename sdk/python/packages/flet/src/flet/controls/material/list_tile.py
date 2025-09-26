@@ -115,8 +115,9 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The tile's color when hovered. Only takes effect if `toggle_inputs` is True or if
-    `on_click` is provided.
+    The tile's color when hovered. Only takes effect if
+    [`toggle_inputs`][flet.ListTile.toggle_inputs] is True or if
+    [`on_click`][flet.ListTile.on_click] is provided.
     """
 
     selected: bool = False

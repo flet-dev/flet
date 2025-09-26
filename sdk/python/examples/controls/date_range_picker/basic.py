@@ -6,7 +6,7 @@ import flet as ft
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_change(e):
+    def handle_change(e: ft.Event[ft.DateRangePicker]):
         page.add(
             ft.Text(
                 f"Start Date changed: {e.control.start_value.strftime('%m/%d/%Y')}"
@@ -14,7 +14,7 @@ def main(page: ft.Page):
             ft.Text(f"End Date changed: {e.control.end_value.strftime('%m/%d/%Y')}"),
         )
 
-    def handle_dismissal(e):
+    def handle_dismissal(e: ft.Event[ft.DialogControl]):
         page.add(ft.Text("DatePicker dismissed"))
 
     page.add(

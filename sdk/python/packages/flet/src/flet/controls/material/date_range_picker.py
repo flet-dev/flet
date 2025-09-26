@@ -16,7 +16,6 @@ from flet.controls.types import (
 )
 
 __all__ = [
-    "DatePickerEntryMode",
     "DateRangePicker",
 ]
 
@@ -36,14 +35,14 @@ class DateRangePicker(DialogControl):
     """
     The selected start date that the picker should display.
 
-    Defaults to [`current_date`][flet.DatePicker.current_date].
+    Defaults to [`current_date`][flet.DateRangePicker.current_date].
     """
 
     end_value: Optional[DateTimeValue] = None
     """
     The selected end date that the picker should display.
 
-    Defaults to [`current_date`][flet.DatePicker.current_date].
+    Defaults to [`current_date`][flet.DateRangePicker.current_date].
     """
 
     save_text: Optional[str] = None
@@ -116,7 +115,8 @@ class DateRangePicker(DialogControl):
     error_invalid_text: Optional[str] = None
     """
     The error message displayed below the TextField if the date is earlier than
-    `first_date` or later than `last_date`.
+    [`first_date`][ft.DateRangePicker.first_date] or
+    later than [`last_date`][ft.DateRangePicker.last_date].
     """
 
     field_start_hint_text: Optional[str] = None
@@ -142,7 +142,7 @@ class DateRangePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
+    [`date_picker_entry_mode`][flet.DateRangePicker.date_picker_entry_mode]
     is [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
 
     Clicking on this icon changes the `date_picker_entry_mode` to
@@ -154,10 +154,10 @@ class DateRangePicker(DialogControl):
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][flet.DatePicker.date_picker_entry_mode]
+    [`date_picker_entry_mode`][flet.DateRangePicker.date_picker_entry_mode]
     is [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
 
-    Clicking on icon changes the `DatePickerEntryMode` to
+    Clicking on this icon changes the `date_picker_entry_mode` to
     [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
 
     If `None`, [`Icons.EDIT_OUTLINED`][flet.Icons.EDIT_OUTLINED] is used.
@@ -176,7 +176,8 @@ class DateRangePicker(DialogControl):
     on_change: Optional[ControlEventHandler["DateRangePicker"]] = None
     """
     Called when user clicks confirm button.
-    [`value`][flet.DatePicker.value] is updated with selected date.
+    [`start_value`][flet.DateRangePicker.start_value] and
+    [`end_value`][flet.DateRangePicker.end_value] are updated with selected dates.
 
-    The `data` property of the event handler argument contains the selected date.
+    The `data` property of the event handler argument contains the selected dates.
     """
