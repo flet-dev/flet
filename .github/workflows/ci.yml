@@ -87,7 +87,7 @@ jobs:
 
       - name: Compute versions
         id: versions
-        run: source $SCRIPTS/update_build_version.sh
+        run: source "${SCRIPTS}/update_build_version.sh"
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -106,7 +106,7 @@ jobs:
 
             # patch pubspecs
             for dir in packages/flet*; do
-              patch_pubspec_version "$dir/pubspec.yaml" "$PKG_VER"
+              patch_pubspec_version "${dir}/pubspec.yaml" "$PKG_VER"
             done
 
             echo "Running flet tests"
@@ -161,10 +161,10 @@ jobs:
           echo "SCRIPTS: $SCRIPTS"
 
           # Replace: version = ""  -> version = "<PYPI_VER>"
-          vp="$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/version.py"
+          vp="${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/version.py"
           sed -i 's/^version = ""$/version = "'"$PYPI_VER"'"/' "$vp"
 
-          patch_toml_versions "$SDK_PYTHON_POSIX/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
+          patch_toml_versions "${SDK_PYTHON_POSIX}/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
       - name: Build Flutter Windows client
         env:
@@ -180,22 +180,22 @@ jobs:
           flutter build windows --build-name=$BUILD_VER
 
           # Copy needed runtime DLLs
-          cp "$WINDIR_POSIX/system32/msvcp140.dll" "$RELEASE_DIR_POSIX"
-          cp "$WINDIR_POSIX/system32/vcruntime140.dll" "$RELEASE_DIR_POSIX"
-          cp "$WINDIR_POSIX/system32/vcruntime140_1.dll" "$RELEASE_DIR_POSIX"
+          cp "${WINDIR_POSIX}/system32/msvcp140.dll" "$RELEASE_DIR_POSIX"
+          cp "${WINDIR_POSIX}/system32/vcruntime140.dll" "$RELEASE_DIR_POSIX"
+          cp "${WINDIR_POSIX}/system32/vcruntime140_1.dll" "$RELEASE_DIR_POSIX"
 
           ls -la "$RELEASE_DIR_POSIX"
 
           # Rename Release folder to flet
           RUNNER_DIR="$(dirname "$RELEASE_DIR_POSIX")"
-          mv "$RELEASE_DIR_POSIX" "$RUNNER_DIR/flet"
+          mv "$RELEASE_DIR_POSIX" "${RUNNER_DIR}/flet"
 
           cd build/windows/x64/runner
           7z a flet-windows.zip flet
 
           # Stage app into Python package
-          mkdir -p "$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/app"
-          cp -r flet "$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/app/flet"
+          mkdir -p "${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/app"
+          cp -r flet "${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/app/flet"
 
       - name: Build Python wheels
         shell: bash
@@ -259,7 +259,7 @@ jobs:
         shell: bash
         run: |
           pushd client
-          flutter build macos --build-name=$BUILD_VER
+          flutter build macos --build-name="$BUILD_VER"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
@@ -268,7 +268,7 @@ jobs:
       - name: Patch Python package versions
         shell: bash
         run: |
-          source $SCRIPTS/common.sh
+          source "$SCRIPTS/common.sh"
           patch_python_package_versions
 
       - name: Build Python wheels
@@ -388,11 +388,11 @@ jobs:
 
             echo "::group::($PACKAGE_NAME) Flutter build"
             flutter build linux --build-name="$BUILD_VER"
-            mv "build/linux/$BUILD_ARCH/release/bundle" "build/linux/$BUILD_ARCH/release/flet"
-            tar -czvf "flet-linux${ARTIFACT_SUFFIX}-$ARCH.tar.gz" -C "build/linux/$BUILD_ARCH/release" flet
+            mv "build/linux/${BUILD_ARCH}/release/bundle" "build/linux/${BUILD_ARCH}/release/flet"
+            tar -czvf "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
             # Ship the archive into the Python package so the wheels can bundle it later
             mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-            cp "flet-linux${ARTIFACT_SUFFIX}-$ARCH.tar.gz" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz"
+            cp "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz"
             echo "::endgroup::"
           }
 
@@ -403,7 +403,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          source $SCRIPTS/common.sh
+          source "$SCRIPTS/common.sh"
 
           echo "::group::Patch Python package versions"
           pushd "$SDK_PYTHON"
@@ -419,7 +419,7 @@ jobs:
             local FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
 
             echo "::group::($PACKAGE_NAME) Build wheels"
-            patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" $PACKAGE_NAME
+            patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" "$PACKAGE_NAME"
 
             # Build the wheel (uv writes to $SDK_PYTHON_PATH/dist)
             pushd "$FLET_DESKTOP"
@@ -449,7 +449,7 @@ jobs:
               echo "Retagging $wheel"
               for tag in "${wheel_tags[@]}"; do
                 echo "Tagging $wheel with $tag"
-                uv run "${SCRIPTS}/repackage_wheel_with_tag.py" $wheel $tag
+                uv run "${SCRIPTS}/repackage_wheel_with_tag.py" "$wheel" "$tag"
               done
               # Delete the original universal wheel
               rm -f $wheel
@@ -524,10 +524,10 @@ jobs:
           curl -L "$PYODIDE_URL" | tar -xj -C "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
 
           # Download the prebuilt 'packaging' wheel
-          curl -L "$PYODIDE_CDN_URL/packaging-24.2-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
+          curl -L "${PYODIDE_CDN_URL}/packaging-24.2-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
 
           # Download the prebuilt 'micropip' wheel
-          curl -L "$PYODIDE_CDN_URL/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
+          curl -L "${PYODIDE_CDN_URL}/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
 
           popd
 
@@ -537,7 +537,7 @@ jobs:
       - name: Build Python package
         shell: bash
         run: |
-          source $SCRIPTS/common.sh
+          source "$SCRIPTS/common.sh"
           patch_python_package_versions
           uv build --wheel --package flet-web
 
@@ -584,7 +584,7 @@ jobs:
       - name: Build wheels
         shell: bash
         run: |
-          source $SCRIPTS/common.sh
+          source "$SCRIPTS/common.sh"
           patch_python_package_versions
           uv build --wheel --package flet-cli
           uv build --wheel --package flet
@@ -597,10 +597,13 @@ jobs:
           path: sdk/python/dist/*.whl
 
       - name: Publish wheels to PyPI
+        if: >
+          github.event_name != 'pull_request' && (
+            startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+          )
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          ls -la
           uv publish
 
   # ==============
