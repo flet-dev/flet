@@ -35,7 +35,8 @@ jobs:
         suite: [core, material, cupertino, theme, types]
     name: ${{ matrix.suite }} Integration Tests
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6

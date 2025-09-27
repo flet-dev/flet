@@ -2,15 +2,11 @@ name: CI
 
 on:
   push:
-    branches:
-      - v1-migrate-to-github-action
     tags:
       - '*'
     paths-ignore:
       - "**/*.md"
   pull_request:
-    branches:
-      - v1-migrate-to-github-action
     paths-ignore:
       - "**/*.md"
   workflow_dispatch:
@@ -99,30 +95,27 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Build and Publish Dart Packages
+      - name: Run tests
+        shell: bash
+        working-directory: packages/flet
+        run: flutter test
+
+      - name: Publish to pub.dev
+        shell: bash
         env:
           PUB_DEV_TOKEN: ${{ secrets.PUB_DEV_TOKEN }}
-        shell: bash
+        working-directory: packages/flet
         run: |
-          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             mkdir -p "$HOME/.config/dart"
             printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
 
-            # patch pubspecs
-            for dir in packages/flet*; do
-              patch_pubspec_version "${dir}/pubspec.yaml" "$PKG_VER"
-            done
+            # patch pubspec for release
+            patch_pubspec_version ./pubspec.yaml "$PKG_VER"
 
-            echo "Running flet tests"
-            cd packages/flet
-            flutter test
             dart pub publish --force
-
           else
-            echo "Running flet tests"
-            cd packages/flet
-            flutter test
-            dart pub publish --dry-run || exit 0
+            dart pub publish --dry-run
           fi
 
   # =============================
@@ -176,20 +169,22 @@ jobs:
           SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
           WINDIR_POSIX="$(cygpath -u "$WINDIR")"
 
+          echo "Files in $WINDIR:"
+          ls -la "$SDK_PYTHON"
+
           cd client
-          flutter build windows --build-name=$BUILD_VER
+          flutter build windows --build-name="$BUILD_VER"
 
           # Copy needed runtime DLLs
           cp "${WINDIR_POSIX}/system32/msvcp140.dll" "$RELEASE_DIR_POSIX"
           cp "${WINDIR_POSIX}/system32/vcruntime140.dll" "$RELEASE_DIR_POSIX"
           cp "${WINDIR_POSIX}/system32/vcruntime140_1.dll" "$RELEASE_DIR_POSIX"
 
-          ls -la "$RELEASE_DIR_POSIX"
-
           # Rename Release folder to flet
           RUNNER_DIR="$(dirname "$RELEASE_DIR_POSIX")"
           mv "$RELEASE_DIR_POSIX" "${RUNNER_DIR}/flet"
 
+          # Zip up the runner
           cd build/windows/x64/runner
           7z a flet-windows.zip flet
 
@@ -267,17 +262,13 @@ jobs:
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           popd
 
-      - name: Patch Python package versions
-        shell: bash
-        run: |
-          source "$SCRIPTS/common.sh"
-          patch_python_package_versions
-
       - name: Build Python wheels
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
+
+          patch_python_package_versions
 
           uv build --wheel --package flet-desktop
           for file in dist/*-py3-none-any.whl; do
@@ -394,6 +385,7 @@ jobs:
             flutter build linux --build-name="$BUILD_VER"
             mv "build/linux/${BUILD_ARCH}/release/bundle" "build/linux/${BUILD_ARCH}/release/flet"
             tar -czvf "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
+
             # Ship the archive into the Python package so the wheels can bundle it later
             mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
             cp "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz"
@@ -506,14 +498,13 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Compute Pyodide URLs
-        run: |
-          echo "PYODIDE_URL=https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2" >> "$GITHUB_ENV"
-          echo "PYODIDE_CDN_URL=https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full" >> "$GITHUB_ENV"
-
-      - name: Build web client
+      - name: Build Web client
         shell: bash
         run: |
+          # Compute Pyodide URLs
+          PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
+          PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
+
           # Flutter Web client
           pushd client
           flutter build web --wasm
@@ -521,10 +512,9 @@ jobs:
 
           # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
           FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
-          ls "$FLUTTER_JS_DIR"
           cp "$FLUTTER_JS_DIR/flutter.js.map" "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
 
-          # Download the Pyodide tarball and extract its contents into the web build folder of the Python SDK.
+          # Download the Pyodide tarball and extract its contents into the web build folder
           curl -L "$PYODIDE_URL" | tar -xj -C "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
 
           # Download the prebuilt 'packaging' wheel
@@ -636,6 +626,4 @@ jobs:
           overwrite_files: true
           fail_on_unmatched_files: true
           files: |
-            dist/**/*.whl
-            dist/**/*.tar.gz
-            dist/**/*.zip
+            dist/**/*.{whl,tar.gz,zip}
