@@ -1,4 +1,19 @@
 from flet.app import app, app_async, run, run_async
+from flet.components.component import Component
+from flet.components.component_decorator import component
+from flet.components.hooks.use_callback import use_callback
+from flet.components.hooks.use_context import create_context, use_context
+from flet.components.hooks.use_effect import (
+    on_mounted,
+    on_unmounted,
+    on_updated,
+    use_effect,
+)
+from flet.components.hooks.use_memo import use_memo
+from flet.components.hooks.use_state import use_state
+from flet.components.memo import memo
+from flet.components.observable import Observable, observable
+from flet.components.public_utils import unwrap_component
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis
@@ -48,7 +63,6 @@ from flet.controls.buttons import (
     ShapeBorder,
     StadiumBorder,
 )
-from flet.controls.cache import cache
 from flet.controls.colors import Colors
 from flet.controls.context import Context, context
 from flet.controls.control import Control
@@ -116,7 +130,6 @@ from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.stack import Stack, StackFit
-from flet.controls.core.state_view import StateView
 from flet.controls.core.text import (
     Text,
     TextAffinity,
@@ -218,6 +231,7 @@ from flet.controls.gradients import (
     SweepGradient,
 )
 from flet.controls.icon_data import IconData
+from flet.controls.id_counter import IdCounter
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
 from flet.controls.layout_control import ConstrainedControl, LayoutControl
 from flet.controls.margin import Margin, MarginValue
@@ -574,6 +588,7 @@ __all__ = [
     "ColorValue",
     "Colors",
     "Column",
+    "Component",
     "ConstrainedControl",
     "Container",
     "Context",
@@ -691,6 +706,7 @@ __all__ = [
     "IconDataOrControl",
     "IconTheme",
     "Icons",
+    "IdCounter",
     "Image",
     "ImageRepeat",
     "InputBorder",
@@ -749,6 +765,7 @@ __all__ = [
     "NotchShape",
     "Number",
     "NumbersOnlyInputFilter",
+    "Observable",
     "Offset",
     "OffsetValue",
     "OnReorderEvent",
@@ -845,7 +862,6 @@ __all__ = [
     "Stack",
     "StackFit",
     "StadiumBorder",
-    "StateView",
     "StoragePaths",
     "StrOrControl",
     "StrokeCap",
@@ -920,16 +936,28 @@ __all__ = [
     "app_async",
     "border",
     "border_radius",
-    "cache",
+    "component",
     "context",
     "control",
+    "create_context",
     "cupertino_colors",
     "cupertino_icons",
     "dropdown",
     "dropdownm2",
     "icons",
     "margin",
+    "memo",
+    "observable",
+    "on_mounted",
+    "on_unmounted",
+    "on_updated",
     "padding",
     "run",
     "run_async",
+    "unwrap_component",
+    "use_callback",
+    "use_context",
+    "use_effect",
+    "use_memo",
+    "use_state",
 ]

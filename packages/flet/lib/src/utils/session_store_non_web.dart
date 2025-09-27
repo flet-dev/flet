@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 class SessionStore {
   static String? sessionId;
 
-  static String? getSessionId(String pageUrl) {
+  static String? getSessionId() {
     return get("sessionId");
   }
 
-  static setSessionId(String pageUrl, String? value) {
+  static setSessionId(String? value) {
     set("sessionId", value ?? "");
   }
 

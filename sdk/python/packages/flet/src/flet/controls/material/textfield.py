@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.material.form_field_control import FormFieldControl
@@ -423,6 +423,15 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     TBD
     """
+
+    def _migrate_state(self, other: BaseControl):
+        super()._migrate_state(other)
+        if (
+            isinstance(other, TextField)
+            and self.value is None
+            and self.value != other.value
+        ):
+            self.value = other.value
 
     def before_update(self):
         super().before_update()

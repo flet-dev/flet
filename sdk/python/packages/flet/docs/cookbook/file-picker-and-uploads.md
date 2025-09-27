@@ -33,15 +33,12 @@ sudo apt-get install zenity
 
 ## Using file picker in your app
 
-Add file picker to [`Page.services`][flet.Page.services] collection,
-so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
+Create an instance of FilePicker:
 
 ```python
 import flet as ft
 
 file_picker = ft.FilePicker()
-page.services.append(file_picker)
-page.update()
 ```
 
 To open file picker dialog call one of the three methods:

@@ -26,6 +26,7 @@
       multiView: false,
       noCdn: false,
       webSocketEndpoint: "/ws",
+      entrypointBaseUrl: "/",
       assetBase: "/",
       routeUrlStrategy: "path",
       canvasKitBaseUrl: "/canvaskit/",
@@ -45,7 +46,7 @@
         console.log(flutterApp.addView({
           hostElement: document.querySelector('#view-1'),
           initialData: {
-            greeting: 'Hello, world!',
+            script: 'print("Hello from view 1")',
             randomValue: Math.floor(Math.random() * 100),
           },
           viewConstraints: {
@@ -58,6 +59,7 @@
         console.log(flutterApp.addView({
           hostElement: document.querySelector('#view-2'),
           initialData: {
+            script: 'print("Hello from view 2")',
             bar: "baz"
           },
           viewConstraints: {

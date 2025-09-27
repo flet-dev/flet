@@ -5,7 +5,33 @@ import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as p;
 
 import '../models/asset_source.dart';
+import 'lru_cache.dart';
 import 'uri.dart';
+
+String _fileKey(String path) {
+  // absolute + normalized; case-insensitive on Windows
+  final abs = io.File(path).absolute.path;
+  final norm = p.normalize(abs);
+  return io.Platform.isWindows ? norm.toLowerCase() : norm;
+}
+
+class _FileLru {
+  _FileLru({this.capacity = 512})
+      : _cache = LruCache<String, io.File>(capacity);
+  final int capacity;
+  final LruCache<String, io.File> _cache;
+
+  io.File get(String path) {
+    final key = _fileKey(path);
+    final cached = _cache.get(key);
+    if (cached != null) return cached;
+    final f = io.File(key); // already absolute/normalized
+    _cache.set(key, f);
+    return f;
+  }
+}
+
+final _fileLru = _FileLru(capacity: 1024);
 
 SvgPicture getSvgPictureFromFile(
     {required String src,
@@ -15,7 +41,8 @@ SvgPicture getSvgPictureFromFile(
     required Color? color,
     required BlendMode blendMode,
     required String? semanticsLabel}) {
-  return SvgPicture.file(io.File(src),
+  final file = _fileLru.get(src);
+  return SvgPicture.file(file,
       width: width,
       height: height,
       fit: fit,

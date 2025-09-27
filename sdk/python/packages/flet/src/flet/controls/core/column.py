@@ -65,6 +65,11 @@ class Column(LayoutControl, ScrollableControl, AdaptiveControl):
     is `True`.
     """
 
+    intrinsic_width: bool = False
+    """
+    If `True`, the Column will be as wide as the widest child control.
+    """
+
     def init(self):
         super().init()
         self._internals["host_expanded"] = True

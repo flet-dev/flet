@@ -20,7 +20,6 @@ def main(page: ft.Page):
     page.title = "Canvas Example"
 
     file_picker = ft.FilePicker()
-    page.services.append(file_picker)
 
     def handle_pan_start(e: ft.DragStartEvent):
         state.x = e.local_position.x

@@ -1,0 +1,114 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Page-1" id="Mg7rhHNnTGI0UT57NMPE">
+    <mxGraphModel dx="1216" dy="811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="60M6SaybTWxL_RT3a8J9-21" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="370" y="30" width="210" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-14" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry width="210" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-5" value="&lt;b&gt;UserView&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;on Save -&amp;gt; user.update&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry x="30" y="40" width="150" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-6" value="&lt;b&gt;AppView&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;renders list&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry x="30" y="200" width="150" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-7" value="&lt;b&gt;AddUserForm&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;on Add -&amp;gt; app.add_user&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry x="30" y="360" width="150" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-15" value="UI" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-16" value="@component" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry x="30" y="40" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-17" value="@component" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry x="30" y="200" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-18" value="@component" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-21">
+          <mxGeometry x="30" y="360" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-22" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="60" y="30" width="210" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-22">
+          <mxGeometry width="210" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-2" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;b&gt;class User&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;first_name: str&lt;/div&gt;&lt;div&gt;last_name: str&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;def update(...)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-22">
+          <mxGeometry x="20" y="40" width="170" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-11" value="Model" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-22">
+          <mxGeometry x="10" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-12" value="@observable" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-22">
+          <mxGeometry x="20" y="40" width="170" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-28" value="" style="group" vertex="1" connectable="0" parent="60M6SaybTWxL_RT3a8J9-22">
+          <mxGeometry x="20" y="250" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-3" value="&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;&lt;b&gt;class App&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;users: list[User]&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;def add_user(...)&lt;/div&gt;&lt;div&gt;def delete_user(...)&lt;/div&gt;&lt;/blockquote&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-28">
+          <mxGeometry width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-13" value="@observable" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="60M6SaybTWxL_RT3a8J9-28">
+          <mxGeometry width="170" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-23" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.027;entryY=0.675;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="60M6SaybTWxL_RT3a8J9-2" target="60M6SaybTWxL_RT3a8J9-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="460" as="sourcePoint" />
+            <mxPoint x="420" y="159" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-24" value="reads User" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="60M6SaybTWxL_RT3a8J9-23">
+          <mxGeometry x="-0.3059" relative="1" as="geometry">
+            <mxPoint x="9" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-25" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="340" as="sourcePoint" />
+            <mxPoint x="250" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-30" value="mutate: delete" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="60M6SaybTWxL_RT3a8J9-25">
+          <mxGeometry x="0.1734" relative="1" as="geometry">
+            <mxPoint x="8" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.375;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="60M6SaybTWxL_RT3a8J9-5" target="60M6SaybTWxL_RT3a8J9-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-27" value="mutate: update" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="60M6SaybTWxL_RT3a8J9-26">
+          <mxGeometry x="0.1882" relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-29" value="" style="endArrow=classic;html=1;rounded=0;exitX=1.006;exitY=0.194;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.013;entryY=0.683;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="60M6SaybTWxL_RT3a8J9-3" target="60M6SaybTWxL_RT3a8J9-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="460" as="sourcePoint" />
+            <mxPoint x="600" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-31" value="reads Users" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="60M6SaybTWxL_RT3a8J9-29">
+          <mxGeometry x="0.2848" y="-4" relative="1" as="geometry">
+            <mxPoint x="-18" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-32" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="60M6SaybTWxL_RT3a8J9-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="460" as="sourcePoint" />
+            <mxPoint x="250" y="422" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="60M6SaybTWxL_RT3a8J9-33" value="mutate: add" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="60M6SaybTWxL_RT3a8J9-32">
+          <mxGeometry x="-0.1734" y="1" relative="1" as="geometry">
+            <mxPoint x="-18" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

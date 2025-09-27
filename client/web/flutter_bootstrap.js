@@ -5,6 +5,7 @@ var loading = document.querySelector('#loading');
 
 var flutterConfig = {
     multiViewEnabled: flet.multiView,
+    entrypointBaseUrl: flet.entrypointBaseUrl,
     assetBase: flet.assetBase
 };
 if (flet.webRenderer != "auto") {

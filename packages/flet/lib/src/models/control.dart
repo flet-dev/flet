@@ -8,6 +8,9 @@ import '../flet_backend.dart';
 typedef InvokeControlMethodCallback = Future<dynamic> Function(
     String name, dynamic args);
 
+const String componentType = "C";
+const String componentBodyProp = "_b";
+
 enum OperationType {
   unknown(-1),
   replace(0),
@@ -66,33 +69,54 @@ class Control extends ChangeNotifier {
     _backend = WeakReference(backend);
   }
 
-  Control? get parent => _parent?.target;
+  Control? get parent {
+    var current = _parent?.target;
+    while (current != null && current.type == componentType) {
+      current = current._parent?.target;
+    }
+    return current;
+  }
 
   FletBackend get backend => _backend.target!;
 
   bool get disabled =>
-      properties["disabled"] == true || (parent?.disabled ?? false);
+      get<bool>("disabled") == true || (parent?.disabled ?? false);
 
-  bool? get adaptive => properties["adaptive"] ?? parent?.adaptive;
+  bool? get adaptive => get<bool>("adaptive") ?? parent?.adaptive;
 
-  bool get visible =>
-      !properties.containsKey("visible") || properties["visible"];
+  bool get visible => get<bool>("visible", true)!;
 
   T? get<T>(String propertyName, [T? defaultValue]) {
-    return properties.containsKey(propertyName) &&
-            properties[propertyName] != null
-        ? T == double && properties[propertyName] is int
-            ? properties[propertyName].toDouble()
-            : T == String
-                ? properties[propertyName].toString()
-                : properties[propertyName]
-        : defaultValue;
+    if (properties.containsKey(propertyName) &&
+        properties[propertyName] != null) {
+      var v = properties[propertyName];
+      if (v is Control && v.type == componentType) {
+        v = v.get(componentBodyProp);
+        if (v == null) {
+          return defaultValue;
+        }
+      }
+      return T == double && v is int
+          ? v.toDouble()
+          : T == String
+              ? v.toString()
+              : v;
+    }
+    return defaultValue;
+  }
+
+  Control unwrapComponent() {
+    dynamic v = this;
+    while (v is Control && v.type == componentType) {
+      v = v.get(componentBodyProp);
+    }
+    return v;
   }
 
   /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],
   /// or not visible when [visibleOnly] is `true` (default).
   Control? child(String propertyName, {bool visibleOnly = true}) {
-    final child = properties[propertyName];
+    final child = get(propertyName);
     if (child is! Control) return null;
     return (visibleOnly && !child.visible) ? null : child;
   }
@@ -103,7 +127,13 @@ class Control extends ChangeNotifier {
   ///
   /// Returns an empty list if the property is missing or null.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
-    return List<Control>.from(properties[propertyName] ?? [])
+    var elems = get(propertyName);
+    return List<Control>.from(elems is List
+            ? elems
+            : elems != null
+                ? [elems]
+                : [])
+        .map((c) => c.unwrapComponent())
         .where((c) => !visibleOnly || c.visible)
         .toList();
   }
@@ -117,6 +147,17 @@ class Control extends ChangeNotifier {
   /// - [eventData]: Optional data to pass along with the event.
   void triggerEvent(String eventName, [dynamic data]) {
     return backend.triggerControlEvent(this, eventName, data);
+  }
+
+  /// Triggers a control event without checking for subscribers.
+  ///
+  /// This method directly triggers the event for the control identified by its
+  /// [id] without verifying if there are any subscribers for the event.
+  ///
+  /// - [eventName]: The name of the event to trigger.
+  /// - [data]: Optional data to pass along with the event.
+  void triggerEventWithoutSubscribers(String eventName, [dynamic data]) {
+    return backend.triggerControlEventById(id, eventName, data);
   }
 
   /// Updates the properties of this control.
@@ -156,6 +197,10 @@ class Control extends ChangeNotifier {
       if (key == "_i" || key == "_c") return;
       props[key] = _transformIfControl(value, newControl, backend);
     });
+    if (newControl.type == componentType) {
+      // components always notify their parent on changes
+      newControl.notifyParent = true;
+    }
     return newControl;
   }
 
@@ -260,35 +305,43 @@ class Control extends ChangeNotifier {
           "Patch must be a list with at least 2 elements: tree_index, operation");
     }
 
-    // build map of "to-be-patched" tree nodes
-    Map<int, PatchTarget> treeIndex = {};
-    buildTreeIndex(Control control, dynamic obj, List<dynamic> node) {
+    Map<int, List<dynamic>> pathIndex = {};
+
+    buildPathIndex(List<dynamic> node, List<dynamic> path) {
       // node[0] - index
       // node[1] - map of child properties or indexes
-      treeIndex[node[0]] =
-          PatchTarget(obj is Control ? obj.properties : obj, control);
+      pathIndex[node[0]] = path;
       if (node.length > 1 && node[1] is Map) {
         for (var entry in (node[1] as Map).entries) {
           // key - property name or list index
           // value - child node
-          dynamic child;
-          if (obj is Control) {
-            child = obj.properties[entry.key];
-          } else if (obj is Map) {
-            child = obj[entry.key];
-          } else if (obj is List) {
-            child = obj[entry.key];
-          }
-          if (child is Control) {
-            control = child;
-          }
-          buildTreeIndex(control, child, entry.value);
+          buildPathIndex(entry.value, [...path, entry.key]);
         }
       }
     }
 
-    buildTreeIndex(this, this, patch[0]);
-    //debugPrint("TREE INDEX: $treeIndex");
+    buildPathIndex(patch[0], []);
+
+    //debugPrint("PATH INDEX: $pathIndex");
+
+    getPatchTarget(int index) {
+      var path = pathIndex[index]!;
+      dynamic obj = this;
+      Control? control = this;
+      for (var p in path) {
+        if (obj is Control) {
+          obj = obj.properties[p];
+        } else if (obj is Map) {
+          obj = obj[p];
+        } else if (obj is List) {
+          obj = obj[p];
+        }
+        if (obj is Control) {
+          control = obj;
+        }
+      }
+      return PatchTarget(obj is Control ? obj.properties : obj, control!);
+    }
 
     // apply patch commands
     for (int i = 1; i < patch.length; i++) {
@@ -296,7 +349,7 @@ class Control extends ChangeNotifier {
       var opType = OperationType.fromInt(op[0]);
       if (opType == OperationType.replace) {
         // REPLACE
-        var node = treeIndex[op[1]]!;
+        var node = getPatchTarget(op[1]);
         var key = op[2];
         var value = op[3];
         node.obj[key] = _transformIfControl(value, node.control, backend);
@@ -308,7 +361,7 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.add) {
         // ADD
-        var node = treeIndex[op[1]]!;
+        var node = getPatchTarget(op[1]);
         var index = op[2];
         var value = op[3];
         if (node.obj is! List) {
@@ -321,7 +374,7 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.remove) {
         // REMOVE
-        var node = treeIndex[op[1]]!;
+        var node = getPatchTarget(op[1]);
         var index = op[2];
         if (node.obj is! List) {
           throw Exception("Remove operation can be applied to lists only: $op");
@@ -332,9 +385,9 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.move) {
         // MOVE
-        var fromNode = treeIndex[op[1]]!;
+        var fromNode = getPatchTarget(op[1]);
         var fromIndex = op[2];
-        var toNode = treeIndex[op[3]]!;
+        var toNode = getPatchTarget(op[3]);
         var toIndex = op[4];
         if (fromNode.obj is! List || toNode.obj is! List) {
           throw Exception("Move operation can be applied to lists only: $op");

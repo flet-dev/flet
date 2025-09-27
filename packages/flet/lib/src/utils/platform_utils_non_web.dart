@@ -16,7 +16,7 @@ String getFletRouteUrlStrategy() {
   return "";
 }
 
-bool isFletWebPyodideMode() {
+bool isPyodideMode() {
   return false;
 }
 

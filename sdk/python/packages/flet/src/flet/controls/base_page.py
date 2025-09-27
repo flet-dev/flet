@@ -159,45 +159,9 @@ class BasePage(AdaptiveControl):
     reported by the framework.
     """
 
-    width: Optional[Number] = None
-    """
-    Page width in logical pixels.
-
-    Note:
-        - This property is read-only.
-        - To get or set the full window height including window chrome (e.g.,
-            title bar and borders) when running a Flet app on desktop,
-            use the [`width`][flet.Window.] property of
-            [`Page.window`][flet.] instead.
-    """
-
-    height: Optional[Number] = None
-    """
-    Page height in logical pixels.
-
-    Note:
-        - This property is read-only.
-        - To get or set the full window height including window chrome (e.g.,
-            title bar and borders) when running a Flet app on desktop,
-            use the [`height`][flet.Window.] property of
-            [`Page.window`][flet.] instead.
-    """
-
     title: Optional[str] = None
     """
     Page or window title.
-    """
-
-    media: PageMediaData = field(
-        default_factory=lambda: PageMediaData(
-            padding=Padding.zero(),
-            view_padding=Padding.zero(),
-            view_insets=Padding.zero(),
-            device_pixel_ratio=0,
-        )
-    )
-    """
-    Represents the environmental metrics of a page or window.
     """
 
     enable_screenshots: bool = False
@@ -221,6 +185,46 @@ class BasePage(AdaptiveControl):
     on_media_change: Optional[EventHandler[PageMediaData]] = None
     """
     Called when `media` has changed.
+    """
+
+    media: PageMediaData = field(
+        default_factory=lambda: PageMediaData(
+            padding=Padding.zero(),
+            view_padding=Padding.zero(),
+            view_insets=Padding.zero(),
+            device_pixel_ratio=0,
+        )
+    )
+    """
+    The current environmental metrics of the page or window.
+
+    This data is updated whenever the platform window or layout changes,
+    such as when rotating a device, resizing a browser window, or adjusting
+    system UI elements like the keyboard or safe areas.
+    """
+
+    width: Optional[Number] = None
+    """
+    Page width in logical pixels.
+
+    Note:
+        - This property is read-only.
+        - To get or set the full window height including window chrome (e.g.,
+            title bar and borders) when running a Flet app on desktop,
+            use the [`width`][flet.Window.width] property of
+            [`Page.window`][flet.Page.window] instead.
+    """
+
+    height: Optional[Number] = None
+    """
+    Page height in logical pixels.
+
+    Note:
+        - This property is read-only.
+        - To get or set the full window height including window chrome (e.g.,
+            title bar and borders) when running a Flet app on desktop,
+            use the [`height`][flet.Window.height] property of
+            [`Page.window`][flet.Page.window] instead.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
@@ -492,29 +496,29 @@ class BasePage(AdaptiveControl):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self) -> Optional[CrossAxisAlignment]:
+    def horizontal_alignment(self) -> CrossAxisAlignment:
         return self.__default_view().horizontal_alignment
 
     @horizontal_alignment.setter
-    def horizontal_alignment(self, value: Optional[CrossAxisAlignment]):
+    def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__default_view().horizontal_alignment = value
 
     # vertical_alignment
     @property
-    def vertical_alignment(self) -> Optional[MainAxisAlignment]:
+    def vertical_alignment(self) -> MainAxisAlignment:
         return self.__default_view().vertical_alignment
 
     @vertical_alignment.setter
-    def vertical_alignment(self, value: Optional[MainAxisAlignment]):
+    def vertical_alignment(self, value: MainAxisAlignment):
         self.__default_view().vertical_alignment = value
 
     # spacing
     @property
-    def spacing(self) -> Optional[Number]:
+    def spacing(self) -> Number:
         return self.__default_view().spacing
 
     @spacing.setter
-    def spacing(self, value: Optional[Number]):
+    def spacing(self, value: Number):
         self.__default_view().spacing = value
 
     # padding

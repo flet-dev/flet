@@ -17,7 +17,7 @@ abstract class FletBackendChannel {
       required bool forcePyodide,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnMessageCallback onMessage}) {
-    if (isFletWebPyodideMode() || forcePyodide) {
+    if (isPyodideMode() || forcePyodide) {
       // Pyodide/JavaScript
       return FletJavaScriptBackendChannel(
           address: address,

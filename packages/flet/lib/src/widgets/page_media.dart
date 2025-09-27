@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
+import '../models/control.dart';
 import '../protocol/page_media_data.dart';
 import '../utils/debouncer.dart';
 
 class PageMedia extends StatefulWidget {
-  const PageMedia({super.key});
+  final Control? view;
+  const PageMedia({super.key, this.view});
 
   @override
   State<PageMedia> createState() => _PageMediaState();
@@ -24,10 +26,10 @@ class _PageMediaState extends State<PageMedia> {
     var backend = FletBackend.of(context);
     if (pageSizeUpdated) {
       _debouncer.run(() {
-        backend.updatePageSize(newSize);
+        backend.updatePageSize(newSize, view: widget.view);
       });
     } else {
-      backend.updatePageSize(newSize);
+      backend.updatePageSize(newSize, view: widget.view);
     }
   }
 
@@ -36,7 +38,7 @@ class _PageMediaState extends State<PageMedia> {
   }
 
   _onMediaChanged(PageMediaData newMedia) {
-    FletBackend.of(context).updateMedia(newMedia);
+    FletBackend.of(context).updateMedia(newMedia, view: widget.view);
   }
 
   @override

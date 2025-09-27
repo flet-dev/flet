@@ -1,9 +1,10 @@
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import Optional, cast
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
+from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
 
 __all__ = [
@@ -15,14 +16,22 @@ __all__ = [
 
 
 @dataclass
-class DragWillAcceptEvent(Event["DragTarget"]):
-    accept: bool
-    src_id: int
+class DragEventBase(Event["DragTarget"]):
+    src_id: Optional[int]
+    src: Draggable = field(init=False)
+
+    def __post_init__(self):
+        if self.src_id is not None:
+            self.src = cast(Draggable, self.page.get_control(self.src_id))
 
 
 @dataclass
-class DragTargetEvent(Event["DragTarget"]):
-    src_id: int
+class DragWillAcceptEvent(DragEventBase):
+    accept: bool
+
+
+@dataclass
+class DragTargetEvent(DragEventBase):
     x: float
     y: float
 
@@ -32,8 +41,8 @@ class DragTargetEvent(Event["DragTarget"]):
 
 
 @dataclass
-class DragTargetLeaveEvent(Event["DragTarget"]):
-    src_id: Optional[int]
+class DragTargetLeaveEvent(DragEventBase):
+    pass
 
 
 @control("DragTarget")

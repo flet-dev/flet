@@ -25,6 +25,7 @@ class ColumnControl extends StatelessWidget {
     var tight = control.getBool("tight", false)!;
     var wrap = control.getBool("wrap", false)!;
     var horizontalAlignment = control.getString("horizontal_alignment");
+    var intrinsicWidth = control.getBool("intrinsic_width", false)!;
     var controls = control.buildWidgets("controls");
 
     Widget child = wrap
@@ -48,6 +49,10 @@ class ColumnControl extends StatelessWidget {
                 horizontalAlignment, CrossAxisAlignment.start)!,
             children: controls,
           );
+
+    if (intrinsicWidth) {
+      child = IntrinsicWidth(child: child);
+    }
 
     child = ScrollableControl(
       control: control,

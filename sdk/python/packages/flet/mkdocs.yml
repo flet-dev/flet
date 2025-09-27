@@ -386,10 +386,27 @@ nav:
               - Semantics: controls/semantics.md
               - ShaderMask: controls/shadermask.md
               - Screenshot: controls/screenshot.md
-              - StateView: controls/stateview.md
               - TransparentPointer: controls/transparentpointer.md
               - Window: types/window.md
               - WindowDragArea: controls/windowdragarea.md
+      - Components:
+          - Hooks:
+              - on_mounted: types/on_mounted.md
+              - on_unmounted: types/on_unmounted.md
+              - on_updated: types/on_updated.md
+              - use_callback: types/use_callback.md
+              - use_context: types/use_context.md
+              - use_effect: types/use_effect.md
+              - use_memo: types/use_memo.md
+              - use_state: types/use_state.md
+          - Decorators:
+              - component: types/component.md
+              - observable: types/observabledecorator.md
+          - Methods:
+              - create_context: types/create_context.md
+              - memo: types/memo.md
+          - Types:
+              - Observable: types/observable.md
       - Testing:
           - Finder: testing/finder.md
           - FletTestApp: testing/flettestapp.md
@@ -516,7 +533,6 @@ nav:
               - Url: types/url.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
           - Decorators:
-              - cache: types/cache.md
               - control: types/control.md
           - Enums:
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
@@ -700,6 +716,7 @@ nav:
       - Control Refs: cookbook/control-refs.md
       - Custom Controls: cookbook/custom-controls.md
       - Drag and Drop: cookbook/drag-and-drop.md
+      - Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
       - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
       - Expanding Controls: cookbook/expanding-controls.md
       - File Picker and Uploads: cookbook/file-picker-and-uploads.md

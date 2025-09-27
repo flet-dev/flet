@@ -168,7 +168,7 @@ class _ViewControlState extends State<ViewControl> {
         overlayWidgets.addAll(dialogControls
             .where((dialog) => dialog.type != "NavigationDrawer")
             .map((c) => ControlWidget(control: c)));
-        overlayWidgets.add(const PageMedia());
+        overlayWidgets.add(PageMedia(view: widget.control.parent));
       }
 
       var windowControl = control.parent?.get("window");

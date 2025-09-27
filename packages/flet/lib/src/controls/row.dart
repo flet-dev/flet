@@ -22,6 +22,7 @@ class RowControl extends StatelessWidget {
         control.getString("alignment"), MainAxisAlignment.start)!;
     var tight = control.getBool("tight", false)!;
     var wrap = control.getBool("wrap", false)!;
+    var intrinsicHeight = control.getBool("intrinsic_height", false)!;
     var verticalAlignment = control.getString("vertical_alignment");
     var controls = control.buildWidgets("controls");
 
@@ -46,6 +47,10 @@ class RowControl extends StatelessWidget {
                 verticalAlignment, CrossAxisAlignment.center)!,
             children: controls,
           );
+
+    if (intrinsicHeight) {
+      child = IntrinsicHeight(child: child);
+    }
 
     child = ScrollableControl(
         control: control,

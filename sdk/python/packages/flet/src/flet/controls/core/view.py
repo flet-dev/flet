@@ -37,12 +37,6 @@ class View(ScrollableControl, LayoutControl):
     control, so it has a similar behavior and shares same properties.
     """
 
-    route: Optional[str] = None
-    """
-    View's route - not currently used by Flet framework, but can be used in a user
-    program to update [`Page.route`][flet.] when a view popped.
-    """
-
     controls: list[BaseControl] = field(default_factory=list)
     """
     A list of controls to display.
@@ -69,6 +63,12 @@ class View(ScrollableControl, LayoutControl):
     page.update()
     ```
     ///
+    """
+
+    route: Optional[str] = field(default_factory=lambda: "/")
+    """
+    View's route - not currently used by Flet framework, but can be used in a user
+    program to update [`Page.route`][flet.Page.route] when a view popped.
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None

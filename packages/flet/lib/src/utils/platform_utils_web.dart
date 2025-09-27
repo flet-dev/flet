@@ -20,7 +20,7 @@ String getFletRouteUrlStrategy() {
   return fletJS?.routeUrlStrategy ?? "";
 }
 
-bool isFletWebPyodideMode() {
+bool isPyodideMode() {
   return fletJS?.pyodide == true;
 }
 
