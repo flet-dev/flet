@@ -28,9 +28,9 @@ env:
   # PUB_DEV_TOKEN
 
 jobs:
-  # ================
-  # Python test jobs
-  # ================
+  # ============
+  # Python tests
+  # ============
   python_tests:
     name: Python ${{ matrix.python-version }} tests
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
           uv run --no-dev --group test pytest packages/flet/tests
           uv run --directory packages/flet --no-dev --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
 
-      - name: Run docs coverage
+      - name: Run docs-coverage
         if: matrix.python-version == '3.12'
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
@@ -111,7 +111,7 @@ jobs:
             # patch pubspecs
             for dir in packages/flet*; do
               echo "Patching $dir/pubspec.yaml"
-              uv run $SCRIPTS/patch_pubspec_version.py "$dir/pubspec.yaml" "$PKG_VER"
+              patch_pubspec_version "$dir/pubspec.yaml" "$PKG_VER"
             done
 
             echo "Running flet tests"
@@ -169,9 +169,7 @@ jobs:
           vp="$SDK_PYTHON_POSIX/packages/flet-desktop/src/flet_desktop/version.py"
           sed -i 's/^version = ""$/version = "'"$PYPI_VER"'"/' "$vp"
 
-          uv run "$SCRIPTS/patch_toml_versions.py" \
-            "$SDK_PYTHON_POSIX/packages/flet-desktop/pyproject.toml" \
-            "$PYPI_VER"
+          patch_toml_versions "$SDK_PYTHON_POSIX/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
       - name: Build Flutter Windows client
         env:
@@ -217,8 +215,8 @@ jobs:
           shopt -s nullglob
 
           for wheel in dist/*-py3-none-any.whl; do
-            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$wheel" "py3-none-win_amd64"
-            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$wheel" "py3-none-win32"
+            repackage_wheel_with_tag "$wheel" "py3-none-win_amd64"
+            repackage_wheel_with_tag "$wheel" "py3-none-win32"
             rm -f "$wheel"
           done
 
@@ -284,8 +282,8 @@ jobs:
         run: |
           uv build --wheel --package flet-desktop
           for file in dist/*-py3-none-any.whl; do
-            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_12_0_arm64"
-            uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$file" "py3-none-macosx_10_14_x86_64"
+            repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
+            repackage_wheel_with_tag "$file" "py3-none-macosx_10_14_x86_64"
             rm "$file"
           done
 
@@ -413,7 +411,7 @@ jobs:
           source $SCRIPTS/common.sh
 
           echo "::group::Patch Python package versions"
-          pushd "${SDK_PYTHON}"
+          pushd "$SDK_PYTHON"
           patch_python_package_versions
           popd
           echo "::endgroup::"
@@ -426,10 +424,10 @@ jobs:
             local FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
 
             echo "::group::($PACKAGE_NAME) Build wheels"
-            uv run $SCRIPTS/patch_toml_package_name.py "${FLET_DESKTOP}/pyproject.toml" $PACKAGE_NAME
+            patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" $PACKAGE_NAME
 
             # Build the wheel (uv writes to $SDK_PYTHON_PATH/dist)
-            pushd "${FLET_DESKTOP}"
+            pushd "$FLET_DESKTOP"
             uv build --wheel
             popd
 
@@ -441,7 +439,7 @@ jobs:
 
             if (( ${#universal[@]} == 0 )); then
               echo "ERROR: No universal wheels found in ${output_dir} for ${PACKAGE_NAME}."
-              ls -la "${output_dir}" || true
+              ls -la "$output_dir" || true
               exit 1
             fi
 
@@ -595,7 +593,7 @@ jobs:
           patch_python_package_versions
           uv build --wheel --package flet-cli
           uv build --wheel --package flet
-          uv run "$SCRIPTS/update_flet_wheel_deps.py" dist
+          update_flet_wheel_deps dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
