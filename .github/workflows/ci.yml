@@ -154,15 +154,11 @@ jobs:
       - name: Prepare env and patch versions
         shell: bash
         run: |
-          set -euo pipefail
+          source "$SCRIPTS/common.sh"
 
           # Convert to POSIX for bash compatibility
           SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
           SCRIPTS_POSIX="$(cygpath -u "$SCRIPTS")"
-
-          # print
-          echo "SDK_PYTHON: $SDK_PYTHON"
-          echo "SCRIPTS: $SCRIPTS"
 
           # Replace: version = ""  -> version = "<PYPI_VER>"
           vp="${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/version.py"
@@ -204,6 +200,8 @@ jobs:
       - name: Build Python wheels
         shell: bash
         run: |
+          source "$SCRIPTS/common.sh"
+
           # Convert Windows env paths to POSIX for bash
           SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
 
@@ -279,6 +277,8 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
+          source "$SCRIPTS/common.sh"
+
           uv build --wheel --package flet-desktop
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
