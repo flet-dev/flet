@@ -17,6 +17,8 @@ from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
+__all__ = ["FletTestApp"]
+
 
 class FletTestApp:
     """
