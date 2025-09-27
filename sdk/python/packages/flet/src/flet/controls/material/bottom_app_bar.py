@@ -20,7 +20,7 @@ class BottomAppBar(LayoutControl):
     A material design bottom app bar.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] is negative.
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: Optional[Control] = None
@@ -30,11 +30,10 @@ class BottomAppBar(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The fill color to use for this
-    app bar.
+    The fill color to use for this app bar.
 
-    Defaults to [`BottomAppBarTheme.bgcolor`][flet.BottomAppBarTheme.bgcolor], or if
-    that is `None`, falls back to [`ColorScheme.surface`][flet.ColorScheme.surface].
+    Defaults to [`BottomAppBarTheme.bgcolor`][flet.], or if
+    that is `None`, falls back to [`ColorScheme.surface`][flet.].
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -46,14 +45,13 @@ class BottomAppBar(LayoutControl):
     """
     Empty space to inscribe inside a container decoration (background, border).
 
-    Defaults to [`BottomAppBarTheme.padding`][flet.BottomAppBarTheme.padding], or if
+    Defaults to [`BottomAppBarTheme.padding`][flet.], or if
     that is `None`, falls back to `Padding.symmetric(vertical=12.0, horizontal=16.0)`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    Defines how the [`content`][flet.BottomAppBar.content] of this app bar should be
-    clipped.
+    Defines how the [`content`][(c).] of this app bar should be clipped.
     """
 
     shape: Optional[NotchShape] = None
@@ -63,10 +61,10 @@ class BottomAppBar(LayoutControl):
 
     notch_margin: Number = 4.0
     """
-    The margin between the [`FloatingActionButton`][flet.FloatingActionButton] and this
+    The margin between the [`FloatingActionButton`][flet.] and this
     app bar's notch.
 
-    Can be visible only if `shape=None`.
+    Can be visible only if [`shape`][(c).] is `None`.
     """
 
     elevation: Optional[Number] = None
@@ -76,6 +74,7 @@ class BottomAppBar(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to 0, got {self.elevation}"
-        )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to 0, got {self.elevation}"
+            )

@@ -7,13 +7,13 @@ from flet.controls.layout_control import LayoutControl
 @control("ReorderableDraggable")
 class ReorderableDraggable(LayoutControl, AdaptiveControl):
     """
-    Used to drag an item in a [`ReorderableListView`][flet.ReorderableListView].
+    Used to drag an item in a [`ReorderableListView`][flet.].
 
     It creates a listener for a drag immediately following a pointer down
     event over the given [`content`][(c).] control.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     index: int
@@ -29,4 +29,5 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

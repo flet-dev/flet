@@ -12,10 +12,12 @@ __all__ = ["Semantics"]
 @control("Semantics")
 class Semantics(Control):
     """
-    Provides semantic annotations for the control tree, describing the meaning and purpose of controls.
+    Provides semantic annotations for the control tree, describing the meaning
+    and purpose of controls.
 
-    These annotations are utilized by accessibility tools, search engines, and semantic analysis software
-    to better understand the structure and functionality of the application.
+    These annotations are utilized by accessibility tools, search engines,
+    and semantic analysis software to better understand the structure and
+    functionality of the application.
     """
 
     content: Optional[Control] = None
@@ -25,7 +27,7 @@ class Semantics(Control):
 
     label: Optional[str] = None
     """
-    A textual description of the [`content`][flet.Semantics.content].
+    A textual description of the [`content`][(c).].
     """
 
     expanded: Optional[bool] = None
@@ -52,12 +54,13 @@ class Semantics(Control):
 
     obscured: Optional[bool] = None
     """
-    Whether [`value`][flet.Semantics.value] should be obscured.
+    Whether [`value`][(c).] should be obscured.
     """
 
     multiline: Optional[bool] = None
     """
-    Whether the [`value`][flet.Semantics.value] is coming from a field that supports multiline text editing.
+    Whether the [`value`][(c).] is coming from a field that supports multiline
+    text editing.
     """
 
     focusable: Optional[bool] = None

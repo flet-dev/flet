@@ -20,7 +20,7 @@ class CupertinoPicker(LayoutControl):
     An iOS-styled picker.
 
     Raises:
-        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c).],
+        ValueError: If [`item_extent`][(c).], [`squeeze`][(c).],
             or [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
@@ -31,23 +31,22 @@ class CupertinoPicker(LayoutControl):
 
     item_extent: Number = 32.0
     """
-    The uniform height of all [`controls`][flet.CupertinoPicker.controls].
+    The uniform height of all [`controls`][(c).].
     """
 
     selected_index: int = 0
     """
-    The index (starting from `0`) of the selected item in
-    the [`controls`][flet.CupertinoPicker.controls] list.
+    The index (starting from `0`) of the selected item in the [`controls`][(c).] list.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background color of the timer picker.
+    The background color of this timer picker.
     """
 
     use_magnifier: bool = False
     """
-    Whether to use the magnifier for the center item of the wheel.
+    Whether to use the magnifier for the center item of this picker's wheel.
     """
 
     looping: bool = False
@@ -57,11 +56,14 @@ class CupertinoPicker(LayoutControl):
 
     magnification: Number = 1.0
     """
-    The zoomed-in rate of the magnifier, if it is used.
+    The zoomed-in or magnification rate of the magnifier.
 
     If the value is greater than `1.0`, the item in the center will be zoomed in by that
     rate, and it will also be rendered as flat, not cylindrical like the rest of the
     list. The item will be zoomed-out if magnification is less than `1.0`.
+
+    Note:
+        Has effect only if [`use_magnifier`][(c).] is `True`.
     """
 
     squeeze: Number = 1.45
@@ -87,13 +89,12 @@ class CupertinoPicker(LayoutControl):
     matching the height of the center row.
 
     Defaults to a rounded rectangle in iOS 14 style with
-    [`default_selection_overlay_bgcolor`][flet.CupertinoPicker.default_selection_overlay_bgcolor] as background color.
-    """  # noqa: E501
+    [`default_selection_overlay_bgcolor`][(c).] as background color.
+    """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The default background color of the
-    [`selection_overlay`][flet.CupertinoPicker.selection_overlay].
+    The default background color of the [`selection_overlay`][(c).].
     """
 
     on_change: Optional[ControlEventHandler["CupertinoPicker"]] = None
@@ -103,12 +104,16 @@ class CupertinoPicker(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.squeeze > 0.0, (
-            f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
-        )
-        assert self.magnification > 0.0, (
-            f"magnification must be strictly greater than 0.0, got {self.magnification}"
-        )
-        assert self.item_extent > 0.0, (
-            f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
-        )
+        if self.squeeze <= 0.0:
+            raise ValueError(
+                f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
+            )
+        if self.magnification <= 0.0:
+            raise ValueError(
+                f"magnification must be strictly greater than 0.0, "
+                f"got {self.magnification}"
+            )
+        if self.item_extent <= 0.0:
+            raise ValueError(
+                f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
+            )

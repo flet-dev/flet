@@ -40,7 +40,7 @@ class Text(Shape):
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`][flet.TextSpan]
+    The list of [`TextSpan`][flet.]
     objects to build a rich text paragraph.
     """
 

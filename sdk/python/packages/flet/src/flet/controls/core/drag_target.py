@@ -48,8 +48,8 @@ class DragTargetLeaveEvent(DragEventBase):
 @control("DragTarget")
 class DragTarget(Control):
     """
-    A control that completes drag operation when a [`Draggable`][flet.Draggable]
-    control is dropped.
+    A control that completes drag operation when a [`Draggable`][flet.] control
+    is dropped.
 
     When a `Draggable` is dragged on top of a `DragTarget`, the `DragTarget` is asked
     whether it will accept the data the `Draggable` is carrying. The `DragTarget` will
@@ -59,7 +59,7 @@ class DragTarget(Control):
     asked to accept the `Draggable`'s data.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -72,8 +72,8 @@ class DragTarget(Control):
     The group this target belongs to.
 
     Note:
-        For a `DragTarget` to accept an incoming drop from a
-        [`Draggable`][flet.Draggable], they must both be in the same `group`.
+        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.],
+        they must both be in the same `group`.
     """
 
     on_will_accept: Optional[EventHandler[DragWillAcceptEvent]] = None
@@ -83,8 +83,8 @@ class DragTarget(Control):
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when the user does drop an acceptable (same
-    [`group`][flet.DragTarget.group]) draggable on this target.
+    Called when the user does drop an acceptable (same [`group`][(c).]) draggable on
+    this target.
 
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
     """
@@ -101,4 +101,5 @@ class DragTarget(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

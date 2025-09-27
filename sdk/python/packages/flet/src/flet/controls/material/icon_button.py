@@ -34,32 +34,35 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
+
+    Raises:
+        ValueError: If [`splash_radius`][(c).] is not greater than `0`.
     """
 
     icon: Optional[IconDataOrControl] = None
     """
-    Icon shown in the button.
+    An icon to be shown in this button.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    The foreground color of the icon.
+    The foreground color of the [`icon`][flet.IconButton.].
     """
 
     icon_size: Optional[Number] = None
     """
-    The [`icon`][flet.IconButton.icon]'s size in virtual pixels.
+    The [`icon`][flet.IconButton.]'s size in virtual pixels.
 
     Defaults to `24`.
     """
 
     selected: Optional[bool] = None
     """
-    The optional selection state of the icon button.
+    The optional selection state of this button.
 
     If this property is not set, the button will behave as a normal push button,
-    otherwise, the button will toggle between showing [`icon`][flet.IconButton.icon]
-    (when `False`), and [`selected_icon`][flet.IconButton.selected_icon] (when `True`).
+    otherwise, the button will toggle between showing [`icon`][flet.IconButton.]
+    (when `False`), and [`selected_icon`][flet.IconButton.] (when `True`).
     """
 
     selected_icon: Optional[IconDataOrControl] = None
@@ -70,47 +73,17 @@ class IconButton(LayoutControl, AdaptiveControl):
     selected_icon_color: Optional[ColorValue] = None
     """
     The icon color for the 'selected' state of this button.
-
-    An example of icon toggle button:
-
-    <img src="/img/blog/gradients/toggle-icon-button.gif" className="screenshot-10" />
-
-    ```python
-    import flet as ft
-
-    def main(page: ft.Page):
-
-        def toggle_icon_button(e):
-            e.control.selected = not e.control.selected
-
-        page.add(
-            ft.IconButton(
-                icon=ft.Icons.BATTERY_1_BAR,
-                selected_icon=ft.Icons.BATTERY_FULL,
-                on_click=toggle_icon_button,
-                selected=False,
-                style=ft.ButtonStyle(
-                    color={
-                        ft.ControlState.SELECTED: ft.Colors.GREEN,
-                        ft.ControlState.DEFAULT: ft.Colors.RED
-                    },
-                ),
-            )
-        )
-
-    ft.run(main)
-    ```
     """
 
     bgcolor: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     """
-    The button's background color.
+    The background color of this button.
     """
 
     highlight_color: Optional[ColorValue] = None
     """
-    The button's color when the button is
-    pressed. The highlight fades in quickly as the button is held down.
+    The color of this button when it is pressed.
+    The highlight fades in quickly as this button is pressed/held down.
     """
 
     style: Optional[ButtonStyle] = None
@@ -118,18 +91,15 @@ class IconButton(LayoutControl, AdaptiveControl):
     Customizes this button's appearance.
 
     Note:
-        - Only honoured in Material 3 design
-            ([`Theme.use_material3`][flet.Theme.use_material3] is `True` - default).
-        - If [`Theme.use_material3`][flet.Theme.use_material3] is `True`,
+        - Only honoured in Material 3 design ([`Theme.use_material3`][flet.] is `True`).
+        - If [`Theme.use_material3`][flet.] is `True`,
             any parameters defined in style will be overridden by the
-            corresponding parameters in this `IconButton`.
-            For example, if icon button
-            [`visual_density`][flet.IconButton.visual_density]
-            is set to [`VisualDensity.STANDARD`][flet.VisualDensity.STANDARD] and
-            style's [`visual_density`][flet.ButtonStyle.visual_density] is
-            set to [`VisualDensity.COMPACT`][flet.VisualDensity.COMPACT], the icon
-            button will have [`VisualDensity.STANDARD`][flet.VisualDensity.STANDARD]
-            to define the button's layout.
+            corresponding parameters in this button.
+            For example, if icon button [`visual_density`][flet.IconButton.]
+            is set to [`VisualDensity.STANDARD`][flet.] and
+            style's [`visual_density`][flet.ButtonStyle.] is
+            set to [`VisualDensity.COMPACT`][flet.], [`VisualDensity.STANDARD`][flet.]
+            will be used.
     """
 
     autofocus: bool = False
@@ -141,8 +111,7 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     disabled_color: Optional[ColorValue] = None
     """
-    The color to use for the icon inside the
-    button when disabled.
+    The color to use for the icon inside the button when disabled.
     """
 
     hover_color: Optional[ColorValue] = None
@@ -157,8 +126,7 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     splash_color: Optional[ColorValue] = None
     """
-    The primary color of the button when the
-    button is in the down (pressed) state.
+    The primary color of this button when it is in the pressed state.
     """
 
     splash_radius: Optional[Number] = None
@@ -167,15 +135,14 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     Note:
         This value is honoured only when in Material 2
-        ([`Theme.use_material3`][flet.Theme.use_material3] is `False`).
+        ([`Theme.use_material3`][flet.] is `False`).
     """
 
     alignment: Optional[Alignment] = None
     """
-    Defines how the icon is positioned within the IconButton. Alignment is an instance
-    of [`Alignment`][flet.Alignment] class.
+    Defines how the icon is positioned within this button.
 
-    Defaults to [`Alignment.CENTER`][flet.Alignment.CENTER].
+    Defaults to [`Alignment.CENTER`][flet.].
     """
 
     padding: Optional[PaddingValue] = None
@@ -197,7 +164,7 @@ class IconButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.IconButton.on_click] event callback is provided,
+    Additionally, if [`on_click`][flet.IconButton.] event callback is provided,
     it is fired after that.
     """
 
@@ -211,7 +178,7 @@ class IconButton(LayoutControl, AdaptiveControl):
         default=None, metadata={"skip": True}
     )
     """
-    Defines how compact the control's layout will be.
+    Defines how compact this button's layout will be.
     """
 
     size_constraints: Optional[BoxConstraints] = None
@@ -226,19 +193,20 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     on_focus: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Called when the control has received focus.
+    Called when this button has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["IconButton"]] = None
     """
-    Called when the control has lost focus.
+    Called when this button has lost focus.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.splash_radius is None or self.splash_radius > 0, (
-            f"splash_radius must be greater than 0, got {self.splash_radius}"
-        )
+        if self.splash_radius is not None and self.splash_radius <= 0:
+            raise ValueError(
+                f"splash_radius must be greater than 0, got {self.splash_radius}"
+            )
         if (
             self.style is not None
             or self.bgcolor is not None
@@ -261,7 +229,7 @@ class IconButton(LayoutControl, AdaptiveControl):
 @control("FilledIconButton")
 class FilledIconButton(IconButton):
     """
-    A filled variant of [`IconButton`][flet.IconButton].
+    A filled variant of [`IconButton`][flet.].
 
     Filled icon buttons have higher visual impact and should be used for high emphasis
     actions, such as turning off a microphone or camera.
@@ -271,7 +239,7 @@ class FilledIconButton(IconButton):
 @control("FilledTonalIconButton")
 class FilledTonalIconButton(IconButton):
     """
-    A filled tonal variant of [`IconButton`][flet.IconButton].
+    A filled tonal variant of [`IconButton`][flet.].
 
     Filled tonal icon buttons are a middle ground between filled and
     outlined icon buttons. They're useful in contexts where the button requires
@@ -283,7 +251,7 @@ class FilledTonalIconButton(IconButton):
 @control("OutlinedIconButton")
 class OutlinedIconButton(IconButton):
     """
-    An outlined variant of [`IconButton`][flet.IconButton].
+    An outlined variant of [`IconButton`][flet.].
 
     Outlined icon buttons are medium-emphasis buttons.
     They're useful when an icon button needs more emphasis than a

@@ -1,8 +1,8 @@
 __all__ = [
     "FletException",
-    "FletUnsupportedPlatformException",
-    "FletUnimplementedPlatformException",
     "FletPageDisconnectedException",
+    "FletUnimplementedPlatformException",
+    "FletUnsupportedPlatformException",
 ]
 
 
@@ -12,9 +12,9 @@ class FletException(Exception):
 
     See these subclasses/implementations:
 
-    - [`FletUnsupportedPlatformException`][flet.FletUnsupportedPlatformException]
-    - [`FletUnimplementedPlatformException`][flet.FletUnimplementedPlatformException]
-    - [`FletPageDisconnectedException`][flet.FletPageDisconnectedException]
+    - [`FletUnsupportedPlatformException`][flet.]
+    - [`FletUnimplementedPlatformException`][flet.]
+    - [`FletPageDisconnectedException`][flet.]
     """
 
 

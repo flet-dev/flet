@@ -310,7 +310,7 @@ class BasePage(AdaptiveControl):
         This method adds the specified `dialog` to the active dialog stack
         and renders it on the page. If the dialog is already open, an exception
         is raised.
-        The [`on_dismiss`][flet.DialogControl.on_dismiss] handler of the dialog
+        The [`on_dismiss`][flet.DialogControl.] handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 

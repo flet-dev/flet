@@ -33,27 +33,30 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A single-line ListTile with an expansion arrow icon that expands or collapses the
     tile to reveal or hide its controls.
+
+    Raises:
+        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     title: StrOrControl
     """
     A `Control` to display as primary content of the tile.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     controls: Optional[list[Control]] = None
     """
     The controls to be displayed when the tile expands.
 
-    Typically a list of [`ListTile`][flet.ListTile] controls.
+    Typically a list of [`ListTile`][flet.] controls.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     leading: Optional[IconDataOrControl] = None
@@ -65,7 +68,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A `Control` to display after the title.
 
-    Typically an [`Icon`][flet.Icon] control.
+    Typically an [`Icon`][flet.] control.
     """
 
     controls_padding: Optional[PaddingValue] = None
@@ -108,28 +111,22 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     initially_expanded: bool = False
     """
     A boolean value which defines whether the tile is initially expanded or collapsed.
-
-    Defaults to `False`.
     """
 
     maintain_state: bool = False
     """
     A boolean value which defines whether the state of the `controls` is maintained
     when the tile expands and collapses.
-
-    Defaults to `False`.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The color of the tile's titles when the
-    sublist is expanded.
+    The color of the tile's titles when the sublist is expanded.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    The icon color of tile's expansion arrow
-    icon when the sublist is expanded.
+    The icon color of tile's expansion arrow icon when the sublist is expanded.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -139,32 +136,27 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The  color to display behind the sublist
-    when expanded.
+    The  color to display behind the sublist when expanded.
     """
 
     collapsed_bgcolor: Optional[ColorValue] = None
     """
-    Defines the background color of tile when
-    the sublist is collapsed.
+    Defines the background color of tile when the sublist is collapsed.
     """
 
     collapsed_icon_color: Optional[ColorValue] = None
     """
-    The icon color of tile's expansion arrow
-    icon when the sublist is collapsed.
+    The icon color of tile's expansion arrow icon when the sublist is collapsed.
     """
 
     collapsed_text_color: Optional[ColorValue] = None
     """
-    The color of the tile's titles when the
-    sublist is collapsed.
+    The color of the tile's titles when the sublist is collapsed.
     """
 
     collapsed_shape: Optional[OutlinedBorder] = None
     """
-    The tile's border shape when the sublist is collapsed. The value is an instance
-    of [`OutlinedBorder`][flet.OutlinedBorder]
+    The tile's border shape when the sublist is collapsed.
     """
 
     dense: Optional[bool] = None
@@ -180,16 +172,12 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     Whether detected gestures should provide acoustic and/or haptic feedback. For
     example, on Android a tap will produce a clicking sound and a long-press will
     produce a short vibration, when feedback is enabled.
-
-    Defaults to `True`.
     """
 
     show_trailing_icon: bool = True
     """
     Whether to show the trailing icon (be it the default icon or the custom `trailing`,
     if specified and visible).
-
-    Defaults to `True`.
     """
 
     min_tile_height: Optional[Number] = None
@@ -209,5 +197,5 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.title, Control):
-            assert self.title.visible, "title must be visible"
+        if isinstance(self.title, Control) and not self.title.visible:
+            raise ValueError("title must be visible")
