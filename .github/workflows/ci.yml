@@ -383,7 +383,14 @@ jobs:
 
             echo "::group::($PACKAGE_NAME) Flutter build"
             flutter build linux --build-name="$BUILD_VER"
+
+            # Remove any previous build output, so mv below works as expected
+            rm -rf "build/linux/${BUILD_ARCH}/release/flet"
+
+            # Rename Flutter's default "bundle" output directory to "flet"
             mv "build/linux/${BUILD_ARCH}/release/bundle" "build/linux/${BUILD_ARCH}/release/flet"
+
+            # Create a compressed tarball of the "flet" directory for distribution
             tar -czvf "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
 
             # Ship the archive into the Python package so the wheels can bundle it later
@@ -392,8 +399,8 @@ jobs:
             echo "::endgroup::"
           }
 
-          build_flutter "flet-desktop-light"
           build_flutter "flet-desktop"
+          build_flutter "flet-desktop-light"
 
       - name: Build Python wheels
         shell: bash
@@ -403,10 +410,9 @@ jobs:
           # Ensure glob expands
           shopt -s nullglob
 
-          echo "::group::Patch Python package versions"
+          # Patch Python package versions
           pushd "$SDK_PYTHON"
           patch_python_package_versions
-          echo "::endgroup::"
 
           # directory which will contain uv-build output
           dist="${SDK_PYTHON}/dist"
@@ -418,7 +424,7 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
-            # Patch the package's name in pyproject.toml to match the current package name'
+            # Patch the package's name in pyproject.toml to match the current package name
             patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" "$PACKAGE_NAME"
             # Build the package's wheel (uv writes to $SDK_PYTHON_PATH/dist)
             uv build --wheel
@@ -452,8 +458,8 @@ jobs:
             echo "::endgroup::"
           }
 
-          build_wheels "flet-desktop-light"
           build_wheels "flet-desktop"
+          build_wheels "flet-desktop-light"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
