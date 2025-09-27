@@ -19,6 +19,10 @@ permissions:
   id-token: write
   contents: write
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   ROOT: "${{ github.workspace }}"
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
