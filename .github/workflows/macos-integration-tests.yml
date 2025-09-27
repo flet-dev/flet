@@ -18,6 +18,8 @@ on:
       - 'packages/flet/**'
       - 'client/**'
 
+  workflow_dispatch:
+
 # Ensure only one run per branch (PR or push), cancel older ones
 concurrency:
   group: macos-integration-tests-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -31,38 +33,37 @@ env:
 jobs:
   test-macos:
     runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [core, material, cupertino, theme, types]
+    name: ${{ matrix.suite }} Integration Tests
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure FVM
-        uses: kuhnroyal/flutter-fvm-config-action/config@v3
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         id: fvm-config-action
         with:
           path: '.fvmrc'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
           cache: true
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
 
       - name: Show tool versions
         run: |
           python3 --version && uv --version && pod --version && flutter --version
 
-      - name: Run integration tests
+      - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/${{ matrix.suite }}
 
       - name: Upload failure screenshots
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-test-failures-macos
-          path: sdk/python/packages/flet/integration_tests/**/*_actual.png
+          name: integration-test-failures-macos-${{ matrix.suite }}
+          path: sdk/python/packages/flet/integration_tests/controls/${{ matrix.suite }}/**/*_actual.png
           if-no-files-found: ignore

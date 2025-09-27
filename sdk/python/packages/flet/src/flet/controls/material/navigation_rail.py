@@ -28,7 +28,7 @@ class NavigationRailLabelType(Enum):
 @control("NavigationRailDestination")
 class NavigationRailDestination(Control):
     """
-    TBD
+    Represents a destination in a `NavigationRail`.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -66,7 +66,7 @@ class NavigationRailDestination(Control):
     indicator_color: Optional[ColorValue] = None
     """
     The color of the
-    [`indicator_shape`][flet.NavigationRailDestination.indicator_shape] when
+    [`indicator_shape`][(c).] when
     this destination is selected.
     """
 
@@ -81,6 +81,11 @@ class NavigationRail(LayoutControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to
     navigate between a small number of views, typically between three and five.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If [`min_width`][(c).] is negative.
+        ValueError: If [`min_extended_width`][(c).] is negative.
     """
 
     destinations: list[NavigationRailDestination] = field(default_factory=list)
@@ -130,14 +135,12 @@ class NavigationRail(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets the color of the Container that holds
-    all of the NavigationRail's contents.
+    Sets the color of the Container that holds all of the NavigationRail's contents.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the navigation rail's
-    indicator.
+    The color of the navigation rail's indicator.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -153,7 +156,7 @@ class NavigationRail(LayoutControl):
 
     Its location is not affected by `group_alignment`.
 
-    Typically a [`FloatingActionButton`][flet.FloatingActionButton], but
+    Typically a [`FloatingActionButton`][flet.], but
     may also be a non-button, such as a logo.
     """
 
@@ -204,7 +207,7 @@ class NavigationRail(LayoutControl):
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] of a
+    The [`TextStyle`][flet.] of a
     destination's label when it is selected.
 
     When a destination is not selected, `unselected_label_text_style` will instead be
@@ -213,7 +216,7 @@ class NavigationRail(LayoutControl):
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] of a
+    The [`TextStyle`][flet.] of a
     destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
@@ -223,15 +226,15 @@ class NavigationRail(LayoutControl):
     """
     Whether to add a rounded navigation indicator behind the selected destination's icon.
 
-    The indicator's shape will be circular if [`label_type`][flet.NavigationRail.label_type]
-    is [`NavigationRailLabelType.NONE`][flet.NavigationRailLabelType.NONE], or a
-    [`StadiumBorder`][flet.StadiumBorder] if [`label_type`][flet.NavigationRail.label_type]
-    is [`NavigationRailLabelType.ALL`][flet.NavigationRailLabelType.ALL] or
-    [`NavigationRailLabelType.SELECTED`][flet.NavigationRailLabelType.SELECTED].
+    The indicator's shape will be circular if [`label_type`][(c).]
+    is [`NavigationRailLabelType.NONE`][flet.], or a
+    [`StadiumBorder`][flet.] if [`label_type`][(c).]
+    is [`NavigationRailLabelType.ALL`][flet.] or
+    [`NavigationRailLabelType.SELECTED`][flet.].
 
     If `None`, defaults to
-    [`NavigationRailTheme.use_indicator`][flet.NavigationRailTheme.use_indicator].
-    If that is also `None`, defaults to [`Theme.use_material3`][flet.Theme.use_material3].
+    [`NavigationRailTheme.use_indicator`][flet.].
+    If that is also `None`, defaults to [`Theme.use_material3`][flet.].
     """  # noqa: E501
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None
@@ -241,9 +244,9 @@ class NavigationRail(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        if self.elevation is not None:
-            assert self.elevation >= 0, "elevation cannot be negative"
-        if self.min_width is not None:
-            assert self.min_width >= 0, "min_width cannot be negative"
-        if self.min_extended_width is not None:
-            assert self.min_extended_width >= 0, "min_extended_width cannot be negative"
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError("elevation cannot be negative")
+        if self.min_width is not None and self.min_width < 0:
+            raise ValueError("min_width cannot be negative")
+        if self.min_extended_width is not None and self.min_extended_width < 0:
+            raise ValueError("min_extended_width cannot be negative")

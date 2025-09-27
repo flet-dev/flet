@@ -15,7 +15,7 @@ class WindowDragArea(LayoutControl):
     title bar on the [`content`][(c).] control.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -36,7 +36,7 @@ class WindowDragArea(LayoutControl):
     Called when the `WindowDragArea` is double-tapped and `maximizable=True`.
 
     Info:
-        When a double-tap event is fired, the [`type`][flet.WindowEvent.type]
+        When a double-tap event is fired, the [`type`][flet.WindowEvent.]
         property of the event handler argument can only be one of the following:
         `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`.
     """
@@ -54,4 +54,5 @@ class WindowDragArea(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

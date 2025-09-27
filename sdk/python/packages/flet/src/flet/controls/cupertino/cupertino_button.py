@@ -33,7 +33,7 @@ class CupertinoButton(LayoutControl):
     An iOS-style button.
 
     Raises:
-        AssertionError: If [`opacity_on_click`][(c).] is not between `0.0`
+        ValueError: If [`opacity_on_click`][(c).] is not between `0.0`
             and `1.0` inclusive.
     """
 
@@ -49,7 +49,7 @@ class CupertinoButton(LayoutControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    The foreground color of the [`icon`][flet.CupertinoButton.icon].
+    The foreground color of the [`icon`][(c).].
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -110,7 +110,7 @@ class CupertinoButton(LayoutControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.CupertinoButton.on_click] event callback is
+    Additionally, if [`on_click`][(c).] event callback is
     provided, it is fired after that.
     """
 
@@ -124,9 +124,9 @@ class CupertinoButton(LayoutControl):
     """
     The color to use for the focus highlight for keyboard interactions.
 
-    Defaults to a slightly transparent [`bgcolor`][flet.CupertinoButton.bgcolor].
+    Defaults to a slightly transparent [`bgcolor`][(c).].
     If `bgcolor` is `None`, defaults to a slightly transparent
-    [`CupertinoColors.ACTIVE_BLUE`][flet.CupertinoColors.ACTIVE_BLUE].
+    [`CupertinoColors.ACTIVE_BLUE`][flet.].
     'Slightly transparent' in this context means the color is used with an opacity
     of `0.80`, a brightness of `0.69` and a saturation of `0.835`.
     """
@@ -158,10 +158,11 @@ class CupertinoButton(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert 0 <= self.opacity_on_click <= 1, (
-            "opacity_on_click must be between 0 and 1 inclusive, "
-            f"got {self.opacity_on_click}"
-        )
+        if not (0 <= self.opacity_on_click <= 1):
+            raise ValueError(
+                "opacity_on_click must be between 0 and 1 inclusive, "
+                f"got {self.opacity_on_click}"
+            )
 
     async def focus(self):
         await self._invoke_method("focus")

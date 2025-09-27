@@ -252,6 +252,7 @@ from flet.controls.material.date_picker import (
     DatePickerEntryModeChangeEvent,
     DatePickerMode,
 )
+from flet.controls.material.date_range_picker import DateRangePicker
 from flet.controls.material.divider import Divider
 from flet.controls.material.dropdown import Dropdown, DropdownOption
 from flet.controls.material.dropdownm2 import DropdownM2
@@ -624,6 +625,7 @@ __all__ = [
     "DatePickerEntryModeChangeEvent",
     "DatePickerMode",
     "DatePickerTheme",
+    "DateRangePicker",
     "DateTimeValue",
     "DecorationImage",
     "DialogControl",

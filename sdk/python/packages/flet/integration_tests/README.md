@@ -1,21 +1,42 @@
 # Flet tests
 
+## Commands
+
 Running **all** tests in directory with output and log debug output:
 
 ```
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 ```
 
+Running tests by suite:
+
+```
+# Core
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/core
+
+# Material
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/material
+
+# Cupertino
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/cupertino
+
+# Theme
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/theme
+
+# Types
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/types
+```
+
 Running **single file** tests with output and log debug output:
 
 ```
-uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/test_buttons.py
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/material/test_button.py
 ```
 
 Running **single test** with output and log debug output:
 
 ```
-uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/test_buttons.py -k test_button_2
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/material/test_button.py -k test_basic
 ```
 
 Running tests on iOS simulator:
@@ -33,10 +54,10 @@ FLET_TEST_DEVICE=<simulator-name> FLET_TEST_PLATFORM=android uv run pytest -s -o
 Running test to create golden images:
 
 ```
-FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/test_buttons.py
+FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material/test_button.py
 ```
 
-Environment variables:
+## Environment variables
 
 `FLET_TEST_PLATFORM` - The platform on which tests are running: `macos`, `windows`, `linux`, `android` or `ios`. Desktop platforms are detected automatically if not specified.
 

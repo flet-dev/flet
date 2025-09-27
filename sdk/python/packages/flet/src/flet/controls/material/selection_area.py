@@ -14,15 +14,16 @@ class SelectionArea(Control):
     selection for its child control.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible
+        ValueError: If [`content`][(c).] is not visible
     """
 
     content: Control
     """
     The child control this selection area applies to.
-    
-    If you need to have multiple selectable controls, use container-like controls 
-    like [`Row`][flet.Row] or [`Column`][flet.Column], which have a `controls` property for this purpose.
+
+    If you need to have multiple selectable controls, use container-like controls
+    like [`Row`][flet.] or [`Column`][flet.], which have a `controls` property
+    for this purpose.
     """
 
     on_change: Optional[ControlEventHandler["SelectionArea"]] = None
@@ -32,4 +33,5 @@ class SelectionArea(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

@@ -87,7 +87,7 @@ class Image(LayoutControl):
     color: Optional[ColorValue] = None
     """
     If set, this color is blended with each
-    image pixel using [`color_blend_mode`][flet.Image.color_blend_mode].
+    image pixel using [`color_blend_mode`][(c).].
     """
 
     color_blend_mode: Optional[BlendMode] = None

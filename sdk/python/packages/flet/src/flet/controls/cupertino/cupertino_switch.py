@@ -17,7 +17,9 @@ __all__ = ["CupertinoSwitch"]
 @control("CupertinoSwitch")
 class CupertinoSwitch(LayoutControl):
     """
-    An iOS-style switch. Used to toggle the on/off state of a single setting.
+    An iOS-style switch.
+
+    Used to toggle the on/off state of a single setting.
     """
 
     label: Optional[str] = None
@@ -32,7 +34,7 @@ class CupertinoSwitch(LayoutControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    The position of the label relative to the switch.
+    The position of the [`label`][(c).] relative to this switch.
     """
 
     thumb_color: Optional[ColorValue] = None
@@ -42,8 +44,7 @@ class CupertinoSwitch(LayoutControl):
 
     focus_color: Optional[ColorValue] = None
     """
-    The color to use for the focus highlight
-    for keyboard interactions.
+    The color to use for the focus highlight for keyboard interactions.
     """
 
     autofocus: bool = False
@@ -56,14 +57,12 @@ class CupertinoSwitch(LayoutControl):
 
     on_label_color: Optional[ColorValue] = None
     """
-    The color to use for the accessibility
-    label when the switch is on.
+    The color to use for the accessibility label when the switch is on.
     """
 
     off_label_color: Optional[ColorValue] = None
     """
-    The color to use for the accessibility
-    label when the switch is off.
+    The color to use for the accessibility label when the switch is off.
     """
 
     active_thumb_image: Optional[str] = None
@@ -82,79 +81,69 @@ class CupertinoSwitch(LayoutControl):
 
     active_track_color: Optional[ColorValue] = None
     """
-    The color to use on the track when this
-    switch is on.
+    The color to use on the track when this switch is on.
     """
 
     inactive_thumb_color: Optional[ColorValue] = None
     """
-    The color to use on the thumb when this
-    switch is off.
+    The color to use on the thumb when this switch is off.
 
-    If `None`, defaults to [`thumb_color`][flet.CupertinoSwitch.thumb_color],
-    and if this is also `None`, defaults to
-    [`CupertinoColors.WHITE`][flet.CupertinoColors.WHITE].
+    If `None`, defaults to [`thumb_color`][(c).], and if this is also `None`,
+    defaults to [`CupertinoColors.WHITE`][flet.].
     """
 
     inactive_track_color: Optional[ColorValue] = None
     """
-    The color to use on the track when this
-    switch is off.
+    The color to use on the track when this switch is off.
     """
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The outline color of this switch's track
-    in various [`ControlState`][flet.ControlState]s.
+    in various [`ControlState`][flet.]s.
 
-    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
-    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
-    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
-    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
-    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
+    Supported states: [`ControlState.SELECTED`][flet.],
+    [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
+    [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
     """
 
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The outline width of this switch's track in all or specific
-    [`ControlState`][flet.ControlState]s.
+    [`ControlState`][flet.]s.
 
-    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
-    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
-    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
-    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
-    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
+    Supported states: [`ControlState.SELECTED`][flet.],
+    [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
+    [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
     """
 
     thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
     The icon of this Switch's thumb in various
-    [`ControlState`][flet.ControlState]s.
+    [`ControlState`][flet.]s.
 
-    Supported states: [`ControlState.SELECTED`][flet.ControlState.SELECTED],
-    [`ControlState.HOVERED`][flet.ControlState.HOVERED],
-    [`ControlState.DISABLED`][flet.ControlState.DISABLED],
-    [`ControlState.FOCUSED`][flet.ControlState.FOCUSED],
-    and [`ControlState.DEFAULT`][flet.ControlState.DEFAULT].
+    Supported states: [`ControlState.SELECTED`][flet.],
+    [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
+    [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when the state of the switch is changed.
+    Called when the state of this switch is changed.
     """
 
     on_focus: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when the control has received focus.
+    Called when this switch has received focus.
     """
 
     on_blur: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when the control has lost focus.
+    Called when this switch has lost focus.
     """
 
     on_image_error: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when the image ([`active_thumb_image`][flet.CupertinoSwitch.active_thumb_image] or
-    [`inactive_thumb_image`][flet.CupertinoSwitch.inactive_thumb_image]) fails to load.
-    """  # noqa: E501
+    Called when [`active_thumb_image`][(c).] or
+    [`inactive_thumb_image`][(c).] fails to load.
+    """
