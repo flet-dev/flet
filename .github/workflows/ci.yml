@@ -629,7 +629,10 @@ jobs:
         with:
           name: ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
-          files: dist/**/*
+          files: |
+            dist/**/*.whl
+            dist/**/*.tar.gz
+            dist/**/*.zip
           generate_release_notes: true
           preserve_order: true
           overwrite_files: true
