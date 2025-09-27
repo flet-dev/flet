@@ -115,7 +115,7 @@ jobs:
 
             dart pub publish --force
           else
-            dart pub publish --dry-run
+            dart pub publish --dry-run || exit 1
           fi
 
   # =============================
