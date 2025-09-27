@@ -25,7 +25,6 @@ env:
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
   UV_PYTHON: "3.12"
   PYODIDE_VERSION: "0.28.3"
-  # PUB_DEV_TOKEN
 
 jobs:
   # ============
@@ -103,13 +102,10 @@ jobs:
         run: |
           if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
             mkdir -p "$HOME/.config/dart"
-
-            # PUB_DEV_TOKEN should be a base64 of pub-credentials.json in repo secrets
             printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
 
             # patch pubspecs
             for dir in packages/flet*; do
-              echo "Patching $dir/pubspec.yaml"
               patch_pubspec_version "$dir/pubspec.yaml" "$PKG_VER"
             done
 
