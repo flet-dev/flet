@@ -1,7 +1,8 @@
-import apps.counter as app
+import app
+import pytest
+
 import flet as ft
 import flet.testing as ftt
-import pytest
 
 
 @pytest.mark.parametrize(

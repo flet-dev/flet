@@ -1,4 +1,4 @@
-import apps.finders as app
+import app
 import pytest
 
 import flet as ft

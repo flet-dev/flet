@@ -1,6 +1,7 @@
-import apps.hello_world as app
-import flet.testing as ftt
+import app
 import pytest
+
+import flet.testing as ftt
 
 
 @pytest.mark.parametrize(
