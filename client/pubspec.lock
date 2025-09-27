@@ -275,93 +275,119 @@ packages:
   flet_ads:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-ads/src/flutter/flet_ads"
-      relative: false
-    source: path
+      path: "src/flutter/flet_ads"
+      ref: main
+      resolved-ref: aa05773138be06e69353e2a223bd23c51b36dd3f
+      url: "https://github.com/flet-dev/flet-ads.git"
+    source: git
     version: "0.2.0"
   flet_audio:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-audio/src/flutter/flet_audio"
-      relative: false
-    source: path
+      path: "src/flutter/flet_audio"
+      ref: main
+      resolved-ref: "06fb901f133fab54e603f8039bc9a1d707d19068"
+      url: "https://github.com/flet-dev/flet-audio.git"
+    source: git
     version: "0.2.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-audio-recorder/src/flutter/flet_audio_recorder"
-      relative: false
-    source: path
+      path: "src/flutter/flet_audio_recorder"
+      ref: main
+      resolved-ref: "62a1934a34514e92617f4e090b53828474f5969e"
+      url: "https://github.com/flet-dev/flet-audio-recorder.git"
+    source: git
     version: "0.2.0"
   flet_charts:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-charts/src/flutter/flet_charts"
-      relative: false
-    source: path
+      path: "src/flutter/flet_charts"
+      ref: main
+      resolved-ref: d1303e03a6e39ab72ea888eb22219ba330704313
+      url: "https://github.com/flet-dev/flet-charts.git"
+    source: git
     version: "0.2.0"
   flet_datatable2:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-datatable2/src/flutter/flet_datatable2"
-      relative: false
-    source: path
+      path: "src/flutter/flet_datatable2"
+      ref: main
+      resolved-ref: bf6af9c7a9c1962c36512ff5ab48eec9f14ef81a
+      url: "https://github.com/flet-dev/flet-datatable2.git"
+    source: git
     version: "0.1.0"
   flet_flashlight:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-flashlight/src/flutter/flet_flashlight"
-      relative: false
-    source: path
+      path: "src/flutter/flet_flashlight"
+      ref: main
+      resolved-ref: def30504c3ed6786dc2a1fdb4f18b226a284a7d2
+      url: "https://github.com/flet-dev/flet-flashlight.git"
+    source: git
     version: "0.2.0"
   flet_geolocator:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-geolocator/src/flutter/flet_geolocator"
-      relative: false
-    source: path
+      path: "src/flutter/flet_geolocator"
+      ref: main
+      resolved-ref: "25efd0a9d15f23bf284912814a131388f8de9ec4"
+      url: "https://github.com/flet-dev/flet-geolocator.git"
+    source: git
     version: "0.25.2"
   flet_lottie:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-lottie/src/flutter/flet_lottie"
-      relative: false
-    source: path
+      path: "src/flutter/flet_lottie"
+      ref: main
+      resolved-ref: "5187fcf6bcb37f4bfa59cad127f6444d40cdb48c"
+      url: "https://github.com/flet-dev/flet-lottie.git"
+    source: git
     version: "0.2.0"
   flet_map:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-map/src/flutter/flet_map"
-      relative: false
-    source: path
+      path: "src/flutter/flet_map"
+      ref: main
+      resolved-ref: d79ebf24ebad208a543b73a7f7511cd4da1d7ea9
+      url: "https://github.com/flet-dev/flet-map.git"
+    source: git
     version: "0.2.0"
   flet_permission_handler:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-permission-handler/src/flutter/flet_permission_handler"
-      relative: false
-    source: path
+      path: "src/flutter/flet_permission_handler"
+      ref: main
+      resolved-ref: dbd04f183b8452a5247f2807007cc40a2381a172
+      url: "https://github.com/flet-dev/flet-permission-handler.git"
+    source: git
     version: "0.2.0"
   flet_rive:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-rive/src/flutter/flet_rive"
-      relative: false
-    source: path
+      path: "src/flutter/flet_rive"
+      ref: main
+      resolved-ref: "6d78b068940afa5126fc38374ea326e710d43862"
+      url: "https://github.com/flet-dev/flet-rive.git"
+    source: git
     version: "0.2.0"
   flet_video:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-video/src/flutter/flet_video"
-      relative: false
-    source: path
+      path: "src/flutter/flet_video"
+      ref: main
+      resolved-ref: abeea4e9a3a2864299743726b26d5a245a4389d6
+      url: "https://github.com/flet-dev/flet-video.git"
+    source: git
     version: "0.2.0"
   flet_webview:
     dependency: "direct main"
     description:
-      path: "/Users/ndonkohenri/PycharmProjects/flet-dev/flet-packages/flet-webview/src/flutter/flet_webview"
-      relative: false
-    source: path
+      path: "src/flutter/flet_webview"
+      ref: main
+      resolved-ref: cb3d07bfb84ae1b51be25388ca04c03a9dafd7f3
+      url: "https://github.com/flet-dev/flet-webview.git"
+    source: git
     version: "0.2.0"
   flutter:
     dependency: "direct main"
