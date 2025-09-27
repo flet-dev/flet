@@ -69,7 +69,7 @@ def repackage_wheel(wheel_path: str, new_tag: str) -> None:
 
 def main() -> None:
     if not (len(sys.argv) >= 3):
-        print("Usage: uv run repackage_wheel.py <wheel_file> <new_tag>")
+        print("Usage: uv run repackage_wheel_with_tag.py <wheel_file> <new_tag>")
         sys.exit(1)
 
     wheel_file, new_tag = sys.argv[1], sys.argv[2]

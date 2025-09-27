@@ -14,7 +14,7 @@ Dependencies patched:
     - flet
 
 Usage:
-    uv run patch_toml_version.py <toml_file> <version>
+    uv run patch_toml_versions.py <toml_file> <version>
 """
 
 import sys
