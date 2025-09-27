@@ -268,7 +268,7 @@ jobs:
         run: |
           source "$SCRIPTS/common.sh"
 
-          patch_python_package_versions flet-desktop
+          patch_python_package_versions
           uv build --wheel --package flet-desktop
 
           for file in dist/*-py3-none-any.whl; do
@@ -405,7 +405,7 @@ jobs:
 
           echo "::group::Patch Python package versions"
           pushd "$SDK_PYTHON"
-          patch_python_package_versions flet-desktop
+          patch_python_package_versions
           echo "::endgroup::"
 
           # directory which will contain uv-build output
@@ -532,7 +532,7 @@ jobs:
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
-          patch_python_package_versions flet-web
+          patch_python_package_versions
           uv build --wheel --package flet-web
 
       - name: Upload artifacts
@@ -558,7 +558,6 @@ jobs:
   build_flet_and_cli_wheels:
     name: Build flet and flet-cli Python wheels
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     needs:
@@ -579,7 +578,7 @@ jobs:
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
-          patch_python_package_versions flet-cli flet
+          patch_python_package_versions
           uv build --wheel --package flet-cli
           uv build --wheel --package flet
           update_flet_wheel_deps dist
