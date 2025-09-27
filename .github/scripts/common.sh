@@ -1,14 +1,26 @@
-function patch_python_package_versions() {
-    cd $SDK_PYTHON || exit 1
+patch_python_package_versions() {
+    cd "$SDK_PYTHON" || exit 1
 
+    # Install dependencies
     uv sync --no-default-groups || true
 
-    # Update package versions in version.py and pyproject.toml files
-    for pkg in flet flet-cli flet-desktop flet-web; do
-      sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/$pkg/src/${pkg//-/_}/version.py
-      uv version --package "$pkg" "$PYPI_VER"
+    # Get package names from arguments
+    local packages=("$@")
+
+    # If no packages are provided, update versions for all known packages
+    if [ ${#packages[@]} -eq 0 ]; then
+        packages=(flet flet-cli flet-desktop flet-web)
+    fi
+
+    for pkg in "${packages[@]}"; do
+        # Update version in version.py file
+        sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" "packages/$pkg/src/${pkg//-/_}/version.py"
+        # Update version in pyproject.toml file
+        uv version --package "$pkg" "$PYPI_VER"
+        echo "Patched version for $pkg to $PYPI_VER"
     done
 }
+
 
 update_flet_wheel_deps() {
   uv run "$SCRIPTS/update_flet_wheel_deps.py" "$@"

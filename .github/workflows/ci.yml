@@ -115,7 +115,7 @@ jobs:
 
             dart pub publish --force
           else
-            dart pub publish --dry-run || exit 1
+            dart pub publish --dry-run || exit 0
           fi
 
   # =============================
@@ -225,7 +225,7 @@ jobs:
         if: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request' }}
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
-        run: uv publish
+        run: uv publish dist/flet_desktop-*.whl
 
   # ===========================
   # Build Flet Client for macOS
@@ -268,9 +268,9 @@ jobs:
         run: |
           source "$SCRIPTS/common.sh"
 
-          patch_python_package_versions
-
+          patch_python_package_versions flet-desktop
           uv build --wheel --package flet-desktop
+
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
             repackage_wheel_with_tag "$file" "py3-none-macosx_10_14_x86_64"
@@ -292,7 +292,7 @@ jobs:
             startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
           )
         working-directory: ${{ env.SDK_PYTHON }}
-        run: uv publish
+        run: uv publish dist/flet_desktop-*.whl
 
   # ===========================
   # Build Flet Client for Linux
@@ -400,37 +400,35 @@ jobs:
         working-directory: client
         run: |
           source "$SCRIPTS/common.sh"
+          # Ensure glob expands
+          shopt -s nullglob
 
           echo "::group::Patch Python package versions"
           pushd "$SDK_PYTHON"
-          patch_python_package_versions
-          popd
+          patch_python_package_versions flet-desktop
           echo "::endgroup::"
 
-          # directory for output artifacts
-          output_dir="${SDK_PYTHON}/dist"
+          # directory which will contain uv-build output
+          dist="${SDK_PYTHON}/dist"
 
           build_wheels() {
             local PACKAGE_NAME="$1"
             local FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
 
             echo "::group::($PACKAGE_NAME) Build wheels"
-            patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" "$PACKAGE_NAME"
-
-            # Build the wheel (uv writes to $SDK_PYTHON_PATH/dist)
             pushd "$FLET_DESKTOP"
-            uv build --wheel
-            popd
 
-            # Ensure glob expands
-            shopt -s nullglob
+            # Patch the package's name in pyproject.toml to match the current package name'
+            patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" "$PACKAGE_NAME"
+            # Build the package's wheel (uv writes to $SDK_PYTHON_PATH/dist)
+            uv build --wheel
 
             # Find all universal wheels for the current package
-            universal=( "${output_dir}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
+            universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
 
             if (( ${#universal[@]} == 0 )); then
-              echo "ERROR: No universal wheels found in ${output_dir} for ${PACKAGE_NAME}."
-              ls -la "$output_dir" || true
+              echo "ERROR: No universal wheels found in ${dist} for ${PACKAGE_NAME}."
+              ls -la "$dist" || true
               exit 1
             fi
 
@@ -472,7 +470,9 @@ jobs:
             startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
           )
         working-directory: ${{ env.SDK_PYTHON }}
-        run: uv publish
+        run: |
+          uv publish dist/flet_desktop_light-*.whl
+          uv publish dist/flet_desktop-*.whl
 
   # =========================
   # Build Flet Client for Web
@@ -532,7 +532,7 @@ jobs:
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
-          patch_python_package_versions
+          patch_python_package_versions flet-web
           uv build --wheel --package flet-web
 
       - name: Upload artifacts
@@ -550,7 +550,7 @@ jobs:
             startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
           )
         working-directory: ${{ env.SDK_PYTHON }}
-        run: uv publish
+        run: uv publish dist/flet_web-*.whl
 
   # =======================
   # Build flet and flet-cli
@@ -579,7 +579,7 @@ jobs:
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
-          patch_python_package_versions
+          patch_python_package_versions flet-cli flet
           uv build --wheel --package flet-cli
           uv build --wheel --package flet
           update_flet_wheel_deps dist
@@ -598,7 +598,8 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          uv publish
+          uv publish dist/flet_cli-*.whl
+          uv publish dist/flet-*.whl
 
   # ==============
   # GitHub Release

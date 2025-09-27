@@ -10,7 +10,7 @@ It is intended for cases where you want to change the package name
 programmatically without touching any other fields or comments in the file.
 
 The script:
-    - Loads the specified TOML file using `tomlkit` (preserves formatting and comments).
+    - Loads the specified TOML file using `tomlkit`.
     - Replaces the value of `project.name` with the new package name provided.
     - Writes the modified TOML back to the same file.
 
