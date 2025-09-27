@@ -58,8 +58,16 @@ jobs:
 
       - name: Upload failure screenshots
         if: failure()
+        run: |
+          SAFE_SUITE="${MATRIX_SUITE//\//-}"
+          echo "SAFE_SUITE=$SAFE_SUITE" >> $GITHUB_ENV
+        env:
+          MATRIX_SUITE: ${{ matrix.suite }}
+
+      - name: Upload artifact
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-test-failures-macos-${{ replace(matrix.suite, '/', '-') }}
+          name: integration-test-failures-macos-${{ env.SAFE_SUITE }}
           path: sdk/python/packages/flet/integration_tests/${{ matrix.suite }}/**/*_actual.png
           if-no-files-found: ignore
