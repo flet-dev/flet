@@ -52,7 +52,7 @@ else
     export PKG_VER="${major}.${minor}.0"
 
     # Append the GitHub Actions run number for uniqueness
-    export BUILD_VER="${PKG_VER}+$((GITHUB_RUN_NUMBER + 6000))"
+    export BUILD_VER="${PKG_VER}+$((GITHUB_RUN_NUMBER + 6000))" # TODO: remove the increment
 fi
 
 # -------------------------------------------------------------
