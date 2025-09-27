@@ -14,7 +14,7 @@ class SelectionArea(Control):
     selection for its child control.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible
+        ValueError: If [`content`][(c).] is not visible
     """
 
     content: Control
@@ -33,4 +33,5 @@ class SelectionArea(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
+        if not self.content.visible:
+            raise ValueError("content must be visible")

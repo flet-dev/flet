@@ -36,6 +36,7 @@ class CupertinoActivityIndicator(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.radius > 0.0, (
-            f"radius must be strictly greater than 0.0, got {self.radius}"
-        )
+        if self.radius <= 0.0:
+            raise ValueError(
+                f"radius must be strictly greater than 0.0, got {self.radius}"
+            )

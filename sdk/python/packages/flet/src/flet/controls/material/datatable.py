@@ -36,7 +36,7 @@ class DataColumn(Control):
     Column configuration for a [`DataTable`][flet.].
 
     Raises:
-        AssertionError: If the [`label`][(c).] is neither a string nor
+        ValueError: If the [`label`][(c).] is neither a string nor
             a visible control.
     """
 
@@ -82,9 +82,11 @@ class DataColumn(Control):
 
     def before_update(self):
         super().before_update()
-        assert isinstance(self.label, str) or (
-            isinstance(self.label, Control) and self.label.visible
-        ), "label must a string or a visible control"
+        if not (
+            isinstance(self.label, str)
+            or (isinstance(self.label, Control) and self.label.visible)
+        ):
+            raise ValueError("label must a string or a visible control")
 
 
 @control("DataCell")
@@ -93,7 +95,7 @@ class DataCell(Control):
     The data for a cell of a [`DataTable`][flet.].
 
     Raises:
-        AssertionError: If the [`content`][(c).] is neither a string nor a visible
+        ValueError: If the [`content`][(c).] is neither a string nor a visible
             control.
     """
 
@@ -185,8 +187,8 @@ class DataCell(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.content, Control):
-            assert self.content.visible, "content must be visible"
+        if isinstance(self.content, Control) and not self.content.visible:
+            raise ValueError("content must be visible")
 
 
 @control("DataRow")
@@ -197,6 +199,9 @@ class DataRow(Control):
     One row configuration must be provided for each row to display in the table.
 
     The data for this row of the table is provided in the [`cells`][(c).] property.
+
+    Raises:
+        ValueError: If [`cells`][(c).] does not contain at least one visible DataCell.
     """
 
     cells: list[DataCell] = field(default_factory=list)
@@ -267,9 +272,8 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert any(cell.visible for cell in self.cells), (
-            "cells must contain at minimum one visible DataCell"
-        )
+        if not any(cell.visible for cell in self.cells):
+            raise ValueError("cells must contain at minimum one visible DataCell")
 
 
 @control("DataTable")
@@ -278,13 +282,13 @@ class DataTable(LayoutControl):
     A Material Design data table.
 
     Raises:
-        AssertionError: If there are no visible [`columns`][(c).].
-        AssertionError: If any visible row does not contain exactly as many visible
+        ValueError: If there are no visible [`columns`][(c).].
+        ValueError: If any visible row does not contain exactly as many visible
             [`DataRow.cells`][flet.] as there are visible [`columns`][(c).].
-        AssertionError: If [`data_row_min_height`][(c).] is greater than
+        ValueError: If [`data_row_min_height`][(c).] is greater than
             [`data_row_max_height`][(c).].
-        AssertionError: If [`divider_thickness`][(c).] is negative.
-        AssertionError: If [`sort_column_index`][(c).] is out of range.
+        ValueError: If [`divider_thickness`][(c).] is negative.
+        ValueError: If [`sort_column_index`][(c).] is out of range.
     """
 
     columns: list[DataColumn]
@@ -488,34 +492,37 @@ class DataTable(LayoutControl):
             list(filter(lambda column: column.visible, self.columns))
         )
         visible_rows = list(filter(lambda row: row.visible, self.rows))
-        assert visible_columns_count > 0, (
-            "columns must contain at minimum one visible DataColumn"
-        )
-        assert all(
+        if visible_columns_count == 0:
+            raise ValueError("columns must contain at minimum one visible DataColumn")
+        if not all(
             [
                 len([c for c in row.cells if c.visible]) == visible_columns_count
                 for row in visible_rows
             ]
-        ), (
-            f"each visible DataRow must contain exactly as many visible DataCells as "
-            f"there are visible DataColumns ({visible_columns_count})"
-        )
-        assert (
-            self.data_row_min_height is None
-            or self.data_row_max_height is None
-            or (self.data_row_min_height <= self.data_row_max_height)
-        ), (
-            f"data_row_min_height ({self.data_row_min_height}) must be less than or "
-            f"equal to data_row_max_height ({self.data_row_max_height})"
-        )
-        assert self.divider_thickness is None or self.divider_thickness >= 0, (
-            f"divider_thickness must be greater than or equal to 0, "
-            f"got {self.divider_thickness}"
-        )
-        assert self.sort_column_index is None or (
+        ):
+            raise ValueError(
+                f"each visible DataRow must contain exactly as many visible DataCells "
+                f"as there are visible DataColumns ({visible_columns_count})"
+            )
+        if (
+            self.data_row_min_height is not None
+            and self.data_row_max_height is not None
+            and self.data_row_min_height > self.data_row_max_height
+        ):
+            raise ValueError(
+                f"data_row_min_height ({self.data_row_min_height}) must be less than "
+                f"or equal to data_row_max_height ({self.data_row_max_height})"
+            )
+        if self.divider_thickness is not None and self.divider_thickness < 0:
+            raise ValueError(
+                f"divider_thickness must be greater than or equal to 0, "
+                f"got {self.divider_thickness}"
+            )
+        if self.sort_column_index is not None and not (
             0 <= self.sort_column_index < visible_columns_count
-        ), (
-            f"sort_column_index ({self.sort_column_index}) must be greater than or "
-            f"equal to 0 and less than the "
-            f"number of visible columns ({visible_columns_count})"
-        )
+        ):
+            raise ValueError(
+                f"sort_column_index ({self.sort_column_index}) must be greater than or "
+                f"equal to 0 and less than the "
+                f"number of visible columns ({visible_columns_count})"
+            )

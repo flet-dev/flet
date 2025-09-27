@@ -20,9 +20,9 @@ class AppBar(AdaptiveControl):
     A material design app bar.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] or [`elevation_on_scroll`][(c).]
-            is negative.
-        AssertionError: If [`toolbar_opacity`][(c).] is not between `0.0`
+        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If [`elevation_on_scroll`][(c).] is negative.
+        ValueError: If [`toolbar_opacity`][(c).] is not between `0.0`
             and `1.0` inclusive.
     """
 
@@ -193,14 +193,17 @@ class AppBar(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to 0, got {self.elevation}"
-        )
-        assert self.elevation_on_scroll is None or self.elevation_on_scroll >= 0, (
-            "elevation_on_scroll must be greater than or equal to 0, "
-            f"got {self.elevation_on_scroll}"
-        )
-        assert 0 <= self.toolbar_opacity <= 1, (
-            "toolbar_opacity must be between 0.0 and 1.0 inclusive, "
-            f"got {self.toolbar_opacity}"
-        )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to 0, got {self.elevation}"
+            )
+        if self.elevation_on_scroll is not None and self.elevation_on_scroll < 0:
+            raise ValueError(
+                "elevation_on_scroll must be greater than or equal to 0, "
+                f"got {self.elevation_on_scroll}"
+            )
+        if not (0 <= self.toolbar_opacity <= 1):
+            raise ValueError(
+                "toolbar_opacity must be between 0.0 and 1.0 inclusive, "
+                f"got {self.toolbar_opacity}"
+            )

@@ -29,7 +29,7 @@ class AlertDialog(DialogControl):
     below the `content`.
 
     Raises:
-        AssertionError: If none of [`title`][(c).], [`content`][(c).], or
+        ValueError: If none of [`title`][(c).], [`content`][(c).], or
             [`actions`][(c).] are provided, as the dialog would have nothing to display.
     """
 
@@ -230,7 +230,8 @@ class AlertDialog(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert self.title or self.content or self.actions, (
-            "AlertDialog has nothing to display. Provide at minimum one of the "
-            "following: title, content, actions"
-        )
+        if not (self.title or self.content or self.actions):
+            raise ValueError(
+                "AlertDialog has nothing to display. Provide at minimum one of the "
+                "following: title, content, actions"
+            )

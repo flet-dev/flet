@@ -11,6 +11,12 @@ __all__ = ["Divider"]
 class Divider(Control):
     """
     A thin horizontal line (divider), with padding on either side.
+
+    Raises:
+        ValueError: If [`height`][(c).] is negative.
+        ValueError: If [`thickness`][(c).] is negative.
+        ValueError: If [`leading_indent`][(c).] is negative.
+        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     color: Optional[ColorValue] = None
@@ -58,17 +64,21 @@ class Divider(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.height is None or self.height >= 0, (
-            f"height must be greater than or equal to 0, got {self.height}"
-        )
-        assert self.thickness is None or self.thickness >= 0, (
-            f"thickness must be greater than or equal to 0, got {self.thickness}"
-        )
-        assert self.leading_indent is None or self.leading_indent >= 0, (
-            "leading_indent must be greater than or equal to 0, "
-            f"got {self.leading_indent}"
-        )
-        assert self.trailing_indent is None or self.trailing_indent >= 0, (
-            "trailing_indent must be greater than or equal to 0, "
-            f"got {self.trailing_indent}"
-        )
+        if self.height is not None and self.height < 0:
+            raise ValueError(
+                f"height must be greater than or equal to 0, got {self.height}"
+            )
+        if self.thickness is not None and self.thickness < 0:
+            raise ValueError(
+                f"thickness must be greater than or equal to 0, got {self.thickness}"
+            )
+        if self.leading_indent is not None and self.leading_indent < 0:
+            raise ValueError(
+                f"leading_indent must be greater than or equal to 0, "
+                f"got {self.leading_indent}"
+            )
+        if self.trailing_indent is not None and self.trailing_indent < 0:
+            raise ValueError(
+                f"trailing_indent must be greater than or equal to 0, "
+                f"got {self.trailing_indent}"
+            )

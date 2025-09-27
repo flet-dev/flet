@@ -9,6 +9,10 @@ __all__ = ["CupertinoContextMenu"]
 class CupertinoContextMenu(AdaptiveControl):
     """
     A full-screen modal route that opens up when the [`content`][(c).] is long-pressed.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If [`actions`][(c).] does not contain at least one visible action.
     """
 
     content: Control
@@ -38,7 +42,7 @@ class CupertinoContextMenu(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
-        assert any(a.visible for a in self.actions), (
-            "at least one action must be visible"
-        )
+        if not self.content.visible:
+            raise ValueError("content must be visible")
+        if not any(a.visible for a in self.actions):
+            raise ValueError("at least one action must be visible")

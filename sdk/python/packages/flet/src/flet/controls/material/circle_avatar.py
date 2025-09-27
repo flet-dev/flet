@@ -21,9 +21,9 @@ class CircleAvatar(LayoutControl):
     and if this also fails, then [`bgcolor`][(c).] is used.
 
     Raises:
-        AssertionError: If [`radius`][(c).] or [`min_radius`][(c).]
+        ValueError: If [`radius`][(c).] or [`min_radius`][(c).]
             or [`max_radius`][(c).] is negative.
-        AssertionError: If [`radius`][(c).] is set and [`min_radius`][(c).]
+        ValueError: If [`radius`][(c).] is set and [`min_radius`][(c).]
             or [`max_radius`][(c).] is not None.
     """
 
@@ -107,15 +107,19 @@ class CircleAvatar(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.radius is None or self.radius >= 0, (
-            f"radius must be greater than or equal to 0, got {self.radius}"
-        )
-        assert self.min_radius is None or self.min_radius >= 0, (
-            f"min_radius must be greater than or equal to 0, got {self.min_radius}"
-        )
-        assert self.max_radius is None or self.max_radius >= 0, (
-            f"max_radius must be greater than or equal to 0, got {self.max_radius}"
-        )
-        assert self.radius is None or (
+        if self.radius is not None and self.radius < 0:
+            raise ValueError(
+                f"radius must be greater than or equal to 0, got {self.radius}"
+            )
+        if self.min_radius is not None and self.min_radius < 0:
+            raise ValueError(
+                f"min_radius must be greater than or equal to 0, got {self.min_radius}"
+            )
+        if self.max_radius is not None and self.max_radius < 0:
+            raise ValueError(
+                f"max_radius must be greater than or equal to 0, got {self.max_radius}"
+            )
+        if self.radius is not None and not (
             self.min_radius is None and self.max_radius is None
-        ), "If radius is set, min_radius and max_radius must be None"
+        ):
+            raise ValueError("If radius is set, min_radius and max_radius must be None")

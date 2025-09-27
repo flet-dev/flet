@@ -316,9 +316,9 @@ class TabBar(LayoutControl, AdaptiveControl):
     on text headers to articulate the different sections of content.
 
     Raises:
-        AssertionError: If [`indicator`][(c).] is None and
+        ValueError: If [`indicator`][(c).] is None and
             [`indicator_thickness`][(c).] is not strictly greater than 0.
-        AssertionError: If [`tab_alignment`][(c).] is not valid for
+        ValueError: If [`tab_alignment`][(c).] is not valid for
             the given [`scrollable`][(c).] state.
     """
 
@@ -538,20 +538,25 @@ class TabBar(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.indicator is not None or self.indicator_thickness > 0.0, (
-            f"indicator_thickness must be strictly greater than zero if indicator is "
-            f"None, got {self.indicator_thickness}"
-        )
+        if self.indicator is None and self.indicator_thickness <= 0.0:
+            raise ValueError(
+                f"indicator_thickness must be strictly greater than zero if indicator "
+                f"is None, got {self.indicator_thickness}"
+            )
         valid_alignments = (
             [TabAlignment.CENTER, TabAlignment.FILL]
             if not self.scrollable
             else [TabAlignment.START, TabAlignment.START_OFFSET, TabAlignment.CENTER]
         )
 
-        assert self.tab_alignment is None or self.tab_alignment in valid_alignments, (
-            f"If scrollable is {self.scrollable}, tab_alignment must be one of: "
-            f"{', '.join(f'TabAlignment.{a.name}' for a in valid_alignments)}."
-        )
+        if (
+            self.tab_alignment is not None
+            and self.tab_alignment not in valid_alignments
+        ):
+            raise ValueError(
+                f"If scrollable is {self.scrollable}, tab_alignment must be one of: "
+                f"{', '.join(f'TabAlignment.{a.name}' for a in valid_alignments)}."
+            )
 
 
 @control("Tab")
@@ -560,7 +565,7 @@ class Tab(AdaptiveControl):
     A Material Design [`TabBar`][flet.] tab.
 
     Raises:
-        AssertionError: If both [`label`][(c).] and [`icon`][(c).] are not set.
+        ValueError: If both [`label`][(c).] and [`icon`][(c).] are not set.
     """
 
     label: Optional[StrOrControl] = None
@@ -599,6 +604,5 @@ class Tab(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (self.label is not None) or (self.icon is not None), (
-            "Tab must have at least label or icon property set"
-        )
+        if not ((self.label is not None) or (self.icon is not None)):
+            raise ValueError("Tab must have at least label or icon property set")

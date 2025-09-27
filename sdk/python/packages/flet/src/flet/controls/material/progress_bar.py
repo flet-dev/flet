@@ -14,6 +14,11 @@ class ProgressBar(LayoutControl):
     A material design linear progress indicator, also known as a progress bar.
 
     A control that shows progress along a line.
+
+    Raises:
+        ValueError: If [`value`][(c).] is negative.
+        ValueError: If [`bar_height`][(c).] is negative.
+        ValueError: If [`semantics_value`][(c).] is negative.
     """
 
     value: Optional[Number] = None
@@ -114,13 +119,16 @@ class ProgressBar(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.value is None or self.value >= 0, (
-            f"value must be greater than or equal to 0, got {self.value}"
-        )
-        assert self.bar_height is None or self.bar_height >= 0, (
-            f"bar_height must be greater than or equal to 0, got {self.bar_height}"
-        )
-        assert self.semantics_value is None or self.semantics_value >= 0, (
-            f"semantics_value must be greater than or equal to 0, "
-            f"got {self.semantics_value}"
-        )
+        if self.value is not None and self.value < 0:
+            raise ValueError(
+                f"value must be greater than or equal to 0, got {self.value}"
+            )
+        if self.bar_height is not None and self.bar_height < 0:
+            raise ValueError(
+                f"bar_height must be greater than or equal to 0, got {self.bar_height}"
+            )
+        if self.semantics_value is not None and self.semantics_value < 0:
+            raise ValueError(
+                f"semantics_value must be greater than or equal to 0, "
+                f"got {self.semantics_value}"
+            )

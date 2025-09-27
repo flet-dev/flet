@@ -13,6 +13,12 @@ class VerticalDivider(Control):
     A thin vertical line, with padding on either side.
 
     In the material design language, this represents a divider.
+
+    Raises:
+        ValueError: If [`width`][(c).] is negative.
+        ValueError: If [`thickness`][(c).] is negative.
+        ValueError: If [`leading_indent`][(c).] is negative.
+        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     width: Optional[Number] = None
@@ -63,15 +69,11 @@ class VerticalDivider(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.width is None or self.width >= 0, (
-            "width must be greater than or equal to 0"
-        )
-        assert self.thickness is None or self.thickness >= 0, (
-            "thickness must be greater than or equal to 0"
-        )
-        assert self.leading_indent is None or self.leading_indent >= 0, (
-            "leading_indent must be greater than or equal to 0"
-        )
-        assert self.trailing_indent is None or self.trailing_indent >= 0, (
-            "trailing_indent must be greater than or equal to 0"
-        )
+        if self.width is not None and self.width < 0:
+            raise ValueError("width must be greater than or equal to 0")
+        if self.thickness is not None and self.thickness < 0:
+            raise ValueError("thickness must be greater than or equal to 0")
+        if self.leading_indent is not None and self.leading_indent < 0:
+            raise ValueError("leading_indent must be greater than or equal to 0")
+        if self.trailing_indent is not None and self.trailing_indent < 0:
+            raise ValueError("trailing_indent must be greater than or equal to 0")

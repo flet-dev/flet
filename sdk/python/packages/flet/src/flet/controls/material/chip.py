@@ -28,9 +28,9 @@ class Chip(LayoutControl):
     Chips are compact elements that represent an attribute, text, entity, or action.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is
+        ValueError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is
             negative.
-        AssertionError: If callback for both [`on_click`][(c).] and [`on_select`][(c).]
+        ValueError: If callback for both [`on_click`][(c).] and [`on_select`][(c).]
             are specified.
     """
 
@@ -254,13 +254,14 @@ class Chip(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.on_select is None or self.on_click is None, (
-            "on_select and on_click cannot be used together"
-        )
-        assert self.elevation is None or self.elevation >= 0.0, (
-            f"elevation must be greater than or equal to 0, got {self.elevation}"
-        )
-        assert self.elevation_on_click is None or self.elevation_on_click >= 0.0, (
-            "elevation_on_click must be greater than or equal to 0, got "
-            "{self.elevation_on_click}"
-        )
+        if self.on_select is not None and self.on_click is not None:
+            raise ValueError("on_select and on_click cannot be used together")
+        if self.elevation is not None and self.elevation < 0.0:
+            raise ValueError(
+                f"elevation must be greater than or equal to 0, got {self.elevation}"
+            )
+        if self.elevation_on_click is not None and self.elevation_on_click < 0.0:
+            raise ValueError(
+                "elevation_on_click must be greater than or equal to 0, got "
+                f"{self.elevation_on_click}"
+            )

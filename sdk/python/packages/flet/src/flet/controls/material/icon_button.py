@@ -34,6 +34,9 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
+
+    Raises:
+        ValueError: If [`splash_radius`][(c).] is not greater than `0`.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -200,9 +203,10 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.splash_radius is None or self.splash_radius > 0, (
-            f"splash_radius must be greater than 0, got {self.splash_radius}"
-        )
+        if self.splash_radius is not None and self.splash_radius <= 0:
+            raise ValueError(
+                f"splash_radius must be greater than 0, got {self.splash_radius}"
+            )
         if (
             self.style is not None
             or self.bgcolor is not None

@@ -23,7 +23,7 @@ class CupertinoListTile(LayoutControl):
     Can also serve as a cupertino equivalent of the Material [`ListTile`][flet.].
 
     Raises:
-        AssertionError: If [`title`][(c).] is neither a string nor a visible Control.
+        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     title: StrOrControl
@@ -120,6 +120,5 @@ class CupertinoListTile(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert isinstance(self.title, str) or self.title.visible, (
-            "title must be a string or a visible Control"
-        )
+        if not (isinstance(self.title, str) or self.title.visible):
+            raise ValueError("title must be a string or a visible Control")

@@ -19,8 +19,8 @@ class Draggable(Control):
     given the opportunity to complete drag-and-drop flow.
 
     Raises:
-        AssertionError: If [`content`][(c).] is not visible.
-        AssertionError: If [`max_simultaneous_drags`][(c).] is set to a negative value.
+        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If [`max_simultaneous_drags`][(c).] is set to a negative value.
     """
 
     content: Control
@@ -101,10 +101,10 @@ class Draggable(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
-        assert self.max_simultaneous_drags is None or (
-            self.max_simultaneous_drags >= 0
-        ), (
-            f"max_simultaneous_drags must be greater than or equal to 0, "
-            f"got {self.max_simultaneous_drags}"
-        )
+        if not self.content.visible:
+            raise ValueError("content must be visible")
+        if self.max_simultaneous_drags is not None and self.max_simultaneous_drags < 0:
+            raise ValueError(
+                f"max_simultaneous_drags must be greater than or equal to 0, "
+                f"got {self.max_simultaneous_drags}"
+            )

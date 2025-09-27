@@ -34,6 +34,15 @@ class CupertinoDatePickerDateOrder(Enum):
 class CupertinoDatePicker(LayoutControl):
     """
     An iOS-styled date picker.
+
+    Raises:
+        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
+        ValueError: If [`minute_interval`][(c).] is not a positive integer
+            factor of `60`.
+        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
+            after [`last_date`][(c).].
+        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
+            greater than [`maximum_year`][(c).].
     """
 
     value: DateTimeValue = field(default_factory=lambda: datetime.now())
@@ -159,21 +168,23 @@ class CupertinoDatePicker(LayoutControl):
         else:
             value = self.value
 
-        assert self.item_extent > 0, (
-            f"item_extent must be strictly greater than 0, got {self.item_extent}"
-        )
-        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
-            f"minute_interval must be a positive integer factor of 60, "
-            f"got {self.minute_interval}"
-        )
+        if self.item_extent <= 0:
+            raise ValueError(
+                f"item_extent must be strictly greater than 0, got {self.item_extent}"
+            )
+        if not (self.minute_interval > 0 and 60 % self.minute_interval == 0):
+            raise ValueError(
+                f"minute_interval must be a positive integer factor of 60, "
+                f"got {self.minute_interval}"
+            )
 
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
-            if self.first_date:
-                assert value >= self.first_date, (
+            if self.first_date and value < self.first_date:
+                raise ValueError(
                     f"value ({value}) can't be before first_date ({self.first_date})"
                 )
-            if self.last_date:
-                assert value <= self.last_date, (
+            if self.last_date and value > self.last_date:
+                raise ValueError(
                     f"value ({value}) can't be after last_date ({self.last_date})"
                 )
 
@@ -181,34 +192,39 @@ class CupertinoDatePicker(LayoutControl):
             CupertinoDatePickerMode.DATE,
             CupertinoDatePickerMode.MONTH_YEAR,
         ]:
-            assert 1 <= self.minimum_year <= value.year, (
-                f"value.year ({value.year}) can't be less than minimum_year "
-            )
-            f"({self.minimum_year})"
-
-            if self.maximum_year:
-                assert value.year <= self.maximum_year, (
-                    f"value.year ({value.year}) can't be greater than maximum_year "
+            if not (1 <= self.minimum_year <= value.year):
+                raise ValueError(
+                    f"value.year ({value.year}) can't be less than minimum_year "
+                    f"({self.minimum_year})"
                 )
-                f"({self.maximum_year})"
 
-            if self.first_date:
-                assert value >= self.first_date, (
+            if self.maximum_year and value.year > self.maximum_year:
+                raise ValueError(
+                    f"value.year ({value.year}) can't be greater than maximum_year "
+                    f"({self.maximum_year})"
+                )
+
+            if self.first_date and value < self.first_date:
+                raise ValueError(
                     f"value ({value}) can't be before first_date ({self.first_date})"
                 )
 
-            if self.last_date:
-                assert value <= self.last_date, (
+            if self.last_date and value > self.last_date:
+                raise ValueError(
                     f"value ({value}) can't be after last_date ({self.last_date})"
                 )
 
-        if self.date_picker_mode != CupertinoDatePickerMode.DATE:
-            assert not self.show_day_of_week, (
+        if (
+            self.date_picker_mode != CupertinoDatePickerMode.DATE
+            and self.show_day_of_week
+        ):
+            raise ValueError(
                 "show_day_of_week is only supported when date_picker_mode is "
                 "CupertinoDatePickerMode.DATE"
             )
 
-        assert value.minute % self.minute_interval == 0, (
-            f"value.minute ({value.minute}) must be divisible by minute_interval "
-        )
-        f"({self.minute_interval})"
+        if value.minute % self.minute_interval != 0:
+            raise ValueError(
+                f"value.minute ({value.minute}) must be divisible by minute_interval "
+                f"({self.minute_interval})"
+            )

@@ -60,9 +60,12 @@ class CupertinoAlertDialog(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert (
+        if not (
             (isinstance(self.title, str) or self.title.visible)
             or (self.content and self.content.visible)
             or any(a.visible for a in self.actions)
-        ), "AlertDialog has nothing to display. Provide at minimum one of the "
-        "following: title, content, actions"
+        ):
+            raise ValueError(
+                "AlertDialog has nothing to display. Provide at minimum one of the "
+                "following: title, content, actions"
+            )

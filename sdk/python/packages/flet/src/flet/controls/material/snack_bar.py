@@ -93,6 +93,11 @@ class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
     bottom of the screen.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not a string or visible control.
+        ValueError: If [`action_overflow_threshold`][(c).] is not between 0 and 1.
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: StrOrControl
@@ -229,13 +234,16 @@ class SnackBar(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert isinstance(self.content, str) or (
-            isinstance(self.content, Control) and self.content.visible
-        ), "content must be a string or a visible control"
-        assert (
-            self.action_overflow_threshold is None
-            or 0 <= self.action_overflow_threshold <= 1
-        ), "action_overflow_threshold must be between 0 and 1 inclusive"
-        assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
-        )
+        if not (
+            isinstance(self.content, str)
+            or (isinstance(self.content, Control) and self.content.visible)
+        ):
+            raise ValueError("content must be a string or a visible control")
+        if self.action_overflow_threshold is not None and not (
+            0 <= self.action_overflow_threshold <= 1
+        ):
+            raise ValueError(
+                "action_overflow_threshold must be between 0 and 1 inclusive"
+            )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError("elevation cannot be negative")

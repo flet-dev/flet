@@ -18,6 +18,9 @@ class TextSpan(Control):
 
     For the object to be useful, at least one of [`text`][(c).] or
     [`spans`][(c).] should be set.
+
+    Raises:
+        ValueError: If [`semantics_label`][(c).] is set when [`text`][(c).] is `None`.
     """
 
     text: Optional[str] = None
@@ -94,6 +97,5 @@ class TextSpan(Control):
 
     def before_update(self):
         super().before_update()
-        assert not (self.text is None and self.semantics_label is not None), (
-            "semantics_label can be set only when text is not None"
-        )
+        if self.text is None and self.semantics_label is not None:
+            raise ValueError("semantics_label can be set only when text is not None")

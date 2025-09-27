@@ -28,9 +28,9 @@ class Banner(DialogControl):
     them at any time.
 
     Raises:
-        AssertionError: if [`content`][(c).] is not visible.
-        AssertionError: if [`elevation`][(c).] is negative.
-        AssertionError: if [`actions`][(c).] does not contain at least one visible
+        ValueError: if [`content`][(c).] is not visible.
+        ValueError: if [`elevation`][(c).] is negative.
+        ValueError: if [`actions`][(c).] does not contain at least one visible
             action Control.
     """
 
@@ -128,11 +128,13 @@ class Banner(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to 0, got {self.elevation}"
-        )
-        if isinstance(self.content, Control):
-            assert self.content.visible, "content must be visible"
-        assert any(a.visible for a in self.actions), (
-            "actions must contain at minimum one visible action Control"
-        )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to 0, got {self.elevation}"
+            )
+        if isinstance(self.content, Control) and not self.content.visible:
+            raise ValueError("content must be visible")
+        if not any(a.visible for a in self.actions):
+            raise ValueError(
+                "actions must contain at minimum one visible action Control"
+            )

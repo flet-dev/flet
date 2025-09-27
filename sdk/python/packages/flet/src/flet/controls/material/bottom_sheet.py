@@ -20,7 +20,7 @@ class BottomSheet(DialogControl):
     from interacting with the rest of the app.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] is negative.
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: Control
@@ -99,6 +99,7 @@ class BottomSheet(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to zero, got {self.elevation}"
-        )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to zero, got {self.elevation}"
+            )

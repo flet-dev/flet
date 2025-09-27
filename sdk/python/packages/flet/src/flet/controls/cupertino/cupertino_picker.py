@@ -20,7 +20,7 @@ class CupertinoPicker(LayoutControl):
     An iOS-styled picker.
 
     Raises:
-        AssertionError: If [`item_extent`][(c).], [`squeeze`][(c).],
+        ValueError: If [`item_extent`][(c).], [`squeeze`][(c).],
             or [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
@@ -104,12 +104,16 @@ class CupertinoPicker(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.squeeze > 0.0, (
-            f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
-        )
-        assert self.magnification > 0.0, (
-            f"magnification must be strictly greater than 0.0, got {self.magnification}"
-        )
-        assert self.item_extent > 0.0, (
-            f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
-        )
+        if self.squeeze <= 0.0:
+            raise ValueError(
+                f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
+            )
+        if self.magnification <= 0.0:
+            raise ValueError(
+                f"magnification must be strictly greater than 0.0, "
+                f"got {self.magnification}"
+            )
+        if self.item_extent <= 0.0:
+            raise ValueError(
+                f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
+            )

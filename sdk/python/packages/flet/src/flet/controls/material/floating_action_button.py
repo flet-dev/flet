@@ -27,9 +27,9 @@ class FloatingActionButton(LayoutControl):
     place on a page.
 
     Raises:
-        AssertionError: If neither [`icon`][(c).] nor a valid [`content`][(c).]
+        ValueError: If neither [`icon`][(c).] nor a valid [`content`][(c).]
             (string or visible Control) is provided.
-        AssertionError: If [`elevation`][(c).],
+        ValueError: If [`elevation`][(c).],
             [`disabled_elevation`][(c).], [`focus_elevation`][(c).],
             [`highlight_elevation`][(c).], or [`hover_elevation`][(c).]
             is negative.
@@ -161,27 +161,36 @@ class FloatingActionButton(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert (
+        if not (
             self.icon
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
-        ), "at minimum, icon or a content (string or visible Control) must be provided"
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to 0, got {self.elevation}"
-        )
-        assert self.disabled_elevation is None or self.disabled_elevation >= 0, (
-            "disabled_elevation must be greater than or equal to 0, "
-            f"got {self.disabled_elevation}"
-        )
-        assert self.focus_elevation is None or self.focus_elevation >= 0, (
-            "focus_elevation must be greater than or equal to 0, "
-            f"got {self.focus_elevation}"
-        )
-        assert self.highlight_elevation is None or self.highlight_elevation >= 0, (
-            "highlight_elevation must be greater than or equal to 0, "
-            f"got {self.highlight_elevation}"
-        )
-        assert self.hover_elevation is None or self.hover_elevation >= 0, (
-            "hover_elevation must be greater than or equal to 0, "
-            f"got {self.hover_elevation}"
-        )
+        ):
+            raise ValueError(
+                "at minimum, icon or a content (string or visible Control) "
+                "must be provided"
+            )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to 0, got {self.elevation}"
+            )
+        if self.disabled_elevation is not None and self.disabled_elevation < 0:
+            raise ValueError(
+                "disabled_elevation must be greater than or equal to 0, "
+                f"got {self.disabled_elevation}"
+            )
+        if self.focus_elevation is not None and self.focus_elevation < 0:
+            raise ValueError(
+                "focus_elevation must be greater than or equal to 0, "
+                f"got {self.focus_elevation}"
+            )
+        if self.highlight_elevation is not None and self.highlight_elevation < 0:
+            raise ValueError(
+                "highlight_elevation must be greater than or equal to 0, "
+                f"got {self.highlight_elevation}"
+            )
+        if self.hover_elevation is not None and self.hover_elevation < 0:
+            raise ValueError(
+                "hover_elevation must be greater than or equal to 0, "
+                f"got {self.hover_elevation}"
+            )

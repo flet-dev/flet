@@ -15,6 +15,10 @@ class CupertinoActionSheet(LayoutControl):
 
     Action sheets are generally used to give the user a choice between
     two or more choices for the current context.
+
+    Raises:
+        ValueError: If none of [`actions`][(c).], [`title`][(c).], [`message`][(c).],
+            or [`cancel`][(c).] are provided.
     """
 
     title: Optional[StrOrControl] = None
@@ -48,12 +52,13 @@ class CupertinoActionSheet(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert (
+        if not (
             self.actions is not None
             or self.title is not None
             or self.message is not None
             or self.cancel is not None
-        ), (
-            "This action sheet must have a non-None value for at least one of the "
-            "following arguments: `actions`, `title`, `message`, or `cancel`"
-        )
+        ):
+            raise ValueError(
+                "This action sheet must have a non-None value for at least one of the "
+                "following arguments: `actions`, `title`, `message`, or `cancel`"
+            )

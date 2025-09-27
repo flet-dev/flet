@@ -20,7 +20,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     A cupertino sliding segmented button.
 
     Raises:
-        AssertionError: If [`controls`][(c).] does not contain at least two
+        ValueError: If [`controls`][(c).] does not contain at least two
             visible controls.
         IndexError: If [`selected_index`][(c).] is out of range.
     """
@@ -78,10 +78,11 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     def before_update(self):
         super().before_update()
         visible_controls_count = len([c for c in self.controls if c.visible])
-        assert visible_controls_count >= 2, (
-            f"controls must contain at minimum two visible Controls, "
-            f"got {visible_controls_count}"
-        )
+        if visible_controls_count < 2:
+            raise ValueError(
+                f"controls must contain at minimum two visible Controls, "
+                f"got {visible_controls_count}"
+            )
         if not (0 <= self.selected_index < visible_controls_count):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "

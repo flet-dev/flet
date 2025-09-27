@@ -22,9 +22,14 @@ __all__ = ["Button"]
 @control("Button")
 class Button(LayoutControl, AdaptiveControl):
     """
-    A customizable button control that can display text, icons, or both.
+    A material button.
 
-    It supports various styles, colors, and event handlers for user interaction.
+    It supports various styles, colors, event handlers for user interaction,
+    and can be used to display text, icons, etc.
+
+    Raises:
+        ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
+            (string or visible control) is provided.
     """
 
     content: Optional[StrOrControl] = None
@@ -45,11 +50,14 @@ class Button(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
+        if not (
             self.icon
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
-        ), "At least icon or content (string or visible Control) must be provided"
+        ):
+            raise ValueError(
+                "At least icon or content (string or visible Control) must be provided"
+            )
 
         if (
             self.style is not None

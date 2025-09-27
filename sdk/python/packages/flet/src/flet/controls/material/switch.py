@@ -28,7 +28,7 @@ class Switch(LayoutControl, AdaptiveControl):
     For example, "On/Off", "Show/Hide".
 
     Raises:
-        AssertionError: If [`splash_radius`][(c).] is negative.
+        ValueError: If [`splash_radius`][(c).] is negative.
     """
 
     label: Optional[StrOrControl] = None
@@ -225,7 +225,8 @@ class Switch(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.splash_radius is None or self.splash_radius >= 0, (
-            "splash_radius must be greater than or equal to 0, "
-            f"got {self.splash_radius}"
-        )
+        if self.splash_radius is not None and self.splash_radius < 0:
+            raise ValueError(
+                "splash_radius must be greater than or equal to 0, "
+                f"got {self.splash_radius}"
+            )
