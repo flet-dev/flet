@@ -1,5 +1,5 @@
 function patch_python_package_versions() {
-    cd $SDK_PYTHON || exit 1
+    cd "$SDK_PYTHON" || exit 1
 
     # Install dependencies
     uv sync --no-default-groups || true

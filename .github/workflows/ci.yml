@@ -363,11 +363,16 @@ jobs:
         shell: bash
         working-directory: client
         run: |
+          local FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+
           build_flutter() {
             local PACKAGE_NAME="$1"
-            local ARTIFACT_SUFFIX=""
+            local SUFFIX=""
+            local FLAVOR="full"
+
             if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
-              ARTIFACT_SUFFIX="-light"
+              SUFFIX="-light"
+              FLAVOR="light"
             fi
 
             echo "::group::($PACKAGE_NAME) Preparing sources"
@@ -391,11 +396,12 @@ jobs:
             mv "build/linux/${BUILD_ARCH}/release/bundle" "build/linux/${BUILD_ARCH}/release/flet"
 
             # Create a compressed tarball of the "flet" directory for distribution
-            tar -czvf "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
+            tar -czvf "flet-linux${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
 
             # Ship the archive into the Python package so the wheels can bundle it later
-            mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-            cp "flet-linux${ARTIFACT_SUFFIX}-${ARCH}.tar.gz" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz"
+            mkdir -p "$FLET_DESKTOP_APP"
+            cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
+
             echo "::endgroup::"
           }
 
@@ -417,16 +423,25 @@ jobs:
           # directory which will contain uv-build output
           dist="${SDK_PYTHON}/dist"
 
+          # Path to the shared package dir (note: don't use 'local' outside a function)
+          FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
+
           build_wheels() {
             local PACKAGE_NAME="$1"
-            local FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
+            local APP_DIR="${FLET_DESKTOP}/src/flet_desktop/app"
+
+            local FLAVOR="full"
+            if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+              FLAVOR="light"
+            fi
 
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
-            # Patch the package's name in pyproject.toml to match the current package name
+            cp -f "${APP_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${APP_DIR}/flet-linux-${ARCH}.tar.gz"
+
+            # Patch the package name to match the current wheel's flavor and build
             patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" "$PACKAGE_NAME"
-            # Build the package's wheel (uv writes to $SDK_PYTHON_PATH/dist)
             uv build --wheel
 
             # Find all universal wheels for the current package
@@ -452,7 +467,7 @@ jobs:
                 uv run "${SCRIPTS}/repackage_wheel_with_tag.py" "$wheel" "$tag"
               done
               # Delete the original universal wheel
-              rm -f $wheel
+              rm -f "$wheel"
             done
 
             echo "::endgroup::"
