@@ -363,7 +363,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          local FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+          FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
 
           build_flutter() {
             local PACKAGE_NAME="$1"
@@ -423,13 +423,11 @@ jobs:
           # directory which will contain uv-build output
           dist="${SDK_PYTHON}/dist"
 
-          # Path to the shared package dir (note: don't use 'local' outside a function)
           FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
+          FLET_DESKTOP_APP="${FLET_DESKTOP}/src/flet_desktop/app"
 
           build_wheels() {
             local PACKAGE_NAME="$1"
-            local APP_DIR="${FLET_DESKTOP}/src/flet_desktop/app"
-
             local FLAVOR="full"
             if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
               FLAVOR="light"
@@ -438,10 +436,11 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
-            cp -f "${APP_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${APP_DIR}/flet-linux-${ARCH}.tar.gz"
+            # Rename the archive
+            cp -f "${FLET_DESKTOP_APP}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
 
             # Patch the package name to match the current wheel's flavor and build
-            patch_toml_package_name "${FLET_DESKTOP}/pyproject.toml" "$PACKAGE_NAME"
+            patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
             uv build --wheel
 
             # Find all universal wheels for the current package
