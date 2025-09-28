@@ -150,47 +150,39 @@ jobs:
           source "$SCRIPTS/common.sh"
 
           # Convert to POSIX for bash compatibility
-          SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
-          SCRIPTS_POSIX="$(cygpath -u "$SCRIPTS")"
+          SDK_PYTHON="$(cygpath -u "$SDK_PYTHON")"
+          SCRIPTS="$(cygpath -u "$SCRIPTS")"
 
           # Replace: version = ""  -> version = "<PYPI_VER>"
-          vp="${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/version.py"
+          vp="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/version.py"
           sed -i 's/^version = ""$/version = "'"$PYPI_VER"'"/' "$vp"
 
-          patch_toml_versions "${SDK_PYTHON_POSIX}/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
+          patch_toml_versions "${SDK_PYTHON}/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
       - name: Build Flutter Windows client
         env:
           RELEASE_DIR: ${{ env.ROOT }}\client\build\windows\x64\runner\Release
         shell: bash
+        working-directory: client
         run: |
-          # Normalize paths for bash
-          RELEASE_DIR_POSIX="$(cygpath -u "$RELEASE_DIR")"
-          SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
-          WINDIR_POSIX="$(cygpath -u "$WINDIR")"
-
-          echo "Files in $WINDIR:"
-          ls -la "$SDK_PYTHON"
-
-          cd client
           flutter build windows --build-name="$BUILD_VER"
 
           # Copy needed runtime DLLs
-          cp "${WINDIR_POSIX}/system32/msvcp140.dll" "$RELEASE_DIR_POSIX"
-          cp "${WINDIR_POSIX}/system32/vcruntime140.dll" "$RELEASE_DIR_POSIX"
-          cp "${WINDIR_POSIX}/system32/vcruntime140_1.dll" "$RELEASE_DIR_POSIX"
+          cp "${WINDIR}/system32/msvcp140.dll" "$RELEASE_DIR"
+          cp "${WINDIR}/system32/vcruntime140.dll" "$RELEASE_DIR"
+          cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
 
           # Rename Release folder to flet
-          RUNNER_DIR="$(dirname "$RELEASE_DIR_POSIX")"
-          mv "$RELEASE_DIR_POSIX" "${RUNNER_DIR}/flet"
+          RUNNER_DIR="$(dirname "$RELEASE_DIR")"
+          mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
 
           # Zip up the runner
           cd build/windows/x64/runner
           7z a flet-windows.zip flet
 
           # Stage app into Python package
-          mkdir -p "${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/app"
-          cp -r flet "${SDK_PYTHON_POSIX}/packages/flet-desktop/src/flet_desktop/app/flet"
+          mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+          cp -r "flet" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet"
 
       - name: Build Python wheels
         shell: bash
@@ -198,7 +190,7 @@ jobs:
           source "$SCRIPTS/common.sh"
 
           # Convert Windows env paths to POSIX for bash
-          SDK_PYTHON_POSIX="$(cygpath -u "$SDK_PYTHON")"
+          SDK_PYTHON="$(cygpath -u "$SDK_PYTHON")"
 
           cd "$SDK_PYTHON"
           uv build --wheel --package flet-desktop
@@ -254,13 +246,12 @@ jobs:
 
       - name: Build Flutter macOS client
         shell: bash
+        working-directory: client
         run: |
-          pushd client
           flutter build macos --build-name="$BUILD_VER"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-          popd
 
       - name: Build Python wheels
         shell: bash
@@ -403,8 +394,6 @@ jobs:
             # Stage the archive
             cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
 
-            ls -la "${STAGING_DIR}"
-
             echo "::endgroup::"
           }
 
@@ -441,13 +430,9 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
-            ls -la "${STAGING_DIR}"
-
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
-            cp -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
-
-            ls -la "${FLET_DESKTOP_APP}"
+            mv -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
 
             # Patch the package name to match the current wheel's flavor and build
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
@@ -530,13 +515,12 @@ jobs:
 
       - name: Build Web client
         shell: bash
+        working-directory: client
         run: |
           # Compute Pyodide URLs
           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
-          # Flutter Web client
-          pushd client
           flutter build web --wasm
           cp -R build/web "${SDK_PYTHON}/packages/flet-web/src/flet_web"
 
@@ -553,10 +537,8 @@ jobs:
           # Download the prebuilt 'micropip' wheel
           curl -L "${PYODIDE_CDN_URL}/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
 
-          popd
-
           # Archive the entire built Flutter web client into a gzipped tarball
-          tar -czvf client/build/flet-web.tar.gz -C client/build/web .
+          tar -czvf build/flet-web.tar.gz -C build/web .
 
       - name: Build Python package
         shell: bash
