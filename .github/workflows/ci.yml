@@ -363,8 +363,6 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-
           build_flutter() {
             local PACKAGE_NAME="$1"
             local SUFFIX=""
@@ -398,9 +396,10 @@ jobs:
             # Create a compressed tarball of the "flet" directory for distribution
             tar -czvf "flet-linux${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
 
-            # Ship the archive into the Python package so the wheels can bundle it later
-            mkdir -p "$FLET_DESKTOP_APP"
-            cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
+            # Stage the archive
+            STAGING_DIR="${RUNNER_TEMP:-/tmp}/flet_tars_${ARCH}"
+            mkdir -p "$STAGING_DIR"
+            cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
 
             echo "::endgroup::"
           }
@@ -426,6 +425,8 @@ jobs:
           FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
           FLET_DESKTOP_APP="${FLET_DESKTOP}/src/flet_desktop/app"
 
+          mkdir -p "$FLET_DESKTOP_APP"
+
           build_wheels() {
             local PACKAGE_NAME="$1"
             local FLAVOR="full"
@@ -436,8 +437,12 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
-            # Rename the archive
-            cp -f "${FLET_DESKTOP_APP}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
+            # Move corresponding staged Linux client to the app directory, so it is part of wheel
+            rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
+            cp -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
+
+            ls -la "${FLET_DESKTOP_APP}"
+            ls -la "${STAGING_DIR}"
 
             # Patch the package name to match the current wheel's flavor and build
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
