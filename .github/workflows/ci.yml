@@ -363,6 +363,10 @@ jobs:
         shell: bash
         working-directory: client
         run: |
+          STAGING_DIR="${RUNNER_TEMP:-/tmp}/flet_tars_${ARCH}"
+          echo "STAGING_DIR=$STAGING_DIR" >> "$GITHUB_ENV"
+          mkdir -p "$STAGING_DIR
+
           build_flutter() {
             local PACKAGE_NAME="$1"
             local SUFFIX=""
@@ -397,8 +401,6 @@ jobs:
             tar -czvf "flet-linux${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
 
             # Stage the archive
-            STAGING_DIR="${RUNNER_TEMP:-/tmp}/flet_tars_${ARCH}"
-            mkdir -p "$STAGING_DIR"
             cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
 
             ls -la "${STAGING_DIR}"
