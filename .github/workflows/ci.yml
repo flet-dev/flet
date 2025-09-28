@@ -401,6 +401,8 @@ jobs:
             mkdir -p "$STAGING_DIR"
             cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
 
+            ls -la "${STAGING_DIR}"
+
             echo "::endgroup::"
           }
 
@@ -437,12 +439,13 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
+            ls -la "${STAGING_DIR}"
+
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
             cp -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
 
             ls -la "${FLET_DESKTOP_APP}"
-            ls -la "${STAGING_DIR}"
 
             # Patch the package name to match the current wheel's flavor and build
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
