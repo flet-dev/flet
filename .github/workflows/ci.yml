@@ -365,7 +365,7 @@ jobs:
         run: |
           STAGING_DIR="${RUNNER_TEMP:-/tmp}/flet_tars_${ARCH}"
           echo "STAGING_DIR=$STAGING_DIR" >> "$GITHUB_ENV"
-          mkdir -p "$STAGING_DIR
+          mkdir -p "$STAGING_DIR"
 
           build_flutter() {
             local PACKAGE_NAME="$1"
