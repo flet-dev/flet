@@ -28,7 +28,7 @@ env:
 
 jobs:
   test-macos:
-    runs-on: macos-14
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
@@ -57,7 +57,7 @@ jobs:
         run: |
           uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
 
-      - name: Upload failure screenshots
+      - name: Prepare failure screenshots
         if: failure()
         run: |
           SAFE_SUITE="${MATRIX_SUITE//\//-}"
