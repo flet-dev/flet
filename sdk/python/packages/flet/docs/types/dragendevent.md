@@ -1,1 +1,1 @@
-::: flet.DragEndEvent
+{{ class_all_options("flet.DragEndEvent") }}

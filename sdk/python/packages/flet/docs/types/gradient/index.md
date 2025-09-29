@@ -1,4 +1,4 @@
-::: flet.Gradient
+{{ class_all_options("flet.Gradient") }}
 
 ### Examples
 

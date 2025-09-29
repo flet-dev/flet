@@ -1,1 +1,1 @@
-::: flet.CheckboxTheme
+{{ class_all_options("flet.CheckboxTheme") }}

@@ -1,1 +1,1 @@
-::: flet.PointerEvent
+{{ class_all_options("flet.PointerEvent") }}

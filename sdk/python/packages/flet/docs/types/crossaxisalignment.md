@@ -1,4 +1,4 @@
-::: flet.CrossAxisAlignment
+{{ class_all_options("flet.CrossAxisAlignment", separate_signature=False) }}
 
 ## Usage example
 
@@ -57,5 +57,3 @@ ft.run(main)
 ```
   </TabItem>
 </Tabs>
-    options:
-        separate_signature: false

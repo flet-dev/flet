@@ -1,3 +1,1 @@
-::: flet.SnackBarBehavior
-    options:
-        separate_signature: false
+{{ class_all_options("flet.SnackBarBehavior", separate_signature=False) }}

@@ -1,1 +1,1 @@
-::: flet.use_effect
+{{ class_all_options("flet.use_effect") }}

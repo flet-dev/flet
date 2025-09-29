@@ -1,4 +1,4 @@
-::: flet.Padding
+{{ class_all_options("flet.Padding") }}
 
 ## Examples
 

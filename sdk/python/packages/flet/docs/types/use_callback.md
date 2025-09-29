@@ -1,1 +1,1 @@
-::: flet.use_callback
+{{ class_all_options("flet.use_callback") }}

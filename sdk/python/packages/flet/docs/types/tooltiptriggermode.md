@@ -1,3 +1,1 @@
-::: flet.TooltipTriggerMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TooltipTriggerMode", separate_signature=False) }}

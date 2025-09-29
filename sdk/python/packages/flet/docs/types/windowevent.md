@@ -1,1 +1,1 @@
-::: flet.WindowEvent
+{{ class_all_options("flet.WindowEvent") }}

@@ -1,3 +1,1 @@
-::: flet.canvas.PointMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.canvas.PointMode", separate_signature=False) }}

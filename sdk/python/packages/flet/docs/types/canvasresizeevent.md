@@ -1,1 +1,1 @@
-::: flet.canvas.CanvasResizeEvent
+{{ class_all_options("flet.canvas.CanvasResizeEvent") }}

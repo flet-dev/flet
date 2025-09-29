@@ -1,4 +1,4 @@
-::: flet.Blur
+{{ class_all_options("flet.Blur") }}
 
 ## Examples
 

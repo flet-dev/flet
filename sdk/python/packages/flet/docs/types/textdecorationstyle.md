@@ -1,3 +1,1 @@
-::: flet.TextDecorationStyle
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TextDecorationStyle", separate_signature=False) }}

@@ -1,3 +1,1 @@
-::: flet.BoxShape
-    options:
-        separate_signature: false
+{{ class_all_options("flet.BoxShape", separate_signature=False) }}

@@ -1,9 +1,9 @@
-::: flet.InputFilter
+{{ class_all_options("flet.InputFilter") }}
 
 ## Predefined filters
 
-::: flet.NumbersOnlyInputFilter
-::: flet.TextOnlyInputFilter
+{{ class_all_options("flet.NumbersOnlyInputFilter", show_root_heading=True) }}
+{{ class_all_options("flet.TextOnlyInputFilter", show_root_heading=True) }}
 
 ## Usage example
 

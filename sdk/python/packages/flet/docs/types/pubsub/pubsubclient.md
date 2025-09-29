@@ -1,1 +1,1 @@
-::: flet.pubsub.PubSubClient
+{{ class_all_options("flet.pubsub.PubSubClient") }}

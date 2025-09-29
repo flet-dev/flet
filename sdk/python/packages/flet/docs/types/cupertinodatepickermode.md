@@ -1,3 +1,1 @@
-::: flet.CupertinoDatePickerMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.CupertinoDatePickerMode", separate_signature=False) }}

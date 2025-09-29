@@ -1,4 +1,4 @@
-::: flet.ControlState
+{{ class_all_options("flet.ControlState") }}
 
 ## Usage Example
 

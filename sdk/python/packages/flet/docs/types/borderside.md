@@ -1,1 +1,1 @@
-::: flet.BorderSide
+{{ class_all_options("flet.BorderSide") }}

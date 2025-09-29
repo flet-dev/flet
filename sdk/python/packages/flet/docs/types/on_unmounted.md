@@ -1,1 +1,1 @@
-::: flet.on_unmounted
+{{ class_all_options("flet.on_unmounted") }}

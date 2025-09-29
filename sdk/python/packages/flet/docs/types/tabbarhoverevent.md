@@ -1,1 +1,1 @@
-::: flet.TabBarHoverEvent
+{{ class_all_options("flet.TabBarHoverEvent") }}

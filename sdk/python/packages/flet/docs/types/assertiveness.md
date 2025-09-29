@@ -1,3 +1,1 @@
-::: flet.Assertiveness
-    options:
-        separate_signature: false
+{{ class_all_options("flet.Assertiveness", separate_signature=False) }}

@@ -1,3 +1,1 @@
-::: flet.ListTileStyle
-    options:
-        separate_signature: false
+{{ class_all_options("flet.ListTileStyle", separate_signature=False) }}

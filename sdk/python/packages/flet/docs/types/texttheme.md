@@ -1,1 +1,1 @@
-::: flet.TextTheme
+{{ class_all_options("flet.TextTheme") }}

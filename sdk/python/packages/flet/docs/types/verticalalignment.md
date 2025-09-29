@@ -1,3 +1,1 @@
-::: flet.VerticalAlignment
-    options:
-        separate_signature: false
+{{ class_all_options("flet.VerticalAlignment", separate_signature=False) }}

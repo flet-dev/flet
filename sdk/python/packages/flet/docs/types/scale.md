@@ -1,1 +1,1 @@
-::: flet.Scale
+{{ class_all_options("flet.Scale") }}

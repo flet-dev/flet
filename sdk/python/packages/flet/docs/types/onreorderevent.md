@@ -1,1 +1,1 @@
-::: flet.OnReorderEvent
+{{ class_all_options("flet.OnReorderEvent") }}

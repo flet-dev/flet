@@ -1,3 +1,1 @@
-::: flet.LabelPosition
-    options:
-        separate_signature: false
+{{ class_all_options("flet.LabelPosition", separate_signature=False) }}

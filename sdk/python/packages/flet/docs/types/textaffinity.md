@@ -1,3 +1,1 @@
-::: flet.TextAffinity
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TextAffinity", separate_signature=False) }}

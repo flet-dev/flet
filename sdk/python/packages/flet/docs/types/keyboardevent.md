@@ -1,1 +1,1 @@
-::: flet.KeyboardEvent
+{{ class_all_options("flet.KeyboardEvent") }}

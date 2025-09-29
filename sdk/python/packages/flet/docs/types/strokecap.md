@@ -1,3 +1,1 @@
-::: flet.StrokeCap
-    options:
-        separate_signature: false
+{{ class_all_options("flet.StrokeCap", separate_signature=False) }}
