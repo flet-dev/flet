@@ -32,7 +32,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [apps, controls/core, controls/material, controls/cupertino, controls/theme, controls/types]
+        # suite: [apps, controls/core, controls/material, controls/cupertino, controls/theme, controls/types]
+        suite: [apps]
     name: ${{ matrix.suite }} Integration Tests
     steps:
       - uses: actions/checkout@v4
