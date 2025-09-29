@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
-from flet.controls.control_id import ControlId
+from flet.controls.id_counter import ControlId
 from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
 from flet.utils.from_dict import from_dict
@@ -119,7 +119,6 @@ class BaseControl:
     """
     Arbitrary data of any type.
     """
-
     key: Optional[KeyValue] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
@@ -173,18 +172,21 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> Optional[Union["Page", "BasePage"]]:
+    def page(self) -> Union["Page", "BasePage"]:
         """
         The page to which this control belongs to.
         """
-        from .page import BasePage, Page
+        from .page import Page
 
         parent = self
         while parent:
-            if isinstance(parent, (Page, BasePage)):
+            if isinstance(parent, (Page)):
                 return parent
             parent = parent.parent
-        return None
+        raise RuntimeError(
+            f"{self.__class__.__qualname__}({self._i}) "
+            "Control must be added to the page first"
+        )
 
     def is_isolated(self):
         return hasattr(self, "_isolated") and self._isolated
@@ -209,15 +211,25 @@ class BaseControl:
         """
         pass
 
+    def _before_update_safe(self):
+        frozen = getattr(self, "_frozen", None)
+        if frozen is not None:
+            del self._frozen
+
+        self.before_update()
+
+        if frozen is not None:
+            self._frozen = frozen
+
     def before_event(self, e: ControlEvent):
         return True
 
     def did_mount(self):
-        controls_log.debug(f"{self._c}({self._i}).did_mount")
+        controls_log.debug(f"{self}.did_mount()")
         pass
 
     def will_unmount(self):
-        controls_log.debug(f"{self._c}({self._i}).will_unmount")
+        controls_log.debug(f"{self}.will_unmount()")
         pass
 
     # public methods
@@ -239,7 +251,7 @@ class BaseControl:
             f"{self.__class__.__qualname__} Control must be added to the page first"
         )
 
-        return await self.page.get_session().invoke_method(
+        return await self.page.session.invoke_method(
             self._i, method_name, arguments, timeout
         )
 
@@ -271,11 +283,13 @@ class BaseControl:
             _context_page.set(self.page)
             context.reset_auto_update()
 
+            controls_log.debug(f"Trigger event {self}.{field_name} {e}")
+
             assert self.page, (
                 "Control must be added to a page before triggering events. "
                 "Use page.add(control) or add it to a parent control that's on a page."
             )
-            session = self.page.get_session()
+            session = self.page.session
 
             # Handle async and sync event handlers accordingly
             event_handler = getattr(self, field_name)
@@ -310,3 +324,13 @@ class BaseControl:
                     event_handler(e)
 
             await session.after_event(session.index.get(self._i))
+
+    def _migrate_state(self, other: "BaseControl"):
+        if not isinstance(other, BaseControl):
+            return
+        self._i = other._i
+        if self.data is None:
+            self.data = other.data
+
+    def __str__(self):
+        return f"{self._c}({self._i} - {id(self)})"

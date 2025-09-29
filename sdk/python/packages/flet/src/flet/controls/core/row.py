@@ -68,6 +68,11 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     How the runs should be placed in the cross-axis when `wrap=True`.
     """
 
+    intrinsic_height: bool = False
+    """
+    If `True`, the Row will be as tall as the tallest child control.
+    """
+
     def init(self):
         super().init()
         self._internals["host_expanded"] = True

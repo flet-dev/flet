@@ -1,6 +1,7 @@
 from typing import Optional
 
 from flet.controls.base_control import control
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
 from flet.controls.types import ColorValue, Number
 
@@ -65,6 +66,11 @@ class VerticalDivider(Control):
 
     If `None`, [`DividerTheme.trailing_indent`][flet.] is used.
     If that's is also `None`, defaults to `0.0`.
+    """
+
+    radius: Optional[BorderRadiusValue] = None
+    """
+    The border radius of the divider.
     """
 
     def before_update(self):
