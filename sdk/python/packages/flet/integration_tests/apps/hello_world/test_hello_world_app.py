@@ -1,7 +1,8 @@
-import app
 import pytest
 
 import flet.testing as ftt
+
+from . import app
 
 
 @pytest.mark.parametrize(
