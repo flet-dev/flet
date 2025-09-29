@@ -43,6 +43,7 @@ dependencies:
   file_picker: ^10.3.3
   path_provider: ^2.1.5
   screenshot: ^3.0.0
+  highlight: ^0.7.0
 
 dev_dependencies:
   flutter_test:

@@ -28,7 +28,7 @@ function Start-ProcessWithOutput {
             $searchPath = [IO.Path]::Combine($pathPart, "$fileName.bat")
             if (Test-Path $searchPath) {
                 $fileName = $searchPath; break;
-            }            
+            }
             $searchPath = [IO.Path]::Combine($pathPart, "$fileName.cmd")
             if (Test-Path $searchPath) {
                 $fileName = $searchPath; break;
@@ -44,7 +44,7 @@ function Start-ProcessWithOutput {
         }
     }
 
-    $psi = New-Object System.Diagnostics.ProcessStartInfo 
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = $fileName
     $psi.RedirectStandardError = $true
     $psi.RedirectStandardOutput = $true
@@ -78,13 +78,13 @@ function Start-ProcessWithOutput {
         $process.BeginOutputReadLine()
         $process.BeginErrorReadLine()
         [Void]$process.WaitForExit()
-    
+
         # Unregistering events to retrieve process output.
         if ($ignoreStdOut -eq $false) {
             Unregister-Event -SourceIdentifier $stdOutEvent.Name
         }
-        Unregister-Event -SourceIdentifier $stdErrEvent.Name    
-    
+        Unregister-Event -SourceIdentifier $stdErrEvent.Name
+
         if ($ignoreExitCode -eq $false -and $process.ExitCode -ne 0) {
             exit $process.ExitCode
         }
