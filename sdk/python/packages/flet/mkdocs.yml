@@ -15,8 +15,8 @@ copyright: Copyright &copy; 2025 Appveyor Systems Inc.
 # Theme
 theme:
   name: "material"
-  favicon: 'images/favicon.ico'
-  logo: 'images/logo.svg'
+  favicon: "images/favicon.ico"
+  logo: "images/logo.svg"
   # custom_dir: docs/overrides
   icon:
     annotation: material/plus-circle
@@ -132,13 +132,13 @@ plugins:
             inherited_members: false
             separate_signature: true
             filters:
-              - "!^_"   # Exclude private members starting with only one underscore
+              - "!^_" # Exclude private members starting with only one underscore
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
           inventories:
             - url: https://docs.python.org/3/objects.inv
-              domains: [ py, std ]
+              domains: [py, std]
             - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
   - external-images:
       mappings:
@@ -211,14 +211,6 @@ nav:
       - Creating a new Flet app: getting-started/create-flet-app.md
       - Running a Flet app (Hot Reload): getting-started/running-app.md
       - Testing on Mobile: getting-started/testing-on-mobile.md
-      - Roadmap: https://flet.dev/roadmap
-      - Release Notes:
-          - Changelog: getting-started/changelog.md
-          - Migration Guide: getting-started/migration-guide.md
-      - Policies:
-          - Versioning: policies/versioning.md
-          - Deprecation: policies/deprecation.md
-          - License: policies/license.md
   - API Reference:
       - Controls:
           - Controls: controls/index.md
@@ -738,12 +730,8 @@ nav:
       - Trolli: tutorials/trolli.md
   - Contributing:
       - contributing/index.md
-      - Code of Conduct: contributing/code-of-conduct.md
       - Built-in binary Python packages for Android and iOS: contributing/binary-packages-android-ios.md
       - Extensions:
           - contributing/extensions/index.md
           - Creating an Extension: contributing/extensions/user-extensions.md
           - Built-in Extensions: contributing/extensions/built-in-extensions.md
-  - Gallery: https://flet.dev/gallery
-  - Blog: https://flet.dev/blog
-  - Support: support.md
