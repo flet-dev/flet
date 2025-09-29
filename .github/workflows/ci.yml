@@ -584,6 +584,9 @@ jobs:
       - build_linux
       - build_web
     steps:
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
