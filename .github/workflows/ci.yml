@@ -596,13 +596,13 @@ jobs:
       - name: Publish wheels to PyPI
         run: |
           # Enable recursive globbing
-          shopt -s globstar nullglob
+          # shopt -s globstar nullglob
 
-          uv publish dist/**/flet-*.whl
-          uv publish dist/**/flet_cli-*.whl
-          uv publish dist/**/flet_desktop-*.whl
-          uv publish dist/**/flet_desktop_light-*.whl
-          uv publish dist/**/flet_web-*.whl
+          uv publish dist/**/flet-*.whl --dry-run
+          uv publish dist/**/flet_cli-*.whl --dry-run
+          uv publish dist/**/flet_desktop-*.whl --dry-run
+          uv publish dist/**/flet_desktop_light-*.whl --dry-run
+          uv publish dist/**/flet_web-*.whl --dry-run
 
   # ==============
   # GitHub Release
