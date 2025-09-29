@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import sys
+import threading
 import weakref
 from collections.abc import Awaitable, Coroutine
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
@@ -17,9 +19,11 @@ from urllib.parse import urlparse
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
+from flet.components.component import Renderer
+from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.control import Control
 from flet.controls.control_event import (
     ControlEvent,
@@ -38,7 +42,6 @@ from flet.controls.services.service import Service
 from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.services.url_launcher import UrlLauncher
-from flet.controls.session_storage import SessionStorage
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
@@ -48,6 +51,7 @@ from flet.controls.types import (
     Wrapper,
 )
 from flet.utils import is_pyodide
+from flet.utils.deprecated import deprecated
 from flet.utils.strings import random_string
 
 if not is_pyodide():
@@ -68,10 +72,6 @@ except ImportError:
 
 
 logger = logging.getLogger("flet")
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -81,11 +81,31 @@ RetT = TypeVar("RetT")
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
-    services: list[Service] = field(default_factory=list)
+    _services: list[Service] = field(default_factory=list)
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
         self._internals["uid"] = random_string(10)
+        self._lock: threading.Lock = threading.Lock()
+
+    def register_service(self, service: Service):
+        with self._lock:
+            logger.debug(
+                f"Registering service {service._c}({service._i}) to registry {self._i}"
+            )
+            self._services.append(service)
+            self.update()
+
+    def unregister_services(self):
+        with self._lock:
+            original_len = len(self._services)
+            self._services = [
+                service for service in self._services if sys.getrefcount(service) > 4
+            ]
+            removed_count = original_len - len(self._services)
+            if removed_count > 0:
+                logger.debug(f"Removed {removed_count} services from the registry")
+                self.update()
 
 
 @dataclass
@@ -145,7 +165,7 @@ class MultiViewRemoveEvent(Event["Page"]):
 @control("Page", isolated=True, post_init_args=2)
 class Page(BasePage):
     """
-    Page is a container for [`View`][flet.View] controls.
+    Page is a container for [`View`][flet.] controls.
 
     A page instance and the root view are automatically created when a new
     user session started.
@@ -153,18 +173,12 @@ class Page(BasePage):
 
     sess: InitVar["Session"]
     """
-    TBD
+    The session that this page belongs to.
     """
 
     multi_views: list[MultiView] = field(default_factory=list)
     """
-    TBD
-    """
-
-    window: Window = field(default_factory=lambda: Window())
-    """
-    Provides properties/methods/events to monitor and control the
-    app's native OS window.
+    The list of multi-views associated with this page.
     """
 
     browser_context_menu: BrowserContextMenu = field(
@@ -182,82 +196,97 @@ class Page(BasePage):
         default_factory=lambda: SharedPreferences(), metadata={"skip": True}
     )
     """
-    TBD
+    Provides a persistent key-value storage for simple data types.
     """
 
     clipboard: Clipboard = field(
         default_factory=lambda: Clipboard(), metadata={"skip": True}
     )
     """
-    TBD
+    Provides access to the system clipboard.
     """
 
     storage_paths: StoragePaths = field(
         default_factory=lambda: StoragePaths(), metadata={"skip": True}
     )
     """
-    TBD
+    Provides the information about common storage paths.
     """
 
     url_launcher: UrlLauncher = field(
         default_factory=lambda: UrlLauncher(), metadata={"skip": True}
     )
     """
-    TBD
+    Provides methods for launching URLs.
     """
 
-    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    window: Window = field(default_factory=lambda: Window())
     """
-    TBD
-    """
-
-    _page_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
-    """
-    TBD
+    Provides properties/methods/events to monitor and control the
+    app's native OS window.
     """
 
-    route: Optional[str] = None
+    route: str = "/"
     """
-    Get or sets page's navigation route. See
-    [Navigation and routing](https://flet.dev/docs/getting-started/navigation-and-routing)
-    section for more information and examples.
+    Gets current app route.
+
+    Note:
+        This property is read-only.
     """
 
     web: bool = False
     """
     `True` if the application is running in the web browser.
+
+    Note:
+        This property is read-only.
     """
 
     pwa: bool = False
     """
     `True` if the application is running as Progressive Web App (PWA).
 
-    Value is read-only.
+    Note:
+        This property is read-only.
     """
-
     debug: bool = False
     """
     `True` if Flutter client of Flet app is running in debug mode.
+
+    Note:
+        This property is read-only.
     """
 
     wasm: bool = False
     """
-    TBD
+    `True` if the application is running in WebAssembly (WASM) mode.
+
+    Note:
+        This property is read-only.
     """
 
     test: bool = False
     """
-    TBD
+    `True` if the application is running with test mode.
+
+    Note:
+        This property is read-only.
     """
 
     multi_view: bool = False
     """
-    TBD
+    `True` if the application is running with multi-view support.
+
+    Note:
+        This property is read-only.
     """
 
-    platform: Optional[PagePlatform] = None
+    pyodide: bool = False
     """
-    The operating system the application is running on.
+    `True` if the application is running in Pyodide (WebAssembly) mode.
+
+    Note:
+        This property is read-only.
     """
 
     platform_brightness: Optional[Brightness] = None
@@ -273,7 +302,7 @@ class Page(BasePage):
     IP address of the connected user.
 
     Note:
-        This property is web only.
+        This property is web- and read-only only.
     """
 
     client_user_agent: Optional[str] = None
@@ -281,7 +310,12 @@ class Page(BasePage):
     Browser details of the connected user.
 
     Note:
-        This property is web only.
+        This property is web- and read-only only.
+    """
+
+    platform: Optional[PagePlatform] = None
+    """
+    The operating system the application is running on.
     """
 
     fonts: Optional[dict[str, str]] = None
@@ -321,7 +355,7 @@ class Page(BasePage):
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
     Called when the user clicks automatic "Back" button in
-    [`AppBar`][flet.AppBar] control.
+    [`AppBar`][flet.] control.
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
@@ -378,6 +412,8 @@ class Page(BasePage):
     """
     TBD
     """
+    _services: list[Service] = field(default_factory=list)
+    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
 
     def __post_init__(
         self,
@@ -389,7 +425,7 @@ class Page(BasePage):
         self.__session = weakref.ref(sess)
 
         # page services
-        self._page_services.services = [
+        self._services = [
             self.browser_context_menu,
             self.shared_preferences,
             self.clipboard,
@@ -398,7 +434,6 @@ class Page(BasePage):
         ]
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
-        self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
 
     def get_control(self, id: int) -> Optional[BaseControl]:
@@ -420,7 +455,37 @@ class Page(BasePage):
         ft.run(main)
         ```
         """
-        return self.get_session().index.get(id)
+        return self.session.index.get(id)
+
+    def render(
+        self,
+        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        *args,
+        **kwargs,
+    ):
+        logger.debug("Page.render()")
+        self._notify = self.__notify
+        self.views[0].controls = Renderer().render(component, *args, **kwargs)
+        self.__render()
+
+    def render_views(
+        self,
+        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        *args,
+        **kwargs,
+    ):
+        logger.debug("Page.render_views()")
+        self._notify = self.__notify
+        self.views = Renderer().render(component, *args, **kwargs)
+        self.__render()
+
+    def __render(self):
+        self.update()
+        context.enable_components_mode()
+        self.session.start_updates_scheduler()
+
+    def schedule_update(self):
+        self.session.schedule_update(self)
 
     def update(self, *controls) -> None:
         if len(controls) == 0:
@@ -428,17 +493,15 @@ class Page(BasePage):
         else:
             self.__update(*controls)
 
-    def get_session(self):
-        if sess := self.__session():
-            return sess
-        raise Exception("An attempt to fetch destroyed session.")
+    def __notify(self, name: str, value: Any):
+        self.schedule_update()
 
     def __update(self, *controls: Control):
         for c in controls:
-            self.get_session().patch_control(c)
+            self.session.patch_control(c)
 
     def error(self, message: str) -> None:
-        self.get_session().error(message)
+        self.session.error(message)
 
     def before_event(self, e: ControlEvent):
         if isinstance(e, RouteChangeEvent):
@@ -446,12 +509,15 @@ class Page(BasePage):
                 return False
             self.__last_route = e.route
             self.query()
+
         elif isinstance(e, ViewPopEvent):
-            view = next((v for v in self.views if v.route == e.data), None)
-            if view is None:
-                return False
-            e.view = view
-            return True
+            views = unwrap_component(self.views)
+            view_index = next(
+                (i for i, v in enumerate(views) if v.route == e.route), None
+            )
+            if view_index is not None:
+                e.view = views[view_index]
+
         return super().before_event(e)
 
     def run_task(
@@ -465,10 +531,11 @@ class Page(BasePage):
         current page.
         """
         _context_page.set(self)
-        assert asyncio.iscoroutinefunction(handler)
+        if not asyncio.iscoroutinefunction(handler):
+            raise TypeError("handler must be a coroutine function")
 
         future = asyncio.run_coroutine_threadsafe(
-            handler(*args, **kwargs), self.get_session().connection.loop
+            handler(*args, **kwargs), self.session.connection.loop
         )
 
         def _on_completion(f):
@@ -504,13 +571,14 @@ class Page(BasePage):
         if is_pyodide():
             handler_with_context(*args, **kwargs)
         else:
-            loop = self.get_session().connection.loop
+            loop = self.session.connection.loop
             loop.call_soon_threadsafe(
                 loop.run_in_executor,
                 self.executor,
                 partial(handler_with_context, *args, **kwargs),
             )
 
+    @deprecated("Use push_route() instead.", version="0.70.0", show_parentheses=True)
     def go(
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
@@ -519,20 +587,76 @@ class Page(BasePage):
         [`page.on_route_change`](#on_route_change) event handler to update views and
         finally calls `page.update()`.
         """
-        self.route = route if not kwargs else route + self.query.post(kwargs)
 
-        if not skip_route_change_event:
-            e = RouteChangeEvent(
-                name="route_change", control=self, data=self.route, route=self.route
+        self.push_route(route, **kwargs)
+
+    def push_route(self, route: str, **kwargs: Any) -> None:
+        """
+        Pushes a new navigation route to the browser history stack.
+        Changing route will fire [`page.on_route_change`](#on_route_change) event
+        handler.
+
+        Example:
+
+        ```python
+        import flet as ft
+
+
+        def main(page: ft.Page):
+            page.title = "Push Route Example"
+
+            def route_change(e):
+                page.views.clear()
+                page.views.append(
+                    ft.View(
+                        route="/",
+                        controls=[
+                            ft.AppBar(title=ft.Text("Flet app")),
+                            ft.ElevatedButton(
+                                "Visit Store",
+                                on_click=lambda _: page.push_route("/store"),
+                            ),
+                        ],
+                    )
+                )
+                if page.route == "/store":
+                    page.views.append(
+                        ft.View(
+                            route="/store",
+                            can_pop=True,
+                            controls=[
+                                ft.AppBar(title=ft.Text("Store")),
+                                ft.ElevatedButton(
+                                    "Go Home", on_click=lambda _: page.push_route("/")
+                                ),
+                            ],
+                        )
+                    )
+
+            def view_pop(e):
+                page.views.pop()
+                top_view = page.views[-1]
+                page.push_route(top_view.route)
+
+            page.on_route_change = route_change
+            page.on_view_pop = view_pop
+
+
+        ft.run(main)
+        ```
+
+        Args:
+            route: New navigation route.
+            **kwargs: Additional query string parameters to be added to the route.
+        """
+
+        new_route = route if not kwargs else route + self.query.post(kwargs)
+        asyncio.create_task(
+            self._invoke_method(
+                "push_route",
+                arguments={"route": new_route},
             )
-            if self.on_route_change:
-                if asyncio.iscoroutinefunction(self.on_route_change):
-                    asyncio.create_task(self.on_route_change(e))
-                elif callable(self.on_route_change):
-                    self.on_route_change(e)
-
-        self.update()
-        self.query()  # Update query url (required when using go)
+        )
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
         """
@@ -554,7 +678,7 @@ class Page(BasePage):
         ft.run(main, upload_dir="uploads")
         ```
         """
-        return self.get_session().connection.get_upload_url(file_name, expires)
+        return self.session.connection.get_upload_url(file_name, expires)
 
     async def login(
         self,
@@ -590,9 +714,9 @@ class Page(BasePage):
             if redirect_to_page:
                 up = urlparse(provider.redirect_url)
                 auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.get_session().connection.page_name}{self.route}"
+                    path=f"{self.session.connection.page_name}{self.route}"
                 ).geturl()
-            self.get_session().connection.oauth_authorize(auth_attrs)
+            self.session.connection.oauth_authorize(auth_attrs)
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
@@ -673,8 +797,8 @@ class Page(BasePage):
         Args:
             url: The URL to open.
             web_popup_window_name: Window tab/name to open URL in. Use
-                [`UrlTarget.SELF`][flet.UrlTarget.SELF]
-                for the same browser tab, [`UrlTarget.BLANK`][flet.UrlTarget.BLANK]
+                [`UrlTarget.SELF`][flet.]
+                for the same browser tab, [`UrlTarget.BLANK`][flet.]
                 for a new browser tab (or in external application on mobile device),
                 or a custom name for a named tab.
             web_popup_window: Display the URL in a browser popup window.
@@ -719,51 +843,60 @@ class Page(BasePage):
         """
         await self.url_launcher.close_in_app_web_view()
 
-    # query
+    @property
+    def session(self) -> "Session":
+        """
+        The session that this page belongs to.
+        """
+        if sess := self.__session():
+            return sess
+        raise Exception("An attempt to fetch destroyed session.")
+
     @property
     def query(self) -> QueryString:
+        """
+        The query parameters of the current page.
+        """
         return self.__query
 
-    # url
     @property
     def url(self) -> Optional[str]:
-        return self.get_session().connection.page_url
+        """
+        The URL of the current page.
+        """
+        return self.session.connection.page_url
 
-    # name
     @property
     def name(self) -> str:
-        return self.get_session().connection.page_name
+        """
+        The name of the current page.
+        """
+        return self.session.connection.page_name
 
-    # loop
     @property
     def loop(self) -> asyncio.AbstractEventLoop:
-        return self.get_session().connection.loop
+        """
+        The event loop for the current page.
+        """
+        return self.session.connection.loop
 
-    # executor
     @property
     def executor(self) -> Optional[ThreadPoolExecutor]:
-        return self.get_session().connection.executor
+        """
+        The executor for the current page.
+        """
+        return self.session.connection.executor
 
-    # auth
     @property
     def auth(self) -> Optional[Authorization]:
+        """
+        The current authorization context, or `None` if the user is not authorized.
+        """
         return self.__authorization
 
-    # pubsub
     @property
     def pubsub(self) -> "PubSubClient":
-        return self.get_session().pubsub_client
-
-    # session_storage
-    @property
-    def session(self) -> SessionStorage:
-        return self.__session_storage
-
-    # services
-    @property
-    def services(self) -> list[Service]:
-        return self._user_services.services
-
-    @services.setter
-    def services(self, value: list[Service]):
-        self._user_services.services = value
+        """
+        The PubSub client for the current page.
+        """
+        return self.session.pubsub_client

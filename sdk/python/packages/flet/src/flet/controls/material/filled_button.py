@@ -6,7 +6,7 @@ from flet.controls.material.button import Button
 class FilledButton(Button):
     """
     Filled buttons have the most visual impact after the
-    [`FloatingActionButton`][flet.FloatingActionButton], and is typically used for
+    [`FloatingActionButton`][flet.], and is typically used for
     important, final actions that complete a flow, like "Save",
     "Join now", or "Confirm".
     """

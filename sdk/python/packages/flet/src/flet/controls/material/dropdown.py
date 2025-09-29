@@ -10,6 +10,7 @@ from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons
+from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.textfield import InputFilter, TextCapitalization
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
@@ -29,11 +30,14 @@ class DropdownOption(Control):
     """
     Represents an item in a dropdown. Either `key` or `text` must be specified, else an
     `AssertionError` will be raised.
+
+    Raises:
+        ValueError: If neither [`key`][(c).] nor [`text`][(c).] are provided.
     """
 
     key: Optional[str] = None
     """
-    Option's key. If not specified [`text`][flet.DropdownOption.text] will
+    Option's key. If not specified [`text`][(c).] will
     be used as fallback.
     """
 
@@ -65,9 +69,8 @@ class DropdownOption(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.key is not None or self.text is not None, (
-            "key or text must be specified"
-        )
+        if self.key is None and self.text is None:
+            raise ValueError("key or text must be specified")
 
 
 Option = DropdownOption
@@ -82,7 +85,7 @@ class Dropdown(LayoutControl):
 
     value: Optional[str] = None
     """
-    [`key`][flet.DropdownOption.key] value of the selected option.
+    [`key`][(c).] value of the selected option.
     """
 
     options: list[DropdownOption] = field(default_factory=list)
@@ -109,7 +112,7 @@ class Dropdown(LayoutControl):
 
     elevation: Optional[ControlStateValue[Optional[Number]]] = 8
     """
-    The dropdown's menu elevation in various [`ControlState`][flet.ControlState]
+    The dropdown's menu elevation in various [`ControlState`][flet.]
     states.
     """
 
@@ -146,6 +149,13 @@ class Dropdown(LayoutControl):
 
     If this is `None`, the menu width will be the same as
     input textfield width.
+    """
+
+    menu_style: Optional[MenuStyle] = None
+    """
+    The menu style that defines the visual attributes of the menu.
+
+    The default width of the menu is set to the width of the text field.
     """
 
     expanded_insets: Optional[PaddingValue] = None
@@ -190,7 +200,7 @@ class Dropdown(LayoutControl):
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     The background color of the dropdown menu
-    in various [`ControlState`][flet.ControlState]
+    in various [`ControlState`][flet.]
     states.
     """
 
@@ -218,8 +228,8 @@ class Dropdown(LayoutControl):
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    [`error_text`][flet.Dropdown.error_text].
+    The [`TextStyle`][flet.] to use for
+    [`error_text`][(c).].
     """
 
     error_text: Optional[str] = None
@@ -236,7 +246,7 @@ class Dropdown(LayoutControl):
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for text
+    The [`TextStyle`][flet.] to use for text
     in input text field.
     """
 
@@ -253,7 +263,7 @@ class Dropdown(LayoutControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`label`][flet.Dropdown.label]'s text style.
+    The [`label`][(c).]'s text style.
     """
 
     border: Optional[InputBorder] = None
@@ -309,7 +319,7 @@ class Dropdown(LayoutControl):
     filled: bool = False
     """
     Whether the decoration's container is filled with theme
-    [`fill_color`][flet.Dropdown.fill_color].
+    [`fill_color`][(c).].
     """
 
     fill_color: Optional[ColorValue] = None
@@ -337,8 +347,8 @@ class Dropdown(LayoutControl):
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    [`hint_text`][flet.Dropdown.hint_text].
+    The [`TextStyle`][flet.] to use for
+    [`hint_text`][(c).].
     """
 
     helper_text: Optional[str] = None
@@ -353,8 +363,8 @@ class Dropdown(LayoutControl):
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] to use for
-    [`helper_text`][flet.Dropdown.helper_text].
+    The [`TextStyle`][flet.] to use for
+    [`helper_text`][(c).].
     """
 
     def __contains__(self, item):

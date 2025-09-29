@@ -29,7 +29,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     horizontal: bool = False
     """
-    Whether to layout the [`controls`][flet.ListView.controls] horizontally.
+    Whether to layout the [`controls`][(c).] horizontally.
     """
 
     reverse: bool = False
@@ -37,7 +37,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     Whether the scroll view scrolls in the reading direction.
 
     For example, if the reading direction is left-to-right and
-    [`horizontal`][flet.ListView.horizontal] is `True`,
+    [`horizontal`][(c).] is `True`,
     then the scroll view scrolls from left to right when `reverse` is `False`
     and from right to left when `reverse` is `True`.
 
@@ -47,18 +47,18 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     spacing: Number = 0
     """
-    The height of divider between the [`controls`][flet.ListView.controls].
+    The height of divider between the [`controls`][(c).].
     """
 
     item_extent: Optional[Number] = None
     """
-    A fixed height or width (when [`horizontal`][flet.ListView.horizontal] is `True`)
+    A fixed height or width (when [`horizontal`][(c).] is `True`)
     of an item to optimize rendering.
     """
 
     first_item_prototype: bool = False
     """
-    Whether the dimensions of the first item of [`controls`][flet.ListView.controls]
+    Whether the dimensions of the first item of [`controls`][(c).]
     should be used as a "prototype" for all other items,
     i.e. their `height` or `width` will be the same as the first item.
     """
@@ -75,7 +75,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    How to clip the [`controls`][flet.ListView.controls]
+    How to clip the [`controls`][(c).]
     """
 
     semantic_child_count: Optional[int] = None
@@ -98,7 +98,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     build_controls_on_demand: bool = True
     """
-    Whether the [`controls`][flet.ListView.controls] should be built lazily/on-demand.
+    Whether the [`controls`][(c).] should be built lazily/on-demand.
 
     This is particularly useful when dealing with a large number of controls.
     """

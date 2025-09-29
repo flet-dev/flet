@@ -56,7 +56,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   ServiceRegistry? _userServices;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
-  double _dpr = 1.0;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
@@ -98,7 +97,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
-    _dpr = MediaQuery.devicePixelRatioOf(context);
     _loadFontsIfNeeded(FletBackend.of(context));
   }
 
@@ -109,18 +107,10 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _updateMultiViews();
 
     // page services
-    var pageServicesControl = widget.control.child("_page_services");
-    if (pageServicesControl != null) {
-      if (_pageServices == null ||
-          (_pageServices != null &&
-              _pageServices?.control.internals?["uid"] !=
-                  pageServicesControl.internals?["uid"])) {
-        _pageServices = ServiceRegistry(
-            control: pageServicesControl,
-            propertyName: "services",
-            backend: FletBackend.of(context));
-      }
-    }
+    _pageServices ??= ServiceRegistry(
+        control: widget.control,
+        propertyName: "_services",
+        backend: FletBackend.of(context));
 
     // user services
     var userServicesControl = widget.control.child("_user_services");
@@ -130,7 +120,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
               userServicesControl.internals?["uid"]) {
         _userServices = ServiceRegistry(
             control: userServicesControl,
-            propertyName: "services",
+            propertyName: "_services",
             backend: FletBackend.of(context));
       }
     }
@@ -159,19 +149,38 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Page.$name($args)");
+
     switch (name) {
       case "take_screenshot":
-        if (_rootKey.currentContext == null) {
-          return null;
+        {
+          // Capture context up front
+          final ctx = _rootKey.currentContext;
+          if (ctx == null) return null;
+
+          // Read everything you can before awaiting
+          final delay =
+              parseDuration(args["delay"], const Duration(milliseconds: 20))!;
+          final pixelRatio = parseDouble(
+              args["pixel_ratio"], MediaQuery.of(ctx).devicePixelRatio)!;
+
+          // Wait, then ensure the widget is still mounted
+          await Future.delayed(delay);
+          if (!ctx.mounted) {
+            return null;
+          }
+
+          // Use the same (still-mounted) context
+          final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
+          if (boundary == null) return null;
+
+          final image = await boundary.toImage(pixelRatio: pixelRatio);
+          final data = await image.toByteData(format: ui.ImageByteFormat.png);
+          return data?.buffer.asUint8List();
         }
-        await Future.delayed(
-            parseDuration(args["delay"], const Duration(milliseconds: 20))!);
-        final boundary = _rootKey.currentContext!.findRenderObject()
-            as RenderRepaintBoundary;
-        final image = await boundary.toImage(
-            pixelRatio: parseDouble(args["pixel_ratio"], _dpr)!);
-        final data = await image.toByteData(format: ui.ImageByteFormat.png);
-        return data!.buffer.asUint8List();
+
+      case "push_route":
+        _routeState.route = args["route"];
+
       default:
         throw Exception("Unknown Page method: $name");
     }
@@ -183,7 +192,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     bool changed = false;
 
-    bool triggerAddViewEvent = SessionStore.get("triggerAddViewEvent") == null;
+    bool triggerAddViewEvent =
+        SessionStore.get("triggerAddViewEvent") == null || isPyodideMode();
     for (final FlutterView view
         in WidgetsBinding.instance.platformDispatcher.views) {
       if (!_multiViews.containsKey(view.viewId)) {
@@ -192,9 +202,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         _multiViews[view.viewId] = MultiView(
             viewId: view.viewId, flutterView: view, initialData: initialData);
         if (triggerAddViewEvent) {
-          widget.control.backend.triggerControlEventById(
-              widget.control.id,
-              "multi_view_add",
+          widget.control.triggerEventWithoutSubscribers("multi_view_add",
               {"view_id": view.viewId, "initial_data": initialData});
         }
         changed = true;
@@ -205,19 +213,25 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           .any((view) => view.viewId == viewId)) {
         _multiViews.remove(viewId);
         if (triggerAddViewEvent) {
-          widget.control.backend.triggerControlEventById(
-              widget.control.id, "multi_view_remove", viewId);
+          widget.control
+              .triggerEventWithoutSubscribers("multi_view_remove", viewId);
         }
         changed = true;
       }
     }
-    SessionStore.set("triggerAddViewEvent", "true");
+    if (!isPyodideMode()) {
+      SessionStore.set("triggerAddViewEvent", "true");
+    }
     if (changed && !_registeredFromMultiViews) {
       _registeredFromMultiViews = true;
-      widget.control.backend.onRouteUpdated("/");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.control.backend.onRouteUpdated("/");
+      });
     } else {
       // re-draw
-      setState(() {});
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 
@@ -226,7 +240,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _handleAppLifecycleTransition(String state) {
-    widget.control.triggerEvent("app_lifecycle_state_change", {"state": state});
+    widget.control.triggerEventWithoutSubscribers(
+        "app_lifecycle_state_change", {"state": state});
   }
 
   bool _handleKeyDown(KeyEvent e) {
@@ -246,7 +261,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        widget.control.triggerEvent(
+        widget.control.triggerEventWithoutSubscribers(
             "keyboard_event",
             KeyboardEvent(
                     key: k.keyLabel,
@@ -300,15 +315,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     // clear hrefs index
     FletBackend.of(context).globalKeys.clear();
 
-    // page route
-    var route = widget.control.getString("route");
-    if (route != null && _routeState.route != route) {
-      // update route
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _routeState.route = route;
-      });
-    }
-
     if (!widget.control.backend.multiView) {
       // single page mode
       return _buildApp(widget.control, null);
@@ -334,7 +340,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           child: viewControl != null
               ? ControlWidget(control: viewControl)
               : Stack(children: [
-                  const PageMedia(),
+                  PageMedia(view: multiViewControl),
                   LoadingPage(
                     isLoading: appStatus.isLoading,
                     message: appStatus.isLoading
@@ -537,7 +543,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         pages: pages,
         onDidRemovePage: (page) {
           if (page.key != null) {
-            widget.control.triggerEvent(
+            widget.control.triggerEventWithoutSubscribers(
                 "view_pop", {"route": (page.key as ValueKey).value});
           }
         });

@@ -17,9 +17,9 @@ class Icon(LayoutControl):
     parameters such as stroke weight, fill level, and shadows.
 
     Raises:
-        AssertionError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
-        AssertionError: If [`weight`][(c).] is less than or equal to `0.0`.
-        AssertionError: If [`optical_size`][(c).] is less than or equal to `0.0`.
+        ValueError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
+        ValueError: If [`weight`][(c).] is less than or equal to `0.0`.
+        ValueError: If [`optical_size`][(c).] is less than or equal to `0.0`.
     """
 
     icon: IconData
@@ -110,12 +110,16 @@ class Icon(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.fill is None or (0.0 <= self.fill <= 1.0), (
-            f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
-        )
-        assert self.weight is None or (self.weight > 0.0), (
-            f"weight must be strictly greater than 0.0, got {self.weight}"
-        )
-        assert self.optical_size is None or (self.optical_size > 0.0), (
-            f"optical_size must be strictly greater than 0.0, got {self.optical_size}"
-        )
+        if self.fill is not None and not (0.0 <= self.fill <= 1.0):
+            raise ValueError(
+                f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
+            )
+        if self.weight is not None and self.weight <= 0.0:
+            raise ValueError(
+                f"weight must be strictly greater than 0.0, got {self.weight}"
+            )
+        if self.optical_size is not None and self.optical_size <= 0.0:
+            raise ValueError(
+                f"optical_size must be strictly greater than 0.0, "
+                f"got {self.optical_size}"
+            )

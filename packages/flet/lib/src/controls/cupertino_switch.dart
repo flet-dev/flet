@@ -23,19 +23,37 @@ class CupertinoSwitchControl extends StatefulWidget {
 class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   bool _value = false;
   late final FocusNode _focusNode;
+  Listenable? _tileClicksNotifier;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
+    _focusNode = FocusNode()..addListener(_onFocusChange);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newNotifier = ListTileClicks.of(context)?.notifier;
+
+    // If the inherited source changed, swap listeners
+    if (!identical(_tileClicksNotifier, newNotifier)) {
+      _tileClicksNotifier?.removeListener(_toggleValue);
+      _tileClicksNotifier = newNotifier;
+      _tileClicksNotifier?.addListener(_toggleValue);
+    }
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    _tileClicksNotifier?.removeListener(_toggleValue);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _toggleValue() {
+    _onChange(!_value);
   }
 
   void _onChange(bool value) {
@@ -113,10 +131,6 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
                 _onChange(value);
               }
             : null);
-
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _onChange(!_value);
-    });
 
     Widget result = swtch;
     if (label != "") {

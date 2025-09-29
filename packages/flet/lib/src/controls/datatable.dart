@@ -29,15 +29,16 @@ class DataTableControl extends StatelessWidget {
     var gradient = control.getGradient("gradient", theme);
     var horizontalLines = control.getBorderSide("horizontal_lLines", theme);
     var verticalLines = control.getBorderSide("vertical_lines", theme);
-    var defaultDecoration =
-        theme.dataTableTheme.decoration ?? const BoxDecoration();
+    var defaultDecoration = theme.dataTableTheme.decoration as BoxDecoration? ??
+        const BoxDecoration();
 
     BoxDecoration? decoration;
+
     if (bgcolor != null ||
         border != null ||
         borderRadius != null ||
         gradient != null) {
-      decoration = (defaultDecoration as BoxDecoration).copyWith(
+      decoration = defaultDecoration.copyWith(
           color: parseColor(bgcolor, theme),
           border: border,
           borderRadius: borderRadius,
@@ -45,7 +46,7 @@ class DataTableControl extends StatelessWidget {
     }
 
     var datatable = DataTable(
-      decoration: decoration,
+      decoration: decoration ?? defaultDecoration,
       border: (horizontalLines != null || verticalLines != null)
           ? TableBorder(
               horizontalInside: horizontalLines ?? BorderSide.none,

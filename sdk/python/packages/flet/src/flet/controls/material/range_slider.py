@@ -20,6 +20,11 @@ class RangeSlider(LayoutControl):
     A range slider can be used to select from either a continuous or a discrete
     set of values.
     The default is to use a continuous range of values from min to max.
+
+    Raises:
+        ValueError: If [`end_value`][(c).] is greater than [`max`][(c).].
+        ValueError: If [`start_value`][(c).] is less than [`min`][(c).].
+        ValueError: If [`start_value`][(c).] is greater than [`end_value`][(c).].
     """
 
     start_value: Number
@@ -100,7 +105,7 @@ class RangeSlider(LayoutControl):
     """
     The highlight color that's typically
     used to indicate that the range slider thumb is in `HOVERED` or `DRAGGED`
-    [`ControlState`][flet.ControlState] .
+    [`ControlState`][flet.] .
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
@@ -124,17 +129,12 @@ class RangeSlider(LayoutControl):
     """
 
     def before_update(self):
-        if self.max is not None:
-            assert self.end_value <= self.max, (
-                "end_value must be less than or equal to max"
-            )
+        if self.max is not None and self.end_value > self.max:
+            raise ValueError("end_value must be less than or equal to max")
 
-        if self.min is not None:
-            assert self.start_value >= self.min, (
-                "start_value must be greater than or equal to min"
-            )
+        if self.min is not None and self.start_value < self.min:
+            raise ValueError("start_value must be greater than or equal to min")
 
-        assert self.start_value <= self.end_value, (
-            "start_value must be less than or equal to end_value"
-        )
+        if self.start_value > self.end_value:
+            raise ValueError("start_value must be less than or equal to end_value")
         pass

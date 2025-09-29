@@ -24,9 +24,9 @@ class CupertinoSlider(LayoutControl):
     setting changes.
 
     Raises:
-        AssertionError: If [`min`][(c).] is greater than or equal to [`max`][(c).].
-        AssertionError: If [`min`][(c).] is greater than or equal to [`value`][(c).].
-        AssertionError: If [`max`][(c).] is less than or equal to [`value`][(c).].
+        ValueError: If [`min`][(c).] is greater than [`max`][(c).].
+        ValueError: If [`value`][(c).] is less than [`min`][(c).].
+        ValueError: If [`value`][(c).] is greater than [`max`][(c).].
     """
 
     value: Optional[Number] = None
@@ -41,9 +41,8 @@ class CupertinoSlider(LayoutControl):
     The minimum value the user can select.
 
     Note:
-        - Must be less than or equal to [`max`][flet.CupertinoSlider.max].
-        - If the [`max`][flet.CupertinoSlider.max] is equal to the `min`,
-            then the slider is disabled.
+        - Must be less than or equal to [`max`][(c).].
+        - If the [`max`][(c).] is equal to the `min`, then this slider is disabled.
     """
 
     max: Number = 1.0
@@ -51,9 +50,8 @@ class CupertinoSlider(LayoutControl):
     The maximum value the user can select.
 
     Note:
-        - Must be greater than or equal to [`min`][flet.CupertinoSlider.min].
-        - If the [`min`][flet.CupertinoSlider.min] is equal to the `max`,
-            then the slider is disabled.
+        - Must be greater than or equal to [`min`][(c).].
+        - If the [`min`][(c).] is equal to the `max`, then this slider is disabled.
     """
 
     divisions: Optional[int] = None
@@ -65,8 +63,7 @@ class CupertinoSlider(LayoutControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The color to use for the portion of the
-    slider track that is active.
+    The color to use for the portion of the slider track that is active.
 
     The "active" side of the slider is the side between the thumb and the minimum
     value.
@@ -74,7 +71,7 @@ class CupertinoSlider(LayoutControl):
 
     thumb_color: Optional[ColorValue] = None
     """
-    The color of the thumb.
+    The color of this slider's thumb.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSlider"]] = None
@@ -105,12 +102,16 @@ class CupertinoSlider(LayoutControl):
     def before_update(self):
         super().before_update()
         self.value = self.value if self.value is not None else self.min
-        assert self.min <= self.max, (
-            f"min ({self.min}) must be less than or equal to max ({self.max})"
-        )
-        assert self.value is None or (self.value >= self.min), (
-            f"value ({self.value}) must be greater than or equal to min ({self.min})"
-        )
-        assert self.value is None or (self.value <= self.max), (
-            f"value ({self.value}) must be less than or equal to max ({self.max})"
-        )
+        if self.min > self.max:
+            raise ValueError(
+                f"min ({self.min}) must be less than or equal to max ({self.max})"
+            )
+        if self.value is not None and self.value < self.min:
+            raise ValueError(
+                f"value ({self.value}) must be greater than or "
+                f"equal to min ({self.min})"
+            )
+        if self.value is not None and self.value > self.max:
+            raise ValueError(
+                f"value ({self.value}) must be less than or equal to max ({self.max})"
+            )

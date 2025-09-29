@@ -16,7 +16,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     Displays its children in a horizontal array.
 
     To cause a child control to expand and fill the available horizontal space, set
-    its [`expand`][flet.Control.expand] property.
+    its [`expand`][(c).] property.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -26,23 +26,23 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][flet.Row.controls] should be placed horizontally.
+    Defines how the child [`controls`][(c).] should be placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     """
-    Defines how the child [`controls`][flet.Row.controls] should be placed vertically.
+    Defines how the child [`controls`][(c).] should be placed vertically.
     """
 
     spacing: Number = 10
     """
-    The spacing between the child [`controls`][flet.Row.controls].
+    The spacing between the child [`controls`][(c).].
 
     Note:
-        Has effect only when [`alignment`][flet.ResponsiveRow.alignment] is set to
-        [`MainAxisAlignment.START`][flet.MainAxisAlignment.START],
-        [`MainAxisAlignment.END`][flet.MainAxisAlignment.END],
-        or [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER].
+        Has effect only when [`alignment`][(c).] is set to
+        [`MainAxisAlignment.START`][flet.],
+        [`MainAxisAlignment.END`][flet.],
+        or [`MainAxisAlignment.CENTER`][flet.].
     """
 
     tight: bool = False
@@ -66,6 +66,11 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     How the runs should be placed in the cross-axis when `wrap=True`.
+    """
+
+    intrinsic_height: bool = False
+    """
+    If `True`, the Row will be as tall as the tallest child control.
     """
 
     def init(self):

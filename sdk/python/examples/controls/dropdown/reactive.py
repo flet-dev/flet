@@ -5,6 +5,7 @@ import flet as ft
 
 
 @dataclass
+@ft.observable
 class Form:
     color: str = "red"
 
@@ -13,44 +14,37 @@ class Form:
         self.color = new_color
 
 
-def main(page: ft.Page):
-    form = Form()
-    page.theme_mode = ft.ThemeMode.LIGHT
+@ft.component
+def App():
+    form, _ = ft.use_state(lambda: Form())
 
-    page.add(
-        ft.SelectionArea(
-            ft.StateView(
-                form,
-                lambda state: ft.Column(
-                    cast(
-                        list[ft.Control],
+    return ft.SafeArea(
+        ft.Column(
+            cast(
+                list[ft.Control],
+                [
+                    ft.Text(f"Selected color: {form.color}"),
+                    ft.Column(
                         [
-                            ft.Text(f"Selected color: {form.color}"),
-                            ft.Column(
-                                [
-                                    ft.Dropdown(
-                                        editable=True,
-                                        label="Color",
-                                        value=form.color,
-                                        on_select=lambda e: form.change_color(
-                                            cast(str, e.control.value)
-                                        ),
-                                        options=[
-                                            ft.DropdownOption(key="red", text="Red"),
-                                            ft.DropdownOption(
-                                                key="green", text="Green"
-                                            ),
-                                            ft.DropdownOption(key="blue", text="Blue"),
-                                        ],
-                                    ),
-                                ]
+                            ft.Dropdown(
+                                editable=True,
+                                label="Color",
+                                value=form.color,
+                                on_select=lambda e: form.change_color(
+                                    cast(str, e.control.value)
+                                ),
+                                options=[
+                                    ft.DropdownOption(key="red", text="Red"),
+                                    ft.DropdownOption(key="green", text="Green"),
+                                    ft.DropdownOption(key="blue", text="Blue"),
+                                ],
                             ),
-                        ],
-                    )
-                ),
+                        ]
+                    ),
+                ],
             )
-        )
+        ),
     )
 
 
-ft.run(main)
+ft.run(lambda page: page.render(App))

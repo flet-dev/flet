@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -20,6 +21,7 @@ class VerticalDividerControl extends StatelessWidget {
       color: control.getColor("color", context),
       indent: control.getDouble("leading_indent"),
       endIndent: control.getDouble("trailing_indent"),
+      radius: control.getBorderRadius("radius"),
     );
 
     return BaseControl(control: control, child: divider);

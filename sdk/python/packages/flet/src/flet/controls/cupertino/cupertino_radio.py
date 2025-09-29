@@ -22,35 +22,33 @@ class CupertinoRadio(LayoutControl):
 
     label: Optional[str] = None
     """
-    The clickable label to display on the right of a Radio.
+    The clickable label to display on the right of this radio.
     """
 
     value: str = ""
     """
-    The value to set to [`RadioGroup`][flet.RadioGroup] ancestor/parent when the radio
+    The value to set to [`RadioGroup`][flet.] ancestor/parent when this radio
     is selected.
     """
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    The position of the label relative to the radio.
+    The position of the label relative to this radio.
     """
 
     fill_color: Optional[ColorValue] = None
     """
-    The color that fills the radio.
+    The color that fills this radio.
     """
 
     active_color: Optional[ColorValue] = Colors.PRIMARY
     """
-    The color used to fill this radio
-    when it is selected.
+    The color used to fill this radio when it is selected.
     """
 
     inactive_color: Optional[ColorValue] = None
     """
-    The color used to fill this radio
-    when it is not selected.
+    The color used to fill this radio when it is not selected.
     """
 
     autofocus: bool = False
@@ -63,19 +61,18 @@ class CupertinoRadio(LayoutControl):
 
     use_checkmark_style: bool = False
     """
-    Whether the radio displays in a checkbox style or the default radio style.
+    Whether the radio displays in a checkbox style instead of the default radio style.
     """
 
     toggleable: bool = False
     """
-    Set to `True` if this radio button is allowed to be returned to an indeterminate
-    state by selecting it again when selected.
+    Whether this radio button can return to an indeterminate state
+    by selecting it again when already selected.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The color for the radio's border
-    when it has the input focus.
+    The color for the radio's border when it has the input focus.
     """
 
     mouse_cursor: Optional[MouseCursor] = None

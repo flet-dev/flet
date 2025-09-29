@@ -29,14 +29,14 @@ class Column(LayoutControl, ScrollableControl, AdaptiveControl):
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    Defines how the [`controls`][flet.Column.controls] should be placed horizontally.
+    Defines how the [`controls`][(c).] should be placed horizontally.
     """
 
     spacing: Number = 10
     """
     Spacing between the `controls`.
 
-    It is applied only when [`alignment`][flet.Column.alignment] is
+    It is applied only when [`alignment`][(c).] is
     `MainAxisAlignment.START`, `MainAxisAlignment.END` or `MainAxisAlignment.CENTER`.
     """
 
@@ -50,19 +50,24 @@ class Column(LayoutControl, ScrollableControl, AdaptiveControl):
 
     wrap: bool = False
     """
-    Whether the [`controls`][flet.Column.controls] should wrap into additional
+    Whether the [`controls`][(c).] should wrap into additional
     columns (runs) when they don't fit in a single vertical column.
     """
 
     run_spacing: Number = 10
     """
-    The spacing between runs when [`wrap`][flet.Column.wrap] is `True`.
+    The spacing between runs when [`wrap`][(c).] is `True`.
     """
 
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the runs should be placed in the cross-axis when [`wrap`][flet.Column.wrap]
+    How the runs should be placed in the cross-axis when [`wrap`][(c).]
     is `True`.
+    """
+
+    intrinsic_width: bool = False
+    """
+    If `True`, the Column will be as wide as the widest child control.
     """
 
     def init(self):

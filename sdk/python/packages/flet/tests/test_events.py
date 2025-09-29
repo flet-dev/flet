@@ -1,3 +1,4 @@
+import sys
 from typing import ForwardRef, get_args, get_origin
 
 from flet.controls.base_page import PageResizeEvent
@@ -34,6 +35,15 @@ def test_get_event_field_type():
     on_scroll_type = get_event_field_type(col, "on_scroll")
     assert on_scroll_type == OnScrollEvent
     assert on_scroll_type != ControlEvent
+
+
+def test_get_page_event_field_type():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+    on_resize_type = get_event_field_type(page, "on_resize")
+    assert on_resize_type == PageResizeEvent
+    assert on_resize_type != ControlEvent
 
 
 def test_create_event_typed_data():
@@ -102,3 +112,19 @@ def test_page_events():
     )
 
     assert isinstance(evt, PageResizeEvent)
+
+
+def test_page_forward_ref_resolution_uses_base_module():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+
+    page_module = sys.modules["flet.controls.page"]
+    removed = page_module.__dict__.pop("PageResizeEvent", None)
+
+    try:
+        on_resize_type = get_event_field_type(page, "on_resize")
+        assert on_resize_type == PageResizeEvent
+    finally:
+        if removed is not None:
+            page_module.PageResizeEvent = removed

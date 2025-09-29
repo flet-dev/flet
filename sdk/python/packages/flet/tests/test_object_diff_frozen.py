@@ -1,15 +1,17 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import pytest
 
 import flet as ft
+from flet.components.component import Component
 from flet.controls.base_control import BaseControl, control
+from flet.controls.object_patch import ObjectPatch
 
 from .common import (
     LineChart,
     LineChartData,
     LineChartDataPoint,
+    MyText,
     cmp_ops,
     make_diff,
     make_msg,
@@ -119,14 +121,14 @@ def test_compare_objects_replaced_with_control_keys():
 
     c1 = ft.Column(
         [
-            Item(3, 1),
-            Item(4, 1),
+            Item(key=3, y=1),
+            Item(key=4, y=1),
         ],
     )
     c2 = ft.Column(
         [
-            Item(1, 0),
-            Item(2, 0),
+            Item(key=1, y=0),
+            Item(key=2, y=0),
         ]
     )
     c1._frozen = True
@@ -134,20 +136,24 @@ def test_compare_objects_replaced_with_control_keys():
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["controls", 0], "value_type": Item},
-            {"op": "replace", "path": ["controls", 1], "value_type": Item},
+            {"op": "remove", "path": ["controls", 0], "value": Item(key=3, y=1)},
+            {"op": "replace", "path": ["controls", 0], "value": Item(key=1, y=0)},
+            {"op": "add", "path": ["controls", 1], "value": Item(key=2, y=0)},
         ],
     )
-    assert patch[0]["value"].key == 1
-    assert patch[0]["value"].y == 0
-    assert patch[1]["value"].key == 2
+    assert patch[1]["value"].key == 1
     assert patch[1]["value"].y == 0
+    assert patch[2]["value"].key == 2
+    assert patch[2]["value"].y == 0
 
 
 def test_compare_objects_updated_and_moved_with_control_keys():
     @control("Item")
     class Item(BaseControl):
         y: int
+
+        def __str__(self):
+            return f"Item(key={self.key}, y={self.y})"
 
     c1 = ft.Column(
         [
@@ -166,9 +172,9 @@ def test_compare_objects_updated_and_moved_with_control_keys():
     assert cmp_ops(
         patch,
         [
-            {"op": "replace", "path": ["controls", 0, "y"], "value": 1},
+            {"op": "replace", "path": ["controls", 1, "y"], "value": 1},
+            {"op": "move", "from": ["controls", 1], "path": ["controls", 0]},
             {"op": "replace", "path": ["controls", 1, "y"], "value": 2},
-            {"op": "move", "from": ["controls", 0], "path": ["controls", 1]},
         ],
     )
 
@@ -177,6 +183,9 @@ def test_compare_objects_added():
     @control("Item")
     class Item(BaseControl):
         y: int
+
+        def __str__(self):
+            return f"Item(key={self.key}, y={self.y})"
 
     c1 = ft.Column(
         [
@@ -190,8 +199,8 @@ def test_compare_objects_added():
         [
             Item(key=1, y=0),
             Item(key=2, y=0),
-            Item(key=4, y=0),
-            Item(key=3, y=0),
+            Item(key=4, y=40),
+            Item(key=3, y=30),
             Item(key=5, y=0),
             Item(key=6, y=0),
             Item(key=7, y=0),
@@ -203,15 +212,15 @@ def test_compare_objects_added():
     assert cmp_ops(
         patch,
         [
-            {"op": "add", "path": ["controls", 0], "value_type": Item},
-            {"op": "add", "path": ["controls", 1], "value_type": Item},
-            {"op": "replace", "path": ["controls", 2, "y"], "value": 0},
-            {"op": "replace", "path": ["controls", 3, "y"], "value": 0},
-            {"op": "move", "from": ["controls", 2], "path": ["controls", 3]},
+            {"op": "add", "path": ["controls", 0], "value": Item(key=1, y=0)},
+            {"op": "add", "path": ["controls", 1], "value": Item(key=2, y=0)},
+            {"op": "replace", "path": ["controls", 3, "y"], "value": 40},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+            {"op": "replace", "path": ["controls", 3, "y"], "value": 30},
             {"op": "replace", "path": ["controls", 4, "y"], "value": 0},
             {"op": "replace", "path": ["controls", 5, "y"], "value": 0},
-            {"op": "add", "path": ["controls", 6], "value_type": Item},
-            {"op": "add", "path": ["controls", 7], "value_type": Item},
+            {"op": "add", "path": ["controls", 6], "value": Item(key=7, y=0)},
+            {"op": "add", "path": ["controls", 7], "value": Item(key=8, y=0)},
         ],
     )
 
@@ -327,16 +336,16 @@ def test_lists_with_key_diff():
     assert cmp_ops(
         patch,
         [
-            {"op": "remove", "path": ["data_series", 0, "points", 0]},
             {
-                "op": "replace",
-                "path": ["data_series", 0, "points", 1, "y"],
-                "value": 2,
+                "op": "remove",
+                "path": ["data_series", 0, "points", 0],
+                "value": LineChartDataPoint(key=0, x=0, y=1),
             },
+            {"op": "replace", "path": ["data_series", 0, "points", 1, "y"], "value": 2},
             {
                 "op": "add",
                 "path": ["data_series", 0, "points", 2],
-                "value_type": LineChartDataPoint,
+                "value": LineChartDataPoint(key=3, x=3, y=5),
             },
         ],
     )
@@ -597,223 +606,650 @@ class User:
     verified: bool
 
 
-users = [
-    User(1, "John Smith", 20, True),
-    User(2, "Alice Wong", 32, True),
-    User(3, "Bob Bar", 40, False),
-]
-
-
-def test_control_builder():
-    @dataclass
-    class State:
-        msg: str
-
-    state = State(msg="some text")
-
-    dv = ft.StateView(state, builder=lambda state: ft.Text(state.msg))
-    _, patch, _, added_controls, removed_controls = make_msg(dv, {})
-    assert len(added_controls) == 2
-    assert len(removed_controls) == 0
-    assert cmp_ops(
-        patch,
-        [{"op": "replace", "path": [], "value_type": ft.StateView}],
+def test_component_single_control_diff():
+    comp = Component(fn=lambda: None, args=(), kwargs={})
+    old = ft.Button("Hey there!")
+    new = ft.Button("Hello, world!")
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl, parent=comp, path=["_b"], frozen=True
     )
-    assert isinstance(patch[0]["value"].content, ft.Text)
-    assert hasattr(patch[0]["value"].content, "_frozen")
-    assert patch[0]["value"].content.value == "some text"
-
-    state.msg = "Hello, world!"
-    patch, msg, added_controls, removed_controls = make_diff(dv, dv)
-    assert len(patch) == 1
     assert cmp_ops(
-        patch,
-        [{"op": "replace", "path": ["content", "value"], "value": "Hello, world!"}],
+        patch.patch,
+        [{"op": "replace", "path": ["_b", "content"], "value": "Hello, world!"}],
     )
 
 
-def test_nested_control_builders():
-    @dataclass
-    class AppState:
-        count: int
-
-    state = AppState(count=0)
-
-    cb = ft.StateView(
-        state,
-        lambda state: ft.SafeArea(
-            ft.Container(
-                ft.StateView(
-                    state,
-                    lambda state: ft.Text(
-                        value=f"{state.count}",
-                        spans=(
-                            [
-                                ft.TextSpan(
-                                    f"SPAN {state.count}",
-                                    on_click=lambda: print("span clicked!"),
-                                )
-                            ]
-                            if state.count > 0
-                            else []
-                        ),
-                        size=50,
-                    ),
-                ),
-                alignment=ft.Alignment.CENTER,
-            ),
-            expand=True,
-        ),
-        expand=True,
+def test_component_list_diff():
+    comp = Component(fn=lambda: None, args=(), kwargs={})
+    old = [ft.Column([ft.Button("Hey there!")])]
+    new = [
+        c1 := ft.Column([btn1 := ft.Button("Hello, world!")]),
+        txt1 := ft.Text("New control"),
+    ]
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl, parent=comp, path=["_b"], frozen=True
     )
-    _, patch, _, added_controls, removed_controls = make_msg(cb, {})
-    assert len(added_controls) == 5
-    assert len(removed_controls) == 0
-    assert not hasattr(patch[0]["value"], "_frozen")  # StateView
-    assert hasattr(patch[0]["value"].content, "_frozen")  # SafeArea
-    assert hasattr(patch[0]["value"].content.content, "_frozen")  # Center
-    assert hasattr(
-        patch[0]["value"].content.content.content, "_frozen"
-    )  # StateView (nested)
-    assert hasattr(patch[0]["value"].content.content.content.content, "_frozen")  # Text
-
-    state.count = 10
-    patch, msg, added_controls, removed_controls = make_diff(cb, cb)
-    assert len(added_controls) == 5
-    assert len(removed_controls) == 4
     assert cmp_ops(
-        patch,
+        patch.patch,
         [
             {
                 "op": "replace",
-                "path": ["content", "content", "content", "content", "value"],
-                "value": "10",
+                "path": ["_b", 0, "controls", 0, "content"],
+                "value": "Hello, world!",
             },
-            {
-                "op": "replace",
-                "path": ["content", "content", "content", "content", "spans"],
-                "value_type": list,
-            },
+            {"op": "add", "path": ["_b", 1], "value_type": ft.Text},
         ],
     )
-    assert isinstance(patch[1]["value"][0], ft.TextSpan)
-    assert patch[1]["value"][0].text == "SPAN 10"
-    assert hasattr(patch[1]["value"][0], "_frozen")  # TextSpan
+    assert c1._frozen
+    assert btn1._frozen
+    assert txt1._frozen
+    assert c1.parent == comp
+    assert btn1.parent == c1
+    assert txt1.parent == comp
 
-    state.count = 0
-    patch, msg, added_controls, removed_controls = make_diff(cb, cb)
-    assert len(added_controls) == 4
-    assert len(removed_controls) == 5
+
+def test_list_insertions_with_keys():
+    col_1 = ft.Column(
+        [
+            MyText("Line 2", key=2),
+            MyText("Line 4", key=4),
+            MyText("Line 6", key=6),
+            MyText("Line 8", key=8),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2 (updated)", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4 (updated)", key=4),
+            MyText("Line 5", key=5),
+            MyText("Line 6 (updated)", key=6),
+            MyText("Line 7", key=7),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
     assert cmp_ops(
         patch,
         [
             {
-                "op": "replace",
-                "path": ["content", "content", "content", "content", "value"],
-                "value": "0",
+                "op": "add",
+                "path": ["controls", 0],
+                "value": MyText(key=1, value="Line 1"),
             },
             {
                 "op": "replace",
-                "path": ["content", "content", "content", "content", "spans"],
-                "value": [],
+                "path": ["controls", 1, "value"],
+                "value": "Line 2 (updated)",
+            },
+            {
+                "op": "add",
+                "path": ["controls", 2],
+                "value": MyText(key=3, value="Line 3"),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {
+                "op": "add",
+                "path": ["controls", 4],
+                "value": MyText(key=5, value="Line 5"),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 5, "value"],
+                "value": "Line 6 (updated)",
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 6],
+                "value": MyText(key=7, value="Line 7"),
             },
         ],
     )
 
 
-def test_view_with_cache():
-    @ft.cache(freeze=True)
-    def user_details(user: User):
-        return ft.Card(
-            ft.Column(
-                [
-                    ft.Text(f"Name: {user.name}"),
-                    ft.Text(f"Age: {user.age}"),
-                    ft.Checkbox(label="Verified", value=user.verified),
-                ]
-            ),
-            key=user.id,
-        )
+def test_list_move_1a():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 3", key=3),
+            MyText("Line 2", key=2),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
 
-    @ft.cache(freeze=True)
-    def users_list(users):
-        return ft.Column([user_details(user) for user in users])
-
-    page = ft.Row([users_list(users)])
-
-    _, patch, _, added_controls, removed_controls = make_msg(page, {})
-    assert len(added_controls) == 17
-    assert len(removed_controls) == 0
-
-    # add new user
-    users.append(User(4, name="Someone Else", age=99, verified=False))
-    page.controls[0] = users_list(users)
-    patch, msg, added_controls, removed_controls = make_diff(page, page)
-    assert len(added_controls) == 6
-    assert len(removed_controls) == 1
     assert cmp_ops(
         patch,
-        [{"op": "add", "path": ["controls", 0, "controls", 3], "value_type": ft.Card}],
+        [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
+        ],
     )
 
-    # Card ids: 9, 14, 19, 26
 
-    # remove user
-    del users[1]
-    page.controls[0] = users_list(users)
+def test_list_move_1b():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3 (divider)", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 3", key=3),
+            MyText("Line 2", key=2),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
 
-    # OLD: 9, 14, 19, 26
-    # NEW: 9, 19, 26
-
-    patch, msg, added_controls, removed_controls = make_diff(page, page)
     assert cmp_ops(
         patch,
-        [{"op": "remove", "path": ["controls", 0, "controls", 1]}],
+        [
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 3"},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+        ],
     )
-    # for ac in added_controls:
-    #     print("\nADDED CONTROL:", ac)
-    # for rc in removed_controls:
-    #     print("\nREMOVED CONTROL:", rc)
-    assert len(added_controls) == 1
-    assert len(removed_controls) == 6
 
 
-def test_empty_view():
-    @ft.cache
-    def my_view():
-        return None
+def test_list_move_1c():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1 (divider)", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3 (divider)", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 5", key=5),
+            MyText("Line 6 (divider)", key=6),
+            MyText("Line 7 (divider)", key=7),
+            MyText("Line 8", key=8),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 8", key=8),
+            MyText("Line 5", key=5),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 6", key=6),
+            MyText("Line 7", key=7),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
 
-    v = my_view()
-    assert v is None
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 7], "path": ["controls", 0]},
+            {"op": "move", "from": ["controls", 5], "path": ["controls", 1]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 1"},
+            {"op": "replace", "path": ["controls", 3, "value"], "value": "Line 2"},
+            {"op": "replace", "path": ["controls", 4, "value"], "value": "Line 3"},
+            {"op": "replace", "path": ["controls", 6, "value"], "value": "Line 6"},
+            {"op": "replace", "path": ["controls", 7, "value"], "value": "Line 7"},
+        ],
+    )
 
 
-def test_login_logout_view():
-    class AppState:
-        logged_username: Optional[str] = None
+def test_list_move_1d():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1 (divider)", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 4", key=4),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
 
-        def login(self, _):
-            self.logged_username = "John"
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 0]},
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Line 1"},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
+        ],
+    )
 
-        def logout(self, _):
-            self.logged_username = None
 
-    state = AppState()
+def test_list_move_2a():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2 (divider)", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 3", key=3),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
 
-    @ft.cache
-    def login_view(state: AppState):
-        return (
-            ft.Column(
-                [
-                    ft.Text(state.logged_username),
-                    ft.Button("Logout", on_click=state.logout),
-                ]
-            )
-            if state.logged_username
-            else ft.Column(
-                [
-                    ft.Button("Login", on_click=state.login),
-                ]
-            )
-        )
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Line 2"},
+        ],
+    )
 
-    ft.View("/", [login_view(state)])
+
+def test_list_move_2():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 0", key=0),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2 (updated)", key=2),
+            MyText("Line 4 (updated)", key=4),
+            MyText("Line 3 (updated)", key=3),
+            MyText("Line 0", key=0),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["controls", 1, "value"],
+                "value": "Line 2 (updated)",
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 3 (updated)",
+            },
+        ],
+    )
+
+
+def test_list_move_3():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 3", key=3),
+            MyText("Line 2", key=2),
+            MyText("Line 1 (updated)", key=1),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {
+                "op": "replace",
+                "path": ["controls", 2, "value"],
+                "value": "Line 1 (updated)",
+            },
+        ],
+    )
+
+
+def test_list_move_4():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 3", key=3),
+            MyText("Line 2 (updated)", key=2),
+            MyText("Line 1", key=1),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
+            {
+                "op": "replace",
+                "path": ["controls", 2, "value"],
+                "value": "Line 2 (updated)",
+            },
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+        ],
+    )
+
+
+def test_list_move_5():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 5", key=5),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1 (updated)", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 4 (updated)", key=4),
+            MyText("Line 3", key=3),
+            MyText("Line 5", key=5),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["controls", 0, "value"],
+                "value": "Line 1 (updated)",
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+        ],
+    )
+
+
+def test_list_move_6():
+    col_1 = ft.Column(
+        [
+            MyText("Line 0", key=0),
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1 (updated)", key=1),
+            MyText("Line 2 (updated)", key=2),
+            MyText("Line 3 (updated)", key=3),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "remove",
+                "path": ["controls", 0],
+                "value": MyText(key=0, value="Line 0"),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 0, "value"],
+                "value": "Line 1 (updated)",
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 1, "value"],
+                "value": "Line 2 (updated)",
+            },
+            {
+                "op": "add",
+                "path": ["controls", 2],
+                "value": MyText(key=3, value="Line 3 (updated)"),
+            },
+        ],
+    )
+
+
+def test_list_move_7():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 5", key=5),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 4 (updated)", key=4),
+            MyText("Line 3", key=3),
+            MyText("Line 2", key=2),
+            MyText("Line 5", key=5),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 1]},
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+        ],
+    )
+
+
+def test_list_move_8_no_keys():
+    col_1 = ft.Column(
+        [
+            MyText("Line 1"),
+            MyText("Line 2"),
+            MyText("Line 3"),
+            MyText("Line 4"),
+            MyText("Line 5"),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1"),
+            MyText("Line 4 (updated)"),
+            MyText("Line 3"),
+            MyText("Line 2"),
+            MyText("Line 5"),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["controls", 1, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {"op": "replace", "path": ["controls", 3, "value"], "value": "Line 2"},
+        ],
+    )
+
+
+def test_list_move_9():
+    col_1 = ft.Column(
+        [
+            MyText("Line 3", key=3),
+            MyText("Line 4", key=4),
+            MyText("Line 5", key=5),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Line 1", key=1),
+            MyText("Line 2", key=2),
+            MyText("Line 4 (updated)", key=4),
+            MyText("Line 3 (updated)", key=3),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "add",
+                "path": ["controls", 0],
+                "value": MyText(key=1, value="Line 1"),
+            },
+            {
+                "op": "add",
+                "path": ["controls", 1],
+                "value": MyText(key=2, value="Line 2"),
+            },
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated)",
+            },
+            {"op": "move", "from": ["controls", 3], "path": ["controls", 2]},
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 3 (updated)",
+            },
+            {
+                "op": "remove",
+                "path": ["controls", 4],
+                "value": MyText(key=5, value="Line 5"),
+            },
+        ],
+    )
+
+
+def test_list_move_10():
+    col_1 = ft.Column(
+        [
+            MyText("Group 1", key=1),
+            MyText("Group 2 (divider)", key=2),
+            MyText("Group 3 (divider)", key=3),
+            # MyText("Group 4 (divider)", key=4),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Group 1", key=1),
+            # MyText("Group 4", key=4),
+            MyText("Group 3", key=3),
+            MyText("Group 2", key=2),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Group 3"},
+            {"op": "move", "from": ["controls", 2], "path": ["controls", 1]},
+            {"op": "replace", "path": ["controls", 2, "value"], "value": "Group 2"},
+        ],
+    )
+
+
+def test_list_move_11():
+    col_1 = ft.Column(
+        [
+            # MyText("Group -4", key=-4),
+            # MyText("Group -3", key=-3),
+            # MyText("Group -2", key=-2),
+            # MyText("Group -1", key=-1),
+            MyText("Group 0", key=0),
+            MyText("Group 1 (divider)", key=1),
+            MyText("Group 2 (divider)", key=2),
+        ]
+    )
+    col_1._frozen = True
+    col_2 = ft.Column(
+        [
+            MyText("Group 1", key=1),
+            MyText("Group 2", key=2),
+            MyText("Group 3", key=3),
+            # MyText("Group 4", key=4),
+        ]
+    )
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "remove",
+                "path": ["controls", 0],
+                "value": MyText(key=0, value="Group 0"),
+            },
+            {"op": "replace", "path": ["controls", 0, "value"], "value": "Group 1"},
+            {"op": "replace", "path": ["controls", 1, "value"], "value": "Group 2"},
+            {
+                "op": "add",
+                "path": ["controls", 2],
+                "value": MyText(key=3, value="Group 3"),
+            },
+        ],
+    )

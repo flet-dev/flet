@@ -28,27 +28,24 @@ class CupertinoAlertDialog(DialogControl):
 
     title: Optional[StrOrControl] = None
     """
-    The (optional) title of the dialog is displayed in a large font at the top of the
-    dialog.
+    The title of this dialog, displayed in a large font at the top of this dialog.
 
-    Typically a [`Text`][flet.Text] control.
+    Typically a [`Text`][flet.] control.
     """
 
     content: Optional[Control] = None
     """
-    The (optional) content of the dialog is displayed in the center of the dialog in a
-    lighter font.
+    The content of this dialog, displayed in a light font at the center of this dialog.
 
-    Typically this is a [`Column`][flet.Column] that contains
-    the dialog's [`Text`][flet.Text] message.
+    Typically a [`Column`][flet.] that contains
+    the dialog's [`Text`][flet.] message.
     """
 
     actions: list[Control] = field(default_factory=list)
     """
-    The (optional) set of actions that are displayed at the bottom of the dialog.
+    A set of actions that are displayed at the bottom of the dialog.
 
-    Typically this is a list of
-    [`CupertinoDialogAction`][flet.CupertinoDialogAction] controls.
+    Typically this is a list of [`CupertinoDialogAction`][flet.] controls.
     """
 
     inset_animation: Animation = field(
@@ -63,9 +60,12 @@ class CupertinoAlertDialog(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert (
+        if not (
             (isinstance(self.title, str) or self.title.visible)
             or (self.content and self.content.visible)
             or any(a.visible for a in self.actions)
-        ), "AlertDialog has nothing to display. Provide at minimum one of the "
-        "following: title, content, actions"
+        ):
+            raise ValueError(
+                "AlertDialog has nothing to display. Provide at minimum one of the "
+                "following: title, content, actions"
+            )

@@ -13,11 +13,10 @@ class CupertinoContextMenuAction(AdaptiveControl):
     """
     A cupertino context menu action.
 
-    Typically used as a child of
-    [`CupertinoContextMenu.actions`][flet.CupertinoContextMenu.actions].
+    Typically used as a child of [`CupertinoContextMenu.actions`][flet.].
 
     Raises:
-        AssertionError: If [`content`][(c).] is neither a string nor a visible Control.
+        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
@@ -37,8 +36,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     trailing_icon: Optional[IconData] = None
     """
-    An optional icon to display at the right of the
-    [`content`][flet.CupertinoContextMenuAction.content] control.
+    An icon to display at the right of the [`content`][(c).] control.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoContextMenuAction"]] = None
@@ -48,6 +46,5 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert isinstance(self.content, str) or self.content.visible, (
-            "content must be a string or a visible Control"
-        )
+        if not (isinstance(self.content, str) or self.content.visible):
+            raise ValueError("content must be a string or a visible Control")

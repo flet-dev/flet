@@ -26,23 +26,37 @@ class _CheckboxControlState extends State<CheckboxControl> {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
+  Listenable? _tileClicksNotifier;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
+    _focusNode = FocusNode()..addListener(_onFocusChange);
   }
 
-  void _onFocusChange() {
-    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newNotifier = ListTileClicks.of(context)?.notifier;
+
+    // If the inherited source changed, swap listeners
+    if (!identical(_tileClicksNotifier, newNotifier)) {
+      _tileClicksNotifier?.removeListener(_toggleValue);
+      _tileClicksNotifier = newNotifier;
+      _tileClicksNotifier?.addListener(_toggleValue);
+    }
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    _tileClicksNotifier?.removeListener(_toggleValue);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _onFocusChange() {
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   void _toggleValue() {
@@ -97,11 +111,6 @@ class _CheckboxControlState extends State<CheckboxControl> {
         onChanged: !widget.control.disabled
             ? (bool? value) => _onChange(value)
             : null);
-
-    // Add listener to ListTile clicks
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _toggleValue();
-    });
 
     Widget result = checkbox;
 

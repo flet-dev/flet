@@ -11,15 +11,15 @@ Android APK and Android App Bundle (AAB).
 
 ### Android SDK
 
-The build process requires both **Java** ([JDK](https://de.wikipedia.org/wiki/Java_Development_Kit)) 
+The build process requires both **Java** ([JDK](https://de.wikipedia.org/wiki/Java_Development_Kit))
 and the **Android SDK**.
 
-If either component is missing or an incompatible version is detected, the required tools will be 
+If either component is missing or an incompatible version is detected, the required tools will be
 **automatically installed** during the first run of the [`flet build`](../cli/flet-build.md) command.
 
 - The JDK will be installed in `$HOME/java/{version}`.
-- If **Android Studio** is installed, Flet CLI will automatically use the Android SDK bundled with it.  
-  Otherwise, a standalone Android SDK will be installed in:  
+- If **Android Studio** is installed, Flet CLI will automatically use the Android SDK bundled with it.
+  Otherwise, a standalone Android SDK will be installed in:
   `$HOME/Android/sdk`
 
 ### Android wheels for binary Python packages
@@ -27,7 +27,7 @@ If either component is missing or an incompatible version is detected, the requi
 Binary Python packages (in contrast to "pure" Python packages written in Python only) are packages that partially
 written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
-Make sure all non-pure (binary) packages used in your Flet app have 
+Make sure all non-pure (binary) packages used in your Flet app have
 [pre-built wheels for Android](../contributing/binary-packages-android-ios.md).
 
 ## <code class="doc-symbol doc-symbol-command"></code> `flet build apk`
@@ -38,21 +38,21 @@ This command can be run on a **macOS**, **Linux**, or **Windows**.
 
 Builds a **release** Android APK.
 
-Release builds are optimized for production, meaning they **don’t support debugging** 
+Release builds are optimized for production, meaning they **don’t support debugging**
 and are intended for publishing to app stores such as Google Play.
 
 For Play Store deployment, it’s recommended to:
 
 - Use an [**Android App Bundle (AAB)**](#flet-build-aab) for more efficient delivery and smaller install size
-- Or [**split the APK by ABI**](#platform-specific-apks) to reduce the APK size
+- Or [**split the APK by ABI**](#split-apk-per-abi) to reduce the APK size
 
 ### Split APK per ABI
 
-Different Android devices use different CPUs, which in turn support different instruction sets. 
-Each combination of CPU and instruction set has its own [Application Binary Interface (ABI)](https://developer.android.com/ndk/guides/abis). 
+Different Android devices use different CPUs, which in turn support different instruction sets.
+Each combination of CPU and instruction set has its own [Application Binary Interface (ABI)](https://developer.android.com/ndk/guides/abis).
 
-By default, Flet will build a "fat" APK which includes binaries for both 
-[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a) and 
+By default, Flet will build a "fat" APK which includes binaries for both
+[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a) and
 [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) architectures.
 
 You can split fat APK into smaller APKs for each platform as follows:
@@ -75,21 +75,21 @@ flet build apk --split-per-abi
 
 /// admonition | Note
     type: caution
-Splitting APKs per ABI will generate multiple APK files, each targeting a specific architecture. 
-Make sure to distribute the correct APK to users based on their device's CPU architecture, 
+Splitting APKs per ABI will generate multiple APK files, each targeting a specific architecture.
+Make sure to distribute the correct APK to users based on their device's CPU architecture,
 as installing an incompatible APK will result in installation failure.
 ///
 
 ### Installing APK to a device
 
-The easiest way to install APK to your device is to use the 
-[Android Debug Bridge](https://developer.android.com/tools/adb) (adb) tool, 
+The easiest way to install APK to your device is to use the
+[Android Debug Bridge](https://developer.android.com/tools/adb) (adb) tool,
 a command-line tool that can communicate between your computer and your Android device.
 
-`adb` is a part of the Android SDK. On macOS, for example, if the Android SDK was 
+`adb` is a part of the Android SDK. On macOS, for example, if the Android SDK was
 installed with Android Studio its location will be at `~/Library/Android/sdk/platform-tools/adb`.
 
-Refer to this [guide](https://www.makeuseof.com/install-apps-via-adb-android/) for 
+Refer to this [guide](https://www.makeuseof.com/install-apps-via-adb-android/) for
 more information about installing and using `adb` on various platforms.
 
 To install an APK to a device run the following command:
@@ -111,17 +111,17 @@ where `<device>` can be found with `adb devices` command.
 
 Builds a **release** [Android App Bundle (AAB)](https://developer.android.com/guide/app-bundle) file.
 
-Release builds are optimized for production, meaning they **don’t support debugging** 
+Release builds are optimized for production, meaning they **don’t support debugging**
 and are intended for publishing to app stores such as the [Google Play Store](https://play.google.com/store/).
 
-It is recommended to use this AAB format (instead of [APK](#flet-build-apk)) for publishing to the 
+It is recommended to use this AAB format (instead of [APK](#flet-build-apk)) for publishing to the
 Google Play Store due to its optimized app size.
 
 ## Signing an Android bundle
 
-Android requires that all APKs be digitally signed with a certificate before they are installed 
-on a device or updated. When releasing using [Android App Bundles](#flet-build-aab), you need to sign your app bundle 
-with an upload key before uploading it to the Play Console, and Play App Signing takes care of the rest. 
+Android requires that all APKs be digitally signed with a certificate before they are installed
+on a device or updated. When releasing using [Android App Bundles](#flet-build-aab), you need to sign your app bundle
+with an upload key before uploading it to the Play Console, and Play App Signing takes care of the rest.
 For apps distributing using APKs on the Play Store or on other stores, you must manually sign your APKs for upload.
 
 For detailed information, see this [guide](https://developer.android.com/studio/publish/app-signing).
@@ -133,14 +133,14 @@ Android uses two signing keys: upload and app signing.
 - Developers upload an .aab or .apk file signed with an upload key to the Play Store.
 - The end-users download the .apk file signed with an app signing key.
 
-To create your app signing key, use Play App Signing as described in the 
+To create your app signing key, use Play App Signing as described in the
 [official Play Store documentation](https://support.google.com/googleplay/android-developer/answer/7384423?hl=en).
 
 To sign your app, use the following instructions.
 
 ### Create an upload keystore
 
-If you have an existing keystore, skip to the next step. 
+If you have an existing keystore, skip to the next step.
 If not, create one using one of the following methods:
 
 1. Follow the [Android Studio key generation steps](https://developer.android.com/studio/publish/app-signing#generate-key).
@@ -159,22 +159,22 @@ If not, create one using one of the following methods:
         -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 `
         -alias upload
     ```
-    You will be prompted for several details, such as a keystore password, 
-    a key alias, your names and location. Remember the password and alias 
+    You will be prompted for several details, such as a keystore password,
+    a key alias, your names and location. Remember the password and alias
     for use in the [configuration](#configuration) step below.
-    
+
     A file named `upload-keystore.jks` will be created in your home directory.
     If you want to store it elsewhere, change the argument passed to the `-keystore` parameter.
     The location of the keystore file is equally important for the [configuration](#configuration) step below.
-    
+
     /// admonition | Note
-    - The `keytool` command might not be in your path—it's part of Java, which is installed as part of Android Studio. 
-    For the concrete path, run `flutter doctor -v` and locate the path printed after 'Java binary at:'. 
-    Then use that fully qualified path replacing `java` (at the end) with `keytool`. 
-    If your path includes space-separated names, such as Program Files, use platform-appropriate notation 
+    - The `keytool` command might not be in your path—it's part of Java, which is installed as part of Android Studio.
+    For the concrete path, run `flutter doctor -v` and locate the path printed after 'Java binary at:'.
+    Then use that fully qualified path replacing `java` (at the end) with `keytool`.
+    If your path includes space-separated names, such as Program Files, use platform-appropriate notation
     for the names. For example, on macOS and Linux use `Program\ Files`, and on Windows use `"Program Files"`.
 
-    - The `-storetype JKS` tag is only required for Java 9 or newer. 
+    - The `-storetype JKS` tag is only required for Java 9 or newer.
     As of the Java 9 release, the keystore type defaults to PKS12.
     ///
 
@@ -220,7 +220,7 @@ FLET_ANDROID_SIGNING_KEY_ALIAS="value"
 
 The path to the keystore file (with extension `.jks`).
 
-If you used the cli commands above as-is, this file might be located at `/Users/<user name>/upload-keystore.jks` on macOS 
+If you used the cli commands above as-is, this file might be located at `/Users/<user name>/upload-keystore.jks` on macOS
 or `C:\\Users\\<user name>\\upload-keystore.jks` on Windows.
 
 /// tab | `flet build`
@@ -258,7 +258,7 @@ flet build aab --android-signing-key-store-password value
 ///
 /// tab | `pyproject.toml`
 
-For security reasons, the keystore password is not read from `pyproject.toml` to 
+For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 
 ///
@@ -281,7 +281,7 @@ flet build aab --android-signing-key-password value
 ///
 /// tab | `pyproject.toml`
 
-For security reasons, the keystore password is not read from `pyproject.toml` to 
+For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 
 ///
@@ -321,9 +321,9 @@ android = false
 
 ## Android Manifest
 
-The [Android Manifest](https://developer.android.com/guide/topics/manifest/manifest-intro) describes 
-essential information about your app to the Android build tools, 
-the Android operating system, and Google Play. The file in which this information is written 
+The [Android Manifest](https://developer.android.com/guide/topics/manifest/manifest-intro) describes
+essential information about your app to the Android build tools,
+the Android operating system, and Google Play. The file in which this information is written
 is `AndroidManifest.xml`, which gets populated with the information you provide.
 
 ### Meta-data
@@ -384,8 +384,8 @@ Below are default/pre-configured meta-data:
 A hardware or software feature that is used by the application.
 More information [here](https://developer.android.com/guide/topics/manifest/uses-feature-element).
 
-- `name`: Specifies a single hardware or software feature used by the application as a descriptor string. 
-    Valid attribute values are listed in the Hardware features and Software features sections. 
+- `name`: Specifies a single hardware or software feature used by the application as a descriptor string.
+    Valid attribute values are listed in the Hardware features and Software features sections.
     These attribute values are case-sensitive.
 - `required`: A boolean value (`True` or `False`) that indicates whether the application requires the feature specified by the `name`.
 

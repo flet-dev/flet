@@ -20,7 +20,7 @@ class BottomSheet(DialogControl):
     from interacting with the rest of the app.
 
     Raises:
-        AssertionError: If [`elevation`][(c).] is negative.
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: Control
@@ -30,22 +30,22 @@ class BottomSheet(DialogControl):
 
     elevation: Optional[Number] = None
     """
-    Defines the size of the shadow below the bottom sheet.
+    Defines the size of the shadow below this bottom sheet.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The sheet's background color.
+    The background color of this bottom sheet.
     """
 
     dismissible: bool = True
     """
-    Specifies whether the bottom sheet will be dismissed when user taps on the scrim.
+    Specifies whether this bottom sheet will be dismissed when user taps on the scrim.
     """
 
     enable_drag: bool = False
     """
-    Specifies whether the bottom sheet can be dragged up and down and dismissed by
+    Specifies whether this bottom sheet can be dragged up and down and dismissed by
     swiping downwards.
     """
 
@@ -62,34 +62,34 @@ class BottomSheet(DialogControl):
 
     scroll_controlled: bool = False
     """
-    Specifies if the bottom sheet contains scrollable content, such as ListView or
+    Specifies if this bottom sheet contains scrollable content, such as ListView or
     GridView.
     """
 
     maintain_bottom_view_insets_padding: bool = True
     """
-    Adds a padding at the bottom to avoid obstructing bottom sheet content with
+    Adds a padding at the bottom to avoid obstructing the bottom sheet's content with
     on-screen keyboard or other system elements.
     """
 
     animation_style: Optional[AnimationStyle] = None
     """
-    The sheet's animation style.
+    The animation style of this bottom sheet.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    The size constraints to apply to the bottom sheet.
+    The size constraints to apply to this bottom sheet.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Defines how the content of the bottom sheet should be clipped.
+    Defines how the content of this bottom sheet should be clipped.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Defines the shape of the bottom sheet.
+    Defines the shape of this bottom sheet.
     """
 
     barrier_color: Optional[ColorValue] = None
@@ -99,6 +99,7 @@ class BottomSheet(DialogControl):
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            f"elevation must be greater than or equal to zero, got {self.elevation}"
-        )
+        if self.elevation is not None and self.elevation < 0:
+            raise ValueError(
+                f"elevation must be greater than or equal to zero, got {self.elevation}"
+            )

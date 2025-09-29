@@ -5,8 +5,9 @@ import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
+from flet.components.hooks.use_effect import EffectHook
 from flet.controls.base_control import BaseControl
-from flet.controls.context import _context_page
+from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
@@ -17,11 +18,13 @@ from flet.messaging.protocol import (
     PatchControlBody,
     SessionCrashedBody,
 )
+from flet.messaging.session_store import SessionStore
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils.object_model import patch_dataclass
 from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
+patch_logger = logging.getLogger("flet_object_patch")
 
 __all__ = ["Session"]
 
@@ -37,9 +40,14 @@ class Session:
         )
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
+        self.__store: SessionStore = SessionStore()
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
         self.__method_calls: dict[str, asyncio.Event] = {}
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        self.__updates_ready: asyncio.Event = asyncio.Event()
+        self.__pending_updates: set[BaseControl] = set()
+        self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
+        self.__closed = False
 
         session_id = self.__id
         weakref.finalize(
@@ -70,6 +78,10 @@ class Session:
     def pubsub_client(self) -> PubSubClient:
         return self.__pubsub_client
 
+    @property
+    def store(self) -> SessionStore:
+        return self.__store
+
     async def connect(self, conn: Connection) -> None:
         logger.debug(f"Connect session: {self.id}")
         _context_page.set(self.__page)
@@ -92,18 +104,30 @@ class Session:
 
     def close(self):
         logger.debug(f"Closing expired session: {self.id}")
+        self.__closed = True
         self.__pubsub_client.unsubscribe_all()
         self.__cancel_method_calls()
         asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
 
-    def patch_control(self, control: BaseControl):
+    def patch_control(
+        self,
+        control: BaseControl,
+        prev_control: Optional[BaseControl] = None,
+        parent: Any = None,
+        path: Optional[list[Any]] = None,
+        frozen: bool = False,
+    ):
         patch, added_controls, removed_controls = self.__get_update_control_patch(
-            control=control, prev_control=control
+            control=control,
+            prev_control=prev_control or control,
+            parent=parent,
+            path=path,
+            frozen=frozen,
         )
 
-        # print(f"\n\nremoved_controls: ({len(removed_controls)})")
-        # for c in removed_controls:
-        #     print(f"\n\nremoved_control: {c._c}({c._i} - {id(c)})")
+        patch_logger.debug(f"\npatch removed_controls ({len(removed_controls)}):")
+        for c in removed_controls:
+            patch_logger.debug("   %s", c)
 
         for removed_control in removed_controls:
             if not any(added._i == removed_control._i for added in added_controls):
@@ -113,13 +137,14 @@ class Session:
         if len(patch) > 1:
             self.__send_message(
                 ClientMessage(
-                    ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
+                    ClientAction.PATCH_CONTROL,
+                    PatchControlBody(parent._i if parent else control._i, patch),
                 )
             )
 
-        # print(f"\n\nadded_controls: ({len(added_controls)})")
-        # for ac in added_controls:
-        #     print(f"\n\nadded_control: {ac._c}({ac._i} - {id(ac)})")
+        patch_logger.debug(f"\npatch added_controls: ({len(added_controls)})")
+        for ac in added_controls:
+            patch_logger.debug("   %s", ac)
 
         for added_control in added_controls:
             self.__index[added_control._i] = added_control
@@ -227,7 +252,15 @@ class Session:
             self.__method_call_results[evt] = (None, "Session closed")
             evt.set()
 
-    async def auto_update(self, control: BaseControl | None):
+    async def after_event(self, control: BaseControl | None):
+        # call auto-update
+        if context.auto_update_enabled():
+            await self.__auto_update(control)
+
+        # unregister unreferenced services
+        self.page._user_services.unregister_services()
+
+    async def __auto_update(self, control: BaseControl | None):
         while control:
             if (
                 control.is_isolated()
@@ -250,15 +283,83 @@ class Session:
             self.__send_buffer.append(message)
 
     def __get_update_control_patch(
-        self, control: BaseControl, prev_control: Optional[BaseControl]
+        self,
+        control: BaseControl,
+        prev_control: Optional[BaseControl],
+        parent: Any = None,
+        path: Optional[list[Any]] = None,
+        frozen: bool = False,
     ):
+        # start_time = datetime.now()
+
         # calculate patch
         patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
             control,
             control_cls=BaseControl,
+            parent=parent,
+            path=path,
+            frozen=frozen,
         )
+
+        # end_time = datetime.now()
+        # elapsed_time = end_time - start_time
+        # print(
+        #     "Time spent calculating patch: "
+        #     f"{elapsed_time.total_seconds() * 1000:.3f} ms"
+        # )
 
         # print("\n\npatch:", patch)
 
         return patch.to_message(), added_controls, removed_controls
+
+    def schedule_update(self, control: BaseControl):
+        logger.debug("Schedule_update(%s)", control)
+        self.__pending_updates.add(control)
+        self.__updates_ready.set()
+
+    def schedule_effect(self, hook: EffectHook, is_cleanup: bool):
+        logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
+        self.__pending_effects.append((weakref.ref(hook), is_cleanup))
+        self.__updates_ready.set()
+
+    def start_updates_scheduler(self):
+        logger.debug(f"Starting updates scheduler: {self.id}")
+        asyncio.create_task(self.__updates_scheduler())
+
+    async def __updates_scheduler(self):
+        while not self.__closed:
+            await self.__updates_ready.wait()
+            self.__updates_ready.clear()
+
+            # Process pending updates
+            for control in self.__pending_updates:
+                control.update()
+
+            self.__pending_updates.clear()
+
+            # Process pending effects
+            for effect in self.__pending_effects:
+                try:
+                    hook = effect[0]()
+                    is_cleanup = effect[1]
+                    # print(f"**** Running effect: {hook} {is_cleanup}")
+                    if hook and hook.setup and not is_cleanup:
+                        hook.cancel()
+                        if asyncio.iscoroutinefunction(hook.setup):
+                            hook._setup_task = asyncio.create_task(hook.setup())
+                        else:
+                            res = hook.setup()
+                        if callable(res):
+                            hook.cleanup = res
+                    elif hook and hook.cleanup and is_cleanup:
+                        hook.cancel()
+                        if asyncio.iscoroutinefunction(hook.cleanup):
+                            hook._cleanup_task = asyncio.create_task(hook.cleanup())
+                        else:
+                            hook.cleanup()
+                except Exception as ex:
+                    tb = traceback.format_exc()
+                    self.error(f"Exception in effect: {ex}\n{tb}")
+
+            self.__pending_effects.clear()

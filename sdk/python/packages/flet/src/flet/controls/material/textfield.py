@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.material.form_field_control import FormFieldControl
@@ -19,11 +19,11 @@ from flet.controls.types import (
 )
 
 __all__ = [
-    "TextField",
-    "KeyboardType",
-    "TextCapitalization",
     "InputFilter",
+    "KeyboardType",
     "NumbersOnlyInputFilter",
+    "TextCapitalization",
+    "TextField",
     "TextOnlyInputFilter",
 ]
 
@@ -133,6 +133,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
+
+    Raises:
+        ValueError: If [`min_lines`][(c).] is not positive.
+        ValueError: If [`max_lines`][(c).] is not positive.
+        ValueError: If [`min_lines`][(c).] is greater than [`max_lines`][(c).].
+        ValueError: If [`max_length`][(c).] is not -1 or positive.
     """
 
     value: str = ""
@@ -142,9 +148,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
-    The type of keyboard to use for editing the text. The property value is
-    [`KeyboardType`][flet.KeyboardType] and defaults
-    to `KeyboardType.TEXT`.
+    The type of keyboard to use for editing the text.
     """
 
     multiline: bool = False
@@ -420,22 +424,33 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
+    def _migrate_state(self, other: BaseControl):
+        super()._migrate_state(other)
+        if (
+            isinstance(other, TextField)
+            and self.value is None
+            and self.value != other.value
+        ):
+            self.value = other.value
+
     def before_update(self):
         super().before_update()
-        assert self.min_lines is None or self.min_lines > 0, (
-            "min_lines must be greater than 0"
-        )
-        assert self.max_lines is None or self.max_lines > 0, (
-            "min_lines must be greater than 0"
-        )
-        assert (
-            self.max_lines is None
-            or self.min_lines is None
-            or self.min_lines <= self.max_lines
-        ), "min_lines can't be greater than max_lines"
-        assert (
-            self.max_length is None or self.max_length == -1 or self.max_length > 0
-        ), "max_length must be either equal to -1 or greater than 0"
+        if self.min_lines is not None and self.min_lines <= 0:
+            raise ValueError("min_lines must be greater than 0")
+        if self.max_lines is not None and self.max_lines <= 0:
+            raise ValueError("max_lines must be greater than 0")
+        if (
+            self.max_lines is not None
+            and self.min_lines is not None
+            and self.min_lines > self.max_lines
+        ):
+            raise ValueError("min_lines can't be greater than max_lines")
+        if (
+            self.max_length is not None
+            and self.max_length != -1
+            and self.max_length <= 0
+        ):
+            raise ValueError("max_length must be either equal to -1 or greater than 0")
         if (
             self.bgcolor is not None
             or self.fill_color is not None

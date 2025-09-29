@@ -8,9 +8,6 @@ __all__ = ["HapticFeedback"]
 class HapticFeedback(Service):
     """
     Allows access to the haptic feedback interface on the device.
-
-    It is non-visual and should be added to
-    [`Page.services`][flet.Page.services] list before it can be used.
     """
 
     async def heavy_impact(self):

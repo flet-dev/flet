@@ -19,7 +19,7 @@ __all__ = [
 class FilePickerFileType(Enum):
     """
     Defines the file types that can be selected using the
-    [`FilePicker`][flet.FilePicker].
+    [`FilePicker`][flet.].
     """
 
     ANY = "any"
@@ -29,8 +29,8 @@ class FilePickerFileType(Enum):
 
     MEDIA = "media"
     """
-    A combination of [`VIDEO`][flet.FilePickerFileType.VIDEO] and
-    [`IMAGE`][flet.FilePickerFileType.IMAGE].
+    A combination of [`VIDEO`][(c).] and
+    [`IMAGE`][(c).].
     """
 
     IMAGE = "image"
@@ -133,11 +133,11 @@ class FilePicker(Service):
         Uploads selected files to specified upload URLs.
 
         Before calling this method,
-        [`pick_files()`][flet.FilePicker.pick_files]
+        [`pick_files()`][(c).pick_files]
         must be called, so that the internal file picker selection is not empty.
 
         Args:
-            files: A list of [`FilePickerUploadFile`][flet.FilePickerUploadFile], where
+            files: A list of [`FilePickerUploadFile`][flet.], where
                 each item specifies which file to upload, and where
                 (with PUT or POST).
         """
@@ -202,7 +202,7 @@ class FilePicker(Service):
                 iOS or Android modes.
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is
-                [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
+                [`FilePickerFileType.CUSTOM`][flet.].
 
         Raises:
             ValueError: If `src_bytes` is not provided, when called in web mode,
@@ -249,7 +249,7 @@ class FilePicker(Service):
             allow_multiple: Allow the selection of multiple files at once.
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is
-                [`FilePickerFileType.CUSTOM`][flet.FilePickerFileType.CUSTOM].
+                [`FilePickerFileType.CUSTOM`][flet.].
         """
         files = await self._invoke_method(
             "pick_files",

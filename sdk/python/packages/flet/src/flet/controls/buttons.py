@@ -34,7 +34,7 @@ class ShapeBorder:
 
     See subclasses/implementations:
 
-    - [`OutlinedBorder`][flet.OutlinedBorder]
+    - [`OutlinedBorder`][flet.]
     """
 
 
@@ -45,11 +45,11 @@ class OutlinedBorder(ShapeBorder):
 
     See subclasses/implementations:
 
-    - [`BeveledRectangleBorder`][flet.BeveledRectangleBorder]
-    - [`ContinuousRectangleBorder`][flet.ContinuousRectangleBorder]
-    - [`CircleBorder`][flet.CircleBorder]
-    - [`RoundedRectangleBorder`][flet.RoundedRectangleBorder]
-    - [`StadiumBorder`][flet.StadiumBorder]
+    - [`BeveledRectangleBorder`][flet.]
+    - [`ContinuousRectangleBorder`][flet.]
+    - [`CircleBorder`][flet.]
+    - [`RoundedRectangleBorder`][flet.]
+    - [`StadiumBorder`][flet.]
     """
 
     side: Optional[BorderSide] = None
@@ -194,7 +194,7 @@ class ButtonStyle:
     background and shadow colors, content padding, border width and radius.
 
     Most of these style attributes could be configured for all or particular
-    [`ControlState`][flet.ControlState] of a button,
+    [`ControlState`][flet.] of a button,
     such as `HOVERED`, `FOCUSED`, `DISABLED` and others.
     """
 

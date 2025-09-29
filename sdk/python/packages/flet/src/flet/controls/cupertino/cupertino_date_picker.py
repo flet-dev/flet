@@ -34,13 +34,24 @@ class CupertinoDatePickerDateOrder(Enum):
 class CupertinoDatePicker(LayoutControl):
     """
     An iOS-styled date picker.
+
+    Raises:
+        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
+        ValueError: If [`minute_interval`][(c).] is not a positive integer
+            factor of `60`.
+        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
+            after [`last_date`][(c).].
+        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
+            greater than [`maximum_year`][(c).].
     """
 
     value: DateTimeValue = field(default_factory=lambda: datetime.now())
     """
-    The initial date and/or time of the picker. It must conform to the intervals
-    set in `first_date`, `last_date`, `min_year`, and `max_year` else an error
-    will be `ValueError` will be raised.
+    The initial date and/or time of the picker.
+
+    It must conform to the intervals set in [`first_date`][(c).], [`last_date`][(c).],
+    [`minimum_year`][(c).], and [`maximum_year`][(c).],
+    else a `ValueError` will be raised.
 
     Defaults to the present date and time.
     """
@@ -49,45 +60,43 @@ class CupertinoDatePicker(LayoutControl):
     """
     The earliest allowable date that the user can select.
 
-    Defaults to `None` - no limit.
+    - If set to `None` (the default), there is no lower date limit.
+    - When not `None`, one can still scroll the picker to dates earlier than
+        `first_date`, with the exception that the [`on_change`][(c).] will not be
+        called. Once let go, the picker will scroll back to `first_date`.
 
-    When not `None` (no limit), one can still scroll the picker to dates earlier than
-    `first_date`, with the exception that the
-    [`on_change`][flet.CupertinoDatePicker.on_change] will not be called.
-    Once let go, the picker will scroll back to `first_date`.
-
-    In `CupertinoDatePickerMode.TIME` mode, a time becomes unselectable if the
-    datetime produced by combining that particular time and the date part of
-    initialDateTime is earlier than `last_date`. So typically `first_date` needs
-    to be set to a datetime that is on the same date as initialDateTime.
+    Note:
+        In [`CupertinoDatePickerMode.TIME`][flet.] mode, a time becomes unselectable
+        if the datetime produced by combining that particular time and the date part of
+        [`value`][(c).] is earlier than `last_date`. So typically, `first_date` needs
+        to be set to a datetime that is on the same date as [`value`][(c).].
     """
 
     last_date: Optional[DateTimeValue] = None
     """
     The latest allowable date that the user can select.
 
-    When not `None`, one can still scroll the picker to dates later than
-    `last_date`, with the exception that the `on_change` will not be called.
-    Once let go, the picker will scroll back to `last_date`.
+    - If set to `None` (the default), there is no upper date limit.
+    - When not `None`, one can still scroll the picker to dates later than
+        `last_date`, with the exception that the [`on_change`][(c).] will not be called.
+        Once let go, the picker will scroll back to `last_date`.
 
-    In [`CupertinoDatePickerMode.TIME`][flet.CupertinoDatePickerMode.TIME] mode,
-    a time becomes unselectable if the
-    datetime produced by combining that particular time and the date part of
-    initialDateTime is later than `last_date`. So typically `last_date` needs to
-    be set to a datetime that is on the same date as initialDateTime.
-
-    Defaults to `None` - no limit.
+    Note:
+        In [`CupertinoDatePickerMode.TIME`][flet.] mode, a time becomes unselectable
+        if the datetime produced by combining that particular time and the date part
+        of [`value`][(c).] is later than `last_date`. So typically, `last_date` needs
+        to be set to a datetime that is on the same date as [`value`][(c).].
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background color of the date picker.
+    The background color of this date picker.
     """
 
     minute_interval: int = 1
     """
     The granularity of the minutes spinner, if it is shown in the current
-    [`date_picker_mode`][flet.CupertinoDatePicker.date_picker_mode].
+    [`date_picker_mode`][(c).].
 
     Note:
         Must be an integer factor of `60`.
@@ -96,13 +105,13 @@ class CupertinoDatePicker(LayoutControl):
     minimum_year: int = 1
     """
     Minimum year to which the picker can be scrolled when in
-    [`CupertinoDatePickerMode.DATE`][flet.CupertinoDatePickerMode.DATE] mode.
+    [`CupertinoDatePickerMode.DATE`][flet.] mode.
     """
 
     maximum_year: Optional[int] = None
     """
     Maximum year to which the picker can be scrolled when in
-    [`CupertinoDatePickerMode.DATE`][flet.CupertinoDatePickerMode.DATE] mode.
+    [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Defaults to `None` - no limit.
     """
@@ -135,21 +144,19 @@ class CupertinoDatePicker(LayoutControl):
 
     Note:
         The final order in which the columns are displayed is also influenced by
-        the [`date_picker_mode`][flet.CupertinoDatePicker.date_picker_mode].
-        For example,if `date_picker_mode` is
-        [`CupertinoDatePickerMode.MONTH_YEAR`][flet.CupertinoDatePickerMode.MONTH_YEAR]
-        both [`CupertinoDatePickerDateOrder.DAY_MONTH_YEAR`][flet.CupertinoDatePickerDateOrder.DAY_MONTH_YEAR] and
-        [`CupertinoDatePickerDateOrder.MONTH_DAY_YEAR`][flet.CupertinoDatePickerDateOrder.MONTH_DAY_YEAR] will result in the month|year order.
-    """  # noqa: E501
+        the [`date_picker_mode`][(c).]. For example, if `date_picker_mode` is
+        [`CupertinoDatePickerMode.MONTH_YEAR`][flet.]
+        both [`CupertinoDatePickerDateOrder.DAY_MONTH_YEAR`][flet.] and
+        [`CupertinoDatePickerDateOrder.MONTH_DAY_YEAR`][flet.] will result
+        in the `month|year` order.
+    """
 
     on_change: Optional[ControlEventHandler["CupertinoDatePicker"]] = None
     """
     Called when the selected date and/or time changes.
 
-    Will not fire if the new
-    selected value is not valid, or is not in the range of
-    [`first_date`][flet.CupertinoDatePicker.first_date] and
-    [`last_date`][flet.CupertinoDatePicker.last_date].
+    Will not be called if the new selected value is not valid,
+    or is not in the range of [`first_date`][(c).] and [`last_date`][(c).].
     """
 
     def before_update(self):
@@ -161,21 +168,23 @@ class CupertinoDatePicker(LayoutControl):
         else:
             value = self.value
 
-        assert self.item_extent > 0, (
-            f"item_extent must be strictly greater than 0, got {self.item_extent}"
-        )
-        assert self.minute_interval > 0 and 60 % self.minute_interval == 0, (
-            f"minute_interval must be a positive integer factor of 60, "
-            f"got {self.minute_interval}"
-        )
+        if self.item_extent <= 0:
+            raise ValueError(
+                f"item_extent must be strictly greater than 0, got {self.item_extent}"
+            )
+        if not (self.minute_interval > 0 and 60 % self.minute_interval == 0):
+            raise ValueError(
+                f"minute_interval must be a positive integer factor of 60, "
+                f"got {self.minute_interval}"
+            )
 
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
-            if self.first_date:
-                assert value >= self.first_date, (
+            if self.first_date and value < self.first_date:
+                raise ValueError(
                     f"value ({value}) can't be before first_date ({self.first_date})"
                 )
-            if self.last_date:
-                assert value <= self.last_date, (
+            if self.last_date and value > self.last_date:
+                raise ValueError(
                     f"value ({value}) can't be after last_date ({self.last_date})"
                 )
 
@@ -183,34 +192,39 @@ class CupertinoDatePicker(LayoutControl):
             CupertinoDatePickerMode.DATE,
             CupertinoDatePickerMode.MONTH_YEAR,
         ]:
-            assert 1 <= self.minimum_year <= value.year, (
-                f"value.year ({value.year}) can't be less than minimum_year "
-            )
-            f"({self.minimum_year})"
-
-            if self.maximum_year:
-                assert value.year <= self.maximum_year, (
-                    f"value.year ({value.year}) can't be greater than maximum_year "
+            if not (1 <= self.minimum_year <= value.year):
+                raise ValueError(
+                    f"value.year ({value.year}) can't be less than minimum_year "
+                    f"({self.minimum_year})"
                 )
-                f"({self.maximum_year})"
 
-            if self.first_date:
-                assert value >= self.first_date, (
+            if self.maximum_year and value.year > self.maximum_year:
+                raise ValueError(
+                    f"value.year ({value.year}) can't be greater than maximum_year "
+                    f"({self.maximum_year})"
+                )
+
+            if self.first_date and value < self.first_date:
+                raise ValueError(
                     f"value ({value}) can't be before first_date ({self.first_date})"
                 )
 
-            if self.last_date:
-                assert value <= self.last_date, (
+            if self.last_date and value > self.last_date:
+                raise ValueError(
                     f"value ({value}) can't be after last_date ({self.last_date})"
                 )
 
-        if self.date_picker_mode != CupertinoDatePickerMode.DATE:
-            assert not self.show_day_of_week, (
+        if (
+            self.date_picker_mode != CupertinoDatePickerMode.DATE
+            and self.show_day_of_week
+        ):
+            raise ValueError(
                 "show_day_of_week is only supported when date_picker_mode is "
                 "CupertinoDatePickerMode.DATE"
             )
 
-        assert value.minute % self.minute_interval == 0, (
-            f"value.minute ({value.minute}) must be divisible by minute_interval "
-        )
-        f"({self.minute_interval})"
+        if value.minute % self.minute_interval != 0:
+            raise ValueError(
+                f"value.minute ({value.minute}) must be divisible by minute_interval "
+                f"({self.minute_interval})"
+            )
