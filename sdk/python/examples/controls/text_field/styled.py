@@ -21,8 +21,7 @@ async def main(page: ft.Page):
             capitalization=ft.TextCapitalization.CHARACTERS,
         )
     )
-    # await tf.focus()
-    # page.update()
+    await tf.focus()
 
 
 ft.run(main)

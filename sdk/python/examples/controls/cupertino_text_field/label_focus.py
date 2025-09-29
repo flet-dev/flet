@@ -9,7 +9,6 @@ async def main(page: ft.Page):
         )
     )
     await ctf.focus()
-    page.update()
 
 
 ft.run(main)
