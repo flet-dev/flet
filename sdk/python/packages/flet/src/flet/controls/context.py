@@ -13,6 +13,9 @@ class Context:
     Context instance is accessed via [`flet.context`][flet.context].
     """
 
+    def __init__(self) -> None:
+        self.__components_mode = False
+
     @property
     def page(self) -> "Page":
         """
@@ -95,6 +98,21 @@ class Context:
         """
         _update_behavior_context_var.get()._auto_update_enabled = False
 
+    def enable_components_mode(self):
+        """
+        Enables components mode in the current context.
+        """
+        self.__components_mode = True
+
+    def is_components_mode(self) -> bool:
+        """
+        Returns whether the current context is in components mode.
+
+        Returns:
+            `True` if in components mode, `False` otherwise.
+        """
+        return self.__components_mode
+
     def auto_update_enabled(self) -> bool:
         """
         Returns whether auto-update is enabled in the current context.
@@ -102,7 +120,10 @@ class Context:
         Returns:
             `True` if auto-update is enabled, `False` otherwise.
         """
-        return _update_behavior_context_var.get()._auto_update_enabled
+        return (
+            not self.__components_mode
+            and _update_behavior_context_var.get()._auto_update_enabled
+        )
 
     def reset_auto_update(self):
         """

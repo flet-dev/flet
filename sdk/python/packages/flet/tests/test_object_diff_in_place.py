@@ -1,7 +1,10 @@
 from dataclasses import field
 from typing import Any, Optional
 
+from pytest import raises
+
 import flet as ft
+from flet.components.component import Component
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
@@ -26,6 +29,7 @@ from .common import (
     LineChart,
     LineChartData,
     LineChartDataPoint,
+    MyText,
     b_unpack,
     cmp_ops,
     make_diff,
@@ -38,8 +42,7 @@ class SuperButton(Button):
     prop_2: Optional[str] = None
 
     def init(self):
-        print("SuperButton.init()")
-        assert not self.page
+        pass
 
     def build(self):
         print("SuperButton.build()")
@@ -212,7 +215,8 @@ def test_simple_page():
         SuperButton("Another Button"),
     ]
     del page.fonts["font2"]
-    assert page.controls[0].controls[0].page is None
+    with raises(RuntimeError):
+        assert page.controls[0].controls[0].page is None
 
     page._user_services._services[0].prop_2 = [2, 6]
 
@@ -290,7 +294,7 @@ def test_simple_page():
             {
                 "op": "add",
                 "path": ["views", 0, "controls", 0, "controls", 0],
-                "value": SuperButton("Bar"),
+                "value_type": SuperButton,
             },
             {
                 "op": "replace",
@@ -513,5 +517,141 @@ def test_reverse_list():
         [
             {"op": "move", "from": ["controls", 2], "path": ["controls", 0]},
             {"op": "move", "from": ["controls", 1], "path": ["controls", 2]},
+        ],
+    )
+
+
+def test_overriding_controls_with_component():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+
+    # initial update
+    make_msg(page, {}, show_details=True)
+
+    # replace .controls with a component
+    page.controls = Component(
+        fn=lambda: ft.Text("Hello from component"), args=(), kwargs={}
+    )
+
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": ["views", 0, "controls"],
+                "value_type": Component,
+            },
+        ],
+    )
+
+    # second update
+    page.title = "Something"
+    page.theme_mode = ft.ThemeMode.DARK
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    print(patch)
+
+    # 3rd update
+    page.title = "Bar"
+    page.theme_mode = ft.ThemeMode.DARK
+    patch, _, added_controls, removed_controls = make_diff(page, show_details=True)
+    print(patch)
+
+
+def test_list_insertions():
+    col = ft.Column(
+        [
+            ft.Text("Line 2"),
+            ft.Text("Line 4"),
+            ft.Text("Line 6"),
+            ft.Text("Line 8"),
+        ]
+    )
+    _, patch, _, _, _ = make_msg(col, {})
+
+    # 1st update
+    col.controls[0] = ft.Text("Line 2 (updated)")
+    col.controls[1] = ft.Text("Line 4 (updated)")
+    col.controls[2] = ft.Text("Line 6 (updated)")
+
+    patch, _, _, _ = make_diff(col)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "replace", "path": ["controls", 0], "value_type": Text},
+            {"op": "replace", "path": ["controls", 1], "value_type": Text},
+            {"op": "replace", "path": ["controls", 2], "value_type": Text},
+        ],
+    )
+
+    # 2nd update
+    col.controls.insert(0, ft.Text("Line 1"))
+    col.controls.insert(2, ft.Text("Line 3"))
+    col.controls.insert(4, ft.Text("Line 5"))
+    col.controls.insert(6, ft.Text("Line 7"))
+    col.controls[3].value = "Line 4 (updated again)"
+
+    patch, _, _, _ = make_diff(col)
+    assert cmp_ops(
+        patch,
+        [
+            {"op": "add", "path": ["controls", 0], "value": ft.Text("Line 1")},
+            {"op": "add", "path": ["controls", 2], "value": ft.Text("Line 3")},
+            {
+                "op": "replace",
+                "path": ["controls", 3, "value"],
+                "value": "Line 4 (updated again)",
+            },
+            {"op": "add", "path": ["controls", 4], "value": ft.Text("Line 5")},
+            {"op": "add", "path": ["controls", 6], "value": ft.Text("Line 7")},
+        ],
+    )
+
+
+def test_list_move_1_no_keys():
+    line_1 = MyText("Line 1")
+    line_2 = MyText("Line 2")
+    line_3 = MyText("Line 3")
+    line_4 = MyText("Line 4")
+    line_5 = MyText("Line 5")
+
+    col_1 = [
+        line_1,
+        line_2,
+        line_3,
+        line_4,
+        line_5,
+    ]
+
+    col_2 = [
+        MyText("Line 0"),
+        line_4,
+        line_3,
+        line_5,
+        MyText("Line 6"),
+    ]
+
+    patch, msg, added_controls, removed_controls = make_diff(col_2, col_1)
+
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "replace",
+                "path": [0],
+                "value": MyText(value="Line 0"),
+            },
+            {
+                "op": "remove",
+                "path": [1],
+                "value": MyText(value="Line 2"),
+            },
+            {"op": "move", "from": [2], "path": [1]},
+            {
+                "op": "add",
+                "path": [4],
+                "value": MyText(value="Line 6"),
+            },
         ],
     )

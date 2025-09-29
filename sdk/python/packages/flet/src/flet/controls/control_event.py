@@ -32,14 +32,17 @@ __all__ = [
 
 def get_event_field_type(control: Any, field_name: str):
     frame = inspect.currentframe().f_back
-    globalns = sys.modules[control.__class__.__module__].__dict__
     localns = frame.f_globals.copy()
     localns.update(frame.f_locals)
 
     merged_annotations = {}
+    annotation_modules = {}
 
     for cls in control.__class__.__mro__:
         annotations = getattr(cls, "__annotations__", {})
+        module = sys.modules.get(cls.__module__)
+        module_dict = module.__dict__ if module else {}
+
         for name, annotation in annotations.items():
             if get_origin(annotation) is InitVar or str(annotation).startswith(
                 "dataclasses.InitVar"
@@ -47,11 +50,24 @@ def get_event_field_type(control: Any, field_name: str):
                 continue  # Skip InitVar
             if name not in merged_annotations:
                 merged_annotations[name] = annotation
+                annotation_modules[name] = module_dict
 
     if field_name not in merged_annotations:
         return None
 
     annotation = merged_annotations[field_name]
+
+    globalns = {}
+    current_module = sys.modules.get(control.__class__.__module__)
+    if current_module:
+        globalns.update(current_module.__dict__)
+
+    owner_module_dict = annotation_modules.get(field_name)
+    if owner_module_dict:
+        for key, value in owner_module_dict.items():
+            globalns.setdefault(key, value)
+
+    globalns.setdefault("__builtins__", __builtins__)
 
     try:
         # Resolve forward refs manually
@@ -80,7 +96,8 @@ class Event(Generic[EventControlType]):
     control: EventControlType = field(repr=False)
 
     @property
-    def page(self) -> Optional[Union["Page", "BasePage"]]:
+    def page(self) -> Union["Page", "BasePage"]:
+        assert self.control.page
         return self.control.page
 
     @property

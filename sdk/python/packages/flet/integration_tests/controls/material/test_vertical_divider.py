@@ -37,11 +37,12 @@ async def test_vertical_divider_properties(flet_app: ftt.FletTestApp, request):
     flet_app.page.add(
         ft.VerticalDivider(
             expand=True,
-            thickness=10,
+            thickness=20,
             color=ft.Colors.RED,
             width=100,
             leading_indent=100,
             trailing_indent=100,
+            radius=10,
         )
     )
     flet_app.page.update()

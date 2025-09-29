@@ -62,6 +62,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     _shiftEnterfocusNode.addListener(_onShiftEnterFocusChange);
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
@@ -70,8 +71,19 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     _shiftEnterfocusNode.removeListener(_onShiftEnterFocusChange);
     _shiftEnterfocusNode.dispose();
     _focusNode.removeListener(_onFocusChange);
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("CupertinoTextField.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown CupertinoTextField method: $name");
+    }
   }
 
   void _onShiftEnterFocusChange() {

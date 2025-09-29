@@ -4,12 +4,12 @@ import 'package:web/web.dart' as web;
 const String _sessionIdKey = "_flet_session_id";
 
 class SessionStore {
-  static String? getSessionId(String pageUrl) {
-    return get("$pageUrl$_sessionIdKey");
+  static String? getSessionId() {
+    return get(_sessionIdKey);
   }
 
-  static setSessionId(String pageUrl, String? value) {
-    set("$pageUrl$_sessionIdKey", value ?? "");
+  static setSessionId(String? value) {
+    set(_sessionIdKey, value ?? "");
   }
 
   static String? get(String name) {
