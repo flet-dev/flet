@@ -1,7 +1,9 @@
-name: CI
+name: Build & Publish
 
 on:
   push:
+    branches:
+      - '**'
     tags:
       - '*'
     paths-ignore:
@@ -16,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -24,7 +26,7 @@ env:
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
   UV_PYTHON: "3.12"
-  PYODIDE_VERSION: "0.28.3"
+  PYODIDE_VERSION: "0.27.7"
 
 jobs:
   # ============
@@ -36,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.10", "3.11", "3.12", "3.13" ]
+        python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -100,23 +102,26 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Publish to pub.dev
+      - name: Publish to pub.dev (Release)
+        if: ${{ github.ref_type == 'tag' }}
         shell: bash
         env:
           PUB_DEV_TOKEN: ${{ secrets.PUB_DEV_TOKEN }}
         working-directory: packages/flet
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            mkdir -p "$HOME/.config/dart"
-            printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
+          mkdir -p "$HOME/.config/dart"
+          printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
 
-            # patch pubspec for release
-            patch_pubspec_version ./pubspec.yaml "$PKG_VER"
+          # patch pubspec for release
+          patch_pubspec_version ./pubspec.yaml "$PKG_VER"
 
-            dart pub publish --force
-          else
-            dart pub publish --dry-run || exit 0
-          fi
+          dart pub publish --force
+
+      - name: Publish to pub.dev (Dry Run)
+        if: ${{ github.ref_type != 'tag' }}
+        shell: bash
+        working-directory: packages/flet
+        run: dart pub publish --dry-run || exit 0
 
   # =============================
   # Build Flet Client for Windows
