@@ -211,7 +211,8 @@ jobs:
           if-no-files-found: error
           path: |
             client/build/windows/x64/runner/flet-windows.zip
-            sdk/python/dist/*.{whl,tar.gz}
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # ===========================
   # Build Flet Client for macOS
@@ -269,7 +270,8 @@ jobs:
           if-no-files-found: error
           path: |
             client/flet-macos.tar.gz
-            sdk/python/dist/*.{whl,tar.gz}
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # ===========================
   # Build Flet Client for Linux
@@ -463,7 +465,8 @@ jobs:
           if-no-files-found: error
           path: |
             client/flet-linux*.tar.gz
-            sdk/python/dist/*.{whl,tar.gz}
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # =========================
   # Build Flet Client for Web
@@ -530,7 +533,8 @@ jobs:
           if-no-files-found: error
           path: |
             client/build/flet-web.tar.gz
-            sdk/python/dist/*.{whl,tar.gz}
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # =======================
   # Build flet and flet-cli
@@ -563,7 +567,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: flet-and-flet-cli-wheels
-          path: sdk/python/dist/*.{whl,tar.gz}
+          path: |
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # ===============================
   # Publish Python packages to PyPI
@@ -592,11 +598,11 @@ jobs:
 
       - name: Publish packages to PyPI
         run: |
-          uv publish dist/**/flet-[0-9]* --dry-run
-          uv publish dist/**/flet_cli-[0-9]* --dry-run
-          uv publish dist/**/flet_desktop-[0-9]* --dry-run
-          uv publish dist/**/flet_desktop_light-[0-9]* --dry-run
-          uv publish dist/**/flet_web-[0-9]* --dry-run
+          uv publish dist/**/flet-* --dry-run
+          uv publish dist/**/flet_cli-* --dry-run
+          uv publish dist/**/flet_desktop-* --dry-run
+          uv publish dist/**/flet_desktop_light-* --dry-run
+          uv publish dist/**/flet_web-* --dry-run
 
   # ==============
   # GitHub Release
@@ -624,4 +630,6 @@ jobs:
           overwrite_files: true
           fail_on_unmatched_files: true
           files: |
-            dist/**/*.{whl,tar.gz,zip}
+            dist/**/*.whl
+            dist/**/*.tar.gz
+            dist/**/*.zip
