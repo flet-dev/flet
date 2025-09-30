@@ -604,7 +604,7 @@ jobs:
           rm -rf dist/client
 
           for pkg in flet flet_cli flet_desktop flet_desktop_light flet_web; do
-            uv publish dist/**/${pkg}-*
+            uv publish --dry-run dist/**/${pkg}-*
           done
 
   # ==============
