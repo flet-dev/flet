@@ -187,16 +187,13 @@ jobs:
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp -r "flet" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet"
 
-      - name: Build Python wheels
+      - name: Build flet-desktop Python package
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
 
-          # Convert Windows env paths to POSIX for bash
-          SDK_PYTHON="$(cygpath -u "$SDK_PYTHON")"
-
           cd "$SDK_PYTHON"
-          uv build --wheel --package flet-desktop
+          uv build --package flet-desktop
 
           # Ensure glob expands
           shopt -s nullglob
@@ -250,14 +247,14 @@ jobs:
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
 
-      - name: Build Python wheels
+      - name: Build flet-desktop Python package
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
 
           patch_python_package_versions
-          uv build --wheel --package flet-desktop
+          uv build --package flet-desktop
 
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
@@ -389,7 +386,7 @@ jobs:
           build_flutter "flet-desktop"
           build_flutter "flet-desktop-light"
 
-      - name: Build Python wheels
+      - name: Build flet-desktop and flet-desktop-light Python packages
         shell: bash
         working-directory: client
         run: |
@@ -425,7 +422,7 @@ jobs:
 
             # Patch the package name to match the current wheel's flavor and build
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
-            uv build --wheel
+            uv build
 
             # Find all universal wheels for the current package
             universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
@@ -519,12 +516,12 @@ jobs:
           # Archive the entire built Flutter web client into a gzipped tarball
           tar -czvf build/flet-web.tar.gz -C build/web .
 
-      - name: Build Python package
+      - name: Build flet-web Python package
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          uv build --wheel --package flet-web
+          uv build --package flet-web
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -539,7 +536,7 @@ jobs:
   # Build flet and flet-cli
   # =======================
   build_flet_and_cli_wheels:
-    name: Build flet and flet-cli Python wheels
+    name: Build flet and flet-cli Python packages
     runs-on: ubuntu-latest
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
@@ -553,13 +550,13 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Build wheels
+      - name: Build flet and flet-cli Python packages
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          uv build --wheel --package flet-cli
-          uv build --wheel --package flet
+          uv build --package flet-cli
+          uv build --package flet
           update_flet_wheel_deps dist
 
       - name: Upload artifacts
@@ -574,7 +571,7 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
@@ -593,13 +590,13 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Publish wheels to PyPI
+      - name: Publish packages to PyPI
         run: |
-          uv publish dist/**/flet-*.whl
-          uv publish dist/**/flet_cli-*.whl
-          uv publish dist/**/flet_desktop-*.whl
-          uv publish dist/**/flet_desktop_light-*.whl
-          uv publish dist/**/flet_web-*.whl
+          uv publish dist/**/flet-* --dry-run
+          uv publish dist/**/flet_cli-* --dry-run
+          uv publish dist/**/flet_desktop-* --dry-run
+          uv publish dist/**/flet_desktop_light-* --dry-run
+          uv publish dist/**/flet_web-* --dry-run
 
   # ==============
   # GitHub Release
