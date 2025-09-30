@@ -257,6 +257,28 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
+    async def wrap_page_controls_in_screenshot(self):
+        """
+        Wraps provided controls in a Screenshot control.
+        """
+        controls = list(self.page.controls)
+        self.page.controls = [scr := ft.Screenshot(ft.Column(controls, margin=10))]
+        self.page.update()
+        await self.tester.pump_and_settle()
+        return scr
+
+    async def take_page_controls_screenshot(
+        self,
+        pixel_ratio: Optional[float] = None,
+    ):
+        """
+        Takes a screenshot of all controls on the current page.
+        """
+        scr = await self.wrap_page_controls_in_screenshot()
+        return await scr.capture(
+            pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
+        )
+
     async def assert_control_screenshot(
         self,
         name: str,

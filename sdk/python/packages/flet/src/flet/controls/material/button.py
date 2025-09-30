@@ -55,18 +55,73 @@ class Button(LayoutControl, AdaptiveControl):
             (string or visible control) is provided.
     """
     icon_color: Optional[ColorValue] = None
+    """
+    The color of the icon.
+    If not specified, defaults to the current foreground color.
+    """
+
     color: Optional[ColorValue] = field(default=None, metadata={"skip": True})
+    """
+    The button's foreground color.
+    If not specified, defaults to the theme's primary color.
+    """
+
     bgcolor: Optional[ColorValue] = field(default=None, metadata={"skip": True})
+    """
+    The button's background color.
+    If not specified, defaults to the theme's primary color.
+    """
+
     elevation: Number = field(default=1, metadata={"skip": True})
+    """
+    The button's elevation.
+    If not specified, defaults to `1`.
+    """
+
     style: Optional[ButtonStyle] = field(default=None, metadata={"skip": True})
+    """
+    The button's style.
+    """
+
     autofocus: Optional[bool] = None
+    """
+    Whether this button should be focused initially.
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    The button's clip behavior.
+    """
+
     url: Optional[Union[str, Url]] = None
+    """
+    The URL to open when the button is clicked.
+    """
+
     on_click: Optional[ControlEventHandler["Button"]] = None
+    """
+    Called when the button is clicked.
+    """
+
     on_long_press: Optional[ControlEventHandler["Button"]] = None
+    """
+    Called when the button is long-pressed.
+    """
+
     on_hover: Optional[ControlEventHandler["Button"]] = None
+    """
+    Called when the button is hovered.
+    """
+
     on_focus: Optional[ControlEventHandler["Button"]] = None
+    """
+    Called when the button is focused.
+    """
+
     on_blur: Optional[ControlEventHandler["Button"]] = None
+    """
+    Called when the button loses focus.
+    """
 
     def before_update(self):
         super().before_update()
@@ -92,4 +147,7 @@ class Button(LayoutControl, AdaptiveControl):
             )
 
     async def focus(self):
+        """
+        Focus the button.
+        """
         await self._invoke_method("focus")
