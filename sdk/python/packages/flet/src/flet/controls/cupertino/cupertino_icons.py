@@ -4,7 +4,7 @@ Flet Cupertino Icons
 To generate/update this file run from the root of the repository:
 
 ```
-uv run ci/generate_icons.py
+uv run .github/scripts/generate_icons.py
 ```
 """
 
