@@ -434,7 +434,7 @@ jobs:
 
             if (( ${#universal[@]} == 0 )); then
               echo "ERROR: No universal wheels found in ${dist} for ${PACKAGE_NAME}."
-              ls -la "$dist" || true
+              ls -laR "$dist" || true
               exit 1
             fi
 
@@ -579,7 +579,7 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
