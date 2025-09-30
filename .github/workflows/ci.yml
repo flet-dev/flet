@@ -598,6 +598,7 @@ jobs:
 
       - name: Publish packages to PyPI
         run: |
+          ls -laR dist
           uv publish dist/**/flet-* --dry-run
           uv publish dist/**/flet_cli-* --dry-run
           uv publish dist/**/flet_desktop-* --dry-run
