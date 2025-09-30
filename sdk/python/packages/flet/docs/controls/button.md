@@ -1,16 +1,19 @@
+---
+class_name: flet.Button
+image: ../test-images/controls/material/golden/macos/button/image_for_docs.png
+---
+
+{{ class_summary(class_name, image, image_caption="Enabled and disabled buttons") }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/elevatedbutton)
 
-### Basic Example
+### Basic example
 
 ```python
 --8<-- "../../examples/controls/button/basic.py"
 ```
-
-![basic](../examples/controls/button/media/basic.png){width="80%"}
-/// caption
-///
 
 ### Icons
 
@@ -60,4 +63,4 @@
 --8<-- "../../examples/controls/button/animate_on_hover.py"
 ```
 
-::: flet.Button
+{{ class_members(class_name) }}

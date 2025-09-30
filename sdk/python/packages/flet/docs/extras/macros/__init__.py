@@ -24,7 +24,9 @@ def define_env(env):
 
     @env.macro
     def class_all_options(
-        class_name, separate_signature=True, image=None, **extra_options
+        class_name,
+        separate_signature=True,
+        **extra_options,
     ):
         options = {
             "show_root_toc_entry": True,
@@ -42,13 +44,16 @@ def define_env(env):
         if extra_options:
             options.update(extra_options)
         block = render_directive(class_name, options)
-        if image:
-            control_name = class_name.split(".")[-1]
-            return f"{block}\n\n![{control_name}]({image})\n"
         return f"{block}\n"
 
     @env.macro
-    def class_summary(class_name, image=None, **options):
+    def class_summary(
+        class_name,
+        image=None,
+        image_width="50%",
+        image_caption=None,
+        **options,
+    ):
         summary_options = {
             "show_bases": True,
             "summary": {
@@ -67,7 +72,11 @@ def define_env(env):
         blocks = [render_directive(class_name, base_options)]
         if image:
             control_name = class_name.split(".")[-1]
-            blocks.append(f"![{control_name}]({image})")
+            caption_line = f"{image_caption}\n" if image_caption else ""
+            blocks.append(
+                f"![{control_name}]({image})"
+                f'{{width="{image_width}"}}\n/// caption\n{caption_line}///\n'
+            )
         blocks.append(render_directive(class_name, summary_options))
         return "\n\n".join(blocks) + "\n"
 

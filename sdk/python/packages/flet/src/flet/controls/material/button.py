@@ -27,13 +27,33 @@ class Button(LayoutControl, AdaptiveControl):
     It supports various styles, colors, event handlers for user interaction,
     and can be used to display text, icons, etc.
 
+    ```python
+    ft.Button(content="Enabled button")
+    ft.Button(content="Disabled button", disabled=True)
+    ```
+    """
+
+    content: Optional[StrOrControl] = None
+    """
+    The button's label.
+    Typically a [`Text`][flet.] control or a string.
+    If a string is provided, it will be wrapped in a [`Text`][flet.] control.
+
     Raises:
         ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
             (string or visible control) is provided.
     """
 
-    content: Optional[StrOrControl] = None
     icon: Optional[IconDataOrControl] = None
+    """
+    The icon to display inside the button.
+    Typically an [`Icon`][flet.] control or an `IconData`.
+    If an `IconData` is provided, it will be wrapped in an [`Icon`][flet.] control.
+
+    Raises:
+        ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
+            (string or visible control) is provided.
+    """
     icon_color: Optional[ColorValue] = None
     color: Optional[ColorValue] = field(default=None, metadata={"skip": True})
     bgcolor: Optional[ColorValue] = field(default=None, metadata={"skip": True})
