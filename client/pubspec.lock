@@ -181,10 +181,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: "98f28b42168cc509abc92f88518882fd58061ea372d7999aecc424345c7bff6a"
+      sha256: "49413c8ca514dea7633e8def233b25efdf83ec8522955cc2c0e3ad802927e7c6"
       url: "https://pub.dev"
     source: hosted
-    version: "11.5.0"
+    version: "12.1.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -245,10 +245,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: e7e16c9d15c36330b94ca0e2ad8cb61f93cd5282d0158c09805aed13b5452f22
+      sha256: f2d9f173c2c14635cc0e9b14c143c49ef30b4934e8d1d274d6206fcb0086a06f
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.2"
+    version: "10.3.3"
   fixnum:
     dependency: transitive
     description:
@@ -277,7 +277,7 @@ packages:
     description:
       path: "src/flutter/flet_ads"
       ref: main
-      resolved-ref: aa05773138be06e69353e2a223bd23c51b36dd3f
+      resolved-ref: c320d40add2fd2d46f5f82029a4f259936308847
       url: "https://github.com/flet-dev/flet-ads.git"
     source: git
     version: "0.2.0"
@@ -286,7 +286,7 @@ packages:
     description:
       path: "src/flutter/flet_audio"
       ref: main
-      resolved-ref: "06fb901f133fab54e603f8039bc9a1d707d19068"
+      resolved-ref: "1e629a501a87b0c2c0a9956cf49552dc01efcbe5"
       url: "https://github.com/flet-dev/flet-audio.git"
     source: git
     version: "0.2.0"
@@ -295,7 +295,7 @@ packages:
     description:
       path: "src/flutter/flet_audio_recorder"
       ref: main
-      resolved-ref: "62a1934a34514e92617f4e090b53828474f5969e"
+      resolved-ref: e29cd51dec917fdb8b9e03d7bf4a71cb2f75217b
       url: "https://github.com/flet-dev/flet-audio-recorder.git"
     source: git
     version: "0.2.0"
@@ -304,7 +304,7 @@ packages:
     description:
       path: "src/flutter/flet_charts"
       ref: main
-      resolved-ref: d1303e03a6e39ab72ea888eb22219ba330704313
+      resolved-ref: "6902aeb244d676cb85f14268126df9c4fe7af084"
       url: "https://github.com/flet-dev/flet-charts.git"
     source: git
     version: "0.2.0"
@@ -313,7 +313,7 @@ packages:
     description:
       path: "src/flutter/flet_datatable2"
       ref: main
-      resolved-ref: bf6af9c7a9c1962c36512ff5ab48eec9f14ef81a
+      resolved-ref: b53fba432acf42e01505acba5898bc47d7d25797
       url: "https://github.com/flet-dev/flet-datatable2.git"
     source: git
     version: "0.1.0"
@@ -322,7 +322,7 @@ packages:
     description:
       path: "src/flutter/flet_flashlight"
       ref: main
-      resolved-ref: def30504c3ed6786dc2a1fdb4f18b226a284a7d2
+      resolved-ref: "0862f0324f4a0c1a405b2c1dc23e3857175b36cc"
       url: "https://github.com/flet-dev/flet-flashlight.git"
     source: git
     version: "0.2.0"
@@ -331,7 +331,7 @@ packages:
     description:
       path: "src/flutter/flet_geolocator"
       ref: main
-      resolved-ref: "25efd0a9d15f23bf284912814a131388f8de9ec4"
+      resolved-ref: "8381f3605b09eec6cbf02c44abb8216aaedf22b2"
       url: "https://github.com/flet-dev/flet-geolocator.git"
     source: git
     version: "0.25.2"
@@ -340,7 +340,7 @@ packages:
     description:
       path: "src/flutter/flet_lottie"
       ref: main
-      resolved-ref: "5187fcf6bcb37f4bfa59cad127f6444d40cdb48c"
+      resolved-ref: c9e8db9bab3ae0054de4e7b3fcb3fe282f6d8ee6
       url: "https://github.com/flet-dev/flet-lottie.git"
     source: git
     version: "0.2.0"
@@ -349,7 +349,7 @@ packages:
     description:
       path: "src/flutter/flet_map"
       ref: main
-      resolved-ref: d79ebf24ebad208a543b73a7f7511cd4da1d7ea9
+      resolved-ref: "3575ca7dc80251e6b0ac7648ff2620adb84db412"
       url: "https://github.com/flet-dev/flet-map.git"
     source: git
     version: "0.2.0"
@@ -358,7 +358,7 @@ packages:
     description:
       path: "src/flutter/flet_permission_handler"
       ref: main
-      resolved-ref: dbd04f183b8452a5247f2807007cc40a2381a172
+      resolved-ref: "6c9ac6c2c5608e00603c542a13e545ffba637398"
       url: "https://github.com/flet-dev/flet-permission-handler.git"
     source: git
     version: "0.2.0"
@@ -367,7 +367,7 @@ packages:
     description:
       path: "src/flutter/flet_rive"
       ref: main
-      resolved-ref: "6d78b068940afa5126fc38374ea326e710d43862"
+      resolved-ref: "6c9164f842e2d2b7ef27f09ab3bec163b63f6ac8"
       url: "https://github.com/flet-dev/flet-rive.git"
     source: git
     version: "0.2.0"
@@ -376,7 +376,7 @@ packages:
     description:
       path: "src/flutter/flet_video"
       ref: main
-      resolved-ref: abeea4e9a3a2864299743726b26d5a245a4389d6
+      resolved-ref: "9292cab1b40ce5ef81e9012421c05ce03d910133"
       url: "https://github.com/flet-dev/flet-video.git"
     source: git
     version: "0.2.0"
@@ -385,7 +385,7 @@ packages:
     description:
       path: "src/flutter/flet_webview"
       ref: main
-      resolved-ref: cb3d07bfb84ae1b51be25388ca04c03a9dafd7f3
+      resolved-ref: "4ae806ad9019a9d3883d1c0c88e30ba61aacb696"
       url: "https://github.com/flet-dev/flet-webview.git"
     source: git
     version: "0.2.0"
