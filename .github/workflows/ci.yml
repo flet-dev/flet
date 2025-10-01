@@ -535,6 +535,7 @@ jobs:
             client/flet-web.tar.gz
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
+
   # =====================================
   # Build flet, flet-cli and flet-desktop
   # =====================================
@@ -553,7 +554,7 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Build flet and flet-cli Python packages
+      - name: Build Python packages
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
@@ -566,7 +567,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: flet-and-flet-cli-wheels
+          name: flet-cli-desktop-python-wheels
           path: |
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
@@ -577,7 +578,7 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
@@ -602,7 +603,7 @@ jobs:
           rm -rf dist/client
 
           for pkg in flet flet_cli flet_desktop flet_desktop_light flet_web; do
-            uv publish --dry-run dist/**/${pkg}-*
+            uv publish dist/**/${pkg}-*
           done
 
   # ==============
