@@ -23,7 +23,8 @@ import '../services/service_registry.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
-import '../utils/platform_utils_non_web.dart';
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/session_store_web.dart'
     if (dart.library.io) "../utils/session_store_non_web.dart";
 import '../utils/theme.dart';

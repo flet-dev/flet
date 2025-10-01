@@ -21,7 +21,14 @@ __all__ = [
 class DeviceInfo:
     """
     Base class for device information.
-    Platform-specific device info classes inherit from this.
+
+    Platform-specific classes include:
+        - [`AndroidDeviceInfo`][flet.]
+        - [`IosDeviceInfo`][flet.]
+        - [`LinuxDeviceInfo`][flet.]
+        - [`MacOsDeviceInfo`][flet.]
+        - [`WebDeviceInfo`][flet.]
+        - [`WindowsDeviceInfo`][flet.]
     """
 
 
