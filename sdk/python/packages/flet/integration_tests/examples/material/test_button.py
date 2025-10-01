@@ -136,5 +136,5 @@ async def test_animate_on_hover(flet_app_function: ftt.FletTestApp):
     flet_app_function.assert_screenshot(
         "animate_on_hover_hovered",
         await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
-        similarity_threshold=98.8,
+        # similarity_threshold=98.8,
     )
