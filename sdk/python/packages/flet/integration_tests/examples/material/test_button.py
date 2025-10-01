@@ -80,7 +80,7 @@ async def test_handling_clicks(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "handling_clicks",
-        await scr.capture(),
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
     )
 
 
@@ -107,14 +107,14 @@ async def test_styling(flet_app_function: ftt.FletTestApp):
     scr = await flet_app_function.wrap_page_controls_in_screenshot()
     flet_app_function.assert_screenshot(
         "styled_initial",
-        await scr.capture(),
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
     )
     button = await flet_app_function.tester.find_by_text_containing("Styled")
     await flet_app_function.tester.mouse_hover(button)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "styled_hovered",
-        await scr.capture(),
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
     )
 
 
@@ -128,12 +128,12 @@ async def test_animate_on_hover(flet_app_function: ftt.FletTestApp):
     scr = await flet_app_function.wrap_page_controls_in_screenshot()
     flet_app_function.assert_screenshot(
         "animate_on_hover_initial",
-        await scr.capture(),
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
     )
     button = await flet_app_function.tester.find_by_text_containing("Hover over me")
     await flet_app_function.tester.mouse_hover(button)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "animate_on_hover_hovered",
-        await scr.capture(),
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
     )
