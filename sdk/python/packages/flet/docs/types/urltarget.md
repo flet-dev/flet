@@ -1,3 +1,1 @@
-::: flet.UrlTarget
-    options:
-        separate_signature: false
+{{ class_all_options("flet.UrlTarget", separate_signature=False) }}

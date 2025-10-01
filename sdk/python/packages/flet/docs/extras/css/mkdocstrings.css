@@ -1,26 +1,62 @@
+/* Material Symbols font with selected icons */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=account_tree,bolt,build,category,deployed_code");
+
+/* Hide the original label text */
+code.doc-symbol { font-size: 0; }
+
+/* Show only the icon */
+code.doc-symbol::before {
+  font-family: "Material Symbols Outlined";
+  font-variation-settings: 'FILL' 1, 'GRAD' 200, 'opsz' 24, 'wght' 200;
+  font-size: .82rem;
+  position: relative;
+  top: .25em;
+}
+
+.doc-heading .doc-symbol::before {
+  font-size: 1.0rem;
+  top: .21em;
+}
+
+code.doc-symbol-class::before {
+  content: "category";
+}
+
+code.doc-symbol-attribute::before {
+  content: "build";
+}
+
+code.doc-symbol-event::before {
+  content: "bolt";
+}
+
+code.doc-symbol-method::before {
+  content: "deployed_code";
+}
+
 /* Overrides */
-code.doc-symbol-parameter::after {
-    content: "parameter";
+[data-md-color-scheme="default"] {
+  --doc-symbol-class-fg-color: #f0a502;
+  --doc-symbol-attribute-fg-color: #0b8dd9; /* ae106f */
+  --doc-symbol-attribute-bg-color: #9500721a;
+
+  --doc-symbol-event-fg-color: #f8aa01;
+  --doc-symbol-event-bg-color: #e5ff001a;
 }
 
-code.doc-symbol-attribute::after {
-    content: "property";
+[data-md-color-scheme="slate"] {
+  --doc-symbol-class-fg-color: #f0a502;
+  --doc-symbol-attribute-fg-color: #0b8dd9; /* ae106f */
+  --doc-symbol-attribute-bg-color: #9500721a;
+
+  --doc-symbol-event-fg-color: #f8aa01;
+  --doc-symbol-event-bg-color: #e5ff001a;
 }
 
-code.doc-symbol-function::after {
-    content: "function";
-}
-
-code.doc-symbol-method::after {
-    content: "method";
-}
-
-code.doc-symbol-class::after {
-    content: "class";
-}
-
-code.doc-symbol-module::after {
-    content: "module";
+code.doc-symbol-event,
+a code.doc-symbol-event {
+  color: var(--doc-symbol-event-fg-color);
+  background-color: var(--doc-symbol-event-bg-color);
 }
 
 /* Overrides */

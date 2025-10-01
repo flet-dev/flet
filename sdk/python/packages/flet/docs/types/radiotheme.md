@@ -1,1 +1,1 @@
-::: flet.RadioTheme
+{{ class_all_options("flet.RadioTheme") }}

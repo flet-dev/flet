@@ -1,4 +1,4 @@
-::: flet.PaintRadialGradient
+{{ class_all_options("flet.PaintRadialGradient") }}
 
 ## Examples
 

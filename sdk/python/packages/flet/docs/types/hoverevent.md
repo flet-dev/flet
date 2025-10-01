@@ -1,1 +1,1 @@
-::: flet.HoverEvent
+{{ class_all_options("flet.HoverEvent") }}

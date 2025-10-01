@@ -49,7 +49,6 @@ class VerticalDivider(Control):
     line.
 
     If `None`, [`DividerTheme.color`][flet.] is used.
-    If that's is also `None`, defaults to [`Theme.divider_color`][flet.].
     """
 
     leading_indent: Optional[Number] = None

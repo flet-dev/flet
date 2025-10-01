@@ -1,4 +1,4 @@
-::: flet.BorderRadius
+{{ class_all_options("flet.BorderRadius") }}
 
 ## Usage example
 

@@ -1,3 +1,1 @@
-::: flet.TabIndicatorAnimation
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TabIndicatorAnimation", separate_signature=False) }}

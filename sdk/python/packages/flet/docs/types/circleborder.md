@@ -1,1 +1,1 @@
-::: flet.CircleBorder
+{{ class_all_options("flet.CircleBorder") }}

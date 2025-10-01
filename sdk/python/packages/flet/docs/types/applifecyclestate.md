@@ -1,3 +1,1 @@
-::: flet.AppLifecycleState
-    options:
-        separate_signature: false
+{{ class_all_options("flet.AppLifecycleState", separate_signature=False) }}

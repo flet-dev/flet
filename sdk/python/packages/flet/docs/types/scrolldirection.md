@@ -1,3 +1,1 @@
-::: flet.ScrollDirection
-    options:
-        separate_signature: false
+{{ class_all_options("flet.ScrollDirection", separate_signature=False) }}

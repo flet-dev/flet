@@ -1,1 +1,1 @@
-::: flet.StrutStyle
+{{ class_all_options("flet.StrutStyle") }}

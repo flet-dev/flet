@@ -1,4 +1,4 @@
-::: flet.BoxShadow
+{{ class_all_options("flet.BoxShadow") }}
 
 ## Examples
 

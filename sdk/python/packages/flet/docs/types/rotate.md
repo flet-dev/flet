@@ -1,1 +1,1 @@
-::: flet.Rotate
+{{ class_all_options("flet.Rotate") }}

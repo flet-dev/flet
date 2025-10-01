@@ -1,1 +1,1 @@
-::: flet.DismissibleDismissEvent
+{{ class_all_options("flet.DismissibleDismissEvent") }}

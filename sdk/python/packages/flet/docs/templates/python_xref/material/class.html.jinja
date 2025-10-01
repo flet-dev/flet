@@ -1,0 +1,60 @@
+{% extends "_base/class.html.jinja" %}
+
+{% block bases %}
+    {#- Class bases block.
+
+    This block renders the bases for the class.
+    -#}
+    {% if config.show_bases and class.bases %}
+    <p class="doc doc-class-bases">
+        Inherits: {% for expression in class.bases -%}
+        <code>
+            {%- with backlink_type = "subclassed-by" -%}
+            {#- YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. -#}
+            {%- include "expression"|get_template with context -%}
+            {%- endwith -%}
+        </code>{% if not loop.last %}, {% endif %}
+        {% endfor -%}
+    </p>
+    {% endif %}
+{% endblock bases %}
+
+{% block docstring %}
+    {#- Docstring block.
+
+    This block renders the docstring for the class.
+    -#}
+    {% if config.extra.show_class_docstring %}
+        {% with docstring_sections = class.docstring.parsed %}
+        {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
+        {% include "docstring"|get_template with context %}
+        {% endwith %}
+        {% if config.merge_init_into_class %}
+        {# We don't want to merge the inherited `__init__` method docstring into the class docstring #}
+        {# if such inherited method was not selected through `inherited_members`. #}
+        {% with check_members = all_members if (config.inherited_members is true or (config.inherited_members is iterable and "__init__" in config.inherited_members)) else class.members %}
+            {% if "__init__" in check_members and check_members["__init__"].has_docstring %}
+            {% with function = check_members["__init__"] %}
+                {% with obj = function, docstring_sections = function.docstring.parsed %}
+                {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
+                {% include "docstring"|get_template with context %}
+                {% endwith %}
+            {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% endif %}
+    {% endif %}
+{% endblock docstring %}
+
+{% block children scoped %}
+    {#- Children block.
+
+    This block renders the children (members) of the class.
+    -#}
+    {% if config.extra.show_children %}
+        {% set root = False %}
+        {% set heading_level = heading_level + 1 %}
+        {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
+        {% include "children"|get_template with context %}
+    {% endif %}
+{% endblock children %}

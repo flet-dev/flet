@@ -1,3 +1,1 @@
-::: flet.OverlayVisibilityMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.OverlayVisibilityMode", separate_signature=False) }}

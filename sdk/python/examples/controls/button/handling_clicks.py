@@ -2,9 +2,6 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "Button Example"
-    page.theme_mode = ft.ThemeMode.LIGHT
-
     def button_clicked(e: ft.Event[ft.Button]):
         button.data += 1
         message.value = f"Button clicked {button.data} time(s)"
@@ -20,4 +17,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

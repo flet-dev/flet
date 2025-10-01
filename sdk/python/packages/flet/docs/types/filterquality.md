@@ -1,3 +1,1 @@
-::: flet.FilterQuality
-    options:
-        separate_signature: false
+{{ class_all_options("flet.FilterQuality", separate_signature=False) }}

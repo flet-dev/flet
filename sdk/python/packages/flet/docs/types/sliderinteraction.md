@@ -1,3 +1,1 @@
-::: flet.SliderInteraction
-    options:
-        separate_signature: false
+{{ class_all_options("flet.SliderInteraction", separate_signature=False) }}

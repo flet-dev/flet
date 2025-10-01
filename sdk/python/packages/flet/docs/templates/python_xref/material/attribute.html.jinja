@@ -1,0 +1,132 @@
+{#- Template for Python attributes.
+
+This template renders a Python attribute (or variable).
+This can be a module attribute or a class attribute.
+
+Context:
+  attribute (griffe.Attribute): The attribute to render.
+  root (bool): Whether this is the root object, injected with `:::` in a Markdown page.
+  heading_level (int): The HTML heading level to use.
+  config (dict): The configuration options.
+-#}
+
+{% block logs scoped %}
+  {#- Logging block.
+
+  This block can be used to log debug messages, deprecation messages, warnings, etc.
+  -#}
+  {{ log.debug("Rendering " + attribute.path) }}
+{% endblock logs %}
+
+{% set attr_class_name = "doc-symbol-event" if attribute.name.startswith('on_') else "doc-symbol-attribute" %}
+
+<div class="doc doc-object doc-attribute">
+  {% with obj = attribute, html_id = attribute.path %}
+
+    {% if root %}
+      {% set show_full_path = config.show_root_full_path %}
+      {% set root_members = True %}
+    {% elif root_members %}
+      {% set show_full_path = config.show_root_members_full_path or config.show_object_full_path %}
+      {% set root_members = False %}
+    {% else %}
+      {% set show_full_path = config.show_object_full_path %}
+    {% endif %}
+
+    {% set attribute_name = attribute.path if show_full_path else attribute.name %}
+
+    {% if not root or config.show_root_heading %}
+      {% filter heading(
+          heading_level,
+          role="data" if attribute.parent.kind.value == "module" else "attr",
+          id=html_id,
+          class="doc doc-heading",
+          toc_label=(('<code class="doc-symbol doc-symbol-toc ' + attr_class_name + '"></code>&nbsp;')|safe if config.show_symbol_type_toc else '') + (config.toc_label if config.toc_label and root else attribute.name),
+          skip_inventory=config.skip_local_inventory,
+        ) %}
+
+        {% block heading scoped %}
+          {#- Heading block.
+
+          This block renders the heading for the attribute.
+          -#}
+          {% if config.show_symbol_type_heading %}<code class="doc-symbol doc-symbol-heading {{ attr_class_name }}"></code>{% endif %}
+          {% if config.heading and root %}
+            {{ config.heading }}
+          {% elif config.separate_signature %}
+            <span class="doc doc-object-name doc-attribute-name">{{ attribute_name }}</span>
+          {% else %}
+            {%+ filter highlight(language="python", inline=True) %}
+              {{ attribute_name }}{% if attribute.annotation and config.show_signature_annotations %}: {{ attribute.annotation }}{% endif %}
+              {% if config.show_attribute_values and attribute.value %} = {{ attribute.value }}{% endif %}
+            {% endfilter %}
+          {% endif %}
+        {% endblock heading %}
+
+        {% block labels scoped %}
+          {#- Labels block.
+
+          This block renders the labels for the attribute.
+          -#}
+          {% with labels = attribute.labels %}
+            {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
+            {% include "labels"|get_template with context %}
+          {% endwith %}
+        {% endblock labels %}
+
+      {% endfilter %}
+
+      {% block signature scoped %}
+        {#- Signature block.
+
+        This block renders the signature for the attribute.
+        -#}
+        {% if config.separate_signature %}
+          {% filter format_attribute(attribute, config.line_length, crossrefs=config.signature_crossrefs, show_value=config.show_attribute_values) %}
+            {{ attribute.name }}
+          {% endfilter %}
+        {% endif %}
+      {% endblock signature %}
+
+    {% else %}
+
+      {% if config.show_root_toc_entry %}
+        {% filter heading(heading_level,
+            role="data" if attribute.parent.kind.value == "module" else "attr",
+            id=html_id,
+            toc_label=('<code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;'|safe if config.show_symbol_type_toc else '') + (config.toc_label if config.toc_label and root else attribute_name),
+            hidden=True,
+            skip_inventory=config.skip_local_inventory,
+          ) %}
+        {% endfilter %}
+      {% endif %}
+      {% set heading_level = heading_level - 1 %}
+    {% endif %}
+
+    <div class="doc doc-contents {% if root %}first{% endif %}">
+      {% block contents scoped %}
+        {#- Contents block.
+
+        This block renders the contents of the attribute.
+        It contains other blocks that users can override.
+        Overriding the contents block allows to rearrange the order of the blocks.
+        -#}
+        {% block docstring scoped %}
+          {#- Docstring block.
+
+          This block renders the docstring for the attribute.
+          -#}
+          {% with docstring_sections = attribute.docstring.parsed %}
+            {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
+            {% include "docstring"|get_template with context %}
+          {% endwith %}
+        {% endblock docstring %}
+
+        {% if config.backlinks %}
+          <backlinks identifier="{{ html_id }}" handler="python" />
+        {% endif %}
+      {% endblock contents %}
+    </div>
+
+  {% endwith %}
+</div>

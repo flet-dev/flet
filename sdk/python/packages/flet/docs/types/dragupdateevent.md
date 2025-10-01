@@ -1,1 +1,1 @@
-::: flet.DragUpdateEvent
+{{ class_all_options("flet.DragUpdateEvent") }}

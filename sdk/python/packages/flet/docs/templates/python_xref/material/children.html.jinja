@@ -1,0 +1,204 @@
+{#- Template for members (children) of an object.
+
+This template iterates on members of a given object and renders them.
+It can group members by category (attributes, classes, functions, modules) or render them in a flat list.
+
+Context:
+  obj (griffe.Object): The object to render.
+  config (dict): The configuration options.
+  root_members (bool): Whether the object is the root object.
+  heading_level (int): The HTML heading level to use.
+-#}
+
+{% if obj.all_members %}
+  {% block logs scoped %}
+    {#- Logging block.
+
+    This block can be used to log debug messages, deprecation messages, warnings, etc.
+    -#}
+    {{ log.debug("Rendering children of " + obj.path) }}
+  {% endblock logs %}
+
+  <div class="doc doc-children">
+
+    {% if root_members %}
+      {% set members_list = config.members %}
+    {% else %}
+      {% set members_list = none %}
+    {% endif %}
+
+    {% if config.group_by_category %}
+
+      {% with %}
+
+        {% if config.show_category_heading %}
+          {% set extra_level = 1 %}
+        {% else %}
+          {% set extra_level = 0 %}
+        {% endif %}
+
+        {# decide headings for properties #}
+        {% set attr_heading_id = "-properties" if obj.is_class else "-attributes" %}
+        {% set attr_heading_name = "Properties" if obj.is_class else "Attributes" %}
+
+        {% with attributes = obj.attributes | filter_objects(
+              filters=config.filters,
+              members_list=members_list,
+              inherited_members=config.inherited_members,
+              keep_no_docstrings=config.show_if_no_docstring,
+        ) %}
+          {% if attributes %}
+            {# order once, then split into two lists #}
+            {% set ordered = attributes | order_members(config.members_order, members_list) %}
+            {% set ns = namespace(props=[], events=[]) %}
+            {% for attribute in ordered %}
+              {% if config.filters == "public" or members_list is not none or (not attribute.is_imported or attribute.is_public) %}
+                {% if attribute.name.startswith("on_") %}
+                  {% set _ = ns.events.append(attribute) %}
+                {% else %}
+                  {% set _ = ns.props.append(attribute) %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+            {# --- PROPERTIES --- #}
+            {% if ns.props %}
+              {% if config.show_category_heading %}
+                {% filter heading(heading_level, id=html_id ~ attr_heading_id, skip_inventory=config.skip_local_inventory) %}{{ attr_heading_name }}{% endfilter %}
+              {% endif %}
+              {% with heading_level = heading_level + extra_level %}
+                {% for attribute in ns.props %}
+                  {% include attribute|get_template with context %}
+                {% endfor %}
+              {% endwith %}
+            {% endif %}
+
+            {# --- EVENTS (on_*) --- #}
+            {% if ns.events %}
+              {% if config.show_category_heading %}
+                {% filter heading(heading_level, id=html_id ~ "-events", skip_inventory=config.skip_local_inventory) %}Events{% endfilter %}
+              {% endif %}
+              {% with heading_level = heading_level + extra_level %}
+                {% for attribute in ns.events %}
+                  {% include attribute|get_template with context %}
+                {% endfor %}
+              {% endwith %}
+            {% endif %}
+          {% endif %}
+        {% endwith %}
+
+        {% with classes = obj.classes|filter_objects(
+            filters=config.filters,
+            members_list=members_list,
+            inherited_members=config.inherited_members,
+            keep_no_docstrings=config.show_if_no_docstring,
+          ) %}
+          {% if classes %}
+            {% if config.show_category_heading %}
+              {% filter heading(heading_level, id=html_id ~ "-classes", skip_inventory=config.skip_local_inventory) %}Classes{% endfilter %}
+            {% endif %}
+            {% with heading_level = heading_level + extra_level %}
+              {% for class in classes|order_members(config.members_order, members_list) %}
+                {% if config.filters == "public" or members_list is not none or (not class.is_imported or class.is_public) %}
+                  {% include class|get_template with context %}
+                {% endif %}
+              {% endfor %}
+            {% endwith %}
+          {% endif %}
+        {% endwith %}
+
+        {% set func_heading_id = "-methods" if obj.is_class else "-functions" %}
+        {% set func_heading_name = "Methods" if obj.is_class else "Functions" %}
+        {% with functions = obj.functions|filter_objects(
+            filters=config.filters,
+            members_list=members_list,
+            inherited_members=config.inherited_members,
+            keep_no_docstrings=config.show_if_no_docstring,
+          ) %}
+          {% if functions %}
+            {% if config.show_category_heading %}
+              {% filter heading(heading_level, id=html_id ~ func_heading_id, skip_inventory=config.skip_local_inventory) %}{{ func_heading_name }}{% endfilter %}
+            {% endif %}
+            {% with heading_level = heading_level + extra_level %}
+              {% for function in functions|order_members(config.members_order, members_list) %}
+                {% if not (obj.kind.value == "class" and function.name == "__init__" and config.merge_init_into_class) %}
+                  {% if config.filters == "public" or members_list is not none or (not function.is_imported or function.is_public) %}
+                    {% include function|get_template with context %}
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endwith %}
+          {% endif %}
+        {% endwith %}
+
+        {% if config.show_submodules %}
+          {% with modules = obj.modules|filter_objects(
+              filters=config.filters,
+              members_list=members_list,
+              inherited_members=config.inherited_members,
+              keep_no_docstrings=config.show_if_no_docstring,
+            ) %}
+            {% if modules %}
+              {% if config.show_category_heading %}
+                {% filter heading(heading_level, id=html_id ~ "-modules", skip_inventory=config.skip_local_inventory) %}Modules{% endfilter %}
+              {% endif %}
+              {% with heading_level = heading_level + extra_level %}
+                {% for module in modules|order_members("alphabetical", members_list) %}
+                  {% if config.filters == "public" or members_list is not none or (not module.is_alias or module.is_public) %}
+                    {% include module|get_template with context %}
+                  {% endif %}
+                {% endfor %}
+              {% endwith %}
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+
+      {% endwith %}
+
+    {% else %}
+
+      {% for child in obj.all_members
+          |filter_objects(
+            filters=config.filters,
+            members_list=members_list,
+            inherited_members=config.inherited_members,
+            keep_no_docstrings=config.show_if_no_docstring,
+            )
+          |order_members(config.members_order, members_list)
+        %}
+
+        {% if not (obj.is_class and child.name == "__init__" and config.merge_init_into_class) %}
+
+          {% if config.filters == "public" or members_list is not none or child.is_public %}
+            {% if child.is_attribute %}
+              {% with attribute = child %}
+                {% include attribute|get_template with context %}
+              {% endwith %}
+
+            {% elif child.is_class %}
+              {% with class = child %}
+                {% include class|get_template with context %}
+              {% endwith %}
+
+            {% elif child.is_function %}
+              {% with function = child %}
+                {% include function|get_template with context %}
+              {% endwith %}
+
+            {% elif child.is_module and config.show_submodules %}
+              {% with module = child %}
+                {% include module|get_template with context %}
+              {% endwith %}
+
+            {% endif %}
+          {% endif %}
+
+        {% endif %}
+
+      {% endfor %}
+
+    {% endif %}
+
+  </div>
+
+{% endif %}

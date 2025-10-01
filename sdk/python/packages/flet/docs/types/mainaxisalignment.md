@@ -1,6 +1,4 @@
-::: flet.MainAxisAlignment
-    options:
-        separate_signature: false
+{{ class_all_options("flet.MainAxisAlignment", separate_signature=False) }}
 
 ## Usage example
 

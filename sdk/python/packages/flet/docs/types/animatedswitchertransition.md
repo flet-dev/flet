@@ -1,3 +1,1 @@
-::: flet.AnimatedSwitcherTransition
-    options:
-        separate_signature: false
+{{ class_all_options("flet.AnimatedSwitcherTransition", separate_signature=False) }}

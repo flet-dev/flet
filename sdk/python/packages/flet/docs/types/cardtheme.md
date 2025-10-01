@@ -1,1 +1,1 @@
-::: flet.CardTheme
+{{ class_all_options("flet.CardTheme") }}

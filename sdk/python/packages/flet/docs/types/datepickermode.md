@@ -1,3 +1,1 @@
-::: flet.DatePickerMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.DatePickerMode", separate_signature=False) }}

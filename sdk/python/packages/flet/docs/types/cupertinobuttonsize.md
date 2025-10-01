@@ -1,3 +1,1 @@
-::: flet.CupertinoButtonSize
-    options:
-        separate_signature: false
+{{ class_all_options("flet.CupertinoButtonSize", separate_signature=False) }}

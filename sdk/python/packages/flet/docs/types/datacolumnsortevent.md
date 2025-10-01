@@ -1,1 +1,1 @@
-::: flet.DataColumnSortEvent
+{{ class_all_options("flet.DataColumnSortEvent") }}

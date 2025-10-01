@@ -1,1 +1,0 @@
-Details on deprecation policy... TBA.

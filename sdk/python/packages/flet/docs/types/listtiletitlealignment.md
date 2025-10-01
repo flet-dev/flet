@@ -1,3 +1,1 @@
-::: flet.ListTileTitleAlignment
-    options:
-        separate_signature: false
+{{ class_all_options("flet.ListTileTitleAlignment", separate_signature=False) }}

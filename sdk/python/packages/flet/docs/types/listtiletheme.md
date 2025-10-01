@@ -1,1 +1,1 @@
-::: flet.ListTileTheme
+{{ class_all_options("flet.ListTileTheme") }}

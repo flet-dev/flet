@@ -588,9 +588,9 @@ class Page(BasePage):
         finally calls `page.update()`.
         """
 
-        self.push_route(route, **kwargs)
+        asyncio.create_task(self.push_route(route, **kwargs))
 
-    def push_route(self, route: str, **kwargs: Any) -> None:
+    async def push_route(self, route: str, **kwargs: Any) -> None:
         """
         Pushes a new navigation route to the browser history stack.
         Changing route will fire [`page.on_route_change`](#on_route_change) event
@@ -600,6 +600,7 @@ class Page(BasePage):
 
         ```python
         import flet as ft
+        import asyncio
 
 
         def main(page: ft.Page):
@@ -614,7 +615,9 @@ class Page(BasePage):
                             ft.AppBar(title=ft.Text("Flet app")),
                             ft.ElevatedButton(
                                 "Visit Store",
-                                on_click=lambda _: page.push_route("/store"),
+                                on_click=lambda _: asyncio.create_task(
+                                    page.push_route("/store")
+                                ),
                             ),
                         ],
                     )
@@ -627,16 +630,19 @@ class Page(BasePage):
                             controls=[
                                 ft.AppBar(title=ft.Text("Store")),
                                 ft.ElevatedButton(
-                                    "Go Home", on_click=lambda _: page.push_route("/")
+                                    "Go Home",
+                                    on_click=lambda _: asyncio.create_task(
+                                        page.push_route("/")
+                                    ),
                                 ),
                             ],
                         )
                     )
 
-            def view_pop(e):
+            async def view_pop(e):
                 page.views.pop()
                 top_view = page.views[-1]
-                page.push_route(top_view.route)
+                await page.push_route(top_view.route)
 
             page.on_route_change = route_change
             page.on_view_pop = view_pop
@@ -651,11 +657,9 @@ class Page(BasePage):
         """
 
         new_route = route if not kwargs else route + self.query.post(kwargs)
-        asyncio.create_task(
-            self._invoke_method(
-                "push_route",
-                arguments={"route": new_route},
-            )
+        await self._invoke_method(
+            "push_route",
+            arguments={"route": new_route},
         )
 
     def get_upload_url(self, file_name: str, expires: int) -> str:

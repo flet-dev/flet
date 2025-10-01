@@ -1,4 +1,4 @@
-::: flet.Badge
+{{ class_all_options("flet.Badge") }}
 
 ## Examples
 

@@ -1,1 +1,0 @@
-Details on Flet versioning... TBA.

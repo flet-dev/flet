@@ -1,3 +1,1 @@
-::: flet.CupertinoTimerPickerMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.CupertinoTimerPickerMode", separate_signature=False) }}

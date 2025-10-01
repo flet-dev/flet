@@ -2,8 +2,6 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "Button Example"
-
     page.add(
         ft.Button(content="Button with icon", icon=ft.Icons.WAVES_ROUNDED),
         ft.Button(
@@ -14,4 +12,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

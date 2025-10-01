@@ -1,1 +1,1 @@
-::: flet.OnScrollEvent
+{{ class_all_options("flet.OnScrollEvent") }}
