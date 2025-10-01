@@ -125,7 +125,7 @@ async def test_styling(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_animate_on_hover(flet_app_function: ftt.FletTestApp):
-    scr = await flet_app_function.wrap_page_controls_in_screenshot()
+    scr = await flet_app_function.wrap_page_controls_in_screenshot(margin=20)
     flet_app_function.assert_screenshot(
         "animate_on_hover_initial",
         await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),

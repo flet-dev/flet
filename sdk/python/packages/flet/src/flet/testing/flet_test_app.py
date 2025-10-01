@@ -257,12 +257,12 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
-    async def wrap_page_controls_in_screenshot(self):
+    async def wrap_page_controls_in_screenshot(self, margin=10):
         """
         Wraps provided controls in a Screenshot control.
         """
         controls = list(self.page.controls)
-        self.page.controls = [scr := ft.Screenshot(ft.Column(controls, margin=10))]
+        self.page.controls = [scr := ft.Screenshot(ft.Column(controls, margin=margin))]
         self.page.update()
         await self.tester.pump_and_settle()
         return scr
