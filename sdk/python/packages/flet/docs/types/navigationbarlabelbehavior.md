@@ -1,3 +1,1 @@
-::: flet.NavigationBarLabelBehavior
-    options:
-        separate_signature: false
+{{ class_all_options("flet.NavigationBarLabelBehavior", separate_signature=False) }}

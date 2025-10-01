@@ -52,9 +52,7 @@ class Card(LayoutControl, AdaptiveControl):
     """
     The color to paint the shadow below this card.
 
-    Defaults to [`CardTheme.shadow_color`][flet.],
-    or if that is `None`, falls back to [`Theme.shadow_color`][flet.]
-    (which defaults to `Colors.BLACK`).
+    Defaults to [`CardTheme.shadow_color`][flet.]
     """
 
     shape: Optional[OutlinedBorder] = None

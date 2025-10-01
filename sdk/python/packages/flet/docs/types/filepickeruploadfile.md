@@ -1,1 +1,1 @@
-::: flet.FilePickerUploadFile
+{{ class_all_options("flet.FilePickerUploadFile") }}

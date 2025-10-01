@@ -1,4 +1,4 @@
-::: flet.Tooltip
+{{ class_all_options("flet.Tooltip") }}
 
 ## Examples
 

@@ -1,3 +1,1 @@
-::: flet.RouteUrlStrategy
-    options:
-        separate_signature: false
+{{ class_all_options("flet.RouteUrlStrategy", separate_signature=False) }}

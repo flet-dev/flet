@@ -1,3 +1,1 @@
-::: flet.ImageRepeat
-    options:
-        separate_signature: false
+{{ class_all_options("flet.ImageRepeat", separate_signature=False) }}

@@ -1,4 +1,4 @@
-::: flet.Margin
+{{ class_all_options("flet.Margin") }}
 
 ## Examples
 

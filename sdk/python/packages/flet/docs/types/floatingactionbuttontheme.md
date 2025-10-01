@@ -1,1 +1,1 @@
-::: flet.FloatingActionButtonTheme
+{{ class_all_options("flet.FloatingActionButtonTheme") }}

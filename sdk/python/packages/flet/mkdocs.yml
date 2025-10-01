@@ -15,34 +15,33 @@ copyright: Copyright &copy; 2025 Appveyor Systems Inc.
 # Theme
 theme:
   name: "material"
-  favicon: 'images/favicon.ico'
-  logo: 'images/logo.svg'
-  # custom_dir: docs/overrides
+  favicon: "images/favicon.ico"
+  logo: "images/logo.svg"
   icon:
     annotation: material/plus-circle
+    repo: fontawesome/brands/github
   palette:
-    - scheme: default
-      primary: indigo
-      accent: pink
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: indigo
-      accent: pink
-      toggle:
-        icon: material/brightness-4
-        name: Switch to system preference
-    - scheme: slate
-      primary: indigo
+    - media: "(prefers-color-scheme)"
+      primary: pink
       accent: pink
       toggle:
         icon: material/brightness-auto
-        name: Switch to light mode
+        name: "Switch to light mode"
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/brightness-7
+        name: "Switch to dark mode"
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: "Switch to system preference"
   features:
-    # - announce.dismiss
-    - content.action.edit
-    - content.action.view
     - content.action.annotate
     - content.action.copy
     - content.tooltips
@@ -68,6 +67,8 @@ theme:
 extra:
   version:
     provider: mike
+  # hide the "Made with Material for MkDocs" message
+  generator: false
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/flet-dev
@@ -103,6 +104,8 @@ plugins:
         - archive/*
   - search:
       lang: en
+  - macros:
+      module_name: docs/extras/macros/__init__
   - open-in-new-tab
   - mike:
       alias_type: symlink
@@ -111,6 +114,7 @@ plugins:
   - markdown-exec
   - mkdocstrings:
       default_handler: python_xref
+      custom_templates: docs/templates
       handlers:
         python_xref:
           options:
@@ -120,25 +124,34 @@ plugins:
             signature_crossrefs: true
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-            show_root_heading: true
+            show_root_heading: false
+            show_root_toc_entry: false
             show_root_full_path: false
-            show_bases: true
+            show_bases: false
             show_source: false
             group_by_category: true
-            show_category_heading: false
+            show_category_heading: true
             show_labels: false
             show_if_no_docstring: true
-            docstring_section_style: spacy
-            inherited_members: false
+            docstring_section_style: list
             separate_signature: true
+            inherited_members: false
+            summary:
+                attributes: false
+                functions: false
+            preload_modules: [ flet ]
             filters:
-              - "!^_"   # Exclude private members starting with only one underscore
+              - "!^_" # Exclude private members starting with only one underscore
+              - "!(init|before_update)"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
+            extra:
+              show_children: false
+              show_class_docstring: false
           inventories:
             - url: https://docs.python.org/3/objects.inv
-              domains: [ py, std ]
+              domains: [py, std]
             - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
   - external-images:
       mappings:
@@ -211,14 +224,6 @@ nav:
       - Creating a new Flet app: getting-started/create-flet-app.md
       - Running a Flet app (Hot Reload): getting-started/running-app.md
       - Testing on Mobile: getting-started/testing-on-mobile.md
-      - Roadmap: https://flet.dev/roadmap
-      - Release Notes:
-          - Changelog: getting-started/changelog.md
-          - Migration Guide: getting-started/migration-guide.md
-      - Policies:
-          - Versioning: policies/versioning.md
-          - Deprecation: policies/deprecation.md
-          - License: policies/license.md
   - API Reference:
       - Controls:
           - Controls: controls/index.md
@@ -738,12 +743,8 @@ nav:
       - Trolli: tutorials/trolli.md
   - Contributing:
       - contributing/index.md
-      - Code of Conduct: contributing/code-of-conduct.md
       - Built-in binary Python packages for Android and iOS: contributing/binary-packages-android-ios.md
       - Extensions:
           - contributing/extensions/index.md
           - Creating an Extension: contributing/extensions/user-extensions.md
           - Built-in Extensions: contributing/extensions/built-in-extensions.md
-  - Gallery: https://flet.dev/gallery
-  - Blog: https://flet.dev/blog
-  - Support: support.md

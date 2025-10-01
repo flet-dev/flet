@@ -1,1 +1,1 @@
-::: flet.memo
+{{ class_all_options("flet.memo") }}

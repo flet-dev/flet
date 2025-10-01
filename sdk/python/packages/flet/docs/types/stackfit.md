@@ -1,3 +1,1 @@
-::: flet.StackFit
-    options:
-        separate_signature: false
+{{ class_all_options("flet.StackFit", separate_signature=False) }}

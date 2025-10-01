@@ -1,1 +1,1 @@
-::: flet.on_updated
+{{ class_all_options("flet.on_updated") }}

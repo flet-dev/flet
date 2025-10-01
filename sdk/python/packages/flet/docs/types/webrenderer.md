@@ -1,6 +1,4 @@
-::: flet.WebRenderer
-    options:
-        separate_signature: false
+{{ class_all_options("flet.WebRenderer", separate_signature=False) }}
 
 
 ## Usage Example

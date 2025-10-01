@@ -1,3 +1,1 @@
-::: flet.BlurStyle
-    options:
-        separate_signature: false
+{{ class_all_options("flet.BlurStyle", separate_signature=False) }}

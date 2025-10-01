@@ -1,1 +1,1 @@
-::: flet.RoundedRectangleBorder
+{{ class_all_options("flet.RoundedRectangleBorder") }}

@@ -1,1 +1,1 @@
-::: flet.FletException
+{{ class_all_options("flet.FletException") }}

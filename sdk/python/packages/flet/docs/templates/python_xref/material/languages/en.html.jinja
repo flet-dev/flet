@@ -1,0 +1,45 @@
+{#- Macro for English translations. -#}
+
+{% block logs scoped %}
+  {#- Logging block.
+
+  This block can be used to log debug messages, deprecation messages, warnings, etc.
+  -#}
+{% endblock logs %}
+
+{% macro t(key) %}{{ {
+  "ATTRIBUTE": "ATTRIBUTE",
+  "Attributes:": "Properties",
+  "Classes:": "Classes:",
+  "CLASS": "CLASS",
+  "DEFAULT:": "DEFAULT:",
+  "Default": "Default",
+  "default:": "default:",
+  "DESCRIPTION": "DESCRIPTION",
+  "Description": "Description",
+  "Examples:": "Examples:",
+  "Functions:": "Functions:",
+  "FUNCTION": "FUNCTION",
+  "Methods:": "Methods",
+  "METHOD": "METHOD",
+  "Modules:": "Modules:",
+  "MODULE": "MODULE",
+  "Name": "Name",
+  "Other Parameters:": "Other Parameters:",
+  "PARAMETER": "PARAMETER",
+  "Parameters:": "Parameters:",
+  "RAISES": "RAISES",
+  "Raises:" : "Raises:",
+  "RECEIVES": "RECEIVES",
+  "Receives:": "Receives:",
+  "required": "required",
+  "RETURNS": "RETURNS",
+  "Returns:": "Returns:",
+  "Source code in": "Source code in",
+  "TYPE:": "TYPE:",
+  "Type": "Type",
+  "WARNS": "WARNS",
+  "Warns:": "Warns:",
+  "YIELDS": "YIELDS",
+  "Yields:": "Yields:",
+}[key] }}{% endmacro %}

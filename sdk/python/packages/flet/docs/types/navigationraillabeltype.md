@@ -1,3 +1,1 @@
-::: flet.NavigationRailLabelType
-    options:
-        separate_signature: false
+{{ class_all_options("flet.NavigationRailLabelType", separate_signature=False) }}

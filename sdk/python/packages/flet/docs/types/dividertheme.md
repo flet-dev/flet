@@ -1,1 +1,1 @@
-::: flet.DividerTheme
+{{ class_all_options("flet.DividerTheme") }}

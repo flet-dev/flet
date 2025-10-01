@@ -1,3 +1,1 @@
-::: flet.GradientTileMode
-    options:
-        separate_signature: false
+{{ class_all_options("flet.GradientTileMode", separate_signature=False) }}

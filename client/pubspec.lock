@@ -245,10 +245,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: e7e16c9d15c36330b94ca0e2ad8cb61f93cd5282d0158c09805aed13b5452f22
+      sha256: f2d9f173c2c14635cc0e9b14c143c49ef30b4934e8d1d274d6206fcb0086a06f
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.2"
+    version: "10.3.3"
   fixnum:
     dependency: transitive
     description:

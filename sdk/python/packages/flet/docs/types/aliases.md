@@ -1,27 +1,27 @@
-::: flet.AnimationValue
-::: flet.BadgeValue
-::: flet.BlurValue
-::: flet.BorderRadiusValue
-::: flet.BorderSideStrokeAlignValue
-::: flet.BoxShadowValue
-::: flet.ColorValue
-::: flet.context
-::: flet.ControlEvent
-::: flet.ControlEventHandler
-::: flet.ControlStateValue
-::: flet.DateTimeValue
-::: flet.DurationValue
-::: flet.EventControlType
-::: flet.EventHandler
-::: flet.IconData
-::: flet.IconDataOrControl
-::: flet.KeyValue
-::: flet.MarginValue
-::: flet.Number
-::: flet.OffsetValue
-::: flet.PaddingValue
-::: flet.ResponsiveNumber
-::: flet.RotateValue
-::: flet.ScaleValue
-::: flet.StrOrControl
-::: flet.TooltipValue
+{{ class_summary("flet.AnimationValue", show_root_heading=True) }}
+{{ class_summary("flet.BadgeValue", show_root_heading=True) }}
+{{ class_summary("flet.BlurValue", show_root_heading=True) }}
+{{ class_summary("flet.BorderRadiusValue", show_root_heading=True) }}
+{{ class_summary("flet.BorderSideStrokeAlignValue", show_root_heading=True) }}
+{{ class_summary("flet.BoxShadowValue", show_root_heading=True) }}
+{{ class_summary("flet.ColorValue", show_root_heading=True) }}
+{{ class_summary("flet.context", show_root_heading=True) }}
+{{ class_summary("flet.ControlEvent", show_root_heading=True) }}
+{{ class_summary("flet.ControlEventHandler", show_root_heading=True) }}
+{{ class_summary("flet.ControlStateValue", show_root_heading=True) }}
+{{ class_summary("flet.DateTimeValue", show_root_heading=True) }}
+{{ class_summary("flet.DurationValue", show_root_heading=True) }}
+{{ class_summary("flet.EventControlType", show_root_heading=True) }}
+{{ class_summary("flet.EventHandler", show_root_heading=True) }}
+{{ class_summary("flet.IconData", show_root_heading=True) }}
+{{ class_summary("flet.IconDataOrControl", show_root_heading=True) }}
+{{ class_summary("flet.KeyValue", show_root_heading=True) }}
+{{ class_summary("flet.MarginValue", show_root_heading=True) }}
+{{ class_summary("flet.Number", show_root_heading=True) }}
+{{ class_summary("flet.OffsetValue", show_root_heading=True) }}
+{{ class_summary("flet.PaddingValue", show_root_heading=True) }}
+{{ class_summary("flet.ResponsiveNumber", show_root_heading=True) }}
+{{ class_summary("flet.RotateValue", show_root_heading=True) }}
+{{ class_summary("flet.ScaleValue", show_root_heading=True) }}
+{{ class_summary("flet.StrOrControl", show_root_heading=True) }}
+{{ class_summary("flet.TooltipValue", show_root_heading=True) }}

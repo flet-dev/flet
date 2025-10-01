@@ -1,1 +1,1 @@
-::: flet.Key
+{{ class_all_options("flet.Key") }}

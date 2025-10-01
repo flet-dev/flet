@@ -1,1 +1,1 @@
-::: flet.use_state
+{{ class_all_options("flet.use_state") }}

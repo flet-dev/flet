@@ -1,1 +1,1 @@
-::: flet.ColorScheme
+{{ class_all_options("flet.ColorScheme") }}

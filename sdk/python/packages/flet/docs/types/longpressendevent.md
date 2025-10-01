@@ -1,1 +1,1 @@
-::: flet.LongPressEndEvent
+{{ class_all_options("flet.LongPressEndEvent") }}

@@ -1,1 +1,1 @@
-::: flet.TextSelection
+{{ class_all_options("flet.TextSelection") }}

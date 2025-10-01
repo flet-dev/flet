@@ -1,3 +1,1 @@
-::: flet.WindowResizeEdge
-    options:
-        separate_signature: false
+{{ class_all_options("flet.WindowResizeEdge", separate_signature=False) }}

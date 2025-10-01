@@ -1,1 +1,1 @@
-::: flet.Event
+{{ class_all_options("flet.Event") }}

@@ -257,6 +257,28 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
+    async def wrap_page_controls_in_screenshot(self, margin=10):
+        """
+        Wraps provided controls in a Screenshot control.
+        """
+        controls = list(self.page.controls)
+        self.page.controls = [scr := ft.Screenshot(ft.Column(controls, margin=margin))]
+        self.page.update()
+        await self.tester.pump_and_settle()
+        return scr
+
+    async def take_page_controls_screenshot(
+        self,
+        pixel_ratio: Optional[float] = None,
+    ):
+        """
+        Takes a screenshot of all controls on the current page.
+        """
+        scr = await self.wrap_page_controls_in_screenshot()
+        return await scr.capture(
+            pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
+        )
+
     async def assert_control_screenshot(
         self,
         name: str,
@@ -289,7 +311,9 @@ class FletTestApp:
             await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
         )
 
-    def assert_screenshot(self, name: str, screenshot: bytes):
+    def assert_screenshot(
+        self, name: str, screenshot: bytes, similarity_threshold: float = 0
+    ):
         """
         Compares provided screenshot with a golden copy or takes golden screenshot
         if `FLET_TEST_GOLDEN=1` environment variable is set.
@@ -324,14 +348,16 @@ class FletTestApp:
             img = self._load_image_from_bytes(screenshot)
             similarity = self._compare_images_rgb(golden_img, img)
             print(f"Similarity for {name}: {similarity}%")
-            if similarity <= self.screenshots_similarity_threshold:
+            if similarity_threshold == 0:
+                similarity_threshold = self.screenshots_similarity_threshold
+            if similarity <= similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
                     / f"{golden_image_path.parent.stem}_{golden_image_path.stem}_actual.png"  # noqa: E501
                 )
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
-            assert similarity > self.screenshots_similarity_threshold, (
+            assert similarity > similarity_threshold, (
                 f"{name} screenshots are not identical"
             )
 

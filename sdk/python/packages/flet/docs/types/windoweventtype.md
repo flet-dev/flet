@@ -1,3 +1,1 @@
-::: flet.WindowEventType
-    options:
-        separate_signature: false
+{{ class_all_options("flet.WindowEventType", separate_signature=False) }}

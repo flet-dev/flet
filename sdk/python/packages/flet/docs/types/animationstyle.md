@@ -1,1 +1,1 @@
-::: flet.AnimationStyle
+{{ class_all_options("flet.AnimationStyle") }}

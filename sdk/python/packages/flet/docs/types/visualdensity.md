@@ -1,3 +1,1 @@
-::: flet.VisualDensity
-    options:
-        separate_signature: false
+{{ class_all_options("flet.VisualDensity", separate_signature=False) }}

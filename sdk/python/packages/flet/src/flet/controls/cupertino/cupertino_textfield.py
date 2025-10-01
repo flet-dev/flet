@@ -46,7 +46,9 @@ class CupertinoTextField(TextField):
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode applied to the [`bgcolor`][(c).] or [`gradient`][(c).] background.
+    The blend mode applied to the
+    [`bgcolor`][flet.FormFieldControl.]
+    or [`gradient`][(c).] background.
     """
 
     shadows: Optional[BoxShadowValue] = None
@@ -56,27 +58,35 @@ class CupertinoTextField(TextField):
 
     prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the [`prefix`][(c).] control
-    based on the state of text entry.
+    Defines the visibility of the
+    [`prefix`][flet.FormFieldControl.]
+    control based on the state of text entry.
 
     Note:
-        Has no effect if [`prefix`][(c).] is not specified.
+        Has no effect if
+        [`prefix`][flet.FormFieldControl.]
+        is not specified.
     """
 
     suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the [`suffix`][(c).] control
-    based on the state of text entry.
+    Defines the visibility of the
+    [`suffix`][flet.FormFieldControl.]
+    control based on the state of text entry.
 
     Note:
-        Has no effect if [`suffix`][(c).] is not specified.
+        Has no effect if
+        [`suffix`][flet.FormFieldControl.]
+        is not specified.
     """
 
     clear_button_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.NEVER
     """
     Defines the visibility of the clear button based on the state of text entry.
 
-    Will appear only if no [`suffix`][(c).] is provided.
+    Will appear only if no
+    [`suffix`][flet.FormFieldControl.]
+    is provided.
     """
 
     clear_button_semantics_label: Optional[str] = "Clear"
@@ -88,12 +98,16 @@ class CupertinoTextField(TextField):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the [`bgcolor`][(c).] or [`gradient`][(c).] background.
+    An image to paint above the
+    [`bgcolor`][flet.FormFieldControl.]
+    or [`gradient`][(c).] background.
     """
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
-    The padding around the text entry area between the [`prefix`][(c).]
-    and [`suffix`][(c).] or the clear button when [`clear_button_visibility_mode`][(c).]
+    The padding around the text entry area between the
+    [`prefix`][flet.FormFieldControl.]
+    and [`suffix`][flet.FormFieldControl.]
+    or the clear button when [`clear_button_visibility_mode`][(c).]
     is not [`OverlayVisibilityMode.NEVER`][flet.].
     """
