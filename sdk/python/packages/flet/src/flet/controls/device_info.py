@@ -7,7 +7,6 @@ __all__ = [
     "AndroidBuildVersion",
     "AndroidDeviceInfo",
     "DeviceInfo",
-    "DeviceInfo",
     "IosDeviceInfo",
     "IosUtsname",
     "LinuxDeviceInfo",
@@ -95,7 +94,7 @@ class WebBrowserName(Enum):
     """Mozilla Firefox"""
 
     SAMSUNG_INTERNET = "samsungInternet"
-    """Samsumg Internet Browser"""
+    """Samsung Internet Browser"""
 
     OPERA = "opera"
     """Opera Web Browser"""

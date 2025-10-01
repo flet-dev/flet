@@ -658,7 +658,6 @@ __all__ = [
     "DateTimeValue",
     "DecorationImage",
     "DeviceInfo",
-    "DeviceInfo",
     "DialogControl",
     "DialogTheme",
     "DismissDirection",
