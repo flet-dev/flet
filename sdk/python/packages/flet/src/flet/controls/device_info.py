@@ -23,12 +23,12 @@ class DeviceInfo:
     Base class for device information.
 
     Platform-specific classes include:
-        - [`AndroidDeviceInfo`][flet.]
-        - [`IosDeviceInfo`][flet.]
-        - [`LinuxDeviceInfo`][flet.]
-        - [`MacOsDeviceInfo`][flet.]
-        - [`WebDeviceInfo`][flet.]
-        - [`WindowsDeviceInfo`][flet.]
+    - [`AndroidDeviceInfo`][flet.]
+    - [`IosDeviceInfo`][flet.]
+    - [`LinuxDeviceInfo`][flet.]
+    - [`MacOsDeviceInfo`][flet.]
+    - [`WebDeviceInfo`][flet.]
+    - [`WindowsDeviceInfo`][flet.]
     """
 
 
