@@ -196,7 +196,7 @@ jobs:
           source "$SCRIPTS/common.sh"
 
           cd "$SDK_PYTHON"
-          uv build --package flet-desktop
+          uv build --package flet-desktop --wheel
 
           # Ensure glob expands
           shopt -s nullglob
@@ -215,7 +215,6 @@ jobs:
           path: |
             client/flet-windows.zip
             sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
 
   # ===========================
   # Build Flet Client for macOS
@@ -258,7 +257,7 @@ jobs:
           source "$SCRIPTS/common.sh"
 
           patch_python_package_versions
-          uv build --package flet-desktop
+          uv build --package flet-desktop --wheel
 
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
@@ -274,7 +273,6 @@ jobs:
           path: |
             client/flet-macos.tar.gz
             sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
 
   # ===========================
   # Build Flet Client for Linux
@@ -427,7 +425,7 @@ jobs:
 
             # Patch the package name to match the current wheel's flavor and build
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
-            uv build
+            uv build --wheel
 
             # Find all universal wheels for the current package
             universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
@@ -469,7 +467,6 @@ jobs:
           path: |
             client/flet-linux*.tar.gz
             sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
 
   # =========================
   # Build Flet Client for Web
@@ -538,11 +535,11 @@ jobs:
             client/flet-web.tar.gz
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
-  # =======================
-  # Build flet and flet-cli
-  # =======================
-  build_flet_and_cli_wheels:
-    name: Build flet and flet-cli Python packages
+  # =====================================
+  # Build flet, flet-cli and flet-desktop
+  # =====================================
+  build_flet_cli_desktop:
+    name: Build flet, flet-cli and flet-desktop Python packages
     runs-on: ubuntu-latest
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
@@ -563,6 +560,7 @@ jobs:
           patch_python_package_versions
           uv build --package flet-cli
           uv build --package flet
+          uv build --package flet-desktop --sdist
           update_flet_wheel_deps dist
 
       - name: Upload artifacts
@@ -579,11 +577,11 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
-      - build_flet_and_cli_wheels
+      - build_flet_cli_desktop
       - build_windows
       - build_macos
       - build_linux
@@ -604,7 +602,7 @@ jobs:
           rm -rf dist/client
 
           for pkg in flet flet_cli flet_desktop flet_desktop_light flet_web; do
-            uv publish dist/**/${pkg}-*
+            uv publish --dry-run dist/**/${pkg}-*
           done
 
   # ==============
