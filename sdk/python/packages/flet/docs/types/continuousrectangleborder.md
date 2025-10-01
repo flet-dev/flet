@@ -1,1 +1,1 @@
-::: flet.ContinuousRectangleBorder
+{{ class_all_options("flet.ContinuousRectangleBorder") }}

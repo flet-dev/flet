@@ -1,1 +1,1 @@
-::: flet.SearchViewTheme
+{{ class_all_options("flet.SearchViewTheme") }}

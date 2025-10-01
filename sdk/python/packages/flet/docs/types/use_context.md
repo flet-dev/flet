@@ -1,1 +1,1 @@
-::: flet.use_context
+{{ class_all_options("flet.use_context") }}

@@ -1,1 +1,1 @@
-::: flet.FilledButtonTheme
+{{ class_all_options("flet.FilledButtonTheme") }}

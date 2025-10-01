@@ -1,3 +1,1 @@
-::: flet.TabBarIndicatorSize
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TabBarIndicatorSize", separate_signature=False) }}

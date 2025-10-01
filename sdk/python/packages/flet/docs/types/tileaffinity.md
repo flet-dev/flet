@@ -1,3 +1,1 @@
-::: flet.TileAffinity
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TileAffinity", separate_signature=False) }}

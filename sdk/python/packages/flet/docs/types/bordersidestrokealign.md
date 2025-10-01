@@ -1,3 +1,1 @@
-::: flet.BorderSideStrokeAlign
-    options:
-        separate_signature: false
+{{ class_all_options("flet.BorderSideStrokeAlign", separate_signature=False) }}

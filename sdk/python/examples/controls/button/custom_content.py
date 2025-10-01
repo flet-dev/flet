@@ -2,8 +2,6 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "Button Example"
-
     page.add(
         ft.Button(
             width=150,
@@ -32,4 +30,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

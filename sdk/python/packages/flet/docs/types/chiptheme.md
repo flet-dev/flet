@@ -1,1 +1,1 @@
-::: flet.ChipTheme
+{{ class_all_options("flet.ChipTheme") }}

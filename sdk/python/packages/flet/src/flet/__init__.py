@@ -288,7 +288,7 @@ from flet.controls.material.expansion_tile import ExpansionTile, TileAffinity
 from flet.controls.material.filled_button import FilledButton
 from flet.controls.material.filled_tonal_button import FilledTonalButton
 from flet.controls.material.floating_action_button import FloatingActionButton
-from flet.controls.material.form_field_control import InputBorder
+from flet.controls.material.form_field_control import FormFieldControl, InputBorder
 from flet.controls.material.icon_button import (
     FilledIconButton,
     FilledTonalIconButton,
@@ -708,6 +708,7 @@ __all__ = [
     "FloatingActionButtonLocation",
     "FloatingActionButtonTheme",
     "FontWeight",
+    "FormFieldControl",
     "GestureDetector",
     "Gradient",
     "GradientTileMode",

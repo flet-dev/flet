@@ -1,3 +1,1 @@
-::: flet.FontWeight
-    options:
-        separate_signature: false
+{{ class_all_options("flet.FontWeight", separate_signature=False) }}

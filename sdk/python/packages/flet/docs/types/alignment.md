@@ -1,6 +1,4 @@
-::: flet.Alignment
-    options:
-        members_order: source
+{{ class_all_options("flet.Alignment", members_order="source") }}
 
 ## Examples
 

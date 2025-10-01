@@ -1,1 +1,1 @@
-::: flet.DatePickerEntryModeChangeEvent
+{{ class_all_options("flet.DatePickerEntryModeChangeEvent") }}

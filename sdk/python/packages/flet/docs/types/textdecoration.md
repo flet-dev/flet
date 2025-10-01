@@ -1,4 +1,4 @@
-::: flet.TextDecoration
+{{ class_all_options("flet.TextDecoration") }}
 
 ## Usage Example
 

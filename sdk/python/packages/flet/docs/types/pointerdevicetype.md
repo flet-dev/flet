@@ -1,3 +1,1 @@
-::: flet.PointerDeviceType
-    options:
-        separate_signature: false
+{{ class_all_options("flet.PointerDeviceType", separate_signature=False) }}

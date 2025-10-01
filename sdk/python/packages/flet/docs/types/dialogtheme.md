@@ -1,1 +1,1 @@
-::: flet.DialogTheme
+{{ class_all_options("flet.DialogTheme") }}

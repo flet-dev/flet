@@ -1,1 +1,1 @@
-::: flet.OutlinedBorder
+{{ class_all_options("flet.OutlinedBorder") }}

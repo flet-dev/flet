@@ -1,3 +1,1 @@
-::: flet.AutofillGroupDisposeAction
-    options:
-        separate_signature: false
+{{ class_all_options("flet.AutofillGroupDisposeAction", separate_signature=False) }}

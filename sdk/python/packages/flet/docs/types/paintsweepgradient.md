@@ -1,4 +1,4 @@
-::: flet.PaintSweepGradient
+{{ class_all_options("flet.PaintSweepGradient") }}
 
 ## Examples
 

@@ -1,3 +1,1 @@
-::: flet.TextBaseline
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TextBaseline", separate_signature=False) }}

@@ -1,3 +1,1 @@
-::: flet.PopupMenuPosition
-    options:
-        separate_signature: false
+{{ class_all_options("flet.PopupMenuPosition", separate_signature=False) }}

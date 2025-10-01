@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -24,15 +25,15 @@ class AppModel:
     route: str
     theme_mode: ft.ThemeMode = ft.ThemeMode.LIGHT
 
-    def route_change(self, route: str):
-        print("Route changed from:", self.route, "to:", route)
-        self.route = route
+    def route_change(self, e: ft.RouteChangeEvent):
+        print("Route changed from:", self.route, "to:", e.route)
+        self.route = e.route
 
-    def view_popped(self, e: ft.ViewPopEvent):
+    async def view_popped(self, e: ft.ViewPopEvent):
         print("View popped")
         views = ft.unwrap_component(ft.context.page.views)
         if len(views) > 1:
-            ft.context.page.push_route(views[-2].route)
+            await ft.context.page.push_route(views[-2].route)
 
     def toggle_theme(self):
         self.theme_mode = (
@@ -66,8 +67,8 @@ def RoutingExample():
     app, _ = ft.use_state(AppModel(route=ft.context.page.route))
 
     # subscribe to page events as soon as possible
-    ft.context.page.on_route_change = lambda e: app.route_change(e.route)
-    ft.context.page.on_view_pop = lambda e: app.view_popped(e)
+    ft.context.page.on_route_change = app.route_change
+    ft.context.page.on_view_pop = app.view_popped
 
     # stable callback (doesn’t change identity each render)
     toggle = ft.use_callback(lambda: app.toggle_theme(), dependencies=[app.theme_mode])
@@ -97,11 +98,15 @@ def RoutingExample():
                 controls=[
                     ft.Button(
                         "Visit Store",
-                        on_click=lambda _: ft.context.page.push_route("/store"),
+                        on_click=lambda _: asyncio.create_task(
+                            ft.context.page.push_route("/store")
+                        ),
                     ),
                     ft.Button(
                         "Do something",
-                        on_click=lambda _: ft.context.page.push_route("/do-something"),
+                        on_click=lambda _: asyncio.create_task(
+                            ft.context.page.push_route("/do-something")
+                        ),
                     ),
                 ],
             ),
@@ -113,7 +118,9 @@ def RoutingExample():
                         controls=[
                             ft.Button(
                                 "Go Home",
-                                on_click=lambda _: ft.context.page.push_route("/"),
+                                on_click=lambda _: asyncio.create_task(
+                                    ft.context.page.push_route("/")
+                                ),
                             ),
                         ],
                     )

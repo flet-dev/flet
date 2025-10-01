@@ -1,3 +1,1 @@
-::: flet.MarkdownCodeTheme
-    options:
-        separate_signature: false
+{{ class_all_options("flet.MarkdownCodeTheme", separate_signature=False) }}

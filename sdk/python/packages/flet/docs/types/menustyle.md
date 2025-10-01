@@ -1,1 +1,1 @@
-::: flet.MenuStyle
+{{ class_all_options("flet.MenuStyle") }}

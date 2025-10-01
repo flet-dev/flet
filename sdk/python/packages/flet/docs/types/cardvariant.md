@@ -1,3 +1,1 @@
-::: flet.CardVariant
-    options:
-        separate_signature: false
+{{ class_all_options("flet.CardVariant", separate_signature=False) }}

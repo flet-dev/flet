@@ -1,4 +1,4 @@
-::: flet.TabBarTheme
+{{ class_all_options("flet.TabBarTheme") }}
 
 ## Examples
 

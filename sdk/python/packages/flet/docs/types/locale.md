@@ -1,1 +1,1 @@
-::: flet.Locale
+{{ class_all_options("flet.Locale") }}

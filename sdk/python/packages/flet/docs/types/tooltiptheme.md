@@ -1,1 +1,1 @@
-::: flet.TooltipTheme
+{{ class_all_options("flet.TooltipTheme") }}

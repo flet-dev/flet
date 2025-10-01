@@ -1,3 +1,1 @@
-::: flet.TabAlignment
-    options:
-        separate_signature: false
+{{ class_all_options("flet.TabAlignment", separate_signature=False) }}

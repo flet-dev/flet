@@ -1,3 +1,1 @@
-::: flet.Brightness
-    options:
-        separate_signature: false
+{{ class_all_options("flet.Brightness", separate_signature=False) }}
