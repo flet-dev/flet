@@ -61,6 +61,7 @@ from flet.controls.types import (
 )
 from flet.utils import is_pyodide
 from flet.utils.deprecated import deprecated
+from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
 
 if not is_pyodide():
@@ -921,16 +922,16 @@ class Page(BasePage):
         info = await self._invoke_method("get_device_info")
 
         if self.web:
-            return WebDeviceInfo(**info)
+            return from_dict(WebDeviceInfo, info)
         elif self.platform == PagePlatform.ANDROID:
-            return AndroidDeviceInfo(**info)
+            return from_dict(AndroidDeviceInfo, info)
         elif self.platform == PagePlatform.IOS:
-            return IosDeviceInfo(**info)
+            return from_dict(IosDeviceInfo, info)
         elif self.platform == PagePlatform.MACOS:
-            return MacOsDeviceInfo(**info)
+            return from_dict(MacOsDeviceInfo, info)
         elif self.platform == PagePlatform.LINUX:
-            return LinuxDeviceInfo(**info)
+            return from_dict(LinuxDeviceInfo, info)
         elif self.platform == PagePlatform.WINDOWS:
-            return WindowsDeviceInfo(**info)
+            return from_dict(WindowsDeviceInfo, info)
         else:
             return None
