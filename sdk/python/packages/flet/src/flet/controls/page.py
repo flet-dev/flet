@@ -33,6 +33,15 @@ from flet.controls.control_event import (
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
+from flet.controls.device_info import (
+    AndroidDeviceInfo,
+    DeviceInfo,
+    IosDeviceInfo,
+    LinuxDeviceInfo,
+    MacOsDeviceInfo,
+    WebDeviceInfo,
+    WindowsDeviceInfo,
+)
 from flet.controls.multi_view import MultiView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
@@ -52,6 +61,7 @@ from flet.controls.types import (
 )
 from flet.utils import is_pyodide
 from flet.utils.deprecated import deprecated
+from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
 
 if not is_pyodide():
@@ -326,8 +336,8 @@ class Page(BasePage):
     used for reference and the values:
     - Key: The font family name used for reference.
     - Value: The font source, either an absolute URL or a relative path to a
-      local asset. The following font file formats are supported `.ttc`, `.ttf`
-      and `.otf`.
+        local asset. The following font file formats are supported `.ttc`, `.ttf`
+        and `.otf`.
 
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
@@ -904,3 +914,28 @@ class Page(BasePage):
         The PubSub client for the current page.
         """
         return self.session.pubsub_client
+
+    async def get_device_info(self) -> Optional[DeviceInfo]:
+        """
+        Returns device information.
+
+        Returns:
+            The device information object for the current platform,
+                or `None` if unavailable.
+        """
+        info = await self._invoke_method("get_device_info")
+
+        if self.web:
+            return from_dict(WebDeviceInfo, info)
+        elif self.platform == PagePlatform.ANDROID:
+            return from_dict(AndroidDeviceInfo, info)
+        elif self.platform == PagePlatform.IOS:
+            return from_dict(IosDeviceInfo, info)
+        elif self.platform == PagePlatform.MACOS:
+            return from_dict(MacOsDeviceInfo, info)
+        elif self.platform == PagePlatform.LINUX:
+            return from_dict(LinuxDeviceInfo, info)
+        elif self.platform == PagePlatform.WINDOWS:
+            return from_dict(WindowsDeviceInfo, info)
+        else:
+            return None

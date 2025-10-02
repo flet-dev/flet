@@ -421,6 +421,7 @@ nav:
           - Aliases: types/aliases.md
           - Dataclasses:
               - Alignment: types/alignment.md
+              - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md
               - AnimationStyle: types/animationstyle.md
               - AutoCompleteSuggestion: types/autocompletesuggestion.md
@@ -436,6 +437,14 @@ nav:
               - ColorFilter: types/colorfilter.md
               - ControlState: types/controlstate.md
               - DecorationImage: types/decorationimage.md
+              - DeviceInfo:
+                  - DeviceInfo: types/deviceinfo/index.md
+                  - AndroidDeviceInfo: types/androiddeviceinfo.md
+                  - IosDeviceInfo: types/iosdeviceinfo.md
+                  - LinuxDeviceInfo: types/linuxdeviceinfo.md
+                  - MacOsDeviceInfo: types/macosdeviceinfo.md
+                  - WebDeviceInfo: types/webdeviceinfo.md
+                  - WindowsDeviceInfo: types/windowsdeviceinfo.md
               - Duration: types/duration.md
               - FilePickerFile: types/filepickerfile.md
               - FilePickerUploadFile: types/filepickeruploadfile.md
@@ -446,6 +455,7 @@ nav:
                   - SweepGradient: types/sweepgradient.md
               - InputBorder: types/inputborder.md
               - InputFilter: types/inputfilter.md
+              - IosUtsname: types/iosutsname.md
               - Key:
                   - Key: types/key/index.md
                   - ScrollKey: types/scrollkey.md
@@ -620,6 +630,7 @@ nav:
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
               - VisualDensity: types/visualdensity.md
+              - WebBrowserName: types/webbrowsername.md
               - WebRenderer: types/webrenderer.md
               - WindowEventType: types/windoweventtype.md
               - WindowResizeEdge: types/windowresizeedge.md
