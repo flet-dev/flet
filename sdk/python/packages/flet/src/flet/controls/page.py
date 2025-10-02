@@ -918,6 +918,10 @@ class Page(BasePage):
     async def get_device_info(self) -> Optional[DeviceInfo]:
         """
         Returns device information.
+
+        Returns:
+            The device information object for the current platform,
+                or `None` if unavailable.
         """
         info = await self._invoke_method("get_device_info")
 
