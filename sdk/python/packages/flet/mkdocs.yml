@@ -53,7 +53,7 @@ theme:
     - navigation.tabs
     - navigation.instant
     - navigation.tracking
-    #- navigation.sections
+    - navigation.sections
     - navigation.footer
     - navigation.top
     - navigation.indexes
@@ -225,14 +225,15 @@ nav:
       - Running a Flet app (Hot Reload): getting-started/running-app.md
       - Testing on Mobile: getting-started/testing-on-mobile.md
   - API Reference:
+      - api/index.md
       - Controls:
           - controls/index.md
           - Ads:
               - ads/index.md
-              - BannerAd: ads/banner_ad.md
-              - BaseAd: ads/base_ad.md
-              - InterstitialAd: ads/interstitial_ad.md
-              # - NativeAd: ads/native_ad.md
+              - BannerAd: ads/bannerad.md
+              - BaseAd: ads/basead.md
+              - InterstitialAd: ads/interstitialad.md
+              # - NativeAd: ads/nativead.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -415,7 +416,7 @@ nav:
           - Aliases: types/aliases.md
           - Dataclasses:
               - Ads:
-                  - AdRequest: ads/types/ad_request.md
+                  - AdRequest: ads/types/adrequest.md
               - Alignment: types/alignment.md
               - Animation: types/animation.md
               - AnimationStyle: types/animationstyle.md
@@ -537,7 +538,7 @@ nav:
               - control: types/control.md
           - Enums:
               - Ads:
-                  - PrecisionType: ads/types/precision_type.md
+                  - PrecisionType: ads/types/precisiontype.md
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
               - AppLifecycleState: types/applifecyclestate.md
@@ -623,7 +624,7 @@ nav:
               - WindowResizeEdge: types/windowresizeedge.md
           - Events:
               - Ads:
-                  - PaidAdRequest: ads/types/paid_ad_event.md
+                  - PaidAdRequest: ads/types/paidadevent.md
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md

@@ -275,7 +275,7 @@ packages:
   flet_ads:
     dependency: "direct main"
     description:
-      path: "../sdk/python/packages/flet_ads/src/flutter/flet_ads"
+      path: "../sdk/python/packages/flet-ads/src/flutter/flet_ads"
       relative: true
     source: path
     version: "0.1.0"

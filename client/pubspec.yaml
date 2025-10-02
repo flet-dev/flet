@@ -33,7 +33,7 @@ dependencies:
     sdk: flutter
 
   flet_ads:
-    path: ../sdk/python/packages/flet_ads/src/flutter/flet_ads
+    path: ../sdk/python/packages/flet-ads/src/flutter/flet_ads
 
 # --FAT_CLIENT_START--
   flet_audio:

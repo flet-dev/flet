@@ -10,17 +10,13 @@ Based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flu
 
 ## Platform Support
 
-Ads controls are supported on the following platforms:
-
-| Platform | iOS | Android |
-|----------|-----|---------|
-|          |   ✅  |    ✅    |
+| Platform | Windows | macOS | Linux | iOS | Android | Web |
+|----------|---------|-------|-------|-----|---------|-----|
+| Supported|    ❌    |   ❌   |   ❌   |  ✅  |    ✅    |  ❌  |
 
 ## Usage
 
-### Installation
-
-To install the `flet-ads` package and add it to your project dependencies:
+To use ads controls add `flet-ads` package to your project dependencies:
 
 /// tab | uv
 ```bash
@@ -36,11 +32,21 @@ pip install flet-ads  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-### Packaging
+## Example
+
+```python
+--8<-- "{{ examples }}/example_1.py"
+```
+
+![example_1]({{ examples }}/media/example_1.gif){width="80%"}
+/// caption
+///
+
+## Packaging
 
 The following are to be done when packaging an app that uses the `flet-ads` package.
 
-#### Specify AdMob app ID
+### Specify AdMob app ID
 
 Specify your [AdMob app ID](https://support.google.com/admob/answer/7356431), without which your application might crash
 on launch.
@@ -69,7 +75,6 @@ flet build apk ... --android-meta-data com.google.android.gms.ads.APPLICATION_ID
 flet build ipa ... --info-plist GADApplicationIdentifier=ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy
 ```
 
-
 !!! tip "Test Values"
 AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_with_test_ads) app and ad unit IDs for
 testing purposes:
@@ -80,13 +85,3 @@ testing purposes:
     - `InterstitialAd.unit_id` on **iOS**: `"ca-app-pub-3940256099942544/4411468910"`
 
 Remember to replace these values with your own when you're ready to package your app.
-
-## Example
-
-```python
---8<-- "{{ examples }}/example_1.py"
-```
-
-![example_1]({{ examples }}/media/example_1.gif){width="80%"}
-/// caption
-///
