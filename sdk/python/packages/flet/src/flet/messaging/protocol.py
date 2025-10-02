@@ -72,6 +72,8 @@ def decode_ext_from_msgpack(code, data):
         return datetime.time(*map(int, data.decode("utf-8").split(":")))
     elif code == 3:
         return Duration.from_unit(microseconds=int(data))
+    elif code == 4:
+        return data.decode("utf-8")
     return msgpack.ExtType(code, data)
 
 
