@@ -568,6 +568,44 @@ jobs:
           name: flet-and-flet-cli-wheels
           path: sdk/python/dist/*.whl
 
+  # ================
+  # Build extensions
+  # ================
+  build_extensions:
+    name: 'Build extension ${{ matrix.extension_name }}'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        extension_name: [ "flet-ads" ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Patch versions
+        run: |
+          source .github/scripts/update_build_version.sh
+          uv version $PYPI_VER
+          uv run .github/scripts/patch_pubspec_version.py sdk/python/packages/${{ matrix.extension_name }}/src/flutter/*/pubspec.yaml $PKG_VER
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Analyze Flutter package
+        working-directory: sdk/python/packages/${{ matrix.extension_name }}/src/flutter
+        run: |
+          ext="${{ matrix.extension_name }}"
+          fixed="${ext%-*}_${ext##*-}"
+          cd "$fixed"
+          dart pub get
+          dart analyze
+
   # ===============================
   # Publish Python packages to PyPI
   # ===============================
