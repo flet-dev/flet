@@ -225,7 +225,6 @@ nav:
       - Running a Flet app (Hot Reload): getting-started/running-app.md
       - Testing on Mobile: getting-started/testing-on-mobile.md
   - API Reference:
-      - api/index.md
       - Controls:
           - controls/index.md
           - Ads:
