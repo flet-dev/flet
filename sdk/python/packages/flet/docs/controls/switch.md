@@ -16,9 +16,8 @@ example_images: ../examples/controls/switch/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Handling change events
 
@@ -26,8 +25,7 @@ example_images: ../examples/controls/switch/media
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-![handling-events]({{ example_images }}/handling_events.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_events.gif", alt="handling-events", width="80%") }}
+
 
 {{ class_members(class_name) }}

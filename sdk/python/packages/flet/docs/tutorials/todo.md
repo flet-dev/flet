@@ -8,9 +8,8 @@ then publish it as a desktop, mobile or web app. The app is a single-file consol
 [172 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py),
 yet it is a multi-platform application with rich, responsive UI:
 
-![complete-demo-web.gif](../examples/tutorials/todo/media/complete-demo-web.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/complete-demo-web.gif", alt="complete-demo-web.gif", width="80%") }}
+
 
 You can see the live demo [here](https://gallery.flet.dev/todo/).
 
@@ -52,9 +51,8 @@ ft.run(main)
 
 Run this app, and you will see a new window with a greeting:
 
-![hello-world](../examples/tutorials/todo/media/hello-world.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/hello-world.png", alt="hello-world", width="80%") }}
+
 
 ///
 
@@ -84,18 +82,16 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-1](../examples/tutorials/todo/media/app-1.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/app-1.png", alt="app-1", width="80%") }}
+
 
 ### Page layout
 
 Now let's make the app look nice! We want the entire app to be at the top center of the page,
 taking up 600 px width. The TextField and the "+" button should be aligned horizontally, and take up full app width:
 
-![diagram-1](../examples/tutorials/todo/media/diagram-1.svg){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/diagram-1.svg", alt="diagram-1", width="80%") }}
+
 
 [`Row`][flet.Row]  is a control that is used to lay its children controls out horizontally on a page.
 [`Column`][flet.Column] is a control that is used to lay its children controls out vertically on a page.
@@ -134,9 +130,8 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-2](../examples/tutorials/todo/media/app-2.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/app-2.png", alt="app-2", width="80%") }}
+
 
 ### Reusable UI components
 
@@ -210,9 +205,8 @@ In the [previous step](#adding-page-controls-and-handling-events), we created a 
 Let's improve the app by adding "Edit" and "Delete" buttons next to a task name. The "Edit" button
 will switch a task item to edit mode.
 
-![diagram-2](../examples/tutorials/todo/media/diagram-2.svg){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/diagram-2.svg", alt="diagram-2", width="80%") }}
+
 
 Each task item is represented by two rows: `display_view` row with Checkbox, "Edit" and "Delete"
 buttons and `edit_view` row with TextField and "Save" button. `view` column serves as a container
@@ -331,9 +325,8 @@ Then, we passed a reference to `task_delete` method into Task constructor and ca
 
 Run the app and try to edit and delete tasks:
 
-![view-edit-delete](../examples/tutorials/todo/media/view-edit-delete.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/view-edit-delete.gif", alt="view-edit-delete", width="80%") }}
+
 
 ## Filtering list items
 
@@ -434,9 +427,8 @@ class Task(ft.Column):
 
 Run the app and try filtering tasks by clicking on the tabs:
 
-![filtering](../examples/tutorials/todo/media/filtering.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/filtering.gif", alt="filtering", width="80%") }}
+
 
 ## Final touches
 
@@ -450,9 +442,8 @@ displaying the number of incomplete tasks (`Text` control) and a "Clear complete
 ```
 ///
 
-![app-4](../examples/tutorials/todo/media/app-4.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/app-4.png", alt="app-4", width="80%") }}
+
 
 ## Publishing the app
 

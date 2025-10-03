@@ -16,9 +16,8 @@ example_images: ../examples/controls/image/media
 --8<-- "{{ examples }}/gallery.py"
 ```
 
-![gallery]({{ example_images }}/gallery.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/gallery.gif", alt="gallery", width="80%") }}
+
 
 ### Displaying a base64 image
 

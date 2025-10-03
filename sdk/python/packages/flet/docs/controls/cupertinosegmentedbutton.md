@@ -16,9 +16,8 @@ example_images: ../examples/controls/cupertino_segmented_button/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Adjusting segments padding
 

@@ -14,8 +14,7 @@ example_images: ../examples/controls/card/media
 --8<-- "{{ examples }}/music_info.py"
 ```
 
-![music-info]({{ example_images }}/music_info.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/music_info.gif", alt="music-info", width="80%") }}
+
 
 {{ class_members(class_name) }}

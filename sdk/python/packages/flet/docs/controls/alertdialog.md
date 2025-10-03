@@ -16,8 +16,7 @@ example_images: ../examples/controls/alert_dialog/media
 --8<-- "{{ examples }}/modal_and_non_modal.py"
 ```
 
-![modal-and-non-modal]({{ example_images }}/modal_and_non_modal.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/modal_and_non_modal.gif", alt="modal-and-non-modal", width="80%") }}
+
 
 {{ class_members(class_name) }}

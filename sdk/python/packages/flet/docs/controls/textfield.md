@@ -16,9 +16,8 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Handling change events
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/handling_change_events.py"
 ```
 
-![handling-change-events]({{ example_images }}/handling_change_events.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_change_events.gif", alt="handling-change-events", width="80%") }}
+
 
 ### Password with reveal button
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/password.py"
 ```
 
-![password]({{ example_images }}/password.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/password.gif", alt="password", width="80%") }}
+
 
 ### Multiline fields
 
@@ -46,9 +43,8 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/multiline.py"
 ```
 
-![multiline]({{ example_images }}/multiline.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/multiline.gif", alt="multiline", width="80%") }}
+
 
 ### Underlined and borderless TextFields
 
@@ -56,9 +52,8 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/underlined_and_borderless.py"
 ```
 
-![underlined-and-borderless]({{ example_images }}/underlined_and_borderless.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/underlined_and_borderless.gif", alt="underlined-and-borderless", width="80%") }}
+
 
 ### Setting prefixes and suffixes
 
@@ -66,9 +61,8 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/prefix_and_suffix.py"
 ```
 
-![prefix-and-suffix]({{ example_images }}/prefix_and_suffix.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/prefix_and_suffix.gif", alt="prefix-and-suffix", width="80%") }}
+
 
 ### Styled TextField
 

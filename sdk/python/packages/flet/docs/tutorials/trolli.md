@@ -4,9 +4,8 @@ title: Trolli Tutorial
 
 Let's make a clone of Trello in Python with the Flet framework and then deploy it to [fly.io](https://fly.io/)!
 
-![app](../examples/tutorials/trolli/media/app.gif){width="100%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/app.gif", alt="app", width="100%") }}
+
 
 The code for this tutorial can be found [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/trolli) with self explanatory commits.
 Be sure to run `pip install -r requirements.txt` after cloning.
@@ -65,9 +64,8 @@ In terms of layout we can consider the app to consist of a header (`appbar`) and
 collapsible navigation panel, next to which is the active view consisting of either a board, settings,
 members or whatever else we may choose. Something like this...
 
-![mock-up](../examples/tutorials/trolli/media/mock-up.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/mock-up.png", alt="mock-up", width="80%") }}
+
 
 So the class for the app itself could look something like this...
 
@@ -245,9 +243,8 @@ content = ft.Column(
 
 If you save the file you should be able to see the change in your app window.
 
-![basic-nav-rail-toggle](../examples/tutorials/trolli/media/basic-nav-rail-toggle.gif){width="100%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/basic-nav-rail-toggle.gif", alt="basic-nav-rail-toggle", width="100%") }}
+
 
 Before we move on let's define our basic entities. We'll need a `Board` class, which will keep a list of lists, each of which will be a `BoardList` object (apologies for the unfortunate lexical collisions here - the colloquial use of 'list' derives from the nature of the app, whereas the technical use of 'list' derives from python's particular term for an array-like data structure), and each of which, in turn, will contain a list of `Item` objects. If that's confusing, take some time to look over the source code to clear things up.
 
@@ -472,9 +469,8 @@ def sync_board_destinations(self):
 Now we can add new boards and they appear in our navigation rail.
 Unfortunately clicking on the navigation rail doesn't actually navigate to anything.
 
-![add-board-capability](../examples/tutorials/trolli/media/add-board-capability.gif){width="100%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/add-board-capability.gif", alt="add-board-capability", width="100%") }}
+
 
 There are several ways we could achieve this such as having every view present in the `app_layout.py`
 module and then toggling visibility on/off of the relevant views depending on the navigation rail index.
@@ -544,9 +540,8 @@ flet run -dw
 command (_-d_ flag for hot reloading, and _-w_ flag for web) we can add some boards and reach them by
 clicking or entering `board/{i}`, where *i* is the zero indexed board, as the url.
 
-![navigation](../examples/tutorials/trolli/media/navigation.gif){width="100%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/navigation.gif", alt="navigation", width="100%") }}
+
 
 ### Changing Board Names
 
@@ -708,9 +703,8 @@ def list_drag_leave(self, e):
 Note the manipulation of the opacity field acting as a visual indication that the dragged item will be accepted
 on the target.
 
-![drag-drop-list](../examples/tutorials/trolli/media/drag-drop-list.gif){width="100%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/drag-drop-list.gif", alt="drag-drop-list", width="100%") }}
+
 
 Now for the slightly more complex case of dragging items within a list (including potentially to another list on
 the same board). Now that we want a `board_list` to not only be a drag target for other lists, but also for items
@@ -854,9 +848,8 @@ def add_item(
 
 And with these changes, we should be able to drag lists around within the board and also drag items between different lists.
 
-![drag-lists-and-items](../examples/tutorials/trolli/media/drag-lists-and-items.gif){width="100%"}
-/// caption
-///
+{{ image("../examples/tutorials/trolli/media/drag-lists-and-items.gif", alt="drag-lists-and-items", width="100%") }}
+
 
 ## Handling Page Resizing
 

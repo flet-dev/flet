@@ -16,9 +16,8 @@ example_images: ../examples/controls/expansion_tile/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 ### Theme mode toggle
 

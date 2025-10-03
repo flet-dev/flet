@@ -17,9 +17,8 @@ segment_class_name: flet.Segment
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 {{ class_members(class_name) }}
 

@@ -18,9 +18,8 @@ example_images: ../../examples/controls/navigation_drawer/media
 --8<-- "{{ examples }}/position_start.py"
 ```
 
-![position-start]({{ example_images }}/position_start.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/position_start.gif", alt="position-start", width="80%") }}
+
 
 ### End-aligned drawer
 
@@ -28,8 +27,7 @@ example_images: ../../examples/controls/navigation_drawer/media
 --8<-- "{{ examples }}/position_end.py"
 ```
 
-![position-end]({{ example_images }}/position_end.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/position_end.gif", alt="position-end", width="80%") }}
+
 
 {{ class_members(class_name) }}

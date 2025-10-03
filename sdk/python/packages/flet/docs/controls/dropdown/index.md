@@ -18,9 +18,8 @@ example_images: ../../examples/controls/dropdown/media
 --8<-- "{{ examples }}/color_selection_with_filtering.py"
 ```
 
-![color-selection-with-filtering]({{ example_images }}/color_selection_with_filtering.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/color_selection_with_filtering.gif", alt="color-selection-with-filtering", width="80%") }}
+
 
 
 ### Icon selection
@@ -29,9 +28,8 @@ example_images: ../../examples/controls/dropdown/media
 --8<-- "{{ examples }}/icon_selection.py"
 ```
 
-![icon-selection]({{ example_images }}/icon_selection.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/icon_selection.png", alt="icon-selection", width="80%") }}
+
 
 ### Styled dropdowns
 

@@ -16,9 +16,8 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/spacing.py"
 ```
 
-![spacing]({{ example_images }}/spacing.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/spacing.gif", alt="spacing", width="80%") }}
+
 
 ### Column wrapping
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/wrap.py"
 ```
 
-![wrap]({{ example_images }}/wrap.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/wrap.gif", alt="wrap", width="80%") }}
+
 
 ### Column vertical alignments
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/alignment.py"
 ```
 
-![alignment]({{ example_images }}/alignment.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/alignment.png", alt="alignment", width="80%") }}
+
 
 ### Column horizontal alignments
 
@@ -46,9 +43,8 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/horizontal_alignment.py"
 ```
 
-![horizontal-alignment]({{ example_images }}/horizontal_alignment.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/horizontal_alignment.png", alt="horizontal-alignment", width="80%") }}
+
 
 ### Infinite scrolling
 
@@ -67,9 +63,8 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 --8<-- "{{ examples }}/programmatic_scroll.py"
 ```
 
-![programmatic-scroll]({{ example_images }}/programmatic_scroll.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/programmatic_scroll.png", alt="programmatic-scroll", width="80%") }}
+
 
 [//]: # (### Custom scrollbar)
 

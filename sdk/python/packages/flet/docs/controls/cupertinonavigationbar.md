@@ -16,9 +16,8 @@ example_images: ../examples/controls/cupertino_navigation_bar/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 ### Wired navigation bar
 

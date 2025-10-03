@@ -16,9 +16,8 @@ example_images: ../examples/controls/animated_switcher/media
 --8<-- "{{ examples }}/scale_effect.py"
 ```
 
-![scale-effect]({{ example_images }}/scale_effect.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/scale_effect.gif", alt="scale-effect", width="80%") }}
+
 
 ### Animate Image switch
 

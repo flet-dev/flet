@@ -16,9 +16,8 @@ example_images: ../examples/controls/slider/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Setting a custom label
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/slider/media
 --8<-- "{{ examples }}/custom_label"
 ```
 
-![custom-label]({{ example_images }}/custom_label.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/custom_label.gif", alt="custom-label", width="80%") }}
+
 
 ### Handling events
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/slider/media
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-![handling-events]({{ example_images }}/handling_events.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_events.gif", alt="handling-events", width="80%") }}
+
 
 ### Random values
 

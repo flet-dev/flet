@@ -16,9 +16,8 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Dropdown with label and hint
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/label_and_hint.py"
 ```
 
-![label-and-hint]({{ example_images }}/label_and_hint.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/label_and_hint.gif", alt="label-and-hint", width="80%") }}
+
 
 ### Handling events
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-![handling-events]({{ example_images }}/handling_events.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_events.gif", alt="handling-events", width="80%") }}
+
 
 
 ### Add and delete options
@@ -47,8 +44,7 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/add_and_delete_options.py"
 ```
 
-![add-and-delete-options]({{ example_images }}/add_and_delete_options.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/add_and_delete_options.gif", alt="add-and-delete-options", width="80%") }}
+
 
 {{ class_members(class_name) }}

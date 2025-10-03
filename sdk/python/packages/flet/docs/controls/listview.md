@@ -16,8 +16,7 @@ example_images: ../examples/controls/list_view/media
 --8<-- "{{ examples }}/autoscroll_and_dynamic_items.py"
 ```
 
-![autoscroll-and-dynamic-items]({{ example_images }}/autoscroll_and_dynamic_items.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/autoscroll_and_dynamic_items.gif", alt="autoscroll-and-dynamic-items", width="80%") }}
+
 
 {{ class_members(class_name) }}

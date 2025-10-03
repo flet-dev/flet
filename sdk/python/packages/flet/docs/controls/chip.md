@@ -22,9 +22,8 @@ An alternative to assist chips are [buttons](buttons/index.md), which should app
 --8<-- "{{ examples }}/assist_chips.py"
 ```
 
-![assist-chips]({{ example_images }}/assist_chips.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/assist_chips.png", alt="assist-chips", width="80%") }}
+
 
 ### Filter chips
 
@@ -37,8 +36,7 @@ They can be a good alternative to switches or checkboxes.
 --8<-- "{{ examples }}/filter_chips.py"
 ```
 
-![filter-chips]({{ example_images }}/filter_chips.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/filter_chips.png", alt="filter-chips", width="80%") }}
+
 
 {{ class_members(class_name) }}

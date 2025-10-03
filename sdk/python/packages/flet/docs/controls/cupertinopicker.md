@@ -16,8 +16,7 @@ example_images: ../examples/controls/cupertino_picker/media
 --8<-- "{{ examples }}/fruit_selection.py"
 ```
 
-![fruit-selection]({{ example_images }}/fruit_selection.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/fruit_selection.gif", alt="fruit-selection", width="80%") }}
+
 
 {{ class_members(class_name) }}

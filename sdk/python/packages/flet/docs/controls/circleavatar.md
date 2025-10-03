@@ -16,8 +16,7 @@ example_images: ../examples/controls/circle_avatar/media
 --8<-- "{{ examples }}/user_avatars.py"
 ```
 
-![user-avatars]({{ example_images }}/user_avatars.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/user_avatars.png", alt="user-avatars", width="80%") }}
+
 
 {{ class_members(class_name) }}

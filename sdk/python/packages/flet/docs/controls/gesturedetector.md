@@ -29,9 +29,8 @@ inside another control (yellow container) giving the same results.
 --8<-- "{{ examples }}/draggable_containers.py"
 ```
 
-![draggable-containers]({{ example_images }}/draggable_containers.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/draggable_containers.gif", alt="draggable-containers", width="80%") }}
+
 
 ### Window drag area
 

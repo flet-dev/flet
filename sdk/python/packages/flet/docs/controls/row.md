@@ -16,9 +16,8 @@ example_images: ../examples/controls/row/media
 --8<-- "{{ examples }}/spacing.py"
 ```
 
-![spacing]({{ example_images }}/spacing.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/spacing.gif", alt="spacing", width="80%") }}
+
 
 ### Wrapping children
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/row/media
 --8<-- "{{ examples }}/wrap.py"
 ```
 
-![wrap]({{ example_images }}/wrap.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/wrap.gif", alt="wrap", width="80%") }}
+
 
 ### Setting horizontal alignment
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/row/media
 --8<-- "{{ examples }}/alignment.py"
 ```
 
-![alignment]({{ example_images }}/alignment.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/alignment.png", alt="alignment", width="80%") }}
+
 
 ### Setting vertical alignment
 
@@ -46,8 +43,7 @@ example_images: ../examples/controls/row/media
 --8<-- "{{ examples }}/vertical_alignment.py"
 ```
 
-![vertical-alignment]({{ example_images }}/vertical_alignment.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/vertical_alignment.png", alt="vertical-alignment", width="80%") }}
+
 
 {{ class_members(class_name) }}

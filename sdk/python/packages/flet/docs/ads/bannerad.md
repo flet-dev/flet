@@ -14,8 +14,7 @@ example_images: ../examples/controls/ads/media
 --8<-- "{{ examples }}/example_1.py"
 ```
 
-![example_1]({{ example_images }}/example_1.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/example_1.gif", alt="example_1", width="80%") }}
+
 
 {{ class_members(class_name) }}

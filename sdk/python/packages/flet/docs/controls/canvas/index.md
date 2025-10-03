@@ -18,9 +18,8 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/smiling_face.py"
 ```
 
-![smiling-face]({{ example_images }}/smiling_face.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/smiling_face.png", alt="smiling-face", width="80%") }}
+
 
 ### Flet logo
 
@@ -28,9 +27,8 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/flet_logo.py"
 ```
 
-![flet-logo]({{ example_images }}/flet_logo.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/flet_logo.png", alt="flet-logo", width="80%") }}
+
 
 ### Triangles
 
@@ -38,9 +36,8 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/triangles.py"
 ```
 
-![triangles]({{ example_images }}/triangles.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/triangles.png", alt="triangles", width="80%") }}
+
 
 ### Bezier curves
 
@@ -48,9 +45,8 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/bezier_curves.py"
 ```
 
-![bezier-curves]({{ example_images }}/bezier_curves.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/bezier_curves.png", alt="bezier-curves", width="80%") }}
+
 
 ### Text
 
@@ -58,9 +54,8 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/text.py"
 ```
 
-![text]({{ example_images }}/text.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/text.png", alt="text", width="80%") }}
+
 
 ### Free-hand drawing with image capture
 

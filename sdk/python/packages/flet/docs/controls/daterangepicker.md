@@ -16,8 +16,7 @@ example_images: ../test-images/controls/material/golden/macos/date_range_picker
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.png){width="60%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="60%") }}
+
 
 {{ class_members(class_name) }}

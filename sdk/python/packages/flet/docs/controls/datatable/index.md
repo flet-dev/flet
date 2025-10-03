@@ -18,9 +18,8 @@ example_images: ../../examples/controls/data_table/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 ### Sortable columns and selectable rows
 
@@ -28,9 +27,8 @@ example_images: ../../examples/controls/data_table/media
 --8<-- "{{ examples }}/sortable_and_selectable.py"
 ```
 
-![sortable-and-selectable]({{ example_images }}/sortable_and_selectable.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/sortable_and_selectable.png", alt="sortable-and-selectable", width="80%") }}
+
 
 ### Handling events
 

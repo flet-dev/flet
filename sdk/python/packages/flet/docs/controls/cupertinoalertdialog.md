@@ -16,9 +16,8 @@ example_images: ../examples/controls/cupertino_alert_dialog/media
 --8<-- "{{ examples }}/file_deletion_confirmation.py"
 ```
 
-![file-deletion-confirmation]({{ example_images }}/file_deletion_confirmation.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/file_deletion_confirmation.png", alt="file-deletion-confirmation", width="80%") }}
+
 
 ### Cupertino, material and adaptive alert dialogs
 

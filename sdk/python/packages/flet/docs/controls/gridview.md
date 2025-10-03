@@ -16,8 +16,7 @@ example_images: ../examples/controls/grid_view/media
 --8<-- "{{ examples }}/photo_gallery.py"
 ```
 
-![photo-gallery]({{ example_images }}/photo_gallery.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/photo_gallery.png", alt="photo-gallery", width="80%") }}
+
 
 {{ class_members(class_name) }}

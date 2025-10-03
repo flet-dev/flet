@@ -16,9 +16,8 @@ example_images: ../examples/controls/reorderable_list_view/media
 --8<-- "{{ examples }}/horizontal_and_vertical.py"
 ```
 
-![horizontal-and-vertical]({{ example_images }}/horizontal_and_vertical.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/horizontal_and_vertical.gif", alt="horizontal-and-vertical", width="80%") }}
+
 
 ### Custom drag handle
 

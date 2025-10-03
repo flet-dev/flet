@@ -16,9 +16,8 @@ example_images: ../examples/controls/app_bar/media
 --8<-- "{{ examples }}/actions_and_popup_menu.py"
 ```
 
-![actions-and-popup-menu]({{ example_images }}/actions_and_popup_menu.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/actions_and_popup_menu.gif", alt="actions-and-popup-menu", width="80%") }}
+
 
 ### Theme and Material Mode Toggles
 

@@ -16,8 +16,7 @@ example_images: ../examples/controls/cupertino_text_field/media
 --8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-![cupertino-material-and-adaptive]({{ example_images }}/cupertino_material_and_adaptive.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
+
 
 {{ class_members(class_name) }}

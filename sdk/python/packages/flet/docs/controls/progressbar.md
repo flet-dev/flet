@@ -16,8 +16,7 @@ example_images: ../examples/controls/progress_bar/media
 --8<-- "{{ examples }}/determinate_and_indeterminate.py"
 ```
 
-![determinate-and-indeterminate]({{ example_images }}/determinate_and_indeterminate.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/determinate_and_indeterminate.gif", alt="determinate-and-indeterminate", width="80%") }}
+
 
 {{ class_members(class_name) }}

@@ -16,9 +16,8 @@ example_images: ../examples/controls/text_button/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 ### Icons
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/text_button/media
 --8<-- "{{ examples }}/icons.py"
 ```
 
-![icons]({{ example_images }}/icons.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/icons.png", alt="icons", width="80%") }}
+
 
 ### Handling clicks
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/text_button/media
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-![handling-clicks]({{ example_images }}/handling_clicks.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+
 
 ### Custom content
 
@@ -46,8 +43,7 @@ example_images: ../examples/controls/text_button/media
 --8<-- "{{ examples }}/custom_content.py"
 ```
 
-![custom-content]({{ example_images }}/custom_content.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/custom_content.png", alt="custom-content", width="80%") }}
+
 
 {{ class_members(class_name) }}

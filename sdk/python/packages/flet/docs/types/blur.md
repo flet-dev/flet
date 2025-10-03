@@ -8,6 +8,4 @@
 --8<-- "../../examples/controls/types/blur/container.py"
 ```
 
-![container](../examples/controls/types/blur/media/container.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/types/blur/media/container.gif", alt="container", width="80%") }}

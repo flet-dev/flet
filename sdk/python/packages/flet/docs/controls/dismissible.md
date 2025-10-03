@@ -16,8 +16,7 @@ example_images: ../examples/controls/dismissible/media
 --8<-- "{{ examples }}/dismissable_list_tiles.py"
 ```
 
-![dismissable-list-tiles]({{ example_images }}/dismissable_list_tiles.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/dismissable_list_tiles.gif", alt="dismissable-list-tiles", width="80%") }}
+
 
 {{ class_members(class_name) }}

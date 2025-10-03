@@ -14,8 +14,7 @@ example_images: ../examples/controls/window_drag_area/media
 --8<-- "{{ examples }}/no_frame_window.py"
 ```
 
-![no-frame-window]({{ example_images }}/no_frame_window.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/no_frame_window.png", alt="no-frame-window", width="80%") }}
+
 
 {{ class_members(class_name) }}

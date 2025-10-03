@@ -16,8 +16,7 @@ example_images: ../examples/controls/menu_bar/media
 --8<-- "{{ examples }}/nested_submenus.py"
 ```
 
-![nested-submenus]({{ example_images }}/nested_submenus.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/nested_submenus.gif", alt="nested-submenus", width="80%") }}
+
 
 {{ class_members(class_name) }}

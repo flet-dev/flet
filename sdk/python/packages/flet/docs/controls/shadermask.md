@@ -16,9 +16,8 @@ example_images: ../examples/controls/shader_mask/media
 --8<-- "{{ examples }}/pink_radial_glow.py"
 ```
 
-![pink-radial-glow]({{ example_images }}/pink_radial_glow.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/pink_radial_glow.png", alt="pink-radial-glow", width="80%") }}
+
 
 
 ### Fade out bottom edge of an image
@@ -27,9 +26,8 @@ example_images: ../examples/controls/shader_mask/media
 --8<-- "{{ examples }}/fade_out_image_bottom.py"
 ```
 
-![fade-out-image-bottom]({{ example_images }}/fade_out_image_bottom.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/fade_out_image_bottom.png", alt="fade-out-image-bottom", width="80%") }}
+
 
 ### Applying linear and radial gradients/shaders
 

@@ -16,9 +16,8 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/clickable.py"
 ```
 
-![clickable]({{ example_images }}/clickable.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/clickable.gif", alt="clickable", width="80%") }}
+
 
 ### Background color
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/background_color.py"
 ```
 
-![background-color]({{ example_images }}/background_color.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/background_color.png", alt="background-color", width="80%") }}
+
 
 ### Handling clicks
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-![handling-clicks]({{ example_images }}/handling_clicks.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+
 
 ### Handling hovers
 
@@ -46,9 +43,8 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/handling_hovers.py"
 ```
 
-![handling-hovers]({{ example_images }}/handling_hovers.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_hovers.gif", alt="handling-hovers", width="80%") }}
+
 
 ### Animate 1
 
@@ -56,9 +52,8 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/animate_1.py"
 ```
 
-![animate-1]({{ example_images }}/animate_1.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/animate_1.gif", alt="animate-1", width="80%") }}
+
 
 ### Animate 2
 
@@ -96,9 +91,8 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/nested_themes_3.py"
 ```
 
-![nested-themes-3]({{ example_images }}/nested_themes_3.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/nested_themes_3.gif", alt="nested-themes-3", width="80%") }}
+
 
 ### Size aware
 

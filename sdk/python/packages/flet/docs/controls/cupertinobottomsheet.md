@@ -16,8 +16,7 @@ example_images: ../examples/controls/cupertino_action_sheet/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![cupertinoactionsheet]({{ example_images }}/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="cupertinoactionsheet", width="80%") }}
+
 
 {{ class_members(class_name) }}

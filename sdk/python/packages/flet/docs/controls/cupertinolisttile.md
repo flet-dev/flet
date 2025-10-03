@@ -16,8 +16,7 @@ example_images: ../examples/controls/cupertino_list_tile/media
 --8<-- "{{ examples }}/notched.py"
 ```
 
-![notched]({{ example_images }}/notched.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/notched.png", alt="notched", width="80%") }}
+
 
 {{ class_members(class_name) }}

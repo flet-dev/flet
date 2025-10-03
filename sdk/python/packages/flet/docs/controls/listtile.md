@@ -16,8 +16,7 @@ example_images: ../examples/controls/list_tile/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 {{ class_members(class_name) }}

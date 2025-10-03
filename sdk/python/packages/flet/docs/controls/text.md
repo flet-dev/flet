@@ -16,9 +16,8 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/custom_styles.py"
 ```
 
-![custom-styles]({{ example_images }}/custom_styles.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/custom_styles.gif", alt="custom-styles", width="80%") }}
+
 
 ### Pre-defined theme text styles
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/text_theme_styles.py"
 ```
 
-![text-theme-styles]({{ example_images }}/text_theme_styles.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/text_theme_styles.png", alt="text-theme-styles", width="80%") }}
+
 
 ### Font with variable weight
 
@@ -36,9 +34,8 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/variable_font_weight.py"
 ```
 
-![variable-font-weight]({{ example_images }}/variable_font_weight.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/variable_font_weight.gif", alt="variable-font-weight", width="80%") }}
+
 
 ### Basic rich text example
 
@@ -46,9 +43,8 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/rich_text_basic.py"
 ```
 
-![rich-text-basic]({{ example_images }}/rich_text_basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/rich_text_basic.png", alt="rich-text-basic", width="80%") }}
+
 
 ### Rich text with borders and stroke
 
@@ -56,9 +52,8 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/rich_text_border_stroke.py"
 ```
 
-![rich-text-border-stroke]({{ example_images }}/rich_text_border_stroke.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/rich_text_border_stroke.png", alt="rich-text-border-stroke", width="80%") }}
+
 
 ### Rich text with gradient
 
@@ -66,8 +61,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/rich_text_gradient.py"
 ```
 
-![rich-text-gradient]({{ example_images }}/rich_text_gradient.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/rich_text_gradient.png", alt="rich-text-gradient", width="80%") }}
+
 
 {{ class_members(class_name) }}

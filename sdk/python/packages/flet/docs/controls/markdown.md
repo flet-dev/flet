@@ -16,9 +16,8 @@ example_images: ../examples/controls/markdown/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![basic]({{ example_images }}/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Code syntax highlight
 
@@ -26,9 +25,8 @@ example_images: ../examples/controls/markdown/media
 --8<-- "{{ examples }}/code_syntax_highlight.py"
 ```
 
-![code-syntax-highlight]({{ example_images }}/code_syntax_highlight.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/code_syntax_highlight.png", alt="code-syntax-highlight", width="80%") }}
+
 
 ### Custom text theme
 
