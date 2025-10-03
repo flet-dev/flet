@@ -227,6 +227,7 @@ nav:
   - API Reference:
       - Controls:
           - controls/index.md
+          - AdaptiveControl: controls/adaptivecontrol.md
           - Ads:
               - ads/index.md
               - BannerAd: ads/bannerad.md

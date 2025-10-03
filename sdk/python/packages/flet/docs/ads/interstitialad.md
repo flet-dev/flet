@@ -1,6 +1,7 @@
 ---
 class_name: flet_ads.interstitial_ad.InterstitialAd
 examples: ../../examples/controls/ads
+example_images: ../examples/controls/ads/media
 ---
 
 {{ class_summary(class_name) }}
@@ -13,7 +14,7 @@ examples: ../../examples/controls/ads
 --8<-- "{{ examples }}/example_1.py"
 ```
 
-![example_1]({{ examples }}/media/example_1.gif){width="80%"}
+![example_1]({{ example_images }}/example_1.gif){width="80%"}
 /// caption
 ///
 
