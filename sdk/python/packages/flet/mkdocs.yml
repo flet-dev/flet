@@ -139,7 +139,7 @@ plugins:
             summary:
                 attributes: false
                 functions: false
-            preload_modules: [ flet ]
+            preload_modules: [ flet, flet_ads ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
               - "!(init|before_update)"
@@ -226,174 +226,169 @@ nav:
       - Testing on Mobile: getting-started/testing-on-mobile.md
   - API Reference:
       - Controls:
-          - Controls: controls/index.md
-          - Animations:
-              - AnimatedSwitcher: controls/animatedswitcher.md
-          - Base:
-              - AdaptiveControl: controls/adaptivecontrol.md
-              - BaseControl: controls/basecontrol.md
-              - BasePage: controls/basepage.md
-              - Control: controls/control.md
-              - DialogControl: controls/dialogcontrol.md
-              - LayoutControl: controls/layoutcontrol.md
-              - MultiView: controls/multiview.md
-              - ScrollableControl: controls/scrollablecontrol.md
-              - Service: controls/service.md
-          - Buttons:
-              - Buttons: controls/buttons/index.md
-              - Button: controls/button.md
-              - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
-              - CupertinoButton: controls/cupertinobutton.md
-              - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
-              - CupertinoDialogAction: controls/cupertinodialogaction.md
-              - CupertinoFilledButton: controls/cupertinofilledbutton.md
-              - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
-              - CupertinoSlidingSegmentedButton: controls/cupertinoslidingsegmentedbutton.md
-              - CupertinoTintedButton: controls/cupertinotintedbutton.md
-              - FilledButton: controls/filledbutton.md
-              - FilledIconButton: controls/fillediconbutton.md
-              - FilledTonalButton: controls/filledtonalbutton.md
-              - FilledTonalIconButton: controls/filledtonaliconbutton.md
-              - FloatingActionButton: controls/floatingactionbutton.md
-              - IconButton: controls/iconbutton.md
-              - MenuItemButton: controls/menuitembutton.md
-              - OutlinedButton: controls/outlinedbutton.md
-              - OutlinedIconButton: controls/outlinediconbutton.md
-              - PopupMenuButton: controls/popupmenubutton.md
-              - SegmentedButton: controls/segmentedbutton.md
-              - SubmenuButton: controls/submenubutton.md
-              - TextButton: controls/textbutton.md
-          - Dialogs, Alerts and Panels:
-              - AlertDialog: controls/alertdialog.md
-              - Banner: controls/banner.md
-              - BottomSheet: controls/bottomsheet.md
-              - CupertinoActionSheet: controls/cupertinoactionsheet.md
-              - CupertinoAlertDialog: controls/cupertinoalertdialog.md
-              - CupertinoBottomSheet: controls/cupertinobottomsheet.md
-              - CupertinoContextMenu: controls/cupertinocontextmenu.md
-              - CupertinoDatePicker: controls/cupertinodatepicker.md
-              - CupertinoPicker: controls/cupertinopicker.md
-              - CupertinoTimerPicker: controls/cupertinotimerpicker.md
-              - DatePicker: controls/datepicker.md
-              - DateRangePicker: controls/daterangepicker.md
-              - SnackBar: controls/snackbar.md
-              - TimePicker: controls/timepicker.md
-          - Information Displays:
-              - Canvas:
-                  - Canvas: controls/canvas/index.md
-                  - Arc: controls/canvas/arc.md
-                  - Circle: controls/canvas/circle.md
-                  - Color: controls/canvas/color.md
-                  - Fill: controls/canvas/fill.md
-                  - Image: controls/canvas/image.md
-                  - Line: controls/canvas/line.md
-                  - Oval: controls/canvas/oval.md
-                  - Path: controls/canvas/path.md
-                  - Points: controls/canvas/points.md
-                  - Rect: controls/canvas/rect.md
-                  - Shadow: controls/canvas/shadow.md
-                  - Shape: controls/canvas/shape.md
-                  - Text: controls/canvas/text.md
-              - CircleAvatar: controls/circleavatar.md
-              - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
-              - Icon: controls/icon.md
-              - Image: controls/image.md
-              - Markdown: controls/markdown.md
-              - ProgressBar: controls/progressbar.md
-              - ProgressRing: controls/progressring.md
-              - Text: controls/text.md
-          - Inputs and Selections:
-              - AutoComplete: controls/autocomplete.md
-              - AutofillGroup: controls/autofillgroup.md
-              - Checkbox: controls/checkbox.md
-              - Chip: controls/chip.md
-              - CupertinoCheckbox: controls/cupertinocheckbox.md
-              - CupertinoRadio: controls/cupertinoradio.md
-              - CupertinoSlider: controls/cupertinoslider.md
-              - CupertinoSwitch: controls/cupertinoswitch.md
-              - CupertinoTextfield: controls/cupertinotextfield.md
-              - Dropdown: controls/dropdown.md
-              - DropdownOption: controls/dropdownoption.md
-              - DropdownM2: controls/dropdownm2.md
-              - Radio: controls/radio.md
-              - RadioGroup: controls/radiogroup.md
-              - RangeSlider: controls/rangeslider.md
-              - SearchBar: controls/searchbar.md
-              - Slider: controls/slider.md
-              - Switch: controls/switch.md
-              - Textfield: controls/textfield.md
-          - Layout:
-              - Card: controls/card.md
-              - Column: controls/column.md
-              - Container: controls/container.md
-              - Cupertinolisttile: controls/cupertinolisttile.md
-              - Datatable:
-                  - DataTable: controls/datatable/index.md
-                  - DataCell: controls/datacell.md
-                  - DataColumn: controls/datacolumn.md
-                  - DataRow: controls/datarow.md
-              - Dismissible: controls/dismissible.md
-              - Divider: controls/divider.md
-              - ExpansionPanel: controls/expansionpanel.md
-              - ExpansionPanelList: controls/expansionpanellist.md
-              - ExpansionTile: controls/expansiontile.md
-              - GridView: controls/gridview.md
-              - ListTile: controls/listtile.md
-              - ListView: controls/listview.md
-              - Page: controls/page.md
-              - Pagelet: controls/pagelet.md
-              - Placeholder: controls/placeholder.md
-              - ReorderableDraggable: controls/reorderabledraggable.md
-              - ReorderableListView: controls/reorderablelistview.md
-              - ResponsiveRow: controls/responsiverow.md
-              - Row: controls/row.md
-              - SafeArea: controls/safearea.md
-              - Stack: controls/stack.md
-              - Tabs:
-                  - Tabs: controls/tabs/index.md
-                  - Tab: controls/tab.md
-                  - TabBar: controls/tabbar.md
-                  - TabBarView: controls/tabbarview.md
-              - VerticalDivider: controls/verticaldivider.md
-              - View: controls/view.md
-          - Navigation:
-              - AppBar: controls/appbar.md
-              - BottomAppBar: controls/bottomappbar.md
-              - CupertinoAppBar: controls/cupertinoappbar.md
-              - CupertinoNavigationBar: controls/cupertinonavigationbar.md
-              - MenuBar: controls/menubar.md
-              - NavigationBar: controls/navigationbar.md
-              - NavigationBarDestination: controls/navigationbardestination.md
-              - NavigationDrawer: controls/navigationdrawer.md
-              - NavigationDrawerDestination: controls/navigationdrawerdestination.md
-              - NavigationRail: controls/navigationrail.md
-              - NavigationRailDestination: controls/navigationraildestination.md
-          - Services:
-              - BrowserContextMenu: controls/browsercontextmenu.md
-              - FilePicker: controls/filepicker.md
-              - HapticFeedback: controls/hapticfeedback.md
-              - Clipboard: controls/clipboard.md
-              - SemanticsService: controls/semanticsservice.md
-              - ShakeDetector: controls/shakedetector.md
-              - SharedPreferences: controls/sharedpreferences.md
-              - StoragePaths: controls/storagepaths.md
-              - UrlLauncher: controls/urllauncher.md
-          - Utility:
-              - Badge: types/badge.md
-              - Draggable: controls/draggable.md
-              - DragTarget: controls/dragtarget.md
-              - FletApp: controls/fletapp.md
-              - GestureDetector: controls/gesturedetector.md
-              - InteractiveViewer: controls/interactiveviewer.md
-              - KeyboardListener: controls/keyboardlistener.md
-              - MergeSemantics: controls/mergesemantics.md
-              - SelectionArea: controls/selectionarea.md
-              - Semantics: controls/semantics.md
-              - ShaderMask: controls/shadermask.md
-              - Screenshot: controls/screenshot.md
-              - TransparentPointer: controls/transparentpointer.md
-              - Window: types/window.md
-              - WindowDragArea: controls/windowdragarea.md
+          - controls/index.md
+          - AdaptiveControl: controls/adaptivecontrol.md
+          - Ads:
+              - ads/index.md
+              - BannerAd: ads/bannerad.md
+              - BaseAd: ads/basead.md
+              - InterstitialAd: ads/interstitialad.md
+              # - NativeAd: ads/nativead.md
+          - AlertDialog: controls/alertdialog.md
+          - AnimatedSwitcher: controls/animatedswitcher.md
+          - AppBar: controls/appbar.md
+          - AutoComplete: controls/autocomplete.md
+          - AutofillGroup: controls/autofillgroup.md
+          - Badge: types/badge.md
+          - Banner: controls/banner.md
+          - BaseControl: controls/basecontrol.md
+          - BasePage: controls/basepage.md
+          - BottomAppBar: controls/bottomappbar.md
+          - BottomSheet: controls/bottomsheet.md
+          - BrowserContextMenu: controls/browsercontextmenu.md
+          - Button: controls/button.md
+          - Canvas:
+              - Arc: controls/canvas/arc.md
+              - Canvas: controls/canvas/index.md
+              - Circle: controls/canvas/circle.md
+              - Color: controls/canvas/color.md
+              - Fill: controls/canvas/fill.md
+              - Image: controls/canvas/image.md
+              - Line: controls/canvas/line.md
+              - Oval: controls/canvas/oval.md
+              - Path: controls/canvas/path.md
+              - Points: controls/canvas/points.md
+              - Rect: controls/canvas/rect.md
+              - Shadow: controls/canvas/shadow.md
+              - Shape: controls/canvas/shape.md
+              - Text: controls/canvas/text.md
+          - Card: controls/card.md
+          - Checkbox: controls/checkbox.md
+          - Chip: controls/chip.md
+          - CircleAvatar: controls/circleavatar.md
+          - Clipboard: controls/clipboard.md
+          - Column: controls/column.md
+          - Container: controls/container.md
+          - Control: controls/control.md
+          - CupertinoActionSheet: controls/cupertinoactionsheet.md
+          - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
+          - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
+          - CupertinoAlertDialog: controls/cupertinoalertdialog.md
+          - CupertinoAppBar: controls/cupertinoappbar.md
+          - CupertinoBottomSheet: controls/cupertinobottomsheet.md
+          - CupertinoButton: controls/cupertinobutton.md
+          - CupertinoCheckbox: controls/cupertinocheckbox.md
+          - CupertinoContextMenu: controls/cupertinocontextmenu.md
+          - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
+          - CupertinoDatePicker: controls/cupertinodatepicker.md
+          - CupertinoDialogAction: controls/cupertinodialogaction.md
+          - CupertinoFilledButton: controls/cupertinofilledbutton.md
+          - CupertinoNavigationBar: controls/cupertinonavigationbar.md
+          - CupertinoPicker: controls/cupertinopicker.md
+          - CupertinoRadio: controls/cupertinoradio.md
+          - CupertinoSegmentedButton: controls/cupertinosegmentedbutton.md
+          - CupertinoSlider: controls/cupertinoslider.md
+          - CupertinoSlidingSegmentedButton: controls/cupertinoslidingsegmentedbutton.md
+          - CupertinoSwitch: controls/cupertinoswitch.md
+          - CupertinoTextfield: controls/cupertinotextfield.md
+          - CupertinoTimerPicker: controls/cupertinotimerpicker.md
+          - CupertinoTintedButton: controls/cupertinotintedbutton.md
+          - CupertinoListTile: controls/cupertinolisttile.md
+          - DatePicker: controls/datepicker.md
+          - DateRangePicker: controls/daterangepicker.md
+          - Datatable:
+              - DataCell: controls/datacell.md
+              - DataColumn: controls/datacolumn.md
+              - DataRow: controls/datarow.md
+              - DataTable: controls/datatable/index.md
+          - DialogControl: controls/dialogcontrol.md
+          - Dismissible: controls/dismissible.md
+          - Divider: controls/divider.md
+          - DragTarget: controls/dragtarget.md
+          - Draggable: controls/draggable.md
+          - Dropdown: controls/dropdown.md
+          - DropdownM2: controls/dropdownm2.md
+          - DropdownOption: controls/dropdownoption.md
+          - ExpansionPanel: controls/expansionpanel.md
+          - ExpansionPanelList: controls/expansionpanellist.md
+          - ExpansionTile: controls/expansiontile.md
+          - FilePicker: controls/filepicker.md
+          - FilledButton: controls/filledbutton.md
+          - FilledIconButton: controls/fillediconbutton.md
+          - FilledTonalButton: controls/filledtonalbutton.md
+          - FilledTonalIconButton: controls/filledtonaliconbutton.md
+          - FletApp: controls/fletapp.md
+          - FloatingActionButton: controls/floatingactionbutton.md
+          - GestureDetector: controls/gesturedetector.md
+          - GridView: controls/gridview.md
+          - HapticFeedback: controls/hapticfeedback.md
+          - Icon: controls/icon.md
+          - IconButton: controls/iconbutton.md
+          - Image: controls/image.md
+          - InteractiveViewer: controls/interactiveviewer.md
+          - KeyboardListener: controls/keyboardlistener.md
+          - LayoutControl: controls/layoutcontrol.md
+          - ListTile: controls/listtile.md
+          - ListView: controls/listview.md
+          - Markdown: controls/markdown.md
+          - MenuBar: controls/menubar.md
+          - MenuItemButton: controls/menuitembutton.md
+          - MergeSemantics: controls/mergesemantics.md
+          - MultiView: controls/multiview.md
+          - NavigationBar: controls/navigationbar.md
+          - NavigationBarDestination: controls/navigationbardestination.md
+          - NavigationDrawer: controls/navigationdrawer.md
+          - NavigationDrawerDestination: controls/navigationdrawerdestination.md
+          - NavigationRail: controls/navigationrail.md
+          - NavigationRailDestination: controls/navigationraildestination.md
+          - OutlinedButton: controls/outlinedbutton.md
+          - OutlinedIconButton: controls/outlinediconbutton.md
+          - Page: controls/page.md
+          - Pagelet: controls/pagelet.md
+          - Placeholder: controls/placeholder.md
+          - PopupMenuButton: controls/popupmenubutton.md
+          - ProgressBar: controls/progressbar.md
+          - ProgressRing: controls/progressring.md
+          - Radio: controls/radio.md
+          - RadioGroup: controls/radiogroup.md
+          - RangeSlider: controls/rangeslider.md
+          - ReorderableDraggable: controls/reorderabledraggable.md
+          - ReorderableListView: controls/reorderablelistview.md
+          - ResponsiveRow: controls/responsiverow.md
+          - Row: controls/row.md
+          - SafeArea: controls/safearea.md
+          - ScrollableControl: controls/scrollablecontrol.md
+          - SearchBar: controls/searchbar.md
+          - SegmentedButton: controls/segmentedbutton.md
+          - SelectionArea: controls/selectionarea.md
+          - Semantics: controls/semantics.md
+          - SemanticsService: controls/semanticsservice.md
+          - Service: controls/service.md
+          - ShaderMask: controls/shadermask.md
+          - ShakeDetector: controls/shakedetector.md
+          - Screenshot: controls/screenshot.md
+          - SharedPreferences: controls/sharedpreferences.md
+          - Slider: controls/slider.md
+          - SnackBar: controls/snackbar.md
+          - Stack: controls/stack.md
+          - StoragePaths: controls/storagepaths.md
+          - SubmenuButton: controls/submenubutton.md
+          - Switch: controls/switch.md
+          - Tabs:
+              - Tab: controls/tab.md
+              - TabBar: controls/tabbar.md
+              - TabBarView: controls/tabbarview.md
+              - Tabs: controls/tabs/index.md
+          - Text: controls/text.md
+          - TextButton: controls/textbutton.md
+          - TextField: controls/textfield.md
+          - TimePicker: controls/timepicker.md
+          - TransparentPointer: controls/transparentpointer.md
+          - UrlLauncher: controls/urllauncher.md
+          - VerticalDivider: controls/verticaldivider.md
+          - View: controls/view.md
+          - Window: types/window.md
+          - WindowDragArea: controls/windowdragarea.md
       - Components:
           - Hooks:
               - on_mounted: types/on_mounted.md
@@ -420,6 +415,8 @@ nav:
           # - types/index.md
           - Aliases: types/aliases.md
           - Dataclasses:
+              - Ads:
+                  - AdRequest: ads/types/adrequest.md
               - Alignment: types/alignment.md
               - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md
@@ -550,6 +547,8 @@ nav:
           - Decorators:
               - control: types/control.md
           - Enums:
+              - Ads:
+                  - PrecisionType: ads/types/precisiontype.md
               - AnimatedSwitcherTransition: types/animatedswitchertransition.md
               - AnimationCurve: types/animationcurve.md
               - AppLifecycleState: types/applifecyclestate.md
@@ -635,6 +634,8 @@ nav:
               - WindowEventType: types/windoweventtype.md
               - WindowResizeEdge: types/windowresizeedge.md
           - Events:
+              - Ads:
+                  - PaidAdRequest: ads/types/paidadevent.md
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md

@@ -1,0 +1,24 @@
+[project]
+name = "flet-ads"
+version = "0.1.0"
+description = "Display Google Ads in Flet apps."
+readme = "README.md"
+authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://flet-dev.github.io/flet-ads"
+Repository = "https://github.com/flet-dev/flet-ads"
+Issues = "https://github.com/flet-dev/flet-ads/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_ads" = ["**/*"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
