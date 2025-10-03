@@ -1,13 +1,21 @@
+---
+class_name: flet.SelectionArea
+examples: ../../examples/controls/selection_area
+example_images: ../examples/controls/selection_area/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/selection_area/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/selection_area/media/basic.gif){width="80%"}
+![basic]({{ example_images }}/basic.gif){width="80%"}
 /// caption
 ///
 
-::: flet.SelectionArea
+{{ class_members(class_name) }}

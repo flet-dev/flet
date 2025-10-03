@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoBottomSheet
+examples: ../../examples/controls/cupertino_action_sheet
+example_images: ../examples/controls/cupertino_action_sheet/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinobottomsheet)
@@ -5,11 +13,11 @@
 ### Displaying a `CupertinoActionSheet`
 
 ```python
---8<-- "../../examples/controls/cupertino_action_sheet/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![cupertinoactionsheet](../examples/controls/cupertino_action_sheet/media/basic.png){width="80%"}
+![cupertinoactionsheet]({{ example_images }}/basic.png){width="80%"}
 /// caption
 ///
 
-::: flet.CupertinoActionSheet
+{{ class_members(class_name) }}

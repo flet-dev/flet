@@ -1,13 +1,21 @@
+---
+class_name: flet.Card
+examples: ../../examples/controls/card
+example_images: ../examples/controls/card/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/card)
 
 ```python
---8<-- "../../examples/controls/card/music_info.py"
+--8<-- "{{ examples }}/music_info.py"
 ```
 
-![music-info](../examples/controls/card/media/music_info.gif){width="80%"}
+![music-info]({{ example_images }}/music_info.gif){width="80%"}
 /// caption
 ///
 
-::: flet.Card
+{{ class_members(class_name) }}

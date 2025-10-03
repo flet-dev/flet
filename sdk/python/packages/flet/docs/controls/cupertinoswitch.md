@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoSwitch
+examples: ../../examples/controls/cupertino_switch
+example_images: ../examples/controls/cupertino_switch/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/cupertinoswitch)
@@ -5,11 +13,11 @@
 ### Cupertino, Material and Adaptive Switches
 
 ```python
---8<-- "../../examples/controls/cupertino_switch/cupertino_material_and_adaptive.py"
+--8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-![cupertino-material-and-adaptive](../examples/controls/cupertino_switch/media/cupertino_material_and_adaptive.gif){width="80%"}
+![cupertino-material-and-adaptive]({{ example_images }}/cupertino_material_and_adaptive.gif){width="80%"}
 /// caption
 ///
 
-::: flet.CupertinoSwitch
+{{ class_members(class_name) }}

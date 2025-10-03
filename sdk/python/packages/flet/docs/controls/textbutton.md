@@ -1,3 +1,11 @@
+---
+class_name: flet.TextButton
+examples: ../../examples/controls/text_button
+example_images: ../examples/controls/text_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/textbutton)
@@ -5,41 +13,41 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/text_button/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/text_button/media/basic.png){width="80%"}
+![basic]({{ example_images }}/basic.png){width="80%"}
 /// caption
 ///
 
 ### Icons
 
 ```python
---8<-- "../../examples/controls/text_button/icons.py"
+--8<-- "{{ examples }}/icons.py"
 ```
 
-![icons](../examples/controls/text_button/media/icons.png){width="80%"}
+![icons]({{ example_images }}/icons.png){width="80%"}
 /// caption
 ///
 
 ### Handling clicks
 
 ```python
---8<-- "../../examples/controls/text_button/handling_clicks.py"
+--8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-![handling-clicks](../examples/controls/text_button/media/handling_clicks.gif){width="80%"}
+![handling-clicks]({{ example_images }}/handling_clicks.gif){width="80%"}
 /// caption
 ///
 
 ### Custom content
 
 ```python
---8<-- "../../examples/controls/text_button/custom_content.py"
+--8<-- "{{ examples }}/custom_content.py"
 ```
 
-![custom-content](../examples/controls/text_button/media/custom_content.png){width="80%"}
+![custom-content]({{ example_images }}/custom_content.png){width="80%"}
 /// caption
 ///
 
-::: flet.TextButton
+{{ class_members(class_name) }}

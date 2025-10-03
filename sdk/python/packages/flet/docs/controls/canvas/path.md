@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Path
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Path
+{{ class_all_options(class_name) }}

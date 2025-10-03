@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoAppBar
+examples: ../../examples/controls/cupertino_app_bar
+example_images: ../examples/controls/cupertino_app_bar/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/cupertinoappbar)
@@ -5,17 +13,17 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/cupertino_app_bar/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/cupertino_app_bar/media/basic.png){width="80%"}
+![basic]({{ example_images }}/basic.png){width="80%"}
 /// caption
 ///
 
 ### App bar with theme mode toggle
 
 ```python
---8<-- "../../examples/controls/cupertino_app_bar/theme_mode_toggle.py"
+--8<-- "{{ examples }}/theme_mode_toggle.py"
 ```
 
-::: flet.CupertinoAppBar
+{{ class_members(class_name) }}

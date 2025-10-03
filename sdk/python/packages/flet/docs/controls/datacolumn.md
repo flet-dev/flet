@@ -1,5 +1,9 @@
+---
+class_name: flet.DataColumn
+---
+
 ## Examples
 
 See [these](datatable/index.md#examples).
 
-::: flet.DataColumn
+{{ class_all_options(class_name) }}

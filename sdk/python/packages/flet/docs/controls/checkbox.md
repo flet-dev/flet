@@ -1,3 +1,11 @@
+---
+class_name: flet.Checkbox
+examples: ../../examples/controls/checkbox
+example_images: ../examples/controls/checkbox/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/checkbox)
@@ -5,10 +13,10 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/checkbox/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/checkbox/media/basic.gif){width="80%"}
+![basic]({{ example_images }}/basic.gif){width="80%"}
 /// caption
 ///
 
@@ -16,17 +24,17 @@
 ### Handling events
 
 ```python
---8<-- "../../examples/controls/checkbox/handling_events.py"
+--8<-- "{{ examples }}/handling_events.py"
 ```
 
-![handling-events](../examples/controls/checkbox/media/handling_events.gif){width="80%"}
+![handling-events]({{ example_images }}/handling_events.gif){width="80%"}
 /// caption
 ///
 
 ### Styled checkboxes
 
 ```python
---8<-- "../../examples/controls/checkbox/styled.py"
+--8<-- "{{ examples }}/styled.py"
 ```
 
-::: flet.Checkbox
+{{ class_members(class_name) }}

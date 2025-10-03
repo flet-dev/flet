@@ -1,3 +1,11 @@
+---
+class_name: flet.FilledTonalButton
+examples: ../../examples/controls/filled_tonal_button
+example_images: ../examples/controls/filled_tonal_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/filledtonalbutton)
@@ -5,11 +13,11 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/filled_tonal_button/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/filled_tonal_button/media/basic.png){width="80%"}
+![basic]({{ example_images }}/basic.png){width="80%"}
 /// caption
 ///
 
-::: flet.FilledTonalButton
+{{ class_members(class_name) }}

@@ -227,7 +227,6 @@ nav:
   - API Reference:
       - Controls:
           - controls/index.md
-          - AdaptiveControl: controls/adaptivecontrol.md
           - Ads:
               - ads/index.md
               - BannerAd: ads/bannerad.md
@@ -241,15 +240,12 @@ nav:
           - AutofillGroup: controls/autofillgroup.md
           - Badge: types/badge.md
           - Banner: controls/banner.md
-          - BaseControl: controls/basecontrol.md
-          - BasePage: controls/basepage.md
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
-          - BrowserContextMenu: controls/browsercontextmenu.md
           - Button: controls/button.md
           - Canvas:
+              - controls/canvas/index.md
               - Arc: controls/canvas/arc.md
-              - Canvas: controls/canvas/index.md
               - Circle: controls/canvas/circle.md
               - Color: controls/canvas/color.md
               - Fill: controls/canvas/fill.md
@@ -266,20 +262,20 @@ nav:
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
-          - Clipboard: controls/clipboard.md
           - Column: controls/column.md
           - Container: controls/container.md
-          - Control: controls/control.md
-          - CupertinoActionSheet: controls/cupertinoactionsheet.md
-          - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
+          - CupertinoActionSheet:
+              - controls/cupertinoactionsheet/index.md
+              - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
           - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
           - CupertinoAlertDialog: controls/cupertinoalertdialog.md
           - CupertinoAppBar: controls/cupertinoappbar.md
           - CupertinoBottomSheet: controls/cupertinobottomsheet.md
           - CupertinoButton: controls/cupertinobutton.md
           - CupertinoCheckbox: controls/cupertinocheckbox.md
-          - CupertinoContextMenu: controls/cupertinocontextmenu.md
-          - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
+          - CupertinoContextMenu:
+              - controls/cupertinocontextmenu/index.md
+              - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
           - CupertinoDatePicker: controls/cupertinodatepicker.md
           - CupertinoDialogAction: controls/cupertinodialogaction.md
           - CupertinoFilledButton: controls/cupertinofilledbutton.md
@@ -290,25 +286,25 @@ nav:
           - CupertinoSlider: controls/cupertinoslider.md
           - CupertinoSlidingSegmentedButton: controls/cupertinoslidingsegmentedbutton.md
           - CupertinoSwitch: controls/cupertinoswitch.md
-          - CupertinoTextfield: controls/cupertinotextfield.md
+          - CupertinoTextField: controls/cupertinotextfield.md
           - CupertinoTimerPicker: controls/cupertinotimerpicker.md
           - CupertinoTintedButton: controls/cupertinotintedbutton.md
           - CupertinoListTile: controls/cupertinolisttile.md
           - DatePicker: controls/datepicker.md
           - DateRangePicker: controls/daterangepicker.md
-          - Datatable:
+          - DataTable:
+              - controls/datatable/index.md
               - DataCell: controls/datacell.md
               - DataColumn: controls/datacolumn.md
               - DataRow: controls/datarow.md
-              - DataTable: controls/datatable/index.md
-          - DialogControl: controls/dialogcontrol.md
           - Dismissible: controls/dismissible.md
           - Divider: controls/divider.md
           - DragTarget: controls/dragtarget.md
           - Draggable: controls/draggable.md
-          - Dropdown: controls/dropdown.md
+          - Dropdown:
+              - controls/dropdown/index.md
+              - DropdownOption: controls/dropdownoption.md
           - DropdownM2: controls/dropdownm2.md
-          - DropdownOption: controls/dropdownoption.md
           - ExpansionPanel: controls/expansionpanel.md
           - ExpansionPanelList: controls/expansionpanellist.md
           - ExpansionTile: controls/expansiontile.md
@@ -327,7 +323,6 @@ nav:
           - Image: controls/image.md
           - InteractiveViewer: controls/interactiveviewer.md
           - KeyboardListener: controls/keyboardlistener.md
-          - LayoutControl: controls/layoutcontrol.md
           - ListTile: controls/listtile.md
           - ListView: controls/listview.md
           - Markdown: controls/markdown.md
@@ -335,12 +330,15 @@ nav:
           - MenuItemButton: controls/menuitembutton.md
           - MergeSemantics: controls/mergesemantics.md
           - MultiView: controls/multiview.md
-          - NavigationBar: controls/navigationbar.md
-          - NavigationBarDestination: controls/navigationbardestination.md
-          - NavigationDrawer: controls/navigationdrawer.md
-          - NavigationDrawerDestination: controls/navigationdrawerdestination.md
-          - NavigationRail: controls/navigationrail.md
-          - NavigationRailDestination: controls/navigationraildestination.md
+          - NavigationBar:
+              - controls/navigationbar/index.md
+              - NavigationBarDestination: controls/navigationbardestination.md
+          - NavigationDrawer:
+              - controls/navigationdrawer/index.md
+              - NavigationDrawerDestination: controls/navigationdrawerdestination.md
+          - NavigationRail:
+              - controls/navigationrail/index.md
+              - NavigationRailDestination: controls/navigationraildestination.md
           - OutlinedButton: controls/outlinedbutton.md
           - OutlinedIconButton: controls/outlinediconbutton.md
           - Page: controls/page.md
@@ -357,37 +355,31 @@ nav:
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
           - SafeArea: controls/safearea.md
-          - ScrollableControl: controls/scrollablecontrol.md
           - SearchBar: controls/searchbar.md
           - SegmentedButton: controls/segmentedbutton.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
-          - Service: controls/service.md
           - ShaderMask: controls/shadermask.md
           - ShakeDetector: controls/shakedetector.md
           - Screenshot: controls/screenshot.md
-          - SharedPreferences: controls/sharedpreferences.md
           - Slider: controls/slider.md
           - SnackBar: controls/snackbar.md
           - Stack: controls/stack.md
-          - StoragePaths: controls/storagepaths.md
           - SubmenuButton: controls/submenubutton.md
           - Switch: controls/switch.md
           - Tabs:
+              - controls/tabs/index.md
               - Tab: controls/tab.md
               - TabBar: controls/tabbar.md
               - TabBarView: controls/tabbarview.md
-              - Tabs: controls/tabs/index.md
           - Text: controls/text.md
           - TextButton: controls/textbutton.md
           - TextField: controls/textfield.md
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
-          - UrlLauncher: controls/urllauncher.md
           - VerticalDivider: controls/verticaldivider.md
           - View: controls/view.md
-          - Window: types/window.md
           - WindowDragArea: controls/windowdragarea.md
       - Components:
           - Hooks:
@@ -414,6 +406,17 @@ nav:
       - Types:
           # - types/index.md
           - Aliases: types/aliases.md
+          - Controls:
+              - AdaptiveControl: controls/adaptivecontrol.md
+              - BaseControl: controls/basecontrol.md
+              - BasePage: controls/basepage.md
+              - Control: controls/control.md
+              - DialogControl: controls/dialogcontrol.md
+              - FormFieldControl: controls/formfieldcontrol.md
+              - LayoutControl: controls/layoutcontrol.md
+              - ScrollableControl: controls/scrollablecontrol.md
+              - Service: controls/service.md
+              - Window: types/window.md
           - Dataclasses:
               - Ads:
                   - AdRequest: ads/types/adrequest.md
@@ -431,6 +434,7 @@ nav:
               - BoxShadow: types/boxshadow.md
               - BrowserContextMenu: types/browsercontextmenu.md
               - ButtonStyle: types/buttonstyle.md
+              - Clipboard: controls/clipboard.md
               - ColorFilter: types/colorfilter.md
               - ControlState: types/controlstate.md
               - DecorationImage: types/decorationimage.md
@@ -488,7 +492,9 @@ nav:
               - Rotate: types/rotate.md
               - Scale: types/scale.md
               - ShapeBorder: types/shapeborder.md
+              - SharedPreferences: controls/sharedpreferences.md
               - Size: types/size.md
+              - StoragePaths: controls/storagepaths.md
               - StrutStyle: types/strutstyle.md
               - TemplateRoute: types/templateroute.md
               - TextDecoration: types/textdecoration.md
@@ -543,6 +549,7 @@ nav:
                   - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
               - Url: types/url.md
+              - UrlLauncher: controls/urllauncher.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
           - Decorators:
               - control: types/control.md

@@ -1,3 +1,11 @@
+---
+class_name: flet.Dismissible
+examples: ../../examples/controls/dismissible
+example_images: ../examples/controls/dismissible/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/dismissible)
@@ -5,11 +13,11 @@
 ### Dismissable `ListTile`s
 
 ```python
---8<-- "../../examples/controls/dismissible/dismissable_list_tiles.py"
+--8<-- "{{ examples }}/dismissable_list_tiles.py"
 ```
 
-![dismissable-list-tiles](../examples/controls/dismissible/media/dismissable_list_tiles.gif){width="80%"}
+![dismissable-list-tiles]({{ example_images }}/dismissable_list_tiles.gif){width="80%"}
 /// caption
 ///
 
-::: flet.Dismissible
+{{ class_members(class_name) }}

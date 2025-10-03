@@ -1,3 +1,11 @@
+---
+class_name: flet.Chip
+examples: ../../examples/controls/chip
+example_images: ../examples/controls/chip/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/chip)
@@ -11,10 +19,10 @@ They represent smart or automated actions that appear dynamically and contextual
 An alternative to assist chips are [buttons](buttons/index.md), which should appear persistently and consistently.
 
 ```python
---8<-- "../../examples/controls/chip/assist_chips.py"
+--8<-- "{{ examples }}/assist_chips.py"
 ```
 
-![assist-chips](../examples/controls/chip/media/assist_chips.png){width="80%"}
+![assist-chips]({{ example_images }}/assist_chips.png){width="80%"}
 /// caption
 ///
 
@@ -26,11 +34,11 @@ They use tags or descriptive words provided in the [`label`][flet.Chip.label] to
 They can be a good alternative to switches or checkboxes.
 
 ```python
---8<-- "../../examples/controls/chip/filter_chips.py"
+--8<-- "{{ examples }}/filter_chips.py"
 ```
 
-![filter-chips](../examples/controls/chip/media/filter_chips.png){width="80%"}
+![filter-chips]({{ example_images }}/filter_chips.png){width="80%"}
 /// caption
 ///
 
-::: flet.Chip
+{{ class_members(class_name) }}

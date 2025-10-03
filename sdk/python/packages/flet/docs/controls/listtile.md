@@ -1,3 +1,11 @@
+---
+class_name: flet.ListTile
+examples: ../../examples/controls/list_tile
+example_images: ../examples/controls/list_tile/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/listtile)
@@ -5,11 +13,11 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/list_tile/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/list_tile/media/basic.png){width="80%"}
+![basic]({{ example_images }}/basic.png){width="80%"}
 /// caption
 ///
 
-::: flet.ListTile
+{{ class_members(class_name) }}

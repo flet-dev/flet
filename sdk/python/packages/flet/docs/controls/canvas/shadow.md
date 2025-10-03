@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Shadow
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Shadow
+{{ class_all_options(class_name) }}

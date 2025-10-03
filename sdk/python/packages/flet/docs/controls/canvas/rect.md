@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Rect
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Rect
+{{ class_all_options(class_name) }}
