@@ -14,14 +14,14 @@ class CupertinoContextMenuAction(AdaptiveControl):
     A cupertino context menu action.
 
     Typically used as a child of [`CupertinoContextMenu.actions`][flet.].
-
-    Raises:
-        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
     The content of this action button.
+
+    Raises:
+        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     default: bool = False

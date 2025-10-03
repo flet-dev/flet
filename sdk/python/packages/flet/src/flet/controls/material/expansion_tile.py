@@ -33,9 +33,6 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A single-line ListTile with an expansion arrow icon that expands or collapses the
     tile to reveal or hide its controls.
-
-    Raises:
-        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     title: StrOrControl
@@ -43,6 +40,9 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     A `Control` to display as primary content of the tile.
 
     Typically a [`Text`][flet.] control.
+
+    Raises:
+        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     controls: Optional[list[Control]] = None

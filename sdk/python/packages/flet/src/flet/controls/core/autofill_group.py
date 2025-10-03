@@ -84,14 +84,16 @@ class AutofillGroupDisposeAction(Enum):
 class AutofillGroup(Control):
     """
     Used to group autofill controls together.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
     """
     The content of this group.
+
+    Must be visible.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     dispose_action: AutofillGroupDisposeAction = AutofillGroupDisposeAction.COMMIT

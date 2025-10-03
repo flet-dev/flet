@@ -25,19 +25,6 @@ class CupertinoTimerPicker(LayoutControl):
 
     It can show a countdown duration with hour, minute and second spinners. The
     duration is bound between `0` and `23` hours `59` minutes `59` seconds.
-
-    Raises:
-        ValueError: If [`value`][(c).] is negative.
-        ValueError: If [`value`][(c).] is 24 hours or more.
-        ValueError: If [`minute_interval`][(c).] is not a positive integer
-            factor of `60`.
-        ValueError: If [`second_interval`][(c).] is not a positive integer
-            factor of `60`.
-        ValueError: If [`value`][(c).] is not a multiple
-            of [`minute_interval`][(c).].
-        ValueError: If [`value`][(c).] is not a multiple
-            of [`second_interval`][(c).].
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
     """
 
     value: DurationValue = field(default_factory=lambda: Duration())
@@ -45,6 +32,11 @@ class CupertinoTimerPicker(LayoutControl):
     The initial duration of the countdown timer.
 
     If specified as an integer, it will be assumed to be in seconds.
+
+    Raises:
+        ValueError: If [`value`][(c).] is negative or 24 hours or more.
+        ValueError: If [`value`][(c).] is not a multiple
+            of [`minute_interval`][(c).] or [`second_interval`][(c).].
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
@@ -58,6 +50,10 @@ class CupertinoTimerPicker(LayoutControl):
 
     Note:
         Must be a positive integer factor of `60`.
+
+    Raises:
+        ValueError: If [`second_interval`][(c).] is not a positive integer factor of
+            `60`.
     """
 
     minute_interval: int = 1
@@ -66,6 +62,10 @@ class CupertinoTimerPicker(LayoutControl):
 
     Note:
         Must be a positive integer factor of `60`.
+
+    Raises:
+        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
+            `60`.
     """
 
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
@@ -81,6 +81,9 @@ class CupertinoTimerPicker(LayoutControl):
     item_extent: Number = 32.0
     """
     The uniform height of all children.
+
+    Raises:
+        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoTimerPicker"]] = None

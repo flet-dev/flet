@@ -18,9 +18,6 @@ __all__ = ["BottomAppBar"]
 class BottomAppBar(LayoutControl):
     """
     A material design bottom app bar.
-
-    Raises:
-        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: Optional[Control] = None
@@ -70,6 +67,9 @@ class BottomAppBar(LayoutControl):
     elevation: Optional[Number] = None
     """
     This property controls the size of the shadow below this app bar.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     def before_update(self):

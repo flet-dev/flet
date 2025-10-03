@@ -18,10 +18,6 @@ __all__ = ["CupertinoPicker"]
 class CupertinoPicker(LayoutControl):
     """
     An iOS-styled picker.
-
-    Raises:
-        ValueError: If [`item_extent`][(c).], [`squeeze`][(c).],
-            or [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -32,6 +28,9 @@ class CupertinoPicker(LayoutControl):
     item_extent: Number = 32.0
     """
     The uniform height of all [`controls`][(c).].
+
+    Raises:
+        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
     """
 
     selected_index: int = 0
@@ -64,11 +63,17 @@ class CupertinoPicker(LayoutControl):
 
     Note:
         Has effect only if [`use_magnifier`][(c).] is `True`.
+
+    Raises:
+        ValueError: If [`magnification`][(c).] is not strictly greater than `0.0`.
     """
 
     squeeze: Number = 1.45
     """
     The angular compactness of the children on the wheel.
+
+    Raises:
+        ValueError: If [`squeeze`][(c).] is not strictly greater than `0.0`.
     """
 
     diameter_ratio: Number = 1.07

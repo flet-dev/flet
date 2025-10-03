@@ -26,12 +26,6 @@ class Banner(DialogControl):
     Banners are displayed at the top of the screen, below a top app bar. They are
     persistent and non-modal, allowing the user to either ignore them or interact with
     them at any time.
-
-    Raises:
-        ValueError: if [`content`][(c).] is not visible.
-        ValueError: if [`elevation`][(c).] is negative.
-        ValueError: if [`actions`][(c).] does not contain at least one visible
-            action Control.
     """
 
     content: StrOrControl
@@ -39,6 +33,9 @@ class Banner(DialogControl):
     The content of this banner.
 
     Typically a [`Text`][flet.] control.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     actions: list[Control]
@@ -47,6 +44,10 @@ class Banner(DialogControl):
 
     Typically this is a list of [`TextButton`][flet.]
     controls.
+
+    Raises:
+        ValueError: If [`actions`][(c).] does not contain at least one visible
+            action Control.
     """
 
     leading: Optional[IconDataOrControl] = None
@@ -104,6 +105,9 @@ class Banner(DialogControl):
     elevation: Optional[Number] = None
     """
     The elevation of this banner.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     margin: Optional[MarginValue] = None

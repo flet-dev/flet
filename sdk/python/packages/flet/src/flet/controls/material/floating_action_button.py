@@ -25,19 +25,15 @@ class FloatingActionButton(LayoutControl):
     promote a primary action in the application. Floating action button is usually set
     to `page.floating_action_button`, but can also be added as a regular control at any
     place on a page.
-
-    Raises:
-        ValueError: If neither [`icon`][(c).] nor a valid [`content`][(c).]
-            (string or visible Control) is provided.
-        ValueError: If [`elevation`][(c).],
-            [`disabled_elevation`][(c).], [`focus_elevation`][(c).],
-            [`highlight_elevation`][(c).], or [`hover_elevation`][(c).]
-            is negative.
     """
 
     content: Optional[StrOrControl] = None
     """
     The content of this button.
+
+    Raises:
+        ValueError: If neither [`icon`][(c).] nor a valid [`content`][(c).]
+            (string or visible Control) is provided.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -93,6 +89,9 @@ class FloatingActionButton(LayoutControl):
     The elevation of this button.
 
     Defaults to `6`.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     disabled_elevation: Optional[Number] = None
@@ -100,6 +99,9 @@ class FloatingActionButton(LayoutControl):
     The elevation of this button when disabled.
 
     Defaults to the same value as `elevation`.
+
+    Raises:
+        ValueError: If [`disabled_elevation`][(c).] is negative.
     """
 
     focus_elevation: Optional[Number] = None
@@ -107,6 +109,9 @@ class FloatingActionButton(LayoutControl):
     The elevation of this button when it has input focus.
 
     Defaults to `8`.
+
+    Raises:
+        ValueError: If [`focus_elevation`][(c).] is negative.
     """
 
     highlight_elevation: Optional[Number] = None
@@ -114,6 +119,9 @@ class FloatingActionButton(LayoutControl):
     The elevation of this button when it is highlighted.
 
     Defaults to `12`.
+
+    Raises:
+        ValueError: If [`highlight_elevation`][(c).] is negative.
     """
 
     hover_elevation: Optional[Number] = None
@@ -121,6 +129,9 @@ class FloatingActionButton(LayoutControl):
     The elevation of this button it is enabled and being hovered over.
 
     Defaults to `8`.
+
+    Raises:
+        ValueError: If [`hover_elevation`][(c).] is negative.
     """
 
     hover_color: Optional[ColorValue] = None

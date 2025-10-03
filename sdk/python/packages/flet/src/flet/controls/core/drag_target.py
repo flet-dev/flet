@@ -57,14 +57,16 @@ class DragTarget(Control):
     does drop the `Draggable` on top of the `DragTarget` (and the `DragTarget` has
     indicated that it will accept the `Draggable`'s data), then the `DragTarget` is
     asked to accept the `Draggable`'s data.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
     """
     The content of this control.
+
+    Must be visible.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     group: str = "default"

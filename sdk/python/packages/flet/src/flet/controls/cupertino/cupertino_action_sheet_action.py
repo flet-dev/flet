@@ -12,14 +12,14 @@ __all__ = ["CupertinoActionSheetAction"]
 class CupertinoActionSheetAction(LayoutControl):
     """
     An action button typically used in a CupertinoActionSheet.
-
-    Raises:
-        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
     The child control to be shown in this action button.
+
+    Raises:
+        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     default: bool = False

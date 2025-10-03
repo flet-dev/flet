@@ -133,12 +133,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
-
-    Raises:
-        ValueError: If [`min_lines`][(c).] is not positive.
-        ValueError: If [`max_lines`][(c).] is not positive.
-        ValueError: If [`min_lines`][(c).] is greater than [`max_lines`][(c).].
-        ValueError: If [`max_length`][(c).] is not -1 or positive.
     """
 
     value: str = ""
@@ -164,6 +158,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     that can be entered into the field.
 
     Defaults to `1`.
+
+    Raises:
+        ValueError: If [`min_lines`][(c).] is not positive or exceeds
+            [`max_lines`][(c).] when both are set.
     """
 
     max_lines: Optional[int] = None
@@ -175,11 +173,18 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     If this is `1` (the default), the text will not wrap, but will scroll horizontally
     instead.
+
+    Raises:
+        ValueError: If [`max_lines`][(c).] is not positive or is less than
+            [`min_lines`][(c).].
     """
 
     max_length: Optional[int] = None
     """
     Limits a maximum number of characters that can be entered into TextField.
+
+    Raises:
+        ValueError: If [`max_length`][(c).] is neither `-1` nor a positive integer.
     """
 
     password: bool = False

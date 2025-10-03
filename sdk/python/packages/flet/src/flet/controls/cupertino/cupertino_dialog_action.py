@@ -15,14 +15,14 @@ class CupertinoDialogAction(Control):
     A dialog action button.
 
     Typically used as a child of [`CupertinoAlertDialog.actions`][flet.].
-
-    Raises:
-        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     content: StrOrControl
     """
     The content of this action button.
+
+    Raises:
+        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
     """
 
     default: bool = False

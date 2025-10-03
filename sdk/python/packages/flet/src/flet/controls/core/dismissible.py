@@ -44,16 +44,16 @@ class Dismissible(LayoutControl, AdaptiveControl):
     this control further animates its height (or width, depending on what is
     perpendicular to the [`dismiss_direction`][(c).]), gradually reducing it to zero
     over the specified [`resize_duration`][(c).].
-
-    Raises:
-        ValueError: If the [`content`][(c).] is not visible.
-        ValueError: If the [`secondary_background`][(c).] is provided and visible
-            but the [`background`][(c).] is not provided and visible.
     """
 
     content: Control
     """
     The control that is being dismissed.
+
+    Must be visible.
+
+    Raises:
+        ValueError: If the [`content`][(c).] is not visible.
     """
 
     background: Optional[Control] = None
@@ -73,6 +73,10 @@ class Dismissible(LayoutControl, AdaptiveControl):
     Note:
         Can only be specified if [`background`][(c).] is also
         specified/visible.
+
+    Raises:
+        ValueError: If the [`secondary_background`][(c).] is provided and visible
+            but the [`background`][(c).] is not provided and visible.
     """
 
     dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL

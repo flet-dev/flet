@@ -11,9 +11,6 @@ __all__ = ["RadioGroup"]
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -22,6 +19,9 @@ class RadioGroup(Control):
 
     Typically a list of `Radio` controls nested in a container control, e.g. `Column`,
     `Row`.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     value: Optional[str] = None

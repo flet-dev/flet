@@ -14,11 +14,6 @@ class ProgressBar(LayoutControl):
     A material design linear progress indicator, also known as a progress bar.
 
     A control that shows progress along a line.
-
-    Raises:
-        ValueError: If [`value`][(c).] is negative.
-        ValueError: If [`bar_height`][(c).] is negative.
-        ValueError: If [`semantics_value`][(c).] is negative.
     """
 
     value: Optional[Number] = None
@@ -31,11 +26,17 @@ class ProgressBar(LayoutControl):
     Defaults to `None`, meaning that this progress indicator is indeterminate -
     displays a predetermined animation that does not indicate how much actual progress
     is being made.
+
+    Raises:
+        ValueError: If [`value`][(c).] is negative.
     """
 
     bar_height: Optional[Number] = None
     """
     The minimum height of the line used to draw the linear indicator.
+
+    Raises:
+        ValueError: If [`bar_height`][(c).] is negative.
     """
 
     color: Optional[ColorValue] = None
@@ -63,6 +64,9 @@ class ProgressBar(LayoutControl):
     semantics_value: Optional[Number] = None
     """
     The semantics label for this progress indicator.
+
+    Raises:
+        ValueError: If [`semantics_value`][(c).] is negative.
     """
 
     stop_indicator_color: Optional[ColorValue] = None
