@@ -20,6 +20,7 @@ import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../services/service_registry.dart';
+import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
 import '../utils/platform_utils_web.dart'
@@ -180,6 +181,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
       case "push_route":
         _routeState.route = args["route"];
+      case "get_device_info":
+        return await getDeviceInfo();
 
       default:
         throw Exception("Unknown Page method: $name");
@@ -390,7 +393,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var newLightTheme = control.getTheme("theme", context, Brightness.light);
     var newDarkTheme = control.getString("dark_theme") == null
         ? control.getTheme("theme", context, Brightness.dark)
-        : parseTheme(control.get("dark_theme"), context, Brightness.dark);
+        : control.getTheme("dark_theme", context, Brightness.dark);
 
     var lightTheme = control.get("_lightTheme");
     if (lightTheme == null || newLightTheme != lightTheme) {
@@ -407,7 +410,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var cupertinoTheme = themeMode == ThemeMode.light ||
             ((themeMode == null || themeMode == ThemeMode.system) &&
                 brightness == Brightness.light)
-        ? parseCupertinoTheme(control.get("theme"), context, Brightness.light)
+        ? control.getCupertinoTheme("theme", context, Brightness.light)
         : control.getString("dark_theme") != null
             ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
             : control.getCupertinoTheme("theme", context, Brightness.dark);
@@ -466,10 +469,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
               );
 
     if (control.getBool("enable_screenshots") == true) {
-      app = RepaintBoundary(
-        key: _rootKey,
-        child: app,
-      );
+      app = RepaintBoundary(key: _rootKey, child: app);
     }
 
     return PageContext(

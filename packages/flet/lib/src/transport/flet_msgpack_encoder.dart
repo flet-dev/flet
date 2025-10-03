@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:msgpack_dart/msgpack_dart.dart';
 
+import 'js_interop.dart' show JSAny;
+
 class FletMsgpackEncoder extends ExtEncoder {
   final codec = const Utf8Codec();
 
@@ -15,7 +17,11 @@ class FletMsgpackEncoder extends ExtEncoder {
       return 2;
     } else if (object is Duration) {
       return 3;
+    } else if (object is JSAny) {
+      return 4;
     }
+    debugPrint(
+        "FletMsgpackEncoder: unknown type: ${object.runtimeType}: $object");
     return 0;
   }
 
@@ -27,6 +33,8 @@ class FletMsgpackEncoder extends ExtEncoder {
       return codec.encode("${object.hour}:${object.minute}");
     } else if (object is Duration) {
       return codec.encode(object.inMicroseconds.toString());
+    } else if (object is JSAny) {
+      return codec.encode(object.toString());
     }
     return Uint8List(0);
   }
