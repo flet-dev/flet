@@ -1,11 +1,11 @@
 import flet as ft
 
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.padding = 50
 
     page.add(
-        ft.TextField(
+        tf := ft.TextField(
             text_size=30,
             cursor_color=ft.Colors.RED,
             selection_color=ft.Colors.YELLOW,
@@ -21,6 +21,6 @@ def main(page: ft.Page):
             capitalization=ft.TextCapitalization.CHARACTERS,
         )
     )
-
+    await tf.focus()
 
 ft.run(main)

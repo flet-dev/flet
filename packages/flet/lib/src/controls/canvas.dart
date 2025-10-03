@@ -565,7 +565,7 @@ Future<void> loadCanvasImage(Control shape) async {
       throw Exception("Missing image source: 'src' or 'src_bytes'");
     }
 
-    final codec = await ui.instantiateImageCodec(bytes);
+    final codec = await ui.instantiateImageCodec(bytes, allowUpscaling: false);
     final frame = await codec.getNextFrame();
     shape.properties["_image"] = frame.image;
     shape.updateProperties({"_hash": getImageHash(shape)},

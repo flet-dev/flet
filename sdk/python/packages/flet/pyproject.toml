@@ -31,6 +31,9 @@ web = ["flet-web"]
 flet = "flet.cli:main"
 
 [dependency-groups]
+extensions = [
+    "flet-ads",
+]
 test = [
     "pytest >=7.2.0",
     "pytest_asyncio >=1.1.0",
@@ -70,6 +73,7 @@ docs = [
     "linkcheckmd >=1.4.0",
     "mkdocs-external-images",
     "mkdocs-macros-plugin>=1.4.0",
+    { include-group = 'extensions' },
     { include-group = 'docs-coverage' },
 ]
 all = [
