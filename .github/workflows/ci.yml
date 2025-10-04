@@ -427,6 +427,10 @@ jobs:
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
             uv build --wheel
 
+            if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+              uv build --sdist
+            fi
+
             # Find all universal wheels for the current package
             universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
 
@@ -479,9 +483,6 @@ jobs:
       - build_flet_package
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-      FLET_WEB: ${{ env.SDK_PYTHON }}/packages/flet-web/src/flet_web
-      PYODIDE_URL: https://github.com/pyodide/pyodide/releases/download/${{ env.PYODIDE_VERSION }}/pyodide-core-${{ env.PYODIDE_VERSION }}.tar.bz2
-      PYODIDE_CDN_URL: https://cdn.jsdelivr.net/pyodide/v${{ env.PYODIDE_VERSION }}/full
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -503,6 +504,8 @@ jobs:
           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
+          FLET_WEB="${SDK_PYTHON}/packages/flet-web/src/flet_web"
+
           flutter build web --wasm
 
           cp -R "build/web" "${FLET_WEB}"
@@ -515,7 +518,7 @@ jobs:
           curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
 
           # Download the prebuilt pyodide wheels
-          for wheel in packaging-24.2-py3-none-any.whl micropip-0.8.0-py3-none-any.whl; do
+          for wheel in "packaging-24.2-py3-none-any.whl" "micropip-0.8.0-py3-none-any.whl"; do
             curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
           done
 
@@ -575,7 +578,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: flet-cli-desktop-python-wheels
+          name: flet-cli-desktop-python-distribution
           path: |
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
