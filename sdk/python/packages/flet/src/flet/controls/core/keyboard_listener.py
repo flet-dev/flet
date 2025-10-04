@@ -6,6 +6,9 @@ from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 
 __all__ = [
+    "KeyDownEvent",
+    "KeyRepeatEvent",
+    "KeyUpEvent",
     "KeyboardListener",
 ]
 

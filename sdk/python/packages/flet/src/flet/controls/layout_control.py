@@ -10,7 +10,7 @@ from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import Number
 from flet.utils import deprecated_class
 
-__all__ = ["LayoutControl"]
+__all__ = ["ConstrainedControl", "LayoutControl"]
 
 
 @control(kw_only=True)
