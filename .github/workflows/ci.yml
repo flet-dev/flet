@@ -475,6 +475,7 @@ jobs:
           path: |
             client/flet-linux*.tar.gz
             sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # =========================
   # Build Flet Client for Web
