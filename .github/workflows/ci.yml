@@ -419,8 +419,6 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
-            ls -laR "$FLET_DESKTOP"
-
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
             mv -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
@@ -430,10 +428,9 @@ jobs:
             uv build --wheel
 
             if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+              rm -rf "$FLET_DESKTOP_APP"
               uv build --sdist
             fi
-
-            ls -laR "$dist" || true
 
             # Find all universal wheels for the current package
             universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
