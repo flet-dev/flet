@@ -419,6 +419,8 @@ jobs:
             echo "::group::($PACKAGE_NAME) Build wheels"
             pushd "$FLET_DESKTOP"
 
+            ls -laR "$FLET_DESKTOP"
+
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
             mv -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
@@ -430,6 +432,8 @@ jobs:
             if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
               uv build --sdist
             fi
+
+            ls -laR "$dist" || true
 
             # Find all universal wheels for the current package
             universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
@@ -589,7 +593,7 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
