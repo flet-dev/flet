@@ -479,6 +479,9 @@ jobs:
       - build_flet_package
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+      FLET_WEB: ${{ env.SDK_PYTHON }}/packages/flet-web/src/flet_web
+      PYODIDE_URL: https://github.com/pyodide/pyodide/releases/download/${{ env.PYODIDE_VERSION }}/pyodide-core-${{ env.PYODIDE_VERSION }}.tar.bz2
+      PYODIDE_CDN_URL: https://cdn.jsdelivr.net/pyodide/v${{ env.PYODIDE_VERSION }}/full
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -501,30 +504,35 @@ jobs:
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
           flutter build web --wasm
-          cp -R build/web "${SDK_PYTHON}/packages/flet-web/src/flet_web"
+
+          cp -R "build/web" "${FLET_WEB}"
 
           # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
           FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
-          cp "$FLUTTER_JS_DIR/flutter.js.map" "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
+          cp "$FLUTTER_JS_DIR/flutter.js.map" "${FLET_WEB}/web"
 
           # Download the Pyodide tarball and extract its contents into the web build folder
-          curl -L "$PYODIDE_URL" | tar -xj -C "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
+          curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
 
-          # Download the prebuilt 'packaging' wheel
-          curl -L "${PYODIDE_CDN_URL}/packaging-24.2-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
+          # Download the prebuilt pyodide wheels
+          for wheel in packaging-24.2-py3-none-any.whl micropip-0.8.0-py3-none-any.whl; do
+            curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
+          done
 
-          # Download the prebuilt 'micropip' wheel
-          curl -L "${PYODIDE_CDN_URL}/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
-
-          # Archive the entire built Flutter web client into a gzipped tarball
-          tar -czvf flet-web.tar.gz -C build/web .
+          # Archive the web client into a gzipped tarball
+          tar -czvf "flet-web.tar.gz" -C "build/web" .
 
       - name: Build flet-web Python package
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          uv build --package flet-web
+          uv build --package flet-web --wheel
+          rm -rf "packages/flet-web/src/flet_web/web"
+          uv build --package flet-web --sdist
+
+          ls -laR dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -602,8 +610,10 @@ jobs:
           # remove client to avoid glob conflicts with its contents
           rm -rf dist/client
 
+          ls -laR
+
           for pkg in flet flet_cli flet_desktop flet_desktop_light flet_web; do
-            uv publish dist/**/${pkg}-*
+            uv publish --dry-run dist/**/${pkg}-*
           done
 
   # ==============
