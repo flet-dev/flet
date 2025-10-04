@@ -62,7 +62,7 @@ class _SwitchControlState extends State<SwitchControl> {
     _value = value;
     var props = {"value": value};
     widget.control.updateProperties(props, notify: true);
-    widget.control.triggerEvent("change");
+    widget.control.triggerEvent("change", value);
   }
 
   void _onFocusChange() {
