@@ -28,7 +28,7 @@ Binary Python packages (in contrast to "pure" Python packages written in Python 
 written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
 Make sure all non-pure (binary) packages used in your Flet app have
-[pre-built wheels for Android](../contributing/binary-packages-android-ios.md).
+[pre-built wheels for Android](../reference/binary-packages-android-ios.md).
 
 ## <code class="doc-symbol doc-symbol-command"></code> `flet build apk`
 
