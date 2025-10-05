@@ -69,8 +69,8 @@ jobs:
         with:
           name: dist
           path: |
-            dist/**/*.whl
-            dist/**/*.tar.gz
+            $SDK_PYTHON/dist/*.whl
+            $SDK_PYTHON/dist/*.tar.gz
 
 #      - name: Publish Python package
 #        if: >
