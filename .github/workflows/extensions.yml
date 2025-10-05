@@ -55,7 +55,7 @@ jobs:
       - name: Publish flet-ads
         working-directory: ${{ env.SDK_PYTHON }}/packages/flet-ads
         run: |
-          uv run "${SCRIPTS}/patch_pubspec_version.py" "src/flutter/*/pubspec.yaml" $PKG_VER
+          uv run "${SCRIPTS}/patch_pubspec_version.py" "src/flutter/flet_ads/pubspec.yaml" "$PKG_VER"
           dart pub get && dart analyze
 
           uv version "$PYPI_VER"
