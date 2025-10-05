@@ -262,7 +262,11 @@ class FletTestApp:
         Wraps provided controls in a Screenshot control.
         """
         controls = list(self.page.controls)
-        self.page.controls = [scr := ft.Screenshot(ft.Column(controls, margin=margin))]
+        self.page.controls = [
+            scr := ft.Screenshot(
+                ft.Column(controls, margin=margin, intrinsic_width=True)
+            )
+        ]  # type: ignore
         self.page.update()
         await self.tester.pump_and_settle()
         return scr

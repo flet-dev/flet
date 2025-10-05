@@ -6,11 +6,21 @@ on:
       - '**'
     tags:
       - '*'
-    paths-ignore:
-      - "**/*.md"
+    paths:
+      - '.github/workflows/ci.yml'
+      - '.github/scripts/**'
+      - 'client/**'
+      - 'sdk/python/packages/**'
+      - 'packages/flet/**'
+      - '.fvmrc'
   pull_request:
-    paths-ignore:
-      - "**/*.md"
+    paths:
+      - '.github/workflows/ci.yml'
+      - '.github/scripts/**'
+      - 'client/**'
+      - 'sdk/python/packages/**'
+      - 'packages/flet/**'
+      - '.fvmrc'
   workflow_dispatch:
 
 permissions:
@@ -151,20 +161,13 @@ jobs:
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
-
-          # Convert to POSIX for bash compatibility
-          SDK_PYTHON="$(cygpath -u "$SDK_PYTHON")"
-          SCRIPTS="$(cygpath -u "$SCRIPTS")"
-
-          # Replace: version = ""  -> version = "<PYPI_VER>"
-          vp="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/version.py"
-          sed -i 's/^version = ""$/version = "'"$PYPI_VER"'"/' "$vp"
-
+          patch_python_package_versions
           patch_toml_versions "${SDK_PYTHON}/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
       - name: Build Flutter Windows client
         env:
-          RELEASE_DIR: ${{ env.ROOT }}\client\build\windows\x64\runner\Release
+          RUNNER_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner
+          RELEASE_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner/Release
         shell: bash
         working-directory: client
         run: |
@@ -176,27 +179,24 @@ jobs:
           cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
 
           # Rename Release folder to flet
-          RUNNER_DIR="$(dirname "$RELEASE_DIR")"
           mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
 
           # Zip up the runner
-          cd build/windows/x64/runner
-          7z a flet-windows.zip flet
+          cd "$RUNNER_DIR"
+          7z a "${ROOT}/client/flet-windows.zip" "flet"
 
-          # Stage app into Python package
-          mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-          cp -r "flet" "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app/flet"
+          # Stage app into flet-desktop package
+          FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+          mkdir -p "$FLET_DESKTOP_APP"
+          cp -r "flet" "${FLET_DESKTOP_APP}/flet"
 
-      - name: Build Python wheels
+      - name: Build flet-desktop Python package
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
 
-          # Convert Windows env paths to POSIX for bash
-          SDK_PYTHON="$(cygpath -u "$SDK_PYTHON")"
-
           cd "$SDK_PYTHON"
-          uv build --wheel --package flet-desktop
+          uv build --package flet-desktop --wheel
 
           # Ensure glob expands
           shopt -s nullglob
@@ -213,7 +213,7 @@ jobs:
           name: windows-artifacts
           if-no-files-found: error
           path: |
-            client/build/windows/x64/runner/flet-windows.zip
+            client/flet-windows.zip
             sdk/python/dist/*.whl
 
   # ===========================
@@ -250,14 +250,14 @@ jobs:
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
 
-      - name: Build Python wheels
+      - name: Build flet-desktop Python package
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
 
           patch_python_package_versions
-          uv build --wheel --package flet-desktop
+          uv build --package flet-desktop --wheel
 
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
@@ -271,8 +271,8 @@ jobs:
           name: macos-artifacts
           if-no-files-found: error
           path: |
-            sdk/python/dist/*.whl
             client/flet-macos.tar.gz
+            sdk/python/dist/*.whl
 
   # ===========================
   # Build Flet Client for Linux
@@ -389,7 +389,7 @@ jobs:
           build_flutter "flet-desktop"
           build_flutter "flet-desktop-light"
 
-      - name: Build Python wheels
+      - name: Build flet-desktop and flet-desktop-light Python packages
         shell: bash
         working-directory: client
         run: |
@@ -427,12 +427,17 @@ jobs:
             patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
             uv build --wheel
 
+            if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+              rm -rf "$FLET_DESKTOP_APP"
+              uv build --sdist
+            fi
+
             # Find all universal wheels for the current package
             universal=( "${dist}/${PACKAGE_NAME//-/_}-"*"-py3-none-any"*.whl )
 
             if (( ${#universal[@]} == 0 )); then
               echo "ERROR: No universal wheels found in ${dist} for ${PACKAGE_NAME}."
-              ls -la "$dist" || true
+              ls -laR "$dist" || true
               exit 1
             fi
 
@@ -467,6 +472,7 @@ jobs:
           path: |
             client/flet-linux*.tar.gz
             sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # =========================
   # Build Flet Client for Web
@@ -500,31 +506,38 @@ jobs:
           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
+          FLET_WEB="${SDK_PYTHON}/packages/flet-web/src/flet_web"
+
           flutter build web --wasm
-          cp -R build/web "${SDK_PYTHON}/packages/flet-web/src/flet_web"
+
+          cp -R "build/web" "${FLET_WEB}"
 
           # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
           FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
-          cp "$FLUTTER_JS_DIR/flutter.js.map" "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
+          cp "$FLUTTER_JS_DIR/flutter.js.map" "${FLET_WEB}/web"
 
           # Download the Pyodide tarball and extract its contents into the web build folder
-          curl -L "$PYODIDE_URL" | tar -xj -C "${SDK_PYTHON}/packages/flet-web/src/flet_web/web"
+          curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
 
-          # Download the prebuilt 'packaging' wheel
-          curl -L "${PYODIDE_CDN_URL}/packaging-24.2-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/packaging-24.2-py3-none-any.whl"
+          # Download the prebuilt pyodide wheels
+          for wheel in "packaging-24.2-py3-none-any.whl" "micropip-0.8.0-py3-none-any.whl"; do
+            curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
+          done
 
-          # Download the prebuilt 'micropip' wheel
-          curl -L "${PYODIDE_CDN_URL}/micropip-0.8.0-py3-none-any.whl" -o "${SDK_PYTHON}/packages/flet-web/src/flet_web/web/pyodide/micropip-0.8.0-py3-none-any.whl"
+          # Archive the web client into a gzipped tarball
+          tar -czvf "flet-web.tar.gz" -C "build/web" .
 
-          # Archive the entire built Flutter web client into a gzipped tarball
-          tar -czvf build/flet-web.tar.gz -C build/web .
-
-      - name: Build Python package
+      - name: Build flet-web Python package
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          uv build --wheel --package flet-web
+          uv build --package flet-web --wheel
+          rm -rf "packages/flet-web/src/flet_web/web"
+          uv build --package flet-web --sdist
+
+          ls -laR dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -532,14 +545,15 @@ jobs:
           name: web-artifacts
           if-no-files-found: error
           path: |
-            client/build/flet-web.tar.gz
+            client/flet-web.tar.gz
             sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
-  # =======================
-  # Build flet and flet-cli
-  # =======================
-  build_flet_and_cli_wheels:
-    name: Build flet and flet-cli Python wheels
+  # =====================================
+  # Build flet, flet-cli and flet-desktop
+  # =====================================
+  build_flet_cli_desktop:
+    name: Build flet, flet-cli and flet-desktop Python packages
     runs-on: ubuntu-latest
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
@@ -553,20 +567,23 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Build wheels
+      - name: Build Python packages
         shell: bash
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          uv build --wheel --package flet-cli
-          uv build --wheel --package flet
+          uv build --package flet-cli
+          uv build --package flet
+          uv build --package flet-desktop --sdist
           update_flet_wheel_deps dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: flet-and-flet-cli-wheels
-          path: sdk/python/dist/*.whl
+          name: flet-cli-desktop-python-distribution
+          path: |
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
 
   # ===============================
   # Publish Python packages to PyPI
@@ -574,11 +591,11 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
-      - build_flet_and_cli_wheels
+      - build_flet_cli_desktop
       - build_windows
       - build_macos
       - build_linux
@@ -593,13 +610,16 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Publish wheels to PyPI
+      - name: Publish packages to PyPI
         run: |
-          uv publish dist/**/flet-*.whl
-          uv publish dist/**/flet_cli-*.whl
-          uv publish dist/**/flet_desktop-*.whl
-          uv publish dist/**/flet_desktop_light-*.whl
-          uv publish dist/**/flet_web-*.whl
+          # remove client to avoid glob conflicts with its contents
+          rm -rf dist/client
+
+          ls -laR
+
+          for pkg in flet flet_cli flet_desktop flet_desktop_light flet_web; do
+            uv publish --dry-run dist/**/${pkg}-*
+          done
 
   # ==============
   # GitHub Release
@@ -614,6 +634,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: dist
+          merge-multiple: true
 
       - name: Create/Update GitHub Release
         uses: softprops/action-gh-release@v2
@@ -627,4 +648,6 @@ jobs:
           overwrite_files: true
           fail_on_unmatched_files: true
           files: |
-            dist/**/*.{whl,tar.gz,zip}
+            dist/**/*.whl
+            dist/**/*.tar.gz
+            dist/**/*.zip
