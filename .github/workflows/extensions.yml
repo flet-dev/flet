@@ -1,0 +1,79 @@
+name: Build & Publish Flet Extensions
+
+on:
+  push:
+    branches:
+      - '**'
+    # paths:
+    #   - "sdk/python/packages/flet-ads/**"
+    tags:
+      - '*'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+env:
+  ROOT: "${{ github.workspace }}"
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  PKG_VER: "0.2.0"
+  BUILD_VER: "0.2.0+${{ github.run_number }}"
+  PYPI_VER: "0.2.0.dev${{ github.run_number }}"
+
+jobs:
+  build:
+    name: Publish extensions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Filter publish-relevant changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            ads:
+              - "sdk/python/packages/flet-ads/**"
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Publish flet-ads
+        working-directory: ${{ env.SDK_PYTHON }}/packages/flet-ads
+        run: |
+          uv run "${SCRIPTS}/patch_pubspec_version.py" "src/flutter/*/pubspec.yaml" $PKG_VER
+          dart pub get && dart analyze
+
+          uv version "$PYPI_VER"
+          uv build
+          ls -laR .
+          uv publish --dry-run
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist/**/*.whl
+            dist/**/*.tar.gz
+
+#      - name: Publish Python package
+#        if: >
+#          startsWith(github.ref, 'refs/tags/')
+#          || (github.ref == 'refs/heads/main' &&
+#          steps.changes.outputs.publish == 'true')
+#        run: uv publish --dry-run
