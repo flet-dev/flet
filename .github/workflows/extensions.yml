@@ -19,6 +19,7 @@ env:
   ROOT: "${{ github.workspace }}"
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  UV_PYTHON: "3.12"
   PKG_VER: "0.2.0"
   BUILD_VER: "0.2.0+${{ github.run_number }}"
   PYPI_VER: "0.2.0.dev${{ github.run_number }}"
@@ -60,8 +61,8 @@ jobs:
 
           uv version "$PYPI_VER"
           uv build
-          ls -laR .
-          uv publish --dry-run
+          ls -laR "${SDK_PYTHON}/dist"
+          uv publish --dry-run "${SDK_PYTHON}/dist/flet_ads*"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
