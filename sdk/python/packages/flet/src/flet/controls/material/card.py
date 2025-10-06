@@ -25,13 +25,15 @@ class Card(LayoutControl, AdaptiveControl):
 
     ```python
     ft.Card(
-        width=400,
-        bgcolor=ft.Colors.PRIMARY_CONTAINER,
-        shape=ft.RoundedRectangleBorder(radius=10),
+        shadow_color=ft.Colors.ON_SURFACE_VARIANT,
         content=ft.Container(
+            width=400,
             padding=10,
-            bgcolor=ft.Colors.SECONDARY_CONTAINER,
-            content=ft.Text("CARD TITLE"),
+            content=ft.ListTile(
+                bgcolor=ft.Colors.GREY_400,
+                leading=ft.Icon(ft.Icons.FOREST),
+                title=ft.Text("Card Name"),
+            ),
         ),
     )
     ```
