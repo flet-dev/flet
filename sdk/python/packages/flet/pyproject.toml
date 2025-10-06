@@ -34,6 +34,7 @@ flet = "flet.cli:main"
 extensions = [
     "flet-ads",
     "flet-audio",
+    "flet-audio-recorder",
 ]
 test = [
     "pytest >=7.2.0",

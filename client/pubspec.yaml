@@ -45,6 +45,9 @@ dependencies:
       path: src/flutter/flet_video
 # --FAT_CLIENT_END--
 
+  flet_audio_recorder:
+    path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
+
   flet_lottie:
     git:
       url: https://github.com/flet-dev/flet-lottie.git
@@ -62,12 +65,6 @@ dependencies:
       url: https://github.com/flet-dev/flet-rive.git
       ref: main
       path: src/flutter/flet_rive
-
-  flet_audio_recorder:
-    git:
-      url: https://github.com/flet-dev/flet-audio-recorder.git
-      ref: main
-      path: src/flutter/flet_audio_recorder
 
   flet_permission_handler:
     git:
