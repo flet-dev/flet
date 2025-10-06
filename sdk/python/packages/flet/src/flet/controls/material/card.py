@@ -22,6 +22,19 @@ class Card(LayoutControl, AdaptiveControl):
     """
     A material design card: a panel with slightly rounded corners and an elevation
     shadow.
+
+    ```python
+    ft.Card(
+        width=400,
+        bgcolor=ft.Colors.PRIMARY_CONTAINER,
+        shape=ft.RoundedRectangleBorder(radius=10),
+        content=ft.Container(
+            padding=10,
+            bgcolor=ft.Colors.SECONDARY_CONTAINER,
+            content=ft.Text("CARD TITLE"),
+        ),
+    )
+    ```
     """
 
     content: Optional[Control] = None

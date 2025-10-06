@@ -25,6 +25,12 @@ class Checkbox(LayoutControl, AdaptiveControl):
     """
     Checkbox allows to select one or more items from a group, or switch between two
     mutually exclusive options (checked or unchecked, on or off).
+
+    ```python
+    ft.Checkbox()
+    ft.Checkbox(label="Checked", value=True)
+    ft.Checkbox(label="Disabled", disabled=True)
+    ```
     """
 
     label: Optional[StrOrControl] = None
