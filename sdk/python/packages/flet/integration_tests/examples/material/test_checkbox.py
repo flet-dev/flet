@@ -28,6 +28,9 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
+    button = await flet_app_function.tester.find_by_text("Submit")
+    await flet_app_function.tester.tap(button)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic",
         await flet_app_function.take_page_controls_screenshot(),

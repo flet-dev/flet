@@ -3,8 +3,10 @@ import flet as ft
 
 def main(page: ft.Page):
     def handle_button_click(e: ft.Event[ft.Button]):
-        message.value = f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, "
-        f"{c4.value}, {c5.value}."
+        message.value = (
+            f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, "
+            f"{c4.value}, {c5.value}."
+        )
         page.update()
 
     page.add(
