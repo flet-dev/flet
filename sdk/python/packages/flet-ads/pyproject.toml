@@ -12,9 +12,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://flet-dev.github.io/flet-ads"
-Repository = "https://github.com/flet-dev/flet-ads"
-Issues = "https://github.com/flet-dev/flet-ads/issues"
+Documentation = "https://docs.flet.dev/ads"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-ads"
+Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
 "flutter.flet_ads" = ["**/*"]
