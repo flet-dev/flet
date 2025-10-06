@@ -26,9 +26,6 @@ class Switch(LayoutControl, AdaptiveControl):
     two mutually exclusive options.
 
     For example, "On/Off", "Show/Hide".
-
-    Raises:
-        ValueError: If [`splash_radius`][(c).] is negative.
     """
 
     label: Optional[StrOrControl] = None
@@ -159,6 +156,9 @@ class Switch(LayoutControl, AdaptiveControl):
     splash_radius: Optional[Number] = None
     """
     The radius of the splash effect when the switch is pressed.
+
+    Raises:
+        ValueError: If [`splash_radius`][(c).] is negative.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None

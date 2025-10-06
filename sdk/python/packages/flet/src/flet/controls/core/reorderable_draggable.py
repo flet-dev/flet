@@ -11,9 +11,6 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
 
     It creates a listener for a drag immediately following a pointer down
     event over the given [`content`][(c).] control.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     index: int
@@ -25,6 +22,11 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
     """
     The control for which the application would like to respond to a tap and
     drag gesture by starting a reordering drag on a reorderable list.
+
+    Must be visible.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     def before_update(self):

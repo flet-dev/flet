@@ -31,10 +31,6 @@ class CupertinoButtonSize(Enum):
 class CupertinoButton(LayoutControl):
     """
     An iOS-style button.
-
-    Raises:
-        ValueError: If [`opacity_on_click`][(c).] is not between `0.0`
-            and `1.0` inclusive.
     """
 
     content: Optional[StrOrControl] = None
@@ -72,6 +68,10 @@ class CupertinoButton(LayoutControl):
     Defines the opacity of the button when it is clicked.
 
     When not pressed, the button has an opacity of `1.0`.
+
+    Raises:
+        ValueError: If [`opacity_on_click`][(c).] is not between `0.0`
+            and `1.0` inclusive.
     """
 
     min_size: Optional[Size] = None

@@ -1,3 +1,11 @@
+---
+class_name: flet.TimePicker
+examples: ../../examples/controls/time_picker
+example_images: ../examples/controls/time_picker/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/timepicker)
@@ -5,11 +13,10 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/time_picker/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/time_picker/media/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
 
-::: flet.TimePicker
+
+{{ class_members(class_name) }}

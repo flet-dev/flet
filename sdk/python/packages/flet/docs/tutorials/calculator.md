@@ -8,9 +8,8 @@ Flet framework and publish it as a desktop, mobile or web app.
 The app is a simple console program, yet it is a multi-platform application with
 similar to iPhone calculator app UI:
 
-![calc-app](../examples/tutorials/calculator/media/app.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/calculator/media/app.png", alt="calc-app", width="80%") }}
+
 
 You can find a live demo [here](https://gallery.flet.dev/calculator/).
 
@@ -45,9 +44,8 @@ ft.run(main)
 
 Run this app and you will see a new window with a greeting:
 
-![hello-world](../examples/tutorials/todo/media/hello-world.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/hello-world.png", alt="hello-world", width="80%") }}
+
 
 ## Adding page controls
 
@@ -93,9 +91,8 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-1](../examples/tutorials/calculator/media/app-1.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/calculator/media/app-1.png", alt="app-1", width="80%") }}
+
 
 ## Building page layout
 
@@ -159,9 +156,8 @@ ft.run(main)
 
 Run the app and you should see a page like this:
 
-![app-2](../examples/tutorials/calculator/media/app-2.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/calculator/media/app-2.png", alt="app-2", width="80%") }}
+
 
 ### Using Container for decoration
 
@@ -169,9 +165,8 @@ To add a black background with rounded border around the calculator, we will be 
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
 [`Column`][flet.Column] that will be used as the container's [`content`][flet.Container.content]:
 
-![container-layout](../examples/tutorials/calculator/media/container-layout.svg){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/calculator/media/container-layout.svg", alt="container-layout", width="80%") }}
+
 
 Here is the code for adding the container to the page:
 
@@ -296,9 +291,8 @@ content=ft.Column(
 ```
 ///
 
-![calc-app](../examples/tutorials/calculator/media/app.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/calculator/media/app.png", alt="calc-app", width="80%") }}
+
 
 Just what we wanted!
 
@@ -364,9 +358,8 @@ Copy the entire code for this step from
 [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc.py).
 
 Run the app and see it in the action:
-![calc-app2](../examples/tutorials/calculator/media/app.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/calculator/media/app.gif", alt="calc-app2", width="80%") }}
+
 
 ## Publishing your app
 

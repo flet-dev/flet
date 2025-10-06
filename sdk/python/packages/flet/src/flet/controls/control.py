@@ -15,10 +15,6 @@ class Control(BaseControl):
     Base class for controls.
 
     Not meant to be used directly.
-
-    Raises:
-        ValueError: If [`opacity`][(c).] is not between `0.0` and `1.0` inclusive.
-        ValueError: If [`expand`][(c).] is not None and not of type `bool` or `int`.
     """
 
     expand: Optional[Union[bool, int]] = None
@@ -33,6 +29,9 @@ class Control(BaseControl):
         Has effect only if the direct parent of this control is one of the following
         controls, or their subclasses: [`Column`][flet.], [`Row`][flet.],
         [`View`][flet.], [`Page`][flet.].
+
+    Raises:
+        ValueError: If [`expand`][(c).] is not `None` and not of type `bool` or `int`.
     """
 
     expand_loose: bool = False
@@ -83,6 +82,9 @@ class Control(BaseControl):
 
     Value ranges from `0.0` (completely transparent) to `1.0` (completely opaque
     without any transparency).
+
+    Raises:
+        ValueError: If [`opacity`][(c).] is not between `0.0` and `1.0` inclusive.
     """
 
     tooltip: Optional[TooltipValue] = None

@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Points
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Points
+{{ class_all_options(class_name) }}

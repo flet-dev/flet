@@ -1,3 +1,11 @@
+---
+class_name: flet.GestureDetector
+examples: ../../examples/controls/gesture_detector
+example_images: ../examples/controls/gesture_detector/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/gesturedetector)
@@ -7,7 +15,7 @@
 ### Handling events
 
 ```python
---8<-- "../../examples/controls/gesture_detector/handling_events.py"
+--8<-- "{{ examples }}/handling_events.py"
 ```
 
 ### Draggable containers
@@ -18,23 +26,22 @@ The sample also shows that GestureDetector can have a child control (blue contai
 inside another control (yellow container) giving the same results.
 
 ```python
---8<-- "../../examples/controls/gesture_detector/draggable_containers.py"
+--8<-- "{{ examples }}/draggable_containers.py"
 ```
 
-![draggable-containers](../examples/controls/gesture_detector/media/draggable_containers.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/draggable_containers.gif", alt="draggable-containers", width="80%") }}
+
 
 ### Window drag area
 
 ```python
---8<-- "../../examples/controls/gesture_detector/window_drag_area.py"
+--8<-- "{{ examples }}/window_drag_area.py"
 ```
 
 ### Mouse Cursors
 
 ```python
---8<-- "../../examples/controls/gesture_detector/mouse_cursors.py"
+--8<-- "{{ examples }}/mouse_cursors.py"
 ```
 
-::: flet.GestureDetector
+{{ class_members(class_name) }}

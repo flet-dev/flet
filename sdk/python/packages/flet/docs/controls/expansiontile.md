@@ -1,3 +1,11 @@
+---
+class_name: flet.ExpansionTile
+examples: ../../examples/controls/expansion_tile
+example_images: ../examples/controls/expansion_tile/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/expansiontile)
@@ -5,23 +13,22 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/expansion_tile/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/expansion_tile/media/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 ### Theme mode toggle
 
 ```python
---8<-- "../../examples/controls/expansion_tile/theme_mode_toggle.py"
+--8<-- "{{ examples }}/theme_mode_toggle.py"
 ```
 
 ### Borders
 
 ```python
---8<-- "../../examples/controls/expansion_tile/borders.py"
+--8<-- "{{ examples }}/borders.py"
 ```
 
-::: flet.ExpansionTile
+{{ class_members(class_name) }}

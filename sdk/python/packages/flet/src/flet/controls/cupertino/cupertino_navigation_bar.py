@@ -21,11 +21,6 @@ class CupertinoNavigationBar(LayoutControl):
 
     Navigation bars offer a persistent and convenient way to switch between primary
     destinations in an app.
-
-    Raises:
-        ValueError: If [`destinations`][(c).] does not contain at least two visible
-            [`NavigationBarDestination`][flet.]s.
-        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     destinations: list[NavigationBarDestination]
@@ -34,6 +29,10 @@ class CupertinoNavigationBar(LayoutControl):
 
     Note:
         Must be a list of two or more [`NavigationBarDestination`][flet.]s.
+
+    Raises:
+        ValueError: If [`destinations`][(c).] does not contain at least two visible
+            [`NavigationBarDestination`][flet.]s.
     """
 
     selected_index: int = 0
@@ -44,6 +43,10 @@ class CupertinoNavigationBar(LayoutControl):
     Note:
         Must be a value between `0` and the length of visible
         [`destinations`][(c).], inclusive.
+
+    Raises:
+        IndexError: If [`selected_index`][(c).] is out of range relative to the
+            visible destinations.
     """
 
     bgcolor: Optional[ColorValue] = None

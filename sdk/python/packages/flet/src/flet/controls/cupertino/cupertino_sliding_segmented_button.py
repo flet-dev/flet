@@ -18,11 +18,6 @@ __all__ = ["CupertinoSlidingSegmentedButton"]
 class CupertinoSlidingSegmentedButton(LayoutControl):
     """
     A cupertino sliding segmented button.
-
-    Raises:
-        ValueError: If [`controls`][(c).] does not contain at least two
-            visible controls.
-        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     controls: list[Control]
@@ -31,11 +26,19 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     Note:
         Must contain at least two visible Controls.
+
+    Raises:
+        ValueError: If [`controls`][(c).] does not contain at least two
+            visible controls.
     """
 
     selected_index: int = 0
     """
     The index (starting from 0) of the selected segment in the [`controls`][(c).] list.
+
+    Raises:
+        IndexError: If [`selected_index`][(c).] is out of range relative to the
+            visible controls.
     """
 
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL

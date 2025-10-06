@@ -218,16 +218,44 @@ markdown_extensions:
 
 # Navigation
 nav:
-  - Getting Started:
-      - Introduction: index.md
-      - Installation: getting-started/installation.md
-      - Creating a new Flet app: getting-started/create-flet-app.md
-      - Running a Flet app (Hot Reload): getting-started/running-app.md
-      - Testing on Mobile: getting-started/testing-on-mobile.md
-  - API Reference:
+  - Learn:
+      - Getting started:
+          - Introduction: index.md
+          - Installation: getting-started/installation.md
+          - Creating a new Flet app: getting-started/create-flet-app.md
+          - Running a Flet app (Hot Reload): getting-started/running-app.md
+          - Testing on Mobile: getting-started/testing-on-mobile.md
+      - Tutorials:
+          - Calculator: tutorials/calculator.md
+          - Chat: tutorials/chat.md
+          - Solitaire: tutorials/solitaire.md
+          - ToDo: tutorials/todo.md
+      - Publishing Flet app:
+          - Overview: publish/index.md
+          - Android: publish/android.md
+          - iOS: publish/ios.md
+          - Linux: publish/linux.md
+          - macOS: publish/macos.md
+          - Windows: publish/windows.md
+          - Web:
+              - publish/web/index.md
+              - Dynamic Website:
+                  - Publish web app as dynamic website: publish/web/dynamic-website/index.md
+                  - Hosting:
+                      - Hosting: publish/web/dynamic-website/hosting/index.md
+                      - Fly.io: publish/web/dynamic-website/hosting/fly-io.md
+                      - Replit: publish/web/dynamic-website/hosting/replit.md
+                      - Self-Hosting: publish/web/dynamic-website/hosting/self-hosting.md
+              - Static Website:
+                  - Publish web app as static website: publish/web/static-website/index.md
+                  - Hosting:
+                      - Cloudflare: publish/web/static-website/hosting/cloudflare.md
+      - Extending Flet:
+          - Creating an Extension: extend/user-extensions.md
+          - Built-in Extensions: extend/built-in-extensions.md
+  - Reference:
       - Controls:
-          - controls/index.md
-          - AdaptiveControl: controls/adaptivecontrol.md
+          - Overview: controls/index.md
           - Ads:
               - ads/index.md
               - BannerAd: ads/bannerad.md
@@ -241,15 +269,12 @@ nav:
           - AutofillGroup: controls/autofillgroup.md
           - Badge: types/badge.md
           - Banner: controls/banner.md
-          - BaseControl: controls/basecontrol.md
-          - BasePage: controls/basepage.md
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
-          - BrowserContextMenu: controls/browsercontextmenu.md
           - Button: controls/button.md
           - Canvas:
+              - controls/canvas/index.md
               - Arc: controls/canvas/arc.md
-              - Canvas: controls/canvas/index.md
               - Circle: controls/canvas/circle.md
               - Color: controls/canvas/color.md
               - Fill: controls/canvas/fill.md
@@ -266,20 +291,20 @@ nav:
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
-          - Clipboard: controls/clipboard.md
           - Column: controls/column.md
           - Container: controls/container.md
-          - Control: controls/control.md
-          - CupertinoActionSheet: controls/cupertinoactionsheet.md
-          - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
+          - CupertinoActionSheet:
+              - controls/cupertinoactionsheet/index.md
+              - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
           - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
           - CupertinoAlertDialog: controls/cupertinoalertdialog.md
           - CupertinoAppBar: controls/cupertinoappbar.md
           - CupertinoBottomSheet: controls/cupertinobottomsheet.md
           - CupertinoButton: controls/cupertinobutton.md
           - CupertinoCheckbox: controls/cupertinocheckbox.md
-          - CupertinoContextMenu: controls/cupertinocontextmenu.md
-          - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
+          - CupertinoContextMenu:
+              - controls/cupertinocontextmenu/index.md
+              - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
           - CupertinoDatePicker: controls/cupertinodatepicker.md
           - CupertinoDialogAction: controls/cupertinodialogaction.md
           - CupertinoFilledButton: controls/cupertinofilledbutton.md
@@ -290,25 +315,25 @@ nav:
           - CupertinoSlider: controls/cupertinoslider.md
           - CupertinoSlidingSegmentedButton: controls/cupertinoslidingsegmentedbutton.md
           - CupertinoSwitch: controls/cupertinoswitch.md
-          - CupertinoTextfield: controls/cupertinotextfield.md
+          - CupertinoTextField: controls/cupertinotextfield.md
           - CupertinoTimerPicker: controls/cupertinotimerpicker.md
           - CupertinoTintedButton: controls/cupertinotintedbutton.md
           - CupertinoListTile: controls/cupertinolisttile.md
           - DatePicker: controls/datepicker.md
           - DateRangePicker: controls/daterangepicker.md
-          - Datatable:
+          - DataTable:
+              - controls/datatable/index.md
               - DataCell: controls/datacell.md
               - DataColumn: controls/datacolumn.md
               - DataRow: controls/datarow.md
-              - DataTable: controls/datatable/index.md
-          - DialogControl: controls/dialogcontrol.md
           - Dismissible: controls/dismissible.md
           - Divider: controls/divider.md
           - DragTarget: controls/dragtarget.md
           - Draggable: controls/draggable.md
-          - Dropdown: controls/dropdown.md
+          - Dropdown:
+              - controls/dropdown/index.md
+              - DropdownOption: controls/dropdownoption.md
           - DropdownM2: controls/dropdownm2.md
-          - DropdownOption: controls/dropdownoption.md
           - ExpansionPanel: controls/expansionpanel.md
           - ExpansionPanelList: controls/expansionpanellist.md
           - ExpansionTile: controls/expansiontile.md
@@ -327,7 +352,6 @@ nav:
           - Image: controls/image.md
           - InteractiveViewer: controls/interactiveviewer.md
           - KeyboardListener: controls/keyboardlistener.md
-          - LayoutControl: controls/layoutcontrol.md
           - ListTile: controls/listtile.md
           - ListView: controls/listview.md
           - Markdown: controls/markdown.md
@@ -335,12 +359,15 @@ nav:
           - MenuItemButton: controls/menuitembutton.md
           - MergeSemantics: controls/mergesemantics.md
           - MultiView: controls/multiview.md
-          - NavigationBar: controls/navigationbar.md
-          - NavigationBarDestination: controls/navigationbardestination.md
-          - NavigationDrawer: controls/navigationdrawer.md
-          - NavigationDrawerDestination: controls/navigationdrawerdestination.md
-          - NavigationRail: controls/navigationrail.md
-          - NavigationRailDestination: controls/navigationraildestination.md
+          - NavigationBar:
+              - controls/navigationbar/index.md
+              - NavigationBarDestination: controls/navigationbardestination.md
+          - NavigationDrawer:
+              - controls/navigationdrawer/index.md
+              - NavigationDrawerDestination: controls/navigationdrawerdestination.md
+          - NavigationRail:
+              - controls/navigationrail/index.md
+              - NavigationRailDestination: controls/navigationraildestination.md
           - OutlinedButton: controls/outlinedbutton.md
           - OutlinedIconButton: controls/outlinediconbutton.md
           - Page: controls/page.md
@@ -357,64 +384,55 @@ nav:
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
           - SafeArea: controls/safearea.md
-          - ScrollableControl: controls/scrollablecontrol.md
           - SearchBar: controls/searchbar.md
           - SegmentedButton: controls/segmentedbutton.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
-          - Service: controls/service.md
           - ShaderMask: controls/shadermask.md
           - ShakeDetector: controls/shakedetector.md
           - Screenshot: controls/screenshot.md
-          - SharedPreferences: controls/sharedpreferences.md
           - Slider: controls/slider.md
           - SnackBar: controls/snackbar.md
           - Stack: controls/stack.md
-          - StoragePaths: controls/storagepaths.md
           - SubmenuButton: controls/submenubutton.md
           - Switch: controls/switch.md
           - Tabs:
+              - controls/tabs/index.md
               - Tab: controls/tab.md
               - TabBar: controls/tabbar.md
               - TabBarView: controls/tabbarview.md
-              - Tabs: controls/tabs/index.md
           - Text: controls/text.md
           - TextButton: controls/textbutton.md
           - TextField: controls/textfield.md
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
-          - UrlLauncher: controls/urllauncher.md
           - VerticalDivider: controls/verticaldivider.md
           - View: controls/view.md
-          - Window: types/window.md
           - WindowDragArea: controls/windowdragarea.md
-      - Components:
-          - Hooks:
-              - on_mounted: types/on_mounted.md
-              - on_unmounted: types/on_unmounted.md
-              - on_updated: types/on_updated.md
-              - use_callback: types/use_callback.md
-              - use_context: types/use_context.md
-              - use_effect: types/use_effect.md
-              - use_memo: types/use_memo.md
-              - use_state: types/use_state.md
-          - Decorators:
-              - component: types/component.md
-              - observable: types/observabledecorator.md
-          - Methods:
-              - create_context: types/create_context.md
-              - memo: types/memo.md
-          - Types:
-              - Observable: types/observable.md
-      - Testing:
-          - Finder: testing/finder.md
-          - FletTestApp: testing/flettestapp.md
-          - Tester: testing/tester.md
-      - Types:
-          # - types/index.md
+      - CLI:
+          - Overview: cli/index.md
+          - flet build: cli/flet-build.md
+          - flet create: cli/flet-create.md
+          - flet doctor: cli/flet-doctor.md
+          - flet pack: cli/flet-pack.md
+          - flet publish: cli/flet-publish.md
+          - flet run: cli/flet-run.md
+          - flet serve: cli/flet-serve.md
+      - API:
           - Aliases: types/aliases.md
-          - Dataclasses:
+          - Base Controls:
+              - AdaptiveControl: controls/adaptivecontrol.md
+              - BaseControl: controls/basecontrol.md
+              - BasePage: controls/basepage.md
+              - Control: controls/control.md
+              - DialogControl: controls/dialogcontrol.md
+              - FormFieldControl: controls/formfieldcontrol.md
+              - LayoutControl: controls/layoutcontrol.md
+              - ScrollableControl: controls/scrollablecontrol.md
+              - Service: controls/service.md
+              - Window: types/window.md
+          - Classes:
               - Ads:
                   - AdRequest: ads/types/adrequest.md
               - Alignment: types/alignment.md
@@ -431,7 +449,9 @@ nav:
               - BoxShadow: types/boxshadow.md
               - BrowserContextMenu: types/browsercontextmenu.md
               - ButtonStyle: types/buttonstyle.md
+              - Clipboard: controls/clipboard.md
               - ColorFilter: types/colorfilter.md
+              - Context: types/context.md
               - ControlState: types/controlstate.md
               - DecorationImage: types/decorationimage.md
               - DeviceInfo:
@@ -445,6 +465,8 @@ nav:
               - Duration: types/duration.md
               - FilePickerFile: types/filepickerfile.md
               - FilePickerUploadFile: types/filepickeruploadfile.md
+              - Finder: types/finder.md
+              - FletTestApp: types/flettestapp.md
               - Gradient:
                   - Gradient: types/gradient/index.md
                   - LinearGradient: types/lineargradient.md
@@ -467,6 +489,7 @@ nav:
                   - NotchShape: types/notchshape/index.md
                   - AutomaticNotchShape: types/automaticnotchshape.md
                   - CircularRectangleNotchShape: types/circularrectanglenotchshape.md
+              - Observable: types/observable.md
               - Offset: types/offset.md
               - OutlinedBorder:
                   - OutlinedBorder: types/outlinedborder/index.md
@@ -482,15 +505,20 @@ nav:
                   - PaintLinearGradient: types/paintlineargradient.md
                   - PaintRadialGradient: types/paintradialgradient.md
                   - PaintSweepGradient: types/paintsweepgradient.md
+              - PubSubClient: types/pubsub/pubsubclient.md
+              - PubSubHub: types/pubsub/pubsubhub.md
               - Rect: types/rect.md
               - Ref: types/ref.md
               - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
               - Rotate: types/rotate.md
               - Scale: types/scale.md
               - ShapeBorder: types/shapeborder.md
+              - SharedPreferences: controls/sharedpreferences.md
               - Size: types/size.md
+              - StoragePaths: controls/storagepaths.md
               - StrutStyle: types/strutstyle.md
               - TemplateRoute: types/templateroute.md
+              - Tester: types/tester.md
               - TextDecoration: types/textdecoration.md
               - TextSelection: types/textselection.md
               - TextSpan: types/textspan.md
@@ -543,9 +571,12 @@ nav:
                   - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
               - Url: types/url.md
+              - UrlLauncher: controls/urllauncher.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
           - Decorators:
+              - component: types/component.md
               - control: types/control.md
+              - observable: types/observabledecorator.md
           - Enums:
               - Ads:
                   - PrecisionType: ads/types/precisiontype.md
@@ -679,47 +710,24 @@ nav:
               - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md
               - ViewPopEvent: types/viewpopevent.md
               - WindowEvent: types/windowevent.md
-          - FletException:
+          - Exceptions:
               - FletException: types/fletexception/index.md
               - FletPageDisconnectedException: types/fletpagedisconnectedexception.md
               - FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
               - FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
-          - PubSub:
-              # - types/pubsub/index.md
-              - PubSubClient: types/pubsub/pubsubclient.md
-              - PubSubHub: types/pubsub/pubsubhub.md
-          - Utility:
-              - Context: types/context.md
-      - Environment Variables: environment-variables.md
-  - Publish:
-      - Build and Publish a Flet app: publish/index.md
-      - Android: publish/android.md
-      - iOS: publish/ios.md
-      - Linux: publish/linux.md
-      - macOS: publish/macos.md
-      - Windows: publish/windows.md
-      - Web:
-          - publish/web/index.md
-          - Dynamic Website:
-              - Publish web app as dynamic website: publish/web/dynamic-website/index.md
-              - Hosting:
-                  - Hosting: publish/web/dynamic-website/hosting/index.md
-                  - Fly.io: publish/web/dynamic-website/hosting/fly-io.md
-                  - Replit: publish/web/dynamic-website/hosting/replit.md
-                  - Self-Hosting: publish/web/dynamic-website/hosting/self-hosting.md
-          - Static Website:
-              - Publish web app as static website: publish/web/static-website/index.md
-              - Hosting:
-                  - Cloudflare: publish/web/static-website/hosting/cloudflare.md
-  - CLI:
-      - Flet CLI: cli/index.md
-      - flet build: cli/flet-build.md
-      - flet create: cli/flet-create.md
-      - flet doctor: cli/flet-doctor.md
-      - flet pack: cli/flet-pack.md
-      - flet publish: cli/flet-publish.md
-      - flet run: cli/flet-run.md
-      - flet serve: cli/flet-serve.md
+          - Methods:
+              - create_context: types/create_context.md
+              - memo: types/memo.md
+              - on_mounted: types/on_mounted.md
+              - on_unmounted: types/on_unmounted.md
+              - on_updated: types/on_updated.md
+              - use_callback: types/use_callback.md
+              - use_context: types/use_context.md
+              - use_effect: types/use_effect.md
+              - use_memo: types/use_memo.md
+              - use_state: types/use_state.md
+      - Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
+      - Environment Variables: reference/environment-variables.md
   - Cookbook:
       - cookbook/index.md
       - Accessibility: cookbook/accessibility.md
@@ -746,17 +754,3 @@ nav:
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
       - Theming: cookbook/theming.md
-  - Tutorials:
-      - tutorials/index.md
-      - Calculator: tutorials/calculator.md
-      - Chat: tutorials/chat.md
-      - Solitaire: tutorials/solitaire.md
-      - ToDo: tutorials/todo.md
-      - Trolli: tutorials/trolli.md
-  - Contributing:
-      - contributing/index.md
-      - Built-in binary Python packages for Android and iOS: contributing/binary-packages-android-ios.md
-      - Extensions:
-          - contributing/extensions/index.md
-          - Creating an Extension: contributing/extensions/user-extensions.md
-          - Built-in Extensions: contributing/extensions/built-in-extensions.md

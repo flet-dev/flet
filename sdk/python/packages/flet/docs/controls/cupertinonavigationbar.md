@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoNavigationBar
+examples: ../../examples/controls/cupertino_navigation_bar
+example_images: ../examples/controls/cupertino_navigation_bar/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/navigation/cupertinonavigationbar)
@@ -5,17 +13,16 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/cupertino_navigation_bar/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/cupertino_navigation_bar/media/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+
 
 ### Wired navigation bar
 
 ```python
---8<-- "../../examples/controls/cupertino_navigation_bar/wired.py"
+--8<-- "{{ examples }}/wired.py"
 ```
 
-::: flet.CupertinoNavigationBar
+{{ class_members(class_name) }}

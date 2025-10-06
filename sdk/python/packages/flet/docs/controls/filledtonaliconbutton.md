@@ -1,5 +1,9 @@
+---
+class_name: flet.FilledTonalIconButton
+---
+
 ## Examples
 
-See these [examples](iconbutton.md#examples).
+See `IconButton` [examples](iconbutton.md#examples).
 
-::: flet.FilledTonalIconButton
+{{ class_all_options(class_name) }}

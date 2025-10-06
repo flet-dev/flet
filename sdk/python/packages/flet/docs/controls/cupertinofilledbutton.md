@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoFilledButton
+examples: ../../examples/controls/cupertino_filled_button
+example_images: ../examples/controls/cupertino_filled_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinofilledbutton)
@@ -5,11 +13,10 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/cupertino_filled_button/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/cupertino_filled_button/media/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
 
-::: flet.CupertinoFilledButton
+
+{{ class_members(class_name) }}

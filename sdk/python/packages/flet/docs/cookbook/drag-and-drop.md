@@ -1,8 +1,8 @@
-The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`][flet.Draggable] 
-control and "drops" it on [`DragTarget`][flet.DragTarget]. If both draggable and drag target has the same `group` a 
+The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`][flet.Draggable]
+control and "drops" it on [`DragTarget`][flet.DragTarget]. If both draggable and drag target has the same `group` a
 drag target will call `on_accept` event handler and pass draggable control ID as event data. In this case draggable serves as a source "data" for drag-and-drop operation.
 
-Let's take a look at the following example. In the program below you can drag left control displaying "1" on top of 
+Let's take a look at the following example. In the program below you can drag left control displaying "1" on top of
 the right control displaying "0" and when drag operation completes left control is replaced with "0" and the right control becomes "1":
 
 ```python
@@ -54,11 +54,10 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Drag and drop number](../assets/cookbook/drag-and-drop/image-1.gif)
-/// caption
-///
+{{ image("../assets/cookbook/drag-and-drop/image-1.gif", alt="Drag and drop number") }}
 
-So, it's developer's responsibility to determine what happens with "source" (draggable) and "destination" (drag target) 
+
+So, it's developer's responsibility to determine what happens with "source" (draggable) and "destination" (drag target)
 controls when `on_accept` event occurs.
 
 /// admonition | Try something
@@ -66,12 +65,12 @@ controls when `on_accept` event occurs.
 Change DragTarget's group property to `number1` and note `on_accept` is not called any more when you drop "1" on the target.
 ///
 
-There are additional properties and event handlers to make drag-and-drop operation even more interactive. 
-For example, draggable has `content_when_dragging` property to display a different control instead of `content` 
-when drag operation is under way. There is also `content_feedback` property to show a different control 
+There are additional properties and event handlers to make drag-and-drop operation even more interactive.
+For example, draggable has `content_when_dragging` property to display a different control instead of `content`
+when drag operation is under way. There is also `content_feedback` property to show a different control
 under the pointer. By default, the same `content` control, but with 50% opacity is displayed under cursor when dragging.
 
-Let's modify Draggable in our example to display a "hole" in place of dragged control and 
+Let's modify Draggable in our example to display a "hole" in place of dragged control and
 just "1" under cursor while dragging:
 
 ```python
@@ -97,12 +96,11 @@ just "1" under cursor while dragging:
 ...
 ```
 
-![Drag and drop number 2](../assets/cookbook/drag-and-drop/image-2.gif)
-/// caption
-///
+{{ image("../assets/cookbook/drag-and-drop/image-2.gif", alt="Drag and drop number 2") }}
 
-Drag target control additionally has `on_will_accept` and `on_leave` event handlers which help better 
-visualize when it's a good time to "drop" something on the target. Let's modify DragTarget in our example 
+
+Drag target control additionally has `on_will_accept` and `on_leave` event handlers which help better
+visualize when it's a good time to "drop" something on the target. Let's modify DragTarget in our example
 to draw a border around target control when it's ready to accept incoming drag:
 
 ```python
@@ -178,6 +176,4 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Drag and drop number 3](../assets/cookbook/drag-and-drop/image-3.gif)
-/// caption
-///
+{{ image("../assets/cookbook/drag-and-drop/image-3.gif", alt="Drag and drop number 3") }}

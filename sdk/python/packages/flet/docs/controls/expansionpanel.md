@@ -1,5 +1,9 @@
+---
+class_name: flet.ExpansionPanel
+---
+
 ## Examples
 
 See [these](expansionpanellist.md#examples).
 
-::: flet.ExpansionPanel
+{{ class_all_options(class_name) }}

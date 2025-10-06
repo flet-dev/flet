@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoSegmentedButton
+examples: ../../examples/controls/cupertino_segmented_button
+example_images: ../examples/controls/cupertino_segmented_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinosegmentedbutton)
@@ -5,17 +13,16 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/cupertino_segmented_button/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/cupertino_segmented_button/media/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Adjusting segments padding
 
 ```python
---8<-- "../../examples/controls/cupertino_segmented_button/segments_padding.py"
+--8<-- "{{ examples }}/segments_padding.py"
 ```
 
-::: flet.CupertinoSegmentedButton
+{{ class_members(class_name) }}

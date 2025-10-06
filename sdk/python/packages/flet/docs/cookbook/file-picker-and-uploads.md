@@ -2,9 +2,8 @@
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
-![File picker all modes demo](../examples/controls/file_picker/media/pick_save_and_get_directory_path.png){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/file_picker/media/pick_save_and_get_directory_path.png", alt="File picker all modes demo", width="80%") }}
+
 
 Check out [source code of the demo above](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/controls/file-picker/pick-save-and-get-directory-path.py).
 
@@ -163,8 +162,7 @@ The following example demonstrates multiple file uploads:
 --8<-- "../../examples/controls/file_picker/pick_and_upload.py"
 ```
 
-![File picker multiple uploads](../examples/controls/file_picker/media/pick_and_upload.png){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/file_picker/media/pick_and_upload.png", alt="File picker multiple uploads", width="80%") }}
+
 
 See [`FilePicker`][flet.FilePicker] control docs for all its properties and examples.

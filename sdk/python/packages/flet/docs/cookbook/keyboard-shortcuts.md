@@ -31,9 +31,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Keyboard shortcuts](../assets/cookbook/keyboard/shortcuts.png)
-/// caption
-///
+{{ image("../assets/cookbook/keyboard/shortcuts.png", alt="Keyboard shortcuts") }}
+
 
 Below is a more advanced example:
 

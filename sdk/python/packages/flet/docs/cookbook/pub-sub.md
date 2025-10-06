@@ -41,6 +41,4 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-![Chat app](../assets/cookbook/pub-sub/chat-app.gif)
-/// caption
-///
+{{ image("../assets/cookbook/pub-sub/chat-app.gif", alt="Chat app") }}

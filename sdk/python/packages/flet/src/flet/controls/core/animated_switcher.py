@@ -20,9 +20,6 @@ class AnimatedSwitcherTransition(Enum):
 class AnimatedSwitcher(LayoutControl):
     """
     Used to switch between controls with an animation.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -31,6 +28,9 @@ class AnimatedSwitcher(LayoutControl):
 
     When it changes, this switcher will animate the transition from the old/previous
     `content` to the new one.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))

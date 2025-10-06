@@ -1,3 +1,11 @@
+---
+class_name: flet.SubmenuButton
+examples: ../../examples/controls/submenu_button
+example_images: ../examples/controls/submenu_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/submenubutton)
@@ -5,11 +13,10 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/submenu_button/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/submenu_button/media/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
 
-::: flet.SubmenuButton
+
+{{ class_members(class_name) }}

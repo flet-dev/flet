@@ -39,9 +39,8 @@ properties, described below, to enable implicit animation of its appearance:
 --8<-- "../../examples/controls/time_picker/basic.py"
 ```
 
-![basic](../examples/controls/time_picker/media/basic.png){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/time_picker/media/basic.png", alt="basic", width="80%") }}
+
 
 
 
@@ -55,9 +54,8 @@ enables implicit animation of [`LayoutControl.opacity`][flet.LayoutControl.opaci
 --8<-- "../../examples/controls/layout_control/animate_opacity.py"
 ```
 
-![animate-opacity](../examples/controls/layout_control/media/animate_opacity.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/layout_control/media/animate_opacity.gif", alt="animate-opacity", width="80%") }}
+
 
 ### Rotation animation
 
@@ -68,9 +66,8 @@ enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate
 --8<-- "../../examples/controls/constrained-control/animate_rotation.py"
 ```
 
-![animate-rotation](../examples/controls/layout_control/media/animate_rotation.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/layout_control/media/animate_rotation.gif", alt="animate-rotation", width="80%") }}
+
 
 ### Scale animation
 
@@ -81,9 +78,8 @@ enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] 
 --8<-- "../../examples/controls/layout_control/animate_scale.py"
 ```
 
-![animate-scale](../examples/controls/layout_control/media/animate_scale.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/layout_control/media/animate_scale.gif", alt="animate-scale", width="80%") }}
+
 
 ### Offset animation
 
@@ -100,9 +96,8 @@ Offset animation is used for various sliding effects:
 --8<-- "../../examples/controls/layout_control/animate_offset.py"
 ```
 
-![animate-offset](../examples/controls/layout_control/media/animate_offset.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/layout_control/media/animate_offset.gif", alt="animate-offset", width="80%") }}
+
 
 ### Position animation
 
@@ -122,9 +117,8 @@ Note:
 --8<-- "../../examples/controls/layout_control/animate_position.py"
 ```
 
-![animate-position](../examples/controls/layout_control/media/animate_position.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/layout_control/media/animate_position.gif", alt="animate-position", width="80%") }}
+
 
 ### Animate
 
@@ -135,9 +129,8 @@ enables implicit animation of container properties such as size, background colo
 --8<-- "../../examples/controls/container/animate.py"
 ```
 
-![animate](../examples/controls/container/media/animate_1.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/container/media/animate_1.gif", alt="animate", width="80%") }}
+
 
 ### Animated content switcher
 
@@ -175,9 +168,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![animated-switcher](../assets/cookbook/animations/animated-switcher.gif){width="80%"}
-/// caption
-///
+{{ image("../assets/cookbook/animations/animated-switcher.gif", alt="animated-switcher", width="80%") }}
+
 
 ### Animation end callback
 

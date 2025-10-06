@@ -1,3 +1,11 @@
+---
+class_name: flet.Switch
+examples: ../../examples/controls/switch
+example_images: ../examples/controls/switch/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/switch)
@@ -5,21 +13,19 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/switch/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/switch/media/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Handling change events
 
 ```python
---8<-- "../../examples/controls/switch/handling_events.py"
+--8<-- "{{ examples }}/handling_events.py"
 ```
 
-![handling-events](../examples/controls/switch/media/handling_events.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_events.gif", alt="handling-events", width="80%") }}
 
-::: flet.Switch
+
+{{ class_members(class_name) }}

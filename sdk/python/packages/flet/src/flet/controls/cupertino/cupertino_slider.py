@@ -22,11 +22,6 @@ class CupertinoSlider(LayoutControl):
     Use a slider when you want people to set defined values (such as volume or
     brightness), or when people would benefit from instant feedback on the effect of
     setting changes.
-
-    Raises:
-        ValueError: If [`min`][(c).] is greater than [`max`][(c).].
-        ValueError: If [`value`][(c).] is less than [`min`][(c).].
-        ValueError: If [`value`][(c).] is greater than [`max`][(c).].
     """
 
     value: Optional[Number] = None
@@ -34,6 +29,10 @@ class CupertinoSlider(LayoutControl):
     The currently selected value for this slider.
 
     The slider's thumb is drawn at a position that corresponds to this value.
+
+    Raises:
+        ValueError: If [`value`][(c).] is less than [`min`][(c).] or greater than
+            [`max`][(c).].
     """
 
     min: Number = 0.0
@@ -43,6 +42,9 @@ class CupertinoSlider(LayoutControl):
     Note:
         - Must be less than or equal to [`max`][(c).].
         - If the [`max`][(c).] is equal to the `min`, then this slider is disabled.
+
+    Raises:
+        ValueError: If [`min`][(c).] is greater than [`max`][(c).].
     """
 
     max: Number = 1.0
@@ -52,6 +54,9 @@ class CupertinoSlider(LayoutControl):
     Note:
         - Must be greater than or equal to [`min`][(c).].
         - If the [`min`][(c).] is equal to the `max`, then this slider is disabled.
+
+    Raises:
+        ValueError: If [`max`][(c).] is less than [`min`][(c).].
     """
 
     divisions: Optional[int] = None

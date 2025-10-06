@@ -13,10 +13,8 @@ Start building awesome mobile apps in Python using just your computer and mobile
 Install the [Flet iOS app](https://apps.apple.com/app/flet/id1624979699) on your iOS device.
 You will be using this app to see how your Flet project is working on iPhone or iPad.
 
-[![Get it on App Store](../assets/getting-started/testing-on-mobile/ios/qr-code.jpg){width=300}](https://apps.apple.com/app/flet/id1624979699)
-/// caption
-[View on App Store](https://apps.apple.com/app/flet/id1624979699)
-///
+{{ image("../assets/getting-started/testing-on-mobile/ios/qr-code.jpg", alt="Get it on App Store", width="300", caption="[View on App Store](https://apps.apple.com/app/flet/id1624979699)", link="https://apps.apple.com/app/flet/id1624979699") }}
+
 
 Run the following command to start Flet development server with your app:
 
@@ -48,10 +46,8 @@ poetry run flet run --ios [script]  # (1)!
 Install the [Flet Android app](https://play.google.com/store/apps/details?id=com.appveyor.flet) on your Android device.
 You will be using this app to see how your Flet project is working on Android device.
 
-[![Get it on Google Play](../assets/getting-started/testing-on-mobile/android/google-play-badge.png){width=300}](https://play.google.com/store/apps/details?id=com.appveyor.flet)
-/// caption
-[View on PlayStore](https://play.google.com/store/apps/details?id=com.appveyor.flet)
-///
+{{ image("../assets/getting-started/testing-on-mobile/android/google-play-badge.png", alt="Get it on Google Play", width="300", caption="[View on PlayStore](https://play.google.com/store/apps/details?id=com.appveyor.flet)", link="https://play.google.com/store/apps/details?id=com.appveyor.flet") }}
+
 
 Run the following command to start Flet development server with your app:
 
@@ -81,9 +77,8 @@ poetry run flet run --android [script]  # (1)!
 
 A QR code with encoded project URL will be displayed in the terminal:
 
-![app-qr-code](../assets/getting-started/testing-on-mobile/ios/app-qr-code.png){width=300}
-/// caption
-///
+{{ image("../assets/getting-started/testing-on-mobile/ios/app-qr-code.png", alt="app-qr-code", width="300") }}
+
 
 Open **Camera** app on your Android device, point to QR code you got and click URL to open it in Flet app.
 

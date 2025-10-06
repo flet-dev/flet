@@ -17,10 +17,6 @@ class Draggable(Control):
     [`content_feedback`][(c).] control that tracks the user's finger across the screen.
     If the user lifts their finger while on top of a `DragTarget`, this target is
     given the opportunity to complete drag-and-drop flow.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
-        ValueError: If [`max_simultaneous_drags`][(c).] is set to a negative value.
     """
 
     content: Control
@@ -29,6 +25,9 @@ class Draggable(Control):
 
     If the draggable is being dragged, the
     [`content_when_dragging`][(c).] is displayed instead.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     group: str = "default"
@@ -87,6 +86,9 @@ class Draggable(Control):
         to visually indicate the item is being moved.
     - Set to any positive integer to allow that many concurrent drags.
     - If `None`, there is no limit on the number of simultaneous drags.
+
+    Raises:
+        ValueError: If [`max_simultaneous_drags`][(c).] is set to a negative value.
     """
 
     on_drag_start: Optional[ControlEventHandler["Draggable"]] = None

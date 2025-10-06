@@ -1,5 +1,9 @@
+---
+class_name: flet.CupertinoDialogAction
+---
+
 ## Examples
 
 See [these](cupertinoalertdialog.md#examples).
 
-::: flet.CupertinoDialogAction
+{{ class_all_options(class_name) }}

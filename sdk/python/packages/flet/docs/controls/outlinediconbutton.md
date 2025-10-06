@@ -1,5 +1,9 @@
+---
+class_name: flet.OutlinedIconButton
+---
+
 ## Examples
 
-See these [examples](iconbutton.md#examples).
+See `IconButton` [examples](iconbutton.md#examples).
 
-::: flet.OutlinedIconButton
+{{ class_all_options(class_name) }}

@@ -16,9 +16,8 @@ In this tutorial you will learn how to:
 
 The complete application will look like this:
 
-![chat](../examples/tutorials/chat/media/chat.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/chat.gif", alt="chat", width="80%") }}
+
 
 You can try the live demo [here](https://flet-chat.fly.dev).
 
@@ -46,18 +45,16 @@ ft.run(main)
 
 Run this app you will see a new window with a greeting:
 
-![hello-world](../examples/tutorials/todo/media/hello-world.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/todo/media/hello-world.png", alt="hello-world", width="80%") }}
+
 
 ## Adding page controls and handling events
 
 To start, we want to be able to take user input (chat message) and show messages history on the screen.
 The layout for this step could look like this:
 
-![chat-layout-1](../examples/tutorials/chat/media/layout-1.svg){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/layout-1.svg", alt="chat-layout-1", width="80%") }}
+
 
 To implement this layout, we will be using these Flet controls:
 * [`Column`][flet.Column] - a container to display chat messages (`Text` controls) vertically.
@@ -96,9 +93,8 @@ should be called for the update to take effect.
 ///
 
 Chat app now looks like this:
-![chat-1](../examples/tutorials/chat/media/chat-1.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/chat-1.png", alt="chat-1", width="80%") }}
+
 
 ## Broadcasting chat messages
 
@@ -178,9 +174,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![chat-2](../examples/tutorials/chat/media/chat-2.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/chat-2.gif", alt="chat-2", width="80%") }}
+
 
 ## User name dialog
 
@@ -208,17 +203,15 @@ we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the 
 A dialog will be opened on the start of the program since we have set its `open` property to `True`.
 ///
 
-![username-dialog](../examples/tutorials/chat/media/username-dialog.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/username-dialog.png", alt="username-dialog", width="80%") }}
+
 
 When the user clicks on "Join chat" button, it will call `join_click` method that should send a message to
 all subscribers, informing them that the user has joined the chat. This message should look different
 from the regular chat message, for example, like this:
 
-![chat-4](../examples/tutorials/chat/media/chat-4.png){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/chat-4.png", alt="chat-4", width="80%") }}
+
 
 Let's add `message_type` property to the `Message` class to differentiate between login and chat messages:
 
@@ -284,9 +277,8 @@ def send_click(e):
 ```
 ///
 
-![chat-3](../examples/tutorials/chat/media/chat-3.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/chat-3.gif", alt="chat-3", width="80%") }}
+
 
 ## Enhancing user interface
 
@@ -300,9 +292,8 @@ to it that will improve user experience and make the app look more professional.
 
 You may want to show messages in a different format, like this:
 
-![chat-layout-chatmessage](../examples/tutorials/chat/media/layout-chatmessage.svg){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/layout-chatmessage.svg", alt="chat-layout-chatmessage", width="80%") }}
+
 
 Chat message will now be a [`Row`][flet.Row] containing [`CircleAvatar`][flet.CircleAvatar] with username initials and
 [`Column`][flet.Column] that contains two [`Text`][flet.Text] controls: user name and message text.
@@ -364,9 +355,8 @@ Later, if you decide to improve control layout or its logic, it won't affect the
 
 Now you can use your brand new `ChatMessage` to build a better layout for the chat app:
 
-![chat-layout-2](../examples/tutorials/chat/media/layout-2.svg){width="80%"}
-/// caption
-///
+{{ image("../examples/tutorials/chat/media/layout-2.svg", alt="chat-layout-2", width="80%") }}
+
 
 Instances of `ChatMessage` will be created instead of plain `Text` chat messages in `on_message` method:
 

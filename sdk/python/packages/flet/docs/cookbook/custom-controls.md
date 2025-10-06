@@ -29,9 +29,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Styled controls](../assets/cookbook/custom-controls/styled-controls.png)
-/// caption
-///
+{{ image("../assets/cookbook/custom-controls/styled-controls.png", alt="Styled controls") }}
+
 
 See example of using styled controls in [Calculator App tutorial](../tutorials/calculator.md#styled-controls).
 
@@ -114,9 +113,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![Composite controls](../assets/cookbook/custom-controls/composite-controls.gif){width="90%"}
-/// caption
-///
+{{ image("../assets/cookbook/custom-controls/composite-controls.gif", alt="Composite controls", width="90%") }}
+
 
 ## Life-cycle methods
 

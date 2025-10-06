@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoDatePicker
+examples: ../../examples/controls/cupertino_date_picker
+example_images: ../examples/controls/cupertino_date_picker/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinodatepicker)
@@ -5,11 +13,10 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/cupertino_date_picker/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/cupertino_date_picker/media/basic.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
 
-::: flet.CupertinoDatePicker
+
+{{ class_members(class_name) }}

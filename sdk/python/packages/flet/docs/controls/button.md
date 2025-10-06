@@ -16,9 +16,8 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/basic.py"
 ```
 
-![Basic button]({{ example_images }}/basic.png){width="50%"}
-/// caption
-///
+{{ image(example_images + "/basic.png", alt="Basic button", width="50%") }}
+
 
 ### Icons
 
@@ -26,9 +25,8 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/icons.py"
 ```
 
-![Basic button]({{ example_images }}/icons.png){width="50%"}
-/// caption
-///
+{{ image(example_images + "/icons.png", alt="Basic button", width="50%") }}
+
 
 ### Handling clicks
 
@@ -36,9 +34,8 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-![Handling clicks]({{ example_images }}/handling_clicks.png){width="50%"}
-/// caption
-///
+{{ image(example_images + "/handling_clicks.png", alt="Handling clicks", width="50%") }}
+
 
 ### Custom content
 
@@ -46,9 +43,8 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/custom_content.py"
 ```
 
-![Buttons with custom content]({{ example_images }}/custom_content.png){width="50%"}
-/// caption
-///
+{{ image(example_images + "/custom_content.png", alt="Buttons with custom content", width="50%") }}
+
 
 ### Shapes
 
@@ -56,9 +52,8 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/button_shapes.py"
 ```
 
-![Buttons with different shapes]({{ example_images }}/button_shapes.png){width="50%"}
-/// caption
-///
+{{ image(example_images + "/button_shapes.png", alt="Buttons with different shapes", width="50%") }}
+
 
 ### Styling
 
@@ -66,15 +61,11 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/styling.py"
 ```
 
-![Styled button - default state]({{ example_images }}/styled_initial.png){width="50%"}
-/// caption
-Default state
-///
+{{ image(example_images + "/styled_initial.png", alt="Styled button - default state", width="50%", caption="Default state") }}
 
-![Styled button - hovered state]({{ example_images }}/styled_hovered.png){width="50%"}
-/// caption
-Hovered state
-///
+
+{{ image(example_images + "/styled_hovered.png", alt="Styled button - hovered state", width="50%", caption="Hovered state") }}
+
 
 ### Animate on hover
 
@@ -82,14 +73,10 @@ Hovered state
 --8<-- "{{ examples }}/animate_on_hover.py"
 ```
 
-![Unhovered button]({{ example_images }}/animate_on_hover_initial.png){width="50%"}
-/// caption
-Normal button
-///
+{{ image(example_images + "/animate_on_hover_initial.png", alt="Unhovered button", width="50%", caption="Normal button") }}
 
-![Hovered button]({{ example_images }}/animate_on_hover_hovered.png){width="50%"}
-/// caption
-Hovered button
-///
+
+{{ image(example_images + "/animate_on_hover_hovered.png", alt="Hovered button", width="50%", caption="Hovered button") }}
+
 
 {{ class_members(class_name) }}

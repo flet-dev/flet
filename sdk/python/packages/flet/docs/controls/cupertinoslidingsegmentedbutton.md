@@ -1,3 +1,11 @@
+---
+class_name: flet.CupertinoSlidingSegmentedButton
+examples: ../../examples/controls/cupertino_sliding_segmented_button
+example_images: ../examples/controls/cupertino_sliding_segmented_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinoslidingsegmentedbutton)
@@ -5,11 +13,10 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/cupertino_sliding_segmented_button/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/cupertino_sliding_segmented_button/media/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
 
-::: flet.CupertinoSlidingSegmentedButton
+
+{{ class_members(class_name) }}

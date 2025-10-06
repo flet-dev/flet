@@ -1,3 +1,11 @@
+---
+class_name: flet.Radio
+examples: ../../examples/controls/radio
+example_images: ../examples/controls/radio/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/input/radio)
@@ -5,28 +13,26 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/radio/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/radio/media/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 
 ### Handling selection changes
 
 ```python
---8<-- "../../examples/controls/radio/handling_selection_changes.py"
+--8<-- "{{ examples }}/handling_selection_changes.py"
 ```
 
-![handling-selection-changes](../examples/controls/radio/media/handling_selection_changes.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_selection_changes.gif", alt="handling-selection-changes", width="80%") }}
+
 
 ### Styled radio buttons
 
 ```python
---8<-- "../../examples/controls/radio/styled.py"
+--8<-- "{{ examples }}/styled.py"
 ```
 
-::: flet.Radio
+{{ class_members(class_name) }}
