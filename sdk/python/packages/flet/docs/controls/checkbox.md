@@ -16,7 +16,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="50%") }}
+{{ image(example_images + "/basic.png", alt="basic", width="50%") }}
 
 
 ### Handling events
@@ -25,7 +25,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-{{ image(example_images + "/handling_events.gif", alt="handling-events", width="50%") }}
+{{ image(example_images + "/handling_events.png", alt="handling-events", width="50%") }}
 
 
 ### Styled checkboxes
@@ -34,6 +34,6 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 --8<-- "{{ examples }}/styled.py"
 ```
 
-{{ image(example_images + "/styled_checkboxes.gif", alt="Styled checkboxes", width="50%") }}
+{{ image(example_images + "/styled_checkboxes.png", alt="Styled checkboxes", width="50%") }}
 
 {{ class_members(class_name) }}
