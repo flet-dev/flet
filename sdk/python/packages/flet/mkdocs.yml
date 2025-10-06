@@ -262,6 +262,7 @@ nav:
               - BaseAd: ads/basead.md
               - InterstitialAd: ads/interstitialad.md
               # - NativeAd: ads/nativead.md
+          - Audio: audio/index.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -439,6 +440,12 @@ nav:
               - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md
               - AnimationStyle: types/animationstyle.md
+              - Audio:
+                  - AudioDurationChangeEvent: audio/types/audio_duration_change_event.md
+                  - AudioPositionChangeEvent: audio/types/audio_position_change_event.md
+                  - AudioStateChangeEvent: audio/types/audio_state_change_event.md
+                  - AudioState: audio/types/audio_state.md
+                  - ReleaseMode: audio/types/release_mode.md
               - AutoCompleteSuggestion: types/autocompletesuggestion.md
               - Blur: types/blur.md
               - Border: types/border.md

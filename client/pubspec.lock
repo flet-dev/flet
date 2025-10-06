@@ -282,12 +282,10 @@ packages:
   flet_audio:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_audio"
-      ref: main
-      resolved-ref: "1e629a501a87b0c2c0a9956cf49552dc01efcbe5"
-      url: "https://github.com/flet-dev/flet-audio.git"
-    source: git
-    version: "0.2.0"
+      path: "../sdk/python/packages/flet-audio/src/flutter/flet_audio"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:

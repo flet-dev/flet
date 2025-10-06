@@ -33,6 +33,7 @@ flet = "flet.cli:main"
 [dependency-groups]
 extensions = [
     "flet-ads",
+    "flet-audio",
 ]
 test = [
     "pytest >=7.2.0",

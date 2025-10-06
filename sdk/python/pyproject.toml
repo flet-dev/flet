@@ -11,6 +11,7 @@ dependencies = [
     "flet-desktop",
     "flet-web",
     "flet-ads",
+    "flet-audio"
 ]
 
 [tool.uv.sources]
@@ -19,6 +20,7 @@ flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
 flet-web = { workspace = true }
 flet-ads = { workspace = true }
+flet-audio = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
 
 [tool.uv.workspace]
