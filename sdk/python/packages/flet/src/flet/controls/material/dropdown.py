@@ -81,6 +81,17 @@ class Dropdown(LayoutControl):
     """
     A dropdown control that allows users to select a single option from a list of
     options.
+
+    ```python
+    ft.Dropdown(
+        width=220,
+        value="alice",
+        options=[
+            ft.dropdown.Option(key="alice", text="Alice"),
+            ft.dropdown.Option(key="bob", text="Bob"),
+        ],
+    )
+    ```
     """
 
     value: Optional[str] = None
