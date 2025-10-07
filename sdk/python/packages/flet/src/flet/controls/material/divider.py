@@ -12,6 +12,18 @@ __all__ = ["Divider"]
 class Divider(Control):
     """
     A thin horizontal line (divider), with padding on either side.
+
+    ```python
+    ft.Column(
+        width=240,
+        spacing=10,
+        controls=[
+            ft.Text("Section A", weight=ft.FontWeight.W_600),
+            ft.Divider(),
+            ft.Text("Section B"),
+        ],
+    )
+    ```
     """
 
     color: Optional[ColorValue] = None
