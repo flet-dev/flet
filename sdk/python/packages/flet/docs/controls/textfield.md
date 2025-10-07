@@ -1,10 +1,11 @@
 ---
 class_name: flet.TextField
 examples: ../../examples/controls/text_field
-example_images: ../examples/controls/text_field/media
+example_images: ../test-images/examples/material/golden/macos/textfield
+example_media: ../examples/controls/text_field/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic TextField") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
 
 
 ### Handling change events
@@ -25,7 +26,7 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/handling_change_events.py"
 ```
 
-{{ image(example_images + "/handling_change_events.gif", alt="handling-change-events", width="80%") }}
+{{ image(example_media + "/handling_change_events.gif", alt="handling-change-events", width="80%") }}
 
 
 ### Password with reveal button
@@ -34,7 +35,7 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/password.py"
 ```
 
-{{ image(example_images + "/password.gif", alt="password", width="80%") }}
+{{ image(example_media + "/password.gif", alt="password", width="80%") }}
 
 
 ### Multiline fields
@@ -43,7 +44,7 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/multiline.py"
 ```
 
-{{ image(example_images + "/multiline.gif", alt="multiline", width="80%") }}
+{{ image(example_media + "/multiline.gif", alt="multiline", width="80%") }}
 
 
 ### Underlined and borderless TextFields
@@ -52,7 +53,7 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/underlined_and_borderless.py"
 ```
 
-{{ image(example_images + "/underlined_and_borderless.gif", alt="underlined-and-borderless", width="80%") }}
+{{ image(example_media + "/underlined_and_borderless.gif", alt="underlined-and-borderless", width="80%") }}
 
 
 ### Setting prefixes and suffixes
@@ -61,7 +62,7 @@ example_images: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/prefix_and_suffix.py"
 ```
 
-{{ image(example_images + "/prefix_and_suffix.gif", alt="prefix-and-suffix", width="80%") }}
+{{ image(example_media + "/prefix_and_suffix.gif", alt="prefix-and-suffix", width="80%") }}
 
 
 ### Styled TextField

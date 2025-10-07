@@ -133,6 +133,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
+
+    ```python
+    ft.TextField(label="Name", hint_text="Jane Doe")
+    ```
     """
 
     value: str = ""
