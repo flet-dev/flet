@@ -1,10 +1,11 @@
 ---
 class_name: flet.CircleAvatar
 examples: ../../examples/controls/circle_avatar
-example_images: ../examples/controls/circle_avatar/media
+example_images: ../test-images/examples/material/golden/macos/circle_avatar
+example_media: ../examples/controls/circle_avatar/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic CircleAvatar") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/circle_avatar/media
 --8<-- "{{ examples }}/user_avatars.py"
 ```
 
-{{ image(example_images + "/user_avatars.png", alt="user-avatars", width="80%") }}
+{{ image(example_media + "/user_avatars.png", alt="user-avatars", width="80%") }}
 
 
 {{ class_members(class_name) }}

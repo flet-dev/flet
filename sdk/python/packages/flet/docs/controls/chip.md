@@ -5,7 +5,7 @@ example_images: ../test-images/examples/material/golden/macos/chip
 example_media: ../examples/controls/chip/media
 ---
 
-{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic chip") }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Chip") }}
 
 ## Examples
 
