@@ -51,13 +51,9 @@ class AudioRecorder(ft.Service):
                 It must be specified if not on web.
             configuration: The configuration for the audio recorder.
                 If `None`, the `AudioRecorder.configuration` will be used.
-            timeout: The maximum amount of time (in seconds) to wait for a response.
 
         Returns:
             `True` if recording was successfully started, `False` otherwise.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         assert self.page.web or output_path, (
             "output_path must be provided on platforms other than web"
@@ -94,7 +90,6 @@ class AudioRecorder(ft.Service):
         """
         Cancels the current audio recording.
         """
-
         await self._invoke_method("cancel_recording")
 
     async def resume_recording(self):
@@ -106,7 +101,6 @@ class AudioRecorder(ft.Service):
     async def pause_recording(self):
         """
         Pauses the ongoing audio recording.
-
         """
         await self._invoke_method("pause_recording")
 

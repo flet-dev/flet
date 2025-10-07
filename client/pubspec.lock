@@ -296,11 +296,9 @@ packages:
   flet_charts:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_charts"
-      ref: main
-      resolved-ref: "6902aeb244d676cb85f14268126df9c4fe7af084"
-      url: "https://github.com/flet-dev/flet-charts.git"
-    source: git
+      path: "../sdk/python/packages/flet-charts/src/flutter/flet_charts"
+      relative: true
+    source: path
     version: "0.2.0"
   flet_datatable2:
     dependency: "direct main"

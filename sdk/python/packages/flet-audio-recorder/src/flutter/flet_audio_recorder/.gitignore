@@ -29,3 +29,6 @@ migrate_working_dir/
 build/
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# override parent rules
+!lib/

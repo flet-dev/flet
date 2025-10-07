@@ -253,7 +253,7 @@ nav:
       - Extending Flet:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
-  - Reference:
+  - API Reference:
       - Controls:
           - Overview: controls/index.md
           - Ads:
@@ -264,6 +264,14 @@ nav:
               # - NativeAd: ads/nativead.md
           - Audio: audio/index.md
           - AudioRecorder: audio_recorder/index.md
+          - Charts:
+              - Overview: charts/index.md
+              - BarChart: charts/bar_chart.md
+              - LineChart: charts/line_chart.md
+              - MatplotlibChart: charts/matplotlib_chart.md
+              - PieChart: charts/pie_chart.md
+              - PlotlyChart: charts/plotly_chart.md
+              - ScatterChart: charts/scatter_chart.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -457,6 +465,37 @@ nav:
                   - InputDevice: audio_recorder/types/input_device.md
                   - IosAudioCategoryOption: audio_recorder/types/ios_audio_category_option.md
                   - IosRecorderConfiguration: audio_recorder/types/ios_recorder_configuration.md
+              - Charts:
+                  - BarChartEvent: charts/types/bar_chart_event.md
+                  - BarChartGroup: charts/types/bar_chart_group.md
+                  - BarChartRod: charts/types/bar_chart_rod.md
+                  - BarChartRodStackItem: charts/types/bar_chart_rod_stack_item.md
+                  - BarChartRodTooltip: charts/types/bar_chart_rod_tooltip.md
+                  - BarChartTooltip: charts/types/bar_chart_tooltip.md
+                  - BarChartTooltipDirection: charts/types/bar_chart_tooltip_direction.md
+                  - ChartAxis: charts/types/chart_axis.md
+                  - ChartAxisLabel: charts/types/chart_axis_label.md
+                  - ChartCirclePoint: charts/types/chart_circle_point.md
+                  - ChartCrossPoint: charts/types/chart_cross_point.md
+                  - ChartDataPointTooltip: charts/types/chart_data_point_tooltip.md
+                  - ChartEventType: charts/types/chart_event_type.md
+                  - ChartGridLines: charts/types/chart_grid_lines.md
+                  - ChartPointLine: charts/types/chart_point_line.md
+                  - ChartPointShape: charts/types/chart_point_shape.md
+                  - ChartSquarePoint: charts/types/chart_square_point.md
+                  - HorizontalAlignment: charts/types/horizontal_alignment.md
+                  - LineChartData: charts/types/line_chart_data.md
+                  - LineChartDataPoint: charts/types/line_chart_data_point.md
+                  - LineChartDataPointTooltip: charts/types/line_chart_data_point_tooltip.md
+                  - LineChartEvent: charts/types/line_chart_event.md
+                  - LineChartEventSpot: charts/types/line_chart_event_spot.md
+                  - LineChartTooltip: charts/types/line_chart_tooltip.md
+                  - PieChartEvent: charts/types/pie_chart_event.md
+                  - PieChartSection: charts/types/pie_chart_section.md
+                  - ScatterChartEvent: charts/types/scatter_chart_event.md
+                  - ScatterChartSpot: charts/types/scatter_chart_spot.md
+                  - ScatterChartSpotTooltip: charts/types/scatter_chart_spot_tooltip.md
+                  - ScatterChartTooltip: charts/types/scatter_chart_tooltip.md
               - AutoCompleteSuggestion: types/autocompletesuggestion.md
               - Blur: types/blur.md
               - Border: types/border.md

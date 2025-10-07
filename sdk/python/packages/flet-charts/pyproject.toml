@@ -1,0 +1,24 @@
+[project]
+name = "flet-charts"
+version = "0.2.0"
+description = "Interactive chart controls for Flet apps."
+readme = "README.md"
+authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://docs.flet.dev/charts"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-charts"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_charts" = ["**/*"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
