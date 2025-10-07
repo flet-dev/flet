@@ -8,4 +8,8 @@ __all__ = ["CupertinoTintedButton"]
 class CupertinoTintedButton(CupertinoButton):
     """
     An iOS-style button filled with default background color.
+
+    ```python
+    ft.CupertinoTintedButton("Tap me")
+    ```
     """
