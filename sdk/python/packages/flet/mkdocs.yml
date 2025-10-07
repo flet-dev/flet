@@ -413,6 +413,7 @@ nav:
           - RangeSlider: controls/rangeslider.md
           - ReorderableDraggable: controls/reorderabledraggable.md
           - ReorderableListView: controls/reorderablelistview.md
+          - PermissionHandler: permission_handler/index.md
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
           - Rive: rive/index.md
@@ -619,6 +620,9 @@ nav:
                   - PaintLinearGradient: types/paintlineargradient.md
                   - PaintRadialGradient: types/paintradialgradient.md
                   - PaintSweepGradient: types/paintsweepgradient.md
+              - PermissionHandler:
+                  - Permission: permission_handler/types/permission.md
+                  - PermissionStatus: permission_handler/types/permission_status.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
               - Rect: types/rect.md

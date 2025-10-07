@@ -1,5 +1,5 @@
-name: flet_charts
-description: A Flet extension for creating interactive charts and graphs.
+name: flet_permission_handler
+description: Flet Permission Handler control
 version: 0.1.0
 publish_to: none
 
@@ -11,10 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   collection: ^1.16.0
-  equatable: ^2.0.3
-  fl_chart: 1.0.0
+  permission_handler: 11.3.1
 
   flet:
     path: ../../../../../../../packages/flet

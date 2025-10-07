@@ -39,6 +39,7 @@ extensions = [
     "flet-lottie",
     "flet-map",
     "flet-rive",
+    "flet-permission-handler",
     "flet-video",
 ]
 test = [

@@ -292,14 +292,14 @@ packages:
       path: "../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.1.0"
   flet_charts:
     dependency: "direct main"
     description:
       path: "../sdk/python/packages/flet-charts/src/flutter/flet_charts"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.1.0"
   flet_datatable2:
     dependency: "direct main"
     description:
@@ -344,11 +344,9 @@ packages:
   flet_permission_handler:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_permission_handler"
-      ref: main
-      resolved-ref: "6c9ac6c2c5608e00603c542a13e545ffba637398"
-      url: "https://github.com/flet-dev/flet-permission-handler.git"
-    source: git
+      path: "../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler"
+      relative: true
+    source: path
     version: "0.2.0"
   flet_rive:
     dependency: "direct main"
@@ -356,7 +354,7 @@ packages:
       path: "../sdk/python/packages/flet-rive/src/flutter/flet_rive"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.1.0"
   flet_video:
     dependency: "direct main"
     description:

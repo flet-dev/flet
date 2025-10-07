@@ -17,6 +17,7 @@ dependencies = [
     "flet-lottie",
     "flet-map",
     "flet-rive",
+    "flet-permission-handler",
     "flet-video"
 ]
 
@@ -32,6 +33,7 @@ flet-charts = { workspace = true }
 flet-lottie = { workspace = true }
 flet-map = { workspace = true }
 flet-rive = { workspace = true }
+flet-permission-handler = { workspace = true }
 flet-video = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
 
