@@ -53,10 +53,7 @@ dependencies:
     path: ../sdk/python/packages/flet-map/src/flutter/flet_map
 
   flet_rive:
-    git:
-      url: https://github.com/flet-dev/flet-rive.git
-      ref: main
-      path: src/flutter/flet_rive
+    path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
 
   flet_permission_handler:
     git:

@@ -415,6 +415,7 @@ nav:
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
+          - Rive: rive/index.md
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
           - SegmentedButton: controls/segmentedbutton.md

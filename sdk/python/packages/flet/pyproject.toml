@@ -38,6 +38,7 @@ extensions = [
     "flet-charts",
     "flet-lottie",
     "flet-map",
+    "flet-rive",
     "flet-video",
 ]
 test = [

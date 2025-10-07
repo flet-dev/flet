@@ -340,7 +340,7 @@ packages:
       path: "../sdk/python/packages/flet-map/src/flutter/flet_map"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.1.0"
   flet_permission_handler:
     dependency: "direct main"
     description:
@@ -353,11 +353,9 @@ packages:
   flet_rive:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_rive"
-      ref: main
-      resolved-ref: "6c9164f842e2d2b7ef27f09ab3bec163b63f6ac8"
-      url: "https://github.com/flet-dev/flet-rive.git"
-    source: git
+      path: "../sdk/python/packages/flet-rive/src/flutter/flet_rive"
+      relative: true
+    source: path
     version: "0.2.0"
   flet_video:
     dependency: "direct main"
