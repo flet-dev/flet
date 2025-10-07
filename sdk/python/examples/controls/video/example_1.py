@@ -12,56 +12,54 @@ def main(page: ft.Page):
     page.spacing = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_pause(e):
-        video.pause()
+    async def handle_pause(e):
+        await video.pause()
         print("Video.pause()")
 
-    def handle_play_or_pause(e):
-        video.play_or_pause()
+    async def handle_play_or_pause(e):
+        await video.play_or_pause()
         print("Video.play_or_pause()")
 
-    def handle_play(e):
-        video.play()
+    async def handle_play(e):
+        await video.play()
         print("Video.play()")
 
-    def handle_stop(e):
-        video.stop()
+    async def handle_stop(e):
+        await video.stop()
         print("Video.stop()")
 
-    def handle_next(e):
-        video.next()
+    async def handle_next(e):
+        await video.next()
         print("Video.next()")
 
-    def handle_previous(e):
-        video.previous()
+    async def handle_previous(e):
+        await video.previous()
         print("Video.previous()")
 
     def handle_volume_change(e):
         video.volume = e.control.value
-        page.update()
         print(f"Video.volume = {e.control.value}")
 
     def handle_playback_rate_change(e):
         video.playback_rate = e.control.value
-        page.update()
         print(f"Video.playback_rate = {e.control.value}")
 
-    def handle_seek(e):
-        video.seek(10000)
+    async def handle_seek(e):
+        await video.seek(10000)
         print("Video.seek(10000)")
 
-    def handle_add_media(e):
-        video.playlist_add(random.choice(sample_media))
+    async def handle_add_media(e):
+        await video.playlist_add(random.choice(sample_media))
         print("Video.playlist_add(random.choice(sample_media))")
 
-    def handle_remove_media(e):
+    async def handle_remove_media(e):
         r = random.randint(0, len(video.playlist) - 1)
-        video.playlist_remove(r)
+        await video.playlist_remove(r)
         print(f"Popped Item at index: {r} (position {r + 1})")
 
-    def handle_jump(e):
+    async def handle_jump(e):
         print("Video.jump_to(0)")
-        video.jump_to(0)
+        await video.jump_to(0)
 
     sample_media = [
         ftv.VideoMedia(
@@ -108,16 +106,16 @@ def main(page: ft.Page):
             wrap=True,
             alignment=ft.MainAxisAlignment.CENTER,
             controls=[
-                ft.ElevatedButton("Play", on_click=handle_play),
-                ft.ElevatedButton("Pause", on_click=handle_pause),
-                ft.ElevatedButton("Play Or Pause", on_click=handle_play_or_pause),
-                ft.ElevatedButton("Stop", on_click=handle_stop),
-                ft.ElevatedButton("Next", on_click=handle_next),
-                ft.ElevatedButton("Previous", on_click=handle_previous),
-                ft.ElevatedButton("Seek s=10", on_click=handle_seek),
-                ft.ElevatedButton("Jump to first Media", on_click=handle_jump),
-                ft.ElevatedButton("Add Random Media", on_click=handle_add_media),
-                ft.ElevatedButton("Remove Random Media", on_click=handle_remove_media),
+                ft.Button("Play", on_click=handle_play),
+                ft.Button("Pause", on_click=handle_pause),
+                ft.Button("Play Or Pause", on_click=handle_play_or_pause),
+                ft.Button("Stop", on_click=handle_stop),
+                ft.Button("Next", on_click=handle_next),
+                ft.Button("Previous", on_click=handle_previous),
+                ft.Button("Seek s=10", on_click=handle_seek),
+                ft.Button("Jump to first Media", on_click=handle_jump),
+                ft.Button("Add Random Media", on_click=handle_add_media),
+                ft.Button("Remove Random Media", on_click=handle_remove_media),
             ],
         ),
         ft.Slider(
