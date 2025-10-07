@@ -47,10 +47,7 @@ dependencies:
     path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
 
   flet_lottie:
-    git:
-      url: https://github.com/flet-dev/flet-lottie.git
-      ref: main
-      path: src/flutter/flet_lottie
+    path: ../sdk/python/packages/flet-lottie/src/flutter/flet_lottie
 
   flet_map:
     git:

@@ -364,6 +364,7 @@ nav:
           - KeyboardListener: controls/keyboardlistener.md
           - ListTile: controls/listtile.md
           - ListView: controls/listview.md
+          - Lottie: lottie/index.md
           - Markdown: controls/markdown.md
           - MenuBar: controls/menubar.md
           - MenuItemButton: controls/menuitembutton.md

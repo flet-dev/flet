@@ -36,6 +36,7 @@ extensions = [
     "flet-audio",
     "flet-audio-recorder",
     "flet-charts",
+    "flet-lottie",
     "flet-video",
 ]
 test = [

@@ -330,11 +330,9 @@ packages:
   flet_lottie:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_lottie"
-      ref: main
-      resolved-ref: c9e8db9bab3ae0054de4e7b3fcb3fe282f6d8ee6
-      url: "https://github.com/flet-dev/flet-lottie.git"
-    source: git
+      path: "../sdk/python/packages/flet-lottie/src/flutter/flet_lottie"
+      relative: true
+    source: path
     version: "0.2.0"
   flet_map:
     dependency: "direct main"
