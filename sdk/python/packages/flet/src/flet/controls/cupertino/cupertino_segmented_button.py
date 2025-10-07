@@ -14,6 +14,17 @@ __all__ = ["CupertinoSegmentedButton"]
 class CupertinoSegmentedButton(LayoutControl):
     """
     An iOS-style segmented button.
+
+    ```python
+    ft.CupertinoSegmentedButton(
+        controls=[
+            ft.Text("One"),
+            ft.Text("Two"),
+            ft.Text("Three"),
+        ],
+        selected_index=1,
+    )
+    ```
     """
 
     controls: list[Control]
