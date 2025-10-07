@@ -38,11 +38,9 @@ dependencies:
 # --FAT_CLIENT_START--
   flet_audio:
     path: ../sdk/python/packages/flet-audio/src/flutter/flet_audio
+
   flet_video:
-    git:
-      url: https://github.com/flet-dev/flet-video.git
-      ref: main
-      path: src/flutter/flet_video
+    path: ../sdk/python/packages/flet-video/src/flutter/flet_video
 # --FAT_CLIENT_END--
 
   flet_audio_recorder:

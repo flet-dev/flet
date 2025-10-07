@@ -36,6 +36,7 @@ extensions = [
     "flet-audio",
     "flet-audio-recorder",
     "flet-charts",
+    "flet-video",
 ]
 test = [
     "pytest >=7.2.0",

@@ -366,12 +366,10 @@ packages:
   flet_video:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_video"
-      ref: main
-      resolved-ref: "9292cab1b40ce5ef81e9012421c05ce03d910133"
-      url: "https://github.com/flet-dev/flet-video.git"
-    source: git
-    version: "0.2.0"
+      path: "../sdk/python/packages/flet-video/src/flutter/flet_video"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_webview:
     dependency: "direct main"
     description:

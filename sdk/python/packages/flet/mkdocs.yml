@@ -418,6 +418,7 @@ nav:
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
           - VerticalDivider: controls/verticaldivider.md
+          - Video: video/index.md
           - View: controls/view.md
           - WindowDragArea: controls/windowdragarea.md
       - CLI:
@@ -465,6 +466,12 @@ nav:
                   - InputDevice: audio_recorder/types/input_device.md
                   - IosAudioCategoryOption: audio_recorder/types/ios_audio_category_option.md
                   - IosRecorderConfiguration: audio_recorder/types/ios_recorder_configuration.md
+              - Video:
+                  - PlaylistMode: video/types/playlist_mode.md
+                  - VideoConfiguration: video/types/video_configuration.md
+                  - VideoMedia: video/types/video_media.md
+                  - VideoSubtitleConfiguration: video/types/video_subtitle_configuration.md
+                  - VideoSubtitleTrack: video/types/video_subtitle_track.md
               - Charts:
                   - BarChartEvent: charts/types/bar_chart_event.md
                   - BarChartGroup: charts/types/bar_chart_group.md
