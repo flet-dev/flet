@@ -15,11 +15,6 @@ class Icon(LayoutControl):
 
     Icons can be customized in color, size, and visual style using various
     parameters such as stroke weight, fill level, and shadows.
-
-    Raises:
-        ValueError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
-        ValueError: If [`weight`][(c).] is less than or equal to `0.0`.
-        ValueError: If [`optical_size`][(c).] is less than or equal to `0.0`.
     """
 
     icon: IconData
@@ -65,6 +60,9 @@ class Icon(LayoutControl):
 
     This feature requires the icon's font to support fill variation.
     It can be used to indicate state transitions or selection visually.
+
+    Raises:
+        ValueError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
     """
 
     apply_text_scaling: Optional[bool] = None
@@ -90,6 +88,9 @@ class Icon(LayoutControl):
 
     This requires the icon font to support weight variation.
     Must be greater than `0`.
+
+    Raises:
+        ValueError: If [`weight`][(c).] is less than or equal to `0.0`.
     """
 
     optical_size: Optional[Number] = None
@@ -98,6 +99,9 @@ class Icon(LayoutControl):
 
     This requires the icon font to support optical sizing.
     Must be greater than `0`.
+
+    Raises:
+        ValueError: If [`optical_size`][(c).] is less than or equal to `0.0`.
     """
 
     blend_mode: Optional[BlendMode] = BlendMode.SRC_OVER

@@ -24,9 +24,6 @@ class Pagelet(LayoutControl, AdaptiveControl):
     Use it for projects that require a "page within a page" layouts with its own
     [`AppBar`][flet.], [`BottomAppBar`][flet.], [`NavigationDrawer`][flet.],
     such as demos and galleries.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -35,6 +32,9 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     The control in the content of the Pagelet is positioned at the top-left of the
     available space between the app bar and the bottom of the Pagelet.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None

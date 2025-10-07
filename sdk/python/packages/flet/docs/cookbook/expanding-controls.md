@@ -193,6 +193,4 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-![expand_loose](../assets/controls/control/expand-loose.png){width="65%"}
-/// caption
-///
+{{ image("../assets/controls/control/expand-loose.png", alt="expand_loose", width="65%") }}

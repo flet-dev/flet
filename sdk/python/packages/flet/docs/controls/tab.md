@@ -1,5 +1,5 @@
-## Examples
+---
+class_name: flet.Tab
+---
 
-See [this](tabs/index.md#examples).
-
-::: flet.Tab
+{{ class_all_options(class_name) }}

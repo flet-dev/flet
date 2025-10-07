@@ -1,3 +1,11 @@
+---
+class_name: flet.Stack
+examples: ../../examples/controls/stack
+example_images: ../examples/controls/stack/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/stack)
@@ -5,32 +13,28 @@
 ### Text over an image
 
 ```python
---8<-- "../../examples/controls/stack/text_on_image"
+--8<-- "{{ examples }}/text_on_image"
 ```
 
-![text-on-image](../examples/controls/stack/media/text_on_image.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/text_on_image.png", alt="text-on-image", width="80%") }}
+
 
 ### Avatar with online status
 
 ```python
---8<-- "../../examples/controls/stack/online_avatar"
+--8<-- "{{ examples }}/online_avatar"
 ```
 
-![online-avatar](../examples/controls/stack/media/online_avatar.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/online_avatar.png", alt="online-avatar", width="80%") }}
+
 
 ### Absolute positioning
 
 ```python
---8<-- "../../examples/controls/stack/absolute_positioning"
+--8<-- "{{ examples }}/absolute_positioning"
 ```
 
-![absolute-positioning](../examples/controls/stack/media/absolute_positioning.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/absolute_positioning.png", alt="absolute-positioning", width="80%") }}
 
 
-::: flet.Stack
+{{ class_members(class_name) }}

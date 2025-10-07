@@ -1,13 +1,20 @@
+---
+class_name: flet.WindowDragArea
+examples: ../../examples/controls/window_drag_area
+example_images: ../examples/controls/window_drag_area/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 ### No frame window
 
 ```python
---8<-- "../../examples/controls/window_drag_area/no_frame_window.py"
+--8<-- "{{ examples }}/no_frame_window.py"
 ```
 
-![no-frame-window](../examples/controls/window_drag_area/media/no_frame_window.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/no_frame_window.png", alt="no-frame-window", width="80%") }}
 
-::: flet.WindowDragArea
+
+{{ class_members(class_name) }}

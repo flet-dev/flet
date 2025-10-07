@@ -1,3 +1,11 @@
+---
+class_name: flet.Column
+examples: ../../examples/controls/column
+example_images: ../examples/controls/column/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/column)
@@ -5,42 +13,38 @@
 ### Column `spacing`
 
 ```python
---8<-- "../../examples/controls/column/spacing.py"
+--8<-- "{{ examples }}/spacing.py"
 ```
 
-![spacing](../examples/controls/column/media/spacing.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/spacing.gif", alt="spacing", width="80%") }}
+
 
 ### Column wrapping
 
 ```python
---8<-- "../../examples/controls/column/wrap.py"
+--8<-- "{{ examples }}/wrap.py"
 ```
 
-![wrap](../examples/controls/column/media/wrap.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/wrap.gif", alt="wrap", width="80%") }}
+
 
 ### Column vertical alignments
 
 ```python
---8<-- "../../examples/controls/column/alignment.py"
+--8<-- "{{ examples }}/alignment.py"
 ```
 
-![alignment](../examples/controls/column/media/alignment.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/alignment.png", alt="alignment", width="80%") }}
+
 
 ### Column horizontal alignments
 
 ```python
---8<-- "../../examples/controls/column/horizontal_alignment.py"
+--8<-- "{{ examples }}/horizontal_alignment.py"
 ```
 
-![horizontal-alignment](../examples/controls/column/media/horizontal_alignment.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/horizontal_alignment.png", alt="horizontal-alignment", width="80%") }}
+
 
 ### Infinite scrolling
 
@@ -48,7 +52,7 @@ This example demonstrates adding of list items on-the-fly, as user scroll to the
 creating the illusion of infinite list:
 
 ```python
---8<-- "../../examples/controls/column/infinite_scrolling.py"
+--8<-- "{{ examples }}/infinite_scrolling.py"
 ```
 
 ### Scrolling programmatically
@@ -56,13 +60,12 @@ creating the illusion of infinite list:
 This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
 
 ```python
---8<-- "../../examples/controls/column/programmatic_scroll.py"
+--8<-- "{{ examples }}/programmatic_scroll.py"
 ```
 
-![programmatic-scroll](../examples/controls/column/media/programmatic_scroll.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/programmatic_scroll.png", alt="programmatic-scroll", width="80%") }}
+
 
 [//]: # (### Custom scrollbar)
 
-::: flet.Column
+{{ class_members(class_name) }}

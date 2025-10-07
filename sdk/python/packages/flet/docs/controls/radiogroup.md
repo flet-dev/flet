@@ -1,5 +1,9 @@
+---
+class_name: flet.RadioGroup
+---
+
 ## Examples
 
 See [these](radio.md#examples).
 
-::: flet.RadioGroup
+{{ class_all_options(class_name) }}

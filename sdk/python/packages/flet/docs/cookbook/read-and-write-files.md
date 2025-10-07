@@ -6,8 +6,8 @@ Flet makes it easy to work with files and directories on the mobile/desktop devi
 ### Storage Paths
 
 Flet provides two directory paths for data storage, available as environment variables:
-[`FLET_APP_STORAGE_DATA`](../environment-variables.md#flet_app_storage_data) and
-[`FLET_APP_STORAGE_TEMP`](../environment-variables.md#flet_app_storage_temp).
+[`FLET_APP_STORAGE_DATA`](../reference/environment-variables.md#flet_app_storage_data) and
+[`FLET_APP_STORAGE_TEMP`](../reference/environment-variables.md#flet_app_storage_temp).
 
 Their values can be gotten as follows:
 
@@ -161,6 +161,6 @@ ft.run(main)
 ```
 
 - `Counter` class is a custom control, which is a subclass/extension of the [`Text`][flet.Text] control. More information [here](../cookbook/custom-controls.md).
-- [`FLET_APP_CONSOLE`](../environment-variables.md#flet_app_console) is an environment variable that points to the application's console log file (`console.log`) which contains the app's [console output](https://flet.dev/docs/publish#console-output) (ex: `print()` statements). Its value is set in production mode.
+- [`FLET_APP_CONSOLE`](../reference/environment-variables.md#flet_app_console) is an environment variable that points to the application's console log file (`console.log`) which contains the app's [console output](https://flet.dev/docs/publish#console-output) (ex: `print()` statements). Its value is set in production mode.
 - If you have an android emulator or physical device, you can download and install this [apk](https://github.com/ndonkoHenri/flet-storage-cookbook/releases).
 - Follow [this](../publish/index.md) guide to package your app for all platforms.

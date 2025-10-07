@@ -8,9 +8,8 @@ Well, it took [more efforts](https://github.com/flet-dev/flet/pull/95/files) tha
 2. An easy way to intercept a call to "Back" button in AppBar.
 3. Robust synchronization with browser history.
 
-![Routing app example](../assets/navigation-routing/routing-app-example.gif)
-/// caption
-///
+{{ image("../assets/navigation-routing/routing-app-example.gif", alt="Routing app example") }}
+
 
 Explore [source code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing-navigation/building-views-on-route-change.py) of the example above.
 
@@ -18,9 +17,8 @@ Explore [source code](https://github.com/flet-dev/flet/blob/main/sdk/python/exam
 
 Page route is a portion of application URL after `#` symbol:
 
-![Page address and route](../assets/navigation-routing/page-address-route.png)
-/// caption
-///
+{{ image("../assets/navigation-routing/page-address-route.png", alt="Page address and route") }}
+
 
 Default application route, if not set in application URL by the user, is `/`.
 All routes start with `/`, for example `/store`, `/authors/1/books/2`.

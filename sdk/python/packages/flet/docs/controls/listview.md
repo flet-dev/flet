@@ -1,3 +1,11 @@
+---
+class_name: flet.ListView
+examples: ../../examples/controls/list_view
+example_images: ../examples/controls/list_view/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/listview)
@@ -5,11 +13,10 @@
 ### Auto-scrolling and dynamical items addition
 
 ```python
---8<-- "../../examples/controls/list_view/autoscroll_and_dynamic_items.py"
+--8<-- "{{ examples }}/autoscroll_and_dynamic_items.py"
 ```
 
-![autoscroll-and-dynamic-items](../examples/controls/list_view/media/autoscroll_and_dynamic_items.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/autoscroll_and_dynamic_items.gif", alt="autoscroll-and-dynamic-items", width="80%") }}
 
-::: flet.ListView
+
+{{ class_members(class_name) }}

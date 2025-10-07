@@ -21,19 +21,16 @@ __all__ = ["InteractiveViewer"]
 class InteractiveViewer(LayoutControl):
     """
     Allows you to pan, zoom, and rotate its [`content`][(c).].
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
-        ValueError: If [`min_scale`][(c).] is not greater than `0`.
-        ValueError: If [`max_scale`][(c).] is not greater than `0`.
-        ValueError: If [`max_scale`][(c).] is less than `min_scale`.
-        ValueError: If [`interaction_end_friction_coefficient`][(c).] is not
-            greater than `0`.
     """
 
     content: Control
     """
     The `Control` to be transformed.
+
+    Must be visible.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     pan_enabled: bool = True
@@ -63,6 +60,10 @@ class InteractiveViewer(LayoutControl):
 
     Note:
         Must be greater than or equal to [`min_scale`][(c).].
+
+    Raises:
+        ValueError: If [`max_scale`][(c).] is not greater than `0` or is less than
+            [`min_scale`][(c).].
     """  # noqa: E501
 
     min_scale: Number = 0.8
@@ -72,6 +73,9 @@ class InteractiveViewer(LayoutControl):
     Note:
         Must be greater than `0` and less than or equal
         to [`max_scale`][(c).].
+
+    Raises:
+        ValueError: If [`min_scale`][(c).] is not greater than `0`.
     """
 
     interaction_end_friction_coefficient: Number = 0.0000135
@@ -80,6 +84,10 @@ class InteractiveViewer(LayoutControl):
 
     Note:
         Must be greater than `0`.
+
+    Raises:
+        ValueError: If [`interaction_end_friction_coefficient`][(c).] is not greater
+            than `0`.
     """
 
     scale_factor: Number = 200

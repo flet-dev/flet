@@ -14,12 +14,6 @@ class VerticalDivider(Control):
     A thin vertical line, with padding on either side.
 
     In the material design language, this represents a divider.
-
-    Raises:
-        ValueError: If [`width`][(c).] is negative.
-        ValueError: If [`thickness`][(c).] is negative.
-        ValueError: If [`leading_indent`][(c).] is negative.
-        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     width: Optional[Number] = None
@@ -29,6 +23,9 @@ class VerticalDivider(Control):
 
     If `None`, [`DividerTheme.space`][flet.] is used.
     If that's is also `None`, defaults to `16.0`.
+
+    Raises:
+        ValueError: If [`width`][(c).] is negative.
     """
 
     thickness: Optional[Number] = None
@@ -41,6 +38,9 @@ class VerticalDivider(Control):
 
     If `None`, [`DividerTheme.thickness`][flet.] is used.
     If that's is also `None`, defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`thickness`][(c).] is negative.
     """
 
     color: Optional[ColorValue] = None
@@ -57,6 +57,9 @@ class VerticalDivider(Control):
 
     If `None`, [`DividerTheme.leading_indent`][flet.] is used.
     If that's is also `None`, defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`leading_indent`][(c).] is negative.
     """
 
     trailing_indent: Optional[Number] = None
@@ -65,6 +68,9 @@ class VerticalDivider(Control):
 
     If `None`, [`DividerTheme.trailing_indent`][flet.] is used.
     If that's is also `None`, defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     radius: Optional[BorderRadiusValue] = None

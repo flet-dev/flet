@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Oval
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Oval
+{{ class_all_options(class_name) }}

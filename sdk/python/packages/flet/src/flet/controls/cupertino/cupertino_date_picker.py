@@ -34,15 +34,6 @@ class CupertinoDatePickerDateOrder(Enum):
 class CupertinoDatePicker(LayoutControl):
     """
     An iOS-styled date picker.
-
-    Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
-        ValueError: If [`minute_interval`][(c).] is not a positive integer
-            factor of `60`.
-        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
-            after [`last_date`][(c).].
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
-            greater than [`maximum_year`][(c).].
     """
 
     value: DateTimeValue = field(default_factory=lambda: datetime.now())
@@ -54,6 +45,14 @@ class CupertinoDatePicker(LayoutControl):
     else a `ValueError` will be raised.
 
     Defaults to the present date and time.
+
+    Raises:
+        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
+            after [`last_date`][(c).].
+        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
+            greater than [`maximum_year`][(c).].
+        ValueError: If [`value`][(c).] minute is not divisible by
+            [`minute_interval`][(c).].
     """
 
     first_date: Optional[DateTimeValue] = None
@@ -100,12 +99,19 @@ class CupertinoDatePicker(LayoutControl):
 
     Note:
         Must be an integer factor of `60`.
+
+    Raises:
+        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
+            `60`.
     """
 
     minimum_year: int = 1
     """
     Minimum year to which the picker can be scrolled when in
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
+
+    Raises:
+        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).].
     """
 
     maximum_year: Optional[int] = None
@@ -114,11 +120,17 @@ class CupertinoDatePicker(LayoutControl):
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Defaults to `None` - no limit.
+
+    Raises:
+        ValueError: If [`value`][(c).] year is greater than [`maximum_year`][(c).].
     """
 
     item_extent: Number = 32.0
     """
     The uniform height of all children.
+
+    Raises:
+        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
     """
 
     use_24h_format: bool = False
@@ -131,6 +143,11 @@ class CupertinoDatePicker(LayoutControl):
     show_day_of_week: bool = False
     """
     Whether to show day of week alongside day.
+
+    Raises:
+        ValueError: If [`show_day_of_week`][(c).] is set when
+            [`date_picker_mode`][(c).] is not
+            [`CupertinoDatePickerMode.DATE`][flet.].
     """
 
     date_picker_mode: CupertinoDatePickerMode = CupertinoDatePickerMode.DATE_AND_TIME

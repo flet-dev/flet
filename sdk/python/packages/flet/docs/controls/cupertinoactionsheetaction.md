@@ -1,5 +1,5 @@
-## Examples
+---
+class_name: flet.CupertinoActionSheetAction
+---
 
-See [these](cupertinoactionsheet.md#examples).
-
-::: flet.CupertinoActionSheetAction
+{{ class_all_options(class_name) }}

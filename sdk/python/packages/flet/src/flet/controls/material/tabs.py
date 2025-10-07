@@ -153,11 +153,6 @@ class Tabs(LayoutControl, AdaptiveControl):
     Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
     on text headers to articulate the different sections of content.
-
-    Raises:
-        ValueError: If [`length`][(c).] is negative.
-        IndexError: If [`selected_index`][(c).] is not in the range
-            `[-length, length - 1]`.
     """
 
     content: Control
@@ -175,6 +170,9 @@ class Tabs(LayoutControl, AdaptiveControl):
         Must match the length of both [`TabBar.tabs`][flet.]
         and [`TabBarView.controls`][flet.]. Don't forget to update
         it when adding/removing tabs.
+
+    Raises:
+        ValueError: If [`length`][(c).] is negative.
     """
 
     selected_index: int = 0
@@ -191,6 +189,10 @@ class Tabs(LayoutControl, AdaptiveControl):
             [`AnimationCurve.EASE`][flet.] animation curve. To specify
             a different animation curve or duration for this particular change,
             use [`move_to`][(c).] directly.
+
+    Raises:
+        IndexError: If [`selected_index`][(c).] is not in the range
+            `[-length, length - 1]`.
     """
 
     animation_duration: DurationValue = field(
@@ -314,12 +316,6 @@ class TabBar(LayoutControl, AdaptiveControl):
     Used for navigating frequently accessed, distinct content
     categories. Tabs allow for navigation between two or more content views and relies
     on text headers to articulate the different sections of content.
-
-    Raises:
-        ValueError: If [`indicator`][(c).] is None and
-            [`indicator_thickness`][(c).] is not strictly greater than 0.
-        ValueError: If [`tab_alignment`][(c).] is not valid for
-            the given [`scrollable`][(c).] state.
     """
 
     tabs: list[Control]
@@ -366,6 +362,10 @@ class TabBar(LayoutControl, AdaptiveControl):
             [`TabAlignment.START`][flet.],
             [`TabAlignment.START_OFFSET`][flet.]
             or [`TabAlignment.CENTER`][flet.].
+
+    Raises:
+        ValueError: If [`tab_alignment`][(c).] is not valid for the current
+            [`scrollable`][(c).] configuration.
     """
 
     divider_color: Optional[ColorValue] = None
@@ -487,6 +487,10 @@ class TabBar(LayoutControl, AdaptiveControl):
     Note:
         Will be ignored if [`indicator`][(c).] or
         [`TabBarTheme.indicator`][flet.] is not `None`.
+
+    Raises:
+        ValueError: If [`indicator`][(c).] is `None` and
+            [`indicator_thickness`][(c).] is not strictly greater than `0`.
     """
 
     enable_feedback: Optional[bool] = None
@@ -563,14 +567,14 @@ class TabBar(LayoutControl, AdaptiveControl):
 class Tab(AdaptiveControl):
     """
     A Material Design [`TabBar`][flet.] tab.
-
-    Raises:
-        ValueError: If both [`label`][(c).] and [`icon`][(c).] are not set.
     """
 
     label: Optional[StrOrControl] = None
     """
     The tab's name. Can be either a string or a control.
+
+    Raises:
+        ValueError: If both [`label`][(c).] and [`icon`][(c).] are not set.
     """
 
     icon: Optional[IconDataOrControl] = None

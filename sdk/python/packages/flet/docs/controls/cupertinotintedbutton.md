@@ -1,5 +1,9 @@
+---
+class_name: flet.CupertinoTintedButton
+---
+
 ## Examples
 
 TBA
 
-::: flet.CupertinoTintedButton
+{{ class_all_options(class_name) }}

@@ -34,9 +34,6 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
-
-    Raises:
-        ValueError: If [`splash_radius`][(c).] is not greater than `0`.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -136,6 +133,9 @@ class IconButton(LayoutControl, AdaptiveControl):
     Note:
         This value is honoured only when in Material 2
         ([`Theme.use_material3`][flet.] is `False`).
+
+    Raises:
+        ValueError: If [`splash_radius`][(c).] is not greater than `0`.
     """
 
     alignment: Optional[Alignment] = None

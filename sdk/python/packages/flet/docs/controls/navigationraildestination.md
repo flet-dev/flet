@@ -1,5 +1,5 @@
-## Examples
+---
+class_name: flet.NavigationRailDestination
+---
 
-See [these](navigationrail.md#examples).
-
-::: flet.NavigationRailDestination
+{{ class_all_options(class_name) }}

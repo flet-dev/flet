@@ -18,9 +18,6 @@ class BottomSheet(DialogControl):
 
     A bottom sheet is an alternative to a menu or dialog and prevents the user
     from interacting with the rest of the app.
-
-    Raises:
-        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: Control
@@ -31,6 +28,9 @@ class BottomSheet(DialogControl):
     elevation: Optional[Number] = None
     """
     Defines the size of the shadow below this bottom sheet.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     bgcolor: Optional[ColorValue] = None

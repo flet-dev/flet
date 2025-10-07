@@ -1,5 +1,5 @@
-## Examples
+---
+class_name: flet.CupertinoContextMenuAction
+---
 
-See [these](cupertinocontextmenu.md#examples).
-
-::: flet.CupertinoContextMenuAction
+{{ class_all_options(class_name) }}

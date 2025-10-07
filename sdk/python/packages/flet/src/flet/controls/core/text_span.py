@@ -18,9 +18,6 @@ class TextSpan(Control):
 
     For the object to be useful, at least one of [`text`][(c).] or
     [`spans`][(c).] should be set.
-
-    Raises:
-        ValueError: If [`semantics_label`][(c).] is set when [`text`][(c).] is `None`.
     """
 
     text: Optional[str] = None
@@ -60,6 +57,9 @@ class TextSpan(Control):
 
     If present, the semantics of this control will contain this value instead of the
     actual text.
+
+    Raises:
+        ValueError: If [`semantics_label`][(c).] is set when [`text`][(c).] is `None`.
     """
 
     spell_out: Optional[bool] = None

@@ -1,5 +1,5 @@
-## Examples
+---
+class_name: flet.DropdownOption
+---
 
-See [these](dropdown.md#examples).
-
-::: flet.DropdownOption
+{{ class_all_options(class_name) }}

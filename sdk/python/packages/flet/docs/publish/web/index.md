@@ -1,3 +1,5 @@
+# Publish Flet web app
+
 Flet allows publishing your app as a **static** or **dynamic** website.
 
 **[Static website]** - content is not changing and delivered exactly as it's stored. Python code is running in the web browser.

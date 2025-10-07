@@ -60,7 +60,7 @@ def control(
         isolated: If `True`, marks the control as isolated. An isolated control
             is excluded from page updates when its parent control is updated.
         post_init_args: Number of InitVar arguments to pass to __post_init__.
-        **dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
+        dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Usage:
         - Supports `@control` (without parentheses)

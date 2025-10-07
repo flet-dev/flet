@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Color
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Color
+{{ class_all_options(class_name) }}

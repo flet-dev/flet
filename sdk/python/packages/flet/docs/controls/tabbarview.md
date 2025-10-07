@@ -1,5 +1,5 @@
-## Examples
+---
+class_name: flet.TabBarView
+---
 
-See [this](tabs/index.md#examples).
-
-::: flet.TabBarView
+{{ class_all_options(class_name) }}

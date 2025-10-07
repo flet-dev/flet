@@ -1,5 +1,9 @@
+---
+class_name: flet.FilledIconButton
+---
+
 ## Examples
 
-See these [examples](iconbutton.md#examples).
+See `IconButton` [examples](iconbutton.md#examples).
 
-::: flet.FilledIconButton
+{{ class_all_options(class_name) }}

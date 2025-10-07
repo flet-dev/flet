@@ -1,3 +1,11 @@
+---
+class_name: flet.Markdown
+examples: ../../examples/controls/markdown
+example_images: ../examples/controls/markdown/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/markdown)
@@ -5,27 +13,25 @@
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/markdown/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-![basic](../examples/controls/markdown/media/basic.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+
 
 ### Code syntax highlight
 
 ```python
---8<-- "../../examples/controls/markdown/code_syntax_highlight.py"
+--8<-- "{{ examples }}/code_syntax_highlight.py"
 ```
 
-![code-syntax-highlight](../examples/controls/markdown/media/code_syntax_highlight.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/code_syntax_highlight.png", alt="code-syntax-highlight", width="80%") }}
+
 
 ### Custom text theme
 
 ```python
---8<-- "../../examples/controls/markdown/custom_text_theme.py"
+--8<-- "{{ examples }}/custom_text_theme.py"
 ```
 
-::: flet.Markdown
+{{ class_members(class_name) }}

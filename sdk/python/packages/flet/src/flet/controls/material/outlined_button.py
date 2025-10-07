@@ -23,14 +23,14 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     Outlined buttons are medium-emphasis buttons. They contain actions that are
     important, but aren't the primary action in an app. Outlined buttons pair well with
     filled buttons to indicate an alternative, secondary action.
-
-    Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).] is provided.
     """
 
     content: Optional[StrOrControl] = None
     """
     A Control representing custom button content.
+
+    Raises:
+        ValueError: If neither [`icon`][(c).] nor [`content`][(c).] is provided.
     """
 
     icon: Optional[IconDataOrControl] = None

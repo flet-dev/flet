@@ -8,6 +8,4 @@
 --8<-- "../../examples/controls/types/tooltip/with_decoration.py"
 ```
 
-![with-decoration](../examples/controls/types/tooltip/media/with_decoration.gif){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/types/tooltip/media/with_decoration.gif", alt="with-decoration", width="80%") }}

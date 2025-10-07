@@ -93,11 +93,6 @@ class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
     bottom of the screen.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not a string or visible control.
-        ValueError: If [`action_overflow_threshold`][(c).] is not between 0 and 1.
-        ValueError: If [`elevation`][(c).] is negative.
     """
 
     content: StrOrControl
@@ -105,6 +100,9 @@ class SnackBar(DialogControl):
     The primary content of the snack bar.
 
     Typically a [`Text`][flet.] control.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not a string or visible control.
     """
 
     behavior: Optional[SnackBarBehavior] = None
@@ -195,6 +193,9 @@ class SnackBar(DialogControl):
     """
     The z-coordinate at which to place the snack bar. This controls the size of the
     shadow below the snack bar.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -220,6 +221,9 @@ class SnackBar(DialogControl):
 
     Note:
         Must be between `0.0` and `1.0` inclusive.
+
+    Raises:
+        ValueError: If [`action_overflow_threshold`][(c).] is not between `0` and `1`.
     """
 
     on_action: Optional[ControlEventHandler["SnackBar"]] = None

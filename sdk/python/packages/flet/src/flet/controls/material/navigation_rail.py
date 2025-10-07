@@ -81,11 +81,6 @@ class NavigationRail(LayoutControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to
     navigate between a small number of views, typically between three and five.
-
-    Raises:
-        ValueError: If [`elevation`][(c).] is negative.
-        ValueError: If [`min_width`][(c).] is negative.
-        ValueError: If [`min_extended_width`][(c).] is negative.
     """
 
     destinations: list[NavigationRailDestination] = field(default_factory=list)
@@ -101,6 +96,9 @@ class NavigationRail(LayoutControl):
     Controls the size of the shadow below the NavigationRail.
 
     Defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     selected_index: Optional[int] = None
@@ -180,6 +178,9 @@ class NavigationRail(LayoutControl):
     This value also defines the min width and min height of the destinations.
 
     To make a compact rail, set this to `56` and use `label_type='none'`.
+
+    Raises:
+        ValueError: If [`min_width`][(c).] is negative.
     """
 
     min_extended_width: Optional[Number] = None
@@ -187,6 +188,9 @@ class NavigationRail(LayoutControl):
     The final width when the animation is complete for setting `extended` to `True`.
 
     Defaults to `256`.
+
+    Raises:
+        ValueError: If [`min_extended_width`][(c).] is negative.
     """
 
     group_alignment: Optional[Number] = None

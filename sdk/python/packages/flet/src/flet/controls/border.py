@@ -51,9 +51,6 @@ class BorderSide:
     Creates the side of a border.
 
     By default, the border is `1.0` logical pixels wide and solid black color.
-
-    Raises:
-        AssertionError: if [`width`][(c).] is negative.
     """
 
     width: Number = 1.0
@@ -69,6 +66,9 @@ class BorderSide:
     Tip:
         To omit the border entirely, set the [`style`][(c).]
         to [`BorderStyle.NONE`][flet.].
+
+    Raises:
+        AssertionError: If [`width`][(c).] is negative.
     """
 
     color: ColorValue = Colors.BLACK

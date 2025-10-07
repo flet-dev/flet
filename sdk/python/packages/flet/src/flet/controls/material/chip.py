@@ -26,12 +26,6 @@ __all__ = ["Chip"]
 class Chip(LayoutControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
-
-    Raises:
-        ValueError: If [`elevation`][(c).] or [`elevation_on_click`][(c).] is
-            negative.
-        ValueError: If callback for both [`on_click`][(c).] and [`on_select`][(c).]
-            are specified.
     """
 
     label: StrOrControl
@@ -64,6 +58,9 @@ class Chip(LayoutControl):
     A non-negative value which defines the size of the shadow below this chip.
 
     Defaults to `0`.
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -166,6 +163,9 @@ class Chip(LayoutControl):
 
     Note:
         Must be non-negative.
+
+    Raises:
+        ValueError: If [`elevation_on_click`][(c).] is negative.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -225,6 +225,10 @@ class Chip(LayoutControl):
 
     Note:
         Cannot be specified together with [`on_select`][(c).].
+
+    Raises:
+        ValueError: If both [`on_click`][(c).] and [`on_select`][(c).] callbacks
+            are provided.
     """
 
     on_delete: Optional[ControlEventHandler["Chip"]] = None

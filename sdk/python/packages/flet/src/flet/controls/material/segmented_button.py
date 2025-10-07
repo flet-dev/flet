@@ -21,9 +21,6 @@ __all__ = ["Segment", "SegmentedButton"]
 class Segment(Control):
     """
     A segment for a [`SegmentedButton`][flet.].
-
-    Raises:
-        ValueError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
     """
 
     value: str
@@ -41,6 +38,9 @@ class Segment(Control):
     """
     The label (usually a [`Text`][flet.]) to be
     displayed in the segment.
+
+    Raises:
+        ValueError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
     """
 
     def before_update(self):
@@ -58,19 +58,15 @@ class Segment(Control):
 class SegmentedButton(LayoutControl):
     """
     A segmented button control.
-
-    Raises:
-        ValueError: If [`segments`][(c).] is empty or does not have at
-            least one visible `Segment`.
-        ValueError: If [`selected`][(c).] is empty and
-            [`allow_empty_selection`][(c).] is `False`.
-        ValueError: If [`selected`][(c).] has more than one item and
-            [`allow_multiple_selection`][(c).] is `False`.
     """
 
     segments: list[Segment]
     """
     The segments of this button.
+
+    Raises:
+        ValueError: If [`segments`][(c).] is empty or does not have at least one
+            visible `Segment`.
     """
 
     style: Optional[ButtonStyle] = None
@@ -88,6 +84,10 @@ class SegmentedButton(LayoutControl):
     If `False` (the default), there must be at least one segment selected. If the user
     taps on the only selected segment it will not be deselected, and `on_change` will
     not be called.
+
+    Raises:
+        ValueError: If [`selected`][(c).] is empty while
+            [`allow_empty_selection`][(c).] is `False`.
     """
 
     allow_multiple_selection: bool = False
@@ -100,12 +100,21 @@ class SegmentedButton(LayoutControl):
 
     If `False` (the default), only one segment may be selected at a time. When a segment
     is selected, any previously selected segment will be unselected.
+
+    Raises:
+        ValueError: If [`selected`][(c).] has more than one item while
+            [`allow_multiple_selection`][(c).] is `False`.
     """
 
     selected: list[str] = field(default_factory=list)
     """
     A set of `Segment.value`s that indicate which segments are selected. It is updated
     when the user (un)selects a segment.
+
+    Raises:
+        ValueError: If [`selected`][(c).] violates the constraints defined by
+            [`allow_empty_selection`][(c).] or
+            [`allow_multiple_selection`][(c).].
     """
 
     selected_icon: Optional[IconDataOrControl] = None

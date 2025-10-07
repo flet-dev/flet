@@ -1,6 +1,4 @@
----
-title: Flet CLI
----
+# Flet CLI
 
 Flet command-line interface (CLI) provides an easy way to create, run, test and package Flet apps.
 

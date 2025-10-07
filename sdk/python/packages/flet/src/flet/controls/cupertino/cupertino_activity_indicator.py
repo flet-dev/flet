@@ -11,9 +11,6 @@ __all__ = ["CupertinoActivityIndicator"]
 class CupertinoActivityIndicator(LayoutControl):
     """
     An iOS-style activity indicator that spins clockwise.
-
-    Raises:
-        ValueError: If [`radius`][(c).] is not strictly greater than `0`.
     """
 
     radius: Number = 10
@@ -22,6 +19,9 @@ class CupertinoActivityIndicator(LayoutControl):
 
     Note:
         Must be strictly greater than `0`.
+
+    Raises:
+        ValueError: If [`radius`][(c).] is not strictly greater than `0`.
     """
 
     color: Optional[ColorValue] = None

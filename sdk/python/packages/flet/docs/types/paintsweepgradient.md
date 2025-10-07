@@ -8,6 +8,4 @@
 --8<-- "../../examples/controls/types/paint_gradient/paint_sweep_gradient/canvas_paint.py"
 ```
 
-![canvas-paint](../examples/controls/types/paint_gradient/paint_sweep_gradient/media/canvas_paint.png){width="80%"}
-/// caption
-///
+{{ image("../examples/controls/types/paint_gradient/paint_sweep_gradient/media/canvas_paint.png", alt="canvas-paint", width="80%") }}

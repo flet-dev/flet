@@ -18,12 +18,6 @@ from flet.controls.types import (
 class AppBar(AdaptiveControl):
     """
     A material design app bar.
-
-    Raises:
-        ValueError: If [`elevation`][(c).] is negative.
-        ValueError: If [`elevation_on_scroll`][(c).] is negative.
-        ValueError: If [`toolbar_opacity`][(c).] is not between `0.0`
-            and `1.0` inclusive.
     """
 
     leading: Optional[Control] = None
@@ -95,11 +89,17 @@ class AppBar(AdaptiveControl):
     Note:
         This effect is only visible when using the Material 2 design
         (when [`Theme.use_material3`][flet.] is `False`).
+
+    Raises:
+        ValueError: If [`elevation`][(c).] is negative.
     """
 
     elevation_on_scroll: Optional[Number] = None
     """
     The elevation to be used if this app bar has something scrolled underneath it.
+
+    Raises:
+        ValueError: If [`elevation_on_scroll`][(c).] is negative.
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -173,6 +173,10 @@ class AppBar(AdaptiveControl):
 
     Note:
         Must be in the range `0.0` (transparent) to `1.0` (fully opaque).
+
+    Raises:
+        ValueError: If [`toolbar_opacity`][(c).] is not between `0.0`
+            and `1.0` inclusive.
     """
 
     title_text_style: Optional[TextStyle] = None

@@ -1,9 +1,16 @@
+---
+class_name: flet.Semantics
+examples: ../../examples/controls/semantics
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 ### Basic Example
 
 ```python
---8<-- "../../examples/controls/semantics/basic.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
-::: flet.Semantics
+{{ class_members(class_name) }}

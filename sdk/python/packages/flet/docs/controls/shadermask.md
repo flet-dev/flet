@@ -1,3 +1,11 @@
+---
+class_name: flet.ShaderMask
+examples: ../../examples/controls/shader_mask
+example_images: ../examples/controls/shader_mask/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/shadermask)
@@ -5,28 +13,26 @@
 ### Pink glow around image edges
 
 ```python
---8<-- "../../examples/controls/shader_mask/pink_radial_glow.py"
+--8<-- "{{ examples }}/pink_radial_glow.py"
 ```
 
-![pink-radial-glow](../examples/controls/shader_mask/media/pink_radial_glow.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/pink_radial_glow.png", alt="pink-radial-glow", width="80%") }}
+
 
 
 ### Fade out bottom edge of an image
 
 ```python
---8<-- "../../examples/controls/shader_mask/fade_out_image_bottom.py"
+--8<-- "{{ examples }}/fade_out_image_bottom.py"
 ```
 
-![fade-out-image-bottom](../examples/controls/shader_mask/media/fade_out_image_bottom.png){width="80%"}
-/// caption
-///
+{{ image(example_images + "/fade_out_image_bottom.png", alt="fade-out-image-bottom", width="80%") }}
+
 
 ### Applying linear and radial gradients/shaders
 
 ```python
---8<-- "../../examples/controls/shader_mask/linear_and_radial_gradients.py"
+--8<-- "{{ examples }}/linear_and_radial_gradients.py"
 ```
 
-::: flet.ShaderMask
+{{ class_members(class_name) }}

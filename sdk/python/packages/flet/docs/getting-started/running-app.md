@@ -86,10 +86,8 @@ poetry run flet run --web [script]  # (1)!
 
 A new browser window/tab will be opened and the app will be using a random TCP port:
 
-![Web](../assets/getting-started/counter-app/safari.png){width="80%"}
-/// caption
-Web app
-///
+{{ image("../assets/getting-started/counter-app/safari.png", alt="Web", width="80%", caption="Web app") }}
+
 
 ## Watching for changes
 

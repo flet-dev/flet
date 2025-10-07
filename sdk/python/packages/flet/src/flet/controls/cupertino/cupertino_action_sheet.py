@@ -15,10 +15,6 @@ class CupertinoActionSheet(LayoutControl):
 
     Action sheets are generally used to give the user a choice between
     two or more choices for the current context.
-
-    Raises:
-        ValueError: If none of [`actions`][(c).], [`title`][(c).], [`message`][(c).],
-            or [`cancel`][(c).] are provided.
     """
 
     title: Optional[StrOrControl] = None
@@ -41,6 +37,10 @@ class CupertinoActionSheet(LayoutControl):
     A list of action buttons to be shown in the sheet.
 
     These actions are typically [`CupertinoActionSheetAction`][flet.]s.
+
+    Raises:
+        ValueError: If none of [`actions`][(c).], [`title`][(c).], [`message`][(c).],
+            or [`cancel`][(c).] are provided.
     """
 
     cancel: Optional[Control] = None

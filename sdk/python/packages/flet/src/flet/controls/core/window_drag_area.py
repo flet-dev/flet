@@ -13,9 +13,6 @@ class WindowDragArea(LayoutControl):
     """
     It mimics the behavior (drag, move, maximize, restore) of a native OS window
     title bar on the [`content`][(c).] control.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
     """
 
     content: Control
@@ -23,6 +20,9 @@ class WindowDragArea(LayoutControl):
     The content of this drag area.
 
     Must be visible.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     maximizable: bool = True

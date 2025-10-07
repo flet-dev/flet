@@ -21,9 +21,6 @@ class CupertinoListTile(LayoutControl):
     An iOS-style list tile.
 
     Can also serve as a cupertino equivalent of the Material [`ListTile`][flet.].
-
-    Raises:
-        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     title: StrOrControl
@@ -31,6 +28,9 @@ class CupertinoListTile(LayoutControl):
     The primary content of this list tile.
 
     Typically a [`Text`][flet.] control.
+
+    Raises:
+        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
     """
 
     subtitle: Optional[StrOrControl] = None

@@ -14,11 +14,6 @@ __all__ = ["CupertinoSegmentedButton"]
 class CupertinoSegmentedButton(LayoutControl):
     """
     An iOS-style segmented button.
-
-    Raises:
-        ValueError: If [`controls`][(c).] does not contain at least two visible
-            controls.
-        IndexError: If [`selected_index`][(c).] is out of range.
     """
 
     controls: list[Control]
@@ -27,12 +22,20 @@ class CupertinoSegmentedButton(LayoutControl):
 
     Note:
         Must contain at least two visible Controls.
+
+    Raises:
+        ValueError: If [`controls`][(c).] does not contain at least two visible
+            controls.
     """
 
     selected_index: int = 0
     """
     The index (starting from 0) of the selected segment in the
     [`controls`][(c).] list.
+
+    Raises:
+        IndexError: If [`selected_index`][(c).] is out of range relative to the
+            visible controls.
     """
 
     selected_color: Optional[ColorValue] = None

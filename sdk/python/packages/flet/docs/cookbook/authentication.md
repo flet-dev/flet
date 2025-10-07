@@ -53,16 +53,14 @@ To integrate Flet authentication with GitHub a new [GitHub OAuth app](https://gi
 {application-url}/oauth_callback
 ```
 
-![GitHub new OAuth app](../assets/cookbook/authentication/github-new-oauth-app.png){width="80%"}
-/// caption
-///
+{{ image("../assets/cookbook/authentication/github-new-oauth-app.png", alt="GitHub new OAuth app", width="80%") }}
+
 
 On OAuth app details page click "Generate a new client secret" button.
 Copy "Client ID" and "Client secret" values to a safe place - you'll need them in a Flet app.
 
-![GitHub OAuth app details](../assets/cookbook/authentication/github-oauth-app-details.png){width="80%"}
-/// caption
-///
+{{ image("../assets/cookbook/authentication/github-oauth-app-details.png", alt="GitHub OAuth app details", width="80%") }}
+
 
 ## Sign in with OAuth provider
 
@@ -117,9 +115,8 @@ Run the program and click "Login with GitHub" button. GitHub authorize app page 
 * **Web** app - a new popup window (make sure popup blocker is off).
 * **Mobile** app - an in-app web browser.
 
-![GitHub OAuth authorize](../assets/cookbook/authentication/github-oauth-authorize.png){width="80%"}
-/// caption
-///
+{{ image("../assets/cookbook/authentication/github-oauth-authorize.png", alt="GitHub OAuth authorize", width="80%") }}
+
 
 ### Redirect URL
 

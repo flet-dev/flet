@@ -27,10 +27,6 @@ class AlertDialog(DialogControl):
     It has an optional [`title`][(c).] and an optional list of [`actions`][(c).] . The
     `title` is displayed above the [`content`][(c).] and the `actions` are displayed
     below the `content`.
-
-    Raises:
-        ValueError: If none of [`title`][(c).], [`content`][(c).], or
-            [`actions`][(c).] are provided, as the dialog would have nothing to display.
     """
 
     content: Optional[Control] = None
@@ -59,6 +55,10 @@ class AlertDialog(DialogControl):
     A set of actions that are displayed at the bottom of this dialog.
 
     Typically this is a list of [`TextButton`][flet.] controls.
+
+    Raises:
+        ValueError: If none of [`title`][(c).], [`content`][(c).], or
+            [`actions`][(c).] are provided, as the dialog would have nothing to display.
     """
 
     bgcolor: Optional[ColorValue] = None

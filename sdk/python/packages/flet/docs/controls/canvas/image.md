@@ -1,5 +1,5 @@
-### Examples
+---
+class_name: flet.canvas.Image
+---
 
-See [these](index.md#examples).
-
-::: flet.canvas.Image
+{{ class_all_options(class_name) }}

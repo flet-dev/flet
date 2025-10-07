@@ -47,9 +47,24 @@ def define_env(env):
         return f"{block}\n"
 
     @env.macro
+    def image(src, alt=None, width=None, caption=None, link=None):
+        alt_text = alt or ""
+        body = f"![{alt_text}]({src})"
+        if width:
+            body += f'{{width="{width}"}}'
+        if link:
+            body = f"[{body}]({link})"
+        caption_text = (caption or "").rstrip("\n")
+        block = body + "\n/// caption\n"
+        if caption_text:
+            block += f"{caption_text}\n"
+        block += "///"
+        return block + "\n"
+
+    @env.macro
     def class_summary(
         class_name,
-        image=None,
+        image_url=None,
         image_width="50%",
         image_caption=None,
         **options,
@@ -70,12 +85,15 @@ def define_env(env):
         if options:
             base_options.update(options)
         blocks = [render_directive(class_name, base_options)]
-        if image:
+        if image_url:
             control_name = class_name.split(".")[-1]
-            caption_line = f"{image_caption}\n" if image_caption else ""
             blocks.append(
-                f"![{control_name}]({image})"
-                f'{{width="{image_width}"}}\n/// caption\n{caption_line}///\n'
+                image(
+                    image_url,
+                    alt=control_name,
+                    width=image_width,
+                    caption=image_caption,
+                ).rstrip("\n")
             )
         blocks.append(render_directive(class_name, summary_options))
         return "\n\n".join(blocks) + "\n"

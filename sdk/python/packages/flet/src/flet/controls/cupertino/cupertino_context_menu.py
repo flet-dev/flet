@@ -9,10 +9,6 @@ __all__ = ["CupertinoContextMenu"]
 class CupertinoContextMenu(AdaptiveControl):
     """
     A full-screen modal route that opens up when the [`content`][(c).] is long-pressed.
-
-    Raises:
-        ValueError: If [`content`][(c).] is not visible.
-        ValueError: If [`actions`][(c).] does not contain at least one visible action.
     """
 
     content: Control
@@ -23,6 +19,9 @@ class CupertinoContextMenu(AdaptiveControl):
         When this context menu is long-pressed, the menu will open and this control
         will be moved to the new route and be expanded. This allows the content
         to resize to fit in its place in the new route, if it doesn't size itself.
+
+    Raises:
+        ValueError: If [`content`][(c).] is not visible.
     """
 
     actions: list[Control]
@@ -33,6 +32,9 @@ class CupertinoContextMenu(AdaptiveControl):
 
     Note:
         This list must have at least one visible action.
+
+    Raises:
+        ValueError: If [`actions`][(c).] does not contain at least one visible action.
     """
 
     enable_haptic_feedback: bool = True

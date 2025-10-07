@@ -12,12 +12,6 @@ __all__ = ["Divider"]
 class Divider(Control):
     """
     A thin horizontal line (divider), with padding on either side.
-
-    Raises:
-        ValueError: If [`height`][(c).] is negative.
-        ValueError: If [`thickness`][(c).] is negative.
-        ValueError: If [`leading_indent`][(c).] is negative.
-        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     color: Optional[ColorValue] = None
@@ -34,6 +28,9 @@ class Divider(Control):
 
     If `None`, [`DividerTheme.space`][flet.] is used.
     If that's is also `None`, defaults to `16.0`.
+
+    Raises:
+        ValueError: If [`height`][(c).] is negative.
     """
 
     leading_indent: Optional[Number] = None
@@ -42,6 +39,9 @@ class Divider(Control):
 
     If `None`, [`DividerTheme.leading_indent`][flet.] is used.
     If that's is also `None`, defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`leading_indent`][(c).] is negative.
     """
 
     thickness: Optional[Number] = None
@@ -53,6 +53,9 @@ class Divider(Control):
 
     If `None`, [`DividerTheme.thickness`][flet.] is used.
     If that is also `None`, defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`thickness`][(c).] is negative.
     """
 
     trailing_indent: Optional[Number] = None
@@ -61,6 +64,9 @@ class Divider(Control):
 
     If `None`, [`DividerTheme.trailing_indent`][flet.] is used.
     If that is also `None`, defaults to `0.0`.
+
+    Raises:
+        ValueError: If [`trailing_indent`][(c).] is negative.
     """
 
     radius: Optional[BorderRadiusValue] = None

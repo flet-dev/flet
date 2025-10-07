@@ -31,7 +31,7 @@ are packages that partially written in C, Rust or other languages producing nati
 Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
 Make sure all non-pure (binary) packages used in your Flet app have
-[pre-built wheels for iOS](../contributing/binary-packages-android-ios.md).
+[pre-built wheels for iOS](../reference/binary-packages-android-ios.md).
 
 ## <code class="doc-symbol doc-symbol-command"></code> `flet build ipa`
 
@@ -44,7 +44,7 @@ Builds an iOS app archive (`.ipa`) for testing and distribution.
 To generate an `.ipa` for testing on your device or uploading to App Store Connect
 for distribution, you will need the following:
 
-- [Apple Developer Program](https://developer.apple.com/programs/) subscription with 
+- [Apple Developer Program](https://developer.apple.com/programs/) subscription with
   access to [App Store Connect](https://appstoreconnect.apple.com/)
 - [Application Indentifier](#application-identifier-app-id)
 - [Signing Certificate](#signing-certificate)
@@ -270,9 +270,9 @@ provisioning_profile = "release-testing com.mycompany.example-app"
 Some additional configuration to successfully generate a "runnable" IPA:
 
 /// admonition | Development package
-To build `.ipa` for testing on your developer device you need to provide 
-[provisioning profile](#provisioning-profile) option only. `flet build` will assume `debugging` as an 
-export method and automatically choose the most recent "Apple Development" certificate in your keychain. 
+To build `.ipa` for testing on your developer device you need to provide
+[provisioning profile](#provisioning-profile) option only. `flet build` will assume `debugging` as an
+export method and automatically choose the most recent "Apple Development" certificate in your keychain.
 Team ID is not required.
 ///
 
@@ -353,7 +353,7 @@ export_options = { uploadSymbols = true }
 
 ## Deploying an App to an Apple Device for Testing
 
-You can deploy `.ipa` files directly to an iPhone or iPad on macOS—ideal for 
+You can deploy `.ipa` files directly to an iPhone or iPad on macOS—ideal for
 internal testing without publishing to the App Store.
 
 Follow the following steps:
@@ -381,7 +381,7 @@ Follow the following steps:
 
 ### Step 5: Trust the Developer (for Ad Hoc or Enterprise apps)
 
-If your app is signed with an **Ad Hoc** or **Enterprise** [provisioning profile](), 
+If your app is signed with an **Ad Hoc** or **Enterprise** [provisioning profile](),
 you'll need to manually trust the developer:
 
 - On the iOS device, go to **Settings → General → VPN & Device Management**;

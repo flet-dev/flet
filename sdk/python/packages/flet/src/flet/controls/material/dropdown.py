@@ -30,9 +30,6 @@ class DropdownOption(Control):
     """
     Represents an item in a dropdown. Either `key` or `text` must be specified, else an
     `AssertionError` will be raised.
-
-    Raises:
-        ValueError: If neither [`key`][(c).] nor [`text`][(c).] are provided.
     """
 
     key: Optional[str] = None
@@ -44,6 +41,9 @@ class DropdownOption(Control):
     text: Optional[str] = None
     """
     Option's display text. If not specified `key` will be used as fallback.
+
+    Raises:
+        ValueError: If neither [`key`][(c).] nor [`text`][(c).] are provided.
     """
 
     content: Optional[Control] = None

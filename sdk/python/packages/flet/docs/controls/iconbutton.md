@@ -1,3 +1,11 @@
+---
+class_name: flet.IconButton
+examples: ../../examples/controls/icon_button
+example_images: ../examples/controls/icon_button/media
+---
+
+{{ class_summary(class_name) }}
+
 ## Examples
 
 [Live example](https://flet-controls-gallery.fly.dev/buttons/iconbutton)
@@ -5,17 +13,16 @@
 ### Handling clicks
 
 ```python
---8<-- "../../examples/controls/icon_button/handling_clicks.py"
+--8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-![handling-clicks](../examples/controls/icon_button/media/handling_clicks.gif){width="80%"}
-/// caption
-///
+{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+
 
 ### Selected icon
 
 ```python
---8<-- "../../examples/controls/icon_button/selected_icon.py"
+--8<-- "{{ examples }}/selected_icon.py"
 ```
 
-::: flet.IconButton
+{{ class_members(class_name) }}

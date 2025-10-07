@@ -1,3 +1,5 @@
+---
+class_name: flet.MergeSemantics
+---
 
-
-::: flet.MergeSemantics
+{{ class_all_options(class_name) }}

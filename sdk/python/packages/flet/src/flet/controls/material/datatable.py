@@ -34,10 +34,6 @@ class DataColumnSortEvent(Event["DataColumn"]):
 class DataColumn(Control):
     """
     Column configuration for a [`DataTable`][flet.].
-
-    Raises:
-        ValueError: If the [`label`][(c).] is neither a string nor
-            a visible control.
     """
 
     label: StrOrControl
@@ -47,6 +43,10 @@ class DataColumn(Control):
     Typically, this will be a [`Text`][flet.] control.
     It could also be an [`Icon`][flet.] (typically using size 18),
     or a combination of both in a [`Row`][flet.].
+
+    Raises:
+        ValueError: If the [`label`][(c).] is neither a string nor
+            a visible control.
     """
 
     numeric: bool = False
@@ -93,10 +93,6 @@ class DataColumn(Control):
 class DataCell(Control):
     """
     The data for a cell of a [`DataTable`][flet.].
-
-    Raises:
-        ValueError: If the [`content`][(c).] is neither a string nor a visible
-            control.
     """
 
     content: StrOrControl
@@ -113,6 +109,10 @@ class DataCell(Control):
         To lay out multiple children, set the [`content`][(c).] to a
         container-like control such as [`Row`][flet.], [`Column`][flet.], or
         [`Stack`][flet.], which have a `controls` property.
+
+    Raises:
+        ValueError: If the [`content`][(c).] is neither a string nor a visible
+            control.
     """
 
     placeholder: bool = False
@@ -199,9 +199,6 @@ class DataRow(Control):
     One row configuration must be provided for each row to display in the table.
 
     The data for this row of the table is provided in the [`cells`][(c).] property.
-
-    Raises:
-        ValueError: If [`cells`][(c).] does not contain at least one visible DataCell.
     """
 
     cells: list[DataCell] = field(default_factory=list)
@@ -210,6 +207,10 @@ class DataRow(Control):
 
     Note:
         There must be exactly as many cells as there are columns in the table.
+
+    Raises:
+        ValueError: If [`cells`][(c).] does not contain at least one visible
+            [`DataCell`][flet.].
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
@@ -280,25 +281,23 @@ class DataRow(Control):
 class DataTable(LayoutControl):
     """
     A Material Design data table.
-
-    Raises:
-        ValueError: If there are no visible [`columns`][(c).].
-        ValueError: If any visible row does not contain exactly as many visible
-            [`DataRow.cells`][flet.] as there are visible [`columns`][(c).].
-        ValueError: If [`data_row_min_height`][(c).] is greater than
-            [`data_row_max_height`][(c).].
-        ValueError: If [`divider_thickness`][(c).] is negative.
-        ValueError: If [`sort_column_index`][(c).] is out of range.
     """
 
     columns: list[DataColumn]
     """
     A list of [`DataColumn`][flet.] controls describing table columns.
+
+    Raises:
+        ValueError: If there are no visible [`columns`][(c).].
     """
 
     rows: list[DataRow] = field(default_factory=list)
     """
     A list of [`DataRow`][flet.] controls defining table rows.
+
+    Raises:
+        ValueError: If any visible row does not contain exactly as many visible
+            [`DataCell`][flet.]s as there are visible [`columns`][(c).].
     """
 
     sort_ascending: bool = False
@@ -336,6 +335,10 @@ class DataTable(LayoutControl):
 
     When this is `None`, it implies that the table's sort order does not correspond to
     any of the columns.
+
+    Raises:
+        ValueError: If [`sort_column_index`][(c).] is out of range relative to the
+            visible [`columns`][(c).].
     """
 
     show_bottom_border: bool = False
@@ -397,6 +400,10 @@ class DataTable(LayoutControl):
 
     Note:
         Must be less than or equal to [`data_row_max_height`][(c).].
+
+    Raises:
+        ValueError: If [`data_row_min_height`][(c).] is greater than
+            [`data_row_max_height`][(c).].
     """
 
     data_row_max_height: Optional[Number] = None
@@ -409,6 +416,10 @@ class DataTable(LayoutControl):
 
     Note:
         Must be greater than or equal to [`data_row_min_height`][(c).].
+
+    Raises:
+        ValueError: If [`data_row_max_height`][(c).] is less than
+            [`data_row_min_height`][(c).].
     """
 
     data_text_style: Optional[TextStyle] = None
@@ -432,6 +443,9 @@ class DataTable(LayoutControl):
 
     Note:
         Must be greater than or equal to zero.
+
+    Raises:
+        ValueError: If [`divider_thickness`][(c).] is negative.
     """
 
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
