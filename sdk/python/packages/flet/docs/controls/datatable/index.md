@@ -1,12 +1,13 @@
 ---
 class_name: flet.DataTable
 examples: ../../examples/controls/data_table
-example_images: ../../examples/controls/data_table/media
+example_images: ../../test-images/examples/material/golden/macos/datatable
+example_media: ../../examples/controls/data_table/media
 ---
 
 # DataTable
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic DataTable") }}
 
 ## Examples
 
@@ -18,7 +19,7 @@ example_images: ../../examples/controls/data_table/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
 
 
 ### Sortable columns and selectable rows
@@ -27,7 +28,7 @@ example_images: ../../examples/controls/data_table/media
 --8<-- "{{ examples }}/sortable_and_selectable.py"
 ```
 
-{{ image(example_images + "/sortable_and_selectable.png", alt="sortable-and-selectable", width="80%") }}
+{{ image(example_media + "/sortable_and_selectable.png", alt="sortable-and-selectable", width="80%") }}
 
 
 ### Handling events
