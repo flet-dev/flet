@@ -23,6 +23,17 @@ class CupertinoCheckbox(LayoutControl):
 
     Checkbox allows to select one or more items from a group,
     or switch between two mutually exclusive options (checked or unchecked, on or off).
+
+    ```python
+    ft.Column(
+        intrinsic_width=True,
+        controls=[
+            ft.CupertinoCheckbox(),
+            ft.CupertinoCheckbox(label="Checked", value=True),
+            ft.CupertinoCheckbox(label="Disabled", disabled=True),
+        ],
+    )
+    ```
     """
 
     label: Optional[str] = None
