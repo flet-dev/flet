@@ -36,10 +36,11 @@ extensions = [
     "flet-audio",
     "flet-audio-recorder",
     "flet-charts",
+    "flet-geolocator",
     "flet-lottie",
     "flet-map",
-    "flet-rive",
     "flet-permission-handler",
+    "flet-rive",
     "flet-video",
 ]
 test = [
