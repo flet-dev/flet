@@ -24,6 +24,10 @@ class OverlayVisibilityMode(Enum):
 class CupertinoTextField(TextField):
     """
     An iOS-style text field.
+
+    ```python
+    ft.CupertinoTextField(placeholder_text="Search")
+    ```
     """
 
     placeholder_text: Optional[str] = None
