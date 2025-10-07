@@ -18,6 +18,20 @@ class CupertinoRadio(LayoutControl):
     """
     A macOS-styled radio button, allowing the user to select a single option from two
     or more choices.
+
+    ```python
+    ft.RadioGroup(
+        value="option_2",
+        content=ft.Column(
+            intrinsic_width=True,
+            controls=[
+                ft.CupertinoRadio(value="option_1", label="Option 1"),
+                ft.CupertinoRadio(value="option_2", label="Option 2"),
+                ft.CupertinoRadio(value="option_3", label="Option 3"),
+            ],
+        ),
+    )
+    ```
     """
 
     label: Optional[str] = None
