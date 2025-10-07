@@ -333,15 +333,13 @@ packages:
       path: "../sdk/python/packages/flet-lottie/src/flutter/flet_lottie"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.1.0"
   flet_map:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_map"
-      ref: main
-      resolved-ref: "3575ca7dc80251e6b0ac7648ff2620adb84db412"
-      url: "https://github.com/flet-dev/flet-map.git"
-    source: git
+      path: "../sdk/python/packages/flet-map/src/flutter/flet_map"
+      relative: true
+    source: path
     version: "0.2.0"
   flet_permission_handler:
     dependency: "direct main"

@@ -23,7 +23,7 @@ class Lottie(ft.LayoutControl):
 
     Raises:
         AssertionError: If neither [`src`][(c).] nor
-        [`src_base64`][(c).] is provided.
+            [`src_base64`][(c).] is provided.
     """
 
     src_base64: Optional[str] = None
@@ -36,7 +36,7 @@ class Lottie(ft.LayoutControl):
 
     Raises:
         AssertionError: If neither [`src`][(c).] nor
-        [`src_base64`][(c).] is provided.
+            [`src_base64`][(c).] is provided.
     """
 
     repeat: bool = True

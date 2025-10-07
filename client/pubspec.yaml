@@ -50,10 +50,7 @@ dependencies:
     path: ../sdk/python/packages/flet-lottie/src/flutter/flet_lottie
 
   flet_map:
-    git:
-      url: https://github.com/flet-dev/flet-map.git
-      ref: main
-      path: src/flutter/flet_map
+    path: ../sdk/python/packages/flet-map/src/flutter/flet_map
 
   flet_rive:
     git:

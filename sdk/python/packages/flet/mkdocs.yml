@@ -365,6 +365,27 @@ nav:
           - ListTile: controls/listtile.md
           - ListView: controls/listview.md
           - Lottie: lottie/index.md
+          - Map:
+              - Overview: map/index.md
+              - Map: map/map.md
+              - Layers:
+                  - MapLayer: map/map_layer.md
+                  - TileLayer: map/tile_layer.md
+                  - MarkerLayer: map/marker_layer.md
+                  - CircleLayer: map/circle_layer.md
+                  - PolygonLayer: map/polygon_layer.md
+                  - PolylineLayer: map/polyline_layer.md
+              - Markers:
+                  - Marker: map/marker.md
+                  - CircleMarker: map/circle_marker.md
+                  - PolygonMarker: map/polygon_marker.md
+                  - PolylineMarker: map/polyline_marker.md
+              - Attributions:
+                  - SourceAttribution: map/source_attribution.md
+                  - SimpleAttribution: map/simple_attribution.md
+                  - RichAttribution: map/rich_attribution.md
+                  - TextSourceAttribution: map/text_source_attribution.md
+                  - ImageSourceAttribution: map/image_source_attribution.md
           - Markdown: controls/markdown.md
           - MenuBar: controls/menubar.md
           - MenuItemButton: controls/menuitembutton.md
@@ -546,6 +567,33 @@ nav:
                   - ValueKey: types/valuekey.md
               - Locale: types/locale.md
               - LocaleConfiguration: types/localeconfiguration.md
+              - Map:
+                  - AttributionAlignment: map/types/attribution_alignment.md
+                  - Camera: map/types/camera.md
+                  - CameraFit: map/types/camera_fit.md
+                  - CursorKeyboardRotationConfiguration: map/types/cursor_keyboard_rotation_configuration.md
+                  - CursorRotationBehaviour: map/types/cursor_rotation_behaviour.md
+                  - DashedStrokePattern: map/types/dashed_stroke_pattern.md
+                  - DottedStrokePattern: map/types/dotted_stroke_pattern.md
+                  - FadeInTileDisplay: map/types/fade_in_tile_display.md
+                  - InstantaneousTileDisplay: map/types/instantaneous_tile_display.md
+                  - InteractionConfiguration: map/types/interaction_configuration.md
+                  - InteractionFlag: map/types/interaction_flag.md
+                  - KeyboardConfiguration: map/types/keyboard_configuration.md
+                  - MapEvent: map/types/map_event.md
+                  - MapEventSource: map/types/map_event_source.md
+                  - MapHoverEvent: map/types/map_hover_event.md
+                  - MapLatitudeLongitude: map/types/map_latitude_longitude.md
+                  - MapLatitudeLongitudeBounds: map/types/map_latitude_longitude_bounds.md
+                  - MapPointerEvent: map/types/map_pointer_event.md
+                  - MapPositionChangeEvent: map/types/map_position_change_event.md
+                  - MapTapEvent: map/types/map_tap_event.md
+                  - MultiFingerGesture: map/types/multi_finger_gesture.md
+                  - PatternFit: map/types/pattern_fit.md
+                  - SolidStrokePattern: map/types/solid_stroke_pattern.md
+                  - StrokePattern: map/types/stroke_pattern.md
+                  - TileDisplay: map/types/tile_display.md
+                  - TileLayerEvictErrorTileStrategy: map/types/tile_layer_evict_error_tile_strategy.md
               - Margin: types/margin.md
               - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
               - MarkdownStyleSheet: types/markdownstylesheet.md

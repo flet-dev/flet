@@ -15,6 +15,7 @@ dependencies = [
     "flet-audio-recorder",
     "flet-charts",
     "flet-lottie",
+    "flet-map",
     "flet-video"
 ]
 
@@ -28,6 +29,7 @@ flet-audio = { workspace = true }
 flet-audio-recorder = { workspace = true }
 flet-charts = { workspace = true }
 flet-lottie = { workspace = true }
+flet-map = { workspace = true }
 flet-video = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
 
