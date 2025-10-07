@@ -1,10 +1,11 @@
 ---
 class_name: flet.Column
 examples: ../../examples/controls/column
-example_images: ../examples/controls/column/media
+example_images: ../test-images/examples/material/golden/macos/column
+example_media: ../examples/controls/column/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Column with Text controls") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/spacing.py"
 ```
 
-{{ image(example_images + "/spacing.gif", alt="spacing", width="80%") }}
+{{ image(example_media + "/spacing.gif", alt="spacing", width="80%") }}
 
 
 ### Column wrapping
@@ -25,7 +26,7 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/wrap.py"
 ```
 
-{{ image(example_images + "/wrap.gif", alt="wrap", width="80%") }}
+{{ image(example_media + "/wrap.gif", alt="wrap", width="80%") }}
 
 
 ### Column vertical alignments
@@ -34,7 +35,7 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/alignment.py"
 ```
 
-{{ image(example_images + "/alignment.png", alt="alignment", width="80%") }}
+{{ image(example_media + "/alignment.png", alt="alignment", width="80%") }}
 
 
 ### Column horizontal alignments
@@ -43,7 +44,7 @@ example_images: ../examples/controls/column/media
 --8<-- "{{ examples }}/horizontal_alignment.py"
 ```
 
-{{ image(example_images + "/horizontal_alignment.png", alt="horizontal-alignment", width="80%") }}
+{{ image(example_media + "/horizontal_alignment.png", alt="horizontal-alignment", width="80%") }}
 
 
 ### Infinite scrolling
@@ -63,7 +64,7 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 --8<-- "{{ examples }}/programmatic_scroll.py"
 ```
 
-{{ image(example_images + "/programmatic_scroll.png", alt="programmatic-scroll", width="80%") }}
+{{ image(example_media + "/programmatic_scroll.png", alt="programmatic-scroll", width="80%") }}
 
 
 [//]: # (### Custom scrollbar)
