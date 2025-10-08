@@ -26,6 +26,13 @@ __all__ = ["Chip"]
 class Chip(LayoutControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
+
+    ```python
+    ft.Chip(
+        label="Explore topics",
+        leading=ft.Icon(ft.Icons.EXPLORE_OUTLINED),
+    )
+    ```
     """
 
     label: StrOrControl

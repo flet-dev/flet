@@ -20,6 +20,23 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
     A material expansion panel. It can either be expanded or collapsed. Its body is
     only visible when it is expanded.
+
+    ```python
+    ft.ExpansionPanelList(
+        width=400,
+        controls=[
+            ft.ExpansionPanel(
+                header=ft.Text("Shipping address"),
+                content=ft.Text("123 Market Street, Springfield"),
+                expanded=True,
+            ),
+            ft.ExpansionPanel(
+                header=ft.Text("Billing address"),
+                content=ft.Text("Same as shipping"),
+            ),
+        ],
+    )
+    ```
     """
 
     header: Optional[Control] = None
@@ -71,6 +88,23 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 class ExpansionPanelList(LayoutControl):
     """
     A material expansion panel list that lays out its children and animates expansions.
+
+    ```python
+    ft.ExpansionPanelList(
+        width=400,
+        controls=[
+            ft.ExpansionPanel(
+                header=ft.Text("Details"),
+                content=ft.Text("More information here"),
+                expanded=True,
+            ),
+            ft.ExpansionPanel(
+                header=ft.Text("History"),
+                content=ft.Text("View previous updates"),
+            ),
+        ],
+    )
+    ```
     """
 
     controls: list[ExpansionPanel] = field(default_factory=list)

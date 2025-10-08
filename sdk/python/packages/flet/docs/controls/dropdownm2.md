@@ -1,10 +1,11 @@
 ---
 class_name: flet.DropdownM2
 examples: ../../examples/controls/dropdown_m2
-example_images: ../examples/controls/dropdown_m2/media
+example_images: ../test-images/examples/material/golden/macos/dropdown_m2
+example_media: ../examples/controls/dropdown_m2/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic DropdownM2") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
 
 
 ### Dropdown with label and hint
@@ -25,7 +26,7 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/label_and_hint.py"
 ```
 
-{{ image(example_images + "/label_and_hint.gif", alt="label-and-hint", width="80%") }}
+{{ image(example_media + "/label_and_hint.gif", alt="label-and-hint", width="80%") }}
 
 
 ### Handling events
@@ -34,7 +35,7 @@ example_images: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-{{ image(example_images + "/handling_events.gif", alt="handling-events", width="80%") }}
+{{ image(example_media + "/handling_events.gif", alt="handling-events", width="80%") }}
 
 
 

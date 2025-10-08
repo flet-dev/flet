@@ -8,4 +8,8 @@ __all__ = ["CupertinoFilledButton"]
 class CupertinoFilledButton(CupertinoButton):
     """
     An iOS-style button filled with default background color.
+
+    ```python
+    ft.CupertinoFilledButton("Tap me")
+    ```
     """

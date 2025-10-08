@@ -47,6 +47,17 @@ class ListTile(LayoutControl, AdaptiveControl):
     """
     A single fixed-height row that typically contains some text as well as a leading or
     trailing icon.
+
+    ```python
+    ft.ListTile(
+        width=400,
+        leading=ft.Icon(ft.Icons.ACCOUNT_CIRCLE),
+        title="Jane Doe",
+        subtitle="Product Manager",
+        trailing=ft.Icon(ft.Icons.CHEVRON_RIGHT),
+        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+    )
+    ```
     """
 
     title: Optional[StrOrControl] = None

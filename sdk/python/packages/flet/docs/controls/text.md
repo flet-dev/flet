@@ -1,10 +1,11 @@
 ---
 class_name: flet.Text
 examples: ../../examples/controls/text
-example_images: ../examples/controls/text/media
+example_images: ../test-images/examples/material/golden/macos/text
+example_media: ../examples/controls/text/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Text control") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/custom_styles.py"
 ```
 
-{{ image(example_images + "/custom_styles.gif", alt="custom-styles", width="80%") }}
+{{ image(example_media + "/custom_styles.gif", alt="custom-styles", width="80%") }}
 
 
 ### Pre-defined theme text styles
@@ -25,7 +26,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/text_theme_styles.py"
 ```
 
-{{ image(example_images + "/text_theme_styles.png", alt="text-theme-styles", width="80%") }}
+{{ image(example_media + "/text_theme_styles.png", alt="text-theme-styles", width="80%") }}
 
 
 ### Font with variable weight
@@ -34,7 +35,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/variable_font_weight.py"
 ```
 
-{{ image(example_images + "/variable_font_weight.gif", alt="variable-font-weight", width="80%") }}
+{{ image(example_media + "/variable_font_weight.gif", alt="variable-font-weight", width="80%") }}
 
 
 ### Basic rich text example
@@ -43,7 +44,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/rich_text_basic.py"
 ```
 
-{{ image(example_images + "/rich_text_basic.png", alt="rich-text-basic", width="80%") }}
+{{ image(example_media + "/rich_text_basic.png", alt="rich-text-basic", width="80%") }}
 
 
 ### Rich text with borders and stroke
@@ -52,7 +53,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/rich_text_border_stroke.py"
 ```
 
-{{ image(example_images + "/rich_text_border_stroke.png", alt="rich-text-border-stroke", width="80%") }}
+{{ image(example_media + "/rich_text_border_stroke.png", alt="rich-text-border-stroke", width="80%") }}
 
 
 ### Rich text with gradient
@@ -61,7 +62,7 @@ example_images: ../examples/controls/text/media
 --8<-- "{{ examples }}/rich_text_gradient.py"
 ```
 
-{{ image(example_images + "/rich_text_gradient.png", alt="rich-text-gradient", width="80%") }}
+{{ image(example_media + "/rich_text_gradient.png", alt="rich-text-gradient", width="80%") }}
 
 
 {{ class_members(class_name) }}

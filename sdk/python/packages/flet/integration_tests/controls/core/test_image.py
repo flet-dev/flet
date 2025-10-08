@@ -4,9 +4,6 @@ import flet as ft
 import flet.testing as ftt
 
 
-@pytest.mark.skip(
-    reason="temporarily disabled due to reference image generation failure"
-)
 @pytest.mark.asyncio(loop_scope="module")
 async def test_image(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
@@ -17,12 +14,11 @@ async def test_image(flet_app: ftt.FletTestApp, request):
             height=100,
             fit=ft.BoxFit.CONTAIN,
         ),
+        pump_times=5,
+        pump_duration=1000,
     )
 
 
-@pytest.mark.skip(
-    reason="temporarily disabled due to reference image generation failure"
-)
 @pytest.mark.asyncio(loop_scope="module")
 async def test_image_base64(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
@@ -32,4 +28,6 @@ async def test_image_base64(flet_app: ftt.FletTestApp, request):
             width=100,
             height=100,
         ),
+        pump_times=3,
+        pump_duration=1000,
     )

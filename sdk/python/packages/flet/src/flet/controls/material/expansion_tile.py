@@ -33,6 +33,19 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A single-line ListTile with an expansion arrow icon that expands or collapses the
     tile to reveal or hide its controls.
+
+    ```python
+    ft.ExpansionTile(
+        width=400,
+        title="Account",
+        subtitle="Manage profile and security",
+        controls=[
+            ft.ListTile(title=ft.Text("Profile")),
+            ft.ListTile(title=ft.Text("Security")),
+        ],
+        initially_expanded=True,
+    )
+    ```
     """
 
     title: StrOrControl

@@ -1,10 +1,11 @@
 ---
 class_name: flet.Chip
 examples: ../../examples/controls/chip
-example_images: ../examples/controls/chip/media
+example_images: ../test-images/examples/material/golden/macos/chip
+example_media: ../examples/controls/chip/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Chip") }}
 
 ## Examples
 
@@ -22,7 +23,7 @@ An alternative to assist chips are [buttons](buttons/index.md), which should app
 --8<-- "{{ examples }}/assist_chips.py"
 ```
 
-{{ image(example_images + "/assist_chips.png", alt="assist-chips", width="80%") }}
+{{ image(example_media + "/assist_chips.png", alt="assist-chips", width="80%") }}
 
 
 ### Filter chips
@@ -36,7 +37,7 @@ They can be a good alternative to switches or checkboxes.
 --8<-- "{{ examples }}/filter_chips.py"
 ```
 
-{{ image(example_images + "/filter_chips.png", alt="filter-chips", width="80%") }}
+{{ image(example_media + "/filter_chips.png", alt="filter-chips", width="80%") }}
 
 
 {{ class_members(class_name) }}

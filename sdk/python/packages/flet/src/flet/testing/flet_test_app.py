@@ -164,6 +164,7 @@ class FletTestApp:
                 await self.__flet_app_main(page)
             elif callable(self.__flet_app_main):
                 self.__flet_app_main(page)
+            await self.__tester.pump_and_settle()
             ready.set()
 
         if not self.__tcp_port:

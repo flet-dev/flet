@@ -26,6 +26,15 @@ class Image(LayoutControl):
     - [`src_bytes`][(c).]
     - [`src_base64`][(c).]
     - [`src`][(c).]
+
+    ```python
+    ft.Image(
+        src="https://picsum.photos/seed/picsum/100/100",
+        width=100,
+        height=100,
+        fit=ft.BoxFit.CONTAIN,
+    )
+    ```
     """
 
     src: Optional[str] = None

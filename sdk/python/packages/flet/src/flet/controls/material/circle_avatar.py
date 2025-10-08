@@ -19,6 +19,14 @@ class CircleAvatar(LayoutControl):
 
     If [`foreground_image_src`][(c).] fails then [`background_image_src`][(c).] is used,
     and if this also fails, then [`bgcolor`][(c).] is used.
+
+    ```python
+    ft.CircleAvatar(
+        content=ft.Text("AB"),
+        bgcolor=ft.Colors.PRIMARY,
+        color=ft.Colors.ON_PRIMARY,
+    )
+    ```
     """
 
     content: Optional[StrOrControl] = None

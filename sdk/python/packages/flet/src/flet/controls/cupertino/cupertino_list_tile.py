@@ -20,7 +20,18 @@ class CupertinoListTile(LayoutControl):
     """
     An iOS-style list tile.
 
-    Can also serve as a cupertino equivalent of the Material [`ListTile`][flet.].
+    The CupertinoListTile is a Cupertino equivalent of the Material [`ListTile`][flet.].
+
+    ```python
+    ft.CupertinoListTile(
+        title="Notifications",
+        subtitle="Enabled",
+        width=400,
+        leading=ft.Icon(ft.Icons.NOTIFICATIONS_OUTLINED),
+        trailing=ft.Icon(ft.Icons.CHEVRON_RIGHT),
+        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+    )
+    ```
     """
 
     title: StrOrControl

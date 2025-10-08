@@ -20,6 +20,10 @@ class CupertinoSwitch(LayoutControl):
     An iOS-style switch.
 
     Used to toggle the on/off state of a single setting.
+
+    ```python
+    ft.CupertinoSwitch(value=True)
+    ```
     """
 
     label: Optional[str] = None

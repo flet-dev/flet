@@ -22,6 +22,10 @@ class CupertinoSlider(LayoutControl):
     Use a slider when you want people to set defined values (such as volume or
     brightness), or when people would benefit from instant feedback on the effect of
     setting changes.
+
+    ```python
+    ft.CupertinoSlider(value=0.6)
+    ```
     """
 
     value: Optional[Number] = None

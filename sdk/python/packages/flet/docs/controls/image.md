@@ -1,10 +1,11 @@
 ---
 class_name: flet.Image
 examples: ../../examples/controls/image
-example_images: ../examples/controls/image/media
+example_images: ../test-images/examples/material/golden/macos/image
+example_media: ../examples/controls/image/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Image") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/image/media
 --8<-- "{{ examples }}/gallery.py"
 ```
 
-{{ image(example_images + "/gallery.gif", alt="gallery", width="80%") }}
+{{ image(example_media + "/gallery.gif", alt="gallery", width="80%") }}
 
 
 ### Displaying a base64 image

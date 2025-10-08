@@ -34,6 +34,10 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
+
+    ```python
+    ft.IconButton(icon=ft.Icons.FAVORITE, icon_color=ft.Colors.PRIMARY)
+    ```
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -233,6 +237,10 @@ class FilledIconButton(IconButton):
 
     Filled icon buttons have higher visual impact and should be used for high emphasis
     actions, such as turning off a microphone or camera.
+
+    ```python
+    ft.FilledIconButton(icon=ft.Icons.CHECK)
+    ```
     """
 
 
@@ -245,6 +253,10 @@ class FilledTonalIconButton(IconButton):
     outlined icon buttons. They're useful in contexts where the button requires
     slightly more emphasis than an outline would give, such as a secondary action
     paired with a high emphasis action.
+
+    ```python
+    ft.FilledTonalIconButton(icon=ft.Icons.CHECK)
+    ```
     """
 
 

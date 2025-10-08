@@ -13,8 +13,21 @@ __all__ = ["Column"]
 @control("Column")
 class Column(LayoutControl, ScrollableControl, AdaptiveControl):
     """
-    Container allows to decorate a control with background color and border and
-    position it with padding, margin and alignment.
+    Arranges child controls vertically, optionally aligning and spacing them within
+    the available space.
+
+    ```python
+    ft.Column(
+        width=220,
+        height=120,
+        spacing=12,
+        controls=[
+            ft.Text("Daily planning", size=20, weight=ft.FontWeight.W_600),
+            ft.Text("Review pull requests"),
+            ft.Text("Ship release"),
+        ],
+    )
+    ```
     """
 
     controls: list[Control] = field(default_factory=list)

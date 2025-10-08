@@ -1,10 +1,11 @@
 ---
 class_name: flet.IconButton
 examples: ../../examples/controls/icon_button
-example_images: ../examples/controls/icon_button/media
+example_images: ../test-images/examples/material/golden/macos/icon_button
+example_media: ../examples/controls/icon_button/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic IconButton") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/icon_button/media
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+{{ image(example_media + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
 
 
 ### Selected icon

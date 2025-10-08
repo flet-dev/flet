@@ -281,6 +281,29 @@ class DataRow(Control):
 class DataTable(LayoutControl):
     """
     A Material Design data table.
+
+    ```python
+    ft.DataTable(
+        columns=[
+            ft.DataColumn(label=ft.Text("Name")),
+            ft.DataColumn(label=ft.Text("Role")),
+        ],
+        rows=[
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text("Alice")),
+                    ft.DataCell(ft.Text("Engineer")),
+                ]
+            ),
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text("Bob")),
+                    ft.DataCell(ft.Text("Designer")),
+                ]
+            ),
+        ],
+    )
+    ```
     """
 
     columns: list[DataColumn]

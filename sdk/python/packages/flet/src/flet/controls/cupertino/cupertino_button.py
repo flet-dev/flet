@@ -31,6 +31,10 @@ class CupertinoButtonSize(Enum):
 class CupertinoButton(LayoutControl):
     """
     An iOS-style button.
+
+    ```python
+    ft.CupertinoButton("Tap me")
+    ```
     """
 
     content: Optional[StrOrControl] = None

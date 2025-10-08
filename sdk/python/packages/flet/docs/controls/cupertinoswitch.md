@@ -1,10 +1,11 @@
 ---
 class_name: flet.CupertinoSwitch
 examples: ../../examples/controls/cupertino_switch
-example_images: ../examples/controls/cupertino_switch/media
+example_images: ../test-images/examples/cupertino/golden/macos/cupertino_switch
+example_media: ../examples/controls/cupertino_switch/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic CupertinoSwitch") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/cupertino_switch/media
 --8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-{{ image(example_images + "/cupertino_material_and_adaptive.gif", alt="cupertino-material-and-adaptive", width="80%") }}
+{{ image(example_media + "/cupertino_material_and_adaptive.gif", alt="cupertino-material-and-adaptive", width="80%") }}
 
 
 {{ class_members(class_name) }}

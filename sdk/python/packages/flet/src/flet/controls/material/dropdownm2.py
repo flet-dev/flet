@@ -69,6 +69,17 @@ class DropdownM2(FormFieldControl):
     A dropdown lets the user select from a number of items. The dropdown shows the
     currently selected item as well as an arrow that opens a menu for selecting another
     item.
+
+    ```python
+    ft.DropdownM2(
+        width=220,
+        value="Alice",
+        options=[
+            ft.dropdownm2.Option(key="Alice", text="Alice"),
+            ft.dropdownm2.Option(key="Bob", text="Bob"),
+        ],
+    )
+    ```
     """
 
     value: Optional[str] = None

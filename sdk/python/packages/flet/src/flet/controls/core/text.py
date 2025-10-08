@@ -178,6 +178,10 @@ class Text(LayoutControl):
 
     It consists of two sources combined to produce the final text:
     [`value`][(c).] and [`spans`][(c).].
+
+    ```python
+    ft.Text("Hello from Flet!", size=24, weight=ft.FontWeight.W_600)
+    ```
     """
 
     value: str = ""
