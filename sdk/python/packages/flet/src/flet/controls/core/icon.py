@@ -15,6 +15,10 @@ class Icon(LayoutControl):
 
     Icons can be customized in color, size, and visual style using various
     parameters such as stroke weight, fill level, and shadows.
+
+    ```python
+    ft.Icon(ft.Icons.FAVORITE, color=ft.Colors.PRIMARY, size=40)
+    ```
     """
 
     icon: IconData
