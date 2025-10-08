@@ -101,7 +101,7 @@ jobs:
         id: versions
         run: |
           source "$SCRIPTS/common.sh"
-          compute_release_versions
+          RUN_OFFSET=6000 compute_release_versions
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3

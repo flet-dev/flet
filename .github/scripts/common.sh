@@ -80,7 +80,7 @@ compute_release_versions() {
     local build="${pkg}+$((GITHUB_RUN_NUMBER + RUN_OFFSET))"
     local pypi="${build/+/.dev}"
     echo "compute_release_versions: _next_dev_from -> pkg=${pkg} build=${build} pypi=${pypi}" >&2
-    printf '%s %s %s' "$pkg" "$build" "$pypi"
+    printf '%s %s %s\n' "$pkg" "$build" "$pypi"
   }
 
   # ---------------- pyproject flow ----------------

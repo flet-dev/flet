@@ -55,7 +55,7 @@ jobs:
         working-directory: ${{ env.SDK_PYTHON }}/packages
         run: |
           source "$SCRIPTS/common.sh"
-          compute_release_versions "flet-ads"
+          RUN_OFFSET=500 compute_release_versions "flet-ads"
 
           pushd "src/flutter/flet_ads"
           patch_pubspec_version "pubspec.yaml" "$PKG_VER"
