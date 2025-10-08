@@ -20,9 +20,6 @@ env:
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
   UV_PYTHON: "3.12"
-  #  PKG_VER: "0.2.0"
-  #  BUILD_VER: "0.2.0+${{ github.run_number }}"
-  #  PYPI_VER: "0.2.0.dev${{ github.run_number }}"
 
 jobs:
   build:
@@ -51,11 +48,10 @@ jobs:
           cache: true
 
       - name: Publish flet-ads
-        # if:
-        working-directory: ${{ env.SDK_PYTHON }}
+        # if: steps.changes.outputs.ads == 'true'
         run: |
           source "$SCRIPTS/common.sh"
-          RUN_OFFSET=500 compute_release_versions "flet-ads"
+          OFFSET=500 compute_release_versions "flet-ads"
 
           cd "${SDK_PYTHON}/packages/flet-ads/src/flutter/flet_ads"
           patch_pubspec_version "pubspec.yaml" "$PKG_VER"
@@ -72,8 +68,8 @@ jobs:
         with:
           name: dist
           path: |
-            $SDK_PYTHON/dist/*.whl
-            $SDK_PYTHON/dist/*.tar.gz
+            ${{ env.SDK_PYTHON }}/dist/*.whl
+            ${{ env.SDK_PYTHON }}/dist/*.tar.gz
 
 #      - name: Publish Python package
 #        if: >
