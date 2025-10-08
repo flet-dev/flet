@@ -34,6 +34,10 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
     places as well.
+
+    ```python
+    ft.IconButton(icon=ft.Icons.FAVORITE, icon_color=ft.Colors.PRIMARY)
+    ```
     """
 
     icon: Optional[IconDataOrControl] = None
