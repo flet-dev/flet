@@ -37,7 +37,7 @@ get_pyproject_version() {
   uv run "$SCRIPTS/get_pyproject_version.py" "$@"
 }
 
-compute_build_versions() {
+compute_release_versions() {
   local RUN_OFFSET="${RUN_OFFSET:-0}"
   : "${GITHUB_RUN_NUMBER:=0}"
 

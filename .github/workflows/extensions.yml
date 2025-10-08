@@ -52,15 +52,16 @@ jobs:
 
       - name: Publish flet-ads
         # if:
-        working-directory: ${{ env.SDK_PYTHON }}/packages/flet-ads
+        working-directory: ${{ env.SDK_PYTHON }}/packages
         run: |
           source "$SCRIPTS/common.sh"
+          compute_release_versions "flet-ads"
+
           pushd "src/flutter/flet_ads"
           patch_pubspec_version "pubspec.yaml" "$PKG_VER"
           dart pub get && dart analyze
 
           popd
-          compute_build_versions flet-ads
           uv version "$PYPI_VER"
           uv build
           ls -laR "${SDK_PYTHON}/dist"
