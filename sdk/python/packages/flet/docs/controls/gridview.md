@@ -1,10 +1,11 @@
 ---
 class_name: flet.GridView
 examples: ../../examples/controls/grid_view
-example_images: ../examples/controls/grid_view/media
+example_images: ../test-images/examples/material/golden/macos/grid_view
+example_media: ../examples/controls/grid_view/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic GridView") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/grid_view/media
 --8<-- "{{ examples }}/photo_gallery.py"
 ```
 
-{{ image(example_images + "/photo_gallery.png", alt="photo-gallery", width="80%") }}
+{{ image(example_media + "/photo_gallery.png", alt="photo-gallery", width="80%") }}
 
 
 {{ class_members(class_name) }}

@@ -20,6 +20,28 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
     It is very effective for large lists (thousands of items).
     Prefer it over wrapping [`Column`][flet.]s or
     [`Row`][flet.]s for smooth scrolling.
+
+    ```python
+    ft.GridView(
+        width=180,
+        runs_count=2,
+        spacing=8,
+        controls=[
+            ft.Container(
+                width=50, height=50, bgcolor=ft.Colors.PRIMARY, border_radius=8
+            ),
+            ft.Container(
+                width=50, height=50, bgcolor=ft.Colors.SECONDARY, border_radius=8
+            ),
+            ft.Container(
+                width=50, height=50, bgcolor=ft.Colors.TERTIARY, border_radius=8
+            ),
+            ft.Container(
+                width=50, height=50, bgcolor=ft.Colors.ERROR, border_radius=8
+            ),
+        ],
+    )
+    ```
     """
 
     controls: list[Control] = field(default_factory=list)
