@@ -9,6 +9,10 @@ class FilledTonalButton(Button):
     OutlinedButton buttons. They're useful in contexts where a lower-priority button
     requires slightly more emphasis than an outline would give, such as "Next" in an
     onboarding flow. Tonal buttons use the secondary color mapping.
+
+    ```python
+    ft.FilledTonalButton(content="Tap me")
+    ```
     """
 
     pass
