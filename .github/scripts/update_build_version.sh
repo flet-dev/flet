@@ -62,19 +62,16 @@ fi
 # -------------------------------------------------------------
 export PYPI_VER="${BUILD_VER/+/.dev}"
 
-# Print values for debugging in logs
-echo "PKG_VER=$PKG_VER"
-echo "BUILD_VER=$BUILD_VER"
-echo "PYPI_VER=$PYPI_VER"
-
 # Export values as environment variables
-echo "PKG_VER=$PKG_VER" >> $GITHUB_ENV
-echo "BUILD_VER=$BUILD_VER" >> $GITHUB_ENV
-echo "PYPI_VER=$PYPI_VER" >> $GITHUB_ENV
+{
+  echo "PKG_VER=$PKG_VER"
+  echo "BUILD_VER=$BUILD_VER"
+  echo "PYPI_VER=$PYPI_VER"
+} >> "$GITHUB_ENV"
 
 # set GitHub Actions output variables for use in other jobs
 {
   echo "PKG_VER=$PKG_VER"
   echo "BUILD_VER=$BUILD_VER"
   echo "PYPI_VER=$PYPI_VER"
-} >> $GITHUB_OUTPUT
+} | tee -a "$GITHUB_OUTPUT"

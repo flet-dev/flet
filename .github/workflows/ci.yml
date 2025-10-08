@@ -99,7 +99,9 @@ jobs:
 
       - name: Compute versions
         id: versions
-        run: source "${SCRIPTS}/update_build_version.sh"
+        run: |
+          source "$SCRIPTS/common.sh"
+          compute_build_versions
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -128,6 +130,7 @@ jobs:
           printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
 
           # patch pubspec for release
+          source "$SCRIPTS/common.sh"
           patch_pubspec_version ./pubspec.yaml "$PKG_VER"
 
           dart pub publish --force

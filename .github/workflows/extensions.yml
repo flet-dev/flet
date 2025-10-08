@@ -20,9 +20,9 @@ env:
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
   UV_PYTHON: "3.12"
-  PKG_VER: "0.2.0"
-  BUILD_VER: "0.2.0+${{ github.run_number }}"
-  PYPI_VER: "0.2.0.dev${{ github.run_number }}"
+  #  PKG_VER: "0.2.0"
+  #  BUILD_VER: "0.2.0+${{ github.run_number }}"
+  #  PYPI_VER: "0.2.0.dev${{ github.run_number }}"
 
 jobs:
   build:
@@ -32,9 +32,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
@@ -54,11 +51,16 @@ jobs:
           cache: true
 
       - name: Publish flet-ads
+        # if:
         working-directory: ${{ env.SDK_PYTHON }}/packages/flet-ads
         run: |
-          uv run "${SCRIPTS}/patch_pubspec_version.py" "src/flutter/flet_ads/pubspec.yaml" "$PKG_VER"
+          source "$SCRIPTS/common.sh"
+          pushd "src/flutter/flet_ads"
+          patch_pubspec_version "pubspec.yaml" "$PKG_VER"
           dart pub get && dart analyze
 
+          popd
+          compute_build_versions flet-ads
           uv version "$PYPI_VER"
           uv build
           ls -laR "${SDK_PYTHON}/dist"
