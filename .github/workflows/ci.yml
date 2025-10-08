@@ -604,6 +604,7 @@ jobs:
           pushd "$FLUTTER_DIR"
           flutter pub get
           dart analyze
+          rm -f pubspec.lock
           popd
 
       - name: Build Python package
