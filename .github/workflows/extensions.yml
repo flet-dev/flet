@@ -57,10 +57,11 @@ jobs:
           source "$SCRIPTS/common.sh"
           RUN_OFFSET=500 compute_release_versions "flet-ads"
 
-          pushd "${SDK_PYTHON}/packages/flet-ads"
-          patch_pubspec_version "src/flutter/flet_ads/pubspec.yaml" "$PKG_VER"
+          cd "${SDK_PYTHON}/packages/flet-ads/src/flutter/flet_ads"
+          patch_pubspec_version "pubspec.yaml" "$PKG_VER"
           dart pub get && dart analyze
 
+          cd "${SDK_PYTHON}/packages/flet-ads"
           uv version "$PYPI_VER"
           uv build
           ls -laR "${SDK_PYTHON}/dist"
