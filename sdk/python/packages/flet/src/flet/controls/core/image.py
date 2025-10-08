@@ -29,10 +29,10 @@ class Image(LayoutControl):
 
     ```python
     ft.Image(
-        src="sample_image.jpg",
-        width=120,
-        height=120,
-        border_radius=8,
+        src="https://picsum.photos/seed/picsum/100/100",
+        width=100,
+        height=100,
+        fit=ft.BoxFit.CONTAIN,
     )
     ```
     """
