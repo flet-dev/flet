@@ -233,6 +233,10 @@ class FilledIconButton(IconButton):
 
     Filled icon buttons have higher visual impact and should be used for high emphasis
     actions, such as turning off a microphone or camera.
+
+    ```python
+    ft.FilledIconButton(icon=ft.Icons.CHECK)
+    ```
     """
 
 
