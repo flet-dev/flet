@@ -26,6 +26,15 @@ class Image(LayoutControl):
     - [`src_bytes`][(c).]
     - [`src_base64`][(c).]
     - [`src`][(c).]
+
+    ```python
+    ft.Image(
+        src="sample_image.jpg",
+        width=120,
+        height=120,
+        border_radius=8,
+    )
+    ```
     """
 
     src: Optional[str] = None
