@@ -43,8 +43,6 @@ compute_release_versions() {
 
   echo "compute_release_versions: start (GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}, RUN_OFFSET=${RUN_OFFSET})" >&2
 
-  local VERSION PKG_VER BUILD_VER PYPI_VER
-
   _emit() {
     # $1..$4: VERSION PKG_VER BUILD_VER PYPI_VER
     export VERSION="$1" PKG_VER="$2" BUILD_VER="$3" PYPI_VER="$4"
