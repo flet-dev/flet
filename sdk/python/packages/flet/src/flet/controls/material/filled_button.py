@@ -9,6 +9,10 @@ class FilledButton(Button):
     [`FloatingActionButton`][flet.], and is typically used for
     important, final actions that complete a flow, like "Save",
     "Join now", or "Confirm".
+
+    ```python
+    ft.FilledButton(content="Tap me")
+    ```
     """
 
     pass
