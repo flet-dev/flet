@@ -303,21 +303,17 @@ packages:
   flet_datatable2:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_datatable2"
-      ref: main
-      resolved-ref: b53fba432acf42e01505acba5898bc47d7d25797
-      url: "https://github.com/flet-dev/flet-datatable2.git"
-    source: git
+      path: "../sdk/python/packages/flet-datatable2/src/flutter/flet_datatable2"
+      relative: true
+    source: path
     version: "0.1.0"
   flet_flashlight:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_flashlight"
-      ref: main
-      resolved-ref: "0862f0324f4a0c1a405b2c1dc23e3857175b36cc"
-      url: "https://github.com/flet-dev/flet-flashlight.git"
-    source: git
-    version: "0.2.0"
+      path: "../sdk/python/packages/flet-flashlight/src/flutter/flet_flashlight"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_geolocator:
     dependency: "direct main"
     description:
@@ -363,12 +359,10 @@ packages:
   flet_webview:
     dependency: "direct main"
     description:
-      path: "src/flutter/flet_webview"
-      ref: main
-      resolved-ref: "4ae806ad9019a9d3883d1c0c88e30ba61aacb696"
-      url: "https://github.com/flet-dev/flet-webview.git"
-    source: git
-    version: "0.2.0"
+      path: "../sdk/python/packages/flet-webview/src/flutter/flet_webview"
+      relative: true
+    source: path
+    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter

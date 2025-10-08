@@ -46,6 +46,12 @@ dependencies:
   flet_audio_recorder:
     path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
 
+  flet_datatable2:
+    path: ../sdk/python/packages/flet-datatable2/src/flutter/flet_datatable2
+
+  flet_flashlight:
+    path: ../sdk/python/packages/flet-flashlight/src/flutter/flet_flashlight
+
   flet_geolocator:
     path: ../sdk/python/packages/flet-geolocator/src/flutter/flet_geolocator
 
@@ -62,20 +68,7 @@ dependencies:
     path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
 
   flet_webview:
-    git:
-      url: https://github.com/flet-dev/flet-webview.git
-      ref: main
-      path: src/flutter/flet_webview
-  flet_flashlight:
-    git:
-      url: https://github.com/flet-dev/flet-flashlight.git
-      ref: main
-      path: src/flutter/flet_flashlight
-  flet_datatable2:
-    git:
-      url: https://github.com/flet-dev/flet-datatable2.git
-      ref: main
-      path: src/flutter/flet_datatable2
+    path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
 
   flet_charts:
     path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts

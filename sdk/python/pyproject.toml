@@ -14,12 +14,15 @@ dependencies = [
     "flet-audio",
     "flet-audio-recorder",
     "flet-charts",
+    "flet-datatable2",
+    "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
-    "flet-video"
+    "flet-video",
+    "flet-webview"
 ]
 
 [tool.uv.sources]
@@ -31,12 +34,15 @@ flet-ads = { workspace = true }
 flet-audio = { workspace = true }
 flet-audio-recorder = { workspace = true }
 flet-charts = { workspace = true }
+flet-datatable2 = { workspace = true }
+flet-flashlight = { workspace = true }
 flet-geolocator = { workspace = true }
 flet-lottie = { workspace = true }
 flet-map = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
 flet-video = { workspace = true }
+flet-webview = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
 
 [tool.uv.workspace]

@@ -318,6 +318,7 @@ nav:
           - CupertinoDatePicker: controls/cupertinodatepicker.md
           - CupertinoDialogAction: controls/cupertinodialogaction.md
           - CupertinoFilledButton: controls/cupertinofilledbutton.md
+          - CupertinoListTile: controls/cupertinolisttile.md
           - CupertinoNavigationBar: controls/cupertinonavigationbar.md
           - CupertinoPicker: controls/cupertinopicker.md
           - CupertinoRadio: controls/cupertinoradio.md
@@ -328,7 +329,6 @@ nav:
           - CupertinoTextField: controls/cupertinotextfield.md
           - CupertinoTimerPicker: controls/cupertinotimerpicker.md
           - CupertinoTintedButton: controls/cupertinotintedbutton.md
-          - CupertinoListTile: controls/cupertinolisttile.md
           - DatePicker: controls/datepicker.md
           - DateRangePicker: controls/daterangepicker.md
           - DataTable:
@@ -336,6 +336,10 @@ nav:
               - DataCell: controls/datacell.md
               - DataColumn: controls/datacolumn.md
               - DataRow: controls/datarow.md
+          - DataTable2:
+              - Overview: datatable2/index.md
+              - DataColumn2: datatable2/datacolumn2.md
+              - DataRow2: datatable2/datarow2.md
           - Dismissible: controls/dismissible.md
           - Divider: controls/divider.md
           - DragTarget: controls/dragtarget.md
@@ -352,6 +356,7 @@ nav:
           - FilledIconButton: controls/fillediconbutton.md
           - FilledTonalButton: controls/filledtonalbutton.md
           - FilledTonalIconButton: controls/filledtonaliconbutton.md
+          - Flashlight: flashlight/index.md
           - FletApp: controls/fletapp.md
           - FloatingActionButton: controls/floatingactionbutton.md
           - GestureDetector: controls/gesturedetector.md
@@ -445,6 +450,7 @@ nav:
           - VerticalDivider: controls/verticaldivider.md
           - Video: video/index.md
           - View: controls/view.md
+          - WebView: webview/index.md
           - WindowDragArea: controls/windowdragarea.md
       - CLI:
           - Overview: cli/index.md
@@ -491,23 +497,16 @@ nav:
                   - InputDevice: audio_recorder/types/input_device.md
                   - IosAudioCategoryOption: audio_recorder/types/ios_audio_category_option.md
                   - IosRecorderConfiguration: audio_recorder/types/ios_recorder_configuration.md
-              - Geolocator:
-                  - ForegroundNotificationConfiguration: geolocator/types/foreground_notification_configuration.md
-                  - GeolocatorAndroidConfiguration: geolocator/types/geolocator_android_configuration.md
-                  - GeolocatorConfiguration: geolocator/types/geolocator_configuration.md
-                  - GeolocatorIosActivityType: geolocator/types/geolocator_ios_activity_type.md
-                  - GeolocatorIosConfiguration: geolocator/types/geolocator_ios_configuration.md
-                  - GeolocatorPermissionStatus: geolocator/types/geolocator_permission_status.md
-                  - GeolocatorPosition: geolocator/types/geolocator_position.md
-                  - GeolocatorPositionAccuracy: geolocator/types/geolocator_position_accuracy.md
-                  - GeolocatorPositionChangeEvent: geolocator/types/geolocator_position_change_event.md
-                  - GeolocatorWebConfiguration: geolocator/types/geolocator_web_configuration.md
-              - Video:
-                  - PlaylistMode: video/types/playlist_mode.md
-                  - VideoConfiguration: video/types/video_configuration.md
-                  - VideoMedia: video/types/video_media.md
-                  - VideoSubtitleConfiguration: video/types/video_subtitle_configuration.md
-                  - VideoSubtitleTrack: video/types/video_subtitle_track.md
+              - AutoCompleteSuggestion: types/autocompletesuggestion.md
+              - Blur: types/blur.md
+              - Border: types/border.md
+              - BorderRadius: types/borderradius.md
+              - BorderSide: types/borderside.md
+              - BoxConstraints: types/boxconstraints.md
+              - BoxDecoration: types/boxdecoration.md
+              - BoxShadow: types/boxshadow.md
+              - BrowserContextMenu: types/browsercontextmenu.md
+              - ButtonStyle: types/buttonstyle.md
               - Charts:
                   - BarChartEvent: charts/types/bar_chart_event.md
                   - BarChartGroup: charts/types/bar_chart_group.md
@@ -539,16 +538,6 @@ nav:
                   - ScatterChartSpot: charts/types/scatter_chart_spot.md
                   - ScatterChartSpotTooltip: charts/types/scatter_chart_spot_tooltip.md
                   - ScatterChartTooltip: charts/types/scatter_chart_tooltip.md
-              - AutoCompleteSuggestion: types/autocompletesuggestion.md
-              - Blur: types/blur.md
-              - Border: types/border.md
-              - BorderRadius: types/borderradius.md
-              - BorderSide: types/borderside.md
-              - BoxConstraints: types/boxconstraints.md
-              - BoxDecoration: types/boxdecoration.md
-              - BoxShadow: types/boxshadow.md
-              - BrowserContextMenu: types/browsercontextmenu.md
-              - ButtonStyle: types/buttonstyle.md
               - Clipboard: controls/clipboard.md
               - ColorFilter: types/colorfilter.md
               - Context: types/context.md
@@ -567,6 +556,25 @@ nav:
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Finder: types/finder.md
               - FletTestApp: types/flettestapp.md
+              - Flashlight:
+                  - FlashlightException: flashlight/exceptions/flashlight_exception.md
+                  - FlashlightEnableException: flashlight/exceptions/flashlight_enable_exception.md
+                  - FlashlightEnableNotAvailableException: flashlight/exceptions/flashlight_enable_not_available_exception.md
+                  - FlashlightEnableExistentUserException: flashlight/exceptions/flashlight_enable_existent_user_exception.md
+                  - FlashlightDisableException: flashlight/exceptions/flashlight_disable_exception.md
+                  - FlashlightDisableNotAvailableException: flashlight/exceptions/flashlight_disable_not_available_exception.md
+                  - FlashlightDisableExistentUserException: flashlight/exceptions/flashlight_disable_existent_user_exception.md
+              - Geolocator:
+                  - ForegroundNotificationConfiguration: geolocator/types/foreground_notification_configuration.md
+                  - GeolocatorAndroidConfiguration: geolocator/types/geolocator_android_configuration.md
+                  - GeolocatorConfiguration: geolocator/types/geolocator_configuration.md
+                  - GeolocatorIosActivityType: geolocator/types/geolocator_ios_activity_type.md
+                  - GeolocatorIosConfiguration: geolocator/types/geolocator_ios_configuration.md
+                  - GeolocatorPermissionStatus: geolocator/types/geolocator_permission_status.md
+                  - GeolocatorPosition: geolocator/types/geolocator_position.md
+                  - GeolocatorPositionAccuracy: geolocator/types/geolocator_position_accuracy.md
+                  - GeolocatorPositionChangeEvent: geolocator/types/geolocator_position_change_event.md
+                  - GeolocatorWebConfiguration: geolocator/types/geolocator_web_configuration.md
               - Gradient:
                   - Gradient: types/gradient/index.md
                   - LinearGradient: types/lineargradient.md
@@ -703,6 +711,18 @@ nav:
               - Url: types/url.md
               - UrlLauncher: controls/urllauncher.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
+              - Video:
+                  - PlaylistMode: video/types/playlist_mode.md
+                  - VideoConfiguration: video/types/video_configuration.md
+                  - VideoMedia: video/types/video_media.md
+                  - VideoSubtitleConfiguration: video/types/video_subtitle_configuration.md
+                  - VideoSubtitleTrack: video/types/video_subtitle_track.md
+              - WebView:
+                  - RequestMethod: webview/types/request_method.md
+                  - LogLevelSeverity: webview/types/log_level_severity.md
+                  - WebViewConsoleMessageEvent: webview/types/webview_console_message_event.md
+                  - WebViewJavaScriptEvent: webview/types/webview_javascript_event.md
+                  - WebViewScrollEvent: webview/types/webview_scroll_event.md
           - Decorators:
               - component: types/component.md
               - control: types/control.md
