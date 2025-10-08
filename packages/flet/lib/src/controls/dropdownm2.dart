@@ -70,11 +70,23 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
 
     var textStyle = widget.control
         .getTextStyle("text_style", Theme.of(context), const TextStyle())!;
-    if (textSize != null || color != null || focusedColor != null) {
+
+    if (textSize != null) {
+      textStyle = textStyle.copyWith(fontSize: textSize);
+    }
+
+    if (focusedColor != null) {
       textStyle = textStyle.copyWith(
-          fontSize: textSize,
-          color: (_focused ? (focusedColor ?? color) : color) ??
-              Theme.of(context).colorScheme.onSurface);
+          color: _focused ? focusedColor : (color ?? textStyle.color));
+    }
+
+    if (color != null) {
+      textStyle = textStyle.copyWith(color: color);
+    }
+
+    if (textStyle.color == null) {
+      textStyle =
+          textStyle.copyWith(color: Theme.of(context).colorScheme.onSurface);
     }
 
     var items = widget.control
@@ -113,7 +125,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
       style: textStyle,
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
-      value: _value,
+      initialValue: _value,
       dropdownColor: widget.control.getColor("bgcolor", context),
       enableFeedback: widget.control.getBool("enable_feedback"),
       elevation: widget.control.getInt("elevation", 8)!,
