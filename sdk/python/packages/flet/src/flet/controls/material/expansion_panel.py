@@ -88,6 +88,23 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 class ExpansionPanelList(LayoutControl):
     """
     A material expansion panel list that lays out its children and animates expansions.
+
+    ```python
+    ft.ExpansionPanelList(
+        width=400,
+        controls=[
+            ft.ExpansionPanel(
+                header=ft.Text("Details"),
+                content=ft.Text("More information here"),
+                expanded=True,
+            ),
+            ft.ExpansionPanel(
+                header=ft.Text("History"),
+                content=ft.Text("View previous updates"),
+            ),
+        ],
+    )
+    ```
     """
 
     controls: list[ExpansionPanel] = field(default_factory=list)
