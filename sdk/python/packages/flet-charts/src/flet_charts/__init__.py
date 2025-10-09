@@ -7,6 +7,15 @@ from flet_charts.bar_chart import (
 from flet_charts.bar_chart_group import BarChartGroup
 from flet_charts.bar_chart_rod import BarChartRod, BarChartRodTooltip
 from flet_charts.bar_chart_rod_stack_item import BarChartRodStackItem
+from flet_charts.candlestick_chart import (
+    CandlestickChart,
+    CandlestickChartEvent,
+    CandlestickChartTooltip,
+)
+from flet_charts.candlestick_chart_spot import (
+    CandlestickChartSpot,
+    CandlestickChartSpotTooltip,
+)
 from flet_charts.chart_axis import ChartAxis, ChartAxisLabel
 from flet_charts.line_chart import (
     LineChart,
@@ -55,6 +64,11 @@ __all__ = [
     "BarChartRodTooltip",
     "BarChartTooltip",
     "BarChartTooltipDirection",
+    "CandlestickChart",
+    "CandlestickChartEvent",
+    "CandlestickChartSpot",
+    "CandlestickChartSpotTooltip",
+    "CandlestickChartTooltip",
     "ChartAxis",
     "ChartAxisLabel",
     "ChartCirclePoint",

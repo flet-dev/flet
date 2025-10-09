@@ -38,3 +38,13 @@ To install the `flet-charts` package and add it to your project dependencies:
 ### Examples
 
 For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/charts).
+
+### Available charts
+
+- `BarChart`
+- `CandlestickChart`
+- `LineChart`
+- `MatplotlibChart`
+- `PieChart`
+- `PlotlyChart`
+- `ScatterChart`

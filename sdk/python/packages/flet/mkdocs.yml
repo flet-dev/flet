@@ -267,6 +267,7 @@ nav:
           - Charts:
               - Overview: charts/index.md
               - BarChart: charts/bar_chart.md
+              - CandlestickChart: charts/candlestick_chart.md
               - LineChart: charts/line_chart.md
               - MatplotlibChart: charts/matplotlib_chart.md
               - PieChart: charts/pie_chart.md
@@ -515,6 +516,10 @@ nav:
                   - BarChartRodTooltip: charts/types/bar_chart_rod_tooltip.md
                   - BarChartTooltip: charts/types/bar_chart_tooltip.md
                   - BarChartTooltipDirection: charts/types/bar_chart_tooltip_direction.md
+                  - CandlestickChartEvent: charts/types/candlestick_chart_event.md
+                  - CandlestickChartSpot: charts/types/candlestick_chart_spot.md
+                  - CandlestickChartSpotTooltip: charts/types/candlestick_chart_spot_tooltip.md
+                  - CandlestickChartTooltip: charts/types/candlestick_chart_tooltip.md
                   - ChartAxis: charts/types/chart_axis.md
                   - ChartAxisLabel: charts/types/chart_axis_label.md
                   - ChartCirclePoint: charts/types/chart_circle_point.md

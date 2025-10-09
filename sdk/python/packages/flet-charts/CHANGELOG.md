@@ -13,6 +13,7 @@ Initial release.
 
 - Deployed online documentation: https://docs.flet.dev/charts/
 - New Chart control: `ScatterChart`
+- New Chart control: `CandlestickChart`
 
 #### BarChart
 

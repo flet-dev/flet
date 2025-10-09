@@ -38,6 +38,7 @@ pip install flet-charts  # (1)!
 ## Available Charts
 
 - [`BarChart`](bar_chart.md)
+- [`CandlestickChart`](candlestick_chart.md)
 - [`LineChart`](line_chart.md)
 - [`MatplotlibChart`](matplotlib_chart.md)
 - [`PieChart`](pie_chart.md)
