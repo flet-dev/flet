@@ -1,7 +1,7 @@
 ---
 class_name: flet.Column
 examples: ../../examples/controls/column
-example_images: ../test-images/examples/material/golden/macos/column
+example_images: ../test-images/examples/core/golden/macos/column
 example_media: ../examples/controls/column/media
 ---
 
