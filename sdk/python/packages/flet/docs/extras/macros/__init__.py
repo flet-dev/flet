@@ -1,3 +1,7 @@
+import os
+from urllib.parse import urlparse
+
+
 def define_env(env):
     def format_value(value):
         if isinstance(value, bool):
@@ -48,7 +52,14 @@ def define_env(env):
 
     @env.macro
     def image(src, alt=None, width=None, caption=None, link=None):
-        alt_text = alt or ""
+        if alt is None:
+            parsed_src = urlparse(src)
+            path = parsed_src.path or src
+            filename = os.path.basename(path.rstrip("/"))
+            alt_text = filename or src
+        else:
+            alt_text = alt
+        alt_text = str(alt_text)
         body = f"![{alt_text}]({src})"
         if width:
             body += f'{{width="{width}"}}'
