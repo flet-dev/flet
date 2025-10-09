@@ -48,7 +48,6 @@ class Geolocator(ft.Service):
     async def get_current_position(
         self,
         configuration: Optional[GeolocatorConfiguration] = None,
-        timeout: float = 30,
     ) -> GeolocatorPosition:
         """
         Gets the current position of the device with the desired accuracy and settings.
@@ -64,22 +63,17 @@ class Geolocator(ft.Service):
             configuration: Additional configuration for the location request.
                 If not specified, then the [`Geolocator.configuration`][(p).]
                 property is used.
-            timeout: The maximum amount of time (in seconds) to wait for a response.
 
         Returns:
             The current position of the device as a [`GeolocatorPosition`][(p).].
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         r = await self._invoke_method(
             method_name="get_current_position",
             arguments={"configuration": configuration or self.configuration},
-            timeout=timeout,
         )
         return GeolocatorPosition(**r)
 
-    async def get_last_known_position(self, timeout: float = 10) -> GeolocatorPosition:
+    async def get_last_known_position(self) -> GeolocatorPosition:
         """
         Gets the last known position stored on the user's device.
         The accuracy can be defined using the
@@ -88,122 +82,85 @@ class Geolocator(ft.Service):
         Note:
             This method is not supported on web platform.
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             The last known position of the device as a [`GeolocatorPosition`][(p).].
 
         Raises:
             AssertionError: If invoked on a web platform.
-            TimeoutError: If the request times out.
         """
         assert not self.page.web, "get_last_known_position is not supported on web"
         r = await self._invoke_method(
             "get_last_known_position",
-            timeout=timeout,
         )
         return GeolocatorPosition(**r)
 
-    async def get_permission_status(
-        self, timeout: float = 10
-    ) -> GeolocatorPermissionStatus:
+    async def get_permission_status(self) -> GeolocatorPermissionStatus:
         """
         Gets which permission the app has been granted to access the device's location.
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             The status of the permission.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         r = await self._invoke_method(
             "get_permission_status",
-            timeout=timeout,
         )
         return GeolocatorPermissionStatus(r)
 
-    async def request_permission(self, timeout: int = 60) -> GeolocatorPermissionStatus:
+    async def request_permission(self) -> GeolocatorPermissionStatus:
         """
         Requests the device for access to the device's location.
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             The status of the permission request.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         r = await self._invoke_method(
             "request_permission",
-            timeout=timeout,
         )
         return GeolocatorPermissionStatus(r)
 
-    async def is_location_service_enabled(self, timeout: float = 10) -> bool:
+    async def is_location_service_enabled(self) -> bool:
         """
         Checks if location service is enabled.
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             `True` if location service is enabled, `False` otherwise.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
-        return await self._invoke_method("is_location_service_enabled", timeout=timeout)
+        return await self._invoke_method("is_location_service_enabled")
 
-    async def open_app_settings(self, timeout: float = 10) -> bool:
+    async def open_app_settings(self) -> bool:
         """
         Attempts to open the app's settings.
 
         Note:
             This method is not supported on web platform.
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             `True` if the app's settings were opened successfully, `False` otherwise.
 
         Raises:
             AssertionError: If invoked on a web platform.
-            TimeoutError: If the request times out.
         """
         assert not self.page.web, "open_app_settings is not supported on web"
         return await self._invoke_method(
             "open_app_settings",
-            timeout=timeout,
         )
 
-    async def open_location_settings(self, timeout: float = 10) -> bool:
+    async def open_location_settings(self) -> bool:
         """
         Attempts to open the device's location settings.
 
         Note:
             This method is not supported on web platform.
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             `True` if the device's settings were opened successfully, `False` otherwise.
 
         Raises:
             AssertionError: If invoked on a web platform.
-            TimeoutError: If the request times out.
         """
         assert not self.page.web, "open_location_settings is not supported on web"
         return await self._invoke_method(
             "open_location_settings",
-            timeout=timeout,
         )
 
     async def distance_between(
@@ -212,8 +169,7 @@ class Geolocator(ft.Service):
         start_longitude: ft.Number,
         end_latitude: ft.Number,
         end_longitude: ft.Number,
-        timeout: float = 10,
-    ):
+    ) -> ft.Number:
         """
         Calculates the distance between the supplied coordinates in meters.
 
@@ -225,15 +181,11 @@ class Geolocator(ft.Service):
             start_longitude: The longitude of the starting point, in degrees.
             end_latitude: The latitude of the ending point, in degrees.
             end_longitude: The longitude of the ending point, in degrees.
-            timeout: The maximum amount of time (in seconds) to wait for a response.
 
         Returns:
             The distance between the coordinates in meters.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
-        await self._invoke_method(
+        return await self._invoke_method(
             method_name="distance_between",
             arguments={
                 "start_latitude": start_latitude,
@@ -241,5 +193,4 @@ class Geolocator(ft.Service):
                 "end_latitude": end_latitude,
                 "end_longitude": end_longitude,
             },
-            timeout=timeout,
         )

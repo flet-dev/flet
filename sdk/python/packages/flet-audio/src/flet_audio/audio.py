@@ -120,111 +120,74 @@ class Audio(ft.Service):
         super().before_update()
         assert self.src or self.src_base64, "either src or src_base64 must be provided"
 
-    async def play(self, position: ft.DurationValue = 0, timeout: Optional[float] = 10):
+    async def play(self, position: ft.DurationValue = 0):
         """
         Starts playing audio from the specified `position`.
 
         Args:
             position: The position to start playback from.
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         await self._invoke_method(
             method_name="play",
             arguments={"position": position},
-            timeout=timeout,
         )
 
-    async def pause(self, timeout: Optional[float] = 10):
+    async def pause(self):
         """
         Pauses the audio that is currently playing.
 
         If you call [`resume()`][flet_audio.Audio.resume] later,
         the audio will resume from the point that it has been paused.
         """
-        await self._invoke_method("pause", timeout=timeout)
+        await self._invoke_method("pause")
 
-    async def resume(self, timeout: Optional[float] = 10):
+    async def resume(self):
         """
         Resumes the audio that has been paused or stopped.
-
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
-        await self._invoke_method("resume", timeout=timeout)
+        await self._invoke_method("resume")
 
-    async def release(self, timeout: Optional[float] = 10):
+    async def release(self):
         """
         Releases the resources associated with this media player.
         These are going to be fetched or buffered again as soon as
         you change the source or call [`resume()`][flet_audio.Audio.resume].
-
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
-        await self._invoke_method("release", timeout=timeout)
+        await self._invoke_method("release")
 
-    async def seek(self, position: ft.DurationValue, timeout: Optional[float] = 10):
+    async def seek(self, position: ft.DurationValue):
         """
         Moves the cursor to the desired position.
 
         Args:
             position: The position to seek/move to.
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         await self._invoke_method(
             method_name="seek",
             arguments={"position": position},
-            timeout=timeout,
         )
 
-    async def get_duration(
-        self, timeout: Optional[float] = 10
-    ) -> Optional[ft.Duration]:
+    async def get_duration(self) -> Optional[ft.Duration]:
         """
         Get audio duration of the audio playback.
 
         It will be available as soon as the audio duration is available
         (it might take a while to download or buffer it if file is not local).
 
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
-
         Returns:
             The duration of audio playback.
-
-        Raises:
-            TimeoutError: If the request times out.
         """
         return await self._invoke_method(
             method_name="get_duration",
-            timeout=timeout,
         )
 
-    async def get_current_position(
-        self, timeout: Optional[float] = 10
-    ) -> Optional[ft.Duration]:
+    async def get_current_position(self) -> Optional[ft.Duration]:
         """
         Get the current position of the audio playback.
-
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a response.
 
         Returns:
             The current position of the audio playback.
         """
         return await self._invoke_method(
             method_name="get_current_position",
-            timeout=timeout,
         )
