@@ -1,0 +1,25 @@
+name: flet_charts
+description: A Flet extension for creating interactive charts and graphs.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  collection: ^1.16.0
+  equatable: ^2.0.3
+  fl_chart: 1.1.1
+
+  flet:
+    path: ../../../../../../../packages/flet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

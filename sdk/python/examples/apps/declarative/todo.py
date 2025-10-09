@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass, field
-from typing import cast
+from typing import Callable, cast
 
 import flet as ft
 
@@ -15,12 +15,15 @@ class TaskItem:
     name: str
     completed: bool = False
     id: int = field(default_factory=TaskID)
+    on_status_changed: Callable | None = None
 
     def update_task(self, new_name: str):
         self.name = new_name
 
     def toggle_task_status(self):
         self.completed = not self.completed
+        if self.on_status_changed:
+            self.on_status_changed()
 
 
 @ft.observable
@@ -49,8 +52,13 @@ class TodoAppState:
     def status_changed(self, e: ft.Event[ft.Tabs]):
         self.status = self.statuses[e.control.selected_index]
 
+    def on_task_status_changed(self):
+        cast(ft.Observable, self).notify()
+
     def add_task(self, new_task_event: str):
-        self.tasks.append(TaskItem(new_task_event))
+        self.tasks.append(
+            TaskItem(new_task_event, on_status_changed=self.on_task_status_changed)
+        )
 
     def delete_task(self, task: TaskItem):
         self.tasks.remove(task)

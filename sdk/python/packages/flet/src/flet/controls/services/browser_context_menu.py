@@ -1,5 +1,3 @@
-from typing import Optional
-
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
 
@@ -12,12 +10,12 @@ class BrowserContextMenu(Service):
         super().__post_init__(ref)
         self.__disabled = False
 
-    async def enable(self, timeout: Optional[float] = None):
-        await self._invoke_method("enable_menu", timeout=timeout)
+    async def enable(self):
+        await self._invoke_method("enable_menu")
         self.__disabled = False
 
-    async def disable(self, timeout: Optional[float] = None):
-        await self._invoke_method("disable_menu", timeout=timeout)
+    async def disable(self):
+        await self._invoke_method("disable_menu")
         self.__disabled = True
 
     @property

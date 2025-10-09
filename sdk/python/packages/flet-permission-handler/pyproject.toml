@@ -1,0 +1,24 @@
+[project]
+name = "flet-permission-handler"
+version = "0.1.0"
+description = "Manage runtime permissions in Flet apps."
+readme = "README.md"
+authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://docs.flet.dev/permission-handler"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-permission-handler"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_permission_handler" = ["**/*"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,27 @@
+name: flet_webview
+description: Flet WebView control
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  collection: ^1.16.0
+  webview_flutter: 4.13.0
+  webview_flutter_web: 0.2.3+4
+  webview_flutter_platform_interface: 2.14.0
+
+  flet:
+    path: ../../../../../../../packages/flet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

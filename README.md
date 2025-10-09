@@ -19,8 +19,8 @@
 <a href="https://pypi.org/project/flet" target="_blank">
     <img src="https://img.shields.io/pypi/pyversions/flet.svg?color=%2334D058" alt="Supported Python versions">
 </a>
-<a href="https://ci.appveyor.com/project/flet-dev/flet/branch/main" target="_blank">
-    <img src="https://ci.appveyor.com/api/projects/status/xwablctxslvey576/branch/main?svg=true" alt="Build status">
+<a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
+    <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status">
 </a>
 </p>
 
@@ -51,7 +51,7 @@ with assets hosting and desktop clients.
 
 Flet UI is built with [Flutter](https://flutter.dev/), so your app looks professional and could be delivered to any platform.
 Flet simplifies the Flutter model by combining smaller "widgets" to ready-to-use "controls"
-with an imperative programming model. 
+with an imperative programming model.
 
 ### 📱 Deliver to any device or platform
 

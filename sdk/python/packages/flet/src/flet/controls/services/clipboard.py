@@ -2,14 +2,13 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
-from flet.controls.types import Number
 
 __all__ = ["Clipboard"]
 
 
 @control("Clipboard")
 class Clipboard(Service):
-    async def set(self, value: str, timeout: Optional[Number] = None) -> None:
+    async def set(self, value: str) -> None:
         """
         Set clipboard data on a client side (user's web browser or a desktop).
 
@@ -21,9 +20,9 @@ class Clipboard(Service):
         ```
         ///
         """
-        await self._invoke_method("set", {"data": value}, timeout=timeout)
+        await self._invoke_method("set", {"data": value})
 
-    async def get(self, timeout: Optional[Number] = None) -> Optional[str]:
+    async def get(self) -> Optional[str]:
         """
         Set clipboard data on a client side (user's web browser or a desktop).
 
@@ -35,4 +34,4 @@ class Clipboard(Service):
         ```
         ///
         """
-        return await self._invoke_method("get", timeout=timeout)
+        return await self._invoke_method("get")

@@ -253,7 +253,7 @@ nav:
       - Extending Flet:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
-  - Reference:
+  - API Reference:
       - Controls:
           - Overview: controls/index.md
           - Ads:
@@ -262,6 +262,17 @@ nav:
               - BaseAd: ads/basead.md
               - InterstitialAd: ads/interstitialad.md
               # - NativeAd: ads/nativead.md
+          - Audio: audio/index.md
+          - AudioRecorder: audio_recorder/index.md
+          - Charts:
+              - Overview: charts/index.md
+              - BarChart: charts/bar_chart.md
+              - CandlestickChart: charts/candlestick_chart.md
+              - LineChart: charts/line_chart.md
+              - MatplotlibChart: charts/matplotlib_chart.md
+              - PieChart: charts/pie_chart.md
+              - PlotlyChart: charts/plotly_chart.md
+              - ScatterChart: charts/scatter_chart.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -308,6 +319,7 @@ nav:
           - CupertinoDatePicker: controls/cupertinodatepicker.md
           - CupertinoDialogAction: controls/cupertinodialogaction.md
           - CupertinoFilledButton: controls/cupertinofilledbutton.md
+          - CupertinoListTile: controls/cupertinolisttile.md
           - CupertinoNavigationBar: controls/cupertinonavigationbar.md
           - CupertinoPicker: controls/cupertinopicker.md
           - CupertinoRadio: controls/cupertinoradio.md
@@ -318,7 +330,6 @@ nav:
           - CupertinoTextField: controls/cupertinotextfield.md
           - CupertinoTimerPicker: controls/cupertinotimerpicker.md
           - CupertinoTintedButton: controls/cupertinotintedbutton.md
-          - CupertinoListTile: controls/cupertinolisttile.md
           - DatePicker: controls/datepicker.md
           - DateRangePicker: controls/daterangepicker.md
           - DataTable:
@@ -326,6 +337,10 @@ nav:
               - DataCell: controls/datacell.md
               - DataColumn: controls/datacolumn.md
               - DataRow: controls/datarow.md
+          - DataTable2:
+              - Overview: datatable2/index.md
+              - DataColumn2: datatable2/datacolumn2.md
+              - DataRow2: datatable2/datarow2.md
           - Dismissible: controls/dismissible.md
           - Divider: controls/divider.md
           - DragTarget: controls/dragtarget.md
@@ -342,9 +357,11 @@ nav:
           - FilledIconButton: controls/fillediconbutton.md
           - FilledTonalButton: controls/filledtonalbutton.md
           - FilledTonalIconButton: controls/filledtonaliconbutton.md
+          - Flashlight: flashlight/index.md
           - FletApp: controls/fletapp.md
           - FloatingActionButton: controls/floatingactionbutton.md
           - GestureDetector: controls/gesturedetector.md
+          - Geolocator: geolocator/index.md
           - GridView: controls/gridview.md
           - HapticFeedback: controls/hapticfeedback.md
           - Icon: controls/icon.md
@@ -354,6 +371,28 @@ nav:
           - KeyboardListener: controls/keyboardlistener.md
           - ListTile: controls/listtile.md
           - ListView: controls/listview.md
+          - Lottie: lottie/index.md
+          - Map:
+              - Overview: map/index.md
+              - Map: map/map.md
+              - Layers:
+                  - MapLayer: map/map_layer.md
+                  - TileLayer: map/tile_layer.md
+                  - MarkerLayer: map/marker_layer.md
+                  - CircleLayer: map/circle_layer.md
+                  - PolygonLayer: map/polygon_layer.md
+                  - PolylineLayer: map/polyline_layer.md
+              - Markers:
+                  - Marker: map/marker.md
+                  - CircleMarker: map/circle_marker.md
+                  - PolygonMarker: map/polygon_marker.md
+                  - PolylineMarker: map/polyline_marker.md
+              - Attributions:
+                  - SourceAttribution: map/source_attribution.md
+                  - SimpleAttribution: map/simple_attribution.md
+                  - RichAttribution: map/rich_attribution.md
+                  - TextSourceAttribution: map/text_source_attribution.md
+                  - ImageSourceAttribution: map/image_source_attribution.md
           - Markdown: controls/markdown.md
           - MenuBar: controls/menubar.md
           - MenuItemButton: controls/menuitembutton.md
@@ -374,6 +413,7 @@ nav:
           - Pagelet: controls/pagelet.md
           - Placeholder: controls/placeholder.md
           - PopupMenuButton: controls/popupmenubutton.md
+          - PermissionHandler: permission_handler/index.md
           - ProgressBar: controls/progressbar.md
           - ProgressRing: controls/progressring.md
           - Radio: controls/radio.md
@@ -383,6 +423,7 @@ nav:
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
+          - Rive: rive/index.md
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
           - SegmentedButton: controls/segmentedbutton.md
@@ -408,7 +449,9 @@ nav:
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
           - VerticalDivider: controls/verticaldivider.md
+          - Video: video/index.md
           - View: controls/view.md
+          - WebView: webview/index.md
           - WindowDragArea: controls/windowdragarea.md
       - CLI:
           - Overview: cli/index.md
@@ -439,6 +482,22 @@ nav:
               - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md
               - AnimationStyle: types/animationstyle.md
+              - Audio:
+                  - AudioDurationChangeEvent: audio/types/audio_duration_change_event.md
+                  - AudioPositionChangeEvent: audio/types/audio_position_change_event.md
+                  - AudioStateChangeEvent: audio/types/audio_state_change_event.md
+                  - AudioState: audio/types/audio_state.md
+                  - ReleaseMode: audio/types/release_mode.md
+              - AudioRecorder:
+                  - AndroidAudioSource: audio_recorder/types/android_audio_source.md
+                  - AndroidRecorderConfiguration: audio_recorder/types/android_recorder_configuration.md
+                  - AudioEncoder: audio_recorder/types/audio_encoder.md
+                  - AudioRecorderConfiguration: audio_recorder/types/audio_recorder_configuration.md
+                  - AudioRecorderStateChangeEvent: audio_recorder/types/audio_recorder_state_change_event.md
+                  - AudioRecorderState: audio_recorder/types/audio_recorder_state.md
+                  - InputDevice: audio_recorder/types/input_device.md
+                  - IosAudioCategoryOption: audio_recorder/types/ios_audio_category_option.md
+                  - IosRecorderConfiguration: audio_recorder/types/ios_recorder_configuration.md
               - AutoCompleteSuggestion: types/autocompletesuggestion.md
               - Blur: types/blur.md
               - Border: types/border.md
@@ -449,6 +508,41 @@ nav:
               - BoxShadow: types/boxshadow.md
               - BrowserContextMenu: types/browsercontextmenu.md
               - ButtonStyle: types/buttonstyle.md
+              - Charts:
+                  - BarChartEvent: charts/types/bar_chart_event.md
+                  - BarChartGroup: charts/types/bar_chart_group.md
+                  - BarChartRod: charts/types/bar_chart_rod.md
+                  - BarChartRodStackItem: charts/types/bar_chart_rod_stack_item.md
+                  - BarChartRodTooltip: charts/types/bar_chart_rod_tooltip.md
+                  - BarChartTooltip: charts/types/bar_chart_tooltip.md
+                  - BarChartTooltipDirection: charts/types/bar_chart_tooltip_direction.md
+                  - CandlestickChartEvent: charts/types/candlestick_chart_event.md
+                  - CandlestickChartSpot: charts/types/candlestick_chart_spot.md
+                  - CandlestickChartSpotTooltip: charts/types/candlestick_chart_spot_tooltip.md
+                  - CandlestickChartTooltip: charts/types/candlestick_chart_tooltip.md
+                  - ChartAxis: charts/types/chart_axis.md
+                  - ChartAxisLabel: charts/types/chart_axis_label.md
+                  - ChartCirclePoint: charts/types/chart_circle_point.md
+                  - ChartCrossPoint: charts/types/chart_cross_point.md
+                  - ChartDataPointTooltip: charts/types/chart_data_point_tooltip.md
+                  - ChartEventType: charts/types/chart_event_type.md
+                  - ChartGridLines: charts/types/chart_grid_lines.md
+                  - ChartPointLine: charts/types/chart_point_line.md
+                  - ChartPointShape: charts/types/chart_point_shape.md
+                  - ChartSquarePoint: charts/types/chart_square_point.md
+                  - HorizontalAlignment: charts/types/horizontal_alignment.md
+                  - LineChartData: charts/types/line_chart_data.md
+                  - LineChartDataPoint: charts/types/line_chart_data_point.md
+                  - LineChartDataPointTooltip: charts/types/line_chart_data_point_tooltip.md
+                  - LineChartEvent: charts/types/line_chart_event.md
+                  - LineChartEventSpot: charts/types/line_chart_event_spot.md
+                  - LineChartTooltip: charts/types/line_chart_tooltip.md
+                  - PieChartEvent: charts/types/pie_chart_event.md
+                  - PieChartSection: charts/types/pie_chart_section.md
+                  - ScatterChartEvent: charts/types/scatter_chart_event.md
+                  - ScatterChartSpot: charts/types/scatter_chart_spot.md
+                  - ScatterChartSpotTooltip: charts/types/scatter_chart_spot_tooltip.md
+                  - ScatterChartTooltip: charts/types/scatter_chart_tooltip.md
               - Clipboard: controls/clipboard.md
               - ColorFilter: types/colorfilter.md
               - Context: types/context.md
@@ -467,6 +561,25 @@ nav:
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Finder: types/finder.md
               - FletTestApp: types/flettestapp.md
+              - Flashlight:
+                  - FlashlightException: flashlight/exceptions/flashlight_exception.md
+                  - FlashlightEnableException: flashlight/exceptions/flashlight_enable_exception.md
+                  - FlashlightEnableNotAvailableException: flashlight/exceptions/flashlight_enable_not_available_exception.md
+                  - FlashlightEnableExistentUserException: flashlight/exceptions/flashlight_enable_existent_user_exception.md
+                  - FlashlightDisableException: flashlight/exceptions/flashlight_disable_exception.md
+                  - FlashlightDisableNotAvailableException: flashlight/exceptions/flashlight_disable_not_available_exception.md
+                  - FlashlightDisableExistentUserException: flashlight/exceptions/flashlight_disable_existent_user_exception.md
+              - Geolocator:
+                  - ForegroundNotificationConfiguration: geolocator/types/foreground_notification_configuration.md
+                  - GeolocatorAndroidConfiguration: geolocator/types/geolocator_android_configuration.md
+                  - GeolocatorConfiguration: geolocator/types/geolocator_configuration.md
+                  - GeolocatorIosActivityType: geolocator/types/geolocator_ios_activity_type.md
+                  - GeolocatorIosConfiguration: geolocator/types/geolocator_ios_configuration.md
+                  - GeolocatorPermissionStatus: geolocator/types/geolocator_permission_status.md
+                  - GeolocatorPosition: geolocator/types/geolocator_position.md
+                  - GeolocatorPositionAccuracy: geolocator/types/geolocator_position_accuracy.md
+                  - GeolocatorPositionChangeEvent: geolocator/types/geolocator_position_change_event.md
+                  - GeolocatorWebConfiguration: geolocator/types/geolocator_web_configuration.md
               - Gradient:
                   - Gradient: types/gradient/index.md
                   - LinearGradient: types/lineargradient.md
@@ -481,6 +594,33 @@ nav:
                   - ValueKey: types/valuekey.md
               - Locale: types/locale.md
               - LocaleConfiguration: types/localeconfiguration.md
+              - Map:
+                  - AttributionAlignment: map/types/attribution_alignment.md
+                  - Camera: map/types/camera.md
+                  - CameraFit: map/types/camera_fit.md
+                  - CursorKeyboardRotationConfiguration: map/types/cursor_keyboard_rotation_configuration.md
+                  - CursorRotationBehaviour: map/types/cursor_rotation_behaviour.md
+                  - DashedStrokePattern: map/types/dashed_stroke_pattern.md
+                  - DottedStrokePattern: map/types/dotted_stroke_pattern.md
+                  - FadeInTileDisplay: map/types/fade_in_tile_display.md
+                  - InstantaneousTileDisplay: map/types/instantaneous_tile_display.md
+                  - InteractionConfiguration: map/types/interaction_configuration.md
+                  - InteractionFlag: map/types/interaction_flag.md
+                  - KeyboardConfiguration: map/types/keyboard_configuration.md
+                  - MapEvent: map/types/map_event.md
+                  - MapEventSource: map/types/map_event_source.md
+                  - MapHoverEvent: map/types/map_hover_event.md
+                  - MapLatitudeLongitude: map/types/map_latitude_longitude.md
+                  - MapLatitudeLongitudeBounds: map/types/map_latitude_longitude_bounds.md
+                  - MapPointerEvent: map/types/map_pointer_event.md
+                  - MapPositionChangeEvent: map/types/map_position_change_event.md
+                  - MapTapEvent: map/types/map_tap_event.md
+                  - MultiFingerGesture: map/types/multi_finger_gesture.md
+                  - PatternFit: map/types/pattern_fit.md
+                  - SolidStrokePattern: map/types/solid_stroke_pattern.md
+                  - StrokePattern: map/types/stroke_pattern.md
+                  - TileDisplay: map/types/tile_display.md
+                  - TileLayerEvictErrorTileStrategy: map/types/tile_layer_evict_error_tile_strategy.md
               - Margin: types/margin.md
               - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
               - MarkdownStyleSheet: types/markdownstylesheet.md
@@ -505,6 +645,9 @@ nav:
                   - PaintLinearGradient: types/paintlineargradient.md
                   - PaintRadialGradient: types/paintradialgradient.md
                   - PaintSweepGradient: types/paintsweepgradient.md
+              - PermissionHandler:
+                  - Permission: permission_handler/types/permission.md
+                  - PermissionStatus: permission_handler/types/permission_status.md
               - PubSubClient: types/pubsub/pubsubclient.md
               - PubSubHub: types/pubsub/pubsubhub.md
               - Rect: types/rect.md
@@ -573,6 +716,18 @@ nav:
               - Url: types/url.md
               - UrlLauncher: controls/urllauncher.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
+              - Video:
+                  - PlaylistMode: video/types/playlist_mode.md
+                  - VideoConfiguration: video/types/video_configuration.md
+                  - VideoMedia: video/types/video_media.md
+                  - VideoSubtitleConfiguration: video/types/video_subtitle_configuration.md
+                  - VideoSubtitleTrack: video/types/video_subtitle_track.md
+              - WebView:
+                  - RequestMethod: webview/types/request_method.md
+                  - LogLevelSeverity: webview/types/log_level_severity.md
+                  - WebViewConsoleMessageEvent: webview/types/webview_console_message_event.md
+                  - WebViewJavaScriptEvent: webview/types/webview_javascript_event.md
+                  - WebViewScrollEvent: webview/types/webview_scroll_event.md
           - Decorators:
               - component: types/component.md
               - control: types/control.md
