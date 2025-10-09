@@ -10,13 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  collection: ^1.16.0
-  webview_flutter: ^4.13.0
   flutter_web_plugins:
     sdk: flutter
-  webview_flutter_web: ^0.2.3+4
-  webview_flutter_platform_interface: ^2.13.0
+
+  collection: ^1.16.0
+  webview_flutter: 4.13.0
+  webview_flutter_web: 0.2.3+4
+  webview_flutter_platform_interface: 2.14.0
 
   flet:
     path: ../../../../../../../packages/flet

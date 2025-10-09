@@ -11,9 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   collection: ^1.16.0
-  torch_light: ^1.1.0
+  torch_light: 1.1.0
 
   flet:
     path: ../../../../../../../packages/flet

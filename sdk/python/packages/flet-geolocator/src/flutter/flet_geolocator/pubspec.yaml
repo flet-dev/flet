@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  geolocator: ^14.0.1
+  geolocator: 14.0.2
   collection: ^1.16.0
 
   flet:

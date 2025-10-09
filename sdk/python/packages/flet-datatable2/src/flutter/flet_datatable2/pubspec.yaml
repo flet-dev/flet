@@ -8,7 +8,8 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  data_table_2: ^2.6.0
+  data_table_2: 2.6.0
+
   flet:
     path: ../../../../../../../packages/flet
 

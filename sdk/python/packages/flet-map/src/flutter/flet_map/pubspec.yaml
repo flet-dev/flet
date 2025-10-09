@@ -12,10 +12,9 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  flutter_map: ^8.1.1
-  flutter_map_animations: ^0.9.0
-  flutter_map_cancellable_tile_provider: ^3.1.0
-  latlong2: ^0.9.1
+  flutter_map: 8.2.2
+  flutter_map_animations: 0.9.0
+  latlong2: 0.9.1
 
   flet:
     path: ../../../../../../../packages/flet

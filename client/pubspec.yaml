@@ -95,7 +95,7 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
   # Docs: https://pub.dev/packages/flutter_launcher_icons
-  flutter_launcher_icons: "^0.13.1"
+  flutter_launcher_icons: "^0.14.4"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

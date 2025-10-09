@@ -2,7 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 import './utils/map.dart';
 
@@ -36,7 +35,7 @@ class TileLayerControl extends StatelessWidget {
                 ?.map((e) => e.toString())
                 .toList() ??
             ['a', 'b', 'c'],
-        tileProvider: CancellableNetworkTileProvider(),
+        tileProvider: NetworkTileProvider(),
         tileDisplay: parseTileDisplay(
             control.get("display_mode"), const TileDisplay.fadeIn())!,
         tileDimension: control.getInt("tile_size", 256)!,
