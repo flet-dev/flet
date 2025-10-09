@@ -1,3 +1,7 @@
+"""
+Public exports for the flet-video package.
+"""
+
 from flet_video.types import (
     PlaylistMode,
     VideoConfiguration,

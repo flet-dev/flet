@@ -113,5 +113,9 @@ class PolylineLayer(MapLayer):
 
     simplification_tolerance: ft.Number = 0.3
     """
+    The tolerance (in map units) used to simplify polylines for rendering.
 
+    Higher values result in more aggressive simplification,
+    which can improve performance but may reduce the accuracy of
+    the displayed polyline.
     """

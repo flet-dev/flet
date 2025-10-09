@@ -1,3 +1,7 @@
+"""
+Type definitions and configuration objects for flet-video.
+"""
+
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
@@ -108,16 +112,59 @@ class VideoSubtitleTrack:
     """The language of the subtitle track, e.g. 'en'."""
 
     channels_count: Optional[int] = None
+    """
+    The number of audio channels detected in the media.
+    """
+
     channels: Optional[str] = None
+    """
+    Channel layout string describing the spatial arrangement of channels.
+    """
+
     sample_rate: Optional[int] = None
+    """
+    Audio sampling rate in hertz.
+    """
+
     fps: Optional[ft.Number] = None
+    """
+    Video frames per second.
+    """
+
     bitrate: Optional[int] = None
+    """
+    Overall media bitrate in bits per second.
+    """
+
     rotate: Optional[int] = None
+    """
+    Rotation metadata in degrees to apply when rendering the video.
+    """
+
     par: Optional[ft.Number] = None
+    """
+    Pixel aspect ratio value.
+    """
+
     audio_channels: Optional[int] = None
+    """
+    Explicit audio channel count override.
+    """
+
     album_art: Optional[bool] = None
+    """
+    Whether the track represents album art rather than timed media.
+    """
+
     codec: Optional[str] = None
+    """
+    Codec identifier for the media stream.
+    """
+
     decoder: Optional[str] = None
+    """
+    Decoder name used to process the media stream.
+    """
 
     @classmethod
     def none(cls) -> "VideoSubtitleTrack":

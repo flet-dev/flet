@@ -108,7 +108,13 @@ class PolygonLayer(MapLayer):
 
     simplification_tolerance: ft.Number = 0.3
     """
+    The tolerance value used to simplify polygon outlines before rendering.
 
+    Higher values will result in polygons with fewer points, which can improve
+    rendering performance at the cost of reduced geometric accuracy. Lower values
+    preserve more detail but may decrease performance, especially with complex polygons.
+
+    Set to 0 to disable simplification.
     """
 
     use_alternative_rendering: bool = False

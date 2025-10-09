@@ -1,3 +1,7 @@
+"""
+Video control definition for the flet-video package.
+"""
+
 from dataclasses import field
 from typing import Optional
 
