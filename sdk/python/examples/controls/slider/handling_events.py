@@ -9,6 +9,7 @@ def main(page: ft.Page):
     page.add(
         ft.Text("Slider with 'on_change' event:"),
         ft.Slider(
+            key="slider",
             min=0,
             max=100,
             divisions=10,
@@ -19,4 +20,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

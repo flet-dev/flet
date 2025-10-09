@@ -1,14 +1,15 @@
 ---
 class_name: flet.Slider
 examples: ../../examples/controls/slider
-example_images: ../examples/controls/slider/media
+example_images: ../test-images/examples/material/golden/macos/slider
 ---
 
-{{ class_summary(class_name) }}
+<!-- {{ class_summary(class_name) }} -->
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Default and disabled sliders") }}
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/slider)
+[Live example](https://flet-controls-gallery.fly.dev/input/slider/basic)
 
 ### Basic Example
 
