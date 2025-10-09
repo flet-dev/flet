@@ -220,22 +220,22 @@ class BarChart(ft.LayoutControl):
     Controls drawing of chart's vertical lines.
     """
 
-    left_axis: ChartAxis = field(default_factory=lambda: ChartAxis(label_size=44))
+    left_axis: Optional[ChartAxis] = None
     """
     The appearance of the left axis, its title and labels.
     """
 
-    top_axis: ChartAxis = field(default_factory=lambda: ChartAxis(label_size=30))
+    top_axis: Optional[ChartAxis] = None
     """
     The appearance of the top axis, its title and labels.
     """
 
-    right_axis: ChartAxis = field(default_factory=lambda: ChartAxis(label_size=44))
+    right_axis: Optional[ChartAxis] = None
     """
     The appearance of the right axis, its title and labels.
     """
 
-    bottom_axis: ChartAxis = field(default_factory=lambda: ChartAxis(label_size=30))
+    bottom_axis: Optional[ChartAxis] = None
     """
     The appearance of the bottom axis, its title and labels.
     """

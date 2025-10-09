@@ -18,7 +18,7 @@ HOVER_BADGE_SIZE = 50
 
 
 class SectionBadge(ft.Container):
-    def __init__(self, icon: ft.IconValue, size: int = NORMAL_BADGE_SIZE):
+    def __init__(self, icon: ft.IconData, size: int = NORMAL_BADGE_SIZE):
         super().__init__(
             content=ft.Icon(icon),
             width=size,

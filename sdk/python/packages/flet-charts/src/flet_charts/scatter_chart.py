@@ -172,22 +172,22 @@ class ScatterChart(ft.LayoutControl):
     Controls drawing of chart's vertical lines.
     """
 
-    left_axis: ChartAxis = field(default_factory=lambda: ChartAxis())
+    left_axis: Optional[ChartAxis] = None
     """
     Configures the appearance of the left axis, its title and labels.
     """
 
-    top_axis: ChartAxis = field(default_factory=lambda: ChartAxis())
+    top_axis: Optional[ChartAxis] = None
     """
     Configures the appearance of the top axis, its title and labels.
     """
 
-    right_axis: ChartAxis = field(default_factory=lambda: ChartAxis())
+    right_axis: Optional[ChartAxis] = None
     """
     Configures the appearance of the right axis, its title and labels.
     """
 
-    bottom_axis: ChartAxis = field(default_factory=lambda: ChartAxis())
+    bottom_axis: Optional[ChartAxis] = None
     """
     Configures the appearance of the bottom axis, its title and labels.
     """
