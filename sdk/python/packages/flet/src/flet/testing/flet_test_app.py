@@ -291,6 +291,7 @@ class FletTestApp:
         pump_times: int = 0,
         pump_duration: Optional[ft.DurationValue] = None,
         expand_screenshot: bool = False,
+        similarity_threshold: float = 0,
     ):
         """
         Adds control to a clean page, takes a screenshot and compares it with
@@ -314,6 +315,7 @@ class FletTestApp:
         self.assert_screenshot(
             name,
             await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
+            similarity_threshold=similarity_threshold,
         )
 
     def assert_screenshot(

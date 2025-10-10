@@ -1,7 +1,7 @@
 ---
 class_name: flet.GridView
 examples: ../../examples/controls/grid_view
-example_images: ../test-images/examples/material/golden/macos/grid_view
+example_images: ../test-images/examples/core/golden/macos/grid_view
 example_media: ../examples/controls/grid_view/media
 ---
 
