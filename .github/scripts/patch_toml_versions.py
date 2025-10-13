@@ -3,7 +3,7 @@
 # ///
 
 """
-Patchs a TOML file (e.g. pyproject.toml) to:
+Patches a TOML file (e.g. pyproject.toml) to:
     - Set `[project].version` to a given value.
     - Update selected dependencies in `[project].dependencies` to the same version.
 

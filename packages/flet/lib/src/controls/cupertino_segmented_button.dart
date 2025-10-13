@@ -33,7 +33,7 @@ class _CupertinoSegmentedButtonControlState
           "CupertinoSegmentedButton must have at minimum two visible controls");
     }
 
-    var segmnetedButton = CupertinoSegmentedControl(
+    var segmentedButton = CupertinoSegmentedControl(
       groupValue: selectedIndex,
       borderColor: widget.control.getColor("border_color", context),
       selectedColor: widget.control.getColor("selected_color", context),
@@ -55,6 +55,6 @@ class _CupertinoSegmentedButtonControlState
       },
     );
 
-    return LayoutControl(control: widget.control, child: segmnetedButton);
+    return LayoutControl(control: widget.control, child: segmentedButton);
   }
 }
