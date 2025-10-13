@@ -102,7 +102,7 @@ class IconCupertinoBrowser(Container):
 
             for batch in batches(search_icons(search_term.upper()), 200):
                 for icon_name in batch:
-                    # HOT GLUE - primitive text in replace to diplay & copy correctly.
+                    # HOT GLUE - primitive text in replace to display & copy correctly.
                     icon_key = f"CupertinoIcons.{icon_name.upper()}".replace(
                         "cupertino_".upper(), ""
                     )
@@ -116,7 +116,7 @@ class IconCupertinoBrowser(Container):
                                             size=30,
                                         ),
                                         Text(
-                                            # HOT GLUE - primitive text in replace to diplay & copy correctly.
+                                            # HOT GLUE - primitive text in replace to display & copy correctly.
                                             value=f"{icon_name}".replace(
                                                 "cupertino_", ""
                                             ),

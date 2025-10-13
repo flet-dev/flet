@@ -1,5 +1,5 @@
 CARD_WIDTH = 70
-CARD_HEIGTH = 100
+CARD_HEIGHT = 100
 DROP_PROXIMITY = 30
 CARD_OFFSET = 20
 
@@ -21,7 +21,7 @@ class Card(ft.GestureDetector):
         self.card_offset = CARD_OFFSET
         self.color = color
         self.content = ft.Container(
-            bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH
+            bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGHT
         )
         self.draggable_pile = [self]
 
@@ -63,7 +63,7 @@ class Card(ft.GestureDetector):
         """returns list of cards that will be dragged together, starting with the current card"""
         if self.slot is not None:
             self.draggable_pile = self.slot.pile[self.slot.pile.index(self) :]
-        else:  # slot == None when the cards are dealed and need to be place in slot for the first time
+        else:  # slot == None when the cards are dealt and need to be place in slot for the first time
             self.draggable_pile = [self]
 
     def start_drag(self, e: ft.DragStartEvent):

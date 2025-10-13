@@ -16,7 +16,7 @@ class SettingsDialog(ft.AlertDialog):
         self.on_settings_applied = on_settings_applied
         self.settings = settings
         self.modal = True
-        self.title = ft.Text("Solitare Settings")
+        self.title = ft.Text("Solitaire Settings")
         self.waste_size = ft.RadioGroup(
             value=self.settings.waste_size,
             content=ft.Row(
