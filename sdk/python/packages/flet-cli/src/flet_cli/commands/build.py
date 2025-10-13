@@ -1897,7 +1897,7 @@ class Command(BaseCommand):
             self.options.cleanup_packages, "cleanup.packages", True
         )
 
-        # TODO: should be depreacted
+        # TODO: should be deprecated
         if self.get_bool_setting(None, "compile.cleanup", False):
             cleanup_app = cleanup_packages = True
 

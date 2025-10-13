@@ -46,7 +46,7 @@ for distribution, you will need the following:
 
 - [Apple Developer Program](https://developer.apple.com/programs/) subscription with
   access to [App Store Connect](https://appstoreconnect.apple.com/)
-- [Application Indentifier](#application-identifier-app-id)
+- [Application Identifier](#application-identifier-app-id)
 - [Signing Certificate](#signing-certificate)
 - [Provisioning Profile](#provisioning-profile)
 
