@@ -93,7 +93,7 @@ class FletStaticFiles(StaticFiles):
             path (str): Resource path.
 
         Returns:
-            [tuple[str, os.stat_result]]: Always retuens a full path and stat result.
+            [tuple[str, os.stat_result]]: Always returns a full path and stat result.
         """
         logger.debug(f"StaticFiles.lookup_path: {self.__app_mount_path} {path}")
         full_path, stat_result = super().lookup_path(path)

@@ -40,7 +40,7 @@ class UrlComponents:
     def _querystring_part(self, url_string: bool = False):
         """
         Function sliced url part and returns querystring part.\n
-        Use case: checking querystring part for encode, assiging decoded value
+        Use case: checking querystring part for encode, assigning decoded value
         """
         pattern = re.compile(r"\?[\w\D]+")
         data = pattern.search(self.url)
@@ -63,7 +63,7 @@ class QueryString(UrlComponents):
                 `path` returns url path (Ex: .../products?id=1 -> /products)
 
             Private(meant to be used only inside of page class):
-                `post()` method takes key-value pair as an argument and returs proceeded querystring ready to be merged with URL
+                `post()` method takes key-value pair as an argument and returns proceeded querystring ready to be merged with URL
 
     """
 

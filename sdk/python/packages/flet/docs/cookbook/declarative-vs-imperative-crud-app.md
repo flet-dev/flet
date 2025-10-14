@@ -4,7 +4,7 @@ If you’ve been using Flet, you’ve probably built your apps the imperative wa
 
 We’ll show the switch using a tiny CRUD “User Manager” app. First, the imperative version: UI-first, mutate controls, then update the page. Then the declarative rewrite: model-first, observable classes for data, components that return UI from state.
 
-The behavior in both examples stays the same - in the app you can see the list of users, add user, inline edit with save/cancel buttons and delete. This is how this simple app looks in boths examples:
+The behavior in both examples stays the same - in the app you can see the list of users, add user, inline edit with save/cancel buttons and delete. This is how this simple app looks in both examples:
 
 ![view](../assets/cookbook/declarative-vs-imperative-crud-app/crud1.png){width="70%"}
 
@@ -391,4 +391,4 @@ set_new_first_name(user.first_name)
 
 ## Summary
 
-The declarative style makes your UI a straightforward function of your data. It may not be make a big diffrence for a very simple app, but as your screen grows, you’ll add **state** and **components**, not scattered mutations of controls in different places. The result: code that’s easier to understand, maintain, and change — without chasing `visible` flags or manual updates.
+The declarative style makes your UI a straightforward function of your data. It may not be make a big difference for a very simple app, but as your screen grows, you’ll add **state** and **components**, not scattered mutations of controls in different places. The result: code that’s easier to understand, maintain, and change — without chasing `visible` flags or manual updates.

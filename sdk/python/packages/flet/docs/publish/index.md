@@ -286,7 +286,7 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 | iOS      | `icon_ios.png`                           | ≥ 1024×1024 px   | Transparency (alpha channel) is not supported and will be automatically removed if present. |
 | Android  | `icon_android.png`                       | ≥ 192×192 px     |                                                                                             |
 | Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
-| Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be interally converted to a 256×256 px `.ico` icon.                        |
+| Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                        |
 | macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
 
 

@@ -1,6 +1,6 @@
 import flet as ft
 
-# Adding secord card. Now the one of the cards will not be on top of stack when being dragged
+# Adding second card. Now the one of the cards will not be on top of stack when being dragged
 # move_on_top function to move the card on top on_pan_start event
 
 

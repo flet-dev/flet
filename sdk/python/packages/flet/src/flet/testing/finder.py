@@ -6,7 +6,7 @@ __all__ = ["Finder"]
 @dataclass
 class Finder:
     """
-    Finder is used to search for controls by different criterias.
+    Finder is used to search for controls by different criteria.
     """
 
     id: int

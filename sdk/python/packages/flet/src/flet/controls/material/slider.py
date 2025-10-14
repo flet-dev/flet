@@ -50,8 +50,8 @@ class Slider(LayoutControl, AdaptiveControl):
     label: Optional[str] = None
     """
     A label to show above the slider when the slider is active. The value of
-    `label` may contain `{value}` which will be dynamicly replaced with a current slider
-    value. For example, `"Volume: {value}"`.
+    `label` may contain `{value}` which will be dynamically replaced with a current
+    slider value. For example, `"Volume: {value}"`.
 
     It is used to display the value of a discrete slider, and it is displayed as
     part of the value indicator shape.
