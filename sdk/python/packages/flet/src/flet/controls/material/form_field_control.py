@@ -1,4 +1,3 @@
-from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
@@ -31,7 +30,7 @@ class FormFieldControl(LayoutControl):
     Text size in virtual pixels.
     """
 
-    text_style: TextStyle = field(default_factory=lambda: TextStyle())
+    text_style: Optional[TextStyle] = None
     """
     The [`TextStyle`][flet.] to use for the
     text being edited.

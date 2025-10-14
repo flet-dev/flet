@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-ads.svg)](https://pypi.python.org/pypi/flet-ads)
 [![downloads](https://static.pepy.tech/badge/flet-ads/month)](https://pepy.tech/project/flet-ads)
-[![license](https://img.shields.io/github/license/flet-dev/flet-ads.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages//flet-ads/LICENSE)
+[![license](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads/LICENSE)
 
 Display Google Ads in [Flet](https://flet.dev) apps.
 
@@ -37,4 +37,4 @@ To install the `flet-ads` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](../../examples/controls/ads).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/ads).

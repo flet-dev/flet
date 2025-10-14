@@ -1,0 +1,25 @@
+name: flet_video
+description: Flet Video control
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  collection: ^1.16.0
+  media_kit: 1.2.1
+  media_kit_video: 1.3.1
+  media_kit_libs_video: 1.0.7
+
+  flet:
+    path: ../../../../../../../packages/flet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
