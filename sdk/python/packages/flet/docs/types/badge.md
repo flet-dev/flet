@@ -1,4 +1,11 @@
-{{ class_all_options("flet.Badge") }}
+---
+class_name: flet.Badge
+examples: ../../examples/controls/badge
+example_images: ../test-images/examples/material/golden/macos/badge
+example_media: ../examples/controls/badge/media
+---
+
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Badge") }}
 
 ## Examples
 
@@ -42,7 +49,8 @@ def main(page: ft.Page):
 
 ft.run(main)
 ```
-  </TabItem>
-</Tabs>
 
-<img src="/img/docs/controls/badge/badge-navigation-bar.png" className="screenshot-50" />
+
+{{ image(example_media + "/badge-navigation-bar.png", alt="badge-navigation-bar", width="80%") }}
+
+{{ class_members(class_name) }}
