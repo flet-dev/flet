@@ -46,7 +46,7 @@ class FletUpload:
     """
     Handle file upload.
 
-    Upload must be an non-encoded (raw) file in the requst body.
+    Upload must be an non-encoded (raw) file in the request body.
     """
 
     async def handle(self, request: Request):

@@ -1,5 +1,5 @@
 CARD_WIDTH = 70
-CARD_HEIGTH = 100
+CARD_HEIGHT = 100
 DROP_PROXIMITY = 20
 
 import flet as ft
@@ -19,7 +19,7 @@ class Card(ft.GestureDetector):
         self.solitaire = solitaire
         self.color = color
         self.content = ft.Container(
-            bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH
+            bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGHT
         )
 
     def move_on_top(self):
