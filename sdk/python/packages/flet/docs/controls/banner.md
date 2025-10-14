@@ -1,10 +1,11 @@
 ---
 class_name: flet.Banner
 examples: ../../examples/controls/banner
-example_images: ../examples/controls/banner/media
+example_images: ../test-images/examples/material/golden/macos/banner
+example_media: ../examples/controls/banner/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Banner") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/banner/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
 
 
 {{ class_members(class_name) }}
