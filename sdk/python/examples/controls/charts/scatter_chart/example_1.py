@@ -1,8 +1,7 @@
 import random
 
-import flet_charts as ftc
-
 import flet as ft
+import flet_charts as ftc
 
 
 class MySpot(ftc.ScatterChartSpot):
@@ -146,7 +145,7 @@ def main(page: ft.Page):
             right_axis=ftc.ChartAxis(show_labels=False),
             top_axis=ftc.ChartAxis(show_labels=False),
             bottom_axis=ftc.ChartAxis(show_labels=False),
-            show_tooltips_for_selected_spots_only=False,
+            show_tooltips_for_selected_spots_only=True,
             on_event=handle_event,
             animation=ft.Animation(
                 duration=ft.Duration(milliseconds=600),

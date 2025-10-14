@@ -180,7 +180,7 @@ class BarChart(ft.LayoutControl):
 
     group_alignment: ft.MainAxisAlignment = ft.MainAxisAlignment.SPACE_EVENLY
     """
-    A alignment of the bar [`groups`][..] within this chart.
+    The alignment of the bar [`groups`][..] within this chart.
 
     If set to [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER],
     the space between the `groups` can be specified using [`group_spacing`][..].

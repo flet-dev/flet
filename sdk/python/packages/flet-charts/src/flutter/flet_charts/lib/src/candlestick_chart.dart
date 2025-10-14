@@ -57,8 +57,8 @@ class _CandlestickChartControlState extends State<CandlestickChartControl> {
     final selectedIndicators = spotControls
         .asMap()
         .entries
-        .where((entry) => entry.value.getBool("selected", false)!)
-        .map((entry) => entry.key)
+        .where((e) => e.value.getBool("selected", false)!)
+        .map((e) => e.key)
         .toList();
 
     final showingIndicators =
@@ -66,7 +66,8 @@ class _CandlestickChartControlState extends State<CandlestickChartControl> {
 
     final candlestickTouchData = CandlestickTouchData(
       enabled: interactive && !widget.control.disabled,
-      handleBuiltInTouches: handleBuiltInTouches,
+      handleBuiltInTouches: !widget.control
+          .getBool("show_tooltips_for_selected_spots_only", false)!,
       longPressDuration: widget.control.getDuration("long_press_duration"),
       touchSpotThreshold: touchSpotThreshold,
       touchTooltipData: parseCandlestickTouchTooltipData(

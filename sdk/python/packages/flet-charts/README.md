@@ -41,10 +41,11 @@ For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/
 
 ### Available charts
 
-- `BarChart`
-- `CandlestickChart`
-- `LineChart`
-- `MatplotlibChart`
-- `PieChart`
-- `PlotlyChart`
-- `ScatterChart`
+- [`BarChart`](https://docs.flet.dev/charts/bar_chart/)
+- [`CandlestickChart`](https://docs.flet.dev/charts/candlestick_chart/)
+- [`LineChart`](https://docs.flet.dev/charts/line_chart/)
+- [`MatplotlibChart`](https://docs.flet.dev/charts/matplotlib_chart/)
+- [`PieChart`](https://docs.flet.dev/charts/pie_chart/)
+- [`PlotlyChart`](https://docs.flet.dev/charts/plotly_chart/)
+- [`RadarChart`](https://docs.flet.dev/charts/radar_chart/)
+- [`ScatterChart`](https://docs.flet.dev/charts/scatter_chart/)

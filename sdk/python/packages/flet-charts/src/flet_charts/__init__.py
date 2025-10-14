@@ -37,6 +37,13 @@ from flet_charts.matplotlib_chart_with_toolbar import MatplotlibChartWithToolbar
 from flet_charts.pie_chart import PieChart, PieChartEvent
 from flet_charts.pie_chart_section import PieChartSection
 from flet_charts.plotly_chart import PlotlyChart
+from flet_charts.radar_chart import (
+    RadarChart,
+    RadarChartEvent,
+    RadarChartTitle,
+    RadarShape,
+)
+from flet_charts.radar_data_set import RadarDataSet, RadarEntry
 from flet_charts.scatter_chart import (
     ScatterChart,
     ScatterChartEvent,
@@ -95,6 +102,12 @@ __all__ = [
     "PieChartEvent",
     "PieChartSection",
     "PlotlyChart",
+    "RadarChart",
+    "RadarChartEvent",
+    "RadarChartTitle",
+    "RadarDataSet",
+    "RadarEntry",
+    "RadarShape",
     "ScatterChart",
     "ScatterChartEvent",
     "ScatterChartSpot",
