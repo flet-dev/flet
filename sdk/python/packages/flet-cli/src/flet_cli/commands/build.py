@@ -36,7 +36,7 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.35.1")
+MINIMAL_FLUTTER_VERSION = version.Version("3.35.5")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -1897,7 +1897,7 @@ class Command(BaseCommand):
             self.options.cleanup_packages, "cleanup.packages", True
         )
 
-        # TODO: should be depreacted
+        # TODO: should be deprecated
         if self.get_bool_setting(None, "compile.cleanup", False):
             cleanup_app = cleanup_packages = True
 

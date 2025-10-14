@@ -1,0 +1,24 @@
+[project]
+name = "flet-video"
+version = "0.1.0"
+description = "Cross-platform video playback for Flet apps."
+readme = "README.md"
+authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://docs.flet.dev/video"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-video"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_video" = ["**/*"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

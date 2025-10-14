@@ -154,7 +154,7 @@ Note:
 ### Ancestor Theme Level
 
 Flet searches upward in the widget tree to find the nearest ancestor with a defined `theme`, and will take color
-from its [`Theme.color_scheme`][flet.Theme.color_scheme]. In the example below, the nearest anscestor for the [`FilledButton`][flet.FilledButton]
+from its [`Theme.color_scheme`][flet.Theme.color_scheme]. In the example below, the nearest ancestor for the [`FilledButton`][flet.FilledButton]
 is [`Container`][flet.Container], and the `primary` color that is used for the button will be taken from the
 [`Container.theme`][flet.Container.theme].
 

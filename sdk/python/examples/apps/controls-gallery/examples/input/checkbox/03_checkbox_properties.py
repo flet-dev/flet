@@ -41,7 +41,7 @@ def example():
         visual_density=ft.VisualDensity.COMFORTABLE,
         mouse_cursor=ft.MouseCursor.CONTEXT_MENU,
         on_change=lambda e: print("Changed!"),
-        on_blur=lambda e: print("Blured!"),
+        on_blur=lambda e: print("Blurred!"),
         on_focus=lambda e: print("Focused!"),
         badge=ft.Badge(
             label="1", offset=ft.Offset(-15, -25), alignment=ft.Alignment(0, 0)

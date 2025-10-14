@@ -37,74 +37,41 @@ dependencies:
 
 # --FAT_CLIENT_START--
   flet_audio:
-    git:
-      url: https://github.com/flet-dev/flet-audio.git
-      ref: main
-      path: src/flutter/flet_audio
+    path: ../sdk/python/packages/flet-audio/src/flutter/flet_audio
+
   flet_video:
-    git:
-      url: https://github.com/flet-dev/flet-video.git
-      ref: main
-      path: src/flutter/flet_video
+    path: ../sdk/python/packages/flet-video/src/flutter/flet_video
 # --FAT_CLIENT_END--
 
-  flet_lottie:
-    git:
-      url: https://github.com/flet-dev/flet-lottie.git
-      ref: main
-      path: src/flutter/flet_lottie
-
-  flet_map:
-    git:
-      url: https://github.com/flet-dev/flet-map.git
-      ref: main
-      path: src/flutter/flet_map
-
-  flet_rive:
-    git:
-      url: https://github.com/flet-dev/flet-rive.git
-      ref: main
-      path: src/flutter/flet_rive
-
   flet_audio_recorder:
-    git:
-      url: https://github.com/flet-dev/flet-audio-recorder.git
-      ref: main
-      path: src/flutter/flet_audio_recorder
+    path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
 
-  flet_permission_handler:
-    git:
-      url: https://github.com/flet-dev/flet-permission-handler.git
-      ref: main
-      path: src/flutter/flet_permission_handler
+  flet_datatable2:
+    path: ../sdk/python/packages/flet-datatable2/src/flutter/flet_datatable2
+
+  flet_flashlight:
+    path: ../sdk/python/packages/flet-flashlight/src/flutter/flet_flashlight
 
   flet_geolocator:
-    git:
-      url: https://github.com/flet-dev/flet-geolocator.git
-      ref: main
-      path: src/flutter/flet_geolocator
+    path: ../sdk/python/packages/flet-geolocator/src/flutter/flet_geolocator
+
+  flet_lottie:
+    path: ../sdk/python/packages/flet-lottie/src/flutter/flet_lottie
+
+  flet_map:
+    path: ../sdk/python/packages/flet-map/src/flutter/flet_map
+
+  flet_permission_handler:
+    path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
+
+  flet_rive:
+    path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
 
   flet_webview:
-    git:
-      url: https://github.com/flet-dev/flet-webview.git
-      ref: main
-      path: src/flutter/flet_webview
-  flet_flashlight:
-    git:
-      url: https://github.com/flet-dev/flet-flashlight.git
-      ref: main
-      path: src/flutter/flet_flashlight
-  flet_datatable2:
-    git:
-      url: https://github.com/flet-dev/flet-datatable2.git
-      ref: main
-      path: src/flutter/flet_datatable2
+    path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
 
   flet_charts:
-    git:
-      url: https://github.com/flet-dev/flet-charts.git
-      ref: main
-      path: src/flutter/flet_charts
+    path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
 
   cupertino_icons: ^1.0.6
 
@@ -128,7 +95,7 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
   # Docs: https://pub.dev/packages/flutter_launcher_icons
-  flutter_launcher_icons: "^0.13.1"
+  flutter_launcher_icons: "^0.14.4"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

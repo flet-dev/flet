@@ -350,7 +350,7 @@ Parameters of `FletStaticFiles` constructor:
 
 #### WebSocket handler
 
-Handles WebSocket connections from Flet client app running in the browser. WebSocket channel is used to send events from a browser to a Flet backend code and receive page real-time incremential updates.
+Handles WebSocket connections from Flet client app running in the browser. WebSocket channel is used to send events from a browser to a Flet backend code and receive page real-time incremental updates.
 
 ```python
 from flet.fastapi import FletApp

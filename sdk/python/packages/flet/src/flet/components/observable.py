@@ -127,6 +127,12 @@ class Observable:
         for fn in list(self.__listeners):
             fn(self, field)
 
+    def notify(self):
+        """
+        Manually notify listeners that something changed.
+        """
+        self._notify(None)
+
     # collection wrapping
     def _wrap_if_collection(self, name: str, value: Any) -> Any:
         if isinstance(value, list) and not isinstance(value, ObservableList):

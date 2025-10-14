@@ -10,7 +10,7 @@ example_images: ../examples/controls/gesture_detector/media
 
 [Live example](https://flet-controls-gallery.fly.dev/utility/gesturedetector)
 
-[Solitare game tutorial](https://flet.dev/docs/tutorials/python-solitaire)
+[Solitaire game tutorial](https://flet.dev/docs/tutorials/python-solitaire)
 
 ### Handling events
 

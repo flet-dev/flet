@@ -25,7 +25,7 @@ def main(page: ft.Page):
             theme=ft.Theme(color_scheme=ft.ColorScheme(primary=ft.Colors.PINK)),
             content=ft.Row(
                 controls=[
-                    ft.Button("Inherited theme with primary color overriden"),
+                    ft.Button("Inherited theme with primary color overridden"),
                     ft.TextButton("Button 2"),
                 ]
             ),

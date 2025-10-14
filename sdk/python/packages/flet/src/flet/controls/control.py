@@ -89,7 +89,7 @@ class Control(BaseControl):
 
     tooltip: Optional[TooltipValue] = None
     """
-    The tooltip ot show when this control is hovered over.
+    The tooltip to show when this control is hovered over.
     """
 
     badge: Optional[BadgeValue] = None

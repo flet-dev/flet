@@ -1,7 +1,7 @@
 import flet as ft
 
 CARD_WIDTH = 70
-CARD_HEIGTH = 100
+CARD_HEIGHT = 100
 DROP_PROXIMITY = 30
 CARD_OFFSET = 20
 
@@ -25,7 +25,7 @@ class Card(ft.GestureDetector):
         self.slot = None
         self.content = ft.Container(
             width=CARD_WIDTH,
-            height=CARD_HEIGTH,
+            height=CARD_HEIGHT,
             border_radius=ft.border_radius.all(6),
             content=ft.Image(src="/images/card_back.png"),
         )
@@ -95,7 +95,7 @@ class Card(ft.GestureDetector):
             and self.slot != self.solitaire.waste
         ):
             self.draggable_pile = self.slot.pile[self.slot.pile.index(self) :]
-        else:  # slot == None when the cards are dealed and need to be place in slot for the first time
+        else:  # slot == None when the cards are dealt and need to be place in slot for the first time
             self.draggable_pile = [self]
 
     def start_drag(self, e: ft.DragStartEvent):

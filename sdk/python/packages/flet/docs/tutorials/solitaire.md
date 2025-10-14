@@ -382,7 +382,7 @@ Similarly to `Slot` class, let’s create a new `Card` class with `slot` propert
 It will inherit from [`GestureDetector`][flet.GestureDetector] and we’ll move all card-related methods to it:
 ```python
 CARD_WIDTH = 70
-CARD_HEIGTH = 100
+CARD_HEIGHT = 100
 DROP_PROXIMITY = 20
 
 import flet as ft
@@ -400,7 +400,7 @@ class Card(ft.GestureDetector):
        self.top=None
        self.solitaire = solitaire
        self.color = color
-       self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
+       self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGHT)
 
    def move_on_top(self):
        """Moves draggable card to the top of the stack"""
@@ -687,7 +687,7 @@ class Card(ft.GestureDetector):
         self.slot = None
         self.content=ft.Container(
             width=CARD_WIDTH,
-            height=CARD_HEIGTH,
+            height=CARD_HEIGHT,
             border_radius = ft.border_radius.all(6),
             content=ft.Image(src="card_back.png"))
 ```
