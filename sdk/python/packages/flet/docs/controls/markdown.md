@@ -1,10 +1,11 @@
 ---
 class_name: flet.Markdown
 examples: ../../examples/controls/markdown
-example_images: ../examples/controls/markdown/media
+example_images: ../test-images/examples/core/golden/macos/markdown
+example_media: ../examples/controls/markdown/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Markdown") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/markdown/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
 
 
 ### Code syntax highlight
