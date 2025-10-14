@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-ads.svg)](https://pypi.python.org/pypi/flet-ads)
 [![downloads](https://static.pepy.tech/badge/flet-ads/month)](https://pepy.tech/project/flet-ads)
-[![license](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads/LICENSE)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads/LICENSE)
 
 Display Google Ads in [Flet](https://flet.dev) apps.
 

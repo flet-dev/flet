@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-permission-handler.svg)](https://pypi.python.org/pypi/flet-permission-handler)
 [![downloads](https://static.pepy.tech/badge/flet-permission-handler/month)](https://pepy.tech/project/flet-permission-handler)
-[![license](https://img.shields.io/github/license/flet-dev/flet.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-permission-handler/LICENSE)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-permission-handler/LICENSE)
 
 A [Flet](https://flet.dev) extension that simplifies working with device permissions.
 

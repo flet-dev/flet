@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-rive.svg)](https://pypi.python.org/pypi/flet-rive)
 [![downloads](https://static.pepy.tech/badge/flet-rive/month)](https://pepy.tech/project/flet-rive)
-[![license](https://img.shields.io/github/license/flet-dev/flet.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-rive/LICENSE)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-rive/LICENSE)
 
 A cross-platform [Flet](https://flet.dev) extension for displaying [Rive](https://rive.app/) animations.
 
