@@ -27,6 +27,15 @@ class AlertDialog(DialogControl):
     It has an optional [`title`][(c).] and an optional list of [`actions`][(c).] . The
     `title` is displayed above the [`content`][(c).] and the `actions` are displayed
     below the `content`.
+
+    ```python
+    ft.AlertDialog(
+        title=ft.Text("Session expired"),
+        content=ft.Text("Please sign in again to continue."),
+        actions=[ft.TextButton("Dismiss")],
+        open=True,
+    )
+    ```
     """
 
     content: Optional[Control] = None
