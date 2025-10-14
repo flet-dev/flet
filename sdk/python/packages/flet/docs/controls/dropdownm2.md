@@ -45,7 +45,7 @@ example_media: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/add_and_delete_options.py"
 ```
 
-{{ image(example_images + "/add_and_delete_options.gif", alt="add-and-delete-options", width="80%") }}
+{{ image(example_media + "/add_and_delete_options.gif", alt="add-and-delete-options", width="80%") }}
 
 
 {{ class_members(class_name) }}

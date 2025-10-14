@@ -18,6 +18,18 @@ from flet.controls.types import (
 class AppBar(AdaptiveControl):
     """
     A material design app bar.
+
+    ```python
+    ft.AppBar(
+        leading=ft.Icon(ft.Icons.MENU),
+        title=ft.Text("Dashboard"),
+        actions=[
+            ft.IconButton(ft.Icons.SEARCH),
+            ft.IconButton(ft.Icons.MORE_VERT),
+        ],
+        bgcolor=ft.Colors.SURFACE_CONTAINER,
+    )
+    ```
     """
 
     leading: Optional[Control] = None
