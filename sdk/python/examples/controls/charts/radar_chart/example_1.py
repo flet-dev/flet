@@ -15,7 +15,6 @@ def main(page: ft.Page):
             expand=True,
             titles=[fch.RadarChartTitle(text=label) for label in categories],
             center_min_value=True,
-            radar_shape=fch.RadarShape.CIRCLE,
             tick_count=4,
             ticks_text_style=ft.TextStyle(size=20, color=ft.Colors.ON_SURFACE),
             title_text_style=ft.TextStyle(
@@ -28,9 +27,9 @@ def main(page: ft.Page):
                     border_color=ft.Colors.DEEP_PURPLE,
                     entry_radius=4,
                     entries=[
-                        fch.RadarEntry(300),
-                        fch.RadarEntry(50),
-                        fch.RadarEntry(250),
+                        fch.RadarDataSetEntry(300),
+                        fch.RadarDataSetEntry(50),
+                        fch.RadarDataSetEntry(250),
                     ],
                 ),
                 fch.RadarDataSet(
@@ -38,9 +37,9 @@ def main(page: ft.Page):
                     border_color=ft.Colors.PINK,
                     entry_radius=4,
                     entries=[
-                        fch.RadarEntry(250),
-                        fch.RadarEntry(100),
-                        fch.RadarEntry(200),
+                        fch.RadarDataSetEntry(250),
+                        fch.RadarDataSetEntry(100),
+                        fch.RadarDataSetEntry(200),
                     ],
                 ),
                 fch.RadarDataSet(
@@ -48,9 +47,9 @@ def main(page: ft.Page):
                     border_color=ft.Colors.CYAN,
                     entry_radius=4,
                     entries=[
-                        fch.RadarEntry(200),
-                        fch.RadarEntry(150),
-                        fch.RadarEntry(50),
+                        fch.RadarDataSetEntry(200),
+                        fch.RadarDataSetEntry(150),
+                        fch.RadarDataSetEntry(50),
                     ],
                 ),
             ],
