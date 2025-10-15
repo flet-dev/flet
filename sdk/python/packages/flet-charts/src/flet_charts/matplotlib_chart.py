@@ -96,8 +96,10 @@ class MatplotlibChart(ft.GestureDetector):
     Triggers when toolbar buttons status is updated.
     """
 
-    def build(self):
+    def init(self):
         _require_matplotlib()
+
+    def build(self):
         self.mouse_cursor = ft.MouseCursor.WAIT
         self.__started = False
         self.__dpr = self.page.media.device_pixel_ratio
