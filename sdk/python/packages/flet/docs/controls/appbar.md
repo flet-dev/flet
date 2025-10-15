@@ -1,10 +1,11 @@
 ---
 class_name: flet.AppBar
 examples: ../../examples/controls/app_bar
-example_images: ../examples/controls/app_bar/media
+example_images: ../test-images/examples/material/golden/macos/app_bar
+example_media: ../examples/controls/app_bar/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic AppBar", image_width="100%") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/app_bar/media
 --8<-- "{{ examples }}/actions_and_popup_menu.py"
 ```
 
-{{ image(example_images + "/actions_and_popup_menu.gif", alt="actions-and-popup-menu", width="80%") }}
+{{ image(example_media + "/actions_and_popup_menu.gif", alt="actions-and-popup-menu", width="80%") }}
 
 
 ### Theme and Material Mode Toggles

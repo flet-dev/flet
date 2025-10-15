@@ -16,6 +16,13 @@ class Badge(BaseControl):
     Badges are used to show notifications, counts, or status information on navigation
     items such as [`NavigationBar`][flet.] or [`NavigationRail`][flet.] destinations
     or a button's icon.
+
+    ```python
+    ft.FilledIconButton(
+        icon=ft.Icons.PHONE,
+        badge=ft.Badge(label="3"),
+    )
+    ```
     """
 
     label: Optional[StrOrControl] = None

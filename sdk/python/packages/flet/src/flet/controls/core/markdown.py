@@ -233,6 +233,13 @@ class MarkdownCustomCodeTheme:
 class Markdown(LayoutControl):
     """
     Renders text in markdown format.
+
+    ```python
+    ft.Markdown(
+        value="# Welcome\\n\\nThis is **Markdown** rendered in Flet.",
+        width=260,
+    )
+    ```
     """
 
     value: str = ""
