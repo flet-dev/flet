@@ -43,7 +43,7 @@ from flet_charts.radar_chart import (
     RadarChartTitle,
     RadarShape,
 )
-from flet_charts.radar_data_set import RadarDataSet, RadarEntry
+from flet_charts.radar_data_set import RadarDataSet, RadarDataSetEntry
 from flet_charts.scatter_chart import (
     ScatterChart,
     ScatterChartEvent,
@@ -106,7 +106,7 @@ __all__ = [
     "RadarChartEvent",
     "RadarChartTitle",
     "RadarDataSet",
-    "RadarEntry",
+    "RadarDataSetEntry",
     "RadarShape",
     "ScatterChart",
     "ScatterChartEvent",

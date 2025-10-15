@@ -3,11 +3,11 @@ from typing import Optional
 
 import flet as ft
 
-__all__ = ["RadarDataSet", "RadarEntry"]
+__all__ = ["RadarDataSet", "RadarDataSetEntry"]
 
 
-@ft.control("RadarEntry")
-class RadarEntry(ft.BaseControl):
+@ft.control("RadarDataSetEntry")
+class RadarDataSetEntry(ft.BaseControl):
     """
     A single data point rendered on a [`RadarChart`][(p).].
     """
@@ -21,11 +21,10 @@ class RadarEntry(ft.BaseControl):
 @ft.control("RadarDataSet")
 class RadarDataSet(ft.BaseControl):
     """
-    A collection of [`RadarEntry`][(p).] values drawn
-    as a filled radar shape.
+    A collection of [`RadarDataSetEntry`][(p).] drawn as a filled radar shape.
     """
 
-    entries: list[RadarEntry] = field(default_factory=list)
+    entries: list[RadarDataSetEntry] = field(default_factory=list)
     """
     The data points that compose this set.
     """
