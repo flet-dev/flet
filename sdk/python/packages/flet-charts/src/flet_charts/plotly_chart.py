@@ -50,12 +50,12 @@ class PlotlyChart(ft.Container):
     """
 
     def init(self):
+        _require_plotly()
         self.alignment = ft.Alignment.CENTER
         self.__img = ft.Image(fit=ft.BoxFit.FILL)
         self.content = self.__img
 
     def before_update(self):
-        _require_plotly()
         super().before_update()
         if self.figure is not None:
             svg = self.figure.to_image(format="svg").decode("utf-8")
