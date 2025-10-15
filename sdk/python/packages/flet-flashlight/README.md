@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-flashlight.svg)](https://pypi.python.org/pypi/flet-flashlight)
 [![downloads](https://static.pepy.tech/badge/flet-flashlight/month)](https://pepy.tech/project/flet-flashlight)
-[![license](https://img.shields.io/github/license/flet-dev/flet.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-flashlight/LICENSE)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-flashlight/LICENSE)
 
 A [Flet](https://flet.dev) extension to manage the device torch/flashlight.
 

@@ -37,9 +37,9 @@ pip install flet-audio  # (1)!
 --8<-- "{{ examples }}/example_1.py"
 ```
 
-/// admonition | Windows Subsystem for Linux (WSL)
+/// admonition | Linux/WSL (Windows Subsystem for Linux)
     type: note
-On WSL, you need to install [`GStreamer`](https://github.com/GStreamer/gstreamer) library.
+To play audio on Linux/WSL you need to install [`GStreamer`](https://github.com/GStreamer/gstreamer) library.
 
 If you receive `error while loading shared libraries: libgstapp-1.0.so.0`,
 it means `GStreamer` is not installed in your WSL environment.
