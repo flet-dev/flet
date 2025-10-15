@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 
 import flet as ft
 
-matplotlib.use("svg")
-
 
 def main(page: ft.Page):
     fig, ax = plt.subplots()
