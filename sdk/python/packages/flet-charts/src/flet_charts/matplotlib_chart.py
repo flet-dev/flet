@@ -2,19 +2,23 @@ import asyncio
 import logging
 from dataclasses import dataclass, field
 from io import BytesIO
-from typing import Optional
+from typing import Any, Optional
 
 import flet.canvas as fc
 
 import flet as ft
 
+_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+
 try:
-    import matplotlib
-    from matplotlib.figure import Figure
-except ImportError as e:
-    raise Exception(
-        'Install "matplotlib" Python package to use MatplotlibChart control.'
-    ) from e
+    import matplotlib  # type: ignore[import]
+    from matplotlib.figure import Figure  # type: ignore[import]
+except ImportError as e:  # pragma: no cover - depends on optional dependency
+    matplotlib = None  # type: ignore[assignment]
+    Figure = Any  # type: ignore[assignment]
+    _MATPLOTLIB_IMPORT_ERROR = e
+else:
+    matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 
 __all__ = [
     "MatplotlibChart",
@@ -23,8 +27,6 @@ __all__ = [
 ]
 
 logger = logging.getLogger("flet-charts.matplotlib")
-
-matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 
 figure_cursors = {
     "default": None,
@@ -35,6 +37,13 @@ figure_cursors = {
     "ew-resize": ft.MouseCursor.RESIZE_LEFT_RIGHT,
     "ns-resize": ft.MouseCursor.RESIZE_UP_DOWN,
 }
+
+
+def _require_matplotlib() -> None:
+    if matplotlib is None:
+        raise ModuleNotFoundError(
+            'Install "matplotlib" Python package to use MatplotlibChart control.'
+        ) from _MATPLOTLIB_IMPORT_ERROR
 
 
 @dataclass
@@ -88,6 +97,7 @@ class MatplotlibChart(ft.GestureDetector):
     """
 
     def build(self):
+        _require_matplotlib()
         self.mouse_cursor = ft.MouseCursor.WAIT
         self.__started = False
         self.__dpr = self.page.media.device_pixel_ratio

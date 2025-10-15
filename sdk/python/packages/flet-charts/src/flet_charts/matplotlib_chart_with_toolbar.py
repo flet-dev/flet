@@ -1,9 +1,17 @@
 from dataclasses import field
+from typing import Any, Optional
 
-from matplotlib.figure import Figure
+import flet_charts
 
 import flet as ft
-import flet_charts
+
+_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+
+try:
+    from matplotlib.figure import Figure  # type: ignore
+except ImportError as e:  # pragma: no cover - depends on optional dependency
+    Figure = Any  # type: ignore[assignment]
+    _MATPLOTLIB_IMPORT_ERROR = e
 
 _download_formats = [
     "eps",
@@ -19,6 +27,13 @@ _download_formats = [
 ]
 
 
+def _require_matplotlib() -> None:
+    if _MATPLOTLIB_IMPORT_ERROR is not None:
+        raise ModuleNotFoundError(
+            'Install "matplotlib" Python package to use MatplotlibChart control.'
+        ) from _MATPLOTLIB_IMPORT_ERROR
+
+
 @ft.control(kw_only=True, isolated=True)
 class MatplotlibChartWithToolbar(ft.Column):
     figure: Figure = field(metadata={"skip": True})
@@ -28,6 +43,7 @@ class MatplotlibChartWithToolbar(ft.Column):
     """
 
     def build(self):
+        _require_matplotlib()
         self.mpl = flet_charts.MatplotlibChart(
             figure=self.figure,
             expand=True,
