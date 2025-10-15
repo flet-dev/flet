@@ -1,12 +1,13 @@
 ---
 class_name: flet.canvas.Canvas
 examples: ../../examples/controls/canvas
-example_images: ../../examples/controls/canvas/media
+example_images: ../../test-images/examples/core/golden/macos/canvas
+example_media: ../../examples/controls/canvas/media
 ---
 
 # Canvas
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Canvas") }}
 
 ## Examples
 
@@ -18,7 +19,7 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/smiling_face.py"
 ```
 
-{{ image(example_images + "/smiling_face.png", alt="smiling-face", width="80%") }}
+{{ image(example_media + "/smiling_face.png", alt="smiling-face", width="80%") }}
 
 
 ### Flet logo
@@ -27,7 +28,7 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/flet_logo.py"
 ```
 
-{{ image(example_images + "/flet_logo.png", alt="flet-logo", width="80%") }}
+{{ image(example_media + "/flet_logo.png", alt="flet-logo", width="80%") }}
 
 
 ### Triangles
@@ -36,7 +37,7 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/triangles.py"
 ```
 
-{{ image(example_images + "/triangles.png", alt="triangles", width="80%") }}
+{{ image(example_media + "/triangles.png", alt="triangles", width="80%") }}
 
 
 ### Bezier curves
@@ -45,7 +46,7 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/bezier_curves.py"
 ```
 
-{{ image(example_images + "/bezier_curves.png", alt="bezier-curves", width="80%") }}
+{{ image(example_media + "/bezier_curves.png", alt="bezier-curves", width="80%") }}
 
 
 ### Text
@@ -54,7 +55,7 @@ example_images: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/text.py"
 ```
 
-{{ image(example_images + "/text.png", alt="text", width="80%") }}
+{{ image(example_media + "/text.png", alt="text", width="80%") }}
 
 
 ### Free-hand drawing with image capture
