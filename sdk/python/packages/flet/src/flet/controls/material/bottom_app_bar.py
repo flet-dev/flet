@@ -18,6 +18,20 @@ __all__ = ["BottomAppBar"]
 class BottomAppBar(LayoutControl):
     """
     A material design bottom app bar.
+
+    ```python
+    ft.BottomAppBar(
+        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+        content=ft.Row(
+            controls=[
+                ft.IconButton(ft.Icons.MENU),
+                ft.IconButton(ft.Icons.SEARCH),
+                ft.IconButton(ft.Icons.SETTINGS),
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+        ),
+    )
+    ```
     """
 
     content: Optional[Control] = None
