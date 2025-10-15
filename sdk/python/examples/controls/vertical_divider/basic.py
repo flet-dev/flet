@@ -4,7 +4,8 @@ import flet as ft
 def main(page: ft.Page):
     page.add(
         ft.Row(
-            expand=True,
+            width=180,
+            height=100,
             spacing=0,
             controls=[
                 ft.Container(
@@ -35,4 +36,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
