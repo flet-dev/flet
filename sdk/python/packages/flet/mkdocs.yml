@@ -298,7 +298,7 @@ nav:
               - MatplotlibChart: charts/matplotlib_chart.md
               - PieChart: charts/pie_chart.md
               - PlotlyChart: charts/plotly_chart.md
-              - PlotlyChart: charts/radar_chart.md
+              - RadarChart: charts/radar_chart.md
               - ScatterChart: charts/scatter_chart.md
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
