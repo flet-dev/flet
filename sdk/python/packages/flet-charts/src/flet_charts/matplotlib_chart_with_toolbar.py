@@ -1,9 +1,8 @@
 from dataclasses import field
 from typing import Any, Optional
 
-import flet_charts
-
 import flet as ft
+import flet_charts
 
 _MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
 
@@ -79,7 +78,7 @@ class MatplotlibChartWithToolbar(ft.Column):
         self.msg = ft.Text()
         self.controls = [
             ft.Row(
-                [
+                controls=[
                     self.home_btn,
                     self.back_btn,
                     self.fwd_btn,

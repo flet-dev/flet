@@ -4,9 +4,8 @@ from dataclasses import dataclass, field
 from io import BytesIO
 from typing import Any, Optional
 
-import flet.canvas as fc
-
 import flet as ft
+import flet.canvas as fc
 
 _MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
 
@@ -98,6 +97,7 @@ class MatplotlibChart(ft.GestureDetector):
 
     def init(self):
         _require_matplotlib()
+        super().init()
 
     def build(self):
         self.mouse_cursor = ft.MouseCursor.WAIT
