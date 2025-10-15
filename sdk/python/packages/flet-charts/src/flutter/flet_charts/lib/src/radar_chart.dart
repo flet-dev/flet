@@ -19,8 +19,7 @@ class _RadarChartControlState extends State<RadarChartControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "RadarChart build: ${widget.control.id}, ${widget.control.properties.containsKey("radar_shape")}");
+    debugPrint("RadarChart build: ${widget.control.id}‚");
 
     final theme = Theme.of(context);
     final animation = widget.control.getAnimation(

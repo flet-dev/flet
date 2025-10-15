@@ -198,7 +198,7 @@ class RadarChart(ft.LayoutControl):
 
     on_event: Optional[ft.EventHandler[RadarChartEvent]] = None
     """
-    Fires when a dataset or entry is touched.
+    Called when the chart is interacted with.
     """
 
     def init(self):
