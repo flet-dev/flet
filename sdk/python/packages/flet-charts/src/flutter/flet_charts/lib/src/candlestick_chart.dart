@@ -37,9 +37,6 @@ class _CandlestickChartControlState extends State<CandlestickChartControl> {
     final bottomTitles = parseAxisTitles(widget.control.child("bottom_axis"));
 
     final interactive = widget.control.getBool("interactive", true)!;
-    final handleBuiltInTouches =
-        widget.control.getBool("handle_built_in_touches", true)!;
-    final touchSpotThreshold = widget.control.getDouble("touch_spot_threshold");
 
     final spotControls = widget.control.children("spots");
     final candlestickSpots = spotControls.map((spot) {
@@ -54,22 +51,12 @@ class _CandlestickChartControlState extends State<CandlestickChartControl> {
       );
     }).toList();
 
-    final selectedIndicators = spotControls
-        .asMap()
-        .entries
-        .where((e) => e.value.getBool("selected", false)!)
-        .map((e) => e.key)
-        .toList();
-
-    final showingIndicators =
-        (!interactive || !handleBuiltInTouches) ? selectedIndicators : <int>[];
-
     final candlestickTouchData = CandlestickTouchData(
       enabled: interactive && !widget.control.disabled,
       handleBuiltInTouches: !widget.control
           .getBool("show_tooltips_for_selected_spots_only", false)!,
       longPressDuration: widget.control.getDuration("long_press_duration"),
-      touchSpotThreshold: touchSpotThreshold,
+      touchSpotThreshold: widget.control.getDouble("touch_spot_threshold", 4)!,
       touchTooltipData: parseCandlestickTouchTooltipData(
         context,
         widget.control,
@@ -113,7 +100,12 @@ class _CandlestickChartControlState extends State<CandlestickChartControl> {
             widget.control.get("vertical_grid_lines"),
             theme),
         candlestickTouchData: candlestickTouchData,
-        showingTooltipIndicators: showingIndicators,
+        showingTooltipIndicators: spotControls
+            .asMap()
+            .entries
+            .where((e) => e.value.getBool("selected", false)!)
+            .map((e) => e.key)
+            .toList(),
         rotationQuarterTurns:
             widget.control.getInt("rotation_quarter_turns", 0)!,
       ),

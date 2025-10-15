@@ -17,12 +17,14 @@ __all__ = [
 class CandlestickChartTooltip:
     """Configuration of the tooltip for [`CandlestickChart`][(p).]s."""
 
-    bgcolor: ft.ColorValue = "#FF607D8B"
+    bgcolor: ft.ColorValue = "#FFFFECEF"
     """
     Background color applied to the tooltip bubble.
     """
 
-    border_radius: Optional[ft.BorderRadiusValue] = None
+    border_radius: ft.BorderRadiusValue = field(
+        default_factory=lambda: ft.BorderRadius.all(4)
+    )
     """
     Corner radius of the tooltip bubble.
     """
@@ -159,9 +161,10 @@ class CandlestickChart(ft.LayoutControl):
     Enables automatic tooltips and highlighting when hovering the chart.
     """
 
-    handle_built_in_touches: bool = True
+    show_tooltips_for_selected_spots_only: bool = False
     """
-    Allows the chart to manage tooltip visibility automatically.
+    Whether to permanently and only show the tooltips of spots with their
+    [`selected`][(p).CandlestickChartSpot.selected] property set to `True`.
     """
 
     long_press_duration: Optional[ft.DurationValue] = None
@@ -169,7 +172,7 @@ class CandlestickChart(ft.LayoutControl):
     The duration of a long press on the chart.
     """
 
-    touch_spot_threshold: Optional[ft.Number] = None
+    touch_spot_threshold: ft.Number = 4
     """
     The distance threshold to consider a touch near a candlestick.
     """

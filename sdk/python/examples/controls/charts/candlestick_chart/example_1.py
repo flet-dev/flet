@@ -99,7 +99,6 @@ def main(page: ft.Page):
             horizontal_alignment=ftc.HorizontalAlignment.CENTER,
             fit_inside_horizontally=True,
         ),
-        handle_built_in_touches=False,
         on_event=handle_event,
     )
 

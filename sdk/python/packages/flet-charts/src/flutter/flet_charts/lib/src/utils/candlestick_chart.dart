@@ -39,24 +39,24 @@ CandlestickTouchTooltipData parseCandlestickTouchTooltipData(
   final theme = Theme.of(context);
 
   return CandlestickTouchTooltipData(
-    tooltipBorder:
-        parseBorderSide(tooltip["border_side"], theme, defaultValue: BorderSide.none)!,
+    tooltipBorder: parseBorderSide(tooltip["border_side"], theme,
+        defaultValue: BorderSide.none)!,
     rotateAngle: parseDouble(tooltip["rotation"], 0.0)!,
-    tooltipBorderRadius: parseBorderRadius(tooltip["border_radius"]),
-    tooltipPadding: parsePadding(
-        tooltip["padding"], const EdgeInsets.symmetric(horizontal: 16, vertical: 8))!,
+    tooltipBorderRadius:
+        parseBorderRadius(tooltip["border_radius"], BorderRadius.circular(4))!,
+    tooltipPadding: parsePadding(tooltip["padding"],
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 8))!,
     tooltipHorizontalAlignment: parseFLHorizontalAlignment(
         tooltip["horizontal_alignment"], FLHorizontalAlignment.center)!,
     tooltipHorizontalOffset: parseDouble(tooltip["horizontal_offset"], 0)!,
     maxContentWidth: parseDouble(tooltip["max_width"], 120)!,
     fitInsideHorizontally:
         parseBool(tooltip["fit_inside_horizontally"], false)!,
-    fitInsideVertically:
-        parseBool(tooltip["fit_inside_vertically"], false)!,
+    fitInsideVertically: parseBool(tooltip["fit_inside_vertically"], false)!,
     showOnTopOfTheChartBoxArea:
         parseBool(tooltip["show_on_top_of_chart_box_area"], false)!,
-    getTooltipColor: (spot) => parseColor(
-        tooltip["bgcolor"], theme, const Color.fromRGBO(96, 125, 139, 1))!,
+    getTooltipColor: (spot) =>
+        parseColor(tooltip["bgcolor"], theme, const Color(0xFFFFECEF))!,
     getTooltipItems: (painter, touchedSpot, spotIndex) {
       if (spotIndex < 0 || spotIndex >= spotControls.length) {
         return null;
@@ -105,8 +105,9 @@ CandlestickTooltipItem? parseCandlestickTooltipItem(
     textStyle: textStyle,
     bottomMargin: parseDouble(tooltip["bottom_margin"], 8)!,
     textAlign: parseTextAlign(tooltip["text_align"], TextAlign.center)!,
-    textDirection:
-        parseBool(tooltip["rtl"], false)! ? TextDirection.rtl : TextDirection.ltr,
+    textDirection: parseBool(tooltip["rtl"], false)!
+        ? TextDirection.rtl
+        : TextDirection.ltr,
     children: tooltip["text_spans"] != null
         ? parseTextSpans(tooltip["text_spans"], theme, (s, eventName,
             [eventData]) {

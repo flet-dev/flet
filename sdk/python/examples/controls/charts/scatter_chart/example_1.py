@@ -19,6 +19,7 @@ class MySpot(ftc.ScatterChartSpot):
             radius=radius,
             color=color,
             show_tooltip=show_tooltip,
+            selected=y == 43,
         )
 
 
@@ -145,7 +146,7 @@ def main(page: ft.Page):
             right_axis=ftc.ChartAxis(show_labels=False),
             top_axis=ftc.ChartAxis(show_labels=False),
             bottom_axis=ftc.ChartAxis(show_labels=False),
-            show_tooltips_for_selected_spots_only=True,
+            show_tooltips_for_selected_spots_only=False,
             on_event=handle_event,
             animation=ft.Animation(
                 duration=ft.Duration(milliseconds=600),
