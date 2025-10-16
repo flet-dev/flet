@@ -177,7 +177,7 @@ class DashedStrokePattern(StrokePattern):
     A stroke pattern of alternating dashes and gaps, defined by [`segments`][(c).].
 
     Raises:
-        AssertionError: If [`segments`][(c).] does not contain at least two items,
+        ValueError: If [`segments`][(c).] does not contain at least two items,
             or has an odd length.
     """
 
@@ -185,9 +185,11 @@ class DashedStrokePattern(StrokePattern):
     """
     A list of alternating dash and gap lengths, in pixels.
 
-    Note:
-        Must contain at least two items, and have an even length.
+    Raises:
+        ValueError: If the list does not contain at least two items,
+            or if its length is not even.
     """
+
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
     Determines how this stroke pattern should be fit to a line when their lengths
@@ -195,10 +197,12 @@ class DashedStrokePattern(StrokePattern):
     """
 
     def __post_init__(self):
-        assert len(self.segments) >= 2, (
-            f"segments must contain at least two items, got {len(self.segments)}"
-        )
-        assert len(self.segments) % 2 == 0, "segments must have an even length"
+        if len(self.segments) < 2:
+            raise ValueError(
+                f"segments must contain at least two items, got {len(self.segments)}"
+            )
+        if len(self.segments) % 2 != 0:
+            raise ValueError("segments must have an even length")
         self._type = "dashed"
 
 
@@ -206,9 +210,6 @@ class DashedStrokePattern(StrokePattern):
 class DottedStrokePattern(StrokePattern):
     """
     A stroke pattern of circular dots, spaced with [`spacing_factor`][(c).].
-
-    Raises:
-        AssertionError: If [`spacing_factor`][(c).] is negative.
     """
 
     spacing_factor: ft.Number = 1.5
@@ -220,9 +221,12 @@ class DottedStrokePattern(StrokePattern):
 
     May also be scaled by the use of [`PatternFit.SCALE_UP`][(p).].
 
+    Raises:
+        ValueError: If it is less than or equal to zero.
     Note:
         Must be non-negative.
     """
+
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
     Determines how this stroke pattern should be fit to a line when their
@@ -230,10 +234,11 @@ class DottedStrokePattern(StrokePattern):
     """
 
     def __post_init__(self):
-        assert self.spacing_factor > 0, (
-            f"spacing_factor must be greater than or equal to 0.0, "
-            f"got {self.spacing_factor}"
-        )
+        if self.spacing_factor <= 0:
+            raise ValueError(
+                "spacing_factor must be greater than or equal to 0.0, "
+                f"got {self.spacing_factor}"
+            )
         self._type = "dotted"
 
 
@@ -620,7 +625,7 @@ class CameraFit:
     depending on which one was provided.
 
     Raises:
-        AssertionError: If both [`bounds`][(c).] and [`coordinates`][(c).]
+        ValueError: If both [`bounds`][(c).] and [`coordinates`][(c).]
             are `None` or not `None`.
     """
 
@@ -664,9 +669,13 @@ class CameraFit:
     """
 
     def __post_init__(self):
-        assert (self.bounds and not self.coordinates) or (
-            self.coordinates and not self.bounds
-        ), "only one of bounds or coordinates must be provided, not both"
+        if not (
+            (self.bounds and not self.coordinates)
+            or (self.coordinates and not self.bounds)
+        ):
+            raise ValueError(
+                "only one of bounds or coordinates must be provided, not both"
+            )
 
 
 @dataclass
@@ -724,12 +733,16 @@ class InstantaneousTileDisplay(TileDisplay):
     opacity: ft.Number = 1.0
     """
     The optional opacity of the tile.
+
+    Raises:
+        ValueError: If its value is not between `0.0` and `1.0` inclusive.
     """
 
     def __post_init__(self):
-        assert 0.0 <= self.opacity <= 1.0, (
-            f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-        )
+        if not (0.0 <= self.opacity <= 1.0):
+            raise ValueError(
+                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
+            )
         self._type = "instantaneous"
 
 
@@ -747,22 +760,30 @@ class FadeInTileDisplay(TileDisplay):
     start_opacity: ft.Number = 0.0
     """
     Opacity start value when a tile is faded in.
+
+    Raises:
+        ValueError: If its value is not between `0.0` and `1.0` inclusive.
     """
 
     reload_start_opacity: ft.Number = 0.0
     """
     Opacity start value when a tile is reloaded.
+
+    Raises:
+        ValueError: If its value is not between `0.0` and `1.0` inclusive.
     """
 
     def __post_init__(self):
-        assert 0.0 <= self.start_opacity <= 1.0, (
-            f"start_opacity must be between 0.0 and 1.0 inclusive, "
-            f"got {self.start_opacity}"
-        )
-        assert 0.0 <= self.reload_start_opacity <= 1.0, (
-            f"reload_start_opacity must be between 0.0 and 1.0 inclusive, "
-            f"got {self.reload_start_opacity}"
-        )
+        if not (0.0 <= self.start_opacity <= 1.0):
+            raise ValueError(
+                "start_opacity must be between 0.0 and 1.0 inclusive, "
+                f"got {self.start_opacity}"
+            )
+        if not (0.0 <= self.reload_start_opacity <= 1.0):
+            raise ValueError(
+                "reload_start_opacity must be between 0.0 and 1.0 inclusive, "
+                f"got {self.reload_start_opacity}"
+            )
         self._type = "fadein"
 
 

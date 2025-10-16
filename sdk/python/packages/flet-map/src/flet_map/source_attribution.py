@@ -23,17 +23,14 @@ class ImageSourceAttribution(SourceAttribution):
     open/close icon of a [`RichAttribution`][(p).] control.
     For it to be displayed, it should be part of a
     [`RichAttribution.attributions`][(p).] list.
-
-    Raises:
-        AssertionError: If the [`image`][(c).] is not visible.
     """
 
     image: ft.Image
     """
-    The `Image` to be displayed.
+    The [`Image`][flet.] to be displayed.
 
-    Note:
-        Must be provided and visible.
+    Raises:
+        ValueError: If the image is not visible.
     """
 
     height: ft.Number = 24.0
@@ -51,7 +48,8 @@ class ImageSourceAttribution(SourceAttribution):
 
     def before_update(self):
         super().before_update()
-        assert self.image.visible, "image must be visible"
+        if not self.image.visible:
+            raise ValueError("image must be visible")
 
 
 @ft.control("TextSourceAttribution")
