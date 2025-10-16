@@ -18,6 +18,21 @@ class BottomSheet(DialogControl):
 
     A bottom sheet is an alternative to a menu or dialog and prevents the user
     from interacting with the rest of the app.
+
+    ```python
+    sheet = ft.BottomSheet(
+        content=ft.Column(
+            width=150,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Text("Choose an option"),
+                ft.TextButton("Dismiss"),
+            ],
+        )
+    )
+    page.show_dialog(sheet)
+    ```
     """
 
     content: Control
