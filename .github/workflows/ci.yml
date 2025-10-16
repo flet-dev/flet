@@ -619,8 +619,7 @@ jobs:
           patch_toml_versions "$PYPROJECT" "$PYPI_VER"
 
           rm -rf dist
-          uv build --package "$PACKAGE" --wheel
-          uv build --package "$PACKAGE" --sdist
+          uv build --package "$PACKAGE"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

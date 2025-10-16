@@ -104,7 +104,23 @@ show-fixes = true
 
 [tool.ruff.lint]
 pydocstyle = { convention = 'google' }
-isort = { known-first-party = ["flet", "flet_cli"] }
+isort = { known-first-party = [
+    "flet",
+    "flet_cli",
+    "flet_ads",
+    "flet_audio",
+    "flet_audio_recorder",
+    "flet_charts",
+    "flet_datatable2",
+    "flet_flashlight",
+    "flet_geolocator",
+    "flet_lottie",
+    "flet_map",
+    "flet_permission_handler",
+    "flet_rive",
+    "flet_video",
+    "flet_webview"
+] }
 preview = true
 select = [
     # pycodestyle

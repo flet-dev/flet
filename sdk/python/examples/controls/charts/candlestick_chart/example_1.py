@@ -1,6 +1,5 @@
-import flet_charts as ftc
-
 import flet as ft
+import flet_charts as ftc
 
 CANDLE_DATA = [
     ("Mon", 24.8, 28.6, 23.9, 27.2),
@@ -100,7 +99,6 @@ def main(page: ft.Page):
             horizontal_alignment=ftc.HorizontalAlignment.CENTER,
             fit_inside_horizontally=True,
         ),
-        handle_built_in_touches=True,
         on_event=handle_event,
     )
 

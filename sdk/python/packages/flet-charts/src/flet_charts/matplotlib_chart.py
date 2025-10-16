@@ -2,18 +2,22 @@ import asyncio
 import logging
 from dataclasses import dataclass, field
 from io import BytesIO
-from typing import Optional
+from typing import Any, Optional
 
 import flet as ft
 import flet.canvas as fc
 
+_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+
 try:
-    import matplotlib
-    from matplotlib.figure import Figure
-except ImportError as e:
-    raise Exception(
-        'Install "matplotlib" Python package to use MatplotlibChart control.'
-    ) from e
+    import matplotlib  # type: ignore[import]
+    from matplotlib.figure import Figure  # type: ignore[import]
+except ImportError as e:  # pragma: no cover - depends on optional dependency
+    matplotlib = None  # type: ignore[assignment]
+    Figure = Any  # type: ignore[assignment]
+    _MATPLOTLIB_IMPORT_ERROR = e
+else:
+    matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 
 __all__ = [
     "MatplotlibChart",
@@ -22,8 +26,6 @@ __all__ = [
 ]
 
 logger = logging.getLogger("flet-charts.matplotlib")
-
-matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 
 figure_cursors = {
     "default": None,
@@ -34,6 +36,13 @@ figure_cursors = {
     "ew-resize": ft.MouseCursor.RESIZE_LEFT_RIGHT,
     "ns-resize": ft.MouseCursor.RESIZE_UP_DOWN,
 }
+
+
+def _require_matplotlib() -> None:
+    if matplotlib is None:
+        raise ModuleNotFoundError(
+            'Install "matplotlib" Python package to use MatplotlibChart control.'
+        ) from _MATPLOTLIB_IMPORT_ERROR
 
 
 @dataclass
@@ -86,6 +95,10 @@ class MatplotlibChart(ft.GestureDetector):
     Triggers when toolbar buttons status is updated.
     """
 
+    def init(self):
+        _require_matplotlib()
+        super().init()
+
     def build(self):
         self.mouse_cursor = ft.MouseCursor.WAIT
         self.__started = False
@@ -95,7 +108,7 @@ class MatplotlibChart(ft.GestureDetector):
 
         self.canvas = fc.Canvas(
             # resize_interval=10,
-            on_resize=self.on_canvas_resize,
+            on_resize=self._on_canvas_resize,
             expand=True,
         )
         self.keyboard_listener = ft.KeyboardListener(
@@ -246,29 +259,55 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def will_unmount(self):
+        """
+        Called when the control is about to be removed from the page.
+        """
         self.figure.canvas.manager.remove_web_socket(self)
 
     def home(self):
+        """
+        Resets the view to the original state.
+        """
         logger.debug("home)")
         self.send_message({"type": "toolbar_button", "name": "home"})
 
     def back(self):
+        """
+        Goes back to the previous view.
+        """
         logger.debug("back()")
         self.send_message({"type": "toolbar_button", "name": "back"})
 
     def forward(self):
+        """
+        Goes forward to the next view.
+        """
         logger.debug("forward)")
         self.send_message({"type": "toolbar_button", "name": "forward"})
 
     def pan(self):
+        """
+        Activates the pan tool.
+        """
         logger.debug("pan()")
         self.send_message({"type": "toolbar_button", "name": "pan"})
 
     def zoom(self):
+        """
+        Activates the zoom tool.
+        """
         logger.debug("zoom()")
         self.send_message({"type": "toolbar_button", "name": "zoom"})
 
-    def download(self, format):
+    def download(self, format) -> bytes:
+        """
+        Downloads the current figure in the specified format.
+        Args:
+            format (str): The format to download the figure in (e.g., 'png',
+                'jpg', 'svg', etc.).
+        Returns:
+            bytes: The figure image in the specified format as a byte array.
+        """
         logger.debug(f"Download in format: {format}")
         buff = BytesIO()
         self.figure.savefig(buff, format=format, dpi=self.figure.dpi * self.__dpr)
@@ -347,23 +386,26 @@ class MatplotlibChart(ft.GestureDetector):
                     )
 
     def send_message(self, message):
+        """Sends a message to the figure's canvas manager."""
         logger.debug(f"send_message({message})")
         manager = self.figure.canvas.manager
         if manager is not None:
             manager.handle_json(message)
 
     def send_json(self, content):
+        """Sends a JSON message to the front end."""
         logger.debug(f"send_json: {content}")
         self._main_loop.call_soon_threadsafe(
             lambda: self._receive_queue.put_nowait((False, content))
         )
 
     def send_binary(self, blob):
+        """Sends a binary message to the front end."""
         self._main_loop.call_soon_threadsafe(
             lambda: self._receive_queue.put_nowait((True, blob))
         )
 
-    async def on_canvas_resize(self, e: fc.CanvasResizeEvent):
+    async def _on_canvas_resize(self, e: fc.CanvasResizeEvent):
         logger.debug(f"on_canvas_resize: {e.width}, {e.height}")
 
         if not self.__started:

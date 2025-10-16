@@ -40,6 +40,5 @@ pip install flet-charts  # (1)!
 - [`MatplotlibChart`](matplotlib_chart.md)
 - [`PieChart`](pie_chart.md)
 - [`PlotlyChart`](plotly_chart.md)
+- [`RadarChart`](radar_chart.md)
 - [`ScatterChart`](scatter_chart.md)
-
-Each chart page provides ready-to-run examples from `{{ examples }}`.

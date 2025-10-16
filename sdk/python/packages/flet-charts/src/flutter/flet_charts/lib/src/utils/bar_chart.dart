@@ -38,11 +38,11 @@ class BarChartEventData extends Equatable {
   }
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-    'type': eventType,
-    'group_index': groupIndex,
-    'rod_index': rodIndex,
-    'stack_item_index': stackItemIndex,
-  };
+        'type': eventType,
+        'group_index': groupIndex,
+        'rod_index': rodIndex,
+        'stack_item_index': stackItemIndex,
+      };
 
   @override
   List<Object?> get props => [eventType, groupIndex, rodIndex, stackItemIndex];
@@ -96,9 +96,8 @@ BarTouchTooltipData? parseBarTouchTooltipData(
       FLHorizontalAlignment.center,
     )!,
     getTooltipItem: (group, groupIndex, rod, rodIndex) {
-      var rod = control
-          .children("groups")[groupIndex]
-          .children("rods")[rodIndex];
+      var rod =
+          control.children("groups")[groupIndex].children("rods")[rodIndex];
       return parseBarTooltipItem(rod, context);
     },
   );
@@ -118,8 +117,7 @@ BarTooltipItem? parseBarTooltipItem(Control rod, BuildContext context) {
   )!;
   if (tooltipTextStyle.color == null) {
     tooltipTextStyle = tooltipTextStyle.copyWith(
-      color:
-          rod.getGradient("gradient", theme)?.colors.first ??
+      color: rod.getGradient("gradient", theme)?.colors.first ??
           rod.getColor("color", context, Colors.blueGrey)!,
     );
   }
@@ -194,8 +192,7 @@ BarChartRodData parseBarChartRodData(
       defaultValue: BorderSide.none,
     ),
     backDrawRodData: BackgroundBarChartRodData(
-      show:
-          (bgFromY != null ||
+      show: (bgFromY != null ||
           bgToY != null ||
           bgcolor != null ||
           backgroundGradient != null),
@@ -235,13 +232,10 @@ BarChartRodStackItem parseBarChartRodStackItem(
   );
 }
 
-BarChartAlignment? parseBarChartAlignment(
-  String? value, [
-  BarChartAlignment? defaultValue,
-]) {
+BarChartAlignment? parseBarChartAlignment(String? value,
+    [BarChartAlignment? defaultValue]) {
   if (value == null) return defaultValue;
   return BarChartAlignment.values.firstWhereOrNull(
-        (e) => e.name.toLowerCase() == value.toLowerCase(),
-      ) ??
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
