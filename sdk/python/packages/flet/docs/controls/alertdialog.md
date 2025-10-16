@@ -16,9 +16,7 @@ example_images: ../test-images/examples/material/golden/macos/alert_dialog
 --8<-- "{{ examples }}/modal_and_non_modal.py"
 ```
 
-{{ image(example_images + "/before_click.png", alt="Initial state", caption="Initial state",width="50%") }}
-{{ image(example_images + "/non_modal_dialog.png", alt="After Open dialog button clicked", caption="After Open dialog button clicked", width="50%") }}
-{{ image(example_images + "/modal_dialog.png", alt="After Open modal dialog button clicked", caption="After Open modal dialog button clicked", width="50%") }}
+{{ image(example_images + "/alert_dialog_flow.gif", alt="Modal and non-modal dialogs", caption="Modal and non-modal dialogs",width="50%") }}
 
 
 {{ class_members(class_name) }}
