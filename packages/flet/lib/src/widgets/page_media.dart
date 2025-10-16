@@ -68,6 +68,11 @@ class _PageMediaState extends State<PageMedia> {
       if (pageSize != backend.pageSize) {
         _onPageSizeChanged(pageSizeUpdated, pageSize);
       }
+
+      var orientation = MediaQuery.orientationOf(context);
+      if (orientation != backend.orientation || !pageSizeUpdated) {
+        backend.updateOrientation(orientation, view: widget.view);
+      }
     });
 
     return const SizedBox.shrink();

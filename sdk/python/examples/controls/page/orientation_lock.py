@@ -1,3 +1,5 @@
+from typing import Optional
+
 import flet as ft
 
 
@@ -34,6 +36,22 @@ def main(page: ft.Page) -> None:
     def label_for(orientation: ft.DeviceOrientation) -> str:
         return orientation.name.replace("_", " ").title()
 
+    def format_orientation(value: Optional[ft.Orientation]) -> str:
+        return value.name.title() if value else "Unknown"
+
+    orientation_info = ft.Text(
+        f"Current orientation: {format_orientation(page.orientation)}",
+        text_align=ft.TextAlign.CENTER,
+    )
+
+    def handle_orientation_change(e: ft.OrientationChangeEvent) -> None:
+        orientation_info.value = (
+            f"Current orientation: {format_orientation(e.orientation)}"
+        )
+        page.update()
+
+    page.on_orientation_change = handle_orientation_change
+
     checkboxes: dict[ft.DeviceOrientation, ft.Checkbox] = {
         orientation: ft.Checkbox(
             label=label_for(orientation),
@@ -51,6 +69,7 @@ def main(page: ft.Page) -> None:
         ),
         ft.Column(list(checkboxes.values()), tight=True),
         status,
+        orientation_info,
     )
 
     # Ensure the initial device orientations reflect the default checkbox state.
@@ -58,4 +77,4 @@ def main(page: ft.Page) -> None:
 
 
 if __name__ == "__main__":
-    ft.run(main)
+    ft.app(target=main)

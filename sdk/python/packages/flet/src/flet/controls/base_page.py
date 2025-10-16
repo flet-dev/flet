@@ -36,6 +36,7 @@ from flet.controls.types import (
     LocaleConfiguration,
     MainAxisAlignment,
     Number,
+    Orientation,
     ScrollMode,
     ThemeMode,
 )
@@ -235,6 +236,14 @@ class BasePage(AdaptiveControl):
             title bar and borders) when running a Flet app on desktop,
             use the [`height`][flet.Window.height] property of
             [`Page.window`][flet.Page.window] instead.
+    """
+
+    orientation: Optional[Orientation] = None
+    """
+    The current orientation of the page.
+
+    Note:
+        This property is read-only.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())

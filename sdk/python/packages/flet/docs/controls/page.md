@@ -19,3 +19,15 @@ ft.app(target=main)
 ```
 
 See the full example at `sdk/python/examples/controls/page/orientation_lock.py`.
+
+To react to device rotation, inspect `page.orientation` and subscribe to `page.on_orientation_change` for updates:
+
+```python
+import flet as ft
+
+def main(page: ft.Page):
+    def handle_orientation_change(e: ft.OrientationChangeEvent):
+        print("Orientation changed to", e.orientation)
+
+    page.on_orientation_change = handle_orientation_change
+```

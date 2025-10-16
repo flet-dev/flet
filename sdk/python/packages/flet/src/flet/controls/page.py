@@ -54,6 +54,7 @@ from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
+    Orientation,
     PagePlatform,
     Url,
     UrlTarget,
@@ -126,6 +127,11 @@ class RouteChangeEvent(Event["Page"]):
 @dataclass
 class PlatformBrightnessChangeEvent(Event["Page"]):
     brightness: Brightness
+
+
+@dataclass
+class OrientationChangeEvent(Event["Page"]):
+    orientation: Orientation
 
 
 @dataclass
@@ -347,6 +353,11 @@ class Page(BasePage):
     ] = None
     """
     Called when brightness of app host platform has changed.
+    """
+
+    on_orientation_change: Optional[EventHandler[OrientationChangeEvent]] = None
+    """
+    Called when the device orientation changes between portrait and landscape.
     """
 
     on_app_lifecycle_state_change: Optional[
