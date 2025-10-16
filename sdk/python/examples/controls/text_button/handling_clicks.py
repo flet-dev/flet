@@ -6,17 +6,20 @@ def main(page: ft.Page):
 
     def button_clicked(e):
         button.data += 1
-        message.value = f"Button clicked {button.data} time(s)"
+        message_text.value = f"Button clicked {button.data} time(s)"
         page.update()
 
+    message_text = ft.Text()
     page.add(
         button := ft.TextButton(
+            key="TextButton",
             content="Button with 'click' event",
             data=0,
             on_click=button_clicked,
         ),
-        message := ft.Text(),
+        message := ft.Container(content=message_text, padding=ft.Padding(left=12)),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
