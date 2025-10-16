@@ -68,3 +68,8 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
+
+    flet_app_function.create_gif(
+        ["before_click", "non_modal_dialog", "modal_dialog"],
+        "alert_dialog_flow",
+    )
