@@ -10,6 +10,8 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+import flet_desktop
+import flet_desktop.version
 from flet.utils import (
     get_arch,
     is_linux,
@@ -18,9 +20,6 @@ from flet.utils import (
     random_string,
     safe_tar_extractall,
 )
-
-import flet_desktop
-import flet_desktop.version
 
 logger = logging.getLogger(flet_desktop.__name__)
 
@@ -146,9 +145,10 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             for f in os.listdir(temp_flet_dir):
                 if f.endswith(".app"):
                     app_name = f
-            assert app_name is not None, (
-                f"Application bundle not found in {temp_flet_dir}"
-            )
+            if app_name is None:
+                raise FileNotFoundError(
+                    f"Application bundle not found in {temp_flet_dir}"
+                )
             app_path = temp_flet_dir.joinpath(app_name)
         logger.info(f"page_url: {page_url}")
         logger.info(f"pid_file: {pid_file}")

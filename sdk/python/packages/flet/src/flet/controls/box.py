@@ -336,17 +336,17 @@ class BoxDecoration:
     """
 
     def __post_init__(self):
-        assert (
+        if not (
             self.blend_mode is None
             or self.bgcolor is not None
             or self.gradient is not None
-        ), (
-            "blend_mode applies to the BoxDecoration's background color or gradient, "
-            "but no color or gradient was provided"
-        )
-        assert not (self.shape == BoxShape.CIRCLE and self.border_radius), (
-            "border_radius must be None when shape is BoxShape.CIRCLE"
-        )
+        ):
+            raise ValueError(
+                "blend_mode applies to the BoxDecoration's background color "
+                "or gradient, but no color or gradient was provided"
+            )
+        if self.shape == BoxShape.CIRCLE and self.border_radius:
+            raise ValueError("border_radius must be None when shape is BoxShape.CIRCLE")
 
     def copy(
         self,
@@ -414,14 +414,16 @@ class BoxConstraints:
     """
 
     def __post_init__(self):
-        assert 0 <= self.min_width <= self.max_width <= float("inf"), (
-            "min_width and max_width must be between 0 and infinity "
-            "and min_width must be less than or equal to max_width"
-        )
-        assert 0 <= self.min_height <= self.max_height <= float("inf"), (
-            "min_height and max_height must be between 0 and infinity "
-            "and min_height must be less than or equal to max_height"
-        )
+        if not (0 <= self.min_width <= self.max_width <= float("inf")):
+            raise ValueError(
+                "min_width and max_width must be between 0 and infinity "
+                "and min_width must be less than or equal to max_width"
+            )
+        if not (0 <= self.min_height <= self.max_height <= float("inf")):
+            raise ValueError(
+                "min_height and max_height must be between 0 and infinity "
+                "and min_height must be less than or equal to max_height"
+            )
 
     def copy(
         self,

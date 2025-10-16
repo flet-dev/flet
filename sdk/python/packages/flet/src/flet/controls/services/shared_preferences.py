@@ -9,7 +9,8 @@ __all__ = ["SharedPreferences"]
 @control("SharedPreferences")
 class SharedPreferences(Service):
     async def set(self, key: str, value: Any) -> bool:
-        assert value is not None
+        if value is None:
+            raise ValueError("value can't be None")
         return await self._invoke_method("set", {"key": key, "value": value})
 
     async def get(self, key: str):

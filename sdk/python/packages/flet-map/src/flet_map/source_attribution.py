@@ -63,14 +63,14 @@ class TextSourceAttribution(SourceAttribution):
     """
 
     text: str
-    """The text to display as attribution, styled with [`text_style`][..]."""
+    """The text to display as attribution, styled with [`text_style`][(c).]."""
 
     text_style: Optional[ft.TextStyle] = None
-    """Style used to display the [`text`][..]."""
+    """Style used to display the [`text`][(c).]."""
 
     prepend_copyright: bool = True
     """
-    Whether to add the '©' character to the start of [`text`][..] automatically.
+    Whether to add the '©' character to the start of [`text`][(c).] automatically.
     """
 
     on_click: Optional[ft.ControlEventHandler["TextSourceAttribution"]] = None

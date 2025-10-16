@@ -48,7 +48,10 @@ class MenuBar(Control):
 
     controls: list[Control] = field(default_factory=list)
     """
-    The list of menu items that are the top level children of the `MenuBar`.
+    A list of top-level menu controls to display in this menu bar.
+
+    Raises:
+        ValueError: If at least one control in this list is not visible.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -58,11 +61,10 @@ class MenuBar(Control):
 
     style: Optional[MenuStyle] = None
     """
-    TBD
+    The menu bar style.
     """
 
     def before_update(self):
         super().before_update()
-        assert any(c.visible for c in self.controls), (
-            "MenuBar must have at minimum one visible control"
-        )
+        if not any(c.visible for c in self.controls):
+            raise ValueError("MenuBar must have at minimum one visible control")

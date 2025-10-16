@@ -11,7 +11,8 @@ class BaseAd(ft.Control):
     Base class for all ad controls in Flet Ads package.
 
     Raises:
-        AssertionError: When using this control on a web and/or non-mobile platform.
+        FletUnsupportedPlatformException: When using this control on a web
+            and/or non-mobile platform.
     """
 
     unit_id: str
@@ -63,6 +64,8 @@ class BaseAd(ft.Control):
     """
 
     def before_update(self):
-        assert not self.page.web and self.page.platform.is_mobile(), (
-            f"{self.__class__.__name__} is only supported on Mobile (Android and iOS)"
-        )
+        if self.page.web or not self.page.platform.is_mobile():
+            raise ft.FletUnsupportedPlatformException(
+                f"{self.__class__.__name__} is only supported on "
+                f"Mobile (Android and iOS)"
+            )

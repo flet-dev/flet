@@ -231,7 +231,8 @@ class BasePage(AdaptiveControl):
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
     def __default_view(self) -> View:
-        assert len(self.views) > 0, "views list is empty."
+        if len(self.views) == 0:
+            raise RuntimeError("views list is empty.")
         return self.views[0]
 
     def update(self, *controls) -> None:

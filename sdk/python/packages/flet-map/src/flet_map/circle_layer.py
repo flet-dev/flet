@@ -12,9 +12,6 @@ class CircleMarker(ft.Control):
     """
     A circular marker displayed on the Map at the specified
     location through the [`CircleLayer`][(p).].
-
-    Raises:
-        AssertionError: If the [`border_stroke_width`][(c).] is negative.
     """
 
     radius: ft.Number
@@ -30,8 +27,8 @@ class CircleMarker(ft.Control):
     """
     The color of the circle border line.
 
-    Note:
-        [`border_stroke_width`][..] must to be greater than
+    Tip:
+        [`border_stroke_width`][(c).] must be greater than
         `0.0` in order for this color to be visible.
     """
 
@@ -39,21 +36,22 @@ class CircleMarker(ft.Control):
     """
     The stroke width for the circle border.
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than `0.0`.
     """
 
     use_radius_in_meter: bool = False
     """
-    Whether the [`radius`][..] should use the unit meters.
+    Whether the [`radius`][(c).] should use the unit meters.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.border_stroke_width >= 0, (
-            f"border_stroke_width must be greater than or equal to 0, "
-            f"got {self.border_stroke_width}"
-        )
+        if self.border_stroke_width < 0:
+            raise ValueError(
+                "border_stroke_width must be greater than or equal to 0, "
+                f"got {self.border_stroke_width}"
+            )
 
 
 @ft.control("CircleLayer")

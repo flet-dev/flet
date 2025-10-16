@@ -20,23 +20,6 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
     A material expansion panel. It can either be expanded or collapsed. Its body is
     only visible when it is expanded.
-
-    ```python
-    ft.ExpansionPanelList(
-        width=400,
-        controls=[
-            ft.ExpansionPanel(
-                header=ft.Text("Shipping address"),
-                content=ft.Text("123 Market Street, Springfield"),
-                expanded=True,
-            ),
-            ft.ExpansionPanel(
-                header=ft.Text("Billing address"),
-                content=ft.Text("Same as shipping"),
-            ),
-        ],
-    )
-    ```
     """
 
     header: Optional[Control] = None
@@ -64,13 +47,12 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 
     expanded: bool = False
     """
-    Whether expanded(`True`) or collapsed(`False`). Defaults to `False`.
+    Whether expanded(`True`) or collapsed(`False`).
     """
 
     can_tap_header: bool = False
     """
-    If `True`, tapping on the panel's `header` will expand or collapse it. Defaults to
-    `False`.
+    If `True`, tapping on the panel's `header` will expand or collapse it.
     """
 
     splash_color: Optional[ColorValue] = None
@@ -88,40 +70,25 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 class ExpansionPanelList(LayoutControl):
     """
     A material expansion panel list that lays out its children and animates expansions.
-
-    ```python
-    ft.ExpansionPanelList(
-        width=400,
-        controls=[
-            ft.ExpansionPanel(
-                header=ft.Text("Details"),
-                content=ft.Text("More information here"),
-                expanded=True,
-            ),
-            ft.ExpansionPanel(
-                header=ft.Text("History"),
-                content=ft.Text("View previous updates"),
-            ),
-        ],
-    )
-    ```
     """
 
     controls: list[ExpansionPanel] = field(default_factory=list)
     """
-    A list of `ExpansionPanel`s to display inside `ExpansionPanelList`.
+    A list of panels to display.
     """
 
     divider_color: Optional[ColorValue] = None
     """
     The color of the divider when
-    `ExpansionPanel.expanded` is `False`.
+    [`ExpansionPanel.expanded`][flet.] is `False`.
     """
 
     elevation: Number = 2
     """
-    Defines the elevation of the children controls (`ExpansionPanel`s), while it is
-    expanded. Default value is `2`.
+    Defines the elevation of the [`controls`][(c).], when expanded.
+
+    Raises:
+        ValueError: If it is less than or equal to zero.
     """
 
     expanded_header_padding: PaddingValue = field(
@@ -133,23 +100,26 @@ class ExpansionPanelList(LayoutControl):
 
     expand_icon_color: Optional[ColorValue] = None
     """
-    The color of the icon. Defaults to
-    `colors.BLACK_54` in light theme mode and `colors.WHITE_60` in dark theme mode.
+    The color of the icon.
+
+    Defaults to [`Colors.BLACK_54`][flet.] in light theme mode and
+    [`Colors.WHITE_60`][flet.] in dark theme mode.
     """
 
     spacing: Optional[Number] = None
     """
-    The size of the gap between the `ExpansionPanel`s when expanded.
+    The size of the gap between the [`controls`][(c).]s when expanded.
     """
 
     on_change: Optional[ControlEventHandler["ExpansionPanelList"]] = None
     """
-    Called when an `ExpansionPanel` is expanded or collapsed. The event's data
-    (`e.data`), contains the index of the `ExpansionPanel` which triggered this event.
+    Called when an item of [`controls`][(c).] is expanded or collapsed.
+
+    The event's [`data`][flet.Event.], contains the index of the
+    child panel (in [`controls`][(c).]) which triggered this event.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.elevation is None or self.elevation >= 0, (
-            "elevation cannot be negative"
-        )
+        if self.elevation < 0:
+            raise ValueError("elevation must be greater than or equal to zero")

@@ -119,7 +119,7 @@ class Video(ft.LayoutControl):
     resume_upon_entering_foreground_mode: bool = False
     """
     Whether to resume the video when application enters foreground mode.
-    Has effect only if [`pause_upon_entering_background_mode`][..] is also set to
+    Has effect only if [`pause_upon_entering_background_mode`][(c).] is also set to
     `True`.
     """
 
@@ -201,17 +201,17 @@ class Video(ft.LayoutControl):
         await self._invoke_method("stop")
 
     async def next(self):
-        """Jumps to the next `VideoMedia` in the [`playlist`][..]."""
+        """Jumps to the next `VideoMedia` in the [`playlist`][(c).]."""
         await self._invoke_method("next")
 
     async def previous(self):
-        """Jumps to the previous `VideoMedia` in the [`playlist`][..]."""
+        """Jumps to the previous `VideoMedia` in the [`playlist`][(c).]."""
         await self._invoke_method("previous")
 
     async def seek(self, position: ft.DurationValue):
         """
         Seeks the currently playing `VideoMedia` from the
-        [`playlist`][..] at the specified `position`.
+        [`playlist`][(c).] at the specified `position`.
         """
         await self._invoke_method(
             "seek",
@@ -221,7 +221,7 @@ class Video(ft.LayoutControl):
     async def jump_to(self, media_index: int):
         """
         Jumps to the `VideoMedia` at the specified `media_index`
-        in the [`playlist`][..].
+        in the [`playlist`][(c).].
         """
         assert self.playlist[media_index], "media_index is out of range"
         if media_index < 0:
