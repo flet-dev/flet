@@ -31,6 +31,7 @@ from flet.controls.transform import OffsetValue
 from flet.controls.types import (
     ColorValue,
     CrossAxisAlignment,
+    DeviceOrientation,
     FloatingActionButtonLocation,
     LocaleConfiguration,
     MainAxisAlignment,
@@ -167,6 +168,15 @@ class BasePage(AdaptiveControl):
     enable_screenshots: bool = False
     """
     Enable taking screenshots of the entire page with `take_screenshot` method.
+    """
+
+    device_orientations: Optional[list[DeviceOrientation]] = None
+    """
+    Constrains the allowed orientations for the app when running on a mobile device.
+
+    Set to a list of [`DeviceOrientation`][flet.] values (e.g.,
+    `[DeviceOrientation.PORTRAIT_UP]`) to lock the app to specific orientations.
+    Leave as `None` (default) to allow all orientations.
     """
 
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None

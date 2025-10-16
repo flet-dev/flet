@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
@@ -23,6 +24,7 @@ import '../services/service_registry.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
+import '../utils/platform.dart';
 import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/session_store_web.dart'
@@ -61,6 +63,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
+  List<DeviceOrientation>? _appliedDeviceOrientations;
 
   @override
   void initState() {
@@ -92,6 +95,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     widget.control.addInvokeMethodListener(_invokeMethod);
+    _updatePreferredDeviceOrientations();
   }
 
   @override
@@ -128,6 +132,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     _loadFontsIfNeeded(FletBackend.of(context));
+    _updatePreferredDeviceOrientations();
   }
 
   @override
@@ -291,6 +296,54 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       }
       _prevOnKeyboardEvent = onKeyboardEvent;
     }
+  }
+
+  void _updatePreferredDeviceOrientations() {
+    if (!isMobilePlatform()) {
+      return;
+    }
+
+    final property = widget.control.get("device_orientations");
+    List<DeviceOrientation> orientations;
+
+    if (property is Iterable) {
+      orientations = property
+          .map<DeviceOrientation?>(_parseDeviceOrientation)
+          .whereType<DeviceOrientation>()
+          .toList(growable: false);
+      if (orientations.isEmpty) {
+        orientations =
+            List<DeviceOrientation>.from(DeviceOrientation.values);
+      }
+    } else {
+      orientations =
+          List<DeviceOrientation>.from(DeviceOrientation.values);
+    }
+
+    final normalized =
+        List<DeviceOrientation>.unmodifiable(orientations);
+
+    if (_appliedDeviceOrientations != null &&
+        const ListEquality<DeviceOrientation>()
+            .equals(normalized, _appliedDeviceOrientations!)) {
+      return;
+    }
+
+    _appliedDeviceOrientations = normalized;
+    unawaited(SystemChrome.setPreferredOrientations(
+        List<DeviceOrientation>.from(normalized)));
+  }
+
+  DeviceOrientation? _parseDeviceOrientation(dynamic value) {
+    if (value is DeviceOrientation) {
+      return value;
+    }
+    if (value is String) {
+      final normalized = value.toLowerCase();
+      return DeviceOrientation.values.firstWhereOrNull(
+          (orientation) => orientation.name.toLowerCase() == normalized);
+    }
+    return null;
   }
 
   Future<void> _loadFontsIfNeeded(FletBackend backend) async {
