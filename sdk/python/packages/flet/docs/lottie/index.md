@@ -33,9 +33,6 @@ pip install flet-lottie  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-> [!TIP]
-> `Lottie` is a visual control—place it wherever any other widget goes and configure playback via its properties.
-
 ## Example
 
 ```python

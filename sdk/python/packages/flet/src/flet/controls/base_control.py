@@ -16,13 +16,10 @@ from flet.utils.object_model import get_param_count
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
 
-# Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
-if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
+if sys.version_info >= (3, 11):
     from typing import dataclass_transform
 else:
-
-    def dataclass_transform():  # No-op decorator for older Python versions
-        return lambda x: x
+    from typing_extensions import dataclass_transform
 
 
 if TYPE_CHECKING:
@@ -236,9 +233,9 @@ class BaseControl:
     def update(self) -> None:
         if hasattr(self, "_frozen"):
             raise Exception("Frozen control cannot be updated.")
-        assert self.page, (
-            f"{self.__class__.__qualname__} Control must be added to the page first"
-        )
+        assert (
+            self.page
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
         self.page.update(self)
 
     async def _invoke_method(
@@ -247,9 +244,9 @@ class BaseControl:
         arguments: Optional[dict[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
-        assert self.page, (
-            f"{self.__class__.__qualname__} Control must be added to the page first"
-        )
+        assert (
+            self.page
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
 
         return await self.page.session.invoke_method(
             self._i, method_name, arguments, timeout

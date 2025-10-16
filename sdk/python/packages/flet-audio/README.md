@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-audio.svg)](https://pypi.python.org/pypi/flet-audio)
 [![downloads](https://static.pepy.tech/badge/flet-audio/month)](https://pepy.tech/project/flet-audio)
-[![license](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio/LICENSE)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio/LICENSE)
 
 A [Flet](https://flet.dev) extension package for playing audio.
 
@@ -34,6 +34,17 @@ To install the `flet-audio` package and add it to your project dependencies:
     pip install flet-audio
     ```
     After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
+
+> [!NOTE]
+> On Linux/WSL, you need to install [`GStreamer`](https://github.com/GStreamer/gstreamer) library.
+>
+> If you receive `error while loading shared libraries: libgstapp-1.0.so.0`, it means `GStreamer` is not installed in your WSL environment.
+>
+> To install it, run the following command:
+>
+> ```bash
+> apt install -y libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools
+> ```
 
 ### Examples
 

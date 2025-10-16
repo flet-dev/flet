@@ -32,9 +32,6 @@ pip install flet-charts  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-> [!TIP]
-> All chart services are regular controls—simply instantiate them and add to the page or to a layout container.
-
 ## Available Charts
 
 - [`BarChart`](bar_chart.md)
