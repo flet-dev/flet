@@ -70,7 +70,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     )
 
     flet_app_function.create_gif(
-        ["before_click", "non_modal_dialog", "modal_dialog"],
+        ["before_click", "non_modal_dialog", "before_click", "modal_dialog"],
         "alert_dialog_flow",
-        duration=500,
+        duration=2000,
     )

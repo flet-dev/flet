@@ -388,7 +388,7 @@ class FletTestApp:
         image_names: Iterable[str],
         output_name: str,
         *,
-        duration: int = 300,
+        duration: int = 1000,
         loop: int = 0,
     ) -> Path:
         """Create an animated GIF from a sequence of image files.
