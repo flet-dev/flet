@@ -42,6 +42,7 @@ from flet.controls.device_info import (
     WebDeviceInfo,
     WindowsDeviceInfo,
 )
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.multi_view import MultiView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
@@ -54,6 +55,7 @@ from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
+    DeviceOrientation,
     Orientation,
     PagePlatform,
     Url,
@@ -950,3 +952,22 @@ class Page(BasePage):
             return from_dict(WindowsDeviceInfo, info)
         else:
             return None
+
+    async def set_allowed_device_orientations(
+        self, orientations: list[DeviceOrientation]
+    ) -> None:
+        """
+        Constrains the allowed orientations for the app when running on a mobile device.
+        Set to an empty list to use the system default behavior.
+
+        Args:
+            orientations: A list of allowed device orientations.
+        """
+        if not self.platform.is_mobile():
+            raise FletUnsupportedPlatformException(
+                "set_allowed_device_orientations is only supported on mobile platforms"
+            )
+        await self._invoke_method(
+            "set_allowed_device_orientations",
+            arguments={"orientations": orientations},
+        )

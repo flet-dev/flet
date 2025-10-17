@@ -95,7 +95,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     widget.control.addInvokeMethodListener(_invokeMethod);
-    _updatePreferredDeviceOrientations();
   }
 
   @override
@@ -132,7 +131,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     _loadFontsIfNeeded(FletBackend.of(context));
-    _updatePreferredDeviceOrientations();
   }
 
   @override
@@ -186,8 +184,19 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
       case "push_route":
         _routeState.route = args["route"];
+        break;
       case "get_device_info":
         return await getDeviceInfo();
+      case "set_allowed_device_orientations":
+        if (isMobilePlatform()) {
+          var orientations = args["orientations"]
+                  ?.map((o) => parseDeviceOrientation(o))
+                  .whereType<DeviceOrientation>()
+                  .toList() ??
+              List<DeviceOrientation>.from(DeviceOrientation.values);
+          await SystemChrome.setPreferredOrientations(orientations);
+        }
+        break;
 
       default:
         throw Exception("Unknown Page method: $name");
@@ -296,54 +305,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       }
       _prevOnKeyboardEvent = onKeyboardEvent;
     }
-  }
-
-  void _updatePreferredDeviceOrientations() {
-    if (!isMobilePlatform()) {
-      return;
-    }
-
-    final property = widget.control.get("device_orientations");
-    List<DeviceOrientation> orientations;
-
-    if (property is Iterable) {
-      orientations = property
-          .map<DeviceOrientation?>(_parseDeviceOrientation)
-          .whereType<DeviceOrientation>()
-          .toList(growable: false);
-      if (orientations.isEmpty) {
-        orientations =
-            List<DeviceOrientation>.from(DeviceOrientation.values);
-      }
-    } else {
-      orientations =
-          List<DeviceOrientation>.from(DeviceOrientation.values);
-    }
-
-    final normalized =
-        List<DeviceOrientation>.unmodifiable(orientations);
-
-    if (_appliedDeviceOrientations != null &&
-        const ListEquality<DeviceOrientation>()
-            .equals(normalized, _appliedDeviceOrientations!)) {
-      return;
-    }
-
-    _appliedDeviceOrientations = normalized;
-    unawaited(SystemChrome.setPreferredOrientations(
-        List<DeviceOrientation>.from(normalized)));
-  }
-
-  DeviceOrientation? _parseDeviceOrientation(dynamic value) {
-    if (value is DeviceOrientation) {
-      return value;
-    }
-    if (value is String) {
-      final normalized = value.toLowerCase();
-      return DeviceOrientation.values.firstWhereOrNull(
-          (orientation) => orientation.name.toLowerCase() == normalized);
-    }
-    return null;
   }
 
   Future<void> _loadFontsIfNeeded(FletBackend backend) async {

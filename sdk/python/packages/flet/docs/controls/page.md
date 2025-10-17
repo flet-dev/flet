@@ -1,33 +1,38 @@
 ---
 class_name: flet.Page
+examples: ../../examples/controls/page
+example_images: ../examples/controls/page/media
 ---
 
-{{ class_all_options(class_name) }}
+{{ class_summary(class_name) }}
 
-## Locking device orientation
+## Examples
 
-Use `page.device_orientations` to control which physical orientations are allowed when the app runs on Android or iOS. Provide a list of [`DeviceOrientation`](../types/deviceorientation.md) values— for example `[ft.DeviceOrientation.PORTRAIT_UP]` to force an upright portrait experience, or `list(ft.DeviceOrientation)` to restore all directions.
-
-```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.device_orientations = [ft.DeviceOrientation.PORTRAIT_UP]
-    page.add(ft.Text("The app is locked to portrait up on mobile devices."))
-
-ft.app(target=main)
-```
-
-See the full example at `sdk/python/examples/controls/page/orientation_lock.py`.
-
-To react to device rotation, inspect `page.orientation` and subscribe to `page.on_orientation_change` for updates:
+### Listening to keyboard events
 
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    def handle_orientation_change(e: ft.OrientationChangeEvent):
-        print("Orientation changed to", e.orientation)
-
-    page.on_orientation_change = handle_orientation_change
+--8<-- "{{ examples }}/keyboard_events.py"
 ```
+
+### Mobile device orientation configuration
+
+Shows how to lock your app to specific device orientations
+(e.g., portrait up, landscape right) and listen for orientation changes on mobile devices.
+
+```python
+--8<-- "{{ examples }}/device_orientation.py"
+```
+
+### App exit confirmation
+
+```python
+--8<-- "{{ examples }}/app_exit_confirm_dialog.py"
+```
+
+### Hidden app window on startup
+
+```python
+--8<-- "{{ examples }}/window_hidden_on_start.py"
+```
+
+{{ class_members(class_name) }}

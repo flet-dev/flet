@@ -55,10 +55,12 @@ class _PageMediaState extends State<PageMedia> {
       }
 
       var newMedia = PageMediaData(
-          padding: PaddingData(MediaQuery.paddingOf(context)),
-          viewPadding: PaddingData(MediaQuery.viewPaddingOf(context)),
-          viewInsets: PaddingData(MediaQuery.viewInsetsOf(context)),
-          devicePixelRatio: MediaQuery.devicePixelRatioOf(context));
+        padding: PaddingData(MediaQuery.paddingOf(context)),
+        viewPadding: PaddingData(MediaQuery.viewPaddingOf(context)),
+        viewInsets: PaddingData(MediaQuery.viewInsetsOf(context)),
+        devicePixelRatio: MediaQuery.devicePixelRatioOf(context),
+        orientation: MediaQuery.orientationOf(context),
+      );
 
       if (newMedia != backend.media || !pageSizeUpdated) {
         _onMediaChanged(newMedia);
@@ -67,11 +69,6 @@ class _PageMediaState extends State<PageMedia> {
       var pageSize = MediaQuery.sizeOf(context);
       if (pageSize != backend.pageSize) {
         _onPageSizeChanged(pageSizeUpdated, pageSize);
-      }
-
-      var orientation = MediaQuery.orientationOf(context);
-      if (orientation != backend.orientation || !pageSizeUpdated) {
-        backend.updateOrientation(orientation, view: widget.view);
       }
     });
 

@@ -76,8 +76,8 @@ class FletBackend extends ChangeNotifier {
       padding: PaddingData(EdgeInsets.zero),
       viewPadding: PaddingData(EdgeInsets.zero),
       viewInsets: PaddingData(EdgeInsets.zero),
-      devicePixelRatio: 0);
-  Orientation orientation = Orientation.portrait;
+      devicePixelRatio: 0,
+      orientation: Orientation.portrait);
   TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;
@@ -115,7 +115,6 @@ class FletBackend extends ChangeNotifier {
       "test": tester != null,
       "multi_view": multiView,
       "pyodide": isPyodideMode(),
-      "orientation": Orientation.portrait.name,
       "window": {
         "_c": "Window",
         "_i": 2,
@@ -201,7 +200,6 @@ class FletBackend extends ChangeNotifier {
                   "test": page.get("test"),
                   "multi_view": page.get("multi_view"),
                   "pyodide": page.get("pyodide"),
-                  "orientation": page.get("orientation"),
                   "platform_brightness": page.get("platform_brightness"),
                   "width": page.get("width"),
                   "height": page.get("height"),
@@ -355,23 +353,6 @@ class FletBackend extends ChangeNotifier {
     updateControl(ctrl.id, {"media": newMedia.toMap()});
     triggerControlEvent(ctrl, "media_change", newMedia.toMap());
     notifyListeners();
-  }
-
-  void updateOrientation(Orientation newOrientation, {Control? view}) {
-    var orientationChanged = orientation != newOrientation;
-
-    if (orientationChanged) {
-      debugPrint("Orientation updated: $newOrientation");
-      orientation = newOrientation;
-      updateControl(page.id, {"orientation": newOrientation.name});
-      triggerControlEvent(
-          page, "orientation_change", {"orientation": newOrientation.name});
-      notifyListeners();
-    }
-
-    if (view != null) {
-      updateControl(view.id, {"orientation": newOrientation.name});
-    }
   }
 
   /// Updates the properties of a control with the given [id].

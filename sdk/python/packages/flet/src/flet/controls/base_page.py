@@ -31,7 +31,6 @@ from flet.controls.transform import OffsetValue
 from flet.controls.types import (
     ColorValue,
     CrossAxisAlignment,
-    DeviceOrientation,
     FloatingActionButtonLocation,
     LocaleConfiguration,
     MainAxisAlignment,
@@ -76,6 +75,8 @@ class PageMediaData:
     """
     The number of device pixels for each logical pixel.
     """
+
+    orientation: Orientation
 
 
 @dataclass
@@ -171,15 +172,6 @@ class BasePage(AdaptiveControl):
     Enable taking screenshots of the entire page with `take_screenshot` method.
     """
 
-    device_orientations: Optional[list[DeviceOrientation]] = None
-    """
-    Constrains the allowed orientations for the app when running on a mobile device.
-
-    Set to a list of [`DeviceOrientation`][flet.] values (e.g.,
-    `[DeviceOrientation.PORTRAIT_UP]`) to lock the app to specific orientations.
-    Leave as `None` (default) to allow all orientations.
-    """
-
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
     Called when a user resizes a browser or native OS window containing Flet app, for
@@ -195,7 +187,7 @@ class BasePage(AdaptiveControl):
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None
     """
-    Called when `media` has changed.
+    Called when [`media`][(c).] has changed.
     """
 
     media: PageMediaData = field(
@@ -204,6 +196,7 @@ class BasePage(AdaptiveControl):
             view_padding=Padding.zero(),
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
+            orientation=Orientation.PORTRAIT,
         )
     )
     """
@@ -236,14 +229,6 @@ class BasePage(AdaptiveControl):
             title bar and borders) when running a Flet app on desktop,
             use the [`height`][flet.Window.height] property of
             [`Page.window`][flet.Page.window] instead.
-    """
-
-    orientation: Optional[Orientation] = None
-    """
-    The current orientation of the page.
-
-    Note:
-        This property is read-only.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
