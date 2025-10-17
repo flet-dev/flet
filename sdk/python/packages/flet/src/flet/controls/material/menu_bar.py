@@ -51,7 +51,7 @@ class MenuBar(Control):
     A list of top-level menu controls to display in this menu bar.
 
     Raises:
-        ValueError: If at least one control in this list is not visible.
+        ValueError: If none of the controls are visible.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
