@@ -962,7 +962,33 @@ class Page(BasePage):
 
         Args:
             orientations: A list of allowed device orientations.
-        """
+
+        Raises:
+            FletUnsupportedPlatformException: If the method is called
+                on a non-mobile platform.
+
+        Limitations:
+            - **Android**: On Android 16 (API 36) or later, this method wont be able to
+                change the orientation of **devices with a display width ≥ 600 dp**
+                cannot change orientation. For more details see Android 16 docs
+                [here](https://developer.android.com/about/versions/16/behavior-changes-16#ignore-orientation).
+                Also, Android limits the [orientations](https://developer.android.com/reference/android/R.attr#screenOrientation) to the following combinations:
+                    - `[]` → `unspecified`
+                    - `[PORTRAIT_UP]` → `portrait`
+                    - `[LANDSCAPE_LEFT]` → `landscape`
+                    - `[PORTRAIT_DOWN]` → `reversePortrait`
+                    - `[PORTRAIT_UP, PORTRAIT_DOWN]` → `userPortrait`
+                    - `[LANDSCAPE_RIGHT]` → `reverseLandscape`
+                    - `[LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `userLandscape`
+                    - `[PORTRAIT_UP, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `user`
+                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `fullUser`
+
+            - **iOS**: This setting will only be respected on iPad if multitasking is disabled.
+                You can decide to opt out of multitasking on iPad, then this will work
+                but your app will not support Slide Over and Split View multitasking
+                anymore. Should you decide to opt out of multitasking you can do this by
+                setting "Requires full screen" to true in the Xcode Deployment Info.
+        """  # noqa: E501
         if not self.platform.is_mobile():
             raise FletUnsupportedPlatformException(
                 "set_allowed_device_orientations is only supported on mobile platforms"
