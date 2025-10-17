@@ -175,7 +175,7 @@ class BarChart(ft.LayoutControl):
 
     group_spacing: ft.Number = 16.0
     """
-    A amount of space between bar [`groups`][(c).].
+    An amount of space between bar [`groups`][(c).].
     """
 
     group_alignment: ft.MainAxisAlignment = ft.MainAxisAlignment.SPACE_EVENLY
