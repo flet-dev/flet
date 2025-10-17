@@ -29,6 +29,34 @@ class Canvas(LayoutControl):
     """
     Canvas is a control for drawing arbitrary graphics using a set of primitives or
     "shapes" such as line, arc, path and text.
+
+    ```python
+    cv.Canvas(
+        width=160,
+        height=160,
+        shapes=[
+            cv.Rect(
+                0,
+                0,
+                160,
+                160,
+                paint=ft.Paint(
+                    color=ft.Colors.BLUE_100,
+                    style=ft.PaintingStyle.FILL,
+                ),
+            ),
+            cv.Circle(
+                80,
+                80,
+                50,
+                paint=ft.Paint(
+                    color=ft.Colors.BLUE_400,
+                    style=ft.PaintingStyle.FILL,
+                ),
+            ),
+        ],
+    )
+    ```
     """
 
     shapes: list[Shape] = field(default_factory=list)

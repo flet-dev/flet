@@ -11,6 +11,13 @@ __all__ = ["CupertinoActivityIndicator"]
 class CupertinoActivityIndicator(LayoutControl):
     """
     An iOS-style activity indicator that spins clockwise.
+
+    ```python
+    ft.CupertinoActivityIndicator(
+        radius=30,
+        color=ft.CupertinoColors.DARK_BACKGROUND_GRAY,
+    )
+    ```
     """
 
     radius: Number = 10

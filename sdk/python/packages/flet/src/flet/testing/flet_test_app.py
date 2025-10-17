@@ -3,6 +3,7 @@ import logging
 import os
 import platform
 import tempfile
+from collections.abc import Iterable
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
@@ -381,3 +382,71 @@ class FletTestApp:
         arr2 = np.array(img2)
         similarity, _ = ssim(arr1, arr2, channel_axis=-1, full=True)
         return similarity * 100
+
+    def create_gif(
+        self,
+        image_names: Iterable[str],
+        output_name: str,
+        *,
+        duration: int = 1000,
+        loop: int = 0,
+    ) -> Path:
+        """Create an animated GIF from a sequence of image files.
+
+        Args:
+            image_names: Iterable of file name stems (without ``.png``) in the
+                order they should appear in the animation.
+            output_name: Base name for the resulting animation. The ``.gif``
+                extension is added automatically and the file is stored in the
+                same directory as the provided frames.
+            duration: Frame duration in milliseconds. Defaults to ``300``.
+            loop: Number of times the GIF should repeat (``0`` means infinite).
+
+        Returns:
+            Path to the generated GIF file.
+
+        Raises:
+            ValueError: If ``image_names`` is empty.
+            FileNotFoundError: If any referenced image file does not exist.
+        """
+
+        if not self.__test_path:
+            raise ValueError("test_path must be set to create GIF animations")
+        if not self.test_platform:
+            raise ValueError("test_platform must be set to create GIF animations")
+
+        names = list(image_names)
+        if not names:
+            raise ValueError("image_names must contain at least one entry")
+
+        stem = output_name
+        golden_dir = (
+            Path(self.__test_path).parent
+            / "golden"
+            / self.test_platform
+            / Path(self.__test_path).stem.removeprefix("test_")
+        )
+        output = golden_dir / f"{stem}.gif"
+        output.parent.mkdir(parents=True, exist_ok=True)
+
+        frames: list[Image.Image] = []
+        try:
+            for name in names:
+                path = golden_dir / f"{name}.png"
+                if not path.exists():
+                    raise FileNotFoundError(path)
+                frames.append(Image.open(path))
+
+            first, *rest = frames
+            first.save(
+                output,
+                save_all=True,
+                append_images=rest,
+                duration=duration,
+                loop=loop,
+            )
+        finally:
+            for frame in frames:
+                frame.close()
+
+        return output
