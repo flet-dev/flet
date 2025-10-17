@@ -958,17 +958,17 @@ class Page(BasePage):
     ) -> None:
         """
         Constrains the allowed orientations for the app when running on a mobile device.
-        Set to an empty list to use the system default behavior.
 
         Args:
             orientations: A list of allowed device orientations.
+                Set to an empty list to use the system default behavior.
 
         Raises:
             FletUnsupportedPlatformException: If the method is called
                 on a non-mobile platform.
 
         Limitations:
-            - **Android**: On Android 16 (API 36) or later, this method wont be able to
+            - **Android**: On Android 16 (API 36) or later, this method won't be able to
                 change the orientation of **devices with a display width ≥ 600 dp**
                 cannot change orientation. For more details see Android 16 docs
                 [here](https://developer.android.com/about/versions/16/behavior-changes-16#ignore-orientation).
