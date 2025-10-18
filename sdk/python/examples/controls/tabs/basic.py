@@ -12,11 +12,11 @@ def main(page: ft.Page):
                 controls=[
                     ft.TabBar(
                         tabs=[
-                            ft.Tab(label="Tab 1"),
+                            ft.Tab(label="Tab 1", icon=ft.Icons.SETTINGS_PHONE),
                             ft.Tab(label="Tab 2", icon=ft.Icons.SETTINGS),
                             ft.Tab(
                                 label=ft.CircleAvatar(
-                                    foreground_image_src="https://avatars.githubusercontent.com/u/7119543?s=88&v=4"
+                                    foreground_image_src="https://avatars.githubusercontent.com/u/102273996?s=200&amp;v=4",
                                 ),
                             ),
                         ]
@@ -44,4 +44,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -5,6 +5,7 @@ def main(page: ft.Page):
     page.add(
         ft.Tabs(
             length=2,
+            selected_index=1,
             expand=True,
             content=ft.Column(
                 expand=True,
@@ -50,4 +51,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
