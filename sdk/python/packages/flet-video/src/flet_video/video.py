@@ -86,8 +86,7 @@ class Video(ft.LayoutControl):
         An exception will be raised if the value is outside this range.
 
     Raises:
-        AssertionError: If the [`volume`][(c).] is not between
-            `0.0` and `100.0` (inclusive).
+        ValueError: If its value is not between `0.0` and `100.0` (inclusive).
     """
 
     playback_rate: ft.Number = 1.0
@@ -119,7 +118,7 @@ class Video(ft.LayoutControl):
     resume_upon_entering_foreground_mode: bool = False
     """
     Whether to resume the video when application enters foreground mode.
-    Has effect only if [`pause_upon_entering_background_mode`][..] is also set to
+    Has effect only if [`pause_upon_entering_background_mode`][(c).] is also set to
     `True`.
     """
 
@@ -177,9 +176,10 @@ class Video(ft.LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert 0 <= self.volume <= 100, (
-            f"volume must be between 0 and 100 inclusive, got {self.volume}"
-        )
+        if not (0 <= self.volume <= 100):
+            raise ValueError(
+                f"volume must be between 0 and 100 inclusive, got {self.volume}"
+            )
 
     async def play(self):
         """Starts playing the video."""
@@ -201,17 +201,17 @@ class Video(ft.LayoutControl):
         await self._invoke_method("stop")
 
     async def next(self):
-        """Jumps to the next `VideoMedia` in the [`playlist`][..]."""
+        """Jumps to the next `VideoMedia` in the [`playlist`][(c).]."""
         await self._invoke_method("next")
 
     async def previous(self):
-        """Jumps to the previous `VideoMedia` in the [`playlist`][..]."""
+        """Jumps to the previous `VideoMedia` in the [`playlist`][(c).]."""
         await self._invoke_method("previous")
 
     async def seek(self, position: ft.DurationValue):
         """
         Seeks the currently playing `VideoMedia` from the
-        [`playlist`][..] at the specified `position`.
+        [`playlist`][(c).] at the specified `position`.
         """
         await self._invoke_method(
             "seek",
@@ -221,9 +221,10 @@ class Video(ft.LayoutControl):
     async def jump_to(self, media_index: int):
         """
         Jumps to the `VideoMedia` at the specified `media_index`
-        in the [`playlist`][..].
+        in the [`playlist`][(c).].
         """
-        assert self.playlist[media_index], "media_index is out of range"
+        if not (-len(self.playlist) <= media_index < len(self.playlist)):
+            raise IndexError("media_index is out of range")
         if media_index < 0:
             # dart doesn't support negative indexes
             media_index = len(self.playlist) + media_index
@@ -234,7 +235,8 @@ class Video(ft.LayoutControl):
 
     async def playlist_add(self, media: VideoMedia):
         """Appends/Adds the provided `media` to the `playlist`."""
-        assert media.resource, "media has no resource"
+        if not media.resource:
+            raise ValueError("media has no resource")
         await self._invoke_method(
             method_name="playlist_add",
             arguments={"media": media},
@@ -243,7 +245,11 @@ class Video(ft.LayoutControl):
 
     async def playlist_remove(self, media_index: int):
         """Removes the provided `media` from the `playlist`."""
-        assert self.playlist[media_index], "index out of range"
+        playlist_length = len(self.playlist)
+        if not (-playlist_length <= media_index < playlist_length):
+            raise IndexError("media_index is out of range")
+        if media_index < 0:
+            media_index = playlist_length + media_index
         await self._invoke_method(
             method_name="playlist_remove",
             arguments={"media_index": media_index},

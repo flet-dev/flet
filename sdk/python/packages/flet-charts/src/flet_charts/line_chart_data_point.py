@@ -99,7 +99,7 @@ class LineChartDataPoint(ft.BaseControl):
 
     show_tooltip: bool = True
     """
-    Whether the [`tooltip`][..] should be shown when this data point is hovered over.
+    Whether the [`tooltip`][(c).] should be shown when this data point is hovered over.
     """
 
     def before_update(self):

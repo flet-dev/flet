@@ -48,7 +48,7 @@ class LineChartData(ft.BaseControl):
 
     prevent_curve_over_shooting_threshold: ft.Number = 10.0
     """
-    Threshold for [`prevent_curve_over_shooting`][..] algorithm.
+    Threshold for [`prevent_curve_over_shooting`][(c).] algorithm.
     """
 
     dash_pattern: Optional[list[int]] = None
@@ -131,7 +131,7 @@ class LineChartData(ft.BaseControl):
     curve_smoothness: ft.Number = 0.35
     """
     Defines the smoothness of a curve line,
-    when [`curved`][..] is set to `True`.
+    when [`curved`][(c).] is set to `True`.
     """
 
     rounded_stroke_join: bool = False

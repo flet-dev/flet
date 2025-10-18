@@ -28,26 +28,30 @@ def install_flet_package(name: str):
 
 def ensure_flet_desktop_package_installed():
     try:
-        import flet.version
         import flet_desktop.version
 
-        assert (
-            not flet_desktop.version.version
-            or flet_desktop.version.version == flet.version.version
-        )
+        import flet.version
+
+        if (
+            flet_desktop.version.version
+            and flet_desktop.version.version != flet.version.version
+        ):
+            raise RuntimeError("flet-desktop version mismatch")
     except:
         install_flet_package("flet-desktop")
 
 
 def ensure_flet_web_package_installed():
     try:
-        import flet.version
         import flet_web.version
 
-        assert (
-            not flet_web.version.version
-            or flet_web.version.version == flet.version.version
-        )
+        import flet.version
+
+        if (
+            flet_web.version.version
+            and flet_web.version.version != flet.version.version
+        ):
+            raise RuntimeError("flet-web version mismatch")
     except:
         install_flet_package("flet-web")
 
@@ -57,9 +61,10 @@ def ensure_flet_cli_package_installed():
         import flet.version
         import flet_cli.version
 
-        assert (
-            not flet_cli.version.version
-            or flet_cli.version.version == flet.version.version
-        )
+        if (
+            flet_cli.version.version
+            and flet_cli.version.version != flet.version.version
+        ):
+            raise RuntimeError("flet-cli version mismatch")
     except:
         install_flet_package("flet-cli")

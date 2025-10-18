@@ -55,9 +55,9 @@ class Geolocator(ft.Service):
         Note:
             Depending on the availability of different location services,
             this can take several seconds. It is recommended to call the
-            [`get_last_known_position`][..] method first to receive a
+            [`get_last_known_position`][(c).] method first to receive a
             known/cached position and update it with the result of the
-            [`get_current_position`][..] method.
+            [`get_current_position`][(c).] method.
 
         Args:
             configuration: Additional configuration for the location request.
@@ -86,9 +86,12 @@ class Geolocator(ft.Service):
             The last known position of the device as a [`GeolocatorPosition`][(p).].
 
         Raises:
-            AssertionError: If invoked on a web platform.
+            FletUnsupportedPlatformException: If invoked on a web platform.
         """
-        assert not self.page.web, "get_last_known_position is not supported on web"
+        if self.page.web:
+            raise ft.FletUnsupportedPlatformException(
+                "get_last_known_position is not supported on web"
+            )
         r = await self._invoke_method(
             "get_last_known_position",
         )
@@ -138,9 +141,12 @@ class Geolocator(ft.Service):
             `True` if the app's settings were opened successfully, `False` otherwise.
 
         Raises:
-            AssertionError: If invoked on a web platform.
+            FletUnsupportedPlatformException: If invoked on a web platform.
         """
-        assert not self.page.web, "open_app_settings is not supported on web"
+        if self.page.web:
+            raise ft.FletUnsupportedPlatformException(
+                "open_app_settings is not supported on web"
+            )
         return await self._invoke_method(
             "open_app_settings",
         )
@@ -156,9 +162,12 @@ class Geolocator(ft.Service):
             `True` if the device's settings were opened successfully, `False` otherwise.
 
         Raises:
-            AssertionError: If invoked on a web platform.
+            FletUnsupportedPlatformException: If invoked on a web platform.
         """
-        assert not self.page.web, "open_location_settings is not supported on web"
+        if self.page.web:
+            raise ft.FletUnsupportedPlatformException(
+                "open_location_settings is not supported on web"
+            )
         return await self._invoke_method(
             "open_location_settings",
         )

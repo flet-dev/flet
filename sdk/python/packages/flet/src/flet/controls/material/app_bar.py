@@ -103,7 +103,7 @@ class AppBar(AdaptiveControl):
         (when [`Theme.use_material3`][flet.] is `False`).
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is less than `0.0`.
     """
 
     elevation_on_scroll: Optional[Number] = None
@@ -111,7 +111,7 @@ class AppBar(AdaptiveControl):
     The elevation to be used if this app bar has something scrolled underneath it.
 
     Raises:
-        ValueError: If [`elevation_on_scroll`][(c).] is negative.
+        ValueError: If it is less than `0.0`.
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -183,12 +183,11 @@ class AppBar(AdaptiveControl):
     """
     The opacity of the toolbar.
 
-    Note:
-        Must be in the range `0.0` (transparent) to `1.0` (fully opaque).
+    - `0.0`: transparent
+    - `1.0`: fully opaque
 
     Raises:
-        ValueError: If [`toolbar_opacity`][(c).] is not between `0.0`
-            and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0` inclusive.
     """
 
     title_text_style: Optional[TextStyle] = None

@@ -19,7 +19,7 @@ Code to sort the members:
 ```
 s = sorted(CupertinoColors, key=lambda i: i.name)
 for i in s:
-    print(f"{i.name} = \"{i.value}\"")
+    print(f'{i.name} = "{i.value}"')
 ```
 """
 
@@ -54,18 +54,20 @@ class CupertinoColors(str, Enum):
             color: The color to apply opacity to.
 
         Returns:
-            A string representing the color with opacity, in the format `"color,opacity"`.
+            A string representing the color with opacity,
+                in the format `"color,opacity"`.
 
         Examples:
             >>> CupertinoColors.with_opacity(0.5, CupertinoColors.WHITE)
             'white,0.5'
 
         Raises:
-            AssertionError: If the opacity is not between `0` and `1` (inclusive).
+            ValueError: If the opacity is not between `0` and `1` (inclusive).
         """
-        assert 0 <= opacity <= 1, (
-            f"opacity must be between 0.0 and 1.0 inclusive, got {opacity}"
-        )
+        if not (0 <= opacity <= 1):
+            raise ValueError(
+                f"opacity must be between 0.0 and 1.0 inclusive, got {opacity}"
+            )
         color_str = color.value if isinstance(color, Enum) else color
         return f"{color_str},{opacity}"
 

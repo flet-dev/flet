@@ -19,8 +19,8 @@ __all__ = ["DropdownM2", "Option"]
 @control("Option")
 class Option(Control):
     """
-    Represents an item in a dropdown. Either `key` or `text` must be specified, else an
-    `AssertionError` will be raised.
+    Represents an item in a dropdown. Either `key` or `text` must be specified, else a
+    `ValueError` will be raised.
     """
 
     key: Optional[str] = None
@@ -58,9 +58,8 @@ class Option(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.key is not None or self.text is not None, (
-            "key or text must be specified"
-        )
+        if self.key is None and self.text is None:
+            raise ValueError("key or text must be specified")
 
 
 @control("DropdownM2")

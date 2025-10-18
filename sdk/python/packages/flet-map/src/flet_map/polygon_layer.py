@@ -22,10 +22,11 @@ class PolygonMarker(ft.Control):
     """
     An optional label for this polygon.
 
-    Note: specifying a label will reduce performance, as the internal
-    canvas must be drawn to and 'saved' more frequently to ensure the proper
-    stacking order is maintained. This can be avoided, potentially at the
-    expense of appearance, by setting [`PolygonLayer.draw_labels_last`][(p).].
+    Note:
+        Specifying a label will reduce performance, as the internal
+        canvas must be drawn to and 'saved' more frequently to ensure the proper
+        stacking order is maintained. This can be avoided, potentially at the
+        expense of appearance, by setting [`PolygonLayer.draw_labels_last`][(p).].
     """
 
     label_text_style: Optional[ft.TextStyle] = None
@@ -47,8 +48,8 @@ class PolygonMarker(ft.Control):
     """
     The width of the border outline.
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than `0.0`.
     """
 
     disable_holes_border: bool = False
@@ -74,10 +75,11 @@ class PolygonMarker(ft.Control):
 
     def before_update(self):
         super().before_update()
-        assert self.border_stroke_width >= 0, (
-            f"border_stroke_width must be greater than or equal to 0, "
-            f"got {self.border_stroke_width}"
-        )
+        if self.border_stroke_width < 0:
+            raise ValueError(
+                "border_stroke_width must be greater than or equal to 0, "
+                f"got {self.border_stroke_width}"
+            )
 
 
 @ft.control("PolygonLayer")

@@ -147,7 +147,8 @@ class PubSubHub:
     def __send(
         self, handler: Union[Callable, Callable[..., Awaitable[Any]]], args: Iterable
     ):
-        assert self.__loop, "PubSub event loop is not set"
+        if not self.__loop:
+            raise RuntimeError("PubSub event loop is not set")
 
         if asyncio.iscoroutinefunction(handler):
             asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)

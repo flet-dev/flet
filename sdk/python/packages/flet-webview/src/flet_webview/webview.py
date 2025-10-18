@@ -113,7 +113,8 @@ class WebView(ft.LayoutControl):
         """
         Checks/Validates support for the current platform (iOS, Android, or macOS).
         """
-        assert self.page is not None, "WebView must be added to page first."
+        if self.page is None:
+            raise RuntimeError("WebView must be added to page first.")
         if self.page.web or self.page.platform not in [
             ft.PagePlatform.ANDROID,
             ft.PagePlatform.IOS,

@@ -27,7 +27,7 @@ class Audio(ft.Service):
             is a list of supported audio formats.
 
     Raises:
-        AssertionError: If both [`src`][(c).] and [`src_base64`][(c).] are `None`.
+        ValueError: If both `src` and [`src_base64`][(c).] are `None`.
     """
 
     src_base64: Optional[str] = None
@@ -41,7 +41,7 @@ class Audio(ft.Service):
             is a list of supported audio formats.
 
     Raises:
-        AssertionError: If both [`src`][(c).] and [`src_base64`][(c).] are `None`.
+        ValueError: If both `src_base64` and [`src`][(c).] are `None`.
     """
 
     autoplay: bool = False
@@ -118,7 +118,8 @@ class Audio(ft.Service):
 
     def before_update(self):
         super().before_update()
-        assert self.src or self.src_base64, "either src or src_base64 must be provided"
+        if not (self.src or self.src_base64):
+            raise ValueError("either src or src_base64 must be provided")
 
     async def play(self, position: ft.DurationValue = 0):
         """

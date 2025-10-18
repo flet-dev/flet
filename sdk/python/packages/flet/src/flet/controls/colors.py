@@ -120,11 +120,12 @@ class Colors(str, Enum):
             'red,0.5'
 
         Raises:
-            AssertionError: If the opacity is not between `0` and `1` (inclusive).
+            ValueError: If the opacity is not between `0` and `1` (inclusive).
         """
-        assert 0 <= opacity <= 1, (
-            f"opacity must be between 0.0 and 1.0 inclusive, got {opacity}"
-        )
+        if not (0 <= opacity <= 1):
+            raise ValueError(
+                f"opacity must be between 0.0 and 1.0 inclusive, got {opacity}"
+            )
         color_str = color.value if isinstance(color, Enum) else color
         return f"{color_str},{opacity}"
 

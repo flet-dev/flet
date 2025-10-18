@@ -70,12 +70,8 @@ class Dismissible(LayoutControl, AdaptiveControl):
     A control that is stacked behind the [`content`][(c).] and is
     exposed when it has been dragged up or to the left.
 
-    Note:
-        Can only be specified if [`background`][(c).] is also
-        specified/visible.
-
     Raises:
-        ValueError: If the [`secondary_background`][(c).] is provided and visible
+        ValueError: If it is provided and visible
             but the [`background`][(c).] is not provided and visible.
     """
 

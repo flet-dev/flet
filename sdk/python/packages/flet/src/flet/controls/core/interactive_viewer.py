@@ -58,36 +58,25 @@ class InteractiveViewer(LayoutControl):
     """
     The maximum allowed scale.
 
-    Note:
-        Must be greater than or equal to [`min_scale`][(c).].
-
     Raises:
-        ValueError: If [`max_scale`][(c).] is not greater than `0` or is less than
+        ValueError: If it is not greater than `0` or is less than
             [`min_scale`][(c).].
-    """  # noqa: E501
+    """
 
     min_scale: Number = 0.8
     """
     The minimum allowed scale.
 
-    Note:
-        Must be greater than `0` and less than or equal
-        to [`max_scale`][(c).].
-
     Raises:
-        ValueError: If [`min_scale`][(c).] is not greater than `0`.
+        ValueError: If it is not greater than `0` or less than [`max_scale`][(c).].
     """
 
     interaction_end_friction_coefficient: Number = 0.0000135
     """
     Changes the deceleration behavior after a gesture.
 
-    Note:
-        Must be greater than `0`.
-
     Raises:
-        ValueError: If [`interaction_end_friction_coefficient`][(c).] is not greater
-            than `0`.
+        ValueError: If it is less than or equal to `0`.
     """
 
     scale_factor: Number = 200
@@ -97,22 +86,23 @@ class InteractiveViewer(LayoutControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    How to clip the `content`.
+    Defines how to clip the [`content`][(c).].
     """
 
     alignment: Optional[Alignment] = None
     """
-    Alignment of the `content` within.
+    The alignment of the [`content`][(c).] within this viewer.
     """
 
     boundary_margin: MarginValue = 0
     """
-    A margin for the visible boundaries of the `content`.
+    A margin for the visible boundaries of the [`content`][(c).].
     """
 
     interaction_update_interval: int = 200
     """
-    The interval (in milliseconds) at which the `on_interaction_update` event is fired.
+    The interval (in milliseconds) at which the
+    [`on_interaction_update`][(c).] event is fired.
     """
 
     on_interaction_start: Optional[
@@ -149,10 +139,7 @@ class InteractiveViewer(LayoutControl):
                 "max_scale must be greater than or equal to min_scale, "
                 f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
             )
-        if (
-            self.interaction_end_friction_coefficient is not None
-            and self.interaction_end_friction_coefficient <= 0
-        ):
+        if self.interaction_end_friction_coefficient <= 0:
             raise ValueError(
                 "interaction_end_friction_coefficient must be greater than 0, "
                 f"got {self.interaction_end_friction_coefficient}"

@@ -21,7 +21,7 @@ class PolylineMarker(ft.Control):
 
     colors_stop: Optional[list[ft.Number]] = None
     """
-    The stops for the [`gradient_colors`][..].
+    The stops for the [`gradient_colors`][(c).].
     """
 
     gradient_colors: Optional[list[ft.ColorValue]] = None
@@ -43,16 +43,16 @@ class PolylineMarker(ft.Control):
     """
     The width of the stroke.
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than `0.0`.
     """
 
     border_stroke_width: ft.Number = 0.0
     """
     The width of the stroke with of the line border.
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than `0.0`.
     """
 
     use_stroke_width_in_meter: bool = False
@@ -78,13 +78,16 @@ class PolylineMarker(ft.Control):
 
     def before_update(self):
         super().before_update()
-        assert self.border_stroke_width >= 0, (
-            f"border_stroke_width must be greater than or equal to 0, "
-            f"got {self.border_stroke_width}"
-        )
-        assert self.stroke_width >= 0, (
-            f"stroke_width must be greater than or equal to 0, got {self.stroke_width}"
-        )
+        if self.border_stroke_width < 0:
+            raise ValueError(
+                "border_stroke_width must be greater than or equal to 0, "
+                f"got {self.border_stroke_width}"
+            )
+        if self.stroke_width < 0:
+            raise ValueError(
+                f"stroke_width must be greater than or equal to 0, "
+                f"got {self.stroke_width}"
+            )
 
 
 @ft.control("PolylineLayer")

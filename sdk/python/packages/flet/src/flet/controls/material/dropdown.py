@@ -29,7 +29,7 @@ __all__ = ["Dropdown", "DropdownOption"]
 class DropdownOption(Control):
     """
     Represents an item in a dropdown. Either `key` or `text` must be specified, else an
-    `AssertionError` will be raised.
+    A `ValueError` will be raised.
     """
 
     key: Optional[str] = None
@@ -247,7 +247,8 @@ class Dropdown(LayoutControl):
     """
     Text that appears below the input border.
 
-    If non-null, the border's color animates to red and the `helper_text` is not shown.
+    If non-null, the border's color animates to red and the [`helper_text`][(c).] is
+    not shown.
     """
 
     text_size: Optional[Number] = None
@@ -291,13 +292,18 @@ class Dropdown(LayoutControl):
 
     border_width: Number = 1
     """
-    The width of the border in virtual pixels. Set to `0` to completely remove border.
+    The width of the border in virtual pixels.
+
+    Tip:
+        Set to `0` to completely remove the border.
     """
 
     border_color: Optional[ColorValue] = None
     """
-    Border color. Could be `transparent` to
-    hide the border.
+    Border color.
+
+    Tip:
+        Set to [`Colors.TRANSPARENT`][flet.] to hide the border.
     """
 
     border_radius: Optional[BorderRadiusValue] = None

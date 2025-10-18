@@ -11,7 +11,8 @@ class BannerAd(BaseAd):
     Displays a banner ad.
 
     Raises:
-        AssertionError: When this control is used on a web and/or non-mobile platform.
+        FletUnsupportedPlatformException: When this control is used on a web
+            and/or non-mobile platform.
     """
 
     on_will_dismiss: Optional[ft.ControlEventHandler["BannerAd"]] = None

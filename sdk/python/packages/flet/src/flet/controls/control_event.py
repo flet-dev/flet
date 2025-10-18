@@ -97,7 +97,8 @@ class Event(Generic[EventControlType]):
 
     @property
     def page(self) -> Union["Page", "BasePage"]:
-        assert self.control.page
+        if not self.control.page:
+            raise RuntimeError("event control is not attached to a page")
         return self.control.page
 
     @property

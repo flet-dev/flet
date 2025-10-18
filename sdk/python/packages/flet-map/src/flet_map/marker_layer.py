@@ -13,18 +13,14 @@ class Marker(ft.Control):
     """
     A marker displayed on the Map at the specified location
     through the [`MarkerLayer`][(p).].
-
-    Raises:
-        AssertionError: If the [`content`][(c).] is not visible, or
-            if [`height`][(c).] or [`width`][(c).] are negative.
     """
 
     content: ft.Control
     """
-    The content to be displayed at [`coordinates`][..].
+    The content to be displayed at [`coordinates`][(c).].
 
-    Note:
-        Must be provided and visible.
+    Raises:
+        ValueError: If it is not [`visible`][(c).].
     """
 
     coordinates: MapLatitudeLongitude
@@ -32,7 +28,7 @@ class Marker(ft.Control):
     The coordinates of the marker.
 
     This will be the center of the marker,
-    if [`alignment`][..] is [`Alignment.CENTER`][flet.Alignment.CENTER].
+    if [`alignment`][(c).] is [`Alignment.CENTER`][flet.Alignment.].
     """
 
     rotate: Optional[bool] = None
@@ -51,36 +47,39 @@ class Marker(ft.Control):
 
     height: ft.Number = 30.0
     """
-    The height of the [`content`][..] Control.
+    The height of the [`content`][(c).] Control.
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than `0.0`.
     """
 
     width: ft.Number = 30.0
     """
-    The width of the [`content`][..] Control.
+    The width of the [`content`][(c).] Control.
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than `0.0`.
     """
 
     alignment: Optional[ft.Alignment] = None
     """
-    Alignment of the marker relative to the normal center at [`coordinates`][..].
+    Alignment of the marker relative to the normal center at [`coordinates`][(c).].
 
     Defaults to the value of the parent [`MarkerLayer.alignment`][(p).].
     """
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
-        assert self.height >= 0, (
-            f"height must be greater than or equal to 0, got {self.height}"
-        )
-        assert self.width >= 0, (
-            f"width must be greater than or equal to 0, got {self.width}"
-        )
+        if not self.content.visible:
+            raise ValueError("content must be visible")
+        if self.height < 0:
+            raise ValueError(
+                f"height must be greater than or equal to 0, got {self.height}"
+            )
+        if self.width < 0:
+            raise ValueError(
+                f"width must be greater than or equal to 0, got {self.width}"
+            )
 
 
 @ft.control("MarkerLayer")
@@ -91,7 +90,7 @@ class MarkerLayer(MapLayer):
 
     markers: list[Marker]
     """
-    A list of [`Marker`][(m).]s to display.
+    A list of [`Marker`][(p).]s to display.
     """
 
     alignment: Optional[ft.Alignment] = field(
@@ -99,11 +98,11 @@ class MarkerLayer(MapLayer):
     )
     """
     The alignment of each marker relative to its normal center at
-    [`Marker.coordinates`][(m).].
+    [`Marker.coordinates`][(p).].
     """
 
     rotate: bool = False
     """
-    Whether to counter-rotate `markers` to the map's rotation,
+    Whether to counter-rotate [`markers`][(c).] to the map's rotation,
     to keep a fixed orientation.
     """

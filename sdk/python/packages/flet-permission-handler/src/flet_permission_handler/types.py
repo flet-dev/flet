@@ -183,7 +183,7 @@ class Permission(Enum):
     Permission for writing to the device's calendar.
 
     On iOS 16 and lower, this permission is identical to
-    [`CALENDAR_FULL_ACCESS`][..].
+    [`CALENDAR_FULL_ACCESS`][(c).].
     """
 
     CAMERA = "camera"
@@ -376,9 +376,9 @@ class Permission(Enum):
 
     Info:
         - Android: Requests access to microphone
-            (identical to requesting [`MICROPHONE`][..]).
+            (identical to requesting [`MICROPHONE`][(c).]).
         - iOS: Requests speech access (different from requesting
-            [`MICROPHONE`][..]).
+            [`MICROPHONE`][(c).]).
     """
 
     STORAGE = "storage"

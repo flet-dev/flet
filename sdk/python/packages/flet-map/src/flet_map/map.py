@@ -100,7 +100,7 @@ class Map(ft.LayoutControl):
     initial_camera_fit: Optional[CameraFit] = None
     """
     Defines the visible bounds when the map is first loaded.
-    Takes precedence over [`initial_center`][..]/[`initial_zoom`][..].
+    Takes precedence over [`initial_center`][(c).]/[`initial_zoom`][(c).].
     """
 
     on_init: Optional[ft.ControlEventHandler["Map"]] = None
@@ -244,7 +244,7 @@ class Map(ft.LayoutControl):
         Zooms out by one zoom-level from the current one.
 
         Args:
-            animation_curve: The curve of the animation. If None (the default),
+            animation_curve: The curve of the animation. If `None` (the default),
                 [`Map.animation_curve`][(p).] will be used.
             animation_duration: The duration of the animation.
                 If None (the default), [`Map.animation_duration`][(p).] will be used.
@@ -272,7 +272,7 @@ class Map(ft.LayoutControl):
 
         Args:
             zoom: The zoom level to zoom to.
-            animation_curve: The curve of the animation. If None (the default),
+            animation_curve: The curve of the animation. If `None` (the default),
                 [`Map.animation_curve`][(p).] will be used.
             animation_duration: The duration of the animation.
                 If None (the default), [`Map.animation_duration`][(p).] will be used.
@@ -316,11 +316,10 @@ class Map(ft.LayoutControl):
                 ongoing map-animations before starting this new one.
 
         Raises:
-            AssertionError: If `zoom` is not `None` and is negative.
+            ValueError: If `zoom` is not `None` and is negative.
         """
-        assert zoom is None or zoom >= 0, (
-            f"zoom must be greater than or equal to zero, got {zoom}"
-        )
+        if zoom is not None and zoom < 0:
+            raise ValueError(f"zoom must be greater than or equal to zero, got {zoom}")
         await self._invoke_method(
             method_name="move_to",
             arguments={
