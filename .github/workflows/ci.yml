@@ -674,6 +674,9 @@ jobs:
     steps:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
+        with:
+          ignore-empty-workdir: true
+          cache-dependency-glob: ""
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
