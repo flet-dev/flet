@@ -311,19 +311,29 @@ Widget _sizedControl(Widget widget, Control control) {
     return widget;
   }
 
-  var width = control.getDouble("width");
-  var height = control.getDouble("height");
+  final width = control.getDouble("width");
+  final height = control.getDouble("height");
+  final animation = control.getAnimation("animate_size");
 
-  if ((width != null || height != null)) {
-    widget = ConstrainedBox(
+  if (animation != null) {
+    if (width != null || height != null) {
+      return AnimatedContainer(
+        duration: animation.duration,
+        curve: animation.curve,
+        width: width,
+        height: height,
+        child: widget,
+      );
+    }
+    return AnimatedSize(
+        duration: animation.duration, curve: animation.curve, child: widget);
+  }
+
+  if (width != null || height != null) {
+    return ConstrainedBox(
       constraints: BoxConstraints.tightFor(width: width, height: height),
       child: widget,
     );
-  }
-  var animation = control.getAnimation("animate_size");
-  if (animation != null) {
-    return AnimatedSize(
-        duration: animation.duration, curve: animation.curve, child: widget);
   }
   return widget;
 }
