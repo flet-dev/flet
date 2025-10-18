@@ -600,20 +600,12 @@ jobs:
             FLUTTER_PACKAGE="${PACKAGE//-/_}"
             FLUTTER_DIR="${SDK_PYTHON}/packages/${PACKAGE}/src/flutter/${FLUTTER_PACKAGE}"
 
-            if [[ -d "$FLUTTER_DIR" ]]; then
-              pushd "$FLUTTER_DIR"
-              flutter pub get || true
-              dart analyze || true
-              rm -f pubspec.lock
-              popd
-            else
-              echo "Flutter directory $FLUTTER_DIR not found; skipping analyze"
-            fi
+            pushd "$FLUTTER_DIR"
+            flutter pub get || true
+            dart analyze || true
+            popd
 
-            PYPROJECT="packages/${PACKAGE}/pyproject.toml"
-            patch_toml_versions "$PYPROJECT" "$PYPI_VER"
-
-            rm -rf dist
+            patch_toml_versions "packages/${PACKAGE}/pyproject.toml" "$PYPI_VER"
             uv build --package "$PACKAGE"
             echo "::endgroup::"
           done
@@ -621,7 +613,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: python-extensions
+          name: flet-python-extensions
           if-no-files-found: error
           path: |
             sdk/python/dist/*.whl
