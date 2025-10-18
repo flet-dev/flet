@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
@@ -23,6 +24,7 @@ import '../services/service_registry.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
+import '../utils/platform.dart';
 import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/session_store_web.dart'
@@ -61,6 +63,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
+  List<DeviceOrientation>? _appliedDeviceOrientations;
 
   @override
   void initState() {
@@ -181,8 +184,19 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
       case "push_route":
         _routeState.route = args["route"];
+        break;
       case "get_device_info":
         return await getDeviceInfo();
+      case "set_allowed_device_orientations":
+        if (isMobilePlatform()) {
+          var orientations = args["orientations"]
+                  ?.map((o) => parseDeviceOrientation(o))
+                  .whereType<DeviceOrientation>()
+                  .toList() ??
+              List<DeviceOrientation>.from(DeviceOrientation.values);
+          await SystemChrome.setPreferredOrientations(orientations);
+        }
+        break;
 
       default:
         throw Exception("Unknown Page method: $name");

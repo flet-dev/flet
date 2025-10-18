@@ -544,17 +544,43 @@ class Brightness(Enum):
 
 class Orientation(Enum):
     """
-    Whether in portrait or landscape.
+    Represents the layout orientation.
     """
 
     PORTRAIT = "portrait"
     """
-    Taller than wide.
+    Orientation with greater height than width.
     """
 
     LANDSCAPE = "landscape"
     """
-    Wider than tall.
+    Orientation with greater width than height.
+    """
+
+
+class DeviceOrientation(Enum):
+    """
+    Supported physical orientations for mobile devices.
+    """
+
+    PORTRAIT_UP = "portraitUp"
+    """
+    Device held upright in portrait mode.
+    """
+
+    PORTRAIT_DOWN = "portraitDown"
+    """
+    Device held upside-down in portrait mode.
+    """
+
+    LANDSCAPE_LEFT = "landscapeLeft"
+    """
+    Device rotated 90° counter-clockwise (home button or primary edge on the right).
+    """
+
+    LANDSCAPE_RIGHT = "landscapeRight"
+    """
+    Device rotated 90° clockwise (home button or primary edge on the left).
     """
 
 

@@ -788,6 +788,7 @@ nav:
               - NavigationBarLabelBehavior: types/navigationbarlabelbehavior.md
               - NavigationDrawerPosition: types/navigationdrawerposition.md
               - NavigationRailLabelType: types/navigationraillabeltype.md
+              - DeviceOrientation: types/deviceorientation.md
               - Orientation: types/orientation.md
               - OverlayVisibilityMode: types/overlayvisibilitymode.md
               - PagePlatform: types/pageplatform.md
