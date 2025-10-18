@@ -15,14 +15,14 @@ class Lottie(ft.LayoutControl):
     """
     The source of the Lottie file.
 
-    Can be a URL or a local [asset file](https://flet.dev/docs/cookbook/assets).
+    Can be a URL or a local [asset file](https://docs.flet.dev/cookbook/assets).
 
     Note:
         If both `src` and [`src_base64`][(c).] are provided,
         `src_base64` will be prioritized/used.
 
     Raises:
-        ValueError: If neither [`src`][(c).] nor [`src_base64`][(c).] is provided.
+        ValueError: If neither `src` nor [`src_base64`][(c).] is provided.
     """
 
     src_base64: Optional[str] = None
@@ -34,7 +34,7 @@ class Lottie(ft.LayoutControl):
         `src_base64` will be prioritized/used.
 
     Raises:
-        ValueError: If neither [`src`][(c).] nor [`src_base64`][(c).] is provided.
+        ValueError: If neither `src_base64` nor [`src`][(c).] is provided.
     """
 
     repeat: bool = True

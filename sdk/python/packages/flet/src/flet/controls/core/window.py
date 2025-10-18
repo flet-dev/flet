@@ -54,7 +54,7 @@ class Window(BaseControl):
     """
     Controls the app window.
 
-    Note:
+    Limitation:
         This control is for Desktop platforms (macOS, Windows, Linux) only.
     """
 
@@ -113,8 +113,8 @@ class Window(BaseControl):
     """
     Defines the opacity of the app window.
 
-    Note:
-        Must be between `0.0` and `1.0`.
+    Raises:
+        ValueError: If it is not between `0.0` and `1.0` inclusive.
     """
 
     aspect_ratio: Optional[Number] = None
@@ -160,7 +160,7 @@ class Window(BaseControl):
     """
     Whether the app window can be moved.
 
-    Note:
+    Limitation:
         Has effect on macOS only.
     """
 
@@ -178,7 +178,7 @@ class Window(BaseControl):
     """
     Whether the app window should always be displayed below other windows.
 
-    Note:
+    Limitation:
         Has effect on Linux and Windows only.
     """
 
@@ -204,7 +204,7 @@ class Window(BaseControl):
     """
     Whether to hide the app window's title bar buttons.
 
-    Note:
+    Limitation:
         Has effect on macOS only.
     """
 
@@ -246,7 +246,7 @@ class Window(BaseControl):
     """
     Sets a badge label on the app window.
 
-    Note:
+    Limitation:
         Has effect on macOS only.
     """
 
@@ -256,7 +256,7 @@ class Window(BaseControl):
 
     The file should have the `.ico` extension.
 
-    Note:
+    Limitation:
         Has effect on Windows only.
     """
 
@@ -275,6 +275,10 @@ class Window(BaseControl):
     def __post_init__(self, ref) -> None:
         super().__post_init__(ref)
         self._i = 2
+        if self.opacity < 0.0 or self.opacity > 1.0:
+            raise ValueError(
+                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
+            )
 
     async def wait_until_ready_to_show(self):
         """

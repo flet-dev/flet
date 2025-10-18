@@ -27,7 +27,7 @@ class Audio(ft.Service):
             is a list of supported audio formats.
 
     Raises:
-        ValueError: If both [`src`][(c).] and [`src_base64`][(c).] are `None`.
+        ValueError: If both `src` and [`src_base64`][(c).] are `None`.
     """
 
     src_base64: Optional[str] = None
@@ -41,7 +41,7 @@ class Audio(ft.Service):
             is a list of supported audio formats.
 
     Raises:
-        ValueError: If both [`src`][(c).] and [`src_base64`][(c).] are `None`.
+        ValueError: If both `src_base64` and [`src`][(c).] are `None`.
     """
 
     autoplay: bool = False

@@ -219,11 +219,8 @@ class SnackBar(DialogControl):
 
     At a value of `0.0`, the `action` will not overflow to a new line.
 
-    Note:
-        Must be between `0.0` and `1.0` inclusive.
-
     Raises:
-        ValueError: If [`action_overflow_threshold`][(c).] is not between `0` and `1`.
+        ValueError: If it is not between `0.0` and `1.0` inclusive.
     """
 
     on_action: Optional[ControlEventHandler["SnackBar"]] = None

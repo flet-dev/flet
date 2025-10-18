@@ -40,8 +40,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     Note:
         Has effect only when [`alignment`][(c).] is set to
-        [`MainAxisAlignment.START`][flet.],
-        [`MainAxisAlignment.END`][flet.],
+        [`MainAxisAlignment.START`][flet.], [`MainAxisAlignment.END`][flet.],
         or [`MainAxisAlignment.CENTER`][flet.].
     """
 

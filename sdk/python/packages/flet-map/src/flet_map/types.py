@@ -223,8 +223,6 @@ class DottedStrokePattern(StrokePattern):
 
     Raises:
         ValueError: If it is less than or equal to zero.
-    Note:
-        Must be non-negative.
     """
 
     pattern_fit: PatternFit = PatternFit.SCALE_UP
@@ -236,8 +234,7 @@ class DottedStrokePattern(StrokePattern):
     def __post_init__(self):
         if self.spacing_factor <= 0:
             raise ValueError(
-                "spacing_factor must be greater than or equal to 0.0, "
-                f"got {self.spacing_factor}"
+                f"spacing_factor must be greater than to 0.0, got {self.spacing_factor}"
             )
         self._type = "dotted"
 
@@ -454,8 +451,8 @@ class InteractionConfiguration:
 
     Note:
         If [`InteractionConfiguration.flags`][(p).] doesn't contain
-        [`InteractionFlag.PINCH_MOVE`][(p).]
-        or [`enable_multi_finger_gesture_race`][(c).] is false then pinch move cannot win.
+        [`InteractionFlag.PINCH_MOVE`][(p).] or
+        [`enable_multi_finger_gesture_race`][(c).] is false then pinch move cannot win.
     """
 
     scroll_wheel_velocity: ft.Number = 0.005
@@ -949,8 +946,8 @@ class KeyboardConfiguration:
 
     To customize the leap itself, see the [`leap_max_of_curve_component`][(c).] &
     `*leap_velocity_multiplier` ([`zoom_leap_velocity_multiplier`][(c).],
-    [`pan_leap_velocity_multiplier`][(c).] and [`rotate_leap_velocity_multiplier`][(c).])
-    properties.
+    [`pan_leap_velocity_multiplier`][(c).] and
+    [`rotate_leap_velocity_multiplier`][(c).]) properties.
 
     Set to `None` to disable leaping.
     """

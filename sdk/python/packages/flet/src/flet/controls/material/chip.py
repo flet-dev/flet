@@ -168,11 +168,8 @@ class Chip(LayoutControl):
 
     Defaults to `8.0`.
 
-    Note:
-        Must be non-negative.
-
     Raises:
-        ValueError: If [`elevation_on_click`][(c).] is negative.
+        ValueError: If it is less than `0.0`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -230,12 +227,8 @@ class Chip(LayoutControl):
     """
     Called when the user clicks on this chip.
 
-    Note:
-        Cannot be specified together with [`on_select`][(c).].
-
     Raises:
-        ValueError: If both [`on_click`][(c).] and [`on_select`][(c).] callbacks
-            are provided.
+        ValueError: If specified together with [`on_select`][(c).].
     """
 
     on_delete: Optional[ControlEventHandler["Chip"]] = None
@@ -249,8 +242,8 @@ class Chip(LayoutControl):
 
     It internally changes [`selected`][(c).] property to the opposite value.
 
-    Note:
-        Cannot be specified together with [`on_click`][(c).].
+    Raises:
+        ValueError: If specified together with [`on_click`][(c).].
     """
 
     on_focus: Optional[ControlEventHandler["Chip"]] = None
