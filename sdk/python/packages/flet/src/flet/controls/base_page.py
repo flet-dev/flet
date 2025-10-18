@@ -77,6 +77,9 @@ class PageMediaData:
     """
 
     orientation: Orientation
+    """
+    The orientation of the page.
+    """
 
 
 @dataclass

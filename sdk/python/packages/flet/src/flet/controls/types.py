@@ -544,17 +544,17 @@ class Brightness(Enum):
 
 class Orientation(Enum):
     """
-    Whether in portrait or landscape.
+    Represents the layout orientation.
     """
 
     PORTRAIT = "portrait"
     """
-    Taller than wide.
+    Orientation with greater height than width.
     """
 
     LANDSCAPE = "landscape"
     """
-    Wider than tall.
+    Orientation with greater width than height.
     """
 
 

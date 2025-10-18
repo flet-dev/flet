@@ -17,7 +17,6 @@ def main(page: ft.Page) -> None:
                 duration=ft.Duration(seconds=3),
             )
         )
-        page.update()
 
     page.on_media_change = handle_media_change
 

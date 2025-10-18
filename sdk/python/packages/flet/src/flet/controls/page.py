@@ -357,11 +357,6 @@ class Page(BasePage):
     Called when brightness of app host platform has changed.
     """
 
-    on_orientation_change: Optional[EventHandler[OrientationChangeEvent]] = None
-    """
-    Called when the device orientation changes between portrait and landscape.
-    """
-
     on_app_lifecycle_state_change: Optional[
         EventHandler[AppLifecycleStateChangeEvent]
     ] = None
