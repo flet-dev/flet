@@ -661,7 +661,7 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
@@ -705,7 +705,7 @@ jobs:
             flet_rive \
             flet_video \
             flet_webview; do
-            uv publish dist/**/${pkg}-*
+            uv publish --dry-run dist/**/${pkg}-*
           done
 
   # ==============
