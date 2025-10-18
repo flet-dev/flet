@@ -601,8 +601,8 @@ jobs:
             FLUTTER_DIR="${SDK_PYTHON}/packages/${PACKAGE}/src/flutter/${FLUTTER_PACKAGE}"
 
             pushd "$FLUTTER_DIR"
-            flutter pub get || true
-            dart analyze || true
+            flutter pub get
+            dart analyze
             popd
 
             patch_toml_versions "packages/${PACKAGE}/pyproject.toml" "$PYPI_VER"
@@ -661,7 +661,7 @@ jobs:
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
     needs:
       - python_tests
       - build_flet_package
@@ -708,7 +708,7 @@ jobs:
             flet_rive \
             flet_video \
             flet_webview; do
-            uv publish --dry-run dist/**/${pkg}-*
+            uv publish dist/**/${pkg}-*
           done
 
   # ==============
