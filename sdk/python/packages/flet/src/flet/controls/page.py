@@ -56,7 +56,6 @@ from flet.controls.types import (
     AppLifecycleState,
     Brightness,
     DeviceOrientation,
-    Orientation,
     PagePlatform,
     Url,
     UrlTarget,
@@ -129,11 +128,6 @@ class RouteChangeEvent(Event["Page"]):
 @dataclass
 class PlatformBrightnessChangeEvent(Event["Page"]):
     brightness: Brightness
-
-
-@dataclass
-class OrientationChangeEvent(Event["Page"]):
-    orientation: Orientation
 
 
 @dataclass
