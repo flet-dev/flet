@@ -136,7 +136,8 @@ class FletTestApp:
         """
         Returns an instance of Flet's app [`Page`][flet.].
         """
-        assert self.__page
+        if self.__page is None:
+            raise RuntimeError("page is not initialized")
         return self.__page
 
     @property
@@ -145,7 +146,8 @@ class FletTestApp:
         Returns an instance of [`Tester`][flet.testing.] class
         that programmatically interacts with page controls and the test environment.
         """
-        assert self.__tester
+        if self.__tester is None:
+            raise RuntimeError("tester is not initialized")
         return self.__tester
 
     async def start(self):
@@ -330,10 +332,13 @@ class FletTestApp:
             name: Screenshot name - will be used as a base for a screenshot filename.
             screenshot: Screenshot contents in PNG format.
         """
-        assert self.test_platform, (
-            "FLET_TEST_PLATFORM must be set to test with screenshots"
-        )
-        assert self.__test_path, "test_path must be set to test with screenshots"
+        if not self.test_platform:
+            raise RuntimeError(
+                "FLET_TEST_PLATFORM environment variable must be set "
+                "to test with screenshots"
+            )
+        if not self.__test_path:
+            raise RuntimeError("test_path must be set to test with screenshots")
 
         golden_image_path = (
             Path(self.__test_path).parent

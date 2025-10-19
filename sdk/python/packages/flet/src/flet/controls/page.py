@@ -200,7 +200,7 @@ class Page(BasePage):
     Used to enable or disable the context menu that appears when the user
     right-clicks on the web page.
 
-    Note:
+    Limitation:
         Web only.
     """
 

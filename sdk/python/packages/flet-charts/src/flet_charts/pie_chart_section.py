@@ -10,10 +10,6 @@ __all__ = ["PieChartSection"]
 class PieChartSection(ft.BaseControl):
     """
     Configures a [PieChart][(p).] section.
-
-    Raises:
-        AssertionError: If [`title_position`][(c).] or
-            [`badge_position`][(c).] is not between `0.0` and `1.0` inclusive.
     """
 
     value: ft.Number
@@ -51,11 +47,13 @@ class PieChartSection(ft.BaseControl):
     """
     The position/offset of the title relative to the section's center.
 
+    - `0.0`: near the center
+    - `1.0`: near the outside of the chart
+
     By default the title is drawn in the middle of the section.
 
-    Note:
-        Must be between `0.0` (near the center)
-        and `1.0`(near the outside of the chart) inclusive.
+    Raises:
+        ValueError: If it is not between `0.0` and `1.0` inclusive.
     """
 
     badge: Optional[ft.Control] = None
@@ -67,11 +65,13 @@ class PieChartSection(ft.BaseControl):
     """
     The position/offset of the badge relative to the section's center.
 
+    - `0.0`: near the center
+    - `1.0`: near the outside of the chart
+
     By default the badge is drawn in the middle of the section.
 
-    Note:
-        Must be between `0.0` (near the center)
-        and `1.0`(near the outside of the chart) inclusive.
+    Raises:
+        ValueError: If it is not between `0.0` and `1.0` inclusive.
     """
 
     gradient: Optional[ft.Gradient] = None
@@ -81,11 +81,13 @@ class PieChartSection(ft.BaseControl):
 
     def before_update(self):
         super().before_update()
-        assert self.title_position is None or (0.0 <= self.title_position <= 1.0), (
-            f"title_position must be between 0.0 and 1.0 inclusive, "
-            f"got {self.title_position}"
-        )
-        assert self.badge_position is None or (0.0 <= self.badge_position <= 1.0), (
-            f"badge_position must be between 0.0 and 1.0 inclusive, "
-            f"got {self.badge_position}"
-        )
+        if self.title_position is not None and not (0.0 <= self.title_position <= 1.0):
+            raise ValueError(
+                "title_position must be between 0.0 and 1.0 inclusive, "
+                f"got {self.title_position}"
+            )
+        if self.badge_position is not None and not (0.0 <= self.badge_position <= 1.0):
+            raise ValueError(
+                "badge_position must be between 0.0 and 1.0 inclusive, "
+                f"got {self.badge_position}"
+            )

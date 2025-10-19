@@ -9,24 +9,25 @@ __all__ = ["NativeAd"]
 class NativeAd(BannerAd):
     """
     Renders a native ad.
-
-    Raises:
-        AssertionError: When neither [`factory_id`][(c).] nor
-            [`template_style`][(c).] is set.
     """
 
     factory_id: str = None
     """
     An identifier for the factory that creates the Platform view.
+
+    Raises:
+        ValueError: When neither `factory_id` nor [`template_style`][(c).] is set.
     """
 
     template_style: NativeAdTemplateStyle = None
     """
     A style for the native ad template.
+
+    Raises:
+        ValueError: When neither [`factory_id`][(c).] nor `template_style` is set.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.factory_id is not None or self.template_style is not None, (
-            "factory_id or template_style must be set"
-        )
+        if self.factory_id is None and self.template_style is None:
+            raise ValueError("factory_id or template_style must be set")

@@ -79,9 +79,8 @@ class CircleAvatar(LayoutControl):
     [`max_radius`][(c).] may be specified.
 
     Raises:
-        ValueError: If [`radius`][(c).] is negative.
-        ValueError: If [`radius`][(c).] is set while [`min_radius`][(c).]
-            or [`max_radius`][(c).] is provided.
+        ValueError: If it is less than `0.0` or if it is
+            provided while [`min_radius`][(c).] or [`max_radius`][(c).] is set.
     """
 
     min_radius: Optional[Number] = None
@@ -92,7 +91,7 @@ class CircleAvatar(LayoutControl):
     Defaults to `0.0`.
 
     Raises:
-        ValueError: If [`min_radius`][(c).] is negative.
+        ValueError: If it is negative.
     """
 
     max_radius: Optional[Number] = None
@@ -105,8 +104,8 @@ class CircleAvatar(LayoutControl):
         If `max_radius` is specified, then [`radius`][(c).] should not be specified.
 
     Raises:
-        ValueError: If [`max_radius`][(c).] is negative.
-        ValueError: If [`max_radius`][(c).] is provided while [`radius`][(c).] is set.
+        ValueError: If it is less than `0.0` or if it is
+            provided while [`radius`][(c).] is set.
     """
 
     on_image_error: Optional[ControlEventHandler["CircleAvatar"]] = None

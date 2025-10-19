@@ -87,7 +87,7 @@ class VideoConfiguration:
     scale: ft.Number = 1.0
     """
     The scale for the video output.
-    Specifying this option will cause [`width`][..] & [`height`][..] to be ignored.
+    Specifying this option will cause [`width`][(c).] & [`height`][(c).] to be ignored.
     """
 
 

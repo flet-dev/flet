@@ -172,7 +172,7 @@ class Tabs(LayoutControl, AdaptiveControl):
         it when adding/removing tabs.
 
     Raises:
-        ValueError: If [`length`][(c).] is negative.
+        ValueError: If it is negative.
     """
 
     selected_index: int = 0
@@ -191,8 +191,7 @@ class Tabs(LayoutControl, AdaptiveControl):
             use [`move_to`][(c).] directly.
 
     Raises:
-        IndexError: If [`selected_index`][(c).] is not in the range
-            `[-length, length - 1]`.
+        IndexError: If it is not in the range `[-length, length - 1]`.
     """
 
     animation_duration: DurationValue = field(
@@ -353,18 +352,14 @@ class TabBar(LayoutControl, AdaptiveControl):
     otherwise [`TabAlignment.FILL`][flet.] is used.
 
     Note:
-        - If [`scrollable`][(c).] is `False`, then
-            [`tab_alignment`][(c).] must be either
-            [`TabAlignment.FILL`][flet.] or
-            [`TabAlignment.CENTER`][flet.].
-        - If [`scrollable`][(c).] is `True`, then
-            [`tab_alignment`][(c).] must be
-            [`TabAlignment.START`][flet.],
-            [`TabAlignment.START_OFFSET`][flet.]
+        - If [`scrollable`][(c).] is `False`, then [`tab_alignment`][(c).] must be
+            either [`TabAlignment.FILL`][flet.] or [`TabAlignment.CENTER`][flet.].
+        - If [`scrollable`][(c).] is `True`, then [`tab_alignment`][(c).] must be
+            [`TabAlignment.START`][flet.], [`TabAlignment.START_OFFSET`][flet.]
             or [`TabAlignment.CENTER`][flet.].
 
     Raises:
-        ValueError: If [`tab_alignment`][(c).] is not valid for the current
+        ValueError: If it is not valid for the current
             [`scrollable`][(c).] configuration.
     """
 
