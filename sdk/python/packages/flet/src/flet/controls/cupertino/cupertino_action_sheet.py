@@ -15,6 +15,21 @@ class CupertinoActionSheet(LayoutControl):
 
     Action sheets are generally used to give the user a choice between
     two or more choices for the current context.
+
+    ```python
+    sheet = ft.CupertinoActionSheet(
+        title=ft.Text("Choose an option"),
+        message=ft.Text("Select what you would like to do"),
+        actions=[
+            ft.CupertinoActionSheetAction(content=ft.Text("Save")),
+            ft.CupertinoActionSheetAction(
+                content=ft.Text("Delete"), destructive=True
+            ),
+        ],
+        cancel=ft.CupertinoActionSheetAction(content=ft.Text("Cancel")),
+    )
+    page.show_dialog(ft.CupertinoBottomSheet(sheet))
+    ```
     """
 
     title: Optional[StrOrControl] = None

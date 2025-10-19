@@ -34,7 +34,7 @@ class DataColumn2(ft.DataColumn):
     fixed_width: Optional[ft.Number] = None
     """
     Defines absolute width of the column in pixels
-    (as opposed to relative [`size`][..] used by default).
+    (as opposed to relative [`size`][(c).] used by default).
     """
 
     size: Optional[DataColumnSize] = DataColumnSize.S

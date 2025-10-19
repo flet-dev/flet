@@ -1,8 +1,7 @@
 import random
 
-import flet_charts as ftc
-
 import flet as ft
+import flet_charts as ftc
 
 
 class MySpot(ftc.ScatterChartSpot):
@@ -20,6 +19,7 @@ class MySpot(ftc.ScatterChartSpot):
             radius=radius,
             color=color,
             show_tooltip=show_tooltip,
+            selected=y == 43,
         )
 
 

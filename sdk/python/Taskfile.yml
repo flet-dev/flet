@@ -106,7 +106,7 @@ tasks:
       - kill -9 $(lsof -ti :8550)
 
   extensions-pre-commit-install:
-    desc: "Installs pre-commit hooks of all extensions, assuming they are present in the currently active uv-workspace."
+    desc: "Installs pre-commit hooks of all extensions."
     aliases:
       - pc-extensions
       - extensions-pre-commit
@@ -125,8 +125,3 @@ tasks:
       - uv run --package flet-rive pre-commit install
       - uv run --package flet-video pre-commit install
       - uv run --package flet-webview pre-commit install
-
-#  serve-extensions:
-#    desc: "Serves all extensions, assuming they are present in the currently active uv-workspace."
-#    cmds:
-#      - uv run --active --package flet-audio --directory path/to/flet-audio mkdocs serve

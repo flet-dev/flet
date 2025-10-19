@@ -91,13 +91,13 @@ class PatternFit(Enum):
     SCALE_DOWN = "scaleDown"
     """
     Scale the pattern to ensure it fits an integer number of times into the
-    polyline (smaller version regarding rounding, cf. [`SCALE_UP`][..]).
+    polyline (smaller version regarding rounding, cf. [`SCALE_UP`][(c).]).
     """
 
     SCALE_UP = "scaleUp"
     """
     Scale the pattern to ensure it fits an integer number of times into the
-    polyline (bigger version regarding rounding, cf. [`SCALE_DOWN`][..]).
+    polyline (bigger version regarding rounding, cf. [`SCALE_DOWN`][(c).]).
     """
 
     APPEND_DOT = "appendDot"
@@ -177,7 +177,7 @@ class DashedStrokePattern(StrokePattern):
     A stroke pattern of alternating dashes and gaps, defined by [`segments`][(c).].
 
     Raises:
-        AssertionError: If [`segments`][(c).] does not contain at least two items,
+        ValueError: If [`segments`][(c).] does not contain at least two items,
             or has an odd length.
     """
 
@@ -185,9 +185,11 @@ class DashedStrokePattern(StrokePattern):
     """
     A list of alternating dash and gap lengths, in pixels.
 
-    Note:
-        Must contain at least two items, and have an even length.
+    Raises:
+        ValueError: If the list does not contain at least two items,
+            or if its length is not even.
     """
+
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
     Determines how this stroke pattern should be fit to a line when their lengths
@@ -195,10 +197,12 @@ class DashedStrokePattern(StrokePattern):
     """
 
     def __post_init__(self):
-        assert len(self.segments) >= 2, (
-            f"segments must contain at least two items, got {len(self.segments)}"
-        )
-        assert len(self.segments) % 2 == 0, "segments must have an even length"
+        if len(self.segments) < 2:
+            raise ValueError(
+                f"segments must contain at least two items, got {len(self.segments)}"
+            )
+        if len(self.segments) % 2 != 0:
+            raise ValueError("segments must have an even length")
         self._type = "dashed"
 
 
@@ -206,9 +210,6 @@ class DashedStrokePattern(StrokePattern):
 class DottedStrokePattern(StrokePattern):
     """
     A stroke pattern of circular dots, spaced with [`spacing_factor`][(c).].
-
-    Raises:
-        AssertionError: If [`spacing_factor`][(c).] is negative.
     """
 
     spacing_factor: ft.Number = 1.5
@@ -220,9 +221,10 @@ class DottedStrokePattern(StrokePattern):
 
     May also be scaled by the use of [`PatternFit.SCALE_UP`][(p).].
 
-    Note:
-        Must be non-negative.
+    Raises:
+        ValueError: If it is less than or equal to zero.
     """
+
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
     Determines how this stroke pattern should be fit to a line when their
@@ -230,10 +232,10 @@ class DottedStrokePattern(StrokePattern):
     """
 
     def __post_init__(self):
-        assert self.spacing_factor > 0, (
-            f"spacing_factor must be greater than or equal to 0.0, "
-            f"got {self.spacing_factor}"
-        )
+        if self.spacing_factor <= 0:
+            raise ValueError(
+                f"spacing_factor must be greater than to 0.0, got {self.spacing_factor}"
+            )
         self._type = "dotted"
 
 
@@ -396,7 +398,7 @@ class InteractionFlag(IntFlag):
     def has_rotate(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`ROTATE`][..] interactive flag is enabled.
+            `True` if the [`ROTATE`][(c).] interactive flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.ROTATE)
 
@@ -404,7 +406,7 @@ class InteractionFlag(IntFlag):
     def has_scroll_wheel_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`SCROLL_WHEEL_ZOOM`][..] interaction flag is enabled.
+            `True` if the [`SCROLL_WHEEL_ZOOM`][(c).] interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.SCROLL_WHEEL_ZOOM)
 
@@ -434,11 +436,11 @@ class MultiFingerGesture(IntFlag):
 class InteractionConfiguration:
     enable_multi_finger_gesture_race: bool = False
     """
-    If `True`, then [`rotation_threshold`][..] and [`pinch_zoom_threshold`][..]
-    and [`pinch_move_threshold`][..] will race.
+    If `True`, then [`rotation_threshold`][(c).] and [`pinch_zoom_threshold`][(c).]
+    and [`pinch_move_threshold`][(c).] will race.
     If multiple gestures win at the same time, then precedence:
-    [`pinch_zoom_win_gestures`][..] > [`rotation_win_gestures`][..] >
-    [`pinch_move_win_gestures`][..]
+    [`pinch_zoom_win_gestures`][(c).] > [`rotation_win_gestures`][(c).] >
+    [`pinch_move_win_gestures`][(c).]
     """
 
     pinch_move_threshold: ft.Number = 40.0
@@ -449,8 +451,8 @@ class InteractionConfiguration:
 
     Note:
         If [`InteractionConfiguration.flags`][(p).] doesn't contain
-        [`InteractionFlag.PINCH_MOVE`][(p).]
-        or [`enable_multi_finger_gesture_race`][..] is false then pinch move cannot win.
+        [`InteractionFlag.PINCH_MOVE`][(p).] or
+        [`enable_multi_finger_gesture_race`][(c).] is false then pinch move cannot win.
     """
 
     scroll_wheel_velocity: ft.Number = 0.005
@@ -468,7 +470,7 @@ class InteractionConfiguration:
     Note:
         If [`InteractionConfiguration.flags`][(p).]
         doesn't contain [`InteractionFlag.PINCH_ZOOM`][(p).]
-        or [`enable_multi_finger_gesture_race`][..] is false then zoom cannot win.
+        or [`enable_multi_finger_gesture_race`][(c).] is false then zoom cannot win.
     """
 
     rotation_threshold: ft.Number = 20.0
@@ -479,7 +481,7 @@ class InteractionConfiguration:
     Note:
         If [`InteractionConfiguration.flags`][(p).]
         doesn't contain [`InteractionFlag.ROTATE`][(p).]
-        or [`enable_multi_finger_gesture_race`][..] is false then rotate cannot win.
+        or [`enable_multi_finger_gesture_race`][(c).] is false then rotate cannot win.
     """
 
     flags: InteractionFlag = InteractionFlag.ALL
@@ -489,16 +491,16 @@ class InteractionConfiguration:
 
     rotation_win_gestures: MultiFingerGesture = MultiFingerGesture.ROTATE
     """
-    When [`rotation_threshold`][..] wins over [`pinch_zoom_threshold`][..] and
-    [`pinch_move_threshold`][..] then `rotation_win_gestures` gestures will be used.
+    When [`rotation_threshold`][(c).] wins over [`pinch_zoom_threshold`][(c).] and
+    [`pinch_move_threshold`][(c).] then `rotation_win_gestures` gestures will be used.
     """
 
     pinch_move_win_gestures: MultiFingerGesture = (
         MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE
     )
     """
-    When [`pinch_move_threshold`][..] wins over [`rotation_threshold`][..]
-    and [`pinch_zoom_threshold`][..] then `pinch_move_win_gestures` gestures
+    When [`pinch_move_threshold`][(c).] wins over [`rotation_threshold`][(c).]
+    and [`pinch_zoom_threshold`][(c).] then `pinch_move_win_gestures` gestures
     will be used.
 
     By default [`MultiFingerGesture.PINCH_MOVE`][(p).]
@@ -510,8 +512,8 @@ class InteractionConfiguration:
         MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE
     )
     """
-    When [`pinch_zoom_threshold`][..] wins over [`rotation_threshold`][..]
-    and [`pinch_move_threshold`][..]
+    When [`pinch_zoom_threshold`][(c).] wins over [`rotation_threshold`][(c).]
+    and [`pinch_move_threshold`][(c).]
     then `pinch_zoom_win_gestures` gestures will be used.
 
     By default [`MultiFingerGesture.PINCH_ZOOM`][(p).]
@@ -620,7 +622,7 @@ class CameraFit:
     depending on which one was provided.
 
     Raises:
-        AssertionError: If both [`bounds`][(c).] and [`coordinates`][(c).]
+        ValueError: If both [`bounds`][(c).] and [`coordinates`][(c).]
             are `None` or not `None`.
     """
 
@@ -629,7 +631,7 @@ class CameraFit:
     The bounds which the camera should contain once it is fitted.
 
     Note:
-        If this is not `None`, [`coordinates`][..] should be `None`, and vice versa.
+        If this is not `None`, [`coordinates`][(c).] should be `None`, and vice versa.
     """
 
     coordinates: Optional[list[MapLatitudeLongitude]] = None
@@ -637,7 +639,7 @@ class CameraFit:
     The coordinates which the camera should contain once it is fitted.
 
     Note:
-        If this is not `None`, [`bounds`][..] should be `None`, and vice versa.
+        If this is not `None`, [`bounds`][(c).] should be `None`, and vice versa.
     """
 
     max_zoom: Optional[ft.Number] = None
@@ -664,9 +666,13 @@ class CameraFit:
     """
 
     def __post_init__(self):
-        assert (self.bounds and not self.coordinates) or (
-            self.coordinates and not self.bounds
-        ), "only one of bounds or coordinates must be provided, not both"
+        if not (
+            (self.bounds and not self.coordinates)
+            or (self.coordinates and not self.bounds)
+        ):
+            raise ValueError(
+                "only one of bounds or coordinates must be provided, not both"
+            )
 
 
 @dataclass
@@ -724,12 +730,16 @@ class InstantaneousTileDisplay(TileDisplay):
     opacity: ft.Number = 1.0
     """
     The optional opacity of the tile.
+
+    Raises:
+        ValueError: If its value is not between `0.0` and `1.0` inclusive.
     """
 
     def __post_init__(self):
-        assert 0.0 <= self.opacity <= 1.0, (
-            f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-        )
+        if not (0.0 <= self.opacity <= 1.0):
+            raise ValueError(
+                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
+            )
         self._type = "instantaneous"
 
 
@@ -747,22 +757,30 @@ class FadeInTileDisplay(TileDisplay):
     start_opacity: ft.Number = 0.0
     """
     Opacity start value when a tile is faded in.
+
+    Raises:
+        ValueError: If its value is not between `0.0` and `1.0` inclusive.
     """
 
     reload_start_opacity: ft.Number = 0.0
     """
     Opacity start value when a tile is reloaded.
+
+    Raises:
+        ValueError: If its value is not between `0.0` and `1.0` inclusive.
     """
 
     def __post_init__(self):
-        assert 0.0 <= self.start_opacity <= 1.0, (
-            f"start_opacity must be between 0.0 and 1.0 inclusive, "
-            f"got {self.start_opacity}"
-        )
-        assert 0.0 <= self.reload_start_opacity <= 1.0, (
-            f"reload_start_opacity must be between 0.0 and 1.0 inclusive, "
-            f"got {self.reload_start_opacity}"
-        )
+        if not (0.0 <= self.start_opacity <= 1.0):
+            raise ValueError(
+                "start_opacity must be between 0.0 and 1.0 inclusive, "
+                f"got {self.start_opacity}"
+            )
+        if not (0.0 <= self.reload_start_opacity <= 1.0):
+            raise ValueError(
+                "reload_start_opacity must be between 0.0 and 1.0 inclusive, "
+                f"got {self.reload_start_opacity}"
+            )
         self._type = "fadein"
 
 
@@ -798,7 +816,7 @@ class KeyboardConfiguration:
     Duration of the curved ([`AnimationCurve.EASE_IN`][flet.AnimationCurve.EASE_IN])
     portion of the animation occuring
     after a key down event (and after a key up event if
-    [`animation_curve_reverse_duration`][..] is `None`)
+    [`animation_curve_reverse_duration`][(c).] is `None`)
     """
 
     animation_curve_reverse_duration: Optional[ft.DurationValue] = field(
@@ -809,7 +827,7 @@ class KeyboardConfiguration:
     [`AnimationCurve.EASE_IN`][flet.AnimationCurve.EASE_IN])
     portion of the animation occuring after a key up event.
 
-    Set to `None` to use [`animation_curve_duration`][..].
+    Set to `None` to use [`animation_curve_duration`][(c).].
     """
 
     animation_curve_curve: AnimationCurve = AnimationCurve.EASE_IN_OUT
@@ -872,7 +890,7 @@ class KeyboardConfiguration:
 
     Must be greater than 0 and less than or equal to 1.
     To disable leaping, or change the maximum length of the key press
-    that will trigger a leap, see [`perform_leap_trigger_duration`][..].
+    that will trigger a leap, see [`perform_leap_trigger_duration`][(c).].
     """
 
     max_rotate_velocity: ft.Number = 3
@@ -896,7 +914,7 @@ class KeyboardConfiguration:
     The amount to scale the panning offset velocity by during a leap animation.
 
     The larger the number, the larger the movement during a leap.
-    To change the duration of a leap, see [`leap_max_of_curve_component`][..].
+    To change the duration of a leap, see [`leap_max_of_curve_component`][(c).].
     """
 
     rotate_leap_velocity_multiplier: ft.Number = 3
@@ -904,9 +922,9 @@ class KeyboardConfiguration:
     The amount to scale the rotation velocity by during a leap animation
 
     The larger the number, the larger the rotation difference during a leap.
-    To change the duration of a leap, see [`leap_max_of_curve_component`][..].
+    To change the duration of a leap, see [`leap_max_of_curve_component`][(c).].
 
-    This may cause the pan velocity to exceed [`max_rotate_velocity`][..].
+    This may cause the pan velocity to exceed [`max_rotate_velocity`][(c).].
     """
 
     zoom_leap_velocity_multiplier: ft.Number = 3
@@ -914,9 +932,9 @@ class KeyboardConfiguration:
     The amount to scale the zooming velocity by during a leap animation.
 
     The larger the number, the larger the zoom difference during a leap. To
-    change the duration of a leap, see [`leap_max_of_curve_component`][..].
+    change the duration of a leap, see [`leap_max_of_curve_component`][(c).].
 
-    This may cause the pan velocity to exceed [`max_zoom_velocity`][..].
+    This may cause the pan velocity to exceed [`max_zoom_velocity`][(c).].
     """
 
     perform_leap_trigger_duration: Optional[ft.DurationValue] = field(
@@ -926,10 +944,10 @@ class KeyboardConfiguration:
     Maximum duration between the key down and key up events of an animation
     which will trigger a 'leap'.
 
-    To customize the leap itself, see the [`leap_max_of_curve_component`][..] &
-    `*leap_velocity_multiplier` ([`zoom_leap_velocity_multiplier`][..],
-    [`pan_leap_velocity_multiplier`][..] and [`rotate_leap_velocity_multiplier`][..])
-    properties.
+    To customize the leap itself, see the [`leap_max_of_curve_component`][(c).] &
+    `*leap_velocity_multiplier` ([`zoom_leap_velocity_multiplier`][(c).],
+    [`pan_leap_velocity_multiplier`][(c).] and
+    [`rotate_leap_velocity_multiplier`][(c).]) properties.
 
     Set to `None` to disable leaping.
     """

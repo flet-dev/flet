@@ -54,10 +54,12 @@ class AudioRecorder(ft.Service):
 
         Returns:
             `True` if recording was successfully started, `False` otherwise.
+
+        Raises:
+            ValueError: If `output_path` is not provided on platforms other than web.
         """
-        assert self.page.web or output_path, (
-            "output_path must be provided on platforms other than web"
-        )
+        if not (self.page.web or output_path):
+            raise ValueError("output_path must be provided on platforms other than web")
         return await self._invoke_method(
             method_name="start_recording",
             arguments={

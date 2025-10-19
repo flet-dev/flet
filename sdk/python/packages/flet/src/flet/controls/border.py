@@ -68,7 +68,7 @@ class BorderSide:
         to [`BorderStyle.NONE`][flet.].
 
     Raises:
-        AssertionError: If [`width`][(c).] is negative.
+        ValueError: If it is less than zero.
     """
 
     color: ColorValue = Colors.BLACK
@@ -86,34 +86,37 @@ class BorderSide:
     """
     The style of this side of the border.
 
-    To omit a side, set `style` to `BorderStyle.NONE`.
-    This skips painting the border, but the border still has a `width`.
+    Tip:
+        To omit a side, set `style` to [`BorderStyle.NONE`][flet.]. This skips
+        painting the border, but the border still has a `width`.
     """
 
     def __post_init__(self):
-        assert self.width >= 0.0, (
-            f"width must be greater than or equal to 0.0, got {self.width}"
-        )
+        if self.width < 0.0:
+            raise ValueError(
+                f"width must be greater than or equal to 0.0, got {self.width}"
+            )
 
     # Properties
 
     @property
     def stroke_inset(self):
         """
-        The amount of the stroke width that lies inside of the `BorderSide`.
+        The amount of the stroke width that lies inside this `BorderSide`.
 
-        For example, this will return the `width` for a `stroke_align` of -1, half
-        the `width` for a `stroke_align` of 0, and 0 for a `stroke_align` of 1.
+        For example, this will return the `width` for a `stroke_align` of `-`1, half
+        the `width` for a `stroke_align` of `0`, and `0` for a `stroke_align` of `1`.
         """
         return self.width * (1 - (1 + self.stroke_align) / 2)
 
     @property
     def stroke_outset(self):
         """
-        The amount of the stroke width that lies outside of the [BorderSide].
+        The amount of the stroke width that lies outside this `BorderSide`.
 
-        For example, this will return 0 for a `stroke_align` of -1, half the
-        `width` for a `stroke_align` of 0, and the `width` for a `stroke_align` of 1.
+        For example, this will return `0` for a `stroke_align` of `-1`, half the
+        `width` for a `stroke_align` of `0`, and the `width` for a
+        `stroke_align` of `1`.
         """
         return self.width * (1 + self.stroke_align) / 2
 
@@ -163,12 +166,6 @@ class Border:
 
     Each side of the border is an instance of
     [`BorderSide`][flet.].
-
-    Example:
-        ```python
-        container_1.border = ft.Border.all(10, ft.Colors.PINK_600)
-        container_1.border = ft.Border.only(bottom=ft.BorderSide(1, "black"))
-        ```
     """
 
     top: BorderSide = field(default_factory=lambda: BorderSide.none())

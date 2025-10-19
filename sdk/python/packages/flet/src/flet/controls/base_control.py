@@ -233,9 +233,10 @@ class BaseControl:
     def update(self) -> None:
         if hasattr(self, "_frozen"):
             raise Exception("Frozen control cannot be updated.")
-        assert (
-            self.page
-        ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        if not self.page:
+            raise RuntimeError(
+                f"{self.__class__.__qualname__} Control must be added to the page first"
+            )
         self.page.update(self)
 
     async def _invoke_method(
@@ -244,9 +245,10 @@ class BaseControl:
         arguments: Optional[dict[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
-        assert (
-            self.page
-        ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        if not self.page:
+            raise RuntimeError(
+                f"{self.__class__.__qualname__} Control must be added to the page first"
+            )
 
         return await self.page.session.invoke_method(
             self._i, method_name, arguments, timeout
@@ -282,10 +284,11 @@ class BaseControl:
 
             controls_log.debug(f"Trigger event {self}.{field_name} {e}")
 
-            assert self.page, (
-                "Control must be added to a page before triggering events. "
-                "Use page.add(control) or add it to a parent control that's on a page."
-            )
+            if not self.page:
+                raise RuntimeError(
+                    "Control must be added to a page before triggering events. Use "
+                    "page.add(control) or add it to a parent control that's on a page."
+                )
             session = self.page.session
 
             # Handle async and sync event handlers accordingly

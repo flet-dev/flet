@@ -28,6 +28,7 @@ env:
   FLET_TEST_SCREENSHOTS_PIXEL_RATIO: "2.0"
   FLET_TEST_SCREENSHOTS_SIMILARITY_THRESHOLD: "99.0"
   FLET_TEST_DISABLE_FVM: "1"
+  UV_PYTHON: "3.13"
 
 jobs:
   test-macos:
@@ -53,7 +54,7 @@ jobs:
 
       - name: Show tool versions
         run: |
-          python3 --version && uv --version && pod --version && flutter --version
+          uv --version && uv run python --version && pod --version && flutter --version
 
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python

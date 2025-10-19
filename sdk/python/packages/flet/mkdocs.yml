@@ -142,7 +142,7 @@ plugins:
             preload_modules: [ flet, flet_ads ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
-              - "!(init|before_update)"
+              - "!(init|before_update|build|will_unmount|did_mount)"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
@@ -264,15 +264,6 @@ nav:
               # - NativeAd: ads/nativead.md
           - Audio: audio/index.md
           - AudioRecorder: audio_recorder/index.md
-          - Charts:
-              - Overview: charts/index.md
-              - BarChart: charts/bar_chart.md
-              - CandlestickChart: charts/candlestick_chart.md
-              - LineChart: charts/line_chart.md
-              - MatplotlibChart: charts/matplotlib_chart.md
-              - PieChart: charts/pie_chart.md
-              - PlotlyChart: charts/plotly_chart.md
-              - ScatterChart: charts/scatter_chart.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -299,6 +290,16 @@ nav:
               - Shape: controls/canvas/shape.md
               - Text: controls/canvas/text.md
           - Card: controls/card.md
+          - Charts:
+              - Overview: charts/index.md
+              - BarChart: charts/bar_chart.md
+              - CandlestickChart: charts/candlestick_chart.md
+              - LineChart: charts/line_chart.md
+              - MatplotlibChart: charts/matplotlib_chart.md
+              - PieChart: charts/pie_chart.md
+              - PlotlyChart: charts/plotly_chart.md
+              - RadarChart: charts/radar_chart.md
+              - ScatterChart: charts/scatter_chart.md
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
@@ -539,6 +540,11 @@ nav:
                   - LineChartTooltip: charts/types/line_chart_tooltip.md
                   - PieChartEvent: charts/types/pie_chart_event.md
                   - PieChartSection: charts/types/pie_chart_section.md
+                  - RadarChartEvent: charts/types/radar_chart_event.md
+                  - RadarChartTitle: charts/types/radar_chart_title.md
+                  - RadarDataSet: charts/types/radar_data_set.md
+                  - RadarDataSetEntry: charts/types/radar_data_set_entry.md
+                  - RadarShape: charts/types/radar_shape.md
                   - ScatterChartEvent: charts/types/scatter_chart_event.md
                   - ScatterChartSpot: charts/types/scatter_chart_spot.md
                   - ScatterChartSpotTooltip: charts/types/scatter_chart_spot_tooltip.md
@@ -782,6 +788,7 @@ nav:
               - NavigationBarLabelBehavior: types/navigationbarlabelbehavior.md
               - NavigationDrawerPosition: types/navigationdrawerposition.md
               - NavigationRailLabelType: types/navigationraillabeltype.md
+              - DeviceOrientation: types/deviceorientation.md
               - Orientation: types/orientation.md
               - OverlayVisibilityMode: types/overlayvisibilitymode.md
               - PagePlatform: types/pageplatform.md

@@ -40,12 +40,11 @@ List<double>? parsePaintStrokeDashPattern(dynamic value,
     [List<double>? defaultValue]) {
   if (value == null) return defaultValue;
 
-  return value["stroke_dash_pattern"] != null
-      ? (value["stroke_dash_pattern"] as List)
-          .map((e) => parseDouble(e))
+  return (value["stroke_dash_pattern"] as List?)
+          ?.map((e) => parseDouble(e))
           .nonNulls
-          .toList()
-      : null;
+          .toList() ??
+      defaultValue;
 }
 
 ui.Gradient? parsePaintGradient(Map<dynamic, dynamic>? value, ThemeData? theme,

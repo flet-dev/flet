@@ -175,15 +175,15 @@ class BarChart(ft.LayoutControl):
 
     group_spacing: ft.Number = 16.0
     """
-    A amount of space between bar [`groups`][..].
+    An amount of space between bar [`groups`][(c).].
     """
 
     group_alignment: ft.MainAxisAlignment = ft.MainAxisAlignment.SPACE_EVENLY
     """
-    A alignment of the bar [`groups`][..] within this chart.
+    The alignment of the bar [`groups`][(c).] within this chart.
 
     If set to [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER],
-    the space between the `groups` can be specified using [`group_spacing`][..].
+    the space between the `groups` can be specified using [`group_spacing`][(c).].
     """
 
     animation: ft.AnimationValue = field(

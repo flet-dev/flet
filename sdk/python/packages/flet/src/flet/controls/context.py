@@ -32,7 +32,7 @@ class Context:
             The current page.
 
         Raises:
-            AssertionError: if property is called outside of Flet app.
+            RuntimeError: If the property is accessed outside a running Flet app.
         """
         page = _context_page.get()
         if page is None:

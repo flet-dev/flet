@@ -5,8 +5,6 @@ import numpy as np
 
 import flet as ft
 
-matplotlib.use("svg")
-
 
 def main(page: ft.Page):
     # Fixing random state for reproducibility
@@ -33,7 +31,7 @@ def main(page: ft.Page):
 
     fig.tight_layout()
 
-    page.add(fch.MatplotlibChart(figure=fig, expand=True))
+    page.add(fch.MatplotlibChartWithToolbar(figure=fig, expand=True))
 
 
 ft.run(main)

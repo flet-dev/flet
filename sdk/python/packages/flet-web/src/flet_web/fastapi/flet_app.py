@@ -340,9 +340,8 @@ class FletApp(Connection):
         self.__send_queue.put_nowait(m)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
-        assert self.__upload_endpoint_path, (
-            "upload_path should be specified to enable uploads"
-        )
+        if not self.__upload_endpoint_path:
+            raise RuntimeError("upload_path should be specified to enable uploads")
         return build_upload_url(
             self.__upload_endpoint_path,
             file_name,

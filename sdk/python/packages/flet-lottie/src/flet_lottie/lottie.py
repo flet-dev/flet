@@ -15,15 +15,14 @@ class Lottie(ft.LayoutControl):
     """
     The source of the Lottie file.
 
-    Can be a URL or a local [asset file](https://flet.dev/docs/cookbook/assets).
+    Can be a URL or a local [asset file](https://docs.flet.dev/cookbook/assets).
 
     Note:
-        If both `src` and [`src_base64`][..] are provided,
+        If both `src` and [`src_base64`][(c).] are provided,
         `src_base64` will be prioritized/used.
 
     Raises:
-        AssertionError: If neither [`src`][(c).] nor
-            [`src_base64`][(c).] is provided.
+        ValueError: If neither `src` nor [`src_base64`][(c).] is provided.
     """
 
     src_base64: Optional[str] = None
@@ -31,12 +30,11 @@ class Lottie(ft.LayoutControl):
     The base64 encoded string of the Lottie file.
 
     Note:
-        If both `src_base64` and [`src`][..] are provided,
+        If both `src_base64` and [`src`][(c).] are provided,
         `src_base64` will be prioritized/used.
 
     Raises:
-        AssertionError: If neither [`src`][(c).] nor
-            [`src_base64`][(c).] is provided.
+        ValueError: If neither `src_base64` nor [`src`][(c).] is provided.
     """
 
     repeat: bool = True
@@ -44,7 +42,7 @@ class Lottie(ft.LayoutControl):
     Whether the animation should repeat in a loop.
 
     Note:
-        Has no effect if [`animate`][..] is `False`.
+        Has no effect if [`animate`][(c).] is `False`.
     """
 
     reverse: bool = False
@@ -53,7 +51,7 @@ class Lottie(ft.LayoutControl):
     (from start to end and then continuously from end to start).
 
     Note:
-        Has no effect if [`animate`][..] or [`repeat`][..] is `False`.
+        Has no effect if [`animate`][(c).] or [`repeat`][(c).] is `False`.
     """
 
     animate: bool = True
@@ -97,7 +95,7 @@ class Lottie(ft.LayoutControl):
     A control to display when an error occurs
     while loading the Lottie animation.
 
-    For more information on the error, see [`on_error`][..].
+    For more information on the error, see [`on_error`][(c).].
     """
 
     on_error: Optional[ft.ControlEventHandler["Lottie"]] = None
@@ -110,6 +108,5 @@ class Lottie(ft.LayoutControl):
 
     def before_update(self):
         super().before_update()
-        assert self.src or self.src_base64, (
-            "at least one of src and src_base64 must be provided"
-        )
+        if not (self.src or self.src_base64):
+            raise ValueError("at least one of src and src_base64 must be provided")

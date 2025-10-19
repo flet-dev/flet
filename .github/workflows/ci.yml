@@ -551,30 +551,13 @@ jobs:
   # Build Flet extension Python packages
   # ============================================
   build_flet_extensions:
-    name: Build ${{ matrix.package }} extension
+    name: Build Flet extensions
     runs-on: ubuntu-latest
     needs:
       - python_tests
       - build_flet_package
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - flet-ads
-          - flet-audio
-          - flet-audio-recorder
-          - flet-charts
-          - flet-datatable2
-          - flet-flashlight
-          - flet-geolocator
-          - flet-lottie
-          - flet-map
-          - flet-permission-handler
-          - flet-rive
-          - flet-video
-          - flet-webview
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -588,44 +571,49 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Analyze Flutter package with dart analyze
-        shell: bash
-        run: |
-          set -euo pipefail
-          PACKAGE="${{ matrix.package }}"
-          FLUTTER_PACKAGE="${PACKAGE//-/_}"
-          FLUTTER_DIR="${SDK_PYTHON}/packages/${PACKAGE}/src/flutter/${FLUTTER_PACKAGE}"
-
-          if [[ ! -d "$FLUTTER_DIR" ]]; then
-            echo "Flutter directory $FLUTTER_DIR not found"
-            exit 1
-          fi
-
-          pushd "$FLUTTER_DIR"
-          flutter pub get
-          dart analyze
-          rm -f pubspec.lock
-          popd
-
-      - name: Build Python package
+      - name: Analyze and Build Flutter & Python packages
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           set -euo pipefail
-          PACKAGE="${{ matrix.package }}"
-          PYPROJECT="packages/${PACKAGE}/pyproject.toml"
+
+          PACKAGES=(
+            flet-ads
+            flet-audio
+            flet-audio-recorder
+            flet-charts
+            flet-datatable2
+            flet-flashlight
+            flet-geolocator
+            flet-lottie
+            flet-map
+            flet-permission-handler
+            flet-rive
+            flet-video
+            flet-webview
+          )
 
           source "$SCRIPTS/common.sh"
-          patch_toml_versions "$PYPROJECT" "$PYPI_VER"
 
-          rm -rf dist
-          uv build --package "$PACKAGE" --wheel
-          uv build --package "$PACKAGE" --sdist
+          for PACKAGE in "${PACKAGES[@]}"; do
+            echo "::group::Processing ${PACKAGE}"
+            FLUTTER_PACKAGE="${PACKAGE//-/_}"
+            FLUTTER_DIR="${SDK_PYTHON}/packages/${PACKAGE}/src/flutter/${FLUTTER_PACKAGE}"
+
+            pushd "$FLUTTER_DIR"
+            flutter pub get
+            dart analyze
+            popd
+
+            patch_toml_versions "packages/${PACKAGE}/pyproject.toml" "$PYPI_VER"
+            uv build --package "$PACKAGE"
+            echo "::endgroup::"
+          done
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: python-extension-${{ matrix.package }}
+          name: flet-python-extensions
           if-no-files-found: error
           path: |
             sdk/python/dist/*.whl
@@ -686,6 +674,9 @@ jobs:
     steps:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
+        with:
+          ignore-empty-workdir: true
+          cache-dependency-glob: ""
 
       - name: Download artifacts
         uses: actions/download-artifact@v4

@@ -2,7 +2,6 @@
 class_name: flet.AlertDialog
 examples: ../../examples/controls/alert_dialog
 example_images: ../test-images/examples/material/golden/macos/alert_dialog
-example_media: ../examples/controls/alert_dialog/media
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic AlertDialog") }}
@@ -17,7 +16,7 @@ example_media: ../examples/controls/alert_dialog/media
 --8<-- "{{ examples }}/modal_and_non_modal.py"
 ```
 
-{{ image(example_media + "/modal_and_non_modal.gif", alt="modal-and-non-modal", width="80%") }}
+{{ image(example_images + "/alert_dialog_flow.gif", alt="Modal and non-modal dialogs", caption="Modal and non-modal dialogs",width="50%") }}
 
 
 {{ class_members(class_name) }}

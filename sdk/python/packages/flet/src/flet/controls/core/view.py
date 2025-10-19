@@ -131,10 +131,8 @@ class View(ScrollableControl, LayoutControl):
 
     Note:
         Has effect only when [`vertical_alignment`][(c).]
-        is set to
-        [`MainAxisAlignment.START`][flet.],
-        [`MainAxisAlignment.END`][flet.],
-        or [`MainAxisAlignment.CENTER`][flet.].
+        is set to [`MainAxisAlignment.START`][flet.],
+        [`MainAxisAlignment.END`][flet.], or [`MainAxisAlignment.CENTER`][flet.].
     """
 
     padding: Optional[PaddingValue] = field(default_factory=lambda: Padding.all(10))

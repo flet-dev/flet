@@ -19,7 +19,7 @@ class ChartAxisLabel(ft.BaseControl):
 
     label: Optional[ft.StrOrControl] = None
     """
-    The label to display for the specified [`value`][..].
+    The label to display for the specified [`value`][(c).].
     """
 
 
@@ -41,7 +41,7 @@ class ChartAxis(ft.BaseControl):
 
     show_labels: bool = True
     """
-    Whether to display the [`labels`][..] along the axis.
+    Whether to display the [`labels`][(c).] along the axis.
     If `labels` is empty then automatic labels are displayed.
     """
 
@@ -61,7 +61,7 @@ class ChartAxis(ft.BaseControl):
 
     label_size: ft.Number = 22
     """
-    The maximum space for each label in [`labels`][..].
+    The maximum space for each label in [`labels`][(c).].
 
     Each label will stretch to fit this space.
     """

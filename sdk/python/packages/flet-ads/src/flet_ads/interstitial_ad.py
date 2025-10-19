@@ -8,7 +8,8 @@ class InterstitialAd(BaseAd):
     Displays a full-screen interstitial ad.
 
     Raises:
-        AssertionError: When using this control on a web and/or non-mobile platform.
+        FletUnsupportedPlatformException: When using this control on a
+            web and/or non-mobile platform.
     """
 
     async def show(self):

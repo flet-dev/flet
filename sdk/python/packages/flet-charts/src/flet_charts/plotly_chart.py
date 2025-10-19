@@ -1,17 +1,26 @@
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import field
+from typing import Any, Optional
 
 import flet as ft
 
+_PLOTLY_IMPORT_ERROR: Optional[ImportError] = None
+
 try:
     from plotly.graph_objects import Figure
-except ImportError as e:
-    raise Exception(
-        'Install "plotly" Python package to use PlotlyChart control.'
-    ) from e
+except ImportError as e:  # pragma: no cover - depends on optional dependency
+    Figure = Any  # type: ignore[assignment]
+    _PLOTLY_IMPORT_ERROR = e
 
 __all__ = ["PlotlyChart"]
+
+
+def _require_plotly() -> None:
+    if _PLOTLY_IMPORT_ERROR is not None:
+        raise ModuleNotFoundError(
+            'Install "plotly" Python package to use PlotlyChart control.'
+        ) from _PLOTLY_IMPORT_ERROR
 
 
 @ft.control(kw_only=True)
@@ -41,6 +50,7 @@ class PlotlyChart(ft.Container):
     """
 
     def init(self):
+        _require_plotly()
         self.alignment = ft.Alignment.CENTER
         self.__img = ft.Image(fit=ft.BoxFit.FILL)
         self.content = self.__img

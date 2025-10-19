@@ -102,7 +102,7 @@ class ScatterChartSpot(ft.BaseControl):
 
     selected: bool = False
     """
-    TBD
+    Whether to treat this spot as selected.
     """
 
     tooltip: Union[ScatterChartSpotTooltip, str] = field(
