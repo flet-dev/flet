@@ -15,6 +15,7 @@ def test_page_media_data():
             "view_padding": {"left": 1, "top": 2, "right": 3, "bottom": 4},
             "view_insets": {"left": 1, "top": 2, "right": 3, "bottom": 4},
             "device_pixel_ratio": 1,
+            "orientation": "portrait",
         },
     )
 

@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/services.dart';
 
 import 'platform.dart';
 
@@ -160,4 +162,12 @@ extension DeviceInfoExtension on BaseDeviceInfo {
       return {};
     }
   }
+}
+
+DeviceOrientation? parseDeviceOrientation(String? value,
+    [DeviceOrientation? defaultValue]) {
+  if (value == null) return defaultValue;
+  return DeviceOrientation.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
 }

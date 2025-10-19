@@ -35,6 +35,7 @@ from flet.controls.types import (
     LocaleConfiguration,
     MainAxisAlignment,
     Number,
+    Orientation,
     ScrollMode,
     ThemeMode,
 )
@@ -73,6 +74,11 @@ class PageMediaData:
     device_pixel_ratio: float
     """
     The number of device pixels for each logical pixel.
+    """
+
+    orientation: Orientation
+    """
+    The orientation of the page.
     """
 
 
@@ -184,7 +190,7 @@ class BasePage(AdaptiveControl):
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None
     """
-    Called when `media` has changed.
+    Called when [`media`][(c).] has changed.
     """
 
     media: PageMediaData = field(
@@ -193,6 +199,7 @@ class BasePage(AdaptiveControl):
             view_padding=Padding.zero(),
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
+            orientation=Orientation.PORTRAIT,
         )
     )
     """

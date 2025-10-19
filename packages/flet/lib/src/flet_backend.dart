@@ -76,7 +76,8 @@ class FletBackend extends ChangeNotifier {
       padding: PaddingData(EdgeInsets.zero),
       viewPadding: PaddingData(EdgeInsets.zero),
       viewInsets: PaddingData(EdgeInsets.zero),
-      devicePixelRatio: 0);
+      devicePixelRatio: 0,
+      orientation: Orientation.portrait);
   TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;

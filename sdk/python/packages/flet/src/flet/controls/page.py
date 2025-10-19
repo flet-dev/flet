@@ -42,6 +42,7 @@ from flet.controls.device_info import (
     WebDeviceInfo,
     WindowsDeviceInfo,
 )
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.multi_view import MultiView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
@@ -54,6 +55,7 @@ from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
+    DeviceOrientation,
     PagePlatform,
     Url,
     UrlTarget,
@@ -939,3 +941,48 @@ class Page(BasePage):
             return from_dict(WindowsDeviceInfo, info)
         else:
             return None
+
+    async def set_allowed_device_orientations(
+        self, orientations: list[DeviceOrientation]
+    ) -> None:
+        """
+        Constrains the allowed orientations for the app when running on a mobile device.
+
+        Args:
+            orientations: A list of allowed device orientations.
+                Set to an empty list to use the system default behavior.
+
+        Raises:
+            FletUnsupportedPlatformException: If the method is called
+                on a non-mobile platform.
+
+        Limitations:
+            - **Android**: On Android 16 (API 36) or later, this method won't be able to
+                change the orientation of **devices with a display width ≥ 600 dp**
+                cannot change orientation. For more details see Android 16 docs
+                [here](https://developer.android.com/about/versions/16/behavior-changes-16#ignore-orientation).
+                Also, Android limits the [orientations](https://developer.android.com/reference/android/R.attr#screenOrientation) to the following combinations:
+                    - `[]` → `unspecified`
+                    - `[PORTRAIT_UP]` → `portrait`
+                    - `[LANDSCAPE_LEFT]` → `landscape`
+                    - `[PORTRAIT_DOWN]` → `reversePortrait`
+                    - `[PORTRAIT_UP, PORTRAIT_DOWN]` → `userPortrait`
+                    - `[LANDSCAPE_RIGHT]` → `reverseLandscape`
+                    - `[LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `userLandscape`
+                    - `[PORTRAIT_UP, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `user`
+                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `fullUser`
+
+            - **iOS**: This setting will only be respected on iPad if multitasking is disabled.
+                You can decide to opt out of multitasking on iPad, then this will work
+                but your app will not support Slide Over and Split View multitasking
+                anymore. Should you decide to opt out of multitasking you can do this by
+                setting "Requires full screen" to true in the Xcode Deployment Info.
+        """  # noqa: E501
+        if not self.platform.is_mobile():
+            raise FletUnsupportedPlatformException(
+                "set_allowed_device_orientations is only supported on mobile platforms"
+            )
+        await self._invoke_method(
+            "set_allowed_device_orientations",
+            arguments={"orientations": orientations},
+        )
