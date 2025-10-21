@@ -7,7 +7,6 @@ colors = [
     "Deep Orange",
     "Green",
     "Light Blue",
-    "Light Green",
     "Orange",
     "Red",
 ]
@@ -29,9 +28,6 @@ def main(page: ft.Page):
     async def handle_tile_click(e: ft.Event[ft.ListTile]):
         await anchor.close_view()
 
-    async def open_search_view():
-        await anchor.open_view()
-
     async def handle_change(e: ft.Event[ft.SearchBar]):
         query = e.control.value.strip().lower()
         matching = (
@@ -46,10 +42,6 @@ def main(page: ft.Page):
         await anchor.open_view()
 
     page.add(
-        ft.OutlinedButton(
-            content="Open Search View",
-            on_click=open_search_view,
-        ),
         anchor := ft.SearchBar(
             view_elevation=4,
             divider_color=ft.Colors.AMBER,
