@@ -152,12 +152,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     When the user selects text, this property is updated to reflect the selected range.
     If no text is selected, it contains an empty range indicating the caret position.
 
-    Setting this property updates the field's selection to match the given value.
-    For the selection to be visible, consider requesting focus first using
-    [`focus()`][(c).].
-
-    Whenever this property changes, the
-    [`on_selection_change`][(c).] event is triggered.
+    Setting this property visually updates the field's selection to match the given
+    value, and hence leads to the [`on_selection_change`][(c).] event being triggered.
+    To ensure the selection is visible and the event is fired, the text field must
+    be focused. Call [`focus()`][(c).] on the field before setting this property.
     """
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
@@ -429,7 +427,10 @@ class TextField(FormFieldControl, AdaptiveControl):
         EventHandler[TextSelectionChangeEvent["TextField"]]
     ] = None
     """
-    Called when the user changes the selection or moves the caret.
+    Called when the text selection or caret position changes.
+
+    This can be triggered either by user interaction (selecting text or moving
+    the caret) or programmatically (through the [`selection`][(c).] property).
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
