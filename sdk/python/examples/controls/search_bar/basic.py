@@ -1,32 +1,54 @@
 import flet as ft
 
+colors = [
+    "Amber",
+    "Blue Grey",
+    "Brown",
+    "Deep Orange",
+    "Green",
+    "Light Blue",
+    "Light Green",
+    "Orange",
+    "Red",
+]
+
 
 def main(page: ft.Page):
-    async def handle_tile_click(e: ft.Event[ft.ListTile]):
-        await anchor.close_view(e.control.title.value)
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    async def open_click():
+    def build_tiles(items: list[str]) -> list[ft.ListTile]:
+        return [
+            ft.ListTile(
+                title=ft.Text(item),
+                data=item,
+                on_click=handle_tile_click,
+            )
+            for item in items
+        ]
+
+    async def handle_tile_click(e: ft.Event[ft.ListTile]):
+        await anchor.close_view()
+
+    async def open_search_view():
         await anchor.open_view()
 
-    def handle_change(e: ft.Event[ft.SearchBar]):
-        print(f"handle_change e.data: {e.data}")
+    async def handle_change(e: ft.Event[ft.SearchBar]):
+        query = e.control.value.strip().lower()
+        matching = (
+            [color for color in colors if query in color.lower()] if query else colors
+        )
+        anchor.controls = build_tiles(matching)
 
     def handle_submit(e: ft.Event[ft.SearchBar]):
-        print(f"handle_submit e.data: {e.data}")
+        print(f"Submit: {e.data}")
 
     async def handle_tap(e: ft.Event[ft.SearchBar]):
-        print("handle_tap")
         await anchor.open_view()
 
     page.add(
-        ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[
-                ft.OutlinedButton(
-                    content="Open Search View",
-                    on_click=open_click,
-                ),
-            ],
+        ft.OutlinedButton(
+            content="Open Search View",
+            on_click=open_search_view,
         ),
         anchor := ft.SearchBar(
             view_elevation=4,
@@ -36,10 +58,7 @@ def main(page: ft.Page):
             on_change=handle_change,
             on_submit=handle_submit,
             on_tap=handle_tap,
-            controls=[
-                ft.ListTile(title=ft.Text(f"Color {i}"), on_click=handle_tile_click)
-                for i in range(10)
-            ],
+            controls=build_tiles(colors),
         ),
     )
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -10,6 +11,7 @@ import '../utils/form_field.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 
 class SearchBarControl extends StatefulWidget {
   final Control control;
@@ -88,10 +90,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
         }
       case "focus":
         _focusNode.requestFocus();
-      case "blur":
-        // todo: test this method
-        _focusNode.unfocus(
-            disposition: UnfocusDisposition.previouslyFocusedChild);
       default:
         throw Exception("Unknown SearchBar method: $name");
     }
@@ -132,8 +130,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("SearchAnchor build: ${widget.control.id}");
-
     var value = widget.control.getString("value", "")!;
     if (value != _controller.text) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -250,9 +246,83 @@ class _SearchBarControlState extends State<SearchBarControl> {
         },
         suggestionsBuilder:
             (BuildContext context, SearchController controller) {
-          return widget.control.buildWidgets("controls");
+          return [
+            _SearchBarSuggestionsHost(control: widget.control),
+          ];
         });
 
     return LayoutControl(control: widget.control, child: anchor);
+  }
+}
+
+class _SearchBarSuggestionsHost extends StatefulWidget {
+  final Control control;
+
+  const _SearchBarSuggestionsHost({required this.control});
+
+  @override
+  State<_SearchBarSuggestionsHost> createState() =>
+      _SearchBarSuggestionsHostState();
+}
+
+class _SearchBarSuggestionsHostState extends State<_SearchBarSuggestionsHost> {
+  late List<Control> _controls;
+
+  @override
+  void initState() {
+    super.initState();
+    _controls = widget.control.children("controls");
+    widget.control.addListener(_handleControlChange);
+  }
+
+  @override
+  void didUpdateWidget(covariant _SearchBarSuggestionsHost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.control != widget.control) {
+      oldWidget.control.removeListener(_handleControlChange);
+      _controls = widget.control.children("controls");
+      widget.control.addListener(_handleControlChange);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.control.removeListener(_handleControlChange);
+    super.dispose();
+  }
+
+  void _handleControlChange() {
+    if (!mounted) return;
+
+    var controls = widget.control.children("controls");
+
+    // compare ids of current and next controls to avoid unnecessary rebuilds
+    var currentIds = _controls.map((c) => c.id).toList(growable: false);
+    var nextIds = controls.map((c) => c.id).toList(growable: false);
+    if (listEquals(currentIds, nextIds)) {
+      _controls = controls;
+      return;
+    }
+
+    // ids differ, update state to trigger rebuild
+    setState(() {
+      _controls = controls;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_controls.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: _controls
+          .map(
+              (child) => ControlWidget(key: ValueKey(child.id), control: child))
+          .toList(growable: false),
+    );
   }
 }
