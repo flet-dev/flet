@@ -147,10 +147,17 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     selection: Optional[TextSelection] = None
     """
-    The most recent text selection performed by the user.
+    Represents the current text selection or caret position in the field.
 
-    Updated whenever [`on_selection_change`][(c).] fires. When no text is selected,
-    this contains an empty range describing the current caret position.
+    When the user selects text, this property is updated to reflect the selected range.
+    If no text is selected, it contains an empty range indicating the caret position.
+
+    Setting this property updates the field's selection to match the given value.
+    For the selection to be visible, consider requesting focus first using
+    [`focus()`][(c).].
+
+    Whenever this property changes, the
+    [`on_selection_change`][(c).] event is triggered.
     """
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
@@ -160,7 +167,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     multiline: bool = False
     """
-    `True` if TextField can contain multiple lines of text.
+    Whether this field can contain multiple lines of text.
     """
 
     min_lines: Optional[int] = None

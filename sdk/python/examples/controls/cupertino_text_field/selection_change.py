@@ -4,7 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     page.title = "Text selection"
 
-    def handle_selection_change(e: ft.TextSelectionChangeEvent[ft.TextField]):
+    def handle_selection_change(e: ft.TextSelectionChangeEvent[ft.CupertinoTextField]):
         selection.value = (
             f"Selection: '{e.selected_text}'" if e.selected_text else "No selection."
         )
