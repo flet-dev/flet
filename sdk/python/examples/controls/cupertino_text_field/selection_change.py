@@ -25,7 +25,7 @@ def main(page: ft.Page):
         ft.Column(
             spacing=10,
             controls=[
-                field := ft.TextField(
+                field := ft.CupertinoTextField(
                     value="Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                     multiline=True,
                     min_lines=3,

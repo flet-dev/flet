@@ -76,6 +76,9 @@ class TextSelection:
     def start(self) -> int:
         """
         The index of the first character in the range.
+
+        Note:
+            This property is read-only.
         """
         if self.base_offset < self.extent_offset:
             return self.base_offset
@@ -86,6 +89,9 @@ class TextSelection:
     def end(self) -> int:
         """
         The next index after the characters in this range.
+
+        Note:
+            This property is read-only.
         """
         if self.base_offset < self.extent_offset:
             return self.extent_offset
@@ -96,6 +102,9 @@ class TextSelection:
     def is_valid(self) -> bool:
         """
         Whether this range represents a valid position in the text.
+
+        Note:
+            This property is read-only.
         """
         return self.start >= 0 and self.end >= 0
 
@@ -103,6 +112,9 @@ class TextSelection:
     def is_collapsed(self) -> bool:
         """
         Whether this range is empty (but still potentially placed inside the text).
+
+        Note:
+            This property is read-only.
         """
         return self.start == self.end
 
@@ -110,6 +122,9 @@ class TextSelection:
     def is_normalized(self) -> bool:
         """
         Whether the start of this range precedes the end.
+
+        Note:
+            This property is read-only.
         """
         return self.start <= self.end
 

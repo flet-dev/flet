@@ -28,12 +28,11 @@ example_media: ../examples/controls/text_field/media
 
 {{ image(example_media + "/handling_change_events.gif", alt="handling-change-events", width="80%") }}
 
-### Tracking selection changes
+### Handling selection changes
 
 ```python
 --8<-- "{{ examples }}/selection_change.py"
 ```
-
 
 ### Password with reveal button
 
