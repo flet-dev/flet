@@ -51,56 +51,81 @@ class TextSelection:
     A range of text that represents a selection.
     """
 
-    start: Optional[int] = None
-    """
-    The index of the first character in the range.
-    """
-
-    end: Optional[int] = None
-    """
-    The next index after the characters in this range.
-    """
-
-    selection: Optional[str] = None
-    """
-    The text string that is selected.
-    """
-
-    base_offset: Optional[int] = None
+    base_offset: int
     """
     The offset at which the selection originates.
     """
 
-    extent_offset: Optional[int] = None
+    extent_offset: int
     """
     The offset at which the selection terminates.
     """
 
-    affinity: Optional["TextAffinity"] = None
+    affinity: "TextAffinity" = TextAffinity.DOWNSTREAM
     """
     If the text range is collapsed and has more than one visual location (e.g., occurs
     at a line break), which of the two locations to use when painting the caret.
     """
 
-    directional: Optional[bool] = None
+    directional: bool = False
     """
     Whether this selection has disambiguated its base and extent.
     """
 
-    collapsed: Optional[bool] = None
-    """
-    Whether this range is empty (but still potentially placed inside the text).
-    """
+    @property
+    def start(self) -> int:
+        """
+        The index of the first character in the range.
+        """
+        if self.base_offset < self.extent_offset:
+            return self.base_offset
+        else:
+            return self.extent_offset
 
-    valid: Optional[bool] = None
-    """
-    Whether this range represents a valid position in the text.
-    """
+    @property
+    def end(self) -> int:
+        """
+        The next index after the characters in this range.
+        """
+        if self.base_offset < self.extent_offset:
+            return self.extent_offset
+        else:
+            return self.base_offset
 
-    normalized: Optional[bool] = None
-    """
-    Whether the start of this range precedes the end.
-    """
+    @property
+    def is_valid(self) -> bool:
+        """
+        Whether this range represents a valid position in the text.
+        """
+        return self.start >= 0 and self.end >= 0
+
+    @property
+    def is_collapsed(self) -> bool:
+        """
+        Whether this range is empty (but still potentially placed inside the text).
+        """
+        return self.start == self.end
+
+    @property
+    def is_normalized(self) -> bool:
+        """
+        Whether the start of this range precedes the end.
+        """
+        return self.start <= self.end
+
+    def get_selected_text(self, source_text: str) -> str:
+        """
+        Returns the selected text from the given full text.
+
+        Args:
+            source_text: The full text to get the selection from.
+
+        Raises:
+            AssertionError: If the selection is not valid,
+                i.e. [`is_valid`][(c).] is `False`.
+        """
+        assert self.is_valid
+        return source_text[self.start : self.end]
 
 
 class TextSelectionChangeCause(Enum):
@@ -166,9 +191,16 @@ class TextSelectionChangeCause(Enum):
 
 @dataclass
 class TextSelectionChangeEvent(Event[EventControlType]):
-    text: str
-    cause: TextSelectionChangeCause
+    """An event emitted when the text selection changes."""
+
+    selected_text: str
+    """The selected text."""
+
     selection: TextSelection
+    """The new text selection."""
+
+    cause: Optional[TextSelectionChangeCause] = None
+    """The cause of the selection change."""
 
 
 @control("Text")

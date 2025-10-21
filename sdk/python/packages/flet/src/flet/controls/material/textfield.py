@@ -4,8 +4,9 @@ from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
+from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
 from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import StrutStyle
@@ -142,6 +143,14 @@ class TextField(FormFieldControl, AdaptiveControl):
     value: str = ""
     """
     Current value of the TextField.
+    """
+
+    selection: Optional[TextSelection] = None
+    """
+    The most recent text selection performed by the user.
+
+    Updated whenever [`on_selection_change`][(c).] fires. When no text is selected,
+    this contains an empty range describing the current caret position.
     """
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
@@ -400,12 +409,20 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Helps the autofill service identify the type of this text input.
 
-    More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
+    More information
+    [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
 
     on_change: Optional[ControlEventHandler["TextField"]] = None
     """
     Called when the typed input for the TextField has changed.
+    """
+
+    on_selection_change: Optional[
+        EventHandler[TextSelectionChangeEvent["TextField"]]
+    ] = None
+    """
+    Called when the user changes the selection or moves the caret.
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None

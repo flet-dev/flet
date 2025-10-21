@@ -82,13 +82,12 @@ class TextControl extends StatelessWidget {
 
     TextAlign textAlign =
         parseTextAlign(control.getString("text_align"), TextAlign.start)!;
-
     TextOverflow overflow =
         parseTextOverflow(control.getString("overflow"), TextOverflow.clip)!;
 
     onSelectionChanged(TextSelection selection, SelectionChangedCause? cause) {
       control.triggerEvent("selection_change", {
-        "text": text,
+        "selected_text": text,
         "cause": cause?.name ?? "unknown",
         "selection": selection.toMap(),
       });
