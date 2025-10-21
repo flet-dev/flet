@@ -31,6 +31,33 @@ class Stack(LayoutControl, AdaptiveControl):
     Stack is also useful if you want to implement implicit animations
     (https://flet.dev/docs/guides/python/animations/) that require knowing absolute
     position of a target value.
+
+    ```python
+    ft.Stack(
+            width=300,
+            height=300,
+            controls=[
+                ft.Image(
+                    src="https://picsum.photos/300/300",
+                    width=300,
+                    height=300,
+                    fit=ft.BoxFit.CONTAIN,
+                ),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text(
+                            value="Image title",
+                            color=ft.Colors.SURFACE_TINT,
+                            size=40,
+                            weight=ft.FontWeight.BOLD,
+                            opacity=0.5,
+                        )
+                    ],
+                ),
+            ],
+        )
+    ```
     """
 
     controls: list[Control] = field(default_factory=list)

@@ -19,6 +19,25 @@ class SubmenuButton(LayoutControl):
     A menu button that displays a cascading menu.
 
     Typically used in a [`MenuBar`][flet.] control.
+
+    ```python
+    ft.SubmenuButton(
+        content=ft.Text("Choose text style"),
+        key="smbutton",
+        expand=True,
+        menu_style=ft.MenuStyle(
+            alignment=ft.Alignment.BOTTOM_LEFT, side=ft.BorderSide(1)
+        ),
+        controls=[
+            ft.MenuItemButton(
+                content=ft.Text("Underlined"),
+                on_click=lambda e: print(f"{e.control.content.value}.on_click")
+            ),
+            ft.MenuItemButton(...),
+            ...
+        ]
+    )
+    ```
     """
 
     content: Optional[StrOrControl] = None

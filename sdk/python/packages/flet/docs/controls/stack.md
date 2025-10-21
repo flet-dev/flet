@@ -1,7 +1,7 @@
 ---
 class_name: flet.Stack
 examples: ../../examples/controls/stack
-example_images: ../test-images/examples/material/golden/macos/stack
+example_images: ../test-images/examples/core/golden/macos/stack
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic stack with text over image") }}
