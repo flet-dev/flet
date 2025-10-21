@@ -23,15 +23,28 @@ class SemanticsServiceControl extends FletService {
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("SemanticsService.$name($args)");
-    var message = args["message"].toString();
     switch (name) {
       case "announce_message":
+        var message = args["message"].toString();
         return SemanticsService.announce(
             message, args["rtl"] ? TextDirection.rtl : TextDirection.ltr,
             assertiveness: control.getAssertiveness(
                 args["assertiveness"], Assertiveness.polite)!);
       case "announce_tooltip":
+        var message = args["message"].toString();
         return SemanticsService.tooltip(message);
+      case "get_accessibility_features":
+        var features = SemanticsBinding.instance.accessibilityFeatures;
+        return {
+          "accessible_navigation": features.accessibleNavigation,
+          "bold_text": features.boldText,
+          "disable_animations": features.disableAnimations,
+          "high_contrast": features.highContrast,
+          "invert_colors": features.invertColors,
+          "reduce_motion": features.reduceMotion,
+          "on_off_switch_labels": features.onOffSwitchLabels,
+          "supports_announcements": features.supportsAnnounce,
+        };
       default:
         throw Exception("Unknown SemanticsService method: $name");
     }
