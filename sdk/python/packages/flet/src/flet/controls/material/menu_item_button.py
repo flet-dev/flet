@@ -80,7 +80,7 @@ class MenuItemButton(LayoutControl):
 
     on_click: Optional[ControlEventHandler["MenuItemButton"]] = None
     """
-    Called when the button is clicked.
+    Called when the button is clicked.If not defined the button will be disabled.
     """
 
     on_hover: Optional[ControlEventHandler["MenuItemButton"]] = None
