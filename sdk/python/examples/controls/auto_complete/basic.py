@@ -23,7 +23,6 @@ def main(page: ft.Page):
         info.value = f"Current input 👀: {e.data!r} \n"
 
     def handle_select(e: ft.AutoCompleteSelectEvent):
-        print("Selected:", e.selection, e.control.selected_index)
         info.value = (
             f"Current input 👀: {e.control.value!r} \n"
             f"Your selection: {e.selection.value}"
