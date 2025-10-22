@@ -38,6 +38,14 @@ class TimePicker(DialogControl):
 
     Depending on the `time_picker_entry_mode`, it will show either a Dial or
     an Input (hour and minute text fields) for picking a time.
+
+    ```python
+    ft.TimePicker(
+        value=time(1, 2),
+        time_picker_entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
+        open=True,
+    )
+    ```
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())

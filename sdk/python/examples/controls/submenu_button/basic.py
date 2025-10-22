@@ -13,7 +13,7 @@ def main(page: ft.Page):
 
     def handle_alignment_click(e: ft.Event[ft.MenuItemButton]):
         print(
-            f"bg_container.alignment: {bg_container.alignment}, bg_container.content: {bg_container.content}"
+            f"bg_container.alignment: {background_container.alignment}, bg_container.content: {background_container.content}"
         )
         background_container.alignment = e.control.data
         print(
@@ -24,20 +24,12 @@ def main(page: ft.Page):
     def handle_on_hover(e: ft.Event[ft.MenuItemButton]):
         print(f"{e.control.content.value}.on_hover")
 
-    bg_container = ft.Container(
-        expand=True,
-        bgcolor=ft.Colors.SURFACE_TINT,
-        alignment=ft.Alignment.CENTER,
-        content=ft.Text(
-            value="Choose a bgcolor from the menu",
-            style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD),
-        ),
-    )
     menubar = ft.MenuBar(
         expand=True,
         controls=[
             ft.SubmenuButton(
                 content=ft.Text("Change Body"),
+                key="submenubutton",
                 controls=[
                     ft.SubmenuButton(
                         content=ft.Text("BG Color"),
@@ -144,4 +136,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -26,6 +26,11 @@ class Switch(LayoutControl, AdaptiveControl):
     two mutually exclusive options.
 
     For example, "On/Off", "Show/Hide".
+
+    ```python
+        ft.Switch(label="Unchecked switch", value=False)
+        ft.Switch(label="Disabled switch", disabled=True)
+    ```
     """
 
     label: Optional[StrOrControl] = None

@@ -19,4 +19,5 @@ def main(page: ft.Page):
     page.add(ft.Switch(label="Light ThemeMode", on_change=handle_switch_change))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
