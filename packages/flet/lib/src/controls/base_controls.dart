@@ -282,11 +282,7 @@ Widget _positionedControl(
       top: top,
       right: right,
       bottom: bottom,
-      onEnd: control.getBool("on_animation_end", false)!
-          ? () {
-              control.triggerEvent("animation_end", "position");
-            }
-          : null,
+      onEnd: () => control.triggerEvent("animation_end", "position"),
       child: widget,
     );
   } else if (left != null || top != null || right != null || bottom != null) {
@@ -305,35 +301,34 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control control) {
-  final skipProps = control.internals?["skip_properties"] as List?;
-  if (skipProps?.contains("width") == true ||
-      skipProps?.contains("height") == true) {
+  final skipProps = control.internals?['skip_properties'] as List?;
+  if (skipProps != null && ['width', 'height'].any(skipProps.contains)) {
     return widget;
   }
 
   final width = control.getDouble("width");
   final height = control.getDouble("height");
-  final animation = control.getAnimation("animate_size");
+  final animationSize = control.getAnimation("animate_size");
 
-  if (animation != null) {
-    if (width != null || height != null) {
-      return AnimatedContainer(
-        duration: animation.duration,
-        curve: animation.curve,
-        width: width,
-        height: height,
-        child: widget,
-      );
-    }
-    return AnimatedSize(
-        duration: animation.duration, curve: animation.curve, child: widget);
-  }
+  final hasFixedSize = width != null || height != null;
 
-  if (width != null || height != null) {
-    return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: width, height: height),
-      child: widget,
-    );
+  if (animationSize != null) {
+    return hasFixedSize
+        ? AnimatedContainer(
+            duration: animationSize.duration,
+            curve: animationSize.curve,
+            width: width,
+            height: height,
+            child: widget,
+          )
+        : AnimatedSize(
+            duration: animationSize.duration,
+            curve: animationSize.curve,
+            child: widget,
+          );
+  } else {
+    return hasFixedSize
+        ? SizedBox(width: width, height: height, child: widget)
+        : widget;
   }
-  return widget;
 }
