@@ -91,7 +91,7 @@ class AccessibilityFeatures:
 
     supports_announcements: bool
     """
-    Whether the platform supports accessibility  announcement API, i.e.
+    Whether the platform supports accessibility announcement API, i.e.
     [`SemanticsService.announce_message()`][flet.SemanticsService.announce_message].
 
     Will be `False` on platforms where announcements are deprecated or
@@ -100,7 +100,7 @@ class AccessibilityFeatures:
 
     Note:
         Some platforms do not support or discourage the use of
-        announcement. Using `SemanticsService.announce_message()` on those platform
+        announcement. Using `SemanticsService.announce_message()` on those platforms
         may be ignored. Consider using other way to convey message to the
         user. For example, Android discourages the uses of direct message
         announcement, and rather encourages using other semantic
