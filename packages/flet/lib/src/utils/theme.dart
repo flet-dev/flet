@@ -8,6 +8,7 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/transforms.dart';
 import 'alignment.dart';
+import 'animations.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'buttons.dart';
@@ -850,6 +851,9 @@ ListTileThemeData? parseListTileTheme(
         parseTextStyle(value["leading_and_trailing_text_style"], theme),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     minTileHeight: parseDouble(value["min_height"]),
+    controlAffinity: parseListTileControlAffinity(value["affinity"]),
+    style: parseListTileStyle(value["style"]),
+    titleAlignment: parseListTileTitleAlignment(value["title_alignment"]),
   );
 }
 
@@ -894,6 +898,10 @@ ExpansionTileThemeData? parseExpansionTileTheme(
     tilePadding: parsePadding(value["tile_padding"]),
     expandedAlignment: parseAlignment(value["expanded_alignment"]),
     childrenPadding: parsePadding(value["controls_padding"]),
+    shape: parseShape(value["shape"], theme),
+    collapsedShape: parseShape(value["collapsed_shape"], theme),
+    expansionAnimationStyle:
+        parseAnimationStyle(value["expansion_animation_style"]),
   );
 }
 

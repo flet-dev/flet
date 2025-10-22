@@ -23,9 +23,29 @@ __all__ = ["ExpansionTile", "TileAffinity"]
 
 
 class TileAffinity(Enum):
+    """
+    Where to place a control in controls that use [`ListTile`][flet.] to position a
+    control next to a label.
+    """
+
     LEADING = "leading"
+    """
+    Positions the control on the leading edge, and the secondary control, if
+    any, on the trailing edge.
+    """
+
     TRAILING = "trailing"
+    """
+    Positions the control on the trailing edge, and the secondary control, if
+    any, on the leading edge.
+    """
+
     PLATFORM = "platform"
+    """
+    Positions the control relative to the text in the fashion that is typical
+    for the current platform, and place the secondary control on the opposite
+    side.
+    """
 
 
 @control("ExpansionTile")
@@ -39,11 +59,11 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
         width=400,
         title="Account",
         subtitle="Manage profile and security",
+        expanded=True,
         controls=[
             ft.ListTile(title=ft.Text("Profile")),
             ft.ListTile(title=ft.Text("Security")),
         ],
-        initially_expanded=True,
     )
     ```
     """
@@ -55,7 +75,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     Typically a [`Text`][flet.] control.
 
     Raises:
-        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
+        ValueError: If it is neither a string nor a visible Control.
     """
 
     controls: Optional[list[Control]] = None
@@ -86,20 +106,23 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     controls_padding: Optional[PaddingValue] = None
     """
-    Defines the padding around the `controls`.
+    Defines the padding around the [`controls`][(c).].
     """
 
     tile_padding: Optional[PaddingValue] = None
     """
-    Defines the tile's padding. Default value is `Padding.symmetric(horizontal=16.0)`.
+    Defines the tile's padding.
+
+    Default value is `Padding.symmetric(horizontal=16.0)`.
     """
 
     affinity: Optional[TileAffinity] = None
     """
-    Typically used to force the expansion arrow icon to the tile's `leading` or
-    `trailing` edge.
+    Typically used to force the expansion arrow icon to the tile's [`leading`][(c).] or
+    [`trailing`][(c).] edge.
 
-    Defaults to `TileAffinity.PLATFORM`.
+    Defaults to [`TileAffinity.PLATFORM`][flet.], i.e. the expansion arrow icon
+    will appear on the tile's trailing edge.
     """
 
     expanded_alignment: Optional[Alignment] = None
@@ -119,11 +142,6 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     The content will be clipped (or not) according to this option.
 
     Defaults to `ClipBehavior.NONE`.
-    """
-
-    initially_expanded: bool = False
-    """
-    A boolean value which defines whether the tile is initially expanded or collapsed.
     """
 
     maintain_state: bool = False
@@ -195,7 +213,15 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     min_tile_height: Optional[Number] = None
     """
-    The minimum height of the tile.
+    The minimum height of this tile.
+    """
+
+    expanded: bool = False
+    """
+    The expansion state of this tile.
+
+    Set to `True` to expand the tile or `False` to
+    collapse it programmatically.
     """
 
     visual_density: Optional[VisualDensity] = None
