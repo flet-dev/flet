@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flet/flet.dart';
@@ -13,16 +14,20 @@ class FlutterWidgetTester implements Tester {
   final WidgetTester _tester;
   final IntegrationTestWidgetsFlutterBinding _binding;
   final lock = Lock();
-  final Completer _teardown = Completer();
+  final Completer _teardown = Completer<void>();
 
   FlutterWidgetTester(this._tester, this._binding);
+
+  @protected
+  IntegrationTestWidgetsFlutterBinding get binding => _binding;
 
   @override
   Future<void> pumpAndSettle({Duration? duration}) async {
     await lock.acquire();
     try {
-      await _tester
-          .pumpAndSettle(duration ?? const Duration(milliseconds: 100));
+      await _tester.pumpAndSettle(
+        duration ?? const Duration(milliseconds: 100),
+      );
     } finally {
       lock.release();
     }
@@ -60,7 +65,8 @@ class FlutterWidgetTester implements Tester {
     if (defaultTargetPlatform != TargetPlatform.android &&
         defaultTargetPlatform != TargetPlatform.iOS) {
       throw Exception(
-          "Full app screenshots are only available on Android and iOS.");
+        "Full app screenshots are only available on Android and iOS.",
+      );
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
       await _binding.convertFlutterSurfaceToImage();

@@ -4,9 +4,10 @@ import os
 import platform
 import tempfile
 from collections.abc import Iterable
+from enum import Enum
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import numpy as np
 from PIL import Image
@@ -14,11 +15,27 @@ from skimage.metrics import structural_similarity as ssim
 
 import flet as ft
 from flet.controls.control import Control
+from flet.testing.remote_tester import RemoteTester
 from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
-__all__ = ["FletTestApp"]
+__all__ = ["FletTestApp", "FletTestMode"]
+
+
+class FletTestMode(Enum):
+    FLET = "flet"
+    REMOTE = "remote"
+
+    @classmethod
+    def from_value(cls, value: Union["FletTestMode", str]) -> "FletTestMode":
+        if isinstance(value, cls):
+            return value
+        try:
+            return cls(value.lower())
+        except ValueError as exc:
+            valid = ", ".join(mode.value for mode in cls)
+            raise ValueError(f"mode must be one of: {valid}") from exc
 
 
 class FletTestApp:
@@ -80,6 +97,13 @@ class FletTestApp:
             If `True`, do not invoke `fvm` when running the Flutter test
             process. Env override: `FLET_TEST_DISABLE_FVM=1`.
 
+        mode:
+            Testing mode selector. `FletTestMode.FLET` (default) launches the
+            Python Flet app and communicates over the Flet protocol.
+            `FletTestMode.REMOTE` skips the Flet app and drives the Flutter
+            test harness through the remote tester bridge. Env override:
+            `FLET_TEST_MODE`.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -89,6 +113,8 @@ class FletTestApp:
             Overrides `screenshots_similarity_threshold`.
         - `FLET_TEST_USE_HTTP`: Enables HTTP transport when set to `1`.
         - `FLET_TEST_DISABLE_FVM`: Disables `fvm` usage when set to `1`.
+        - `FLET_TEST_MODE`: Overrides :param:`mode`.
+        - `FLET_TEST_SERVER_HOST`: Host interface to bind the remote tester server to.
     """
 
     def __init__(
@@ -105,6 +131,7 @@ class FletTestApp:
         screenshots_similarity_threshold: float = 99.0,
         use_http: bool = False,
         disable_fvm: bool = False,
+        mode: FletTestMode = FletTestMode.FLET,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -121,6 +148,10 @@ class FletTestApp:
             )
         )
         self.__disable_fvm = get_bool_env_var("FLET_TEST_DISABLE_FVM") or disable_fvm
+        self.__mode = FletTestMode.from_value(mode)
+        env_mode = os.getenv("FLET_TEST_MODE")
+        if env_mode:
+            self.__mode = FletTestMode.from_value(env_mode)
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
@@ -129,7 +160,8 @@ class FletTestApp:
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
-        self.__tester = None
+        self.__tester: Optional[Union[Tester, RemoteTester]] = None
+        self.__remote_server_host = os.getenv("FLET_TEST_SERVER_HOST", "127.0.0.1")
 
     @property
     def page(self) -> ft.Page:
@@ -137,14 +169,15 @@ class FletTestApp:
         Returns an instance of Flet's app [`Page`][flet.].
         """
         if self.__page is None:
-            raise RuntimeError("page is not initialized")
+            raise RuntimeError(
+                "page is not initialized (available only when running in 'flet' mode)"
+            )
         return self.__page
 
     @property
-    def tester(self) -> Tester:
+    def tester(self) -> Union[Tester, RemoteTester]:
         """
-        Returns an instance of [`Tester`][flet.testing.] class
-        that programmatically interacts with page controls and the test environment.
+        Returns the active tester implementation.
         """
         if self.__tester is None:
             raise RuntimeError("tester is not initialized")
@@ -155,33 +188,49 @@ class FletTestApp:
         Starts Flet app and Flutter integration test process.
         """
 
-        ready = asyncio.Event()
+        ready: Optional[asyncio.Event] = None
 
-        async def main(page: ft.Page):
-            self.__page = page
-            self.__tester = Tester()
-            page.theme_mode = ft.ThemeMode.LIGHT
-            page.update()
+        if self.__mode is FletTestMode.FLET:
+            ready = asyncio.Event()
 
-            if asyncio.iscoroutinefunction(self.__flet_app_main):
-                await self.__flet_app_main(page)
-            elif callable(self.__flet_app_main):
-                self.__flet_app_main(page)
-            await self.__tester.pump_and_settle()
-            ready.set()
+            async def main(page: ft.Page):
+                self.__page = page
+                self.__tester = Tester()
+                page.theme_mode = ft.ThemeMode.LIGHT
+                page.update()
 
-        if not self.__tcp_port:
-            self.__tcp_port = get_free_tcp_port()
+                if asyncio.iscoroutinefunction(self.__flet_app_main):
+                    await self.__flet_app_main(page)
+                elif callable(self.__flet_app_main):
+                    self.__flet_app_main(page)
+                await self.__tester.pump_and_settle()
+                ready.set()
 
-        if self.__use_http:
-            os.environ["FLET_FORCE_WEB_SERVER"] = "true"
+            if not self.__tcp_port:
+                self.__tcp_port = get_free_tcp_port()
 
-        asyncio.create_task(
-            ft.run_async(
-                main, port=self.__tcp_port, assets_dir=str(self.__assets_dir), view=None
+            if self.__use_http:
+                os.environ["FLET_FORCE_WEB_SERVER"] = "true"
+
+            asyncio.create_task(
+                ft.run_async(
+                    main,
+                    port=self.__tcp_port,
+                    assets_dir=str(self.__assets_dir),
+                    view=None,
+                )
             )
-        )
-        print("Started Flet app")
+            print("Started Flet app")
+        else:
+            remote_tester = RemoteTester()
+            self.__tcp_port = await remote_tester.start(
+                host=self.__remote_server_host, port=self.__tcp_port
+            )
+            self.__tester = remote_tester
+            print(
+                "Started remote tester bridge "
+                f"on {self.__remote_server_host}:{self.__tcp_port}"
+            )
 
         stdout = asyncio.subprocess.DEVNULL
         stderr = asyncio.subprocess.DEVNULL
@@ -205,21 +254,25 @@ class FletTestApp:
             self.test_device = self.test_platform
 
         tcp_addr = "10.0.2.2" if self.test_platform == "android" else "127.0.0.1"
-        protocol = "http" if self.__use_http else "tcp"
 
         if self.test_device:
             flutter_args += ["-d", self.test_device]
 
-        app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
-        flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
+        if self.__mode is FletTestMode.FLET:
+            protocol = "http" if self.__use_http else "tcp"
+            app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
+            flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
 
-        if not self.__use_http:
-            temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
-            flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
-            if self.__assets_dir:
-                flutter_args += [
-                    f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
-                ]
+            if not self.__use_http:
+                temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+                flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
+                if self.__assets_dir:
+                    flutter_args += [
+                        f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
+                    ]
+        else:
+            server_url = f"tcp://{tcp_addr}:{self.__tcp_port}"
+            flutter_args += [f"--dart-define=FLET_TEST_SERVER_URL={server_url}"]
 
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
@@ -229,9 +282,20 @@ class FletTestApp:
         )
 
         print("Started Flutter test process.")
-        print("Waiting for a Flet client to connect...")
+        if self.__mode is FletTestMode.FLET:
+            print("Waiting for a Flet client to connect...")
+        else:
+            print("Waiting for Flutter app to connect to remote tester...")
 
-        while not ready.is_set():
+        while True:
+            if self.__mode is FletTestMode.FLET:
+                assert ready is not None
+                if ready.is_set():
+                    break
+            else:
+                assert isinstance(self.__tester, RemoteTester)
+                if self.__tester.is_connected():
+                    break
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
@@ -244,7 +308,11 @@ class FletTestApp:
         Teardown Flutter integration test process.
         """
 
-        await self.tester.teardown()
+        try:
+            await self.tester.teardown()
+        finally:
+            if isinstance(self.__tester, RemoteTester):
+                await self.__tester.stop()
 
         if self.__flutter_process:
             print("\nWaiting for Flutter test process to exit...")

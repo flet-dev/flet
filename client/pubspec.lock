@@ -313,6 +313,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  flet_integration_test:
+    dependency: "direct dev"
+    description:
+      path: "../packages/flet_integration_test"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_lottie:
     dependency: "direct main"
     description:

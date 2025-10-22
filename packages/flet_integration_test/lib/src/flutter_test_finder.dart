@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 class FlutterTestFinder extends TestFinder {
   final Finder finder;
 
-  FlutterTestFinder(this.finder) : super();
+  FlutterTestFinder(this.finder);
 
   @override
   int get count => finder.evaluate().length;

@@ -86,6 +86,8 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flet_integration_test:
+    path: ../packages/flet_integration_test
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
