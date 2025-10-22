@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flet/flet.dart';
+import 'package:flet_integration_test/src/chunked_line_decoder.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -42,25 +43,25 @@ class RemoteWidgetTester extends FlutterWidgetTester {
   }
 
   void _startListening() {
-    final lines = utf8.decoder.bind(_socket).transform(const LineSplitter());
-    _subscription = lines.listen(
-      (line) {
-        _commandQueue = _commandQueue.then((_) => _processLine(line));
-      },
-      onError: (error, stackTrace) {
-        if (!_connectionClosed.isCompleted) {
-          _connectionClosed.completeError(error, stackTrace);
-        }
-        _closeSilently();
-      },
-      onDone: () {
-        _closeSilently();
-        if (!_connectionClosed.isCompleted) {
-          _connectionClosed.complete();
-        }
-      },
-      cancelOnError: true,
-    );
+    final stream = _socket
+        .transform(const ChunkedLineDecoder(maxLineLength: 16 * 1024 * 1024));
+    _subscription = stream.listen(null, onError: (error, stackTrace) {
+      if (!_connectionClosed.isCompleted) {
+        _connectionClosed.completeError(error, stackTrace);
+      }
+      _closeSilently();
+    }, onDone: () {
+      _closeSilently();
+      if (!_connectionClosed.isCompleted) {
+        _connectionClosed.complete();
+      }
+    }, cancelOnError: true);
+    _subscription!.onData((line) {
+      _subscription?.pause();
+      final Future<void> pending = _processLine(line);
+      _commandQueue = _commandQueue.then((_) => pending);
+      pending.whenComplete(() => _subscription?.resume());
+    });
   }
 
   Future<void> _processLine(String line) async {

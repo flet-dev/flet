@@ -82,21 +82,38 @@ class RemoteTester:
 
     async def _read_loop(self):
         assert self._reader is not None
+        buffer = bytearray()
+        max_line_length = 16 * 1024 * 1024
         while True:
-            line = await self._reader.readline()
-            if not line:
+            chunk = await self._reader.read(4096)
+            if not chunk:
+                if buffer:
+                    message = json.loads(buffer.decode("utf-8"))
+                    self._dispatch_message(message)
                 break
-            message = json.loads(line.decode("utf-8"))
-            request_id = message.get("id")
-            future = self._pending.pop(request_id, None)
-            if future is None:
-                continue
-            if "error" in message:
-                future.set_exception(
-                    RemoteTesterError(message["error"], message.get("stack"))
-                )
-            else:
-                future.set_result(message.get("result"))
+            buffer.extend(chunk)
+            while True:
+                newline_index = buffer.find(b"\n")
+                if newline_index == -1:
+                    if len(buffer) > max_line_length:
+                        raise ValueError("Incoming message exceeds allowed size.")
+                    break
+                line = buffer[:newline_index]
+                del buffer[: newline_index + 1]
+                message = json.loads(line.decode("utf-8"))
+                self._dispatch_message(message)
+
+    def _dispatch_message(self, message: Any):
+        request_id = message.get("id")
+        future = self._pending.pop(request_id, None)
+        if future is None:
+            return
+        if "error" in message:
+            future.set_exception(
+                RemoteTesterError(message["error"], message.get("stack"))
+            )
+        else:
+            future.set_result(message.get("result"))
 
     def _cleanup_connection(self):
         for future in self._pending.values():

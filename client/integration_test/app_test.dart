@@ -47,10 +47,13 @@ void main() {
 
       app.main(args);
 
-      await Future.delayed(const Duration(milliseconds: 500));
-      await widgetTester?.pump(duration: const Duration(seconds: 1));
-      await widgetTester?.pumpAndSettle(
-          duration: const Duration(milliseconds: 100));
+      if (testerServerUrl.isEmpty) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        await widgetTester?.pump(duration: const Duration(seconds: 1));
+        await widgetTester?.pumpAndSettle(
+          duration: const Duration(milliseconds: 100),
+        );
+      }
       await widgetTester?.waitForTeardown();
     });
   });
