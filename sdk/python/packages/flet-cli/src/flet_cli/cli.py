@@ -1,5 +1,6 @@
 import argparse
 import sys
+from typing import Optional
 
 import flet.version
 import flet_cli.commands.build
@@ -14,8 +15,11 @@ from flet.version import update_version
 
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(
-    parser: argparse.ArgumentParser, name: str, args: list = None, index: int = 0
-):
+    parser: argparse.ArgumentParser,
+    name: str,
+    args: Optional[list[str]] = None,
+    index: int = 0,
+) -> list[str]:
     """
     Set a default subparser when no subparser is provided.
     This should be called after setting up the argument parser but before
@@ -28,9 +32,12 @@ def set_default_subparser(
             inserted.
     """
 
+    mutate_sys_argv = args is None
+    current_args = list(sys.argv[1:] if mutate_sys_argv else args)
+
     # exit if help or version flags are present
-    if any(flag in sys.argv[1:] for flag in {"-h", "--help", "-V", "--version"}):
-        return
+    if any(flag in current_args for flag in {"-h", "--help", "-V", "--version"}):
+        return current_args
 
     # all subparser actions
     subparser_actions = [
@@ -45,22 +52,27 @@ def set_default_subparser(
     ]
 
     # if an existing subparser is provided, skip setting a default
-    if any(arg in subparser_names for arg in sys.argv[1:]):
-        return
+    if any(arg in subparser_names for arg in current_args):
+        return current_args
 
     # if the default subparser doesn't exist, register it in the first subparser action
     if (name not in subparser_names) and subparser_actions:
         subparser_actions[0].add_parser(name)
 
     # insert the default subparser into the appropriate argument list
-    if args is None:
-        if len(sys.argv) > 1:
-            sys.argv.insert(index, name)
-    else:
-        args.insert(index, name)
+    current_args.insert(index, name)
+
+    if mutate_sys_argv:
+        sys.argv = [sys.argv[0], *current_args]
+
+    return current_args
 
 
 def main():
+    sys.exit(run())
+
+
+def _create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--version",
@@ -81,19 +93,29 @@ def main():
         sp, "doctor"
     )  # Register the doctor command
 
+    return parser
+
+
+def run(args: Optional[list[str]] = None) -> int:
+    parser = _create_parser()
+
+    argv = list(args) if args is not None else list(sys.argv[1:])
+
     # set "run" as the default subparser
-    set_default_subparser(parser, name="run", index=1)
+    argv = set_default_subparser(parser, name="run", args=argv, index=0)
 
     # print usage/help if called without arguments
-    if len(sys.argv) == 1:
+    if not argv:
         parser.print_help(sys.stdout)
-        sys.exit(1)
+        return 1
 
     # parse arguments
-    args = parser.parse_args()
+    namespace = parser.parse_args(argv)
 
     # execute command
-    args.handler(args)
+    namespace.handler(namespace)
+
+    return 0
 
 
 if __name__ == "__main__":
