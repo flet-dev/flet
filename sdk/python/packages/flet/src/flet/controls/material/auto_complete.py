@@ -29,7 +29,7 @@ class AutoCompleteSelectEvent(Event["AutoComplete"]):
     index: int
     """
     The index of the selected suggestion from the corresponding
-    [`AutoCompletesuggestions`][flet.] list.
+    [`AutoComplete.suggestions`][flet.] list.
     """
 
     selection: AutoCompleteSuggestion
