@@ -53,7 +53,7 @@ Context:
             {% set ns = namespace(props=[], events=[]) %}
             {% for attribute in ordered %}
               {% if config.filters == "public" or members_list is not none or (not attribute.is_imported or attribute.is_public) %}
-                {% if attribute.name.startswith("on_") %}
+                {% if attribute.name.startswith('on_') and (config.extra.events is not defined or (config.extra.events and attribute.name in config.extra.events)) %}
                   {% set _ = ns.events.append(attribute) %}
                 {% else %}
                   {% set _ = ns.props.append(attribute) %}
