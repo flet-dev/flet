@@ -5,7 +5,6 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
@@ -91,11 +90,9 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           destinations:
               widget.control.children("destinations").map((destinationControl) {
             destinationControl.notifyParent = true;
-            var icon = destinationControl.buildWidget("icon") ??
-                Icon(destinationControl.getIconData("icon"));
-            var selectedIcon =
-                destinationControl.buildWidget("selected_icon") ??
-                    Icon(destinationControl.getIconData("selected_icon"));
+            var icon = destinationControl.buildIconOrWidget("icon")!;
+            Widget? selectedIcon =
+                destinationControl.buildIconOrWidget("selected_icon");
             return NavigationRailDestination(
                 disabled: disabled || destinationControl.disabled,
                 padding: destinationControl.getPadding("padding"),
