@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
+from flet.controls.animation import AnimationStyle
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
@@ -11,6 +12,8 @@ from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
 from flet.controls.geometry import Size
 from flet.controls.margin import MarginValue
+from flet.controls.material.expansion_tile import TileAffinity
+from flet.controls.material.list_tile import ListTileStyle, ListTileTitleAlignment
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.navigation_bar import NavigationBarLabelBehavior
 from flet.controls.material.navigation_rail import NavigationRailLabelType
@@ -2351,6 +2354,24 @@ class ListTileTheme:
     [`ListTile.min_height`][flet.].
     """
 
+    affinity: Optional[TileAffinity] = None
+    """
+    Overrides the default value for
+    [`ExpansionTile.affinity`][flet.].
+    """
+
+    style: Optional[ListTileStyle] = None
+    """
+    Overrides the default value for
+    [`ListTile.style`][flet.].
+    """
+
+    title_alignment: Optional[ListTileTitleAlignment] = None
+    """
+    Overrides the default value for
+    [`ListTile.title_alignment`][flet.].
+    """
+
 
 @dataclass
 class TooltipTheme:
@@ -2502,6 +2523,23 @@ class ExpansionTileTheme:
     """
     Overrides the default value for
     [`ExpansionTile.controls_padding`][flet.].
+    """
+
+    shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for [`ExpansionTile.shape`][flet.].
+    """
+
+    collapsed_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for
+    [`ExpansionTile.collapsed_shape`][flet.].
+    """
+
+    animation_style: Optional[AnimationStyle] = None
+    """
+    Overrides the default value for
+    [`ExpansionTile.animation_style`][flet.].
     """
 
 

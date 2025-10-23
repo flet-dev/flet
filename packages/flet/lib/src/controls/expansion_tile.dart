@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -39,8 +40,8 @@ class _ExpansionTileControlState extends State<ExpansionTileControl> {
     super.dispose();
   }
 
-  /// Schedules an update to the controller after the current frame.
-  /// This ensures the expansion/collapse animation is triggered safely.
+  // Schedules an update to the controller after the current frame.
+  // This ensures the expansion/collapse animation is triggered safely.
   void _scheduleControllerUpdate(bool expanded) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return; // Prevents updates if the widget is disposed.
@@ -51,12 +52,6 @@ class _ExpansionTileControlState extends State<ExpansionTileControl> {
         _controller.collapse();
       }
     });
-  }
-
-  void _handleExpansionChanged(bool expanded) {
-    _expanded = expanded;
-    widget.control.updateProperties({"expanded": expanded});
-    widget.control.triggerEvent("change", expanded);
   }
 
   @override
@@ -79,15 +74,14 @@ class _ExpansionTileControlState extends State<ExpansionTileControl> {
         "expanded_cross_axis_alignment", CrossAxisAlignment.center)!;
     if (expandedCrossAxisAlignment == CrossAxisAlignment.baseline) {
       return const ErrorControl(
-          'CrossAxisAlignment.baseline is not supported since the expanded '
+          'CrossAxisAlignment.BASELINE is not supported since the expanded '
           'controls are aligned in a column, not a row. '
           'Try aligning the controls differently.');
     }
 
     final tile = ExpansionTile(
       controller: _controller,
-      controlAffinity: widget.control.getListTileControlAffinity(
-          "affinity", ListTileControlAffinity.platform)!,
+      controlAffinity: widget.control.getListTileControlAffinity("affinity"),
       childrenPadding: widget.control.getPadding("controls_padding"),
       tilePadding: widget.control.getEdgeInsets("tile_padding"),
       expandedAlignment: widget.control.getAlignment("expanded_alignment"),
@@ -107,14 +101,19 @@ class _ExpansionTileControlState extends State<ExpansionTileControl> {
       shape: widget.control.getShape("shape", Theme.of(context)),
       collapsedShape:
           widget.control.getShape("collapsed_shape", Theme.of(context)),
-      onExpansionChanged:
-          !widget.control.disabled ? _handleExpansionChanged : null,
+      onExpansionChanged: (bool expanded) {
+        _expanded = expanded;
+        widget.control.updateProperties({"expanded": expanded});
+        widget.control.triggerEvent("change", expanded);
+      },
       visualDensity: widget.control.getVisualDensity("visual_density"),
       enableFeedback: widget.control.getBool("enable_feedback"),
       showTrailingIcon: widget.control.getBool("show_trailing_icon", true)!,
       enabled: !widget.control.disabled,
       minTileHeight: widget.control.getDouble("min_tile_height"),
       dense: widget.control.getBool("dense"),
+      expansionAnimationStyle:
+          widget.control.getAnimationStyle("animation_style"),
       leading: widget.control.buildIconOrWidget("leading"),
       title: title,
       subtitle: widget.control.buildTextOrWidget("subtitle"),

@@ -21,12 +21,12 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     ```python
     ft.CupertinoSlidingSegmentedButton(
+        selected_index=1,
         controls=[
             ft.Text("One"),
             ft.Text("Two"),
             ft.Text("Three"),
         ],
-        selected_index=1,
     )
     ```
     """

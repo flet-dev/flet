@@ -36,15 +36,13 @@ class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
           "thumb_color",
           context,
           const CupertinoDynamicColor.withBrightness(
-            color: Color(0xFFFFFFFF),
-            darkColor: Color(0xFF636366),
-          ))!,
+              color: Color(0xFFFFFFFF), darkColor: Color(0xFF636366)))!,
       children: controls.asMap().map((i, c) => MapEntry(i, c)),
       onValueChanged: (int? index) {
         if (!control.disabled) {
-          control
-              .updateProperties({"selected_index": index ?? 0}, notify: true);
-          control.triggerEvent("change", index ?? 0);
+          index = index ?? 0;
+          control.updateProperties({"selected_index": index}, notify: true);
+          control.triggerEvent("change", index);
         }
       },
     );
