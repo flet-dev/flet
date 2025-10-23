@@ -84,10 +84,12 @@ class _SearchBarControlState extends State<SearchBarControl> {
           _updateValue(text);
           _controller.closeView(text);
         }
+        break;
       case "open_view":
         if (!_controller.isOpen) {
           _controller.openView();
         }
+        break;
       case "focus":
         _focusNode.requestFocus();
       default:

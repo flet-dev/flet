@@ -1,10 +1,10 @@
 ---
 class_name: flet.TimePicker
 examples: ../../examples/controls/time_picker
-example_images: ../examples/controls/time_picker/media
+example_images: ../test-images/examples/material/golden/macos/time_picker
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Time picker") }}
 
 ## Examples
 

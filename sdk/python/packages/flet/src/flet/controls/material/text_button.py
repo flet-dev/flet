@@ -22,6 +22,14 @@ class TextButton(LayoutControl, AdaptiveControl):
     Text buttons are used for the lowest priority actions, especially when presenting
     multiple options. Text buttons can be placed on a variety of backgrounds. Until the
     button is interacted with, its container isn’t visible.
+
+    ```python
+    ft.TextButton(
+            content="Text Button",
+            icon=ft.Icons.STAR_BORDER,
+            icon_color=ft.Colors.BLUE_300,
+        )
+    ```
     """
 
     content: Optional[StrOrControl] = None

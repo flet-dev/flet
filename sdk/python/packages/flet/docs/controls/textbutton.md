@@ -1,10 +1,10 @@
 ---
 class_name: flet.TextButton
 examples: ../../examples/controls/text_button
-example_images: ../examples/controls/text_button/media
+example_images: ../test-images/examples/material/golden/macos/text_button
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Simple text button") }}
 
 ## Examples
 
@@ -34,7 +34,7 @@ example_images: ../examples/controls/text_button/media
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+{{ image(example_images + "/handling_clicks.png", alt="handling-clicks", width="80%") }}
 
 
 ### Custom content

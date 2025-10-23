@@ -1,4 +1,5 @@
 import flet as ft
+from datetime import time
 
 
 def main(page: ft.Page):
@@ -14,6 +15,7 @@ def main(page: ft.Page):
         page.add(ft.Text(f"TimePicker Entry mode changed to {e.entry_mode}"))
 
     time_picker = ft.TimePicker(
+        value=time(1, 2),
         confirm_text="Confirm",
         error_invalid_text="Time out of range",
         help_text="Pick your time slot",
@@ -31,4 +33,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
