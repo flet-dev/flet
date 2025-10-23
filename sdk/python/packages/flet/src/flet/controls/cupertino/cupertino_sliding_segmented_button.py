@@ -39,8 +39,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
         Must contain at least two visible Controls.
 
     Raises:
-        ValueError: If [`controls`][(c).] does not contain at least two
-            visible controls.
+        ValueError: If it does not contain at least two visible controls.
     """
 
     selected_index: int = 0
@@ -48,8 +47,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     The index (starting from 0) of the selected segment in the [`controls`][(c).] list.
 
     Raises:
-        IndexError: If [`selected_index`][(c).] is out of range relative to the
-            visible controls.
+        IndexError: If it is out of range relative to the visible controls.
     """
 
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL

@@ -19,14 +19,13 @@ class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
     debugPrint("CupertinoSlidingSegmentedButtonControl build: ${control.id}");
 
     var controls = control.buildWidgets("controls");
-
     if (controls.length < 2) {
       return const ErrorControl(
           "CupertinoSlidingSegmentedButton must have at minimum two visible controls");
     }
 
     var button = CupertinoSlidingSegmentedControl(
-      groupValue: control.getInt("selected_index"),
+      groupValue: control.getInt("selected_index", 0)!,
       proportionalWidth: control.getBool("proportional_width", false)!,
       backgroundColor: control.getColor(
           "bgcolor", context, CupertinoColors.tertiarySystemFill)!,
