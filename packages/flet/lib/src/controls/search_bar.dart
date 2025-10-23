@@ -82,16 +82,20 @@ class _SearchBarControlState extends State<SearchBarControl> {
           _updateValue(text);
           _controller.closeView(text);
         }
+        break;
       case "open_view":
         if (!_controller.isOpen) {
           _controller.openView();
         }
+        break;
       case "focus":
         _focusNode.requestFocus();
+        break;
       case "blur":
         // todo: test this method
         _focusNode.unfocus(
             disposition: UnfocusDisposition.previouslyFocusedChild);
+        break;
       default:
         throw Exception("Unknown SearchBar method: $name");
     }
