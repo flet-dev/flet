@@ -12,6 +12,7 @@ from .common import (
     LineChartData,
     LineChartDataPoint,
     MyText,
+    b_unpack,
     cmp_ops,
     make_diff,
     make_msg,
@@ -1253,3 +1254,52 @@ def test_list_move_11():
             },
         ],
     )
+
+
+def test_fields_start_with_on():
+    t1 = MyText("Text 1")
+    t2 = MyText(
+        "Text 2",
+        color_scheme=ft.ColorScheme(on_surface_variant=ft.Colors.RED),
+        on_select=lambda e: print("Selected"),
+    )
+    t1._frozen = True
+
+    msg, _, _, _, _ = make_msg(t2, t1, show_details=False)
+    u_msg = b_unpack(msg)
+
+    expected = [
+        [0],
+        [0, 0, "value", "Text 2"],
+        [0, 0, "color_scheme", {"on_surface_variant": "red"}],
+        [0, 0, "on_select", True],
+    ]
+
+    assert isinstance(u_msg, list)
+    assert u_msg == expected
+
+
+def test_fields_start_with_on_update():
+    t1 = MyText(
+        "Text 1",
+        color_scheme=ft.ColorScheme(on_surface_variant=ft.Colors.RED),
+        on_select=lambda e: print("Selected"),
+    )
+    t2 = MyText(
+        "Text 2",
+        color_scheme=ft.ColorScheme(on_surface_variant=ft.Colors.BLUE),
+    )
+    t1._frozen = True
+
+    msg, _, _, _, _ = make_msg(t2, t1, show_details=False)
+    u_msg = b_unpack(msg)
+
+    expected = [
+        [0, {"color_scheme": [1]}],
+        [0, 0, "value", "Text 2"],
+        [0, 1, "on_surface_variant", "blue"],
+        [0, 0, "on_select", False],
+    ]
+
+    assert isinstance(u_msg, list)
+    assert u_msg == expected
