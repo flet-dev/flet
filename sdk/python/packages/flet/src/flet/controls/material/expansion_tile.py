@@ -346,6 +346,6 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
         if self.expanded_cross_axis_alignment == CrossAxisAlignment.BASELINE:
             raise ValueError(
                 "expanded_cross_axis_alignment cannot be CrossAxisAlignment.BASELINE "
-                "is not supported since the expanded controls are aligned in a column, "
-                "not a row. Try aligning the controls differently."
+                "since the expanded controls are aligned in a column, not a row. "
+                "Try aligning the controls differently."
             )
