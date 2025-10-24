@@ -890,9 +890,8 @@ class DiffBuilder:
                     old = change[0]
                     new = change[1]
 
-                    if field_name.startswith("on_") and (
-                        "event" not in fields[field_name].metadata
-                        or fields[field_name].metadata["event"]
+                    if field_name.startswith("on_") and fields[field_name].metadata.get(
+                        "event", True
                     ):
                         old = old is not None
                         new = new is not None
@@ -970,8 +969,8 @@ class DiffBuilder:
                 if "skip" not in field.metadata:
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
-                    if field.name.startswith("on_") and (
-                        "event" not in field.metadata or field.metadata["event"]
+                    if field.name.startswith("on_") and field.metadata.get(
+                        "event", True
                     ):
                         old = old is not None
                         new = new is not None
