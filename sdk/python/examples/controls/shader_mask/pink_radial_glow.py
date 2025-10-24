@@ -6,7 +6,7 @@ def main(page: ft.Page):
         ft.Row(
             controls=[
                 ft.Image(
-                    src="https://picsum.photos/300/300?1",
+                    src="https://picsum.photos/id/288/300/300",
                     width=300,
                     height=300,
                     fit=ft.BoxFit.FILL,
@@ -20,7 +20,7 @@ def main(page: ft.Page):
                         tile_mode=ft.GradientTileMode.CLAMP,
                     ),
                     content=ft.Image(
-                        src="https://picsum.photos/300/300?1",
+                        src="https://picsum.photos/id/288/300/300",
                         width=300,
                         height=300,
                         fit=ft.BoxFit.FILL,

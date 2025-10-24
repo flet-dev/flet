@@ -14,9 +14,9 @@ def main(page: ft.Page):
                         tile_mode=ft.GradientTileMode.CLAMP,
                     ),
                     content=ft.Image(
-                        src="https://picsum.photos/200/300?1",
-                        width=400,
-                        height=400,
+                        src="https://picsum.photos/id/288/300/300",
+                        width=300,
+                        height=300,
                         fit=ft.BoxFit.FILL,
                     ),
                 ),
@@ -28,7 +28,7 @@ def main(page: ft.Page):
                         colors=[ft.Colors.BLACK, ft.Colors.TRANSPARENT],
                         stops=[0.5, 1.0],
                     ),
-                    content=ft.Image(src="https://picsum.photos/200/300?2"),
+                    content=ft.Image(src="https://picsum.photos/id/288/300/300"),
                 ),
             ]
         )

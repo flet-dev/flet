@@ -6,7 +6,7 @@ def main(page: ft.Page):
         ft.Row(
             controls=[
                 ft.ShaderMask(
-                    content=ft.Image(src="https://picsum.photos/200/200?2"),
+                    content=ft.Image(src="https://picsum.photos/id/288/300/300"),
                     blend_mode=ft.BlendMode.DST_IN,
                     border_radius=10,
                     shader=ft.LinearGradient(
