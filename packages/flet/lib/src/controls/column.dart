@@ -57,6 +57,7 @@ class ColumnControl extends StatelessWidget {
     child = ScrollableControl(
       control: control,
       scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
+      wrapIntoScrollableView: true,
       child: child,
     );
 

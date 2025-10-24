@@ -79,14 +79,31 @@ class _ListViewControlState extends State<ListViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 semanticChildCount: semanticChildCount,
-                itemExtent: itemExtent,
-                prototypeItem: prototypeItem,
-                children: controls
-                    .map((item) => ControlWidget(
-                          key: ValueKey(item.getKey("key")?.value ?? item.id),
-                          control: item,
-                        ))
-                    .toList(),
+                itemExtent: spacing > 0 ? null : itemExtent,
+                prototypeItem: spacing > 0 ? null : prototypeItem,
+                children: () {
+                  final childWidgets = <Widget>[];
+                  for (var index = 0; index < controls.length; index++) {
+                    final item = controls[index];
+                    childWidgets.add(ControlWidget(
+                      key: ValueKey(item.getKey("key")?.value ?? item.id),
+                      control: item,
+                    ));
+                    if (spacing > 0 && index < controls.length - 1) {
+                      childWidgets.add(horizontal
+                          ? dividerThickness == 0
+                              ? SizedBox(width: spacing)
+                              : VerticalDivider(
+                                  width: spacing, thickness: dividerThickness)
+                          : dividerThickness == 0
+                              ? SizedBox(height: spacing)
+                              : Divider(
+                                  height: spacing,
+                                  thickness: dividerThickness));
+                    }
+                  }
+                  return childWidgets;
+                }(),
               )
             : spacing > 0
                 ? ListView.separated(
