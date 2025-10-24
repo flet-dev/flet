@@ -155,7 +155,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     Setting this property visually updates the field's selection to match the given
     value, and hence leads to the [`on_selection_change`][(c).] event being triggered.
     To ensure the selection is visible and the event is fired, the text field must
-    be focused. Call [`focus()`][(c).] on the field before setting this property.
+    be focused. Call [`focus()`][(c).focus] on the field before setting this property.
     """
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
