@@ -19,5 +19,16 @@ example_media: ../examples/controls/cupertino_text_field/media
 
 {{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
 
+### Handling selection changes
+
+```python
+--8<-- "{{ examples }}/selection_change.py"
+```
+
+### Background image
+
+```python
+--8<-- "{{ examples }}/background_image.py"
+```
 
 {{ class_members(class_name) }}

@@ -132,7 +132,7 @@ plugins:
             show_source: false
             group_by_category: true
             show_category_heading: true
-            show_labels: false
+            show_labels: true
             show_if_no_docstring: true
             docstring_section_style: list
             separate_signature: true

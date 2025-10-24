@@ -28,7 +28,7 @@ class Marker(ft.Control):
     The coordinates of the marker.
 
     This will be the center of the marker,
-    if [`alignment`][(c).] is [`Alignment.CENTER`][flet.Alignment.].
+    if [`alignment`][(c).] is [`Alignment.CENTER`][flet.].
     """
 
     rotate: Optional[bool] = None
