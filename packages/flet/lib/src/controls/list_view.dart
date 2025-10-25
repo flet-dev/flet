@@ -56,10 +56,11 @@ class _ListViewControlState extends State<ListViewControl> {
         widget.control.getBool("build_controls_on_demand", true)!;
     var firstItemPrototype =
         widget.control.getBool("first_item_prototype", false)!;
-    var prototypeItem = firstItemPrototype
-        ? widget.control.buildWidget("prototype_item")
-        : null;
     var controls = widget.control.children("controls");
+    var prototypeItem = widget.control.buildWidget("prototype_item") ??
+        (firstItemPrototype && controls.isNotEmpty
+            ? ControlWidget(control: controls.first)
+            : null);
 
     Widget listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
