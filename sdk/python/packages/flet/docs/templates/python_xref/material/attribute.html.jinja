@@ -18,7 +18,7 @@ Context:
   {{ log.debug("Rendering " + attribute.path) }}
 {% endblock logs %}
 
-{% set attr_class_name = "doc-symbol-event" if attribute.name.startswith('on_') else "doc-symbol-attribute" %}
+{% set attr_class_name = "doc-symbol-event" if attribute.name.startswith('on_') and (config.extra.events is not defined or (config.extra.events and attribute.name in config.extra.events)) else "doc-symbol-attribute" %}
 
 <div class="doc doc-object doc-attribute">
   {% with obj = attribute, html_id = attribute.path %}

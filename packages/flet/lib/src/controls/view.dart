@@ -76,8 +76,6 @@ class _ViewControlState extends State<ViewControl> {
         if (_popCompleter != null && !_popCompleter!.isCompleted) {
           _popCompleter?.complete(args["should_pop"]);
         }
-      default:
-        throw Exception("Unknown View method: $name");
     }
   }
 
@@ -130,7 +128,11 @@ class _ViewControlState extends State<ViewControl> {
             .toList());
 
     Widget child = ScrollableControl(
-        control: control, scrollDirection: Axis.vertical, child: column);
+      control: control,
+      scrollDirection: Axis.vertical,
+      wrapIntoScrollableView: true,
+      child: column,
+    );
 
     if (control.getBool("on_scroll", false)!) {
       child = ScrollNotificationControl(control: control, child: child);
