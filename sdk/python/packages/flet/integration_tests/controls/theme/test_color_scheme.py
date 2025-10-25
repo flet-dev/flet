@@ -64,9 +64,8 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
         )
     )
 
-    flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 500
-    flet_app.page.window.height = 300
+    flet_app.page.window.height = 500
     flet_app.page.scroll = ft.ScrollMode.HIDDEN
 
     def swatch(label: str, fill_color: str, text_color: str) -> ft.Container:
@@ -93,217 +92,248 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
             padding=10,
         )
 
-    primary_palette = ft.Row(
-        key=ft.ScrollKey("primary_palette"),
-        wrap=True,
-        controls=[
-            swatch("Primary", ft.Colors.PRIMARY, ft.Colors.ON_PRIMARY),
-            swatch(
-                "Primary Ctr",
-                ft.Colors.PRIMARY_CONTAINER,
-                ft.Colors.ON_PRIMARY_CONTAINER,
-            ),
-            swatch("Primary Fix", ft.Colors.PRIMARY_FIXED, ft.Colors.ON_PRIMARY_FIXED),
-            swatch(
-                "Primary Dim", ft.Colors.PRIMARY_FIXED_DIM, ft.Colors.ON_PRIMARY_FIXED
-            ),
-        ],
-    )
-
-    secondary_palette = ft.Row(
-        key=ft.ScrollKey("secondary_palette"),
-        wrap=True,
-        controls=[
-            swatch("Secondary", ft.Colors.SECONDARY, ft.Colors.ON_SECONDARY),
-            swatch(
-                "Secondary Ctr",
-                ft.Colors.SECONDARY_CONTAINER,
-                ft.Colors.ON_SECONDARY_CONTAINER,
-            ),
-            swatch(
-                "Secondary Fix", ft.Colors.SECONDARY_FIXED, ft.Colors.ON_SECONDARY_FIXED
-            ),
-            swatch(
-                "Secondary Dim",
-                ft.Colors.SECONDARY_FIXED_DIM,
-                ft.Colors.ON_SECONDARY_FIXED,
-            ),
-        ],
-    )
-
-    tertiary_palette = ft.Row(
-        key=ft.ScrollKey("tertiary_palette"),
-        wrap=True,
-        controls=[
-            swatch("Tertiary", ft.Colors.TERTIARY, ft.Colors.ON_TERTIARY),
-            swatch(
-                "Tertiary Ctr",
-                ft.Colors.TERTIARY_CONTAINER,
-                ft.Colors.ON_TERTIARY_CONTAINER,
-            ),
-            swatch(
-                "Tertiary Fix", ft.Colors.TERTIARY_FIXED, ft.Colors.ON_TERTIARY_FIXED
-            ),
-            swatch(
-                "Tertiary Dim",
-                ft.Colors.TERTIARY_FIXED_DIM,
-                ft.Colors.ON_TERTIARY_FIXED,
-            ),
-        ],
-    )
-
-    surface_palette = ft.Row(
-        key=ft.ScrollKey("surface_roles"),
-        wrap=True,
-        controls=[
-            swatch("Surface", ft.Colors.SURFACE, ft.Colors.ON_SURFACE),
-            swatch("Surface Br", ft.Colors.SURFACE_BRIGHT, ft.Colors.ON_SURFACE),
-            swatch("Surface Dim", ft.Colors.SURFACE_DIM, ft.Colors.ON_SURFACE),
-            swatch("Surface Tint", ft.Colors.SURFACE_TINT, ft.Colors.ON_SURFACE),
-            swatch("Container", ft.Colors.SURFACE_CONTAINER, ft.Colors.ON_SURFACE),
-            swatch("Ctr High", ft.Colors.SURFACE_CONTAINER_HIGH, ft.Colors.ON_SURFACE),
-            swatch(
-                "Ctr Highest", ft.Colors.SURFACE_CONTAINER_HIGHEST, ft.Colors.ON_SURFACE
-            ),
-            swatch("Ctr Low", ft.Colors.SURFACE_CONTAINER_LOW, ft.Colors.ON_SURFACE),
-            swatch(
-                "Ctr Lowest", ft.Colors.SURFACE_CONTAINER_LOWEST, ft.Colors.ON_SURFACE
-            ),
-        ],
-    )
-
-    accents_palette = ft.Row(
-        key=ft.ScrollKey("accents_palette"),
-        wrap=True,
-        controls=[
-            swatch("Inverse", ft.Colors.INVERSE_SURFACE, ft.Colors.ON_INVERSE_SURFACE),
-            swatch(
-                "Inverse Pri", ft.Colors.INVERSE_PRIMARY, ft.Colors.ON_INVERSE_SURFACE
-            ),
-            swatch("Scrim", ft.Colors.SCRIM, ft.Colors.ON_INVERSE_SURFACE),
-            swatch("Outline", ft.Colors.OUTLINE, ft.Colors.ON_SURFACE_VARIANT),
-            swatch("Outline Var", ft.Colors.OUTLINE_VARIANT, ft.Colors.ON_SURFACE),
-            swatch("Error", ft.Colors.ERROR, ft.Colors.ON_ERROR),
-            swatch(
-                "Error Ctr", ft.Colors.ERROR_CONTAINER, ft.Colors.ON_ERROR_CONTAINER
-            ),
-        ],
-    )
-
-    buttons_row_1 = ft.Row(
-        controls=[
-            ft.FilledButton(
-                "Primary button",
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=14),
-                    padding=ft.Padding.symmetric(horizontal=24, vertical=12),
-                ),
-            ),
-            ft.FilledTonalButton(
-                "Tonal secondary",
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=14),
-                    padding=ft.Padding.symmetric(horizontal=20, vertical=12),
-                ),
-            ),
-            ft.OutlinedButton(
-                "Surface variant",
-                style=ft.ButtonStyle(
-                    side=ft.BorderSide(width=2, color=ft.Colors.OUTLINE),
-                    shape=ft.RoundedRectangleBorder(radius=14),
-                    padding=ft.Padding.symmetric(horizontal=20, vertical=12),
-                ),
-            ),
-        ],
-    )
-
-    buttons_row_2 = ft.Row(
-        controls=[
-            ft.TextButton(
-                "Tertiary text",
-                style=ft.ButtonStyle(
-                    color=ft.Colors.TERTIARY,
-                    overlay_color=ft.Colors.TERTIARY_CONTAINER,
-                    shape=ft.RoundedRectangleBorder(radius=14),
-                ),
-            ),
-            ft.IconButton(
-                icon=ft.Icons.FAVORITE,
-                icon_color=ft.Colors.ON_TERTIARY_CONTAINER,
-                style=ft.ButtonStyle(
-                    bgcolor=ft.Colors.TERTIARY_CONTAINER,
-                    shape=ft.CircleBorder(),
-                    overlay_color=ft.Colors.TERTIARY,
-                ),
-            ),
-            ft.FloatingActionButton(
-                icon=ft.Icons.ADD,
-                bgcolor=ft.Colors.SECONDARY_CONTAINER,
-                foreground_color=ft.Colors.ON_SECONDARY_CONTAINER,
-                shape=ft.CircleBorder(),
-            ),
-        ],
-    )
-
-    themed_card = ft.Card(
-        key=ft.ScrollKey("themed_card"),
-        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
-        content=ft.Container(
-            content=ft.Column(
-                [
-                    ft.Text(
-                        "Card on surface container",
-                        size=18,
-                        weight=ft.FontWeight.BOLD,
-                        color=ft.Colors.ON_SURFACE,
-                    ),
-                    ft.Text(
-                        "Uses outline variant border and shadow color.",
-                        color=ft.Colors.ON_SURFACE_VARIANT,
-                    ),
-                    ft.ListTile(
-                        title=ft.Text("Selected list tile"),
-                        leading=ft.Icon(ft.Icons.PALETTE, color=ft.Colors.PRIMARY),
-                        selected=True,
-                        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
-                        selected_color=ft.Colors.ON_PRIMARY,
-                        trailing=ft.Switch(value=True),
-                    ),
-                ],
-                spacing=8,
-                alignment=ft.MainAxisAlignment.START,
-                horizontal_alignment=ft.CrossAxisAlignment.START,
-            ),
-            padding=10,
-        ),
-    )
-
-    error_banner = ft.Container(
-        key=ft.ScrollKey("error_banner"),
-        bgcolor=ft.Colors.ERROR_CONTAINER,
-        border_radius=ft.BorderRadius.all(10),
-        padding=ft.Padding.symmetric(horizontal=16, vertical=12),
-        content=ft.Row(
+    primary_palette = ft.Screenshot(
+        ft.Row(
+            key=ft.ScrollKey("primary_palette"),
+            wrap=True,
             controls=[
-                ft.Icon(ft.Icons.ERROR, color=ft.Colors.ON_ERROR_CONTAINER),
-                ft.Text(
-                    "Error container background with on-error text.",
-                    color=ft.Colors.ON_ERROR_CONTAINER,
-                    weight=ft.FontWeight.BOLD,
-                    expand=True,
+                swatch("Primary", ft.Colors.PRIMARY, ft.Colors.ON_PRIMARY),
+                swatch(
+                    "Primary Ctr",
+                    ft.Colors.PRIMARY_CONTAINER,
+                    ft.Colors.ON_PRIMARY_CONTAINER,
+                ),
+                swatch(
+                    "Primary Fix", ft.Colors.PRIMARY_FIXED, ft.Colors.ON_PRIMARY_FIXED
+                ),
+                swatch(
+                    "Primary Dim",
+                    ft.Colors.PRIMARY_FIXED_DIM,
+                    ft.Colors.ON_PRIMARY_FIXED,
                 ),
             ],
-            spacing=10,
-            alignment=ft.MainAxisAlignment.START,
-            vertical_alignment=ft.CrossAxisAlignment.CENTER,
-        ),
+        )
+    )
+
+    secondary_palette = ft.Screenshot(
+        ft.Row(
+            key=ft.ScrollKey("secondary_palette"),
+            wrap=True,
+            controls=[
+                swatch("Secondary", ft.Colors.SECONDARY, ft.Colors.ON_SECONDARY),
+                swatch(
+                    "Secondary Ctr",
+                    ft.Colors.SECONDARY_CONTAINER,
+                    ft.Colors.ON_SECONDARY_CONTAINER,
+                ),
+                swatch(
+                    "Secondary Fix",
+                    ft.Colors.SECONDARY_FIXED,
+                    ft.Colors.ON_SECONDARY_FIXED,
+                ),
+                swatch(
+                    "Secondary Dim",
+                    ft.Colors.SECONDARY_FIXED_DIM,
+                    ft.Colors.ON_SECONDARY_FIXED,
+                ),
+            ],
+        )
+    )
+
+    tertiary_palette = ft.Screenshot(
+        ft.Row(
+            key=ft.ScrollKey("tertiary_palette"),
+            wrap=True,
+            controls=[
+                swatch("Tertiary", ft.Colors.TERTIARY, ft.Colors.ON_TERTIARY),
+                swatch(
+                    "Tertiary Ctr",
+                    ft.Colors.TERTIARY_CONTAINER,
+                    ft.Colors.ON_TERTIARY_CONTAINER,
+                ),
+                swatch(
+                    "Tertiary Fix",
+                    ft.Colors.TERTIARY_FIXED,
+                    ft.Colors.ON_TERTIARY_FIXED,
+                ),
+                swatch(
+                    "Tertiary Dim",
+                    ft.Colors.TERTIARY_FIXED_DIM,
+                    ft.Colors.ON_TERTIARY_FIXED,
+                ),
+            ],
+        )
+    )
+
+    surface_palette = ft.Screenshot(
+        ft.Row(
+            key=ft.ScrollKey("surface_roles"),
+            wrap=True,
+            controls=[
+                swatch("Surface", ft.Colors.SURFACE, ft.Colors.ON_SURFACE),
+                swatch("Surface Br", ft.Colors.SURFACE_BRIGHT, ft.Colors.ON_SURFACE),
+                swatch("Surface Dim", ft.Colors.SURFACE_DIM, ft.Colors.ON_SURFACE),
+                swatch("Surface Tint", ft.Colors.SURFACE_TINT, ft.Colors.ON_SURFACE),
+                swatch("Container", ft.Colors.SURFACE_CONTAINER, ft.Colors.ON_SURFACE),
+                swatch(
+                    "Ctr High", ft.Colors.SURFACE_CONTAINER_HIGH, ft.Colors.ON_SURFACE
+                ),
+                swatch(
+                    "Ctr Highest",
+                    ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                    ft.Colors.ON_SURFACE,
+                ),
+                swatch(
+                    "Ctr Low", ft.Colors.SURFACE_CONTAINER_LOW, ft.Colors.ON_SURFACE
+                ),
+                swatch(
+                    "Ctr Lowest",
+                    ft.Colors.SURFACE_CONTAINER_LOWEST,
+                    ft.Colors.ON_SURFACE,
+                ),
+            ],
+        )
+    )
+
+    accents_palette = ft.Screenshot(
+        ft.Row(
+            key=ft.ScrollKey("accents_palette"),
+            wrap=True,
+            controls=[
+                swatch(
+                    "Inverse", ft.Colors.INVERSE_SURFACE, ft.Colors.ON_INVERSE_SURFACE
+                ),
+                swatch(
+                    "Inverse Pri",
+                    ft.Colors.INVERSE_PRIMARY,
+                    ft.Colors.ON_INVERSE_SURFACE,
+                ),
+                swatch("Scrim", ft.Colors.SCRIM, ft.Colors.ON_INVERSE_SURFACE),
+                swatch("Outline", ft.Colors.OUTLINE, ft.Colors.ON_SURFACE_VARIANT),
+                swatch("Outline Var", ft.Colors.OUTLINE_VARIANT, ft.Colors.ON_SURFACE),
+                swatch("Error", ft.Colors.ERROR, ft.Colors.ON_ERROR),
+                swatch(
+                    "Error Ctr", ft.Colors.ERROR_CONTAINER, ft.Colors.ON_ERROR_CONTAINER
+                ),
+            ],
+        )
+    )
+
+    buttons = ft.Screenshot(
+        ft.Row(
+            wrap=True,
+            controls=[
+                ft.FilledButton(
+                    "Primary button",
+                    style=ft.ButtonStyle(
+                        shape=ft.RoundedRectangleBorder(radius=14),
+                        padding=ft.Padding.symmetric(horizontal=24, vertical=12),
+                    ),
+                ),
+                ft.FilledTonalButton(
+                    "Tonal secondary",
+                    style=ft.ButtonStyle(
+                        shape=ft.RoundedRectangleBorder(radius=14),
+                        padding=ft.Padding.symmetric(horizontal=20, vertical=12),
+                    ),
+                ),
+                ft.OutlinedButton(
+                    "Surface variant",
+                    style=ft.ButtonStyle(
+                        side=ft.BorderSide(width=2, color=ft.Colors.OUTLINE),
+                        shape=ft.RoundedRectangleBorder(radius=14),
+                        padding=ft.Padding.symmetric(horizontal=20, vertical=12),
+                    ),
+                ),
+                ft.TextButton(
+                    "Tertiary text",
+                    style=ft.ButtonStyle(
+                        color=ft.Colors.TERTIARY,
+                        overlay_color=ft.Colors.TERTIARY_CONTAINER,
+                        shape=ft.RoundedRectangleBorder(radius=14),
+                    ),
+                ),
+                ft.IconButton(
+                    icon=ft.Icons.FAVORITE,
+                    icon_color=ft.Colors.ON_TERTIARY_CONTAINER,
+                    style=ft.ButtonStyle(
+                        bgcolor=ft.Colors.TERTIARY_CONTAINER,
+                        shape=ft.CircleBorder(),
+                        overlay_color=ft.Colors.TERTIARY,
+                    ),
+                ),
+                ft.FloatingActionButton(
+                    icon=ft.Icons.ADD,
+                    bgcolor=ft.Colors.SECONDARY_CONTAINER,
+                    foreground_color=ft.Colors.ON_SECONDARY_CONTAINER,
+                    shape=ft.CircleBorder(),
+                ),
+            ],
+        )
+    )
+
+    themed_card = ft.Screenshot(
+        ft.Card(
+            key=ft.ScrollKey("themed_card"),
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Text(
+                            "Card on surface container",
+                            size=18,
+                            weight=ft.FontWeight.BOLD,
+                            color=ft.Colors.ON_SURFACE,
+                        ),
+                        ft.Text(
+                            "Uses outline variant border and shadow color.",
+                            color=ft.Colors.ON_SURFACE_VARIANT,
+                        ),
+                        ft.ListTile(
+                            title=ft.Text("Selected list tile"),
+                            leading=ft.Icon(ft.Icons.PALETTE, color=ft.Colors.PRIMARY),
+                            selected=True,
+                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
+                            selected_color=ft.Colors.ON_PRIMARY,
+                            trailing=ft.Switch(value=True),
+                        ),
+                    ],
+                    spacing=8,
+                    alignment=ft.MainAxisAlignment.START,
+                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                ),
+                padding=10,
+            ),
+        )
+    )
+
+    error_banner = ft.Screenshot(
+        ft.Container(
+            key=ft.ScrollKey("error_banner"),
+            bgcolor=ft.Colors.ERROR_CONTAINER,
+            border_radius=ft.BorderRadius.all(10),
+            padding=ft.Padding.symmetric(horizontal=16, vertical=12),
+            content=ft.Row(
+                controls=[
+                    ft.Icon(ft.Icons.ERROR, color=ft.Colors.ON_ERROR_CONTAINER),
+                    ft.Text(
+                        "Error container background with on-error text.",
+                        color=ft.Colors.ON_ERROR_CONTAINER,
+                        weight=ft.FontWeight.BOLD,
+                        expand=True,
+                    ),
+                ],
+                spacing=10,
+                alignment=ft.MainAxisAlignment.START,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+        )
     )
 
     flet_app.page.add(
         ft.Column(
             controls=[
-                buttons_row_1,
-                buttons_row_2,
+                buttons,
                 primary_palette,
                 secondary_palette,
                 tertiary_palette,
@@ -318,70 +348,54 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
 
     flet_app.assert_screenshot(
         "buttons",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await buttons.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="primary_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "primary_palette",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await primary_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="secondary_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "secondary_palette",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await secondary_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="tertiary_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "tertiary_palette",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await tertiary_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="surface_roles", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "surface_roles",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await surface_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="accents_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "accents_palette",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await accents_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="themed_card", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "themed_card",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await themed_card.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="error_banner", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "error_banner",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
+        await error_banner.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
