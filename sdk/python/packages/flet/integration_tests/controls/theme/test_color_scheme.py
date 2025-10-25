@@ -94,6 +94,8 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
         )
 
     primary_palette = ft.Row(
+        key=ft.ScrollKey("primary_palette"),
+        wrap=True,
         controls=[
             swatch("Primary", ft.Colors.PRIMARY, ft.Colors.ON_PRIMARY),
             swatch(
@@ -106,12 +108,11 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                 "Primary Dim", ft.Colors.PRIMARY_FIXED_DIM, ft.Colors.ON_PRIMARY_FIXED
             ),
         ],
-        wrap=True,
-        spacing=10,
-        run_spacing=10,
     )
 
     secondary_palette = ft.Row(
+        key=ft.ScrollKey("secondary_palette"),
+        wrap=True,
         controls=[
             swatch("Secondary", ft.Colors.SECONDARY, ft.Colors.ON_SECONDARY),
             swatch(
@@ -128,12 +129,11 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                 ft.Colors.ON_SECONDARY_FIXED,
             ),
         ],
-        wrap=True,
-        spacing=10,
-        run_spacing=10,
     )
 
     tertiary_palette = ft.Row(
+        key=ft.ScrollKey("tertiary_palette"),
+        wrap=True,
         controls=[
             swatch("Tertiary", ft.Colors.TERTIARY, ft.Colors.ON_TERTIARY),
             swatch(
@@ -150,12 +150,11 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                 ft.Colors.ON_TERTIARY_FIXED,
             ),
         ],
-        wrap=True,
-        spacing=10,
-        run_spacing=10,
     )
 
     surface_palette = ft.Row(
+        key=ft.ScrollKey("surface_roles"),
+        wrap=True,
         controls=[
             swatch("Surface", ft.Colors.SURFACE, ft.Colors.ON_SURFACE),
             swatch("Surface Br", ft.Colors.SURFACE_BRIGHT, ft.Colors.ON_SURFACE),
@@ -171,12 +170,11 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                 "Ctr Lowest", ft.Colors.SURFACE_CONTAINER_LOWEST, ft.Colors.ON_SURFACE
             ),
         ],
-        wrap=True,
-        spacing=10,
-        run_spacing=10,
     )
 
     accents_palette = ft.Row(
+        key=ft.ScrollKey("accents_palette"),
+        wrap=True,
         controls=[
             swatch("Inverse", ft.Colors.INVERSE_SURFACE, ft.Colors.ON_INVERSE_SURFACE),
             swatch(
@@ -190,16 +188,9 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                 "Error Ctr", ft.Colors.ERROR_CONTAINER, ft.Colors.ON_ERROR_CONTAINER
             ),
         ],
-        wrap=True,
-        spacing=10,
-        run_spacing=10,
     )
 
-    buttons_row = ft.Row(
-        wrap=True,
-        spacing=12,
-        run_spacing=12,
-        alignment=ft.MainAxisAlignment.START,
+    buttons_row_1 = ft.Row(
         controls=[
             ft.FilledButton(
                 "Primary button",
@@ -223,6 +214,11 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                     padding=ft.Padding.symmetric(horizontal=20, vertical=12),
                 ),
             ),
+        ],
+    )
+
+    buttons_row_2 = ft.Row(
+        controls=[
             ft.TextButton(
                 "Tertiary text",
                 style=ft.ButtonStyle(
@@ -251,7 +247,6 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
 
     themed_card = ft.Card(
         key=ft.ScrollKey("themed_card"),
-        elevation=6,
         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
         content=ft.Container(
             content=ft.Column(
@@ -286,7 +281,7 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
     error_banner = ft.Container(
         key=ft.ScrollKey("error_banner"),
         bgcolor=ft.Colors.ERROR_CONTAINER,
-        border_radius=ft.BorderRadius.all(14),
+        border_radius=ft.BorderRadius.all(10),
         padding=ft.Padding.symmetric(horizontal=16, vertical=12),
         content=ft.Row(
             controls=[
@@ -307,51 +302,16 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
     flet_app.page.add(
         ft.Column(
             controls=[
-                ft.Text(
-                    "Buttons",
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.ON_SURFACE,
-                ),
-                buttons_row,
-                ft.Text(
-                    "Primary palette",
-                    key=ft.ScrollKey("primary_palette"),
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.ON_SURFACE,
-                ),
+                buttons_row_1,
+                buttons_row_2,
                 primary_palette,
-                ft.Text(
-                    "Secondary palette",
-                    key=ft.ScrollKey("secondary_palette"),
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.ON_SURFACE,
-                ),
                 secondary_palette,
-                ft.Text(
-                    "Tertiary palette",
-                    key=ft.ScrollKey("tertiary_palette"),
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.ON_SURFACE,
-                ),
                 tertiary_palette,
-                ft.Text(
-                    "Surface roles",
-                    key=ft.ScrollKey("surface_roles"),
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.ON_SURFACE,
-                ),
                 surface_palette,
-                ft.Text(
-                    "Supporting accents",
-                    key=ft.ScrollKey("accents_palette"),
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.ON_SURFACE,
-                ),
                 accents_palette,
                 themed_card,
                 error_banner,
             ],
-            spacing=14,
         )
     )
     await flet_app.tester.pump_and_settle()
