@@ -25,10 +25,10 @@ class TextButton(LayoutControl, AdaptiveControl):
 
     ```python
     ft.TextButton(
-            content="Text Button",
-            icon=ft.Icons.STAR_BORDER,
-            icon_color=ft.Colors.BLUE_300,
-        )
+        content="Text Button",
+        icon=ft.Icons.STAR_BORDER,
+        icon_color=ft.Colors.BLUE_300,
+    )
     ```
     """
 
@@ -87,8 +87,8 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists this button's response area.
 
-    The [`data`][flet.Event.] property of event object is `True` when cursor
-    enters and `False` when it exits.
+    The [`data`][flet.Event.] property of the event handler argument is `True` when
+    cursor enters and `False` when it exits.
     """
 
     on_focus: Optional[ControlEventHandler["TextButton"]] = None

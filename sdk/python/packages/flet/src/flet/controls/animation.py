@@ -86,6 +86,16 @@ class Animation:
 
 @dataclass
 class AnimationStyle:
+    """
+    Used to override the default parameters of an animation.
+
+    Note:
+        If [`duration`][(c).] and [`reverse_duration`][(c).] are set to
+        [`Duration()`][flet.Duration], the corresponding animation will be disabled.
+        See [`no_animation()`][(c).no_animation] method for a convenient way to create
+        such an instance.
+    """
+
     duration: Optional[DurationValue] = None
     """
     The duration of the animation.
@@ -105,6 +115,16 @@ class AnimationStyle:
     """
     The curve to use for the reverse animation.
     """
+
+    @staticmethod
+    def no_animation() -> "AnimationStyle":
+        """
+        Creates an instance of `AnimationStyle` with no animation.
+        """
+        return AnimationStyle(
+            duration=Duration(),
+            reverse_duration=Duration(),
+        )
 
     def copy(
         self,

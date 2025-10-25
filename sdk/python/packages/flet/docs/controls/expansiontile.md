@@ -19,6 +19,17 @@ example_media: ../examples/controls/expansion_tile/media
 
 {{ image(example_media + "/basic.png", alt="basic", width="80%") }}
 
+## Programmatic expansion/collapse
+
+```python
+--8<-- "{{ examples }}/programmatic_expansion.py"
+```
+
+## Custom animations
+
+```python
+--8<-- "{{ examples }}/custom_animations.py"
+```
 
 ### Theme mode toggle
 
