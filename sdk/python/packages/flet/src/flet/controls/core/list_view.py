@@ -55,7 +55,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     A fixed height or width (when [`horizontal`][(c).] is `True`)
     of an item to optimize rendering.
 
-    Note: This property has effect only when [`build_controls_on_demand`][(c).]
+    Note:
+        This property has effect only when [`build_controls_on_demand`][(c).]
         is `True` or [`spacing`][(c).] is `0`.
     """
 
@@ -71,7 +72,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     A control to be used as a "prototype" for all items,
     i.e. their `height` or `width` will be the same as the `prototype_item`.
 
-    Note: This property has effect only when [`build_controls_on_demand`][(c).]
+    Note:
+        This property has effect only when [`build_controls_on_demand`][(c).]
         is `True` or [`spacing`][(c).] is `0`.
     """
 
