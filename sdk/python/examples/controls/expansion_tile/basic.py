@@ -53,7 +53,7 @@ def main(page: ft.Page):
             title=ft.Text("ExpansionTile 3"),
             subtitle=ft.Text("Leading expansion arrow icon"),
             affinity=ft.TileAffinity.LEADING,
-            initially_expanded=True,
+            expanded=True,
             collapsed_text_color=ft.Colors.BLUE_800,
             text_color=ft.Colors.BLUE_200,
             controls=[
