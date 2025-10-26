@@ -241,7 +241,6 @@ async def test_toggle_inputs(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.add(lt)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

@@ -41,8 +41,7 @@ async def test_menu_bar_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
     flet_app.page.window.width = 400
     flet_app.page.window.height = 600
-    flet_app.page.controls = [pb]
-    flet_app.page.update()
+    flet_app.page.add(pb)
     await flet_app.tester.pump_and_settle()
 
     # normal state

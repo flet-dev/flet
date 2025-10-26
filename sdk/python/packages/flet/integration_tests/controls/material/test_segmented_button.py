@@ -82,7 +82,6 @@ async def test_theme(flet_app: ftt.FletTestApp):
         key="sb",
     )
     flet_app.page.add(scr_1)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

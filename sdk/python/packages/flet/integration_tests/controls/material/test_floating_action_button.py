@@ -60,7 +60,6 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
         mouse_cursor=ft.MouseCursor.COPY,  # is not shown on screenshots
     )
     flet_app.page.add(fab)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
