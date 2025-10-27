@@ -69,6 +69,7 @@ class _PageletControlState extends State<PageletControl> {
     var bottomSheet = widget.control.buildWidget("bottom_sheet");
     var drawer = widget.control.child("drawer");
     var endDrawer = widget.control.child("end_drawer");
+    var hasDrawer = drawer != null || endDrawer != null;
     var fab = widget.control.buildWidget("floating_action_button");
 
     if (content == null) {
@@ -120,6 +121,11 @@ class _PageletControlState extends State<PageletControl> {
         floatingActionButtonLocation: widget.control
             .getFloatingActionButtonLocation("floating_action_button_location",
                 FloatingActionButtonLocation.endFloat));
+
+    if (hasDrawer) {
+      // Clip to page bounds so the drawer animation stays hidden outside the pagelet.
+      scaffold = ClipRect(child: scaffold);
+    }
 
     if (bar is CupertinoAppBarControl) {
       scaffold = CupertinoPageScaffold(
