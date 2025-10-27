@@ -148,7 +148,10 @@ class Observable:
             return
         value = self._wrap_if_collection(name, value)
         had = hasattr(self, name)
-        old = object.__getattribute__(self, name) if had else None
+        if not had:
+            object.__setattr__(self, name, value)
+            return
+        old = object.__getattribute__(self, name)
         if not value_equal(old, value):
             object.__setattr__(self, name, value)
             self._notify(name)
