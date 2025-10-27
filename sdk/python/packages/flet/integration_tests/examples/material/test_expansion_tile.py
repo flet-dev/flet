@@ -13,10 +13,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
             width=400,
             title="Account",
             subtitle="Manage profile and security",
+            expanded=True,
             controls=[
                 ft.ListTile(title=ft.Text("Profile")),
                 ft.ListTile(title=ft.Text("Security")),
             ],
-            initially_expanded=True,
         ),
     )
