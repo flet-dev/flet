@@ -5,11 +5,11 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_image(flet_app: ftt.FletTestApp, request):
+async def test_src(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Image(
-            src="https://picsum.photos/seed/picsum/100/100",
+            src="/mignon.png",
             width=100,
             height=100,
             fit=ft.BoxFit.CONTAIN,
@@ -20,7 +20,7 @@ async def test_image(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_image_base64(flet_app: ftt.FletTestApp, request):
+async def test_src_base64(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Image(

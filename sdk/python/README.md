@@ -4,8 +4,7 @@ Package relationships:
 
 ```mermaid
 graph TD;
-    flet-core-->flet-runtime;
-    flet-core-->flet-pyodide;
-    flet-runtime-->flet-embed;
-    flet-runtime-->flet;
+    flet --> flet-cli;
+    flet --> flet-desktop;
+    flet --> flet-web;
 ```
