@@ -449,14 +449,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  fullscreen_window:
-    dependency: transitive
-    description:
-      name: fullscreen_window
-      sha256: "74247cb56006e5d00fa9ed7eaef9df90caa2be1cec4d5b1aeb7391fec7d19f66"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   geoclue:
     dependency: transitive
     description:
