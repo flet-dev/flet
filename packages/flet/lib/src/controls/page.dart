@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fullscreen_window/fullscreen_window.dart';
 import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
@@ -195,6 +196,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                   .toList() ??
               List<DeviceOrientation>.from(DeviceOrientation.values);
           await SystemChrome.setPreferredOrientations(orientations);
+        }
+        break;
+      case "set_fullscreen":
+        final value = parseBool(args["value"]);
+        if (value != null) {
+          await FullScreenWindow.setFullScreen(value);
         }
         break;
 
