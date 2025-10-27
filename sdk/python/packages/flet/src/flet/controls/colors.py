@@ -55,13 +55,15 @@ import random
 from enum import Enum
 from typing import TYPE_CHECKING, Optional, Union
 
+from flet.utils.deprecated_enum import DeprecatedEnumMeta
+
 if TYPE_CHECKING:
     from flet.controls.types import ColorValue
 
 __all__ = ["Colors"]
 
 
-class Colors(str, Enum):
+class Colors(str, Enum, metaclass=DeprecatedEnumMeta):
     def __eq__(self, other):
         if isinstance(other, str):
             return self.value.lower() == other.lower()
@@ -198,12 +200,12 @@ class Colors(str, Enum):
     AMBER_ACCENT_400 = "amberaccent400"
     AMBER_ACCENT_700 = "amberaccent700"
     BLACK = "black"
-    BLACK12 = "black12"
-    BLACK26 = "black26"
-    BLACK38 = "black38"
-    BLACK45 = "black45"
-    BLACK54 = "black54"
-    BLACK87 = "black87"
+    BLACK_12 = "black12"
+    BLACK_26 = "black26"
+    BLACK_38 = "black38"
+    BLACK_45 = "black45"
+    BLACK_54 = "black54"
+    BLACK_87 = "black87"
     BLUE = "blue"
     BLUE_100 = "blue100"
     BLUE_200 = "blue200"
@@ -463,14 +465,14 @@ class Colors(str, Enum):
     TEAL_ACCENT_700 = "tealaccent700"
     TRANSPARENT = "transparent"
     WHITE = "white"
-    WHITE10 = "white10"
-    WHITE12 = "white12"
-    WHITE24 = "white24"
-    WHITE30 = "white30"
-    WHITE38 = "white38"
-    WHITE54 = "white54"
-    WHITE60 = "white60"
-    WHITE70 = "white70"
+    WHITE_10 = "white10"
+    WHITE_12 = "white12"
+    WHITE_24 = "white24"
+    WHITE_30 = "white30"
+    WHITE_38 = "white38"
+    WHITE_54 = "white54"
+    WHITE_60 = "white60"
+    WHITE_70 = "white70"
     YELLOW = "yellow"
     YELLOW_100 = "yellow100"
     YELLOW_200 = "yellow200"
@@ -487,3 +489,26 @@ class Colors(str, Enum):
     YELLOW_ACCENT_200 = "yellowaccent200"
     YELLOW_ACCENT_400 = "yellowaccent400"
     YELLOW_ACCENT_700 = "yellowaccent700"
+
+
+_DEPRECATED_COLOR_ALIASES = {
+    "BLACK12": ("BLACK_12", "Use Colors.BLACK_12 instead."),
+    "BLACK26": ("BLACK_26", "Use Colors.BLACK_26 instead."),
+    "BLACK38": ("BLACK_38", "Use Colors.BLACK_38 instead."),
+    "BLACK45": ("BLACK_45", "Use Colors.BLACK_45 instead."),
+    "BLACK54": ("BLACK_54", "Use Colors.BLACK_54 instead."),
+    "BLACK87": ("BLACK_87", "Use Colors.BLACK_87 instead."),
+    "WHITE10": ("WHITE_10", "Use Colors.WHITE_10 instead."),
+    "WHITE12": ("WHITE_12", "Use Colors.WHITE_12 instead."),
+    "WHITE24": ("WHITE_24", "Use Colors.WHITE_24 instead."),
+    "WHITE30": ("WHITE_30", "Use Colors.WHITE_30 instead."),
+    "WHITE38": ("WHITE_38", "Use Colors.WHITE_38 instead."),
+    "WHITE54": ("WHITE_54", "Use Colors.WHITE_54 instead."),
+    "WHITE60": ("WHITE_60", "Use Colors.WHITE_60 instead."),
+    "WHITE70": ("WHITE_70", "Use Colors.WHITE_70 instead."),
+}
+
+Colors._deprecated_members_ = _DEPRECATED_COLOR_ALIASES
+
+for alias_name, (target_name, _) in _DEPRECATED_COLOR_ALIASES.items():
+    Colors._member_map_[alias_name] = getattr(Colors, target_name)
