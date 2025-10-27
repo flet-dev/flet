@@ -1,7 +1,7 @@
 ---
 class_name: flet.ShaderMask
 examples: ../../examples/controls/shader_mask
-example_images: ../test-images/examples/material/golden/macos/shader_mask
+example_images: ../test-images/examples/core/golden/macos/shader_mask
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Linear gradient mask") }}
