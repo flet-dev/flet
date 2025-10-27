@@ -125,7 +125,7 @@ def main(page: ft.Page):
     def drag_will_accept(e):
         # black border when it's allowed to drop and red when it's not
         e.control.content.border = ft.border.all(
-            2, ft.Colors.BLACK45 if e.data == "true" else ft.Colors.RED
+            2, ft.Colors.BLACK_45 if e.data == "true" else ft.Colors.RED
         )
         e.control.update()
 
