@@ -125,7 +125,7 @@ class FloatingActionButton(LayoutControl):
     Defaults to `12`.
 
     Raises:
-        ValueError:If it is less than `0`.
+        ValueError: If it is less than `0`.
     """
 
     hover_elevation: Optional[Number] = None

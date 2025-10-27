@@ -21,4 +21,5 @@ def main(page: ft.Page):
     page.add(ft.Text("Content goes here..."))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
