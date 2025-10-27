@@ -2,21 +2,11 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_show_drawer(e: ft.Event[ft.FloatingActionButton]):
-        pagelet.show_drawer(drawer)
+    async def handle_show_drawer(e: ft.Event[ft.FloatingActionButton]):
+        await pagelet.show_drawer()
 
-    drawer = ft.NavigationDrawer(
-        controls=[
-            ft.NavigationDrawerDestination(
-                icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
-                label="Item 1",
-            ),
-            ft.NavigationDrawerDestination(
-                icon=ft.Icons.ADD_COMMENT,
-                label="Item 2",
-            ),
-        ],
-    )
+    async def handle_show_end_drawer():
+        await pagelet.show_end_drawer()
 
     page.add(
         pagelet := ft.Pagelet(
@@ -26,7 +16,15 @@ def main(page: ft.Page):
                 title=ft.Text("Pagelet AppBar Title"),
                 bgcolor=ft.Colors.AMBER_ACCENT,
             ),
-            content=ft.Container(ft.Text("Pagelet Body"), padding=ft.Padding.all(16)),
+            content=ft.Container(
+                ft.Column(
+                    [
+                        ft.Text("Pagelet Body"),
+                        ft.Button("Show end drawer", on_click=handle_show_end_drawer),
+                    ]
+                ),
+                padding=ft.Padding.all(16),
+            ),
             bgcolor=ft.Colors.AMBER_100,
             bottom_appbar=ft.BottomAppBar(
                 bgcolor=ft.Colors.BLUE,
@@ -42,7 +40,30 @@ def main(page: ft.Page):
                     ]
                 ),
             ),
-            end_drawer=drawer,
+            drawer=ft.NavigationDrawer(
+                controls=[
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
+                        label="Item 1",
+                    ),
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.ADD_COMMENT,
+                        label="Item 2",
+                    ),
+                ],
+            ),
+            end_drawer=ft.NavigationDrawer(
+                controls=[
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.SLOW_MOTION_VIDEO,
+                        label="Item 3",
+                    ),
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.INSERT_CHART,
+                        label="Item 4",
+                    ),
+                ],
+            ),
             floating_action_button=ft.FloatingActionButton(
                 content="Open",
                 shape=ft.CircleBorder(),

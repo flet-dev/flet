@@ -107,27 +107,36 @@ class Pagelet(LayoutControl, AdaptiveControl):
         if not self.content.visible:
             raise ValueError("content must be visible")
 
-    # todo: deprecate show_* in favor of a open/close methods, or page.open/close
-    # Drawer
-    #
-    def show_drawer(self, drawer: NavigationDrawer):
-        self.drawer = drawer
-        self.drawer.open = True
-        self.update()
+    async def show_drawer(self):
+        """
+        Show the drawer.
 
-    def close_drawer(self):
-        if self.drawer is not None:
-            self.drawer.open = False
-            self.update()
+        Raises:
+            ValueError: If no [`drawer`][(c).] is defined.
+        """
+        if self.drawer is None:
+            raise ValueError("No drawer defined")
+        await self._invoke_method("show_drawer")
 
-    # End_drawer
-    #
-    def show_end_drawer(self, end_drawer: NavigationDrawer):
-        self.end_drawer = end_drawer
-        self.end_drawer.open = True
-        self.update()
+    async def close_drawer(self):
+        """
+        Close the drawer.
+        """
+        await self._invoke_method("close_drawer")
 
-    def close_end_drawer(self):
-        if self.end_drawer is not None:
-            self.end_drawer.open = False
-            self.update()
+    async def show_end_drawer(self):
+        """
+        Show the end drawer.
+
+        Raises:
+            ValueError: If no [`end_drawer`][(c).] is defined.
+        """
+        if self.end_drawer is None:
+            raise ValueError("No end_drawer defined")
+        await self._invoke_method("show_end_drawer")
+
+    async def close_end_drawer(self):
+        """
+        Close the end drawer.
+        """
+        await self._invoke_method("close_end_drawer")
