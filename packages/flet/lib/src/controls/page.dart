@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fullscreen_window/fullscreen_window.dart';
 import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
@@ -33,6 +32,8 @@ import '../utils/session_store_web.dart'
 import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/user_fonts.dart';
+import '../utils/web_interface.dart'
+    if (dart.library.io) "../utils/io_interface.dart";
 import '../widgets/animated_transition_page.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/page_context.dart';
@@ -201,7 +202,17 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       case "set_fullscreen":
         final value = parseBool(args["value"]);
         if (value != null) {
-          await FullScreenWindow.setFullScreen(value);
+          if (isDesktopPlatform() || isWebPlatform()) {
+            await setWindowFullScreen(value);
+          } else if (isMobilePlatform()) {
+            if (value) {
+              await SystemChrome.setEnabledSystemUIMode(
+                  SystemUiMode.immersiveSticky);
+            } else {
+              await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                  overlays: SystemUiOverlay.values);
+            }
+          }
         }
         break;
 

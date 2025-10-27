@@ -330,22 +330,6 @@ class Page(BasePage):
     The operating system the application is running on.
     """
 
-    @property
-    def fullscreen(self) -> bool:
-        """
-        Requests fullscreen mode for the host window or browser.
-
-        Set to `True` to hide the host system chrome; set to `False` to restore it.
-        """
-        return getattr(self, "_fullscreen", False)
-
-    @fullscreen.setter
-    def fullscreen(self, value: bool) -> None:
-        self._fullscreen = value
-        asyncio.create_task(
-            self._invoke_method("set_fullscreen", arguments={"value": value})
-        )
-
     fonts: Optional[dict[str, str]] = None
     """
     Defines the custom fonts to be used in the application.
@@ -359,6 +343,28 @@ class Page(BasePage):
 
     Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
+
+    @property
+    def full_screen(self) -> bool:
+        """
+        Requests fullscreen mode for the host window or browser.
+
+        Set to `True` to hide the host system chrome; set to `False` to restore it.
+        """
+        return getattr(
+            self,
+            "__full_screen",
+            self.page.window.full_screen if self.page.platform.is_desktop() else False,
+        )
+
+    @full_screen.setter
+    def full_screen(self, value: bool) -> None:
+        self.__full_screen = value
+        if self.page.platform.is_desktop() and not self.page.web:
+            self.page.window.full_screen = value
+        asyncio.create_task(
+            self._invoke_method("set_fullscreen", arguments={"value": value})
+        )
 
     on_platform_brightness_change: Optional[
         EventHandler[PlatformBrightnessChangeEvent]
