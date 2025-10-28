@@ -1,3 +1,5 @@
+import asyncio
+
 import flet as ft
 
 
@@ -7,6 +9,8 @@ def main(page: ft.Page):
 
     async def handle_show_end_drawer():
         await pagelet.show_end_drawer()
+        await asyncio.sleep(3)
+        await pagelet.close_end_drawer()
 
     page.add(
         pagelet := ft.Pagelet(
@@ -41,6 +45,7 @@ def main(page: ft.Page):
                 ),
             ),
             drawer=ft.NavigationDrawer(
+                on_dismiss=lambda e: print("Drawer dismissed"),
                 controls=[
                     ft.NavigationDrawerDestination(
                         icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
@@ -53,6 +58,7 @@ def main(page: ft.Page):
                 ],
             ),
             end_drawer=ft.NavigationDrawer(
+                on_dismiss=lambda e: print("End Drawer dismissed"),
                 controls=[
                     ft.NavigationDrawerDestination(
                         icon=ft.Icons.SLOW_MOTION_VIDEO,
