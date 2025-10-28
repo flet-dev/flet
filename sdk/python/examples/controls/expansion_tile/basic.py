@@ -6,7 +6,7 @@ def main(page: ft.Page):
     page.spacing = 0
     page.padding = 0
 
-    def handle_expansion_tile_change(e: ft.Event[ft.ExpansionTile]):
+    def handle_tile_change(e: ft.Event[ft.ExpansionTile]):
         page.show_dialog(
             ft.SnackBar(
                 duration=1000,
@@ -25,44 +25,45 @@ def main(page: ft.Page):
 
     page.add(
         ft.ExpansionTile(
+            expanded=True,
             title=ft.Text("ExpansionTile 1"),
             subtitle=ft.Text("Trailing expansion arrow icon"),
-            bgcolor=ft.Colors.BLUE_GREY_200,
-            collapsed_bgcolor=ft.Colors.BLUE_GREY_200,
             affinity=ft.TileAffinity.PLATFORM,
             maintain_state=True,
             collapsed_text_color=ft.Colors.RED,
             text_color=ft.Colors.RED,
             controls=[
-                ft.ListTile(
-                    title=ft.Text("This is sub-tile number 1"),
-                    bgcolor=ft.Colors.BLUE_GREY_200,
-                )
+                ft.ListTile(title=ft.Text("This is sub-tile number 1.1")),
+                ft.ListTile(title=ft.Text("This is sub-tile number 1.2")),
             ],
         ),
         ft.ExpansionTile(
+            expanded=True,
             title=ft.Text("ExpansionTile 2"),
             subtitle=ft.Text("Custom expansion arrow icon"),
             trailing=ft.Icon(ft.Icons.ARROW_DROP_DOWN),
             collapsed_text_color=ft.Colors.GREEN,
             text_color=ft.Colors.GREEN,
-            on_change=handle_expansion_tile_change,
-            controls=[ft.ListTile(title=ft.Text("This is sub-tile number 2"))],
+            on_change=handle_tile_change,
+            controls=[
+                ft.ListTile(title=ft.Text("This is sub-tile number 2.1")),
+                ft.ListTile(title=ft.Text("This is sub-tile number 2.2")),
+            ],
         ),
         ft.ExpansionTile(
+            expanded=True,
             title=ft.Text("ExpansionTile 3"),
             subtitle=ft.Text("Leading expansion arrow icon"),
             affinity=ft.TileAffinity.LEADING,
-            expanded=True,
             collapsed_text_color=ft.Colors.BLUE_800,
             text_color=ft.Colors.BLUE_200,
             controls=[
-                ft.ListTile(title=ft.Text("This is sub-tile number 3")),
-                ft.ListTile(title=ft.Text("This is sub-tile number 4")),
-                ft.ListTile(title=ft.Text("This is sub-tile number 5")),
+                ft.ListTile(title=ft.Text("This is sub-tile number 3.1")),
+                ft.ListTile(title=ft.Text("This is sub-tile number 3.2")),
             ],
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
