@@ -267,19 +267,28 @@ class FletTestApp:
         """
         if self.page.window.width is None or self.page.window.height is None:
             return
-        evt = asyncio.Event()
-        self.page.on_resize = lambda e: evt.set()
+
+        # first update to desired content size
         self.page.window.width = width
         self.page.window.height = height
         self.page.update()
         await self.tester.pump_and_settle()
-        await evt.wait()
+        while self.page.window.width != width or self.page.window.height != height:
+            await asyncio.sleep(0.1)
+
+        # then adjust for window chrome size
         chrome_width = self.page.window.width - self.page.width
         chrome_height = self.page.window.height - self.page.height
-        self.page.window.width = width + chrome_width
-        self.page.window.height = height + chrome_height
-        self.page.window.update()
+        new_width = width + chrome_width
+        new_height = height + chrome_height
+        self.page.window.width = new_width
+        self.page.window.height = new_height
+        self.page.update()
         await self.tester.pump_and_settle()
+        while (
+            self.page.window.width != new_width or self.page.window.height != new_height
+        ):
+            await asyncio.sleep(0.1)
 
     async def wrap_page_controls_in_screenshot(self, margin=10):
         """
