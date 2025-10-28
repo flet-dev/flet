@@ -4,7 +4,7 @@ examples: ../../examples/controls/bottom_app_bar
 example_images: ../test-images/examples/material/golden/macos/bottom_app_bar
 ---
 
-{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic BottomAppBar", image_width="100%") }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic BottomAppBar", image_width="50%") }}
 
 ## Examples
 
