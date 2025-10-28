@@ -13,8 +13,7 @@ def flet_app(flet_app_function):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_end_position(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 500)
     flet_app.page.end_drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(
@@ -43,8 +42,7 @@ async def test_end_position(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_start_position(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 500)
     flet_app.page.drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(
@@ -73,6 +71,8 @@ async def test_start_position(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    await flet_app.resize_page(400, 500)
     flet_app.page.theme = ft.Theme(
         navigation_drawer_theme=ft.NavigationDrawerTheme(
             bgcolor=ft.Colors.BLUE_GREY_200,
@@ -87,10 +87,6 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             tile_height=100,
         )
     )
-
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
     flet_app.page.drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(

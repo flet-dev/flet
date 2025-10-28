@@ -261,6 +261,26 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
+    async def resize_page(self, width: int, height: int):
+        """
+        Resizes the page window to the specified width and height.
+        """
+        if self.page.window.width is None or self.page.window.height is None:
+            return
+        evt = asyncio.Event()
+        self.page.on_resize = lambda e: evt.set()
+        self.page.window.width = width
+        self.page.window.height = height
+        self.page.update()
+        await self.tester.pump_and_settle()
+        await evt.wait()
+        chrome_width = self.page.window.width - self.page.width
+        chrome_height = self.page.window.height - self.page.height
+        self.page.window.width = width + chrome_width
+        self.page.window.height = height + chrome_height
+        self.page.window.update()
+        await self.tester.pump_and_settle()
+
     async def wrap_page_controls_in_screenshot(self, margin=10):
         """
         Wraps provided controls in a Screenshot control.
