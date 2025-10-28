@@ -59,7 +59,7 @@ def configure_encode_object_for_msgpack(control_cls):
         elif isinstance(obj, Duration):
             return msgpack.ExtType(3, obj.in_microseconds)
         elif callable(obj):
-            raise Exception(f"Cannot serialize method: {obj}") from None
+            raise RuntimeError(f"Cannot serialize method: {obj}") from None
         return obj
 
     return encode_object_for_msgpack

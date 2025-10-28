@@ -83,7 +83,7 @@ def get_event_field_type(control: Any, field_name: str):
 
         return event_type
     except Exception as e:
-        raise Exception(f"[resolve error] {field_name}: {e}") from e
+        raise RuntimeError(f"[resolve error] {field_name}: {e}") from e
 
 
 EventControlType = TypeVar("EventControlType", bound="BaseControl")

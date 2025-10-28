@@ -229,7 +229,7 @@ class Session:
 
         result, err = self.__method_call_results.pop(evt)
         if err:
-            raise Exception(err)
+            raise RuntimeError(err)
         return result
 
     def handle_invoke_method_results(
@@ -242,7 +242,7 @@ class Session:
             self.__method_call_results[evt] = (result, error)
             evt.set()
         else:
-            raise Exception(
+            raise RuntimeError(
                 f"Error handling invoke method results. Control with ID {control_id} "
                 "is not registered."
             )

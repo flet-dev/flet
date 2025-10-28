@@ -90,7 +90,7 @@ class AuthorizationService(Authorization):
             self.user = await self.provider._fetch_user(self.__token.access_token)
             if self.user is None and self.provider.user_endpoint is not None:
                 if self.provider.user_id_fn is None:
-                    raise Exception(
+                    raise ValueError(
                         "user_id_fn must be specified too if user_endpoint is not None"
                     )
                 self.user = await self.__get_user()

@@ -4,9 +4,10 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
+from rich.progress import Progress
+
 from flet_cli.utils import processes
 from flet_cli.utils.distros import download_with_progress, extract_with_progress
-from rich.progress import Progress
 
 ANDROID_CMDLINE_TOOLS_DOWNLOAD_VERSION = "11076708"
 ANDROID_CMDLINE_TOOLS_VERSION = "12.0"
@@ -98,7 +99,7 @@ class AndroidSDK:
                 },
             }[platform.system()][platform.machine()]
         except KeyError:
-            raise Exception(
+            raise RuntimeError(
                 f"Unsupported platform: {platform.system()}-{platform.machine()}"
             ) from None
 
@@ -183,7 +184,7 @@ class AndroidSDK:
         )
         if p.returncode != 0:
             self.log(p.stderr)
-            raise Exception("Error installing Android SDK tools")
+            raise RuntimeError("Error installing Android SDK tools")
         return 1
 
     def _accept_licenses(self, home_dir: Path):
@@ -208,7 +209,7 @@ class AndroidSDK:
         )
         if p.returncode != 0:
             self.log(p.stderr)
-            raise Exception("Error accepting Android SDK licenses")
+            raise RuntimeError("Error accepting Android SDK licenses")
 
     def get_installed_packages(self, home_dir: Path):
         self.log("Checking installed Android APIs and build tools")
@@ -219,7 +220,7 @@ class AndroidSDK:
         )
         if p.returncode != 0:
             self.log(p.stderr)
-            raise Exception(
+            raise RuntimeError(
                 "Error retrieving the list of installed Android SDK packages"
             )
         return p.stdout

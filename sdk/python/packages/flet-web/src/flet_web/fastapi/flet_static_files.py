@@ -6,11 +6,11 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi.staticfiles import StaticFiles
-from flet.controls.types import RouteUrlStrategy, WebRenderer
-from flet.utils import Once, get_bool_env_var
 from starlette.types import Receive, Scope, Send
 
 import flet_web.fastapi as flet_fastapi
+from flet.controls.types import RouteUrlStrategy, WebRenderer
+from flet.utils import Once, get_bool_env_var
 from flet_web import (
     get_package_web_dir,
     patch_font_manifest_json,
@@ -120,7 +120,7 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Web root: {web_dir}")
 
         if not os.path.exists(web_dir):
-            raise Exception(f"Web root path not found: {web_dir}")
+            raise RuntimeError(f"Web root path not found: {web_dir}")
 
         # user-defined assets
         if self.__assets_dir:

@@ -36,7 +36,7 @@ class OAuthProvider:
         self.code_verifier = code_verifier
 
     def _name(self):
-        raise Exception("Not implemented")
+        raise NotImplementedError("Subclasses must implement _name()")
 
     async def _fetch_groups(self, access_token: str) -> list[Group]:
         return []

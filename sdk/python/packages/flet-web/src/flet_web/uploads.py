@@ -39,8 +39,9 @@ def get_upload_signature(
     if env_secret_key:
         secret_key = env_secret_key
     if not secret_key:
-        raise Exception(
-            "Specify secret_key parameter or set FLET_SECRET_KEY environment variable to enable uploads."
+        raise RuntimeError(
+            "Specify secret_key parameter or set FLET_SECRET_KEY environment "
+            "variable to enable uploads."
         )
     signing_key = hmac.new(
         secret_key.encode("utf-8"),
@@ -49,6 +50,6 @@ def get_upload_signature(
     ).digest()
     return hmac.new(
         signing_key,
-        f"{upload_endpoint_path.strip('/')}{query_string}".encode("utf-8"),
+        f"{upload_endpoint_path.strip('/')}{query_string}".encode(),
         hashlib.sha256,
     ).hexdigest()
