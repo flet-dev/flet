@@ -5,15 +5,9 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD,
-        shape=ft.CircleBorder(),
-    )
-    page.floating_action_button_location = ft.FloatingActionButtonLocation.CENTER_DOCKED
-
     page.bottom_appbar = ft.BottomAppBar(
+        border_radius=ft.BorderRadius.all(20),
         bgcolor=ft.Colors.BLUE,
-        shape=ft.CircularRectangleNotchShape(),
         content=ft.Row(
             controls=[
                 ft.IconButton(icon=ft.Icons.MENU, icon_color=ft.Colors.WHITE),
