@@ -491,6 +491,7 @@ class Colors(str, Enum, metaclass=DeprecatedEnumMeta):
     YELLOW_ACCENT_700 = "yellowaccent700"
 
 
+# TODO - remove in Flet 1.0
 _DEPRECATED_COLOR_ALIASES = {
     "BLACK12": ("BLACK_12", "Use Colors.BLACK_12 instead."),
     "BLACK26": ("BLACK_26", "Use Colors.BLACK_26 instead."),
