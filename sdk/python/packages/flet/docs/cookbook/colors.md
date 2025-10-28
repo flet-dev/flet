@@ -82,8 +82,8 @@ Most palettes range from `50` to `900`, in increments of `100`, while **accent s
 (e.g., [`Colors.RED_ACCENT`][flet.Colors.RED_ACCENT]) have only `100`, `200`, `400`, and `700`.
 
 In addition to color swatches, Flet provides named black and white variants with built-in opacities, such as:
-- [`Colors.BLACK54`][flet.Colors.BLACK54] → black at 54% opacity
-- [`Colors.WHITE70`][flet.Colors.WHITE70] → white at 70% opacity
+- [`Colors.BLACK_54`][flet.Colors.BLACK_54] → black at 54% opacity
+- [`Colors.WHITE_70`][flet.Colors.WHITE_70] → white at 70% opacity
 
 These palette colors can be used:
 - directly as values for control color properties (e.g., `bgcolor`, `color`)
