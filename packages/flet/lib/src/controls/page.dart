@@ -156,6 +156,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  /// Applies full screen mode to the app.
   Future<void> _applyFullScreenFromControl(Control control) async {
     final fullScreen = control.getBool("full_screen", false)!;
     if (_prevFullScreen != fullScreen) {

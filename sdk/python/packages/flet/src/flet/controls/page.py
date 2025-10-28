@@ -347,6 +347,11 @@ class Page(BasePage):
     full_screen: bool = False
     """
     Whether the app should run in full screen mode.
+
+    Difference to `Window.full_screen`:
+        This property is cross-platform, in contrast to [`full_screen`][flet.Window.]
+        property of [`Page.window`][flet.], which is only
+        available on desktop platforms (Windows, macOS and Linux).
     """
 
     on_platform_brightness_change: Optional[
