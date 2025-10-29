@@ -383,7 +383,8 @@ class FletTestApp:
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
             assert similarity > similarity_threshold, (
-                f"{name} screenshots are not identical"
+                f"{name} screenshots are not identical "
+                f"(similarity: {similarity}% <= {similarity_threshold}%)"
             )
 
     def _load_image_from_file(self, file_name):
