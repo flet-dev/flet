@@ -890,6 +890,12 @@ class DiffBuilder:
                     old = change[0]
                     new = change[1]
 
+                    if field_name.startswith("on_") and fields[field_name].metadata.get(
+                        "event", True
+                    ):
+                        old = old is not None
+                        new = new is not None
+
                     logger.debug("\n\n_compare_values:changes %s %s", old, new)
 
                     self._compare_values(dst, path, field_name, old, new, frozen)
@@ -963,7 +969,9 @@ class DiffBuilder:
                 if "skip" not in field.metadata:
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
-                    if field.name.startswith("on_"):
+                    if field.name.startswith("on_") and field.metadata.get(
+                        "event", True
+                    ):
                         old = old is not None
                         new = new is not None
                     self._compare_values(dst, path, field.name, old, new, frozen)
@@ -1126,20 +1134,15 @@ class DiffBuilder:
 
                     if hasattr(obj, "__changes"):
                         old_value = getattr(obj, name, None)
-                        if name.startswith("on_"):
-                            old_value = old_value is not None
-                        new_value = (
-                            value if not name.startswith("on_") else value is not None
-                        )
-                        if old_value != new_value:
+                        if old_value != value:
                             # logger.debug(
                             #     f"\n\nset_attr: {obj.__class__.__name__}.{name} = "
                             #     f"{new_value}, old: {old_value}"
                             # )
                             changes = getattr(obj, "__changes")
-                            changes[name] = (old_value, new_value)
+                            changes[name] = (old_value, value)
                             if hasattr(obj, "_notify"):
-                                obj._notify(name, new_value)
+                                obj._notify(name, value)
                 object.__setattr__(obj, name, value)
 
             item.__class__.__setattr__ = control_setattr  # type: ignore

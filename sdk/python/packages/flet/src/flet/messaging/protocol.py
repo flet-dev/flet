@@ -29,7 +29,7 @@ def configure_encode_object_for_msgpack(control_cls):
                     if len(v) > 0:
                         r[field.name] = v
                     prev_dicts[field.name] = v
-                elif field.name.startswith("on_"):
+                elif field.name.startswith("on_") and field.metadata.get("event", True):
                     v = v is not None
                     if v:
                         r[field.name] = v

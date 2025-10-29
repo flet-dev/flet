@@ -41,11 +41,13 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   late final FocusNode _shiftEnterfocusNode;
   String? _lastFocusValue;
   String? _lastBlurValue;
+  TextSelection? _selection;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _controller.addListener(_handleControllerChange);
     _shiftEnterfocusNode = FocusNode(
       onKeyEvent: (FocusNode node, KeyEvent evt) {
         if (!HardwareKeyboard.instance.isShiftPressed &&
@@ -67,6 +69,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
   @override
   void dispose() {
+    _controller.removeListener(_handleControllerChange);
     _controller.dispose();
     _shiftEnterfocusNode.removeListener(_onShiftEnterFocusChange);
     _shiftEnterfocusNode.dispose();
@@ -101,6 +104,25 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
+  void _handleControllerChange() {
+    final selection = _controller.selection;
+    if (_selection == selection) return;
+
+    _selection = selection;
+
+    if (!selection.isValid ||
+        !widget.control.getBool("on_selection_change", false)!) {
+      return;
+    }
+
+    widget.control.updateProperties({"selection": selection.toMap()});
+    widget.control.triggerEvent("selection_change", {
+      "selected_text":
+          _controller.text.substring(selection.start, selection.end),
+      "selection": selection.toMap()
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoTextField build: ${widget.control.id}");
@@ -109,7 +131,12 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     var value = widget.control.getString("value", "")!;
     if (_value != value) {
       _value = value;
-      _controller.text = value;
+      _controller.value = TextEditingValue(
+        text: value,
+        // preserve cursor position at the end
+        selection: TextSelection.collapsed(offset: value.length),
+      );
+      _selection = _controller.selection;
     }
 
     var shiftEnter = widget.control.getBool("shift_enter", false)!;
@@ -163,6 +190,13 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     if (blurValue != null && blurValue != _lastBlurValue) {
       _lastBlurValue = blurValue;
       _focusNode.unfocus();
+    }
+
+    var selection = widget.control.getTextSelection("selection",
+        minOffset: 0, maxOffset: _controller.text.length);
+    if (selection != null && selection != _controller.selection) {
+      _controller.selection = selection;
+      _selection = selection;
     }
 
     var borderRadius = widget.control.getBorderRadius("border_radius");

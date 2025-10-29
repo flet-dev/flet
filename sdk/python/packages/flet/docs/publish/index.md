@@ -214,6 +214,70 @@ dependencies = [
 
 Example of extensions can be found here.
 
+## Product Name
+
+The display name shown in window titles, about dialogs, and app launchers.
+This is the user-facing name of your application.
+
+**Default:** Derived from `project.name`, `tool.poetry.name` in `pyproject.toml`,
+or the name of your Flet app directory.
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --product "My Awesome App"
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+product = "My Awesome App"
+```
+///
+
+///
+
+## Company Name
+
+The company name displayed in about app dialogs and metadata.
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --company "My Company Inc."
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+company = "My Company Inc."
+```
+///
+
+///
+
+## Copyright
+
+Copyright text displayed in about app dialogs and metadata.
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --copyright "Copyright © 2025 My Company Inc."
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+copyright = "Copyright © 2025 My Company Inc."
+```
+///
+
+///
+
 ## Flutter dependencies
 
 Adding a Flutter package can be done in the `pyproject.toml` as follows:
@@ -402,7 +466,7 @@ message = "Starting up the app…"
 
 ## Entry point
 
-The Flet application entry (or starting) point refers to the file that contains the call to `ft.run(target)`.
+The Flet application entry (or starting) point refers to the file that contains the call to `ft.run()`.
 
 By default, Flet assumes this file is named `main.py`.
 However, if your entry point is different (for example, `start.py`), you can specify it as follows:
@@ -690,77 +754,6 @@ flet build <target_platform> --template gh:org/template --template-dir sub/direc
 ```
 ///
 
-## Additional `flutter build` Arguments
-
-During the `flet build` process, `flutter build` command gets called internally to
-package your app for the specified platform.
-
-It's value can be set in either of the following ways:
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-flutter.build_args = [
-  "--no-tree-shake-icons",
-  "--export-method", "development"
-]
-```
-///
-/// tab | `[tool.flet.flutter]`
-```toml
-[tool.flet.flutter]
-build_args = [
-  "--no-tree-shake-icons",
-  "--export-method", "development"
-]
-```
-///
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --flutter-build-args=--no-tree-shake-icons # (1)!
-
-# OR as key-value
-
-flet build <target_platform> --flutter-build-args=--export-method --flutter-build-args=development
-```
-
-1. `--flutter-build-args` can be used multiple times.
-///
-
-## Verbose logging
-
-The `-v` (or `--verbose`) and `-vv` flags enables detailed output from all commands during the flet build process.
-Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed output (higher verbosity level).
-If you need support, we may ask you to share this verbose log.
-
-## Console output
-
-All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python
-logging module—is now redirected to a `console.log` file. The full path to this file is available via the
-`FLET_APP_CONSOLE` environment variable.
-
-The log file is written in an unbuffered manner, allowing you to read it at any point in your Python program using:
-
-```python
-with open(os.getenv("FLET_APP_CONSOLE"), "r") as f:
-  log = f.read()
-```
-
-You can then display the `log` content using an `AlertDialog` or any other Flet control.
-
-If your program calls sys.exit(100), the complete log will automatically be shown in a scrollable window.
-This is a special “magic” exit code for debugging purposes:
-
-```python
-import sys
-sys.exit(100)
-```
-
-Calling `sys.exit()` with any other code will terminate the app without displaying the log.
-
 ## Deep linking
 
 [Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users to
@@ -889,3 +882,74 @@ bundle_id = "com.mycompany.example-app-platform"
 ///
 
 ///
+
+## Additional `flutter build` Arguments
+
+During the `flet build` process, `flutter build` command gets called internally to
+package your app for the specified platform.
+
+It's value can be set in either of the following ways:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+flutter.build_args = [
+  "--no-tree-shake-icons",
+  "--export-method", "development"
+]
+```
+///
+/// tab | `[tool.flet.flutter]`
+```toml
+[tool.flet.flutter]
+build_args = [
+  "--no-tree-shake-icons",
+  "--export-method", "development"
+]
+```
+///
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --flutter-build-args=--no-tree-shake-icons # (1)!
+
+# OR as key-value
+
+flet build <target_platform> --flutter-build-args=--export-method --flutter-build-args=development
+```
+
+1. `--flutter-build-args` can be used multiple times.
+///
+
+## Verbose logging
+
+The `-v` (or `--verbose`) and `-vv` flags enables detailed output from all commands during the flet build process.
+Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed output (higher verbosity level).
+If you need support, we may ask you to share this verbose log.
+
+## Console output
+
+All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python
+logging module—is now redirected to a `console.log` file. The full path to this file is available via the
+`FLET_APP_CONSOLE` environment variable.
+
+The log file is written in an unbuffered manner, allowing you to read it at any point in your Python program using:
+
+```python
+with open(os.getenv("FLET_APP_CONSOLE"), "r") as f:
+  log = f.read()
+```
+
+You can then display the `log` content using an `AlertDialog` or any other Flet control.
+
+If your program calls sys.exit(100), the complete log will automatically be shown in a scrollable window.
+This is a special “magic” exit code for debugging purposes:
+
+```python
+import sys
+sys.exit(100)
+```
+
+Calling `sys.exit()` with any other code will terminate the app without displaying the log.

@@ -324,4 +324,14 @@ class FormFieldControl(LayoutControl):
     """
 
     async def focus(self):
+        """
+        Request focus for this control.
+
+        Example:
+            ```python
+            async def main(page: ft.Page):
+                page.add(ctf := ft.TextField())
+                await ctf.focus()
+            ```
+        """
         await self._invoke_method("focus")

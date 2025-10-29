@@ -4,8 +4,9 @@ from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
+from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
 from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import StrutStyle
@@ -144,6 +145,19 @@ class TextField(FormFieldControl, AdaptiveControl):
     Current value of the TextField.
     """
 
+    selection: Optional[TextSelection] = None
+    """
+    Represents the current text selection or caret position in the field.
+
+    When the user selects text, this property is updated to reflect the selected range.
+    If no text is selected, it contains an empty range indicating the caret position.
+
+    Setting this property visually updates the field's selection to match the given
+    value, and hence leads to the [`on_selection_change`][(c).] event being triggered.
+    To ensure the selection is visible and the event is fired, the text field must
+    be focused. Call [`focus()`][(c).focus] on the field before setting this property.
+    """
+
     keyboard_type: KeyboardType = KeyboardType.TEXT
     """
     The type of keyboard to use for editing the text.
@@ -151,7 +165,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     multiline: bool = False
     """
-    `True` if TextField can contain multiple lines of text.
+    Whether this field can contain multiple lines of text.
     """
 
     min_lines: Optional[int] = None
@@ -400,12 +414,23 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Helps the autofill service identify the type of this text input.
 
-    More information [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
+    More information
+    [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
 
     on_change: Optional[ControlEventHandler["TextField"]] = None
     """
     Called when the typed input for the TextField has changed.
+    """
+
+    on_selection_change: Optional[
+        EventHandler[TextSelectionChangeEvent["TextField"]]
+    ] = None
+    """
+    Called when the text selection or caret position changes.
+
+    This can be triggered either by user interaction (selecting text or moving
+    the caret) or programmatically (through the [`selection`][(c).] property).
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
