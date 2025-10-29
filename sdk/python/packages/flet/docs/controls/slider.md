@@ -4,7 +4,7 @@ examples: ../../examples/controls/slider
 example_images: ../test-images/examples/material/golden/macos/slider
 ---
 
-{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Default and disabled sliders") }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic slider") }}
 
 ## Examples
 

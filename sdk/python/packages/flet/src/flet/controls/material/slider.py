@@ -32,6 +32,11 @@ class Slider(LayoutControl, AdaptiveControl):
     Use a slider when you want people to set defined values (such as volume or
     brightness), or when people would benefit from instant feedback on the effect
     of setting changes.
+
+    ```python
+    ft.Slider(label="Slider", value=0.3)
+    ```
+
     """
 
     value: Optional[Number] = None
