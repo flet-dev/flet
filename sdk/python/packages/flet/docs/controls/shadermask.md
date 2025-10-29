@@ -35,4 +35,6 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 --8<-- "{{ examples }}/linear_and_radial_gradients.py"
 ```
 
+{{ image(example_images + "/linear_and_radial_gradients.png", alt="fade-out-image-bottom", width="80%") }}
+
 {{ class_members(class_name) }}

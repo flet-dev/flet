@@ -25,6 +25,7 @@ snack_bar_action_class_name: flet.SnackBarAction
 ```python
 --8<-- "{{ examples }}/counter.py"
 ```
+
 {{ image(example_images + "/snack_bar_flow.gif", alt="Snack bar with counter", caption="Snack bar with counter",width="50%") }}
 
 
