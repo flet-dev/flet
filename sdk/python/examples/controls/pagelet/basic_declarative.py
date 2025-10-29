@@ -1,20 +1,15 @@
-from typing import cast
-
 import flet as ft
 
 
 @ft.component
 def App():
-    pagelet = ft.Ref[ft.BaseControl]()
-
     async def handle_show_drawer():
-        await cast(ft.Pagelet, pagelet.current).show_drawer()
+        await p.show_drawer()
 
     async def handle_show_end_drawer():
-        await cast(ft.Pagelet, pagelet.current).show_end_drawer()
+        await p.show_end_drawer()
 
-    return ft.Pagelet(
-        ref=pagelet,
+    p = ft.Pagelet(
         width=400,
         height=400,
         appbar=ft.AppBar(
@@ -74,6 +69,7 @@ def App():
         ),
         floating_action_button_location=ft.FloatingActionButtonLocation.CENTER_DOCKED,
     )
+    return p
 
 
 ft.run(lambda page: page.render(App))
