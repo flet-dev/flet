@@ -231,7 +231,7 @@ def on_message(message: Message):
         chat.controls.append(ft.Text(f"{message.user}: {message.text}"))
     elif message.message_type == "login_message":
         chat.controls.append(
-            ft.Text(message.text, italic=True, color=ft.Colors.BLACK45, size=12)
+            ft.Text(message.text, italic=True, color=ft.Colors.BLACK_45, size=12)
         )
     page.update()
 ```
@@ -365,7 +365,7 @@ Instances of `ChatMessage` will be created instead of plain `Text` chat messages
         if message.message_type == "chat_message":
             m = ChatMessage(message)
         elif message.message_type == "login_message":
-            m = ft.Text(message.text, italic=True, color=ft.Colors.BLACK45, size=12)
+            m = ft.Text(message.text, italic=True, color=ft.Colors.BLACK_45, size=12)
         chat.controls.append(m)
         page.update()
 ```
