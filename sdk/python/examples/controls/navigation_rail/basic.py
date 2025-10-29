@@ -37,7 +37,7 @@ def main(page: ft.Page):
         ft.Row(
             expand=True,
             controls=[
-                rail,
+                ft.SelectionArea(content=rail),
                 ft.VerticalDivider(width=1),
                 ft.Column(
                     alignment=ft.MainAxisAlignment.START,

@@ -1,10 +1,11 @@
 ---
 class_name: flet.SelectionArea
 examples: ../../examples/controls/selection_area
-example_images: ../examples/controls/selection_area/media
+example_images: ../test-images/examples/material/golden/macos/selection_area
+example_media: ../examples/controls/selection_area/media
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Selectable and unselectable text") }}
 
 ## Examples
 
@@ -14,7 +15,7 @@ example_images: ../examples/controls/selection_area/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
 
 
 {{ class_members(class_name) }}

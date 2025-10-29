@@ -34,4 +34,5 @@ def main(page: ft.Page):
     page.add(ft.Button("Open SnackBar", on_click=handle_button_click))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

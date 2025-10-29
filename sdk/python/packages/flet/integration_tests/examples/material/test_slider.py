@@ -14,13 +14,7 @@ from examples.controls.slider import (
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app_function.assert_control_screenshot(
-        request.node.name,
-        ft.Column(
-            [
-                ft.Slider(label="Defualt Slider"),
-                ft.Slider(label="Disabled Slider", disabled=True),
-            ]
-        ),
+        request.node.name, ft.Slider(label="Slider", value=0.3)
     )
 
 
