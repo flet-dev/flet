@@ -77,6 +77,8 @@ async def test_src_svg_string(flet_app: ftt.FletTestApp, request):
             height=100,
             fit=ft.BoxFit.CONTAIN,
         ),
+        pump_times=5,
+        pump_duration=1000,
     )
 
 
