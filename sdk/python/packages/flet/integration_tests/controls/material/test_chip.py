@@ -39,8 +39,7 @@ async def test_chip_clicked(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.add(chip)
     await flet_app.tester.pump_and_settle()
     await flet_app.tester.tap(await flet_app.tester.find_by_key("chip"))

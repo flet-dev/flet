@@ -26,8 +26,7 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_expanded(flet_app: ftt.FletTestApp, request):
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.add(
         tile := ft.ExpansionTile(
             key="tile",

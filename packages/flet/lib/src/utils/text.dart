@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,68 +14,42 @@ import 'material_state.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {
   var textTheme = Theme.of(context).textTheme;
-  switch (styleName.toLowerCase()) {
-    case "displaylarge":
-      return textTheme.displayLarge;
-    case "displaymedium":
-      return textTheme.displayMedium;
-    case "displaysmall":
-      return textTheme.displaySmall;
-    case "headlinelarge":
-      return textTheme.headlineLarge;
-    case "headlinemedium":
-      return textTheme.headlineMedium;
-    case "headlinesmall":
-      return textTheme.headlineSmall;
-    case "titlelarge":
-      return textTheme.titleLarge;
-    case "titlemedium":
-      return textTheme.titleMedium;
-    case "titlesmall":
-      return textTheme.titleSmall;
-    case "labellarge":
-      return textTheme.labelLarge;
-    case "labelmedium":
-      return textTheme.labelMedium;
-    case "labelsmall":
-      return textTheme.labelSmall;
-    case "bodylarge":
-      return textTheme.bodyLarge;
-    case "bodymedium":
-      return textTheme.bodyMedium;
-    case "bodysmall":
-      return textTheme.bodySmall;
-  }
-  return null;
+  final styles = <String, TextStyle?>{
+    "displaylarge": textTheme.displayLarge,
+    "displaymedium": textTheme.displayMedium,
+    "displaysmall": textTheme.displaySmall,
+    "headlinelarge": textTheme.headlineLarge,
+    "headlinemedium": textTheme.headlineMedium,
+    "headlinesmall": textTheme.headlineSmall,
+    "titlelarge": textTheme.titleLarge,
+    "titlemedium": textTheme.titleMedium,
+    "titlesmall": textTheme.titleSmall,
+    "labellarge": textTheme.labelLarge,
+    "labelmedium": textTheme.labelMedium,
+    "labelsmall": textTheme.labelSmall,
+    "bodylarge": textTheme.bodyLarge,
+    "bodymedium": textTheme.bodyMedium,
+    "bodysmall": textTheme.bodySmall,
+  };
+  return styles[styleName.toLowerCase()];
 }
 
 FontWeight? getFontWeight(String? weightName, [FontWeight? defaultWeight]) {
-  switch (weightName?.toLowerCase()) {
-    case "normal":
-      return FontWeight.normal;
-    case "bold":
-      return FontWeight.bold;
-    case "w100":
-      return FontWeight.w100;
-    case "w200":
-      return FontWeight.w200;
-    case "w300":
-      return FontWeight.w300;
-    case "w400":
-      return FontWeight.w400;
-    case "w500":
-      return FontWeight.w500;
-    case "w600":
-      return FontWeight.w600;
-    case "w700":
-      return FontWeight.w700;
-    case "w800":
-      return FontWeight.w800;
-    case "w900":
-      return FontWeight.w900;
-    default:
-      return defaultWeight;
-  }
+  if (weightName == null) return defaultWeight;
+  final weights = <String, FontWeight>{
+    "normal": FontWeight.normal,
+    "bold": FontWeight.bold,
+    "w100": FontWeight.w100,
+    "w200": FontWeight.w200,
+    "w300": FontWeight.w300,
+    "w400": FontWeight.w400,
+    "w500": FontWeight.w500,
+    "w600": FontWeight.w600,
+    "w700": FontWeight.w700,
+    "w800": FontWeight.w800,
+    "w900": FontWeight.w900,
+  };
+  return weights[weightName.toLowerCase()] ?? defaultWeight;
 }
 
 List<TextSpan> parseTextSpans(List<Control> spans, ThemeData theme,
@@ -157,6 +133,13 @@ TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
       defaultValue;
 }
 
+TextAffinity? parseTextAffinity(String? value, [TextAffinity? defaultValue]) {
+  if (value == null) return defaultValue;
+  return TextAffinity.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
 TextStyle? parseTextStyle(dynamic value, ThemeData theme,
     [TextStyle? defaultValue]) {
   if (value == null) return defaultValue;
@@ -213,6 +196,35 @@ WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
       value, (jv) => parseTextStyle(jv, theme), defaultTextStyle);
 }
 
+TextSelection? parseTextSelection(
+  dynamic value, {
+  int? minOffset,
+  int? maxOffset,
+  TextSelection? defaultValue,
+}) {
+  if (value == null) return defaultValue;
+
+  int baseOffset = parseInt(value['base_offset'], 0)!;
+  int extentOffset = parseInt(value['extent_offset'], 0)!;
+
+  // Clamp values if limits are provided
+  if (minOffset != null) {
+    baseOffset = max(baseOffset, minOffset);
+    extentOffset = max(extentOffset, minOffset);
+  }
+  if (maxOffset != null) {
+    baseOffset = min(baseOffset, maxOffset);
+    extentOffset = min(extentOffset, maxOffset);
+  }
+
+  return TextSelection(
+    baseOffset: baseOffset,
+    extentOffset: extentOffset,
+    affinity: parseTextAffinity(value['affinity'], TextAffinity.downstream)!,
+    isDirectional: parseBool(value['directional'], false)!,
+  );
+}
+
 extension TextParsers on Control {
   TextStyle? getTextStyle(String propertyName, ThemeData theme,
       [TextStyle? defaultValue]) {
@@ -243,6 +255,21 @@ extension TextParsers on Control {
     return parseTextBaseline(get(propertyName), defaultValue);
   }
 
+  TextAffinity? getTextAffinity(String propertyName,
+      [TextAffinity? defaultValue]) {
+    return parseTextAffinity(get(propertyName), defaultValue);
+  }
+
+  TextSelection? getTextSelection(
+    String propertyName, {
+    int? minOffset,
+    int? maxOffset,
+    TextSelection? defaultValue,
+  }) {
+    return parseTextSelection(get(propertyName),
+        minOffset: minOffset, maxOffset: maxOffset, defaultValue: defaultValue);
+  }
+
   WidgetStateProperty<TextStyle?>? getWidgetStateTextStyle(
       String propertyName, ThemeData theme,
       {TextStyle? defaultTextStyle,
@@ -254,14 +281,9 @@ extension TextParsers on Control {
 
 extension TextSelectionExtension on TextSelection {
   Map<String, dynamic> toMap() => {
-        "start": start,
-        "end": end,
         "base_offset": baseOffset,
         "extent_offset": extentOffset,
         "affinity": affinity.name,
         "directional": isDirectional,
-        "collapsed": isCollapsed,
-        "valid": isValid,
-        "normalized": isNormalized,
       };
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +21,6 @@ import '../utils/theme.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
-import '../widgets/scaffold_key_provider.dart';
 import 'app_bar.dart';
 import 'cupertino_app_bar.dart';
 import 'scroll_notification_control.dart';
@@ -72,12 +70,23 @@ class _ViewControlState extends State<ViewControl> {
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("View.$name($args)");
     switch (name) {
+      case "show_drawer":
+        _scaffoldKey.currentState?.openDrawer();
+        break;
+      case "close_drawer":
+        _scaffoldKey.currentState?.closeDrawer();
+        break;
+      case "show_end_drawer":
+        _scaffoldKey.currentState?.openEndDrawer();
+        break;
+      case "close_end_drawer":
+        _scaffoldKey.currentState?.closeEndDrawer();
+        break;
       case "confirm_pop":
         if (_popCompleter != null && !_popCompleter!.isCompleted) {
           _popCompleter?.complete(args["should_pop"]);
         }
-      default:
-        throw Exception("Unknown View method: $name");
+        break;
     }
   }
 
@@ -85,22 +94,8 @@ class _ViewControlState extends State<ViewControl> {
     setState(() {});
   }
 
-  Future<void> _dismissDrawer(Control drawer, FletBackend backend) async {
-    await Future.delayed(const Duration(milliseconds: 250));
-    backend.updateControl(drawer.id, {"open": false});
-    backend.triggerControlEvent(drawer, "dismiss");
-  }
-
-  void _openDrawers(Control? drawer, Control? endDrawer) {
-    if (drawer != null &&
-        drawer.getBool("open", false) == true &&
-        _scaffoldKey.currentState?.isDrawerOpen == false) {
-      _scaffoldKey.currentState?.openDrawer();
-    } else if (endDrawer != null &&
-        endDrawer.getBool("open", false) == true &&
-        _scaffoldKey.currentState?.isEndDrawerOpen == false) {
-      _scaffoldKey.currentState?.openEndDrawer();
-    }
+  Future<void> _dismissDrawer(int drawerId) async {
+    widget.control.backend.triggerControlEventById(drawerId, "dismiss");
   }
 
   @override
@@ -130,7 +125,11 @@ class _ViewControlState extends State<ViewControl> {
             .toList());
 
     Widget child = ScrollableControl(
-        control: control, scrollDirection: Axis.vertical, child: column);
+      control: control,
+      scrollDirection: Axis.vertical,
+      wrapIntoScrollableView: true,
+      child: column,
+    );
 
     if (control.getBool("on_scroll", false)!) {
       child = ScrollNotificationControl(control: control, child: child);
@@ -154,10 +153,8 @@ class _ViewControlState extends State<ViewControl> {
     var overlayControls = _overlay?.children("controls");
     var dialogControls = _dialogs?.children("controls");
 
-    Control? drawer = dialogControls?.firstWhereOrNull(
-        (c) => c.type == "NavigationDrawer" && c.get("position") != "end");
-    Control? endDrawer = dialogControls?.firstWhereOrNull(
-        (c) => c.type == "NavigationDrawer" && c.get("position") == "end");
+    var drawer = widget.control.child("drawer");
+    var endDrawer = widget.control.child("end_drawer");
 
     var isRootView = control.id == pageViews.first.id;
 
@@ -165,9 +162,8 @@ class _ViewControlState extends State<ViewControl> {
       if (control.id == pageViews.last.id) {
         overlayWidgets
             .addAll(overlayControls.map((c) => ControlWidget(control: c)));
-        overlayWidgets.addAll(dialogControls
-            .where((dialog) => dialog.type != "NavigationDrawer")
-            .map((c) => ControlWidget(control: c)));
+        overlayWidgets
+            .addAll(dialogControls.map((c) => ControlWidget(control: c)));
         overlayWidgets.add(PageMedia(view: widget.control.parent));
       }
 
@@ -176,10 +172,6 @@ class _ViewControlState extends State<ViewControl> {
         overlayWidgets.add(ControlWidget(control: windowControl));
       }
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _openDrawers(drawer, endDrawer);
-    });
 
     Widget body = Stack(children: [
       SizedBox.expand(
@@ -200,37 +192,34 @@ class _ViewControlState extends State<ViewControl> {
             : parseTheme(
                 control.parent!.get("theme"), context, Brightness.dark);
 
-    Widget scaffold = ScaffoldKeyProvider(
-      scaffoldKey: _scaffoldKey,
-      child: Scaffold(
-        key: appBarWidget == null || appBarWidget is AppBarControl
-            ? _scaffoldKey
-            : null,
-        backgroundColor: control.getColor("bgcolor", context) ??
-            ((pageData?.widgetsDesign == PageDesign.cupertino)
-                ? CupertinoTheme.of(context).scaffoldBackgroundColor
-                : Theme.of(context).scaffoldBackgroundColor),
-        appBar: appBarWidget is AppBarControl ? appBarWidget : null,
-        drawer: drawer != null ? ControlWidget(control: drawer) : null,
-        onDrawerChanged: (opened) {
-          if (!opened) {
-            _dismissDrawer(drawer!, FletBackend.of(context));
-          }
-        },
-        endDrawer: endDrawer != null ? ControlWidget(control: endDrawer) : null,
-        onEndDrawerChanged: (opened) {
-          if (!opened) {
-            _dismissDrawer(endDrawer!, FletBackend.of(context));
-          }
-        },
-        body: body,
-        bottomNavigationBar: control.buildWidget("navigation_bar") ??
-            control.buildWidget("bottom_appbar"),
-        floatingActionButton: control.buildWidget("floating_action_button"),
-        floatingActionButtonLocation: control.getFloatingActionButtonLocation(
-            "floating_action_button_location",
-            FloatingActionButtonLocation.endFloat),
-      ),
+    Widget scaffold = Scaffold(
+      key: appBarWidget == null || appBarWidget is AppBarControl
+          ? _scaffoldKey
+          : null,
+      backgroundColor: control.getColor("bgcolor", context) ??
+          ((pageData?.widgetsDesign == PageDesign.cupertino)
+              ? CupertinoTheme.of(context).scaffoldBackgroundColor
+              : Theme.of(context).scaffoldBackgroundColor),
+      appBar: appBarWidget is AppBarControl ? appBarWidget : null,
+      drawer: drawer != null ? ControlWidget(control: drawer) : null,
+      onDrawerChanged: (opened) {
+        if (!opened) {
+          _dismissDrawer(drawer!.id);
+        }
+      },
+      endDrawer: endDrawer != null ? ControlWidget(control: endDrawer) : null,
+      onEndDrawerChanged: (opened) {
+        if (!opened) {
+          _dismissDrawer(endDrawer!.id);
+        }
+      },
+      body: body,
+      bottomNavigationBar: control.buildWidget("navigation_bar") ??
+          control.buildWidget("bottom_appbar"),
+      floatingActionButton: control.buildWidget("floating_action_button"),
+      floatingActionButtonLocation: control.getFloatingActionButtonLocation(
+          "floating_action_button_location",
+          FloatingActionButtonLocation.endFloat),
     );
 
     var systemOverlayStyle =

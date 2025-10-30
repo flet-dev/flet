@@ -15,6 +15,8 @@ from flet.messaging.protocol import configure_encode_object_for_msgpack
 @ft.control("MyText")
 class MyText(ft.BaseControl):
     value: str
+    color_scheme: Optional[ft.ColorScheme] = None
+    on_select: Optional[ft.EventHandler] = None
 
     def __str__(self):
         return f"{self._c}({self.value}, key={self.key} - {id(self)})"

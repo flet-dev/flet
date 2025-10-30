@@ -78,7 +78,7 @@ class ColorScheme:
     The color displayed most frequently across your app's screens and components.
     """
 
-    on_primary: Optional[ColorValue] = None
+    on_primary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
     A color that's clearly legible when drawn on `primary`.
     """
@@ -88,7 +88,9 @@ class ColorScheme:
     A color used for elements needing less emphasis than `primary`.
     """
 
-    on_primary_container: Optional[ColorValue] = None
+    on_primary_container: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that's clearly legible when drawn on `primary_container`.
     """
@@ -99,7 +101,7 @@ class ColorScheme:
     while expanding the opportunity for color expression.
     """
 
-    on_secondary: Optional[ColorValue] = None
+    on_secondary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
     A color that's clearly legible when drawn on `secondary`.
     """
@@ -109,7 +111,9 @@ class ColorScheme:
     A color used for elements needing less emphasis than `secondary`.
     """
 
-    on_secondary_container: Optional[ColorValue] = None
+    on_secondary_container: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that's clearly legible when drawn on `secondary_container`.
     """
@@ -120,7 +124,7 @@ class ColorScheme:
     colors or bring heightened attention to an element, such as an input field.
     """
 
-    on_tertiary: Optional[ColorValue] = None
+    on_tertiary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
     A color that's clearly legible when drawn on `tertiary`.
     """
@@ -130,7 +134,9 @@ class ColorScheme:
     A color used for elements needing less emphasis than `tertiary`.
     """
 
-    on_tertiary_container: Optional[ColorValue] = None
+    on_tertiary_container: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that's clearly legible when drawn on `tertiary_container`.
     """
@@ -140,7 +146,7 @@ class ColorScheme:
     The color to use for input validation errors, e.g. for `TextField.error_text`.
     """
 
-    on_error: Optional[ColorValue] = None
+    on_error: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
     A color that's clearly legible when drawn on `error`.
     """
@@ -150,7 +156,9 @@ class ColorScheme:
     A color used for error elements needing less emphasis than `error`.
     """
 
-    on_error_container: Optional[ColorValue] = None
+    on_error_container: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that's clearly legible when drawn on `error_container`.
     """
@@ -160,12 +168,14 @@ class ColorScheme:
     The background color for widgets like `Card`.
     """
 
-    on_surface: Optional[ColorValue] = None
+    on_surface: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
     A color that's clearly legible when drawn on `surface`.
     """
 
-    on_surface_variant: Optional[ColorValue] = None
+    on_surface_variant: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that's clearly legible when drawn on `surface_variant`.
     """
@@ -197,7 +207,9 @@ class ColorScheme:
     UI, for example in a `SnackBar` to bring attention to an alert.
     """
 
-    on_inverse_surface: Optional[ColorValue] = None
+    on_inverse_surface: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that's clearly legible when drawn on `inverse_surface`.
     """
@@ -213,37 +225,49 @@ class ColorScheme:
     A color used as an overlay on a surface color to indicate a component's elevation.
     """
 
-    on_primary_fixed: Optional[ColorValue] = None
+    on_primary_fixed: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that is used for text and icons that exist on top of elements having
     `primary_fixed` color.
     """
 
-    on_secondary_fixed: Optional[ColorValue] = None
+    on_secondary_fixed: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that is used for text and icons that exist on top of elements having
     `secondary_fixed` color.
     """
 
-    on_tertiary_fixed: Optional[ColorValue] = None
+    on_tertiary_fixed: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that is used for text and icons that exist on top of elements having
     `tertiary_fixed` color.
     """
 
-    on_primary_fixed_variant: Optional[ColorValue] = None
+    on_primary_fixed_variant: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that provides a lower-emphasis option for text and icons than
     `on_primary_fixed`.
     """
 
-    on_secondary_fixed_variant: Optional[ColorValue] = None
+    on_secondary_fixed_variant: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that provides a lower-emphasis option for text and icons than
     `on_secondary_fixed`.
     """
 
-    on_tertiary_fixed_variant: Optional[ColorValue] = None
+    on_tertiary_fixed_variant: Optional[ColorValue] = field(
+        default=None, metadata={"event": False}
+    )
     """
     A color that provides a lower-emphasis option for text and icons than
     `on_tertiary_fixed`.

@@ -132,7 +132,7 @@ plugins:
             show_source: false
             group_by_category: true
             show_category_heading: true
-            show_labels: false
+            show_labels: true
             show_if_no_docstring: true
             docstring_section_style: list
             separate_signature: true
@@ -143,7 +143,7 @@ plugins:
             preload_modules: [ flet, flet_ads ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
-              - "!(init|before_update|build|will_unmount|did_mount)"
+              - "!^(init|before_update|build|will_unmount|did_mount)$"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
@@ -787,7 +787,6 @@ nav:
               - MarkdownCodeTheme: types/markdowncodetheme.md
               - MarkdownExtensionSet: types/markdownextensionset.md
               - NavigationBarLabelBehavior: types/navigationbarlabelbehavior.md
-              - NavigationDrawerPosition: types/navigationdrawerposition.md
               - NavigationRailLabelType: types/navigationraillabeltype.md
               - DeviceOrientation: types/deviceorientation.md
               - Orientation: types/orientation.md

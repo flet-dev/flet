@@ -282,11 +282,7 @@ Widget _positionedControl(
       top: top,
       right: right,
       bottom: bottom,
-      onEnd: control.getBool("on_animation_end", false)!
-          ? () {
-              control.triggerEvent("animation_end", "position");
-            }
-          : null,
+      onEnd: () => control.triggerEvent("animation_end", "position"),
       child: widget,
     );
   } else if (left != null || top != null || right != null || bottom != null) {
@@ -305,25 +301,34 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control control) {
-  final skipProps = control.internals?["skip_properties"] as List?;
-  if (skipProps?.contains("width") == true ||
-      skipProps?.contains("height") == true) {
+  final skipProps = control.internals?['skip_properties'] as List?;
+  if (skipProps != null && ['width', 'height'].any(skipProps.contains)) {
     return widget;
   }
 
-  var width = control.getDouble("width");
-  var height = control.getDouble("height");
+  final width = control.getDouble("width");
+  final height = control.getDouble("height");
+  final animationSize = control.getAnimation("animate_size");
 
-  if ((width != null || height != null)) {
-    widget = ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: width, height: height),
-      child: widget,
-    );
+  final hasFixedSize = width != null || height != null;
+
+  if (animationSize != null) {
+    return hasFixedSize
+        ? AnimatedContainer(
+            duration: animationSize.duration,
+            curve: animationSize.curve,
+            width: width,
+            height: height,
+            child: widget,
+          )
+        : AnimatedSize(
+            duration: animationSize.duration,
+            curve: animationSize.curve,
+            child: widget,
+          );
+  } else {
+    return hasFixedSize
+        ? SizedBox(width: width, height: height, child: widget)
+        : widget;
   }
-  var animation = control.getAnimation("animate_size");
-  if (animation != null) {
-    return AnimatedSize(
-        duration: animation.duration, curve: animation.curve, child: widget);
-  }
-  return widget;
 }

@@ -4,7 +4,7 @@
   {# Split attributes into events and properties #}
   {% set ns = namespace(events=[], props=[]) %}
   {% for attribute in section.value %}
-    {% if attribute.name.startswith('on_') %}
+    {% if attribute.name.startswith('on_') and (config.extra.events is not defined or (config.extra.events and attribute.name in config.extra.events)) %}
       {% set _ = ns.events.append(attribute) %}
     {% else %}
       {% set _ = ns.props.append(attribute) %}

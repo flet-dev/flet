@@ -16,7 +16,5 @@ example_images: ../examples/controls/auto_complete/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
-
 
 {{ class_members(class_name) }}

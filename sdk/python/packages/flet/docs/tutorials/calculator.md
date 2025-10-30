@@ -218,7 +218,7 @@ Now let's create child classes for all three types of buttons:
 class DigitButton(CalcButton):
     def __init__(self, text, expand=1):
         CalcButton.__init__(self, text, expand)
-        self.bgcolor = ft.Colors.WHITE24
+        self.bgcolor = ft.Colors.WHITE_24
         self.color = ft.Colors.WHITE
 
 class ActionButton(CalcButton):

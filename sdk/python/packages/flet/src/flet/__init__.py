@@ -311,7 +311,6 @@ from flet.controls.material.navigation_bar import (
 from flet.controls.material.navigation_drawer import (
     NavigationDrawer,
     NavigationDrawerDestination,
-    NavigationDrawerPosition,
 )
 from flet.controls.material.navigation_rail import (
     NavigationRail,
@@ -778,7 +777,6 @@ __all__ = [
     "NavigationBarTheme",
     "NavigationDrawer",
     "NavigationDrawerDestination",
-    "NavigationDrawerPosition",
     "NavigationDrawerTheme",
     "NavigationRail",
     "NavigationRailDestination",

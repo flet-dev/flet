@@ -14,6 +14,29 @@ class VerticalDivider(Control):
     A thin vertical line, with padding on either side.
 
     In the material design language, this represents a divider.
+
+    ```python
+    ft.Row(
+            width=120,
+            height=60,
+            expand=True,
+            spacing=0,
+            controls=[
+                ft.Container(
+                    bgcolor=ft.Colors.BLUE_GREY_200,
+                    alignment=ft.Alignment.CENTER,
+                    expand=True,
+                ),
+                ft.VerticalDivider(),
+                ft.Container(
+                    bgcolor=ft.Colors.GREY_500,
+                    alignment=ft.Alignment.CENTER,
+                    expand=True,
+                ),
+            ],
+        )
+    ```
+
     """
 
     width: Optional[Number] = None

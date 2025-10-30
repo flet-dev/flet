@@ -47,6 +47,8 @@ class SnackBarAction(Control):
             action, avoid including it in the snack bar in the first place.
         -  Snack bar actions can will only respond to first click.
             Subsequent clicks/presses are ignored.
+
+
     """
 
     label: str
@@ -93,6 +95,11 @@ class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
     bottom of the screen.
+
+    ```python
+    page.show_dialog(ft.SnackBar(ft.Text("Opened snack bar")))
+    ```
+
     """
 
     content: StrOrControl

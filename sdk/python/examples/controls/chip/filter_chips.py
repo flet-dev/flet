@@ -8,7 +8,12 @@ def main(page: ft.Page):
     amenities = ["Washer / Dryer", "Ramp access", "Dogs OK", "Cats OK", "Smoke-free"]
 
     page.add(
-        ft.Row(controls=[ft.Icon(ft.Icons.HOTEL_CLASS), ft.Text("Amenities")]),
+        ft.Row(
+            controls=[
+                ft.Icon(ft.Icons.HOTEL_CLASS),
+                ft.Text("Amenities"),
+            ]
+        ),
         ft.Row(
             controls=[
                 ft.Chip(

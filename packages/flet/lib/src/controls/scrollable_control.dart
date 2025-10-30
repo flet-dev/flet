@@ -8,13 +8,15 @@ class ScrollableControl extends StatefulWidget {
   final Widget child;
   final Axis scrollDirection;
   final ScrollController? scrollController;
+  final bool wrapIntoScrollableView;
 
   ScrollableControl(
       {Key? key,
       required this.control,
       required this.child,
       required this.scrollDirection,
-      this.scrollController})
+      this.scrollController,
+      this.wrapIntoScrollableView = false})
       : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
@@ -40,14 +42,14 @@ class _ScrollableControlState extends State<ScrollableControl>
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("ScrollableControl.$name($args)");
-    var offset = parseDouble(args["offset"]);
-    var delta = parseDouble(args["delta"]);
-    var scrollKey = parseKey(args["scroll_key"]);
-    var globalKey = scrollKey != null
-        ? widget.control.backend.globalKeys[scrollKey.toString()]
-        : null;
     switch (name) {
       case "scroll_to":
+        var offset = parseDouble(args["offset"]);
+        var delta = parseDouble(args["delta"]);
+        var scrollKey = parseKey(args["scroll_key"]);
+        var globalKey = scrollKey != null
+            ? widget.control.backend.globalKeys[scrollKey.toString()]
+            : null;
         var duration = parseDuration(args["duration"], Duration.zero)!;
         var curve = parseCurve(args["curve"], Curves.ease)!;
         if (globalKey != null) {
@@ -102,22 +104,26 @@ class _ScrollableControlState extends State<ScrollableControl>
     return scrollMode != ScrollMode.none
         ? Scrollbar(
             // todo: create class ScrollBarConfiguration on Py end, for more customizability
-            thumbVisibility: scrollMode == ScrollMode.always ||
-                    (scrollMode == ScrollMode.adaptive && !isMobilePlatform())
-                ? true
-                : false,
-            trackVisibility: scrollMode == ScrollMode.hidden ? false : null,
+            thumbVisibility: (scrollMode == ScrollMode.always ||
+                    (scrollMode == ScrollMode.adaptive &&
+                        !isMobilePlatform())) &&
+                scrollMode != ScrollMode.hidden,
             thickness: scrollMode == ScrollMode.hidden
                 ? 0
                 : isMobilePlatform()
                     ? 4.0
                     : null,
-            //interactive: true,
             controller: _controller,
-            child: SingleChildScrollView(
-              controller: _controller,
-              scrollDirection: widget.scrollDirection,
-              child: widget.child,
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: widget.wrapIntoScrollableView
+                  ? SingleChildScrollView(
+                      controller: _controller,
+                      scrollDirection: widget.scrollDirection,
+                      child: widget.child,
+                    )
+                  : widget.child,
             ))
         : widget.child;
   }

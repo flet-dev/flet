@@ -655,3 +655,37 @@ def test_list_move_1_no_keys():
             },
         ],
     )
+
+
+def test_fields_start_with_on():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+    page.controls = [Div(cls="div_1", some_value="Text")]
+    page.on_login = lambda e: print("on login")
+    page.theme = ft.Theme(
+        color_scheme=ft.ColorScheme(on_surface_variant=ft.Colors.RED),
+    )
+
+    msg, _, _, _, _ = make_msg(page, {}, show_details=True)
+    u_msg = b_unpack(msg)
+
+    print(u_msg)
+
+    # page
+    p = u_msg[1][3]
+    # print("\n\n", p)
+    assert p["on_login"]
+    assert p["theme"]["color_scheme"]["on_surface_variant"] == "red"
+
+    # update
+    page.on_login = None
+    page.theme.color_scheme.on_surface_variant = ft.Colors.BLUE
+
+    msg, _, _, _, _ = make_msg(page, show_details=True)
+    u_msg = b_unpack(msg)
+    # print("\n\n", u_msg[1])
+    assert u_msg[1][2] == "on_login"
+    assert not u_msg[1][3]
+    assert u_msg[2][2] == "on_surface_variant"
+    assert u_msg[2][3] == "blue"

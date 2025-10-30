@@ -2,15 +2,17 @@ import flet as ft
 
 
 def main(page: ft.Page):
+    async def handle_show_drawer():
+        await page.show_end_drawer()
+
     def handle_dismissal(e: ft.Event[ft.NavigationDrawer]):
-        print("End drawer dismissed")
+        print("Drawer dismissed!")
 
-    def handle_change(e: ft.Event[ft.NavigationDrawer]):
+    async def handle_change(e: ft.Event[ft.NavigationDrawer]):
         print(f"Selected Index changed: {e.control.selected_index}")
-        page.pop_dialog()
+        await page.close_end_drawer()
 
-    end_drawer = ft.NavigationDrawer(
-        position=ft.NavigationDrawerPosition.END,
+    page.end_drawer = ft.NavigationDrawer(
         on_dismiss=handle_dismissal,
         on_change=handle_change,
         controls=[
@@ -24,11 +26,10 @@ def main(page: ft.Page):
             ),
         ],
     )
-
     page.add(
         ft.Button(
             content="Show end drawer",
-            on_click=lambda e: page.show_dialog(end_drawer),
+            on_click=handle_show_drawer,
         )
     )
 
