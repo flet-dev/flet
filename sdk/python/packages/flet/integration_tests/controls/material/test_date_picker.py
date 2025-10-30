@@ -14,8 +14,7 @@ async def test_date_picker_basic(flet_app: ftt.FletTestApp, request):
         last_date=datetime.datetime(year=2025, month=10, day=1),
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(dp)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()

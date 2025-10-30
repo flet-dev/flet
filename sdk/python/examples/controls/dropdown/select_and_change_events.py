@@ -29,7 +29,7 @@ def main(page: ft.Page):
         e.control.color = e.control.value
         display_value.value = f"VALUE changed to {e.control.value}"
 
-    def dropdown_change(e):
+    def dropdown_text_change(e):
         display_text.value = f"TEXT changed to {e.control.text}"
 
     page.scroll = ft.ScrollMode.AUTO
@@ -42,7 +42,7 @@ def main(page: ft.Page):
             width=float("inf"),
             options=get_options(),
             on_select=dropdown_select,
-            on_change=dropdown_change,
+            on_text_change=dropdown_text_change,
         ),
     )
 

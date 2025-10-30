@@ -220,7 +220,7 @@ class Dropdown(LayoutControl):
     Called when the selected item of this dropdown has changed.
     """
 
-    on_change: Optional[ControlEventHandler["Dropdown"]] = None
+    on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
     Called when the text input of this dropdown has changed.
     """

@@ -40,8 +40,7 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_properties2(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
 
     fab = ft.FloatingActionButton(
         key="fab",
@@ -115,8 +114,7 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_location(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.floating_action_button = ft.FloatingActionButton("OK")
 
     # center_top_location

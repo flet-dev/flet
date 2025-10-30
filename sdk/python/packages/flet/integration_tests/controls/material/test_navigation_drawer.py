@@ -12,8 +12,9 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_end_position(flet_app: ftt.FletTestApp, request):
-    end_drawer = ft.NavigationDrawer(
-        position=ft.NavigationDrawerPosition.END,
+    flet_app.page.enable_screenshots = True
+    await flet_app.resize_page(400, 500)
+    flet_app.page.end_drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(
                 icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
@@ -25,12 +26,9 @@ async def test_end_position(flet_app: ftt.FletTestApp, request):
             ),
         ],
     )
-
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.show_dialog(end_drawer)
     flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.page.show_end_drawer()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
@@ -42,8 +40,10 @@ async def test_end_position(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_default_position(flet_app: ftt.FletTestApp, request):
-    end_drawer = ft.NavigationDrawer(
+async def test_start_position(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    await flet_app.resize_page(400, 500)
+    flet_app.page.drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(
                 icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
@@ -55,17 +55,14 @@ async def test_default_position(flet_app: ftt.FletTestApp, request):
             ),
         ],
     )
-
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.show_dialog(end_drawer)
     flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.page.show_drawer()
     await flet_app.tester.pump_and_settle()
 
     # normal state
     flet_app.assert_screenshot(
-        "default_position",
+        "start_position",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -74,6 +71,8 @@ async def test_default_position(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    await flet_app.resize_page(400, 500)
     flet_app.page.theme = ft.Theme(
         navigation_drawer_theme=ft.NavigationDrawerTheme(
             bgcolor=ft.Colors.BLUE_GREY_200,
@@ -88,7 +87,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             tile_height=100,
         )
     )
-    end_drawer = ft.NavigationDrawer(
+    flet_app.page.drawer = ft.NavigationDrawer(
         controls=[
             ft.NavigationDrawerDestination(
                 icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
@@ -100,12 +99,9 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             ),
         ],
     )
-
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.show_dialog(end_drawer)
     flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.page.show_drawer()
     await flet_app.tester.pump_and_settle()
 
     # normal state

@@ -261,7 +261,24 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
-    async def wrap_page_controls_in_screenshot(self, margin=10):
+    async def resize_page(self, width: int, height: int):
+        """
+        Resizes the page window to the specified width and height.
+        """
+        if self.page.window.width is None or self.page.window.height is None:
+            return
+
+        chrome_width = self.page.window.width - self.page.width
+        chrome_height = self.page.window.height - self.page.height
+        self.page.window.width = width + chrome_width
+        self.page.window.height = height + chrome_height
+
+    async def wrap_page_controls_in_screenshot(
+        self,
+        margin=10,
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ) -> ft.Screenshot:
         """
         Wraps provided controls in a Screenshot control.
         """
@@ -273,16 +290,22 @@ class FletTestApp:
         ]  # type: ignore
         self.page.update()
         await self.tester.pump_and_settle()
+        for _ in range(0, pump_times):
+            await self.tester.pump(duration=pump_duration)
         return scr
 
     async def take_page_controls_screenshot(
         self,
         pixel_ratio: Optional[float] = None,
-    ):
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ) -> bytes:
         """
         Takes a screenshot of all controls on the current page.
         """
-        scr = await self.wrap_page_controls_in_screenshot()
+        scr = await self.wrap_page_controls_in_screenshot(
+            pump_times=pump_times, pump_duration=pump_duration
+        )
         return await scr.capture(
             pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
         )
@@ -371,7 +394,8 @@ class FletTestApp:
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
             assert similarity > similarity_threshold, (
-                f"{name} screenshots are not identical"
+                f"{name} screenshots are not identical "
+                f"(similarity: {similarity}% <= {similarity_threshold}%)"
             )
 
     def _load_image_from_file(self, file_name):

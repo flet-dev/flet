@@ -47,8 +47,7 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
         ],
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.controls = [eb]
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
@@ -83,8 +82,7 @@ async def test_banner_string_content(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(banner)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
