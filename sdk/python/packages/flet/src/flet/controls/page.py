@@ -448,24 +448,17 @@ class Page(BasePage):
         self.__query: QueryString = QueryString(self)
         self.__authorization: Optional[Authorization] = None
 
-    def get_control(self, id: int) -> Optional[BaseControl]:
+    def get_control(self, id: str) -> Optional[BaseControl]:
         """
         Get a control by its `id`.
 
         Example:
-
-        ```python
-        import flet as ft
-
-
-        def main(page: ft.Page):
-            x = ft.IconButton(ft.Icons.ADD)
-            page.add(x)
-            print(type(page.get_control(x.uid)))
-
-
-        ft.run(main)
-        ```
+            ```python
+            def main(page: ft.Page):
+                x = ft.IconButton(ft.Icons.ADD)
+                page.add(x)
+                print(type(page.get_control(x.uid)))
+            ```
         """
         return self.session.index.get(id)
 

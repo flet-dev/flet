@@ -20,6 +20,7 @@ import 'controls/chip.dart';
 import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/context_menu_region.dart';
 import 'controls/cupertino_action_sheet.dart';
 import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
@@ -172,6 +173,8 @@ class FletCoreExtension extends FletExtension {
         return ColumnControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "ContextMenuRegion":
+        return ContextMenuRegionControl(key: key, control: control);
       case "CupertinoActionSheet":
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
