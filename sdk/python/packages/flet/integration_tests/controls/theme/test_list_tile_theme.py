@@ -45,13 +45,15 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             ),
             mouse_cursor=ft.MouseCursor.FORBIDDEN,
             min_height=100,
+            style=ft.ListTileStyle.LIST,
+            title_alignment=ft.ListTileTitleAlignment.THREE_LINE,
         )
     )
 
     flet_app.page.enable_screenshots = True
     await flet_app.resize_page(400, 600)
 
-    lt1 = ft.ListTile(
+    tile_1 = ft.ListTile(
         "ListTile with is_three_line = False",
         subtitle="List",
         leading=ft.Icon(ft.Icons.STAR),
@@ -62,7 +64,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         toggle_inputs=True,
         visual_density=ft.VisualDensity.COMPACT,
     )
-    lt2 = ft.ListTile(
+    tile_2 = ft.ListTile(
         "ListTile default is_three_line",
         subtitle="List",
         leading=ft.Icon(ft.Icons.STAR),
@@ -73,7 +75,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         style=ft.ListTileStyle.LIST,
         toggle_inputs=False,
     )
-    lt3 = ft.ListTile(
+    tile_3 = ft.ListTile(
         title="ListTile is_three_line = True",
         subtitle="Subtitle",
         is_three_line=True,
@@ -85,8 +87,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         shape=ft.RoundedRectangleBorder(radius=10),
     )
 
-    flet_app.page.add(lt1, lt2, lt3)
-    flet_app.page.update()
+    flet_app.page.add(tile_1, tile_2, tile_3)
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

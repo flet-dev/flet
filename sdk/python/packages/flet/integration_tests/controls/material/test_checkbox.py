@@ -38,7 +38,6 @@ async def test_theme(flet_app: ftt.FletTestApp):
 
     scr_1 = ft.Screenshot(cb := ft.Checkbox(key="cb", value=True, margin=20))
     flet_app.page.add(scr_1)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

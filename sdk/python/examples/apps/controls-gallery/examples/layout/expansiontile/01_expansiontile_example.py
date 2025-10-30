@@ -27,7 +27,7 @@ def example():
                 title=ft.Text("ExpansionTile 3"),
                 subtitle=ft.Text("Leading expansion arrow icon"),
                 affinity=ft.TileAffinity.LEADING,
-                initially_expanded=True,
+                expanded=True,
                 collapsed_text_color=ft.Colors.BLUE,
                 text_color=ft.Colors.BLUE,
                 controls=[

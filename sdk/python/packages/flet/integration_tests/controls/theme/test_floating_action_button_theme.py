@@ -59,7 +59,6 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     fab3 = ft.FloatingActionButton("Text", disabled=True)
     fab4 = ft.FloatingActionButton("Long Long Long Long Text", disabled=True)
     flet_app.page.add(fab1, fab2, fab3, fab4)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
@@ -83,8 +82,6 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     )
 
     # test hover
-    flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
     button = await flet_app.tester.find_by_key("fab1")
     assert button.count == 1
     await flet_app.tester.mouse_hover(button)
