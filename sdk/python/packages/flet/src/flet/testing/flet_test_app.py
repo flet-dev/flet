@@ -273,7 +273,12 @@ class FletTestApp:
         self.page.window.width = width + chrome_width
         self.page.window.height = height + chrome_height
 
-    async def wrap_page_controls_in_screenshot(self, margin=10):
+    async def wrap_page_controls_in_screenshot(
+        self,
+        margin=10,
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ) -> ft.Screenshot:
         """
         Wraps provided controls in a Screenshot control.
         """
@@ -285,16 +290,22 @@ class FletTestApp:
         ]  # type: ignore
         self.page.update()
         await self.tester.pump_and_settle()
+        for _ in range(0, pump_times):
+            await self.tester.pump(duration=pump_duration)
         return scr
 
     async def take_page_controls_screenshot(
         self,
         pixel_ratio: Optional[float] = None,
-    ):
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ) -> bytes:
         """
         Takes a screenshot of all controls on the current page.
         """
-        scr = await self.wrap_page_controls_in_screenshot()
+        scr = await self.wrap_page_controls_in_screenshot(
+            pump_times=pump_times, pump_duration=pump_duration
+        )
         return await scr.capture(
             pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
         )
