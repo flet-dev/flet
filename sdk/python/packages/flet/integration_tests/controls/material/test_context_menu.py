@@ -12,7 +12,7 @@ async def test_primary_select(flet_app: ftt.FletTestApp):
         status.value = e.item_key
         e.page.update()
 
-    region = ft.ContextMenuRegion(
+    region = ft.ContextMenu(
         primary_trigger=ft.ContextMenuTrigger.DOWN,
         primary_items=[
             ft.PopupMenuItem(content="Rename", key="rename"),
@@ -49,7 +49,7 @@ async def test_dismiss_event(flet_app: ftt.FletTestApp):
         status.value = e.reason
         e.page.update()
 
-    region = ft.ContextMenuRegion(
+    region = ft.ContextMenu(
         primary_trigger=ft.ContextMenuTrigger.DOWN,
         primary_items=[ft.PopupMenuItem(content="Rename", key="rename")],
         on_dismiss=handle_dismiss,
@@ -73,3 +73,35 @@ async def test_dismiss_event(flet_app: ftt.FletTestApp):
     await flet_app.tester.pump_and_settle()
 
     assert status.value == "cancelled"
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_programmatic_open(flet_app: ftt.FletTestApp):
+    status = ft.Text("idle", key="status")
+
+    def handle_select(e: ft.ContextMenuEvent):
+        status.value = e.item_key
+        e.page.update()
+
+    region = ft.ContextMenu(
+        primary_items=[ft.PopupMenuItem(content="Program", key="program")],
+        on_select=handle_select,
+        content=ft.Container(
+            width=160,
+            height=100,
+            bgcolor=ft.Colors.SURFACE_VARIANT,
+            alignment=ft.Alignment.CENTER,
+            content=ft.Text("Programmatic menu"),
+        ),
+    )
+
+    flet_app.page.add(status, region)
+    await flet_app.tester.pump_and_settle()
+
+    await region.open(button=ft.ContextMenuButton.PRIMARY)
+    await flet_app.tester.pump_and_settle()
+
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Program"))
+    await flet_app.tester.pump_and_settle()
+
+    assert status.value == "program"

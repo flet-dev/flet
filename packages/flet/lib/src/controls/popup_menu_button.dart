@@ -1,4 +1,3 @@
-import '../utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -10,7 +9,6 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
-import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/popup_menu.dart';
 import 'base_controls.dart';
@@ -53,7 +51,7 @@ class PopupMenuButtonControl extends StatelessWidget {
         onCanceled: () => control.triggerEvent("cancel"),
         onOpened: () => control.triggerEvent("open"),
         itemBuilder: (BuildContext context) =>
-            buildPopupMenuEntries(context, control.children("items")),
+            buildPopupMenuEntries(control.children("items"), context),
         child: content);
 
     return LayoutControl(

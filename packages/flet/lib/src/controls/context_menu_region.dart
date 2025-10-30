@@ -7,22 +7,21 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/keys.dart';
 import '../utils/popup_menu.dart';
+import '../utils/transforms.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
-class ContextMenuRegionControl extends StatefulWidget {
+class ContextMenuControl extends StatefulWidget {
   final Control control;
 
-  const ContextMenuRegionControl({super.key, required this.control});
+  const ContextMenuControl({super.key, required this.control});
 
   @override
-  State<ContextMenuRegionControl> createState() =>
-      _ContextMenuRegionControlState();
+  State<ContextMenuControl> createState() => _ContextMenuControlState();
 }
 
-class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
+class _ContextMenuControlState extends State<ContextMenuControl> {
   ContextMenuTrigger _primaryTrigger = ContextMenuTrigger.disabled;
   ContextMenuTrigger _secondaryTrigger = ContextMenuTrigger.down;
   ContextMenuTrigger _tertiaryTrigger = ContextMenuTrigger.down;
@@ -30,12 +29,25 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
   Future<String?>? _pendingMenu;
 
   @override
+  void initState() {
+    super.initState();
+    // Allow backend code to invoke methods on this control instance.
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void dispose() {
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    debugPrint("ContextMenuRegion build: ${widget.control.id}");
+    debugPrint("ContextMenu build: ${widget.control.id}");
 
     var content = widget.control.buildWidget("content");
     if (content == null) {
-      return const ErrorControl("ContextMenuRegion.content must be visible");
+      return const ErrorControl("ContextMenu.content must be visible");
     }
 
     _primaryTrigger = parseContextMenuTrigger(
@@ -104,7 +116,7 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
     );
   }
 
-  ContextMenuTrigger _getTriggerFromButton(_MouseButton button) {
+  ContextMenuTrigger? _getTriggerFromButton(_MouseButton button) {
     switch (button) {
       case _MouseButton.primary:
         return _primaryTrigger;
@@ -112,6 +124,8 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
         return _secondaryTrigger;
       case _MouseButton.tertiary:
         return _tertiaryTrigger;
+      default:
+        return null;
     }
   }
 
@@ -128,37 +142,30 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
     return null;
   }
 
+  /// Picks popup menu items configured for the provided button, falling back
+  /// to the shared `items` collection when a button-specific list is empty.
   List<Control> _getPopupItemsFromButton(_MouseButton button) {
-    List<Control> items;
     switch (button) {
       case _MouseButton.primary:
-        items = widget.control.children("primary_items");
-        break;
+        return widget.control.children("primary_items");
       case _MouseButton.secondary:
-        items = widget.control.children("secondary_items");
-        break;
+        return widget.control.children("secondary_items");
       case _MouseButton.tertiary:
-        items = widget.control.children("tertiary_items");
-        break;
+        return widget.control.children("tertiary_items");
+      default:
+        return widget.control.children("items");
     }
-
-    return items.isEmpty ? items = widget.control.children("items") : items;
   }
 
+  /// Serialises menu event data to a compact payload sent to Python handlers.
   Map<String, dynamic> _eventPayload(
       _MouseButton button, Offset globalPosition, Offset? localPosition,
-      {int? itemId,
-      String? itemControlId,
-      int? itemIndex,
-      Object? itemKey,
-      int? itemCount}) {
+      {int? itemId, int? itemIndex, int? itemCount}) {
     return {
       "b": button.name,
-      "tr": _getTriggerFromButton(button).name,
-      "iid": itemId,
-      "cid": itemControlId,
+      "tr": _getTriggerFromButton(button)?.name,
+      "id": itemId,
       "idx": itemIndex,
-      "key": itemKey,
       "ic": itemCount,
       "g": {"x": globalPosition.dx, "y": globalPosition.dy},
       "l": localPosition != null
@@ -167,21 +174,23 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
     };
   }
 
+  /// Opens the context menu for a specific button at the requested position.
   Future<void> _showMenu(_MouseButton button,
       {required Offset globalPosition, Offset? localPosition}) async {
+    // If a menu is already open, close it and wait for it to finish.
     if (_pendingMenu != null) {
       Navigator.of(context).pop();
       await _pendingMenu;
       if (!mounted) return;
     }
 
-    final overlayState = Overlay.of(context);
+    // Get the overlay state and its render box for positioning the menu.
+    final overlayState = Overlay.of(context, rootOverlay: true);
     final overlayRenderBox =
         overlayState.context.findRenderObject() as RenderBox?;
-    if (overlayRenderBox == null || !overlayRenderBox.hasSize) {
-      return;
-    }
+    if (overlayRenderBox == null || !overlayRenderBox.hasSize) return;
 
+    // Calculate the position for the popup menu relative to the overlay.
     final overlayOffset = overlayRenderBox.globalToLocal(globalPosition);
     final position = RelativeRect.fromLTRB(
       overlayOffset.dx,
@@ -190,24 +199,24 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
       overlayRenderBox.size.height - overlayOffset.dy,
     );
 
-    final basePayload = _eventPayload(button, globalPosition, localPosition);
+    // Build popup menu entries.
+    final popupItems = _getPopupItemsFromButton(button).toList(growable: false);
+    final entries = buildPopupMenuEntries(popupItems, context);
 
-    widget.control.triggerEvent("request", basePayload);
+    // Prepare event payload for menu events.
+    final basePayload = _eventPayload(button, globalPosition, localPosition,
+        itemCount: entries.length);
 
-    final popupItems = _getPopupItemsFromButton(button)
-        .where((c) => c.type == "PopupMenuItem")
-        .toList(growable: false);
-    final entries = buildPopupMenuEntries(context, popupItems);
-    basePayload.addAll({"ic": entries.length});
-
-    // If there are no menu items, trigger the dismiss event and return.
+    // If there are no menu entries, send dismiss event.
     if (entries.isEmpty) {
       widget.control.triggerEvent("dismiss", basePayload);
       return;
     }
 
+    // Notify that the menu is opening.
     widget.control.triggerEvent("open", basePayload);
 
+    // Show the popup menu and wait for user selection.
     final menuFuture = showMenu<String>(
       context: context,
       position: position,
@@ -217,23 +226,19 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
     final selection = await menuFuture;
 
     if (!mounted) return;
-
     _pendingMenu = null;
 
+    // Handle the user's selection or dismissal.
     if (selection != null) {
       final selectedControl = popupItems
           .firstWhereOrNull((item) => item.id.toString() == selection);
-      final itemId = parseInt(selection);
-      final controlKey = selectedControl?.getKey("key");
       widget.control.triggerEvent(
           "select",
           _eventPayload(
             button,
             globalPosition,
             localPosition,
-            itemId: itemId,
-            itemControlId: selection,
-            itemKey: controlKey?.value,
+            itemId: parseInt(selection),
             itemCount: popupItems.length,
             itemIndex: selectedControl != null
                 ? popupItems.indexOf(selectedControl)
@@ -250,9 +255,45 @@ class _ContextMenuRegionControlState extends State<ContextMenuRegionControl> {
           ));
     }
   }
+
+  /// Handles invoke-method calls originating from Python (programmatic open).
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    switch (name) {
+      case "open":
+        // Get the render box for positioning the context menu.
+        final renderBox = context.findRenderObject() as RenderBox?;
+        if (renderBox == null || !renderBox.hasSize) {
+          throw StateError(
+              "ContextMenu render box is not ready to display a menu.");
+        }
+
+        var globalPosition = parseOffset(args["global_position"]);
+        var localPosition = parseOffset(args["local_position"]);
+
+        // If only local position is provided, obtain global position from it.
+        if (globalPosition == null && localPosition != null) {
+          globalPosition = renderBox.localToGlobal(localPosition);
+        }
+        // If only global position is provided, obtain local position from it.
+        else if (globalPosition != null && localPosition == null) {
+          localPosition = renderBox.globalToLocal(globalPosition);
+        }
+
+        // Default to center of the render box if positions are missing.
+        localPosition ??= renderBox.size.center(Offset.zero);
+        globalPosition ??= renderBox.localToGlobal(localPosition);
+
+        // Show the context menu at the calculated position.
+        _showMenu(_MouseButton.none,
+            globalPosition: globalPosition, localPosition: localPosition);
+        return null;
+      default:
+        throw ArgumentError("Unsupported method: $name");
+    }
+  }
 }
 
-enum _MouseButton { primary, secondary, tertiary }
+enum _MouseButton { primary, secondary, tertiary, none }
 
 enum ContextMenuTrigger { disabled, down, longPress }
 

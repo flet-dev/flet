@@ -306,7 +306,7 @@ nav:
           - CircleAvatar: controls/circleavatar.md
           - Column: controls/column.md
           - Container: controls/container.md
-          - ContextMenuRegion: controls/contextmenuregion.md
+          - ContextMenu: controls/contextmenu.md
           - CupertinoActionSheet:
               - controls/cupertinoactionsheet/index.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
@@ -762,7 +762,7 @@ nav:
               - CardVariant: types/cardvariant.md
               - ClipBehavior: types/clipbehavior.md
               - Colors: types/colors.md
-              - ContextMenuTrigger: types/contextmenutrigger.md
+              - ContextMenuTrigger:w types/contextmenutrigger.md
               - CrossAxisAlignment: types/crossaxisalignment.md
               - CupertinoButtonSize: types/cupertinobuttonsize.md
               - CupertinoColors: types/cupertinocolors.md

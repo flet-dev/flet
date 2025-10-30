@@ -173,8 +173,8 @@ class FletCoreExtension extends FletExtension {
         return ColumnControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
-      case "ContextMenuRegion":
-        return ContextMenuRegionControl(key: key, control: control);
+      case "ContextMenu":
+        return ContextMenuControl(key: key, control: control);
       case "CupertinoActionSheet":
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":

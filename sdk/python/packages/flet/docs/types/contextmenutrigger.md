@@ -1,5 +1,5 @@
 ---
-class_name: flet.ContextMenuRegion
+class_name: flet.ContextMenu
 examples: ../../examples/controls/context_menu_region
 ---
 

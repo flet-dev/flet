@@ -12,7 +12,7 @@ import 'text.dart';
 /// Only controls with type `PopupMenuItem` are converted. Controls without any
 /// visible content are treated as menu dividers.
 List<PopupMenuEntry<String>> buildPopupMenuEntries(
-    BuildContext context, Iterable<Control> items) {
+    Iterable<Control> items, BuildContext context) {
   return items.where((item) => item.type == "PopupMenuItem").map((item) {
     var checked = item.getBool("checked");
     var height = item.getDouble("height", 48.0)!;

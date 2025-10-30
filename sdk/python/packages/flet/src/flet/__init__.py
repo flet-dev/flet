@@ -265,9 +265,10 @@ from flet.controls.material.checkbox import Checkbox
 from flet.controls.material.chip import Chip
 from flet.controls.material.circle_avatar import CircleAvatar
 from flet.controls.material.container import Container
-from flet.controls.material.context_menu_region import (
+from flet.controls.material.context_menu import (
+    ContextMenu,
     ContextMenuEvent,
-    ContextMenuRegion,
+    ContextMenuSelectEvent,
     ContextMenuTrigger,
 )
 from flet.controls.material.datatable import (
@@ -612,8 +613,10 @@ __all__ = [
     "ConstrainedControl",
     "Container",
     "Context",
+    "ContextMenu",
     "ContextMenuEvent",
-    "ContextMenuRegion",
+    "ContextMenuSelectEvent",
+    "ContextMenuSelectEvent",
     "ContextMenuTrigger",
     "ContinuousRectangleBorder",
     "Control",
