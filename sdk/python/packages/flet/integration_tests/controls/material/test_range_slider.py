@@ -21,10 +21,8 @@ async def test_range_slider(flet_app: ftt.FletTestApp, request):
     c = ft.Container(content=rs, padding=ft.Padding.only(top=40))
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [c]
-    flet_app.page.update()
+    await flet_app.resize_page(400, 600)
+    flet_app.page.add(c)
     await flet_app.tester.pump_and_settle()
 
     # default

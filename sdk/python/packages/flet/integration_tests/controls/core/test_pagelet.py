@@ -19,7 +19,6 @@
 #             ft.Container(bgcolor=ft.Colors.AMBER, content=ft.Text("Pagelet Content"))
 #         ),
 #     )
-#     flet_app.page.update()
 #     await flet_app.tester.pump_and_settle()
 
 #     flet_app.assert_screenshot(

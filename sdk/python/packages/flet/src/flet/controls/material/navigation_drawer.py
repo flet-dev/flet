@@ -1,12 +1,11 @@
 from dataclasses import field
-from enum import Enum
 from typing import Optional
 
+from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
-from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
@@ -17,7 +16,6 @@ from flet.controls.types import (
 __all__ = [
     "NavigationDrawer",
     "NavigationDrawerDestination",
-    "NavigationDrawerPosition",
 ]
 
 
@@ -74,13 +72,8 @@ class NavigationDrawerDestination(Control):
     """
 
 
-class NavigationDrawerPosition(Enum):
-    START = "start"
-    END = "end"
-
-
 @control("NavigationDrawer")
-class NavigationDrawer(DialogControl):
+class NavigationDrawer(AdaptiveControl):
     """
     Material Design Navigation Drawer component.
 
@@ -138,12 +131,12 @@ class NavigationDrawer(DialogControl):
     Defines the padding for `destination` controls.
     """
 
-    position: NavigationDrawerPosition = NavigationDrawerPosition.START
-    """
-    The position of this drawer.
-    """
-
     on_change: Optional[ControlEventHandler["NavigationDrawer"]] = None
     """
     Called when selected destination changed.
+    """
+
+    on_dismiss: Optional[ControlEventHandler["NavigationDrawer"]] = None
+    """
+    Called when the drawer is dismissed.
     """

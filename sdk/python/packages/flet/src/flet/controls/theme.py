@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
+from flet.controls.animation import AnimationStyle
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
@@ -11,6 +12,8 @@ from flet.controls.control_state import ControlStateValue
 from flet.controls.duration import DurationValue
 from flet.controls.geometry import Size
 from flet.controls.margin import MarginValue
+from flet.controls.material.expansion_tile import TileAffinity
+from flet.controls.material.list_tile import ListTileStyle, ListTileTitleAlignment
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.navigation_bar import NavigationBarLabelBehavior
 from flet.controls.material.navigation_rail import NavigationRailLabelType
@@ -530,92 +533,77 @@ class TabBarTheme:
 
     indicator_size: Optional[TabBarIndicatorSize] = None
     """
-    Overrides the default value for
-    [`TabBar.indicator_size`][flet.].
+    Overrides the default value for [`TabBar.indicator_size`][flet.].
     """
 
     indicator: Optional[UnderlineTabIndicator] = None
     """
-    Overrides the default value for
-    [`TabBar.indicator`][flet.].
+    Overrides the default value for [`TabBar.indicator`][flet.].
     """
 
     indicator_animation: Optional[TabIndicatorAnimation] = None
     """
-    Overrides the default value for
-    [`TabBar.indicator_animation`][flet.].
+    Overrides the default value for [`TabBar.indicator_animation`][flet.].
     """
 
     splash_border_radius: Optional[BorderRadiusValue] = None
     """
-    Overrides the default value for
-    [`TabBar.splash_border_radius`][flet.].
+    Overrides the default value for [`TabBar.splash_border_radius`][flet.].
     """
 
     tab_alignment: Optional[TabAlignment] = None
     """
-    Overrides the default value for
-    [`TabBar.tab_alignment`][flet.].
+    Overrides the default value for [`TabBar.tab_alignment`][flet.].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value for
-    [`TabBar.overlay_color`][flet.].
+    Overrides the default value for [`TabBar.overlay_color`][flet.].
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default value for
-    [`TabBar.divider_color`][flet.].
+    Overrides the default value for [`TabBar.divider_color`][flet.].
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value for
-    [`TabBar.indicator_color`][flet.].
+    Overrides the default value for [`TabBar.indicator_color`][flet.].
     """
 
     mouse_cursor: Optional[ControlStateValue[Optional[MouseCursor]]] = None
     """
-    Overrides the default value for
-    [`TabBar.mouse_cursor`][flet.].
+    Overrides the default value for [`TabBar.mouse_cursor`][flet.].
     """
 
     divider_height: Optional[Number] = None
     """
-    Overrides the default value for
-    [`TabBar.divider_height`][flet.].
+    Overrides the default value for [`TabBar.divider_height`][flet.].
     """
 
     label_color: Optional[ColorValue] = None
     """
-    Overrides the default value for
-    [`TabBar.label_color`][flet.].
+    Overrides the default value for [`TabBar.label_color`][flet.].
     """
 
     unselected_label_color: Optional[ColorValue] = None
     """
-    Overrides the default value for
-    [`TabBar.unselected_label_color`][flet.].
+    Overrides the default value for [`TabBar.unselected_label_color`][flet.].
     """
 
     label_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for
-    [`TabBar.label_padding`][flet.].
+    Overrides the default value for [`TabBar.label_padding`][flet.].
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for
-    [`TabBar.label_text_style`][flet.].
+    Overrides the default value for [`TabBar.label_text_style`][flet.].
     """
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for
-    [`TabBar.unselected_label_text_style`][flet.].
+    Overrides the default value for [`TabBar.unselected_label_text_style`][flet.].
     """
 
 
@@ -709,50 +697,44 @@ class DialogTheme:
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`AlertDialog.title_text_style`][flet.] in all
+    Overrides the default value of [`AlertDialog.title_text_style`][flet.] in all
     descendant [`AlertDialog`][flet.] controls.
     """
 
     content_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`AlertDialog.content_text_style`][flet.] in all
+    Overrides the default value of [`AlertDialog.content_text_style`][flet.] in all
     descendant [`AlertDialog`][flet.] controls.
     """
 
     alignment: Optional[Alignment] = None
     """
-    Overrides the default value of [`AlertDialog.alignment`][flet.]
-    in all descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of [`AlertDialog.alignment`][flet.] in all
+    descendant [`AlertDialog`][flet.] controls.
     """
 
     actions_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of
-    [`AlertDialog.actions_padding`][flet.] in all descendant
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of [`AlertDialog.actions_padding`][flet.] in all
+    descendant [`AlertDialog`][flet.] controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value of
-    [`AlertDialog.clip_behavior`][flet.] in all descendant
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of [`AlertDialog.clip_behavior`][flet.] in all
+    descendant [`AlertDialog`][flet.] controls.
     """
 
     barrier_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`AlertDialog.barrier_color`][flet.] in all descendant
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of [`AlertDialog.barrier_color`][flet.] in all
+    descendant [`AlertDialog`][flet.] controls.
     """
 
     inset_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of
-    [`AlertDialog.inset_padding`][flet.] in all descendant
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of [`AlertDialog.inset_padding`][flet.] in all
+    descendant [`AlertDialog`][flet.] controls.
     """
 
 
@@ -764,9 +746,8 @@ class ButtonTheme:
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`Button.style`][flet.] in all descendant
-    [`Button`][flet.] controls.
+    Overrides the default value of [`Button.style`][flet.] in all
+    descendant [`Button`][flet.] controls.
     """
 
 
@@ -778,9 +759,8 @@ class OutlinedButtonTheme:
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`OutlinedButton.style`][flet.] in all descendant
-    [`OutlinedButton`][flet.] controls.
+    Overrides the default value of [`OutlinedButton.style`][flet.] in all
+    descendant [`OutlinedButton`][flet.] controls.
     """
 
 
@@ -792,9 +772,8 @@ class TextButtonTheme:
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`TextButton.style`][flet.] in all descendant
-    [`TextButton`][flet.] controls.
+    Overrides the default value of [`TextButton.style`][flet.] in all
+    descendant [`TextButton`][flet.] controls.
     """
 
 
@@ -806,9 +785,8 @@ class FilledButtonTheme:
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`FilledButton.style`][flet.] in all descendant
-    [`FilledButton`][flet.] controls.
+    Overrides the default value of [`FilledButton.style`][flet.] in all
+    descendant [`FilledButton`][flet.] controls.
     """
 
 
@@ -820,9 +798,8 @@ class IconButtonTheme:
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of
-    [`IconButton.style`][flet.] in all descendant
-    [`IconButton`][flet.] controls.
+    Overrides the default value of [`IconButton.style`][flet.] in all
+    descendant [`IconButton`][flet.] controls.
     """
 
 
@@ -834,15 +811,14 @@ class BottomSheetTheme:
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`BottomSheet.bgcolor`][flet.] in
-    all descendant [`BottomSheet`][flet.] controls.
+    Overrides the default value of [`BottomSheet.bgcolor`][flet.] in all
+    descendant [`BottomSheet`][flet.] controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`BottomSheet.elevation`][flet.] in all descendant
-    [`BottomSheet`][flet.] controls.
+    Overrides the default value of [`BottomSheet.elevation`][flet.] in all
+    descendant [`BottomSheet`][flet.] controls.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -853,42 +829,38 @@ class BottomSheetTheme:
 
     show_drag_handle: Optional[bool] = None
     """
-    Overrides the default value of
-    [`BottomSheet.show_drag_handle`][flet.] in all
+    Overrides the default value of [`BottomSheet.show_drag_handle`][flet.] in all
     descendant [`BottomSheet`][flet.] controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value of
-    [`BottomSheet.clip_behavior`][flet.] in all
+    Overrides the default value of [`BottomSheet.clip_behavior`][flet.] in all
     descendant [`BottomSheet`][flet.] controls.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of
-    [`BottomSheet.size_constraints`][flet.] in all
+    Overrides the default value of [`BottomSheet.size_constraints`][flet.] in all
     descendant [`BottomSheet`][flet.] controls.
     """
 
     barrier_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`BottomSheet.barrier_color`][flet.] in all
+    Overrides the default value of [`BottomSheet.barrier_color`][flet.] in all
     descendant [`BottomSheet`][flet.] controls.
     """
 
     drag_handle_color: Optional[ColorValue] = None
     """
-    Overrides the default value of drag handle color in all descendant
-    [`BottomSheet`][flet.] controls.
+    Overrides the default value of drag handle color in all
+    descendant [`BottomSheet`][flet.] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of shadow color in all descendant
-    [`BottomSheet`][flet.] controls.
+    Overrides the default value of shadow color in all
+    descendant [`BottomSheet`][flet.] controls.
     """
 
 
@@ -900,39 +872,38 @@ class CardTheme:
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Card.clip_behavior`][flet.] in
-    all descendant [`Card`][flet.] controls.
+    Overrides the default value of [`Card.clip_behavior`][flet.] in all
+    descendant [`Card`][flet.] controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Card.shadow_color`][flet.] in
-    all descendant [`Card`][flet.] controls.
+    Overrides the default value of [`Card.shadow_color`][flet.] in all
+    descendant [`Card`][flet.] controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of
-    [`Card.elevation`][flet.] in all descendant [`Card`][flet.]
-    controls.
+    Overrides the default value of [`Card.elevation`][flet.] in all
+    descendant [`Card`][flet.] controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`Card.shape`][flet.] in all descendant
-    [`Card`][flet.] controls.
+    Overrides the default value of [`Card.shape`][flet.] in all
+    descendant [`Card`][flet.] controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value of [`Card.clip_behavior`][flet.] in
-    all descendant [`Card`][flet.] controls.
+    Overrides the default value of [`Card.clip_behavior`][flet.] in all
+    descendant [`Card`][flet.] controls.
     """
 
     margin: Optional[MarginValue] = None
     """
-    Overrides the default value of [`Card.margin`][flet.] in all descendant
-    [`Card`][flet.] controls.
+    Overrides the default value of [`Card.margin`][flet.] in all
+    descendant [`Card`][flet.] controls.
     """
 
 
@@ -962,37 +933,32 @@ class ChipTheme:
 
     selected_shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`Chip.selected_shadow_color`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.selected_shadow_color`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     disabled_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`Chip.disabled_color`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.disabled_color`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`Chip.selected_color`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.selected_color`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     check_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`Chip.check_color`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.check_color`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     delete_icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value of
-    [`Chip.delete_icon_color`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.delete_icon_color`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     elevation: Optional[Number] = None
@@ -1003,9 +969,8 @@ class ChipTheme:
 
     elevation_on_click: Optional[Number] = None
     """
-    Overrides the default value of
-    [`Chip.elevation_on_click`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.elevation_on_click`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -1022,15 +987,14 @@ class ChipTheme:
 
     label_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Chip.label_padding`][flet.] in
-    all descendant [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.label_padding`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of
-    [`Chip.label_text_style`][flet.] in all descendant
-    [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.label_text_style`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     border_side: Optional[BorderSide] = None
@@ -1041,28 +1005,26 @@ class ChipTheme:
 
     show_checkmark: Optional[bool] = None
     """
-    Overrides the default value of [`Chip.show_checkmark`][flet.] in
-    all descendant [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.show_checkmark`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     leading_size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of
-    [`Chip.leading_size_constraints`][flet.] in all
+    Overrides the default value of [`Chip.leading_size_constraints`][flet.] in all
     descendant [`Chip`][flet.] controls.
     """
 
     delete_icon_size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of
-    [`Chip.delete_icon_size_constraints`][flet.] in
-    all descendant [`Chip`][flet.] controls.
+    Overrides the default value of [`Chip.delete_icon_size_constraints`][flet.] in all
+    descendant [`Chip`][flet.] controls.
     """
 
     brightness: Optional[Brightness] = None
     """
-    Overrides the default value for all chips which affects various base
-    material color choices in the chip rendering.
+    Overrides the default value for all chips which affects various base material
+    color choices in the chip rendering.
     """
 
     # secondary_selected_color: Optional[ColorValue] = None
@@ -1145,14 +1107,12 @@ class FloatingActionButtonTheme:
 
     enable_feedback: Optional[bool] = None
     """
-    If specified, defines the feedback property for
-    [`FloatingActionButton`][flet.].
+    If specified, defines the feedback property for [`FloatingActionButton`][flet.].
     """
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for a [`FloatingActionButton`][flet.]'s
-    that has both icon and content.
+    The padding for a [`FloatingActionButton`][flet.]'s that has both icon and content.
     """
 
     text_style: Optional[TextStyle] = None
@@ -1163,8 +1123,7 @@ class FloatingActionButtonTheme:
 
     icon_label_spacing: Optional[Number] = None
     """
-    The spacing between the icon and the label for
-    [`FloatingActionButton`][flet.].
+    The spacing between the icon and the label for [`FloatingActionButton`][flet.].
     """
 
     extended_size_constraints: Optional[BoxConstraints] = None
@@ -2283,26 +2242,22 @@ class ListTileTheme:
 
     selected_tile_color: Optional[ColorValue] = None
     """
-    Overrides the default value for
-    [`ListTile.selected_tile_color`][flet.].
+    Overrides the default value for [`ListTile.selected_tile_color`][flet.].
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    Overrides the default value for
-    [`ListTile.selected_color`][flet.].
+    Overrides the default value for [`ListTile.selected_color`][flet.].
     """
 
     is_three_line: Optional[bool] = None
     """
-    Overrides the default value for
-    [`ListTile.is_three_line`][flet.].
+    Overrides the default value for [`ListTile.is_three_line`][flet.].
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for
-    [`ListTile.enable_feedback`][flet.].
+    Overrides the default value for [`ListTile.enable_feedback`][flet.].
     """
 
     dense: Optional[bool] = None
@@ -2317,62 +2272,67 @@ class ListTileTheme:
 
     visual_density: Optional[VisualDensity] = None
     """
-    Overrides the default value for
-    [`ListTile.visual_density`][flet.].
+    Overrides the default value for [`ListTile.visual_density`][flet.].
     """
 
     content_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for
-    [`ListTile.content_padding`][flet.].
+    Overrides the default value for [`ListTile.content_padding`][flet.].
     """
 
     min_vertical_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for
-    [`ListTile.min_vertical_padding`][flet.].
+    Overrides the default value for [`ListTile.min_vertical_padding`][flet.].
     """
 
     horizontal_spacing: Optional[Number] = None
     """
-    Overrides the default value for
-    [`ListTile.horizontal_spacing`][flet.].
+    Overrides the default value for [`ListTile.horizontal_spacing`][flet.].
     """
 
     min_leading_width: Optional[Number] = None
     """
-    Overrides the default value for
-    [`ListTile.min_leading_width`][flet.].
+    Overrides the default value for [`ListTile.min_leading_width`][flet.].
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for
-    [`ListTile.title_text_style`][flet.].
+    Overrides the default value for [`ListTile.title_text_style`][flet.].
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for
-    [`ListTile.subtitle_text_style`][flet.].
+    Overrides the default value for [`ListTile.subtitle_text_style`][flet.].
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for
-    [`ListTile.leading_and_trailing_text_style`][flet.].
+    Overrides the default value for [`ListTile.leading_and_trailing_text_style`][flet.].
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value for
-    [`ListTile.mouse_cursor`][flet.].
+    Overrides the default value for [`ListTile.mouse_cursor`][flet.].
     """
 
     min_height: Optional[Number] = None
     """
-    Overrides the default value for
-    [`ListTile.min_height`][flet.].
+    Overrides the default value for [`ListTile.min_height`][flet.].
+    """
+
+    affinity: Optional[TileAffinity] = None
+    """
+    Overrides the default value for [`ExpansionTile.affinity`][flet.].
+    """
+
+    style: Optional[ListTileStyle] = None
+    """
+    Overrides the default value for [`ListTile.style`][flet.].
+    """
+
+    title_alignment: Optional[ListTileTitleAlignment] = None
+    """
+    Overrides the default value for [`ListTile.title_alignment`][flet.].
     """
 
 
@@ -2526,6 +2486,23 @@ class ExpansionTileTheme:
     """
     Overrides the default value for
     [`ExpansionTile.controls_padding`][flet.].
+    """
+
+    shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for [`ExpansionTile.shape`][flet.].
+    """
+
+    collapsed_shape: Optional[OutlinedBorder] = None
+    """
+    Overrides the default value for
+    [`ExpansionTile.collapsed_shape`][flet.].
+    """
+
+    animation_style: Optional[AnimationStyle] = None
+    """
+    Overrides the default value for
+    [`ExpansionTile.animation_style`][flet.].
     """
 
 

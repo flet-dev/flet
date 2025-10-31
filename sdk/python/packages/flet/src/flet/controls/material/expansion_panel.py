@@ -149,8 +149,8 @@ class ExpansionPanelList(LayoutControl):
     """
     Called when an item of [`controls`][(c).] is expanded or collapsed.
 
-    The event's [`data`][flet.Event.], contains the index of the
-    child panel (in [`controls`][(c).]) which triggered this event.
+    The [`data`][flet.Event.] property of the event handler argument contains the
+    index of the child panel (in [`controls`][(c).]) which triggered this event.
     """
 
     def before_update(self):

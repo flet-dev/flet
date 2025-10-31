@@ -373,6 +373,36 @@ class BasePage(AdaptiveControl):
         dialog.update()
         return dialog
 
+    async def show_drawer(self):
+        """
+        Show the drawer.
+
+        Raises:
+            ValueError: If no [`drawer`][(c).] is defined.
+        """
+        await self.__default_view().show_drawer()
+
+    async def close_drawer(self):
+        """
+        Close the drawer.
+        """
+        await self.__default_view().close_drawer()
+
+    async def show_end_drawer(self):
+        """
+        Show the end drawer.
+
+        Raises:
+            ValueError: If no [`end_drawer`][(c).] is defined.
+        """
+        await self.__default_view().show_end_drawer()
+
+    async def close_end_drawer(self):
+        """
+        Close the end drawer.
+        """
+        await self.__default_view().close_end_drawer()
+
     async def take_screenshot(
         self,
         pixel_ratio: Optional[Number] = None,

@@ -6,7 +6,6 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/numbers.dart';
-import '../widgets/scaffold_key_provider.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
@@ -82,21 +81,6 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
         }
       }).toList(),
     );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.control.getBool("open", false) == false) {
-        if (endDrawer &&
-            ScaffoldKeyProvider.of(context)?.currentState?.isEndDrawerOpen ==
-                true) {
-          ScaffoldKeyProvider.of(context)?.currentState?.closeEndDrawer();
-        } else if (ScaffoldKeyProvider.of(context)
-                ?.currentState
-                ?.isDrawerOpen ==
-            true) {
-          ScaffoldKeyProvider.of(context)?.currentState?.closeDrawer();
-        }
-      }
-    });
 
     return BaseControl(control: widget.control, child: drawer);
   }

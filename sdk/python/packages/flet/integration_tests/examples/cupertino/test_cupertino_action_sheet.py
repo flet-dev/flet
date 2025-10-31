@@ -9,8 +9,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     page = flet_app_function.page
     page.theme_mode = ft.ThemeMode.LIGHT
     page.enable_screenshots = True
-    page.window.width = 400
-    page.window.height = 400
+    await flet_app_function.resize_page(400, 400)
     sheet = ft.CupertinoActionSheet(
         title=ft.Text("Choose an option"),
         message=ft.Text("Select what you would like to do."),

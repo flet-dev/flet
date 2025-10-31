@@ -11,19 +11,18 @@ example_media: ../examples/controls/image/media
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/image)
 
-### Displaying an image
+### Image gallery
 
 ```python
 --8<-- "{{ examples }}/gallery.py"
 ```
 
-{{ image(example_media + "/gallery.gif", alt="gallery", width="80%") }}
+{{ image(example_media + "/gallery.gif", width="80%") }}
 
-
-### Displaying a base64 image
+### Displaying images from base64 strings and byte data
 
 ```python
---8<-- "{{ examples }}/base64.py"
+--8<-- "{{ examples }}/src_base64_and_bytes.py"
 ```
 
 ### Displaying a static SVG image

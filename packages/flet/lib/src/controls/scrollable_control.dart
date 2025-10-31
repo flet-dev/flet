@@ -42,14 +42,14 @@ class _ScrollableControlState extends State<ScrollableControl>
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("ScrollableControl.$name($args)");
-    var offset = parseDouble(args["offset"]);
-    var delta = parseDouble(args["delta"]);
-    var scrollKey = parseKey(args["scroll_key"]);
-    var globalKey = scrollKey != null
-        ? widget.control.backend.globalKeys[scrollKey.toString()]
-        : null;
     switch (name) {
       case "scroll_to":
+        var offset = parseDouble(args["offset"]);
+        var delta = parseDouble(args["delta"]);
+        var scrollKey = parseKey(args["scroll_key"]);
+        var globalKey = scrollKey != null
+            ? widget.control.backend.globalKeys[scrollKey.toString()]
+            : null;
         var duration = parseDuration(args["duration"], Duration.zero)!;
         var curve = parseCurve(args["curve"], Curves.ease)!;
         if (globalKey != null) {
