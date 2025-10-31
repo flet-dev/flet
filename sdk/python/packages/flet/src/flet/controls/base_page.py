@@ -181,7 +181,7 @@ class BasePage(AdaptiveControl):
 
     Example:
         ```python
-        def def main(page: ft.Page):
+        def main(page: ft.Page):
             def handle_page_size(e):
                 print("New page size:", page.window.width, page.window_height)
 

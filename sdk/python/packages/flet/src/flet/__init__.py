@@ -615,7 +615,6 @@ __all__ = [
     "ContextMenu",
     "ContextMenuDismissEvent",
     "ContextMenuSelectEvent",
-    "ContextMenuSelectEvent",
     "ContextMenuTrigger",
     "ContinuousRectangleBorder",
     "Control",

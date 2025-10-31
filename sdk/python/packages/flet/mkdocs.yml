@@ -762,7 +762,7 @@ nav:
               - CardVariant: types/cardvariant.md
               - ClipBehavior: types/clipbehavior.md
               - Colors: types/colors.md
-              - ContextMenuTrigger:w types/contextmenutrigger.md
+              - ContextMenuTrigger: types/contextmenutrigger.md
               - CrossAxisAlignment: types/crossaxisalignment.md
               - CupertinoButtonSize: types/cupertinobuttonsize.md
               - CupertinoColors: types/cupertinocolors.md
@@ -834,7 +834,7 @@ nav:
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
-              - ContextMenuEvent: types/contextmenuevent.md
+              - ContextMenuDismissEvent: types/contextmenudismissevent.md
               - ContextMenuSelectEvent: types/contextmenuselectevent.md
               - DataColumnSortEvent: types/datacolumnsortevent.md
               - DatePickerEntryModeChangeEvent: types/datepickerentrymodechangeevent.md
