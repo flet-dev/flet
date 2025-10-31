@@ -177,15 +177,16 @@ class BasePage(AdaptiveControl):
 
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
-    Called when a user resizes a browser or native OS window containing Flet app, for
-    example:
+    Called when a user resizes a browser or native OS window containing Flet app
 
-    ```python
-    def page_resize(e):
-        print("New page size:", page.window.width, page.window_height)
+    Example:
+        ```python
+        def main(page: ft.Page):
+            def handle_page_size(e):
+                print("New page size:", page.window.width, page.window_height)
 
-    page.on_resize = page_resize
-    ```
+            page.on_resize = handle_page_size
+        ```
     """
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None

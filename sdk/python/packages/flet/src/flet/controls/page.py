@@ -453,19 +453,12 @@ class Page(BasePage):
         Get a control by its `id`.
 
         Example:
-
-        ```python
-        import flet as ft
-
-
-        def main(page: ft.Page):
-            x = ft.IconButton(ft.Icons.ADD)
-            page.add(x)
-            print(type(page.get_control(x.uid)))
-
-
-        ft.run(main)
-        ```
+            ```python
+            def main(page: ft.Page):
+                x = ft.IconButton(ft.Icons.ADD)
+                page.add(x)
+                print(type(page.get_control(x._i)))
+            ```
         """
         return self.session.index.get(id)
 
@@ -609,59 +602,58 @@ class Page(BasePage):
         handler.
 
         Example:
+            ```python
+            import flet as ft
+            import asyncio
 
-        ```python
-        import flet as ft
-        import asyncio
 
+            def main(page: ft.Page):
+                page.title = "Push Route Example"
 
-        def main(page: ft.Page):
-            page.title = "Push Route Example"
-
-            def route_change(e):
-                page.views.clear()
-                page.views.append(
-                    ft.View(
-                        route="/",
-                        controls=[
-                            ft.AppBar(title=ft.Text("Flet app")),
-                            ft.ElevatedButton(
-                                "Visit Store",
-                                on_click=lambda _: asyncio.create_task(
-                                    page.push_route("/store")
-                                ),
-                            ),
-                        ],
-                    )
-                )
-                if page.route == "/store":
+                def route_change(e):
+                    page.views.clear()
                     page.views.append(
                         ft.View(
-                            route="/store",
-                            can_pop=True,
+                            route="/",
                             controls=[
-                                ft.AppBar(title=ft.Text("Store")),
+                                ft.AppBar(title=ft.Text("Flet app")),
                                 ft.ElevatedButton(
-                                    "Go Home",
+                                    "Visit Store",
                                     on_click=lambda _: asyncio.create_task(
-                                        page.push_route("/")
+                                        page.push_route("/store")
                                     ),
                                 ),
                             ],
                         )
                     )
+                    if page.route == "/store":
+                        page.views.append(
+                            ft.View(
+                                route="/store",
+                                can_pop=True,
+                                controls=[
+                                    ft.AppBar(title=ft.Text("Store")),
+                                    ft.ElevatedButton(
+                                        "Go Home",
+                                        on_click=lambda _: asyncio.create_task(
+                                            page.push_route("/")
+                                        ),
+                                    ),
+                                ],
+                            )
+                        )
 
-            async def view_pop(e):
-                page.views.pop()
-                top_view = page.views[-1]
-                await page.push_route(top_view.route)
+                async def view_pop(e):
+                    page.views.pop()
+                    top_view = page.views[-1]
+                    await page.push_route(top_view.route)
 
-            page.on_route_change = route_change
-            page.on_view_pop = view_pop
+                page.on_route_change = route_change
+                page.on_view_pop = view_pop
 
 
-        ft.run(main)
-        ```
+            ft.run(main)
+            ```
 
         Args:
             route: New navigation route.
@@ -681,18 +673,17 @@ class Page(BasePage):
         * `file_name` - a relative to upload storage path.
         * `expires` - a URL time-to-live in seconds.
 
-        For example:
+        Example:
+            ```python
+            upload_url = page.get_upload_url("dir/filename.ext", 60)
+            ```
 
-        ```python
-        upload_url = page.get_upload_url("dir/filename.ext", 60)
-        ```
+            To enable built-in upload storage, provide the `upload_dir `
+            argument to `ft.run()` call:
 
-        To enable built-in upload storage provide `upload_dir` argument to `flet.app()`
-        call:
-
-        ```python
-        ft.run(main, upload_dir="uploads")
-        ```
+            ```python
+            ft.run(main, upload_dir="uploads")
+            ```
         """
         return self.session.connection.get_upload_url(file_name, expires)
 
@@ -839,15 +830,15 @@ class Page(BasePage):
 
         Returns:
             `True` if it is possible to verify that there is a handler available.
-            `False` if there is no handler available,
-            or the application does not have permission to check. For example:
+                `False` if there is no handler available, or the application does not
+                have permission to check. For example:
 
-            - On recent versions of Android and iOS, this will always return `False`
-                unless the application has been configuration to allow querying the
-                system for launch support.
-            - In web mode, this will always return `False` except for a few specific
-                schemes that are always assumed to be supported (such as http(s)),
-                as web pages are never allowed to query installed applications.
+                - On recent versions of Android and iOS, this will always return `False`
+                    unless the application has been configuration to allow querying the
+                    system for launch support.
+                - In web mode, this will always return `False` except for a few specific
+                    schemes that are always assumed to be supported (such as http(s)),
+                    as web pages are never allowed to query installed applications.
         """
         return await self.url_launcher.can_launch_url(url)
 

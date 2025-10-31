@@ -28,6 +28,10 @@ class PopupMenuPosition(Enum):
 
 @control("PopupMenuItem")
 class PopupMenuItem(Control):
+    """
+    A popup menu item.
+    """
+
     content: Optional[StrOrControl] = None
     """
     A `Control` representing custom content of this menu item.

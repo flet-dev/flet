@@ -6,24 +6,23 @@ def memo(fn):
     Lets you skip re-rendering a component when its props are unchanged.
 
     Example:
-
-    ```python
-    import flet as ft
-
-
-    @ft.component
-    def MyComponent(x, y):
-        return ft.Text(f"x={x}, y={y}")
+        ```python
+        import flet as ft
 
 
-    MemoizedMyComponent = ft.memo(MyComponent)
+        @ft.component
+        def MyComponent(x, y):
+            return ft.Text(f"x={x}, y={y}")
 
-    flet.run(
-        lambda page: page.render(
-            lambda: MemoizedMyComponent(x=1, y=2),
-        ),
-    )
-    ```
+
+        MemoizedMyComponent = ft.memo(MyComponent)
+
+        flet.run(
+            lambda page: page.render(
+                lambda: MemoizedMyComponent(x=1, y=2),
+            ),
+        )
+        ```
     """
 
     def memo_wrapper(*args, **kwargs):
