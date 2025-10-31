@@ -329,7 +329,7 @@ class BasePage(AdaptiveControl):
             Exception: If the specified dialog is already open.
         """
         if dialog in self._dialogs.controls:
-            raise Exception("Dialog is already opened")
+            raise RuntimeError("Dialog is already opened")
 
         original_on_dismiss = dialog.on_dismiss
 

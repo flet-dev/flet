@@ -1060,7 +1060,7 @@ class DiffBuilder:
             if parent:
                 logger.debug("\n\nAdding parent %s to item: %s", parent, item)
                 if parent is item:
-                    raise Exception(f"Parent is the same as item: {item}")
+                    raise ObjectPatchException(f"Parent is the same as item: {item}")
                 item._parent = weakref.ref(parent)
             else:
                 logger.debug("\n\nSkip adding parent to item: %s", item)
@@ -1113,7 +1113,7 @@ class DiffBuilder:
 
             if parent:
                 if parent is item:
-                    raise Exception(f"Parent is the same as item: {item}")
+                    raise ObjectPatchException(f"Parent is the same as item: {item}")
                 item._parent = weakref.ref(parent)
 
             if hasattr(item, "_frozen"):
@@ -1130,7 +1130,9 @@ class DiffBuilder:
                     or not isinstance(obj, control_cls)
                 ):
                     if hasattr(obj, "_frozen"):
-                        raise Exception("Frozen controls cannot be updated.") from None
+                        raise RuntimeError(
+                            "Frozen controls cannot be updated."
+                        ) from None
 
                     if hasattr(obj, "__changes"):
                         old_value = getattr(obj, name, None)

@@ -206,7 +206,7 @@ class FletSocketServer(Connection):
 
         else:
             # it's something else
-            raise Exception(f'Unknown message "{action}": {body}')
+            raise RuntimeError(f'Unknown message "{action}": {body}')
 
         if task:
             self.__running_tasks.add(task)

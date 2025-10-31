@@ -866,7 +866,7 @@ class Page(BasePage):
         """
         if sess := self.__session():
             return sess
-        raise Exception("An attempt to fetch destroyed session.")
+        raise RuntimeError("An attempt to fetch destroyed session.")
 
     @property
     def query(self) -> QueryString:

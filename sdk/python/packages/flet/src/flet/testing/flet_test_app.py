@@ -377,7 +377,7 @@ class FletTestApp:
                 f.write(screenshot)
         else:
             if not golden_image_path.exists():
-                raise Exception(
+                raise RuntimeError(
                     f"Golden image for {name} not found: {golden_image_path}"
                 )
             golden_img = self._load_image_from_file(golden_image_path)

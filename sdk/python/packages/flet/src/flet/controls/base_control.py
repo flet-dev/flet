@@ -134,7 +134,7 @@ class BaseControl:
         self._i = ControlId.next()
         if not hasattr(self, "_c") or self._c is None:
             cls_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
-            raise Exception(
+            raise ValueError(
                 f"Control {cls_name} must have @control decorator with "
                 "type_name specified."
             )
@@ -236,7 +236,7 @@ class BaseControl:
     # public methods
     def update(self) -> None:
         if hasattr(self, "_frozen"):
-            raise Exception("Frozen control cannot be updated.")
+            raise RuntimeError("Frozen control cannot be updated.")
         if not self.page:
             raise RuntimeError(
                 f"{self.__class__.__qualname__} Control must be added to the page first"

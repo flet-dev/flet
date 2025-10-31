@@ -146,6 +146,3 @@ class Control(BaseControl):
             raise ValueError(
                 f"expand must be of type bool or int, got {type(self.expand)}"
             )
-
-    def clean(self) -> None:
-        raise Exception("Deprecated!")

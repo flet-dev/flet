@@ -4,6 +4,7 @@ from typing import Any
 
 import flet_js
 import msgpack
+
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -107,7 +108,7 @@ class PyodideConnection(Connection):
 
         else:
             # it's something else
-            raise Exception(f'Unknown message "{action}": {body}')
+            raise RuntimeError(f'Unknown message "{action}": {body}')
 
         if task:
             self.__running_tasks.add(task)

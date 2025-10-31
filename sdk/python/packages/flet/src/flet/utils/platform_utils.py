@@ -2,6 +2,8 @@ import asyncio
 import os
 import sys
 
+from flet.controls.exceptions import FletUnsupportedPlatformException
+
 
 def get_bool_env_var(name: str):
     v = os.getenv(name)
@@ -52,7 +54,7 @@ def is_linux_server():
         # check if it's WSL
         p = "/proc/version"
         if os.path.exists(p):
-            with open(p, "r", encoding="utf-8") as file:
+            with open(p, encoding="utf-8") as file:
                 if "microsoft" in file.read():
                     return False  # it's WSL, not a server
         return os.environ.get("DISPLAY") is None
@@ -72,7 +74,7 @@ def get_platform():
     elif p == "Darwin":
         return "darwin"
     else:
-        raise Exception(f"Unsupported platform: {p}")
+        raise FletUnsupportedPlatformException(f"Unsupported platform: {p}")
 
 
 def get_arch():
@@ -84,4 +86,4 @@ def get_arch():
     elif a.startswith("arm"):
         return "arm_7"
     else:
-        raise Exception(f"Unsupported architecture: {a}")
+        raise FletUnsupportedPlatformException(f"Unsupported architecture: {a}")

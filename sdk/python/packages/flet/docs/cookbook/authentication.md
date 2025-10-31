@@ -438,7 +438,7 @@ def main(page: Page):
 
     def on_login(e):
         if e.error:
-            raise Exception(e.error)
+            raise RuntimeError(e.error)
         print("User ID:", page.auth.user.id)
         print("Access token:", page.auth.token.access_token)
 
