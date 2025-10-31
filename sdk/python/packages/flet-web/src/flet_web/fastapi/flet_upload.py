@@ -112,6 +112,7 @@ class FletUpload:
                 if self.__max_upload_size and size > self.__max_upload_size:
                     raise HTTPException(
                         status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                        detail="Max upload size exceeded",
+                        detail="Max upload size exceeded: "
+                        f"{self.__max_upload_size} bytes",
                     )
                 await f.write(chunk)

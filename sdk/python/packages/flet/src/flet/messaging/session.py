@@ -346,6 +346,7 @@ class Session:
                     # print(f"**** Running effect: {hook} {is_cleanup}")
                     if hook and hook.setup and not is_cleanup:
                         hook.cancel()
+                        res = None
                         if asyncio.iscoroutinefunction(hook.setup):
                             hook._setup_task = asyncio.create_task(hook.setup())
                         else:
