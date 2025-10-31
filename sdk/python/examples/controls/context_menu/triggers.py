@@ -27,7 +27,6 @@ async def main(page: ft.Page):
                 ft.PopupMenuItem(content="Tertiary 2", on_click=handle_item_click),
             ],
             tertiary_trigger=ft.ContextMenuTrigger.DOWN,
-            on_open=lambda e: print("Menu opened"),
             on_select=lambda e: print(f"Selected item: {e.item.content}"),
             on_dismiss=lambda e: print("Menu dismissed"),
             expand=True,

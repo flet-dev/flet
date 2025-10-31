@@ -267,7 +267,7 @@ from flet.controls.material.circle_avatar import CircleAvatar
 from flet.controls.material.container import Container
 from flet.controls.material.context_menu import (
     ContextMenu,
-    ContextMenuEvent,
+    ContextMenuDismissEvent,
     ContextMenuSelectEvent,
     ContextMenuTrigger,
 )
@@ -613,7 +613,7 @@ __all__ = [
     "Container",
     "Context",
     "ContextMenu",
-    "ContextMenuEvent",
+    "ContextMenuDismissEvent",
     "ContextMenuSelectEvent",
     "ContextMenuSelectEvent",
     "ContextMenuTrigger",

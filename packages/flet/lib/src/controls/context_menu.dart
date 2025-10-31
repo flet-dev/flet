@@ -222,9 +222,6 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
       return;
     }
 
-    // Notify that the menu is opening.
-    widget.control.triggerEvent("open", basePayload);
-
     // Show the popup menu and wait for user selection.
     final menuFuture = showMenu<String>(
       context: context,

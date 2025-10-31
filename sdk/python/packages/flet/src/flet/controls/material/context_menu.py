@@ -11,7 +11,7 @@ from flet.controls.transform import Offset, OffsetValue
 
 __all__ = [
     "ContextMenu",
-    "ContextMenuEvent",
+    "ContextMenuDismissEvent",
     "ContextMenuSelectEvent",
     "ContextMenuTrigger",
 ]
@@ -34,8 +34,8 @@ class ContextMenuTrigger(Enum):
 
 
 @dataclass(kw_only=True)
-class ContextMenuEvent(Event["ContextMenu"]):
-    """Event fired when a context menu is shown or dismissed."""
+class ContextMenuDismissEvent(Event["ContextMenu"]):
+    """Event fired when a context menu is dismissed."""
 
     global_position: Offset = field(metadata={"data_field": "g"})
     """
@@ -66,7 +66,7 @@ class ContextMenuEvent(Event["ContextMenu"]):
 
 
 @dataclass(kw_only=True)
-class ContextMenuSelectEvent(ContextMenuEvent):
+class ContextMenuSelectEvent(ContextMenuDismissEvent):
     """Event fired when a context menu item is selected."""
 
     item_id: Optional[int] = field(default=None, metadata={"data_field": "id"})
@@ -115,18 +115,27 @@ class ContextMenu(LayoutControl):
     """
     A list of menu items to display in the context menu,
     for primary (usually left) mouse button actions.
+
+    These items are displayed when the corresponding
+    [`primary_trigger`][(c).] is activated.
     """
 
     secondary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu,
+    A list of menu items to display in the context menu
     for secondary (usually right) mouse button actions.
+
+    These items are displayed when the corresponding
+    [`secondary_trigger`][(c).] is activated.
     """
 
     tertiary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu,
+    A list of menu items to display in the context menu
     for tertiary (usually middle) mouse button actions.
+
+    These items are displayed when the corresponding
+    [`tertiary_trigger`][(c).] is activated.
     """
 
     primary_trigger: Optional[ContextMenuTrigger] = None
@@ -150,17 +159,12 @@ class ContextMenu(LayoutControl):
     If set to `None`, the trigger is disabled.
     """
 
-    on_open: Optional[EventHandler[ContextMenuEvent]] = None
-    """
-    Fires immediately after the menu is shown.
-    """
-
     on_select: Optional[EventHandler[ContextMenuSelectEvent]] = None
     """
-    Fires when a `PopupMenuItem` is selected.
+    Fires when a context menu item is selected.
     """
 
-    on_dismiss: Optional[EventHandler[ContextMenuEvent]] = None
+    on_dismiss: Optional[EventHandler[ContextMenuDismissEvent]] = None
     """
     Fires when the menu is dismissed without a selection, or when an attempt is made
     to open the menu but no items are available.

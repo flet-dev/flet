@@ -1,1 +1,1 @@
-{{ class_all_options("flet.ContextMenuEvent") }}
+{{ class_all_options("flet.ContextMenuDismissEvent") }}
