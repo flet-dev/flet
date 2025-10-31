@@ -12,4 +12,4 @@ def main(page: Page):
     page.update()
 
 
-flet.app(target=main, view=flet.AppView.WEB_BROWSER)
+flet.run(main)

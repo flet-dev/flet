@@ -6,4 +6,4 @@ def main(page: Page):
     page.add(Text(f"Initial route: {page.route}"))
 
 
-flet.app(target=main, view=flet.AppView.WEB_BROWSER)
+flet.run(main)
