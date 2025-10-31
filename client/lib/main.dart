@@ -87,8 +87,7 @@ void main([List<String>? args]) async {
         assetsDir = args[2];
         debugPrint("Args contain a path assets directory: $assetsDir}");
       }
-    } else if (!kDebugMode &&
-        (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+    } else if (!kDebugMode && isDesktopPlatform()) {
       throw Exception(
           'In desktop mode Flet app URL must be provided as a first argument.');
     }

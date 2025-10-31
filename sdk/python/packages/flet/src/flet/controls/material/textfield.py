@@ -30,29 +30,168 @@ __all__ = [
 
 
 class KeyboardType(Enum):
+    """
+    The type of information for which to optimize the text input control.
+
+    On Android, behavior may vary across device and keyboard provider.
+    """
+
     NONE = "none"
+    """
+    Prevents the OS from showing the on-screen virtual keyboard.
+    """
+
     TEXT = "text"
+    """
+    Optimized for textual information.
+
+    Requests the default platform keyboard.
+    """
+
     MULTILINE = "multiline"
+    """
+    Optimized for multiline textual information.
+
+    Requests the default platform keyboard, but accepts newlines when the
+    enter key is pressed. This is the input type used for all multiline text
+    fields.
+    """
+
     NUMBER = "number"
+    """
+    Optimized for unsigned numerical information without a decimal point.
+
+    Requests a default keyboard with ready access to the number keys.
+    """
+
     PHONE = "phone"
+    """
+    Optimized for telephone numbers.
+
+    Requests a keyboard with ready access to the number keys, `"*"`, and `"#"`.
+    """
+
     DATETIME = "datetime"
+    """
+    Optimized for date and time information.
+
+    - On iOS, requests the default keyboard.
+    - On Android, requests a keyboard with ready
+        access to the number keys, `":"`, and `"-"`.
+    """
+
     EMAIL = "email"
+    """
+    Optimized for email addresses.
+
+    Requests a keyboard with ready access to the `"@"` and `"."` keys.
+    """
+
     URL = "url"
+    """
+    Optimized for URLs.
+
+    Requests a keyboard with ready access to the `"/"` and `"."` keys.
+    """
+
     VISIBLE_PASSWORD = "visiblePassword"
+    """
+    Optimized for passwords that are visible to the user.
+
+    Requests a keyboard with ready access to both letters and numbers.
+    """
+
     NAME = "name"
+    """
+    Optimized for a person's name.
+
+    - On iOS, requests the [UIKeyboardType.namePhonePad](https://developer.apple.com/documentation/uikit/uikeyboardtype/namephonepad)
+        keyboard, a keyboard optimized for entering a person’s name or phone number.
+        Does not support auto-capitalization.
+    - On Android, requests a keyboard optimized for
+        [TYPE_TEXT_VARIATION_PERSON_NAME](https://developer.android.com/reference/android/text/InputType#TYPE_TEXT_VARIATION_PERSON_NAME).
+    """  # noqa: E501
+
     STREET_ADDRESS = "streetAddress"
+    """
+    Optimized for postal mailing addresses.
+
+    - On iOS, requests the default keyboard.
+    - On Android, requests a keyboard optimized for
+        [TYPE_TEXT_VARIATION_POSTAL_ADDRESS](https://developer.android.com/reference/android/text/InputType#TYPE_TEXT_VARIATION_POSTAL_ADDRESS).
+    """  # noqa: E501
+
+    WEB_SEARCH = "webSearch"
+    """
+    Optimized for web searches.
+
+    Requests a keyboard that includes keys useful for web searches as well as URLs.
+
+    - On iOS, requests a default keyboard with ready access to the `"."` key.
+        In contrast to [`URL`][(c).], a space bar is available.
+    - On Android this is remapped to the [`URL`][(c).] keyboard type as it always
+        shows a space bar.
+    """
+
+    TWITTER = "twitter"
+    """
+    Optimized for social media.
+
+    Requests a keyboard that includes keys useful for handles and tags.
+
+    - On iOS, requests a default keyboard with ready access to the `"@"` and `"#"` keys.
+    - On Android this is remapped to the [`EMAIL`][(c).] keyboard type as it
+        always shows the `"@"` key.
+    """
 
 
 class TextCapitalization(Enum):
+    """
+    Configures how the platform keyboard will select an uppercase or
+    lowercase keyboard.
+
+    Only supports text keyboards, other keyboard types will ignore this
+    configuration. Capitalization is locale-aware.
+    """
+
     CHARACTERS = "characters"
+    """
+    Uppercase keyboard for each character.
+
+    Info:
+        Corresponds to `InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS` on Android, and
+        `UITextAutocapitalizationTypeAllCharacters` on iOS.
+    """
+
     WORDS = "words"
+    """
+    Uppercase keyboard for the first letter of each word.
+
+    Info:
+        Corresponds to `InputType.TYPE_TEXT_FLAG_CAP_WORDS` on Android, and
+        `UITextAutocapitalizationTypeWords` on iOS.
+    """
+
     SENTENCES = "sentences"
+    """
+    Uppercase keyboard for the first letter of each sentence.
+
+    Info:
+        Corresponds to `InputType.TYPE_TEXT_FLAG_CAP_SENTENCES` on Android, and
+        `UITextAutocapitalizationTypeSentences` on iOS.
+    """
+
+    NONE = "none"
+    """
+    Lowercase keyboard.
+    """
 
 
 @dataclass
 class InputFilter:
     """
-    `InputFilter` class.
+    An input filter that uses a regular expression to allow or deny/block certain
+    patterns in the input.
     """
 
     regex_string: str
@@ -79,7 +218,7 @@ class InputFilter:
     """
     Whether this regular expression matches multiple lines.
 
-    If the regexp does match multiple lines, the "^" and "$" characters match the
+    If the regexp does match multiple lines, the `"^"` and `"$"` characters match the
     beginning and end of lines. If not, the characters match the beginning and end of
     the input.
     """
@@ -100,10 +239,10 @@ class InputFilter:
 
     dot_all: bool = False
     """
-    Whether "." in this regular expression matches line terminators.
+    Whether `"."` in this regular expression matches line terminators.
 
-    When false, the "." character matches a single character, unless that character
-    terminates a line. When true, then the "." character will match any single
+    When false, the `"."` character matches a single character, unless that character
+    terminates a line. When true, then the `"."` character will match any single
     character including line terminators.
 
     This feature is distinct from `multiline`. They affect the behavior of different
