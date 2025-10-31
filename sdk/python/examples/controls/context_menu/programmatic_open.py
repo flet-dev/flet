@@ -7,27 +7,27 @@ def main(page: ft.Page):
 
     def handle_select(e: ft.ContextMenuSelectEvent):
         action = e.item.content
-        page.show_dialog(ft.SnackBar(content=f"Item '{action}' selected."))
+        page.show_dialog(ft.SnackBar(f"Item '{action}' selected."))
 
     async def open_menu(e: ft.Event[ft.Button]):
-        await context_menu.open()
+        await menu.open()
 
     page.add(
-        context_menu := ft.ContextMenu(
+        menu := ft.ContextMenu(
             on_select=handle_select,
-            content=ft.Button("Open Menu", on_click=open_menu),
+            content=ft.Button("Click to open menu", on_click=open_menu),
             items=[
                 ft.PopupMenuItem(
-                    content="Cut",
-                    on_click=lambda e: print(f"Action '{e.control.content}' clicked!"),
+                    content="Item 1",
+                    on_click=lambda e: print(f"{e.control.content}"),
                 ),
                 ft.PopupMenuItem(
-                    content="Copy",
-                    on_click=lambda e: print(f"Action '{e.control.content}' clicked!"),
+                    content="Item 2",
+                    on_click=lambda e: print(f"{e.control.content}"),
                 ),
                 ft.PopupMenuItem(
-                    content="Paste",
-                    on_click=lambda e: print(f"Action '{e.control.content}' clicked!"),
+                    content="Item 3",
+                    on_click=lambda e: print(f"{e.control.content}"),
                 ),
             ],
         ),

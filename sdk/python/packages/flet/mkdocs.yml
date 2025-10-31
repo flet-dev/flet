@@ -834,6 +834,8 @@ nav:
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
+              - ContextMenuEvent: types/contextmenuevent.md
+              - ContextMenuSelectEvent: types/contextmenuselectevent.md
               - DataColumnSortEvent: types/datacolumnsortevent.md
               - DatePickerEntryModeChangeEvent: types/datepickerentrymodechangeevent.md
               - DismissibleDismissEvent: types/dismissibledismissevent.md

@@ -30,7 +30,7 @@ async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "alert_dialog_basic",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

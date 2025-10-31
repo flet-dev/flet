@@ -17,32 +17,52 @@ __all__ = [
 ]
 
 
-class ContextMenuTrigger(str, Enum):
+class ContextMenuTrigger(Enum):
     """Defines how a menu is shown for a specific mouse button."""
 
-    DISABLED = "disabled"
     DOWN = "down"
+    """
+    Represents a trigger mode where the menu is shown
+    when the mouse button is pressed down.
+    """
+
     LONG_PRESS = "longPress"
+    """
+    Represents a trigger mode where the menu is shown
+    after a long press of the mouse button.
+    """
 
 
 @dataclass(kw_only=True)
 class ContextMenuEvent(Event["ContextMenu"]):
     """Event fired when a context menu is shown or dismissed."""
 
-    button: str = field(metadata={"data_field": "b"})
-    """Mouse button that triggered the menu."""
-
     global_position: Offset = field(metadata={"data_field": "g"})
-    """Global pointer position in logical pixels."""
+    """
+    Global pointer position in logical pixels.
+    """
 
     local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
-    """Local pointer position relative to the wrapped control."""
+    """
+    Local pointer position relative to the wrapped control.
+    """
 
-    trigger: Optional[str] = field(default=None, metadata={"data_field": "tr"})
-    """Trigger mode that opened the menu."""
+    button: Optional[str] = field(default=None, metadata={"data_field": "b"})
+    """
+    Mouse button that triggered the menu.
+    """
+
+    trigger: Optional[ContextMenuTrigger] = field(
+        default=None, metadata={"data_field": "tr"}
+    )
+    """
+    Trigger mode that opened the menu.
+    """
 
     item_count: Optional[int] = field(default=None, metadata={"data_field": "ic"})
-    """Total number of entries displayed in the context menu."""
+    """
+    Total number of entries displayed in the context menu.
+    """
 
 
 @dataclass(kw_only=True)
@@ -50,10 +70,14 @@ class ContextMenuSelectEvent(ContextMenuEvent):
     """Event fired when a context menu item is selected."""
 
     item_id: Optional[int] = field(default=None, metadata={"data_field": "id"})
-    """Internal numeric identifier of the selected menu item."""
+    """
+    Internal numeric identifier of the selected menu item.
+    """
 
     item_index: Optional[int] = field(default=None, metadata={"data_field": "idx"})
-    """Index of the selected menu entry within the rendered list."""
+    """
+    Index of the selected menu entry within the rendered list.
+    """
 
     @property
     def item(self) -> Optional[PopupMenuItem]:
@@ -68,9 +92,9 @@ class ContextMenu(LayoutControl):
     menus for specific mouse events.
 
     Tip:
-        On the web, call [`disable()`][`flet.BrowserContextMenu.disable`] method of
-        [`Page.browser_context_menu`][`flet.`] to suppress the default browser menu
-        before relying on custom menus.
+        On web, call [`disable()`][`flet.BrowserContextMenu.disable`] method of
+        [`Page.browser_context_menu`][`flet.`] to suppress the default browser
+        context menu before relying on custom menus.
     """
 
     content: Control
@@ -83,37 +107,47 @@ class ContextMenu(LayoutControl):
 
     items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A default menu definition used when button-specific items are not supplied.
+    A list of menu items to display in the context menu,
+    when [`open()`][(c).open] is called.
     """
 
     primary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    The menu displayed for primary (usually left) mouse button actions.
+    A list of menu items to display in the context menu,
+    for primary (usually left) mouse button actions.
     """
 
     secondary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    The menu displayed for secondary (usually right) mouse button actions.
+    A list of menu items to display in the context menu,
+    for secondary (usually right) mouse button actions.
     """
 
     tertiary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    The menu displayed for tertiary (usually middle) mouse button actions.
+    A list of menu items to display in the context menu,
+    for tertiary (usually middle) mouse button actions.
     """
 
-    primary_trigger: ContextMenuTrigger = ContextMenuTrigger.DISABLED
+    primary_trigger: Optional[ContextMenuTrigger] = None
     """
-    How the menu for the primary button is invoked.
+    Defines a trigger mode for the display of [`primary_items`][(c).].
+
+    If set to `None`, the trigger is disabled.
     """
 
-    secondary_trigger: ContextMenuTrigger = ContextMenuTrigger.DOWN
+    secondary_trigger: Optional[ContextMenuTrigger] = ContextMenuTrigger.DOWN
     """
-    How the menu for the secondary button is invoked.
+    Defines a trigger mode for the display of [`secondary_items`][(c).].
+
+    If set to `None`, the trigger is disabled.
     """
 
-    tertiary_trigger: ContextMenuTrigger = ContextMenuTrigger.DOWN
+    tertiary_trigger: Optional[ContextMenuTrigger] = ContextMenuTrigger.DOWN
     """
-    How the menu for the tertiary button is invoked.
+    Defines a trigger mode for the display of [`tertiary_items`][(c).].
+
+    If set to `None`, the trigger is disabled.
     """
 
     on_open: Optional[EventHandler[ContextMenuEvent]] = None

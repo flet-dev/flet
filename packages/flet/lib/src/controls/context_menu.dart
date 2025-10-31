@@ -76,6 +76,13 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
                     details.localPosition,
                   )
               : null,
+      onTertiaryLongPressStart: _tertiaryTrigger == ContextMenuTrigger.longPress
+          ? (LongPressStartDetails details) => _handleLongPress(
+                _MouseButton.tertiary,
+                details.globalPosition,
+                details.localPosition,
+              )
+          : null,
       child: Listener(
         behavior: HitTestBehavior.translucent,
         onPointerDown: _handlePointerDown,
@@ -98,7 +105,7 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
     if (trigger != ContextMenuTrigger.down) return;
 
     _showMenu(
-      button,
+      button: button,
       globalPosition: event.position,
       localPosition: event.localPosition,
     );
@@ -110,13 +117,13 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
     if (trigger != ContextMenuTrigger.longPress) return;
 
     _showMenu(
-      button,
+      button: button,
       globalPosition: globalPosition,
       localPosition: localPosition,
     );
   }
 
-  ContextMenuTrigger? _getTriggerFromButton(_MouseButton button) {
+  ContextMenuTrigger? _getTriggerFromButton(_MouseButton? button) {
     switch (button) {
       case _MouseButton.primary:
         return _primaryTrigger;
@@ -144,7 +151,7 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
 
   /// Picks popup menu items configured for the provided button, falling back
   /// to the shared `items` collection when a button-specific list is empty.
-  List<Control> _getPopupItemsFromButton(_MouseButton button) {
+  List<Control> _getPopupItemsFromButton(_MouseButton? button) {
     switch (button) {
       case _MouseButton.primary:
         return widget.control.children("primary_items");
@@ -159,10 +166,10 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
 
   /// Serialises menu event data to a compact payload sent to Python handlers.
   Map<String, dynamic> _eventPayload(
-      _MouseButton button, Offset globalPosition, Offset? localPosition,
+      _MouseButton? button, Offset globalPosition, Offset? localPosition,
       {int? itemId, int? itemIndex, int? itemCount}) {
     return {
-      "b": button.name,
+      "b": button?.name,
       "tr": _getTriggerFromButton(button)?.name,
       "id": itemId,
       "idx": itemIndex,
@@ -175,8 +182,10 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
   }
 
   /// Opens the context menu for a specific button at the requested position.
-  Future<void> _showMenu(_MouseButton button,
-      {required Offset globalPosition, Offset? localPosition}) async {
+  Future<void> _showMenu(
+      {required Offset globalPosition,
+      Offset? localPosition,
+      _MouseButton? button}) async {
     // If a menu is already open, close it and wait for it to finish.
     if (_pendingMenu != null) {
       Navigator.of(context).pop();
@@ -256,7 +265,6 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
     }
   }
 
-  /// Handles invoke-method calls originating from Python (programmatic open).
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     switch (name) {
       case "open":
@@ -284,8 +292,7 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
         globalPosition ??= renderBox.localToGlobal(localPosition);
 
         // Show the context menu at the calculated position.
-        _showMenu(_MouseButton.none,
-            globalPosition: globalPosition, localPosition: localPosition);
+        _showMenu(globalPosition: globalPosition, localPosition: localPosition);
         return null;
       default:
         throw ArgumentError("Unsupported method: $name");
@@ -293,7 +300,7 @@ class _ContextMenuControlState extends State<ContextMenuControl> {
   }
 }
 
-enum _MouseButton { primary, secondary, tertiary, none }
+enum _MouseButton { primary, secondary, tertiary }
 
 enum ContextMenuTrigger { disabled, down, longPress }
 

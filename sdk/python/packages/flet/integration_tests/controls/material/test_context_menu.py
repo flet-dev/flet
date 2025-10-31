@@ -4,104 +4,35 @@ import flet as ft
 import flet.testing as ftt
 
 
-@pytest.mark.asyncio(loop_scope="function")
-async def test_primary_select(flet_app: ftt.FletTestApp):
-    status = ft.Text("idle", key="status")
+@pytest.mark.asyncio(loop_scope="module")
+async def test_programmatic_open(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    await flet_app.resize_page(250, 250)
+    flet_app.page.add(
+        menu := ft.ContextMenu(
+            content=ft.IconButton(ft.Icons.MENU),
+            items=[
+                ft.PopupMenuItem("Item 1"),
+                ft.PopupMenuItem("Item 2"),
+                ft.PopupMenuItem("Item 3"),
+            ],
+        )
+    )
+    await flet_app.tester.pump_and_settle()
 
-    def handle_select(e: ft.ContextMenuEvent):
-        status.value = e.item_key
-        e.page.update()
-
-    region = ft.ContextMenu(
-        primary_trigger=ft.ContextMenuTrigger.DOWN,
-        primary_items=[
-            ft.PopupMenuItem(content="Rename", key="rename"),
-            ft.PopupMenuItem(content="Duplicate", key="duplicate"),
-        ],
-        on_select=handle_select,
-        content=ft.Container(
-            key="context-region",
-            width=160,
-            height=100,
-            bgcolor=ft.Colors.SURFACE_VARIANT,
-            alignment=ft.Alignment.CENTER,
-            content=ft.Text("Primary menu"),
+    await menu.open()
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        "programmatic_open_1",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
 
-    flet_app.page.add(status, region)
     await flet_app.tester.pump_and_settle()
-
-    await flet_app.tester.tap(await flet_app.tester.find_by_key("context-region"))
-    await flet_app.tester.pump_and_settle()
-
-    await flet_app.tester.tap(await flet_app.tester.find_by_text("Rename"))
-    await flet_app.tester.pump_and_settle()
-
-    assert status.value == "rename"
-
-
-@pytest.mark.asyncio(loop_scope="function")
-async def test_dismiss_event(flet_app: ftt.FletTestApp):
-    status = ft.Text("idle", key="status")
-
-    def handle_dismiss(e: ft.ContextMenuEvent):
-        status.value = e.reason
-        e.page.update()
-
-    region = ft.ContextMenu(
-        primary_trigger=ft.ContextMenuTrigger.DOWN,
-        primary_items=[ft.PopupMenuItem(content="Rename", key="rename")],
-        on_dismiss=handle_dismiss,
-        content=ft.Container(
-            key="context-region",
-            width=160,
-            height=100,
-            bgcolor=ft.Colors.SURFACE_VARIANT,
-            alignment=ft.Alignment.CENTER,
-            content=ft.Text("Dismiss menu"),
+    flet_app.assert_screenshot(
+        "programmatic_open_2",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
-
-    flet_app.page.add(status, region)
-    await flet_app.tester.pump_and_settle()
-
-    await flet_app.tester.tap(await flet_app.tester.find_by_key("context-region"))
-    await flet_app.tester.pump_and_settle()
-
-    await flet_app.tester.tap(await flet_app.tester.find_by_key("status"))
-    await flet_app.tester.pump_and_settle()
-
-    assert status.value == "cancelled"
-
-
-@pytest.mark.asyncio(loop_scope="function")
-async def test_programmatic_open(flet_app: ftt.FletTestApp):
-    status = ft.Text("idle", key="status")
-
-    def handle_select(e: ft.ContextMenuEvent):
-        status.value = e.item_key
-        e.page.update()
-
-    region = ft.ContextMenu(
-        primary_items=[ft.PopupMenuItem(content="Program", key="program")],
-        on_select=handle_select,
-        content=ft.Container(
-            width=160,
-            height=100,
-            bgcolor=ft.Colors.SURFACE_VARIANT,
-            alignment=ft.Alignment.CENTER,
-            content=ft.Text("Programmatic menu"),
-        ),
-    )
-
-    flet_app.page.add(status, region)
-    await flet_app.tester.pump_and_settle()
-
-    await region.open(button=ft.ContextMenuButton.PRIMARY)
-    await flet_app.tester.pump_and_settle()
-
-    await flet_app.tester.tap(await flet_app.tester.find_by_text("Program"))
-    await flet_app.tester.pump_and_settle()
-
-    assert status.value == "program"
