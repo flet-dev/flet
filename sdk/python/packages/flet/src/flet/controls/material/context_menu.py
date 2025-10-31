@@ -97,8 +97,8 @@ class ContextMenu(LayoutControl):
     menus for specific mouse events.
 
     Tip:
-        On web, call [`disable()`][`flet.BrowserContextMenu.disable`] method of
-        [`Page.browser_context_menu`][`flet.`] to suppress the default browser
+        On web, call [`disable()`][flet.BrowserContextMenu.disable] method of
+        [`Page.browser_context_menu`][flet.] to suppress the default browser
         context menu before relying on custom menus.
     """
 
