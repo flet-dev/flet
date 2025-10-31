@@ -1,7 +1,7 @@
 ---
 class_name: flet.ContextMenu
 examples: ../../examples/controls/context_menu
-example_images: ../test-images/examples/cupertino/golden/macos/context_menu
+example_images: ../test-images/examples/material/golden/macos/context_menu
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic ContextMenu") }}

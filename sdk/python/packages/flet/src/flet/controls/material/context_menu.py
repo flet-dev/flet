@@ -35,7 +35,7 @@ class ContextMenuTrigger(Enum):
 
 @dataclass(kw_only=True)
 class ContextMenuDismissEvent(Event["ContextMenu"]):
-    """Event fired when a context menu is dismissed."""
+    """Event fired when a [`ContextMenu`][flet.] is dismissed."""
 
     global_position: Offset = field(metadata={"data_field": "g"})
     """
@@ -50,24 +50,29 @@ class ContextMenuDismissEvent(Event["ContextMenu"]):
     button: Optional[str] = field(default=None, metadata={"data_field": "b"})
     """
     Mouse button that triggered the menu.
+
+    If a string, can be one of:
+    `"primary"` (linked to [`ContextMenu.primary_items`][flet.]),
+    `"secondary"` (linked to [`ContextMenu.secondary_items`][flet.]),
+    or `"tertiary"` (linked to [`ContextMenu.tertiary_items`][flet.]).
     """
 
     trigger: Optional[ContextMenuTrigger] = field(
         default=None, metadata={"data_field": "tr"}
     )
     """
-    Trigger mode that opened the menu.
+    The trigger mode that opened the menu.
     """
 
     item_count: Optional[int] = field(default=None, metadata={"data_field": "ic"})
     """
-    Total number of entries displayed in the context menu.
+    Total number of entries displayed in the corresponding context menu.
     """
 
 
 @dataclass(kw_only=True)
 class ContextMenuSelectEvent(ContextMenuDismissEvent):
-    """Event fired when a context menu item is selected."""
+    """Event fired when a [`ContextMenu`][flet.] item is selected."""
 
     item_id: Optional[int] = field(default=None, metadata={"data_field": "id"})
     """
@@ -166,8 +171,8 @@ class ContextMenu(LayoutControl):
 
     on_dismiss: Optional[EventHandler[ContextMenuDismissEvent]] = None
     """
-    Fires when the menu is dismissed without a selection, or when an attempt is made
-    to open the menu but no items are available.
+    Fires when the menu is dismissed without a selection,
+    or when an attempt is made to open the menu but no items are available.
     """
 
     async def open(
@@ -181,8 +186,8 @@ class ContextMenu(LayoutControl):
         Args:
             global_position: A global coordinate describing where the menu
                 should appear. If omitted, `local_position` or the center of the
-                wrapped control is used.
-            local_position: A local coordinate relative to the wrapped control.
+                [`content`][(c).] is used.
+            local_position: A local coordinate relative to the [`content`][(c).].
                 When provided without `global_position`, the coordinate is translated
                 to global space automatically.
         """
