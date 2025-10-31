@@ -19,14 +19,13 @@ class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
     debugPrint("CupertinoSlidingSegmentedButtonControl build: ${control.id}");
 
     var controls = control.buildWidgets("controls");
-
     if (controls.length < 2) {
       return const ErrorControl(
           "CupertinoSlidingSegmentedButton must have at minimum two visible controls");
     }
 
     var button = CupertinoSlidingSegmentedControl(
-      groupValue: control.getInt("selected_index"),
+      groupValue: control.getInt("selected_index", 0)!,
       proportionalWidth: control.getBool("proportional_width", false)!,
       backgroundColor: control.getColor(
           "bgcolor", context, CupertinoColors.tertiarySystemFill)!,
@@ -36,15 +35,13 @@ class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
           "thumb_color",
           context,
           const CupertinoDynamicColor.withBrightness(
-            color: Color(0xFFFFFFFF),
-            darkColor: Color(0xFF636366),
-          ))!,
+              color: Color(0xFFFFFFFF), darkColor: Color(0xFF636366)))!,
       children: controls.asMap().map((i, c) => MapEntry(i, c)),
       onValueChanged: (int? index) {
         if (!control.disabled) {
-          control
-              .updateProperties({"selected_index": index ?? 0}, notify: true);
-          control.triggerEvent("change", index ?? 0);
+          index = index ?? 0;
+          control.updateProperties({"selected_index": index}, notify: true);
+          control.triggerEvent("change", index);
         }
       },
     );

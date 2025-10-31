@@ -17,6 +17,22 @@ class ShaderMask(LayoutControl):
 
     For example, it can be used to gradually fade out the edge of a control by
     using a [`LinearGradient`][flet.] mask.
+
+    ```python
+    ft.ShaderMask(
+        blend_mode=ft.BlendMode.MULTIPLY,
+        shader=ft.LinearGradient(
+            begin=ft.Alignment.CENTER_LEFT,
+            end=ft.Alignment.CENTER_RIGHT,
+            colors=[ft.Colors.WHITE, ft.Colors.BLACK],
+            tile_mode=ft.GradientTileMode.CLAMP,
+        ),
+        content=ft.Image(
+            src="https://picsum.photos/id/288/300/300",
+            height=300,
+            fit=ft.BoxFit.FILL,
+        )
+    ```
     """
 
     shader: Gradient

@@ -34,10 +34,8 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [pb]
-    flet_app.page.update()
+    await flet_app.resize_page(400, 600)
+    flet_app.page.add(pb)
     await flet_app.tester.pump_and_settle()
 
     # normal state
@@ -103,10 +101,8 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
         ),
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [pb]
-    flet_app.page.update()
+    await flet_app.resize_page(400, 600)
+    flet_app.page.add(pb)
     await flet_app.tester.pump_and_settle()
 
     # normal state

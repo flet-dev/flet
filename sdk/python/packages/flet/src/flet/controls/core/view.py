@@ -158,9 +158,6 @@ class View(ScrollableControl, LayoutControl):
     can_pop: bool = True
     on_confirm_pop: Optional[ControlEventHandler["View"]] = None
 
-    async def confirm_pop(self, should_pop: bool) -> None:
-        await self._invoke_method("confirm_pop", {"should_pop": should_pop})
-
     def init(self):
         super().init()
         self._internals["host_expanded"] = True
@@ -168,3 +165,40 @@ class View(ScrollableControl, LayoutControl):
     # Magic methods
     def __contains__(self, item: Control) -> bool:
         return item in self.controls
+
+    async def confirm_pop(self, should_pop: bool) -> None:
+        await self._invoke_method("confirm_pop", {"should_pop": should_pop})
+
+    async def show_drawer(self):
+        """
+        Show the drawer.
+
+        Raises:
+            ValueError: If no [`drawer`][(c).] is defined.
+        """
+        if self.drawer is None:
+            raise ValueError("No drawer defined")
+        await self._invoke_method("show_drawer")
+
+    async def close_drawer(self):
+        """
+        Close the drawer.
+        """
+        await self._invoke_method("close_drawer")
+
+    async def show_end_drawer(self):
+        """
+        Show the end drawer.
+
+        Raises:
+            ValueError: If no [`end_drawer`][(c).] is defined.
+        """
+        if self.end_drawer is None:
+            raise ValueError("No end_drawer defined")
+        await self._invoke_method("show_end_drawer")
+
+    async def close_end_drawer(self):
+        """
+        Close the end drawer.
+        """
+        await self._invoke_method("close_end_drawer")

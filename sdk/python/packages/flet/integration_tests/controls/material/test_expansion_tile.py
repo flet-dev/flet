@@ -13,49 +13,54 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
+    flet_app.page.window.width = 400
+    flet_app.page.window.height = 600
     await flet_app.assert_control_screenshot(
-        request.node.name, ft.ExpansionTile("ExpansionTile Title")
+        request.node.name,
+        ft.ExpansionTile(
+            title="ExpansionTile Title",
+            subtitle="ExpansionTile Subtitle",
+        ),
     )
 
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_expanded(flet_app: ftt.FletTestApp, request):
-    et = ft.ExpansionTile(
-        key="et",
-        title="ExpansionTile Title",
-        subtitle="ExpansionTile Subtitle",
-        # leading=ft.Icons.UMBRELLA,
-        trailing=ft.Icons.SUNNY,
-        controls=[
-            ft.Text("ExpansionTile Content"),
-            ft.Text("More Content"),
-        ],
-        controls_padding=ft.Padding.all(10),
-        tile_padding=ft.Padding.all(20),
-        affinity=ft.TileAffinity.LEADING,
+    await flet_app.resize_page(400, 600)
+    flet_app.page.add(
+        tile := ft.ExpansionTile(
+            key="tile",
+            expanded=False,
+            title="ExpansionTile Title",
+            subtitle="ExpansionTile Subtitle",
+            trailing=ft.Icons.SUNNY,
+            controls_padding=ft.Padding.all(10),
+            tile_padding=ft.Padding.all(20),
+            affinity=ft.TileAffinity.LEADING,
+            controls=[
+                ft.Text("ExpansionTile Content"),
+                ft.Text("More Content"),
+            ],
+        )
     )
+    await flet_app.tester.pump_and_settle()
 
-    flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [et]
+    # collapsed state
+    assert tile.expanded is False
+    await flet_app.assert_control_screenshot("collapsed", tile)
+
+    # tap/click on the tile to expand
+    await flet_app.tester.tap(await flet_app.tester.find_by_key("tile"))
+    await flet_app.tester.pump_and_settle()
+
+    # expanded state
+    assert tile.expanded is True
+    await flet_app.assert_control_screenshot("expanded", tile)
+
+    # collapse programatically
+    tile.expanded = False
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
-    # normal state
-    flet_app.assert_screenshot(
-        "collapsed",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
-    )
-
-    # open state
-    await flet_app.tester.tap(await flet_app.tester.find_by_key("et"))
-    await flet_app.tester.pump_and_settle()
-    flet_app.assert_screenshot(
-        "expanded",
-        await flet_app.page.take_screenshot(
-            pixel_ratio=flet_app.screenshots_pixel_ratio
-        ),
-    )
+    # collapsed state
+    await flet_app.assert_control_screenshot("collapsed", tile)

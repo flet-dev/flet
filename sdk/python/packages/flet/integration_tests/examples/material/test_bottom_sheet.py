@@ -19,13 +19,12 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         )
     )
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.page.window.width = 200
-    flet_app_function.page.window.height = 200
+    await flet_app_function.resize_page(200, 200)
     flet_app_function.page.show_dialog(sheet)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "test_image_for_docs",
+        request.node.name,
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),

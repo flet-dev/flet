@@ -19,9 +19,6 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
         flet_app.page.pop_dialog()
         flet_app.page.add(ft.Text(f"Action clicked: {e.control.content}"))
 
-    eb = ft.Button(
-        "Show Banner", on_click=lambda e: flet_app.page.show_dialog(banner), key="eb"
-    )
     banner = ft.Banner(
         key="banner",
         bgcolor=ft.Colors.AMBER_100,
@@ -47,10 +44,14 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
         ],
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [eb]
-    flet_app.page.update()
+    await flet_app.resize_page(400, 600)
+    flet_app.page.add(
+        ft.Button(
+            key="eb",
+            content="Show Banner",
+            on_click=lambda e: flet_app.page.show_dialog(banner),
+        )
+    )
     await flet_app.tester.pump_and_settle()
 
     await flet_app.tester.tap(await flet_app.tester.find_by_key("eb"))
@@ -83,8 +84,7 @@ async def test_banner_string_content(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    await flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(banner)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()

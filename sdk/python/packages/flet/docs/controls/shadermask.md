@@ -1,10 +1,10 @@
 ---
 class_name: flet.ShaderMask
 examples: ../../examples/controls/shader_mask
-example_images: ../examples/controls/shader_mask/media
+example_images: ../test-images/examples/core/golden/macos/shader_mask
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Linear gradient mask") }}
 
 ## Examples
 
@@ -34,5 +34,7 @@ example_images: ../examples/controls/shader_mask/media
 ```python
 --8<-- "{{ examples }}/linear_and_radial_gradients.py"
 ```
+
+{{ image(example_images + "/linear_and_radial_gradients.png", alt="fade-out-image-bottom", width="80%") }}
 
 {{ class_members(class_name) }}

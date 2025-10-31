@@ -65,8 +65,7 @@ async def test_icons(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_handling_clicks(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.page.window.width = 250
-    flet_app_function.page.window.height = 150
+    await flet_app_function.resize_page(250, 150)
     button = await flet_app_function.tester.find_by_key("TextButton")
     await flet_app_function.tester.tap(button)
     await flet_app_function.tester.tap(button)
