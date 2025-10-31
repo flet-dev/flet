@@ -6,6 +6,12 @@ def main(page: ft.Page):
 
     print("Initial route:", page.route)
 
+    async def open_mail_settings(e):
+        await page.push_route("/settings/mail")
+
+    async def open_settings(e):
+        await page.push_route("/settings")
+
     def route_change():
         print("Route change:", page.route)
         page.views.clear()
@@ -59,12 +65,6 @@ def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
-
-    async def open_mail_settings(e):
-        await page.push_route("/settings/mail")
-
-    async def open_settings(e):
-        await page.push_route("/settings")
 
     route_change()
 

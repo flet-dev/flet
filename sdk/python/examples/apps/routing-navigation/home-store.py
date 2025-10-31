@@ -6,7 +6,7 @@ import flet as ft
 def main(page: ft.Page):
     page.title = "Routes Example"
 
-    def route_change(e):
+    def route_change():
         page.views.clear()
         page.views.append(
             ft.View(
@@ -48,10 +48,8 @@ def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
-    route_change(page.route)
 
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
+    route_change()
 
 
 ft.run(main)
