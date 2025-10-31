@@ -6,8 +6,8 @@ def main(page: ft.Page):
 
     print("Initial route:", page.route)
 
-    def route_change(e):
-        print("Route change:", e.route)
+    def route_change():
+        print("Route change:", page.route)
         page.views.clear()
         page.views.append(
             ft.View(
@@ -50,22 +50,23 @@ def main(page: ft.Page):
             )
         page.update()
 
-    def view_pop(e):
-        print("View pop:", e.view)
-        page.views.pop()
-        top_view = page.views[-1]
-        page.go(top_view.route)
+    async def view_pop(e):
+        if e.view is not None:
+            print("View pop:", e.view)
+            page.views.remove(e.view)
+            top_view = page.views[-1]
+            await page.push_route(top_view.route)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    def open_mail_settings(e):
-        page.go("/settings/mail")
+    async def open_mail_settings(e):
+        await page.push_route("/settings/mail")
 
-    def open_settings(e):
-        page.go("/settings")
+    async def open_settings(e):
+        await page.push_route("/settings")
 
-    page.go(page.route)
+    route_change()
 
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
