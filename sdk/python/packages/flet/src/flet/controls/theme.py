@@ -3365,6 +3365,14 @@ class Theme:
     [`DataTable`][flet.].
     """
 
+    divider_color: Optional[ColorValue] = None
+    """
+    Overrides the default color of dividers used in
+    [`Divider`][flet.], [`VerticalDivider`][flet.], dividers between
+    [`ListTile`][flet.]s, and dividers between rows in
+    [`DataTable`][flet.].
+    """
+
     dropdown_theme: Optional[DropdownTheme] = None
     """
     Customizes the appearance of [`Dropdown`][flet.] across the app.

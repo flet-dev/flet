@@ -136,7 +136,7 @@ ThemeData parseTheme(
     canvasColor: parseColor(value?["canvas_color"], theme),
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
     cardColor: parseColor(value?["card_bgcolor"], theme),
-    dividerColor: dividerTheme?.color,
+    dividerColor: parseColor(value?["divider_color"], theme),
     hintColor: parseColor(value?["hint_color"], theme),
     shadowColor: colorScheme?.shadow,
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
