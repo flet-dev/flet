@@ -17,41 +17,37 @@ import 'highlight_view.dart';
 class MarkdownControl extends StatelessWidget {
   final Control control;
 
-  static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
-
   const MarkdownControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Markdown build: ${control.id}");
 
+    final theme = Theme.of(context);
     var value = control.getString("value", "")!;
-    md.ExtensionSet extensionSet =
+    var extensionSet =
         control.getMarkdownExtensionSet("extension_set", md.ExtensionSet.none)!;
 
     var autoFollowLinks = control.getBool("auto_follow_links", false)!;
     var autoFollowLinksTarget = control.getString("auto_follow_links_target");
+    var selectable = control.getBool("selectable", false)!;
 
-    bool selectable = control.getBool("selectable", false)!;
-    var codeStyleSheet =
-        control.getMarkdownStyleSheet("code_style_sheet", context) ??
-            MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-                code: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(fontFamily: "monospace"));
+    var codeStyleSheet = control.getMarkdownStyleSheet(
+            "code_style_sheet", context) ??
+        MarkdownStyleSheet.fromTheme(theme).copyWith(
+            code:
+                theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
     var mdStyleSheet = control.getMarkdownStyleSheet("md_style_sheet", context);
-    var codeTheme =
-        control.getMarkdownCodeTheme("code_theme", Theme.of(context));
+    var codeTheme = control.getMarkdownCodeTheme("code_theme", theme);
+
     Widget markdown = MarkdownBody(
         data: value,
-        selectable: selectable,
         imageDirectory: control.backend.assetsDir != ""
             ? control.backend.assetsDir
             : getBaseUri(control.backend.pageUri).toString(),
         extensionSet: extensionSet,
         builders: {
-          'code': CodeElementBuilder(codeTheme, codeStyleSheet, selectable),
+          'code': CodeElementBuilder(codeTheme, codeStyleSheet),
         },
         styleSheet: mdStyleSheet,
         imageBuilder: (Uri uri, String? title, String? alt) {
@@ -100,16 +96,18 @@ class MarkdownControl extends StatelessWidget {
           control.triggerEvent("tap_link", href);
         });
 
-    return LayoutControl(control: control, child: markdown);
+    return LayoutControl(
+      control: control,
+      child: selectable ? SelectionArea(child: markdown) : markdown,
+    );
   }
 }
 
 class CodeElementBuilder extends MarkdownElementBuilder {
   final Map<String, TextStyle> codeTheme;
   final MarkdownStyleSheet mdStyleSheet;
-  final bool selectable;
 
-  CodeElementBuilder(this.codeTheme, this.mdStyleSheet, this.selectable);
+  CodeElementBuilder(this.codeTheme, this.mdStyleSheet);
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
@@ -132,8 +130,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
           // The original code to be highlighted
           element.textContent.substring(0, element.textContent.length - 1),
 
-          // Specify language
-          // It is recommended to give it a value for performance
+          // It is recommended to give a language for performance
           language: language,
 
           // Specify highlight theme
@@ -142,8 +139,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
           padding: mdStyleSheet.codeblockPadding,
           decoration: mdStyleSheet.codeblockDecoration,
           textStyle: mdStyleSheet.code,
-
-          selectable: selectable,
         ),
       );
     });
