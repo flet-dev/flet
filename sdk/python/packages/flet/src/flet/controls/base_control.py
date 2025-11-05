@@ -46,7 +46,7 @@ def control(
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
-    **dataclass_kwargs,
+    **dataclass_kwargs: Any,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
     Decorator to optionally set widget name and 'isolated' while behaving

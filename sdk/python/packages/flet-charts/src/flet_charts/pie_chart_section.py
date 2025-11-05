@@ -79,6 +79,10 @@ class PieChartSection(ft.BaseControl):
     Defines the gradient of section. If specified, overrides the color setting.
     """
 
+    def init(self):
+        super().init()
+        self._internals["skip_properties"] = ["badge"]
+
     def before_update(self):
         super().before_update()
         if self.title_position is not None and not (0.0 <= self.title_position <= 1.0):

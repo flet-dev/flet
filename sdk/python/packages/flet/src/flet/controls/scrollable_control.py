@@ -93,7 +93,7 @@ class ScrollableControl(Control):
             - Exactly one of `offset`, `delta` or `scroll_key` should be provided.
             - [`auto_scroll`][(c).] must be `False`.
             - This method is ineffective for controls (e.g.
-                [`ListView`][(c).], [`GridView`][(c).]) that build items dynamically.
+                [`ListView`][flet.], [`GridView`][flet.]) that build items dynamically.
 
         Examples:
             ```python

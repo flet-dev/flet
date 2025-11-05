@@ -1,6 +1,5 @@
-import flet_charts as fch
-
 import flet as ft
+import flet_charts as fch
 
 NORMAL_RADIUS = 100
 HOVER_RADIUS = 110
@@ -11,7 +10,7 @@ HOVER_TITLE_STYLE = ft.TextStyle(
     size=16,
     color=ft.Colors.WHITE,
     weight=ft.FontWeight.BOLD,
-    shadow=ft.BoxShadow(blur_radius=2, color=ft.Colors.BLACK54),
+    shadow=ft.BoxShadow(blur_radius=2, color=ft.Colors.BLACK_54),
 )
 NORMAL_BADGE_SIZE = 40
 HOVER_BADGE_SIZE = 50
