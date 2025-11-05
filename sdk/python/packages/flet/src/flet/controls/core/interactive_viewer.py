@@ -80,11 +80,6 @@ class InteractiveViewer(LayoutControl):
     """
     The minimum allowed scale.
 
-    Scale is also affected by [`boundary_margin`][(c).]. If the scale would result in
-    viewing beyond the boundary, then it will not be allowed. By default,
-    [`boundary_margin`][(c).] is `0`, so scaling below 1.0 will not be
-    allowed in most cases without first increasing the [`boundary_margin`][(c).].
-
     The effective scale is limited by the value of [`boundary_margin`][(c).].
     If scaling would cause the content to be displayed outside the defined boundary,
     it is prevented. By default, `boundary_margin` is set to `Margin.all(0)`,
