@@ -1,10 +1,10 @@
 import random
 
 import flet as ft
-import flet_charts as ftc
+import flet_charts as fch
 
 
-class MySpot(ftc.ScatterChartSpot):
+class MySpot(fch.ScatterChartSpot):
     def __init__(
         self,
         x: float,
@@ -123,8 +123,8 @@ def get_random_spots():
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_event(e: ftc.ScatterChartEvent):
-        if e.type == ftc.ChartEventType.TAP_DOWN:
+    def handle_event(e: fch.ScatterChartEvent):
+        if e.type == fch.ChartEventType.TAP_DOWN:
             e.control.spots = (
                 flutter_logo_spots
                 if (e.control.spots != flutter_logo_spots)
@@ -135,17 +135,17 @@ def main(page: ft.Page):
         ft.Text(
             "Tap on the chart to toggle between random spots and Flutter logo spots."
         ),
-        ftc.ScatterChart(
+        fch.ScatterChart(
             expand=True,
             aspect_ratio=1.0,
             min_x=0.0,
             max_x=50.0,
             min_y=0.0,
             max_y=50.0,
-            left_axis=ftc.ChartAxis(show_labels=False),
-            right_axis=ftc.ChartAxis(show_labels=False),
-            top_axis=ftc.ChartAxis(show_labels=False),
-            bottom_axis=ftc.ChartAxis(show_labels=False),
+            left_axis=fch.ChartAxis(show_labels=False),
+            right_axis=fch.ChartAxis(show_labels=False),
+            top_axis=fch.ChartAxis(show_labels=False),
+            bottom_axis=fch.ChartAxis(show_labels=False),
             show_tooltips_for_selected_spots_only=False,
             on_event=handle_event,
             animation=ft.Animation(
