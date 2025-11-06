@@ -39,6 +39,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   bool _rightPanActive = false;
   int _rightPanTimestamp = DateTime.now().millisecondsSinceEpoch;
   Offset _rightPanStart = Offset.zero;
+  TapDownDetails? _lastTapDownDetails;
+  TapDownDetails? _lastSecondaryTapDownDetails;
+  TapDownDetails? _lastDoubleTapDownDetails;
 
   @override
   void initState() {
@@ -217,26 +220,32 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   .nonNulls
                   .toSet();
             }(),
-            onTap: onTap ? () => widget.control.triggerEvent("tap") : null,
-            onTapDown: onTapDown
-                ? (TapDownDetails details) {
-                    widget.control.triggerEvent("tap_down", details.toMap());
-                  }
+            onTap: onTap
+                ? () => widget.control
+                    .triggerEvent("tap", _lastTapDownDetails?.toMap())
                 : null,
+            onTapDown: (TapDownDetails details) {
+              if (onTapDown) {
+                widget.control.triggerEvent("tap_down", details.toMap());
+              }
+              _lastTapDownDetails = details;
+            },
             onTapUp: onTapUp
                 ? (TapUpDetails details) {
                     widget.control.triggerEvent("tap_up", details.toMap());
                   }
                 : null,
             onSecondaryTap: onSecondaryTap
-                ? () => widget.control.triggerEvent("secondary_tap")
+                ? () => widget.control.triggerEvent(
+                    "secondary_tap", _lastSecondaryTapDownDetails?.toMap())
                 : null,
-            onSecondaryTapDown: onSecondaryTapDown
-                ? (TapDownDetails details) {
-                    widget.control
-                        .triggerEvent("secondary_tap_down", details.toMap());
-                  }
-                : null,
+            onSecondaryTapDown: (TapDownDetails details) {
+              if (onSecondaryTapDown) {
+                widget.control
+                    .triggerEvent("secondary_tap_down", details.toMap());
+              }
+              _lastSecondaryTapDownDetails = details;
+            },
             onSecondaryTapUp: onSecondaryTapUp
                 ? (TapUpDetails details) {
                     widget.control
@@ -268,14 +277,15 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   }
                 : null,
             onDoubleTap: onDoubleTap
-                ? () => widget.control.triggerEvent("double_tap")
+                ? () => widget.control.triggerEvent(
+                    "double_tap", _lastDoubleTapDownDetails?.toMap())
                 : null,
-            onDoubleTapDown: onDoubleTapDown
-                ? (TapDownDetails details) {
-                    widget.control
-                        .triggerEvent("double_tap_down", details.toMap());
-                  }
-                : null,
+            onDoubleTapDown: (TapDownDetails details) {
+              if (onDoubleTapDown) {
+                widget.control.triggerEvent("double_tap_down", details.toMap());
+              }
+              _lastDoubleTapDownDetails = details;
+            },
             onHorizontalDragStart:
                 (onHorizontalDragStart || onHorizontalDragUpdate)
                     ? handleHorizontalDragStart
