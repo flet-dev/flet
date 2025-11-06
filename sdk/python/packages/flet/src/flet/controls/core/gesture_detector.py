@@ -128,6 +128,18 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     contacting the screen at a particular location.
     """
 
+    on_tertiary_tap_down: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
+    """
+    Called when a pointer that might cause a tap with a tertiary button has contacted
+    the screen at a particular location.
+    """
+
+    on_tertiary_tap_up: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
+    """
+    Called when a pointer that will trigger a tap with a tertiary button has stopped
+    contacting the screen at a particular location.
+    """
+
     on_long_press_start: Optional[
         EventHandler[LongPressStartEvent["GestureDetector"]]
     ] = None
@@ -161,6 +173,24 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     ] = None
     """
     Called when a pointer that has triggered a long-press with a secondary button has
+    stopped contacting the screen.
+    """
+
+    on_tertiary_long_press_start: Optional[
+        EventHandler[LongPressStartEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when a long press gesture with a tertiary button has been recognized.
+
+    Triggered when a pointer has remained in contact with the screen at the same
+    location for a long period of time.
+    """
+
+    on_tertiary_long_press_end: Optional[
+        EventHandler[LongPressEndEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when a pointer that has triggered a long-press with a tertiary button has
     stopped contacting the screen.
     """
 
