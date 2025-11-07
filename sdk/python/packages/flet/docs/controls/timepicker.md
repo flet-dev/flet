@@ -18,5 +18,11 @@ example_images: ../test-images/examples/material/golden/macos/time_picker
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
 
+### Hour Format
+
+```python
+--8<-- "{{ examples }}/hour_format.py"
+```
+
 
 {{ class_members(class_name) }}

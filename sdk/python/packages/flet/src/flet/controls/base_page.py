@@ -317,17 +317,17 @@ class BasePage(AdaptiveControl):
         Displays a dialog and manages its dismissal lifecycle.
 
         This method adds the specified `dialog` to the active dialog stack
-        and renders it on the page. If the dialog is already open, an exception
+        and renders it on the page. If the dialog is already open, a `RuntimeError`
         is raised.
         The [`on_dismiss`][flet.DialogControl.] handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 
         Args:
-            dialog: The dialog instance to display. Must not already be open.
+            dialog: The dialog instance to display. Must not yet be open.
 
         Raises:
-            Exception: If the specified dialog is already open.
+            RuntimeError: If the specified dialog is already open.
         """
         if dialog in self._dialogs.controls:
             raise RuntimeError("Dialog is already opened")

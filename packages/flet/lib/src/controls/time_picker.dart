@@ -45,11 +45,13 @@ class _TimePickerControlState extends State<TimePickerControl> {
         hourLabelText: widget.control.getString("hour_label_text"),
         minuteLabelText: widget.control.getString("minute_label_text"),
         errorInvalidText: widget.control.getString("error_invalid_text"),
-        initialEntryMode: widget.control.getTimePickerEntryMode(
-            "time_picker_entry_mode", TimePickerEntryMode.dial)!,
+        initialEntryMode: widget.control
+            .getTimePickerEntryMode("entry_mode", TimePickerEntryMode.dial)!,
         orientation: widget.control.getOrientation("orientation"),
         onEntryModeChanged: (TimePickerEntryMode mode) {
-          widget.control.triggerEvent("entry_mode_change", mode.name);
+          widget.control.updateProperties({"entry_mode": mode.name});
+          widget.control
+              .triggerEvent("entry_mode_change", {"entry_mode": mode.name});
         },
       );
 
@@ -59,7 +61,6 @@ class _TimePickerControlState extends State<TimePickerControl> {
             .copyWith(alwaysUse24HourFormat: hourFormatMap[hourFormat]),
         child: dialog,
       );
-      ;
     }
 
     if (open && (open != lastOpen)) {

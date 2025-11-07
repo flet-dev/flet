@@ -39,14 +39,51 @@ class TimePickerHourFormat(Enum):
 
 
 class TimePickerEntryMode(Enum):
+    """
+    Interactive input mode of the [`TimePicker`][flet.] dialog.
+
+    In [`DIAL`][(c).] mode, a clock dial is displayed, and the user taps or drags
+    the time they wish to select. In [`INPUT`][(c).] mode, [`TextField`][flet.]s are
+    displayed and the user types in the time they wish to select.
+    """
+
     DIAL = "dial"
+    """
+    User picks time from a clock dial.
+
+    Can switch to [`INPUT`][(c).] by activating a mode button in the time picker dialog.
+    """
+
     INPUT = "input"
+    """
+    User can input the time by typing it into text fields.
+
+    Can switch to [`DIAL`][(c).] by activating a mode button in the time picker dialog.
+    """
+
     DIAL_ONLY = "dialOnly"
+    """
+    User can only pick time from a clock dial.
+
+    There is no user interface to switch to another mode.
+    """
+
     INPUT_ONLY = "inputOnly"
+    """
+    User can only input the time by typing it into text fields.
+
+    There is no user interface to switch to another mode.
+    """
 
 
 class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
-    entry_mode: Optional[TimePickerEntryMode]
+    """
+    Represents the event triggered when the
+    entry mode of a [`TimePicker`][flet.] changes.
+    """
+
+    entry_mode: TimePickerEntryMode
+    """The new entry mode."""
 
 
 @control("TimePicker")
@@ -57,7 +94,7 @@ class TimePicker(DialogControl):
     Can be opened by calling the
     [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
-    Depending on the [`time_picker_entry_mode`][(c).], it will show either a Dial or
+    Depending on the [`entry_mode`][(c).], it will show either a Dial or
     an Input (hour and minute text fields) for picking a time.
 
     Example:
@@ -65,7 +102,7 @@ class TimePicker(DialogControl):
         ft.TimePicker(
             open=True,
             value=time(1, 2),
-            time_picker_entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
+            entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
         )
         ```
     """
@@ -82,7 +119,7 @@ class TimePicker(DialogControl):
     TBD
     """
 
-    time_picker_entry_mode: Optional[TimePickerEntryMode] = None
+    entry_mode: Optional[TimePickerEntryMode] = None
     """
     The initial mode of time entry method for this picker.
 
@@ -147,15 +184,14 @@ class TimePicker(DialogControl):
     """
     Called when user clicks confirm button.
 
-    `value` property is updated with selected time.
+    [`value`][(c).] property is updated with selected time.
     Additionally, the [`data`][flet.Event.] property of the event handler argument
     also contains the selected time.
     """
 
     on_entry_mode_change: Optional[EventHandler[TimePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`time_picker_entry_mode`][(c).]
-    is changed through the time picker dialog.
+    Called when the [`entry_mode`][(c).] is changed through the time picker dialog.
     """
 
     hour_format: TimePickerHourFormat = TimePickerHourFormat.SYSTEM
