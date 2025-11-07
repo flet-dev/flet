@@ -820,6 +820,7 @@ nav:
               - ThemeMode: types/thememode.md
               - TileAffinity: types/tileaffinity.md
               - TimePickerEntryMode: types/timepickerentrymode.md
+              - TimePickerHourFormat: types/timepickerhourformat.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md

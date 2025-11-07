@@ -2135,7 +2135,7 @@ class TimePickerTheme:
 
     day_period_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [TextStyle][flet.TextStyle] for the AM/PM toggle control.
+    Used to configure the [`TextStyle`][flet.TextStyle] for the AM/PM toggle control.
 
     If this is null, the time picker defaults to the overall theme's
     [`TextTheme.title_medium`][flet.].
@@ -2143,18 +2143,18 @@ class TimePickerTheme:
 
     dial_text_style: Optional[TextStyle] = None
     """
-    The [TextStyle][flet.TextStyle] for the numbers on the time selection dial.
+    The [`TextStyle`][[flet.TextStyle] for the numbers on the time selection dial.
     """
 
     help_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [TextStyle][flet.TextStyle] for the helper text in the header.
-
+    Used to configure the [`TextStyle`][[flet.TextStyle]
+    for the helper text in the header.
     """
 
     hour_minute_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [TextStyle][flet.TextStyle] for the hour/minute controls.
+    Used to configure the [`TextStyle`][[flet.TextStyle] for the hour/minute controls.
     """
 
     elevation: Optional[Number] = None
@@ -2547,7 +2547,7 @@ class SliderTheme:
 
     value_indicator_text_style: Optional[TextStyle] = None
     """
-    The [TextStyle][flet.TextStyle] for the text on the value indicator.
+    The [`TextStyle`][flet.TextStyle] for the text on the value indicator.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
