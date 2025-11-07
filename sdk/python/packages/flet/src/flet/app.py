@@ -5,7 +5,6 @@ import inspect
 import logging
 import os
 import signal
-import traceback
 from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union
@@ -271,11 +270,8 @@ def __get_on_session_created(main):
             await session.after_event(session.page)
 
         except Exception as e:
-            print(
-                f"Unhandled error processing page session {session.id}:",
-                traceback.format_exc(),
-            )
-            session.error(f"The application encountered an error: {e}")
+            logger.error("Unhandled error in main() handler", exc_info=True)
+            session.error(str(e))
 
     return on_session_created
 

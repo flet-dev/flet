@@ -229,7 +229,7 @@ class FletBackend extends ChangeNotifier {
       _sendQueue.clear();
     } else {
       // error response!
-      isLoading = true;
+      isLoading = false;
       error = resp.error!;
       _reconnectDelayMs = 0;
     }
