@@ -61,7 +61,7 @@ class PageMediaData:
 
     view_padding: Padding
     """
-    Similar to `padding`, but includes padding that is always reserved
+    Similar to [`padding`][(c).], but includes padding that is always reserved
     (even when the system UI is hidden).
     """
 
@@ -79,6 +79,22 @@ class PageMediaData:
     orientation: Orientation
     """
     The orientation of the page.
+    """
+
+    always_use_24_hour_format: bool = False
+    """
+    Whether to use 24-hour format when formatting time.
+
+    Note:
+        The behavior of this flag is different across platforms:
+
+        - On Android this flag is reported directly from the user settings called
+            "Use 24-hour format". It applies to any locale used by the application,
+            whether it is the system-wide locale, or the custom locale set by the
+            application.
+        - On iOS this flag is set to true when the user setting called "24-Hour Time"
+            is set or the system-wide locale's default uses 24-hour
+            formatting.
     """
 
 
@@ -201,6 +217,7 @@ class BasePage(AdaptiveControl):
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
             orientation=Orientation.PORTRAIT,
+            always_use_24_hour_format=False,
         )
     )
     """

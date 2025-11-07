@@ -6,13 +6,20 @@ import flet as ft
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_change(e: ft.Event[ft.TimePicker]):
-        fmt = (
-            "%H:%M"
-            if time_picker.hour_format == ft.TimePickerHourFormat.H24
-            else "%I:%M %p"
+    def get_system_hour_format():
+        """Returns the current system's hour format."""
+        return "24h" if page.media.always_use_24_hour_format else "12h"
+
+    def format_time(value: time) -> str:
+        """Returns a formatted time string based on TimePicker and system settings."""
+        use_24h = time_picker.hour_format == ft.TimePickerHourFormat.H24 or (
+            time_picker.hour_format == ft.TimePickerHourFormat.SYSTEM
+            and page.media.always_use_24_hour_format
         )
-        selection.value = f"Selection: {time_picker.value.strftime(fmt)}"
+        return value.strftime("%H:%M" if use_24h else "%I:%M %p")
+
+    def handle_change(e: ft.Event[ft.TimePicker]):
+        selection.value = f"Selection: {format_time(time_picker.value)}"
 
     time_picker = ft.TimePicker(
         value=time(hour=9, minute=30),
@@ -37,9 +44,12 @@ def main(page: ft.Page):
                 format_dropdown := ft.Dropdown(
                     label="Hour format",
                     value="system",
-                    width=210,
+                    width=260,
                     options=[
-                        ft.DropdownOption(key="system", text="System default"),
+                        ft.DropdownOption(
+                            key="system",
+                            text=f"System default ({get_system_hour_format()})",
+                        ),
                         ft.DropdownOption(key="12h", text="12-hour clock"),
                         ft.DropdownOption(key="24h", text="24-hour clock"),
                     ],
