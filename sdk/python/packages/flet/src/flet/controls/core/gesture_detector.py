@@ -5,11 +5,15 @@ from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.events import (
+    DragDownEvent,
     DragEndEvent,
     DragStartEvent,
     DragUpdateEvent,
+    ForcePressEvent,
     HoverEvent,
+    LongPressDownEvent,
     LongPressEndEvent,
+    LongPressMoveUpdateEvent,
     LongPressStartEvent,
     PointerEvent,
     ScaleEndEvent,
@@ -17,6 +21,7 @@ from flet.controls.events import (
     ScaleUpdateEvent,
     ScrollEvent,
     TapEvent,
+    TapMoveEvent,
 )
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor, PointerDeviceType
@@ -59,17 +64,46 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     hover_interval: int = 0
     """
-    Throttling in milliseconds for `on_hover` event.
+    Throttling in milliseconds for [`on_hover`][(c).] event.
     """
 
     multi_tap_touches: int = 0
     """
-    The minimum number of pointers to trigger `on_multi_tap` event.
+    The minimum number of pointers to trigger [`on_multi_tap`][(c).] event.
     """
 
     exclude_from_semantics: bool = False
     """
     TBD
+    """
+
+    on_force_press_start: Optional[EventHandler[ForcePressEvent["GestureDetector"]]] = (
+        None
+    )
+    """
+    Called when a pointer has pressed with a force exceeding the start pressure.
+    """
+
+    on_force_press_peak: Optional[EventHandler[ForcePressEvent["GestureDetector"]]] = (
+        None
+    )
+    """
+    Called when a pointer has pressed with a force exceeding the peak pressure.
+    """
+
+    on_force_press_update: Optional[
+        EventHandler[ForcePressEvent["GestureDetector"]]
+    ] = None
+    """
+    Called for each update after a force press has started.
+    """
+
+    on_force_press_end: Optional[EventHandler[ForcePressEvent["GestureDetector"]]] = (
+        None
+    )
+    """
+    Called when the pointer that triggered a force press is no longer
+    in contact with the screen.
     """
 
     trackpad_scroll_causes_scale: bool = False
@@ -97,6 +131,17 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     """
     Called when a pointer that will trigger a tap with a primary button has stopped
     contacting the screen at a particular location.
+    """
+
+    on_tap_move: Optional[EventHandler[TapMoveEvent["GestureDetector"]]] = None
+    """
+    Called when a pointer that triggered a tap has moved.
+    """
+
+    on_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_tap_down`][(c).] will not
+    end up causing a tap.
     """
 
     on_multi_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
@@ -128,6 +173,12 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     contacting the screen at a particular location.
     """
 
+    on_secondary_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_secondary_tap_down`][(c).]
+    will not end up causing a tap.
+    """
+
     on_tertiary_tap_down: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
     Called when a pointer that might cause a tap with a tertiary button has contacted
@@ -140,14 +191,50 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     contacting the screen at a particular location.
     """
 
+    on_tertiary_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_tertiary_tap_down`][(c).]
+    will not end up causing a tap.
+    """
+
+    on_long_press_down: Optional[
+        EventHandler[LongPressDownEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when a pointer that might cause a long press with a primary button
+    has contacted the screen.
+    """
+
+    on_long_press_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_long_press_down`][(c).]
+    will not end up causing a long-press.
+    """
+
+    on_long_press: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    Called when a long press gesture with a primary button has been recognized.
+    """
+
     on_long_press_start: Optional[
         EventHandler[LongPressStartEvent["GestureDetector"]]
     ] = None
     """
-    Called when a long press gesture with a primary button has been recognized.
-
     Triggered when a pointer has remained in contact with the screen at the same
     location for a long period of time.
+    """
+
+    on_long_press_move_update: Optional[
+        EventHandler[LongPressMoveUpdateEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when, after a long press has been accepted, the pointer moves.
+    """
+
+    on_long_press_up: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    Called when a pointer that has triggered a long press with a primary button
+    is no longer in contact with the screen.
     """
 
     on_long_press_end: Optional[EventHandler[LongPressEndEvent["GestureDetector"]]] = (
@@ -158,14 +245,46 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     stopped contacting the screen.
     """
 
+    on_secondary_long_press_down: Optional[
+        EventHandler[LongPressDownEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when a pointer that might cause a long press with a secondary button
+    has contacted the screen.
+    """
+
+    on_secondary_long_press_cancel: Optional[ControlEventHandler["GestureDetector"]] = (
+        None
+    )
+    """
+    The pointer that previously triggered [`on_secondary_long_press_down`][(c).]
+    not end up causing a long-press.
+    """
+
+    on_secondary_long_press: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    Called when a long press gesture with a secondary button has been recognized.
+    """
+
     on_secondary_long_press_start: Optional[
         EventHandler[LongPressStartEvent["GestureDetector"]]
     ] = None
     """
-    Called when a long press gesture with a secondary button has been recognized.
-
     Triggered when a pointer has remained in contact with the screen at the same
     location for a long period of time.
+    """
+
+    on_secondary_long_press_move_update: Optional[
+        EventHandler[LongPressMoveUpdateEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when, after a secondary long press has been accepted, the pointer moves.
+    """
+
+    on_secondary_long_press_up: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    Called when a pointer that has triggered a long press with a secondary button
+    is no longer in contact with the screen.
     """
 
     on_secondary_long_press_end: Optional[
@@ -176,14 +295,46 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     stopped contacting the screen.
     """
 
+    on_tertiary_long_press_down: Optional[
+        EventHandler[LongPressDownEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when a pointer that might cause a long press with a tertiary button
+    has contacted the screen.
+    """
+
+    on_tertiary_long_press_cancel: Optional[ControlEventHandler["GestureDetector"]] = (
+        None
+    )
+    """
+    The pointer that previously triggered [`on_tertiary_long_press_down`][(c).]
+    will not end up causing a long-press.
+    """
+
+    on_tertiary_long_press: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    Called when a long press gesture with a tertiary button has been recognized.
+    """
+
     on_tertiary_long_press_start: Optional[
         EventHandler[LongPressStartEvent["GestureDetector"]]
     ] = None
     """
-    Called when a long press gesture with a tertiary button has been recognized.
-
     Triggered when a pointer has remained in contact with the screen at the same
     location for a long period of time.
+    """
+
+    on_tertiary_long_press_move_update: Optional[
+        EventHandler[LongPressMoveUpdateEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when, after a tertiary long press has been accepted, the pointer moves.
+    """
+
+    on_tertiary_long_press_up: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    Called when a pointer that has triggered a long press with a tertiary button
+    is no longer in contact with the screen.
     """
 
     on_tertiary_long_press_end: Optional[
@@ -206,6 +357,19 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     a particular location.
 
     Triggered immediately after the down event of the second tap.
+    """
+
+    on_double_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer sequence that was expected to cause a double tap will not do so.
+    """
+
+    on_horizontal_drag_down: Optional[
+        EventHandler[DragDownEvent["GestureDetector"]]
+    ] = None
+    """
+    Called when a pointer has contacted the screen and might begin to
+    move horizontally.
     """
 
     on_horizontal_drag_start: Optional[
@@ -232,6 +396,20 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     moving at a specific velocity.
     """
 
+    on_horizontal_drag_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_horizontal_drag_down`][(c).]
+    will not end up causing a horizontal drag.
+    """
+
+    on_vertical_drag_down: Optional[EventHandler[DragDownEvent["GestureDetector"]]] = (
+        None
+    )
+    """
+    Called when a pointer has contacted the screen and might begin to
+    move vertically.
+    """
+
     on_vertical_drag_start: Optional[
         EventHandler[DragStartEvent["GestureDetector"]]
     ] = None
@@ -252,6 +430,17 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     moving at a specific velocity.
     """
 
+    on_vertical_drag_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_vertical_drag_down`][(c).]
+    will not end up causing a vertical drag.
+    """
+
+    on_pan_down: Optional[EventHandler[DragDownEvent["GestureDetector"]]] = None
+    """
+    Called when a pointer has contacted the screen and might begin to move.
+    """
+
     on_pan_start: Optional[EventHandler[DragStartEvent["GestureDetector"]]] = None
     """
     Called when a pointer has contacted the screen and has begun to move.
@@ -265,6 +454,12 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     on_pan_end: Optional[EventHandler[DragEndEvent["GestureDetector"]]] = None
     """
     Called when a pointer is no longer in contact and was moving at a specific velocity.
+    """
+
+    on_pan_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
+    """
+    The pointer that previously triggered [`on_pan_down`][(c).] will not end up
+    causing a pan gesture.
     """
 
     on_right_pan_start: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
