@@ -10,6 +10,7 @@ from flet.components.hooks.use_effect import (
     use_effect,
 )
 from flet.components.hooks.use_memo import use_memo
+from flet.components.hooks.use_ref import use_ref
 from flet.components.hooks.use_state import use_state
 from flet.components.memo import memo
 from flet.components.observable import Observable, observable
@@ -1002,5 +1003,6 @@ __all__ = [
     "use_context",
     "use_effect",
     "use_memo",
+    "use_ref",
     "use_state",
 ]
