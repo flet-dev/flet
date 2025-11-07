@@ -25,6 +25,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
     var open = widget.control.getBool("open", false)!;
     var value = widget.control.getTimeOfDay("value", TimeOfDay.now())!;
+    var hourFormat = widget.control.getString("hour_format");
 
     void onClosed(TimeOfDay? timeValue) {
       widget.control.updateProperties({"_open": false}, python: false);
@@ -52,7 +53,13 @@ class _TimePickerControlState extends State<TimePickerControl> {
         },
       );
 
-      return dialog;
+      final hourFormatMap = {"h12": false, "h24": true, "system": null};
+      return MediaQuery(
+        data: MediaQuery.of(context)
+            .copyWith(alwaysUse24HourFormat: hourFormatMap[hourFormat]),
+        child: dialog,
+      );
+      ;
     }
 
     if (open && (open != lastOpen)) {
