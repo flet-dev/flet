@@ -10,7 +10,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     sb = ft.SnackBar(ft.Text("Opened snack bar"))
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(250, 200)
+    flet_app_function.resize_page(250, 200)
     flet_app_function.page.show_dialog(sb)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
@@ -30,7 +30,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(250, 200)
+    flet_app_function.resize_page(250, 200)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
     button = await flet_app_function.tester.find_by_text_containing("Open SnackBar")
@@ -52,7 +52,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_counter(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(250, 200)
+    flet_app_function.resize_page(250, 200)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(

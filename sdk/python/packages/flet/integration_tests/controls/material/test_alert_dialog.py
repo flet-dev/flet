@@ -24,7 +24,7 @@ async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
         title_padding=ft.Padding.all(25),
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(ad)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
@@ -56,7 +56,7 @@ async def test_update_body(flet_app: ftt.FletTestApp, request):
         ],
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(ad)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
