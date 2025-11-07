@@ -3,7 +3,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.events import (
     DragEndEvent,
     DragStartEvent,
@@ -82,7 +82,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     TBD
     """
 
-    on_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
+    on_tap: Optional[ControlEventHandler["GestureDetector"]] = None
     """
     Called when a tap with a primary button has occurred.
     """
@@ -111,7 +111,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     Called when a long press gesture with multiple pointers has been recognized.
     """
 
-    on_secondary_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
+    on_secondary_tap: Optional[ControlEventHandler["GestureDetector"]] = None
     """
     A tap with a secondary button has occurred.
     """
@@ -194,7 +194,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     stopped contacting the screen.
     """
 
-    on_double_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
+    on_double_tap: Optional[ControlEventHandler["GestureDetector"]] = None
     """
     The user has tapped the screen with a primary button at the same location twice
     in quick succession.
