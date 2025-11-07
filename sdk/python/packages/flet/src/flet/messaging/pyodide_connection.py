@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import traceback
 from typing import Any
 
 import flet_js
@@ -73,7 +74,7 @@ class PyodideConnection(Connection):
                 elif callable(self.__before_main):
                     self.__before_main(self.session.page)
             except Exception as e:
-                register_error = str(e)
+                register_error = f"{e}\n{traceback.format_exc()}"
                 logger.error("Unhandled error in before_main() handler", exc_info=True)
 
             # register response

@@ -3,6 +3,7 @@ import contextlib
 import logging
 import os
 import tempfile
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Optional
@@ -171,7 +172,7 @@ class FletSocketServer(Connection):
                 elif callable(self.__before_main):
                     self.__before_main(self.session.page)
             except Exception as e:
-                register_error = str(e)
+                register_error = f"{e}\n{traceback.format_exc()}"
                 logger.error("Unhandled error in before_main() handler", exc_info=True)
 
             # register response

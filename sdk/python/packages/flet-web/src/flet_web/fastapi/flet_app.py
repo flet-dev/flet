@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import logging
 import os
+import traceback
 import weakref
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
@@ -264,7 +265,7 @@ class FletApp(Connection):
                     elif callable(self.__before_main):
                         self.__before_main(self.__session.page)
                 except Exception as e:
-                    register_error = str(e)
+                    register_error = f"{e}\n{traceback.format_exc()}"
                     logger.error(
                         "Unhandled error in before_main() handler", exc_info=True
                     )

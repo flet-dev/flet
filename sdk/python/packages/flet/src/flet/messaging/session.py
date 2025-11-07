@@ -193,7 +193,7 @@ class Session:
             await control._trigger_event(event_name, event_data)
         except Exception as e:
             logger.error(f"Unhandled error in 'on_{event_name}' handler", exc_info=True)
-            self.error(str(e))
+            self.error(f"{e}\n{traceback.format_exc()}")
 
     async def invoke_method(
         self,

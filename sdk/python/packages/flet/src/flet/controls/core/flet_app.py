@@ -48,6 +48,11 @@ class FletApp(LayoutControl):
     TBD
     """
 
+    app_error_message: Optional[str] = None
+    """
+    TBD
+    """
+
     on_error: Optional[ControlEventHandler["FletApp"]] = None
     """
     Called when a connection or any unhandled error occurs.

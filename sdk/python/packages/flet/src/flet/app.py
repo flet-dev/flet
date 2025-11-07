@@ -5,6 +5,7 @@ import inspect
 import logging
 import os
 import signal
+import traceback
 from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union
@@ -271,7 +272,7 @@ def __get_on_session_created(main):
 
         except Exception as e:
             logger.error("Unhandled error in main() handler", exc_info=True)
-            session.error(str(e))
+            session.error(f"{e}\n{traceback.format_exc()}")
 
     return on_session_created
 
