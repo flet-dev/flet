@@ -45,6 +45,7 @@ def main(page: ft.Page):
                     label="Hour format",
                     value="system",
                     width=260,
+                    key="dd",
                     options=[
                         ft.DropdownOption(
                             key="system",
@@ -55,7 +56,9 @@ def main(page: ft.Page):
                     ],
                 ),
                 ft.Button(
-                    "Open TimePicker", icon=ft.Icons.SCHEDULE, on_click=open_picker
+                    "Open TimePicker",
+                    icon=ft.Icons.SCHEDULE,
+                    on_click=open_picker,
                 ),
             ],
         ),

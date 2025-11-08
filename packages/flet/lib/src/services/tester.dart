@@ -49,7 +49,7 @@ class TesterService extends FletService {
             ? control.backend.globalKeys[controlKey.toString()]
             : ValueKey(controlKey.value);
         if (key == null) {
-          throw Exception("Scroll key not found: $key");
+          throw Exception("Key not found: $key");
         }
         var finder = control.backend.tester!.findByKey(key);
         _finders[finder.id] = finder;

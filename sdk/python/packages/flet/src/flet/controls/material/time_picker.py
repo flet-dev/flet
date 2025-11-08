@@ -32,10 +32,10 @@ class TimePickerHourFormat(Enum):
     """Respect the host platform setting."""
 
     H12 = "h12"
-    """Force a 12-hour clock with an AM/PM selector."""
+    """A 12-hour clock with an AM/PM selector."""
 
     H24 = "h24"
-    """Force a 24-hour clock without an AM/PM selector."""
+    """A 24-hour clock without an AM/PM selector."""
 
 
 class TimePickerEntryMode(Enum):
