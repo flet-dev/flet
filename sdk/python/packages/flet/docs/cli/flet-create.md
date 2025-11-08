@@ -19,8 +19,6 @@ flet create [OPTIONS] [OUTPUT_DIRECTORY]
 Directory where the new Flet project will be created.
 If omitted, the project is created in the current directory.
 
-## Options
-
 ```python exec="true" updatetoc="no"
 import argparse
 
