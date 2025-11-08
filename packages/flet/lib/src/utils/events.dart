@@ -13,8 +13,7 @@ extension ScaleEndDetailsExtension on ScaleEndDetails {
 extension ScaleUpdateDetailsExtension on ScaleUpdateDetails {
   Map<String, dynamic> toMap() => {
         "gfp": {"x": focalPoint.dx, "y": focalPoint.dy},
-        "fpdx": focalPointDelta.dx,
-        "fpdy": focalPointDelta.dy,
+        "fpd": {"x": focalPointDelta.dx, "y": focalPointDelta.dy},
         "lfp": {"x": localFocalPoint.dx, "y": localFocalPoint.dy},
         "pc": pointerCount,
         "hs": horizontalScale,
