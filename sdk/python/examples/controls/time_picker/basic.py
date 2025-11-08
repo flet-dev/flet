@@ -15,14 +15,14 @@ def main(page: ft.Page):
 
     def handle_entry_mode_change(e: ft.TimePickerEntryModeChangeEvent):
         page.show_dialog(ft.SnackBar(f"Entry mode changed: {time_picker.entry_mode}"))
-        # print(e, e.entry_mode)
+        print(e, e.entry_mode)
 
     time_picker = ft.TimePicker(
         value=time(hour=1, minute=2),
         confirm_text="Confirm",
         error_invalid_text="Time out of range",
         help_text="Pick your time slot",
-        entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
+        entry_mode=ft.TimePickerEntryMode.DIAL,
         on_change=handle_change,
         on_dismiss=handle_dismissal,
         on_entry_mode_change=handle_entry_mode_change,

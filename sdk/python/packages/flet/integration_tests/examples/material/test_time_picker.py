@@ -37,7 +37,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(500, 400)
+    await flet_app_function.resize_page(600, 400)
 
     # open picker
     await flet_app_function.tester.tap(
