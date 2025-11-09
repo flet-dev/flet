@@ -106,6 +106,11 @@ class Offset:
     The vertical offset.
     """
 
+    @property
+    def distance(self) -> float:
+        """The magnitude of the offset."""
+        return (self.x**2 + self.y**2) ** 0.5
+
     def copy(
         self,
         *,
@@ -119,11 +124,6 @@ class Offset:
             x=x if x is not None else self.x,
             y=y if y is not None else self.y,
         )
-
-    @property
-    def distance(self) -> float:
-        """The magnitude of the offset."""
-        return (self.x**2 + self.y**2) ** 0.5
 
 
 # typing
