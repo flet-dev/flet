@@ -79,24 +79,26 @@ Option = DropdownOption
 @control("Dropdown")
 class Dropdown(LayoutControl):
     """
-    A dropdown control that allows users to select a single option from a list of
-    options.
+    A dropdown control that allows users to select a single option
+    from a list of [`options`][(c).].
 
-    ```python
-    ft.Dropdown(
-        width=220,
-        value="alice",
-        options=[
-            ft.dropdown.Option(key="alice", text="Alice"),
-            ft.dropdown.Option(key="bob", text="Bob"),
-        ],
-    )
-    ```
+    Example:
+        ```python
+        ft.Dropdown(
+            width=220,
+            value="alice",
+            options=[
+                ft.DropdownOption(key="alice", text="Alice"),
+                ft.DropdownOption(key="bob", text="Bob"),
+            ],
+        )
+        ```
     """
 
     value: Optional[str] = None
     """
-    [`key`][(c).] value of the selected option.
+    The [`key`][flet.DropdownOption.] of the dropdown [`options`][(c).]
+    corresponding the selected option.
     """
 
     options: list[DropdownOption] = field(default_factory=list)
