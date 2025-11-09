@@ -17,7 +17,13 @@ example_media: ../examples/controls/bottom_sheet/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", width="80%") }}
+
+### Fullscreen
+
+```python
+--8<-- "{{ examples }}/fullscreen.py"
+```
 
 
 {{ class_members(class_name) }}

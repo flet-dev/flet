@@ -2,22 +2,21 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "BottomSheet Example"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_sheet_dismissal(e: ft.Event[ft.BottomSheet]):
-        page.add(ft.Text("Bottom sheet dismissed"))
+    def handle_switch_change(e: ft.Event[ft.Switch]):
+        sheet.fullscreen = e.control.value
 
     sheet = ft.BottomSheet(
-        on_dismiss=handle_sheet_dismissal,
+        fullscreen=True,
+        show_drag_handle=True,
         content=ft.Container(
-            padding=50,
+            padding=ft.Padding.all(10),
             content=ft.Column(
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                tight=True,
                 controls=[
-                    ft.Text("Here is a bottom sheet!"),
-                    ft.Button("Dismiss", on_click=lambda _: page.pop_dialog()),
+                    ft.Text("This is bottom sheet's content!"),
+                    ft.Button("Close bottom sheet", on_click=lambda: page.pop_dialog()),
                 ],
             ),
         ),
@@ -27,7 +26,8 @@ def main(page: ft.Page):
         ft.Button(
             content="Display bottom sheet",
             on_click=lambda e: page.show_dialog(sheet),
-        )
+        ),
+        ft.Switch(value=True, label="Fullscreen", on_change=handle_switch_change),
     )
 
 

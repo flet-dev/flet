@@ -30,6 +30,10 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
     var maintainBottomViewInsetsPadding =
         widget.control.getBool("maintain_bottom_view_insets_padding", true)!;
+    final fullscreen = widget.control.getBool("fullscreen", false)!;
+    final scrollable =
+        fullscreen || widget.control.getBool("scrollable", false)!;
+    final draggable = widget.control.getBool("draggable", false)!;
 
     if (open && !lastOpen) {
       widget.control.updateProperties({"_open": open}, python: false);
@@ -53,19 +57,23 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                     );
                   }
 
+                  if (fullscreen) {
+                    content = SizedBox.expand(child: content);
+                  }
+
                   return content;
                 },
                 isDismissible: widget.control.getBool("dismissible", true)!,
                 backgroundColor: widget.control.getColor("bgcolor", context),
                 elevation: widget.control.getDouble("elevation"),
-                isScrollControlled:
-                    widget.control.getBool("scroll_controlled", false)!,
-                enableDrag: widget.control.getBool("enable_drag", false)!,
+                isScrollControlled: scrollable,
+                enableDrag: draggable,
                 barrierColor: widget.control.getColor("barrier_color", context),
                 sheetAnimationStyle:
                     widget.control.getAnimationStyle("animation_style"),
-                constraints:
-                    widget.control.getBoxConstraints("size_constraints"),
+                constraints: fullscreen
+                    ? null
+                    : widget.control.getBoxConstraints("size_constraints"),
                 showDragHandle:
                     widget.control.getBool("show_drag_handle", false)!,
                 clipBehavior: widget.control.getClipBehavior("clip_behavior"),
