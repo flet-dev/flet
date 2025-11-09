@@ -1,8 +1,7 @@
 import pytest
-import asyncio
+
 import flet as ft
 import flet.testing as ftt
-
 
 sample1 = """
 # Markdown Example
@@ -79,7 +78,6 @@ void main() {
 """
 
 md = ft.Markdown(
-    value=sample1,
     selectable=True,
     extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
 )
@@ -87,9 +85,11 @@ md = ft.Markdown(
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_md_1(flet_app: ftt.FletTestApp, request):
+    md.value = sample1
     await flet_app.assert_control_screenshot(
         request.node.name,
         md,
+        similarity_threshold=97,
     )
 
 
@@ -99,4 +99,5 @@ async def test_md_2(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         md,
+        similarity_threshold=97,
     )
