@@ -318,7 +318,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     the expansion animation curve. If it is `None`, then
     [`AnimationStyle.curve`][flet.] from the
     [`ExpansionTileTheme.animation_style`][(c).] will be used. If that is also
-    `None`, [`Curves.EASE_IN`][flet.] will be used as default.
+    `None`, [`AnimationCurve.EASE_IN`][flet.] will be used as default.
 
     If [`AnimationStyle.reverse_curve`][flet.] is provided, it will be used to override
     the collapse animation curve. If it is `None`, then

@@ -85,7 +85,7 @@ docs = [
     "pydocstyle >=6.3.0",
     "linkcheckmd >=1.4.0",
     "mkdocs-external-images",
-    "mkdocs-macros-plugin>=1.4.0",
+    "mkdocs-macros-plugin>=1.5.0",
     { include-group = 'extensions' },
     { include-group = 'docs-coverage' },
 ]

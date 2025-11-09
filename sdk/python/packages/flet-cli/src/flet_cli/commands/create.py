@@ -2,12 +2,13 @@ import argparse
 import os
 from pathlib import Path
 
-import flet.version
-from flet.utils import slugify
-from flet_cli.commands.base import BaseCommand
 from packaging import version
 from rich.console import Console
 from rich.style import Style
+
+import flet.version
+from flet.utils import slugify
+from flet_cli.commands.base import BaseCommand
 
 error_style = Style(color="red1", bold=True)
 console = Console(log_path=False)
@@ -15,7 +16,9 @@ console = Console(log_path=False)
 
 class Command(BaseCommand):
     """
-    Create a new Flet app from a template.
+    Create a new Flet project using a predefined template.
+    It sets up the initial directory structure, metadata,
+    and required files to help you get started quickly.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -24,33 +27,39 @@ class Command(BaseCommand):
             type=str,
             default=".",
             nargs="?",
-            help="project output directory",
+            help="Directory where the new Flet project will be created."
+            "If omitted, the project is created in the current directory",
         )
         parser.add_argument(
             "--project-name",
             dest="project_name",
-            help="project name for the new Flet app",
             required=False,
+            help="Name of the new Flet project. "
+            "This will be used in metadata files such as `pyproject.toml`",
         )
         parser.add_argument(
             "--description",
             dest="description",
-            help="the description to use for the new Flet project",
             required=False,
+            help="Short description of the new Flet project. "
+            "This will appear in generated metadata",
         )
         parser.add_argument(
             "--template",
             dest="template",
             choices=["app", "extension"],
             default="app",
-            help="template to use for new Flet project",
             required=False,
+            help="The template to use (or type of project to create) "
+            "for new Flet project",
         )
         parser.add_argument(
             "--template-ref",
             dest="template_ref",
             type=str,
-            help="the branch, tag or commit ID to checkout after cloning the repository with Flet app templates",
+            help="Git reference (branch, tag, or commit ID) of the Flet template "
+            "repository (flet-dev/flet-app-templates) to use. Useful when using a "
+            "custom or development version of templates",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -82,7 +91,7 @@ class Command(BaseCommand):
         # print("Template data:", template_data)
         try:
             cookiecutter(
-                f"gh:flet-dev/flet-app-templates",
+                "gh:flet-dev/flet-app-templates",
                 checkout=template_ref,
                 directory=options.template,
                 output_dir=str(out_dir.parent),

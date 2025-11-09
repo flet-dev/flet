@@ -23,5 +23,6 @@ verbose_option = Option(
     "--verbose",
     action="count",
     default=0,
-    help="-v for detailed output and -vv for more detailed",
+    help="Enable verbose output. "
+    "Use -v for standard verbose logging and -vv for more detailed output",
 )

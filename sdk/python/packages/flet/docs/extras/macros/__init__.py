@@ -1,5 +1,8 @@
 import os
+import sys
 from urllib.parse import urlparse
+
+from .cli_to_md import render_flet_cli_as_markdown
 
 
 def define_env(env):
@@ -117,3 +120,9 @@ def define_env(env):
             },
         }
         return render_directive(class_name, options) + "\n"
+
+    @env.macro
+    def flet_cli_as_markdown(command: str = "", subcommands_only: bool = True):
+        return render_flet_cli_as_markdown(
+            command=command, subcommands_only=subcommands_only
+        )
