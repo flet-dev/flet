@@ -51,7 +51,7 @@ PieChartSectionData parsePieChartSectionData(
     borderSide: section.getBorderSide("border_side", theme,
         defaultValue: BorderSide.none)!,
     titlePositionPercentageOffset: section.getDouble("title_position"),
-    badgeWidget: section.buildWidget("badge_content"),
+    badgeWidget: section.buildWidget("badge"),
     badgePositionPercentageOffset: section.getDouble("badge_position"),
   );
 }

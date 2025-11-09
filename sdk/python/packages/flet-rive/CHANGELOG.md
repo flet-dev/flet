@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2025-06-26
+## [0.2.0] - Unreleased
 
 - Published documentation at https://docs.flet.dev/rive/
 - Added async-friendly examples and workspace integration for the `Rive` control.
