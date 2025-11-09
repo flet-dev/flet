@@ -167,7 +167,7 @@ class DatePicker(DialogControl):
     [`entry_mode`][(c).]
     is [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    Clicking on icon changes the `DatePickerEntryMode` to
+    Clicking on icon changes the `entry_mode` to
     [`DatePickerEntryMode.INPUT`][flet.].
 
     If `None`, [`Icons.EDIT_OUTLINED`][flet.] is used.
