@@ -26,20 +26,53 @@ __all__ = [
 
 
 class DatePickerMode(Enum):
+    """Initial display of a calendar date picker."""
+
     DAY = "day"
+    """Choosing a month and day."""
+
     YEAR = "year"
+    """Choosing a year."""
 
 
 class DatePickerEntryMode(Enum):
+    """Mode of date entry method for the date picker dialog."""
+
     CALENDAR = "calendar"
+    """
+    User picks a date from calendar grid.
+
+    Can switch to [`INPUT`][(c).] by activating a mode button in the dialog.
+    """
+
     INPUT = "input"
+    """
+    User can input the date by typing it into a text field.
+
+    Can switch to [`CALENDAR`][(c).] by activating a mode button in the dialog.
+    """
+
     CALENDAR_ONLY = "calendarOnly"
+    """
+    User can only pick a date from calendar grid.
+
+    There is no user interface to switch to another mode.
+    """
+
     INPUT_ONLY = "inputOnly"
+    """
+    User can only input the date by typing it into a text field.
+
+    There is no user interface to switch to another mode.
+    """
 
 
 @dataclass
 class DatePickerEntryModeChangeEvent(Event["DatePicker"]):
+    """Event fired when the [`DatePicker`][flet.] entry mode is changed."""
+
     entry_mode: DatePickerEntryMode
+    """The new date picker entry mode."""
 
 
 @control("DatePicker")
@@ -69,14 +102,18 @@ class DatePicker(DialogControl):
         default_factory=lambda: datetime(year=1900, month=1, day=1)
     )
     """
-    The earliest allowable date that the user can select. Defaults to `January 1, 1900`.
+    The earliest allowable date that the user can select.
+
+    Defaults to `January 1, 1900`.
     """
 
     last_date: DateTimeValue = field(
         default_factory=lambda: datetime(year=2050, month=1, day=1)
     )
     """
-    The latest allowable date that the user can select. Defaults to `January 1, 2050`.
+    The latest allowable date that the user can select.
+
+    Defaults to `January 1, 2050`.
     """
 
     current_date: DateTimeValue = field(default_factory=lambda: datetime.now())
@@ -110,17 +147,21 @@ class DatePicker(DialogControl):
 
     cancel_text: Optional[str] = None
     """
-    The text that is displayed on the cancel button. Defaults to `"Cancel"`.
+    The text that is displayed on the cancel button.
+
+    Defaults to `"Cancel"`.
     """
 
     confirm_text: Optional[str] = None
     """
-    The text that is displayed on the confirm button. Defaults to `"OK"`.
+    The text that is displayed on the confirm button.
+
+    Defaults to `"OK"`.
     """
 
     error_format_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the entered date is not in the
+    The error message displayed below the text field if the entered date is not in the
     correct format.
 
     Defaults to `"Invalid format"`.
@@ -128,8 +169,8 @@ class DatePicker(DialogControl):
 
     error_invalid_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the date is earlier than
-    `first_date` or later than `last_date`.
+    The error message displayed below the text field if the date is earlier than
+    [`first_date`][(c).] or later than [`last_date`][(c).].
 
     Defaults to `"Out of range"`.
     """
@@ -152,8 +193,7 @@ class DatePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`entry_mode`][(c).]
-    is [`DatePickerEntryMode.INPUT`][flet.].
+    [`entry_mode`][(c).] is [`DatePickerEntryMode.INPUT`][flet.].
 
     Clicking on this icon changes the `entry_mode` to
     [`DatePickerEntryMode.CALENDAR`][flet.].
@@ -164,10 +204,9 @@ class DatePicker(DialogControl):
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`entry_mode`][(c).]
-    is [`DatePickerEntryMode.CALENDAR`][flet.].
+    [`entry_mode`][(c).] is [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    Clicking on icon changes the `entry_mode` to
+    Clicking on icon changes the `DatePickerEntryMode` to
     [`DatePickerEntryMode.INPUT`][flet.].
 
     If `None`, [`Icons.EDIT_OUTLINED`][flet.] is used.
@@ -178,8 +217,7 @@ class DatePicker(DialogControl):
     The color of the modal barrier that
     darkens everything below the date picker.
 
-    If `None`, the [`DialogTheme.barrier_color`][flet.]
-    is used.
+    If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
     If it is also `None`, then `Colors.BLACK_54` is used.
     """
 
@@ -188,11 +226,11 @@ class DatePicker(DialogControl):
     Called when user clicks confirm button.
     [`value`][(c).] is updated with selected date.
 
-    The `data` property of the event handler argument contains the selected date.
+    The [`data`][flet.Event.] property of the event handler argument
+    contains the selected date.
     """
 
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`entry_mode`][(c).]
-    is changed.
+    Called when the [`entry_mode`][(c).] is changed from the user interface.
     """
