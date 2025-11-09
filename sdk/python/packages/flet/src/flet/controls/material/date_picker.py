@@ -39,7 +39,7 @@ class DatePickerEntryMode(Enum):
 
 @dataclass
 class DatePickerEntryModeChangeEvent(Event["DatePicker"]):
-    entry_mode: Optional[DatePickerEntryMode]
+    entry_mode: DatePickerEntryMode
 
 
 @control("DatePicker")
@@ -49,7 +49,7 @@ class DatePicker(DialogControl):
 
     It can be opened by calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
-    Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar
+    Depending on the [`entry_mode`][(c).], it will show either a Calendar
     or an Input (TextField) for picking a date.
     """
 
@@ -94,7 +94,7 @@ class DatePicker(DialogControl):
     Initial display of a calendar date picker.
     """
 
-    date_picker_entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
+    entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
     """
@@ -152,10 +152,10 @@ class DatePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][(c).]
+    [`entry_mode`][(c).]
     is [`DatePickerEntryMode.INPUT`][flet.].
 
-    Clicking on this icon changes the `date_picker_entry_mode` to
+    Clicking on this icon changes the `entry_mode` to
     [`DatePickerEntryMode.CALENDAR`][flet.].
 
     If `None`, [`Icons.CALENDAR_TODAY`][flet.] is used.
@@ -164,7 +164,7 @@ class DatePicker(DialogControl):
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][(c).]
+    [`entry_mode`][(c).]
     is [`DatePickerEntryMode.CALENDAR`][flet.].
 
     Clicking on icon changes the `DatePickerEntryMode` to
@@ -193,6 +193,6 @@ class DatePicker(DialogControl):
 
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`date_picker_entry_mode`][(c).]
+    Called when the [`entry_mode`][(c).]
     is changed.
     """

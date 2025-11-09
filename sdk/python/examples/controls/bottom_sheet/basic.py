@@ -22,7 +22,7 @@ def main(page: ft.Page):
             ),
         ),
     )
-    page.overlay.append(sheet)
+
     page.add(
         ft.Button(
             content="Display bottom sheet",

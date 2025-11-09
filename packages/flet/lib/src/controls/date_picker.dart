@@ -58,7 +58,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
         initialCalendarMode: widget.control
             .getDatePickerMode("date_picker_mode", DatePickerMode.day)!,
         initialEntryMode: widget.control.getDatePickerEntryMode(
-            "date_picker_entry_mode", DatePickerEntryMode.calendar)!,
+            "entry_mode", DatePickerEntryMode.calendar)!,
         fieldHintText: widget.control.getString("field_hint_text"),
         fieldLabelText: widget.control.getString("field_label_text"),
         onDatePickerModeChange: (DatePickerEntryMode mode) {
