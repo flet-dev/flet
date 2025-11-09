@@ -22,7 +22,7 @@ class WebView(ft.LayoutControl):
     Note:
         Supported only on the following platforms: iOS, Android, macOS, and Web.
         Concerning Windows and Linux support, subscribe to this
-        [issue]().
+        [issue](https://github.com/flet-dev/flet-webview/issues/17).
     """
 
     url: Optional[str] = None
