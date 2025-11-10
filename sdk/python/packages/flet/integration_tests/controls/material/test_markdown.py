@@ -89,7 +89,6 @@ async def test_md_1(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         md,
-        similarity_threshold=97,
     )
 
 
@@ -99,5 +98,4 @@ async def test_md_2(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         md,
-        similarity_threshold=97,
     )

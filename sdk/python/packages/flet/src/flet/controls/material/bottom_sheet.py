@@ -14,26 +14,27 @@ __all__ = ["BottomSheet"]
 @control("BottomSheet")
 class BottomSheet(DialogControl):
     """
-    Displays a modal bottom sheet.
+    A modal bottom sheet.
 
-    A bottom sheet is an alternative to a menu or dialog and prevents the user
-    from interacting with the rest of the app.
+    Displays a temporary surface anchored to the bottom of the
+    screen that presents supplemental content or actions.
+    Prevents interaction with the underlying app while visible.
 
     Example:
-        ```python
-        sheet = ft.BottomSheet(
-            content=ft.Column(
-                width=150,
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.Text("Choose an option"),
-                    ft.TextButton("Dismiss"),
-                ],
-            )
+    ```python
+    sheet = ft.BottomSheet(
+        content=ft.Column(
+            width=150,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Text("Choose an option"),
+                ft.TextButton("Dismiss"),
+            ],
         )
-        page.show_dialog(sheet)
-        ```
+    )
+    page.show_dialog(sheet)
+    ```
     """
 
     content: Control
