@@ -28,22 +28,27 @@ __all__ = ["Dropdown", "DropdownOption"]
 @control("DropdownOption")
 class DropdownOption(Control):
     """
-    Represents an item in a dropdown. Either `key` or `text` must be specified, else an
-    A `ValueError` will be raised.
+    Represents an item in a dropdown.
     """
 
     key: Optional[str] = None
     """
-    Option's key. If not specified [`text`][(c).] will
-    be used as fallback.
+    Option's key.
+
+    If not specified [`text`][(c).] will be used as fallback.
+
+    Raises:
+        ValueError: If neither `key` nor [`text`][(c).] are provided.
     """
 
     text: Optional[str] = None
     """
-    Option's display text. If not specified `key` will be used as fallback.
+    Option's display text.
+
+    If not specified [`key`][(c).] will be used as fallback.
 
     Raises:
-        ValueError: If neither [`key`][(c).] nor [`text`][(c).] are provided.
+        ValueError: If neither [`key`][(c).] nor `text` are provided.
     """
 
     content: Optional[Control] = None
