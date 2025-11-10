@@ -31,7 +31,7 @@ class RadarChartEventData extends Equatable {
     final touchedSpot = response?.touchedSpot;
 
     return RadarChartEventData(
-        eventType: resolveFlTouchEventType(event),
+      eventType: resolveFlTouchEventType(event),
       dataSetIndex: touchedSpot?.touchedDataSetIndex,
       entryIndex: touchedSpot?.touchedRadarEntryIndex,
       entryValue: touchedSpot?.touchedRadarEntry.value,

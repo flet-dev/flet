@@ -18,7 +18,7 @@ class PieChartEventData extends Equatable {
   factory PieChartEventData.fromDetails(
       FlTouchEvent event, PieTouchResponse? response) {
     return PieChartEventData(
-        eventType: resolveFlTouchEventType(event),
+      eventType: resolveFlTouchEventType(event),
       sectionIndex: response?.touchedSection?.touchedSectionIndex,
       localPosition: event.localPosition,
     );
