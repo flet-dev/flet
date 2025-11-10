@@ -64,7 +64,7 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
         )
     )
 
-    await flet_app.resize_page(500, 500)
+    flet_app.resize_page(500, 500)
     flet_app.page.scroll = ft.ScrollMode.HIDDEN
 
     def swatch(label: str, fill_color: str, text_color: str) -> ft.Container:

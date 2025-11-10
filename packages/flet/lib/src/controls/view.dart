@@ -242,14 +242,16 @@ class _ViewControlState extends State<ViewControl> {
           child: scaffold);
     }
 
-    var showAppStartupScreen =
-        FletBackend.of(context).showAppStartupScreen ?? false;
+    var backend = FletBackend.of(context);
+    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
     var appStartupScreenMessage =
-        FletBackend.of(context).appStartupScreenMessage ?? "";
+        backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
+    var formattedErrorMessage =
+        backend.formatAppErrorMessage(appStatus.error);
 
     Widget? loadingPage;
     if ((appStatus.isLoading || appStatus.error != "") &&
@@ -257,7 +259,7 @@ class _ViewControlState extends State<ViewControl> {
       loadingPage = LoadingPage(
         isLoading: appStatus.isLoading,
         message:
-            appStatus.isLoading ? appStartupScreenMessage : appStatus.error,
+            appStatus.isLoading ? appStartupScreenMessage : formattedErrorMessage,
       );
     }
 

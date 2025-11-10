@@ -7,7 +7,7 @@ import flet.testing as ftt
 @pytest.mark.asyncio(loop_scope="module")
 async def test_snack_bar_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(ft.SnackBar(ft.Text("Hello, world!")))
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()

@@ -11,7 +11,7 @@ async def test_cupertino_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
         content=ft.Text("Do you want to delete this file?"),
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(cad)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
