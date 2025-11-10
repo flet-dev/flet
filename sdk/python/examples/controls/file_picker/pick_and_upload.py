@@ -1,6 +1,16 @@
+from dataclasses import dataclass, field
+from typing import Optional
+
 import flet as ft
 
-state = {"picked_files": []}
+
+@dataclass
+class State:
+    file_picker: Optional[ft.FilePicker] = None
+    picked_files: list[ft.FilePickerFile] = field(default_factory=list)
+
+
+state = State()
 
 
 def main(page: ft.Page):
@@ -9,13 +19,11 @@ def main(page: ft.Page):
     def on_upload_progress(e: ft.FilePickerUploadEvent):
         prog_bars[e.file_name].value = e.progress
 
-    # add to services
-    page.services.append(file_picker := ft.FilePicker(on_upload=on_upload_progress))
-
     async def handle_files_pick(e: ft.Event[ft.Button]):
-        files = await file_picker.pick_files(allow_multiple=True)
+        state.file_picker = ft.FilePicker(on_upload=on_upload_progress)
+        files = await state.file_picker.pick_files(allow_multiple=True)
         print("Picked files:", files)
-        state["picked_files"] = files
+        state.picked_files = files
 
         # update progress bars
         upload_button.disabled = len(files) == 0
@@ -28,18 +36,17 @@ def main(page: ft.Page):
 
     async def handle_file_upload(e: ft.Event[ft.Button]):
         upload_button.disabled = True
-        await file_picker.upload(
+        await state.file_picker.upload(
             files=[
                 ft.FilePickerUploadFile(
                     name=file.name,
                     upload_url=page.get_upload_url(f"dir/{file.name}", 60),
                 )
-                for file in state["picked_files"]
+                for file in state.picked_files
             ]
         )
 
     page.add(
-        ft.Text("test"),
         ft.Button(
             content="Select files...",
             icon=ft.Icons.FOLDER_OPEN,
