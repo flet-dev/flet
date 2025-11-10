@@ -16,7 +16,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         open=True,
     )
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(400, 300)
+    flet_app_function.resize_page(400, 300)
     flet_app_function.page.add(tp)
     await flet_app_function.tester.pump_and_settle()
 
@@ -36,7 +36,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(350, 300)
+    flet_app_function.resize_page(350, 300)
     button = await flet_app_function.tester.find_by_icon(ft.Icons.TIME_TO_LEAVE)
     await flet_app_function.tester.tap(button)
     flet_app_function.page.update()

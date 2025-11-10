@@ -125,7 +125,7 @@ ThemeData parseTheme(
     primaryTextTheme: parseTextTheme(
         value?["primary_text_theme"], theme, theme.primaryTextTheme),
     scrollbarTheme: parseScrollBarTheme(value?["scrollbar_theme"], theme),
-    tabBarTheme: parseTabBarTheme(value?["tabs_theme"], theme),
+    tabBarTheme: parseTabBarTheme(value?["tab_bar_theme"], theme),
     splashColor: parseColor(value?["splash_color"], theme),
     highlightColor: parseColor(value?["highlight_color"], theme),
     hoverColor: parseColor(value?["hover_color"], theme),

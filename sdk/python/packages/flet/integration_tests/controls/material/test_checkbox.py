@@ -34,7 +34,7 @@ async def test_theme(flet_app: ftt.FletTestApp):
         )
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
 
     scr_1 = ft.Screenshot(cb := ft.Checkbox(key="cb", value=True, margin=20))
     flet_app.page.add(scr_1)
