@@ -16,14 +16,14 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", width="80%") }}
+{{ image(example_images + "/basic.gif", width="60%") }}
 
 ### Fullscreen
 
 ```python
 --8<-- "{{ examples }}/fullscreen.py"
 ```
-{{ image(example_images + "/fullscreen.gif", width="80%") }}
+{{ image(example_images + "/fullscreen.gif", width="60%") }}
 
 
 {{ class_members(class_name) }}
