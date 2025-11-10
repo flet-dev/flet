@@ -1,5 +1,7 @@
 from typing import Optional
 
+from typing_extensions import Self
+
 import flet as ft
 from flet_webview.types import (
     JavaScriptMode,
@@ -18,10 +20,12 @@ class WebView(ft.LayoutControl):
     Easily load webpages while allowing user interaction.
 
     Note:
-        Works only on the following platforms: iOS, Android, macOS and Web.
+        Supported only on the following platforms: iOS, Android, macOS, and Web.
+        Concerning Windows and Linux support, subscribe to this
+        [issue](https://github.com/flet-dev/flet-webview/issues/17).
     """
 
-    url: str
+    url: Optional[str] = None
     """The URL of the web page to load."""
 
     prevent_links: Optional[list[str]] = None
@@ -34,7 +38,7 @@ class WebView(ft.LayoutControl):
     """
     Fires soon as the first loading process of the webview page is started.
 
-    Event handler argument's [`data`][flet.Event.data] property is of type
+    The [`data`][flet.Event.] property of the event handler argument is of type
     `str` and contains the URL.
 
     Note:
@@ -45,8 +49,8 @@ class WebView(ft.LayoutControl):
     """
     Fires when all the webview page loading processes are ended.
 
-    Event handler argument's [`data`][flet.Event.data] property is of type `str`
-    and contains the URL.
+    The [`data`][flet.Event.] property of the event handler argument is of type
+    `str` and contains the URL.
 
     Note:
         Works only on the following platforms: iOS, Android and macOS.
@@ -56,7 +60,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when there is error with loading a webview page resource.
 
-    Event handler argument's [`data`][flet.Event.data] property is of type
+    The [`data`][flet.Event.] property of the event handler argument is of type
     `str` and contains the error message.
 
     Note:
@@ -67,7 +71,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when the progress of the webview page loading is changed.
 
-    Event handler argument's [`data`][flet.Event.data] property is of type
+    The [`data`][flet.Event.] property of the event handler argument is of type
     `int` and contains the progress value.
 
     Note:
@@ -78,7 +82,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when the URL of the webview page is changed.
 
-    Event handler argument's [`data`][flet.Event.data] property is of type
+    The [`data`][flet.Event.] property of the event handler argument is of type
     `str` and contains the new URL.
 
     Note:
@@ -129,7 +133,7 @@ class WebView(ft.LayoutControl):
         Reloads the current URL.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("reload")
@@ -139,7 +143,7 @@ class WebView(ft.LayoutControl):
         Whether there's a back history item.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Returns:
             `True` if there is a back history item, `False` otherwise.
@@ -152,7 +156,7 @@ class WebView(ft.LayoutControl):
         Whether there's a forward history item.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Returns:
             `True` if there is a forward history item, `False` otherwise.
@@ -165,7 +169,7 @@ class WebView(ft.LayoutControl):
         Goes back in the history of the webview, if `can_go_back()` is `True`.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("go_back")
@@ -176,7 +180,7 @@ class WebView(ft.LayoutControl):
         if [`can_go_forward()`][(c).can_go_forward] is `True`.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("go_forward")
@@ -186,7 +190,7 @@ class WebView(ft.LayoutControl):
         Enables zooming using the on-screen zoom controls and gestures.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("enable_zoom")
@@ -196,7 +200,7 @@ class WebView(ft.LayoutControl):
         Disables zooming using the on-screen zoom controls and gestures.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("disable_zoom")
@@ -211,7 +215,7 @@ class WebView(ft.LayoutControl):
             - Application cache
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("clear_cache")
@@ -221,7 +225,7 @@ class WebView(ft.LayoutControl):
         Clears the local storage used by the WebView.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method("clear_local_storage")
@@ -232,7 +236,7 @@ class WebView(ft.LayoutControl):
         if no URL was ever loaded.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Returns:
             The current URL that the WebView is displaying or `None`
@@ -246,7 +250,7 @@ class WebView(ft.LayoutControl):
         Get the title of the currently loaded page.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Returns:
             The title of the currently loaded page.
@@ -259,7 +263,7 @@ class WebView(ft.LayoutControl):
         Get the value used for the HTTP `User-Agent:` request header.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Returns:
             The value used for the HTTP `User-Agent:` request header.
@@ -272,7 +276,7 @@ class WebView(ft.LayoutControl):
         Loads the provided local file.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Args:
             path: The absolute path to the file.
@@ -292,7 +296,7 @@ class WebView(ft.LayoutControl):
             method: The HTTP method to use.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method(
@@ -307,7 +311,7 @@ class WebView(ft.LayoutControl):
             value: The JavaScript code to run.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method(
@@ -315,12 +319,12 @@ class WebView(ft.LayoutControl):
             arguments={"value": value},
         )
 
-    async def load_html(self, value: str, base_url: Optional[str] = None):
+    async def load_html(self, value: str, base_url: Optional[str] = None) -> Self:
         """
         Loads the provided HTML string.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Args:
             value: The HTML string to load.
@@ -331,12 +335,14 @@ class WebView(ft.LayoutControl):
             "load_html", arguments={"value": value, "base_url": base_url}
         )
 
+        return self
+
     async def scroll_to(self, x: int, y: int):
         """
         Scrolls to the provided position of webview pixels.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Args:
             x: The x-coordinate of the scroll position.
@@ -353,7 +359,7 @@ class WebView(ft.LayoutControl):
         Scrolls by the provided number of webview pixels.
 
         Note:
-            Works only on the following platforms: iOS, Android and macOS.
+            Works only on the following platforms: iOS, Android, and macOS.
 
         Args:
             x: The number of pixels to scroll by on the x-axis.
@@ -370,7 +376,7 @@ class WebView(ft.LayoutControl):
         Sets the JavaScript mode of the WebView.
 
         Note:
-            - Works only on the following platforms: iOS, Android and macOS.
+            - Works only on the following platforms: iOS, Android, and macOS.
             - Disabling the JavaScript execution on the page may result to
                 unexpected web page behaviour.
 
