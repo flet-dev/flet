@@ -98,13 +98,13 @@ class TimePicker(DialogControl):
     an Input (hour and minute text fields) for picking a time.
 
     Example:
-        ```python
-        ft.TimePicker(
-            open=True,
-            value=time(1, 2),
-            entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
-        )
-        ```
+    ```python
+    ft.TimePicker(
+        open=True,
+        value=time(1, 2),
+        entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
+    )
+    ```
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())
