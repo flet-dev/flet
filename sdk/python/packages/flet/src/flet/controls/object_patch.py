@@ -782,7 +782,7 @@ class DiffBuilder:
                 if cur_key not in new_keys_set:
                     # remove disappearing item at i
                     self._item_removed(
-                        path, i, work[i], item_key=(cur_key, path), frozen=True
+                        path, i, work[i], item_key=(cur_key, path), frozen=frozen
                     )
                     _remove_from_work(i)
                     continue
@@ -792,7 +792,7 @@ class DiffBuilder:
                     # before.
                     # remove it here; it will be re-inserted (moved) where needed.
                     self._item_removed(
-                        path, i, work[i], item_key=(cur_key, path), frozen=True
+                        path, i, work[i], item_key=(cur_key, path), frozen=frozen
                     )
                     _remove_from_work(i)
                     continue
@@ -834,7 +834,7 @@ class DiffBuilder:
                     i,
                     dst[i],
                     item_key=(target_key, path),
-                    frozen=True,
+                    frozen=frozen,
                 )
                 _insert_into_work(i, dst[i], target_key)
 
@@ -847,7 +847,7 @@ class DiffBuilder:
             key_j = work_keys[j]
             if key_j not in new_keys_set:
                 self._item_removed(
-                    path, j, work[j], item_key=(key_j, path), frozen=True
+                    path, j, work[j], item_key=(key_j, path), frozen=frozen
                 )
                 _remove_from_work(j)
             j -= 1
