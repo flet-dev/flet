@@ -20,12 +20,12 @@ class FletApp(LayoutControl):
 
     args: Optional[dict[str, Any]] = None
     """
-    TBD
+    Optional dictionary of arguments to pass to the Flet app.
     """
 
     force_pyodide: bool = False
     """
-    TBD
+    Whether to force the use of Pyodide.
     """
 
     reconnect_interval_ms: Optional[int] = None
@@ -40,17 +40,19 @@ class FletApp(LayoutControl):
 
     show_app_startup_screen: bool = False
     """
-    TBD
+    Whether to show the app startup screen.
     """
 
     app_startup_screen_message: Optional[str] = None
     """
-    TBD
+    Message to display on the app startup screen.
     """
 
     app_error_message: Optional[str] = None
     """
-    TBD
+    Template message to display when the app fails to load.
+    Use `{message}` placeholder to include the error message
+    and `{details}` to include error details.
     """
 
     on_error: Optional[ControlEventHandler["FletApp"]] = None
