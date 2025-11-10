@@ -7,11 +7,15 @@ from flet.controls.transform import Offset
 from flet.controls.types import PointerDeviceType
 
 __all__ = [
+    "DragDownEvent",
     "DragEndEvent",
     "DragStartEvent",
     "DragUpdateEvent",
+    "ForcePressEvent",
     "HoverEvent",
+    "LongPressDownEvent",
     "LongPressEndEvent",
+    "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
     "MultiTapEvent",
     "PointerEvent",
@@ -20,6 +24,7 @@ __all__ = [
     "ScaleUpdateEvent",
     "ScrollEvent",
     "TapEvent",
+    "TapMoveEvent",
 ]
 
 
@@ -46,8 +51,51 @@ class TapEvent(Event[EventControlType]):
 
 
 @dataclass(kw_only=True)
+class TapMoveEvent(Event[EventControlType]):
+    kind: PointerDeviceType = field(metadata={"data_field": "k"})
+    """
+    The kind of the device that initiated the event.
+    """
+
+    local_position: Offset = field(metadata={"data_field": "l"})
+    """
+    The local position at which the pointer is located.
+    """
+
+    global_position: Offset = field(metadata={"data_field": "g"})
+    """
+    The global position at which the pointer is located.
+    """
+
+    delta: Offset = field(metadata={"data_field": "d"})
+    """
+    The movement delta since the previous update.
+    """
+
+
+@dataclass(kw_only=True)
 class MultiTapEvent(ControlEvent):
     correct_touches: bool = field(metadata={"data_field": "ct"})
+
+
+@dataclass(kw_only=True)
+class LongPressDownEvent(Event[EventControlType]):
+    kind: Optional[PointerDeviceType] = field(
+        default=None, metadata={"data_field": "k"}
+    )
+    """
+    The kind of the device that initiated the event.
+    """
+
+    local_position: Offset = field(metadata={"data_field": "l"})
+    """
+    The local position at which the pointer contacted the screen.
+    """
+
+    global_position: Offset = field(metadata={"data_field": "g"})
+    """
+    The global position at which the pointer contacted the screen.
+    """
 
 
 @dataclass(kw_only=True)
@@ -62,6 +110,29 @@ class LongPressStartEvent(Event[EventControlType]):
     )
     """
     The global position at which the pointer initially contacted the screen.
+    """
+
+
+@dataclass(kw_only=True)
+class LongPressMoveUpdateEvent(Event[EventControlType]):
+    local_position: Offset = field(metadata={"data_field": "l"})
+    """
+    The current local position of the pointer.
+    """
+
+    global_position: Offset = field(metadata={"data_field": "g"})
+    """
+    The current global position of the pointer.
+    """
+
+    offset_from_origin: Offset = field(metadata={"data_field": "ofo"})
+    """
+    Delta from the point where the long press started, in global coordinates.
+    """
+
+    local_offset_from_origin: Offset = field(metadata={"data_field": "lofo"})
+    """
+    Delta from the point where the long press started, in local coordinates.
     """
 
 
@@ -85,6 +156,19 @@ class LongPressEndEvent(Event[EventControlType]):
     in pixels per second.
 
     Defaults to zero if not specified in the constructor.
+    """
+
+
+@dataclass(kw_only=True)
+class DragDownEvent(Event[EventControlType]):
+    local_position: Offset = field(metadata={"data_field": "l"})
+    """
+    The local position at which the pointer contacted the screen.
+    """
+
+    global_position: Offset = field(metadata={"data_field": "g"})
+    """
+    The global position at which the pointer contacted the screen.
     """
 
 
@@ -181,6 +265,24 @@ class DragEndEvent(Event[EventControlType]):
     """
     The velocity the pointer was moving along the primary axis when it stopped
     contacting the screen, in logical pixels per second.
+    """
+
+
+@dataclass(kw_only=True)
+class ForcePressEvent(Event[EventControlType]):
+    local_position: Offset = field(metadata={"data_field": "l"})
+    """
+    The local position at which the pointer applied pressure.
+    """
+
+    global_position: Offset = field(metadata={"data_field": "g"})
+    """
+    The global position at which the pointer applied pressure.
+    """
+
+    pressure: float = field(metadata={"data_field": "p"})
+    """
+    The normalized pressure value reported by the device.
     """
 
 

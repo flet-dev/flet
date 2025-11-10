@@ -32,7 +32,7 @@ async def test_icon_button_theme(flet_app: ftt.FletTestApp):
         )
     )
 
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
 
     scr_1 = ft.Screenshot(
         ft.IconButton(icon=ft.Icons.UMBRELLA),

@@ -24,7 +24,7 @@ class BarChartEventData extends Equatable {
     BarTouchResponse? response,
   ) {
     return BarChartEventData(
-      eventType: eventMap[event.runtimeType.toString()] ?? "undefined",
+      eventType: resolveFlTouchEventType(event),
       groupIndex: response != null && response.spot != null
           ? response.spot!.touchedBarGroupIndex
           : null,

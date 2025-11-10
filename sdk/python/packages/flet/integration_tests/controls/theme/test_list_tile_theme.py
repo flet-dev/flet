@@ -51,7 +51,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
 
     tile_1 = ft.ListTile(
         "ListTile with is_three_line = False",

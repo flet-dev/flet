@@ -330,7 +330,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     debugPrint("Page.build: ${widget.control.id}");
 
     // clear hrefs index
-    FletBackend.of(context).globalKeys.clear();
+    var backend = FletBackend.of(context);
+    backend.globalKeys.clear();
 
     if (!widget.control.backend.multiView) {
       // single page mode
@@ -341,7 +342,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           .select<FletBackend, ({bool isLoading, String error})>((backend) =>
               (isLoading: backend.isLoading, error: backend.error));
       var appStartupScreenMessage =
-          FletBackend.of(context).appStartupScreenMessage ?? "";
+          backend.appStartupScreenMessage ?? "";
+      var formattedErrorMessage =
+          backend.formatAppErrorMessage(appStatus.error);
 
       List<Widget> views = [];
       for (var view in _multiViews.entries) {
@@ -362,7 +365,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                     isLoading: appStatus.isLoading,
                     message: appStatus.isLoading
                         ? appStartupScreenMessage
-                        : appStatus.error,
+                        : formattedErrorMessage,
                   )
                 ]),
         );
@@ -498,14 +501,16 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
     debugPrint("Page navigator build: ${widget.control.id}");
 
-    var showAppStartupScreen =
-        FletBackend.of(context).showAppStartupScreen ?? false;
+    var backend = FletBackend.of(context);
+    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
     var appStartupScreenMessage =
-        FletBackend.of(context).appStartupScreenMessage ?? "";
+        backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
+    var formattedErrorMessage =
+        backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
     List<Page<dynamic>> pages = [];
@@ -520,7 +525,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                     isLoading: appStatus.isLoading,
                     message: appStatus.isLoading
                         ? appStartupScreenMessage
-                        : appStatus.error,
+                        : formattedErrorMessage,
                   )
                 ])
               : const Scaffold(

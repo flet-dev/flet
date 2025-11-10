@@ -10,6 +10,7 @@ from flet.components.hooks.use_effect import (
     use_effect,
 )
 from flet.components.hooks.use_memo import use_memo
+from flet.components.hooks.use_ref import use_ref
 from flet.components.hooks.use_state import use_state
 from flet.components.memo import memo
 from flet.components.observable import Observable, observable
@@ -214,11 +215,15 @@ from flet.controls.duration import (
     DurationValue,
 )
 from flet.controls.events import (
+    DragDownEvent,
     DragEndEvent,
     DragStartEvent,
     DragUpdateEvent,
+    ForcePressEvent,
     HoverEvent,
+    LongPressDownEvent,
     LongPressEndEvent,
+    LongPressMoveUpdateEvent,
     LongPressStartEvent,
     MultiTapEvent,
     PointerEvent,
@@ -227,6 +232,7 @@ from flet.controls.events import (
     ScaleUpdateEvent,
     ScrollEvent,
     TapEvent,
+    TapMoveEvent,
 )
 from flet.controls.exceptions import (
     FletException,
@@ -678,6 +684,7 @@ __all__ = [
     "DismissibleUpdateEvent",
     "Divider",
     "DividerTheme",
+    "DragDownEvent",
     "DragEndEvent",
     "DragStartEvent",
     "DragTarget",
@@ -720,6 +727,7 @@ __all__ = [
     "FloatingActionButtonLocation",
     "FloatingActionButtonTheme",
     "FontWeight",
+    "ForcePressEvent",
     "FormFieldControl",
     "GestureDetector",
     "Gradient",
@@ -762,7 +770,9 @@ __all__ = [
     "Locale",
     "LocaleConfiguration",
     "LoginEvent",
+    "LongPressDownEvent",
     "LongPressEndEvent",
+    "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
     "MacOsDeviceInfo",
     "MainAxisAlignment",
@@ -914,6 +924,7 @@ __all__ = [
     "TabIndicatorAnimation",
     "Tabs",
     "TapEvent",
+    "TapMoveEvent",
     "TemplateRoute",
     "Text",
     "TextAffinity",
@@ -994,5 +1005,6 @@ __all__ = [
     "use_context",
     "use_effect",
     "use_memo",
+    "use_ref",
     "use_state",
 ]

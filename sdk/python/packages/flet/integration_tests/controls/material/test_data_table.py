@@ -63,7 +63,7 @@ async def test_theme(flet_app: ftt.FletTestApp):
             thickness=5,
         ),
     )
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
 
     scr_1 = ft.Screenshot(
         ft.DataTable(

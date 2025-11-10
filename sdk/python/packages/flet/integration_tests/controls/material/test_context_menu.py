@@ -7,7 +7,7 @@ import flet.testing as ftt
 @pytest.mark.asyncio(loop_scope="module")
 async def test_programmatic_open(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(250, 250)
+    flet_app.resize_page(250, 250)
     flet_app.page.add(
         menu := ft.ContextMenu(
             content=ft.IconButton(ft.Icons.MENU),
