@@ -31,6 +31,7 @@ class _FletAppControlState extends State<FletAppControl> {
         widget.control.getBool("show_app_startup_screen");
     var appStartupScreenMessage =
         widget.control.getString("app_startup_screen_message");
+    var appErrorMessage = widget.control.getString("app_error_message");
 
     return LayoutControl(
       control: widget.control,
@@ -40,6 +41,7 @@ class _FletAppControlState extends State<FletAppControl> {
         reconnectTimeoutMs: reconnectTimeoutMs,
         showAppStartupScreen: showAppStartupScreen,
         appStartupScreenMessage: appStartupScreenMessage,
+        appErrorMessage: appErrorMessage,
         pageUrl: url,
         assetsDir: "",
         errorsHandler: _errorsHandler,

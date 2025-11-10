@@ -271,11 +271,8 @@ def __get_on_session_created(main):
             await session.after_event(session.page)
 
         except Exception as e:
-            print(
-                f"Unhandled error processing page session {session.id}:",
-                traceback.format_exc(),
-            )
-            session.error(f"The application encountered an error: {e}")
+            logger.error("Unhandled error in main() handler", exc_info=True)
+            session.error(f"{e}\n{traceback.format_exc()}")
 
     return on_session_created
 

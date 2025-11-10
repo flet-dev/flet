@@ -19,7 +19,7 @@ class CandlestickChartEventData extends Equatable {
     CandlestickTouchResponse? response,
   ) {
     return CandlestickChartEventData(
-      eventType: eventMap[event.runtimeType.toString()] ?? "undefined",
+      eventType: resolveFlTouchEventType(event),
       spotIndex: response?.touchedSpot?.spotIndex,
     );
   }

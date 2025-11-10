@@ -14,7 +14,7 @@ def flet_app(flet_app_function):
 async def test_vertical_divider_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.add(ft.VerticalDivider(expand=True))
     await flet_app.tester.pump_and_settle()
 
@@ -30,7 +30,7 @@ async def test_vertical_divider_basic(flet_app: ftt.FletTestApp, request):
 async def test_vertical_divider_properties(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.add(
         ft.VerticalDivider(
             expand=True,

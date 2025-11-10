@@ -106,6 +106,11 @@ class Offset:
     The vertical offset.
     """
 
+    @property
+    def distance(self) -> float:
+        """The magnitude of the offset."""
+        return (self.x**2 + self.y**2) ** 0.5
+
     def copy(
         self,
         *,
