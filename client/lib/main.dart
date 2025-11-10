@@ -116,6 +116,7 @@ void main([List<String>? args]) async {
     errorsHandler: errorsHandler,
     showAppStartupScreen: true,
     appStartupScreenMessage: "Working...",
+    appErrorMessage: "The application encountered an error: {message}",
     extensions: extensions,
     multiView: isMultiView(),
     tester: tester,
