@@ -222,9 +222,9 @@ class _DropdownControlState extends State<DropdownControl> {
         .nonNulls
         .toList();
 
-    var selectedOption = options
-        .firstWhereOrNull((o) => o.value == widget.control.getString("value"));
-    var value = selectedOption?.value;
+    var value = widget.control.getString("value");
+    var selectedOption = options.firstWhereOrNull((o) => o.value == value);
+    value = selectedOption?.value;
 
     // keep controller text in sync with backend-driven value changes
     if (_value != value) {

@@ -88,22 +88,22 @@ class Dropdown(LayoutControl):
     from a list of [`options`][(c).].
 
     Example:
-        ```python
-        ft.Dropdown(
-            width=220,
-            value="alice",
-            options=[
-                ft.DropdownOption(key="alice", text="Alice"),
-                ft.DropdownOption(key="bob", text="Bob"),
-            ],
-        )
-        ```
+    ```python
+    ft.Dropdown(
+        width=220,
+        value="alice",
+        options=[
+            ft.DropdownOption(key="alice", text="Alice"),
+            ft.DropdownOption(key="bob", text="Bob"),
+        ],
+    )
+    ```
     """
 
     value: Optional[str] = None
     """
     The [`key`][flet.DropdownOption.] of the dropdown [`options`][(c).]
-    corresponding the selected option.
+    corresponding to the selected option.
     """
 
     options: list[DropdownOption] = field(default_factory=list)
