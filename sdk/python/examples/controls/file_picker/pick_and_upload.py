@@ -1,12 +1,18 @@
+#
+# Example of picking and uploading files with progress indication
+#
+# Run this example with:
+#    export FLET_SECRET_KEY=<some_secret_key>
+#    uv run flet run --web examples/controls/file_picker/pick_and_upload.py
+#
 from dataclasses import dataclass, field
-from typing import Optional
 
 import flet as ft
 
 
 @dataclass
 class State:
-    file_picker: Optional[ft.FilePicker] = None
+    file_picker: ft.FilePicker | None = None
     picked_files: list[ft.FilePickerFile] = field(default_factory=list)
 
 

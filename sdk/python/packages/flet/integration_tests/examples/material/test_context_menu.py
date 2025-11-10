@@ -8,7 +8,7 @@ from examples.controls.context_menu import programmatic_open
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(250, 200)
+    flet_app_function.resize_page(250, 200)
     flet_app_function.page.add(
         menu := ft.ContextMenu(
             content=ft.IconButton(ft.Icons.MENU),
@@ -40,7 +40,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_programmatic_open(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(300, 300)
+    flet_app_function.resize_page(300, 300)
     flet_app_function.page.update()
 
     # click button to open menu
