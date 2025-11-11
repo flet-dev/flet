@@ -31,7 +31,7 @@ async def test_cupertino_context_menu_basic(flet_app: ftt.FletTestApp, request):
         ],
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.add(ccm)
     await flet_app.tester.pump_and_settle()
 

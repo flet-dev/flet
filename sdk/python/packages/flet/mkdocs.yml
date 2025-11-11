@@ -891,6 +891,7 @@ nav:
               - use_context: types/use_context.md
               - use_effect: types/use_effect.md
               - use_memo: types/use_memo.md
+              - use_ref: types/use_ref.md
               - use_state: types/use_state.md
       - Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
       - Environment Variables: reference/environment-variables.md

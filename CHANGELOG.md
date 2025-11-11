@@ -13,6 +13,7 @@
   * Controls in Python are now defined as plain dataclasses
   * Unified diffing algorithm supports both imperative and declarative styles
   * Refactored Flutter layer using inherited widgets and `Provider`
+* Added `FletApp.appErrorMessage` template to customize loading screen errors.
 * See the list of [breaking changes](https://github.com/flet-dev/flet/issues/5238)
 
 ## 0.28.3
@@ -703,7 +704,7 @@ from flet.auth.providers import GitHubOAuthProvider
 ## 0.4.1
 
 * Slider.round to round slider value on a label
-* Fix page.client_storage.get_keys() timeout 
+* Fix page.client_storage.get_keys() timeout
 * Fix encode() import in PyInstaller integration
 * Fix "ConnectionAbortedError" error on Windows
 * Consistent licensing across the code - Apache 2.0

@@ -689,3 +689,30 @@ def test_fields_start_with_on():
     assert not u_msg[1][3]
     assert u_msg[2][2] == "on_surface_variant"
     assert u_msg[2][3] == "blue"
+
+
+def test_list_with_keys_can_be_updated():
+    col = ft.Column(
+        [
+            ft.Text("Line 1", key=ft.ScrollKey(1)),
+            ft.Text("Line 2", key=ft.ScrollKey(2)),
+        ]
+    )
+    _, patch, _, _, _ = make_msg(col, {})
+
+    # 1st update
+    col.controls.append(ft.Text("Line 3", key=ft.ScrollKey(3)))
+
+    patch, _, _, _ = make_diff(col)
+    assert cmp_ops(
+        patch,
+        [
+            {
+                "op": "add",
+                "path": ["controls", 2],
+                "value": Text("Line 3", key=ft.ScrollKey(3)),
+            }
+        ],
+    )
+
+    col.controls[2].value = "Line 3 (updated)"
