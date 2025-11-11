@@ -1,8 +1,7 @@
 import pytest
-import asyncio
+
 import flet as ft
 import flet.testing as ftt
-
 
 sample1 = """
 # Markdown Example

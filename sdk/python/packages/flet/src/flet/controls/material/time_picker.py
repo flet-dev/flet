@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from datetime import datetime, time
 from enum import Enum
 from typing import Optional
@@ -76,6 +76,7 @@ class TimePickerEntryMode(Enum):
     """
 
 
+@dataclass
 class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     """
     Represents the event triggered when the
@@ -98,13 +99,13 @@ class TimePicker(DialogControl):
     an Input (hour and minute text fields) for picking a time.
 
     Example:
-        ```python
-        ft.TimePicker(
-            open=True,
-            value=time(1, 2),
-            entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
-        )
-        ```
+    ```python
+    ft.TimePicker(
+        open=True,
+        value=time(1, 2),
+        entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
+    )
+    ```
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())

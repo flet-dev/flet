@@ -16,7 +16,7 @@ def flet_app(flet_app_function):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(600, 450)
+    flet_app.resize_page(600, 450)
 
     time_picker = ft.TimePicker(
         confirm_text="Confirm",
@@ -39,7 +39,7 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_hour_format_12(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(600, 450)
+    flet_app.resize_page(600, 450)
 
     time_picker = ft.TimePicker(
         value=datetime.time(hour=1, minute=30),
@@ -59,7 +59,7 @@ async def test_hour_format_12(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_hour_format_24(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(600, 450)
+    flet_app.resize_page(600, 450)
 
     time_picker = ft.TimePicker(
         value=datetime.time(hour=1, minute=30),
