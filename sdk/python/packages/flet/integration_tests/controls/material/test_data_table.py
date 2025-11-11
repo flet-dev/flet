@@ -36,6 +36,7 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp):
+    flet_app.resize_page(400, 600)
     flet_app.page.theme = ft.Theme(
         data_table_theme=ft.DataTableTheme(
             checkbox_horizontal_margin=10,
@@ -63,9 +64,8 @@ async def test_theme(flet_app: ftt.FletTestApp):
             thickness=5,
         ),
     )
-    flet_app.resize_page(400, 600)
 
-    scr_1 = ft.Screenshot(
+    flet_app.page.add(
         ft.DataTable(
             # bgcolor=ft.Colors.BLUE_100,
             show_checkbox_column=True,
@@ -96,10 +96,11 @@ async def test_theme(flet_app: ftt.FletTestApp):
             ],
         )
     )
-    flet_app.page.add(scr_1)
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
         "theme_1",
-        await scr_1.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
     )

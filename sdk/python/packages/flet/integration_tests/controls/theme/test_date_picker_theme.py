@@ -14,7 +14,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_date_picker_theme(flet_app: ftt.FletTestApp, request):
+async def test_theme_1(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme = ft.Theme(
         date_picker_theme=ft.DatePickerTheme(
             bgcolor=ft.Colors.GREEN_200,
@@ -33,7 +33,7 @@ async def test_date_picker_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme1",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
