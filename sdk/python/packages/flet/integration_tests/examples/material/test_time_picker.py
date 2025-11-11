@@ -97,7 +97,7 @@ async def test_hour_formats(flet_app_function: ftt.FletTestApp):
         )
         await _settle()
         await flet_app_function.tester.tap(
-            await flet_app_function.tester.find_by_text(label)
+            (await flet_app_function.tester.find_by_text(label)).last
         )
         await _settle()
         await _snap()

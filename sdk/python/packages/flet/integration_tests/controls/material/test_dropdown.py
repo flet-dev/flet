@@ -48,6 +48,18 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
         ),
     )
 
+    blue_option = await flet_app.tester.find_by_text("blue")
+    assert blue_option.count == 2
+
+    await flet_app.tester.tap(blue_option.last)
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        "basic_2",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp, request):
