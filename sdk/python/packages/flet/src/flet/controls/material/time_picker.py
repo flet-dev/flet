@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from datetime import datetime, time
 from enum import Enum
 from typing import Optional
@@ -76,6 +76,7 @@ class TimePickerEntryMode(Enum):
     """
 
 
+@dataclass
 class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     """
     Represents the event triggered when the
