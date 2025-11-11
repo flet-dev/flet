@@ -24,5 +24,7 @@ example_images: ../test-images/examples/material/golden/macos/time_picker
 --8<-- "{{ examples }}/hour_formats.py"
 ```
 
+{{ image(example_images + "/hour_formats.gif", width="80%") }}
+
 
 {{ class_members(class_name) }}
