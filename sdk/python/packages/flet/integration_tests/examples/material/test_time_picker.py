@@ -14,7 +14,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.resize_page(600, 400)
 
     time_picker = ft.TimePicker(
-        value=time(hour=1, minute=2),
+        value=time(hour=19, minute=30),
         hour_format=ft.TimePickerHourFormat.H12,
     )
     flet_app_function.page.show_dialog(time_picker)

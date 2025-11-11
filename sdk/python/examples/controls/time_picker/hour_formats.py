@@ -22,7 +22,7 @@ def main(page: ft.Page):
         selection.value = f"Selection: {format_time(time_picker.value)}"
 
     time_picker = ft.TimePicker(
-        value=time(hour=9, minute=30),
+        value=time(hour=19, minute=30),
         help_text="Choose your meeting time",
         on_change=handle_change,
     )

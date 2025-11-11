@@ -17,7 +17,7 @@ def main(page: ft.Page):
         page.show_dialog(ft.SnackBar(f"Entry mode changed: {time_picker.entry_mode}"))
 
     time_picker = ft.TimePicker(
-        value=time(hour=1, minute=2),
+        value=time(hour=19, minute=30),
         confirm_text="Confirm",
         error_invalid_text="Time out of range",
         help_text="Pick your time slot",
