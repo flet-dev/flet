@@ -92,13 +92,17 @@ async def test_hour_formats(flet_app_function: ftt.FletTestApp):
         await _snap()
 
     async def _select_clock(label: str):
-        await flet_app_function.tester.tap(
-            await flet_app_function.tester.find_by_key("dd")
-        )
+        dd = await flet_app_function.tester.find_by_key("dd")
+        await flet_app_function.tester.tap(dd)
         await _settle()
         await flet_app_function.tester.tap(
             (await flet_app_function.tester.find_by_text(label)).last
         )
+        await _settle()
+        await flet_app_function.tester.tap(dd)
+        await _settle()
+        await _snap()
+        await flet_app_function.tester.tap(dd)
         await _settle()
         await _snap()
 
