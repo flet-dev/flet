@@ -103,7 +103,7 @@ async def test_hour_formats(flet_app_function: ftt.FletTestApp):
         await _snap()
 
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(600, 450)
+    flet_app_function.resize_page(600, 450)
     flet_app_function.page.update()
     await _settle()
 
