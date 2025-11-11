@@ -13,21 +13,21 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
-    colors = [ft.Colors.RED, ft.Colors.BLUE, ft.Colors.GREEN]
-    dd = ft.Dropdown(
-        label="Color",
-        text="Select a color",
-        options=[
-            ft.DropdownOption(
-                key=color.value, content=ft.Text(value=color.value, color=color)
-            )
-            for color in colors
-        ],
-        key="dd",
-    )
+    colors = ["red", "blue", "green"]
     flet_app.page.enable_screenshots = True
-    flet_app.resize_page(400, 600)
-    flet_app.page.add(dd)
+    flet_app.resize_page(400, 300)
+
+    flet_app.page.add(
+        dd := ft.Dropdown(
+            key="dd",
+            label="Color",
+            text="Select a color",
+            options=[
+                ft.DropdownOption(key=color, content=ft.Text(value=color, color=color))
+                for color in colors
+            ],
+        )
+    )
     await flet_app.tester.pump_and_settle()
 
     # normal state
@@ -48,9 +48,32 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
         ),
     )
 
+    # select red option
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("red").last)
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        "basic_2",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
+    # clear value
+    dd.value = None
+    dd.update()
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        "basic_0",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    flet_app.resize_page(400, 600)
     flet_app.page.theme = ft.Theme(
         dropdown_theme=ft.DropdownTheme(
             text_style=ft.TextStyle(color=ft.Colors.PURPLE, size=20),
@@ -61,20 +84,19 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             ),
         )
     )
-    colors = [ft.Colors.RED, ft.Colors.BLUE, ft.Colors.GREEN]
-    dd = ft.Dropdown(
-        label="Color",
-        text="Select a color",
-        options=[
-            ft.DropdownOption(key=color.value, content=ft.Text(value=color.value))
-            for color in colors
-        ],
-        key="dd",
-    )
-    flet_app.page.enable_screenshots = True
-    flet_app.resize_page(400, 600)
 
-    flet_app.page.add(dd)
+    colors = [ft.Colors.RED, ft.Colors.BLUE, ft.Colors.GREEN]
+    flet_app.page.add(
+        ft.Dropdown(
+            key="dd",
+            label="Color",
+            text="Select a color",
+            options=[
+                ft.DropdownOption(key=color.value, content=ft.Text(value=color.value))
+                for color in colors
+            ],
+        )
+    )
     await flet_app.tester.pump_and_settle()
 
     # normal state
