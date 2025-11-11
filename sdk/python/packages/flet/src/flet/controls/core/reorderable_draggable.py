@@ -13,22 +13,22 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
     event over the given [`content`][(c).] control.
 
     Example:
-        ```python
-        ft.ReorderableListView(
-            expand=True,
-            show_default_drag_handles=False,
-            controls=[
-                ft.ReorderableDraggable(
-                    index=i,
-                    content=ft.ListTile(
-                        title=f"Draggable Item {i}",
-                        bgcolor=ft.Colors.GREY if i % 2 == 0 else ft.Colors.BLUE_ACCENT,
-                    ),
-                )
-                for i in range(10)
-            ],
-        )
-        ```
+    ```python
+    ft.ReorderableListView(
+        expand=True,
+        show_default_drag_handles=False,
+        controls=[
+            ft.ReorderableDraggable(
+                index=i,
+                content=ft.ListTile(
+                    title=f"Draggable Item {i}",
+                    bgcolor=ft.Colors.GREY if i % 2 == 0 else ft.Colors.BLUE_ACCENT,
+                ),
+            )
+            for i in range(10)
+        ],
+    )
+    ```
     """
 
     index: int
