@@ -12,6 +12,7 @@ from flet.controls.control_event import (
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DateTimeValue
 from flet.controls.material.textfield import KeyboardType
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
     IconData,
@@ -179,46 +180,58 @@ class DatePicker(DialogControl):
     """
     The hint text displayed in the text field.
 
-    The default value is the date format string that depends on your locale. For
-    example, 'mm/dd/yyyy' for en_US.
+    The default value is the date format string that depends on your locale.
+    For example, `'mm/dd/yyyy'` for en_US.
     """
 
     field_label_text: Optional[str] = None
     """
-    The label text displayed in the TextField.
+    The label text displayed in the `TextField`.
+
+    If `None`, defaults to the words representing the date format string.
+    For example, `'Month, Day, Year'` for en_US.
 
     Defaults to `"Enter Date"`.
     """
 
     switch_to_calendar_icon: Optional[IconData] = None
     """
-    The name of the icon displayed in the corner of the dialog when
+    The icon displayed in the corner of this picker's dialog when
     [`entry_mode`][(c).] is [`DatePickerEntryMode.INPUT`][flet.].
 
-    Clicking on this icon changes the `entry_mode` to
+    Clicking on this icon changes the [`entry_mode`][(c).] to
     [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    If `None`, [`Icons.CALENDAR_TODAY`][flet.] is used.
+    If `None`, defaults to [`Icons.CALENDAR_TODAY`][flet.].
     """
 
     switch_to_input_icon: Optional[IconData] = None
     """
-    The name of the icon displayed in the corner of the dialog when
+    The icon displayed in the corner of this picker's dialog when
     [`entry_mode`][(c).] is [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    Clicking on icon changes the `DatePickerEntryMode` to
+    Clicking on icon changes the [`entry_mode`][(c).] to
     [`DatePickerEntryMode.INPUT`][flet.].
 
-    If `None`, [`Icons.EDIT_OUTLINED`][flet.] is used.
+    If `None`, defaults to [`Icons.EDIT_OUTLINED`][flet.].
     """
 
     barrier_color: Optional[ColorValue] = None
     """
-    The color of the modal barrier that
-    darkens everything below the date picker.
+    The color of the modal barrier that darkens everything below this picker's dialog.
 
     If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
-    If it is also `None`, then `Colors.BLACK_54` is used.
+    If it is also `None`, then [`Colors.BLACK_54`][flet.] is used.
+    """
+
+    inset_padding: PaddingValue = field(
+        default_factory=lambda: Padding.symmetric(horizontal=16.0, vertical=24.0)
+    )
+    """
+    The amount of padding added to [`view_insets`][flet.PageMediaData.] of the
+    [`Page.media`][flet.] on the outside of this picker's dialog.
+
+    This defines the minimum space between the screen's edges and the dialog.
     """
 
     on_change: Optional[ControlEventHandler["DatePicker"]] = None
