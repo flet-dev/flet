@@ -14,7 +14,7 @@ def flet_app(flet_app_function):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.resize_page(400, 300)
+    flet_app.resize_page(350, 300)
 
     colors = ["red", "blue", "green"]
     flet_app.page.add(
@@ -49,7 +49,9 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
     )
 
     # select red option
-    await flet_app.tester.tap(await flet_app.tester.find_by_text("red").last)
+    red_options = await flet_app.tester.find_by_text("red")
+    assert red_options.count == 2  # Flutter Finder bug - should be 1
+    await flet_app.tester.tap(red_options.last)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "basic_2",
@@ -73,7 +75,7 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.resize_page(400, 600)
+    flet_app.resize_page(350, 300)
     flet_app.page.theme = ft.Theme(
         dropdown_theme=ft.DropdownTheme(
             text_style=ft.TextStyle(color=ft.Colors.PURPLE, size=20),
