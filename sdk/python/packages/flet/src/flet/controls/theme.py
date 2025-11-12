@@ -80,104 +80,106 @@ class ColorScheme:
 
     on_primary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on `primary`.
+    A color that's clearly legible when drawn on [`primary`][(c).].
     """
 
     primary_container: Optional[ColorValue] = None
     """
-    A color used for elements needing less emphasis than `primary`.
+    A color used for elements needing less emphasis than [`primary`][(c).].
     """
 
     on_primary_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on `primary_container`.
+    A color that's clearly legible when drawn on [`primary_container`][(c).].
     """
 
     secondary: Optional[ColorValue] = None
     """
-    An accent color used for less prominent components in the UI, such as filter chips,
-    while expanding the opportunity for color expression.
+    An accent color used for less prominent components in the UI, such as filter
+    [`Chip`][flet.]s, while expanding the opportunity for color expression.
     """
 
     on_secondary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on `secondary`.
+    A color that's clearly legible when drawn on [`secondary`][(c).].
     """
 
     secondary_container: Optional[ColorValue] = None
     """
-    A color used for elements needing less emphasis than `secondary`.
+    A color used for elements needing less emphasis than [`secondary`][(c).].
     """
 
     on_secondary_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on `secondary_container`.
+    A color that's clearly legible when drawn on [`secondary_container`][(c).].
     """
 
     tertiary: Optional[ColorValue] = None
     """
-    A color used as a contrasting accent that can balance `primary` and `secondary`
-    colors or bring heightened attention to an element, such as an input field.
+    A color used as a contrasting accent that can balance [`primary`][(c).] and
+    [`secondary`][(c).] colors or bring heightened attention to an element, such as
+    an input field.
     """
 
     on_tertiary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on `tertiary`.
+    A color that's clearly legible when drawn on [`tertiary`][(c).].
     """
 
     tertiary_container: Optional[ColorValue] = None
     """
-    A color used for elements needing less emphasis than `tertiary`.
+    A color used for elements needing less emphasis than [`tertiary`][(c).].
     """
 
     on_tertiary_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on `tertiary_container`.
+    A color that's clearly legible when drawn on [`tertiary_container`][(c).].
     """
 
     error: Optional[ColorValue] = None
     """
-    The color to use for input validation errors, e.g. for `TextField.error_text`.
+    The color to use for input validation errors,
+    e.g. for [`TextField.error_text`][flet.].
     """
 
     on_error: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on `error`.
+    A color that's clearly legible when drawn on [`error`][(c).].
     """
 
     error_container: Optional[ColorValue] = None
     """
-    A color used for error elements needing less emphasis than `error`.
+    A color used for error elements needing less emphasis than [`error`][(c).].
     """
 
     on_error_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on `error_container`.
+    A color that's clearly legible when drawn on [`error_container`][(c).].
     """
 
     surface: Optional[ColorValue] = None
     """
-    The background color for widgets like `Card`.
+    The background color for widgets like [`Card`][flet.].
     """
 
     on_surface: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on `surface`.
+    A color that's clearly legible when drawn on [`surface`][(c).].
     """
 
     on_surface_variant: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on `surface_variant`.
+    A color that's clearly legible when drawn on [`surface_variant`][(c).].
     """
 
     outline: Optional[ColorValue] = None
@@ -204,20 +206,20 @@ class ColorScheme:
     inverse_surface: Optional[ColorValue] = None
     """
     A surface color used for displaying the reverse of what’s seen in the surrounding
-    UI, for example in a `SnackBar` to bring attention to an alert.
+    UI, for example in a [`SnackBar`][flet.] to bring attention to an alert.
     """
 
     on_inverse_surface: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on `inverse_surface`.
+    A color that's clearly legible when drawn on [`inverse_surface`][(c).].
     """
 
     inverse_primary: Optional[ColorValue] = None
     """
-    An accent color used for displaying a highlight color on `inverse_surface`
-    backgrounds, like button text in a `SnackBar`.
+    An accent color used for displaying a highlight color on [`inverse_surface`][(c).]
+    backgrounds, like button text in a [`SnackBar`][flet.].
     """
 
     surface_tint: Optional[ColorValue] = None
@@ -230,7 +232,7 @@ class ColorScheme:
     )
     """
     A color that is used for text and icons that exist on top of elements having
-    `primary_fixed` color.
+    [`primary_fixed`][(c).] color.
     """
 
     on_secondary_fixed: Optional[ColorValue] = field(
@@ -238,7 +240,7 @@ class ColorScheme:
     )
     """
     A color that is used for text and icons that exist on top of elements having
-    `secondary_fixed` color.
+    [`secondary_fixed`][(c).] color.
     """
 
     on_tertiary_fixed: Optional[ColorValue] = field(
@@ -246,7 +248,7 @@ class ColorScheme:
     )
     """
     A color that is used for text and icons that exist on top of elements having
-    `tertiary_fixed` color.
+    [`tertiary_fixed`][(c).] color.
     """
 
     on_primary_fixed_variant: Optional[ColorValue] = field(
@@ -254,7 +256,7 @@ class ColorScheme:
     )
     """
     A color that provides a lower-emphasis option for text and icons than
-    `on_primary_fixed`.
+    [`on_primary_fixed`][(c).].
     """
 
     on_secondary_fixed_variant: Optional[ColorValue] = field(
@@ -262,7 +264,7 @@ class ColorScheme:
     )
     """
     A color that provides a lower-emphasis option for text and icons than
-    `on_secondary_fixed`.
+    [`on_secondary_fixed`][(c).].
     """
 
     on_tertiary_fixed_variant: Optional[ColorValue] = field(
@@ -270,35 +272,35 @@ class ColorScheme:
     )
     """
     A color that provides a lower-emphasis option for text and icons than
-    `on_tertiary_fixed`.
+    [`on_tertiary_fixed`][(c).].
     """
 
     primary_fixed: Optional[ColorValue] = None
     """
-    A substitute for `primary_container` that's the same color for the dark and light
-    themes.
+    A substitute for [`primary_container`][(c).] that's the
+    same color for the dark and light themes.
     """
 
     secondary_fixed: Optional[ColorValue] = None
     """
-    A substitute for `secondary_container` that's the same color for the dark and light
-    themes.
+    A substitute for [`secondary_container`][(c).] that's the
+    same color for the dark and light themes.
     """
 
     tertiary_fixed: Optional[ColorValue] = None
     """
-    A substitute for `tertiary_container` that's the same color for dark and light
-    themes.
+    A substitute for [`tertiary_container`][(c).] that's the
+    same color for dark and light themes.
     """
 
     primary_fixed_dim: Optional[ColorValue] = None
     """
-    A color used for elements needing more emphasis than `primary_fixed`.
+    A color used for elements needing more emphasis than [`primary_fixed`][(c).].
     """
 
     secondary_fixed_dim: Optional[ColorValue] = None
     """
-    A color used for elements needing more emphasis than `secondary_fixed`.
+    A color used for elements needing more emphasis than [`secondary_fixed`][(c).].
     """
 
     surface_bright: Optional[ColorValue] = None
@@ -325,7 +327,7 @@ class ColorScheme:
     surface_container_low: Optional[ColorValue] = None
     """
     A surface container color with a lighter tone that creates less emphasis than
-    `surface_container` but more emphasis than `surface_container_lowest`.
+    `surface_container` but more emphasis than [`surface_container_lowest`][(c).].
     """
 
     surface_container_lowest: Optional[ColorValue] = None
@@ -341,7 +343,7 @@ class ColorScheme:
 
     tertiary_fixed_dim: Optional[ColorValue] = None
     """
-    A color used for elements needing more emphasis than `tertiary_fixed`.
+    A color used for elements needing more emphasis than [`tertiary_fixed`][(c).].
     """
 
 
@@ -1849,11 +1851,8 @@ class DatePickerTheme:
     Overrides the default text style used for each individual day label in the grid of
     the [`DatePicker`][flet.].
 
-    The color in
-    [`DatePickerTheme.day_text_style`][flet.] is not
-    used,
-    [`DatePickerTheme.day_foreground_color`][flet.]
-    is used instead.
+    The color in [`DatePickerTheme.day_text_style`][flet.] is not
+    used, [`DatePickerTheme.day_foreground_color`][flet.] is used instead.
     """
 
     weekday_text_style: Optional[TextStyle] = None
@@ -1867,11 +1866,8 @@ class DatePickerTheme:
     Overrides the default text style used to paint each of the year entries in the year
     selector of the [`DatePicker`][flet.].
 
-    The color of the
-    [`DatePickerTheme.year_text_style`][flet.] is not
-    used,
-    [`DatePickerTheme.year_foreground_color`][flet.]
-    is used instead.
+    The color of the [`DatePickerTheme.year_text_style`][flet.] is not used,
+    [`DatePickerTheme.year_foreground_color`][flet.] is used instead.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -1884,14 +1880,12 @@ class DatePickerTheme:
 
     cancel_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default style of the cancel button of a
-    [`DatePicker`][flet.].
+    Overrides the default style of the cancel button of a [`DatePicker`][flet.].
     """
 
     confirm_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default style of the confirm (OK) button of a
-    [`DatePicker`][flet.].
+    Overrides the default style of the confirm (OK) button of a [`DatePicker`][flet.].
     """
 
     header_foreground_color: Optional[ColorValue] = None
@@ -1902,8 +1896,7 @@ class DatePickerTheme:
 
     This is used instead of the color property of
     [`DatePickerTheme.header_headline_text_style`][flet.]
-    and
-    [`DatePickerTheme.header_help_text_style`][flet.].
+    and [`DatePickerTheme.header_help_text_style`][flet.].
     """
 
     header_headline_text_style: Optional[TextStyle] = None
@@ -1912,11 +1905,8 @@ class DatePickerTheme:
 
     The dialog's header displays the currently selected date.
 
-    The color of the
-    [`DatePickerTheme.header_headline_text_style`][flet.]
-    is not used,
-    [`DatePickerTheme.header_foreground_color`][flet.]
-    is used instead.
+    The color of the [`DatePickerTheme.header_headline_text_style`][flet.]
+    is not used, [`DatePickerTheme.header_foreground_color`][flet.] is used instead.
     """
 
     header_help_text_style: Optional[TextStyle] = None
@@ -1927,18 +1917,17 @@ class DatePickerTheme:
     usually a prompt to the user at the top of the header (i.e. 'Select date').
 
     The color of the `header_help_style` is not used,
-    [`DatePickerTheme.header_foreground_color`][flet.]
-    is used instead.
+    [`DatePickerTheme.header_foreground_color`][flet.] is used instead.
     """
 
     range_picker_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background color for DateRangePicker (TBD).
+    Overrides the default background color for [`DateRangePicker`][flet.].
     """
 
     range_picker_header_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background fill color for DateRangePicker (TBD).
+    Overrides the default background fill color for [`DateRangePicker`][flet.].
 
     The dialog's header displays the currently selected date range.
     """
@@ -1946,7 +1935,7 @@ class DatePickerTheme:
     range_picker_header_foreground_color: Optional[ColorValue] = None
     """
     Overrides the default color used for text labels and icons in the header of a full
-    screen DateRangePicker (TBD)
+    screen [`DateRangePicker`][flet.].
 
     The dialog's header displays the currently selected date range.
 
@@ -1988,7 +1977,7 @@ class DatePickerTheme:
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the headline text in the header of a
-    full screen DateRangePicker (TBD).
+    full screen [`DateRangePicker`][flet.].
 
     The dialog's header displays the currently selected date range.
 
@@ -1999,25 +1988,23 @@ class DatePickerTheme:
     range_selection_bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color used to paint days selected between the
-    start and end dates in a DateRangePicker (TBD).
+    start and end dates in a [`DateRangePicker`][flet.].
     """
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default highlight color that's typically used to indicate that a
-    date in the selected range of a DateRangePicker (TBD) is focused, hovered, or
+    date in the selected range of a [`DateRangePicker`][flet.] is focused, hovered, or
     pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
     """
-    Overrides the border used to paint the
-    [`DatePicker.current_date`][flet.] label in the
-    grid of the [`DatePicker`][flet.].
+    Overrides the border used to paint the [`DatePicker.current_date`][flet.] label
+    in the grid of the [`DatePicker`][flet.].
 
     The border side's [`BorderSide.color`] is not used,
-    [`DatePickerTheme.today_foreground_color`][flet.]
-    is used instead.
+    [`DatePickerTheme.today_foreground_color`][flet.] is used instead.
     """
 
     year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
@@ -2135,7 +2122,7 @@ class TimePickerTheme:
 
     day_period_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [TextStyle][flet.TextStyle] for the AM/PM toggle control.
+    Used to configure the [`TextStyle`][flet.TextStyle] for the AM/PM toggle control.
 
     If this is null, the time picker defaults to the overall theme's
     [`TextTheme.title_medium`][flet.].
@@ -2143,18 +2130,18 @@ class TimePickerTheme:
 
     dial_text_style: Optional[TextStyle] = None
     """
-    The [TextStyle][flet.TextStyle] for the numbers on the time selection dial.
+    The [`TextStyle`][flet.TextStyle] for the numbers on the time selection dial.
     """
 
     help_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [TextStyle][flet.TextStyle] for the helper text in the header.
-
+    Used to configure the [`TextStyle`][flet.TextStyle]
+    for the helper text in the header.
     """
 
     hour_minute_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [TextStyle][flet.TextStyle] for the hour/minute controls.
+    Used to configure the [`TextStyle`][flet.] for the hour/minute controls.
     """
 
     elevation: Optional[Number] = None
@@ -2547,7 +2534,7 @@ class SliderTheme:
 
     value_indicator_text_style: Optional[TextStyle] = None
     """
-    The [TextStyle][flet.TextStyle] for the text on the value indicator.
+    The [`TextStyle`][flet.TextStyle] for the text on the value indicator.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
