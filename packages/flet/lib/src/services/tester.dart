@@ -49,7 +49,7 @@ class TesterService extends FletService {
             ? control.backend.globalKeys[controlKey.toString()]
             : ValueKey(controlKey.value);
         if (key == null) {
-          throw Exception("Scroll key not found: $key");
+          throw Exception("Key not found: $key");
         }
         var finder = control.backend.tester!.findByKey(key);
         _finders[finder.id] = finder;
@@ -74,27 +74,29 @@ class TesterService extends FletService {
         return await control.backend.tester!.takeScreenshot(args["name"]);
 
       case "tap":
-        var finder = _finders[args["id"]];
+        var finder = _finders[args["finder_id"]];
         if (finder != null) {
-          await control.backend.tester!.tap(finder);
+          await control.backend.tester!.tap(finder, args["finder_index"]);
         }
 
       case "long_press":
-        var finder = _finders[args["id"]];
+        var finder = _finders[args["finder_id"]];
         if (finder != null) {
-          await control.backend.tester!.longPress(finder);
+          await control.backend.tester!.longPress(finder, args["finder_index"]);
         }
 
       case "enter_text":
-        var finder = _finders[args["id"]];
+        var finder = _finders[args["finder_id"]];
         if (finder != null) {
-          await control.backend.tester!.enterText(finder, args["text"]);
+          await control.backend.tester!
+              .enterText(finder, args["finder_index"], args["text"]);
         }
 
       case "mouse_hover":
-        var finder = _finders[args["id"]];
+        var finder = _finders[args["finder_id"]];
         if (finder != null) {
-          await control.backend.tester!.mouseHover(finder);
+          await control.backend.tester!
+              .mouseHover(finder, args["finder_index"]);
         }
 
       case "teardown":

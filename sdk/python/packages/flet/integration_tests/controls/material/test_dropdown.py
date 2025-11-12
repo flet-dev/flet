@@ -13,10 +13,10 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
-    colors = ["red", "blue", "green"]
     flet_app.page.enable_screenshots = True
     flet_app.resize_page(400, 300)
 
+    colors = ["red", "blue", "green"]
     flet_app.page.add(
         dd := ft.Dropdown(
             key="dd",

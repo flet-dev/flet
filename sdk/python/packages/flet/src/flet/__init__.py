@@ -380,6 +380,7 @@ from flet.controls.material.time_picker import (
     TimePicker,
     TimePickerEntryMode,
     TimePickerEntryModeChangeEvent,
+    TimePickerHourFormat,
 )
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
@@ -950,6 +951,7 @@ __all__ = [
     "TimePicker",
     "TimePickerEntryMode",
     "TimePickerEntryModeChangeEvent",
+    "TimePickerHourFormat",
     "TimePickerTheme",
     "Tooltip",
     "TooltipTheme",
