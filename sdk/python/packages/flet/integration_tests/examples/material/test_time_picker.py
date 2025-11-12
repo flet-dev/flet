@@ -6,6 +6,8 @@ import flet as ft
 import flet.testing as ftt
 from examples.controls.time_picker import basic, hour_formats
 
+# Note: CI macOS runner uses a 12-hour (AM / PM) time format by default.
+
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
