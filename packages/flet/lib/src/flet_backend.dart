@@ -77,11 +77,13 @@ class FletBackend extends ChangeNotifier {
   };
   Brightness platformBrightness = Brightness.light;
   PageMediaData media = PageMediaData(
-      padding: PaddingData(EdgeInsets.zero),
-      viewPadding: PaddingData(EdgeInsets.zero),
-      viewInsets: PaddingData(EdgeInsets.zero),
-      devicePixelRatio: 0,
-      orientation: Orientation.portrait);
+    padding: PaddingData(EdgeInsets.zero),
+    viewPadding: PaddingData(EdgeInsets.zero),
+    viewInsets: PaddingData(EdgeInsets.zero),
+    devicePixelRatio: 0,
+    orientation: Orientation.portrait,
+    alwaysUse24HourFormat: false,
+  );
   TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;
