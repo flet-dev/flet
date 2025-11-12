@@ -1,5 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flet/src/utils/events.dart';
+import 'package:flutter/foundation.dart' show clampDouble;
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' show Matrix4, Quad, Vector3;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -23,12 +27,23 @@ class InteractiveViewerControl extends StatefulWidget {
 
 class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     with SingleTickerProviderStateMixin {
+  /// Controller shared with Flutter's InteractiveViewer to orchestrate
+  /// programmatic and gesture-driven transforms.
   final TransformationController _transformationController =
       TransformationController();
+
+  /// Keyed wrapper around the content so we can read its render box for
+  /// boundary calculations when clamping zoom/pan invoked from Python.
+  final GlobalKey _childKey = GlobalKey();
+
+  /// `InteractiveViewer` sits inside `LayoutControl` wrappers; this key lets us
+  /// grab the actual viewport size without the extra decoration.
+  final GlobalKey _viewerKey = GlobalKey();
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
   Matrix4? _savedMatrix;
   int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
+  final double _currentRotation = 0.0;
 
   @override
   void initState() {
@@ -38,6 +53,8 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
+  /// Handles method channel calls from the Python side, mirroring the
+  /// user-driven gestures Flutter's [InteractiveViewer] supports.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("InteractiveViewer.$name($args)");
     switch (name) {
@@ -45,19 +62,20 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
         var factor = parseDouble(args["factor"]);
         if (factor != null) {
           _transformationController.value =
-              _transformationController.value.scaled(factor, factor);
+              _matrixScale(_transformationController.value, factor);
         }
         break;
       case "pan":
         var dx = parseDouble(args["dx"]);
         if (dx != null) {
-          _transformationController.value =
-              _transformationController.value.clone()
-                ..translate(
-                  dx,
-                  parseDouble(args["dy"], 0)!,
-                  parseDouble(args["dz"], 0)!,
-                );
+          final double dy = parseDouble(args["dy"], 0)!;
+          final double dz = parseDouble(args["dz"], 0)!;
+          final Matrix4 updated =
+              _matrixTranslate(_transformationController.value, Offset(dx, dy));
+          if (dz != 0) {
+            updated.translateByDouble(0.0, 0.0, dz, 1.0);
+          }
+          _transformationController.value = updated;
         }
         break;
       case "reset":
@@ -102,7 +120,13 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     debugPrint("InteractiveViewer build: ${widget.control.id}");
 
     var content = widget.control.buildWidget("content");
+    if (content == null) {
+      return const ErrorControl(
+          "InteractiveViewer.content must be provided and visible");
+    }
+
     var interactiveViewer = InteractiveViewer(
+      key: _viewerKey,
       transformationController: _transformationController,
       panEnabled: widget.control.getBool("pan_enabled", true)!,
       scaleEnabled: widget.control.getBool("scale_enabled", true)!,
@@ -142,11 +166,321 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
               }
             }
           : null,
-      child: content ??
-          const ErrorControl(
-              "InteractiveViewer.content must be provided and visible"),
+      child: KeyedSubtree(key: _childKey, child: content),
     );
 
     return LayoutControl(control: widget.control, child: interactiveViewer);
+  }
+
+  /// Returns a copy of [matrix] scaled by [scale] while honoring the viewer's
+  /// min/max scale settings and ensuring the content still covers the viewport.
+  Matrix4 _matrixScale(Matrix4 matrix, double scale) {
+    if (scale == 1.0) {
+      return matrix.clone();
+    }
+
+    final double currentScale = matrix.getMaxScaleOnAxis();
+    if (currentScale == 0) {
+      return matrix.clone();
+    }
+
+    final double minScale = widget.control.getDouble("min_scale", 0.8)!;
+    final double maxScale = widget.control.getDouble("max_scale", 2.5)!;
+    double totalScale = currentScale * scale;
+
+    // Ensure we never shrink the content to a size where the viewport would
+    // extend beyond the boundaries – Flutter does the same during gestures.
+    final Rect? boundaryRect = _currentBoundaryRect();
+    final Rect? viewportRect = _currentViewportRect();
+    if (boundaryRect != null &&
+        viewportRect != null &&
+        boundaryRect.width > 0 &&
+        boundaryRect.height > 0 &&
+        boundaryRect.width.isFinite &&
+        boundaryRect.height.isFinite &&
+        viewportRect.width.isFinite &&
+        viewportRect.height.isFinite) {
+      final double minFitScale = math.max(
+        viewportRect.width / boundaryRect.width,
+        viewportRect.height / boundaryRect.height,
+      );
+      if (minFitScale.isFinite && minFitScale > 0) {
+        totalScale = math.max(totalScale, minFitScale);
+      }
+    }
+
+    final double clampedTotalScale =
+        clampDouble(totalScale, minScale, maxScale);
+    final double clampedScale = clampedTotalScale / currentScale;
+    return matrix.clone()
+      ..scaleByDouble(clampedScale, clampedScale, clampedScale, 1.0);
+  }
+
+  /// Returns a matrix translated by [translation] and clamped to the same
+  /// boundaries Flutter enforces for gesture-driven panning.
+  Matrix4 _matrixTranslate(Matrix4 matrix, Offset translation) {
+    if (translation == Offset.zero) {
+      return matrix.clone();
+    }
+
+    // Apply the requested translation optimistically; we’ll clamp below if it
+    // violates the viewer bounds.
+    final Matrix4 nextMatrix = matrix.clone()
+      ..translateByDouble(translation.dx, translation.dy, 0.0, 1.0);
+
+    final Rect? boundaryRect = _currentBoundaryRect();
+    final Rect? viewportRect = _currentViewportRect();
+    if (boundaryRect == null || viewportRect == null) {
+      return nextMatrix;
+    }
+
+    if (boundaryRect.isInfinite) {
+      return nextMatrix;
+    }
+
+    final Quad nextViewport = _transformViewport(nextMatrix, viewportRect);
+    final Quad boundsQuad =
+        _axisAlignedBoundingBoxWithRotation(boundaryRect, _currentRotation);
+    final Offset offendingDistance = _exceedsBy(boundsQuad, nextViewport);
+    if (offendingDistance == Offset.zero) {
+      return nextMatrix;
+    }
+
+    // Translation went out of bounds; pull it back so the viewport is fully
+    // inside the clamped area.
+    final Offset nextTotalTranslation = _getMatrixTranslation(nextMatrix);
+    final double currentScale = matrix.getMaxScaleOnAxis();
+    if (currentScale == 0) {
+      return matrix.clone();
+    }
+    final Offset correctedTotalTranslation = Offset(
+      nextTotalTranslation.dx - offendingDistance.dx * currentScale,
+      nextTotalTranslation.dy - offendingDistance.dy * currentScale,
+    );
+
+    final Matrix4 correctedMatrix = matrix.clone()
+      ..setTranslation(Vector3(
+        correctedTotalTranslation.dx,
+        correctedTotalTranslation.dy,
+        0.0,
+      ));
+
+    final Quad correctedViewport =
+        _transformViewport(correctedMatrix, viewportRect);
+    final Offset offendingCorrectedDistance =
+        _exceedsBy(boundsQuad, correctedViewport);
+    if (offendingCorrectedDistance == Offset.zero) {
+      return correctedMatrix;
+    }
+
+    // If we still exceed in both axes the viewport is larger than the bounds,
+    // so do not permit the translation at all.
+    if (offendingCorrectedDistance.dx != 0.0 &&
+        offendingCorrectedDistance.dy != 0.0) {
+      return matrix.clone();
+    }
+
+    // Otherwise allow motion in the one dimension that still fits.
+    final Offset unidirectionalCorrectedTotalTranslation = Offset(
+      offendingCorrectedDistance.dx == 0.0 ? correctedTotalTranslation.dx : 0.0,
+      offendingCorrectedDistance.dy == 0.0 ? correctedTotalTranslation.dy : 0.0,
+    );
+
+    return matrix.clone()
+      ..setTranslation(Vector3(
+        unidirectionalCorrectedTotalTranslation.dx,
+        unidirectionalCorrectedTotalTranslation.dy,
+        0.0,
+      ));
+  }
+
+  /// Computes the boundary rectangle, including margins, for the current child.
+  Rect? _currentBoundaryRect() {
+    final BuildContext? childContext = _childKey.currentContext;
+    if (childContext == null) {
+      return null;
+    }
+    final RenderObject? renderObject = childContext.findRenderObject();
+    if (renderObject is! RenderBox) {
+      return null;
+    }
+    final Size childSize = renderObject.size;
+    final EdgeInsets boundaryMargin =
+        widget.control.getMargin("boundary_margin", EdgeInsets.zero)!;
+    return boundaryMargin.inflateRect(Offset.zero & childSize);
+  }
+
+  /// Returns the visible viewport rectangle of the wrapped `InteractiveViewer`.
+  Rect? _currentViewportRect() {
+    final BuildContext? viewerContext = _viewerKey.currentContext;
+    if (viewerContext == null) {
+      return null;
+    }
+    final RenderObject? renderObject = viewerContext.findRenderObject();
+    if (renderObject is! RenderBox) {
+      return null;
+    }
+    final Size size = renderObject.size;
+    return Offset.zero & size;
+  }
+
+  /// Extracts the translation component from [matrix] as an [Offset].
+  Offset _getMatrixTranslation(Matrix4 matrix) {
+    final Vector3 translation = matrix.getTranslation();
+    return Offset(translation.x, translation.y);
+  }
+
+  /// Applies the inverse transform of [matrix] to [viewport] to understand how
+  /// the viewport would move after the child transform is applied.
+  Quad _transformViewport(Matrix4 matrix, Rect viewport) {
+    final Matrix4 inverseMatrix = matrix.clone()..invert();
+    return Quad.points(
+      inverseMatrix.transform3(
+        Vector3(viewport.topLeft.dx, viewport.topLeft.dy, 0.0),
+      ),
+      inverseMatrix.transform3(
+        Vector3(viewport.topRight.dx, viewport.topRight.dy, 0.0),
+      ),
+      inverseMatrix.transform3(
+        Vector3(viewport.bottomRight.dx, viewport.bottomRight.dy, 0.0),
+      ),
+      inverseMatrix.transform3(
+        Vector3(viewport.bottomLeft.dx, viewport.bottomLeft.dy, 0.0),
+      ),
+    );
+  }
+
+  /// Builds an axis-aligned bounding box for [rect] rotated by [rotation].
+  Quad _axisAlignedBoundingBoxWithRotation(Rect rect, double rotation) {
+    final Matrix4 rotationMatrix = Matrix4.identity()
+      ..translateByDouble(rect.size.width / 2, rect.size.height / 2, 0.0, 1.0)
+      ..rotateZ(rotation)
+      ..translateByDouble(
+          -rect.size.width / 2, -rect.size.height / 2, 0.0, 1.0);
+    final Quad boundariesRotated = Quad.points(
+      rotationMatrix.transform3(Vector3(rect.left, rect.top, 0.0)),
+      rotationMatrix.transform3(Vector3(rect.right, rect.top, 0.0)),
+      rotationMatrix.transform3(Vector3(rect.right, rect.bottom, 0.0)),
+      rotationMatrix.transform3(Vector3(rect.left, rect.bottom, 0.0)),
+    );
+    return _axisAlignedBoundingBox(boundariesRotated);
+  }
+
+  /// Measures how far [viewport] spills outside [boundary], returning the
+  /// required correction as an [Offset].
+  Offset _exceedsBy(Quad boundary, Quad viewport) {
+    final List<Vector3> viewportPoints = <Vector3>[
+      viewport.point0,
+      viewport.point1,
+      viewport.point2,
+      viewport.point3,
+    ];
+    Offset largestExcess = Offset.zero;
+    for (final Vector3 point in viewportPoints) {
+      final Vector3 pointInside = _nearestPointInside(point, boundary);
+      final Offset excess =
+          Offset(pointInside.x - point.x, pointInside.y - point.y);
+      if (excess.dx.abs() > largestExcess.dx.abs()) {
+        largestExcess = Offset(excess.dx, largestExcess.dy);
+      }
+      if (excess.dy.abs() > largestExcess.dy.abs()) {
+        largestExcess = Offset(largestExcess.dx, excess.dy);
+      }
+    }
+
+    return _roundOffset(largestExcess);
+  }
+
+  /// Rounds [offset] to trim floating point noise that accumulates during
+  /// transform calculations.
+  Offset _roundOffset(Offset offset) {
+    return Offset(
+      double.parse(offset.dx.toStringAsFixed(9)),
+      double.parse(offset.dy.toStringAsFixed(9)),
+    );
+  }
+
+  /// Returns the axis-aligned bounding box enclosing [quad].
+  Quad _axisAlignedBoundingBox(Quad quad) {
+    final double minX = math.min(
+      quad.point0.x,
+      math.min(quad.point1.x, math.min(quad.point2.x, quad.point3.x)),
+    );
+    final double minY = math.min(
+      quad.point0.y,
+      math.min(quad.point1.y, math.min(quad.point2.y, quad.point3.y)),
+    );
+    final double maxX = math.max(
+      quad.point0.x,
+      math.max(quad.point1.x, math.max(quad.point2.x, quad.point3.x)),
+    );
+    final double maxY = math.max(
+      quad.point0.y,
+      math.max(quad.point1.y, math.max(quad.point2.y, quad.point3.y)),
+    );
+    return Quad.points(
+      Vector3(minX, minY, 0),
+      Vector3(maxX, minY, 0),
+      Vector3(maxX, maxY, 0),
+      Vector3(minX, maxY, 0),
+    );
+  }
+
+  /// Finds the closest point to [point] that still lies inside [quad].
+  Vector3 _nearestPointInside(Vector3 point, Quad quad) {
+    if (_pointIsInside(point, quad)) {
+      return point;
+    }
+
+    // Find the closest point on each edge and keep the minimum distance.
+    final List<Vector3> closestPoints = <Vector3>[
+      _nearestPointOnLine(point, quad.point0, quad.point1),
+      _nearestPointOnLine(point, quad.point1, quad.point2),
+      _nearestPointOnLine(point, quad.point2, quad.point3),
+      _nearestPointOnLine(point, quad.point3, quad.point0),
+    ];
+    double minDistance = double.infinity;
+    late Vector3 closestOverall;
+    for (final Vector3 closePoint in closestPoints) {
+      final double dx = point.x - closePoint.x;
+      final double dy = point.y - closePoint.y;
+      final double distance = math.sqrt(dx * dx + dy * dy);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestOverall = closePoint;
+      }
+    }
+    return closestOverall;
+  }
+
+  /// Checks whether [point] is contained inside [quad] (inclusive).
+  bool _pointIsInside(Vector3 point, Quad quad) {
+    final Vector3 aM = point - quad.point0;
+    final Vector3 aB = quad.point1 - quad.point0;
+    final Vector3 aD = quad.point3 - quad.point0;
+
+    final double aMAB = aM.dot(aB);
+    final double aBAB = aB.dot(aB);
+    final double aMAD = aM.dot(aD);
+    final double aDAD = aD.dot(aD);
+
+    return 0 <= aMAB && aMAB <= aBAB && 0 <= aMAD && aMAD <= aDAD;
+  }
+
+  /// Finds the closest point on the line segment [l1]-[l2] to [point].
+  Vector3 _nearestPointOnLine(Vector3 point, Vector3 l1, Vector3 l2) {
+    final double dx = l2.x - l1.x;
+    final double dy = l2.y - l1.y;
+    final double lengthSquared = dx * dx + dy * dy;
+
+    if (lengthSquared == 0) {
+      return l1;
+    }
+
+    final Vector3 l1P = point - l1;
+    final Vector3 l1L2 = l2 - l1;
+    final double fraction =
+        clampDouble(l1P.dot(l1L2) / lengthSquared, 0.0, 1.0);
+    return l1 + l1L2 * fraction;
   }
 }

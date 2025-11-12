@@ -50,7 +50,7 @@ class RouteUrlStrategy(Enum):
 
 class UrlTarget(Enum):
     """
-    TBD
+    Specifies where to open a URL.
     """
 
     BLANK = "blank"
@@ -426,7 +426,9 @@ class ScrollMode(Enum):
 
 class ClipBehavior(Enum):
     """
-    Different ways to clip content. See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html)
+    Different ways to clip content.
+
+    See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html)
     from Flutter documentation for ClipBehavior examples.
     """
 
