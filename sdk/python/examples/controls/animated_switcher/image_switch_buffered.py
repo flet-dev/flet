@@ -21,7 +21,7 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
 
     def animate(self, e):
         self.content = ft.Image(
-            src_base64=self.image_queue.pop(),
+            src=self.image_queue.pop(),
             width=200,
             height=300,
             gapless_playback=True,
