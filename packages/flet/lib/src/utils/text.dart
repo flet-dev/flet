@@ -12,7 +12,7 @@ import 'colors.dart';
 import 'launch_url.dart';
 import 'material_state.dart';
 
-TextStyle? getTextStyle(BuildContext context, String styleName) {
+TextStyle? parseTextThemeStyle(String? styleName, BuildContext context) {
   var textTheme = Theme.of(context).textTheme;
   final styles = <String, TextStyle?>{
     "displaylarge": textTheme.displayLarge,
@@ -31,10 +31,10 @@ TextStyle? getTextStyle(BuildContext context, String styleName) {
     "bodymedium": textTheme.bodyMedium,
     "bodysmall": textTheme.bodySmall,
   };
-  return styles[styleName.toLowerCase()];
+  return styles[styleName?.toLowerCase()];
 }
 
-FontWeight? getFontWeight(String? weightName, [FontWeight? defaultWeight]) {
+FontWeight? parseFontWeight(String? weightName, [FontWeight? defaultWeight]) {
   if (weightName == null) return defaultWeight;
   final weights = <String, FontWeight>{
     "normal": FontWeight.normal,
@@ -166,7 +166,7 @@ TextStyle? parseTextStyle(dynamic value, ThemeData theme,
 
   return TextStyle(
     fontSize: parseDouble(value["size"]),
-    fontWeight: getFontWeight(fontWeight),
+    fontWeight: parseFontWeight(fontWeight),
     fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
     fontFamily: value["font_family"],
     fontVariations: variations,

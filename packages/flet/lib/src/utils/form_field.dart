@@ -232,7 +232,7 @@ StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {
 
   return StrutStyle(
     fontSize: parseDouble(value["size"]),
-    fontWeight: getFontWeight(value["weight"]),
+    fontWeight: parseFontWeight(value["weight"]),
     fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
     fontFamily: value["font_family"],
     height: parseDouble(value["height"]),
