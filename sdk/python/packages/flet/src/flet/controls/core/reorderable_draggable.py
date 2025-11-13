@@ -19,7 +19,6 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
         show_default_drag_handles=False,
         controls=[
             ft.ReorderableDraggable(
-                index=i,
                 content=ft.ListTile(
                     title=f"Draggable Item {i}",
                     bgcolor=ft.Colors.GREY if i % 2 == 0 else ft.Colors.BLUE_ACCENT,
@@ -29,11 +28,6 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
         ],
     )
     ```
-    """
-
-    index: int
-    """
-    The index of the associated item that will be dragged in the list.
     """
 
     content: Control

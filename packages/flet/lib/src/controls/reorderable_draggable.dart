@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/numbers.dart';
 import '../widgets/error.dart';
+import '../widgets/reorderable_item_scope.dart';
 
 class ReorderableDraggableControl extends StatelessWidget {
   final Control control;
@@ -14,10 +14,11 @@ class ReorderableDraggableControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ReorderableDraggableControl build: ${control.id}");
 
-    var index = control.getInt("index");
+    var scope = ReorderableItemScope.of(context);
+    var index = scope?.index;
     if (index == null) {
       return const ErrorControl(
-          "ReorderableDraggable.index must be an integer");
+          "ReorderableDraggable must be placed inside ReorderableListView.");
     }
     var content = control.buildWidget("content");
     if (content == null) {
