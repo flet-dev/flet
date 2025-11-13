@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -39,7 +39,7 @@ class CircleAvatar(LayoutControl):
         If this avatar is to have an image, use [`background_image_src`][(c).] instead.
     """
 
-    foreground_image_src: Optional[str] = None
+    foreground_image_src: Optional[Union[str, bytes]] = None
     """
     The source (local asset file or URL) of the foreground image in the circle.
 
@@ -48,7 +48,7 @@ class CircleAvatar(LayoutControl):
     Typically used as profile image.
     """
 
-    background_image_src: Optional[str] = None
+    background_image_src: Optional[Union[str, bytes]] = None
     """
     The source (local asset file or URL) of the background image in the circle.
     Changing the background image will cause the avatar to animate to the new image.

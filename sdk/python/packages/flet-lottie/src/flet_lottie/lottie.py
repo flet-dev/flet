@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import flet as ft
 
@@ -11,30 +11,14 @@ class Lottie(ft.LayoutControl):
     Displays lottie animations.
     """
 
-    src: Optional[str] = None
+    src: Union[str, bytes]
     """
-    The source of the Lottie file.
+    The lottie animation source.
 
-    Can be a URL or a local [asset file](https://docs.flet.dev/cookbook/assets).
-
-    Note:
-        If both `src` and [`src_base64`][(c).] are provided,
-        `src_base64` will be prioritized/used.
-
-    Raises:
-        ValueError: If neither `src` nor [`src_base64`][(c).] is provided.
-    """
-
-    src_base64: Optional[str] = None
-    """
-    The base64 encoded string of the Lottie file.
-
-    Note:
-        If both `src_base64` and [`src`][(c).] are provided,
-        `src_base64` will be prioritized/used.
-
-    Raises:
-        ValueError: If neither `src_base64` nor [`src`][(c).] is provided.
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
     """
 
     repeat: bool = True
@@ -59,7 +43,7 @@ class Lottie(ft.LayoutControl):
     Whether the animation should be played automatically.
     """
 
-    enable_merge_paths: bool = False
+    enable_merge_paths: bool = True
     """
     Whether to enable merge path support.
     """
@@ -105,8 +89,3 @@ class Lottie(ft.LayoutControl):
     The [`data`][flet.Event.data] property of the event handler argument
     contains information on the error.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (self.src or self.src_base64):
-            raise ValueError("at least one of src and src_base64 must be provided")

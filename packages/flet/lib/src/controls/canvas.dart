@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
+import '../utils/box.dart';
 import '../utils/dash_path.dart';
 import '../utils/hashing.dart';
 import '../utils/images.dart';
@@ -192,9 +193,6 @@ class FletCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
-
-    debugPrint("paint.size: $size");
-    //debugPrint("paint.shapes: $shapes");
 
     canvas.save();
     canvas.scale(dpr);
@@ -541,16 +539,19 @@ Future<void> loadCanvasImage(Control shape) async {
   final completer = Completer();
   shape.properties["_loading"] = completer;
 
-  final src = shape.getString("src");
-  final srcBytes = shape.get("src_bytes") as Uint8List?;
+  final resolved = ResolvedAssetSource.from(shape.get("src"));
 
   try {
     Uint8List bytes;
 
-    if (srcBytes != null) {
-      bytes = srcBytes;
-    } else if (src != null) {
-      var assetSrc = shape.backend.getAssetSource(src);
+    if (resolved.error != null) {
+      throw Exception("Error decoding src: ${resolved.error}");
+    }
+
+    if (resolved.hasBytes) {
+      bytes = resolved.bytes!;
+    } else if (resolved.hasUri) {
+      var assetSrc = shape.backend.getAssetSource(resolved.uri!);
       if (assetSrc.isFile) {
         final file = File(assetSrc.path);
         bytes = await file.readAsBytes();
@@ -562,7 +563,7 @@ Future<void> loadCanvasImage(Control shape) async {
         bytes = resp.bodyBytes;
       }
     } else {
-      throw Exception("Missing image source: 'src' or 'src_bytes'");
+      throw Exception("Missing image source: 'src'");
     }
 
     final codec = await ui.instantiateImageCodec(bytes, allowUpscaling: false);
@@ -579,12 +580,15 @@ Future<void> loadCanvasImage(Control shape) async {
   }
 }
 
+/// Produces a fast hash for the `src` so Canvas can tell when it needs to
+/// refetch the image. Inline strings and bytes use FNV to avoid massive hashes.
 int getImageHash(Control shape) {
-  final src = shape.getString("src");
-  final srcBytes = shape.get("src_bytes") as Uint8List?;
-  return src != null
-      ? src.hashCode
-      : srcBytes != null
-          ? fnv1aHash(srcBytes)
-          : 0;
+  final resolved = ResolvedAssetSource.from(shape.get("src"));
+  if (resolved.hasUri) {
+    return resolved.uri!.hashCode;
+  }
+  if (resolved.hasBytes) {
+    return fnv1aHash(resolved.bytes!);
+  }
+  return 0;
 }

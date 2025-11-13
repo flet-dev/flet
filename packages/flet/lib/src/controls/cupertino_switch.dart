@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/box.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/images.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -107,10 +107,8 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         trackOutlineWidth:
             widget.control.getWidgetStateDouble("track_outline_width"),
         thumbIcon: widget.control.getWidgetStateIcon("thumb_icon", theme),
-        inactiveThumbImage:
-            getImageProvider(context, inactiveThumbImage, null, null),
-        activeThumbImage:
-            getImageProvider(context, activeThumbImage, null, null),
+        inactiveThumbImage: getImageProvider(context, inactiveThumbImage),
+        activeThumbImage: getImageProvider(context, activeThumbImage),
         onActiveThumbImageError: activeThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {

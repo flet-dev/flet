@@ -45,7 +45,7 @@ class BottomSheet(DialogControl):
     Defines the size of the shadow below this bottom sheet.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is strictly less than `0`.
     """
 
     bgcolor: Optional[ColorValue] = None
