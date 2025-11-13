@@ -10,6 +10,7 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.dialog_control import DialogControl
+from flet.controls.material.icons import IconData
 from flet.controls.types import (
     ColorValue,
     Orientation,
@@ -117,10 +118,10 @@ class TimePicker(DialogControl):
 
     modal: bool = False
     """
-    TBD
+    Whether this picker cannot be dismissed by clicking the area outside of it.
     """
 
-    entry_mode: Optional[TimePickerEntryMode] = None
+    entry_mode: TimePickerEntryMode = TimePickerEntryMode.DIAL
     """
     The initial mode of time entry method for this picker.
 
@@ -178,7 +179,32 @@ class TimePicker(DialogControl):
 
     barrier_color: Optional[ColorValue] = None
     """
-    TBD
+    The color of the modal barrier that darkens everything below this picker's dialog.
+
+    If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
+    If it is also `None`, then [`Colors.BLACK_54`][flet.] is used.
+    """
+
+    switch_to_timer_icon: Optional[IconData] = None
+    """
+    The icon displayed in the corner of this picker's dialog when
+    [`entry_mode`][(c).] is [`TimePickerEntryMode.INPUT`][flet.].
+
+    Clicking on this icon changes the [`entry_mode`][(c).] to
+    [`TimePickerEntryMode.DIAL`][flet.].
+
+    If `None`, defaults to [`Icons.ACCESS_TIME`][flet.].
+    """
+
+    switch_to_input_icon: Optional[IconData] = None
+    """
+    The icon displayed in the corner of this picker's dialog when
+    [`entry_mode`][(c).] is [`TimePickerEntryMode.DIAL`][flet.].
+
+    Clicking on icon changes the [`entry_mode`][(c).] to
+    [`TimePickerEntryMode.INPUT`][flet.].
+
+    If `None`, defaults to [`Icons.KEYBOARD_OUTLINED`][flet.].
     """
 
     on_change: Optional[ControlEventHandler["TimePicker"]] = None
