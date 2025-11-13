@@ -1,11 +1,14 @@
+from typing import Optional
+
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
+from flet.controls.types import MouseCursor
 
 
-@control("ReorderableDraggable")
-class ReorderableDraggable(LayoutControl, AdaptiveControl):
+@control("ReorderableDragHandle")
+class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     """
     Used to drag an item in a [`ReorderableListView`][flet.].
 
@@ -15,13 +18,13 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
     Example:
     ```python
     ft.ReorderableListView(
-        expand=True,
         show_default_drag_handles=False,
         controls=[
-            ft.ReorderableDraggable(
-                content=ft.ListTile(
-                    title=f"Draggable Item {i}",
-                    bgcolor=ft.Colors.GREY if i % 2 == 0 else ft.Colors.BLUE_ACCENT,
+            ft.ListTile(
+                title=ft.Text(f"Draggable Item {i}", color=ft.Colors.BLACK),
+                leading=ft.ReorderableDragHandle(
+                    content=ft.Icon(ft.Icons.DRAG_INDICATOR, color=ft.Colors.RED),
+                    mouse_cursor=ft.MouseCursor.GRAB,
                 ),
             )
             for i in range(10)
@@ -39,6 +42,11 @@ class ReorderableDraggable(LayoutControl, AdaptiveControl):
 
     Raises:
         ValueError: If [`content`][(c).] is not visible.
+    """
+
+    mouse_cursor: Optional[MouseCursor] = None
+    """
+    The mouse cursor for mouse pointers that are hovering over the control.
     """
 
     def before_update(self):

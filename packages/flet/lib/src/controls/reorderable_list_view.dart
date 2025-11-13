@@ -72,7 +72,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ReorderableDraggableControl build: ${widget.control.id}");
+    debugPrint("ReorderableListViewControl build: ${widget.control.id}");
 
     var horizontal = widget.control.getBool("horizontal", false)!;
     var buildControlsOnDemand =
@@ -91,8 +91,9 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
     var header = widget.control.buildWidget("header");
     var footer = widget.control.buildWidget("footer");
-    var prototypeItem =
-        firstItemPrototype && _controls.isNotEmpty ? _buildPrototypeItem() : null;
+    var prototypeItem = firstItemPrototype && _controls.isNotEmpty
+        ? _buildPrototypeItem()
+        : null;
     var autoScrollerVelocityScalar =
         widget.control.getDouble("auto_scroller_velocity_scalar");
     var mouseCursor = widget.control.getMouseCursor("mouse_cursor");

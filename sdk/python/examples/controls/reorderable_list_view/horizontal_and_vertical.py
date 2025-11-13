@@ -10,9 +10,8 @@ def main(page: ft.Page):
     def handle_reorder(e: ft.OnReorderEvent):
         e.control.controls.insert(e.new_index, e.control.controls.pop(e.old_index))
 
-    get_color = lambda i: (
-        ft.Colors.ERROR if i % 2 == 0 else ft.Colors.ON_ERROR_CONTAINER
-    )
+    def get_color(i):
+        return ft.Colors.ERROR if i % 2 == 0 else ft.Colors.ON_ERROR_CONTAINER
 
     page.add(
         # horizontal
