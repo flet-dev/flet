@@ -37,7 +37,8 @@ class ViewControl extends StatefulWidget {
 }
 
 class _ViewControlState extends State<ViewControl> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _materialScaffoldKey = GlobalKey<ScaffoldState>();
+  final _cupertinoPageScaffoldKey = GlobalKey();
   Control? _overlay;
   Control? _dialogs;
   Completer<bool>? _popCompleter;
@@ -71,16 +72,16 @@ class _ViewControlState extends State<ViewControl> {
     debugPrint("View.$name($args)");
     switch (name) {
       case "show_drawer":
-        _scaffoldKey.currentState?.openDrawer();
+        _materialScaffoldKey.currentState?.openDrawer();
         break;
       case "close_drawer":
-        _scaffoldKey.currentState?.closeDrawer();
+        _materialScaffoldKey.currentState?.closeDrawer();
         break;
       case "show_end_drawer":
-        _scaffoldKey.currentState?.openEndDrawer();
+        _materialScaffoldKey.currentState?.openEndDrawer();
         break;
       case "close_end_drawer":
-        _scaffoldKey.currentState?.closeEndDrawer();
+        _materialScaffoldKey.currentState?.closeEndDrawer();
         break;
       case "confirm_pop":
         if (_popCompleter != null && !_popCompleter!.isCompleted) {
@@ -193,9 +194,7 @@ class _ViewControlState extends State<ViewControl> {
                 control.parent!.get("theme"), context, Brightness.dark);
 
     Widget scaffold = Scaffold(
-      key: appBarWidget == null || appBarWidget is AppBarControl
-          ? _scaffoldKey
-          : null,
+      key: _materialScaffoldKey,
       backgroundColor: control.getColor("bgcolor", context) ??
           ((pageData?.widgetsDesign == PageDesign.cupertino)
               ? CupertinoTheme.of(context).scaffoldBackgroundColor
@@ -236,7 +235,7 @@ class _ViewControlState extends State<ViewControl> {
 
     if (appBarWidget is CupertinoAppBarControl) {
       scaffold = CupertinoPageScaffold(
-          key: _scaffoldKey,
+          key: _cupertinoPageScaffoldKey,
           backgroundColor: control.getColor("bgcolor", context),
           navigationBar: appBarWidget,
           child: scaffold);
