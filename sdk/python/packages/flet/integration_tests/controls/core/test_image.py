@@ -28,7 +28,7 @@ async def test_src_base64(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Image(
-            src_base64=base64_string,
+            src=base64_string,
             width=100,
             height=100,
         ),
@@ -85,7 +85,7 @@ async def test_src_svg_string(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-@pytest.mark.skip(reason="image is not rendered from src_bytes in CI environment")
+@pytest.mark.skip(reason="image is not rendered from bytes src in CI environment")
 async def test_src_bytes(flet_app: ftt.FletTestApp, request):
     # Decode the Base64 string into bytes
     image_bytes = base64.b64decode(base64_string)
@@ -93,7 +93,7 @@ async def test_src_bytes(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Image(
-            src_bytes=image_bytes,
+            src=image_bytes,
             width=100,
             height=100,
         ),
