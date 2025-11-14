@@ -28,6 +28,15 @@ snack_bar_action_class_name: flet.SnackBarAction
 
 {{ image(example_images + "/snack_bar_flow.gif", alt="Snack bar with counter", caption="Snack bar with counter",width="50%") }}
 
+### Action
+
+```python
+--8<-- "{{ examples }}/action.py"
+```
+
+{{ image(example_images + "/action_simple.png", alt="Snack bar with a simple action", caption="Snack bar with a simple action", width="50%") }}
+
+{{ image(example_images + "/action_custom.png", alt="Snack bar with a custom action", caption="Snack bar with a custom action", width="50%") }}
 
 {{ class_members(class_name) }}
 

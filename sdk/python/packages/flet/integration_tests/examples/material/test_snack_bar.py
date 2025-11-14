@@ -2,7 +2,7 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.snack_bar import basic, counter
+from examples.controls.snack_bar import action, basic, counter
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -82,4 +82,39 @@ async def test_counter(flet_app_function: ftt.FletTestApp):
         ["before_click", "click_1", "click_2"],
         "snack_bar_flow",
         duration=2000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": action.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_action(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(450, 300)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+    button = await flet_app_function.tester.find_by_text_containing(
+        "Open SnackBar with a Simple action"
+    )
+    await flet_app_function.tester.tap(button)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "action_simple",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+    button = await flet_app_function.tester.find_by_text_containing(
+        "Open SnackBar with a Custom action"
+    )
+    await flet_app_function.tester.tap(button)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "action_custom",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )
