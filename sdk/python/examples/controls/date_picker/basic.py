@@ -9,8 +9,10 @@ def main(page: ft.Page):
     def handle_change(e: ft.Event[ft.DatePicker]):
         page.add(ft.Text(f"Date changed: {e.control.value.strftime('%m/%d/%Y')}"))
 
-    def handle_dismissal(e: ft.Event[ft.DatePicker]):
+    def handle_dismissal(e: ft.Event[ft.DialogControl]):
         page.add(ft.Text("DatePicker dismissed"))
+
+    today = datetime.datetime.now()
 
     page.add(
         ft.Button(
@@ -18,8 +20,10 @@ def main(page: ft.Page):
             icon=ft.Icons.CALENDAR_MONTH,
             on_click=lambda e: page.show_dialog(
                 ft.DatePicker(
-                    first_date=datetime.datetime(year=2000, month=10, day=1),
-                    last_date=datetime.datetime(year=2025, month=10, day=1),
+                    first_date=datetime.datetime(year=today.year - 1, month=1, day=1),
+                    last_date=datetime.datetime(
+                        year=today.year + 1, month=today.month, day=20
+                    ),
                     on_change=handle_change,
                     on_dismiss=handle_dismissal,
                 )
