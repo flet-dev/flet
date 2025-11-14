@@ -618,6 +618,9 @@ class DiffBuilder:
 
         # ----- helper: get keys quickly -----
         def k(obj):
+            # In frozen mode we rely on real control keys. Otherwise we treat every
+            # dataclass instance as keyed by its identity so we can reason about
+            # reorder/move operations without requiring user-provided keys.
             return (
                 get_control_key(obj)
                 if frozen
@@ -761,6 +764,9 @@ class DiffBuilder:
                 _reindex(idx + 1)
 
         def emit_replace_at(idx, old_item, new_item):
+            # Keying by identity means old_item is often new_item, so we explicitly run
+            # the dataclass diff even when the instance pointer matches to surface
+            # property mutations captured by __changes.
             if dataclasses.is_dataclass(old_item) and dataclasses.is_dataclass(
                 new_item
             ):
