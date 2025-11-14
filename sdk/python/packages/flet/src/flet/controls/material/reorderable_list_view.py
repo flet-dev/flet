@@ -38,7 +38,7 @@ class ReorderableListView(ListView):
     Tip:
         By default, each child control (from [`controls`][(c).]) is draggable using an
         automatically created drag handle (see [`show_default_drag_handles`][(c).]).
-        To customize the draggable area, use the [`ReorderableDraggable`][flet.] to
+        To customize the draggable area, use the [`ReorderableDragHandle`][flet.] to
         define your own drag handle or region.
     """
 
@@ -151,26 +151,25 @@ class ReorderableListView(ListView):
     press anywhere on the item starts a drag.
 
     The default desktop drag handle is just an [`Icons.DRAG_HANDLE`][flet.]
-    wrapped by a [`ReorderableDraggable`][flet.]. On mobile platforms, the entire
+    wrapped by a [`ReorderableDragHandle`][flet.]. On mobile platforms, the entire
     item is wrapped with a [`ReorderableDelayedDragStartListener`].
 
     To customize the appearance or layout of drag handles, wrap each
     [`controls`][(c).] item, or a control within each of them, with a
-    [`ReorderableDraggable`][flet.], [`ReorderableDelayedDragStartListener`],
-    or your own subclass of [`ReorderableDraggable`][flet.]. For full control
+    [`ReorderableDragHandle`][flet.], [`ReorderableDelayedDragStartListener`],
+    or your own subclass of [`ReorderableDragHandle`][flet.]. For full control
     over the drag handles, you might want to set `show_default_drag_handles` to `False`.
 
     Example:
         ```python
         ft.ReorderableListView(
-            expand=True,
             show_default_drag_handles=False,
             controls=[
-                ft.ReorderableDraggable(
-                    index=i,
-                    content=ft.ListTile(
-                        title=f"Draggable Item {i}",
-                        bgcolor=ft.Colors.GREY if i % 2 == 0 else ft.Colors.BLUE_ACCENT,
+                ft.ListTile(
+                    title=ft.Text(f"Draggable Item {i}", color=ft.Colors.BLACK),
+                    leading=ft.ReorderableDragHandle(
+                        content=ft.Icon(ft.Icons.DRAG_INDICATOR, color=ft.Colors.RED),
+                        mouse_cursor=ft.MouseCursor.GRAB,
                     ),
                 )
                 for i in range(10)

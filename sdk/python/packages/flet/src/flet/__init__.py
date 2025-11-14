@@ -123,7 +123,7 @@ from flet.controls.core.markdown import (
 from flet.controls.core.merge_semantics import MergeSemantics
 from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
-from flet.controls.core.reorderable_draggable import ReorderableDraggable
+from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
 from flet.controls.core.responsive_row import ResponsiveRow
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
@@ -853,7 +853,7 @@ __all__ = [
     "RangeSlider",
     "Rect",
     "Ref",
-    "ReorderableDraggable",
+    "ReorderableDragHandle",
     "ReorderableListView",
     "ResponsiveNumber",
     "ResponsiveRow",
