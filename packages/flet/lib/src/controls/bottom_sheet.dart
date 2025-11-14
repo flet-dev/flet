@@ -10,39 +10,33 @@ import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 
-class BottomSheetControl extends StatefulWidget {
+class BottomSheetControl extends StatelessWidget {
   final Control control;
 
   BottomSheetControl({Key? key, required this.control})
       : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
-  State<BottomSheetControl> createState() => _BottomSheetControlState();
-}
-
-class _BottomSheetControlState extends State<BottomSheetControl> {
-  @override
   Widget build(BuildContext context) {
-    debugPrint("BottomSheet build: ${widget.control.id}");
+    debugPrint("BottomSheet build: ${control.id}");
 
-    bool lastOpen = widget.control.getBool("_open", false)!;
-    var open = widget.control.getBool("open", false)!;
+    bool lastOpen = control.getBool("_open", false)!;
+    var open = control.getBool("open", false)!;
 
     var maintainBottomViewInsetsPadding =
-        widget.control.getBool("maintain_bottom_view_insets_padding", true)!;
-    final fullscreen = widget.control.getBool("fullscreen", false)!;
-    final scrollable =
-        fullscreen || widget.control.getBool("scrollable", false)!;
-    final draggable = widget.control.getBool("draggable", false)!;
+        control.getBool("maintain_bottom_view_insets_padding", true)!;
+    final fullscreen = control.getBool("fullscreen", false)!;
+    final scrollable = fullscreen || control.getBool("scrollable", false)!;
+    final draggable = control.getBool("draggable", false)!;
 
     if (open && !lastOpen) {
-      widget.control.updateProperties({"_open": open}, python: false);
+      control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet<void>(
                 context: context,
                 builder: (context) {
-                  var content = widget.control.buildWidget("content");
+                  var content = control.buildWidget("content");
 
                   if (content == null) {
                     return const ErrorControl(
@@ -63,27 +57,25 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
                   return content;
                 },
-                isDismissible: widget.control.getBool("dismissible", true)!,
-                backgroundColor: widget.control.getColor("bgcolor", context),
-                elevation: widget.control.getDouble("elevation"),
+                isDismissible: control.getBool("dismissible", true)!,
+                backgroundColor: control.getColor("bgcolor", context),
+                elevation: control.getDouble("elevation"),
                 isScrollControlled: scrollable,
                 enableDrag: draggable,
-                barrierColor: widget.control.getColor("barrier_color", context),
+                barrierColor: control.getColor("barrier_color", context),
                 sheetAnimationStyle:
-                    widget.control.getAnimationStyle("animation_style"),
+                    control.getAnimationStyle("animation_style"),
                 constraints: fullscreen
                     ? null
-                    : widget.control.getBoxConstraints("size_constraints"),
-                showDragHandle:
-                    widget.control.getBool("show_drag_handle", false)!,
-                clipBehavior: widget.control.getClipBehavior("clip_behavior"),
-                shape: widget.control
-                    .getOutlinedBorder("shape", Theme.of(context)),
-                useSafeArea: widget.control.getBool("use_safe_area", true)!)
+                    : control.getBoxConstraints("size_constraints"),
+                showDragHandle: control.getBool("show_drag_handle", false)!,
+                clipBehavior: control.getClipBehavior("clip_behavior"),
+                shape: control.getOutlinedBorder("shape", Theme.of(context)),
+                useSafeArea: control.getBool("use_safe_area", true)!)
             .then((value) {
-          widget.control.updateProperties({"_open": false}, python: false);
-          widget.control.updateProperties({"open": false});
-          widget.control.triggerEvent("dismiss");
+          control.updateProperties({"_open": false}, python: false);
+          control.updateProperties({"open": false});
+          control.triggerEvent("dismiss");
         });
       });
     } else if (open != lastOpen && lastOpen) {
