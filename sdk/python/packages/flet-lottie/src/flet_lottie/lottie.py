@@ -43,7 +43,7 @@ class Lottie(ft.LayoutControl):
     Whether the animation should be played automatically.
     """
 
-    enable_merge_paths: bool = True
+    enable_merge_paths: bool = False
     """
     Whether to enable merge path support.
     """
