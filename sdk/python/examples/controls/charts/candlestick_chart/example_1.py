@@ -1,5 +1,5 @@
 import flet as ft
-import flet_charts as ftc
+import flet_charts as fch
 
 CANDLE_DATA = [
     ("Mon", 24.8, 28.6, 23.9, 27.2),
@@ -12,19 +12,19 @@ CANDLE_DATA = [
 ]
 
 
-def build_spots() -> list[ftc.CandlestickChartSpot]:
+def build_spots() -> list[fch.CandlestickChartSpot]:
     """Create candlestick spots from the static data."""
-    spots: list[ftc.CandlestickChartSpot] = []
+    spots: list[fch.CandlestickChartSpot] = []
     for index, (label, open_, high, low, close) in enumerate(CANDLE_DATA):
         spots.append(
-            ftc.CandlestickChartSpot(
+            fch.CandlestickChartSpot(
                 x=float(index),
                 open=open_,
                 high=high,
                 low=low,
                 close=close,
                 selected=index == len(CANDLE_DATA) - 1,
-                tooltip=ftc.CandlestickChartSpotTooltip(
+                tooltip=fch.CandlestickChartSpotTooltip(
                     text=(
                         f"{label}\n"
                         f"Open: {open_:0.1f}\n"
@@ -52,7 +52,7 @@ def main(page: ft.Page):
     min_y = min(low for _, _, _, low, _ in CANDLE_DATA) - 1
     max_y = max(high for _, _, _, _, high in CANDLE_DATA) + 1
 
-    def handle_event(e: ftc.CandlestickChartEvent):
+    def handle_event(e: fch.CandlestickChartEvent):
         if e.spot_index is not None and e.spot_index >= 0:
             label, open_, high, low, close = CANDLE_DATA[e.spot_index]
             info.value = (
@@ -63,7 +63,7 @@ def main(page: ft.Page):
             info.value = f"{e.type.value} • outside candlesticks"
         info.update()
 
-    chart = ftc.CandlestickChart(
+    chart = fch.CandlestickChart(
         expand=True,
         min_x=min_x,
         max_x=max_x,
@@ -72,17 +72,17 @@ def main(page: ft.Page):
         baseline_x=0,
         baseline_y=min_y,
         bgcolor=ft.Colors.with_opacity(0.2, ft.Colors.BLUE_GREY_900),
-        horizontal_grid_lines=ftc.ChartGridLines(interval=2, dash_pattern=[2, 2]),
-        vertical_grid_lines=ftc.ChartGridLines(interval=1, dash_pattern=[2, 2]),
-        left_axis=ftc.ChartAxis(
+        horizontal_grid_lines=fch.ChartGridLines(interval=2, dash_pattern=[2, 2]),
+        vertical_grid_lines=fch.ChartGridLines(interval=1, dash_pattern=[2, 2]),
+        left_axis=fch.ChartAxis(
             label_spacing=2,
             label_size=60,
             title=ft.Text("Price (k USD)", color=ft.Colors.GREY_300),
             show_min=False,
         ),
-        bottom_axis=ftc.ChartAxis(
+        bottom_axis=fch.ChartAxis(
             labels=[
-                ftc.ChartAxisLabel(
+                fch.ChartAxisLabel(
                     value=index,
                     label=ft.Text(name, color=ft.Colors.GREY_300),
                 )
@@ -94,9 +94,9 @@ def main(page: ft.Page):
             show_max=False,
         ),
         spots=spots,
-        tooltip=ftc.CandlestickChartTooltip(
+        tooltip=fch.CandlestickChartTooltip(
             bgcolor=ft.Colors.BLUE_GREY_800,
-            horizontal_alignment=ftc.HorizontalAlignment.CENTER,
+            horizontal_alignment=fch.HorizontalAlignment.CENTER,
             fit_inside_horizontally=True,
         ),
         on_event=handle_event,

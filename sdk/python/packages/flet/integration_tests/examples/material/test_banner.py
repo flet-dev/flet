@@ -9,7 +9,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     page = flet_app_function.page
     page.theme_mode = ft.ThemeMode.LIGHT
     page.enable_screenshots = True
-    await flet_app_function.resize_page(400, 200)
+    flet_app_function.resize_page(400, 200)
     banner = ft.Banner(
         leading=ft.Icon(ft.Icons.INFO_OUTLINED, color=ft.Colors.PRIMARY),
         content=ft.Text("Backup completed successfully."),

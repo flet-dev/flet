@@ -15,4 +15,10 @@ examples: ../../examples/controls/interactive_viewer
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
+### Programmatic transformations
+
+```python
+--8<-- "{{ examples }}/transformations.py"
+```
+
 {{ class_members(class_name) }}

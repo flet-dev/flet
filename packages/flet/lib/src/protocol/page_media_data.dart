@@ -7,6 +7,7 @@ class PageMediaData extends Equatable {
   final PaddingData viewInsets;
   final double devicePixelRatio;
   final Orientation orientation;
+  final bool alwaysUse24HourFormat;
 
   const PageMediaData({
     required this.padding,
@@ -14,6 +15,7 @@ class PageMediaData extends Equatable {
     required this.viewInsets,
     required this.devicePixelRatio,
     required this.orientation,
+    required this.alwaysUse24HourFormat,
   });
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -22,11 +24,18 @@ class PageMediaData extends Equatable {
         'view_insets': viewInsets.toMap(),
         'device_pixel_ratio': devicePixelRatio,
         'orientation': orientation.name,
+        'always_use_24_hour_format': alwaysUse24HourFormat,
       };
 
   @override
-  List<Object?> get props =>
-      [padding, viewPadding, viewInsets, devicePixelRatio, orientation];
+  List<Object?> get props => [
+        padding,
+        viewPadding,
+        viewInsets,
+        devicePixelRatio,
+        orientation,
+        alwaysUse24HourFormat,
+      ];
 }
 
 class PaddingData extends Equatable {

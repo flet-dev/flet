@@ -46,9 +46,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
           "SnackBar.content must be provided and visible");
     }
 
-    final actionControl = widget.control.child("action");
+    final actionControl = widget.control.get("action");
     SnackBarAction? action;
-    if (actionControl != null) {
+    if (actionControl is Control) {
       action = SnackBarAction(
         label: actionControl.getString("label", "Action")!,
         backgroundColor: actionControl.getColor("bgcolor", context),
@@ -59,14 +59,11 @@ class _SnackBarControlState extends State<SnackBarControl> {
             actionControl.getColor("disabled_text_color", context),
         onPressed: () => actionControl.triggerEvent("click"),
       );
-    } else {
-      var label = widget.control.getString("action");
-      action = label != null
-          ? SnackBarAction(
-              label: label,
-              onPressed: () {},
-            )
-          : null;
+    } else if (actionControl is String) {
+      action = SnackBarAction(
+        label: actionControl,
+        onPressed: () => widget.control.triggerEvent("action"),
+      );
     }
 
     var width = widget.control.getDouble("width");

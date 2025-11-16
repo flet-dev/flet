@@ -61,6 +61,13 @@ class Video(ft.LayoutControl):
     Whether to show the video player controls.
     """
 
+    fullscreen: bool = False
+    """
+    Whether the video player is presented in fullscreen mode.
+
+    Set to `True` to enter fullscreen or `False` to exit fullscreen programmatically.
+    """
+
     muted: bool = False
     """
     Defines whether the video player should be started in muted state.

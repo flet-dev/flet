@@ -1,4 +1,3 @@
-import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -10,8 +9,8 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
-import '../utils/mouse.dart';
 import '../utils/numbers.dart';
+import '../utils/popup_menu.dart';
 import 'base_controls.dart';
 
 class PopupMenuButtonControl extends StatelessWidget {
@@ -51,60 +50,8 @@ class PopupMenuButtonControl extends StatelessWidget {
             control.triggerEvent("select", selection),
         onCanceled: () => control.triggerEvent("cancel"),
         onOpened: () => control.triggerEvent("open"),
-        itemBuilder: (BuildContext context) => control
-                .children("items")
-                .where((i) => i.type == "PopupMenuItem")
-                .map((item) {
-              var checked = item.getBool("checked");
-              var height = item.getDouble("height", 48.0)!;
-              var padding = item.getPadding("padding");
-              var itemContent = item.buildTextOrWidget("content");
-              var itemIcon = item.buildIconOrWidget("icon");
-              var mouseCursor = item.getMouseCursor("mouse_cursor");
-              var labelTextStyle = item.getWidgetStateTextStyle(
-                  "label_text_style", Theme.of(context));
-
-              Widget? child;
-              if (itemContent != null && itemIcon == null) {
-                child = itemContent;
-              } else if (itemContent == null && itemIcon != null) {
-                child = itemIcon;
-              } else if (itemContent != null && itemIcon != null) {
-                child = Row(children: [
-                  itemIcon,
-                  const SizedBox(width: 8),
-                  itemContent
-                ]);
-              }
-
-              var result = checked != null
-                  ? CheckedPopupMenuItem<String>(
-                      value: item.id.toString(),
-                      checked: checked,
-                      height: height,
-                      padding: padding,
-                      enabled: !item.disabled,
-                      mouseCursor: mouseCursor,
-                      labelTextStyle: labelTextStyle,
-                      onTap: () => item.triggerEvent("click", !checked),
-                      child: child,
-                    )
-                  : PopupMenuItem<String>(
-                      value: item.id.toString(),
-                      height: height,
-                      padding: padding,
-                      labelTextStyle: labelTextStyle,
-                      enabled: !item.disabled,
-                      mouseCursor: mouseCursor,
-                      onTap: () {
-                        item.triggerEvent("click");
-                      },
-                      child: child);
-
-              return child != null
-                  ? result
-                  : const PopupMenuDivider() as PopupMenuEntry<String>;
-            }).toList(),
+        itemBuilder: (BuildContext context) =>
+            buildPopupMenuEntries(control.children("items"), context),
         child: content);
 
     return LayoutControl(

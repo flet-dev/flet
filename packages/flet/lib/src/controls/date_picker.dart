@@ -1,11 +1,5 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-
-import '../models/control.dart';
-import '../utils/colors.dart';
-import '../utils/form_field.dart';
-import '../utils/icons.dart';
-import '../utils/numbers.dart';
-import '../utils/time.dart';
 
 class DatePickerControl extends StatefulWidget {
   final Control control;
@@ -58,11 +52,15 @@ class _DatePickerControlState extends State<DatePickerControl> {
         initialCalendarMode: widget.control
             .getDatePickerMode("date_picker_mode", DatePickerMode.day)!,
         initialEntryMode: widget.control.getDatePickerEntryMode(
-            "date_picker_entry_mode", DatePickerEntryMode.calendar)!,
+            "entry_mode", DatePickerEntryMode.calendar)!,
         fieldHintText: widget.control.getString("field_hint_text"),
         fieldLabelText: widget.control.getString("field_label_text"),
+        insetPadding: widget.control.getPadding("inset_padding",
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0))!,
         onDatePickerModeChange: (DatePickerEntryMode mode) {
-          widget.control.triggerEvent("entry_mode_change", mode.name);
+          widget.control.updateProperties({"entry_mode": mode.name});
+          widget.control
+              .triggerEvent("entry_mode_change", {"entry_mode": mode.name});
         },
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)

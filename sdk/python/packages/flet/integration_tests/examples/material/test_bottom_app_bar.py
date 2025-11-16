@@ -8,7 +8,7 @@ from examples.controls.bottom_app_bar import border_radius, notched_fab
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-    await flet_app_function.resize_page(400, 400)
+    flet_app_function.resize_page(400, 400)
 
     await flet_app_function.assert_control_screenshot(
         request.node.name,
@@ -35,7 +35,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 async def test_border_radius(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-    await flet_app_function.resize_page(500, 400)
+    flet_app_function.resize_page(500, 400)
     flet_app_function.page.update()
 
     await flet_app_function.tester.pump_and_settle()
@@ -56,7 +56,7 @@ async def test_border_radius(flet_app_function: ftt.FletTestApp):
 async def test_notched_fab(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-    await flet_app_function.resize_page(500, 400)
+    flet_app_function.resize_page(500, 400)
     flet_app_function.page.update()
 
     await flet_app_function.tester.pump_and_settle()

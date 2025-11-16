@@ -38,6 +38,7 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
     // Build list of ScatterSpotData
     final spotsAsControls = widget.control.children('spots');
     final spots = spotsAsControls.map((spot) {
+      spot.notifyParent = true;
       var x = spot.getDouble('x', 0)!;
       var y = spot.getDouble('y', 0)!;
       return ScatterSpot(x, y,

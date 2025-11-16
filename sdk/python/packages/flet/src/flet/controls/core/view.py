@@ -155,6 +155,11 @@ class View(ScrollableControl, LayoutControl):
     The foreground decoration.
     """
 
+    fullscreen_dialog: bool = False
+    """
+    If `True`, the view is a fullscreen modal dialog.
+    """
+
     can_pop: bool = True
     on_confirm_pop: Optional[ControlEventHandler["View"]] = None
 

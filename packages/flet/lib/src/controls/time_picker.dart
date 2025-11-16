@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/icons.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -25,6 +26,11 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
     var open = widget.control.getBool("open", false)!;
     var value = widget.control.getTimeOfDay("value", TimeOfDay.now())!;
+    var hourFormat = widget.control.getString("hour_format");
+    var switchToTimerEntryModeIcon =
+        widget.control.getIconData("switch_to_timer_icon");
+    var switchToInputEntryModeIcon =
+        widget.control.getIconData("switch_to_input_icon");
 
     void onClosed(TimeOfDay? timeValue) {
       widget.control.updateProperties({"_open": false}, python: false);
@@ -44,15 +50,28 @@ class _TimePickerControlState extends State<TimePickerControl> {
         hourLabelText: widget.control.getString("hour_label_text"),
         minuteLabelText: widget.control.getString("minute_label_text"),
         errorInvalidText: widget.control.getString("error_invalid_text"),
-        initialEntryMode: widget.control.getTimePickerEntryMode(
-            "time_picker_entry_mode", TimePickerEntryMode.dial)!,
+        initialEntryMode: widget.control
+            .getTimePickerEntryMode("entry_mode", TimePickerEntryMode.dial)!,
         orientation: widget.control.getOrientation("orientation"),
+        switchToTimerEntryModeIcon: switchToTimerEntryModeIcon != null
+            ? Icon(switchToTimerEntryModeIcon)
+            : null,
+        switchToInputEntryModeIcon: switchToInputEntryModeIcon != null
+            ? Icon(switchToInputEntryModeIcon)
+            : null,
         onEntryModeChanged: (TimePickerEntryMode mode) {
-          widget.control.triggerEvent("entry_mode_change", mode.name);
+          widget.control.updateProperties({"entry_mode": mode.name});
+          widget.control
+              .triggerEvent("entry_mode_change", {"entry_mode": mode.name});
         },
       );
 
-      return dialog;
+      final hourFormatMap = {"h12": false, "h24": true, "system": null};
+      return MediaQuery(
+        data: MediaQuery.of(context)
+            .copyWith(alwaysUse24HourFormat: hourFormatMap[hourFormat]),
+        child: dialog,
+      );
     }
 
     if (open && (open != lastOpen)) {

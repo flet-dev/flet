@@ -14,7 +14,7 @@ class LineChartEventData extends Equatable {
   factory LineChartEventData.fromDetails(
       FlTouchEvent event, LineTouchResponse? response) {
     return LineChartEventData(
-        eventType: eventMap[event.runtimeType.toString()] ?? "undefined",
+        eventType: resolveFlTouchEventType(event),
         barSpots: response != null && response.lineBarSpots != null
             ? response.lineBarSpots!
                 .map((bs) => LineChartEventDataSpot(

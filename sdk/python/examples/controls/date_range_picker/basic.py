@@ -14,7 +14,7 @@ def main(page: ft.Page):
             ft.Text(f"End Date changed: {e.control.end_value.strftime('%m/%d/%Y')}"),
         )
 
-    def handle_dismissal(e: ft.Event[ft.DialogControl]):
+    def handle_dismissal(e: ft.Event[ft.DateRangePicker]):
         page.add(ft.Text("DatePicker dismissed"))
 
     page.add(

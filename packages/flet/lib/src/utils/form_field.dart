@@ -24,32 +24,22 @@ FormFieldInputBorder? parseFormFieldInputBorder(String? value,
 
 TextInputType? parseTextInputType(String? value,
     [TextInputType? defaultValue]) {
-  switch (value?.toLowerCase()) {
-    case "datetime":
-      return TextInputType.datetime;
-    case "email":
-      return TextInputType.emailAddress;
-    case "multiline":
-      return TextInputType.multiline;
-    case "name":
-      return TextInputType.name;
-    case "none":
-      return TextInputType.none;
-    case "number":
-      return TextInputType.number;
-    case "phone":
-      return TextInputType.phone;
-    case "streetaddress":
-      return TextInputType.streetAddress;
-    case "text":
-      return TextInputType.text;
-    case "url":
-      return TextInputType.url;
-    case "visiblepassword":
-      return TextInputType.visiblePassword;
-    default:
-      return defaultValue;
-  }
+  const typeMap = {
+    "datetime": TextInputType.datetime,
+    "email": TextInputType.emailAddress,
+    "multiline": TextInputType.multiline,
+    "name": TextInputType.name,
+    "none": TextInputType.none,
+    "number": TextInputType.number,
+    "phone": TextInputType.phone,
+    "streetaddress": TextInputType.streetAddress,
+    "text": TextInputType.text,
+    "url": TextInputType.url,
+    "visiblepassword": TextInputType.visiblePassword,
+    "websearch": TextInputType.webSearch,
+    "twitter": TextInputType.twitter,
+  };
+  return typeMap[value?.toLowerCase()] ?? defaultValue;
 }
 
 InputDecoration buildInputDecoration(
@@ -86,7 +76,7 @@ InputDecoration buildInputDecoration(
         ?.replaceAll("{value_length}", valueLength.toString())
         .replaceAll("{max_length}", maxLength?.toString() ?? "None")
         .replaceAll("{symbols_left}",
-                "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
+            "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
   }
 
   // error
@@ -242,7 +232,7 @@ StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {
 
   return StrutStyle(
     fontSize: parseDouble(value["size"]),
-    fontWeight: getFontWeight(value["weight"]),
+    fontWeight: parseFontWeight(value["weight"]),
     fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
     fontFamily: value["font_family"],
     height: parseDouble(value["height"]),

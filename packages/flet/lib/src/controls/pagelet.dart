@@ -24,7 +24,8 @@ class PageletControl extends StatefulWidget {
 }
 
 class _PageletControlState extends State<PageletControl> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _materialScaffoldKey = GlobalKey<ScaffoldState>();
+  final _cupertinoPageScaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -42,16 +43,16 @@ class _PageletControlState extends State<PageletControl> {
     debugPrint("Pagelet.$name($args)");
     switch (name) {
       case "show_drawer":
-        scaffoldKey.currentState?.openDrawer();
+        _materialScaffoldKey.currentState?.openDrawer();
         break;
       case "close_drawer":
-        scaffoldKey.currentState?.closeDrawer();
+        _materialScaffoldKey.currentState?.closeDrawer();
         break;
       case "show_end_drawer":
-        scaffoldKey.currentState?.openEndDrawer();
+        _materialScaffoldKey.currentState?.openEndDrawer();
         break;
       case "close_end_drawer":
-        scaffoldKey.currentState?.closeEndDrawer();
+        _materialScaffoldKey.currentState?.closeEndDrawer();
         break;
       default:
         throw Exception("Unknown Pagelet method: $name");
@@ -98,7 +99,7 @@ class _PageletControlState extends State<PageletControl> {
         : null;
 
     Widget scaffold = Scaffold(
-        key: bar == null || bar is AppBarControl ? scaffoldKey : null,
+        key: _materialScaffoldKey,
         backgroundColor: widget.control.getColor("bgcolor", context) ??
             CupertinoTheme.of(context).scaffoldBackgroundColor,
         appBar: bar is AppBarControl ? bar : null,
@@ -129,7 +130,7 @@ class _PageletControlState extends State<PageletControl> {
 
     if (bar is CupertinoAppBarControl) {
       scaffold = CupertinoPageScaffold(
-          key: scaffoldKey,
+          key: _cupertinoPageScaffoldKey,
           backgroundColor: widget.control.getColor("bgcolor", context),
           navigationBar: bar as ObstructingPreferredSizeWidget,
           child: scaffold);

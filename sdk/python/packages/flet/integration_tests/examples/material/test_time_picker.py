@@ -4,20 +4,23 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.time_picker import basic
+from examples.controls.time_picker import basic, hour_formats
+
+# Note: CI macOS runner uses a 12-hour (AM / PM) time format by default.
 
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-    tp = ft.TimePicker(
-        value=time(1, 2),
-        time_picker_entry_mode=ft.TimePickerEntryMode.INPUT_ONLY,
-        open=True,
-    )
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(400, 300)
-    flet_app_function.page.add(tp)
+    flet_app_function.resize_page(600, 400)
+
+    time_picker = ft.TimePicker(
+        value=time(hour=19, minute=30),
+        hour_format=ft.TimePickerHourFormat.H12,
+    )
+    flet_app_function.page.show_dialog(time_picker)
+    flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
     flet_app_function.assert_screenshot(
@@ -36,14 +39,97 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    await flet_app_function.resize_page(350, 300)
-    button = await flet_app_function.tester.find_by_icon(ft.Icons.TIME_TO_LEAVE)
-    await flet_app_function.tester.tap(button)
+    flet_app_function.resize_page(600, 400)
+
+    # open picker
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_icon(ft.Icons.TIME_TO_LEAVE)
+    )
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
+
     flet_app_function.assert_screenshot(
         "basic",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function", [{"flet_app_main": hour_formats.main}], indirect=True
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_hour_formats(flet_app_function: ftt.FletTestApp):
+    counter = 0
+    images = []
+
+    async def _snap():
+        nonlocal counter
+        counter += 1
+        name = f"hour_formats_{counter}"
+        images.append(name)
+        flet_app_function.assert_screenshot(
+            name,
+            await flet_app_function.page.take_screenshot(
+                pixel_ratio=flet_app_function.screenshots_pixel_ratio
+            ),
+        )
+
+    async def _settle():
+        await flet_app_function.tester.pump_and_settle()
+
+    async def _open_picker():
+        await flet_app_function.tester.tap(
+            await flet_app_function.tester.find_by_icon(ft.Icons.SCHEDULE)
+        )
+        await _settle()
+        await _snap()
+
+    async def _close_picker():
+        await flet_app_function.tester.tap(
+            await flet_app_function.tester.find_by_text("OK")
+        )
+        await _settle()
+        await _snap()
+
+    async def _select_clock(label: str):
+        dd = await flet_app_function.tester.find_by_key("dd")
+        await flet_app_function.tester.tap(dd)
+        await _settle()
+        await flet_app_function.tester.tap(
+            (await flet_app_function.tester.find_by_text(label)).last
+        )
+        await _settle()
+        await flet_app_function.tester.tap(dd)
+        await _settle()
+        await _snap()
+        await flet_app_function.tester.tap(dd)
+        await _settle()
+        await _snap()
+
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(600, 450)
+    flet_app_function.page.update()
+    await _settle()
+
+    # initial state
+    await _snap()
+
+    # picker open/close on default
+    await _open_picker()
+    await _close_picker()
+
+    # switch to 12h, then open/close
+    await _select_clock("12-hour clock")
+    await _open_picker()
+    await _close_picker()
+
+    # switch to 24h, then open/close
+    await _select_clock("24-hour clock")
+    await _open_picker()
+    await _close_picker()
+
+    flet_app_function.create_gif(
+        image_names=images, output_name="hour_formats", duration=2000
     )

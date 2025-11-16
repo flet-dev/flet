@@ -1,6 +1,6 @@
 ---
-class_name: flet.ReorderableDraggable
-examples: ../../examples/controls/reorderable_draggable
+class_name: flet.ReorderableDragHandle
+examples: ../../examples/controls/reorderable_drag_handle
 ---
 
 {{ class_summary(class_name) }}

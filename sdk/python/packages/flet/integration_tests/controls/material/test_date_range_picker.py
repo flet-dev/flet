@@ -23,7 +23,7 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
         current_date=datetime.datetime(year=2000, month=10, day=16),
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(dp)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
@@ -60,10 +60,10 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
         modal=False,
         barrier_color=ft.Colors.RED,
         keyboard_type=ft.KeyboardType.EMAIL,
-        # date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR,
+        # entry_mode=ft.DatePickerEntryMode.CALENDAR,
     )
     flet_app.page.enable_screenshots = True
-    await flet_app.resize_page(400, 600)
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(dp)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()

@@ -311,19 +311,19 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     If [`AnimationStyle.duration`][flet.] is provided, it will be used to override
     the expansion animation duration. If it is `None`, then
     [`AnimationStyle.duration`][flet.] from the
-    [`ExpansionTileTheme.animation_style`][(c).] will be used. If that is also
+    [`ExpansionTileTheme.animation_style`][flet.] will be used. If that is also
     `None`, `Duration(milliseconds=200)` will be used as default.
 
     If [`AnimationStyle.curve`][flet.] is provided, it will be used to override
     the expansion animation curve. If it is `None`, then
     [`AnimationStyle.curve`][flet.] from the
-    [`ExpansionTileTheme.animation_style`][(c).] will be used. If that is also
+    [`ExpansionTileTheme.animation_style`][flet.] will be used. If that is also
     `None`, [`AnimationCurve.EASE_IN`][flet.] will be used as default.
 
     If [`AnimationStyle.reverse_curve`][flet.] is provided, it will be used to override
     the collapse animation curve. If it is `None`, then
     [`AnimationStyle.reverse_curve`][flet.] from the
-    [`ExpansionTileTheme.animation_style`][(c).] will be used. If that is also
+    [`ExpansionTileTheme.animation_style`][flet.] will be used. If that is also
     `None`, the expansion curve will be used as default.
 
     Tip:

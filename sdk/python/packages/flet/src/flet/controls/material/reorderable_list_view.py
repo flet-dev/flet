@@ -18,14 +18,28 @@ from flet.controls.types import (
 
 @dataclass
 class OnReorderEvent(Event["ReorderableListView"]):
+    """
+    Represents an event triggered during the reordering of items in a
+    [`ReorderableListView`][flet.].
+    """
+
     new_index: Optional[int]
+    """The new position of the item after reordering."""
+
     old_index: Optional[int]
+    """The original/previous position of the item before reordering."""
 
 
 @control("ReorderableListView")
 class ReorderableListView(ListView):
     """
     A scrollable list of controls that can be reordered.
+
+    Tip:
+        By default, each child control (from [`controls`][(c).]) is draggable using an
+        automatically created drag handle (see [`show_default_drag_handles`][(c).]).
+        To customize the draggable area, use the [`ReorderableDragHandle`][flet.] to
+        define your own drag handle or region.
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -35,40 +49,42 @@ class ReorderableListView(ListView):
 
     horizontal: bool = False
     """
-    Whether the `controls` should be laid out horizontally.
+    Whether the [`controls`][(c).] should be laid out horizontally.
     """
 
     reverse: bool = False
     """
     Whether the scroll view scrolls in the reading direction.
 
-    For example, if the reading direction is left-to-right and `horizontal` is `True`,
-    then the scroll view scrolls from left to right when `reverse` is `False`
+    For example, if the reading direction is left-to-right and [`horizontal`][(c).]
+    is `True`, then the scroll view scrolls from left to right when `reverse` is `False`
     and from right to left when `reverse` is `True`.
 
-    Similarly, if `horizontal` is `False`, then the scroll view scrolls from top
+    Similarly, if [`horizontal`][(c).] is `False`, then the scroll view scrolls from top
     to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
     """
 
     item_extent: Optional[Number] = None
     """
-    If non-null, forces the children to have the given extent in the scroll direction.
+    Defines the extent that the [`controls`][(c).] should have in the scroll direction.
 
-    Specifying an `item_extent` is more efficient than letting the children determine
-    their own extent because the scrolling machinery can make use of the foreknowledge
-    of the children's extent to save work, for example when the scroll position
-    changes drastically.
+    Specifying an `item_extent` is more efficient than letting the [`controls`][(c).]
+    determine their own extent because the scrolling machinery can make use of the
+    foreknowledge of the `controls` extent to save work, for example when the scroll
+    position changes drastically.
     """
 
     first_item_prototype: bool = False
     """
-    `True` if the dimensions of the first item should be used as a "prototype" for all
-    other items, i.e. their height or width will be the same as the first item.
+    Whether the dimensions of the first item should be used as a "prototype"
+    for all other items.
+
+    If `True`, their height or width will be the same as the first item.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The amount of space by which to inset the `controls`.
+    The amount of space by which to inset the [`controls`][(c).].
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -102,51 +118,83 @@ class ReorderableListView(ListView):
 
     auto_scroller_velocity_scalar: Optional[Number] = None
     """
-    The velocity scalar per pixel over scroll. It represents how the velocity scale
-    with the over scroll distance. The auto-scroll velocity = (distance of overscroll)
-    * velocity scalar.
+    The velocity scalar per pixel over scroll.
+
+    It represents how the velocity scale with the over scroll distance.
+    The auto-scroll velocity = (distance of overscroll) * velocity scalar.
     """
 
     header: Optional[Control] = None
     """
-    A non-reorderable header item to show before the `controls`.
+    A non-reorderable header item to show before the [`controls`][(c).].
     """
 
     footer: Optional[Control] = None
     """
-    A non-reorderable footer item to show after the `controls`.
+    A non-reorderable footer item to show after the [`controls`][(c).].
     """
 
     build_controls_on_demand: bool = True
     """
-    Whether the `controls` should be built lazily/on-demand, i.e. only when they are
-    about to become visible.
+    Whether the [`controls`][(c).] should be built lazily/on-demand,
+    i.e. only when they are about to become visible.
 
     This is particularly useful when dealing with a large number of controls.
     """
 
     show_default_drag_handles: bool = True
     """
-    TBD
+    Whether to show default drag handles for each [`controls`][(c).] item.
+
+    If `True`: on desktop platforms, a drag handle is stacked over the
+    center of each item's trailing edge; on mobile platforms, a long
+    press anywhere on the item starts a drag.
+
+    The default desktop drag handle is just an [`Icons.DRAG_HANDLE`][flet.]
+    wrapped by a [`ReorderableDragHandle`][flet.]. On mobile platforms, the entire
+    item is wrapped with a [`ReorderableDelayedDragStartListener`].
+
+    To customize the appearance or layout of drag handles, wrap each
+    [`controls`][(c).] item, or a control within each of them, with a
+    [`ReorderableDragHandle`][flet.], [`ReorderableDelayedDragStartListener`],
+    or your own subclass of [`ReorderableDragHandle`][flet.]. For full control
+    over the drag handles, you might want to set `show_default_drag_handles` to `False`.
+
+    Example:
+        ```python
+        ft.ReorderableListView(
+            show_default_drag_handles=False,
+            controls=[
+                ft.ListTile(
+                    title=ft.Text(f"Draggable Item {i}", color=ft.Colors.BLACK),
+                    leading=ft.ReorderableDragHandle(
+                        content=ft.Icon(ft.Icons.DRAG_INDICATOR, color=ft.Colors.RED),
+                        mouse_cursor=ft.MouseCursor.GRAB,
+                    ),
+                )
+                for i in range(10)
+            ],
+        )
+        ```
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    TBD
+    The cursor for a mouse pointer when it enters or is hovering over the drag handle.
     """
 
     on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when a child control has been dragged to a new location in the list and the
-    application should update the order of the items.
+    Called when a [`controls`][(c).] item has been dragged to a new location/position
+    and the order of the items gets updated.
     """
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when an item drag has started.
+    Called when a [`controls`][(c).] item drag has started.
     """
 
     on_reorder_end: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when the dragged item is dropped.
+    Called when the dragged [`controls`][(c).] item is dropped.
     """

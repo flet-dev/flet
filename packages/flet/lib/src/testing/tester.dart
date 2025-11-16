@@ -13,10 +13,10 @@ abstract class Tester {
   TestFinder findByTooltip(String value);
   TestFinder findByIcon(IconData icon);
   Future<Uint8List> takeScreenshot(String name);
-  Future<void> tap(TestFinder finder);
-  Future<void> longPress(TestFinder finder);
-  Future<void> enterText(TestFinder finder, String text);
-  Future<void> mouseHover(TestFinder finder);
+  Future<void> tap(TestFinder finder, int finderIndex);
+  Future<void> longPress(TestFinder finder, int finderIndex);
+  Future<void> enterText(TestFinder finder, int finderIndex, String text);
+  Future<void> mouseHover(TestFinder finder, int finderIndex);
   void teardown();
   Future waitForTeardown();
 }

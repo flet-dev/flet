@@ -32,9 +32,9 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
-async def test_basic(flet_app_function: ftt.FletTestApp):
+async def test_music_info(flet_app_function: ftt.FletTestApp):
     flet_app_function.assert_screenshot(
-        "music_info",
+        test_music_info.__name__,
         await flet_app_function.take_page_controls_screenshot(),
         similarity_threshold=98.4,
     )

@@ -61,7 +61,7 @@ class PageMediaData:
 
     view_padding: Padding
     """
-    Similar to `padding`, but includes padding that is always reserved
+    Similar to [`padding`][(c).], but includes padding that is always reserved
     (even when the system UI is hidden).
     """
 
@@ -79,6 +79,22 @@ class PageMediaData:
     orientation: Orientation
     """
     The orientation of the page.
+    """
+
+    always_use_24_hour_format: bool = False
+    """
+    Whether to use 24-hour format when formatting time.
+
+    Note:
+        The behavior of this flag is different across platforms:
+
+        - On Android this flag is reported directly from the user settings called
+            "Use 24-hour format". It applies to any locale used by the application,
+            whether it is the system-wide locale, or the custom locale set by the
+            application.
+        - On iOS this flag is set to true when the user setting called "24-Hour Time"
+            is set or the system-wide locale's default uses 24-hour
+            formatting.
     """
 
 
@@ -177,15 +193,16 @@ class BasePage(AdaptiveControl):
 
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
-    Called when a user resizes a browser or native OS window containing Flet app, for
-    example:
+    Called when a user resizes a browser or native OS window containing Flet app
 
-    ```python
-    def page_resize(e):
-        print("New page size:", page.window.width, page.window_height)
+    Example:
+        ```python
+        def main(page: ft.Page):
+            def handle_page_size(e):
+                print("New page size:", page.window.width, page.window_height)
 
-    page.on_resize = page_resize
-    ```
+            page.on_resize = handle_page_size
+        ```
     """
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None
@@ -200,6 +217,7 @@ class BasePage(AdaptiveControl):
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
             orientation=Orientation.PORTRAIT,
+            always_use_24_hour_format=False,
         )
     )
     """
@@ -316,17 +334,17 @@ class BasePage(AdaptiveControl):
         Displays a dialog and manages its dismissal lifecycle.
 
         This method adds the specified `dialog` to the active dialog stack
-        and renders it on the page. If the dialog is already open, an exception
+        and renders it on the page. If the dialog is already open, a `RuntimeError`
         is raised.
         The [`on_dismiss`][flet.DialogControl.] handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 
         Args:
-            dialog: The dialog instance to display. Must not already be open.
+            dialog: The dialog instance to display. Must not yet be open.
 
         Raises:
-            Exception: If the specified dialog is already open.
+            RuntimeError: If the specified dialog is already open.
         """
         if dialog in self._dialogs.controls:
             raise RuntimeError("Dialog is already opened")

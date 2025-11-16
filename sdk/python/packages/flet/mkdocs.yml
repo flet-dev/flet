@@ -307,6 +307,7 @@ nav:
           - CircleAvatar: controls/circleavatar.md
           - Column: controls/column.md
           - Container: controls/container.md
+          - ContextMenu: controls/contextmenu.md
           - CupertinoActionSheet:
               - controls/cupertinoactionsheet/index.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
@@ -422,7 +423,7 @@ nav:
           - Radio: controls/radio.md
           - RadioGroup: controls/radiogroup.md
           - RangeSlider: controls/rangeslider.md
-          - ReorderableDraggable: controls/reorderabledraggable.md
+          - ReorderableDragHandle: controls/reorderabledraghandle.md
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
@@ -762,6 +763,7 @@ nav:
               - CardVariant: types/cardvariant.md
               - ClipBehavior: types/clipbehavior.md
               - Colors: types/colors.md
+              - ContextMenuTrigger: types/contextmenutrigger.md
               - CrossAxisAlignment: types/crossaxisalignment.md
               - CupertinoButtonSize: types/cupertinobuttonsize.md
               - CupertinoColors: types/cupertinocolors.md
@@ -821,6 +823,7 @@ nav:
               - ThemeMode: types/thememode.md
               - TileAffinity: types/tileaffinity.md
               - TimePickerEntryMode: types/timepickerentrymode.md
+              - TimePickerHourFormat: types/timepickerhourformat.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
@@ -835,6 +838,8 @@ nav:
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
+              - ContextMenuDismissEvent: types/contextmenudismissevent.md
+              - ContextMenuSelectEvent: types/contextmenuselectevent.md
               - DataColumnSortEvent: types/datacolumnsortevent.md
               - DatePickerEntryModeChangeEvent: types/datepickerentrymodechangeevent.md
               - DismissibleDismissEvent: types/dismissibledismissevent.md
@@ -890,6 +895,7 @@ nav:
               - use_context: types/use_context.md
               - use_effect: types/use_effect.md
               - use_memo: types/use_memo.md
+              - use_ref: types/use_ref.md
               - use_state: types/use_state.md
       - Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
       - Environment Variables: reference/environment-variables.md

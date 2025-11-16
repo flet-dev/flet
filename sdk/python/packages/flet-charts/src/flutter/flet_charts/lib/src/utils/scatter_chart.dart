@@ -14,7 +14,7 @@ class ScatterChartEventData extends Equatable {
   factory ScatterChartEventData.fromDetails(
       FlTouchEvent event, ScatterTouchResponse? response) {
     return ScatterChartEventData(
-        eventType: eventMap[event.runtimeType.toString()] ?? "undefined",
+        eventType: resolveFlTouchEventType(event),
         spotIndex: response?.touchedSpot?.spotIndex);
   }
 

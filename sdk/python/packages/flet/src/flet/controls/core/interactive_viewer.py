@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
@@ -11,7 +12,7 @@ from flet.controls.events import (
     ScaleUpdateEvent,
 )
 from flet.controls.layout_control import LayoutControl
-from flet.controls.margin import MarginValue
+from flet.controls.margin import Margin, MarginValue
 from flet.controls.types import ClipBehavior, Number
 
 __all__ = ["InteractiveViewer"]
@@ -50,8 +51,20 @@ class InteractiveViewer(LayoutControl):
 
     constrained: bool = True
     """
-    Whether the normal size constraints at this point in the widget tree are applied
-    to the child.
+    Whether the normal size constraints at this point in the control tree are applied
+    to the [`content`][(c).].
+
+    If set to `False`, then the content will be given infinite constraints. This
+    is often useful when a content should be bigger than this `InteractiveViewer`.
+
+    For example, for a content which is bigger than the viewport but can be
+    panned to reveal parts that were initially offscreen, `constrained` must
+    be set to `False` to allow it to size itself properly. If `constrained` is
+    `True` and the content can only size itself to the viewport, then areas
+    initially outside of the viewport will not be able to receive user
+    interaction events. If experiencing regions of the content that are not
+    receptive to user gestures, make sure `constrained` is `False` and the content
+    is sized properly.
     """
 
     max_scale: Number = 2.5
@@ -66,6 +79,12 @@ class InteractiveViewer(LayoutControl):
     min_scale: Number = 0.8
     """
     The minimum allowed scale.
+
+    The effective scale is limited by the value of [`boundary_margin`][(c).].
+    If scaling would cause the content to be displayed outside the defined boundary,
+    it is prevented. By default, `boundary_margin` is set to `Margin.all(0)`,
+    so scaling below `1.0` is typically not possible unless you increase the
+    `boundary_margin` value.
 
     Raises:
         ValueError: If it is not greater than `0` or less than [`max_scale`][(c).].
@@ -82,11 +101,22 @@ class InteractiveViewer(LayoutControl):
     scale_factor: Number = 200
     """
     The amount of scale to be performed per pointer scroll.
+
+    Increasing this value above the default causes scaling to feel slower,
+    while decreasing it causes scaling to feel faster.
+
+    Note:
+        Has effect only on pointer device scrolling, not pinch to zoom.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     Defines how to clip the [`content`][(c).].
+
+    If set to [`ClipBehavior.NONE`][flet.], the [`content`][(c).] can visually overflow
+    the bounds of this `InteractiveViewer`, but gesture events (such as pan or zoom)
+    will only be recognized within the viewer's area. Ensure this `InteractiveViewer`
+    is sized appropriately when using [`ClipBehavior.NONE`][flet.].
     """
 
     alignment: Optional[Alignment] = None
@@ -94,9 +124,19 @@ class InteractiveViewer(LayoutControl):
     The alignment of the [`content`][(c).] within this viewer.
     """
 
-    boundary_margin: MarginValue = 0
+    boundary_margin: MarginValue = field(default_factory=lambda: Margin.all(0))
     """
     A margin for the visible boundaries of the [`content`][(c).].
+
+    Any transformation that results in the viewport being able to view outside
+    of the boundaries will be stopped at the boundary. The boundaries do not
+    rotate with the rest of the scene, so they are always aligned with the
+    viewport.
+
+    To produce no boundaries at all, pass an infinite value.
+
+    Defaults to `Margin.all(0)`, which results in boundaries that are the
+    exact same size and position as the [`content`][(c).].
     """
 
     interaction_update_interval: int = 200

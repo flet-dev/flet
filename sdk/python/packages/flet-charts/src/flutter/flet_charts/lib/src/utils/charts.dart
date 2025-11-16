@@ -167,19 +167,20 @@ FLHorizontalAlignment? parseFLHorizontalAlignment(String? value,
       defaultValue;
 }
 
-const eventMap = {
-  "FlPointerEnterEvent": "pointerEnter",
-  "FlPointerExitEvent": "pointerExit",
-  "FlPointerHoverEvent": "pointerHover",
-  "FlPanCancelEvent": "panCancel",
-  "FlPanDownEvent": "panDown",
-  "FlPanEndEvent": "panEnd",
-  "FlPanStartEvent": "panStart",
-  "FlPanUpdateEvent": "panUpdate",
-  "FlLongPressEnd": "longPressEnd",
-  "FlLongPressMoveUpdate": "longPressMoveUpdate",
-  "FlLongPressStart": "longPressStart",
-  "FlTapCancelEvent": "tapCancel",
-  "FlTapDownEvent": "tapDown",
-  "FlTapUpEvent": "tapUp",
-};
+String resolveFlTouchEventType(FlTouchEvent event) {
+  if (event is FlPointerEnterEvent) return "pointerEnter";
+  if (event is FlPointerExitEvent) return "pointerExit";
+  if (event is FlPointerHoverEvent) return "pointerHover";
+  if (event is FlPanCancelEvent) return "panCancel";
+  if (event is FlPanDownEvent) return "panDown";
+  if (event is FlPanEndEvent) return "panEnd";
+  if (event is FlPanStartEvent) return "panStart";
+  if (event is FlPanUpdateEvent) return "panUpdate";
+  if (event is FlLongPressEnd) return "longPressEnd";
+  if (event is FlLongPressMoveUpdate) return "longPressMoveUpdate";
+  if (event is FlLongPressStart) return "longPressStart";
+  if (event is FlTapCancelEvent) return "tapCancel";
+  if (event is FlTapDownEvent) return "tapDown";
+  if (event is FlTapUpEvent) return "tapUp";
+  return "undefined";
+}

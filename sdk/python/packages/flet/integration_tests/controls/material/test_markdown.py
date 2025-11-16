@@ -1,10 +1,9 @@
 import pytest
-import asyncio
+
 import flet as ft
 import flet.testing as ftt
 
-
-sample1 = """
+sample_1 = """
 # Markdown Example
 Markdown allows you to easily include formatted text, images, and even formatted Dart
 code in your app.
@@ -47,7 +46,7 @@ Style text as _italic_, __bold__, ~~strikethrough~~, or `inline code`.
 
 """
 
-sample2 = """
+sample_2 = """
 ## Tables
 
 |Syntax                                 |Result                               |
@@ -78,25 +77,26 @@ void main() {
 ```
 """
 
-md = ft.Markdown(
-    value=sample1,
-    selectable=True,
-    extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-)
-
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_md_1(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
-        md,
+        ft.Markdown(
+            value=sample_1,
+            selectable=True,
+            extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+        ),
     )
 
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_md_2(flet_app: ftt.FletTestApp, request):
-    md.value = sample2
     await flet_app.assert_control_screenshot(
         request.node.name,
-        md,
+        ft.Markdown(
+            value=sample_2,
+            selectable=True,
+            extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+        ),
     )

@@ -28,6 +28,8 @@ class TileLayer(MapLayer):
     """
     The URL template is a string that contains placeholders,
     which, when filled in, create a URL/URI to a specific tile.
+
+    Examples: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
     """
 
     fallback_url: Optional[str] = None

@@ -14,6 +14,7 @@ class FletApp extends StatefulWidget {
   final String assetsDir;
   final bool? showAppStartupScreen;
   final String? appStartupScreenMessage;
+  final String? appErrorMessage;
   final int? controlId;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
@@ -31,6 +32,7 @@ class FletApp extends StatefulWidget {
       required this.assetsDir,
       this.showAppStartupScreen,
       this.appStartupScreenMessage,
+      this.appErrorMessage,
       this.controlId,
       this.title,
       this.errorsHandler,
@@ -62,6 +64,7 @@ class _FletAppState extends State<FletApp> {
         return FletBackend(
             showAppStartupScreen: widget.showAppStartupScreen,
             appStartupScreenMessage: widget.appStartupScreenMessage,
+            appErrorMessage: widget.appErrorMessage,
             controlId: widget.controlId,
             reconnectIntervalMs: widget.reconnectIntervalMs,
             reconnectTimeoutMs: widget.reconnectTimeoutMs,
