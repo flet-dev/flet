@@ -275,14 +275,14 @@ class Command(BaseCommand):
             dest="clear_cache",
             action="store_true",
             default=None,
-            help="Remove any existing build cache before starting the build process.",
+            help="Remove any existing build cache before starting the build process",
         )
         parser.add_argument(
             "--project",
             dest="project_name",
             required=False,
             help="Project name for the executable/bundle. "
-            "It is used in metadata and bundle IDs.",
+            "It is used in metadata and bundle IDs",
         )
         parser.add_argument(
             "--description",
@@ -309,7 +309,7 @@ class Command(BaseCommand):
             "--bundle-id",
             dest="bundle_id",
             required=False,
-            help="Bundle ID for the application, e.g. `com.mycompany.app-name`."
+            help="Bundle ID for the application, e.g. `com.mycompany.app-name`. "
             "It is used as an iOS, Android, macOS and Linux bundle ID",
         )
         parser.add_argument(
@@ -631,7 +631,7 @@ class Command(BaseCommand):
             "--no-rich-output",
             action="store_true",
             default=False,
-            help="Disable rich output and prefer plain text. Useful on Windows builds.",
+            help="Disable rich output and prefer plain text. Useful on Windows builds",
         )
         parser.add_argument(
             "--skip-flutter-doctor",

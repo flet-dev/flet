@@ -68,7 +68,7 @@ class Command(BaseCommand):
             dest="module",
             action="store_true",
             default=False,
-            help="Treat the script as a python module path instead of a file path."
+            help="Treat the script as a python module path instead of a file path. "
             "Example: flet run -m my_app.main",
         )
         parser.add_argument(
@@ -127,7 +127,7 @@ class Command(BaseCommand):
             type=str,
             default="assets",
             help="Path to a directory containing static assets "
-            "used by the app (e.g. images, fonts).",
+            "used by the app (e.g. images, fonts)",
         )
         parser.add_argument(
             "--ignore-dirs",

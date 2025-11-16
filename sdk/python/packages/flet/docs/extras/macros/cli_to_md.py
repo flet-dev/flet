@@ -163,12 +163,8 @@ def render_flet_cli_as_markdown(
             # If choices isn't iterable in a friendly way, fallback to repr
             items = [a.choices]
         # Sort for stability across runs
-        items = sorted(items, key=lambda x: str(x))
+        items = sorted(items, key=str)
         return ", ".join(f"`{c}`" for c in items)
-
-    def _is_help_or_version(a: argparse.Action) -> bool:
-        """True for the auto -h/--help and --version/-V actions."""
-        return isinstance(a, (argparse._HelpAction, argparse._VersionAction))
 
     # ---------------- resolve command ----------------
     root = get_parser()

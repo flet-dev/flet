@@ -83,7 +83,7 @@ class Command(BaseCommand):
             type=str,
             default=None,
             help="Base URL path to serve the app from. "
-            "Useful if the app is hosted in a subdirectory.",
+            "Useful if the app is hosted in a subdirectory",
         )
         parser.add_argument(
             "--web-renderer",

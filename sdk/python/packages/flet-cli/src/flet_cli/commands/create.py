@@ -27,7 +27,7 @@ class Command(BaseCommand):
             type=str,
             default=".",
             nargs="?",
-            help="Directory where the new Flet project will be created."
+            help="Directory where the new Flet project will be created. "
             "If omitted, the project is created in the current directory",
         )
         parser.add_argument(

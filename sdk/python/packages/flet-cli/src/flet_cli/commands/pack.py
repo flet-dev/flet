@@ -41,7 +41,7 @@ class Command(BaseCommand):
             action="store_true",
             default=False,
             help="Create a one-folder bundle instead of a "
-            "single-file executable (Windows only).",
+            "single-file executable (Windows only)",
         )
         parser.add_argument(
             "--distpath",
@@ -71,7 +71,7 @@ class Command(BaseCommand):
             action="append",
             nargs="*",
             help="Add Python modules that are dynamically imported "
-            "and not detected by static analysis.",
+            "and not detected by static analysis",
         )
         parser.add_argument(
             "--product-name",
@@ -118,7 +118,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--debug-console",
             dest="debug_console",
-            help="Show python debug console window (ensure correct DEBUG level)."
+            help="Show python debug console window (ensure correct DEBUG level). "
             "Useful for troubleshooting runtime errors",
         )
         parser.add_argument(
@@ -134,8 +134,7 @@ class Command(BaseCommand):
             dest="pyinstaller_build_args",
             action="append",
             nargs="*",
-            help="Additional raw arguments to the underlying "
-            "pyinstaller build command.",
+            help="Additional raw arguments to the underlying pyinstaller build command",
         )
         parser.add_argument(
             "-y",
@@ -143,7 +142,7 @@ class Command(BaseCommand):
             dest="non_interactive",
             default=False,
             action="store_true",
-            help="Enable non-interactive mode. All prompts will be skipped.",
+            help="Enable non-interactive mode. All prompts will be skipped",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
