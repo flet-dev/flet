@@ -22,7 +22,7 @@ def main(page: ft.Page):
             ),
         ),
     )
-    page.overlay.append(sheet)
+
     page.add(
         ft.Button(
             content="Display bottom sheet",
@@ -31,4 +31,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

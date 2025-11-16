@@ -45,10 +45,8 @@ class SnackBarAction(Control):
     Note:
         - Snack bar actions are always enabled. Instead of disabling a snack bar
             action, avoid including it in the snack bar in the first place.
-        -  Snack bar actions can will only respond to first click.
+        - Snack bar actions will only respond to first click.
             Subsequent clicks/presses are ignored.
-
-
     """
 
     label: str

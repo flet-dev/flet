@@ -229,7 +229,7 @@ class Dropdown(LayoutControl):
 
     on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Called when the text input of this dropdown has changed.
+    Called when the [`text`][(c).] input of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
@@ -395,4 +395,5 @@ class Dropdown(LayoutControl):
         return item in self.options
 
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")

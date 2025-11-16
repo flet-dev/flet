@@ -422,7 +422,7 @@ nav:
           - Radio: controls/radio.md
           - RadioGroup: controls/radiogroup.md
           - RangeSlider: controls/rangeslider.md
-          - ReorderableDraggable: controls/reorderabledraggable.md
+          - ReorderableDragHandle: controls/reorderabledraghandle.md
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md

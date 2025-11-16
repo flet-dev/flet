@@ -72,7 +72,7 @@ class _DateRangePickerControlState extends State<DateRangePickerControl> {
         keyboardType: parseTextInputType(
             widget.control.getString("keyboard_type"), TextInputType.text)!,
         initialEntryMode: widget.control.getDatePickerEntryMode(
-            "date_picker_entry_mode", DatePickerEntryMode.calendar)!,
+            "entry_mode", DatePickerEntryMode.calendar)!,
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)
             : null,

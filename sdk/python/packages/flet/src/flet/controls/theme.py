@@ -145,7 +145,7 @@ class ColorScheme:
     error: Optional[ColorValue] = None
     """
     The color to use for input validation errors,
-    e.g. for [`TextField.error_text`][flet.].
+    e.g. for [`FormFieldControl.error`][flet.].
     """
 
     on_error: Optional[ColorValue] = field(default=None, metadata={"event": False})
@@ -179,7 +179,7 @@ class ColorScheme:
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`surface_variant`][(c).].
+    A color that's clearly legible when drawn on [`surface_container_highest`][(c).].
     """
 
     outline: Optional[ColorValue] = None
