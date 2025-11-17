@@ -17,7 +17,7 @@ def _relative_markdown_path(path: str) -> str:
 
 def _build_link(target: str, title: str) -> str:
     """Render a Markdown link for a control entry."""
-    return f"[{title}]({_relative_markdown_path(target)})"
+    return f"[`{title}`]({_relative_markdown_path(target)})"
 
 
 def _find_nav_branch(items: list[Any] | None, label: str):
@@ -29,19 +29,57 @@ def _find_nav_branch(items: list[Any] | None, label: str):
     return None
 
 
+def _partition_section_entries(entries: list[Any]) -> tuple[str | None, list[Any]]:
+    """Return (overview_path, child_entries) for a nav section.
+
+    MkDocs lets sections include raw file paths (treated as implicit "Overview"
+    pages) or an explicit `{ "Overview": "path.md" }` mapping. The overview
+    entry should power the parent link, so we peel it out and ensure it doesn't
+    reappear as a standalone bullet.
+    """
+    overview_path: str | None = None
+    remaining: list[Any] = []
+    for item in entries:
+        if isinstance(item, str):
+            if overview_path is None and item not in SKIP_PATHS:
+                overview_path = item
+                continue
+        elif isinstance(item, dict):
+            used_for_overview = False
+            if overview_path is None:
+                for title, value in item.items():
+                    if (
+                        isinstance(value, str)
+                        and title.casefold() == "overview"
+                        and value not in SKIP_PATHS
+                    ):
+                        overview_path = value
+                        used_for_overview = True
+                        break
+            if used_for_overview:
+                continue
+        remaining.append(item)
+    return overview_path, remaining
+
+
 def _build_nav_nodes(entries: list[Any] | None):
     """Convert MkDocs nav entries into a tree of dict nodes."""
     nodes: list[dict[str, Any]] = []
     for entry in entries or []:
         if isinstance(entry, str):
-            # Unlabeled entries represent overview pages inside sections.
-            # They are omitted from the flat list to keep only named controls.
+            # Unlabeled entries (e.g. "controls/canvas/index.md") serve as
+            # section landing pages and are attached to their parent.
             continue
         if isinstance(entry, dict):
             for title, value in entry.items():
                 if isinstance(value, list):
-                    children = _build_nav_nodes(value)
-                    nodes.append({"title": title, "path": None, "children": children})
+                    # Sections are represented as lists; grab their overview
+                    # link (if any) and continue recursively with the rest.
+                    overview_path, remainder = _partition_section_entries(value)
+                    children = _build_nav_nodes(remainder)
+                    nodes.append(
+                        {"title": title, "path": overview_path, "children": children}
+                    )
                 else:
                     if value in SKIP_PATHS:
                         continue
@@ -49,26 +87,19 @@ def _build_nav_nodes(entries: list[Any] | None):
     return nodes
 
 
-def _collect_link_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, str]]:
-    """Flatten the tree of nav nodes into title/path pairs."""
-    entries: list[dict[str, str]] = []
+def _format_nav_list(nodes: list[dict[str, Any]], depth: int = 0) -> list[str]:
+    """Render the navigation nodes as a simple Markdown list."""
+    lines: list[str] = []
+    indent = " " * (depth * 4)  # 4 spaces per level to keep Markdown happy
     for node in nodes:
-        path = node.get("path")
-        if path:
-            entries.append({"title": node["title"], "path": path})
         children = node.get("children") or []
+        path = node.get("path")
+        title = node["title"]
+        label = _build_link(path, title) if path else f"**{title}**"
+        lines.append(f"{indent}- {label}")
         if children:
-            entries.extend(_collect_link_nodes(children))
-    return entries
-
-
-def _format_link_grid(entries: list[dict[str, str]]) -> str:
-    """Wrap entries in markup consumed by controls.css."""
-    lines = ['<div class="controls-grid" markdown="1">']
-    for entry in entries:
-        lines.append(f"- {_build_link(entry['path'], entry['title'])}")
-    lines.append("</div>")
-    return "\n".join(lines)
+            lines.extend(_format_nav_list(children, depth + 1))
+    return lines
 
 
 def render_controls_overview() -> str:
@@ -82,12 +113,10 @@ def render_controls_overview() -> str:
     api_reference = _find_nav_branch(nav_items, "API Reference")
     controls = _find_nav_branch(api_reference, "Controls") if api_reference else None
     nodes = _build_nav_nodes(controls) if isinstance(controls, list) else []
-
-    links = _collect_link_nodes(nodes)
-    links.sort(key=lambda entry: entry["title"].casefold())
-    if not links:
+    if not nodes:
         return ""
-    return _format_link_grid(links) + "\n"
+    lines = _format_nav_list(nodes)
+    return "\n".join(lines) + "\n"
 
 
 if __name__ == "__main__":

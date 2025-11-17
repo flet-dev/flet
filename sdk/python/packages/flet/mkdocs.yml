@@ -80,7 +80,6 @@ extra:
       link: https://bsky.app/profile/fletdev.bsky.social
 extra_css:
   - extras/css/mkdocstrings.css
-  - extras/css/controls.css
 
 # Validation
 validation:
