@@ -1,8 +1,7 @@
-import flet_charts as fch
-import matplotlib
 import matplotlib.pyplot as plt
 
 import flet as ft
+import flet_charts as fch
 
 
 def main(page: ft.Page):
