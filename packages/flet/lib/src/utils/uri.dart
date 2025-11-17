@@ -30,3 +30,8 @@ bool isLocalhost(Uri uri) {
 bool isUdsPath(Uri address) {
   return !address.hasScheme;
 }
+
+bool isUrl(String value) {
+  final urlPattern = RegExp(r'^(https?:\/\/|www\.)');
+  return urlPattern.hasMatch(value);
+}

@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flet/src/utils/strings.dart';
+import 'package:flet/src/utils/uri.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -105,20 +106,9 @@ extension ImageParsers on Control {
   }
 }
 
-bool isUrlOrPath(String value) {
-  // URL
-  final urlPattern = RegExp(r'^(http:\/\/|https:\/\/|www\.)');
-  if (urlPattern.hasMatch(value)) {
-    return true;
-  }
-
-  // file path
+bool isFilePath(String value) {
   final filePathPattern = RegExp(r'^[a-zA-Z0-9_\-/\\\.]+$');
-  if (filePathPattern.hasMatch(value)) {
-    return true;
-  }
-
-  return false;
+  return filePathPattern.hasMatch(value);
 }
 
 /// Returns a Flutter [ImageProvider] for anything supported by `resolveImageSource`.
@@ -342,20 +332,26 @@ class ResolvedAssetSource {
           : ResolvedAssetSource(bytes: listBytes);
     }
 
-    // string sources (Base64, URL, asset path)
+    // string sources
     if (src is String) {
       src = src.trim();
-      if (src.isEmpty) {
-        return const ResolvedAssetSource();
-      }
+
+      // empty string
+      if (src.isEmpty) return const ResolvedAssetSource();
+
+      // URL
+      if (isUrl(src)) return ResolvedAssetSource(uri: src);
+
+      // asset path
+      if (src.contains(".")) return ResolvedAssetSource(uri: src);
 
       // Base64
       if (src.isBase64) {
-        final bytes = base64Decode(src.stripBase64DataHeader());
-        return ResolvedAssetSource(bytes: bytes);
+        final srcAsBytes = base64Decode(src.stripBase64DataHeader());
+        return ResolvedAssetSource(bytes: srcAsBytes);
       }
 
-      // URL or asset path
+      // asset path
       return ResolvedAssetSource(uri: src);
     }
 

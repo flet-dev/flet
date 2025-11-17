@@ -18,18 +18,14 @@ extension StringExtension on String {
 
   /// Returns `true` if the string contains valid Base64-encoded data.
   ///
-  /// The string is first cleaned (data URI prefixes removed, whitespace
-  /// stripped) and then normalized using [base64.normalize], which validates
-  /// characters, fixes padding, and ensures proper length.
+  /// The string is first cleaned by removing data URI prefixes
+  /// (using [stripBase64DataHeader]) if present, then validated by
+  /// attempting to decode it using [base64.decode].
   ///
-  /// If normalization and subsequent decoding via [base64.decode] both
-  /// succeed, the string is considered valid Base64.
+  /// If decoding succeeds, the string is considered valid Base64.
   bool get isBase64 {
-    var s = stripBase64DataHeader().replaceAll(RegExp(r'\s+'), '');
-
     try {
-      final normalized = base64.normalize(s);
-      base64.decode(normalized);
+      base64.decode(stripBase64DataHeader());
       return true;
     } catch (_) {
       return false;
