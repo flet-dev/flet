@@ -18,7 +18,7 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 class Command(BaseCommand):
     """
-    Publish Flet app as a standalone web app.
+    Compile and package a Flet app as a standalone static web application.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -26,7 +26,7 @@ class Command(BaseCommand):
             "script",
             type=str,
             nargs="?",
-            help="path to a Python script",
+            help="Path to the Python script that starts your Flet app",
             default=".",
         )
         parser.add_argument(
@@ -34,7 +34,8 @@ class Command(BaseCommand):
             dest="pre",
             action="store_true",
             default=False,
-            help="allow micropip to install pre-release Python packages",
+            help="Allow micropip to install pre-release Python packages. "
+            "Use this if your app depends on a prerelease version of a package",
         )
         parser.add_argument(
             "-a",
@@ -42,73 +43,83 @@ class Command(BaseCommand):
             dest="assets_dir",
             type=str,
             default=None,
-            help="path to an assets directory",
+            help="Path to a directory containing static assets "
+            "used by the app (e.g., images, fonts, icons)",
         )
         parser.add_argument(
             "--distpath",
             dest="distpath",
-            help="where to put the published app (default: ./dist)",
+            default="dist",
+            help="Directory where the published web app "
+            "should be placed (default: ./dist)",
         )
         parser.add_argument(
             "--app-name",
             dest="app_name",
             type=str,
             default=None,
-            help="application name",
+            help="Full name of the application. "
+            "This is used in PWA metadata and may appear in the install prompt",
         )
         parser.add_argument(
             "--app-short-name",
             dest="app_short_name",
             type=str,
             default=None,
-            help="application short name",
+            help="A shorter version of the application name, "
+            "often used in homescreen icons or install prompts",
         )
         parser.add_argument(
             "--app-description",
             dest="app_description",
             type=str,
             default=None,
-            help="application description",
+            help="Short description of the application. "
+            "Used in PWA manifests and metadata",
         )
         parser.add_argument(
             "--base-url",
             dest="base_url",
             type=str,
             default=None,
-            help="base URL for the app",
+            help="Base URL path to serve the app from. "
+            "Useful if the app is hosted in a subdirectory",
         )
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
             choices=["auto", "canvaskit", "skwasm"],
             default="auto",
-            help="web renderer to use",
+            help="Flutter web renderer to use",
         )
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
             choices=["path", "hash"],
             default="path",
-            help="URL routing strategy",
+            help="Controls how routes are handled in the browser",
         )
         parser.add_argument(
             "--pwa-background-color",
             dest="pwa_background_color",
-            help="an initial background color for your web application",
             required=False,
+            help="Initial background color of your web app during the "
+            "loading phase (used in splash screens)",
         )
         parser.add_argument(
             "--pwa-theme-color",
             dest="pwa_theme_color",
-            help="default color for your web application's user interface",
             required=False,
+            help="Default color of the browser UI (e.g., address bar) "
+            "when your app is installed as a PWA",
         )
         parser.add_argument(
             "--no-cdn",
             dest="no_cdn",
             action="store_true",
             default=False,
-            help="disable loading of CanvasKit, Pyodide and fonts from CDN.",
+            help="Disable loading of CanvasKit, Pyodide, and fonts from CDNs. "
+            "Use this for full offline deployments or air-gapped environments",
         )
 
     def handle(self, options: argparse.Namespace) -> None:

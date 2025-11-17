@@ -3,9 +3,10 @@ import http.server
 import socketserver
 from pathlib import Path
 
-from flet_cli.commands.base import BaseCommand
 from rich.console import Console
 from rich.style import Style
+
+from flet_cli.commands.base import BaseCommand
 
 error_style = Style(color="red1", bold=True)
 console = Console(log_path=False)
@@ -24,7 +25,8 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 
 class Command(BaseCommand):
     """
-    Serve static files from a directory with optional WASM headers.
+    Serve static files from a directory with a lightweight web server,
+    optionally adding WebAssembly-related headers for Flet web apps.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -32,15 +34,16 @@ class Command(BaseCommand):
             "web_root",
             type=str,
             nargs="?",
-            help="directory to serve (default: ./build/web)",
-            default="build/web",
+            help="Directory to serve (default: ./build/web)",
+            default="./build/web",
         )
         parser.add_argument(
             "-p",
             "--port",
             type=int,
             default=8000,
-            help="Port to serve on (default: 8000)",
+            help="Port number to serve the files on. Use this to customize the port if "
+            "the default is already in use or needs to be changed (default: 8000)",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
