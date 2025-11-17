@@ -22,7 +22,10 @@ dependencies = [
     "flet-permission-handler",
     "flet-rive",
     "flet-video",
-    "flet-webview"
+    "flet-webview",
+    "matplotlib>=3.10.7",
+    "plotly>=6.4.0",
+    "kaleido>=1.2.0",
 ]
 
 [tool.uv.sources]
