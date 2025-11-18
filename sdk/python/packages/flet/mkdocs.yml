@@ -106,7 +106,8 @@ plugins:
   - search:
       lang: en
   - macros:
-      module_name: docs/extras/macros/__init__
+      module_name: docs/extras/macros
+      verbose: true
   - open-in-new-tab
   - mike:
       alias_type: symlink
@@ -770,6 +771,8 @@ nav:
               - CupertinoDatePickerMode: types/cupertinodatepickermode.md
               - CupertinoIcons: types/cupertinoicons.md
               - CupertinoTimerPickerMode: types/cupertinotimerpickermode.md
+              - DataTable2:
+                - DataColumnSize: datatable2/types/data_column_size.md
               - DatePickerEntryMode: types/datepickerentrymode.md
               - DatePickerMode: types/datepickermode.md
               - DismissDirection: types/dismissdirection.md

@@ -435,7 +435,7 @@ class Control extends ChangeNotifier {
             MapEntry(key, _transformIfControl(entryValue, parent, backend)),
       );
     }
-    if (value is List) {
+    if (value is List && value is! Uint8List) {
       return value
           .map((element) => _transformIfControl(element, parent, backend))
           .toList(growable: true);

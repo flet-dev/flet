@@ -1,16 +1,11 @@
 import argparse
 import os
 import platform
-import shutil
-import subprocess
 import sys
 
-import flet.version
-from flet.utils import cleanup_path
 from rich.console import Console
-from rich.status import Status
-from rich.style import Style
 
+import flet.version
 from flet_cli.commands.base import BaseCommand
 
 # Rich console setup for styled output
@@ -19,7 +14,7 @@ console = Console(log_path=False)
 
 class Command(BaseCommand):
     """
-    `flet doctor` command to provide information about the system and environment setup.
+    Get information about the system and environment setup.
     """
 
     def handle(self, options: argparse.Namespace) -> None:

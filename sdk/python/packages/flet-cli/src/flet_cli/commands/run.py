@@ -27,7 +27,7 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 class Command(BaseCommand):
     """
-    Run a Flet app in hot-reload mode.
+    Run a Flet application in hot reload mode.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -36,7 +36,7 @@ class Command(BaseCommand):
             type=str,
             nargs="?",
             default=".",
-            help="path to a Python script",
+            help="Path to the Python script that starts your Flet app (default: .)",
         )
         parser.add_argument(
             "-p",
@@ -44,21 +44,23 @@ class Command(BaseCommand):
             dest="port",
             type=int,
             default=None,
-            help="custom TCP port to run Flet app on",
+            help="Custom TCP or HTTP (if `--web` option is used) port to run the Flet "
+            "app on. If not specified, a random port will be chosen",
         )
         parser.add_argument(
             "--host",
             dest="host",
             type=str,
             default=None,
-            help='host to run Flet web app on. Use "*" to listen on all IPs.',
+            help='The host to run Flet web app on. Use "*" to listen on all IPs',
         )
         parser.add_argument(
             "--name",
             dest="app_name",
             type=str,
             default=None,
-            help="app name to distinguish it from other on the same port",
+            help="A unique name for your app. "
+            "Useful when running multiple apps on the same port",
         )
         parser.add_argument(
             "-m",
@@ -66,7 +68,8 @@ class Command(BaseCommand):
             dest="module",
             action="store_true",
             default=False,
-            help="treat the script as a python module path as opposed to a file path",
+            help="Treat the script as a python module path instead of a file path. "
+            "Example: flet run -m my_app.main",
         )
         parser.add_argument(
             "-d",
@@ -74,7 +77,8 @@ class Command(BaseCommand):
             dest="directory",
             action="store_true",
             default=False,
-            help="watch script directory",
+            help="Watch the directory of the script for changes "
+            "and hot reload the app accordingly",
         )
         parser.add_argument(
             "-r",
@@ -82,7 +86,8 @@ class Command(BaseCommand):
             dest="recursive",
             action="store_true",
             default=False,
-            help="watch script directory and all sub-directories recursively",
+            help="Watch script directory and all its "
+            "sub-directories recursively for file changes",
         )
         parser.add_argument(
             "-n",
@@ -90,7 +95,7 @@ class Command(BaseCommand):
             dest="hidden",
             action="store_true",
             default=False,
-            help="application window is hidden on startup",
+            help="Start the application with the window hidden",
         )
         parser.add_argument(
             "-w",
@@ -98,21 +103,22 @@ class Command(BaseCommand):
             dest="web",
             action="store_true",
             default=False,
-            help="open app in a web browser",
+            help="Launch the Flet app as a dynamic website and automatically "
+            "open it in your web browser after startup",
         )
         parser.add_argument(
             "--ios",
             dest="ios",
             action="store_true",
             default=False,
-            help="open app on iOS device",
+            help="Launch the app on an iOS device",
         )
         parser.add_argument(
             "--android",
             dest="android",
             action="store_true",
             default=False,
-            help="open app on Android device",
+            help="Launch the app on an Android device",
         )
         parser.add_argument(
             "-a",
@@ -120,15 +126,16 @@ class Command(BaseCommand):
             dest="assets_dir",
             type=str,
             default="assets",
-            help="path to assets directory",
+            help="Path to a directory containing static assets "
+            "used by the app (e.g. images, fonts)",
         )
         parser.add_argument(
             "--ignore-dirs",
             dest="ignore_dirs",
             type=str,
             default=None,
-            help="directories to ignore during watch. If more than one, separate"
-            "with a comma.",
+            help="Comma-separated list of directory names to ignore "
+            "when watching for file changes",
         )
 
     def handle(self, options: argparse.Namespace) -> None:

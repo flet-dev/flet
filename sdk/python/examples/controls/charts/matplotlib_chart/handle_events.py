@@ -1,8 +1,8 @@
-import flet_charts
 import matplotlib.pyplot as plt
 import numpy as np
 
 import flet as ft
+import flet_charts
 
 state = {}
 
@@ -86,7 +86,7 @@ def main(page: ft.Page):
             self.selected.set_visible(True)
             self.selected.set_data([xs[dataind]], [ys[dataind]])
 
-            self.text.set_text("selected: %d" % dataind)
+            self.text.set_text(f"selected: {dataind:d}")
             fig.canvas.draw()
 
     browser = PointBrowser()

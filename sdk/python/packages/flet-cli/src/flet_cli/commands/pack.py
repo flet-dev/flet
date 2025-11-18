@@ -4,30 +4,35 @@ import shutil
 import sys
 from pathlib import Path
 
-from flet.utils import is_macos, is_windows
-
 import flet_cli.__pyinstaller.config as hook_config
+from flet.utils import is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
 
 
 class Command(BaseCommand):
     """
-    Package Flet app to a desktop standalone bundle.
+    Package a Flet application into a standalone desktop executable or app bundle
+    using PyInstaller.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        parser.add_argument("script", type=str, help="path to a Python script")
+        parser.add_argument(
+            "script",
+            type=str,
+            help="Path to the Python script that launches your Flet app",
+        )
         parser.add_argument(
             "-i",
             "--icon",
             dest="icon",
-            help="path to an icon file (.ico, .png, .icns)",
+            help="Path to an icon file for your executable or app bundle. "
+            "Supported formats: `.ico` (Windows), `.png` (Linux) and `.icns` (macOS)",
         )
         parser.add_argument(
             "-n",
             "--name",
             dest="name",
-            help="name for the generated executable (Windows) or app bundle (macOS)",
+            help="Name for the generated executable (Windows) or app bundle (macOS)",
         )
         parser.add_argument(
             "-D",
@@ -35,92 +40,101 @@ class Command(BaseCommand):
             dest="onedir",
             action="store_true",
             default=False,
-            help="create a one-folder bundle containing an executable (Windows)",
+            help="Create a one-folder bundle instead of a "
+            "single-file executable (Windows only)",
         )
         parser.add_argument(
             "--distpath",
             dest="distpath",
-            help="where to put the bundled app (default: ./dist)",
+            default="dist",
+            help="Directory where the packaged app will be placed (default: ./dist)",
         )
         parser.add_argument(
             "--add-data",
             dest="add_data",
             action="append",
             nargs="*",
-            help="additional non-binary files or folders to be added to the executable",
+            help="Add additional non-binary files or folders to the bundle. "
+            "Accepts one or more arguments in the form `source:destination`",
         )
         parser.add_argument(
             "--add-binary",
             dest="add_binary",
             action="append",
             nargs="*",
-            help="additional binary files to be added to the executable",
+            help="Additional binary files to be added to the executable."
+            "Format: `source:destination[:platform]`",
         )
         parser.add_argument(
             "--hidden-import",
             dest="hidden_import",
             action="append",
             nargs="*",
-            help="add an import not visible in the code of the script(s)",
+            help="Add Python modules that are dynamically imported "
+            "and not detected by static analysis",
         )
         parser.add_argument(
             "--product-name",
             dest="product_name",
-            help="executable product name (Windows) or bundle name (macOS)",
+            help="Product name to be embedded in the "
+            "executable (Windows) or bundle (macOS)",
         )
         parser.add_argument(
             "--file-description",
             dest="file_description",
-            help="executable file description (Windows)",
+            help="File description to embed in the executable (Windows)",
         )
         parser.add_argument(
             "--product-version",
             dest="product_version",
-            help="executable product version (Windows) or bundle version (macOS)",
+            help="Product version for the executable (Windows) or bundle (macOS)",
         )
         parser.add_argument(
             "--file-version",
             dest="file_version",
-            help="executable file version, n.n.n.n (Windows)",
+            help="File version for the executable in `n.n.n.n` format (Windows only)",
         )
         parser.add_argument(
             "--company-name",
             dest="company_name",
-            help="executable company name (Windows)",
+            help="Company name metadata for the Windows executable",
         )
         parser.add_argument(
             "--copyright",
             dest="copyright",
-            help="executable (Windows) or bundle (macOS) copyright",
+            help="Copyright string embedded in the "
+            "executable (Windows) or bundle (macOS)",
         )
         parser.add_argument(
             "--codesign-identity",
             dest="codesign_identity",
-            help="Code signing identity (macOS)",
+            help="Code signing identity to sign the app bundle (macOS only)",
         )
         parser.add_argument(
             "--bundle-id",
             dest="bundle_id",
-            help="bundle identifier (macOS)",
+            help="Bundle identifier used for macOS app packaging",
         )
         parser.add_argument(
             "--debug-console",
             dest="debug_console",
-            help="Show python console (Ensure correct DEBUG level)",
+            help="Show python debug console window (ensure correct DEBUG level). "
+            "Useful for troubleshooting runtime errors",
         )
         parser.add_argument(
             "--uac-admin",
             dest="uac_admin",
             default=False,
             action="store_true",
-            help="Using this option creates a Manifest that will request elevation upon application start.(Windows)",
+            help="Request elevated (admin) permissions on application "
+            "start (Windows only). Adds a UAC manifest to the executable",
         )
         parser.add_argument(
             "--pyinstaller-build-args",
             dest="pyinstaller_build_args",
             action="append",
             nargs="*",
-            help="additional arguments for pyinstaller build command",
+            help="Additional raw arguments to the underlying pyinstaller build command",
         )
         parser.add_argument(
             "-y",
@@ -128,7 +142,7 @@ class Command(BaseCommand):
             dest="non_interactive",
             default=False,
             action="store_true",
-            help="Non-interactive mode.",
+            help="Enable non-interactive mode. All prompts will be skipped",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -145,7 +159,7 @@ class Command(BaseCommand):
                 shutil.rmtree(build_dir, ignore_errors=True)
             else:
                 delete_dir_prompt = input(
-                    f'Do you want to delete "build" directory? (y/n) '
+                    'Do you want to delete "build" directory? (y/n) '
                 )
                 if not delete_dir_prompt.lower() == "n":
                     shutil.rmtree(build_dir, ignore_errors=True)
