@@ -49,12 +49,13 @@ class Shimmer(LayoutControl):
 
     ```python
     ft.Shimmer(
-        base_color=ft.Colors.GREY_300,
-        highlight_color=ft.Colors.GREY_100,
+        base_color=ft.Colors.with_opacity(0.3, ft.Colors.GREY_400),
+        highlight_color=ft.Colors.WHITE,
         content=ft.Column(
             controls=[
-                ft.Container(width=200, height=16, bgcolor=ft.Colors.WHITE24),
-                ft.Container(width=160, height=16, bgcolor=ft.Colors.WHITE24),
+                ft.Container(height=80, bgcolor=ft.Colors.GREY_300),
+                ft.Container(height=80, bgcolor=ft.Colors.GREY_300),
+                ft.Container(height=80, bgcolor=ft.Colors.GREY_300),
             ],
         ),
     )
