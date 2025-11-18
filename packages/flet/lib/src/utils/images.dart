@@ -91,13 +91,21 @@ bool isBase64ImageString(String value) {
 
 bool isUrlOrPath(String value) {
   // Check for URL pattern
-  final urlPattern = RegExp(r'^(http:\/\/|https:\/\/|www\.)');
+  final urlPattern = RegExp(r'^(https?:\/\/|www\.)');
   if (urlPattern.hasMatch(value)) {
     return true;
   }
 
   // Check for common file path characters
-  final filePathPattern = RegExp(r'^[a-zA-Z0-9_\-/\\\.]+$');
+  final filePathPattern = RegExp(
+    r'^('
+    r'([a-zA-Z]:\\|\\\\)?([^\\/:*?"<>|\r\n]+\\)*[^\\/:*?"<>|\r\n]*'  // Windows paths
+    r'|'  // OR
+    r'(~?\/|\.\/|\.\.\/)?([^\/:*?"<>|\r\n]+\/)*[^\/:*?"<>|\r\n]*'    // Unix paths  
+    r'|'  // OR
+    r'[^\\/:*?"<>|\r\n]+'  // Just filenames without path separators
+    r')$'  
+  );
   if (filePathPattern.hasMatch(value)) {
     return true;
   }
