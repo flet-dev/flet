@@ -435,6 +435,7 @@ nav:
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
           - ShaderMask: controls/shadermask.md
+          - Shimmer: controls/shimmer.md
           - ShakeDetector: controls/shakedetector.md
           - Screenshot: controls/screenshot.md
           - Slider: controls/slider.md
