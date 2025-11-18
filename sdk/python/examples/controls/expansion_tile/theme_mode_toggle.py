@@ -19,14 +19,17 @@ def main(page: ft.Page):
             ft.SnackBar(
                 duration=1000,
                 content=ft.Text(
-                    f"ExpansionTile was {'expanded' if e.data == 'true' else 'collapsed'}"
+                    value=(
+                        f"ExpansionTile was "
+                        f"{'expanded' if e.data == 'true' else 'collapsed'}"
+                    )
                 ),
             )
         )
         if e.control.trailing:
-            e.control.trailing.name = (
+            e.control.trailing.icon = (
                 ft.Icons.ARROW_DROP_DOWN
-                if e.control.trailing.name == ft.Icons.ARROW_DROP_DOWN_CIRCLE
+                if e.control.trailing.icon == ft.Icons.ARROW_DROP_DOWN_CIRCLE
                 else ft.Icons.ARROW_DROP_DOWN_CIRCLE
             )
             page.update()
