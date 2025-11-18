@@ -5,16 +5,15 @@ def _line(width: int, height: int = 12) -> ft.Control:
     return ft.Container(
         width=width,
         height=height,
-        bgcolor=ft.Colors.GREY_300,
+        bgcolor=ft.Colors.GREY_400,
         border_radius=ft.BorderRadius.all(height),
     )
 
 
 def _placeholder_tile() -> ft.Control:
     return ft.Container(
-        width=320,
         padding=ft.Padding.all(16),
-        bgcolor=ft.Colors.WHITE,
+        bgcolor=ft.Colors.with_opacity(0.3, ft.Colors.WHITE),
         border_radius=ft.BorderRadius.all(20),
         content=ft.Row(
             spacing=16,
@@ -23,8 +22,9 @@ def _placeholder_tile() -> ft.Control:
                 ft.Container(
                     width=48,
                     height=48,
-                    bgcolor=ft.Colors.GREY_300,
+                    bgcolor=ft.Colors.with_opacity(0.5, ft.Colors.GREY_400),
                     border_radius=ft.BorderRadius.all(24),
+                    content=ft.Icon(ft.Icons.PERSON, color=ft.Colors.GREY_500),
                 ),
                 ft.Column(
                     expand=True,
@@ -42,7 +42,7 @@ def _placeholder_tile() -> ft.Control:
                 ft.Container(
                     width=32,
                     height=32,
-                    bgcolor=ft.Colors.GREY_300,
+                    bgcolor=ft.Colors.GREY_200,
                     border_radius=ft.BorderRadius.all(16),
                 ),
             ],
@@ -52,18 +52,15 @@ def _placeholder_tile() -> ft.Control:
 
 def main(page: ft.Page):
     page.title = "Shimmer - loading placeholders"
-    page.bgcolor = ft.Colors.GREY_100
-    page.padding = 30
 
     page.add(
         ft.Shimmer(
             base_color=ft.Colors.with_opacity(0.3, ft.Colors.GREY_400),
             highlight_color=ft.Colors.GREY_100,
             content=ft.Column(
-                spacing=14,
                 controls=[_placeholder_tile() for _ in range(3)],
             ),
-        )
+        ),
     )
 
 
