@@ -183,16 +183,14 @@ class FletTestApp:
         )
         print("Started Flet app")
 
-        # stdout = asyncio.subprocess.DEVNULL
-        stdout = asyncio.subprocess.PIPE
-        # stderr = asyncio.subprocess.DEVNULL
-        stderr = asyncio.subprocess.STDOUT
+        stdout = asyncio.subprocess.DEVNULL
+        stderr = asyncio.subprocess.DEVNULL
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             stdout = None
             stderr = None
 
         flutter_args = ["fvm", "flutter", "test", "integration_test"]
-        print(f"flutter args: {flutter_args}")
+
         if self.__disable_fvm:
             flutter_args.pop(0)
 
@@ -233,37 +231,13 @@ class FletTestApp:
         print("Started Flutter test process.")
         print("Waiting for a Flet client to connect...")
 
-        async def _read_stream(stream, label):
-
-            while True:
-                print("reading line...")
-                line = await stream.readline()
-                if line:
-                    print(f"{label}: {line.decode().rstrip()}")
-                else:
-                    break
-
-        reader_task = asyncio.create_task(
-            _read_stream(self.__flutter_process.stdout, "FLUTTER")
-        )
-
-        await reader_task
-
         while not ready.is_set():
-            print("ready still not set!")
             await asyncio.sleep(0.2)
-            reader_task.cancel()
-            # line = await self.__flutter_process.stdout.readline()
-            # if not line:
-            #     break
-            # print("FLUTTER:", line.decode().rstrip())
             if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
-
-        print("flutter exited with", self.__flutter_process.returncode)
 
     async def teardown(self):
         """
