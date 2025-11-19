@@ -132,7 +132,7 @@ flet run --web counter.py
 * [Website](https://flet.dev)
 * [Documentation](https://docs.flet.dev)
 * [Roadmap](https://flet.dev/roadmap)
-* [Apps Gallery](https://docs.flet.dev/gallery)
+* [Apps Gallery](https://flet.dev/gallery)
 
 ## Community
 
