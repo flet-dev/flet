@@ -6,26 +6,26 @@ def main(page: ft.Page):
     result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
 
     class CalcButton(ft.Button):
-        def __init__(self, text, expand=1):
+        def __init__(self, content, expand=1):
             super().__init__()
-            self.text = text
+            self.content = content
             self.expand = expand
 
     class DigitButton(CalcButton):
-        def __init__(self, text, expand=1):
-            CalcButton.__init__(self, text, expand)
-            self.bgcolor = ft.Colors.WHITE24
+        def __init__(self, content, expand=1):
+            CalcButton.__init__(self, content, expand)
+            self.bgcolor = ft.Colors.WHITE_24
             self.color = ft.Colors.WHITE
 
     class ActionButton(CalcButton):
-        def __init__(self, text):
-            CalcButton.__init__(self, text)
+        def __init__(self, content):
+            CalcButton.__init__(self, content)
             self.bgcolor = ft.Colors.ORANGE
             self.color = ft.Colors.WHITE
 
     class ExtraActionButton(CalcButton):
-        def __init__(self, text):
-            CalcButton.__init__(self, text)
+        def __init__(self, content):
+            CalcButton.__init__(self, content)
             self.bgcolor = ft.Colors.BLUE_GREY_100
             self.color = ft.Colors.BLACK
 
@@ -33,48 +33,48 @@ def main(page: ft.Page):
         ft.Container(
             width=350,
             bgcolor=ft.Colors.BLACK,
-            border_radius=ft.border_radius.all(20),
+            border_radius=ft.BorderRadius.all(20),
             padding=20,
             content=ft.Column(
                 controls=[
-                    ft.Row(controls=[result], alignment="end"),
+                    ft.Row(controls=[result], alignment=ft.MainAxisAlignment.END),
                     ft.Row(
                         controls=[
-                            ExtraActionButton(text="AC"),
-                            ExtraActionButton(text="+/-"),
-                            ExtraActionButton(text="%"),
-                            ActionButton(text="/"),
+                            ExtraActionButton("AC"),
+                            ExtraActionButton("+/-"),
+                            ExtraActionButton("%"),
+                            ActionButton("/"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="7"),
-                            DigitButton(text="8"),
-                            DigitButton(text="9"),
-                            ActionButton(text="*"),
+                            DigitButton("7"),
+                            DigitButton("8"),
+                            DigitButton("9"),
+                            ActionButton("*"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="4"),
-                            DigitButton(text="5"),
-                            DigitButton(text="6"),
-                            ActionButton(text="-"),
+                            DigitButton("4"),
+                            DigitButton("5"),
+                            DigitButton("6"),
+                            ActionButton("-"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="1"),
-                            DigitButton(text="2"),
-                            DigitButton(text="3"),
-                            ActionButton(text="+"),
+                            DigitButton("1"),
+                            DigitButton("2"),
+                            DigitButton("3"),
+                            ActionButton("+"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="0", expand=2),
-                            DigitButton(text="."),
-                            ActionButton(text="="),
+                            DigitButton("0", expand=2),
+                            DigitButton("."),
+                            ActionButton("="),
                         ]
                     ),
                 ]
