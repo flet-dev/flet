@@ -56,7 +56,7 @@ def main(page: ft.Page):
     page.add(
         ft.Shimmer(
             base_color=ft.Colors.with_opacity(0.3, ft.Colors.GREY_400),
-            highlight_color=ft.Colors.GREY_100,
+            highlight_color=ft.Colors.WHITE,
             content=ft.Column(
                 controls=[_placeholder_tile() for _ in range(3)],
             ),

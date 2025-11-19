@@ -105,6 +105,7 @@ class FletTestApp:
         screenshots_similarity_threshold: float = 99.0,
         use_http: bool = False,
         disable_fvm: bool = False,
+        skip_pump_and_settle: bool = False,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -124,12 +125,13 @@ class FletTestApp:
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
+        self.__skip_pump_and_settle = skip_pump_and_settle
         self.__flutter_app_dir = flutter_app_dir
         self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
-        self.__tester = None
+        self.__tester: Tester | None = None
 
     @property
     def page(self) -> ft.Page:
@@ -167,7 +169,8 @@ class FletTestApp:
                 await self.__flet_app_main(page)
             elif callable(self.__flet_app_main):
                 self.__flet_app_main(page)
-            await self.__tester.pump_and_settle()
+            if not self.__skip_pump_and_settle:
+                await self.__tester.pump_and_settle()
             ready.set()
 
         if not self.__tcp_port:
@@ -455,7 +458,7 @@ class FletTestApp:
             / self.test_platform
             / Path(self.__test_path).stem.removeprefix("test_")
         )
-        output = golden_dir / f"{stem}.gif"
+        output = golden_dir / f"{stem}.png"
         output.parent.mkdir(parents=True, exist_ok=True)
 
         frames: list[Image.Image] = []
@@ -470,9 +473,10 @@ class FletTestApp:
             first.save(
                 output,
                 save_all=True,
-                append_images=rest,
+                append_images=frames[1:],
                 duration=duration,
                 loop=loop,
+                format="PNG",
             )
         finally:
             for frame in frames:
