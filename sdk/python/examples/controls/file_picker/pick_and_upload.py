@@ -27,7 +27,7 @@ def main(page: ft.Page):
                 "\n"
                 "Run this example with:\n"
                 "    export FLET_SECRET_KEY=<some_secret_key>\n"
-                "    uv run flet run --web "
+                "    flet run --web "
                 "examples/controls/file_picker/pick_and_upload.py",
                 color=ft.Colors.RED,
                 selectable=True,
