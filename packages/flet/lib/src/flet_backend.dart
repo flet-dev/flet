@@ -186,12 +186,14 @@ class FletBackend extends ChangeNotifier {
       _registerClient();
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
+      rethrow;
       error = e.toString();
       _onDisconnect();
     }
   }
 
   _registerClient() {
+    debugPrint("Registering web client: $page");
     _send(
         Message(
             action: MessageAction.registerClient,
@@ -211,7 +213,7 @@ class FletBackend extends ChangeNotifier {
                   "width": page.get("width"),
                   "height": page.get("height"),
                   "platform": page.get("platform"),
-                  "window": page.child("window")!.toMap(),
+                  "window": page.child("window", visibleOnly: false)!.toMap(),
                   "media": page.get("media"),
                 }).toMap()),
         unbuffered: true);
@@ -333,7 +335,7 @@ class FletBackend extends ChangeNotifier {
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
       debugPrint("Window state updated: $windowState");
-      var window = page.child("window")!;
+      var window = page.child("window", visibleOnly: false)!;
       updateControl(window.id, windowState.toMap());
       triggerControlEvent(window, "event", {"type": "resized"});
     }
@@ -470,8 +472,7 @@ class FletBackend extends ChangeNotifier {
     var template = appErrorMessage ?? defaultAppErrorMessageTemplate;
     final lines = const LineSplitter().convert(rawError);
     final message = lines.isNotEmpty ? lines.first : "";
-    final details =
-        lines.length > 1 ? lines.sublist(1).join("\n") : "";
+    final details = lines.length > 1 ? lines.sublist(1).join("\n") : "";
     template = template.replaceAll("{message}", message);
     if (details.isEmpty) {
       template = template.replaceAll(RegExp(r'(\r?\n)*\{details\}'), "");
