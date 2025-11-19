@@ -22,10 +22,7 @@ dependencies = [
     "flet-permission-handler",
     "flet-rive",
     "flet-video",
-    "flet-webview",
-    "matplotlib>=3.10.7",
-    "plotly>=6.4.0",
-    "kaleido>=1.2.0",
+    "flet-webview"
 ]
 
 [tool.uv.sources]
@@ -66,6 +63,9 @@ dev = [
     "numpy >=2.2.0",
     "scikit-image >=0.25.2",
     "ruff >=0.13.1",
+    "matplotlib>=3.10.7",
+    "plotly>=6.4.0",
+    "kaleido>=1.2.0",
     { include-group = 'test' },
 ]
 docs-coverage = [
