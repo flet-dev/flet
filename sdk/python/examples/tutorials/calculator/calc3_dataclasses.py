@@ -9,7 +9,9 @@ def main(page: ft.Page):
 
     @dataclass
     class CalcButton(ft.Button):
-        expand: int = 1
+        def init(self):
+            if self.expand is None:
+                self.expand = 1
 
     @dataclass
     class DigitButton(CalcButton):
