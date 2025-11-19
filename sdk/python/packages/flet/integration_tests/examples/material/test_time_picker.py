@@ -42,12 +42,13 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(600, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
 
     # open picker
     await flet_app_function.tester.tap(
         await flet_app_function.tester.find_by_icon(ft.Icons.TIME_TO_LEAVE)
     )
-    flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
     flet_app_function.assert_screenshot(
