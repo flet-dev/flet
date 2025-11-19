@@ -104,6 +104,6 @@ class Shimmer(LayoutControl):
         if self.gradient is None and (
             self.base_color is None or self.highlight_color is None
         ):
-            raise ValueError("Provide gradient or both base_color and highlight_color.")
+            raise ValueError("Either gradient or both base_color and highlight_color must be provided.")
         if self.loop is not None and self.loop < 0:
             raise ValueError("loop must be greater than or equal to 0")
