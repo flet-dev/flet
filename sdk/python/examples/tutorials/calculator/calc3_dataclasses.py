@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import flet as ft
 
@@ -9,9 +9,16 @@ def main(page: ft.Page):
 
     @dataclass
     class CalcButton(ft.Button):
-        def init(self):
-            if self.expand is None:
-                self.expand = 1
+        # def init(self):
+        #     if self.expand is None:
+        #         self.expand = 1
+        expand: int = field(default=1)
+        style: ft.ButtonStyle = field(
+            default_factory=lambda: ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=10)
+            )
+        )
+        icon: ft.IconDataOrControl = field(default_factory=lambda: ft.Icons.HEADPHONES)
 
     @dataclass
     class DigitButton(CalcButton):
