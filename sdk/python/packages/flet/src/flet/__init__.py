@@ -413,6 +413,8 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
+from flet.controls.services.accelerometer import Accelerometer
+from flet.controls.services.barometer import Barometer
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.file_picker import (
@@ -422,13 +424,24 @@ from flet.controls.services.file_picker import (
     FilePickerUploadEvent,
     FilePickerUploadFile,
 )
+from flet.controls.services.gyroscope import Gyroscope
 from flet.controls.services.haptic_feedback import HapticFeedback
+from flet.controls.services.magnetometer import Magnetometer
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
+from flet.controls.services.sensor_events import (
+    AccelerometerReadingEvent,
+    BarometerReadingEvent,
+    GyroscopeReadingEvent,
+    MagnetometerReadingEvent,
+    SensorErrorEvent,
+    UserAccelerometerReadingEvent,
+)
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.services.url_launcher import UrlLauncher
+from flet.controls.services.user_accelerometer import UserAccelerometer
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     StrutStyle,
@@ -538,6 +551,8 @@ from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
 
 __all__ = [
+    "Accelerometer",
+    "AccelerometerReadingEvent",
     "AdaptiveControl",
     "AlertDialog",
     "Alignment",
@@ -568,6 +583,8 @@ __all__ = [
     "BadgeValue",
     "Banner",
     "BannerTheme",
+    "Barometer",
+    "BarometerReadingEvent",
     "BaseControl",
     "BasePage",
     "BeveledRectangleBorder",
@@ -733,6 +750,8 @@ __all__ = [
     "Gradient",
     "GradientTileMode",
     "GridView",
+    "Gyroscope",
+    "GyroscopeReadingEvent",
     "HapticFeedback",
     "HoverEvent",
     "Icon",
@@ -775,6 +794,8 @@ __all__ = [
     "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
     "MacOsDeviceInfo",
+    "Magnetometer",
+    "MagnetometerReadingEvent",
     "MainAxisAlignment",
     "Margin",
     "MarginValue",
@@ -887,6 +908,7 @@ __all__ = [
     "SelectionArea",
     "Semantics",
     "SemanticsService",
+    "SensorErrorEvent",
     "Service",
     "ShaderMask",
     "ShakeDetector",
@@ -962,6 +984,8 @@ __all__ = [
     "Url",
     "UrlLauncher",
     "UrlTarget",
+    "UserAccelerometer",
+    "UserAccelerometerReadingEvent",
     "ValueKey",
     "VerticalAlignment",
     "VerticalDivider",

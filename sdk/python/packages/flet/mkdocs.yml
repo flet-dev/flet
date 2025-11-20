@@ -266,6 +266,7 @@ nav:
               # - NativeAd: ads/nativead.md
           - Audio: audio/index.md
           - AudioRecorder: audio_recorder/index.md
+          - Accelerometer: controls/accelerometer.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -273,6 +274,7 @@ nav:
           - AutofillGroup: controls/autofillgroup.md
           - Badge: types/badge.md
           - Banner: controls/banner.md
+          - Barometer: controls/barometer.md
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
           - Button: controls/button.md
@@ -367,6 +369,7 @@ nav:
           - GestureDetector: controls/gesturedetector.md
           - Geolocator: geolocator/index.md
           - GridView: controls/gridview.md
+          - Gyroscope: controls/gyroscope.md
           - HapticFeedback: controls/hapticfeedback.md
           - Icon: controls/icon.md
           - IconButton: controls/iconbutton.md
@@ -398,6 +401,7 @@ nav:
                   - TextSourceAttribution: map/text_source_attribution.md
                   - ImageSourceAttribution: map/image_source_attribution.md
           - Markdown: controls/markdown.md
+          - Magnetometer: controls/magnetometer.md
           - MenuBar: controls/menubar.md
           - MenuItemButton: controls/menuitembutton.md
           - MergeSemantics: controls/mergesemantics.md
@@ -452,6 +456,7 @@ nav:
           - TextField: controls/textfield.md
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
+          - UserAccelerometer: controls/useraccelerometer.md
           - VerticalDivider: controls/verticaldivider.md
           - Video: video/index.md
           - View: controls/view.md
@@ -833,10 +838,12 @@ nav:
               - WindowEventType: types/windoweventtype.md
               - WindowResizeEdge: types/windowresizeedge.md
           - Events:
+              - AccelerometerReadingEvent: types/accelerometerreadingevent.md
               - Ads:
                   - PaidAdRequest: ads/types/paidadevent.md
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
+              - BarometerReadingEvent: types/barometerreadingevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
               - ContextMenuDismissEvent: types/contextmenudismissevent.md
               - ContextMenuSelectEvent: types/contextmenuselectevent.md
@@ -852,6 +859,7 @@ nav:
               - DragWillAcceptEvent: types/dragwillacceptevent.md
               - Event: types/event.md
               - FilePickerUploadEvent: types/filepickeruploadevent.md
+              - GyroscopeReadingEvent: types/gyroscopereadingevent.md
               - HoverEvent: types/hoverevent.md
               - KeyboardEvent: types/keyboardevent.md
               - KeyDownEvent: types/keydownevent.md
@@ -860,6 +868,7 @@ nav:
               - LoginEvent: types/loginevent.md
               - LongPressEndEvent: types/longpressendevent.md
               - LongPressStartEvent: types/longpressstartevent.md
+              - MagnetometerReadingEvent: types/magnetometerreadingevent.md
               - MultiTapEvent: types/multitapevent.md
               - MultiViewAddEvent: types/multiviewaddevent.md
               - MultiViewRemoveEvent: types/multiviewremoveevent.md
@@ -870,6 +879,7 @@ nav:
               - PlatformBrightnessChangeEvent: types/platformbrightnesschangeevent.md
               - PointerEvent: types/pointerevent.md
               - RouteChangeEvent: types/routechangeevent.md
+              - SensorErrorEvent: types/sensorerrorevent.md
               - ScaleEndEvent: types/scaleendevent.md
               - ScaleStartEvent: types/scalestartevent.md
               - ScaleUpdateEvent: types/scaleupdateevent.md
@@ -878,6 +888,7 @@ nav:
               - TapEvent: types/tapevent.md
               - TextSelectionChangeEvent: types/textselectionchangeevent.md
               - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md
+              - UserAccelerometerReadingEvent: types/useraccelerometerreadingevent.md
               - ViewPopEvent: types/viewpopevent.md
               - WindowEvent: types/windowevent.md
           - Exceptions:
