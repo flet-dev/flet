@@ -80,6 +80,9 @@ class FletTestApp:
             If `True`, do not invoke `fvm` when running the Flutter test
             process. Env override: `FLET_TEST_DISABLE_FVM=1`.
 
+        skip_pump_and_settle:
+            If `True`, the initial `pump_and_settle` after app start is skipped.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -458,7 +461,7 @@ class FletTestApp:
             / self.test_platform
             / Path(self.__test_path).stem.removeprefix("test_")
         )
-        output = golden_dir / f"{stem}.png"
+        output = golden_dir / f"{stem}.gif"
         output.parent.mkdir(parents=True, exist_ok=True)
 
         frames: list[Image.Image] = []
@@ -467,16 +470,25 @@ class FletTestApp:
                 path = golden_dir / f"{name}.png"
                 if not path.exists():
                     raise FileNotFoundError(path)
-                frames.append(Image.open(path))
+
+                frames.append(
+                    Image.open(path)
+                    .convert("RGB")
+                    .convert(
+                        "P",
+                        palette=Image.ADAPTIVE,
+                        colors=256,
+                    )
+                )
 
             first, *rest = frames
             first.save(
                 output,
                 save_all=True,
-                append_images=frames[1:],
+                append_images=rest,
                 duration=duration,
                 loop=loop,
-                format="PNG",
+                optimize=True,
             )
         finally:
             for frame in frames:
