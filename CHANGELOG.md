@@ -13,6 +13,7 @@
   * Controls in Python are now defined as plain dataclasses
   * Unified diffing algorithm supports both imperative and declarative styles
   * Refactored Flutter layer using inherited widgets and `Provider`
+* Added a Shimmer control for building skeleton loaders and animated placeholders.
 * Added `FletApp.appErrorMessage` template to customize loading screen errors.
 * See the list of [breaking changes](https://github.com/flet-dev/flet/issues/5238)
 

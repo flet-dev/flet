@@ -20,6 +20,21 @@ state = State()
 
 
 def main(page: ft.Page):
+    if not page.web:
+        page.add(
+            ft.Text(
+                "This example is only available in Flet Web mode.\n"
+                "\n"
+                "Run this example with:\n"
+                "    export FLET_SECRET_KEY=<some_secret_key>\n"
+                "    flet run --web "
+                "examples/controls/file_picker/pick_and_upload.py",
+                color=ft.Colors.RED,
+                selectable=True,
+            )
+        )
+        return
+
     prog_bars: dict[str, ft.ProgressRing] = {}
 
     def on_upload_progress(e: ft.FilePickerUploadEvent):

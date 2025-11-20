@@ -92,6 +92,7 @@ import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
 import 'controls/semantics.dart';
 import 'controls/shader_mask.dart';
+import 'controls/shimmer.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
@@ -325,6 +326,8 @@ class FletCoreExtension extends FletExtension {
         return SemanticsControl(key: key, control: control);
       case "ShaderMask":
         return ShaderMaskControl(key: key, control: control);
+      case "Shimmer":
+        return ShimmerControl(key: key, control: control);
       case "Slider":
         return AdaptiveSliderControl(key: key, control: control);
       case "SnackBar":

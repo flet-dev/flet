@@ -11,6 +11,7 @@ def create_flet_app(request):
         flutter_app_dir=(Path(__file__).parent / "../../../../../client").resolve(),
         test_path=request.fspath,
         flet_app_main=params.get("flet_app_main"),
+        skip_pump_and_settle=params.get("skip_pump_and_settle", False),
         assets_dir=Path(__file__).resolve().parent / "assets",
     )
 
