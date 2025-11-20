@@ -61,6 +61,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   bool _keyboardHandlerSubscribed = false;
   String? _prevViewRoutes;
 
+  // Ensures that the first_frame lifecycle event is fired only once.
+  bool _firstFrameEventSent = false;
+
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
   List<DeviceOrientation>? _appliedDeviceOrientations;
@@ -72,6 +75,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     _updateMultiViews();
+    _scheduleFirstFrameNotification();
 
     _routeParser = RouteParser();
 
@@ -252,6 +256,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
   }
 
+  /// Schedules a one-time callback to emit the `first_frame` lifecycle event
+  /// after the first Flutter frame is rendered for this page.
+  void _scheduleFirstFrameNotification() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _firstFrameEventSent) {
+        return;
+      }
+      _firstFrameEventSent = true;
+      widget.control.triggerEventWithoutSubscribers("first_frame");
+    });
+  }
+
   void _routeChanged() {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
   }
@@ -341,8 +357,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       var appStatus = context
           .select<FletBackend, ({bool isLoading, String error})>((backend) =>
               (isLoading: backend.isLoading, error: backend.error));
-      var appStartupScreenMessage =
-          backend.appStartupScreenMessage ?? "";
+      var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
       var formattedErrorMessage =
           backend.formatAppErrorMessage(appStatus.error);
 
@@ -503,14 +518,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     var backend = FletBackend.of(context);
     var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage =
-        backend.appStartupScreenMessage ?? "";
+    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage =
-        backend.formatAppErrorMessage(appStatus.error);
+    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
     List<Page<dynamic>> pages = [];
