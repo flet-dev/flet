@@ -186,7 +186,6 @@ class FletBackend extends ChangeNotifier {
       _registerClient();
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
-      rethrow;
       error = e.toString();
       _onDisconnect();
     }
