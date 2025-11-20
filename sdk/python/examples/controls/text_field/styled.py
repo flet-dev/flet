@@ -10,7 +10,7 @@ async def main(page: ft.Page):
             cursor_color=ft.Colors.RED,
             selection_color=ft.Colors.YELLOW,
             color=ft.Colors.PINK,
-            bgcolor=ft.Colors.BLACK26,
+            bgcolor=ft.Colors.BLACK_26,
             filled=True,
             focused_color=ft.Colors.GREEN,
             focused_bgcolor=ft.Colors.CYAN_200,
@@ -22,5 +22,6 @@ async def main(page: ft.Page):
         )
     )
     await tf.focus()
+
 
 ft.run(main)

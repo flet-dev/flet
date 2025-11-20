@@ -34,9 +34,9 @@ def main(page: ft.Page):
     page.add(
         ft.Container(
             border_radius=5,
-            width=float("inf"),
             expand=True,
             content=ft.Stack(
+                expand=True,
                 controls=[
                     ft.Image(
                         src="https://picsum.photos/200/300",
@@ -51,7 +51,7 @@ def main(page: ft.Page):
                             drag_interval=10,
                         ),
                     ),
-                ]
+                ],
             ),
         )
     )

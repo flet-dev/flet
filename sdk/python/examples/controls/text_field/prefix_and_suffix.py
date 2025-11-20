@@ -3,8 +3,13 @@ import flet as ft
 
 def main(page: ft.Page):
     def handle_button_click(e: ft.Event[ft.Button]):
-        message.value = f"Textboxes values are:  '{prefix_field.value}', "
-        f"'{suffix_field.value}', '{prefix_suffix_field.value}', '{color_field.value}'."
+        message.value = (
+            "Textboxes values are: "
+            f"'{prefix_field.value}', "
+            f"'{suffix_field.value}', "
+            f"'{prefix_suffix_field.value}', "
+            f"'{color_field.value}'."
+        )
         page.update()
 
     page.add(
