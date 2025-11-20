@@ -42,6 +42,7 @@ async def test_programmatic_open(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(300, 300)
     flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
 
     # click button to open menu
     await flet_app_function.tester.tap(
