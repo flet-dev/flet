@@ -17,6 +17,25 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     To cause a child control to expand and fill the available horizontal space, set
     its [`expand`][(c).] property.
+
+    ```python
+    ft.Row(
+            scroll=ft.ScrollMode.AUTO,
+            controls=[
+                ft.Card(
+                    shape=ft.ContinuousRectangleBorder(radius=10),
+                    content=ft.Container(
+                        padding=5,
+                        border_radius=ft.BorderRadius.all(5),
+                        bgcolor=ft.Colors.AMBER_100,
+                        content=ft.Text(f"Control {i}"),
+                    ),
+                )
+                for i in range(1, 6)
+            ],
+        ),
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)

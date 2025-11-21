@@ -75,6 +75,10 @@ class FlutterWidgetTester implements Tester {
       _tester.tap((finder as FlutterTestFinder).raw);
 
   @override
+  Future<void> tapAt(Offset offset) =>
+      _tester.tapAt(offset);
+
+  @override
   Future<void> longPress(TestFinder finder) =>
       _tester.longPress((finder as FlutterTestFinder).raw);
 

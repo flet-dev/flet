@@ -114,6 +114,18 @@ class Tester(Service):
         """
         await self._invoke_method("tap", {"id": finder.id})
 
+    async def tap_at(self, x_offset: int, y_offset: int):
+        """
+        Dispatch a pointer down / pointer up sequence at the given offset.
+
+        Args:
+            x_offset: x value of offset from top right.
+            y_offset: y value of offset from top right.
+        """
+        await self._invoke_method(
+            "tap_at", {"x_offset": x_offset, "y_offset": y_offset}
+        )
+
     async def long_press(self, finder: Finder):
         """
         Dispatch a pointer down / pointer up sequence (with a delay of

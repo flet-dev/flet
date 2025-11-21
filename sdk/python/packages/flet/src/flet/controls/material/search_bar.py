@@ -25,6 +25,11 @@ class SearchBar(LayoutControl):
     """
     Manages a "search view" route that allows the user to select one of the suggested
     completions for a search query.
+
+    ```python
+    ft.SearchBar(bar_hint_text="Search...")
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)

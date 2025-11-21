@@ -52,10 +52,9 @@ async def test_custom_label(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_handling_events(flet_app_function: ftt.FletTestApp):
     scr = await flet_app_function.wrap_page_controls_in_screenshot()
-    button = await flet_app_function.tester.find_by_key("slider")
-    await flet_app_function.tester.tap(button)
-
+    await flet_app_function.tester.tap_at(120, 60)
     await flet_app_function.tester.pump_and_settle()
+
     flet_app_function.assert_screenshot(
         "handling_events",
         await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),

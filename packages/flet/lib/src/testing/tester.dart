@@ -14,6 +14,7 @@ abstract class Tester {
   TestFinder findByIcon(IconData icon);
   Future<Uint8List> takeScreenshot(String name);
   Future<void> tap(TestFinder finder);
+  Future<void> tapAt(Offset offset);
   Future<void> longPress(TestFinder finder);
   Future<void> enterText(TestFinder finder, String text);
   Future<void> mouseHover(TestFinder finder);
