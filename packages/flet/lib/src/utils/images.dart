@@ -77,60 +77,30 @@ FilterQuality? parseFilterQuality(String? value,
       defaultValue;
 }
 
-extension ImageParsers on Control {
-  ImageRepeat? getImageRepeat(String propertyName,
-      [ImageRepeat? defaultValue]) {
-    return parseImageRepeat(get(propertyName), defaultValue);
-  }
+/// Returns a Flutter [ImageProvider]
+/// for anything supported by [ResolvedAssetSource].
+ImageProvider? parseImageProvider(dynamic src, BuildContext context) {
+  final resolvedSrc =
+      src is ResolvedAssetSource ? src : ResolvedAssetSource.from(src);
 
-  BlendMode? getBlendMode(String propertyName, [BlendMode? defaultValue]) {
-    return parseBlendMode(get(propertyName), defaultValue);
-  }
-
-  BoxFit? getBoxFit(String propertyName, [BoxFit? defaultValue]) {
-    return parseBoxFit(get(propertyName), defaultValue);
-  }
-
-  ImageFilter? getBlur(String propertyName, [ImageFilter? defaultValue]) {
-    return parseBlur(get(propertyName), defaultValue);
-  }
-
-  ColorFilter? getColorFilter(String propertyName, ThemeData theme,
-      [ColorFilter? defaultValue]) {
-    return parseColorFilter(get(propertyName), theme, defaultValue);
-  }
-
-  FilterQuality? getFilterQuality(String propertyName,
-      [FilterQuality? defaultValue]) {
-    return parseFilterQuality(get(propertyName), defaultValue);
-  }
-}
-
-bool isFilePath(String value) {
-  final filePathPattern = RegExp(r'^[a-zA-Z0-9_\-/\\\.]+$');
-  return filePathPattern.hasMatch(value);
-}
-
-/// Returns a Flutter [ImageProvider] for anything supported by `resolveImageSource`.
-ImageProvider? getImageProvider(BuildContext context, dynamic src) {
-  final resolved = ResolvedAssetSource.from(src);
-
-  if (resolved.error != null) {
-    debugPrint("getImageProvider failed decoding src: ${resolved.error}");
+  if (resolvedSrc.error != null) {
+    debugPrint("getImageProvider failed decoding src: ${resolvedSrc.error}");
     return null;
   }
 
-  if (resolved.hasBytes) {
+  // bytes
+  if (resolvedSrc.hasBytes) {
     try {
-      return MemoryImage(resolved.bytes!);
+      return MemoryImage(resolvedSrc.bytes!);
     } catch (ex) {
       debugPrint("getImageProvider failed decoding bytes");
       return null;
     }
   }
 
-  if (resolved.hasUri) {
-    var assetSrc = FletBackend.of(context).getAssetSource(resolved.uri!);
+  // URL or asset path
+  if (resolvedSrc.hasUri) {
+    var assetSrc = FletBackend.of(context).getAssetSource(resolvedSrc.uri!);
     return assetSrc.isFile
         ? getFileImageProvider(assetSrc.path)
         : NetworkImage(assetSrc.path);
@@ -346,10 +316,10 @@ class ResolvedAssetSource {
       if (src.contains(".")) return ResolvedAssetSource(uri: src);
 
       // Base64
-      if (src.isBase64) {
-        final srcAsBytes = base64Decode(src.stripBase64DataHeader());
+      try {
+        final srcAsBytes = base64.decode(src.stripBase64DataHeader());
         return ResolvedAssetSource(bytes: srcAsBytes);
-      }
+      } catch (_) {}
 
       // asset path
       return ResolvedAssetSource(uri: src);
@@ -373,4 +343,46 @@ Uint8List? _bytesFromList(dynamic value) {
   }
 
   return null;
+}
+
+bool isFilePath(String value) {
+  final filePathPattern = RegExp(r'^[a-zA-Z0-9_\-/\\\.]+$');
+  return filePathPattern.hasMatch(value);
+}
+
+extension ImageParsers on Control {
+  ImageRepeat? getImageRepeat(String propertyName,
+      [ImageRepeat? defaultValue]) {
+    return parseImageRepeat(get(propertyName), defaultValue);
+  }
+
+  BlendMode? getBlendMode(String propertyName, [BlendMode? defaultValue]) {
+    return parseBlendMode(get(propertyName), defaultValue);
+  }
+
+  BoxFit? getBoxFit(String propertyName, [BoxFit? defaultValue]) {
+    return parseBoxFit(get(propertyName), defaultValue);
+  }
+
+  ImageFilter? getBlur(String propertyName, [ImageFilter? defaultValue]) {
+    return parseBlur(get(propertyName), defaultValue);
+  }
+
+  ColorFilter? getColorFilter(String propertyName, ThemeData theme,
+      [ColorFilter? defaultValue]) {
+    return parseColorFilter(get(propertyName), theme, defaultValue);
+  }
+
+  FilterQuality? getFilterQuality(String propertyName,
+      [FilterQuality? defaultValue]) {
+    return parseFilterQuality(get(propertyName), defaultValue);
+  }
+
+  ResolvedAssetSource getSrc(String propertyName) {
+    return ResolvedAssetSource.from(get(propertyName));
+  }
+
+  ImageProvider? getImageProvider(String propertyName, BuildContext context) {
+    return parseImageProvider(get(propertyName), context);
+  }
 }

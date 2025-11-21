@@ -14,9 +14,9 @@ class CircleAvatarControl extends StatelessWidget {
     debugPrint("CircleAvatar build: ${control.id}");
 
     var foregroundImage =
-        getImageProvider(context, control.get("foreground_image_src"));
+        control.getImageProvider("foreground_image_src", context);
     var backgroundImage =
-        getImageProvider(context, control.get("background_image_src"));
+        control.getImageProvider("background_image_src", context);
 
     var avatar = CircleAvatar(
         foregroundImage: foregroundImage,

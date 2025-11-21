@@ -96,10 +96,9 @@ DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
   if (value == null) return defaultValue;
 
   var src = value["src"];
-  ImageProvider? image = getImageProvider(context, src);
-  if (image == null) {
-    return defaultValue;
-  }
+  ImageProvider? image = parseImageProvider(src, context);
+  if (image == null) return defaultValue;
+
   return DecorationImage(
     image: image,
     colorFilter: parseColorFilter(value["color_filter"], Theme.of(context)),

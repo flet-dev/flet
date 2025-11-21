@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
-import '../utils/box.dart';
 import '../utils/dash_path.dart';
 import '../utils/hashing.dart';
 import '../utils/images.dart';
@@ -539,19 +538,19 @@ Future<void> loadCanvasImage(Control shape) async {
   final completer = Completer();
   shape.properties["_loading"] = completer;
 
-  final resolved = ResolvedAssetSource.from(shape.get("src"));
+  final src = shape.getSrc("src");
 
   try {
     Uint8List bytes;
 
-    if (resolved.error != null) {
-      throw Exception("Error decoding src: ${resolved.error}");
+    if (src.error != null) {
+      throw Exception("Error decoding src: ${src.error}");
     }
 
-    if (resolved.hasBytes) {
-      bytes = resolved.bytes!;
-    } else if (resolved.hasUri) {
-      var assetSrc = shape.backend.getAssetSource(resolved.uri!);
+    if (src.hasBytes) {
+      bytes = src.bytes!;
+    } else if (src.hasUri) {
+      var assetSrc = shape.backend.getAssetSource(src.uri!);
       if (assetSrc.isFile) {
         final file = File(assetSrc.path);
         bytes = await file.readAsBytes();
@@ -583,12 +582,12 @@ Future<void> loadCanvasImage(Control shape) async {
 /// Produces a fast hash for the `src` so Canvas can tell when it needs to
 /// refetch the image. Inline strings and bytes use FNV to avoid massive hashes.
 int getImageHash(Control shape) {
-  final resolved = ResolvedAssetSource.from(shape.get("src"));
-  if (resolved.hasUri) {
-    return resolved.uri!.hashCode;
+  final src = shape.getSrc("src");
+  if (src.hasUri) {
+    return src.uri!.hashCode;
   }
-  if (resolved.hasBytes) {
-    return fnv1aHash(resolved.bytes!);
+  if (src.hasBytes) {
+    return fnv1aHash(src.bytes!);
   }
   return 0;
 }
