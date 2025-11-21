@@ -52,7 +52,7 @@ def main(page: ft.Page):
         ft.Container(
             padding=20,
             bgcolor=ft.Colors.SURFACE_TINT,
-            border=ft.border.all(3, ft.Colors.OUTLINE),
+            border=ft.Border.all(3, ft.Colors.OUTLINE),
             theme_mode=ft.ThemeMode.LIGHT,
             theme=ft.Theme(),
             content=ft.Row(
@@ -69,7 +69,7 @@ def main(page: ft.Page):
         ft.Container(
             padding=20,
             bgcolor=ft.Colors.SURFACE_TINT,
-            border=ft.border.all(3, ft.Colors.OUTLINE),
+            border=ft.Border.all(3, ft.Colors.OUTLINE),
             border_radius=10,
             theme_mode=ft.ThemeMode.SYSTEM,
             theme=ft.Theme(),

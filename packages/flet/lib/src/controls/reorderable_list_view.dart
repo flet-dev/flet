@@ -7,6 +7,7 @@ import '../utils/keys.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
+import '../widgets/reorderable_item_scope.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 import 'scroll_notification_control.dart';
@@ -25,6 +26,30 @@ class ReorderableListViewControl extends StatefulWidget {
 class _ListViewControlState extends State<ReorderableListViewControl> {
   late final ScrollController _controller;
   List<Control> _controls = [];
+
+  Widget _buildItem(int index) {
+    final control = _controls[index];
+    final keyValue = control.getKey("key")?.value ?? control.id;
+    return ReorderableItemScope(
+      key: ValueKey(keyValue),
+      index: index,
+      child: ControlWidget(
+        key: ValueKey(keyValue),
+        control: control,
+      ),
+    );
+  }
+
+  Widget _buildPrototypeItem() {
+    final control = _controls[0];
+    return ReorderableItemScope(
+      index: 0,
+      child: ControlWidget(
+        key: ValueKey(control.id),
+        control: control,
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -47,7 +72,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ReorderableDraggableControl build: ${widget.control.id}");
+    debugPrint("ReorderableListViewControl build: ${widget.control.id}");
 
     var horizontal = widget.control.getBool("horizontal", false)!;
     var buildControlsOnDemand =
@@ -67,7 +92,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
     var header = widget.control.buildWidget("header");
     var footer = widget.control.buildWidget("footer");
     var prototypeItem = firstItemPrototype && _controls.isNotEmpty
-        ? ControlWidget(key: ValueKey(_controls[0].id), control: _controls[0])
+        ? _buildPrototypeItem()
         : null;
     var autoScrollerVelocityScalar =
         widget.control.getDouble("auto_scroller_velocity_scalar");
@@ -121,11 +146,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
                 itemBuilder: (context, index) {
-                  return ControlWidget(
-                    key: ValueKey(_controls[index].getKey("key")?.value ??
-                        _controls[index].id),
-                    control: _controls[index],
-                  );
+                  return _buildItem(index);
                 },
               )
             : ReorderableListView(
@@ -147,12 +168,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
-                children: _controls
-                    .map((item) => ControlWidget(
-                          key: ValueKey(item.getKey("key")?.value ?? item.id),
-                          control: item,
-                        ))
-                    .toList(),
+                children: List.generate(_controls.length, _buildItem),
               );
 
         child = ScrollableControl(

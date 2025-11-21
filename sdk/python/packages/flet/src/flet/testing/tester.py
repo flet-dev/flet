@@ -112,7 +112,9 @@ class Tester(Service):
         Args:
             finder: Finder to search for a control.
         """
-        await self._invoke_method("tap", {"id": finder.id})
+        await self._invoke_method(
+            "tap", {"finder_id": finder.id, "finder_index": finder.index}
+        )
 
     async def long_press(self, finder: Finder):
         """
@@ -123,7 +125,9 @@ class Tester(Service):
         Args:
             finder: Finder to search for a control.
         """
-        await self._invoke_method("long_press", {"id": finder.id})
+        await self._invoke_method(
+            "long_press", {"finder_id": finder.id, "finder_index": finder.index}
+        )
 
     async def enter_text(self, finder: Finder, text: str):
         """
@@ -135,7 +139,10 @@ class Tester(Service):
             finder: Finder to search for a control.
             text: The text to enter.
         """
-        await self._invoke_method("enter_text", {"id": finder.id, "text": text})
+        await self._invoke_method(
+            "enter_text",
+            {"finder_id": finder.id, "finder_index": finder.index, "text": text},
+        )
 
     async def mouse_hover(self, finder: Finder):
         """
@@ -144,7 +151,9 @@ class Tester(Service):
         Args:
             finder: Finder to search for a control.
         """
-        await self._invoke_method("mouse_hover", {"id": finder.id})
+        await self._invoke_method(
+            "mouse_hover", {"finder_id": finder.id, "finder_index": finder.index}
+        )
 
     async def teardown(self):
         """

@@ -12,8 +12,16 @@ example_images: ../examples/controls/drag_target_and_draggable/media
 
 ### Drag and drop Containers
 
+#### Imperative
+
 ```python
 --8<-- "{{ examples }}/drag_and_drop_containers.py"
+```
+
+#### Declarative
+
+```python
+--8<-- "{{ examples }}/drag_and_drop_containers_declarative.py"
 ```
 
 {{ image(example_images + "/drag_and_drop_containers.gif", alt="drag-and-drop-containers", width="80%") }}

@@ -1,5 +1,5 @@
 import argparse
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from flet_cli.commands.options import Option, verbose_option
 
@@ -13,7 +13,7 @@ class BaseCommand:
     description: Optional[str] = None
     # A list of pre-defined options which will be loaded on initializing
     # Rewrite this if you don't want the default ones
-    arguments: List[Option] = [verbose_option]
+    arguments: list[Option] = [verbose_option]
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         for arg in self.arguments:
@@ -25,14 +25,15 @@ class BaseCommand:
         cls,
         subparsers: argparse._SubParsersAction,
         name: Optional[str] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Register a subcommand to the subparsers,
         with an optional name of the subcommand.
         """
         help_text = cls.description or cls.__doc__
         name = name or cls.name or ""
-        # Remove the existing subparser as it will raises an error on Python 3.11+
+
+        # Remove the existing subparser as it will raise an error on Python 3.11+
         subparsers._name_parser_map.pop(name, None)
         subactions = subparsers._get_subactions()
         subactions[:] = [action for action in subactions if action.dest != name]

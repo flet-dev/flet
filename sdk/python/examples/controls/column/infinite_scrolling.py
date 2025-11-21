@@ -13,17 +13,14 @@ sem = threading.Semaphore()
 
 def main(page: ft.Page):
     def on_scroll(e: ft.OnScrollEvent):
-        if e.pixels >= e.max_scroll_extent - 100:
-            if sem.acquire(blocking=False):
-                try:
-                    for i in range(0, 10):
-                        cl.controls.append(
-                            ft.Text(f"Text line {s.i}", scroll_key=str(s.i))
-                        )
-                        s.i += 1
-                    cl.update()
-                finally:
-                    sem.release()
+        if e.pixels >= e.max_scroll_extent - 100 and sem.acquire(blocking=False):
+            try:
+                for _i in range(0, 10):
+                    cl.controls.append(ft.Text(f"Text line {s.i}", key=str(s.i)))
+                    s.i += 1
+                cl.update()
+            finally:
+                sem.release()
 
     cl = ft.Column(
         spacing=10,
@@ -33,8 +30,8 @@ def main(page: ft.Page):
         scroll_interval=0,
         on_scroll=on_scroll,
     )
-    for i in range(0, 50):
-        cl.controls.append(ft.Text(f"Text line {s.i}", scroll_key=str(s.i)))
+    for _i in range(0, 50):
+        cl.controls.append(ft.Text(f"Text line {s.i}", key=str(s.i)))
         s.i += 1
 
     page.add(ft.Container(cl, border=ft.Border.all(1)))

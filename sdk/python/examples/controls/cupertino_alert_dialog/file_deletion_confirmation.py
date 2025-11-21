@@ -4,7 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_dialog_dismissal(e: ft.Event[ft.CupertinoAlertDialog]):
+    def handle_dialog_dismissal(e: ft.Event[ft.DialogControl]):
         page.add(ft.Text("Dialog dismissed"))
 
     def handle_action_click(e: ft.Event[ft.CupertinoDialogAction]):

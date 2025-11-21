@@ -8,7 +8,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.Image(
-            src="/icons/icon-512.png",
+            src="app_icon_512.png",
             width=100,
             height=100,
             fit=ft.BoxFit.CONTAIN,
