@@ -1,3 +1,5 @@
+import random
+
 import flet as ft
 
 
@@ -22,15 +24,9 @@ def main(page: ft.Page):
     )
 
     def handle_button_click(e: ft.Event[ft.Button]):
-        gesture_detector.mouse_cursor = next(
-            generate_mouse_cursors(list(ft.MouseCursor))
-        )
+        gesture_detector.mouse_cursor = random.choice(list(ft.MouseCursor))
         text.value = f"Mouse Cursor:  {gesture_detector.mouse_cursor}"
         page.update()
-
-    def generate_mouse_cursors(m_list):
-        while True:
-            yield from m_list
 
     page.add(
         ft.Stack(controls=[container], width=1000, height=500),

@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_column_scroll(e: ft.OnScrollEvent[ft.Column]):
+    def handle_column_scroll(e: ft.OnScrollEvent):
         print(e)
 
     page.add(

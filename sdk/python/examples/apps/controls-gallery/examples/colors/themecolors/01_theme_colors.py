@@ -1,14 +1,16 @@
+from dataclasses import dataclass
+
 import flet as ft
 
 name = "Theme colors"
 
 
 def example():
+    @dataclass
     class Color:
-        def __init__(self, display_name, name, is_dark=False):
-            self.name = name
-            self.display_name = display_name
-            self.is_dark = is_dark
+        name: str
+        display_name: str
+        is_dark: bool = False
 
     theme_colors = [
         Color("PRIMARY", "primary"),
@@ -40,9 +42,9 @@ def example():
         Color("SCRIM", "scrim", True),
     ]
 
-    def copy_to_clipboard(e):
-        e.control.page.set_clipboard(f"ft.Colors.{e.control.content.value}")
-        e.control.page.open(
+    async def copy_to_clipboard(e):
+        await e.control.page.clipboard.set(f"ft.Colors.{e.control.content.value}")
+        e.control.page.show_dialog(
             ft.SnackBar(
                 ft.Text(f"Copied to clipboard: ft.Colors.{e.control.content.value}"),
                 open=True,

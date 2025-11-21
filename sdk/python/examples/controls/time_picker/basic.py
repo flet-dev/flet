@@ -10,7 +10,7 @@ def main(page: ft.Page):
         selection.value = f"Selection: {time_picker.value}"
         page.show_dialog(ft.SnackBar(f"TimePicker change: {time_picker.value}"))
 
-    def handle_dismissal(e: ft.Event[ft.TimePicker]):
+    def handle_dismissal(e: ft.Event[ft.DialogControl]):
         page.show_dialog(ft.SnackBar("TimePicker dismissed!"))
 
     def handle_entry_mode_change(e: ft.TimePickerEntryModeChangeEvent):

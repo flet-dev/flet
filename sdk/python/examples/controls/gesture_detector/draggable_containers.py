@@ -4,13 +4,13 @@ import flet as ft
 def main(page: ft.Page):
     def handle_pan_update1(e: ft.DragUpdateEvent[ft.GestureDetector]):
         container = e.control.parent
-        container.top = max(0.0, container.top + e.delta_y)
-        container.left = max(0.0, container.left + e.delta_x)
+        container.top = max(0.0, container.top + e.local_delta.y)
+        container.left = max(0.0, container.left + e.local_delta.x)
         container.update()
 
     def handle_pan_update2(e: ft.DragUpdateEvent[ft.GestureDetector]):
-        e.control.top = max(0.0, e.control.top + e.delta_y)
-        e.control.left = max(0.0, e.control.left + e.delta_x)
+        e.control.top = max(0.0, e.control.top + e.local_delta.y)
+        e.control.left = max(0.0, e.control.left + e.local_delta.x)
         e.control.update()
 
     page.add(

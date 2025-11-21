@@ -7,52 +7,46 @@ import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
 
-class TimePickerControl extends StatefulWidget {
+class TimePickerControl extends StatelessWidget {
   final Control control;
 
-  TimePickerControl({Key? key, required this.control})
-      : super(key: key ?? ValueKey("control_${control.id}"));
+  const TimePickerControl({super.key, required this.control});
 
-  @override
-  State<TimePickerControl> createState() => _TimePickerControlState();
-}
-
-class _TimePickerControlState extends State<TimePickerControl> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("TimePicker build: ${widget.control.id}");
+    debugPrint("TimePicker build: ${control.id}");
 
-    bool lastOpen = widget.control.getBool("_open", false)!;
+    bool lastOpen = control.getBool("_open", false)!;
 
-    var open = widget.control.getBool("open", false)!;
-    var value = widget.control.getTimeOfDay("value", TimeOfDay.now())!;
-    var hourFormat = widget.control.getString("hour_format");
+    var open = control.getBool("open", false)!;
+    var value = control.getTimeOfDay("value", TimeOfDay.now())!;
+    var hourFormat = control.getString("hour_format");
     var switchToTimerEntryModeIcon =
-        widget.control.getIconData("switch_to_timer_icon");
+        control.getIconData("switch_to_timer_icon");
     var switchToInputEntryModeIcon =
-        widget.control.getIconData("switch_to_input_icon");
+        control.getIconData("switch_to_input_icon");
 
     void onClosed(TimeOfDay? timeValue) {
-      widget.control.updateProperties({"_open": false}, python: false);
-      widget.control.updateProperties({"value": timeValue, "open": false});
+      control.updateProperties({"_open": false}, python: false);
+      control.updateProperties({"value": timeValue, "open": false});
       if (timeValue != null) {
-        widget.control.triggerEvent("change", timeValue);
+        control.triggerEvent("change", timeValue);
       }
-      widget.control.triggerEvent("dismiss", timeValue == null);
+      control.triggerEvent("dismiss", timeValue == null);
     }
 
     Widget createSelectTimeDialog() {
       Widget dialog = TimePickerDialog(
         initialTime: value,
-        helpText: widget.control.getString("help_text"),
-        cancelText: widget.control.getString("cancel_text"),
-        confirmText: widget.control.getString("confirm_text"),
-        hourLabelText: widget.control.getString("hour_label_text"),
-        minuteLabelText: widget.control.getString("minute_label_text"),
-        errorInvalidText: widget.control.getString("error_invalid_text"),
-        initialEntryMode: widget.control
-            .getTimePickerEntryMode("entry_mode", TimePickerEntryMode.dial)!,
-        orientation: widget.control.getOrientation("orientation"),
+        helpText: control.getString("help_text"),
+        cancelText: control.getString("cancel_text"),
+        confirmText: control.getString("confirm_text"),
+        hourLabelText: control.getString("hour_label_text"),
+        minuteLabelText: control.getString("minute_label_text"),
+        errorInvalidText: control.getString("error_invalid_text"),
+        initialEntryMode: control.getTimePickerEntryMode(
+            "entry_mode", TimePickerEntryMode.dial)!,
+        orientation: control.getOrientation("orientation"),
         switchToTimerEntryModeIcon: switchToTimerEntryModeIcon != null
             ? Icon(switchToTimerEntryModeIcon)
             : null,
@@ -60,9 +54,8 @@ class _TimePickerControlState extends State<TimePickerControl> {
             ? Icon(switchToInputEntryModeIcon)
             : null,
         onEntryModeChanged: (TimePickerEntryMode mode) {
-          widget.control.updateProperties({"entry_mode": mode.name});
-          widget.control
-              .triggerEvent("entry_mode_change", {"entry_mode": mode.name});
+          control.updateProperties({"entry_mode": mode.name});
+          control.triggerEvent("entry_mode_change", {"entry_mode": mode.name});
         },
       );
 
@@ -75,12 +68,12 @@ class _TimePickerControlState extends State<TimePickerControl> {
     }
 
     if (open && (open != lastOpen)) {
-      widget.control.updateProperties({"_open": open}, python: false);
+      control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<TimeOfDay>(
-            barrierColor: widget.control.getColor("barrier_color", context),
-            barrierDismissible: !widget.control.getBool("modal", false)!,
+            barrierColor: control.getColor("barrier_color", context),
+            barrierDismissible: !control.getBool("modal", false)!,
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectTimeDialog()).then((result) {

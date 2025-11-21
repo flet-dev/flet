@@ -5,7 +5,7 @@ def main(page: ft.Page):
     page.title = "BottomSheet Example"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def handle_sheet_dismissal(e: ft.Event[ft.BottomSheet]):
+    def handle_sheet_dismissal(e: ft.Event[ft.DialogControl]):
         page.add(ft.Text("Bottom sheet dismissed"))
 
     sheet = ft.BottomSheet(
