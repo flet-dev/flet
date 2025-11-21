@@ -425,6 +425,7 @@ class Page(BasePage):
     """
     TBD
     """
+
     on_first_frame: Optional[ControlEventHandler["Page"]] = None
     """
     Called once after the client renders the very first frame.
@@ -432,9 +433,10 @@ class Page(BasePage):
     Useful for starting implicit animations or other work that must wait until
     the initial layout completes.
 
-    Pair with [`page.after_first_frame()`](#after_first_frame) to register
+    Pair with [`Page.post_frame_callback()`][flet.Page.post_frame_callback] to register
     callbacks without wiring up an explicit event handler.
     """
+
     _services: list[Service] = field(default_factory=list)
     _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
 
@@ -541,9 +543,10 @@ class Page(BasePage):
 
         return super().before_event(e)
 
-    def after_first_frame(self, callback: Callable[[], Any]):
+    def post_frame_callback(self, callback: Callable[[], Any]):
         """
-        Schedule a callable to run right after the client renders its first frame.
+        Schedule a callable to run immediately after the page finishes
+        rendering its very first frame.
 
         Args:
             callback: A synchronous function or coroutine function to execute after the
@@ -581,7 +584,7 @@ class Page(BasePage):
                 if inspect.isawaitable(result):
                     await result
             except Exception:
-                logger.exception("Error running after_first_frame callback")
+                logger.exception("Error running post_frame_callback callback")
 
         self.run_task(_runner)
 
