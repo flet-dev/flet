@@ -50,7 +50,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
-        ? () => control.triggerEvent("animation_end" "container")
+        ? () => control.triggerEvent("animation_end", "container")
         : null;
     if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
         ink &&
