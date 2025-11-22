@@ -19,4 +19,11 @@ example_images: ../examples/controls/responsive_row/media
 {{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
 
 
+### Custom breakpoints
+
+```python
+--8<-- "{{ examples }}/custom_breakpoint.py"
+```
+
+
 {{ class_members(class_name) }}

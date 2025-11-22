@@ -76,7 +76,14 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
         }
     )
     """
-    TBD
+    Defines the minimum widths (in px) for each breakpoint key used by responsive
+    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.],
+    and [`run_spacing`][flet.ResponsiveRow.].
+
+    Keys can be [`ResponsiveRowBreakpoint`][flet.] values or custom strings.
+    Breakpoint names in responsive values must match the names used here.
+
+    The default mirrors Bootstrap breakpoints.
     """
 
     def clean(self):
