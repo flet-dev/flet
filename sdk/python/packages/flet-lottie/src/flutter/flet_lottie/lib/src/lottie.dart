@@ -15,7 +15,8 @@ class _LottieControlState extends State<LottieControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint(
-        "Lottie build: ${widget.control.id} (${widget.control.hashCode})");
+      "Lottie build: ${widget.control.id} (${widget.control.hashCode})",
+    );
 
     var repeat = widget.control.getBool("repeat", true)!;
     var backgroundLoading = widget.control.getBool("background_loading");
@@ -25,7 +26,7 @@ class _LottieControlState extends State<LottieControl> {
     var alignment = widget.control.getAlignment("alignment");
     var filterQuality = widget.control.getFilterQuality("filter_quality");
     var errorContent = widget.control.buildWidget("error_content");
-    final resolvedSrc = ResolvedAssetSource.from(widget.control.get("src"));
+    final resolvedSrc = widget.control.getSrc("src");
 
     if (resolvedSrc.error != null) {
       return errorContent ??
@@ -38,8 +39,10 @@ class _LottieControlState extends State<LottieControl> {
 
     var options = LottieOptions(
       enableMergePaths: widget.control.getBool("enable_merge_paths", false)!,
-      enableApplyingOpacityToLayers:
-          widget.control.getBool("enable_layers_opacity", false)!,
+      enableApplyingOpacityToLayers: widget.control.getBool(
+        "enable_layers_opacity",
+        false,
+      )!,
     );
 
     void onError(String value) {
@@ -88,33 +91,37 @@ class _LottieControlState extends State<LottieControl> {
       var assetSrc = widget.control.backend.getAssetSource(resolvedSrc.uri!);
       // Local File
       if (assetSrc.isFile) {
-        lottie = Lottie.asset(assetSrc.path,
-            repeat: repeat,
-            reverse: reverse,
-            animate: animate,
-            alignment: alignment,
-            options: options,
-            fit: fit,
-            filterQuality: filterQuality,
-            backgroundLoading: backgroundLoading,
-            errorBuilder: errorBuilder,
-            onLoaded: onLoad,
-            onWarning: onError);
+        lottie = Lottie.asset(
+          assetSrc.path,
+          repeat: repeat,
+          reverse: reverse,
+          animate: animate,
+          alignment: alignment,
+          options: options,
+          fit: fit,
+          filterQuality: filterQuality,
+          backgroundLoading: backgroundLoading,
+          errorBuilder: errorBuilder,
+          onLoaded: onLoad,
+          onWarning: onError,
+        );
       } else {
         // URL
-        lottie = Lottie.network(assetSrc.path,
-            repeat: repeat,
-            reverse: reverse,
-            animate: animate,
-            alignment: alignment,
-            fit: fit,
-            options: options,
-            filterQuality: filterQuality,
-            backgroundLoading: backgroundLoading,
-            headers: widget.control.get("headers")?.cast<String, String>(),
-            errorBuilder: errorBuilder,
-            onLoaded: onLoad,
-            onWarning: onError);
+        lottie = Lottie.network(
+          assetSrc.path,
+          repeat: repeat,
+          reverse: reverse,
+          animate: animate,
+          alignment: alignment,
+          fit: fit,
+          options: options,
+          filterQuality: filterQuality,
+          backgroundLoading: backgroundLoading,
+          headers: widget.control.get("headers")?.cast<String, String>(),
+          errorBuilder: errorBuilder,
+          onLoaded: onLoad,
+          onWarning: onError,
+        );
       }
     }
 

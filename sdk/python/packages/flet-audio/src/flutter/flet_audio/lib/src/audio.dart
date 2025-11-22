@@ -65,7 +65,7 @@ class AudioService extends FletService {
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
 
-    final resolvedSrc = ResolvedAssetSource.from(control.get("src"));
+    final resolvedSrc = control.getSrc("src");
     if (resolvedSrc.error != null) {
       throw Exception("Audio src decode error: ${resolvedSrc.error}");
     }

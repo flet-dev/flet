@@ -65,7 +65,7 @@ def main(page: ft.Page):
         capture = await canvas.get_capture()
         if capture:
             file_path = await file_picker.save_file(
-                file_name="flet_picture.png", src=capture
+                file_name="flet_picture.png", src_bytes=capture
             )
             if file_path and page.platform in [
                 ft.PagePlatform.MACOS,
