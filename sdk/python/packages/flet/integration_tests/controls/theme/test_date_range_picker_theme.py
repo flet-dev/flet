@@ -15,6 +15,8 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme_1(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    flet_app.resize_page(500, 600)
     flet_app.page.theme = ft.Theme(
         date_picker_theme=ft.DatePickerTheme(
             bgcolor=ft.Colors.GREEN_200,
@@ -31,10 +33,8 @@ async def test_theme_1(flet_app: ftt.FletTestApp, request):
             range_selection_overlay_color=ft.Colors.YELLOW_400,
         )
     )
-
-    flet_app.page.enable_screenshots = True
-    flet_app.resize_page(500, 600)
     flet_app.page.update()
+
     flet_app.page.show_dialog(
         ft.DateRangePicker(
             current_date=datetime.datetime(year=2025, month=8, day=15),
