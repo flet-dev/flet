@@ -40,6 +40,12 @@ class BottomSheet(DialogControl):
     content: Control
     """
     The content of this bottom sheet.
+
+	Tip:
+		Set [`scrollable`][(c).] `True` if this content is or contains scrollable
+		controls (e.g., [`ListView`][flet.], [`GridView`][flet.]) or you plan to
+		`expand` the [`content`][(c).] or give it a custom height, else the bottom
+		sheet might ignore the custom height and stop around mid-screen.
     """
 
     elevation: Optional[Number] = None
