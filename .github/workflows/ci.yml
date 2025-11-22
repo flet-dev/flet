@@ -242,12 +242,18 @@ jobs:
           path: '.fvmrc'
           cache: false
 
+      - name: Print Flutter outputs
+        shell: bash
+        run: |
+          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
+          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
+
       - name: Cache Flutter
         id: cache-flutter
         uses: actions/cache@v4
         with:
-            path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
-            key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
+          path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
+          key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
 
       - name: Build Flutter macOS client
         shell: bash
