@@ -59,6 +59,7 @@ jobs:
           channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
           cache: false
 
+      # TODO: Remove when https://github.com/actions/runner-images/issues/13341 is fixed
       - name: Cache Flutter
         id: cache-flutter
         uses: actions/cache@v4

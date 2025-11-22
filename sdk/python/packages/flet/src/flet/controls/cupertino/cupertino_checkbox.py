@@ -11,6 +11,7 @@ from flet.controls.types import (
     ColorValue,
     LabelPosition,
     MouseCursor,
+    Number,
 )
 
 __all__ = ["CupertinoCheckbox"]
@@ -44,6 +45,11 @@ class CupertinoCheckbox(LayoutControl):
     label_position: LabelPosition = LabelPosition.RIGHT
     """
     Defines on which side of this checkbox the [`label`][(c).] should be shown.
+    """
+
+    spacing: Number = 10
+    """
+    The space between this checkbox and the [`label`][(c).].
     """
 
     value: Optional[bool] = False
