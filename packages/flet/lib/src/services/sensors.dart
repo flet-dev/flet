@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import '../flet_service.dart';
+import '../utils/numbers.dart';
 import '../utils/time.dart';
 
 abstract class _SensorStreamService<T> extends FletService {
@@ -80,8 +81,8 @@ abstract class _SensorStreamService<T> extends FletService {
         },
         onError: (error, stackTrace) {
           if (_hasErrorSubscribers) {
-            control.triggerEvent(
-                "error", {"message": error?.toString() ?? "Unknown sensor error"});
+            control.triggerEvent("error",
+                {"message": error?.toString() ?? "Unknown sensor error"});
           } else {
             debugPrint(
                 "Error listening to ${control.type} sensor stream: $error");
@@ -90,8 +91,7 @@ abstract class _SensorStreamService<T> extends FletService {
         cancelOnError: _cancelOnError,
       );
     } catch (error) {
-      debugPrint(
-          "Failed to initialize ${control.type} sensor stream: $error");
+      debugPrint("Failed to initialize ${control.type} sensor stream: $error");
     }
   }
 
