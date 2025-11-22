@@ -1,22 +1,5 @@
-import 'dart:convert';
-import 'dart:io' as io;
-import 'dart:typed_data';
-
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
-import '../flet_backend.dart';
-import '../models/control.dart';
-import '../widgets/error.dart';
-import 'alignment.dart';
-import 'borders.dart';
-import 'collections.dart';
-import 'colors.dart';
-import 'gradient.dart';
-import 'images.dart';
-import 'misc.dart';
-import 'numbers.dart';
-import 'transforms.dart';
 
 BoxConstraints? parseBoxConstraints(dynamic value,
     [BoxConstraints? defaultValue]) {
@@ -113,12 +96,9 @@ DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
   if (value == null) return defaultValue;
 
   var src = value["src"];
-  var srcBase64 = value["src_base64"];
-  var srcBytes = value["src_bytes"];
-  ImageProvider? image = getImageProvider(context, src, srcBase64, srcBytes);
-  if (image == null) {
-    return defaultValue;
-  }
+  ImageProvider? image = parseImageProvider(src, context);
+  if (image == null) return defaultValue;
+
   return DecorationImage(
     image: image,
     colorFilter: parseColorFilter(value["color_filter"], Theme.of(context)),
@@ -133,183 +113,6 @@ DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
     invertColors: parseBool(value["invert_colors"], false)!,
     isAntiAlias: parseBool(value["anti_alias"], false)!,
   );
-}
-
-ImageProvider? getImageProvider(
-    BuildContext context, String? src, String? srcBase64, Uint8List? srcBytes) {
-  src = src?.trim();
-  srcBase64 = srcBase64?.trim();
-
-  if (srcBase64 != null && srcBase64 != "") {
-    try {
-      Uint8List bytes = base64Decode(srcBase64);
-      return MemoryImage(bytes);
-    } catch (ex) {
-      debugPrint("getImageProvider failed decoding src_base64");
-    }
-  } else if (srcBytes != null && srcBytes.isNotEmpty) {
-    try {
-      return MemoryImage(srcBytes);
-    } catch (ex) {
-      debugPrint("getImageProvider failed decoding src_bytes");
-    }
-  }
-  if (src != null && src != "") {
-    var assetSrc = FletBackend.of(context).getAssetSource(src);
-
-    return assetSrc.isFile
-        ? getFileImageProvider(assetSrc.path)
-        : NetworkImage(assetSrc.path);
-  }
-  return null;
-}
-
-Widget buildImage({
-  required BuildContext context,
-  required Widget? errorCtrl,
-  required String? src,
-  required String? srcBase64,
-  Uint8List? srcBytes,
-  double? width,
-  double? height,
-  ImageRepeat repeat = ImageRepeat.noRepeat,
-  BoxFit? fit,
-  BlendMode? colorBlendMode,
-  Color? color,
-  String? semanticsLabel,
-  bool? gaplessPlayback,
-  int? cacheWidth,
-  int? cacheHeight,
-  bool antiAlias = false,
-  bool excludeFromSemantics = false,
-  FilterQuality filterQuality = FilterQuality.low,
-  bool disabled = false,
-}) {
-  Widget? image;
-  const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
-
-  Uint8List bytes = srcBytes ?? Uint8List(0);
-  if (bytes.isEmpty && srcBase64 != null && srcBase64.isNotEmpty) {
-    bytes = base64Decode(srcBase64);
-  }
-  if (bytes.isNotEmpty) {
-    try {
-      if (arrayIndexOf(bytes, Uint8List.fromList(utf8.encode(svgTag))) != -1) {
-        image = SvgPicture.memory(bytes,
-            width: width,
-            height: height,
-            excludeFromSemantics: excludeFromSemantics,
-            fit: fit ?? BoxFit.contain,
-            colorFilter: color != null
-                ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
-                : null,
-            semanticsLabel: semanticsLabel);
-      } else {
-        image = Image.memory(bytes,
-            width: width,
-            height: height,
-            repeat: repeat,
-            fit: fit,
-            color: color,
-            cacheHeight: cacheHeight,
-            cacheWidth: cacheWidth,
-            filterQuality: filterQuality,
-            isAntiAlias: antiAlias,
-            colorBlendMode: colorBlendMode,
-            gaplessPlayback: gaplessPlayback ?? false,
-            excludeFromSemantics: excludeFromSemantics,
-            semanticLabel: semanticsLabel);
-      }
-      return image;
-    } catch (ex) {
-      return ErrorControl("Error decoding base64: ${ex.toString()}");
-    }
-  } else if (src != null && src.isNotEmpty) {
-    if (src.contains(svgTag)) {
-      image = SvgPicture.memory(Uint8List.fromList(utf8.encode(src)),
-          width: width,
-          height: height,
-          fit: fit ?? BoxFit.contain,
-          excludeFromSemantics: excludeFromSemantics,
-          colorFilter: color != null
-              ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
-              : null,
-          semanticsLabel: semanticsLabel);
-    } else {
-      var assetSrc = FletBackend.of(context).getAssetSource(src);
-
-      if (assetSrc.isFile) {
-        // from File
-        if (assetSrc.path.endsWith(".svg")) {
-          image = getSvgPictureFromFile(
-              src: assetSrc.path,
-              width: width,
-              height: height,
-              fit: fit ?? BoxFit.contain,
-              color: color,
-              blendMode: colorBlendMode ?? BlendMode.srcIn,
-              semanticsLabel: semanticsLabel);
-        } else {
-          image = Image.file(
-            io.File(assetSrc.path),
-            width: width,
-            height: height,
-            repeat: repeat,
-            filterQuality: filterQuality,
-            excludeFromSemantics: excludeFromSemantics,
-            fit: fit,
-            color: color,
-            isAntiAlias: antiAlias,
-            cacheHeight: cacheHeight,
-            cacheWidth: cacheWidth,
-            gaplessPlayback: gaplessPlayback ?? false,
-            colorBlendMode: colorBlendMode,
-            semanticLabel: semanticsLabel,
-            errorBuilder: errorCtrl != null
-                ? (context, error, stackTrace) {
-                    return errorCtrl;
-                  }
-                : null,
-          );
-        }
-      } else {
-        // URL
-        if (assetSrc.path.endsWith(".svg")) {
-          image = SvgPicture.network(assetSrc.path,
-              width: width,
-              height: height,
-              excludeFromSemantics: excludeFromSemantics,
-              fit: fit ?? BoxFit.contain,
-              colorFilter: color != null
-                  ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
-                  : null,
-              semanticsLabel: semanticsLabel);
-        } else {
-          image = Image.network(assetSrc.path,
-              width: width,
-              height: height,
-              repeat: repeat,
-              filterQuality: filterQuality,
-              cacheHeight: cacheHeight,
-              cacheWidth: cacheWidth,
-              isAntiAlias: antiAlias,
-              excludeFromSemantics: excludeFromSemantics,
-              fit: fit,
-              color: color,
-              gaplessPlayback: gaplessPlayback ?? false,
-              colorBlendMode: colorBlendMode,
-              semanticLabel: semanticsLabel,
-              errorBuilder: errorCtrl != null
-                  ? (context, error, stackTrace) {
-                      return errorCtrl;
-                    }
-                  : null);
-        }
-      }
-    }
-    return image;
-  }
-  return const ErrorControl("A valid src or src_base64 must be specified.");
 }
 
 extension BoxParsers on Control {

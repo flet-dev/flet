@@ -44,7 +44,7 @@ class _SliderControlState extends State<SliderControl> {
     _value = value;
     var props = {"value": value};
     widget.control.updateProperties(props, notify: true);
-    widget.control.triggerEvent("change");
+    widget.control.triggerEvent("change", value);
   }
 
   @override

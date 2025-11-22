@@ -193,9 +193,6 @@ class FletCustomPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
 
-    debugPrint("paint.size: $size");
-    //debugPrint("paint.shapes: $shapes");
-
     canvas.save();
     canvas.scale(dpr);
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -541,16 +538,19 @@ Future<void> loadCanvasImage(Control shape) async {
   final completer = Completer();
   shape.properties["_loading"] = completer;
 
-  final src = shape.getString("src");
-  final srcBytes = shape.get("src_bytes") as Uint8List?;
+  final src = shape.getSrc("src");
 
   try {
     Uint8List bytes;
 
-    if (srcBytes != null) {
-      bytes = srcBytes;
-    } else if (src != null) {
-      var assetSrc = shape.backend.getAssetSource(src);
+    if (src.error != null) {
+      throw Exception("Error decoding src: ${src.error}");
+    }
+
+    if (src.hasBytes) {
+      bytes = src.bytes!;
+    } else if (src.hasUri) {
+      var assetSrc = shape.backend.getAssetSource(src.uri!);
       if (assetSrc.isFile) {
         final file = File(assetSrc.path);
         bytes = await file.readAsBytes();
@@ -562,7 +562,7 @@ Future<void> loadCanvasImage(Control shape) async {
         bytes = resp.bodyBytes;
       }
     } else {
-      throw Exception("Missing image source: 'src' or 'src_bytes'");
+      throw Exception("Missing image source: 'src'");
     }
 
     final codec = await ui.instantiateImageCodec(bytes, allowUpscaling: false);
@@ -579,12 +579,15 @@ Future<void> loadCanvasImage(Control shape) async {
   }
 }
 
+/// Produces a fast hash for the `src` so Canvas can tell when it needs to
+/// refetch the image. Inline strings and bytes use FNV to avoid massive hashes.
 int getImageHash(Control shape) {
-  final src = shape.getString("src");
-  final srcBytes = shape.get("src_bytes") as Uint8List?;
-  return src != null
-      ? src.hashCode
-      : srcBytes != null
-          ? fnv1aHash(srcBytes)
-          : 0;
+  final src = shape.getSrc("src");
+  if (src.hasUri) {
+    return src.uri!.hashCode;
+  }
+  if (src.hasBytes) {
+    return fnv1aHash(src.bytes!);
+  }
+  return 0;
 }
