@@ -175,34 +175,51 @@ class SolidStrokePattern(StrokePattern):
 class DashedStrokePattern(StrokePattern):
     """
     A stroke pattern of alternating dashes and gaps, defined by [`segments`][(c).].
-
-    Raises:
-        ValueError: If [`segments`][(c).] does not contain at least two items,
-            or has an odd length.
     """
 
-    segments: list[ft.Number] = field(default_factory=list)
+    segments: list[ft.Number]
     """
-    A list of alternating dash and gap lengths, in pixels.
+	A list of even length with a minimum of 2, in the form of
+	`[a₁, b₁, (a₂, b₂, ...)]`, where `a` should be the length of segments in
+	'units', and `b` the length of the space after each segment in units. Both
+	values must be strictly positive.
 
-    Raises:
-        ValueError: If the list does not contain at least two items,
-            or if its length is not even.
-    """
+	'Units' refers to pixels, unless the pattern has been scaled due to the
+	use of [`pattern_fit`][(c).] [`PatternFit.SCALE_UP`][flet.].
+
+	If more than two items are specified, then each segments will
+	alternate/iterate through the values.
+
+	For example, `[50, 10, 10, 10]` will cause:
+
+	* a segment of length 50px
+	* followed by a space of 10px
+	* followed by a segment of length 10px
+	* followed by a space of 10px
+	* followed by a segment of length of 50px
+	* followed by a space of 10px
+	* and so on ...
+
+	Raises:
+		ValueError: If the list does not contain at least two items,
+			or if its length is not even.
+	"""
 
     pattern_fit: PatternFit = PatternFit.SCALE_UP
     """
-    Determines how this stroke pattern should be fit to a line when their lengths
-    are not equal or multiples.
-    """
+	Determines how this stroke pattern should be fit to a line when their lengths
+	are not equal or multiples.
+	"""
+
+    def __setattr__(self, name, value):
+        if name == "segments":
+            if len(value) < 2:
+                raise ValueError("segments must contain at least two items")
+            if len(value) % 2 != 0:
+                raise ValueError("segments length must be even")
+        super().__setattr__(name, value)
 
     def __post_init__(self):
-        if len(self.segments) < 2:
-            raise ValueError(
-                f"segments must contain at least two items, got {len(self.segments)}"
-            )
-        if len(self.segments) % 2 != 0:
-            raise ValueError("segments must have an even length")
         self._type = "dashed"
 
 
