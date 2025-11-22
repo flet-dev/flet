@@ -36,14 +36,13 @@ class ExamplesView(ft.Column):
                                         weight=ft.FontWeight.W_500,
                                     ),
                                     ft.IconButton(
-                                        content=ft.Image(
+                                        icon=ft.Image(
                                             src="github-mark.svg",
                                             width=24,
                                             height=24,
                                             color=ft.Colors.ON_SURFACE_VARIANT,
                                         ),
-                                        url=f"https://github.com/flet-dev/examples/blob/main/python/apps/controls-gallery/examples/{example.file_name}",
-                                        url_target=ft.UrlTarget.BLANK,
+                                        url=f"https://github.com/flet-dev/examples/blob/main/python/apps/controls_gallery/examples/{example.file_name}",
                                     ),
                                 ],
                             ),

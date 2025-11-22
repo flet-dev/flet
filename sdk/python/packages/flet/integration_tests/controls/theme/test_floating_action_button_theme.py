@@ -12,7 +12,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_theme(flet_app: ftt.FletTestApp, request):
+async def test_theme_1(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme = ft.Theme(
         floating_action_button_theme=ft.FloatingActionButtonTheme(
             bgcolor=ft.Colors.ORANGE,
@@ -62,7 +62,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme_normal",
+        "theme_1_normal",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -75,7 +75,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme_focus_disabled",
+        "theme_1_focus_disabled",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -88,7 +88,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme_hover",
+        "theme_1_hover",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

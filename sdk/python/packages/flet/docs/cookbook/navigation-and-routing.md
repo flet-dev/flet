@@ -11,7 +11,7 @@ Well, it took [more efforts](https://github.com/flet-dev/flet/pull/95/files) tha
 {{ image("../assets/navigation-routing/routing-app-example.gif", alt="Routing app example") }}
 
 
-Explore [source code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing-navigation/building-views-on-route-change.py) of the example above.
+Explore [source code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing-navigation/building_views_on_route_change.py) of the example above.
 
 ## Page route
 

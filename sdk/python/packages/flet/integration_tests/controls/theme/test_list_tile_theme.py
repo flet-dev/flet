@@ -12,7 +12,9 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_theme(flet_app: ftt.FletTestApp, request):
+async def test_theme_1(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    flet_app.resize_page(400, 600)
     flet_app.page.theme = ft.Theme(
         list_tile_theme=ft.ListTileTheme(
             icon_color=ft.Colors.PURPLE,
@@ -49,9 +51,6 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             title_alignment=ft.ListTileTitleAlignment.THREE_LINE,
         )
     )
-
-    flet_app.page.enable_screenshots = True
-    flet_app.resize_page(400, 600)
 
     tile_1 = ft.ListTile(
         "ListTile with is_three_line = False",
@@ -91,7 +90,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme1",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

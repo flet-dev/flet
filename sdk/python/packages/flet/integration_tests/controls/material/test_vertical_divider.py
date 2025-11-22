@@ -11,7 +11,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_vertical_divider_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app.page.enable_screenshots = True
     flet_app.resize_page(400, 600)
@@ -19,7 +19,7 @@ async def test_vertical_divider_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "vertical_divider_basic",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -27,7 +27,7 @@ async def test_vertical_divider_basic(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_vertical_divider_properties(flet_app: ftt.FletTestApp, request):
+async def test_properties(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app.page.enable_screenshots = True
     flet_app.resize_page(400, 600)
@@ -45,7 +45,7 @@ async def test_vertical_divider_properties(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "vertical_divider_properties",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

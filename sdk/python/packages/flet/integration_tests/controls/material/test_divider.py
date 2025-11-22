@@ -34,7 +34,7 @@ async def test_properties(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_divider_radius(flet_app: ftt.FletTestApp, request):
+async def test_radius(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Divider(

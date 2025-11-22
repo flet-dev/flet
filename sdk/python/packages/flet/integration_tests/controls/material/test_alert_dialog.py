@@ -14,7 +14,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     ad = ft.AlertDialog(
         key="ad",
         title=ft.Text("Hello"),
@@ -76,8 +76,8 @@ async def test_update_body(flet_app: ftt.FletTestApp, request):
     cancel.disabled = not cancel.disabled  # disable button
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
-    assert (await flet_app.tester.find_by_text("OK")).count == 0
 
+    assert (await flet_app.tester.find_by_text("OK")).count == 0
     flet_app.assert_screenshot(
         "update_body_2",
         await flet_app.page.take_screenshot(

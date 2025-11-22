@@ -34,7 +34,7 @@ async def test_issue_5538(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_button_style(flet_app: ftt.FletTestApp, request):
+async def test_style(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
@@ -56,7 +56,7 @@ async def test_button_style(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_button_style_conflicts(flet_app: ftt.FletTestApp, request):
+async def test_style_conflicts(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
