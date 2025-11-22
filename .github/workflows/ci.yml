@@ -239,8 +239,8 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
           path: '.fvmrc'
-          cache-key: 'flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}'
-          pub-cache-key: 'flutter-pub-${{ runner.os }}-${{ env.FLUTTER_VERSION }}'
+          cache-key: "flutter-:os:-:channel:-:version:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:hash:"
 
       - name: Build Flutter macOS client
         shell: bash
