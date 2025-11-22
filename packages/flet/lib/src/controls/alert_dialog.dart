@@ -13,139 +13,98 @@ import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'control_widget.dart';
 
-class AlertDialogControl extends StatefulWidget {
+class AlertDialogControl extends StatelessWidget {
   final Control control;
 
-  AlertDialogControl({Key? key, required this.control})
-      : super(key: key ?? ValueKey("control_${control.id}"));
+  const AlertDialogControl({super.key, required this.control});
 
-  @override
-  State<AlertDialogControl> createState() => _AlertDialogControlState();
-}
-
-class _AlertDialogControlState extends State<AlertDialogControl> {
-  bool _open = false;
-  NavigatorState? _navigatorState;
-  String? _error;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _navigatorState = Navigator.of(context);
-    _toggleDialog();
-  }
-
-  @override
-  void didUpdateWidget(covariant AlertDialogControl oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _toggleDialog();
-  }
-
-  @override
-  void dispose() {
-    debugPrint("AlertDialog.dispose: ${widget.control.id}");
-    _closeDialog();
-    super.dispose();
-  }
-
-  Widget _createAlertDialog() {
+  Widget _createAlertDialog(BuildContext context) {
     return ControlInheritedNotifier(
-      notifier: widget.control,
+      notifier: control,
       child: Builder(builder: (context) {
         ControlInheritedNotifier.of(context);
-        var title = widget.control.get("title");
+        var title = control.get("title");
         return AlertDialog(
           title: title is Control
               ? ControlWidget(control: title)
               : title is String
                   ? Text(title)
                   : null,
-          titlePadding: widget.control.getPadding("title_padding"),
-          content: widget.control.buildWidget("content"),
-          contentPadding: widget.control.getPadding("content_padding",
+          titlePadding: control.getPadding("title_padding"),
+          content: control.buildWidget("content"),
+          contentPadding: control.getPadding("content_padding",
               const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
-          actions: widget.control.buildWidgets("actions"),
-          actionsPadding: widget.control.getPadding("actions_padding"),
-          actionsAlignment:
-              widget.control.getMainAxisAlignment("actions_alignment"),
-          shape: widget.control.getShape("shape", Theme.of(context)),
-          semanticLabel: widget.control.getString("semantics_label"),
-          insetPadding: widget.control.getPadding("inset_padding",
+          actions: control.buildWidgets("actions"),
+          actionsPadding: control.getPadding("actions_padding"),
+          actionsAlignment: control.getMainAxisAlignment("actions_alignment"),
+          shape: control.getShape("shape", Theme.of(context)),
+          semanticLabel: control.getString("semantics_label"),
+          insetPadding: control.getPadding("inset_padding",
               const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
-          iconPadding: widget.control.getPadding("icon_padding"),
-          backgroundColor: widget.control.getColor("bgcolor", context),
-          buttonPadding: widget.control.getPadding("action_button_padding"),
-          shadowColor: widget.control.getColor("shadow_color", context),
-          elevation: widget.control.getDouble("elevation"),
+          iconPadding: control.getPadding("icon_padding"),
+          backgroundColor: control.getColor("bgcolor", context),
+          buttonPadding: control.getPadding("action_button_padding"),
+          shadowColor: control.getColor("shadow_color", context),
+          elevation: control.getDouble("elevation"),
           clipBehavior:
-              parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
-          icon: widget.control.buildIconOrWidget("icon"),
-          iconColor: widget.control.getColor("icon_color", context),
-          scrollable: widget.control.getBool("scrollable", false)!,
+              parseClip(control.getString("clip_behavior"), Clip.none)!,
+          icon: control.buildIconOrWidget("icon"),
+          iconColor: control.getColor("icon_color", context),
+          scrollable: control.getBool("scrollable", false)!,
           actionsOverflowButtonSpacing:
-              widget.control.getDouble("actions_overflow_button_spacing"),
-          alignment: widget.control.getAlignment("alignment"),
-          contentTextStyle: widget.control
-              .getTextStyle("content_text_style", Theme.of(context)),
-          titleTextStyle: widget.control
-              .getTextStyle("title_text_style", Theme.of(context)),
+              control.getDouble("actions_overflow_button_spacing"),
+          alignment: control.getAlignment("alignment"),
+          contentTextStyle:
+              control.getTextStyle("content_text_style", Theme.of(context)),
+          titleTextStyle:
+              control.getTextStyle("title_text_style", Theme.of(context)),
         );
       }),
     );
   }
 
-  void _toggleDialog() {
-    debugPrint("AlertDialog build: ${widget.control.id}");
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("AlertDialog build: ${control.id}");
 
-    var open = widget.control.getBool("open", false)!;
-    var modal = widget.control.getBool("modal", false)!;
+    var open = control.getBool("open", false)!;
+    final lastOpen = control.getBool("_open", false)!;
+    var modal = control.getBool("modal", false)!;
 
-    if (open && (open != _open)) {
-      if (widget.control.get("title") == null &&
-          widget.control.get("content") == null &&
-          widget.control.children("actions").isEmpty) {
-        _error =
-            "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions.";
-        return;
+    if (open && (open != lastOpen)) {
+      if (control.get("title") == null &&
+          control.get("content") == null &&
+          control.children("actions").isEmpty) {
+        return const ErrorControl(
+            "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions.");
       }
 
-      _open = open;
+      control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
-            barrierColor: widget.control.getColor("barrier_color", context),
+            barrierColor: control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
-            builder: (context) => _createAlertDialog()).then((value) {
-          debugPrint("Dismissing AlertDialog(${widget.control.id})");
-          _open = false;
-          widget.control.updateProperties({"open": false});
-          widget.control.triggerEvent("dismiss");
+            builder: (context) => _createAlertDialog(context)).then((value) {
+          debugPrint("Dismissing AlertDialog(${control.id})");
+          control.updateProperties({"_open": false}, python: false);
+          control.updateProperties({"open": false});
+          control.triggerEvent("dismiss");
         });
       });
-    } else if (!open && _open) {
-      _closeDialog();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _error != null ? ErrorControl(_error!) : const SizedBox.shrink();
-  }
-
-  void _closeDialog() {
-    if (_open) {
-      if (_navigatorState?.canPop() == true) {
+    } else if (!open && lastOpen) {
+      if (Navigator.of(context).canPop() == true) {
         debugPrint(
-            "AlertDialog(${widget.control.id}): Closing dialog managed by this widget.");
-        _navigatorState?.pop();
-        _open = false;
-        _error = null;
+            "AlertDialog(${control.id}): Closing dialog managed by this widget.");
+        Navigator.of(context).pop();
+        control.updateProperties({"_open": false}, python: false);
       } else {
         debugPrint(
-            "AlertDialog(${widget.control.id}): Dialog was not opened by this widget, skipping pop.");
+            "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
       }
     }
+    return const SizedBox.shrink();
   }
 }

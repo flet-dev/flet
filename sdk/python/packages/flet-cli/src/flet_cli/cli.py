@@ -60,8 +60,11 @@ def set_default_subparser(
         args.insert(index, name)
 
 
-def main():
+def get_parser() -> argparse.ArgumentParser:
+    """Construct and return the CLI argument parser."""
     parser = argparse.ArgumentParser()
+
+    # add version flag
     parser.add_argument(
         "--version",
         "-V",
@@ -71,18 +74,23 @@ def main():
 
     sp = parser.add_subparsers(dest="command")
 
+    # register subcommands
     flet_cli.commands.create.Command.register_to(sp, "create")
     flet_cli.commands.run.Command.register_to(sp, "run")
     flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
     flet_cli.commands.serve.Command.register_to(sp, "serve")
-    flet_cli.commands.doctor.Command.register_to(
-        sp, "doctor"
-    )  # Register the doctor command
+    flet_cli.commands.doctor.Command.register_to(sp, "doctor")
 
     # set "run" as the default subparser
     set_default_subparser(parser, name="run", index=1)
+
+    return parser
+
+
+def main():
+    parser = get_parser()
 
     # print usage/help if called without arguments
     if len(sys.argv) == 1:

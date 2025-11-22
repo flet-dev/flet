@@ -4,7 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     def handle_drag_will_accept(e: ft.DragWillAcceptEvent):
         e.control.content.border = ft.Border.all(
-            2, ft.Colors.BLACK45 if e.accept else ft.Colors.RED
+            2, ft.Colors.BLACK_45 if e.accept else ft.Colors.RED
         )
         e.control.update()
 

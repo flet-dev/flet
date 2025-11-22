@@ -60,7 +60,7 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
         modal=False,
         barrier_color=ft.Colors.RED,
         keyboard_type=ft.KeyboardType.EMAIL,
-        # date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR,
+        # entry_mode=ft.DatePickerEntryMode.CALENDAR,
     )
     flet_app.page.enable_screenshots = True
     flet_app.resize_page(400, 600)

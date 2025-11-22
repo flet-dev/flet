@@ -2,7 +2,6 @@
 class_name: flet.BottomSheet
 examples: ../../examples/controls/bottom_sheet
 example_images: ../test-images/examples/material/golden/macos/bottom_sheet
-example_media: ../examples/controls/bottom_sheet/media
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic BottomSheet") }}
@@ -17,7 +16,15 @@ example_media: ../examples/controls/bottom_sheet/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_images + "/basic.gif", width="60%") }}
+
+### Fullscreen
+
+```python
+--8<-- "{{ examples }}/fullscreen.py"
+```
+
+{{ image(example_images + "/fullscreen.gif", width="60%") }}
 
 
 {{ class_members(class_name) }}

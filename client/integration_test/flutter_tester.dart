@@ -71,24 +71,26 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
-  Future<void> tap(TestFinder finder) =>
-      _tester.tap((finder as FlutterTestFinder).raw);
+  Future<void> tap(TestFinder finder, int finderIndex) =>
+      _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
 
   @override
   Future<void> tapAt(Offset offset) =>
       _tester.tapAt(offset);
 
   @override
-  Future<void> longPress(TestFinder finder) =>
-      _tester.longPress((finder as FlutterTestFinder).raw);
+  Future<void> longPress(TestFinder finder, int finderIndex) =>
+      _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
+  
+  @override
+  Future<void> enterText(TestFinder finder, int finderIndex, String text) =>
+      _tester.enterText(
+          (finder as FlutterTestFinder).raw.at(finderIndex), text);
 
   @override
-  Future<void> enterText(TestFinder finder, String text) =>
-      _tester.enterText((finder as FlutterTestFinder).raw, text);
-
-  @override
-  Future<void> mouseHover(TestFinder finder) async {
-    final center = _tester.getCenter((finder as FlutterTestFinder).raw);
+  Future<void> mouseHover(TestFinder finder, int finderIndex) async {
+    final center =
+        _tester.getCenter((finder as FlutterTestFinder).raw.at(finderIndex));
     final gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
     await gesture.addPointer();
     await gesture.moveTo(center);

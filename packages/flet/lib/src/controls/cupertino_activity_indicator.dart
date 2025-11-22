@@ -16,11 +16,23 @@ class CupertinoActivityIndicatorControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoActivityIndicatorControl build: ${control.id}");
-    final activityIndicator = CupertinoActivityIndicator(
-      radius: control.getDouble("radius", 10)!,
-      animating: control.getBool("animating", true)!,
-      color: control.getColor("color", context),
-    );
+    final radius = control.getDouble("radius", 10)!;
+    final color = control.getColor("color", context);
+    final progress = control.getDouble("progress");
+    final bool animating =
+        progress == null ? control.getBool("animating", true)! : false;
+
+    final activityIndicator = progress != null
+        ? CupertinoActivityIndicator.partiallyRevealed(
+            radius: radius,
+            color: color,
+            progress: progress,
+          )
+        : CupertinoActivityIndicator(
+            radius: radius,
+            animating: animating,
+            color: color,
+          );
     return LayoutControl(control: control, child: activityIndicator);
   }
 }

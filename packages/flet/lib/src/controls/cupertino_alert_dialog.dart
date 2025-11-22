@@ -9,53 +9,18 @@ import '../utils/numbers.dart';
 import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 
-class CupertinoAlertDialogControl extends StatefulWidget {
+class CupertinoAlertDialogControl extends StatelessWidget {
   final Control control;
 
-  CupertinoAlertDialogControl({Key? key, required this.control})
-      : super(key: key ?? ValueKey("control_${control.id}"));
-
-  @override
-  State<CupertinoAlertDialogControl> createState() =>
-      _CupertinoAlertDialogControlState();
-}
-
-class _CupertinoAlertDialogControlState
-    extends State<CupertinoAlertDialogControl> {
-  bool _open = false;
-  NavigatorState? _navigatorState;
-  String? _error;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    debugPrint(
-        "CupertinoAlertDialog.didChangeDependencies: ${widget.control.id}");
-    _navigatorState = Navigator.of(context);
-    _toggleDialog();
-  }
-
-  @override
-  void didUpdateWidget(covariant CupertinoAlertDialogControl oldWidget) {
-    debugPrint("CupertinoAlertDialog.didUpdateWidget: ${widget.control.id}");
-    super.didUpdateWidget(oldWidget);
-    _toggleDialog();
-  }
-
-  @override
-  void dispose() {
-    debugPrint("CupertinoAlertDialog.dispose: ${widget.control.id}");
-    _closeDialog();
-    super.dispose();
-  }
+  const CupertinoAlertDialogControl({super.key, required this.control});
 
   Widget _createCupertinoAlertDialog() {
     return ControlInheritedNotifier(
-      notifier: widget.control,
+      notifier: control,
       child: Builder(builder: (context) {
         ControlInheritedNotifier.of(context);
         var insetAnimation = parseAnimation(
-            widget.control.get("inset_animation"),
+            control.get("inset_animation"),
             ImplicitAnimationDetails(
                 duration: const Duration(milliseconds: 100),
                 curve: Curves.decelerate))!;
@@ -63,66 +28,56 @@ class _CupertinoAlertDialogControlState
         return CupertinoAlertDialog(
           insetAnimationCurve: insetAnimation.curve,
           insetAnimationDuration: insetAnimation.duration,
-          title: widget.control.buildTextOrWidget("title"),
-          content: widget.control.buildWidget("content"),
-          actions: widget.control.buildWidgets("actions"),
+          title: control.buildTextOrWidget("title"),
+          content: control.buildWidget("content"),
+          actions: control.buildWidgets("actions"),
         );
       }),
     );
   }
 
-  void _toggleDialog() {
-    debugPrint("CupertinoAlertDialog build: ${widget.control.id}");
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("CupertinoAlertDialog build: ${control.id}");
 
-    var open = widget.control.getBool("open", false)!;
-    var modal = widget.control.getBool("modal", false)!;
+    final lastOpen = control.getBool("_open", false)!;
+    var open = control.getBool("open", false)!;
+    var modal = control.getBool("modal", false)!;
 
-    if (open && (open != _open)) {
-      if (widget.control.get("title") == null &&
-          widget.control.get("content") == null &&
-          widget.control.children("actions").isEmpty) {
-        _error =
-            "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions.";
-        return;
+    if (open && (open != lastOpen)) {
+      if (control.get("title") == null &&
+          control.get("content") == null &&
+          control.children("actions").isEmpty) {
+        return const ErrorControl(
+            "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions.");
       }
 
-      _open = open;
+      control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
-            barrierColor: widget.control.getColor("barrier_color", context),
+            barrierColor: control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => _createCupertinoAlertDialog()).then((value) {
-          debugPrint("Dismissing CupertinoAlertDialog(${widget.control.id})");
-          _open = false;
-          widget.control.updateProperties({"open": false});
-          widget.control.triggerEvent("dismiss");
+          debugPrint("Dismissing CupertinoAlertDialog(${control.id})");
+          control.updateProperties({"_open": false}, python: false);
+          control.updateProperties({"open": false});
+          control.triggerEvent("dismiss");
         });
       });
-    } else if (!open && _open) {
-      _closeDialog();
-    }
-  }
-
-  void _closeDialog() {
-    if (_open) {
-      if (_navigatorState?.canPop() == true) {
+    } else if (!open && lastOpen) {
+      if (Navigator.of(context).canPop() == true) {
         debugPrint(
-            "CupertinoAlertDialog(${widget.control.id}): Closing dialog managed by this widget.");
-        _navigatorState?.pop();
-        _open = false;
-        _error = null;
+            "CupertinoAlertDialog(${control.id}): Closing dialog managed by this widget.");
+        Navigator.of(context).pop();
+        control.updateProperties({"_open": false}, python: false);
       } else {
         debugPrint(
-            "CupertinoAlertDialog(${widget.control.id}): Dialog was not opened by this widget, skipping pop.");
+            "CupertinoAlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
       }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _error != null ? ErrorControl(_error!) : const SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }

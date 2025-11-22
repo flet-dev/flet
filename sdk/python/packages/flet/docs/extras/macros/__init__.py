@@ -1,6 +1,9 @@
 import os
 from urllib.parse import urlparse
 
+from .cli_to_md import render_flet_cli_as_markdown
+from .controls_overview import render_controls_overview
+
 
 def define_env(env):
     def format_value(value):
@@ -117,3 +120,13 @@ def define_env(env):
             },
         }
         return render_directive(class_name, options) + "\n"
+
+    @env.macro
+    def flet_cli_as_markdown(command: str = "", subcommands_only: bool = True):
+        return render_flet_cli_as_markdown(
+            command=command, subcommands_only=subcommands_only
+        )
+
+    @env.macro
+    def controls_overview():
+        return render_controls_overview()

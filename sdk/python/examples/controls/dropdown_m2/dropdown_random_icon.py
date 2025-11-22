@@ -11,7 +11,7 @@ def main(page: ft.Page):
     def handle_new_random_item(e: ft.Event[ft.Button]):
         icon = ft.Icon(ft.Icons.random())
         dd.options.append(
-            ft.dropdownm2.Option(text=f"{str(icon.name)[6:]}", content=icon)
+            ft.dropdownm2.Option(text=f"{str(icon.icon)[6:]}", content=icon)
         )
         page.update()
 

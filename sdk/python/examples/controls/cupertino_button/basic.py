@@ -15,7 +15,7 @@ def main(page: ft.Page):
         ft.CupertinoButton(
             bgcolor=ft.Colors.PRIMARY,
             alignment=ft.Alignment.TOP_LEFT,
-            border_radius=ft.border_radius.all(15),
+            border_radius=ft.BorderRadius.all(15),
             opacity_on_click=0.5,
             on_click=lambda e: print("Filled CupertinoButton clicked!"),
             content=ft.Text("Filled CupertinoButton", color=ft.Colors.YELLOW),
