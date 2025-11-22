@@ -50,8 +50,7 @@ jobs:
         id: fvm-config-action
         with:
           path: '.fvmrc'
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+          cache: false
 
       - name: Show tool versions
         run: |
