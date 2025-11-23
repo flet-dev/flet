@@ -80,9 +80,11 @@ class TesterService extends FletService {
         }
 
       case "tap_at":
-        var xOffset = args["x_offset"].toDouble();
-        var yOffset = args["y_offset"].toDouble();
-        var offset = Offset(xOffset, yOffset);
+
+        var offsetObj = args["offset"];
+        var offsetX = offsetObj["x"].toDouble();
+        var offsetY = offsetObj["y"].toDouble();
+        var offset = Offset(offsetX, offsetY);
         debugPrint(offset.toString());
         await control.backend.tester!.tapAt(offset);
 

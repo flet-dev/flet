@@ -20,7 +20,6 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     ```python
     ft.Row(
-            scroll=ft.ScrollMode.AUTO,
             controls=[
                 ft.Card(
                     shape=ft.ContinuousRectangleBorder(radius=10),
