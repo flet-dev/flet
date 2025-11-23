@@ -23,6 +23,7 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 ```python
 --8<-- "{{ examples }}/fullscreen.py"
 ```
+
 {{ image(example_images + "/fullscreen.gif", width="60%") }}
 
 

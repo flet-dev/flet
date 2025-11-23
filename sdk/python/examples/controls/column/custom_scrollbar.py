@@ -22,7 +22,37 @@ def main(page: ft.Page):
         )
     )
 
-    # todo: finish example
+    fake_messages = [
+        ft.Container(
+            ft.Text(f"Message {i}", size=16, weight=ft.FontWeight.W_500),
+            bgcolor=ft.Colors.with_opacity(0.15, ft.Colors.BLUE_200),
+            border_radius=8,
+            padding=10,
+        )
+        for i in range(1, 31)
+    ]
+
+    page.add(
+        ft.Row(
+            [
+                ft.Container(
+                    content=ft.Column(
+                        controls=fake_messages,
+                        spacing=10,
+                        scroll=ft.ScrollMode.ALWAYS,
+                        expand=True,
+                    ),
+                    width=320,
+                    height=420,
+                    bgcolor=ft.Colors.with_opacity(0.15, ft.Colors.AMBER_200),
+                    padding=15,
+                    border_radius=12,
+                )
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            expand=True,
+        )
+    )
 
 
 ft.run(main)
