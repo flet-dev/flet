@@ -32,6 +32,8 @@ import '../utils/session_store_web.dart'
 import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/user_fonts.dart';
+import '../utils/web_interface.dart'
+    if (dart.library.io) "../utils/io_interface.dart";
 import '../widgets/animated_transition_page.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/page_context.dart';
@@ -59,6 +61,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   ServiceRegistry? _userServices;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
+  bool? _prevFullScreen;
   String? _prevViewRoutes;
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
@@ -95,6 +98,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     widget.control.addInvokeMethodListener(_invokeMethod);
+    _applyFullScreenFromControl(widget.control);
   }
 
   @override
@@ -131,6 +135,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     _loadFontsIfNeeded(FletBackend.of(context));
+    _applyFullScreenFromControl(widget.control);
   }
 
   @override
@@ -149,6 +154,25 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
+  }
+
+  /// Applies full screen mode to the app.
+  Future<void> _applyFullScreenFromControl(Control control) async {
+    final fullScreen = control.getBool("full_screen", false)!;
+    if (_prevFullScreen != fullScreen) {
+      _prevFullScreen = fullScreen;
+      if (isDesktopPlatform() || isWebPlatform()) {
+        await setWindowFullScreen(fullScreen);
+      } else if (isMobilePlatform()) {
+        if (fullScreen) {
+          await SystemChrome.setEnabledSystemUIMode(
+              SystemUiMode.immersiveSticky);
+        } else {
+          await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+              overlays: SystemUiOverlay.values);
+        }
+      }
+    }
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -197,7 +221,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           await SystemChrome.setPreferredOrientations(orientations);
         }
         break;
-
       default:
         throw Exception("Unknown Page method: $name");
     }
@@ -378,11 +401,10 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   Widget _buildApp(Control control, Widget? home) {
-    var platform = TargetPlatform.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            control.getString("platform", "")!.toLowerCase(),
-        orElse: () => defaultTargetPlatform);
+    _applyFullScreenFromControl(control);
+
+    var platform =
+        control.getTargetPlatform("platform", defaultTargetPlatform)!;
 
     var widgetsDesign = control.adaptive == true &&
             (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)

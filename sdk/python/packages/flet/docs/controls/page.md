@@ -29,6 +29,21 @@ Shows how to lock your app to specific device orientations
 --8<-- "{{ examples }}/app_exit_confirm_dialog.py"
 ```
 
+### Toggle Fullscreen
+
+This example demonstrates how to toggle fullscreen mode in a Flet application.
+
+/// admonition
+    type: note
+[`Page.full_screen`][flet.] is cross-platform (mobile, desktop and web), whereas
+[`Page.window.full_screen`][flet.Window.full_screen] is desktop only.
+///
+
+
+```python
+--8<-- "{{ examples }}/fullscreen.py"
+```
+
 ### Hidden app window on startup
 
 ```python
