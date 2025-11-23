@@ -1,11 +1,10 @@
 from typing import Optional, Union
 
-from flet.controls.animation import AnimationCurve
+from flet.controls.animation import Animation
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxFit, FilterQuality
 from flet.controls.control import Control
-from flet.controls.duration import DurationValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     BlendMode,
@@ -19,7 +18,9 @@ __all__ = ["Image"]
 @control("Image")
 class Image(LayoutControl):
     """
-    Displays an image. The following popular formats are supported: JPEG, PNG, SVG,
+    Displays an image.
+
+    The following popular formats are supported: JPEG, PNG, SVG,
     GIF, Animated GIF, WebP, Animated WebP, BMP, and WBMP.
 
     Example:
@@ -111,6 +112,10 @@ class Image(LayoutControl):
     - A base64 string;
     - Raw bytes.
 
+    If `None`, no placeholder is shown while loading; the [`src`][(c).]
+    simply appears (or fades in if [`placeholder`][(c).] or
+    [`placeholder_fade_out_animation`][(c).] is not `None`).
+
     Note:
         SVG sources are currently not supported as placeholders. If provided,
         this property will be ignored and the [`src`][(c).] will be
@@ -119,37 +124,28 @@ class Image(LayoutControl):
 
     placeholder_fit: Optional[BoxFit] = None
     """
-    How to inscribe the placeholder into its space.
+    Defines how to inscribe the placeholder into its space.
 
-    Falls back to [`fit`][(c).] when omitted.
+    If `None`, default to [`fit`][(c).].
     """
 
-    fade_in_duration: Optional[DurationValue] = None
+    fade_in_animation: Optional[Animation] = None
     """
-    Duration of the fade-in animation when the image loads.
+    Fade-in animation of the [`src`][(c).] image as it appears after loading,
+    replacing the [`placeholder`][(c).].
 
-    Defaults to 250 milliseconds when any fade option is set.
-    """
-
-    fade_out_duration: Optional[DurationValue] = None
-    """
-    Duration of the fade-out animation for the placeholder.
-
-    Defaults to 150 milliseconds when any fade option is set.
+    If `None`, defaults to
+    `Animation(Duration(milliseconds=250), AnimationCurve.EASE_IN_OUT)`,
+    if [`placeholder`][(c).] or [`placeholder_fade_out_animation`][(c).] is not `None`.
     """
 
-    fade_in_curve: Optional[AnimationCurve] = None
+    placeholder_fade_out_animation: Optional[Animation] = None
     """
-    Animation curve used for the fade-in transition.
+    Fade-out animation for the [`placeholder`][(c).], after the [`src`][(c).] loads.
 
-    Defaults to `AnimationCurve.EASE_IN_OUT` when a fade is enabled.
-    """
-
-    fade_out_curve: Optional[AnimationCurve] = None
-    """
-    Animation curve used for the fade-out transition.
-
-    Defaults to `AnimationCurve.EASE_OUT` when a fade is enabled.
+    If `None`, defaults to
+    `Animation(Duration(milliseconds=150), AnimationCurve.EASE_OUT)`,
+    if [`placeholder`][(c).] or [`fade_in_animation`][(c).] is not `None`.
     """
 
     cache_width: Optional[int] = None
