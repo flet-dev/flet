@@ -99,3 +99,43 @@ async def test_src_bytes(flet_app: ftt.FletTestApp, request):
         pump_times=1,
         pump_duration=1000,
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_placeholder_1(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Image(
+            src="/minion.png",
+            width=100,
+            height=100,
+            fit=ft.BoxFit.CONTAIN,
+            placeholder_src=base64_image,
+            fade_in_duration=1000,
+            fade_out_duration=250,
+            fade_in_curve=ft.AnimationCurve.EASE_IN_OUT,
+            fade_out_curve=ft.AnimationCurve.EASE_OUT,
+        ),
+        pump_times=1,
+        pump_duration=50,
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_placeholder_2(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Image(
+            src="/minion.png",
+            width=100,
+            height=100,
+            fit=ft.BoxFit.CONTAIN,
+            placeholder_src=base64_image,
+            fade_in_duration=1000,
+            fade_out_duration=250,
+            fade_in_curve=ft.AnimationCurve.EASE_IN_OUT,
+            fade_out_curve=ft.AnimationCurve.EASE_OUT,
+        ),
+        pump_times=3,
+        pump_duration=1000,
+    )
