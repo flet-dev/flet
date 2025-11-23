@@ -692,7 +692,7 @@ async def test_draw_bytes_image(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         fc.Canvas(
-            [fc.Image(src_bytes=image_bytes, x=10, y=10)],
+            [fc.Image(src=image_bytes, x=10, y=10)],
             width=120,
             height=120,
         ),

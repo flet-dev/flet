@@ -175,19 +175,12 @@ class DecorationImage:
     An image for a box decoration.
     """
 
-    src: Optional[str] = None
+    src: Optional[Union[str, bytes]] = None
     """
-    The image to paint.
-    """
+    The image source to paint.
 
-    src_base64: Optional[str] = None
-    """
-    The base64-encoded image to paint.
-    """
-
-    src_bytes: Optional[bytes] = None
-    """
-    TBD
+    Accepts URLs, asset paths, base64 strings (with or without `data:` prefixes),
+    or raw bytes.
     """
 
     color_filter: Optional[ColorFilter] = None
@@ -243,9 +236,7 @@ class DecorationImage:
     def copy(
         self,
         *,
-        src: Optional[str] = None,
-        src_base64: Optional[str] = None,
-        src_bytes: Optional[bytes] = None,
+        src: Optional[Union[str, bytes]] = None,
         color_filter: Optional[ColorFilter] = None,
         fit: Optional[BoxFit] = None,
         alignment: Optional[Alignment] = None,
@@ -262,8 +253,6 @@ class DecorationImage:
         """
         return DecorationImage(
             src=src if src is not None else self.src,
-            src_base64=src_base64 if src_base64 is not None else self.src_base64,
-            src_bytes=src_bytes if src_bytes is not None else self.src_bytes,
             color_filter=color_filter
             if color_filter is not None
             else self.color_filter,

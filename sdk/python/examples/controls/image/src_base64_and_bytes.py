@@ -11,12 +11,12 @@ def main(page: ft.Page):
 
     page.add(
         ft.Image(
-            src_base64=base64_src,
+            src=base64_src,
             width=100,
             height=100,
         ),
         ft.Image(
-            src_bytes=bytes_src,
+            src=bytes_src,
             width=100,
             height=100,
         ),
