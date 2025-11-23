@@ -47,7 +47,7 @@ class CupertinoCheckbox(LayoutControl):
     Defines on which side of this checkbox the [`label`][(c).] should be shown.
     """
 
-    spacing: Number = 10
+    spacing: Optional[Number] = 10
     """
     The space between this checkbox and the [`label`][(c).].
     """
