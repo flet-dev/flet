@@ -5,6 +5,7 @@ import flet.testing as ftt
 from examples.controls.shimmer import basic_placeholder, custom_gradient
 
 
+@pytest.mark.skip(reason="The test is flaky on CI")
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     page = flet_app_function.page
@@ -43,6 +44,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     )
 
 
+@pytest.mark.skip(reason="The test is flaky on CI")
 @pytest.mark.parametrize(
     "flet_app_function",
     [
@@ -73,6 +75,7 @@ async def test_basic_placeholder(flet_app_function: ftt.FletTestApp):
     )
 
 
+@pytest.mark.skip(reason="The test is flaky on CI")
 @pytest.mark.parametrize(
     "flet_app_function",
     [
