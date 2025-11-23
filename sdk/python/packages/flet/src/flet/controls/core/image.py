@@ -1,9 +1,11 @@
 from typing import Optional, Union
 
+from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxFit, FilterQuality
 from flet.controls.control import Control
+from flet.controls.duration import DurationValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     BlendMode,
@@ -98,6 +100,56 @@ class Image(LayoutControl):
     filter_quality: FilterQuality = FilterQuality.MEDIUM
     """
     The rendering quality of the image.
+    """
+
+    placeholder_src: Optional[Union[str, bytes]] = None
+    """
+    A placeholder displayed while the image is loading.
+
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
+
+    Note:
+        SVG sources are currently not supported as placeholders. If provided,
+        this property will be ignored and the [`src`][(c).] will be
+        displayed directly instead.
+    """
+
+    placeholder_fit: Optional[BoxFit] = None
+    """
+    How to inscribe the placeholder into its space.
+
+    Falls back to [`fit`][(c).] when omitted.
+    """
+
+    fade_in_duration: Optional[DurationValue] = None
+    """
+    Duration of the fade-in animation when the image loads.
+
+    Defaults to 250 milliseconds when any fade option is set.
+    """
+
+    fade_out_duration: Optional[DurationValue] = None
+    """
+    Duration of the fade-out animation for the placeholder.
+
+    Defaults to 150 milliseconds when any fade option is set.
+    """
+
+    fade_in_curve: Optional[AnimationCurve] = None
+    """
+    Animation curve used for the fade-in transition.
+
+    Defaults to `AnimationCurve.EASE_IN_OUT` when a fade is enabled.
+    """
+
+    fade_out_curve: Optional[AnimationCurve] = None
+    """
+    Animation curve used for the fade-out transition.
+
+    Defaults to `AnimationCurve.EASE_OUT` when a fade is enabled.
     """
 
     cache_width: Optional[int] = None
