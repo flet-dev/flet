@@ -74,6 +74,7 @@ import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
+import 'controls/page_view.dart';
 import 'controls/pagelet.dart';
 import 'controls/placeholder.dart';
 import 'controls/popup_menu_button.dart';
@@ -289,6 +290,8 @@ class FletCoreExtension extends FletExtension {
         return PageControl(key: key, control: control);
       case "Pagelet":
         return PageletControl(key: key, control: control);
+      case "PageView":
+        return PageViewControl(key: key, control: control);
       case "Placeholder":
         return PlaceholderControl(key: key, control: control);
       case "PopupMenuButton":
