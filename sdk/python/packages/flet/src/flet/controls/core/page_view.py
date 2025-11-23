@@ -27,20 +27,12 @@ class PageView(LayoutControl):
     A list of controls to display, one per page, in the order they should appear.
     """
 
-    initial_page: int = 0
-    """
-    The zero-based page index that will be shown first.
-
-    Raises:
-        ValueError: If it is negative.
-    """
-
-    current_page: Optional[int] = None
+    selected_index: int = 0
     """
     The zero-based index of the currently visible page.
 
-    This value is automatically kept in sync with user interaction.
-    Setting it manually (followed by [`update()`][flet.Control.update])
+    Setting this before the control is rendered selects the initial page.
+    Changing it later (followed by [`update()`][flet.Control.update])
     jumps to the specified page without animation.
 
     Raises:
@@ -112,13 +104,9 @@ class PageView(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        if self.initial_page < 0:
+        if self.selected_index < 0:
             raise ValueError(
-                f"initial_page must be greater than or equal to 0, got {self.initial_page}"
-            )
-        if self.current_page is not None and self.current_page < 0:
-            raise ValueError(
-                f"current_page must be greater than or equal to 0, got {self.current_page}"
+                f"selected_index must be greater than or equal to 0, got {self.selected_index}"
             )
         if self.viewport_fraction <= 0:
             raise ValueError(
@@ -152,7 +140,7 @@ class PageView(LayoutControl):
             {
                 "index": index,
                 "duration": animation_duration
-                if animation_duration is None
+                if animation_duration is not None
                 else self.animation_duration,
                 "curve": animation_curve
                 if animation_curve is not None
@@ -210,7 +198,7 @@ class PageView(LayoutControl):
             "next_page",
             {
                 "duration": animation_duration
-                if animation_duration is None
+                if animation_duration is not None
                 else self.animation_duration,
                 "curve": animation_curve
                 if animation_curve is not None
@@ -236,7 +224,7 @@ class PageView(LayoutControl):
             "previous_page",
             {
                 "duration": animation_duration
-                if animation_duration is None
+                if animation_duration is not None
                 else self.animation_duration,
                 "curve": animation_curve
                 if animation_curve is not None

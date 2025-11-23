@@ -24,16 +24,14 @@ class _PageViewControlState extends State<PageViewControl> {
   late PageController _pageController;
   late bool _keepPage;
   late double _viewportFraction;
-  late int _initialPageValue;
-  int? _currentPageProp;
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
     widget.control.addInvokeMethodListener(_invokeMethod);
     _readControllerConfig();
-    _pageController =
-        _createController(initialPage: _currentPageProp ?? _initialPageValue);
+    _pageController = _createController(initialPage: _selectedIndex);
   }
 
   @override
@@ -43,38 +41,30 @@ class _PageViewControlState extends State<PageViewControl> {
     final newKeepPage = widget.control.getBool("keep_page", true)!;
     final newViewportFraction =
         widget.control.getDouble("viewport_fraction", 1.0)!;
-    final newInitialPage = widget.control.getInt("initial_page", 0)!;
-    final newCurrentPage = widget.control.getInt("current_page");
+    final newSelectedIndex = widget.control.getInt("selected_index", 0)!;
 
-    final requiresRebuild = newKeepPage != _keepPage ||
-        newViewportFraction != _viewportFraction ||
-        (newCurrentPage == null &&
-            _currentPageProp == null &&
-            newInitialPage != _initialPageValue);
+    final requiresRebuild =
+        newKeepPage != _keepPage || newViewportFraction != _viewportFraction;
 
     if (requiresRebuild) {
       _keepPage = newKeepPage;
       _viewportFraction = newViewportFraction;
-      _initialPageValue = newInitialPage;
-      final targetPage = newCurrentPage ?? _resolveCurrentPage();
-      _currentPageProp = newCurrentPage ?? targetPage;
+      _selectedIndex = newSelectedIndex;
 
       final oldController = _pageController;
-      _pageController = _createController(initialPage: targetPage);
+      _pageController = _createController(initialPage: _selectedIndex);
       oldController.dispose();
-    } else if (newCurrentPage != null &&
-        newCurrentPage != _currentPageProp &&
+    } else if (newSelectedIndex != _selectedIndex &&
         _pageController.hasClients) {
-      _currentPageProp = newCurrentPage;
-      _pageController.jumpToPage(newCurrentPage);
+      _selectedIndex = newSelectedIndex;
+      _pageController.jumpToPage(newSelectedIndex);
     }
   }
 
   void _readControllerConfig() {
     _keepPage = widget.control.getBool("keep_page", true)!;
     _viewportFraction = widget.control.getDouble("viewport_fraction", 1.0)!;
-    _initialPageValue = widget.control.getInt("initial_page", 0)!;
-    _currentPageProp = widget.control.getInt("current_page");
+    _selectedIndex = widget.control.getInt("selected_index", 0)!;
   }
 
   PageController _createController({required int initialPage}) {
@@ -85,22 +75,9 @@ class _PageViewControlState extends State<PageViewControl> {
     );
   }
 
-  int _resolveCurrentPage() {
-    if (_currentPageProp != null) {
-      return _currentPageProp!;
-    }
-    if (_pageController.hasClients) {
-      final page = _pageController.page;
-      if (page != null) {
-        return page.round();
-      }
-    }
-    return _initialPageValue;
-  }
-
   void _handlePageChanged(int index) {
-    _currentPageProp = index;
-    widget.control.updateProperties({"current_page": index});
+    _selectedIndex = index;
+    widget.control.updateProperties({"selected_index": index});
     widget.control.triggerEvent("change", index);
   }
 
