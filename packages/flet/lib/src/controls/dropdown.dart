@@ -280,6 +280,7 @@ class _DropdownControlState extends State<DropdownControl> {
       helperText: widget.control.getString("helper_text"),
       menuStyle: menuStyle,
       inputDecorationTheme: inputDecorationTheme,
+      inputFormatters: inputFormatters.isEmpty ? null : inputFormatters,
       onSelected: widget.control.disabled
           ? null
           : (String? selection) {
@@ -291,7 +292,6 @@ class _DropdownControlState extends State<DropdownControl> {
     );
 
     var didAutoFocus = false;
-
     if (!didAutoFocus && autofocus) {
       didAutoFocus = true;
       SchedulerBinding.instance.addPostFrameCallback((_) {
