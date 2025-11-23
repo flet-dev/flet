@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/slider
 ### Setting a custom label
 
 ```python
---8<-- "{{ examples }}/custom_label"
+--8<-- "{{ examples }}/custom_label.py"
 ```
 
 {{ image(example_images + "/custom_label.png", alt="custom-label", width="80%") }}

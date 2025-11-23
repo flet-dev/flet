@@ -79,6 +79,16 @@ class TesterService extends FletService {
           await control.backend.tester!.tap(finder, args["finder_index"]);
         }
 
+      case "tap_at":
+
+        var offsetObj = args["offset"];
+        var offsetX = offsetObj["x"].toDouble();
+        var offsetY = offsetObj["y"].toDouble();
+        var offset = Offset(offsetX, offsetY);
+        debugPrint(offset.toString());
+        await control.backend.tester!.tapAt(offset);
+
+
       case "long_press":
         var finder = _finders[args["finder_id"]];
         if (finder != null) {

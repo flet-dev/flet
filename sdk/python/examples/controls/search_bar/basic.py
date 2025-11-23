@@ -15,7 +15,7 @@ colors = [
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def build_tiles(items: list[str]) -> list[ft.ListTile]:
+    def build_tiles(items: list[str]) -> list[ft.Control]:
         return [
             ft.ListTile(
                 title=ft.Text(item),
@@ -55,4 +55,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

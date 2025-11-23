@@ -24,6 +24,7 @@ def main(page: ft.Page):
             controls=[
                 ft.Text("Spacing between items"),
                 ft.Slider(
+                    key="slider",
                     min=0,
                     max=50,
                     divisions=50,
@@ -39,4 +40,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
