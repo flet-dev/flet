@@ -14,6 +14,7 @@ class FlutterWidgetTester implements Tester {
   final IntegrationTestWidgetsFlutterBinding _binding;
   final lock = Lock();
   final Completer _teardown = Completer();
+  TestGesture? _gesture;
 
   FlutterWidgetTester(this._tester, this._binding);
 
@@ -21,8 +22,9 @@ class FlutterWidgetTester implements Tester {
   Future<void> pumpAndSettle({Duration? duration}) async {
     await lock.acquire();
     try {
-      await _tester
-          .pumpAndSettle(duration ?? const Duration(milliseconds: 100));
+      await _tester.pumpAndSettle(
+        duration ?? const Duration(milliseconds: 100),
+      );
     } finally {
       lock.release();
     }
@@ -60,7 +62,8 @@ class FlutterWidgetTester implements Tester {
     if (defaultTargetPlatform != TargetPlatform.android &&
         defaultTargetPlatform != TargetPlatform.iOS) {
       throw Exception(
-          "Full app screenshots are only available on Android and iOS.");
+        "Full app screenshots are only available on Android and iOS.",
+      );
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
       await _binding.convertFlutterSurfaceToImage();
@@ -71,25 +74,37 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
-  Future<void> tap(TestFinder finder, int finderIndex) =>
-      _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
+  Future<void> tap(TestFinder finder, int finderIndex) async {
+    await _mouseExit();
+    await _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
+  }
 
   @override
-  Future<void> longPress(TestFinder finder, int finderIndex) =>
-      _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
+  Future<void> longPress(TestFinder finder, int finderIndex) async {
+    await _mouseExit();
+    await _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
+  }
+
   @override
-  Future<void> enterText(TestFinder finder, int finderIndex, String text) =>
-      _tester.enterText(
-          (finder as FlutterTestFinder).raw.at(finderIndex), text);
+  Future<void> enterText(
+      TestFinder finder, int finderIndex, String text) async {
+    await _mouseExit();
+    await _tester.enterText(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+      text,
+    );
+  }
 
   @override
   Future<void> mouseHover(TestFinder finder, int finderIndex) async {
-    final center =
-        _tester.getCenter((finder as FlutterTestFinder).raw.at(finderIndex));
-    final gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
-    await gesture.addPointer();
-    await gesture.moveTo(center);
-    await pumpAndSettle();
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+
+    await _mouseExit();
+    _gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(center);
   }
 
   @override
@@ -97,4 +112,11 @@ class FlutterWidgetTester implements Tester {
 
   @override
   Future waitForTeardown() => _teardown.future;
+
+  Future<void> _mouseExit() async {
+    if (_gesture != null) {
+      await _gesture?.removePointer();
+      _gesture = null;
+    }
+  }
 }
