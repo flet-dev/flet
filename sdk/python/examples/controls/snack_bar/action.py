@@ -15,6 +15,7 @@ def main(page: ft.Page):
         page.show_dialog(
             ft.SnackBar(
                 ft.Text("The directory has been deleted."),
+                persist=False,
                 action=ft.SnackBarAction(
                     label="Undo delete",
                     text_color=ft.Colors.YELLOW,

@@ -58,10 +58,13 @@ async def test_theme(flet_app: ftt.FletTestApp):
             elevation=100,
             destinations=[
                 ft.NavigationBarDestination(icon=ft.Icons.EXPLORE, label="Explore"),
-                ft.NavigationBarDestination(key="add", icon=ft.Icon(ft.Icons.ADD)),
                 ft.NavigationBarDestination(
+                    key="add", icon=ft.Icon(ft.Icons.ADD), label="Add"
+                ),
+                ft.NavigationBarDestination(
+                    key="phone",
                     icon=ft.Icons.PHONE_ENABLED,
-                    label="Explore",
+                    label="Phone",
                 ),
             ],
         )
@@ -87,7 +90,6 @@ async def test_theme(flet_app: ftt.FletTestApp):
 
     # click to check label behaviour
     await flet_app.tester.tap(add)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

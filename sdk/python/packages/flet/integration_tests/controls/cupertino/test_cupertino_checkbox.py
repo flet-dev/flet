@@ -12,14 +12,6 @@ ccbts = ft.CupertinoCheckbox(
         ft.ControlState.SELECTED: ft.Colors.DEEP_ORANGE_200,
         ft.ControlState.DEFAULT: ft.Colors.TEAL_200,
     },
-    key="tristate",
-)
-
-ccb = ft.CupertinoCheckbox(
-    label="Cupertino Checkbox circle border",
-    value=True,
-    shape=ft.CircleBorder(),
-    key="circleborder",
 )
 
 
@@ -44,14 +36,38 @@ async def test_tristate_2(flet_app: ftt.FletTestApp, request):
 async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
-        ccb,
+        ft.CupertinoCheckbox(),
     )
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_position(flet_app: ftt.FletTestApp, request):
-    ccb.label_position = ft.LabelPosition.LEFT
+async def test_basic_checked(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
-        ccb,
+        ft.CupertinoCheckbox(
+            value=True,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_label_position(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.CupertinoCheckbox(
+            label="Cupertino Checkbox with circle border",
+            label_position=ft.LabelPosition.LEFT,
+            value=True,
+            shape=ft.CircleBorder(),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_label(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.CupertinoCheckbox(
+            label="Cupertino Checkbox with label",
+        ),
     )
