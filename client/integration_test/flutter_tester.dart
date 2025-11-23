@@ -75,20 +75,17 @@ class FlutterWidgetTester implements Tester {
 
   @override
   Future<void> tap(TestFinder finder, int finderIndex) async {
-    await _mouseExit();
     await _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
   }
 
   @override
   Future<void> longPress(TestFinder finder, int finderIndex) async {
-    await _mouseExit();
     await _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
   }
 
   @override
   Future<void> enterText(
       TestFinder finder, int finderIndex, String text) async {
-    await _mouseExit();
     await _tester.enterText(
       (finder as FlutterTestFinder).raw.at(finderIndex),
       text,
