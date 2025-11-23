@@ -82,10 +82,10 @@ class TesterService extends FletService {
       case "tap_at":
 
         var offsetObj = args["offset"];
-        var offsetX = offsetObj["x"].toDouble();
-        var offsetY = offsetObj["y"].toDouble();
-        var offset = Offset(offsetX, offsetY);
-        debugPrint(offset.toString());
+        var offset = parseOffset(offsetObj);
+        if (offset == null) {
+          throw Exception("Offset not found: $offsetObj, $offset");
+        }
         await control.backend.tester!.tapAt(offset);
 
 
