@@ -5,9 +5,10 @@ import charts
 import counter
 import drawing_tool
 import entry_form
-import flet as ft
 import flet_animation
 import to_do
+
+import flet as ft
 
 
 class AppTile(ft.ListTile):
@@ -29,11 +30,10 @@ class AppTile(ft.ListTile):
                         title=ft.Text(f"{e.control.name}"),
                         actions=[
                             ft.IconButton(
-                                content=ft.Image(
+                                icon=ft.Image(
                                     src="github-mark.svg", width=24, height=24
                                 ),
-                                url=f"https://github.com/flet-dev/examples/tree/main/python/apps/studio-gallery/{self.file_name}",
-                                url_target="_blank",
+                                url=f"https://github.com/flet-dev/examples/tree/main/python/apps/studio_gallery/{self.file_name}",
                             )
                         ],
                     ),

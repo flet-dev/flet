@@ -1,5 +1,6 @@
-import flet as ft
 from components.properties_table import PropertiesList
+
+import flet as ft
 
 name = "Text with variable properties"
 
