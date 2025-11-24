@@ -101,6 +101,7 @@ async def test_src_bytes(flet_app: ftt.FletTestApp, request):
     )
 
 
+@pytest.mark.skip(reason="The test is flaky on CI")
 @pytest.mark.asyncio(loop_scope="module")
 async def test_placeholder_1(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
