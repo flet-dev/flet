@@ -65,7 +65,7 @@ async def test_spacing(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(800, 200)
     flet_app_function.page.update()
-    await flet_app_function.tester.tap_at(200, 60)
+    await flet_app_function.tester.tap_at(ft.Offset(200, 60))
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "spacing1",
@@ -73,7 +73,7 @@ async def test_spacing(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    await flet_app_function.tester.tap_at(300, 60)
+    await flet_app_function.tester.tap_at(ft.Offset(300, 60))
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "spacing2",
@@ -81,7 +81,7 @@ async def test_spacing(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    await flet_app_function.tester.tap_at(400, 60)
+    await flet_app_function.tester.tap_at(ft.Offset(400, 60))
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "spacing3",
@@ -106,7 +106,7 @@ async def test_wrap(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(800, 400)
     flet_app_function.page.update()
-    await flet_app_function.tester.tap_at(600, 60)
+    await flet_app_function.tester.tap_at(ft.Offset(600, 60))
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "wrap1",
@@ -114,7 +114,7 @@ async def test_wrap(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    await flet_app_function.tester.tap_at(500, 60)
+    await flet_app_function.tester.tap_at(ft.Offset(500, 60))
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "wrap2",
@@ -122,7 +122,7 @@ async def test_wrap(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    await flet_app_function.tester.tap_at(400, 60)
+    await flet_app_function.tester.tap_at(ft.Offset(400, 60))
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "wrap3",
