@@ -19,22 +19,18 @@ def main(page: ft.Page):
 
     today = datetime.datetime.now()
 
+    drp = ft.DateRangePicker(
+        start_value=datetime.datetime(year=today.year, month=today.month, day=1),
+        end_value=datetime.datetime(year=today.year, month=today.month, day=15),
+        on_change=handle_change,
+        on_dismiss=handle_dismissal,
+    )
+
     page.add(
         ft.Button(
             content=ft.Text("Pick date"),
             icon=ft.Icons.PHONE,
-            on_click=lambda e: page.show_dialog(
-                ft.DateRangePicker(
-                    start_value=datetime.datetime(
-                        year=today.year, month=today.month, day=1
-                    ),
-                    end_value=datetime.datetime(
-                        year=today.year, month=today.month, day=15
-                    ),
-                    on_change=handle_change,
-                    on_dismiss=handle_dismissal,
-                )
-            ),
+            on_click=lambda e: page.show_dialog(drp),
         )
     )
 

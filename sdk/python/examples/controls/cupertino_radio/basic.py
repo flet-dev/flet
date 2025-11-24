@@ -30,7 +30,7 @@ def main(page: ft.Page):
                 ]
             )
         ),
-        ft.ElevatedButton(content="Submit", on_click=handle_button_click),
+        ft.Button(content="Submit", on_click=handle_button_click),
         message := ft.Text(),
     )
 

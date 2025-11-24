@@ -1,6 +1,5 @@
-import flet_charts as fch
-
 import flet as ft
+import flet_charts as fch
 
 
 class State:
@@ -134,7 +133,7 @@ def main(page: ft.Page):
         state.toggled = not state.toggled
         chart.update()
 
-    page.add(ft.ElevatedButton("avg", on_click=toggle_data), chart)
+    page.add(ft.Button("avg", on_click=toggle_data), chart)
 
 
 ft.run(main)

@@ -34,9 +34,9 @@ def main(page: ft.Page):
                 ft.TextSpan(
                     text="underlined and clickable",
                     style=ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                    on_click=lambda e: print(f"Clicked span: {e.control.uid}"),
-                    on_enter=lambda e: print(f"Entered span: {e.control.uid}"),
-                    on_exit=lambda e: print(f"Exited span: {e.control.uid}"),
+                    on_click=lambda e: print(f"Clicked span: {e.control}"),
+                    on_enter=lambda e: print(f"Entered span: {e.control}"),
+                    on_exit=lambda e: print(f"Exited span: {e.control}"),
                 ),
                 ft.TextSpan(text=" "),
                 ft.TextSpan(
@@ -46,8 +46,8 @@ def main(page: ft.Page):
                         decoration_color=ft.Colors.RED,
                         decoration_style=ft.TextDecorationStyle.WAVY,
                     ),
-                    on_enter=lambda e: print(f"Entered span: {e.control.uid}"),
-                    on_exit=lambda e: print(f"Exited span: {e.control.uid}"),
+                    on_enter=lambda e: print(f"Entered span: {e.control}"),
+                    on_exit=lambda e: print(f"Exited span: {e.control}"),
                 ),
                 ft.TextSpan(text=" "),
                 ft.TextSpan(

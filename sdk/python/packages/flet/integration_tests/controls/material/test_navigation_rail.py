@@ -11,7 +11,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_navigation_rail(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.NavigationRail(
@@ -51,7 +51,7 @@ async def test_navigation_rail(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_navigation_rail_no_selected_icon(flet_app: ftt.FletTestApp, request):
+async def test_no_selected_icon(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.NavigationRail(
