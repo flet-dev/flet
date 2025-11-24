@@ -36,7 +36,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [apps, examples, controls/core, controls/material, controls/cupertino, controls/theme, controls/types]
+        suite:
+        - apps
+        - examples/apps
+        - examples/core
+        - examples/cupertino
+        - examples/material
+        - controls/core
+        - controls/cupertino
+        - controls/material
+        - controls/theme
+        - controls/types
+
     name: ${{ matrix.suite }} Integration Tests
     steps:
       - name: Checkout repository
@@ -45,27 +56,11 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Configure Flutter version
-        uses: kuhnroyal/flutter-fvm-config-action/config@v3
-        id: fvm-config-action
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
           path: '.fvmrc'
-
-      - name: Setup Flutter
-        id: flutter-action
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
-          cache: false
-
-      # TODO: Remove when https://github.com/actions/runner-images/issues/13341 is fixed
-      - name: Cache Flutter
-        id: cache-flutter
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
-          key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
+          cache: true
 
       - name: Show tool versions
         run: |

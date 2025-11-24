@@ -77,4 +77,5 @@ class PermissionView(ft.View):
         # await self.confirm_pop(True)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
