@@ -87,7 +87,7 @@ async def consumer_loop(
             break
 
         print("Draw:", len(png))
-        canvas.shapes = [fc.Image(src_bytes=png, x=0, y=0)]
+        canvas.shapes = [fc.Image(src=png, x=0, y=0)]
         canvas.update()
 
 

@@ -36,7 +36,7 @@ pip install flet-lottie  # (1)!
 ## Example
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/basic.py"
 ```
 
 ## Description
