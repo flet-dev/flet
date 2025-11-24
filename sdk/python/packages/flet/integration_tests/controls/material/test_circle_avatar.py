@@ -20,7 +20,9 @@ async def test_text_content(flet_app: ftt.FletTestApp, request):
 async def test_icon_content(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
-        ft.CircleAvatar(content=ft.Icon(ft.Icons.ABC)),
+        ft.CircleAvatar(
+            content=ft.Icon(ft.Icons.ABC),
+        ),
     )
 
 
