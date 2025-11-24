@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import flet as ft
 from flet_audio.types import (
@@ -15,33 +15,18 @@ class Audio(ft.Service):
     A control to simultaneously play multiple audio sources.
     """
 
-    src: Optional[str] = None
+    src: Optional[Union[str, bytes]] = None
     """
     The audio source.
-    Can be a URL or a local [asset file](https://docs.flet.dev/cookbook/assets).
+
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
 
     Note:
-        - At least one of `src` or [`src_base64`][flet_audio.Audio.src_base64] must be
-            provided, with `src_base64` having priority if both are provided.
-        - [Here](https://github.com/bluefireteam/audioplayers/blob/main/troubleshooting.md#supported-formats--encodings)
+        [Here](https://github.com/bluefireteam/audioplayers/blob/main/troubleshooting.md#supported-formats--encodings)
             is a list of supported audio formats.
-
-    Raises:
-        ValueError: If both `src` and [`src_base64`][(c).] are `None`.
-    """
-
-    src_base64: Optional[str] = None
-    """
-    Defines the contents of audio file encoded in base-64 format.
-
-    Note:
-        - At least one of [`src`][flet_audio.Audio.src] or `src_base64` must be
-            provided, with `src_base64` having priority if both are provided.
-        - [Here](https://github.com/bluefireteam/audioplayers/blob/main/troubleshooting.md#supported-formats--encodings)
-            is a list of supported audio formats.
-
-    Raises:
-        ValueError: If both `src_base64` and [`src`][(c).] are `None`.
     """
 
     autoplay: bool = False
@@ -115,11 +100,6 @@ class Audio(ft.Service):
     Fires on seek completions.
     An event is going to be sent as soon as the audio seek is finished.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (self.src or self.src_base64):
-            raise ValueError("either src or src_base64 must be provided")
 
     async def play(self, position: ft.DurationValue = 0):
         """

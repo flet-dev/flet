@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
@@ -12,17 +12,11 @@ class Image(Shape):
     Draws an image.
     """
 
-    src: Optional[str] = None
+    src: Optional[Union[str, bytes]] = None
     """
     Draws an image from a source.
 
-    This could be an external URL or a local
-    [asset file](https://flet.dev/docs/cookbook/assets).
-    """
-
-    src_bytes: Optional[bytes] = None
-    """
-    Draws an image from a bytes array.
+    Accepts URLs/paths, base64 strings, or raw bytes.
     """
 
     x: Optional[Number] = None

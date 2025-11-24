@@ -44,12 +44,14 @@ StrokePattern? parseStrokePattern(dynamic value,
   } else if (type == 'solid') {
     return const StrokePattern.solid();
   } else if (type == 'dashed') {
-    var segments = value['segments'] ?? [];
+    var segments = value['segments'] as List<dynamic>;
+
     return StrokePattern.dashed(
       patternFit: parsePatternFit(value['pattern_fit'], PatternFit.scaleUp)!,
       segments: segments.map((e) => parseDouble(e)).nonNulls.toList(),
     );
   }
+
   return defaultValue;
 }
 

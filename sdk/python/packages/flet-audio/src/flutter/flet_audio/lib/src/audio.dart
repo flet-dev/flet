@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flet/flet.dart';
@@ -19,7 +18,7 @@ class AudioService extends FletService {
   StreamSubscription? _onSeekCompleteSubscription;
 
   String? _src;
-  String? _srcBase64;
+  Uint8List? _srcBytes;
   ReleaseMode? _releaseMode;
   double? _volume;
   double? _balance;
@@ -66,11 +65,12 @@ class AudioService extends FletService {
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
 
-    var src = control.getString("src", "")!;
-    var srcBase64 = control.getString("src_base64", "")!;
-    if (src == "" && srcBase64 == "") {
-      throw Exception(
-          "Audio must have either \"src\" or \"src_base64\" specified.");
+    final resolvedSrc = control.getSrc("src");
+    if (resolvedSrc.error != null) {
+      throw Exception("Audio src decode error: ${resolvedSrc.error}");
+    }
+    if (resolvedSrc.isEmpty) {
+      throw Exception("Audio must have \"src\" specified.");
     }
     var autoplay = control.getBool("autoplay", false)!;
     var volume = control.getDouble("volume", 1.0)!;
@@ -80,47 +80,56 @@ class AudioService extends FletService {
 
     () async {
       bool srcChanged = false;
-      if (src != "" && src != _src) {
-        _src = src;
+      // URL or file
+      if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
+        _src = resolvedSrc.uri;
+        _srcBytes = null;
         srcChanged = true;
 
-        // URL or file?
-        var assetSrc = control.backend.getAssetSource(src);
+        var assetSrc = control.backend.getAssetSource(_src!);
         if (assetSrc.isFile) {
           await player.setSourceDeviceFile(assetSrc.path);
         } else {
           await player.setSourceUrl(assetSrc.path);
         }
-      } else if (srcBase64 != "" && srcBase64 != _srcBase64) {
-        _srcBase64 = srcBase64;
+      } else if (resolvedSrc.bytes != null &&
+          (_srcBytes == null || !listEquals(_srcBytes, resolvedSrc.bytes))) {
+        // bytes
+        _srcBytes = resolvedSrc.bytes;
+        _src = null;
         srcChanged = true;
-        await player.setSourceBytes(base64Decode(srcBase64));
+        await player.setSourceBytes(resolvedSrc.bytes!);
       }
 
       if (srcChanged) {
         control.triggerEvent("loaded");
       }
 
+      // releaseMode
       if (releaseMode != null && releaseMode != _releaseMode) {
         _releaseMode = releaseMode;
         await player.setReleaseMode(releaseMode);
       }
 
+      // volume
       if (volume != _volume && volume >= 0 && volume <= 1) {
         _volume = volume;
         await player.setVolume(volume);
       }
 
+      // playbackRate
       if (playbackRate != _playbackRate) {
         _playbackRate = playbackRate;
         await player.setPlaybackRate(playbackRate);
       }
 
+      // balance
       if (!kIsWeb && balance != _balance && balance >= -1 && balance <= 1) {
         _balance = balance;
         await player.setBalance(balance);
       }
 
+      // autoplay
       if (srcChanged && autoplay) {
         await player.resume();
       }
