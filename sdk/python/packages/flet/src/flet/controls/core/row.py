@@ -20,19 +20,19 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     ```python
     ft.Row(
-            controls=[
-                ft.Card(
-                    shape=ft.ContinuousRectangleBorder(radius=10),
-                    content=ft.Container(
-                        padding=5,
-                        border_radius=ft.BorderRadius.all(5),
-                        bgcolor=ft.Colors.AMBER_100,
-                        content=ft.Text(f"Control {i}"),
-                    ),
-                )
-                for i in range(1, 6)
-            ],
-        ),
+        controls=[
+            ft.Card(
+                shape=ft.ContinuousRectangleBorder(radius=10),
+                content=ft.Container(
+                    padding=5,
+                    border_radius=ft.BorderRadius.all(5),
+                    bgcolor=ft.Colors.AMBER_100,
+                    content=ft.Text(f"Control {i}"),
+                ),
+            )
+            for i in range(1, 6)
+        ],
+    ),
     ```
 
     """

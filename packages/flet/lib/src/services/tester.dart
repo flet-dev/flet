@@ -80,14 +80,10 @@ class TesterService extends FletService {
         }
 
       case "tap_at":
-
-        var offsetObj = args["offset"];
-        var offset = parseOffset(offsetObj);
-        if (offset == null) {
-          throw Exception("Offset not found: $offsetObj, $offset");
+        var offset = parseOffset(args["offset"]);
+        if (offset != null) {
+          await control.backend.tester!.tapAt(offset);
         }
-        await control.backend.tester!.tapAt(offset);
-
 
       case "long_press":
         var finder = _finders[args["finder_id"]];

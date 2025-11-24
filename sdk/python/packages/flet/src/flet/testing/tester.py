@@ -123,8 +123,7 @@ class Tester(Service):
         Dispatch a pointer down / pointer up sequence at the given offset.
 
         Args:
-            x_offset: x value of offset from top right.
-            y_offset: y value of offset from top right.
+            offset: Offset value at which tap will occur.
         """
         await self._invoke_method("tap_at", {"offset": offset})
 
