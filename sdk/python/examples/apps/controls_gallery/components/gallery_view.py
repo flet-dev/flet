@@ -1,7 +1,8 @@
-import flet as ft
 from components.controls_grid import ControlsGrid
 from components.examples_view import ExamplesView
 from components.left_navigation_menu import LeftNavigationMenu
+
+import flet as ft
 
 
 class GalleryView(ft.Row):

@@ -12,7 +12,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_color_scheme(flet_app: ftt.FletTestApp):
+async def test_theme_1(flet_app: ftt.FletTestApp):
     flet_app.page.theme = ft.Theme(
         color_scheme=ft.ColorScheme(
             error=ft.Colors.RED,
@@ -69,8 +69,17 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
 
     def swatch(label: str, fill_color: str, text_color: str) -> ft.Container:
         return ft.Container(
+            width=100,
+            height=72,
+            bgcolor=fill_color,
+            border_radius=ft.BorderRadius.all(12),
+            border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
+            padding=10,
             content=ft.Column(
-                [
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=4,
+                controls=[
                     ft.Text(
                         label,
                         size=11,
@@ -79,16 +88,7 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                         text_align=ft.TextAlign.CENTER,
                     )
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=4,
             ),
-            width=100,
-            height=72,
-            bgcolor=fill_color,
-            border_radius=ft.BorderRadius.all(12),
-            border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
-            padding=10,
         )
 
     primary_palette = ft.Screenshot(
@@ -276,8 +276,12 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
             key=ft.ScrollKey("themed_card"),
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
             content=ft.Container(
+                padding=10,
                 content=ft.Column(
-                    [
+                    spacing=8,
+                    alignment=ft.MainAxisAlignment.START,
+                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                    controls=[
                         ft.Text(
                             "Card on surface container",
                             size=18,
@@ -297,11 +301,7 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                             trailing=ft.Switch(value=True),
                         ),
                     ],
-                    spacing=8,
-                    alignment=ft.MainAxisAlignment.START,
-                    horizontal_alignment=ft.CrossAxisAlignment.START,
                 ),
-                padding=10,
             ),
         )
     )
@@ -313,6 +313,9 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
             border_radius=ft.BorderRadius.all(10),
             padding=ft.Padding.symmetric(horizontal=16, vertical=12),
             content=ft.Row(
+                spacing=10,
+                alignment=ft.MainAxisAlignment.START,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
                     ft.Icon(ft.Icons.ERROR, color=ft.Colors.ON_ERROR_CONTAINER),
                     ft.Text(
@@ -322,9 +325,6 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
                         expand=True,
                     ),
                 ],
-                spacing=10,
-                alignment=ft.MainAxisAlignment.START,
-                vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
         )
     )
@@ -346,55 +346,55 @@ async def test_color_scheme(flet_app: ftt.FletTestApp):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "buttons",
+        "theme_1_buttons",
         await buttons.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="primary_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "primary_palette",
+        "theme_1_primary_palette",
         await primary_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="secondary_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "secondary_palette",
+        "theme_1_secondary_palette",
         await secondary_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="tertiary_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "tertiary_palette",
+        "theme_1_tertiary_palette",
         await tertiary_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="surface_roles", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "surface_roles",
+        "theme_1_surface_roles",
         await surface_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="accents_palette", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "accents_palette",
+        "theme_1_accents_palette",
         await accents_palette.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="themed_card", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "themed_card",
+        "theme_1_themed_card",
         await themed_card.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
 
     await flet_app.page.scroll_to(scroll_key="error_banner", duration=0)
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "error_banner",
+        "theme_1_error_banner",
         await error_banner.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
     )
