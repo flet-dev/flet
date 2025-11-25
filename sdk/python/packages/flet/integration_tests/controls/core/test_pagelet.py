@@ -96,7 +96,7 @@ async def test_auto_size(flet_app: ftt.FletTestApp, request):
     )
 
 
-@pytest.mark.asyncio(loop_scope="module")
+@pytest.mark.asyncio(loop_scope="function")
 async def test_cupertino_adaptive(flet_app: ftt.FletTestApp, request):
     flet_app.page.platform = ft.PagePlatform.MACOS
     await flet_app.assert_control_screenshot(
