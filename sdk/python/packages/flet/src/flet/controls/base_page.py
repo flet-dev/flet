@@ -26,6 +26,7 @@ from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
+from flet.controls.services.service import Service
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -252,6 +253,7 @@ class BasePage(AdaptiveControl):
             [`Page.window`][flet.Page.window] instead.
     """
 
+    services: list[Service] = field(default_factory=list, metadata={"skip": True})
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 

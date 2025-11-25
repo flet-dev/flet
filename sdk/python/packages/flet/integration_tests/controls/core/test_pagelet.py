@@ -94,3 +94,24 @@ async def test_auto_size(flet_app: ftt.FletTestApp, request):
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_cupertino_adaptive(flet_app: ftt.FletTestApp, request):
+    flet_app.page.platform = ft.PagePlatform.MACOS
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Pagelet(
+            adaptive=True,
+            width=350,
+            height=300,
+            appbar=ft.AppBar(title="Pagelet AppBar"),
+            content=ft.Text("Pagelet Content"),
+            navigation_bar=ft.NavigationBar(
+                destinations=[
+                    ft.NavigationBarDestination(icon=ft.Icons.ADD, label="New"),
+                    ft.NavigationBarDestination(icon=ft.Icons.INBOX, label="Inbox"),
+                ],
+            ),
+        ),
+    )

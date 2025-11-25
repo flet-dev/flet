@@ -20,6 +20,7 @@ import '../models/page_design.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
+import '../services/service_binding.dart';
 import '../services/service_registry.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
@@ -57,6 +58,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final AppLifecycleListener _appLifecycleListener;
   ServiceRegistry? _pageServices;
   ServiceRegistry? _userServices;
+  String? _userServicesUid;
+  ServiceBinding? _windowService;
+  Control? _windowControl;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
   String? _prevViewRoutes;
@@ -95,12 +99,15 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     widget.control.addInvokeMethodListener(_invokeMethod);
+    widget.control.addListener(_onPageControlChanged);
+    _ensureServiceRegistries();
   }
 
   @override
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
+    _ensureServiceRegistries();
     _loadFontsIfNeeded(FletBackend.of(context));
   }
 
@@ -109,26 +116,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     debugPrint("Page.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
     _updateMultiViews();
-
-    // page services
-    _pageServices ??= ServiceRegistry(
-        control: widget.control,
-        propertyName: "_services",
-        backend: FletBackend.of(context));
-
-    // user services
-    var userServicesControl = widget.control.child("_user_services");
-    if (userServicesControl != null) {
-      if (_userServices == null ||
-          _userServices?.control.internals?["uid"] !=
-              userServicesControl.internals?["uid"]) {
-        _userServices = ServiceRegistry(
-            control: userServicesControl,
-            propertyName: "_services",
-            backend: FletBackend.of(context));
-      }
-    }
-
+    _ensureServiceRegistries();
     _attachKeyboardListenerIfNeeded();
     _loadFontsIfNeeded(FletBackend.of(context));
   }
@@ -148,7 +136,58 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
     widget.control.removeInvokeMethodListener(_invokeMethod);
+    widget.control.removeListener(_onPageControlChanged);
+    _pageServices?.dispose();
+    _userServices?.dispose();
+    _windowService?.dispose();
     super.dispose();
+  }
+
+  void _onPageControlChanged() {
+    _ensureServiceRegistries();
+  }
+
+  void _ensureServiceRegistries() {
+    if (!mounted) {
+      return;
+    }
+    var backend = FletBackend.of(context);
+
+    _pageServices ??= ServiceRegistry(
+        control: widget.control,
+        propertyName: "_services",
+        backend: backend);
+
+    var userServicesControl = widget.control.child("_user_services");
+    if (userServicesControl != null) {
+      var uid = userServicesControl.internals?["uid"];
+      if (_userServices == null || _userServicesUid != uid) {
+        _userServices?.dispose();
+        _userServices = ServiceRegistry(
+            control: userServicesControl,
+            propertyName: "_services",
+            backend: backend);
+        _userServicesUid = uid;
+      }
+    } else if (_userServices != null) {
+      _userServices?.dispose();
+      _userServices = null;
+      _userServicesUid = null;
+    }
+
+    var windowControl = widget.control.child("window", visibleOnly: false);
+    if (windowControl != null) {
+      if (!identical(windowControl, _windowControl)) {
+        _windowService?.dispose();
+        _windowService =
+            ServiceBinding(control: windowControl, backend: backend);
+        _windowControl = windowControl;
+      }
+    } else if (_windowService != null) {
+      _windowService?.dispose();
+      _windowService = null;
+      _windowControl = null;
+    }
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -431,6 +470,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
             : control.getCupertinoTheme("theme", context, Brightness.dark);
 
+    var materialTheme = themeMode == ThemeMode.dark ||
+            ((themeMode == null || themeMode == ThemeMode.system) &&
+                brightness == Brightness.dark)
+        ? darkTheme
+        : lightTheme;
+
+    Widget scaffoldMessengerBuilder(BuildContext context, Widget? child) {
+      return Theme(
+          data: materialTheme ?? lightTheme ?? ThemeData(),
+          child: ScaffoldMessenger(child: child ?? const SizedBox.shrink()));
+    }
+
     var showSemanticsDebugger =
         control.getBool("show_semantics_debugger", false)!;
 
@@ -441,6 +492,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 title: windowTitle,
                 theme: cupertinoTheme,
+                builder: scaffoldMessengerBuilder,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -453,6 +505,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 routeInformationParser: _routeParser,
                 title: windowTitle,
                 theme: cupertinoTheme,
+                builder: scaffoldMessengerBuilder,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,

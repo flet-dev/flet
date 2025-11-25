@@ -173,10 +173,6 @@ class _ViewControlState extends State<ViewControl> {
         overlayWidgets.add(PageMedia(view: widget.control.parent));
       }
 
-      var windowControl = control.parent?.get("window");
-      if (windowControl != null && isRootView && isDesktopPlatform()) {
-        overlayWidgets.add(ControlWidget(control: windowControl));
-      }
     }
 
     Widget body = Stack(children: [

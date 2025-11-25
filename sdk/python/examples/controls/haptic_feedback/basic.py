@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.overlay.append(hf := ft.HapticFeedback())
+    hf = ft.HapticFeedback()
 
     async def heavy_impact():
         await hf.heavy_impact()
