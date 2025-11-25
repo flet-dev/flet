@@ -1,7 +1,9 @@
 import pytest
 
+import flet as ft
 import flet.testing as ftt
 from examples.apps.routing_navigation import (
+    drawer_navigation,
     home_store,
     initial_route,
     pop_view_confirm,
@@ -127,3 +129,59 @@ async def test_pop_view_confirm(flet_app_function: ftt.FletTestApp):
     # Verify back to initial view
     button = await flet_app_function.tester.find_by_text_containing("Go to store")
     assert button.count == 1
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": drawer_navigation.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_drawer_navigation(flet_app_function: ftt.FletTestApp):
+    # Verify initial view
+    hamburger_button = await flet_app_function.tester.find_by_icon(ft.Icons.MENU)
+    assert hamburger_button.count == 1
+    await flet_app_function.tester.tap(hamburger_button)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Select Store from drawer
+    store_item = await flet_app_function.tester.find_by_icon(ft.Icons.STORE_OUTLINED)
+    assert store_item.count == 1
+    await flet_app_function.tester.tap(store_item)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Verify store view
+    store_text = await flet_app_function.tester.find_by_text("Welcome to Store Page")
+    assert store_text.count == 1
+
+    # Open drawer again
+    hamburger_button = await flet_app_function.tester.find_by_icon(ft.Icons.MENU)
+    assert hamburger_button.count == 1
+    await flet_app_function.tester.tap(hamburger_button)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Select About from drawer
+    about_item = await flet_app_function.tester.find_by_icon(ft.Icons.PHONE_OUTLINED)
+    assert about_item.count == 1
+    await flet_app_function.tester.tap(about_item)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Verify about view
+    about_text = await flet_app_function.tester.find_by_text("Welcome to About Page")
+    assert about_text.count == 1
+
+    # Open drawer again
+    hamburger_button = await flet_app_function.tester.find_by_icon(ft.Icons.MENU)
+    assert hamburger_button.count == 1
+    await flet_app_function.tester.tap(hamburger_button)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Select Home from drawer
+    home_item = await flet_app_function.tester.find_by_icon(ft.Icons.HOME_OUTLINED)
+    assert home_item.count == 1
+    await flet_app_function.tester.tap(home_item)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Verify home view
+    home_text = await flet_app_function.tester.find_by_text("Welcome to Home Page")
+    assert home_text.count == 1
