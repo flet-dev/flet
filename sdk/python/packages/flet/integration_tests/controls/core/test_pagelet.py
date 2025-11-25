@@ -25,12 +25,10 @@ async def test_explicitly_sized(flet_app: ftt.FletTestApp, request):
             bottom_appbar=ft.BottomAppBar(
                 content=ft.Row(
                     controls=[
-                        ft.IconButton(icon=ft.Icons.MENU, icon_color=ft.Colors.WHITE),
+                        ft.IconButton(icon=ft.Icons.MENU),
                         ft.Container(expand=True),
-                        ft.IconButton(icon=ft.Icons.SEARCH, icon_color=ft.Colors.WHITE),
-                        ft.IconButton(
-                            icon=ft.Icons.FAVORITE, icon_color=ft.Colors.WHITE
-                        ),
+                        ft.IconButton(icon=ft.Icons.SEARCH),
+                        ft.IconButton(icon=ft.Icons.FAVORITE),
                     ]
                 ),
             ),
@@ -71,12 +69,10 @@ async def test_auto_size(flet_app: ftt.FletTestApp, request):
             bottom_appbar=ft.BottomAppBar(
                 content=ft.Row(
                     controls=[
-                        ft.IconButton(icon=ft.Icons.MENU, icon_color=ft.Colors.WHITE),
+                        ft.IconButton(icon=ft.Icons.MENU),
                         ft.Container(expand=True),
-                        ft.IconButton(icon=ft.Icons.SEARCH, icon_color=ft.Colors.WHITE),
-                        ft.IconButton(
-                            icon=ft.Icons.FAVORITE, icon_color=ft.Colors.WHITE
-                        ),
+                        ft.IconButton(icon=ft.Icons.SEARCH),
+                        ft.IconButton(icon=ft.Icons.FAVORITE),
                     ]
                 ),
             ),
