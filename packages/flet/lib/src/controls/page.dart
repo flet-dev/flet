@@ -380,8 +380,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       var appStatus = context
           .select<FletBackend, ({bool isLoading, String error})>((backend) =>
               (isLoading: backend.isLoading, error: backend.error));
-      var appStartupScreenMessage =
-          backend.appStartupScreenMessage ?? "";
+      var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
       var formattedErrorMessage =
           backend.formatAppErrorMessage(appStatus.error);
 
@@ -471,6 +470,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
             : control.getCupertinoTheme("theme", context, Brightness.dark);
 
+    var materialTheme = themeMode == ThemeMode.dark ||
+            ((themeMode == null || themeMode == ThemeMode.system) &&
+                brightness == Brightness.dark)
+        ? darkTheme
+        : lightTheme;
+
+    Widget scaffoldMessengerBuilder(BuildContext context, Widget? child) {
+      return Theme(
+          data: materialTheme ?? lightTheme ?? ThemeData(),
+          child: ScaffoldMessenger(child: child ?? const SizedBox.shrink()));
+    }
+
     var showSemanticsDebugger =
         control.getBool("show_semantics_debugger", false)!;
 
@@ -481,6 +492,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 title: windowTitle,
                 theme: cupertinoTheme,
+                builder: scaffoldMessengerBuilder,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -493,6 +505,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 routeInformationParser: _routeParser,
                 title: windowTitle,
                 theme: cupertinoTheme,
+                builder: scaffoldMessengerBuilder,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
@@ -542,14 +555,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     var backend = FletBackend.of(context);
     var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage =
-        backend.appStartupScreenMessage ?? "";
+    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage =
-        backend.formatAppErrorMessage(appStatus.error);
+    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
     List<Page<dynamic>> pages = [];

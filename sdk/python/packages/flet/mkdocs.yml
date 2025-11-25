@@ -430,7 +430,9 @@ nav:
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
-          - SegmentedButton: controls/segmentedbutton.md
+          - SegmentedButton:
+              - controls/segmentedbutton.md
+              - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
