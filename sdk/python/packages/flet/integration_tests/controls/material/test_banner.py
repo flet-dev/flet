@@ -12,7 +12,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_banner_presence(flet_app: ftt.FletTestApp, request):
+async def test_presence(flet_app: ftt.FletTestApp, request):
     action_button_style = ft.ButtonStyle(color=ft.Colors.BLUE)
 
     def handle_banner_close(e: ft.Event[ft.TextButton]):
@@ -57,7 +57,7 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.tap(await flet_app.tester.find_by_key("eb"))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "banner_0",
+        "presence_0",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -66,7 +66,7 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.tap(await flet_app.tester.find_by_key("retry"))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "banner_1",
+        "presence_1",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -74,7 +74,7 @@ async def test_banner_presence(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_banner_string_content(flet_app: ftt.FletTestApp, request):
+async def test_string_content(flet_app: ftt.FletTestApp, request):
     banner = ft.Banner(
         "This is a banner with string content.",
         actions=[
@@ -90,7 +90,7 @@ async def test_banner_string_content(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "banner_string_content",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

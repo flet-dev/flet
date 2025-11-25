@@ -430,11 +430,14 @@ nav:
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
-          - SegmentedButton: controls/segmentedbutton.md
+          - SegmentedButton:
+              - controls/segmentedbutton.md
+              - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
           - ShaderMask: controls/shadermask.md
+          - Shimmer: controls/shimmer.md
           - ShakeDetector: controls/shakedetector.md
           - Screenshot: controls/screenshot.md
           - Slider: controls/slider.md

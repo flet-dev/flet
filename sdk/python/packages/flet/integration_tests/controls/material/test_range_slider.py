@@ -5,7 +5,7 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_range_slider(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     rs = ft.RangeSlider(
         min=0,
         max=50,

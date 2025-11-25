@@ -7,7 +7,7 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_date_picker_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     dp = ft.DatePicker(
         current_date=datetime.datetime(year=2025, month=8, day=15),
         first_date=datetime.datetime(year=2000, month=10, day=1),
@@ -20,7 +20,7 @@ async def test_date_picker_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "date_picker_basic",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

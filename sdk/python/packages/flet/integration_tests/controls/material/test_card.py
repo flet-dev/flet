@@ -5,10 +5,14 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_card_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Card(
-            content=ft.Container(width=400, padding=10, content=ft.Text("Card")),
+            content=ft.Container(
+                width=400,
+                padding=10,
+                content=ft.Text("Card"),
+            ),
         ),
     )
