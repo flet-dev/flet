@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/tabs.dart';
 import '../utils/transforms.dart';
 import 'alignment.dart';
 import 'animations.dart';
