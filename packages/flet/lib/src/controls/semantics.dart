@@ -31,7 +31,7 @@ class SemanticsControl extends StatelessWidget {
       hint: control.getString("hint"),
       onTapHint: control.getString("on_tap_hint"),
       onLongPressHint: control.getString("on_long_press_hint"),
-      container: control.getBool("container")!,
+      container: control.getBool("container", false)!,
       liveRegion: control.getBool("live_region"),
       obscured: control.getBool("obscured"),
       multiline: control.getBool("multiline"),

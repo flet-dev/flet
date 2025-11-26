@@ -29,8 +29,9 @@ class PlotlyChart(ft.Container):
     Displays a [Plotly](https://plotly.com/python/) chart.
 
     Warning:
-        This control requires the [`plotly`](https://plotly.com/python/) Python
-        package to be installed.
+        This control requires the [`plotly`](https://plotly.com/python/) and
+        [`kaleido`](https://github.com/plotly/Kaleido) Python
+        packages to be installed.
 
         See this [installation guide](index.md#installation) for more information.
     """

@@ -80,6 +80,9 @@ class FletTestApp:
             If `True`, do not invoke `fvm` when running the Flutter test
             process. Env override: `FLET_TEST_DISABLE_FVM=1`.
 
+        skip_pump_and_settle:
+            If `True`, the initial `pump_and_settle` after app start is skipped.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -105,6 +108,7 @@ class FletTestApp:
         screenshots_similarity_threshold: float = 99.0,
         use_http: bool = False,
         disable_fvm: bool = False,
+        skip_pump_and_settle: bool = False,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -124,12 +128,13 @@ class FletTestApp:
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
+        self.__skip_pump_and_settle = skip_pump_and_settle
         self.__flutter_app_dir = flutter_app_dir
         self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
-        self.__tester = None
+        self.__tester: Tester | None = None
 
     @property
     def page(self) -> ft.Page:
@@ -167,7 +172,8 @@ class FletTestApp:
                 await self.__flet_app_main(page)
             elif callable(self.__flet_app_main):
                 self.__flet_app_main(page)
-            await self.__tester.pump_and_settle()
+            if not self.__skip_pump_and_settle:
+                await self.__tester.pump_and_settle()
             ready.set()
 
         if not self.__tcp_port:
@@ -464,7 +470,16 @@ class FletTestApp:
                 path = golden_dir / f"{name}.png"
                 if not path.exists():
                     raise FileNotFoundError(path)
-                frames.append(Image.open(path))
+
+                frames.append(
+                    Image.open(path)
+                    .convert("RGB")
+                    .convert(
+                        "P",
+                        palette=Image.ADAPTIVE,
+                        colors=256,
+                    )
+                )
 
             first, *rest = frames
             first.save(
@@ -473,6 +488,7 @@ class FletTestApp:
                 append_images=rest,
                 duration=duration,
                 loop=loop,
+                optimize=True,
             )
         finally:
             for frame in frames:

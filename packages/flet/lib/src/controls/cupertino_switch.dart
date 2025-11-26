@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/box.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/images.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -85,10 +85,10 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
 
     var materialThumbColor =
         widget.control.getWidgetStateColor("thumb_color", theme);
-    // var materialTrackColor =
-    //     widget.control.getWidgetStateColor("track_color", theme);
-    var activeThumbImage = widget.control.getString("active_thumb_image");
-    var inactiveThumbImage = widget.control.getString("inactive_thumb_image");
+    var activeThumbImage =
+        widget.control.getImageProvider("active_thumb_image_src", context);
+    var inactiveThumbImage =
+        widget.control.getImageProvider("inactive_thumb_image_src", context);
 
     var swtch = CupertinoSwitch(
         autofocus: autofocus,
@@ -96,7 +96,6 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         activeTrackColor:
             widget.control.getColor("active_track_color", context),
         thumbColor: materialThumbColor?.resolve({}),
-        //inactiveTrackColor: materialTrackColor?.resolve({}),
         focusColor: widget.control.getColor("focusColor", context),
         inactiveTrackColor:
             widget.control.getColor("inactive_track_color", context),
@@ -107,10 +106,8 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         trackOutlineWidth:
             widget.control.getWidgetStateDouble("track_outline_width"),
         thumbIcon: widget.control.getWidgetStateIcon("thumb_icon", theme),
-        inactiveThumbImage:
-            getImageProvider(context, inactiveThumbImage, null, null),
-        activeThumbImage:
-            getImageProvider(context, activeThumbImage, null, null),
+        inactiveThumbImage: inactiveThumbImage,
+        activeThumbImage: activeThumbImage,
         onActiveThumbImageError: activeThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {

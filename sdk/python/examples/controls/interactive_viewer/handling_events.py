@@ -6,7 +6,7 @@ def main(page: ft.Page):
         ft.InteractiveViewer(
             min_scale=0.1,
             max_scale=15,
-            boundary_margin=ft.margin.all(20),
+            boundary_margin=ft.Margin.all(20),
             on_interaction_start=lambda e: print(e),
             on_interaction_end=lambda e: print(e),
             on_interaction_update=lambda e: print(e),

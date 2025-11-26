@@ -9,7 +9,7 @@ import flet as ft
 class BufferingSwitcher(ft.AnimatedSwitcher):
     image_queue = []
 
-    def __init__(self, image: ft.Image, page: ft.Page):
+    def __init__(self, image: ft.Image):
         super().__init__(image)
         self.transition = ft.AnimatedSwitcherTransition.SCALE
         self.duration = 500
@@ -17,11 +17,10 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
         self.switch_in_curve = ft.AnimationCurve.EASE_IN
         self.switch_out_curve = ft.AnimationCurve.EASE_OUT
         self.image_queue.append(image)
-        self.page = page
 
     def animate(self, e):
         self.content = ft.Image(
-            src_base64=self.image_queue.pop(),
+            src=self.image_queue.pop(),
             width=200,
             height=300,
             gapless_playback=True,
@@ -37,7 +36,6 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
             )
 
     async def image_to_base64(self, url):
-        print("image_to_base64 called")
         response = await httpx.AsyncClient(follow_redirects=True).get(url)
         if response.status_code == 200:
             base64_str = (
@@ -50,15 +48,13 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
 
     def before_update(self):
         self.page.run_task(self.fill_queue)
-        print(len(self.image_queue))
 
 
 def main(page: ft.Page):
     switcher = BufferingSwitcher(
         ft.Image(
             src=f"https://picsum.photos/200/300?{time.time()}", width=200, height=300
-        ),
-        page,
+        )
     )
 
     page.add(

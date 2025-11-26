@@ -130,6 +130,7 @@ from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
+from flet.controls.core.shimmer import Shimmer, ShimmerDirection
 from flet.controls.core.stack import Stack, StackFit
 from flet.controls.core.text import (
     Text,
@@ -892,6 +893,8 @@ __all__ = [
     "ShakeDetector",
     "ShapeBorder",
     "SharedPreferences",
+    "Shimmer",
+    "ShimmerDirection",
     "Size",
     "Slider",
     "SliderInteraction",

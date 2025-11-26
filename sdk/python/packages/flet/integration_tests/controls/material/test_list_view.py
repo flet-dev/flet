@@ -5,7 +5,7 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_list_view_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.ListView(
@@ -17,7 +17,7 @@ async def test_list_view_basic(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_list_view_horizontal(flet_app: ftt.FletTestApp, request):
+async def test_horizontal(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.ListView(
@@ -33,7 +33,7 @@ async def test_list_view_horizontal(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_list_view_horizontal_unbound(flet_app: ftt.FletTestApp, request):
+async def test_horizontal_unbound(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.ListView(
