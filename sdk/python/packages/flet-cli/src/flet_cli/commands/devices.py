@@ -17,6 +17,8 @@ class Command(BaseFlutterCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
         self.devices_platform = None
+        self.device_timeout = 10
+        self.device_connection = "default"
         self.platform_labels = {
             "ios": "iOS",
             "android": "Android",
@@ -31,39 +33,31 @@ class Command(BaseFlutterCommand):
             help="The target platform to list devices for. "
             "If not specified, lists all platforms.",
         )
-        # parser.add_argument(
-        #     "--device-id",
-        #     "-d",
-        #     type=str,
-        #     dest="device_id",
-        #     help="Device ID to run the app on for iOS and Android builds.",
-        # )
-        # parser.add_argument(
-        #     "--show-devices",
-        #     dest="show_devices",
-        #     action="store_true",
-        #     default=False,
-        #     help="Show connected devices for iOS and Android builds.",
-        # )
-        # parser.add_argument(
-        #     "--release",
-        #     dest="release",
-        #     action="store_true",
-        #     default=False,
-        #     help="Build the app in release mode.",
-        # )
-        # parser.add_argument(
-        #     "--route",
-        #     type=str,
-        #     dest="route",
-        #     help="Route to open the app on for web, iOS and Android builds.",
-        # )
+        parser.add_argument(
+            "--device-timeout",
+            type=int,
+            default=10,
+            dest="device_timeout",
+            help="Time (in seconds) to wait for devices to attach (default: 10).",
+        )
+        parser.add_argument(
+            "--device-connection",
+            choices=["both", "attached", "wireless"],
+            default="both",
+            dest="device_connection",
+            help="Filter devices by connection type: attached (USB) or wireless "
+            "(default: both).",
+        )
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
         super().handle(options)
         if self.options and "platform" in self.options and self.options.platform:
             self.devices_platform = self.options.platform
+        if self.options and "device_timeout" in self.options:
+            self.device_timeout = self.options.device_timeout or 10
+        if self.options and "device_connection" in self.options:
+            self.device_connection = self.options.device_connection
 
         self.status = console.status(
             "[bold blue]Initializing environment...",
@@ -87,7 +81,14 @@ class Command(BaseFlutterCommand):
     def run_flutter_devices(self):
         self.update_status("[bold blue]Checking connected devices...")
         flutter_devices = self.run(
-            [self.flutter_exe, "devices", "--no-version-check", "--suppress-analytics"],
+            [
+                self.flutter_exe,
+                "devices",
+                "--no-version-check",
+                "--suppress-analytics",
+                "--device-timeout",
+                str(self.device_timeout),
+            ],
             cwd=os.getcwd(),
             capture_output=True,
         )
@@ -116,6 +117,8 @@ class Command(BaseFlutterCommand):
             for device in self._parse_devices_output(output)
             if device["platform"] in ("ios", "android")
         ]
+        if self.device_connection != "both":
+            devices = [d for d in devices if d["connection"] == self.device_connection]
         if self.devices_platform:
             devices = [d for d in devices if d["platform"] == self.devices_platform]
 
@@ -126,8 +129,8 @@ class Command(BaseFlutterCommand):
             self.cleanup(0, Group(Panel(f"No {platform_label} devices found."), footer))
 
         devices_table = Table(
-            Column("Device", style="cyan", justify="left"),
-            Column("ID", style="magenta", justify="left", overflow="fold"),
+            Column("ID", style="magenta", justify="left", no_wrap=True),
+            Column("Name", style="cyan", justify="left"),
             Column("Platform", style="green", justify="center"),
             Column("Details", style="yellow", justify="left"),
             title="Connected Devices",
@@ -137,8 +140,8 @@ class Command(BaseFlutterCommand):
 
         for device in devices:
             devices_table.add_row(
-                device["name"],
                 device["id"],
+                device["name"],
                 device["platform_label"],
                 device["details"],
             )
@@ -160,6 +163,7 @@ class Command(BaseFlutterCommand):
             platform_raw = parts[2]
             details = parts[3] if len(parts) > 3 else ""
             platform = self._normalize_platform(platform_raw)
+            connection = self._detect_connection_type(parts)
 
             devices.append(
                 {
@@ -167,6 +171,7 @@ class Command(BaseFlutterCommand):
                     "id": device_id,
                     "platform": platform,
                     "platform_label": platform_raw,
+                    "connection": connection,
                     "details": details,
                 }
             )
@@ -180,3 +185,11 @@ class Command(BaseFlutterCommand):
         if "ios" in platform_lower:
             return "ios"
         return None
+
+    def _detect_connection_type(self, parts: list[str]) -> str:
+        # Heuristic: Flutter prints "wireless" or "wifi" in one of the bullet segments
+        # for wireless devices. Default to "attached" otherwise.
+        parts_lower = " ".join(parts).lower()
+        if "wireless" in parts_lower or "wi-fi" in parts_lower or "wifi" in parts_lower:
+            return "wireless"
+        return "attached"
