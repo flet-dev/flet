@@ -9,6 +9,7 @@ from typing import Optional
 from packaging import version
 from rich.console import Console, Group
 from rich.panel import Panel
+from rich.progress import Progress
 from rich.style import Style
 from rich.theme import Theme
 
@@ -49,9 +50,12 @@ class BaseFlutterCommand(BaseCommand):
         self.dart_exe = None
         self.flutter_exe = None
         self.verbose = False
+        self.package_platform = None
+        self.config_platform = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
+        self.progress = Progress(transient=True)
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
@@ -69,10 +73,11 @@ class BaseFlutterCommand(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         self.options = options
+        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
+        self.verbose = self.options.verbose
 
-    def initialize_build(self):
+    def initialize_command(self):
         assert self.options
-        assert self.target_platform
         self.emojis = {
             "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
             "loading": "" if self.no_rich_output else "⏳",
@@ -238,8 +243,7 @@ class BaseFlutterCommand(BaseCommand):
 
     def cleanup(self, exit_code: int, message: Optional[str] = None):
         if exit_code == 0:
-            msg = message or f"Success! {self.emojis['success']}"
-            self.live.update(Panel(msg), refresh=True)
+            self.live.update(Panel(message) if message else "", refresh=True)
         else:
             msg = (
                 message

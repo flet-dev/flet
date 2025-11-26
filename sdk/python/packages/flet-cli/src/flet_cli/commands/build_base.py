@@ -17,13 +17,11 @@ from rich.table import Column, Table
 import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import copy_tree, is_windows, slugify
-from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
     error_style,
-    no_rich_output,
     verbose1_style,
     verbose2_style,
     warning_style,
@@ -48,34 +46,22 @@ class BaseBuildCommand(BaseFlutterCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
-        self.env = {}
         self.pubspec_path = None
         self.rel_out_dir = None
         self.assets_path = None
         self.target_platform = None
-        self.debug_platform = None
-        self.package_platform = None
-        self.config_platform = None
         self.flutter_dependencies = {}
         self.package_app_path = None
-        self.options = None
         self.template_data = None
         self.python_module_filename = None
         self.out_dir = None
         self.python_module_name = None
         self.get_pyproject = None
         self.python_app_path = None
-        self.emojis = {}
-        self.dart_exe = None
-        self.verbose = False
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
         self.flutter_packages_dir = None
         self.flutter_packages_temp_dir = None
-        self.flutter_exe = None
-        self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
-        self.no_rich_output = no_rich_output
-        self.current_platform = platform.system()
         self.platforms = {
             "windows": {
                 "package_platform": "Windows",
@@ -607,15 +593,16 @@ class BaseBuildCommand(BaseFlutterCommand):
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
 
-    def initialize_build(self):
+    def initialize_command(self):
         assert self.options
         assert self.target_platform
-        super().initialize_build()
-
-        self.python_app_path = Path(self.options.python_app_path).resolve()
 
         self.package_platform = self.platforms[self.target_platform]["package_platform"]
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
+
+        super().initialize_command()
+
+        self.python_app_path = Path(self.options.python_app_path).resolve()
 
         if not (
             os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)

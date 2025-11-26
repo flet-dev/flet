@@ -5,7 +5,6 @@ import platform
 
 from rich.console import Group
 from rich.live import Live
-from rich.progress import Progress
 
 from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_style
 
@@ -17,7 +16,6 @@ class Command(BaseBuildCommand):
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
-
         self.debug_platforms = {
             "windows": {"target_platform": "windows", "device_id": "windows"},
             "macos": {"target_platform": "macos", "device_id": "macos"},
@@ -26,6 +24,7 @@ class Command(BaseBuildCommand):
             "ios": {"target_platform": "ipa", "device_id": None},
             "android": {"target_platform": "apk", "device_id": None},
         }
+        self.debug_platform = None
         self.device_id = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -86,12 +85,9 @@ class Command(BaseBuildCommand):
             f"[bold blue]Initializing {self.target_platform} debug session...",
             spinner="bouncingBall",
         )
-        self.progress = Progress(transient=True)
-        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
-        self.verbose = self.options.verbose
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.check_device_id()
-            self.initialize_build()
+            self.initialize_command()
             if self.options.show_devices:
                 self.run_flutter_devices()
                 self.live.update("", refresh=True)

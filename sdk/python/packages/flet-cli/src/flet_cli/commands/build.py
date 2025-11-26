@@ -2,7 +2,6 @@ import argparse
 
 from rich.console import Group
 from rich.live import Live
-from rich.progress import Progress
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
 
@@ -42,11 +41,8 @@ class Command(BaseBuildCommand):
             f"[bold blue]Initializing {self.target_platform} build...",
             spinner="bouncingBall",
         )
-        self.progress = Progress(transient=True)
-        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
-        self.verbose = self.options.verbose
         with Live(Group(self.status, self.progress), console=console) as self.live:
-            self.initialize_build()
+            self.initialize_command()
             self.validate_target_platform()
             self.validate_entry_point()
             self.setup_template_data()

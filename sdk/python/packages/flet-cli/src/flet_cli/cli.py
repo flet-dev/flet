@@ -5,6 +5,7 @@ import flet.version
 import flet_cli.commands.build
 import flet_cli.commands.create
 import flet_cli.commands.debug
+import flet_cli.commands.devices
 import flet_cli.commands.doctor  # Adding the doctor command
 import flet_cli.commands.pack
 import flet_cli.commands.publish
@@ -83,6 +84,7 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
     flet_cli.commands.serve.Command.register_to(sp, "serve")
+    flet_cli.commands.devices.Command.register_to(sp, "devices")
     flet_cli.commands.doctor.Command.register_to(sp, "doctor")
 
     # set "run" as the default subparser
