@@ -20,7 +20,7 @@ from flet_cli.commands.base import BaseCommand
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.38.2")
+MINIMAL_FLUTTER_VERSION = version.Version("3.38.3")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
