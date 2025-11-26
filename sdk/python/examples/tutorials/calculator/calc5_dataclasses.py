@@ -50,33 +50,35 @@ class CalculatorApp(ft.Container):
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(content="7"),
-                        DigitButton(content="8"),
-                        DigitButton(content="9"),
-                        ActionButton(content="*"),
+                        DigitButton(content="7", on_click=self.button_clicked),
+                        DigitButton(content="8", on_click=self.button_clicked),
+                        DigitButton(content="9", on_click=self.button_clicked),
+                        ActionButton(content="*", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(content="4"),
-                        DigitButton(content="5"),
-                        DigitButton(content="6"),
-                        ActionButton(content="-"),
+                        DigitButton(content="4", on_click=self.button_clicked),
+                        DigitButton(content="5", on_click=self.button_clicked),
+                        DigitButton(content="6", on_click=self.button_clicked),
+                        ActionButton(content="-", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(content="1"),
-                        DigitButton(content="2"),
-                        DigitButton(content="3"),
-                        ActionButton(content="+"),
+                        DigitButton(content="1", on_click=self.button_clicked),
+                        DigitButton(content="2", on_click=self.button_clicked),
+                        DigitButton(content="3", on_click=self.button_clicked),
+                        ActionButton(content="+", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(content="0", expand=2),
-                        DigitButton(content="."),
-                        ActionButton(content="="),
+                        DigitButton(
+                            content="0", expand=2, on_click=self.button_clicked
+                        ),
+                        DigitButton(content=".", on_click=self.button_clicked),
+                        ActionButton(content="=", on_click=self.button_clicked),
                     ]
                 ),
             ]

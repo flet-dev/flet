@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 
 import flet as ft
 
@@ -7,21 +7,21 @@ def main(page: ft.Page):
     page.title = "Calc App"
     result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
 
-    @dataclass
+    @ft.control
     class CalcButton(ft.Button):
         expand: int = field(default_factory=lambda: 1)
 
-    @dataclass
+    @ft.control
     class DigitButton(CalcButton):
         bgcolor: ft.Colors = ft.Colors.WHITE_24
         color: ft.Colors = ft.Colors.WHITE
 
-    @dataclass
+    @ft.control
     class ActionButton(CalcButton):
         bgcolor: ft.Colors = ft.Colors.ORANGE
         color: ft.Colors = ft.Colors.WHITE
 
-    @dataclass
+    @ft.control
     class ExtraActionButton(CalcButton):
         bgcolor: ft.Colors = ft.Colors.BLUE_GREY_100
         color: ft.Colors = ft.Colors.BLACK
