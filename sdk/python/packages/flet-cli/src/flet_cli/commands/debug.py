@@ -51,6 +51,13 @@ class Command(BaseFlutterCommand):
             help="Show connected devices for iOS and Android builds.",
         )
         parser.add_argument(
+            "--release",
+            dest="release",
+            action="store_true",
+            default=False,
+            help="Build the app in release mode.",
+        )
+        parser.add_argument(
             "--route",
             type=str,
             dest="route",
@@ -118,6 +125,16 @@ class Command(BaseFlutterCommand):
     def add_flutter_command_args(self, args: list[str]):
         assert self.device_id
         args.extend(["run", "-d", self.device_id])
+
+        if self.options:
+            if self.options.release:
+                args.append("--release")
+            if self.options.route and self.debug_platform in [
+                "web",
+                "ios",
+                "android",
+            ]:
+                args.extend(["--route", self.options.route])
 
     def run_flutter(self):
         assert self.platforms
