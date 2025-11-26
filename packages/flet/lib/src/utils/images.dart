@@ -129,6 +129,7 @@ Widget buildImage({
   bool excludeFromSemantics = false,
   FilterQuality filterQuality = FilterQuality.low,
   bool disabled = false,
+  ImageFadeConfig? fadeConfig,
 }) {
   const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
@@ -143,31 +144,41 @@ Widget buildImage({
     try {
       // SVG bytes
       if (arrayIndexOf(bytes, Uint8List.fromList(utf8.encode(svgTag))) != -1) {
-        return SvgPicture.memory(bytes,
-            width: width,
-            height: height,
-            excludeFromSemantics: excludeFromSemantics,
-            fit: fit ?? BoxFit.contain,
-            colorFilter: color != null
-                ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
-                : null,
-            semanticsLabel: semanticsLabel);
+        return SvgPicture.memory(
+          bytes,
+          width: width,
+          height: height,
+          excludeFromSemantics: excludeFromSemantics,
+          fit: fit ?? BoxFit.contain,
+          colorFilter: color != null
+              ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
+              : null,
+          semanticsLabel: semanticsLabel,
+        );
       } else {
         // other image bytes
-        return Image.memory(bytes,
-            width: width,
-            height: height,
-            repeat: repeat,
-            fit: fit,
-            color: color,
-            cacheHeight: cacheHeight,
-            cacheWidth: cacheWidth,
-            filterQuality: filterQuality,
-            isAntiAlias: antiAlias,
-            colorBlendMode: colorBlendMode,
-            gaplessPlayback: gaplessPlayback ?? false,
-            excludeFromSemantics: excludeFromSemantics,
-            semanticLabel: semanticsLabel);
+        return Image.memory(
+          bytes,
+          width: width,
+          height: height,
+          repeat: repeat,
+          fit: fit,
+          color: color,
+          cacheHeight: cacheHeight,
+          cacheWidth: cacheWidth,
+          filterQuality: filterQuality,
+          isAntiAlias: antiAlias,
+          colorBlendMode: colorBlendMode,
+          gaplessPlayback: gaplessPlayback ?? false,
+          excludeFromSemantics: excludeFromSemantics,
+          semanticLabel: semanticsLabel,
+          frameBuilder: (BuildContext context, Widget child, int? frame,
+                  bool wasSyncLoaded) =>
+              fadeConfig != null && fadeConfig.enabled
+                  ? fadeConfig.wrapFrame(child, frame, wasSyncLoaded,
+                      width: width, height: height)
+                  : child,
+        );
       }
     } catch (ex) {
       return ErrorControl("Error decoding base64: ${ex.toString()}");
@@ -175,15 +186,20 @@ Widget buildImage({
   } else if (resolvedSrc.hasUri) {
     var stringSrc = resolvedSrc.uri!;
     if (stringSrc.contains(svgTag)) {
-      return SvgPicture.memory(Uint8List.fromList(utf8.encode(stringSrc)),
-          width: width,
-          height: height,
-          fit: fit ?? BoxFit.contain,
-          excludeFromSemantics: excludeFromSemantics,
-          colorFilter: color != null
-              ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
-              : null,
-          semanticsLabel: semanticsLabel);
+      return SvgPicture.memory(
+        Uint8List.fromList(utf8.encode(stringSrc)),
+        width: width,
+        height: height,
+        fit: fit ?? BoxFit.contain,
+        excludeFromSemantics: excludeFromSemantics,
+        colorFilter: color != null
+            ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
+            : null,
+        semanticsLabel: semanticsLabel,
+        errorBuilder: errorCtrl != null
+            ? (context, error, stackTrace) => errorCtrl
+            : null,
+      );
     } else {
       var assetSrc = FletBackend.of(context).getAssetSource(stringSrc);
       if (assetSrc.isFile) {
@@ -214,10 +230,14 @@ Widget buildImage({
             gaplessPlayback: gaplessPlayback ?? false,
             colorBlendMode: colorBlendMode,
             semanticLabel: semanticsLabel,
+            frameBuilder: (BuildContext context, Widget child, int? frame,
+                    bool wasSyncLoaded) =>
+                fadeConfig != null && fadeConfig.enabled
+                    ? fadeConfig.wrapFrame(child, frame, wasSyncLoaded,
+                        width: width, height: height)
+                    : child,
             errorBuilder: errorCtrl != null
-                ? (context, error, stackTrace) {
-                    return errorCtrl;
-                  }
+                ? (context, error, stackTrace) => errorCtrl
                 : null,
           );
         }
@@ -234,6 +254,9 @@ Widget buildImage({
                 ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
                 : null,
             semanticsLabel: semanticsLabel,
+            errorBuilder: errorCtrl != null
+                ? (context, error, stackTrace) => errorCtrl
+                : null,
           );
         } else {
           // other image URL
@@ -252,10 +275,14 @@ Widget buildImage({
             gaplessPlayback: gaplessPlayback ?? false,
             colorBlendMode: colorBlendMode,
             semanticLabel: semanticsLabel,
+            frameBuilder: (BuildContext context, Widget child, int? frame,
+                    bool wasSyncLoaded) =>
+                fadeConfig != null && fadeConfig.enabled
+                    ? fadeConfig.wrapFrame(child, frame, wasSyncLoaded,
+                        width: width, height: height)
+                    : child,
             errorBuilder: errorCtrl != null
-                ? (context, error, stackTrace) {
-                    return errorCtrl;
-                  }
+                ? (context, error, stackTrace) => errorCtrl
                 : null,
           );
         }
@@ -264,6 +291,79 @@ Widget buildImage({
   }
 
   return const ErrorControl("A valid src value must be specified.");
+}
+
+class ImageFadeConfig {
+  const ImageFadeConfig(
+      {this.placeholder,
+      this.fadeInDuration,
+      this.fadeOutDuration,
+      this.fadeInCurve,
+      this.fadeOutCurve});
+
+  final Widget? placeholder;
+  final Duration? fadeInDuration;
+  final Duration? fadeOutDuration;
+  final Curve? fadeInCurve;
+  final Curve? fadeOutCurve;
+
+  /// Returns true if any fade-related option is set.
+  bool get enabled =>
+      placeholder != null ||
+      fadeInDuration != null ||
+      fadeOutDuration != null ||
+      fadeInCurve != null ||
+      fadeOutCurve != null;
+
+  Duration get resolvedFadeInDuration =>
+      fadeInDuration ?? const Duration(milliseconds: 250);
+
+  Duration get resolvedFadeOutDuration =>
+      fadeOutDuration ?? const Duration(milliseconds: 150);
+
+  Curve get resolvedFadeInCurve => fadeInCurve ?? Curves.easeInOut;
+
+  Curve get resolvedFadeOutCurve => fadeOutCurve ?? Curves.easeOut;
+
+  /// Wraps an [Image] frame with a placeholder-to-image fade transition.
+  ///
+  /// - Shows [placeholder] (or a transparent placeholder that preserves layout)
+  ///   until the first frame is available.
+  /// - Fades the loaded image in using [fadeInDuration]/[fadeInCurve].
+  /// - Fades the placeholder out using [fadeOutDuration]/[fadeOutCurve].
+  Widget wrapFrame(Widget image, int? frame, bool wasSyncLoaded,
+      {double? width, double? height}) {
+    if (!enabled) {
+      return image;
+    }
+
+    final isLoaded = frame != null || wasSyncLoaded;
+    final placeholderWidget = placeholder != null
+        ? SizedBox(width: width, height: height, child: placeholder)
+        // Defaults to an invisible version to preserve layout.
+        : SizedBox(
+            width: width,
+            height: height,
+            child: Opacity(opacity: 0, child: image));
+
+    return AnimatedSwitcher(
+        duration: isLoaded ? resolvedFadeInDuration : resolvedFadeOutDuration,
+        switchInCurve: resolvedFadeInCurve,
+        switchOutCurve: resolvedFadeOutCurve,
+        layoutBuilder: (Widget? current, List<Widget> previousChildren) =>
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                ...previousChildren,
+                if (current != null) current,
+              ],
+            ),
+        child: isLoaded
+            ? KeyedSubtree(key: const ValueKey("image-loaded"), child: image)
+            : KeyedSubtree(
+                key: const ValueKey("image-placeholder"),
+                child: placeholderWidget));
+  }
 }
 
 class ResolvedAssetSource {
