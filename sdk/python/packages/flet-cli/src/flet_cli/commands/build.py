@@ -4,10 +4,10 @@ from rich.console import Group
 from rich.live import Live
 from rich.progress import Progress
 
-from flet_cli.commands.flutter_base import BaseFlutterCommand, console
+from flet_cli.commands.build_base import BaseBuildCommand, console
 
 
-class Command(BaseFlutterCommand):
+class Command(BaseBuildCommand):
     """
     Build a Flet Python app into a platform-specific executable or
     installable bundle. It supports building for desktop (macOS, Linux, Windows), web,

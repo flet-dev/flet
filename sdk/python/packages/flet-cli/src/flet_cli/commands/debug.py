@@ -7,10 +7,10 @@ from rich.console import Group
 from rich.live import Live
 from rich.progress import Progress
 
-from flet_cli.commands.flutter_base import BaseFlutterCommand, console, verbose2_style
+from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_style
 
 
-class Command(BaseFlutterCommand):
+class Command(BaseBuildCommand):
     """
     Run a Flet Python app in debug mode on a specified platform (desktop, web, mobile).
     """
