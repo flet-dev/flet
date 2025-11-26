@@ -30,7 +30,7 @@ def discover_examples():
         if len(parts) < 2:
             continue  # expect control_name/file.py
 
-        control_name = parts[0].replace("_", " ").title()
+        control_name = "".join(word.title() for word in parts[0].split("_"))
         slug = "/".join(parts)
         module_name = "examples.controls." + ".".join(parts)
 
@@ -43,7 +43,6 @@ def discover_examples():
         if runner is None:
             continue
 
-        print(control_name)
         controls.setdefault(control_name, []).append({"slug": slug, "runner": runner})
 
     return controls
@@ -53,6 +52,27 @@ CONTROL_EXAMPLES = discover_examples()
 EXAMPLES_BY_SLUG = {
     ex["slug"]: ex for group in CONTROL_EXAMPLES.values() for ex in group
 }
+
+
+def pretty_example_title(slug: str) -> str:
+    parts = slug.split("/")
+    if not parts:
+        return slug
+
+    def prettify(token: str) -> str:
+        return " ".join(word.title() for word in token.replace("_", " ").split())
+
+    rest = parts[1:]
+    if not rest:
+        return prettify(parts[0])
+
+    # Direct file under control: just show the file name.
+    if len(rest) == 1:
+        return prettify(rest[0])
+
+    # Subfolders: use the deepest group as the leading label.
+    groups, leaf = rest[:-1], rest[-1]
+    return f"{prettify(groups[-1])} / {prettify(leaf)}"
 
 
 def main(page: ft.Page):
@@ -91,14 +111,12 @@ def main(page: ft.Page):
                                 ),
                                 ft.ListView(
                                     spacing=4,
-                                    height=None,
+                                    expand=True,
+                                    scroll=ft.ScrollMode.AUTO,
                                     controls=[
                                         ft.ListTile(
                                             title=ft.Text(
-                                                ex["slug"]
-                                                .split("/")[-1]
-                                                .replace("_", " ")
-                                                .title(),
+                                                value=pretty_example_title(ex["slug"]),
                                                 weight=ft.FontWeight.W_600,
                                             ),
                                             subtitle=ft.Text(f"/{ex['slug']}"),
@@ -135,7 +153,9 @@ def main(page: ft.Page):
         page.appbar = None
         page.clean()
         page.overlay.clear()
+        page.pop_dialog()
         page.floating_action_button = None
+        page.update()
 
     def render_example(slug: str):
         info = EXAMPLES_BY_SLUG.get(slug)
