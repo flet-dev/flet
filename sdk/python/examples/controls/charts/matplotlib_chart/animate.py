@@ -1,12 +1,8 @@
-import logging
-
 import matplotlib.pyplot as plt
 import numpy as np
 
 import flet as ft
 import flet_charts
-
-logging.basicConfig(level=logging.INFO)
 
 state = {}
 
