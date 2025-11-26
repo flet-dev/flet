@@ -908,7 +908,7 @@ class BaseFlutterCommand(BaseCommand):
             "android.software.leanback": False,
             "android.hardware.touchscreen": False,
         }
-        android_meta_data = {"io.flutter.embedding.android.EnableImpeller": "false"}
+        android_meta_data = {}
 
         # merge values from "--permissions" arg:
         for p in (
