@@ -1,11 +1,12 @@
-import 'package:flet/src/utils/buttons.dart';
-import 'package:flet/src/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import '../widgets/error.dart';
 import 'app_bar.dart';
@@ -135,6 +136,24 @@ class _PageletControlState extends State<PageletControl> {
           navigationBar: bar as ObstructingPreferredSizeWidget,
           child: scaffold);
     }
+
+    final scaffoldWithBoundsCheck = scaffold;
+
+    scaffold = LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      debugPrint("Pagelet constraints.maxWidth: ${constraints.maxWidth}");
+      debugPrint("Pagelet constraints.maxHeight: ${constraints.maxHeight}");
+
+      if (constraints.maxHeight == double.infinity &&
+          widget.control.getDouble("height") == null) {
+        return const ErrorControl(
+                "Error displaying Pagelet: height is unbounded.",
+            description:
+                "Either set a fixed \"height\" or nest Pagelet inside expanded control or control with a fixed height.");
+      }
+
+      return scaffoldWithBoundsCheck;
+    });
 
     return LayoutControl(control: widget.control, child: scaffold);
   }

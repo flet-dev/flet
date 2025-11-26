@@ -1,10 +1,10 @@
-import 'package:flet/src/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';

@@ -1,9 +1,9 @@
-import flet
-from flet import Page, Text
+import flet as ft
 
 
-def main(page: Page):
-    page.add(Text(f"Initial route: {page.route}"))
+def main(page: ft.Page):
+    page.add(ft.Text(f"Initial route: {page.route}"))
 
 
-flet.run(main)
+if __name__ == "__main__":
+    ft.run(main)
