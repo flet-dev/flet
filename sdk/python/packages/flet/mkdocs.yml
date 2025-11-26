@@ -772,7 +772,7 @@ nav:
               - CupertinoColors: types/cupertinocolors.md
               - CupertinoDatePickerDateOrder: types/cupertinodatepickerdateorder.md
               - CupertinoDatePickerMode: types/cupertinodatepickermode.md
-              - CupertinoIcons: types/cupertinoicons.md
+              # - CupertinoIcons: types/cupertinoicons.md
               - CupertinoTimerPickerMode: types/cupertinotimerpickermode.md
               - DataTable2:
                 - DataColumnSize: datatable2/types/data_column_size.md
@@ -784,7 +784,7 @@ nav:
               - FloatingActionButtonLocation: types/floatingactionbuttonlocation.md
               - FontWeight: types/fontweight.md
               - GradientTileMode: types/gradienttilemode.md
-              - Icons: types/icons.md
+              # - Icons: types/icons.md
               - ImageRepeat: types/imagerepeat.md
               - KeyboardType: types/keyboardtype.md
               - LabelPosition: types/labelposition.md

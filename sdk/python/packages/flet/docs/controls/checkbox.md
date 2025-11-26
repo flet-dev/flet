@@ -8,8 +8,6 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/checkbox)
-
 ### Basic Example
 
 ```python
@@ -18,6 +16,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 
 {{ image(example_images + "/basic.png", alt="basic", width="50%", caption="After clicking Submit") }}
 
+{{ iframe(route="checkbox/basic", height="520") }}
 
 ### Handling events
 
@@ -27,6 +26,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 
 {{ image(example_images + "/handling_events.png", alt="handling-events", width="50%", caption="After three clicks") }}
 
+{{ iframe(route="checkbox/handling_events", height="520") }}
 
 ### Styled checkboxes
 
@@ -35,5 +35,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 ```
 
 {{ image(example_images + "/styled_checkboxes.png", alt="Styled checkboxes", width="50%") }}
+
+{{ iframe(route="checkbox/styled", height="520") }}
 
 {{ class_members(class_name) }}

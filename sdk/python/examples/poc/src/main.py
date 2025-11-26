@@ -154,7 +154,7 @@ def main(page: ft.Page):
         page.clean()
         page.overlay.clear()
         page.pop_dialog()
-        page.floating_action_button = None
+        page.theme = page.dark_theme = page.floating_action_button = None
         page.update()
 
     def render_example(slug: str):

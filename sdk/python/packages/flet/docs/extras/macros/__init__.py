@@ -128,5 +128,42 @@ def define_env(env):
         )
 
     @env.macro
+    def iframe(
+        src=None,
+        *,
+        route=None,
+        base="http://127.0.0.1:60222/",
+        width="100%",
+        height="480",
+        title=None,
+        allow=None,
+        loading="lazy",
+    ):
+        """
+        Renders an iframe block.
+
+        Args:
+            src: Full iframe source URL. If omitted, `route` and `base` are combined.
+            route: Path on the PoC site (e.g., `"checkbox/basic"`).
+            base: Base URL for the PoC site.
+            width, height, title, allow, loading: Standard iframe attributes.
+        """
+        if route:
+            src = base.rstrip("/") + "/" + route.lstrip("/")
+        if not src:
+            raise ValueError("Either src or route must be provided")
+        attrs = [
+            f'src="{src}"',
+            f'width="{width}"',
+            f'height="{height}"',
+            'style="border:0;"',
+            f'title="{title or "iframe"}"',
+            f'loading="{loading}"',
+        ]
+        if allow:
+            attrs.append(f'allow="{allow}"')
+        return f"<iframe {' '.join(attrs)}></iframe>"
+
+    @env.macro
     def controls_overview():
         return render_controls_overview()
