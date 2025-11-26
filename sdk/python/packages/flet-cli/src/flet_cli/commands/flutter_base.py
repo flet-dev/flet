@@ -1939,24 +1939,22 @@ class BaseFlutterCommand(BaseCommand):
             )
         )
 
-    def add_flutter_build_args(self, args: list[str]):
+    def add_flutter_command_args(self, args: list[str]):
         pass
 
-    def flutter_build(self):
+    def run_flutter(self):
+        self._run_flutter_command()
+
+    def _run_flutter_command(self):
         assert self.options
         assert self.build_dir
         assert self.get_pyproject
         assert self.template_data
         assert self.target_platform
 
-        self.update_status(
-            f"[bold blue]Building [cyan]"
-            f"{self.platforms[self.target_platform]['status_text']}[/cyan]..."
-        )
-
         # flutter build
         build_args = [self.flutter_exe]
-        self.add_flutter_build_args(build_args)
+        self.add_flutter_command_args(build_args)
         build_args.extend(
             [
                 "--no-version-check",
@@ -2027,10 +2025,6 @@ class BaseFlutterCommand(BaseCommand):
             if build_result.stderr:
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode if build_result.returncode else 1)
-        console.log(
-            f"Built [cyan]{self.platforms[self.target_platform]['status_text']}"
-            f"[/cyan] {self.emojis['checkmark']}",
-        )
 
     def copy_build_output(self):
         assert self.template_data

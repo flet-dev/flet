@@ -1,4 +1,5 @@
 import argparse
+import contextlib
 import os
 import platform
 
@@ -98,24 +99,8 @@ class Command(BaseFlutterCommand):
                 self.update_flutter_dependencies()
             self.customize_icons()
             self.customize_splash_images()
-            self.flutter_build()
-
-            self.cleanup(
-                0,
-                message=(
-                    f"Successfully built your [cyan]"
-                    f"{self.platforms[self.target_platform]['status_text']}"
-                    f"[/cyan]! {self.emojis['success']} "
-                    f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. "
-                    f"{self.emojis['directory']}"
-                    + (
-                        "\nRun [cyan]flet serve[/cyan] command to start a web server "
-                        "with your app. "
-                        if self.target_platform == "web"
-                        else ""
-                    )
-                ),
-            )
+            self.run_flutter()
+            self.cleanup(0, message=("Debug session ended."))
 
     def check_device_id(self):
         if self.device_id is None and self.debug_platform in [
@@ -130,9 +115,19 @@ class Command(BaseFlutterCommand):
                 "Use --show-devices option to list connected devices.",
             )
 
-    def add_flutter_build_args(self, args: list[str]):
+    def add_flutter_command_args(self, args: list[str]):
         assert self.device_id
         args.extend(["run", "-d", self.device_id])
+
+    def run_flutter(self):
+        assert self.platforms
+        assert self.target_platform
+        self.update_status(
+            f"[bold blue]Running the app on [cyan]{self.debug_platform}[/cyan]..."
+        )
+
+        with contextlib.suppress(KeyboardInterrupt):
+            self._run_flutter_command()
 
     def run_flutter_devices(self):
         self.update_status("[bold blue]Checking connected devices...")

@@ -57,7 +57,7 @@ class Command(BaseFlutterCommand):
                 self.update_flutter_dependencies()
             self.customize_icons()
             self.customize_splash_images()
-            self.flutter_build()
+            self.run_flutter()
             self.copy_build_output()
 
             self.cleanup(
@@ -77,7 +77,7 @@ class Command(BaseFlutterCommand):
                 ),
             )
 
-    def add_flutter_build_args(self, args: list[str]):
+    def add_flutter_command_args(self, args: list[str]):
         assert self.options
         assert self.build_dir
         assert self.get_pyproject
@@ -122,3 +122,19 @@ class Command(BaseFlutterCommand):
             or []
         ):
             args.append(arg)
+
+    def run_flutter(self):
+        assert self.platforms
+        assert self.target_platform
+
+        self.update_status(
+            f"[bold blue]Building [cyan]"
+            f"{self.platforms[self.target_platform]['status_text']}[/cyan]..."
+        )
+
+        self._run_flutter_command()
+
+        console.log(
+            f"Built [cyan]{self.platforms[self.target_platform]['status_text']}"
+            f"[/cyan] {self.emojis['checkmark']}",
+        )
