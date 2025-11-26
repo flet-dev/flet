@@ -4,7 +4,7 @@ import platform
 import re
 import shutil
 import sys
-from typing import Optional
+from typing import Any, Optional
 
 from packaging import version
 from rich.console import Console, Group
@@ -241,9 +241,12 @@ class BaseFlutterCommand(BaseCommand):
             log=self.log_stdout,
         )
 
-    def cleanup(self, exit_code: int, message: Optional[str] = None):
+    def cleanup(self, exit_code: int, message: Any = None):
         if exit_code == 0:
-            self.live.update(Panel(message) if message else "", refresh=True)
+            self.live.update(
+                message if message else "",
+                refresh=True,
+            )
         else:
             msg = (
                 message

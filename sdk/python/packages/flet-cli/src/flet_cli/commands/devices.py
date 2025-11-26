@@ -3,6 +3,8 @@ import os
 
 from rich.console import Group
 from rich.live import Live
+from rich.panel import Panel
+from rich.table import Column, Table
 
 from flet_cli.commands.build_base import BaseFlutterCommand, console, verbose2_style
 
@@ -15,13 +17,17 @@ class Command(BaseFlutterCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
         self.devices_platform = None
+        self.platform_labels = {
+            "ios": "iOS",
+            "android": "Android",
+        }
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
             "platform",
             type=str,
             nargs="?",
-            choices=["ios", "android", "web"],
+            choices=["ios", "android"],
             help="The target platform to list devices for. "
             "If not specified, lists all platforms.",
         )
@@ -70,7 +76,7 @@ class Command(BaseFlutterCommand):
             #     self.live.update("", refresh=True)
             #     return
             self.run_flutter_devices()
-            self.cleanup(0, message=(""))
+            self.cleanup(0)
 
     def initialize_command(self):
         self.package_platform = ""
@@ -85,5 +91,92 @@ class Command(BaseFlutterCommand):
             cwd=os.getcwd(),
             capture_output=True,
         )
-        if flutter_devices.returncode == 0 and flutter_devices.stdout:
-            console.log(flutter_devices.stdout, style=verbose2_style)
+        output = flutter_devices.stdout or ""
+
+        if flutter_devices.returncode != 0:
+            error_output = flutter_devices.stderr or output
+            self.cleanup(
+                flutter_devices.returncode,
+                message=(
+                    error_output or "Failed to retrieve devices via `flutter devices`."
+                ),
+            )
+            return None
+
+        if output and self.verbose >= 1:
+            console.log(output, style=verbose2_style)
+
+        footer = (
+            '\nRun [green]"flet emulators"[/green] to list '
+            "and start any available device emulators.\n"
+        )
+
+        devices = [
+            device
+            for device in self._parse_devices_output(output)
+            if device["platform"] in ("ios", "android")
+        ]
+        if self.devices_platform:
+            devices = [d for d in devices if d["platform"] == self.devices_platform]
+
+        if not devices:
+            platform_label = self.platform_labels.get(
+                self.devices_platform, "iOS/Android"
+            )
+            self.cleanup(0, Group(Panel(f"No {platform_label} devices found."), footer))
+
+        devices_table = Table(
+            Column("Device", style="cyan", justify="left"),
+            Column("ID", style="magenta", justify="left", overflow="fold"),
+            Column("Platform", style="green", justify="center"),
+            Column("Details", style="yellow", justify="left"),
+            title="Connected Devices",
+            header_style="bold",
+            show_lines=True,
+        )
+
+        for device in devices:
+            devices_table.add_row(
+                device["name"],
+                device["id"],
+                device["platform_label"],
+                device["details"],
+            )
+
+        self.cleanup(0, message=Group(devices_table, footer))
+
+    def _parse_devices_output(self, output: str) -> list[dict]:
+        devices = []
+        for raw_line in output.splitlines():
+            line = raw_line.strip()
+            if not line or "\u2022" not in line:
+                continue
+            parts = [p.strip() for p in line.split("\u2022")]
+            if len(parts) < 3:
+                continue
+
+            name = parts[0]
+            device_id = parts[1]
+            platform_raw = parts[2]
+            details = parts[3] if len(parts) > 3 else ""
+            platform = self._normalize_platform(platform_raw)
+
+            devices.append(
+                {
+                    "name": name,
+                    "id": device_id,
+                    "platform": platform,
+                    "platform_label": platform_raw,
+                    "details": details,
+                }
+            )
+
+        return devices
+
+    def _normalize_platform(self, platform_raw: str) -> str | None:
+        platform_lower = platform_raw.lower()
+        if "android" in platform_lower:
+            return "android"
+        if "ios" in platform_lower:
+            return "ios"
+        return None

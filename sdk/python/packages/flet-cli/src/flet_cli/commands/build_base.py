@@ -3,14 +3,12 @@ import glob
 import os
 import platform
 import shutil
-import sys
 from pathlib import Path
 from typing import Optional, cast
 
 import yaml
 from packaging import version
 from packaging.requirements import Requirement
-from rich.console import Group
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -1957,37 +1955,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             capture_output=capture_output,
             log=self.log_stdout,
         )
-
-    def cleanup(self, exit_code: int, message: Optional[str] = None):
-        if exit_code == 0:
-            msg = message or f"Success! {self.emojis['success']}"
-            self.live.update(Panel(msg), refresh=True)
-        else:
-            msg = (
-                message
-                if message is not None
-                else "Error building Flet app - see the log of failed command above."
-            )
-
-            # windows has been reported to raise encoding errors
-            # when running `flutter doctor`
-            # so skip running `flutter doctor` if no_rich_output is True
-            # and platform is Windows
-            if not (
-                (self.no_rich_output and self.current_platform == "Windows")
-                or self.skip_flutter_doctor
-            ):
-                status = console.status(
-                    "[bold blue]Running Flutter doctor...",
-                    spinner="bouncingBall",
-                )
-                self.live.update(
-                    Group(Panel(msg, style=error_style), status), refresh=True
-                )
-                self.run_flutter_doctor()
-            self.live.update(Panel(msg, style=error_style), refresh=True)
-
-        sys.exit(exit_code)
 
     def run_flutter_doctor(self):
         flutter_doctor = self.run(

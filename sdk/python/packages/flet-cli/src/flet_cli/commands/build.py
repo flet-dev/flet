@@ -2,6 +2,7 @@ import argparse
 
 from rich.console import Group
 from rich.live import Live
+from rich.panel import Panel
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
 
@@ -59,16 +60,18 @@ class Command(BaseBuildCommand):
             self.cleanup(
                 0,
                 message=(
-                    f"Successfully built your [cyan]"
-                    f"{self.platforms[self.target_platform]['status_text']}"
-                    f"[/cyan]! {self.emojis['success']} "
-                    f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. "
-                    f"{self.emojis['directory']}"
-                    + (
-                        "\nRun [cyan]flet serve[/cyan] command to start a web server "
-                        "with your app. "
-                        if self.target_platform == "web"
-                        else ""
+                    Panel(
+                        f"Successfully built your [cyan]"
+                        f"{self.platforms[self.target_platform]['status_text']}"
+                        f"[/cyan]! {self.emojis['success']} "
+                        f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. "
+                        f"{self.emojis['directory']}"
+                        + (
+                            "\nRun [cyan]flet serve[/cyan] command to "
+                            "start a web server with your app. "
+                            if self.target_platform == "web"
+                            else ""
+                        )
                     )
                 ),
             )

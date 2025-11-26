@@ -5,6 +5,7 @@ import platform
 
 from rich.console import Group
 from rich.live import Live
+from rich.panel import Panel
 
 from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_style
 
@@ -103,7 +104,7 @@ class Command(BaseBuildCommand):
             self.customize_icons()
             self.customize_splash_images()
             self.run_flutter()
-            self.cleanup(0, message=("Debug session ended."))
+            self.cleanup(0, message=Panel("Debug session ended."))
 
     def check_device_id(self):
         if self.device_id is None and self.debug_platform in [
