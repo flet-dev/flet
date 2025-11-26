@@ -1,3 +1,4 @@
+import importlib
 import sys
 from pathlib import Path
 
@@ -8,46 +9,47 @@ PROJECT_PY_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_PY_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_PY_ROOT))
 
-from examples.controls.button import basic as button_basic
-from examples.controls.button import custom_content, handling_clicks, icons
-from examples.controls.checkbox import basic as checkbox_basic
-from examples.controls.checkbox import handling_events, styled
+EXAMPLES_ROOT = PROJECT_PY_ROOT / "examples" / "controls"
 
-CONTROL_EXAMPLES = {
-    "Checkbox": [
-        {
-            "slug": "checkbox/basic",
-            "runner": checkbox_basic.main,
-        },
-        {
-            "slug": "checkbox/handling_events",
-            "runner": handling_events.main,
-        },
-        {
-            "slug": "checkbox/styled",
-            "runner": styled.main,
-        },
-    ],
-    "Button": [
-        {
-            "slug": "button/basic",
-            "runner": button_basic.main,
-        },
-        {
-            "slug": "button/icons",
-            "runner": icons.main,
-        },
-        {
-            "slug": "button/custom_content",
-            "runner": custom_content.main,
-        },
-        {
-            "slug": "button/handling_clicks",
-            "runner": handling_clicks.main,
-        },
-    ],
-}
 
+def discover_examples():
+    controls: dict[str, list[dict[str, object]]] = {}
+    for path in sorted(EXAMPLES_ROOT.rglob("*.py")):
+        if path.name.startswith("_"):
+            continue
+        if any(
+            part.startswith("__")
+            or part == "media"
+            or part in {"ads", "video", "webview"}
+            for part in path.parts
+        ):
+            continue
+
+        rel = path.relative_to(EXAMPLES_ROOT).with_suffix("")
+        parts = rel.parts
+        if len(parts) < 2:
+            continue  # expect control_name/file.py
+
+        control_name = parts[0].replace("_", " ").title()
+        slug = "/".join(parts)
+        module_name = "examples.controls." + ".".join(parts)
+
+        try:
+            mod = importlib.import_module(module_name)
+        except Exception:
+            continue
+
+        runner = getattr(mod, "main", None)
+        if runner is None:
+            continue
+
+        print(control_name)
+        controls.setdefault(control_name, []).append({"slug": slug, "runner": runner})
+
+    return controls
+
+
+CONTROL_EXAMPLES = discover_examples()
 EXAMPLES_BY_SLUG = {
     ex["slug"]: ex for group in CONTROL_EXAMPLES.values() for ex in group
 }

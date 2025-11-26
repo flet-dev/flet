@@ -8,4 +8,5 @@ def main(page: ft.Page):
     page.add(ft.Button("Get page width", on_click=button_click))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

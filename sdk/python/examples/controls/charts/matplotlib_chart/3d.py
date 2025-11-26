@@ -33,4 +33,5 @@ def main(page: ft.Page):
     page.add(flet_charts.MatplotlibChartWithToolbar(figure=fig))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

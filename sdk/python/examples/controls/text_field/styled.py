@@ -24,4 +24,5 @@ async def main(page: ft.Page):
     await tf.focus()
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

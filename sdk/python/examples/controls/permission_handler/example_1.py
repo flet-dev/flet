@@ -1,6 +1,5 @@
-import flet_permission_handler as fph
-
 import flet as ft
+import flet_permission_handler as fph
 
 
 def main(page: ft.Page):
@@ -32,4 +31,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

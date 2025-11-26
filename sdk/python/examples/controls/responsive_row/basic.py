@@ -78,4 +78,5 @@ def main(page: ft.Page):
     handle_page_resize(None)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

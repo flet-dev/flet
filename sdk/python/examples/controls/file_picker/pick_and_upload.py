@@ -83,4 +83,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main, upload_dir="examples")
+if __name__ == "__main__":
+    ft.run(main, upload_dir="examples")

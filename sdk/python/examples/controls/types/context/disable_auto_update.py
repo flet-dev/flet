@@ -15,4 +15,5 @@ def main(page: ft.Page):
     # page.update() - auto-update is enabled by default
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

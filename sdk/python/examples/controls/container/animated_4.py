@@ -44,4 +44,5 @@ def main(page: ft.Page):
     page.add(ft.Button("Show menu", on_click=show_menu))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

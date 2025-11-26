@@ -1,6 +1,5 @@
-import flet_flashlight as ffl
-
 import flet as ft
+import flet_flashlight as ffl
 
 
 def main(page: ft.Page):
@@ -11,4 +10,5 @@ def main(page: ft.Page):
     page.add(ft.TextButton("toggle", on_click=toggle_flashlight))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

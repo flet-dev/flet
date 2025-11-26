@@ -1,8 +1,7 @@
 import logging
 
-import flet_audio_recorder as far
-
 import flet as ft
+import flet_audio_recorder as far
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -69,4 +68,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

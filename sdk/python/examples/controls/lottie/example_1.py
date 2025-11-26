@@ -1,6 +1,5 @@
-import flet_lottie as ftl
-
 import flet as ft
+import flet_lottie as ftl
 
 
 def main(page: ft.Page):
@@ -24,4 +23,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

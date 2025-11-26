@@ -56,4 +56,5 @@ def main(page: ft.Page):
     page.add(panel_list)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

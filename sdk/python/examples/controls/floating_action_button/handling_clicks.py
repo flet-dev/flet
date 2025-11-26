@@ -50,4 +50,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

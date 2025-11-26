@@ -22,4 +22,5 @@ async def main(page: ft.Page):
             await asyncio.sleep(0.1)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

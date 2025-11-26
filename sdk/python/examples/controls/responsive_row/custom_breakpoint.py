@@ -99,4 +99,5 @@ def main(page: ft.Page):
     update_status()
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

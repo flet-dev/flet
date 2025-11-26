@@ -1,6 +1,5 @@
-import flet_charts as fch
-
 import flet as ft
+import flet_charts as fch
 
 
 def main(page: ft.Page):
@@ -50,4 +49,5 @@ def main(page: ft.Page):
     page.add(chart)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

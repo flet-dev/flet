@@ -103,4 +103,5 @@ def main(page: ft.Page):
     page.add(c, t1, t3, t2)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
