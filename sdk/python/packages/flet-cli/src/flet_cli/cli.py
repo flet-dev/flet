@@ -4,6 +4,7 @@ import sys
 import flet.version
 import flet_cli.commands.build
 import flet_cli.commands.create
+import flet_cli.commands.debug
 import flet_cli.commands.doctor  # Adding the doctor command
 import flet_cli.commands.pack
 import flet_cli.commands.publish
@@ -78,6 +79,7 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.create.Command.register_to(sp, "create")
     flet_cli.commands.run.Command.register_to(sp, "run")
     flet_cli.commands.build.Command.register_to(sp, "build")
+    flet_cli.commands.debug.Command.register_to(sp, "debug")
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
     flet_cli.commands.serve.Command.register_to(sp, "serve")

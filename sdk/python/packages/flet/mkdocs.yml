@@ -464,6 +464,7 @@ nav:
           - Overview: cli/index.md
           - flet build: cli/flet-build.md
           - flet create: cli/flet-create.md
+          - flet debug: cli/flet-debug.md
           - flet doctor: cli/flet-doctor.md
           - flet pack: cli/flet-pack.md
           - flet publish: cli/flet-publish.md
