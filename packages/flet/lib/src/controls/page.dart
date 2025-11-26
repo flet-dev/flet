@@ -65,6 +65,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   bool _keyboardHandlerSubscribed = false;
   String? _prevViewRoutes;
 
+  // Ensures that the first_frame lifecycle event is fired only once.
+  bool _firstFrameEventSent = false;
+
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
   List<DeviceOrientation>? _appliedDeviceOrientations;
@@ -76,6 +79,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     _updateMultiViews();
+    _scheduleFirstFrameNotification();
 
     _routeParser = RouteParser();
 
@@ -289,6 +293,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         setState(() {});
       });
     }
+  }
+
+  /// Schedules a one-time callback to emit the `first_frame` lifecycle event
+  /// after the first Flutter frame is rendered for this page.
+  void _scheduleFirstFrameNotification() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _firstFrameEventSent) {
+        return;
+      }
+      _firstFrameEventSent = true;
+      widget.control.triggerEventWithoutSubscribers("first_frame");
+    });
   }
 
   void _routeChanged() {
