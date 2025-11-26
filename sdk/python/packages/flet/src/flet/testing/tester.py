@@ -6,6 +6,8 @@ from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
 from flet.controls.types import IconData
 from flet.testing.finder import Finder
+from flet.controls.transform import Offset
+
 
 __all__ = ["Tester"]
 
@@ -115,6 +117,15 @@ class Tester(Service):
         await self._invoke_method(
             "tap", {"finder_id": finder.id, "finder_index": finder.index}
         )
+
+    async def tap_at(self, offset: Offset):
+        """
+        Dispatch a pointer down / pointer up sequence at the given offset.
+
+        Args:
+            offset: Offset value at which tap will occur.
+        """
+        await self._invoke_method("tap_at", {"offset": offset})
 
     async def long_press(self, finder: Finder):
         """

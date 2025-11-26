@@ -1,0 +1,27 @@
+[project]
+name = "poc"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Flet developer", email = "you@example.com" }
+]
+dependencies = [
+  "flet==0.69.0"
+]
+
+[dependency-groups]
+dev = [
+  "flet[all]==0.69.0",
+]
+
+[tool.flet]
+# Docs: https://flet.dev/docs/publish
+org = "com.mycompany"
+product = "poc"
+company = "Flet"
+copyright = "Copyright (C) 2025 by Flet"
+
+[tool.flet.app]
+path = "src"
