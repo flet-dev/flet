@@ -152,21 +152,52 @@ class Command(BaseCommand):
         if script_path.is_dir():
             script_path = script_path / "main.py"
 
+        # Keep script filename around so it can be rejoined after adjusting script_dir
+        script_filename = script_path.name
+
         script_dir = script_path.parent
 
-        project_dir = Path(script_dir)
+        def resolve_project_dir(start_dir: Path) -> Path:
+            """Walk up from the script directory looking for a pyproject.toml.
+            If there isn't one, fall back to the closest directory that
+            contains requirements.txt, otherwise stick with the script dir."""
+            current_dir = start_dir
+            requirements_dir = None
+
+            while True:
+                candidate_pyproject = current_dir / "pyproject.toml"
+                if candidate_pyproject.exists():
+                    return current_dir
+
+                candidate_requirements = current_dir / reqs_filename
+                if requirements_dir is None and candidate_requirements.exists():
+                    requirements_dir = current_dir
+
+                parent_dir = current_dir.parent
+                if parent_dir == current_dir:
+                    return requirements_dir or start_dir
+
+                current_dir = parent_dir
+
+        project_dir = resolve_project_dir(script_dir)
         get_pyproject = load_pyproject_toml(project_dir)
 
-        if get_pyproject("tool.flet.app.path"):
-            script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
-            script_path = script_dir.joinpath(
-                os.path.basename(script_path),
+        app_path = get_pyproject("tool.flet.app.path")
+        if app_path:
+            # tool.flet.app.path can point to a subdirectory containing app sources
+            app_path_path = Path(app_path)
+            script_dir = (
+                app_path_path
+                if app_path_path.is_absolute()
+                else project_dir.joinpath(app_path_path)
             )
+            script_path = script_dir.joinpath(script_filename)
 
         # delete "dist" directory
         if options.distpath:
             dist_dir = Path(options.distpath)
             if not dist_dir.is_absolute():
+                # Allow relative --distpath values to be resolved against project root
                 dist_dir = project_dir.joinpath(dist_dir).resolve()
         else:
             dist_dir = project_dir.joinpath(dist_name)
@@ -186,9 +217,12 @@ class Command(BaseCommand):
         # copy assets
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
+            # User provided assets relative to the entry script
             assets_dir = str(script_path.joinpath(assets_dir).resolve())
         else:
-            assets_dir = str(script_dir / assets_name)
+            # Fall back to ./assets next to the script
+            computed_default_assets_dir = str(script_dir / assets_name)
+            assets_dir = computed_default_assets_dir
 
         if os.path.exists(assets_dir):
             copy_tree(assets_dir, str(dist_dir))
@@ -214,8 +248,10 @@ class Command(BaseCommand):
                 print(f"{reqs_filename} dependencies: {deps}")
 
         if len(deps) == 0:
+            # Ensure runtime has at least flet dependency if nothing specified
             deps = [f"flet=={flet.version.version}"]
 
+        # write deps to a temporary file to be included in the tar.gz archive
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w", encoding="utf-8") as f:
             f.writelines(dep + "\n" for dep in deps)
@@ -236,6 +272,7 @@ class Command(BaseCommand):
                 or is_within_directory(dist_dir, full_path)
             ):
                 return None
+
             # tarinfo.uid = tarinfo.gid = 0
             # tarinfo.uname = tarinfo.gname = "root"
             if tarinfo.name != "":
@@ -279,14 +316,6 @@ class Command(BaseCommand):
             or get_pyproject("tool.poetry.description")
         )
 
-        pwa_background_color = options.pwa_background_color or get_pyproject(
-            "tool.flet.web.pwa_background_color"
-        )
-
-        pwa_theme_color = options.pwa_theme_color or get_pyproject(
-            "tool.flet.web.pwa_theme_color"
-        )
-
         no_cdn = options.no_cdn or get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
 
         print("Patching index.html")
@@ -317,8 +346,10 @@ class Command(BaseCommand):
             app_name=app_name,
             app_short_name=app_short_name,
             app_description=app_description,
-            background_color=pwa_background_color,
-            theme_color=pwa_theme_color,
+            background_color=options.pwa_background_color
+            or get_pyproject("tool.flet.web.pwa_background_color"),
+            theme_color=options.pwa_theme_color
+            or get_pyproject("tool.flet.web.pwa_theme_color"),
         )
 
         if no_cdn:
