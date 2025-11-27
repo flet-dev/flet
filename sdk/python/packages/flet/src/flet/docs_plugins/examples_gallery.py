@@ -1,5 +1,8 @@
+import importlib.util
+import logging
 import os
 import subprocess
+import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Optional
@@ -8,6 +11,8 @@ from mkdocs.config import config_options
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import BasePlugin
 
+logger = logging.getLogger("flet.docs.examples_gallery")
+
 
 def _is_relative_to(path: Path, base: Path) -> bool:
     try:
@@ -15,6 +20,27 @@ def _is_relative_to(path: Path, base: Path) -> bool:
         return True
     except ValueError:
         return False
+
+
+def _has_pip() -> bool:
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "pip", "--version"],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return importlib.util.find_spec("pip") is not None
+
+
+def _ensure_pip_available() -> None:
+    """Bootstrap pip into the active virtualenv when it's missing."""
+    if _has_pip():
+        return
+    logger.info("Installing pip in the current environment for `flet publish`.")
+    subprocess.run([sys.executable, "-m", "ensurepip", "--upgrade"], check=True)
 
 
 def _latest_mtime(root: Path, ignored: Optional[Iterable[Path]] = None) -> float:
@@ -125,4 +151,5 @@ class ExamplesGalleryPlugin(BasePlugin):
         extra_env = self.config.get("env") or {}
         env.update({k: str(v) for k, v in extra_env.items()})
 
+        _ensure_pip_available()
         subprocess.run(cmd, cwd=docs_dir, check=True, env=env)
