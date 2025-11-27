@@ -133,7 +133,7 @@ def define_env(env):
         src=None,
         *,
         route=None,
-        base="/apps/dist/index.html#/",
+        base="/apps/examples-gallery/dist/index.html#/",
         # base="http://127.0.0.1:3000/",
         width="100%",
         height="480",

@@ -221,4 +221,7 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(
+        main,
+        # route_url_strategy=ft.RouteUrlStrategy.HASH,
+    )
