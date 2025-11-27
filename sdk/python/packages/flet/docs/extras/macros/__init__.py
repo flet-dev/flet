@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
@@ -129,12 +130,15 @@ def define_env(env):
         )
 
     @env.macro
+    def controls_overview():
+        return render_controls_overview()
+
+    @env.macro
     def iframe(
         src=None,
         *,
         route=None,
         base="/apps/examples-gallery/dist/index.html#/",
-        # base="http://127.0.0.1:3000/",
         width="100%",
         height="480",
         title=None,
@@ -153,5 +157,20 @@ def define_env(env):
         )
 
     @env.macro
-    def controls_overview():
-        return render_controls_overview()
+    def demo(
+        route: str,
+        *,
+        width: str = "100%",
+        height: str = "350",
+        title: Optional[str] = None,
+    ):
+        """
+        Embed an examples gallery route as a centered demo iframe.
+        """
+        return render_iframe(
+            route=route,
+            base="/apps/examples-gallery/dist/index.html#/",
+            width=width,
+            height=height,
+            title=title,
+        )

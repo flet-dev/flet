@@ -96,7 +96,6 @@ watch:
   - ../../../../LICENSE
   - ../../../../README.md
 
-
 # Plugins
 plugins:
   # - footnotes
@@ -163,6 +162,10 @@ plugins:
         - source_dir: integration_tests
           target_url_path: test-images
           include_exts: [".png", ".gif", ".svg"]
+  - examples_gallery:
+      src: apps/examples-gallery/src/main.py
+      dist: apps/examples-gallery/dist
+      base_url: apps/examples-gallery/dist
 
 # Markdown Extensions
 markdown_extensions:

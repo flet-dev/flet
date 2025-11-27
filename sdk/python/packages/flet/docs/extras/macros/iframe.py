@@ -3,7 +3,10 @@ from typing import Optional
 from urllib.parse import urlparse
 
 # Default iframe base can be overridden for local dev via FLET_IFRAME_BASE.
-DEFAULT_IFRAME_BASE = os.environ.get("FLET_IFRAME_BASE", "/apps/dist/index.html#/")
+# Points to the published examples gallery bundled with the docs.
+DEFAULT_IFRAME_BASE = os.environ.get(
+    "FLET_IFRAME_BASE", "/apps/examples-gallery/dist/index.html#/"
+)
 
 
 def _prettify_token(token: str) -> str:
@@ -39,7 +42,7 @@ def render_iframe(
 
     When route is provided, the iframe source is constructed from the base URL.
     The base defaults to the published examples gallery served by MkDocs:
-    /assets/dist/index.html#/ (override with FLET_IFRAME_BASE).
+    /apps/examples-gallery/dist/index.html#/ (override with FLET_IFRAME_BASE).
     """
     base = base or DEFAULT_IFRAME_BASE
 
@@ -56,12 +59,14 @@ def render_iframe(
         raise ValueError("Either src or route must be provided")
 
     if title is None:
-        parsed = urlparse(src)
-        candidate = parsed.path or src
-        if "." not in candidate:
-            title = _pretty_from_route(route or candidate)
+        # Prefer a human-friendly title from the route when available, even if
+        # the underlying src includes an index.html with a fragment.
+        if route:
+            title = _pretty_from_route(route)
         else:
-            title = "iframe"
+            parsed = urlparse(src)
+            candidate = parsed.path or src
+            title = _pretty_from_route(candidate) if "." not in candidate else "iframe"
 
     attrs = [
         f'src="{src}"',
@@ -73,4 +78,6 @@ def render_iframe(
     ]
     if allow:
         attrs.append(f'allow="{allow}"')
-    return f"<iframe {' '.join(attrs)}></iframe>"
+    iframe_html = f"<iframe {' '.join(attrs)}></iframe>"
+
+    return f'<div style="display:flex; justify-content:center;">{iframe_html}</div>'
