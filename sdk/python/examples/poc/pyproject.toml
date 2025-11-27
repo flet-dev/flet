@@ -8,13 +8,11 @@ authors = [
     { name = "Flet developer", email = "you@example.com" }
 ]
 dependencies = [
-  "flet==0.69.0"
+    "flet==0.70.0.dev6833",
 ]
 
-[dependency-groups]
-dev = [
-  "flet[all]==0.69.0",
-]
+[tool.uv]
+prerelease = "allow"
 
 [tool.flet]
 # Docs: https://flet.dev/docs/publish

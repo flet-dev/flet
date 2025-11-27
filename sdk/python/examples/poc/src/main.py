@@ -76,14 +76,31 @@ def pretty_example_title(slug: str) -> str:
 
 
 def main(page: ft.Page):
-    page.title = "Examples POC"
+    page.title = "Flet Examples"
     page.padding = 20
     page.theme_mode = ft.ThemeMode.LIGHT
     page.horizontal_alignment = ft.CrossAxisAlignment.START
     page.scroll = ft.ScrollMode.AUTO
+    search_ref: ft.Ref[ft.TextField] = ft.Ref()
 
     def open_example(slug: str):
         page.go(f"/{slug}")
+
+    def filter_controls(query: str) -> dict[str, list[dict[str, object]]]:
+        q = query.strip().lower()
+        if not q:
+            return CONTROL_EXAMPLES
+        filtered: dict[str, list[dict[str, object]]] = {}
+        for control_name, examples in CONTROL_EXAMPLES.items():
+            matches = []
+            for ex in examples:
+                slug_match = q in ex["slug"].lower()
+                title_match = q in pretty_example_title(ex["slug"]).lower()
+                if slug_match or title_match or q in control_name.lower():
+                    matches.append(ex)
+            if matches:
+                filtered[control_name] = matches
+        return filtered
 
     def render_home():
         page.appbar = ft.AppBar(
@@ -94,67 +111,89 @@ def main(page: ft.Page):
         )
         page.clean()
 
-        control_cards = []
-        for control_name, examples in CONTROL_EXAMPLES.items():
-            control_cards.append(
-                ft.Card(
-                    elevation=2,
-                    content=ft.Container(
-                        padding=12,
-                        content=ft.Column(
-                            spacing=8,
-                            controls=[
-                                ft.Text(
-                                    value=control_name,
-                                    theme_style=ft.TextThemeStyle.TITLE_LARGE,
-                                    weight=ft.FontWeight.W_600,
-                                ),
-                                ft.ListView(
-                                    spacing=4,
-                                    expand=True,
-                                    scroll=ft.ScrollMode.AUTO,
-                                    controls=[
-                                        ft.ListTile(
-                                            title=ft.Text(
-                                                value=pretty_example_title(ex["slug"]),
-                                                weight=ft.FontWeight.W_600,
-                                            ),
-                                            subtitle=ft.Text(f"/{ex['slug']}"),
-                                            on_click=lambda e,
-                                            s=ex["slug"]: open_example(s),
-                                            trailing=ft.Icon(ft.Icons.CHEVRON_RIGHT),
-                                        )
-                                        for ex in examples
-                                    ],
-                                ),
-                            ],
+        grid_view = ft.GridView(
+            expand=1,
+            runs_count=0,
+            max_extent=420,
+            spacing=12,
+            run_spacing=12,
+        )
+
+        def update_controls():
+            query = search_ref.current.value if search_ref.current else ""
+            visible_controls = filter_controls(query or "")
+
+            control_cards = []
+            for control_name, examples in visible_controls.items():
+                control_cards.append(
+                    ft.Card(
+                        elevation=2,
+                        content=ft.Container(
+                            padding=12,
+                            content=ft.Column(
+                                spacing=8,
+                                controls=[
+                                    ft.Text(
+                                        value=control_name,
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
+                                        weight=ft.FontWeight.W_600,
+                                    ),
+                                    ft.ListView(
+                                        spacing=4,
+                                        expand=True,
+                                        scroll=ft.ScrollMode.AUTO,
+                                        controls=[
+                                            ft.ListTile(
+                                                title=ft.Text(
+                                                    value=pretty_example_title(
+                                                        ex["slug"]
+                                                    ),
+                                                    weight=ft.FontWeight.W_600,
+                                                ),
+                                                subtitle=ft.Text(f"/{ex['slug']}"),
+                                                on_click=lambda e,
+                                                s=ex["slug"]: open_example(s),
+                                                trailing=ft.Icon(
+                                                    ft.Icons.CHEVRON_RIGHT
+                                                ),
+                                            )
+                                            for ex in examples
+                                        ],
+                                    ),
+                                ],
+                            ),
                         ),
-                    ),
+                    )
                 )
-            )
+
+            grid_view.controls = control_cards
+            grid_view.update()
 
         page.add(
+            ft.TextField(
+                ref=search_ref,
+                prefix_icon=ft.Icons.SEARCH,
+                hint_text="Search controls or examples",
+                on_change=lambda e: update_controls(),
+                dense=True,
+            ),
+            ft.Divider(),
             ft.Text(
                 "Open examples via tile click or route (e.g. /checkbox/basic).",
                 theme_style=ft.TextThemeStyle.BODY_MEDIUM,
             ),
             ft.Divider(),
-            ft.GridView(
-                expand=1,
-                runs_count=0,
-                max_extent=420,
-                spacing=12,
-                run_spacing=12,
-                controls=control_cards,
-            ),
+            grid_view,
         )
+        update_controls()
 
-    def prepare_page():
+    def reset_page():
         page.appbar = None
         page.clean()
         page.overlay.clear()
         page.pop_dialog()
         page.theme = page.dark_theme = page.floating_action_button = None
+        page.theme_mode = ft.ThemeMode.SYSTEM
         page.update()
 
     def render_example(slug: str):
@@ -164,7 +203,7 @@ def main(page: ft.Page):
             return
 
         # Show only the example content.
-        prepare_page()
+        reset_page()
         info["runner"](page)
         page.update()
 
