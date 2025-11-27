@@ -5,6 +5,8 @@ import '../testing/test_finder.dart';
 import '../utils/icons.dart';
 import '../utils/keys.dart';
 import '../utils/time.dart';
+import 'package:flet/src/utils/transforms.dart';
+
 
 class TesterService extends FletService {
   TesterService({required super.control});
@@ -80,6 +82,12 @@ class TesterService extends FletService {
         var finder = _finders[args["finder_id"]];
         if (finder != null) {
           await control.backend.tester!.tap(finder, args["finder_index"]);
+        }
+
+      case "tap_at":
+        var offset = parseOffset(args["offset"]);
+        if (offset != null) {
+          await control.backend.tester!.tapAt(offset);
         }
 
       case "long_press":
