@@ -8,21 +8,21 @@ example_images: ../examples/controls/range_slider/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/rangeslider)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("range_slider/basic", height="420", width="80%") }}
 
-
-### RangeSlider with events
+### Handling change events
 
 ```python
 --8<-- "{{ examples }}/handling_change_events.py"
 ```
+
+{{ demo("range_slider/handling_change_events", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

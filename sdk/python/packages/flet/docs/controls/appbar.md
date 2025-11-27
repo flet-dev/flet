@@ -9,15 +9,13 @@ example_media: ../examples/controls/app_bar/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/appbar)
-
 ### Actions and Popup Menu
 
 ```python
 --8<-- "{{ examples }}/actions_and_popup_menu.py"
 ```
 
-{{ image(example_media + "/actions_and_popup_menu.gif", alt="actions-and-popup-menu", width="80%") }}
+{{ demo("app_bar/actions_and_popup_menu", height="420", width="80%") }}
 
 
 ### Theme and Material Mode Toggles
@@ -25,5 +23,8 @@ example_media: ../examples/controls/app_bar/media
 ```python
 --8<-- "{{ examples }}/theme_and_material_mode_toggles.py"
 ```
+
+{{ demo("app_bar/theme_and_material_mode_toggles", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

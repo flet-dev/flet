@@ -9,21 +9,21 @@ example_media: ../examples/controls/cupertino_segmented_button/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinosegmentedbutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
-
+{{ demo("cupertino_segmented_button/basic", height="360", width="80%") }}
 
 ### Adjusting segments padding
 
 ```python
 --8<-- "{{ examples }}/segments_padding.py"
 ```
+
+{{ demo("cupertino_segmented_button/segments_padding", height="360", width="80%") }}
+
 
 {{ class_members(class_name) }}

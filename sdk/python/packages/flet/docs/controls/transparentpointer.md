@@ -13,4 +13,7 @@ examples: ../../examples/controls/transparent_pointer
 --8<-- "{{ examples }}/basic.py"
 ```
 
+{{ demo("transparent_pointer/basic", height="420", width="80%") }}
+
+
 {{ class_members(class_name) }}

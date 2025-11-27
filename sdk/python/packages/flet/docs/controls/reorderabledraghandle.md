@@ -13,4 +13,7 @@ examples: ../../examples/controls/reorderable_drag_handle
 --8<-- "{{ examples }}/basic.py"
 ```
 
+{{ demo("reorderable_drag_handle/basic", height="420", width="80%") }}
+
+
 {{ class_members(class_name) }}

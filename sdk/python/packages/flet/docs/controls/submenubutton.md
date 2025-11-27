@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/submenu_button
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/submenubutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+{{ demo("submenubutton/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

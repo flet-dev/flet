@@ -9,15 +9,13 @@ example_media: ../examples/controls/cupertino_switch/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinoswitch)
-
 ### Cupertino, Material and Adaptive Switches
 
 ```python
 --8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-{{ image(example_media + "/cupertino_material_and_adaptive.gif", alt="cupertino-material-and-adaptive", width="80%") }}
+{{ demo("cupertino_switch/cupertino_material_and_adaptive", height="360", width="80%") }}
 
 
 {{ class_members(class_name) }}

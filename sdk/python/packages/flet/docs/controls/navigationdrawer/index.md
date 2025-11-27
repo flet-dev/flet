@@ -10,16 +10,13 @@ example_images: ../../examples/controls/navigation_drawer/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/navigationdrawer)
-
 ### Start-aligned drawer
 
 ```python
 --8<-- "{{ examples }}/position_start.py"
 ```
 
-{{ image(example_images + "/position_start.gif", alt="position-start", width="80%") }}
-
+{{ demo("navigationdrawer/position_start", height="420", width="80%") }}
 
 ### End-aligned drawer
 
@@ -27,7 +24,7 @@ example_images: ../../examples/controls/navigation_drawer/media
 --8<-- "{{ examples }}/position_end.py"
 ```
 
-{{ image(example_images + "/position_end.gif", alt="position-end", width="80%") }}
+{{ demo("navigationdrawer/position_end", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

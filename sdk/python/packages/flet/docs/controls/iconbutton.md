@@ -9,21 +9,21 @@ example_media: ../examples/controls/icon_button/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/iconbutton)
-
 ### Handling clicks
 
 ```python
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-{{ image(example_media + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
-
+{{ demo("iconbutton/handling_clicks", height="420", width="80%") }}
 
 ### Selected icon
 
 ```python
 --8<-- "{{ examples }}/selected_icon.py"
 ```
+
+{{ demo("iconbutton/selected_icon", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

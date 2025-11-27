@@ -11,15 +11,13 @@ example_media: ../../examples/controls/cupertino_action_sheet/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinoactionsheet)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
+{{ demo("cupertino_action_sheet/basic", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}

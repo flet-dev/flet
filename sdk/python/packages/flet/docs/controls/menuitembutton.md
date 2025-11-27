@@ -8,15 +8,13 @@ example_images: ../examples/controls/menu_item_button/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/menuitembutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("menu_item_button/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

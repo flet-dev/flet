@@ -11,17 +11,13 @@ example_media: ../../examples/controls/dropdown/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
-
 ### Color selection with filtering
 
 ```python
 --8<-- "{{ examples }}/color_selection_with_filtering.py"
 ```
 
-{{ image(example_media + "/color_selection_with_filtering.gif", alt="color-selection-with-filtering", width="80%") }}
-
-
+{{ demo("dropdown/color_selection_with_filtering", height="420", width="80%") }}
 
 ### Icon selection
 
@@ -29,7 +25,7 @@ example_media: ../../examples/controls/dropdown/media
 --8<-- "{{ examples }}/icon_selection.py"
 ```
 
-{{ image(example_media + "/icon_selection.png", alt="icon-selection", width="80%") }}
+{{ demo("dropdown/icon_selection", height="420", width="80%") }}
 
 
 ### Styled dropdowns
@@ -37,5 +33,7 @@ example_media: ../../examples/controls/dropdown/media
 ```python
 --8<-- "{{ examples }}/styled.py"
 ```
+
+{{ demo("dropdown/styled", height="420", width="80%") }}
 
 {{ class_members(class_name) }}

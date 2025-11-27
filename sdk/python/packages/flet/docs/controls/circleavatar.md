@@ -9,15 +9,13 @@ example_media: ../examples/controls/circle_avatar/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/circleavatar)
-
 ### User avatars
 
 ```python
 --8<-- "{{ examples }}/user_avatars.py"
 ```
 
-{{ image(example_media + "/user_avatars.png", alt="user-avatars", width="80%") }}
+{{ demo("circle_avatar/user_avatars", height="360", width="80%") }}
 
 
 {{ class_members(class_name) }}

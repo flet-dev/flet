@@ -9,8 +9,6 @@ example_media: ../examples/controls/chip/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/chip)
-
 ### Assist chips
 
 Assist chips are chips with [`leading`][flet.Chip.leading] icon and [`on_click`][flet.Chip.on_click] event specified.
@@ -23,8 +21,7 @@ An alternative to assist chips are [buttons](buttons/index.md), which should app
 --8<-- "{{ examples }}/assist_chips.py"
 ```
 
-{{ image(example_media + "/assist_chips.png", alt="assist-chips", width="80%") }}
-
+{{ demo("chip/assist_chips", height="380", width="80%") }}
 
 ### Filter chips
 
@@ -37,7 +34,7 @@ They can be a good alternative to switches or checkboxes.
 --8<-- "{{ examples }}/filter_chips.py"
 ```
 
-{{ image(example_media + "/filter_chips.png", alt="filter-chips", width="80%") }}
+{{ demo("chip/filter_chips", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}

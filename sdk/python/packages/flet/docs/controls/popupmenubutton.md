@@ -9,13 +9,14 @@ popup_menu_item_class_name: flet.PopupMenuItem
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/popupmenubutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
+
+
+{{ demo("popupmenubutton/basic", height="420", width="80%") }}
 
 {{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
 

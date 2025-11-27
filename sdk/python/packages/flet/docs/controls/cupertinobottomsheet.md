@@ -8,15 +8,13 @@ example_images: ../examples/controls/cupertino_action_sheet/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinobottomsheet)
-
 ### Displaying a `CupertinoActionSheet`
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="cupertinoactionsheet", width="80%") }}
+{{ demo("cupertinobottomsheet/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

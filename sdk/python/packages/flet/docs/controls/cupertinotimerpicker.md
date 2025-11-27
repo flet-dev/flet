@@ -8,15 +8,13 @@ example_images: ../examples/controls/cupertino_timer_picker/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinotimerpicker)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("cupertino_timer_picker/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

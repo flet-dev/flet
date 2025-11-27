@@ -9,15 +9,13 @@ example_media: ../examples/controls/divider/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/divider)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
+{{ demo("divider/basic", height="320", width="80%") }}
 
 
 {{ class_members(class_name) }}

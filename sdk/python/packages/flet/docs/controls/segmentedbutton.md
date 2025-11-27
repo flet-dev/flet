@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/segmented_button
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/segmentedbutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/single_multiple_selection.py"
 ```
 
-{{ image(example_images + "/single_multiple_selection.png", width="80%") }}
+{{ demo("segmented_button/single_multiple_selection", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

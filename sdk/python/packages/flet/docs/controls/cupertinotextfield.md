@@ -9,15 +9,13 @@ example_media: ../examples/controls/cupertino_text_field/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinotextfield)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-{{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
+{{ demo("cupertino_text_field/cupertino_material_and_adaptive", height="420", width="80%") }}
 
 ### Handling selection changes
 
@@ -25,10 +23,15 @@ example_media: ../examples/controls/cupertino_text_field/media
 --8<-- "{{ examples }}/selection_change.py"
 ```
 
+{{ demo("cupertino_text_field/selection_change", height="420", width="80%") }}
+
 ### Background image
 
 ```python
 --8<-- "{{ examples }}/background_image.py"
 ```
+
+{{ demo("cupertino_text_field/background_image", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

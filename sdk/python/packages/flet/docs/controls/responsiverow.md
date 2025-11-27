@@ -8,15 +8,13 @@ example_images: ../examples/controls/responsive_row/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/responsiverow)
-
 ### ResponsiveRow
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("responsiverow/basic", height="420", width="80%") }}
 
 
 ### Custom breakpoints
@@ -24,6 +22,9 @@ example_images: ../examples/controls/responsive_row/media
 ```python
 --8<-- "{{ examples }}/custom_breakpoint.py"
 ```
+
+
+{{ demo("responsiverow/custom_breakpoint", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

@@ -9,15 +9,13 @@ example_media: ../examples/controls/grid_view/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/gridview)
-
 ### Photo gallery
 
 ```python
 --8<-- "{{ examples }}/photo_gallery.py"
 ```
 
-{{ image(example_media + "/photo_gallery.png", alt="photo-gallery", width="80%") }}
+{{ demo("gridview/photo_gallery", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/search_bar
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/searchbar)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+{{ demo("searchbar/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

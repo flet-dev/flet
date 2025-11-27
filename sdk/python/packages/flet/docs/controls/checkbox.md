@@ -32,4 +32,5 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 
 {{ demo("checkbox/styled", height="200", width="80%") }}
 
+
 {{ class_members(class_name) }}

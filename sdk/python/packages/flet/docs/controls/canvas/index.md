@@ -11,16 +11,13 @@ example_media: ../../examples/controls/canvas/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/canvas)
-
 ### Smiling face
 
 ```python
 --8<-- "{{ examples }}/smiling_face.py"
 ```
 
-{{ image(example_media + "/smiling_face.png", alt="smiling-face", width="80%") }}
-
+{{ demo("canvas/smiling_face", height="420", width="80%") }}
 
 ### Flet logo
 
@@ -28,8 +25,7 @@ example_media: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/flet_logo.py"
 ```
 
-{{ image(example_media + "/flet_logo.png", alt="flet-logo", width="80%") }}
-
+{{ demo("canvas/flet_logo", height="420", width="80%") }}
 
 ### Triangles
 
@@ -37,8 +33,7 @@ example_media: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/triangles.py"
 ```
 
-{{ image(example_media + "/triangles.png", alt="triangles", width="80%") }}
-
+{{ demo("canvas/triangles", height="420", width="80%") }}
 
 ### Bezier curves
 
@@ -46,8 +41,7 @@ example_media: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/bezier_curves.py"
 ```
 
-{{ image(example_media + "/bezier_curves.png", alt="bezier-curves", width="80%") }}
-
+{{ demo("canvas/bezier_curves", height="420", width="80%") }}
 
 ### Text
 
@@ -55,8 +49,7 @@ example_media: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/text.py"
 ```
 
-{{ image(example_media + "/text.png", alt="text", width="80%") }}
-
+{{ demo("canvas/text", height="420", width="80%") }}
 
 ### Free-hand drawing with image capture
 
@@ -64,10 +57,15 @@ example_media: ../../examples/controls/canvas/media
 --8<-- "{{ examples }}/brush.py"
 ```
 
+{{ demo("canvas/brush", height="420", width="80%") }}
+
 ### Gradients
 
 ```python
 --8<-- "{{ examples }}/gradients.py"
 ```
+
+{{ demo("canvas/gradients", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

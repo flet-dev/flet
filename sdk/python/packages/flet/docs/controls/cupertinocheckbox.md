@@ -9,15 +9,13 @@ example_media: ../examples/controls/cupertino_checkbox/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinocheckbox)
-
 ### Cupertino, Material and Adaptive Checkboxes
 
 ```python
 --8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-{{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
+{{ demo("cupertino_checkbox/cupertino_material_and_adaptive", height="360", width="80%") }}
 
 
 ### Styled checkboxes
@@ -25,5 +23,8 @@ example_media: ../examples/controls/cupertino_checkbox/media
 ```python
 --8<-- "{{ examples }}/styled.py"
 ```
+
+{{ demo("cupertino_checkbox/styled", height="360", width="80%") }}
+
 
 {{ class_members(class_name) }}

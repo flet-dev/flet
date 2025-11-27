@@ -9,15 +9,13 @@ example_media: ../examples/controls/cupertino_radio/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinoradio)
-
 ### Cupertino, Material and Adaptive Radios
 
 ```python
 --8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
 ```
 
-{{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
+{{ demo("cupertino_radio/cupertino_material_and_adaptive", height="360", width="80%") }}
 
 
 {{ class_members(class_name) }}

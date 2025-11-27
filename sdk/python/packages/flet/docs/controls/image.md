@@ -9,15 +9,13 @@ example_media: ../examples/controls/image/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/image)
-
 ### Image gallery
 
 ```python
 --8<-- "{{ examples }}/gallery.py"
 ```
 
-{{ image(example_media + "/gallery.gif", width="80%") }}
+{{ demo("image/gallery", height="420", width="80%") }}
 
 ### Displaying images from base64 strings and byte data
 
@@ -25,11 +23,15 @@ example_media: ../examples/controls/image/media
 --8<-- "{{ examples }}/src_base64_and_bytes.py"
 ```
 
+{{ demo("image/src_base64_and_bytes", height="420", width="80%") }}
+
 ### Displaying a static SVG image
 
 ```python
 --8<-- "{{ examples }}/static_svg.py"
 ```
+
+{{ demo("image/static_svg", height="420", width="80%") }}
 
 ### Displaying a dynamic SVG image
 
@@ -37,10 +39,15 @@ example_media: ../examples/controls/image/media
 --8<-- "{{ examples }}/dynamic_svg.py"
 ```
 
+{{ demo("image/dynamic_svg", height="420", width="80%") }}
+
 ### Displaying a Lucide icon
 
 ```python
 --8<-- "{{ examples }}/lucide_icons.py"
 ```
+
+{{ demo("image/lucide_icons", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

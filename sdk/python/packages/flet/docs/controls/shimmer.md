@@ -14,7 +14,7 @@ example_images: ../test-images/examples/core/golden/macos/shimmer
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/image_for_docs.gif", alt="custom-label", width="50%") }}
+{{ demo("shimmer/basic", height="420", width="80%") }}
 
 ### Skeleton list placeholders
 
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/core/golden/macos/shimmer
 --8<-- "{{ examples }}/basic_placeholder.py"
 ```
 
-{{ image(example_images + "/basic_placeholder.png", alt="custom-label", width="50%") }}
+{{ demo("shimmer/basic_placeholder", height="420", width="80%") }}
 
 ### Custom gradients and directions
 
@@ -30,6 +30,7 @@ example_images: ../test-images/examples/core/golden/macos/shimmer
 --8<-- "{{ examples }}/custom_gradient.py"
 ```
 
-{{ image(example_images + "/custom_gradient.png", alt="custom-label", width="50%") }}
+{{ demo("shimmer/custom_gradient", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

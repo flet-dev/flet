@@ -10,15 +10,13 @@ example_images: ../../examples/controls/navigation_bar/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/navigationbar)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("navigationbar/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

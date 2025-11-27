@@ -9,15 +9,13 @@ example_media: ../examples/controls/cupertino_list_tile/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/cupertinolisttile)
-
 ### Notched and non-notched list tiles
 
 ```python
 --8<-- "{{ examples }}/notched.py"
 ```
 
-{{ image(example_media + "/notched.png", alt="notched", width="80%") }}
+{{ demo("cupertino_list_tile/notched", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}

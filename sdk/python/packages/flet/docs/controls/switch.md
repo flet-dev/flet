@@ -9,16 +9,13 @@ example_media: ../examples/controls/switch/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/switch)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
-
+{{ demo("switch/basic", height="320", width="80%") }}
 
 ### Handling change events
 
@@ -26,7 +23,7 @@ example_media: ../examples/controls/switch/media
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-{{ image(example_media + "/handling_events.gif", alt="handling-events", width="80%") }}
+{{ demo("switch/handling_events", height="340", width="80%") }}
 
 
 {{ class_members(class_name) }}

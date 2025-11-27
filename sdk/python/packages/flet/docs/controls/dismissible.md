@@ -8,15 +8,13 @@ example_images: ../examples/controls/dismissible/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/dismissible)
-
 ### Dismissible `ListTile`s
 
 ```python
 --8<-- "{{ examples }}/dismissible_list_tiles.py"
 ```
 
-{{ image(example_images + "/dismissible_list_tiles.gif", alt="dismissible-list-tiles", width="80%") }}
+{{ demo("dismissible/dismissible_list_tiles", height="420", width="80%") }}
 
 ### Remove Dismissible `on_dismiss` inside component
 
@@ -44,5 +42,8 @@ Example:
 ```python
 --8<-- "{{ examples }}/remove_on_dismiss_declarative.py"
 ```
+
+
+{{ demo("dismissible/remove_on_dismiss_declarative", height="420", width="80%") }}
 
 {{ class_members(class_name) }}

@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/bottomsheet)
-
 ### Basic example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", width="60%") }}
+{{ demo("bottom_sheet/basic", height="380", width="80%") }}
 
 ### Fullscreen
 
@@ -24,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 --8<-- "{{ examples }}/fullscreen.py"
 ```
 
-{{ image(example_images + "/fullscreen.gif", width="60%") }}
+{{ demo("bottom_sheet/fullscreen", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}

@@ -14,7 +14,7 @@ example_images: ../test-images/examples/core/golden/macos/window_drag_area
 --8<-- "{{ examples }}/no_frame_window.py"
 ```
 
-{{ image(example_images + "/no_frame_window.png", alt="no-frame-window", width="80%") }}
+{{ demo("window_drag_area/no_frame_window", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

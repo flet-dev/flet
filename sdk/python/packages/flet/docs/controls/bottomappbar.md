@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/bottom_app_bar
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/bottomappbar)
-
 ### Notched `FloatingActionButton`
 
 ```python
 --8<-- "{{ examples }}/notched_fab.py"
 ```
 
-{{ image(example_images + "/notched_fab.png", width="80%") }}
+{{ demo("bottom_app_bar/notched_fab", height="380", width="80%") }}
 
 ### Custom border radius
 
@@ -24,6 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/bottom_app_bar
 --8<-- "{{ examples }}/border_radius.py"
 ```
 
-{{ image(example_images + "/border_radius.png", width="80%") }}
+{{ demo("bottom_app_bar/border_radius", height="380", width="80%") }}
+
 
 {{ class_members(class_name) }}

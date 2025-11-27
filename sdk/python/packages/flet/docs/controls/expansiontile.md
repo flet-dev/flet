@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/expansion_tile
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/expansiontile)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", width="80%") }}
+{{ demo("expansiontile/basic", height="420", width="80%") }}
 
 ## Programmatic expansion/collapse
 
@@ -24,11 +22,15 @@ example_images: ../test-images/examples/material/golden/macos/expansion_tile
 --8<-- "{{ examples }}/programmatic_expansion.py"
 ```
 
+{{ demo("expansiontile/programmatic_expansion", height="420", width="80%") }}
+
 ## Custom animations
 
 ```python
 --8<-- "{{ examples }}/custom_animations.py"
 ```
+
+{{ demo("expansiontile/custom_animations", height="420", width="80%") }}
 
 ### Theme mode toggle
 
@@ -36,10 +38,15 @@ example_images: ../test-images/examples/material/golden/macos/expansion_tile
 --8<-- "{{ examples }}/theme_mode_toggle.py"
 ```
 
+{{ demo("expansiontile/theme_mode_toggle", height="420", width="80%") }}
+
 ### Borders
 
 ```python
 --8<-- "{{ examples }}/borders.py"
 ```
+
+{{ demo("expansiontile/borders", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

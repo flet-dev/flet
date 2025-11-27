@@ -8,17 +8,13 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/shadermask)
-
 ### Pink glow around image edges
 
 ```python
 --8<-- "{{ examples }}/pink_radial_glow.py"
 ```
 
-{{ image(example_images + "/pink_radial_glow.png", alt="pink-radial-glow", width="80%") }}
-
-
+{{ demo("shader_mask/pink_radial_glow", height="420", width="80%") }}
 
 ### Fade out bottom edge of an image
 
@@ -26,8 +22,7 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 --8<-- "{{ examples }}/fade_out_image_bottom.py"
 ```
 
-{{ image(example_images + "/fade_out_image_bottom.png", alt="fade-out-image-bottom", width="80%") }}
-
+{{ demo("shader_mask/fade_out_image_bottom", height="420", width="80%") }}
 
 ### Applying linear and radial gradients/shaders
 
@@ -35,6 +30,7 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 --8<-- "{{ examples }}/linear_and_radial_gradients.py"
 ```
 
-{{ image(example_images + "/linear_and_radial_gradients.png", alt="fade-out-image-bottom", width="80%") }}
+{{ demo("shader_mask/linear_and_radial_gradients", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

@@ -15,7 +15,7 @@ example_media: ../examples/controls/selection_area/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("selection_area/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

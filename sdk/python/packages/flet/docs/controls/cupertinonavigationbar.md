@@ -8,21 +8,21 @@ example_images: ../examples/controls/cupertino_navigation_bar/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/cupertinonavigationbar)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
-
+{{ demo("cupertino_navigation_bar/basic", height="360", width="80%") }}
 
 ### Wired navigation bar
 
 ```python
 --8<-- "{{ examples }}/wired.py"
 ```
+
+{{ demo("cupertino_navigation_bar/wired", height="360", width="80%") }}
+
 
 {{ class_members(class_name) }}

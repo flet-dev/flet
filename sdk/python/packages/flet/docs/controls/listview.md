@@ -8,15 +8,13 @@ example_images: ../examples/controls/list_view/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/listview)
-
 ### Auto-scrolling and dynamical items addition
 
 ```python
 --8<-- "{{ examples }}/autoscroll_and_dynamic_items.py"
 ```
 
-{{ image(example_images + "/autoscroll_and_dynamic_items.gif", alt="autoscroll-and-dynamic-items", width="80%") }}
+{{ demo("listview/autoscroll_and_dynamic_items", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

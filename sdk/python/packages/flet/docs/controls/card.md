@@ -8,13 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/card
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/card)
+### Music card
 
 ```python
 --8<-- "{{ examples }}/music_info.py"
 ```
 
-{{ image(example_images + "/music_info.png", alt="music-info", width="50%") }}
+{{ demo("card/music_info", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

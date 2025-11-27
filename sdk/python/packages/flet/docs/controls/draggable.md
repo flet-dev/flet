@@ -8,8 +8,6 @@ example_images: ../examples/controls/drag_target_and_draggable/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/draggable)
-
 ### Drag and drop Containers
 
 #### Imperative
@@ -18,13 +16,15 @@ example_images: ../examples/controls/drag_target_and_draggable/media
 --8<-- "{{ examples }}/drag_and_drop_containers.py"
 ```
 
+{{ demo("draggable/drag_and_drop_containers", height="420", width="80%") }}
+
 #### Declarative
 
 ```python
 --8<-- "{{ examples }}/drag_and_drop_containers_declarative.py"
 ```
 
-{{ image(example_images + "/drag_and_drop_containers.gif", alt="drag-and-drop-containers", width="80%") }}
+{{ demo("drag_target_and_draggable/drag_and_drop_containers", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

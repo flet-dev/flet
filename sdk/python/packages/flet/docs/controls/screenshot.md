@@ -13,4 +13,7 @@ examples: ../../examples/controls/screenshot
 --8<-- "{{ examples }}/taking_screenshot.py"
 ```
 
+{{ demo("screenshot/taking_screenshot", height="420", width="80%") }}
+
+
 {{ class_members(class_name) }}

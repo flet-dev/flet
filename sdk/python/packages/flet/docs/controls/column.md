@@ -9,16 +9,13 @@ example_media: ../examples/controls/column/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/column)
-
 ### Column `spacing`
 
 ```python
 --8<-- "{{ examples }}/spacing.py"
 ```
 
-{{ image(example_media + "/spacing.gif", alt="spacing", width="80%") }}
-
+{{ demo("column/spacing", height="420", width="80%") }}
 
 ### Column wrapping
 
@@ -26,8 +23,7 @@ example_media: ../examples/controls/column/media
 --8<-- "{{ examples }}/wrap.py"
 ```
 
-{{ image(example_media + "/wrap.gif", alt="wrap", width="80%") }}
-
+{{ demo("column/wrap", height="420", width="80%") }}
 
 ### Column vertical alignments
 
@@ -35,8 +31,7 @@ example_media: ../examples/controls/column/media
 --8<-- "{{ examples }}/alignment.py"
 ```
 
-{{ image(example_media + "/alignment.png", alt="alignment", width="80%") }}
-
+{{ demo("column/alignment", height="420", width="80%") }}
 
 ### Column horizontal alignments
 
@@ -44,8 +39,7 @@ example_media: ../examples/controls/column/media
 --8<-- "{{ examples }}/horizontal_alignment.py"
 ```
 
-{{ image(example_media + "/horizontal_alignment.png", alt="horizontal-alignment", width="80%") }}
-
+{{ demo("column/horizontal_alignment", height="420", width="80%") }}
 
 ### Infinite scrolling
 
@@ -56,6 +50,8 @@ creating the illusion of infinite list:
 --8<-- "{{ examples }}/infinite_scrolling.py"
 ```
 
+{{ demo("column/infinite_scrolling", height="420", width="80%") }}
+
 ### Scrolling programmatically
 
 This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
@@ -64,7 +60,7 @@ This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programm
 --8<-- "{{ examples }}/programmatic_scroll.py"
 ```
 
-{{ image(example_media + "/programmatic_scroll.png", alt="programmatic-scroll", width="80%") }}
+{{ demo("column/programmatic_scroll", height="420", width="80%") }}
 
 
 [//]: # (### Custom scrollbar)

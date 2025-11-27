@@ -9,15 +9,13 @@ example_media: ../examples/controls/cupertino_sliding_segmented_button/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinoslidingsegmentedbutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("cupertino_sliding_segmented_button/basic", height="360", width="80%") }}
 
 
 {{ class_members(class_name) }}

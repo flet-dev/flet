@@ -8,15 +8,13 @@ example_images: ../examples/controls/progress_bar/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/progressbar)
-
 ### Determinate and indeterminate progress bars
 
 ```python
 --8<-- "{{ examples }}/determinate_and_indeterminate.py"
 ```
 
-{{ image(example_images + "/determinate_and_indeterminate.gif", alt="determinate-and-indeterminate", width="80%") }}
+{{ demo("progress_bar/determinate_and_indeterminate", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

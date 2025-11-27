@@ -8,15 +8,13 @@ example_images: ../test-images/examples/core/golden/macos/pagelet
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/pagelet)
-
 ### Basic example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", width="80%") }}
+{{ demo("pagelet/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

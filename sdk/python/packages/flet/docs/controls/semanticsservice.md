@@ -13,4 +13,7 @@ examples: ../../examples/controls/semantics_service
 --8<-- "{{ examples }}/accessibility_features.py"
 ```
 
+
+{{ demo("semanticsservice/accessibility_features", height="420", width="80%") }}
+
 {{ class_members(class_name) }}

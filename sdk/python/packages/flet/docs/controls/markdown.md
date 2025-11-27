@@ -9,16 +9,13 @@ example_media: ../examples/controls/markdown/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/markdown)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
-
+{{ demo("markdown/basic", height="420", width="80%") }}
 
 ### Code syntax highlight
 
@@ -26,13 +23,15 @@ example_media: ../examples/controls/markdown/media
 --8<-- "{{ examples }}/code_syntax_highlight.py"
 ```
 
-{{ image(example_images + "/code_syntax_highlight.png", alt="code-syntax-highlight", width="80%") }}
-
+{{ demo("markdown/code_syntax_highlight", height="420", width="80%") }}
 
 ### Custom text theme
 
 ```python
 --8<-- "{{ examples }}/custom_text_theme.py"
 ```
+
+{{ demo("markdown/custom_text_theme", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

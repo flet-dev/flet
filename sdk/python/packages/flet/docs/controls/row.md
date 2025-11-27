@@ -8,16 +8,13 @@ example_images: ../test-images/examples/core/golden/macos/row
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/row)
-
 ### Spacing children
 
 ```python
 --8<-- "{{ examples }}/spacing.py"
 ```
 
-{{ image(example_images + "/row_spacing_adjustment.gif", alt="spacing", width="80%") }}
-
+{{ demo("row/spacing", height="420", width="80%") }}
 
 ### Wrapping children
 
@@ -25,8 +22,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 --8<-- "{{ examples }}/wrap.py"
 ```
 
-{{ image(example_images + "/wrap_adjustment.gif", alt="wrap", width="80%") }}
-
+{{ demo("row/wrap", height="420", width="80%") }}
 
 ### Setting horizontal alignment
 
@@ -34,8 +30,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 --8<-- "{{ examples }}/alignment.py"
 ```
 
-{{ image(example_images + "/alignment.png", alt="alignment", width="60%") }}
-
+{{ demo("row/alignment", height="420", width="80%") }}
 
 ### Setting vertical alignment
 
@@ -43,7 +38,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 --8<-- "{{ examples }}/vertical_alignment.py"
 ```
 
-{{ image(example_images + "/vertical_alignment.png", alt="vertical-alignment", width="60%") }}
+{{ demo("row/vertical_alignment", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

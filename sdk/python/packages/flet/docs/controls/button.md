@@ -8,16 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/button
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/elevatedbutton)
-
 ### Button
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="Basic button", width="50%") }}
-
+{{ demo("button/basic", height="340", width="80%") }}
 
 ### Icons
 
@@ -25,8 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/icons.py"
 ```
 
-{{ image(example_images + "/icons.png", alt="Basic button", width="50%") }}
-
+{{ demo("button/icons", height="340", width="80%") }}
 
 ### Handling clicks
 
@@ -34,8 +30,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-{{ image(example_images + "/handling_clicks.png", alt="Handling clicks", width="50%") }}
-
+{{ demo("button/handling_clicks", height="360", width="80%") }}
 
 ### Custom content
 
@@ -43,8 +38,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/custom_content.py"
 ```
 
-{{ image(example_images + "/custom_content.png", alt="Buttons with custom content", width="50%") }}
-
+{{ demo("button/custom_content", height="360", width="80%") }}
 
 ### Shapes
 
@@ -52,8 +46,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/button_shapes.py"
 ```
 
-{{ image(example_images + "/button_shapes.png", alt="Buttons with different shapes", width="50%") }}
-
+{{ demo("button/button_shapes", height="380", width="80%") }}
 
 ### Styling
 
@@ -61,11 +54,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/styling.py"
 ```
 
-{{ image(example_images + "/styled_initial.png", alt="Styled button - default state", width="50%", caption="Default state") }}
-
-
-{{ image(example_images + "/styled_hovered.png", alt="Styled button - hovered state", width="50%", caption="Hovered state") }}
-
+{{ demo("button/styling", height="420", width="80%") }}
 
 ### Animate on hover
 
@@ -73,10 +62,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 --8<-- "{{ examples }}/animate_on_hover.py"
 ```
 
-{{ image(example_images + "/animate_on_hover_initial.png", alt="Unhovered button", width="50%", caption="Normal button") }}
-
-
-{{ image(example_images + "/animate_on_hover_hovered.png", alt="Hovered button", width="50%", caption="Hovered button") }}
+{{ demo("button/animate_on_hover", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

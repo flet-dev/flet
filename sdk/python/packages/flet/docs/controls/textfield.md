@@ -9,16 +9,13 @@ example_media: ../examples/controls/text_field/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/textfield)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
-
+{{ demo("text_field/basic", height="420", width="80%") }}
 
 ### Handling change events
 
@@ -26,7 +23,7 @@ example_media: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/handling_change_events.py"
 ```
 
-{{ image(example_media + "/handling_change_events.gif", alt="handling-change-events", width="80%") }}
+{{ demo("text_field/handling_change_events", height="420", width="80%") }}
 
 ### Handling selection changes
 
@@ -34,14 +31,15 @@ example_media: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/selection_change.py"
 ```
 
+{{ demo("text_field/selection_change", height="420", width="80%") }}
+
 ### Password with reveal button
 
 ```python
 --8<-- "{{ examples }}/password.py"
 ```
 
-{{ image(example_media + "/password.gif", alt="password", width="80%") }}
-
+{{ demo("text_field/password", height="420", width="80%") }}
 
 ### Multiline fields
 
@@ -49,8 +47,7 @@ example_media: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/multiline.py"
 ```
 
-{{ image(example_media + "/multiline.gif", alt="multiline", width="80%") }}
-
+{{ demo("text_field/multiline", height="420", width="80%") }}
 
 ### Underlined and borderless TextFields
 
@@ -58,8 +55,7 @@ example_media: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/underlined_and_borderless.py"
 ```
 
-{{ image(example_media + "/underlined_and_borderless.gif", alt="underlined-and-borderless", width="80%") }}
-
+{{ demo("text_field/underlined_and_borderless", height="420", width="80%") }}
 
 ### Setting prefixes and suffixes
 
@@ -67,8 +63,7 @@ example_media: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/prefix_and_suffix.py"
 ```
 
-{{ image(example_media + "/prefix_and_suffix.gif", alt="prefix-and-suffix", width="80%") }}
-
+{{ demo("text_field/prefix_and_suffix", height="420", width="80%") }}
 
 ### Styled TextField
 
@@ -76,10 +71,15 @@ example_media: ../examples/controls/text_field/media
 --8<-- "{{ examples }}/styled.py"
 ```
 
+{{ demo("text_field/styled", height="420", width="80%") }}
+
 ### Custom label, hint, helper, and counter texts and styles
 
 ```python
 --8<-- "{{ examples }}/label_hint_helper_counter.py"
 ```
+
+{{ demo("text_field/label_hint_helper_counter", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

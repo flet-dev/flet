@@ -8,8 +8,6 @@ example_images: ../examples/controls/gesture_detector/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/gesturedetector)
-
 [Solitaire game tutorial](https://flet.dev/docs/tutorials/python-solitaire)
 
 ### Handling events
@@ -17,6 +15,8 @@ example_images: ../examples/controls/gesture_detector/media
 ```python
 --8<-- "{{ examples }}/handling_events.py"
 ```
+
+{{ demo("gesturedetector/handling_events", height="420", width="80%") }}
 
 ### Draggable containers
 
@@ -29,8 +29,7 @@ inside another control (yellow container) giving the same results.
 --8<-- "{{ examples }}/draggable_containers.py"
 ```
 
-{{ image(example_images + "/draggable_containers.gif", alt="draggable-containers", width="80%") }}
-
+{{ demo("gesturedetector/draggable_containers", height="420", width="80%") }}
 
 ### Window drag area
 
@@ -38,10 +37,15 @@ inside another control (yellow container) giving the same results.
 --8<-- "{{ examples }}/window_drag_area.py"
 ```
 
+{{ demo("gesturedetector/window_drag_area", height="420", width="80%") }}
+
 ### Mouse Cursors
 
 ```python
 --8<-- "{{ examples }}/mouse_cursors.py"
 ```
+
+{{ demo("gesturedetector/mouse_cursors", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

@@ -9,15 +9,13 @@ example_media: ../examples/controls/expansion_panel_list/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/expansionpanellist)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("expansion_panel_list/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

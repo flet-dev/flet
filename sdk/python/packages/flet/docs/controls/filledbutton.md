@@ -9,15 +9,13 @@ example_media: ../examples/controls/filled_button/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/filledbutton)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
+{{ demo("filled_button/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

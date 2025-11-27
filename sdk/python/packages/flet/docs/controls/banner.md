@@ -9,15 +9,13 @@ example_media: ../examples/controls/banner/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/banner)
-
 ### Basic example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("banner/basic", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}

@@ -9,16 +9,13 @@ snack_bar_action_class_name: flet.SnackBarAction
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/snackbar)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
-
+{{ demo("snackbar/basic", height="420", width="80%") }}
 
 ### Counter
 
@@ -26,7 +23,7 @@ snack_bar_action_class_name: flet.SnackBarAction
 --8<-- "{{ examples }}/counter.py"
 ```
 
-{{ image(example_images + "/snack_bar_flow.gif", alt="Snack bar with counter", caption="Snack bar with counter",width="50%") }}
+{{ demo("snackbar/counter", height="420", width="80%") }}
 
 ### Action
 
@@ -34,9 +31,8 @@ snack_bar_action_class_name: flet.SnackBarAction
 --8<-- "{{ examples }}/action.py"
 ```
 
-{{ image(example_images + "/action_simple.png", alt="Snack bar with a simple action", caption="Snack bar with a simple action", width="50%") }}
+{{ demo("snackbar/action", height="420", width="80%") }}
 
-{{ image(example_images + "/action_custom.png", alt="Snack bar with a custom action", caption="Snack bar with a custom action", width="50%") }}
 
 {{ class_members(class_name) }}
 

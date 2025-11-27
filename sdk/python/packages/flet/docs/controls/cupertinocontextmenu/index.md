@@ -10,15 +10,13 @@ example_images: ../../examples/controls/cupertino_context_menu/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinocontextmenu)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ demo("cupertino_context_menu/basic", height="360", width="80%") }}
 
 
 {{ class_members(class_name) }}

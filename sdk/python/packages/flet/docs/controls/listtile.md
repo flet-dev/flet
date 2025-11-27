@@ -9,15 +9,13 @@ example_media: ../examples/controls/list_tile/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/listtile)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
+{{ demo("list_tile/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

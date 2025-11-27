@@ -13,4 +13,7 @@ examples: ../../examples/controls/keyboard_listener
 --8<-- "{{ examples }}/detect_keys.py"
 ```
 
+
+{{ demo("keyboardlistener/detect_keys", height="420", width="80%") }}
+
 {{ class_members(class_name) }}

@@ -8,16 +8,13 @@ example_images: ../examples/controls/file_picker/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/filepicker)
-
 ### Pick, save, and get directory paths
 
 ```python
 --8<-- "{{ examples }}/pick_save_and_get_directory_path.py"
 ```
 
-{{ image(example_images + "/pick_save_and_get_directory_path.png", width="80%") }}
-
+{{ demo("file_picker/pick_save_and_get_directory_path", height="420", width="80%") }}
 
 ### Pick and upload files
 
@@ -25,7 +22,7 @@ example_images: ../examples/controls/file_picker/media
 --8<-- "{{ examples }}/pick_and_upload.py"
 ```
 
-{{ image(example_images + "/pick_and_upload.png", width="80%") }}
+{{ demo("file_picker/pick_and_upload", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

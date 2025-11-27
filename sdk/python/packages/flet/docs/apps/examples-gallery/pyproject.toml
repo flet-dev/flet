@@ -1,5 +1,5 @@
 [project]
-name = "poc"
+name = "examples-gallery"
 version = "0.1.0"
 description = ""
 readme = "README.md"
@@ -17,9 +17,14 @@ prerelease = "allow"
 [tool.flet]
 # Docs: https://flet.dev/docs/publish
 org = "com.mycompany"
-product = "poc"
+product = "Examples Gallery"
 company = "Flet"
 copyright = "Copyright (C) 2025 by Flet"
 
 [tool.flet.app]
 path = "src"
+
+[tool.flet.web]
+base_url = "apps/examples-gallery/dist"
+renderer = "auto"
+route_url_strategy = "hash"

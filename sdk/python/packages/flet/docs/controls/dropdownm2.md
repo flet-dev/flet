@@ -9,16 +9,13 @@ example_media: ../examples/controls/dropdown_m2/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
-
+{{ demo("dropdown_m2/basic", height="420", width="80%") }}
 
 ### Dropdown with label and hint
 
@@ -26,8 +23,7 @@ example_media: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/label_and_hint.py"
 ```
 
-{{ image(example_media + "/label_and_hint.gif", alt="label-and-hint", width="80%") }}
-
+{{ demo("dropdown_m2/label_and_hint", height="420", width="80%") }}
 
 ### Handling events
 
@@ -35,9 +31,7 @@ example_media: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/handling_events.py"
 ```
 
-{{ image(example_media + "/handling_events.gif", alt="handling-events", width="80%") }}
-
-
+{{ demo("dropdown_m2/handling_events", height="420", width="80%") }}
 
 ### Add and delete options
 
@@ -45,7 +39,7 @@ example_media: ../examples/controls/dropdown_m2/media
 --8<-- "{{ examples }}/add_and_delete_options.py"
 ```
 
-{{ image(example_media + "/add_and_delete_options.gif", alt="add-and-delete-options", width="80%") }}
+{{ demo("dropdown_m2/add_and_delete_options", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

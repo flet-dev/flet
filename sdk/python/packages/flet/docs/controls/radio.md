@@ -8,17 +8,13 @@ example_images: ../examples/controls/radio/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/radio)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
-
-
+{{ demo("radio/basic", height="420", width="80%") }}
 
 ### Handling selection changes
 
@@ -26,13 +22,15 @@ example_images: ../examples/controls/radio/media
 --8<-- "{{ examples }}/handling_selection_changes.py"
 ```
 
-{{ image(example_images + "/handling_selection_changes.gif", alt="handling-selection-changes", width="80%") }}
-
+{{ demo("radio/handling_selection_changes", height="420", width="80%") }}
 
 ### Styled radio buttons
 
 ```python
 --8<-- "{{ examples }}/styled.py"
 ```
+
+{{ demo("radio/styled", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

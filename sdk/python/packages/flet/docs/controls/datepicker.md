@@ -8,15 +8,13 @@ example_images: ../examples/controls/date_picker/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/datepicker)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+{{ demo("date_picker/basic", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}

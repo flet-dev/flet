@@ -8,15 +8,13 @@ example_images: ../examples/controls/placeholder/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/placeholder)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
+{{ demo("placeholder/basic", height="420", width="80%") }}
 
 
 {{ class_members(class_name) }}

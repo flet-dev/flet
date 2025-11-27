@@ -8,16 +8,13 @@ example_images: ../examples/controls/container/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/container)
-
 ### Clickable container
 
 ```python
 --8<-- "{{ examples }}/clickable.py"
 ```
 
-{{ image(example_images + "/clickable.gif", alt="clickable", width="80%") }}
-
+{{ demo("container/clickable", height="420", width="80%") }}
 
 ### Background color
 
@@ -25,8 +22,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/background_color.py"
 ```
 
-{{ image(example_images + "/background_color.png", alt="background-color", width="80%") }}
-
+{{ demo("container/background_color", height="420", width="80%") }}
 
 ### Handling clicks
 
@@ -34,7 +30,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+{{ demo("container/handling_clicks", height="420", width="80%") }}
 
 
 ### Handling hovers
@@ -43,8 +39,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/handling_hovers.py"
 ```
 
-{{ image(example_images + "/handling_hovers.gif", alt="handling-hovers", width="80%") }}
-
+{{ demo("container/handling_hovers", height="420", width="80%") }}
 
 ### Animate 1
 
@@ -52,8 +47,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/animate_1.py"
 ```
 
-{{ image(example_images + "/animate_1.gif", alt="animate-1", width="80%") }}
-
+{{ demo("container/animate_1", height="420", width="80%") }}
 
 ### Animate 2
 
@@ -61,11 +55,15 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/animate_2.py"
 ```
 
+{{ demo("container/animate_2", height="420", width="80%") }}
+
 ### Animate 3
 
 ```python
 --8<-- "{{ examples }}/animate_3.py"
 ```
+
+{{ demo("container/animate_3", height="420", width="80%") }}
 
 ### Animate 4
 
@@ -73,11 +71,15 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/animate_4.py"
 ```
 
+{{ demo("container/animate_4", height="420", width="80%") }}
+
 ### Nested themes 1
 
 ```python
 --8<-- "{{ examples }}/nested_themes_1.py"
 ```
+
+{{ demo("container/nested_themes_1", height="420", width="80%") }}
 
 ### Nested themes 2
 
@@ -85,19 +87,23 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/nested_themes_2.py"
 ```
 
+{{ demo("container/nested_themes_2", height="420", width="80%") }}
+
 ### Nested themes 3
 
 ```python
 --8<-- "{{ examples }}/nested_themes_3.py"
 ```
 
-{{ image(example_images + "/nested_themes_3.gif", alt="nested-themes-3", width="80%") }}
-
+{{ demo("container/nested_themes_3", height="420", width="80%") }}
 
 ### Size aware
 
 ```python
 --8<-- "{{ examples }}/size_aware.py"
 ```
+
+{{ demo("container/size_aware", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

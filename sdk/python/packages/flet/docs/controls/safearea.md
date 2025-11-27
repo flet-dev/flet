@@ -7,12 +7,13 @@ examples: ../../examples/controls/safe_area
 
 ## Example
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/safearea)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
+
+{{ demo("safearea/basic", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

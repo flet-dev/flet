@@ -8,21 +8,21 @@ example_images: ../examples/controls/cupertino_app_bar/media
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/cupertinoappbar)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
-
+{{ demo("cupertino_app_bar/basic", height="360", width="80%") }}
 
 ### App bar with theme mode toggle
 
 ```python
 --8<-- "{{ examples }}/theme_mode_toggle.py"
 ```
+
+{{ demo("cupertinoappbar/theme_mode_toggle", height="420", width="80%") }}
+
 
 {{ class_members(class_name) }}

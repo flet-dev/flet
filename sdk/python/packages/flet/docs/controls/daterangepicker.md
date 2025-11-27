@@ -8,15 +8,13 @@ example_images: ../test-images/controls/material/golden/macos/date_range_picker
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/daterangepicker)
-
 ### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.png", alt="basic", width="60%") }}
+{{ demo("date_range_picker/basic", height="380", width="80%") }}
 
 
 {{ class_members(class_name) }}
