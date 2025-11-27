@@ -1,5 +1,9 @@
+import os
 from typing import Optional
 from urllib.parse import urlparse
+
+# Default iframe base can be overridden for local dev via FLET_IFRAME_BASE.
+DEFAULT_IFRAME_BASE = os.environ.get("FLET_IFRAME_BASE", "/apps/dist/index.html#/")
 
 
 def _prettify_token(token: str) -> str:
@@ -23,7 +27,7 @@ def render_iframe(
     src=None,
     *,
     route=None,
-    base: str = "http://127.0.0.1:60222/",
+    base: Optional[str] = None,
     width: str = "100%",
     height: str = "480",
     title: Optional[str] = None,
@@ -32,9 +36,22 @@ def render_iframe(
 ) -> str:
     """
     Build an iframe HTML snippet.
+
+    When route is provided, the iframe source is constructed from the base URL.
+    The base defaults to the published examples gallery served by MkDocs:
+    /assets/dist/index.html#/ (override with FLET_IFRAME_BASE).
     """
+    base = base or DEFAULT_IFRAME_BASE
+
     if route:
-        src = base.rstrip("/") + "/" + route.lstrip("/")
+        parsed_base = urlparse(base)
+        if parsed_base.fragment:
+            fragment = parsed_base.fragment.rstrip("/")
+            new_fragment = fragment + "/" + route.lstrip("/")
+            parsed_base = parsed_base._replace(fragment=new_fragment)
+            src = parsed_base.geturl()
+        else:
+            src = base.rstrip("/") + "/" + route.lstrip("/")
     if not src:
         raise ValueError("Either src or route must be provided")
 
