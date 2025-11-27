@@ -9,44 +9,45 @@ def main(page: ft.Page):
         ft.Row(controls=[result]),
         ft.Row(
             controls=[
-                ft.Button(text="AC"),
-                ft.Button(text="+/-"),
-                ft.Button(text="%"),
-                ft.Button(text="/"),
+                ft.Button("AC"),
+                ft.Button("+/-"),
+                ft.Button("%"),
+                ft.Button("/"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.Button(text="7"),
-                ft.Button(text="8"),
-                ft.Button(text="9"),
-                ft.Button(text="*"),
+                ft.Button("7"),
+                ft.Button("8"),
+                ft.Button("9"),
+                ft.Button("*"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.Button(text="4"),
-                ft.Button(text="5"),
-                ft.Button(text="6"),
-                ft.Button(text="-"),
+                ft.Button("4"),
+                ft.Button("5"),
+                ft.Button("6"),
+                ft.Button("-"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.Button(text="1"),
-                ft.Button(text="2"),
-                ft.Button(text="3"),
-                ft.Button(text="+"),
+                ft.Button("1"),
+                ft.Button("2"),
+                ft.Button("3"),
+                ft.Button("+"),
             ]
         ),
         ft.Row(
             controls=[
-                ft.Button(text="0"),
-                ft.Button(text="."),
-                ft.Button(text="="),
+                ft.Button("0"),
+                ft.Button("."),
+                ft.Button("="),
             ]
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

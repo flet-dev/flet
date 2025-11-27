@@ -1,100 +1,93 @@
+from dataclasses import field
+
 import flet as ft
 
 
+@ft.control
 class CalcButton(ft.Button):
-    def __init__(self, text, button_clicked, expand=1):
-        super().__init__()
-        self.text = text
-        self.expand = expand
-        self.on_click = button_clicked
-        self.data = text
+    expand: int = field(default_factory=lambda: 1)
 
 
+@ft.control
 class DigitButton(CalcButton):
-    def __init__(self, text, button_clicked, expand=1):
-        CalcButton.__init__(self, text, button_clicked, expand)
-        self.bgcolor = ft.Colors.WHITE24
-        self.color = ft.Colors.WHITE
+    bgcolor: ft.Colors = ft.Colors.WHITE_24
+    color: ft.Colors = ft.Colors.WHITE
 
 
+@ft.control
 class ActionButton(CalcButton):
-    def __init__(self, text, button_clicked):
-        CalcButton.__init__(self, text, button_clicked)
-        self.bgcolor = ft.Colors.ORANGE
-        self.color = ft.Colors.WHITE
+    bgcolor: ft.Colors = ft.Colors.ORANGE
+    color: ft.Colors = ft.Colors.WHITE
 
 
+@ft.control
 class ExtraActionButton(CalcButton):
-    def __init__(self, text, button_clicked):
-        CalcButton.__init__(self, text, button_clicked)
-        self.bgcolor = ft.Colors.BLUE_GREY_100
-        self.color = ft.Colors.BLACK
+    bgcolor: ft.Colors = ft.Colors.BLUE_GREY_100
+    color: ft.Colors = ft.Colors.BLACK
 
 
+@ft.control
 class CalculatorApp(ft.Container):
-    # application's root control (i.e. "view") containing all other controls
-    def __init__(self):
-        super().__init__()
+    def init(self):
         self.reset()
-
-        self.result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
         self.width = 350
         self.bgcolor = ft.Colors.BLACK
-        self.border_radius = ft.border_radius.all(20)
+        self.border_radius = ft.BorderRadius.all(20)
         self.padding = 20
+        self.result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
+
         self.content = ft.Column(
             controls=[
-                ft.Row(controls=[self.result], alignment="end"),
+                ft.Row(
+                    controls=[self.result],
+                    alignment=ft.MainAxisAlignment.END,
+                ),
                 ft.Row(
                     controls=[
-                        ExtraActionButton(
-                            text="AC", button_clicked=self.button_clicked
-                        ),
-                        ExtraActionButton(
-                            text="+/-", button_clicked=self.button_clicked
-                        ),
-                        ExtraActionButton(text="%", button_clicked=self.button_clicked),
-                        ActionButton(text="/", button_clicked=self.button_clicked),
+                        ExtraActionButton(content="AC", on_click=self.button_clicked),
+                        ExtraActionButton(content="+/-", on_click=self.button_clicked),
+                        ExtraActionButton(content="%", on_click=self.button_clicked),
+                        ActionButton(content="/", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(text="7", button_clicked=self.button_clicked),
-                        DigitButton(text="8", button_clicked=self.button_clicked),
-                        DigitButton(text="9", button_clicked=self.button_clicked),
-                        ActionButton(text="*", button_clicked=self.button_clicked),
+                        DigitButton(content="7", on_click=self.button_clicked),
+                        DigitButton(content="8", on_click=self.button_clicked),
+                        DigitButton(content="9", on_click=self.button_clicked),
+                        ActionButton(content="*", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(text="4", button_clicked=self.button_clicked),
-                        DigitButton(text="5", button_clicked=self.button_clicked),
-                        DigitButton(text="6", button_clicked=self.button_clicked),
-                        ActionButton(text="-", button_clicked=self.button_clicked),
+                        DigitButton(content="4", on_click=self.button_clicked),
+                        DigitButton(content="5", on_click=self.button_clicked),
+                        DigitButton(content="6", on_click=self.button_clicked),
+                        ActionButton(content="-", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(text="1", button_clicked=self.button_clicked),
-                        DigitButton(text="2", button_clicked=self.button_clicked),
-                        DigitButton(text="3", button_clicked=self.button_clicked),
-                        ActionButton(text="+", button_clicked=self.button_clicked),
+                        DigitButton(content="1", on_click=self.button_clicked),
+                        DigitButton(content="2", on_click=self.button_clicked),
+                        DigitButton(content="3", on_click=self.button_clicked),
+                        ActionButton(content="+", on_click=self.button_clicked),
                     ]
                 ),
                 ft.Row(
                     controls=[
                         DigitButton(
-                            text="0", expand=2, button_clicked=self.button_clicked
+                            content="0", expand=2, on_click=self.button_clicked
                         ),
-                        DigitButton(text=".", button_clicked=self.button_clicked),
-                        ActionButton(text="=", button_clicked=self.button_clicked),
+                        DigitButton(content=".", on_click=self.button_clicked),
+                        ActionButton(content="=", on_click=self.button_clicked),
                     ]
                 ),
             ]
         )
 
     def button_clicked(self, e):
-        data = e.control.data
+        data = e.control.content
         print(f"Button clicked with data = {data}")
         if self.result.value == "Error" or data == "AC":
             self.result.value = "0"
