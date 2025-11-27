@@ -361,12 +361,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
+            type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
             help="Flutter web renderer to use (web only)",
         )
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
+            type=str.lower,
             choices=["path", "hash"],
             help="Base URL path to serve the app from. "
             "Useful if the app is hosted in a subdirectory (web only)",
@@ -503,6 +505,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--permissions",
             dest="permissions",
+            type=str.lower,
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],

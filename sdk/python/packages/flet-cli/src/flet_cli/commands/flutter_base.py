@@ -56,6 +56,15 @@ class BaseFlutterCommand(BaseCommand):
         self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
         self.progress = Progress(transient=True)
+        self.platform_labels = {
+            "windows": "Windows",
+            "macos": "macOS",
+            "linux": "Linux",
+            "web": "Web",
+            "ios": "iOS",
+            "android": "Android",
+            None: "iOS/Android",
+        }
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(

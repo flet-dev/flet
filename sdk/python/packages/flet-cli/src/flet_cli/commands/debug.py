@@ -31,7 +31,7 @@ class Command(BaseBuildCommand):
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
             "platform",
-            type=str,
+            type=str.lower,
             nargs="?",
             choices=["macos", "linux", "windows", "web", "ios", "android"],
             help="The target platform to run the app on",
@@ -75,6 +75,7 @@ class Command(BaseBuildCommand):
                 self.debug_platform = platform.system().lower()
                 if self.debug_platform == "darwin":
                     self.debug_platform = "macos"
+            self.platform_label = self.platform_labels[self.debug_platform]
             self.target_platform = self.debug_platforms[self.debug_platform][
                 "target_platform"
             ]
@@ -136,8 +137,10 @@ class Command(BaseBuildCommand):
     def run_flutter(self):
         assert self.platforms
         assert self.target_platform
+        mode = "release" if self.options.release else "debug"
         self.update_status(
-            f"[bold blue]Running the app on [cyan]{self.debug_platform}[/cyan]..."
+            f"[bold blue]Running {mode} version of the app on "
+            f"[cyan]{self.platform_label}[/cyan] device..."
         )
 
         with contextlib.suppress(KeyboardInterrupt):

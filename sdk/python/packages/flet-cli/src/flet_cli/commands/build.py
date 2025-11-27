@@ -21,7 +21,7 @@ class Command(BaseBuildCommand):
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
             "target_platform",
-            type=str,
+            type=str.lower,
             choices=["macos", "linux", "windows", "web", "apk", "aab", "ipa"],
             help="The target platform or type of package to build",
         )

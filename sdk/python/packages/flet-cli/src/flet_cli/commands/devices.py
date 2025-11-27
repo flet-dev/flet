@@ -11,7 +11,7 @@ from flet_cli.commands.build_base import BaseFlutterCommand, console, verbose2_s
 
 class Command(BaseFlutterCommand):
     """
-    List all connected devices.
+    List all connected iOS and Android devices.
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
@@ -19,16 +19,11 @@ class Command(BaseFlutterCommand):
         self.devices_platform = None
         self.device_timeout = 10
         self.device_connection = "default"
-        self.platform_labels = {
-            "ios": "iOS",
-            "android": "Android",
-            None: "iOS/Android",
-        }
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
             "platform",
-            type=str,
+            type=str.lower,
             nargs="?",
             choices=["ios", "android"],
             help="The target platform to list devices for. "
@@ -43,6 +38,7 @@ class Command(BaseFlutterCommand):
         )
         parser.add_argument(
             "--device-connection",
+            type=str.lower,
             choices=["both", "attached", "wireless"],
             default="both",
             dest="device_connection",
