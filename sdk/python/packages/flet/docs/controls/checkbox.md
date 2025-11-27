@@ -16,7 +16,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 
 {{ image(example_images + "/basic.png", alt="basic", width="50%", caption="After clicking Submit") }}
 
-{{ iframe(route="checkbox/basic", height="520") }}
+{{ iframe(route="checkbox/basic", height="400") }}
 
 ### Handling events
 

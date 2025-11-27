@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
 from .controls_overview import render_controls_overview
+from .iframe import render_iframe
 
 
 def define_env(env):
@@ -139,30 +140,16 @@ def define_env(env):
         allow=None,
         loading="lazy",
     ):
-        """
-        Renders an iframe block.
-
-        Args:
-            src: Full iframe source URL. If omitted, `route` and `base` are combined.
-            route: Path on the PoC site (e.g., `"checkbox/basic"`).
-            base: Base URL for the PoC site.
-            width, height, title, allow, loading: Standard iframe attributes.
-        """
-        if route:
-            src = base.rstrip("/") + "/" + route.lstrip("/")
-        if not src:
-            raise ValueError("Either src or route must be provided")
-        attrs = [
-            f'src="{src}"',
-            f'width="{width}"',
-            f'height="{height}"',
-            'style="border:0;"',
-            f'title="{title or "iframe"}"',
-            f'loading="{loading}"',
-        ]
-        if allow:
-            attrs.append(f'allow="{allow}"')
-        return f"<iframe {' '.join(attrs)}></iframe>"
+        return render_iframe(
+            src=src,
+            route=route,
+            base=base,
+            width=width,
+            height=height,
+            title=title,
+            allow=allow,
+            loading=loading,
+        )
 
     @env.macro
     def controls_overview():
