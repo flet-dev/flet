@@ -84,6 +84,22 @@ class AndroidSDK:
         assert bin
         return bin / self.tool_exe("sdkmanager", ".bat")
 
+    @staticmethod
+    def has_minimal_packages_installed() -> bool:
+        home_dir = AndroidSDK.android_home_dir()
+        if not home_dir:
+            return False
+
+        sdk = AndroidSDK("", lambda *_: None)
+        if not sdk.cmdline_tools_bin(home_dir):
+            return False
+
+        for package in MINIMAL_PACKAGES:
+            if not home_dir.joinpath(*package.split(";")).exists():
+                return False
+
+        return True
+
     def cmdline_tools_url(self):
         try:
             url_platform = {

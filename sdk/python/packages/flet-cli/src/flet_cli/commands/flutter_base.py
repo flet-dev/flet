@@ -10,6 +10,7 @@ from packaging import version
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.progress import Progress
+from rich.prompt import Confirm
 from rich.style import Style
 from rich.theme import Theme
 
@@ -64,6 +65,8 @@ class BaseFlutterCommand(BaseCommand):
             "android": "Android",
             None: "iOS/Android",
         }
+        self.assume_yes = False
+        self._android_install_confirmed = False
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
@@ -71,6 +74,14 @@ class BaseFlutterCommand(BaseCommand):
             action="store_true",
             default=False,
             help="Disable rich output and prefer plain text. Useful on Windows builds",
+        )
+        parser.add_argument(
+            "--yes",
+            dest="assume_yes",
+            action="store_true",
+            default=False,
+            help="Answer yes to all prompts (install dependencies "
+            "without confirmation).",
         )
         parser.add_argument(
             "--skip-flutter-doctor",
@@ -83,6 +94,7 @@ class BaseFlutterCommand(BaseCommand):
         self.options = options
         self.no_rich_output = self.no_rich_output or self.options.no_rich_output
         self.verbose = self.options.verbose
+        self.assume_yes = getattr(self.options, "assume_yes", False)
 
     def initialize_command(self):
         assert self.options
@@ -113,6 +125,13 @@ class BaseFlutterCommand(BaseCommand):
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
         if self.require_android_sdk:
+            if not self._confirm_android_sdk_installation():
+                self.skip_flutter_doctor = True
+                self.cleanup(
+                    1,
+                    "Android SDK installation is required. "
+                    "Re-run with --yes to install automatically.",
+                )
             self.install_jdk()
             self.install_android_sdk()
 
@@ -236,6 +255,35 @@ class BaseFlutterCommand(BaseCommand):
 
         if self.verbose > 0:
             console.log(f"Android SDK installed {self.emojis['checkmark']}")
+
+    def _confirm_android_sdk_installation(self) -> bool:
+        from flet_cli.utils.android_sdk import AndroidSDK
+
+        if AndroidSDK.has_minimal_packages_installed():
+            self._android_install_confirmed = True
+            return True
+        if self._android_install_confirmed:
+            return True
+        if self.assume_yes:
+            self._android_install_confirmed = True
+            return True
+
+        prompt = (
+            "\nAndroid SDK is required. If it's missing or incomplete, "
+            "it will be installed now. Proceed? [y/N] "
+        )
+
+        if self._prompt_input(prompt):
+            self._android_install_confirmed = True
+            return True
+        return False
+
+    def _prompt_input(self, prompt: str) -> bool:
+        self.live.stop()
+        try:
+            return Confirm.ask(prompt, default=True)
+        finally:
+            self.live.start()
 
     def find_flutter_batch(self, exe_filename: str):
         batch_path = shutil.which(exe_filename)
