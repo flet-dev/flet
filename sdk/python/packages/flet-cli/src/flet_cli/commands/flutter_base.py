@@ -175,9 +175,11 @@ class BaseFlutterCommand(BaseCommand):
                     console.log(config_result.stderr, style=error_style)
                 self.cleanup(config_result.returncode)
 
-        console.log(
-            f"Flutter {MINIMAL_FLUTTER_VERSION} installed {self.emojis['checkmark']}"
-        )
+        if self.verbose > 0:
+            console.log(
+                f"Flutter {MINIMAL_FLUTTER_VERSION} installed "
+                f"{self.emojis['checkmark']}"
+            )
 
     def install_jdk(self):
         from flet_cli.utils.jdk import install_jdk
@@ -210,7 +212,8 @@ class BaseFlutterCommand(BaseCommand):
                 console.log(config_result.stderr, style=error_style)
             self.cleanup(config_result.returncode)
 
-        console.log(f"JDK installed {self.emojis['checkmark']}")
+        if self.verbose > 0:
+            console.log(f"JDK installed {self.emojis['checkmark']}")
 
     def install_android_sdk(self):
         from flet_cli.utils.android_sdk import AndroidSDK
@@ -219,7 +222,9 @@ class BaseFlutterCommand(BaseCommand):
         self.env["ANDROID_HOME"] = AndroidSDK(
             self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
         ).install()
-        console.log(f"Android SDK installed {self.emojis['checkmark']}")
+
+        if self.verbose > 0:
+            console.log(f"Android SDK installed {self.emojis['checkmark']}")
 
     def find_flutter_batch(self, exe_filename: str):
         batch_path = shutil.which(exe_filename)

@@ -22,6 +22,7 @@ class Command(BaseFlutterCommand):
         self.platform_labels = {
             "ios": "iOS",
             "android": "Android",
+            None: "iOS/Android",
         }
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -58,6 +59,7 @@ class Command(BaseFlutterCommand):
             self.device_timeout = self.options.device_timeout or 10
         if self.options and "device_connection" in self.options:
             self.device_connection = self.options.device_connection
+        self.platform_label = self.platform_labels[self.devices_platform]
 
         self.status = console.status(
             "[bold blue]Initializing environment...",
@@ -79,7 +81,9 @@ class Command(BaseFlutterCommand):
         super().initialize_command()
 
     def run_flutter_devices(self):
-        self.update_status("[bold blue]Checking connected devices...")
+        self.update_status(
+            f"[bold blue]Checking connected {self.platform_label} devices..."
+        )
         flutter_devices = self.run(
             [
                 self.flutter_exe,
@@ -123,17 +127,16 @@ class Command(BaseFlutterCommand):
             devices = [d for d in devices if d["platform"] == self.devices_platform]
 
         if not devices:
-            platform_label = self.platform_labels.get(
-                self.devices_platform, "iOS/Android"
+            self.cleanup(
+                0, Group(Panel(f"No {self.platform_label} devices found."), footer)
             )
-            self.cleanup(0, Group(Panel(f"No {platform_label} devices found."), footer))
 
         devices_table = Table(
             Column("ID", style="magenta", justify="left", no_wrap=True),
             Column("Name", style="cyan", justify="left"),
             Column("Platform", style="green", justify="center"),
             Column("Details", style="yellow", justify="left"),
-            title="Connected Devices",
+            title=f"Connected {self.platform_label} devices",
             header_style="bold",
             show_lines=True,
         )
