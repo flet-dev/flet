@@ -48,6 +48,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.rel_out_dir = None
         self.assets_path = None
         self.target_platform = None
+        self.package_platform = None
+        self.config_platform = None
         self.flutter_dependencies = {}
         self.package_app_path = None
         self.template_data = None
@@ -600,6 +602,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self.package_platform = self.platforms[self.target_platform]["package_platform"]
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
+        self.require_android_sdk = self.package_platform == "Android"
 
         super().initialize_command()
 

@@ -71,8 +71,7 @@ class Command(BaseFlutterCommand):
             self.cleanup(0)
 
     def initialize_command(self):
-        self.package_platform = ""
-        self.config_platform = ""
+        self.require_android_sdk = True
 
         super().initialize_command()
 

@@ -82,8 +82,7 @@ class Command(BaseFlutterCommand):
             self._list_emulators()
 
     def initialize_command(self):
-        self.package_platform = ""
-        self.config_platform = ""
+        self.require_android_sdk = True
 
         super().initialize_command()
 

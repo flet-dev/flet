@@ -50,8 +50,7 @@ class BaseFlutterCommand(BaseCommand):
         self.dart_exe = None
         self.flutter_exe = None
         self.verbose = False
-        self.package_platform = None
-        self.config_platform = None
+        self.require_android_sdk = False
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
@@ -113,7 +112,7 @@ class BaseFlutterCommand(BaseCommand):
             console.log("Flutter executable:", self.flutter_exe, style=verbose2_style)
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
-        if self.package_platform == "Android":
+        if self.require_android_sdk:
             self.install_jdk()
             self.install_android_sdk()
 
@@ -160,7 +159,10 @@ class BaseFlutterCommand(BaseCommand):
         self.env["PATH"] = os.pathsep.join([os.path.join(flutter_dir, "bin"), path_env])
 
         # desktop mode
-        if self.config_platform in ["macos", "windows", "linux"]:
+        desktop_platform = platform.system().lower()
+        if desktop_platform == "darwin":
+            desktop_platform = "macos"
+        if desktop_platform in ["macos", "windows", "linux"]:
             if self.verbose > 0:
                 console.log(
                     "Ensure Flutter has desktop support enabled",
@@ -172,7 +174,7 @@ class BaseFlutterCommand(BaseCommand):
                     "config",
                     "--no-version-check",
                     "--suppress-analytics",
-                    f"--enable-{self.config_platform}-desktop",
+                    f"--enable-{desktop_platform}-desktop",
                 ],
                 cwd=os.getcwd(),
                 capture_output=self.verbose < 1,
