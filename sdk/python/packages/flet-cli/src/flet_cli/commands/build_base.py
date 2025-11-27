@@ -1044,7 +1044,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
                 self.update_status(
-                    "[bold blue]Creating Flutter bootstrap project from "
+                    "[bold blue]Creating app shell from "
                     f'{template_url} with ref "{template_ref}"...'
                 )
 
@@ -1077,10 +1077,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
 
             if not second_pass:
-                console.log(
-                    f"Created Flutter bootstrap project from {template_url} "
-                    f'with ref "{template_ref}" {self.emojis["checkmark"]}'
-                )
+                console.log(f"Created app shell {self.emojis['checkmark']}")
 
         hash.commit()
 
