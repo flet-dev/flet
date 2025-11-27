@@ -163,7 +163,7 @@ plugins:
           target_url_path: test-images
           include_exts: [".png", ".gif", ".svg"]
   - examples_gallery:
-      src: apps/examples-gallery/src/main.py
+      src: apps/examples-gallery/src
       dist: apps/examples-gallery/dist
       base_url: apps/examples-gallery/dist
 

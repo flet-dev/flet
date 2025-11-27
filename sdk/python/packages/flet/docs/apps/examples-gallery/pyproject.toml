@@ -1,7 +1,7 @@
 [project]
 name = "examples-gallery"
 version = "0.1.0"
-description = ""
+description = "Live demo of Flet examples."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [

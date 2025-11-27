@@ -158,7 +158,7 @@ def define_env(env):
 
     @env.macro
     def demo(
-        route: str,
+        route_or_path: str,
         *,
         width: str = "100%",
         height: str = "350",
@@ -166,7 +166,25 @@ def define_env(env):
     ):
         """
         Embed an examples gallery route as a centered demo iframe.
+
+        `route_or_path` may be:
+        - a gallery route, e.g. "slider/basic"
+        - or a file path like "../../examples/controls/slider/basic.py"
         """
+        route = route_or_path
+
+        # Strip known prefixes
+        for prefix in ("../../examples/controls/",):
+            if route.startswith(prefix):
+                route = route.removeprefix(prefix)
+                break
+
+        # Strip known suffixes
+        for suffix in (".py", "/"):
+            if route.endswith(suffix):
+                route = route.removesuffix(suffix)
+                break
+
         return render_iframe(
             route=route,
             base="/apps/examples-gallery/dist/index.html#/",
