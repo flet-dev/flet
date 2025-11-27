@@ -32,7 +32,9 @@ def patch_index_html(
 
     app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
     app_config.append(f'flet.webRenderer="{web_renderer.value}";')
-    app_config.append(f'flet.routeUrlStrategy="{route_url_strategy.value}";')
+    app_config.append(
+        f'flet.routeUrlStrategy="{route_url_strategy if isinstance(route_url_strategy, str) else route_url_strategy.value}";'
+    )
 
     if websocket_endpoint_path:
         app_config.append(f'flet.webSocketEndpoint="{websocket_endpoint_path}";')

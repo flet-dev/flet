@@ -193,7 +193,7 @@ def main(page: ft.Page):
         page.overlay.clear()
         page.pop_dialog()
         page.theme = page.dark_theme = page.floating_action_button = None
-        page.theme_mode = ft.ThemeMode.SYSTEM
+        page.theme_mode = ft.ThemeMode.LIGHT
         page.update()
 
     def render_example(slug: str):
