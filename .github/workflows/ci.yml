@@ -1,27 +1,13 @@
 name: Build & Publish
 
-#on:
-#  push:
-#    branches:
-#      - '**'
-#    tags:
-#      - '*'
-#    paths:
-#      - '.github/workflows/ci.yml'
-#      - '.github/scripts/**'
-#      - 'client/**'
-#      - 'sdk/python/packages/**'
-#      - 'packages/flet/**'
-#      - '.fvmrc'
-#  pull_request:
-#    paths:
-#      - '.github/workflows/ci.yml'
-#      - '.github/scripts/**'
-#      - 'client/**'
-#      - 'sdk/python/packages/**'
-#      - 'packages/flet/**'
-#      - '.fvmrc'
-#  workflow_dispatch:
+on:
+  push:
+    paths:
+      - '.fvmrc'
+  pull_request:
+    paths:
+      - '.fvmrc'
+  workflow_dispatch:
 
 permissions:
   id-token: write
