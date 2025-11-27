@@ -90,7 +90,7 @@ docs = [
     "mkdocs-external-images",
     "mkdocs-macros-plugin>=1.5.0",
     "flet-cli",
-    "flet-web",
+    "flet-web>=0.70.0.dev0",
     { include-group = 'extensions' },
     { include-group = 'docs-coverage' },
 ]

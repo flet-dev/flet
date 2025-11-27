@@ -18,5 +18,4 @@ jobs:
       - name: Build docs
         run: |
           cd sdk/python/packages/flet
-          # uv run --group docs mkdocs build
-          uv sync --group docs && uv run mkdocs build
+          uv run --group docs mkdocs build -v
