@@ -1,6 +1,7 @@
 ---
 title: Calculator Tutorial
 examples: ../../examples/tutorials/calculator
+example_images: ../test-images/tutorials/golden/macos/calculator
 ---
 
 In this tutorial you will learn, step-by-step, how to create a Calculator app in
@@ -17,7 +18,6 @@ In this tutorial, we will cover all of the basic concepts for creating a Flet ap
 building a page layout, adding controls, making reusable UI components, handling
 events, and publishing options.
 
-The tutorial consists of the following steps:
 
 ## Getting started with Flet
 
@@ -62,7 +62,7 @@ Create `calc.py` with the following contents:
 
 Run the app and you should see a page like this:
 
-{{ image("../examples/tutorials/calculator/media/app-1.png", alt="app-1", width="80%") }}
+{{ image(example_images + "/calc1.png", alt="calc1", width="50%") }}
 
 
 ## Building page layout
@@ -77,7 +77,7 @@ Replace `calc.py` contents with the following:
 
 Run the app and you should see a page like this:
 
-{{ image("../examples/tutorials/calculator/media/app-2.png", alt="app-2", width="80%") }}
+{{ image(example_images + "/calc2.png", alt="calc2", width="50%") }}
 
 
 ### Using Container for decoration
@@ -162,7 +162,7 @@ We will be using these new classes now to create rows of buttons in the Containe
 content = ft.Column(
             controls=[
                 ft.Row(
-                    controls=[self.result],
+                    controls=[result],
                     alignment=ft.MainAxisAlignment.END,
                 ),
                 ft.Row(
@@ -216,7 +216,7 @@ content = ft.Column(
 ```
 ///
 
-{{ image("../examples/tutorials/calculator/media/app.png", alt="calc-app", width="80%") }}
+{{ image(example_images + "/calc3.png", alt="calc3", width="50%") }}
 
 
 Just what we wanted!
@@ -235,7 +235,7 @@ Flet apps with composability and reusability in mind.
 To make a reusable Calc app component, we are going to encapsulate its state and
 presentation logic in a separate `CalculatorApp` class.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc4.py).
+Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calculator/calc4.py).
 
 /// admonition | Try something
     type: example
@@ -271,7 +271,7 @@ def button_clicked(self, e):
 With similar approach, `button_click` method will handle different calculator actions
 depending on `content` property for each button.
 Copy the entire code for this step from
-[here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc.py).
+[here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calculator/calc.py).
 
 Run the app and see it in the action:
 {{ image("../examples/tutorials/calculator/media/app.gif", alt="calc-app2", width="80%") }}
