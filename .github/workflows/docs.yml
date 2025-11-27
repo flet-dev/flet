@@ -1,0 +1,22 @@
+name: Build docs
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build docs
+        run: |
+          cd sdk/python/packages/flet
+          # uv run --group docs mkdocs build
+          uv sync --group docs && uv run mkdocs build
