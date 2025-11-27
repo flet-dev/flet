@@ -262,12 +262,14 @@ Below is `on_click` event handler that will reset the Text value when "AC" butto
 
 ```python
 def button_clicked(self, e):
-    if e.control.data == "AC":
+    data = e.control.content
+    print(f"Button clicked with data = {data}")
+    if data == "AC":
         self.result.value = "0"
 ```
 
 With similar approach, `button_click` method will handle different calculator actions
-depending on `data` property for each button.
+depending on `content` property for each button.
 Copy the entire code for this step from
 [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc.py).
 
