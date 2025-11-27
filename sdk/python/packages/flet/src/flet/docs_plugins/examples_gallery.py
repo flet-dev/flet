@@ -1,5 +1,6 @@
 import os
 import subprocess
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Optional
 
@@ -8,13 +9,33 @@ from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import BasePlugin
 
 
-def _latest_mtime(root: Path) -> float:
-    """Return the latest modification time for all files under a directory."""
-    mtimes = []
-    for path in root.rglob("*"):
-        if path.is_file():
-            mtimes.append(path.stat().st_mtime)
-    return max(mtimes) if mtimes else 0.0
+def _is_relative_to(path: Path, base: Path) -> bool:
+    try:
+        path.relative_to(base)
+        return True
+    except ValueError:
+        return False
+
+
+def _latest_mtime(root: Path, ignored: Optional[Iterable[Path]] = None) -> float:
+    """Return the newest mtime under ``root`` ignoring any ``ignored`` directories."""
+    root = root.resolve()
+    ignore_roots = tuple(p.resolve() for p in ignored or ())
+    latest = 0.0
+    for dirpath, dirnames, filenames in os.walk(root):
+        current_dir = Path(dirpath)
+        if any(_is_relative_to(current_dir, skipped) for skipped in ignore_roots):
+            dirnames[:] = []
+            continue
+        for name in filenames:
+            file_path = current_dir / name
+            if any(_is_relative_to(file_path, skipped) for skipped in ignore_roots):
+                continue
+            try:
+                latest = max(latest, file_path.stat().st_mtime)
+            except FileNotFoundError:
+                continue
+    return latest
 
 
 class ExamplesGalleryPlugin(BasePlugin):
@@ -68,7 +89,16 @@ class ExamplesGalleryPlugin(BasePlugin):
         if not src.exists():
             return
 
-        src_mtime = _latest_mtime(src.parent)
+        # Accept either a specific entry file or a folder and consistently inspect
+        # the directory that actually contains the source files.
+        src_root = src if src.is_dir() else src.parent
+        ignore_roots: list[Path] = []
+        if _is_relative_to(dist_dir, src_root):
+            # Publishing into the source tree dirties files for every build, so
+            # ignore the generated dist folder when computing the latest mtime.
+            ignore_roots.append(dist_dir)
+
+        src_mtime = _latest_mtime(src_root, ignore_roots)
         dist_mtime = dist_index.stat().st_mtime if dist_index.exists() else 0.0
         if dist_mtime >= src_mtime:
             return
