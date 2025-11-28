@@ -1,4 +1,4 @@
-While Flet provides 100+ built-in controls that can be used on their own, the real beauty of programming with Flet is that all those controls can be utilized for creating your own reusable UI components using Python object-oriented programming concepts.
+While Flet provides 140+ built-in controls that can be used on their own, the real beauty of programming with Flet is that all those controls can be utilized for creating your own reusable UI components using Python object-oriented programming concepts.
 
 You can create custom controls in Python by styling and/or combining existing Flet controls.
 
@@ -6,25 +6,84 @@ You can create custom controls in Python by styling and/or combining existing Fl
 
 The most simple custom control you can create is a styled control, for example, a button of a certain color and behaviour that will be used multiple times throughout your app.
 
-To create a styled control, you need to create a new class in Python that inherits from the Flet control you are going to customize, `Button` in this case:
+To create a styled control, you need to create a new dataclass in Python that inherits from the Flet control you are going to customize, `Button` in this case:
 
 ```python
+@ft.control
 class MyButton(ft.Button):
-    def __init__(self, text):
-        super().__init__()
+    bgcolor: ft.Colors = ft.Colors.ORANGE_300
+    color: ft.Colors = ft.Colors.GREEN_800
+    style: ft.ButtonStyle = field(
+        default_factory=lambda: ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=10)
+        )
+    )
+    expand: int = 1
+```
+
+You can define either `@dataclass` or `@ft.control` decorator on the inherited class - both methods works the same:
+
+```python
+@dataclass
+class MyButton(ft.Button):
+    bgcolor: ft.Colors = ft.Colors.ORANGE_300
+    color: ft.Colors = ft.Colors.GREEN_800
+    style: ft.ButtonStyle = field(
+        default_factory=lambda: ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=10)
+        )
+    )
+    expand: int = 1
+```
+
+You can also set properties in `init()` method:
+```python
+@ft.control
+class MyButton(ft.Button):
+    def init(self):
         self.bgcolor = ft.Colors.ORANGE_300
         self.color = ft.Colors.GREEN_800
-        self.text = text
+        self.style = ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=10)
+        )
+        self.expand = 1
 ```
-Your control has a constructor to customize properties and events and pass custom data. Note that you must call `super().__init__()` in your own constructor to have access to the properties and methods of the Flet control from which you inherit.
+
+/// admonition | Rules
+    type: note
+
+* You should define either @dataclass or @ft.control decorator on the inherited class - both methods works the same.
+
+* A field, to be a class field, must have a type annotation, so `expand: int = 1` will override inherited property, but `expand = 1` won't. Not sure which type to use? Just `Any` will work, for example `expand: Any = 1`.
+
+* Use literal default value for simple data types, such as `int`, `bool`, `str` and `field(default_factory=lambda: <new_value>)` for immutable types such as `class`, `list`, `dict`.
+
+* You can set property values in `init()` method, but you won't be able to override if write `MyButton3(expand=False)`.
+///
+
 
 Now you can use your brand-new control in your app:
 
 ```python
 import flet as ft
 
+
+@ft.control
+class MyButton(ft.Button):
+    bgcolor: ft.Colors = ft.Colors.ORANGE_300
+    color: ft.Colors = ft.Colors.GREEN_800
+
 def main(page: ft.Page):
-    page.add(MyButton(text="OK"), MyButton(text="Cancel"))
+    def ok_clicked(e):
+        print("OK clicked")
+
+    def cancel_clicked(e):
+        print("Cancel clicked")
+
+    page.add(
+        MyButton(content="OK", on_click=ok_clicked),
+        MyButton(content="Cancel", on_click=cancel_clicked),
+    )
 
 ft.run(main)
 ```
@@ -34,36 +93,6 @@ ft.run(main)
 
 See example of using styled controls in [Calculator App tutorial](../tutorials/calculator.md#styled-controls).
 
-### Handling events
-
-Similar to properties, you can pass event handlers as parameters into your custom control class constructor:
-
-```python
-import flet as ft
-
-class MyButton(ft.Button):
-    def __init__(self, text, on_click):
-        super().__init__()
-        self.bgcolor = ft.Colors.ORANGE_300
-        self.color = ft.Colors.GREEN_800
-        self.text = text
-        self.on_click = on_click
-
-def main(page: ft.Page):
-
-    def ok_clicked(e):
-        print("OK clicked")
-
-    def cancel_clicked(e):
-        print("Cancel clicked")
-
-    page.add(
-        MyButton(text="OK", on_click=ok_clicked),
-        MyButton(text="Cancel", on_click=cancel_clicked),
-    )
-
-ft.run(main)
-```
 
 ## Composite controls
 
@@ -72,11 +101,14 @@ Composite custom controls inherit from container controls such as `Column`, `Row
 ```python
 import flet as ft
 
+
+@ft.control
 class Task(ft.Row):
-    def __init__(self, text):
-        super().__init__()
-        self.text_view = ft.Text(text)
-        self.text_edit = ft.TextField(text, visible=False)
+    text: str = ""
+
+    def init(self):
+        self.text_view = ft.Text(value=self.text)
+        self.text_edit = ft.TextField(value=self.text, visible=False)
         self.edit_button = ft.IconButton(icon=ft.Icons.EDIT, on_click=self.edit)
         self.save_button = ft.IconButton(
             visible=False, icon=ft.Icons.SAVE, on_click=self.save
@@ -104,11 +136,13 @@ class Task(ft.Row):
         self.text_view.value = self.text_edit.value
         self.update()
 
+
 def main(page: ft.Page):
     page.add(
         Task(text="Do laundry"),
         Task(text="Cook dinner"),
     )
+
 
 ft.run(main)
 ```
