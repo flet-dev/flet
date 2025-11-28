@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 from pathlib import Path
 
 from rich.console import Group
@@ -18,65 +19,42 @@ class Command(BaseFlutterCommand):
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
-        self.launch_target = None
+        self.action = None
+        self.emulator_target = None
         self.cold_boot = False
-        self.create_emulator = False
-        self.delete_emulator = None
         self.emulator_name = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
-            "--launch",
-            dest="launch",
+            "action",
+            type=str.lower,
+            nargs="?",
+            choices=["start", "create", "delete"],
+            help="Action to perform: start an emulator, create a new one, "
+            "or delete it.",
+        )
+        parser.add_argument(
+            "emulator",
             type=str,
-            help="Launch a specific emulator by ID or name.",
+            nargs="?",
+            help="Emulator ID or name (required for start, create, and delete).",
         )
         parser.add_argument(
             "--cold",
             dest="cold",
             action="store_true",
             default=False,
-            help="Cold boot the emulator when launching.",
-        )
-        parser.add_argument(
-            "--create",
-            dest="create",
-            action="store_true",
-            default=False,
-            help="Create a new emulator using Flutter defaults.",
-        )
-        parser.add_argument(
-            "--delete",
-            dest="delete",
-            type=str,
-            help="Delete an emulator by ID or name (Android only).",
-        )
-        parser.add_argument(
-            "--name",
-            dest="name",
-            type=str,
-            help="Name for the new emulator (used with --create).",
+            help="Cold boot the emulator when starting.",
         )
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
         super().handle(options)
         if self.options:
-            self.launch_target = self.options.launch
+            self.action = self.options.action
+            self.emulator_target = self.options.emulator
+            self.emulator_name = self.options.emulator
             self.cold_boot = bool(self.options.cold)
-            self.create_emulator = bool(self.options.create)
-            self.delete_emulator = self.options.delete
-            self.emulator_name = self.options.name
-
-        selected_actions = [
-            bool(self.create_emulator),
-            bool(self.launch_target),
-            bool(self.delete_emulator),
-        ]
-        if sum(selected_actions) > 1:
-            msg = "Please choose only one action: --create, --launch, or --delete."
-            console.log(msg, style=verbose2_style)
-            self.cleanup(1, msg)
 
         self.status = console.status(
             "[bold blue]Initializing environment...",
@@ -84,13 +62,22 @@ class Command(BaseFlutterCommand):
         )
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_command()
-            if self.delete_emulator:
+            if self.action == "delete":
+                if not self.emulator_target:
+                    self.skip_flutter_doctor = True
+                    self.cleanup(1, "Provide emulator ID or name to delete.")
                 self._delete_emulator()
                 return
-            if self.create_emulator:
+            if self.action == "create":
+                if not self.emulator_name:
+                    self.skip_flutter_doctor = True
+                    self.cleanup(1, "Provide emulator name to create.")
                 self._create_emulator()
                 return
-            if self.launch_target:
+            if self.action == "start":
+                if not self.emulator_target:
+                    self.skip_flutter_doctor = True
+                    self.cleanup(1, "Provide emulator ID or name to start.")
                 self._launch_emulator()
                 return
             self._list_emulators()
@@ -131,7 +118,7 @@ class Command(BaseFlutterCommand):
         emulators = self._parse_emulators_output(output)
         if not emulators:
             footer = (
-                '\nRun [green]"flet emulators --create"[/green] '
+                '\nRun [green]"flet emulators create <name>"[/green] '
                 "to create a new emulator.\n"
             )
             self.cleanup(0, Group(Panel("No emulators found."), footer), no_border=True)
@@ -157,11 +144,11 @@ class Command(BaseFlutterCommand):
         footer = (
             "\n"
             "Launch an emulator with "
-            '[green]"flet emulators --launch <emulator-id>"[/green].\n'
+            '[green]"flet emulators start <emulator-id>"[/green].\n'
             "Create a new emulator with "
-            '[green]"flet emulators --create [--name <name>]"[/green].\n'
+            '[green]"flet emulators create <name>"[/green].\n'
             "Delete an Android emulator with "
-            '[green]"flet emulators --delete <emulator-id>"[/green].\n'
+            '[green]"flet emulators delete <emulator-id>"[/green].\n'
             "\n"
             "You can find more information on managing emulators at the links below:\n"
             "  https://developer.android.com/studio/run/managing-avds\n"
@@ -171,15 +158,15 @@ class Command(BaseFlutterCommand):
         self.cleanup(0, message=Group(table, footer), no_border=True)
 
     def _launch_emulator(self):
-        assert self.launch_target
+        assert self.emulator_target
         self.update_status(
-            f"[bold blue]Launching emulator [cyan]{self.launch_target}[/cyan]..."
+            f"[bold blue]Starting emulator [cyan]{self.emulator_target}[/cyan]..."
         )
         args = [
             self.flutter_exe,
             "emulators",
             "--launch",
-            self.launch_target,
+            self.emulator_target,
             "--no-version-check",
             "--suppress-analytics",
         ]
@@ -200,7 +187,7 @@ class Command(BaseFlutterCommand):
                 (
                     error_output
                     if error_output
-                    else f"Failed to launch emulator '{self.launch_target}'."
+                    else f"Failed to start emulator '{self.emulator_target}'."
                 ),
             )
             return
@@ -209,12 +196,12 @@ class Command(BaseFlutterCommand):
             console.log(output, style=verbose2_style)
 
         mode = " (cold boot)" if self.cold_boot else ""
-        self.cleanup(0, f"Emulator [cyan]{self.launch_target}[/cyan] launched{mode}.")
+        self.cleanup(0, f"Emulator [cyan]{self.emulator_target}[/cyan] started{mode}.")
 
     def _delete_emulator(self):
-        assert self.delete_emulator
+        assert self.emulator_target
         self.update_status(
-            f"[bold blue]Deleting emulator [cyan]{self.delete_emulator}[/cyan]..."
+            f"[bold blue]Deleting emulator [cyan]{self.emulator_target}[/cyan]..."
         )
         home_dir = self.env.get("ANDROID_HOME") or AndroidSDK.android_home_dir()
         if not home_dir:
@@ -227,18 +214,25 @@ class Command(BaseFlutterCommand):
         )
 
         try:
-            sdk.delete_avd(Path(home_dir), self.delete_emulator)
+            sdk.delete_avd(Path(home_dir), self.emulator_target)
         except Exception as exc:  # pragma: no cover - defensive
             self.skip_flutter_doctor = True
             self.cleanup(
-                1, f"Failed to delete emulator '{self.delete_emulator}': {exc}"
+                1, f"Failed to delete emulator '{self.emulator_target}': {exc}"
             )
             return
 
-        self.cleanup(0, f"Deleted emulator [cyan]{self.delete_emulator}[/cyan].")
+        self.cleanup(0, f"Deleted emulator [cyan]{self.emulator_target}[/cyan].")
 
     def _create_emulator(self):
         self.update_status("[bold blue]Creating emulator...")
+        if not self._is_valid_emulator_name(self.emulator_name):
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                "Emulator name is invalid. Allowed characters: a-z A-Z 0-9 . _ -",
+            )
+
         args = [
             self.flutter_exe,
             "emulators",
@@ -255,10 +249,15 @@ class Command(BaseFlutterCommand):
             capture_output=True,
         )
         output = create_result.stdout or ""
-        if create_result.returncode != 0:
-            error_output = create_result.stderr or output
+        error_output = create_result.stderr or output
+        invalid_name = (
+            "contains invalid characters" in (error_output or "").lower()
+            or "contains invalid characters" in output.lower()
+        )
+        exit_code = create_result.returncode or (1 if invalid_name else 0)
+        if exit_code != 0:
             self.cleanup(
-                create_result.returncode,
+                exit_code,
                 error_output or "Failed to create emulator.",
             )
             return
@@ -266,13 +265,16 @@ class Command(BaseFlutterCommand):
         if output and self.verbose >= 1:
             console.log(output, style=verbose2_style)
 
-        created_name = self.emulator_name or "emulator"
+        created_name = self.emulator_name
         self.cleanup(
             0,
             f"Created emulator [cyan]{created_name}[/cyan]. "
             "Use `flet emulators` to list it or "
-            f"`flet emulators --launch {created_name}` to start it.",
+            f"`flet emulators start {created_name}` to start it.",
         )
+
+    def _is_valid_emulator_name(self, name: str) -> bool:
+        return bool(re.match(r"^[A-Za-z0-9._-]+$", name or ""))
 
     def _parse_emulators_output(self, output: str) -> list[dict]:
         emulators = []
