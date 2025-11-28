@@ -16,14 +16,6 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Build docs
-        working-directory: sdk/python
+        working-directory: sdk/python/packages/flet
         run: |
-          uv sync --group docs -v
-          uv pip install --no-deps --force-reinstall flet-web>=0.70.0.dev0
-          cd packages/flet
-          uv run mkdocs build -v
-#        run: |
-#          cd sdk/python/packages/flet
-#          uv sync --group docs -v
-#          uv pip install -v --no-deps --force-reinstall flet-web>=0.70.0.dev0
-#          uv run mkdocs build -v
+          uv run --group docs mkdocs build -v
