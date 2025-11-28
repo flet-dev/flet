@@ -389,10 +389,47 @@ class ExamplesGalleryPlugin(BasePlugin):
             # ignore the generated dist folder when computing the latest mtime.
             ignore_roots.append(dist_dir)
 
+        # Skip rebuild if dist/index.html is already as new as the newest source file.
         src_mtime = _latest_mtime(src_root, ignore_roots)
         dist_mtime = dist_index.stat().st_mtime if dist_index.exists() else 0.0
         if dist_mtime >= src_mtime:
             return
+
+        # Prepare a staging directory to ease bundling
+        # external examples alongside the app.
+        staging_dir: Optional[Path] = None
+        try:
+            staging_dir = Path(tempfile.mkdtemp(prefix="flet-examples-gallery-"))
+            source_root = src_root.parent
+            shutil.copytree(
+                source_root,
+                staging_dir,
+                dirs_exist_ok=True,
+                ignore=shutil.ignore_patterns(
+                    "build", "dist", "__pycache__", ".venv", ".git"
+                ),
+            )
+
+            staged_src_root = staging_dir / src_root.name
+
+            # Copy examples/controls to staged app
+            # so imports work in the packaged build.
+            repo_examples_controls = (
+                docs_dir.resolve().parents[2] / "examples" / "controls"
+            )
+            if repo_examples_controls.is_dir():
+                dest_controls = staged_src_root / "controls"
+                if dest_controls.exists():
+                    shutil.rmtree(dest_controls)
+                shutil.copytree(repo_examples_controls, dest_controls)
+
+            staged_entry = staging_dir / src.relative_to(source_root)
+        except Exception as exc:  # noqa: BLE001
+            if staging_dir:
+                shutil.rmtree(staging_dir, ignore_errors=True)
+            raise RuntimeError(
+                f"Unable to stage examples gallery sources: {exc}"
+            ) from exc
 
         cmd: Optional[list[str]] = self.config.get("command")
         if not cmd:
@@ -402,7 +439,7 @@ class ExamplesGalleryPlugin(BasePlugin):
                 "--active",
                 "flet",
                 "publish",
-                str(src),
+                str(staged_entry or src),
                 "--distpath",
                 str(dist_dir),
                 "--base-url",
@@ -420,4 +457,9 @@ class ExamplesGalleryPlugin(BasePlugin):
         env["FLET_WEB_PATH"] = str(web_client_path)
 
         _ensure_pip_available()
-        subprocess.run(cmd, cwd=docs_dir, check=True, env=env)
+        try:
+            subprocess.run(cmd, cwd=docs_dir, check=True, env=env)
+        finally:
+            # cleanup
+            if staging_dir:
+                shutil.rmtree(staging_dir, ignore_errors=True)

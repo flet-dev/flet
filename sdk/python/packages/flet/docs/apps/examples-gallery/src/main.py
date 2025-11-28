@@ -4,12 +4,27 @@ from pathlib import Path
 
 import flet as ft
 
-# Ensure the repo's Python root (sdk/python) is on sys.path so `examples.*` imports work
-PROJECT_PY_ROOT = Path(__file__).resolve().parents[0]
+
+def _resolve_examples_root() -> tuple[Path, Path, str]:
+    """
+    Find examples/controls tree under sdk/python/examples.
+
+    Falls back to the local controls folder if the repo path isn't available
+    (e.g., packaged artifacts or custom layouts).
+    """
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        candidate = parent / "examples" / "controls"
+        if candidate.is_dir():
+            return parent, candidate, "examples.controls"
+
+    fallback_root = here.parent
+    return fallback_root, fallback_root / "controls", "controls"
+
+
+PROJECT_PY_ROOT, EXAMPLES_ROOT, MODULE_PREFIX = _resolve_examples_root()
 if str(PROJECT_PY_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_PY_ROOT))
-
-EXAMPLES_ROOT = PROJECT_PY_ROOT / "controls"
 
 
 def discover_examples():
@@ -32,7 +47,7 @@ def discover_examples():
 
         control_name = "".join(word.title() for word in parts[0].split("_"))
         slug = "/".join(parts)
-        module_name = "controls." + ".".join(parts)
+        module_name = f"{MODULE_PREFIX}." + ".".join(parts)
 
         try:
             mod = importlib.import_module(module_name)
