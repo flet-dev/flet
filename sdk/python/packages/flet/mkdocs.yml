@@ -465,7 +465,9 @@ nav:
           - flet build: cli/flet-build.md
           - flet create: cli/flet-create.md
           - flet debug: cli/flet-debug.md
+          - flet devices: cli/flet-devices.md
           - flet doctor: cli/flet-doctor.md
+          - flet emulators: cli/flet-emulators.md
           - flet pack: cli/flet-pack.md
           - flet publish: cli/flet-publish.md
           - flet run: cli/flet-run.md
