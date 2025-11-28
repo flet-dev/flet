@@ -125,19 +125,23 @@ class RemoteWidgetTester extends FlutterWidgetTester {
         final bytes = await takeScreenshot(params["name"] as String);
         return _ok(base64Encode(bytes));
       case "tap":
-        await _withFinder(params["id"], (finder) => tap(finder));
+        await _withFinder(params["finder_id"],
+            (finder) => tap(finder, params["finder_index"]));
         return _ok();
       case "long_press":
-        await _withFinder(params["id"], (finder) => longPress(finder));
+        await _withFinder(params["finder_id"],
+            (finder) => longPress(finder, params["finder_index"]));
         return _ok();
       case "enter_text":
         await _withFinder(
-          params["id"],
-          (finder) => enterText(finder, params["text"] as String),
+          params["finder_id"],
+          (finder) => enterText(
+              finder, params["finder_index"], params["text"] as String),
         );
         return _ok();
       case "mouse_hover":
-        await _withFinder(params["id"], (finder) => mouseHover(finder));
+        await _withFinder(params["finder_id"],
+            (finder) => mouseHover(finder, params["finder_index"]));
         return _ok();
       case "teardown":
         _triggerTeardown();
