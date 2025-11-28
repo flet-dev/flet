@@ -425,6 +425,7 @@ class FletTestApp:
         *,
         duration: int = 1000,
         loop: int = 0,
+        disposal: int = 0
     ) -> Path:
         """Create an animated GIF from a sequence of image files.
 
@@ -489,6 +490,7 @@ class FletTestApp:
                 duration=duration,
                 loop=loop,
                 optimize=True,
+                disposal=2
             )
         finally:
             for frame in frames:
