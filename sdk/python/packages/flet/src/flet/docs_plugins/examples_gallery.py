@@ -69,34 +69,43 @@ def _find_pyproject(start: Path, stop: Optional[Path] = None) -> Optional[Path]:
         current = current.parent
 
 
-def _version_from_specifiers(specifiers) -> Optional[str]:
+def _version_from_specifiers(specifiers) -> tuple[Optional[str], bool]:
     """Extract a deterministic version from a SpecifierSet.
 
-    Prioritises exact pins to avoid drift; otherwise falls back to the lowest
-    acceptable bound (>=, >, ~=) to stay compatible with the source tree.
+    Returns (version, lower_only_flag).
+    - If an exact pin or upper bound exists, returns that version and False.
+    - If only lower bounds exist (>=, >, ~=), returns (None, True) so callers
+      can opt for a fallback (e.g., latest pre-release) instead of trying a
+      nonexistent lower bound.
     """
     for operator in ("==", "==="):
         for spec in specifiers:
             if spec.operator == operator:
-                return spec.version
+                return spec.version, False
+
+    for operator in ("<", "<="):
+        for spec in specifiers:
+            if spec.operator == operator:
+                return spec.version, False
 
     for operator in ("~=", ">=", ">"):
         for spec in specifiers:
             if spec.operator == operator:
-                return spec.version
+                return None, True
 
-    return None
+    return None, False
 
 
-def _version_from_pyproject(pyproject: Path) -> Optional[str]:
+def _version_from_pyproject(pyproject: Path) -> tuple[Optional[str], bool]:
     """
-    Read the flet dependency from pyproject.toml and return a pinned/lowest version.
+    Read the flet dependency from pyproject.toml
+    and return a version plus lower-only flag.
     """
     try:
         data = tomllib.loads(pyproject.read_text())
     except Exception as exc:  # noqa: BLE001
         logger.debug("Unable to parse %s: %s", pyproject, exc)
-        return None
+        return None, False
 
     deps = data.get("project", {}).get("dependencies") or []
     for raw in deps:
@@ -106,15 +115,15 @@ def _version_from_pyproject(pyproject: Path) -> Optional[str]:
             continue
         if req.name != "flet":
             continue
-        candidate = _version_from_specifiers(req.specifier)
-        if candidate:
-            return candidate
-    return None
+        candidate, lower_only = _version_from_specifiers(req.specifier)
+        if candidate or lower_only:
+            return candidate, lower_only
+    return None, False
 
 
 def _resolve_flet_version(
     env: Mapping[str, str], src_root: Path, docs_dir: Path
-) -> str:
+) -> tuple[Optional[str], bool]:
     """Resolve the Flet version similar to `flet publish`.
 
     Order:
@@ -136,12 +145,16 @@ def _resolve_flet_version(
         logger.debug("Unable to preload flet version defaults: %s", exc)
 
     if env.get("FLET_WEB_VERSION"):
-        return str(env["FLET_WEB_VERSION"])
+        return str(env["FLET_WEB_VERSION"]), False
 
     pyproject = _find_pyproject(src_root, stop=docs_dir.parent)
-    pinned = _version_from_pyproject(pyproject) if pyproject else None
+    pinned, lower_only = (
+        _version_from_pyproject(pyproject) if pyproject else (None, False)
+    )
     if pinned:
-        return pinned
+        return pinned, False
+    if lower_only:
+        return None, True
 
     try:
         from flet import version as flet_version
@@ -151,12 +164,12 @@ def _resolve_flet_version(
         )
         resolved = resolved or default_version
         if resolved:
-            return str(resolved)
+            return str(resolved), False
     except Exception as exc:  # noqa: BLE001
         logger.debug("Unable to resolve flet version from package: %s", exc)
 
     if default_version:
-        return str(default_version)
+        return str(default_version), False
 
     raise RuntimeError(
         "FLET_WEB_PATH is not set and Flet version could not be determined. "
@@ -190,13 +203,18 @@ def _locate_existing_web_client(env: Mapping[str, str]) -> Optional[Path]:
     return package_web if _web_path_ready(package_web) else None
 
 
-def _download_packaged_web_client(version: str) -> Optional[Path]:
+def _download_packaged_web_client(
+    version: Optional[str], pre_only: bool = False
+) -> Optional[Path]:
     """Download the pre-built flet-web wheel and expose its web folder.
 
     Uses a temp/versioned cache to avoid repeated downloads during local dev.
+    When `pre_only` is True (or version is None), skip the exact-version attempt
+    and go straight to the latest available pre-release wheel.
     """
     cache_root = Path(tempfile.gettempdir()) / "flet-web"
-    target_root = cache_root / version
+    cache_key = version or "latest-pre"
+    target_root = cache_root / cache_key
     web_dir = target_root / "flet_web" / "web"
 
     if _web_path_ready(web_dir):
@@ -208,26 +226,7 @@ def _download_packaged_web_client(version: str) -> Optional[Path]:
     target_root.mkdir(parents=True, exist_ok=True)
     _ensure_pip_available()
 
-    logger.info("Downloading flet-web==%s into %s", version, target_root)
-    try:
-        subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "pip",
-                "install",
-                "--no-deps",
-                "--only-binary",
-                ":all:",
-                f"flet-web=={version}",
-                "--target",
-                str(target_root),
-            ],
-            check=True,
-        )
-    except subprocess.CalledProcessError as exc:
-        logger.warning("Unable to download flet-web==%s: %s", version, exc)
-        logger.info("Falling back to latest available pre-release flet-web wheel.")
+    def _install_latest_pre() -> bool:
         try:
             subprocess.run(
                 [
@@ -245,8 +244,37 @@ def _download_packaged_web_client(version: str) -> Optional[Path]:
                 ],
                 check=True,
             )
+            return True
         except subprocess.CalledProcessError as exc2:
             logger.warning("Unable to download a fallback flet-web wheel: %s", exc2)
+            return False
+
+    if not pre_only and version:
+        logger.info("Downloading flet-web==%s into %s", version, target_root)
+        try:
+            subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-deps",
+                    "--only-binary",
+                    ":all:",
+                    f"flet-web=={version}",
+                    "--target",
+                    str(target_root),
+                ],
+                check=True,
+            )
+        except subprocess.CalledProcessError as exc:
+            logger.warning("Unable to download flet-web==%s: %s", version, exc)
+            logger.info("Falling back to latest available pre-release flet-web wheel.")
+            if not _install_latest_pre():
+                return None
+    else:
+        logger.info("No exact flet-web version to install; using latest pre-release.")
+        if not _install_latest_pre():
             return None
 
     return web_dir if _web_path_ready(web_dir) else None
@@ -262,8 +290,8 @@ def _ensure_web_client(env: dict[str, str], src_root: Path, docs_dir: Path) -> P
     if existing:
         return existing
 
-    target_version = _resolve_flet_version(env, src_root, docs_dir)
-    downloaded = _download_packaged_web_client(target_version)
+    target_version, lower_only = _resolve_flet_version(env, src_root, docs_dir)
+    downloaded = _download_packaged_web_client(target_version, pre_only=lower_only)
     if downloaded:
         return downloaded
 
@@ -300,14 +328,16 @@ class ExamplesGalleryPlugin(BasePlugin):
     """Build the examples gallery Flet app before MkDocs runs.
 
     This plugin:
-    - Finds the examples gallery entry point (default: docs/apps/examples-gallery/src/main.py).
+    - Finds the examples gallery entry point
+        (default: docs/apps/examples-gallery/src/main.py).
     - Runs `flet publish` (via `uv run --active`) into the configured dist folder.
     - Skips the build when the dist/index.html is newer than the source tree.
 
     Env opts:
-    - FLET_SKIP_EXAMPLES_GALLERY=1 — skip building (useful for fast local docs iteration).
+    - FLET_SKIP_EXAMPLES_GALLERY=1 — skip building
+        (useful for fast local docs iteration).
     - FLET_WEB_PATH — optional path to a built Flet web client; if unset the plugin
-      downloads the matching flet-web wheel into a temp cache.
+        downloads the matching flet-web wheel into a temp cache.
     - FLET_WEB_VERSION — optional version override for the wheel download.
 
     Config options (mkdocs.yml):
@@ -321,7 +351,7 @@ class ExamplesGalleryPlugin(BasePlugin):
 
     config_scheme = (
         ("enabled", config_options.Type(bool, default=True)),
-        ("src", config_options.Type(str, default="apps/examples-gallery/src/main.py")),
+        ("src", config_options.Type(str, default="apps/examples-gallery/src")),
         ("dist", config_options.Type(str, default="apps/examples-gallery/dist")),
         ("base_url", config_options.Type(str, default="apps/examples-gallery/dist")),
         ("command", config_options.Type(list, default=None)),
@@ -334,8 +364,8 @@ class ExamplesGalleryPlugin(BasePlugin):
 
         - Honours `enabled` and `FLET_SKIP_EXAMPLES_GALLERY`.
         - Skips when the existing dist/index.html is newer than the source tree.
-        - Runs the configured command (or the default `uv run --active flet publish ...`)
-          with `docs_dir` as the working directory and merged env vars.
+        - Runs the configured command (or the default `uv run flet publish ...`)
+            with `docs_dir` as the working directory and merged env vars.
         """
         if not self.config.get("enabled", True):
             return

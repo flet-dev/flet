@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Documentation
+    name: Build Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,4 +18,4 @@ jobs:
       - name: Build docs
         working-directory: sdk/python/packages/flet
         run: |
-          uv run --group docs mkdocs build -v
+          uv run --group docs mkdocs build
