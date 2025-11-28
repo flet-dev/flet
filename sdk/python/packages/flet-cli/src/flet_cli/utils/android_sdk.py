@@ -84,6 +84,11 @@ class AndroidSDK:
         assert bin
         return bin / self.tool_exe("sdkmanager", ".bat")
 
+    def avdmanager_exe(self, home_dir):
+        bin = self.cmdline_tools_bin(home_dir)
+        assert bin
+        return bin / self.tool_exe("avdmanager", ".bat")
+
     @staticmethod
     def has_minimal_packages_installed() -> bool:
         home_dir = AndroidSDK.android_home_dir()
@@ -99,6 +104,26 @@ class AndroidSDK:
                 return False
 
         return True
+
+    def delete_avd(self, home_dir: Path, avd_name: str) -> None:
+        """
+        Deletes an Android Virtual Device using avdmanager.
+        """
+        self.log(f'Deleting Android emulator "{avd_name}"')
+        result = self.run(
+            [
+                self.avdmanager_exe(home_dir),
+                "delete",
+                "avd",
+                "-n",
+                avd_name,
+            ],
+            env={"ANDROID_HOME": str(home_dir)},
+            capture_output=True,
+        )
+        if result.returncode != 0:
+            self.log(result.stderr or result.stdout)
+            raise RuntimeError(f'Failed to delete Android emulator "{avd_name}"')
 
     def cmdline_tools_url(self):
         try:

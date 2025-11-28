@@ -305,10 +305,10 @@ class BaseFlutterCommand(BaseCommand):
             log=self.log_stdout,
         )
 
-    def cleanup(self, exit_code: int, message: Any = None):
+    def cleanup(self, exit_code: int, message: Any = None, no_border: bool = False):
         if exit_code == 0:
             self.live.update(
-                message if message else "",
+                (message if no_border else Panel(message)) if message else "",
                 refresh=True,
             )
         else:

@@ -123,7 +123,9 @@ class Command(BaseFlutterCommand):
 
         if not devices:
             self.cleanup(
-                0, Group(Panel(f"No {self.platform_label} devices found."), footer)
+                0,
+                Group(Panel(f"No {self.platform_label} devices found."), footer),
+                no_border=True,
             )
 
         devices_table = Table(
@@ -144,7 +146,7 @@ class Command(BaseFlutterCommand):
                 device["details"],
             )
 
-        self.cleanup(0, message=Group(devices_table, footer))
+        self.cleanup(0, message=Group(devices_table, footer), no_border=True)
 
     def _parse_devices_output(self, output: str) -> list[dict]:
         devices = []

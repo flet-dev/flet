@@ -1,5 +1,6 @@
 import argparse
 import os
+from pathlib import Path
 
 from rich.console import Group
 from rich.live import Live
@@ -7,6 +8,7 @@ from rich.panel import Panel
 from rich.table import Column, Table
 
 from flet_cli.commands.build_base import BaseFlutterCommand, console, verbose2_style
+from flet_cli.utils.android_sdk import AndroidSDK
 
 
 class Command(BaseFlutterCommand):
@@ -19,6 +21,7 @@ class Command(BaseFlutterCommand):
         self.launch_target = None
         self.cold_boot = False
         self.create_emulator = False
+        self.delete_emulator = None
         self.emulator_name = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -43,6 +46,12 @@ class Command(BaseFlutterCommand):
             help="Create a new emulator using Flutter defaults.",
         )
         parser.add_argument(
+            "--delete",
+            dest="delete",
+            type=str,
+            help="Delete an emulator by ID or name (Android only).",
+        )
+        parser.add_argument(
             "--name",
             dest="name",
             type=str,
@@ -56,16 +65,18 @@ class Command(BaseFlutterCommand):
             self.launch_target = self.options.launch
             self.cold_boot = bool(self.options.cold)
             self.create_emulator = bool(self.options.create)
+            self.delete_emulator = self.options.delete
             self.emulator_name = self.options.name
 
-        if self.create_emulator and self.launch_target:
-            console.log(
-                "Please choose either --create or --launch, not both.",
-                style=verbose2_style,
-            )
-            self.cleanup(
-                1, Panel("Please choose either --create or --launch, not both.")
-            )
+        selected_actions = [
+            bool(self.create_emulator),
+            bool(self.launch_target),
+            bool(self.delete_emulator),
+        ]
+        if sum(selected_actions) > 1:
+            msg = "Please choose only one action: --create, --launch, or --delete."
+            console.log(msg, style=verbose2_style)
+            self.cleanup(1, msg)
 
         self.status = console.status(
             "[bold blue]Initializing environment...",
@@ -73,6 +84,9 @@ class Command(BaseFlutterCommand):
         )
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_command()
+            if self.delete_emulator:
+                self._delete_emulator()
+                return
             if self.create_emulator:
                 self._create_emulator()
                 return
@@ -120,11 +134,11 @@ class Command(BaseFlutterCommand):
                 '\nRun [green]"flet emulators --create"[/green] '
                 "to create a new emulator.\n"
             )
-            self.cleanup(0, Group(Panel("No emulators found."), footer))
+            self.cleanup(0, Group(Panel("No emulators found."), footer), no_border=True)
 
         table = Table(
-            Column("Name", style="cyan", justify="left"),
             Column("ID", style="magenta", justify="left", no_wrap=True),
+            Column("Name", style="cyan", justify="left"),
             Column("Platform", style="green", justify="center"),
             Column("Manufacturer", style="yellow", justify="left"),
             title="Available emulators",
@@ -134,8 +148,8 @@ class Command(BaseFlutterCommand):
 
         for emulator in emulators:
             table.add_row(
-                emulator["name"],
                 emulator["id"],
+                emulator["name"],
                 emulator["platform_label"],
                 emulator["manufacturer"],
             )
@@ -146,13 +160,15 @@ class Command(BaseFlutterCommand):
             '[green]"flet emulators --launch <emulator-id>"[/green].\n'
             "Create a new emulator with "
             '[green]"flet emulators --create [--name <name>]"[/green].\n'
+            "Delete an Android emulator with "
+            '[green]"flet emulators --delete <emulator-id>"[/green].\n'
             "\n"
             "You can find more information on managing emulators at the links below:\n"
             "  https://developer.android.com/studio/run/managing-avds\n"
             "  https://developer.android.com/studio/command-line/avdmanager"
         )
 
-        self.cleanup(0, message=Group(table, footer))
+        self.cleanup(0, message=Group(table, footer), no_border=True)
 
     def _launch_emulator(self):
         assert self.launch_target
@@ -181,8 +197,10 @@ class Command(BaseFlutterCommand):
             error_output = launch_result.stderr or output
             self.cleanup(
                 launch_result.returncode,
-                Panel(
-                    error_output or f"Failed to launch emulator '{self.launch_target}'."
+                (
+                    error_output
+                    if error_output
+                    else f"Failed to launch emulator '{self.launch_target}'."
                 ),
             )
             return
@@ -191,12 +209,33 @@ class Command(BaseFlutterCommand):
             console.log(output, style=verbose2_style)
 
         mode = " (cold boot)" if self.cold_boot else ""
-        self.cleanup(
-            0,
-            Panel(
-                f"Emulator [cyan]{self.launch_target}[/cyan] launched{mode}.",
-            ),
+        self.cleanup(0, f"Emulator [cyan]{self.launch_target}[/cyan] launched{mode}.")
+
+    def _delete_emulator(self):
+        assert self.delete_emulator
+        self.update_status(
+            f"[bold blue]Deleting emulator [cyan]{self.delete_emulator}[/cyan]..."
         )
+        home_dir = self.env.get("ANDROID_HOME") or AndroidSDK.android_home_dir()
+        if not home_dir:
+            self.cleanup(
+                1, "ANDROID_HOME is not set and Android SDK location cannot be found."
+            )
+
+        sdk = AndroidSDK(
+            self.env.get("JAVA_HOME", ""), self.log_stdout, progress=self.progress
+        )
+
+        try:
+            sdk.delete_avd(Path(home_dir), self.delete_emulator)
+        except Exception as exc:  # pragma: no cover - defensive
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1, f"Failed to delete emulator '{self.delete_emulator}': {exc}"
+            )
+            return
+
+        self.cleanup(0, f"Deleted emulator [cyan]{self.delete_emulator}[/cyan].")
 
     def _create_emulator(self):
         self.update_status("[bold blue]Creating emulator...")
@@ -220,7 +259,7 @@ class Command(BaseFlutterCommand):
             error_output = create_result.stderr or output
             self.cleanup(
                 create_result.returncode,
-                Panel(error_output or "Failed to create emulator."),
+                error_output or "Failed to create emulator.",
             )
             return
 
@@ -230,11 +269,9 @@ class Command(BaseFlutterCommand):
         created_name = self.emulator_name or "emulator"
         self.cleanup(
             0,
-            Panel(
-                f"Created emulator [cyan]{created_name}[/cyan]. "
-                "Use `flet emulators` to list it or "
-                f"`flet emulators --launch {created_name}` to start it.",
-            ),
+            f"Created emulator [cyan]{created_name}[/cyan]. "
+            "Use `flet emulators` to list it or "
+            f"`flet emulators --launch {created_name}` to start it.",
         )
 
     def _parse_emulators_output(self, output: str) -> list[dict]:
@@ -247,10 +284,11 @@ class Command(BaseFlutterCommand):
             if len(parts) < 2:
                 continue
 
-            name = parts[0]
-            emulator_id = parts[1]
+            emulator_id = parts[0]
+            name = parts[1]
             # Skip header rows printed by `flutter emulators` (Id • Name • Platform ...)
-            if name.lower() == "id" and emulator_id.lower() == "name":
+            lower_head = {p.lower() for p in parts[:4]}
+            if {"id", "name", "platform"}.issubset(lower_head):
                 continue
             details_segments = parts[2:]
             platform_raw = details_segments[-1] if details_segments else ""
