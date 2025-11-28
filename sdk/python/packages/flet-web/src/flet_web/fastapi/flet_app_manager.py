@@ -6,11 +6,10 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Optional
 
+import flet_web.fastapi as flet_fastapi
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
-
-import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.oauth_state import OAuthState
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -84,7 +83,7 @@ class FletAppManager:
             session = self.__sessions[session_id]
             await session.connect(conn)
         else:
-            raise Exception(f"Session has expired or not found: {session_id}")
+            raise RuntimeError(f"Session has expired or not found: {session_id}")
 
     async def disconnect_session(self, session_id: str, session_timeout_seconds: int):
         logger.info(f"Session disconnected: {session_id}")

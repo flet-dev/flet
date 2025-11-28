@@ -12,43 +12,23 @@ import '../utils/numbers.dart';
 import '../utils/time.dart';
 import '../widgets/error.dart';
 
-class SnackBarControl extends StatefulWidget {
+class SnackBarControl extends StatelessWidget {
   final Control control;
 
-  SnackBarControl({Key? key, required this.control})
-      : super(key: key ?? ValueKey("control_${control.id}"));
+  const SnackBarControl({super.key, required this.control});
 
-  @override
-  State<SnackBarControl> createState() => _SnackBarControlState();
-}
-
-class _SnackBarControlState extends State<SnackBarControl> {
-  Widget? _dialog;
-  bool _open = false;
-  bool _dismissed = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _toggleSnackBar();
-  }
-
-  @override
-  void didUpdateWidget(covariant SnackBarControl oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _toggleSnackBar();
-  }
-
-  Widget _createSnackBar(FletBackend backend) {
-    var content = widget.control.buildTextOrWidget("content");
+  Widget _createSnackBar(BuildContext context) {
+    var content = control.buildTextOrWidget("content");
     if (content == null) {
       return const ErrorControl(
           "SnackBar.content must be provided and visible");
     }
 
-    final actionControl = widget.control.child("action");
+    var backend = FletBackend.of(context);
+
+    final actionControl = control.get("action");
     SnackBarAction? action;
-    if (actionControl != null) {
+    if (actionControl is Control) {
       action = SnackBarAction(
         label: actionControl.getString("label", "Action")!,
         backgroundColor: actionControl.getColor("bgcolor", context),
@@ -59,21 +39,18 @@ class _SnackBarControlState extends State<SnackBarControl> {
             actionControl.getColor("disabled_text_color", context),
         onPressed: () => actionControl.triggerEvent("click"),
       );
-    } else {
-      var label = widget.control.getString("action");
-      action = label != null
-          ? SnackBarAction(
-              label: label,
-              onPressed: () {},
-            )
-          : null;
+    } else if (actionControl is String) {
+      action = SnackBarAction(
+        label: actionControl,
+        onPressed: () => control.triggerEvent("action"),
+      );
     }
 
-    var width = widget.control.getDouble("width");
-    var margin = widget.control.getMargin("margin");
+    var width = control.getDouble("width");
+    var margin = control.getMargin("margin");
 
     // if behavior is not floating, ignore margin and width
-    SnackBarBehavior? behavior = widget.control.getSnackBarBehavior("behavior");
+    SnackBarBehavior? behavior = control.getSnackBarBehavior("behavior");
     if (behavior != SnackBarBehavior.floating) {
       margin = null;
       width = null;
@@ -84,73 +61,73 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
     return SnackBar(
       behavior: behavior,
-      clipBehavior:
-          widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
-      actionOverflowThreshold:
-          widget.control.getDouble("action_overflow_threshold"),
-      shape: widget.control.getOutlinedBorder("shape", Theme.of(context)),
+      clipBehavior: control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+      actionOverflowThreshold: control.getDouble("action_overflow_threshold"),
+      shape: control.getOutlinedBorder("shape", Theme.of(context)),
       onVisible: () {
-        backend.triggerControlEvent(widget.control, "visible");
+        backend.triggerControlEvent(control, "visible");
       },
-      dismissDirection: widget.control.getDismissDirection("dismiss_direction"),
-      showCloseIcon: widget.control.getBool("show_close_icon"),
-      closeIconColor: widget.control.getColor("close_icon_color", context),
+      dismissDirection: control.getDismissDirection("dismiss_direction"),
+      showCloseIcon: control.getBool("show_close_icon"),
+      closeIconColor: control.getColor("close_icon_color", context),
       content: content,
-      backgroundColor: widget.control.getColor("bgcolor", context),
+      backgroundColor: control.getColor("bgcolor", context),
       action: action,
       margin: margin,
-      padding: widget.control.getPadding("padding"),
+      padding: control.getPadding("padding"),
       width: width,
-      elevation: widget.control.getDouble("elevation"),
-      duration: widget.control
-          .getDuration("duration", const Duration(milliseconds: 4000))!,
+      elevation: control.getDouble("elevation"),
+      duration:
+          control.getDuration("duration", const Duration(milliseconds: 4000))!,
+      persist: control.getBool("persist"),
     );
-  }
-
-  void _toggleSnackBar() {
-    if (_dismissed) return;
-
-    debugPrint("SnackBar build: ${widget.control.id}");
-
-    var open = widget.control.getBool("open", false)!;
-
-    if (open && (open != _open)) {
-      _dialog = _createSnackBar(FletBackend.of(context));
-
-      if (_dialog is ErrorControl) {
-        debugPrint(
-            "SnackBar: ErrorControl, not showing dialog: ${(_dialog as ErrorControl).message}");
-        return;
-      }
-
-      _open = open;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(_dialog as SnackBar)
-            .closed
-            .then((reason) {
-          if (!_dismissed) {
-            _dismissed = true;
-            debugPrint(
-                "Dismissing SnackBar(${widget.control.id}) with reason: $reason");
-            _open = false;
-            widget.control.updateProperties({"open": false});
-            widget.control.triggerEvent("dismiss");
-          }
-        });
-      });
-    } else if (!open && _open) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        _open = false;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _dialog is ErrorControl ? _dialog! : const SizedBox.shrink();
+    final dismissed = control.getBool("_dismissed", false)!;
+
+    if (!dismissed) {
+      final open = control.getBool("open", false)!;
+      final lastOpen = control.getBool("_open", false)!;
+
+      debugPrint(
+          "SnackBar build: ${control.id}, open: $open, _open: $lastOpen");
+
+      if (open && (open != lastOpen)) {
+        var dialog = _createSnackBar(context);
+
+        if (dialog is ErrorControl) {
+          debugPrint(
+              "SnackBar: ErrorControl, not showing dialog: ${dialog.message}");
+          return dialog;
+        }
+
+        control.updateProperties({"_open": open}, python: false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(dialog as SnackBar)
+              .closed
+              .then((reason) {
+            if (!dismissed) {
+              control.updateProperties({"_dismissed": true});
+              debugPrint(
+                  "Dismissing SnackBar(${control.id}) with reason: $reason");
+              control.updateProperties({"_open": false}, python: false);
+              control.updateProperties({"open": false});
+              control.triggerEvent("dismiss");
+            }
+          });
+        });
+      } else if (!open && lastOpen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          control.updateProperties({"_open": false}, python: false);
+        });
+      }
+    }
+    return const SizedBox.shrink();
   }
 }

@@ -168,15 +168,13 @@ class FletApp(Connection):
                 f"{self.__session.id if self.__session else ''}"
             )
         except Exception as e:
-            print(
+            logger.error(
                 "Unhandled error processing page session: "
                 f"{self.__session.id if self.__session else ''}",
-                traceback.format_exc(),
+                exc_info=True,
             )
             if self.__session:
-                self.__session.error(
-                    f"There was an error while processing your request: {e}"
-                )
+                self.__session.error(str(e))
 
     async def __send_loop(self):
         assert self.__websocket
@@ -254,16 +252,23 @@ class FletApp(Connection):
             # apply page patch
             self.__session.apply_page_patch(req.page)
 
+            register_error = ""
             if new_session:
                 # update IP and user-agent
                 self.__session.page.client_ip = self.__client_ip
                 self.__session.page.client_user_agent = self.__client_user_agent
 
                 # run before_main
-                if asyncio.iscoroutinefunction(self.__before_main):
-                    await self.__before_main(self.__session.page)
-                elif callable(self.__before_main):
-                    self.__before_main(self.__session.page)
+                try:
+                    if asyncio.iscoroutinefunction(self.__before_main):
+                        await self.__before_main(self.__session.page)
+                    elif callable(self.__before_main):
+                        self.__before_main(self.__session.page)
+                except Exception as e:
+                    register_error = f"{e}\n{traceback.format_exc()}"
+                    logger.error(
+                        "Unhandled error in before_main() handler", exc_info=True
+                    )
 
             # register response
             self.send_message(
@@ -274,10 +279,14 @@ class FletApp(Connection):
                         page_patch=self.__session.get_page_patch()
                         if new_session
                         else self.__session.page,
-                        error="",
+                        error=register_error,
                     ),
                 )
             )
+
+            if register_error:
+                self.__session.error(register_error)
+                return
 
             # start session
             if new_session:
@@ -325,7 +334,7 @@ class FletApp(Connection):
 
         else:
             # it's something else
-            raise Exception(f'Unknown message "{action}": {body}')
+            raise RuntimeError(f'Unknown message "{action}": {body}')
 
         if task:
             self.__running_tasks.add(task)

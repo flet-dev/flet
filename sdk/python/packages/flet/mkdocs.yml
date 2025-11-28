@@ -96,6 +96,7 @@ watch:
   - ../../../../LICENSE
   - ../../../../README.md
 
+
 # Plugins
 plugins:
   # - footnotes
@@ -105,7 +106,8 @@ plugins:
   - search:
       lang: en
   - macros:
-      module_name: docs/extras/macros/__init__
+      module_name: docs/extras/macros
+      verbose: true
   - open-in-new-tab
   - mike:
       alias_type: symlink
@@ -131,7 +133,7 @@ plugins:
             show_source: false
             group_by_category: true
             show_category_heading: true
-            show_labels: false
+            show_labels: true
             show_if_no_docstring: true
             docstring_section_style: list
             separate_signature: true
@@ -142,7 +144,7 @@ plugins:
             preload_modules: [ flet, flet_ads ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
-              - "!(init|before_update|build|will_unmount|did_mount)"
+              - "!^(init|before_update|build|will_unmount|did_mount)$"
             extensions:
               - griffe_modernized_annotations
               - griffe_warnings_deprecated
@@ -305,6 +307,7 @@ nav:
           - CircleAvatar: controls/circleavatar.md
           - Column: controls/column.md
           - Container: controls/container.md
+          - ContextMenu: controls/contextmenu.md
           - CupertinoActionSheet:
               - controls/cupertinoactionsheet/index.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
@@ -420,18 +423,21 @@ nav:
           - Radio: controls/radio.md
           - RadioGroup: controls/radiogroup.md
           - RangeSlider: controls/rangeslider.md
-          - ReorderableDraggable: controls/reorderabledraggable.md
+          - ReorderableDragHandle: controls/reorderabledraghandle.md
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
           - Row: controls/row.md
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
-          - SegmentedButton: controls/segmentedbutton.md
+          - SegmentedButton:
+              - controls/segmentedbutton.md
+              - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
           - ShaderMask: controls/shadermask.md
+          - Shimmer: controls/shimmer.md
           - ShakeDetector: controls/shakedetector.md
           - Screenshot: controls/screenshot.md
           - Slider: controls/slider.md
@@ -760,6 +766,7 @@ nav:
               - CardVariant: types/cardvariant.md
               - ClipBehavior: types/clipbehavior.md
               - Colors: types/colors.md
+              - ContextMenuTrigger: types/contextmenutrigger.md
               - CrossAxisAlignment: types/crossaxisalignment.md
               - CupertinoButtonSize: types/cupertinobuttonsize.md
               - CupertinoColors: types/cupertinocolors.md
@@ -767,6 +774,8 @@ nav:
               - CupertinoDatePickerMode: types/cupertinodatepickermode.md
               - CupertinoIcons: types/cupertinoicons.md
               - CupertinoTimerPickerMode: types/cupertinotimerpickermode.md
+              - DataTable2:
+                - DataColumnSize: datatable2/types/data_column_size.md
               - DatePickerEntryMode: types/datepickerentrymode.md
               - DatePickerMode: types/datepickermode.md
               - DismissDirection: types/dismissdirection.md
@@ -786,7 +795,6 @@ nav:
               - MarkdownCodeTheme: types/markdowncodetheme.md
               - MarkdownExtensionSet: types/markdownextensionset.md
               - NavigationBarLabelBehavior: types/navigationbarlabelbehavior.md
-              - NavigationDrawerPosition: types/navigationdrawerposition.md
               - NavigationRailLabelType: types/navigationraillabeltype.md
               - DeviceOrientation: types/deviceorientation.md
               - Orientation: types/orientation.md
@@ -818,6 +826,7 @@ nav:
               - ThemeMode: types/thememode.md
               - TileAffinity: types/tileaffinity.md
               - TimePickerEntryMode: types/timepickerentrymode.md
+              - TimePickerHourFormat: types/timepickerhourformat.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
@@ -832,6 +841,8 @@ nav:
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
+              - ContextMenuDismissEvent: types/contextmenudismissevent.md
+              - ContextMenuSelectEvent: types/contextmenuselectevent.md
               - DataColumnSortEvent: types/datacolumnsortevent.md
               - DatePickerEntryModeChangeEvent: types/datepickerentrymodechangeevent.md
               - DismissibleDismissEvent: types/dismissibledismissevent.md
@@ -887,6 +898,7 @@ nav:
               - use_context: types/use_context.md
               - use_effect: types/use_effect.md
               - use_memo: types/use_memo.md
+              - use_ref: types/use_ref.md
               - use_state: types/use_state.md
       - Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
       - Environment Variables: reference/environment-variables.md

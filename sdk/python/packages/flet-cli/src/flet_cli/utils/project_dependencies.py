@@ -8,7 +8,6 @@ from typing import Any, Optional
 def get_poetry_dependencies(
     poetry_dependencies: Optional[dict[str, Any]] = None,
 ) -> Optional[list[str]]:
-
     if poetry_dependencies is None:
         return None
 
@@ -51,8 +50,9 @@ def get_poetry_dependencies(
                             dependency_name = ""
                             sep = ""
                         else:
-                            raise Exception(
-                                f"Unsupported dependency specification: {dependency_name} = {dependency_value}"
+                            raise ValueError(
+                                "Unsupported dependency specification: "
+                                f"{dependency_name} = {dependency_value}"
                             )
 
             # markers - common for all
@@ -88,7 +88,6 @@ def get_poetry_dependencies(
 def get_project_dependencies(
     project_dependencies: Optional[dict[str, Any]] = None,
 ) -> Optional[list[str]]:
-
     if project_dependencies is None:
         return None
 

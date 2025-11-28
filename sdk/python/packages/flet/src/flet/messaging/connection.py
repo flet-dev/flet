@@ -20,7 +20,7 @@ class Connection:
     @property
     def loop(self) -> AbstractEventLoop:
         if self.__loop is None:
-            raise Exception("Loop not initialized")
+            raise RuntimeError("Loop not initialized")
         return self.__loop
 
     @loop.setter
@@ -30,7 +30,7 @@ class Connection:
     @property
     def executor(self) -> ThreadPoolExecutor:
         if self.__executor is None:
-            raise Exception("Executor not initialized")
+            raise RuntimeError("Executor not initialized")
         return self.__executor
 
     @executor.setter
@@ -40,7 +40,7 @@ class Connection:
     @property
     def pubsubhub(self) -> PubSubHub:
         if self.__pubsubhub is None:
-            raise Exception("PubSubHub not initialized")
+            raise RuntimeError("PubSubHub not initialized")
         return self.__pubsubhub
 
     @pubsubhub.setter

@@ -11,12 +11,6 @@ def main(page: ft.Page):
     )
     page.floating_action_button_location = ft.FloatingActionButtonLocation.CENTER_DOCKED
 
-    page.appbar = ft.AppBar(
-        title=ft.Text("Bottom AppBar Demo"),
-        center_title=True,
-        bgcolor=ft.Colors.GREEN_300,
-        automatically_imply_leading=False,
-    )
     page.bottom_appbar = ft.BottomAppBar(
         bgcolor=ft.Colors.BLUE,
         shape=ft.CircularRectangleNotchShape(),
@@ -30,7 +24,8 @@ def main(page: ft.Page):
         ),
     )
 
-    page.add(ft.Text("Body!"))
+    page.add(ft.Text("Content goes here..."))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -27,7 +27,7 @@ class DateRangePicker(DialogControl):
 
     It can be opened by calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
-    Depending on the [`date_picker_entry_mode`][(c).], it will show either a Calendar
+    Depending on the [`entry_mode`][(c).], it will show either a Calendar
     or an Input (TextField) for picking a date range.
     """
 
@@ -84,7 +84,7 @@ class DateRangePicker(DialogControl):
     The type of keyboard to use for editing the text.
     """
 
-    date_picker_entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
+    entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
     """
@@ -142,10 +142,10 @@ class DateRangePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][(c).]
+    [`entry_mode`][(c).]
     is [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
 
-    Clicking on this icon changes the `date_picker_entry_mode` to
+    Clicking on this icon changes the `entry_mode` to
     [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
 
     If `None`, [`Icons.CALENDAR_TODAY`][flet.Icons.CALENDAR_TODAY] is used.
@@ -154,10 +154,10 @@ class DateRangePicker(DialogControl):
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when
-    [`date_picker_entry_mode`][(c).]
+    [`entry_mode`][(c).]
     is [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
 
-    Clicking on this icon changes the `date_picker_entry_mode` to
+    Clicking on this icon changes the `entry_mode` to
     [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
 
     If `None`, [`Icons.EDIT_OUTLINED`][flet.Icons.EDIT_OUTLINED] is used.

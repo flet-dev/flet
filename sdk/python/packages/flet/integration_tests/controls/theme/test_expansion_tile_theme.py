@@ -12,7 +12,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_expansion_tile_theme(flet_app: ftt.FletTestApp, request):
+async def test_theme_1(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme = ft.Theme(
         expansion_tile_theme=ft.ExpansionTileTheme(
             bgcolor=ft.Colors.GREEN_200,
@@ -44,15 +44,13 @@ async def test_expansion_tile_theme(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [et]
-    flet_app.page.update()
+    flet_app.resize_page(400, 600)
+    flet_app.page.add(et)
     await flet_app.tester.pump_and_settle()
 
     # normal state
     flet_app.assert_screenshot(
-        "collapsed",
+        "theme_1_collapsed",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -62,7 +60,7 @@ async def test_expansion_tile_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.tap(await flet_app.tester.find_by_key("et"))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "expanded",
+        "theme_1_expanded",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

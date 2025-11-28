@@ -1,33 +1,31 @@
+import asyncio
+
 import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_show_drawer(e: ft.Event[ft.FloatingActionButton]):
-        pagelet.show_drawer(drawer)
+    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+    page.vertical_alignment = ft.CrossAxisAlignment.CENTER
 
-    drawer = ft.NavigationDrawer(
-        controls=[
-            ft.NavigationDrawerDestination(
-                icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
-                label="Item 1",
-            ),
-            ft.NavigationDrawerDestination(
-                icon=ft.Icons.ADD_COMMENT,
-                label="Item 2",
-            ),
-        ],
-    )
+    async def handle_show_drawer(e: ft.Event[ft.FloatingActionButton]):
+        await pagelet.show_drawer()
+
+    async def handle_show_end_drawer(e: ft.Event[ft.Button]):
+        await pagelet.show_end_drawer()
+        await asyncio.sleep(3)
+        await pagelet.close_end_drawer()
 
     page.add(
         pagelet := ft.Pagelet(
-            width=400,
-            height=400,
+            width=500,
+            height=500,
             appbar=ft.AppBar(
-                title=ft.Text("Pagelet AppBar Title"),
-                bgcolor=ft.Colors.AMBER_ACCENT,
+                title=ft.Text("Pagelet AppBar"),
+                center_title=True,
+                bgcolor=ft.Colors.RED_500,
             ),
-            content=ft.Container(ft.Text("Pagelet Body"), padding=ft.Padding.all(16)),
-            bgcolor=ft.Colors.AMBER_100,
+            content=ft.Text("Pagelet Body"),
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             bottom_appbar=ft.BottomAppBar(
                 bgcolor=ft.Colors.BLUE,
                 shape=ft.CircularRectangleNotchShape(),
@@ -42,15 +40,40 @@ def main(page: ft.Page):
                     ]
                 ),
             ),
-            end_drawer=drawer,
+            drawer=ft.NavigationDrawer(
+                on_dismiss=lambda e: print("Drawer dismissed"),
+                controls=[
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP,
+                        label="Item 1",
+                    ),
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.ADD_COMMENT,
+                        label="Item 2",
+                    ),
+                ],
+            ),
+            end_drawer=ft.NavigationDrawer(
+                on_dismiss=lambda e: print("End Drawer dismissed"),
+                controls=[
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.SLOW_MOTION_VIDEO,
+                        label="Item 3",
+                    ),
+                    ft.NavigationDrawerDestination(
+                        icon=ft.Icons.INSERT_CHART,
+                        label="Item 4",
+                    ),
+                ],
+            ),
             floating_action_button=ft.FloatingActionButton(
-                content="Open",
+                icon=ft.Icons.ADD,
                 shape=ft.CircleBorder(),
-                on_click=handle_show_drawer,
             ),
             floating_action_button_location=ft.FloatingActionButtonLocation.CENTER_DOCKED,
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

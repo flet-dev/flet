@@ -1,7 +1,20 @@
-import 'package:flet/flet.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+
+import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/form_field.dart';
+import '../utils/menu.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
+import '../utils/textfield.dart';
+import 'base_controls.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control control;
@@ -16,29 +29,46 @@ class DropdownControl extends StatefulWidget {
 class _DropdownControlState extends State<DropdownControl> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
+  String? _value;
+  bool _suppressTextChange = false;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
 
-    _controller = TextEditingController(text: widget.control.getString("text"));
+    // initialize controller
+    _value = widget.control.getString("value");
+    final text = widget.control.getString("text") ?? _value ?? "";
+    _controller = TextEditingController(text: text);
+    _controller.addListener(_onTextChange);
+
+    _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
-
-    _controller.addListener(_onTextChange);
   }
 
   void _onTextChange() {
-    debugPrint("Typed text: ${_controller.text}");
+    if (_suppressTextChange) return;
+
     if (_controller.text != widget.control.getString("text")) {
       widget.control.updateProperties({"text": _controller.text});
-      widget.control.triggerEvent("change", _controller.text);
+      widget.control.triggerEvent("text_change", _controller.text);
     }
   }
 
   void _onFocusChange() {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  /// Updates text without triggering a text change event.
+  void _updateControllerText(String text) {
+    _suppressTextChange = true;
+    _controller.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+    _suppressTextChange = false;
+    widget.control.updateProperties({"text": text}, python: false);
   }
 
   @override
@@ -65,13 +95,12 @@ class _DropdownControlState extends State<DropdownControl> {
     debugPrint("DropdownMenu build: ${widget.control.id}");
 
     var theme = Theme.of(context);
-    bool editable = widget.control.getBool("editable", false)!;
-    bool autofocus = widget.control.getBool("autofocus", false)!;
+    var editable = widget.control.getBool("editable", false)!;
+    var autofocus = widget.control.getBool("autofocus", false)!;
     var textSize = widget.control.getDouble("text_size");
     var color = widget.control.getColor("color", context);
 
-    TextAlign textAlign =
-        widget.control.getTextAlign("text_align", TextAlign.start)!;
+    var textAlign = widget.control.getTextAlign("text_align", TextAlign.start)!;
 
     var fillColor = widget.control.getColor("fill_color", context);
     var borderColor = widget.control.getColor("border_color", context);
@@ -85,7 +114,7 @@ class _DropdownControlState extends State<DropdownControl> {
     var bgColor = widget.control.getWidgetStateColor("bgcolor", theme);
     var elevation = widget.control.getWidgetStateDouble("elevation");
 
-    FormFieldInputBorder inputBorder = widget.control
+    var inputBorder = widget.control
         .getFormFieldInputBorder("border", FormFieldInputBorder.outline)!;
 
     InputBorder? border;
@@ -115,7 +144,7 @@ class _DropdownControlState extends State<DropdownControl> {
                 ? BorderSide.none
                 : BorderSide(
                     color: borderColor ??
-                        theme.colorScheme.onSurface.withOpacity(0.38),
+                        theme.colorScheme.onSurface.withValues(alpha: 0.38),
                     width: borderWidth ?? 1.0));
       }
     }
@@ -176,30 +205,54 @@ class _DropdownControlState extends State<DropdownControl> {
                   color: color ?? theme.colorScheme.onSurface);
     }
 
-    var items = widget.control
+    // build dropdown items
+    var options = widget.control
         .children("options")
-        .map<DropdownMenuEntry<String>>((Control itemCtrl) {
-      bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
-      ButtonStyle? style = itemCtrl.getButtonStyle("style", theme);
+        .map<DropdownMenuEntry<String>?>((Control itemCtrl) {
+          bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
+          ButtonStyle? style = itemCtrl.getButtonStyle("style", theme);
 
-      return DropdownMenuEntry<String>(
-        enabled: !itemDisabled,
-        value: itemCtrl.getString("key") ??
-            itemCtrl.getString("text") ??
-            itemCtrl.id.toString(),
-        label: itemCtrl.getString("text") ??
-            itemCtrl.getString("key") ??
-            itemCtrl.id.toString(),
-        labelWidget: itemCtrl.buildWidget("content"),
-        leadingIcon: itemCtrl.buildIconOrWidget("leading_icon"),
-        trailingIcon: itemCtrl.buildIconOrWidget("trailing_icon"),
-        style: style,
-      );
-    }).toList();
+          var optionKey = itemCtrl.getString("key");
+          var optionText = itemCtrl.getString("text");
 
-    String? value = widget.control.getString("value");
-    if (items.where((item) => item.value == value).isEmpty) {
-      value = null;
+          var optionValue = optionKey ?? optionText;
+          var optionLabel = optionText ?? optionKey;
+          if (optionValue == null || optionLabel == null) {
+            return null;
+          }
+
+          return DropdownMenuEntry<String>(
+            enabled: !itemDisabled,
+            value: optionValue,
+            label: optionLabel,
+            labelWidget: itemCtrl.buildWidget("content"),
+            leadingIcon: itemCtrl.buildIconOrWidget("leading_icon"),
+            trailingIcon: itemCtrl.buildIconOrWidget("trailing_icon"),
+            style: style,
+          );
+        })
+        .nonNulls
+        .toList();
+
+    var value = widget.control.getString("value");
+    var selectedOption = options.firstWhereOrNull((o) => o.value == value);
+    value = selectedOption?.value;
+
+    // keep controller text in sync with backend-driven value changes
+    if (_value != value) {
+      if (value == null) {
+        if (_value != null && _controller.text.isNotEmpty) {
+          // clears dropdown field
+          _updateControllerText("");
+        }
+      } else {
+        final String entryLabel =
+            selectedOption?.label ?? widget.control.getString("text") ?? value;
+        if (_controller.text != entryLabel) {
+          _updateControllerText(entryLabel);
+        }
+      }
+      _value = value;
     }
 
     TextCapitalization textCapitalization = widget.control
@@ -237,24 +290,20 @@ class _DropdownControlState extends State<DropdownControl> {
       errorText: widget.control.getString("error_text"),
       hintText: widget.control.getString("hint_text"),
       helperText: widget.control.getString("helper_text"),
-      // menuStyle: MenuStyle(
-      //   backgroundColor: widget.control.getWidgetStateColor("bgcolor", theme),
-      //   elevation: widget.control.getWidgetStateDouble("elevation"),
-      //   fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
-      // ),
       menuStyle: menuStyle,
       inputDecorationTheme: inputDecorationTheme,
+      inputFormatters: inputFormatters.isEmpty ? null : inputFormatters,
       onSelected: widget.control.disabled
           ? null
-          : (String? value) {
-              widget.control.updateProperties({"value": value});
-              widget.control.triggerEvent("select", value);
+          : (String? selection) {
+              _value = selection;
+              widget.control.updateProperties({"value": selection});
+              widget.control.triggerEvent("select", selection);
             },
-      dropdownMenuEntries: items,
+      dropdownMenuEntries: options,
     );
 
     var didAutoFocus = false;
-
     if (!didAutoFocus && autofocus) {
       didAutoFocus = true;
       SchedulerBinding.instance.addPostFrameCallback((_) {

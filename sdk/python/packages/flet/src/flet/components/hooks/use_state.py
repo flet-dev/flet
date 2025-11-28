@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, TypeVar
@@ -5,6 +7,9 @@ from typing import Any, TypeVar
 from flet.components.hooks.hook import Hook
 from flet.components.observable import Observable, ObservableSubscription
 from flet.components.utils import current_component
+
+StateT = TypeVar("StateT")
+Updater = Callable[[StateT], StateT]
 
 
 @dataclass
@@ -14,20 +19,21 @@ class StateHook(Hook):
     version: int = 0
 
 
-StateT = TypeVar("StateT")
-
-
 def use_state(
     initial: StateT | Callable[[], StateT],
-) -> tuple[StateT, Callable[[StateT], None]]:
+) -> tuple[StateT, Callable[[StateT | Updater], None]]:
     """
-    Add state to function components.
+    Adds state to a function component, similar to React's useState().
+
+    The returned setter accepts either:
+      - a new value, or
+      - a function receiving the previous state and returning the next one.
 
     Args:
-        initial: Initial state value or a function that returns the initial state value.
+        initial: Initial state value or a function returning it.
 
     Returns:
-        A tuple of the current state value and a function to update it.
+        (value, set_value) tuple.
     """
     component = current_component()
     hook = component.use_hook(
@@ -37,17 +43,34 @@ def use_state(
         )
     )
 
-    def update_subscription(hook: StateHook):
-        if hook.subscription:
-            component._detach_observable_subscription(hook.subscription)
-            hook.subscription = None
-        if isinstance(hook.value, Observable):
-            hook.subscription = component._attach_observable_subscription(hook.value)
+    def update_subscription(h: StateHook):
+        # Detach previous subscription if any
+        if h.subscription:
+            component._detach_observable_subscription(h.subscription)
+            h.subscription = None
+
+        # Attach new subscription if value is Observable
+        if isinstance(h.value, Observable):
+            h.subscription = component._attach_observable_subscription(h.value)
 
     update_subscription(hook)
 
-    def set_state(new_value: Any):
-        # shallow equality; swap to "is" or custom comparator if needed
+    def set_state(new_value_or_fn: StateT | Updater):
+        """
+        Update the state value.
+
+        Can be called with either:
+          - a direct new value, or
+          - a function that takes the current value and returns the next one.
+        """
+        # Compute next value
+        new_value = (
+            new_value_or_fn(hook.value)
+            if callable(new_value_or_fn)
+            else new_value_or_fn
+        )
+
+        # Only trigger update if value changed (shallow equality)
         if new_value != hook.value:
             hook.value = new_value
             update_subscription(hook)

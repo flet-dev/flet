@@ -24,8 +24,7 @@ async def test_cupertino_picker_basic(flet_app: ftt.FletTestApp, request):
 
     cupertino_bottom_sheet = ft.CupertinoBottomSheet(picker)
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(cupertino_bottom_sheet)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()

@@ -1,18 +1,18 @@
-import 'package:flet/src/utils/buttons.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import '../widgets/error.dart';
 import 'app_bar.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 import 'cupertino_app_bar.dart';
-import 'navigation_drawer.dart';
 
 class PageletControl extends StatefulWidget {
   final Control control;
@@ -25,7 +25,40 @@ class PageletControl extends StatefulWidget {
 }
 
 class _PageletControlState extends State<PageletControl> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _materialScaffoldKey = GlobalKey<ScaffoldState>();
+  final _cupertinoPageScaffoldKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void dispose() {
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Pagelet.$name($args)");
+    switch (name) {
+      case "show_drawer":
+        _materialScaffoldKey.currentState?.openDrawer();
+        break;
+      case "close_drawer":
+        _materialScaffoldKey.currentState?.closeDrawer();
+        break;
+      case "show_end_drawer":
+        _materialScaffoldKey.currentState?.openEndDrawer();
+        break;
+      case "close_end_drawer":
+        _materialScaffoldKey.currentState?.closeEndDrawer();
+        break;
+      default:
+        throw Exception("Unknown Pagelet method: $name");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +71,7 @@ class _PageletControlState extends State<PageletControl> {
     var bottomSheet = widget.control.buildWidget("bottom_sheet");
     var drawer = widget.control.child("drawer");
     var endDrawer = widget.control.child("end_drawer");
+    var hasDrawer = drawer != null || endDrawer != null;
     var fab = widget.control.buildWidget("floating_action_button");
 
     if (content == null) {
@@ -50,65 +84,9 @@ class _PageletControlState extends State<PageletControl> {
 
     var bnb = navigationBar ?? bottomAppBar;
 
-    final bool? drawerOpened = widget.control.getBool("drawer_opened");
-    final bool? endDrawerOpened = widget.control.getBool("end_drawer_opened");
-    final fabLocation = widget.control.getFloatingActionButtonLocation(
-        "floating_action_button_location",
-        FloatingActionButtonLocation.endFloat);
-
-    void dismissDrawer(dynamic id) {
-      // fixme: id
-      widget.control.updateProperties({"open": false});
-      widget.control.triggerEvent("dismiss");
+    void dismissDrawer(int id) {
+      widget.control.backend.triggerControlEventById(id, "dismiss");
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (drawer != null) {
-        if (scaffoldKey.currentState?.isDrawerOpen == false &&
-            drawerOpened == true) {
-          widget.control
-              .updateProperties({"drawer_opened": false}, python: false);
-          dismissDrawer(drawer.id);
-        }
-        if (drawer.getBool("open", false)! && drawerOpened != true) {
-          if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
-            scaffoldKey.currentState?.closeEndDrawer();
-          }
-          Future.delayed(const Duration(milliseconds: 1)).then((value) {
-            scaffoldKey.currentState?.openDrawer();
-            widget.control
-                .updateProperties({"drawer_opened": true}, python: false);
-          });
-        } else if (!drawer.getBool("open", false)! && drawerOpened == true) {
-          scaffoldKey.currentState?.closeDrawer();
-          widget.control
-              .updateProperties({"drawer_opened": false}, python: false);
-        }
-      }
-      if (endDrawer != null) {
-        if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
-            endDrawerOpened == true) {
-          widget.control
-              .updateProperties({"end_drawer_opened": false}, python: false);
-          dismissDrawer(endDrawer.id);
-        }
-        if (endDrawer.getBool("open", false)! && endDrawerOpened != true) {
-          if (scaffoldKey.currentState?.isDrawerOpen == true) {
-            scaffoldKey.currentState?.closeDrawer();
-          }
-          Future.delayed(const Duration(milliseconds: 1)).then((value) {
-            scaffoldKey.currentState?.openEndDrawer();
-            widget.control
-                .updateProperties({"end_drawer_opened": true}, python: false);
-          });
-        } else if (!endDrawer.getBool("open", false)! &&
-            endDrawerOpened == true) {
-          scaffoldKey.currentState?.closeEndDrawer();
-          widget.control
-              .updateProperties({"end_drawer_opened": false}, python: false);
-        }
-      }
-    });
 
     var bar = appBar != null
         ? appBar.type == "AppBar"
@@ -122,26 +100,19 @@ class _PageletControlState extends State<PageletControl> {
         : null;
 
     Widget scaffold = Scaffold(
-        key: bar == null || bar is AppBarControl ? scaffoldKey : null,
+        key: _materialScaffoldKey,
         backgroundColor: widget.control.getColor("bgcolor", context) ??
             CupertinoTheme.of(context).scaffoldBackgroundColor,
         appBar: bar is AppBarControl ? bar : null,
-        drawer:
-            drawer != null ? NavigationDrawerControl(control: drawer) : null,
+        drawer: drawer != null ? ControlWidget(control: drawer) : null,
         onDrawerChanged: (opened) {
           if (drawer != null && !opened) {
-            widget.control
-                .updateProperties({"drawer_opened": false}, python: false);
             dismissDrawer(drawer.id);
           }
         },
-        endDrawer: endDrawer != null
-            ? NavigationDrawerControl(control: endDrawer)
-            : null,
+        endDrawer: endDrawer != null ? ControlWidget(control: endDrawer) : null,
         onEndDrawerChanged: (opened) {
           if (endDrawer != null && !opened) {
-            widget.control
-                .updateProperties({"end_drawer_opened": false}, python: false);
             dismissDrawer(endDrawer.id);
           }
         },
@@ -149,15 +120,40 @@ class _PageletControlState extends State<PageletControl> {
         bottomNavigationBar: bnb,
         bottomSheet: bottomSheet,
         floatingActionButton: fab,
-        floatingActionButtonLocation: fabLocation);
+        floatingActionButtonLocation: widget.control
+            .getFloatingActionButtonLocation("floating_action_button_location",
+                FloatingActionButtonLocation.endFloat));
+
+    if (hasDrawer) {
+      // Clip to page bounds so the drawer animation stays hidden outside the pagelet.
+      scaffold = ClipRect(child: scaffold);
+    }
 
     if (bar is CupertinoAppBarControl) {
       scaffold = CupertinoPageScaffold(
-          key: scaffoldKey,
+          key: _cupertinoPageScaffoldKey,
           backgroundColor: widget.control.getColor("bgcolor", context),
           navigationBar: bar as ObstructingPreferredSizeWidget,
           child: scaffold);
     }
+
+    final scaffoldWithBoundsCheck = scaffold;
+
+    scaffold = LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      debugPrint("Pagelet constraints.maxWidth: ${constraints.maxWidth}");
+      debugPrint("Pagelet constraints.maxHeight: ${constraints.maxHeight}");
+
+      if (constraints.maxHeight == double.infinity &&
+          widget.control.getDouble("height") == null) {
+        return const ErrorControl(
+                "Error displaying Pagelet: height is unbounded.",
+            description:
+                "Either set a fixed \"height\" or nest Pagelet inside expanded control or control with a fixed height.");
+      }
+
+      return scaffoldWithBoundsCheck;
+    });
 
     return LayoutControl(control: widget.control, child: scaffold);
   }

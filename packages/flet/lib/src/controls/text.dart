@@ -15,6 +15,7 @@ class TextControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Text build: ${control.id}");
 
+    final theme = Theme.of(context);
     String text = control.getString("value", "")!;
     var selectionCursorColor =
         control.getColor("selection_cursor_color", context);
@@ -27,34 +28,18 @@ class TextControl extends StatelessWidget {
 
     List<TextSpan>? spans = parseTextSpans(
       control.children("spans"),
-      Theme.of(context),
+      theme,
       (Control control, String eventName, [dynamic eventData]) {
         control.triggerEvent(eventName, eventData);
       },
     );
-    String? semanticsLabel = control.getString("semantics_label");
-    bool noWrap = control.getBool("no_wrap", false)!;
-    int? maxLines = control.getInt("max_lines");
+    var semanticsLabel = control.getString("semantics_label");
+    var noWrap = control.getBool("no_wrap", false)!;
+    var maxLines = control.getInt("max_lines");
 
-    TextStyle? style;
-    var styleNameOrData = control.getString("style", null);
-    if (styleNameOrData != null) {
-      style = getTextStyle(context, styleNameOrData);
-    }
-    if (style == null && styleNameOrData != null) {
-      try {
-        style = control.getTextStyle("style", Theme.of(context));
-      } on FormatException catch (_) {
-        style = null;
-      }
-    }
-
-    TextStyle? themeStyle;
-    var styleName = control.getString("theme_style");
-    if (styleName != null) {
-      themeStyle = getTextStyle(context, styleName);
-    }
-
+    var style = control.getTextStyle("style", theme);
+    var themeStyle =
+        parseTextThemeStyle(control.getString("theme_style"), context);
     if (style == null && themeStyle != null) {
       style = themeStyle;
     } else if (style != null && themeStyle != null) {
@@ -62,7 +47,6 @@ class TextControl extends StatelessWidget {
     }
 
     var fontWeight = control.getString("weight", "")!;
-
     List<FontVariation> variations = [];
     if (fontWeight.startsWith("w")) {
       variations
@@ -70,8 +54,9 @@ class TextControl extends StatelessWidget {
     }
 
     style = (style ?? const TextStyle()).copyWith(
+      overflow: control.getTextOverflow("overflow"),
       fontSize: control.getDouble("size", null),
-      fontWeight: getFontWeight(fontWeight),
+      fontWeight: parseFontWeight(fontWeight),
       fontStyle: control.getBool("italic", false)! ? FontStyle.italic : null,
       fontFamily: control.getString("font_family"),
       fontVariations: variations,
@@ -80,15 +65,12 @@ class TextControl extends StatelessWidget {
       backgroundColor: control.getColor("bgcolor", context),
     );
 
-    TextAlign textAlign =
+    var textAlign =
         parseTextAlign(control.getString("text_align"), TextAlign.start)!;
-
-    TextOverflow overflow =
-        parseTextOverflow(control.getString("overflow"), TextOverflow.clip)!;
 
     onSelectionChanged(TextSelection selection, SelectionChangedCause? cause) {
       control.triggerEvent("selection_change", {
-        "text": text,
+        "selected_text": text,
         "cause": cause?.name ?? "unknown",
         "selection": selection.toMap(),
       });
@@ -134,7 +116,6 @@ class TextControl extends StatelessWidget {
                 maxLines: maxLines,
                 softWrap: !noWrap,
                 textAlign: textAlign,
-                overflow: overflow,
               )
             : Text(
                 text,
@@ -143,7 +124,6 @@ class TextControl extends StatelessWidget {
                 softWrap: !noWrap,
                 style: style,
                 textAlign: textAlign,
-                overflow: overflow,
               );
 
     return LayoutControl(control: control, child: textWidget);

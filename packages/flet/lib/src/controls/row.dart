@@ -55,6 +55,7 @@ class RowControl extends StatelessWidget {
     child = ScrollableControl(
         control: control,
         scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
+        wrapIntoScrollableView: true,
         child: child);
 
     if (control.getBool("on_scroll", false)!) {

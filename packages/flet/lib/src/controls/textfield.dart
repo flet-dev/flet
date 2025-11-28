@@ -36,11 +36,13 @@ class _TextFieldControlState extends State<TextFieldControl> {
   late final FocusNode _shiftEnterfocusNode;
   String? _lastFocusValue;
   String? _lastBlurValue;
+  TextSelection? _selection;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _controller.addListener(_handleControllerChange);
     _shiftEnterfocusNode = FocusNode(
       onKeyEvent: (FocusNode node, KeyEvent evt) {
         if (!HardwareKeyboard.instance.isShiftPressed &&
@@ -62,6 +64,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
 
   @override
   void dispose() {
+    _controller.removeListener(_handleControllerChange);
     _controller.dispose();
     _shiftEnterfocusNode.removeListener(_onShiftEnterFocusChange);
     _shiftEnterfocusNode.dispose();
@@ -92,6 +95,25 @@ class _TextFieldControlState extends State<TextFieldControl> {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
+  void _handleControllerChange() {
+    final selection = _controller.selection;
+    if (_selection == selection) return;
+
+    _selection = selection;
+
+    if (!selection.isValid ||
+        !widget.control.getBool("on_selection_change", false)!) {
+      return;
+    }
+
+    widget.control.updateProperties({"selection": selection.toMap()});
+    widget.control.triggerEvent("selection_change", {
+      "selected_text":
+          _controller.text.substring(selection.start, selection.end),
+      "selection": selection.toMap()
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("TextField build: ${widget.control.id}");
@@ -103,9 +125,17 @@ class _TextFieldControlState extends State<TextFieldControl> {
       _value = value;
       _controller.value = TextEditingValue(
         text: value,
-        selection: TextSelection.collapsed(
-            offset: value.length), // preserve cursor position at the end
+        // preserve cursor position at the end
+        selection: TextSelection.collapsed(offset: value.length),
       );
+      _selection = _controller.selection;
+    }
+
+    var selection = widget.control.getTextSelection("selection",
+        minOffset: 0, maxOffset: _controller.text.length);
+    if (selection != null && selection != _controller.selection) {
+      _controller.selection = selection;
+      _selection = selection;
     }
 
     var shiftEnter = widget.control.getBool("shift_enter", false)!;

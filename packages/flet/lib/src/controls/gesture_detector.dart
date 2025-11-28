@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:flet/src/utils/events.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/events.dart';
 import '../utils/gesture_detector.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
@@ -63,38 +63,97 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var onTap = widget.control.getBool("on_tap", false)!;
     var onTapDown = widget.control.getBool("on_tap_down", false)!;
     var onTapUp = widget.control.getBool("on_tap_up", false)!;
+    var onTapMove = widget.control.getBool("on_tap_move", false)!;
+    var onTapCancel = widget.control.getBool("on_tap_cancel", false)!;
     var onSecondaryTap = widget.control.getBool("on_secondary_tap", false)!;
     var onSecondaryTapDown =
         widget.control.getBool("on_secondary_tap_down", false)!;
     var onSecondaryTapUp =
         widget.control.getBool("on_secondary_tap_up", false)!;
-    var onLongPressStart =
-        widget.control.getBool("on_long_press_start", false)!;
-    var onLongPressEnd = widget.control.getBool("on_long_press_end", false)!;
-    var onSecondaryLongPressStart =
-        widget.control.getBool("on_secondary_long_press_start", false)!;
-    var onSecondaryLongPressEnd =
-        widget.control.getBool("on_secondary_long_press_end", false)!;
+    var onSecondaryTapCancel =
+        widget.control.getBool("on_secondary_tap_cancel", false)!;
+    var onTertiaryTapDown =
+        widget.control.getBool("on_tertiary_tap_down", false)!;
+    var onTertiaryTapUp = widget.control.getBool("on_tertiary_tap_up", false)!;
+    var onTertiaryTapCancel =
+        widget.control.getBool("on_tertiary_tap_cancel", false)!;
     var onDoubleTap = widget.control.getBool("on_double_tap", false)!;
     var onDoubleTapDown = widget.control.getBool("on_double_tap_down", false)!;
+    var onDoubleTapCancel =
+        widget.control.getBool("on_double_tap_cancel", false)!;
+    var onLongPressDown = widget.control.getBool("on_long_press_down", false)!;
+    var onLongPressCancel =
+        widget.control.getBool("on_long_press_cancel", false)!;
+    var onLongPress = widget.control.getBool("on_long_press", false)!;
+    var onLongPressStart =
+        widget.control.getBool("on_long_press_start", false)!;
+    var onLongPressMoveUpdate =
+        widget.control.getBool("on_long_press_move_update", false)!;
+    var onLongPressUp = widget.control.getBool("on_long_press_up", false)!;
+    var onLongPressEnd = widget.control.getBool("on_long_press_end", false)!;
+    var onSecondaryLongPressDown =
+        widget.control.getBool("on_secondary_long_press_down", false)!;
+    var onSecondaryLongPressCancel =
+        widget.control.getBool("on_secondary_long_press_cancel", false)!;
+    var onSecondaryLongPress =
+        widget.control.getBool("on_secondary_long_press", false)!;
+    var onSecondaryLongPressStart =
+        widget.control.getBool("on_secondary_long_press_start", false)!;
+    var onSecondaryLongPressMoveUpdate =
+        widget.control.getBool("on_secondary_long_press_move_update", false)!;
+    var onSecondaryLongPressUp =
+        widget.control.getBool("on_secondary_long_press_up", false)!;
+    var onSecondaryLongPressEnd =
+        widget.control.getBool("on_secondary_long_press_end", false)!;
+    var onTertiaryLongPressDown =
+        widget.control.getBool("on_tertiary_long_press_down", false)!;
+    var onTertiaryLongPressCancel =
+        widget.control.getBool("on_tertiary_long_press_cancel", false)!;
+    var onTertiaryLongPress =
+        widget.control.getBool("on_tertiary_long_press", false)!;
+    var onTertiaryLongPressStart =
+        widget.control.getBool("on_tertiary_long_press_start", false)!;
+    var onTertiaryLongPressMoveUpdate =
+        widget.control.getBool("on_tertiary_long_press_move_update", false)!;
+    var onTertiaryLongPressUp =
+        widget.control.getBool("on_tertiary_long_press_up", false)!;
+    var onTertiaryLongPressEnd =
+        widget.control.getBool("on_tertiary_long_press_end", false)!;
+    var onHorizontalDragDown =
+        widget.control.getBool("on_horizontal_drag_down", false)!;
     var onHorizontalDragStart =
         widget.control.getBool("on_horizontal_drag_start", false)!;
     var onHorizontalDragUpdate =
         widget.control.getBool("on_horizontal_drag_update", false)!;
     var onHorizontalDragEnd =
         widget.control.getBool("on_horizontal_drag_end", false)!;
+    var onHorizontalDragCancel =
+        widget.control.getBool("on_horizontal_drag_cancel", false)!;
+    var onVerticalDragDown =
+        widget.control.getBool("on_vertical_drag_down", false)!;
     var onVerticalDragStart =
         widget.control.getBool("on_vertical_drag_start", false)!;
     var onVerticalDragUpdate =
         widget.control.getBool("on_vertical_drag_update", false)!;
     var onVerticalDragEnd =
         widget.control.getBool("on_vertical_drag_end", false)!;
+    var onVerticalDragCancel =
+        widget.control.getBool("on_vertical_drag_cancel", false)!;
+    var onPanDown = widget.control.getBool("on_pan_down", false)!;
     var onPanStart = widget.control.getBool("on_pan_start", false)!;
     var onPanUpdate = widget.control.getBool("on_pan_update", false)!;
     var onPanEnd = widget.control.getBool("on_pan_end", false)!;
+    var onPanCancel = widget.control.getBool("on_pan_cancel", false)!;
     var onScaleStart = widget.control.getBool("on_scale_start", false)!;
     var onScaleUpdate = widget.control.getBool("on_scale_update", false)!;
     var onScaleEnd = widget.control.getBool("on_scale_end", false)!;
+    var onForcePressStart =
+        widget.control.getBool("on_force_press_start", false)!;
+    var onForcePressPeak =
+        widget.control.getBool("on_force_press_peak", false)!;
+    var onForcePressUpdate =
+        widget.control.getBool("on_force_press_update", false)!;
+    var onForcePressEnd = widget.control.getBool("on_force_press_end", false)!;
     var onMultiTap = widget.control.getBool("on_multi_tap", false)!;
     var onMultiLongPress =
         widget.control.getBool("on_multi_long_press", false)!;
@@ -182,27 +241,61 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     result = (onTap |
             onTapDown |
             onTapUp |
+            onTapMove |
+            onTapCancel |
             onSecondaryTap |
             onSecondaryTapDown |
             onSecondaryTapUp |
-            onLongPressStart |
-            onLongPressEnd |
-            onSecondaryLongPressStart |
-            onSecondaryLongPressEnd |
+            onSecondaryTapCancel |
+            onTertiaryTapDown |
+            onTertiaryTapUp |
+            onTertiaryTapCancel |
             onDoubleTap |
             onDoubleTapDown |
+            onDoubleTapCancel |
+            onLongPressDown |
+            onLongPressCancel |
+            onLongPress |
+            onLongPressStart |
+            onLongPressMoveUpdate |
+            onLongPressUp |
+            onLongPressEnd |
+            onSecondaryLongPressDown |
+            onSecondaryLongPressCancel |
+            onSecondaryLongPress |
+            onSecondaryLongPressStart |
+            onSecondaryLongPressMoveUpdate |
+            onSecondaryLongPressUp |
+            onSecondaryLongPressEnd |
+            onTertiaryLongPressDown |
+            onTertiaryLongPressCancel |
+            onTertiaryLongPress |
+            onTertiaryLongPressStart |
+            onTertiaryLongPressMoveUpdate |
+            onTertiaryLongPressUp |
+            onTertiaryLongPressEnd |
+            onHorizontalDragDown |
             onHorizontalDragStart |
             onHorizontalDragUpdate |
             onHorizontalDragEnd |
+            onHorizontalDragCancel |
+            onVerticalDragDown |
             onVerticalDragStart |
             onVerticalDragUpdate |
             onVerticalDragEnd |
+            onVerticalDragCancel |
+            onPanDown |
             onPanStart |
             onPanUpdate |
             onPanEnd |
+            onPanCancel |
             onScaleStart |
             onScaleUpdate |
-            onScaleEnd)
+            onScaleEnd |
+            onForcePressStart |
+            onForcePressPeak |
+            onForcePressUpdate |
+            onForcePressEnd)
         ? GestureDetector(
             behavior: HitTestBehavior.translucent,
             excludeFromSemantics:
@@ -228,6 +321,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     widget.control.triggerEvent("tap_up", details.toMap());
                   }
                 : null,
+            onTapMove: onTapMove
+                ? (TapMoveDetails details) {
+                    widget.control.triggerEvent("tap_move", details.toMap());
+                  }
+                : null,
+            onTapCancel: onTapCancel
+                ? () {
+                    widget.control.triggerEvent("tap_cancel");
+                  }
+                : null,
             onSecondaryTap: onSecondaryTap
                 ? () => widget.control.triggerEvent("secondary_tap")
                 : null,
@@ -243,10 +346,59 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                         .triggerEvent("secondary_tap_up", details.toMap());
                   }
                 : null,
+            onSecondaryTapCancel: onSecondaryTapCancel
+                ? () {
+                    widget.control.triggerEvent("secondary_tap_cancel");
+                  }
+                : null,
+            onTertiaryTapDown: onTertiaryTapDown
+                ? (TapDownDetails details) {
+                    widget.control
+                        .triggerEvent("tertiary_tap_down", details.toMap());
+                  }
+                : null,
+            onTertiaryTapUp: onTertiaryTapUp
+                ? (TapUpDetails details) {
+                    widget.control
+                        .triggerEvent("tertiary_tap_up", details.toMap());
+                  }
+                : null,
+            onTertiaryTapCancel: onTertiaryTapCancel
+                ? () {
+                    widget.control.triggerEvent("tertiary_tap_cancel");
+                  }
+                : null,
+            onLongPressDown: onLongPressDown
+                ? (LongPressDownDetails details) {
+                    widget.control
+                        .triggerEvent("long_press_down", details.toMap());
+                  }
+                : null,
+            onLongPressCancel: onLongPressCancel
+                ? () {
+                    widget.control.triggerEvent("long_press_cancel");
+                  }
+                : null,
+            onLongPress: onLongPress
+                ? () {
+                    widget.control.triggerEvent("long_press");
+                  }
+                : null,
             onLongPressStart: onLongPressStart
                 ? (LongPressStartDetails details) {
                     widget.control
                         .triggerEvent("long_press_start", details.toMap());
+                  }
+                : null,
+            onLongPressMoveUpdate: onLongPressMoveUpdate
+                ? (LongPressMoveUpdateDetails details) {
+                    widget.control.triggerEvent(
+                        "long_press_move_update", details.toMap());
+                  }
+                : null,
+            onLongPressUp: onLongPressUp
+                ? () {
+                    widget.control.triggerEvent("long_press_up");
                   }
                 : null,
             onLongPressEnd: onLongPressEnd
@@ -255,16 +407,82 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                         .triggerEvent("long_press_end", details.toMap());
                   }
                 : null,
+            onSecondaryLongPressDown: onSecondaryLongPressDown
+                ? (LongPressDownDetails details) {
+                    widget.control.triggerEvent(
+                        "secondary_long_press_down", details.toMap());
+                  }
+                : null,
+            onSecondaryLongPressCancel: onSecondaryLongPressCancel
+                ? () {
+                    widget.control.triggerEvent("secondary_long_press_cancel");
+                  }
+                : null,
+            onSecondaryLongPress: onSecondaryLongPress
+                ? () {
+                    widget.control.triggerEvent("secondary_long_press");
+                  }
+                : null,
             onSecondaryLongPressStart: onSecondaryLongPressStart
                 ? (LongPressStartDetails details) {
                     widget.control.triggerEvent(
                         "secondary_long_press_start", details.toMap());
                   }
                 : null,
+            onSecondaryLongPressMoveUpdate: onSecondaryLongPressMoveUpdate
+                ? (LongPressMoveUpdateDetails details) {
+                    widget.control.triggerEvent(
+                        "secondary_long_press_move_update", details.toMap());
+                  }
+                : null,
+            onSecondaryLongPressUp: onSecondaryLongPressUp
+                ? () {
+                    widget.control.triggerEvent("secondary_long_press_up");
+                  }
+                : null,
             onSecondaryLongPressEnd: onSecondaryLongPressEnd
                 ? (LongPressEndDetails details) {
                     widget.control.triggerEvent(
                         "secondary_long_press_end", details.toMap());
+                  }
+                : null,
+            onTertiaryLongPressDown: onTertiaryLongPressDown
+                ? (LongPressDownDetails details) {
+                    widget.control.triggerEvent(
+                        "tertiary_long_press_down", details.toMap());
+                  }
+                : null,
+            onTertiaryLongPressCancel: onTertiaryLongPressCancel
+                ? () {
+                    widget.control.triggerEvent("tertiary_long_press_cancel");
+                  }
+                : null,
+            onTertiaryLongPress: onTertiaryLongPress
+                ? () {
+                    widget.control.triggerEvent("tertiary_long_press");
+                  }
+                : null,
+            onTertiaryLongPressStart: onTertiaryLongPressStart
+                ? (LongPressStartDetails details) {
+                    widget.control.triggerEvent(
+                        "tertiary_long_press_start", details.toMap());
+                  }
+                : null,
+            onTertiaryLongPressMoveUpdate: onTertiaryLongPressMoveUpdate
+                ? (LongPressMoveUpdateDetails details) {
+                    widget.control.triggerEvent(
+                        "tertiary_long_press_move_update", details.toMap());
+                  }
+                : null,
+            onTertiaryLongPressUp: onTertiaryLongPressUp
+                ? () {
+                    widget.control.triggerEvent("tertiary_long_press_up");
+                  }
+                : null,
+            onTertiaryLongPressEnd: onTertiaryLongPressEnd
+                ? (LongPressEndDetails details) {
+                    widget.control.triggerEvent(
+                        "tertiary_long_press_end", details.toMap());
                   }
                 : null,
             onDoubleTap: onDoubleTap
@@ -274,6 +492,17 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 ? (TapDownDetails details) {
                     widget.control
                         .triggerEvent("double_tap_down", details.toMap());
+                  }
+                : null,
+            onDoubleTapCancel: onDoubleTapCancel
+                ? () {
+                    widget.control.triggerEvent("double_tap_cancel");
+                  }
+                : null,
+            onHorizontalDragDown: onHorizontalDragDown
+                ? (DragDownDetails details) {
+                    widget.control
+                        .triggerEvent("horizontal_drag_down", details.toMap());
                   }
                 : null,
             onHorizontalDragStart:
@@ -291,6 +520,17 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                         .triggerEvent("horizontal_drag_end", details.toMap());
                   }
                 : null,
+            onHorizontalDragCancel: onHorizontalDragCancel
+                ? () {
+                    widget.control.triggerEvent("horizontal_drag_cancel");
+                  }
+                : null,
+            onVerticalDragDown: onVerticalDragDown
+                ? (DragDownDetails details) {
+                    widget.control
+                        .triggerEvent("vertical_drag_down", details.toMap());
+                  }
+                : null,
             onVerticalDragStart: (onVerticalDragStart || onVerticalDragUpdate)
                 ? handleVerticalDragStart
                 : null,
@@ -303,6 +543,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                         .triggerEvent("vertical_drag_end", details.toMap());
                   }
                 : null,
+            onVerticalDragCancel: onVerticalDragCancel
+                ? () {
+                    widget.control.triggerEvent("vertical_drag_cancel");
+                  }
+                : null,
+            onPanDown: onPanDown
+                ? (DragDownDetails details) {
+                    widget.control.triggerEvent("pan_down", details.toMap());
+                  }
+                : null,
             onPanStart: (onPanStart || onPanUpdate) ? handlePanStart : null,
             onPanUpdate: onPanUpdate
                 ? (details) {
@@ -312,6 +562,35 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
             onPanEnd: onPanEnd
                 ? (DragEndDetails details) {
                     widget.control.triggerEvent("pan_end", details.toMap());
+                  }
+                : null,
+            onPanCancel: onPanCancel
+                ? () {
+                    widget.control.triggerEvent("pan_cancel");
+                  }
+                : null,
+            onForcePressStart: onForcePressStart
+                ? (ForcePressDetails details) {
+                    widget.control
+                        .triggerEvent("force_press_start", details.toMap());
+                  }
+                : null,
+            onForcePressPeak: onForcePressPeak
+                ? (ForcePressDetails details) {
+                    widget.control
+                        .triggerEvent("force_press_peak", details.toMap());
+                  }
+                : null,
+            onForcePressUpdate: onForcePressUpdate
+                ? (ForcePressDetails details) {
+                    widget.control
+                        .triggerEvent("force_press_update", details.toMap());
+                  }
+                : null,
+            onForcePressEnd: onForcePressEnd
+                ? (ForcePressDetails details) {
+                    widget.control
+                        .triggerEvent("force_press_end", details.toMap());
                   }
                 : null,
             onScaleStart: onScaleStart

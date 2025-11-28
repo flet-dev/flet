@@ -1,13 +1,14 @@
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/tabs.dart';
 import '../utils/transforms.dart';
 import 'alignment.dart';
+import 'animations.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'buttons.dart';
@@ -124,7 +125,7 @@ ThemeData parseTheme(
     primaryTextTheme: parseTextTheme(
         value?["primary_text_theme"], theme, theme.primaryTextTheme),
     scrollbarTheme: parseScrollBarTheme(value?["scrollbar_theme"], theme),
-    tabBarTheme: parseTabBarTheme(value?["tabs_theme"], theme),
+    tabBarTheme: parseTabBarTheme(value?["tab_bar_theme"], theme),
     splashColor: parseColor(value?["splash_color"], theme),
     highlightColor: parseColor(value?["highlight_color"], theme),
     hoverColor: parseColor(value?["hover_color"], theme),
@@ -135,7 +136,7 @@ ThemeData parseTheme(
     canvasColor: parseColor(value?["canvas_color"], theme),
     scaffoldBackgroundColor: parseColor(value?["scaffold_bgcolor"], theme),
     cardColor: parseColor(value?["card_bgcolor"], theme),
-    dividerColor: dividerTheme?.color,
+    dividerColor: parseColor(value?["divider_color"], theme),
     hintColor: parseColor(value?["hint_color"], theme),
     shadowColor: colorScheme?.shadow,
     secondaryHeaderColor: parseColor(value?["secondary_header_color"], theme),
@@ -850,6 +851,9 @@ ListTileThemeData? parseListTileTheme(
         parseTextStyle(value["leading_and_trailing_text_style"], theme),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     minTileHeight: parseDouble(value["min_height"]),
+    controlAffinity: parseListTileControlAffinity(value["affinity"]),
+    style: parseListTileStyle(value["style"]),
+    titleAlignment: parseListTileTitleAlignment(value["title_alignment"]),
   );
 }
 
@@ -894,6 +898,10 @@ ExpansionTileThemeData? parseExpansionTileTheme(
     tilePadding: parsePadding(value["tile_padding"]),
     expandedAlignment: parseAlignment(value["expanded_alignment"]),
     childrenPadding: parsePadding(value["controls_padding"]),
+    shape: parseShape(value["shape"], theme),
+    collapsedShape: parseShape(value["collapsed_shape"], theme),
+    expansionAnimationStyle:
+        parseAnimationStyle(value["expansion_animation_style"]),
   );
 }
 

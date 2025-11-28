@@ -14,11 +14,13 @@ __all__ = ["BottomSheet"]
 @control("BottomSheet")
 class BottomSheet(DialogControl):
     """
-    Displays a modal bottom sheet.
+    A modal bottom sheet.
 
-    A bottom sheet is an alternative to a menu or dialog and prevents the user
-    from interacting with the rest of the app.
+    Displays a temporary surface anchored to the bottom of the
+    screen that presents supplemental content or actions.
+    Prevents interaction with the underlying app while visible.
 
+    Example:
     ```python
     sheet = ft.BottomSheet(
         content=ft.Column(
@@ -38,6 +40,12 @@ class BottomSheet(DialogControl):
     content: Control
     """
     The content of this bottom sheet.
+
+	Tip:
+		Set [`scrollable`][(c).] `True` if this content is or contains scrollable
+		controls (e.g., [`ListView`][flet.], [`GridView`][flet.]) or you plan to
+		`expand` the [`content`][(c).] or give it a custom height, else the bottom
+		sheet might ignore the custom height and stop around mid-screen.
     """
 
     elevation: Optional[Number] = None
@@ -45,7 +53,7 @@ class BottomSheet(DialogControl):
     Defines the size of the shadow below this bottom sheet.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is strictly less than `0`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -58,7 +66,7 @@ class BottomSheet(DialogControl):
     Specifies whether this bottom sheet will be dismissed when user taps on the scrim.
     """
 
-    enable_drag: bool = False
+    draggable: bool = False
     """
     Specifies whether this bottom sheet can be dragged up and down and dismissed by
     swiping downwards.
@@ -75,16 +83,28 @@ class BottomSheet(DialogControl):
     right.
     """
 
-    scroll_controlled: bool = False
+    scrollable: bool = False
     """
-    Specifies if this bottom sheet contains scrollable content, such as ListView or
-    GridView.
+    Removes the half-height cap so the sheet can grow with its content.
+
+    Set this to `True` whenever the sheet body contains scrollable controls
+    (e.g., [`ListView`][flet.], [`GridView`][flet.]) or you plan to `expand` the
+    [`content`][(c).] or give it a custom height, else the bottom sheet might
+    ignore the custom height and stop around mid-screen.
+    """
+
+    fullscreen: bool = False
+    """
+    Expands the sheet to fill the window/page height.
+
+    If set to `True`, [`scrollable`][(c).] is internally set to `True` equally,
+    so the sheet can grow freely to fill the page.
     """
 
     maintain_bottom_view_insets_padding: bool = True
     """
-    Adds a padding at the bottom to avoid obstructing the bottom sheet's content with
-    on-screen keyboard or other system elements.
+    Adds a padding at the bottom to avoid obstructing this
+    bottom sheet's [`content`][(c).] with on-screen keyboard or other system elements.
     """
 
     animation_style: Optional[AnimationStyle] = None

@@ -21,6 +21,6 @@ example_images: ../examples/controls/reorderable_list_view/media
 
 ### Custom drag handle
 
-See [this](reorderabledraggable.md#examples).
+See [this](reorderabledraghandle.md#examples).
 
 {{ class_members(class_name) }}

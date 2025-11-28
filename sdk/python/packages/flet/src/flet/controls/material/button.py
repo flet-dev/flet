@@ -147,7 +147,5 @@ class Button(LayoutControl, AdaptiveControl):
             )
 
     async def focus(self):
-        """
-        Focus the button.
-        """
+        """Requests focus for this control."""
         await self._invoke_method("focus")

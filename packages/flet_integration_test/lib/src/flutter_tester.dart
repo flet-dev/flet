@@ -14,7 +14,8 @@ class FlutterWidgetTester implements Tester {
   final WidgetTester _tester;
   final IntegrationTestWidgetsFlutterBinding _binding;
   final lock = Lock();
-  final Completer _teardown = Completer<void>();
+  final Completer _teardown = Completer();
+  TestGesture? _gesture;
 
   FlutterWidgetTester(this._tester, this._binding);
 
@@ -77,24 +78,33 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
-  Future<void> tap(TestFinder finder) =>
-      _tester.tap((finder as FlutterTestFinder).raw);
+  Future<void> tap(TestFinder finder, int finderIndex) =>
+      _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
 
   @override
-  Future<void> longPress(TestFinder finder) =>
-      _tester.longPress((finder as FlutterTestFinder).raw);
+  Future<void> tapAt(Offset offset) => _tester.tapAt(offset);
 
   @override
-  Future<void> enterText(TestFinder finder, String text) =>
-      _tester.enterText((finder as FlutterTestFinder).raw, text);
+  Future<void> longPress(TestFinder finder, int finderIndex) =>
+      _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
 
   @override
-  Future<void> mouseHover(TestFinder finder) async {
-    final center = _tester.getCenter((finder as FlutterTestFinder).raw);
-    final gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
-    await gesture.addPointer();
-    await gesture.moveTo(center);
-    await pumpAndSettle();
+  Future<void> enterText(TestFinder finder, int finderIndex, String text) =>
+      _tester.enterText(
+        (finder as FlutterTestFinder).raw.at(finderIndex),
+        text,
+      );
+
+  @override
+  Future<void> mouseHover(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+
+    await _mouseExit();
+    _gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(center);
   }
 
   @override
@@ -102,4 +112,11 @@ class FlutterWidgetTester implements Tester {
 
   @override
   Future waitForTeardown() => _teardown.future;
+
+  Future<void> _mouseExit() async {
+    if (_gesture != null) {
+      await _gesture?.removePointer();
+      _gesture = null;
+    }
+  }
 }

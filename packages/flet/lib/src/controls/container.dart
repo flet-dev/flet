@@ -1,5 +1,21 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
+
+import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/animations.dart';
+import '../utils/borders.dart';
+import '../utils/box.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/events.dart';
+import '../utils/gradient.dart';
+import '../utils/images.dart';
+import '../utils/launch_url.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 
 class ContainerControl extends StatelessWidget with FletStoreMixin {
   final Control control;
@@ -50,7 +66,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
-        ? () => control.triggerEvent("animation_end" "container")
+        ? () => control.triggerEvent("animation_end", "container")
         : null;
     if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
         ink &&

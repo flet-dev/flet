@@ -20,6 +20,7 @@ import 'controls/chip.dart';
 import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/context_menu.dart';
 import 'controls/cupertino_action_sheet.dart';
 import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
@@ -80,7 +81,7 @@ import 'controls/progress_bar.dart';
 import 'controls/progress_ring.dart';
 import 'controls/radio_group.dart';
 import 'controls/range_slider.dart';
-import 'controls/reorderable_draggable.dart';
+import 'controls/reorderable_drag_handle.dart';
 import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
@@ -91,6 +92,7 @@ import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
 import 'controls/semantics.dart';
 import 'controls/shader_mask.dart';
+import 'controls/shimmer.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
@@ -100,7 +102,6 @@ import 'controls/time_picker.dart';
 import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
-import 'controls/window.dart';
 import 'controls/window_drag_area.dart';
 import 'flet_extension.dart';
 import 'flet_service.dart';
@@ -115,6 +116,7 @@ import 'services/shared_preferences.dart';
 import 'services/storage_paths.dart';
 import 'services/tester.dart';
 import 'services/url_launcher.dart';
+import 'services/window.dart';
 import 'utils/cupertino_icons.dart';
 import 'utils/material_icons.dart';
 
@@ -172,6 +174,8 @@ class FletCoreExtension extends FletExtension {
         return ColumnControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "ContextMenu":
+        return ContextMenuControl(key: key, control: control);
       case "CupertinoActionSheet":
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
@@ -300,8 +304,8 @@ class FletCoreExtension extends FletExtension {
         return RadioGroupControl(key: key, control: control);
       case "RangeSlider":
         return RangeSliderControl(key: key, control: control);
-      case "ReorderableDraggable":
-        return ReorderableDraggableControl(key: key, control: control);
+      case "ReorderableDragHandle":
+        return ReorderableDragHandleControl(key: key, control: control);
       case "ReorderableListView":
         return ReorderableListViewControl(key: key, control: control);
       case "ResponsiveRow":
@@ -322,6 +326,8 @@ class FletCoreExtension extends FletExtension {
         return SemanticsControl(key: key, control: control);
       case "ShaderMask":
         return ShaderMaskControl(key: key, control: control);
+      case "Shimmer":
+        return ShimmerControl(key: key, control: control);
       case "Slider":
         return AdaptiveSliderControl(key: key, control: control);
       case "SnackBar":
@@ -352,8 +358,6 @@ class FletCoreExtension extends FletExtension {
         return VerticalDividerControl(key: key, control: control);
       case "View":
         return ViewControl(key: key, control: control);
-      case "Window":
-        return WindowControl(key: key, control: control);
       case "WindowDragArea":
         return WindowDragAreaControl(key: key, control: control);
       default:
@@ -380,6 +384,8 @@ class FletCoreExtension extends FletExtension {
         return SemanticsServiceControl(control: control);
       case "StoragePaths":
         return StoragePaths(control: control);
+      case "Window":
+        return WindowService(control: control);
       case "Tester":
         return TesterService(control: control);
       case "UrlLauncher":

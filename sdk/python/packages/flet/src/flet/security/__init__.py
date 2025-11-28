@@ -8,7 +8,7 @@ try:
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 except ImportError as e:
-    raise Exception(
+    raise ImportError(
         'Install "cryptography" Python package to use Flet security utils.'
     ) from e
 

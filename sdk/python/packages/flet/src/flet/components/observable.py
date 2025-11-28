@@ -23,18 +23,17 @@ def observable(cls):
     the `@dataclass` decorator.
 
     Example:
+        ```python
+        from dataclasses import dataclass
+        import flet as ft
 
-    ```python
-    from dataclasses import dataclass
-    import flet as ft
 
-
-    @ft.observable
-    @dataclass
-    class MyDataClass:
-        x: int
-        y: int
-    ```
+        @ft.observable
+        @dataclass
+        class MyDataClass:
+            x: int
+            y: int
+        ```
     """
     if Observable in cls.__mro__:
         return cls
@@ -73,30 +72,29 @@ class Observable:
     Mixin: notifies when fields change; auto-wraps lists/dicts to be observable.
 
     Example:
-
-    ```python
-    import flet as ft
-    from dataclasses import dataclass
-
-
-    @ft.observable
-    @dataclass
-    class MyDataClass:
-        x: int
-        y: int
+        ```python
+        import flet as ft
+        from dataclasses import dataclass
 
 
-    obj = MyDataClass(1, 2)
+        @ft.observable
+        @dataclass
+        class MyDataClass:
+            x: int
+            y: int
 
 
-    def listener(sender, field):
-        print(f"Changed: {field} in {sender}")
+        obj = MyDataClass(1, 2)
 
 
-    obj.subscribe(listener)
-    obj.x = 3
-    obj.y = 4
-    ```
+        def listener(sender, field):
+            print(f"Changed: {field} in {sender}")
+
+
+        obj.subscribe(listener)
+        obj.x = 3
+        obj.y = 4
+        ```
     """
 
     __version__ = 0  # optional version counter
@@ -147,10 +145,9 @@ class Observable:
             object.__setattr__(self, name, value)
             return
         value = self._wrap_if_collection(name, value)
-        had = hasattr(self, name)
-        old = object.__getattribute__(self, name) if had else None
+        old = object.__getattribute__(self, name) if hasattr(self, name) else None
+        object.__setattr__(self, name, value)
         if not value_equal(old, value):
-            object.__setattr__(self, name, value)
             self._notify(name)
 
     def __delattr__(self, name: str):

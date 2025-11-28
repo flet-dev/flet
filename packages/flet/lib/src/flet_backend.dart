@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -36,6 +37,8 @@ import 'utils/weak_value_map.dart';
 
 /// FletBackend - Handles business logic, provides data, and acts as ChangeNotifier
 class FletBackend extends ChangeNotifier {
+  static const String defaultAppErrorMessageTemplate =
+      "The application encountered an error: {message}\n\n{details}";
   bool multiView = false;
   bool _disposed = false;
   final WeakReference<FletBackend>? _parentFletBackend;
@@ -43,6 +46,7 @@ class FletBackend extends ChangeNotifier {
   final String assetsDir;
   final bool? showAppStartupScreen;
   final String? appStartupScreenMessage;
+  final String? appErrorMessage;
   final int? controlId;
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
@@ -73,11 +77,13 @@ class FletBackend extends ChangeNotifier {
   };
   Brightness platformBrightness = Brightness.light;
   PageMediaData media = PageMediaData(
-      padding: PaddingData(EdgeInsets.zero),
-      viewPadding: PaddingData(EdgeInsets.zero),
-      viewInsets: PaddingData(EdgeInsets.zero),
-      devicePixelRatio: 0,
-      orientation: Orientation.portrait);
+    padding: PaddingData(EdgeInsets.zero),
+    viewPadding: PaddingData(EdgeInsets.zero),
+    viewInsets: PaddingData(EdgeInsets.zero),
+    devicePixelRatio: 0,
+    orientation: Orientation.portrait,
+    alwaysUse24HourFormat: false,
+  );
   TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;
@@ -91,6 +97,7 @@ class FletBackend extends ChangeNotifier {
       this.errorsHandler,
       this.showAppStartupScreen,
       this.appStartupScreenMessage,
+      this.appErrorMessage,
       this.controlId,
       this.args,
       this.forcePyodide,
@@ -185,6 +192,7 @@ class FletBackend extends ChangeNotifier {
   }
 
   _registerClient() {
+    debugPrint("Registering web client: $page");
     _send(
         Message(
             action: MessageAction.registerClient,
@@ -204,7 +212,7 @@ class FletBackend extends ChangeNotifier {
                   "width": page.get("width"),
                   "height": page.get("height"),
                   "platform": page.get("platform"),
-                  "window": page.child("window")!.toMap(),
+                  "window": page.child("window", visibleOnly: false)!.toMap(),
                   "media": page.get("media"),
                 }).toMap()),
         unbuffered: true);
@@ -229,7 +237,7 @@ class FletBackend extends ChangeNotifier {
       _sendQueue.clear();
     } else {
       // error response!
-      isLoading = true;
+      isLoading = false;
       error = resp.error!;
       _reconnectDelayMs = 0;
     }
@@ -326,7 +334,7 @@ class FletBackend extends ChangeNotifier {
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
       debugPrint("Window state updated: $windowState");
-      var window = page.child("window")!;
+      var window = page.child("window", visibleOnly: false)!;
       updateControl(window.id, windowState.toMap());
       triggerControlEvent(window, "event", {"type": "resized"});
     }
@@ -454,6 +462,23 @@ class FletBackend extends ChangeNotifier {
   _onSessionCrashed(SessionCrashedBody body) {
     error = body.message;
     notifyListeners();
+  }
+
+  String formatAppErrorMessage(String rawError) {
+    if (rawError.isEmpty) {
+      return "";
+    }
+    var template = appErrorMessage ?? defaultAppErrorMessageTemplate;
+    final lines = const LineSplitter().convert(rawError);
+    final message = lines.isNotEmpty ? lines.first : "";
+    final details = lines.length > 1 ? lines.sublist(1).join("\n") : "";
+    template = template.replaceAll("{message}", message);
+    if (details.isEmpty) {
+      template = template.replaceAll(RegExp(r'(\r?\n)*\{details\}'), "");
+    } else {
+      template = template.replaceAll("{details}", details);
+    }
+    return template.trimRight();
   }
 
   _reconnect(String message, int reconnectDelayMs) {

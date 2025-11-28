@@ -22,6 +22,14 @@ class TextButton(LayoutControl, AdaptiveControl):
     Text buttons are used for the lowest priority actions, especially when presenting
     multiple options. Text buttons can be placed on a variety of backgrounds. Until the
     button is interacted with, its container isn’t visible.
+
+    ```python
+    ft.TextButton(
+        content="Text Button",
+        icon=ft.Icons.STAR_BORDER,
+        icon_color=ft.Colors.BLUE_300,
+    )
+    ```
     """
 
     content: Optional[StrOrControl] = None
@@ -79,8 +87,8 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists this button's response area.
 
-    The [`data`][flet.Event.] property of event object is `True` when cursor
-    enters and `False` when it exits.
+    The [`data`][flet.Event.] property of the event handler argument is `True` when
+    cursor enters and `False` when it exits.
     """
 
     on_focus: Optional[ControlEventHandler["TextButton"]] = None

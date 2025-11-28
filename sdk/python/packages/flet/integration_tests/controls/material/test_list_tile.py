@@ -24,7 +24,7 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Column(
-            [
+            controls=[
                 ft.ListTile(
                     "List Tile with custom shape",
                     subtitle="Subtitle",
@@ -95,7 +95,7 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Column(
-            [
+            controls=[
                 ft.ListTile(
                     title="List Tile with horizontal spacing",
                     subtitle="Subtitle",
@@ -225,8 +225,7 @@ async def test_properties3(flet_app: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_toggle_inputs(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
 
     lt = ft.ListTile(
         key="lt",
@@ -241,7 +240,6 @@ async def test_toggle_inputs(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.add(lt)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

@@ -426,18 +426,19 @@ class Control extends ChangeNotifier {
   static dynamic _transformIfControl(
       dynamic value, Control? parent, FletBackend backend) {
     //debugPrint("_transformIfControl: $value");
-    if (value is Map && value.containsKey("_c")) {
-      return Control.fromMap(value, backend, parent: parent);
-    } else if (value is List &&
-        value.isNotEmpty &&
-        value.first is Map &&
-        (value.first as Map).containsKey("_c")) {
-      return value.map((e) {
-        if (e is Map) {
-          return Control.fromMap(e, backend, parent: parent);
-        }
-        return e;
-      }).toList();
+    if (value is Map) {
+      if (value.containsKey("_c")) {
+        return Control.fromMap(value, backend, parent: parent);
+      }
+      return value.map(
+        (key, entryValue) =>
+            MapEntry(key, _transformIfControl(entryValue, parent, backend)),
+      );
+    }
+    if (value is List && value is! Uint8List) {
+      return value
+          .map((element) => _transformIfControl(element, parent, backend))
+          .toList(growable: true);
     }
     return value;
   }

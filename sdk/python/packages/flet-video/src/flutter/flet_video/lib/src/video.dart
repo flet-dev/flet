@@ -15,6 +15,7 @@ class VideoControl extends StatefulWidget {
 }
 
 class _VideoControlState extends State<VideoControl> with FletStoreMixin {
+  final GlobalKey<VideoState> _videoKey = GlobalKey<VideoState>();
   late final playerConfig = PlayerConfiguration(
     title: widget.control.getString("title", "flet-video")!,
     muted: widget.control.getBool("muted", false)!,
@@ -30,6 +31,24 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       const VideoControllerConfiguration())!;
   late final controller =
       VideoController(player, configuration: videoControllerConfiguration);
+
+  Future<void> _handleEnterFullscreen() async {
+    widget.control.updateProperties({"_fullscreen": true}, python: false);
+    if (!widget.control.getBool("fullscreen", false)!) {
+      widget.control.updateProperties({"fullscreen": true});
+    }
+    widget.control.triggerEvent("enter_fullscreen");
+    await defaultEnterNativeFullscreen();
+  }
+
+  Future<void> _handleExitFullscreen() async {
+    widget.control.updateProperties({"_fullscreen": false}, python: false);
+    if (widget.control.getBool("fullscreen", false)!) {
+      widget.control.updateProperties({"fullscreen": false});
+    }
+    widget.control.triggerEvent("exit_fullscreen");
+    await defaultExitNativeFullscreen();
+  }
 
   @override
   void initState() {
@@ -107,7 +126,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Video XXX build: ${widget.control.id}");
+    debugPrint("Video build: ${widget.control.id}");
 
     var subtitleConfiguration = parseSubtitleConfiguration(
         widget.control.get("subtitle_configuration"),
@@ -123,6 +142,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     var showControls = widget.control.getBool("show_controls", true)!;
     var playlistMode =
         parsePlaylistMode(widget.control.getString("playlist_mode"));
+    var fullscreen = widget.control.getBool("fullscreen", false)!;
 
     // previous values
     final prevVolume = widget.control.getDouble("_volume");
@@ -132,8 +152,10 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     final PlaylistMode? prevPlaylistMode = widget.control.get("_playlist_mode");
     final SubtitleTrack? prevSubtitleTrack =
         widget.control.get("_subtitleTrack");
+    final prevFullscreen = widget.control.getBool("_fullscreen", false)!;
 
     Video video = Video(
+      key: _videoKey,
       controller: controller,
       wakelock: widget.control.getBool("wakelock", true)!,
       controls: showControls ? AdaptiveVideoControls : null,
@@ -147,15 +169,12 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           widget.control.getFilterQuality("filter_quality", FilterQuality.low)!,
       subtitleViewConfiguration: subtitleConfiguration,
       fill: widget.control.getColor("fill_color", context, Colors.black)!,
-      onEnterFullscreen: widget.control.getBool("on_enter_fullscreen", false)!
-          ? () async => widget.control.triggerEvent("enter_fullscreen")
-          : defaultEnterNativeFullscreen,
-      onExitFullscreen: widget.control.getBool("on_exit_fullscreen", false)!
-          ? () async => widget.control.triggerEvent("exit_fullscreen")
-          : defaultExitNativeFullscreen,
+      onEnterFullscreen: _handleEnterFullscreen,
+      onExitFullscreen: _handleExitFullscreen,
     );
 
     () async {
+      // volume
       if (volume != null &&
           volume != prevVolume &&
           volume >= 0 &&
@@ -164,33 +183,56 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         await player.setVolume(volume);
       }
 
+      // pitch
       if (pitch != null && pitch != prevPitch) {
         widget.control.updateProperties({"_pitch": pitch}, python: false);
         await player.setPitch(pitch);
       }
 
+      // playbackRate
       if (playbackRate != null && playbackRate != prevPlaybackRate) {
         widget.control
             .updateProperties({"_playbackRate": playbackRate}, python: false);
         await player.setRate(playbackRate);
       }
 
+      // shufflePlaylist
       if (shufflePlaylist != null && shufflePlaylist != prevShufflePlaylist) {
         widget.control.updateProperties({"_shufflePlaylist": shufflePlaylist},
             python: false);
         await player.setShuffle(shufflePlaylist);
       }
 
+      // playlistMode
       if (playlistMode != null && playlistMode != prevPlaylistMode) {
         widget.control
             .updateProperties({"_playlistMode": playlistMode}, python: false);
         await player.setPlaylistMode(playlistMode);
       }
 
+      // subtitleTrack
       if (subtitleTrack != null && subtitleTrack != prevSubtitleTrack) {
         widget.control
             .updateProperties({"_subtitleTrack": subtitleTrack}, python: false);
         await player.setSubtitleTrack(subtitleTrack);
+      }
+
+      // fullscreen
+      if (fullscreen != prevFullscreen) {
+        widget.control
+            .updateProperties({"_fullscreen": fullscreen}, python: false);
+        // Defer fullscreen transition until after this frame's build completes.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final videoState = _videoKey.currentState;
+          if (videoState == null) {
+            return;
+          }
+          if (fullscreen) {
+            videoState.enterFullscreen();
+          } else {
+            videoState.exitFullscreen();
+          }
+        });
       }
     }();
 

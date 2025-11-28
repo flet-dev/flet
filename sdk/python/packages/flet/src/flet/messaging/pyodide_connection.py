@@ -1,9 +1,11 @@
 import asyncio
 import logging
+import traceback
 from typing import Any
 
 import flet_js
 import msgpack
+
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -59,35 +61,39 @@ class PyodideConnection(Connection):
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
+            # create new session
+            self.session = Session(self)
+
+            # apply page patch
+            self.session.apply_page_patch(req.page)
+
+            register_error = ""
             try:
-                # create new session
-                self.session = Session(self)
-
-                # apply page patch
-                self.session.apply_page_patch(req.page)
-
                 if asyncio.iscoroutinefunction(self.__before_main):
                     await self.__before_main(self.session.page)
                 elif callable(self.__before_main):
                     self.__before_main(self.session.page)
+            except Exception as e:
+                register_error = f"{e}\n{traceback.format_exc()}"
+                logger.error("Unhandled error in before_main() handler", exc_info=True)
 
-                # register response
-                self.send_message(
-                    ClientMessage(
-                        ClientAction.REGISTER_CLIENT,
-                        RegisterClientResponseBody(
-                            session_id=self.session.id,
-                            page_patch=self.session.get_page_patch(),
-                            error="",
-                        ),
-                    )
+            # register response
+            self.send_message(
+                ClientMessage(
+                    ClientAction.REGISTER_CLIENT,
+                    RegisterClientResponseBody(
+                        session_id=self.session.id,
+                        page_patch=self.session.get_page_patch(),
+                        error=register_error,
+                    ),
                 )
+            )
 
-                # start session
-                if self.__on_session_created is not None:
-                    task = asyncio.create_task(self.__on_session_created(self.session))
-            except Exception as ex:
-                logger.debug(f"Error creating session: {ex}", exc_info=True)
+            # start session
+            if not register_error and self.__on_session_created is not None:
+                task = asyncio.create_task(self.__on_session_created(self.session))
+            elif register_error:
+                self.session.error(register_error)
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
@@ -107,7 +113,7 @@ class PyodideConnection(Connection):
 
         else:
             # it's something else
-            raise Exception(f'Unknown message "{action}": {body}')
+            raise RuntimeError(f'Unknown message "{action}": {body}')
 
         if task:
             self.__running_tasks.add(task)

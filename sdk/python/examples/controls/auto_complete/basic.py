@@ -1,17 +1,45 @@
 import flet as ft
 
+numbers = [
+    ("one 1", "One"),
+    ("two 2", "Two"),
+    ("three 3", "Three"),
+    ("four 4", "Four"),
+    ("five 5", "Five"),
+    ("six 6", "Six"),
+    ("seven 7", "Seven"),
+    ("eight 8", "Eight"),
+    ("nine 9", "Nine"),
+    ("ten 10", "Ten"),
+]
+
 
 def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+
+    def handle_change(e: ft.Event[ft.AutoComplete]):
+        info.value = f"Current input 👀: {e.data!r} \n"
+
+    def handle_select(e: ft.AutoCompleteSelectEvent):
+        info.value = (
+            f"Current input 👀: {e.control.value!r} \n"
+            f"Your selection: {e.selection.value}"
+        )
+
     page.add(
         ft.AutoComplete(
-            on_select=lambda e: print(e.control.selected_index, e.selection),
+            value="One",
+            width=200,
+            on_change=handle_change,
+            on_select=handle_select,
             suggestions=[
-                ft.AutoCompleteSuggestion(key="one 1", value="One"),
-                ft.AutoCompleteSuggestion(key="two 2", value="Two"),
-                ft.AutoCompleteSuggestion(key="three 3", value="Three"),
+                ft.AutoCompleteSuggestion(key=key, value=value)
+                for key, value in numbers
             ],
         ),
-        ft.Text("Type in 1, 2 or 3 to receive suggestions."),
+        info := ft.Text("Enter a number (in words or digits) to get suggestions."),
     )
 
 

@@ -36,7 +36,7 @@ class FloatingActionButton(LayoutControl):
     The content of this button.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor a valid [`content`][(c).]
+        ValueError: If neither [`icon`][(c).] nor a valid `content`
             (string or visible Control) is provided.
     """
 
@@ -95,7 +95,7 @@ class FloatingActionButton(LayoutControl):
     Defaults to `6`.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is less than `0`.
     """
 
     disabled_elevation: Optional[Number] = None
@@ -105,7 +105,7 @@ class FloatingActionButton(LayoutControl):
     Defaults to the same value as `elevation`.
 
     Raises:
-        ValueError: If [`disabled_elevation`][(c).] is negative.
+        ValueError: If it is less than `0`.
     """
 
     focus_elevation: Optional[Number] = None
@@ -115,7 +115,7 @@ class FloatingActionButton(LayoutControl):
     Defaults to `8`.
 
     Raises:
-        ValueError: If [`focus_elevation`][(c).] is negative.
+        ValueError: If it is less than `0`.
     """
 
     highlight_elevation: Optional[Number] = None
@@ -125,7 +125,7 @@ class FloatingActionButton(LayoutControl):
     Defaults to `12`.
 
     Raises:
-        ValueError: If [`highlight_elevation`][(c).] is negative.
+        ValueError: If it is less than `0`.
     """
 
     hover_elevation: Optional[Number] = None
@@ -135,7 +135,7 @@ class FloatingActionButton(LayoutControl):
     Defaults to `8`.
 
     Raises:
-        ValueError: If [`hover_elevation`][(c).] is negative.
+        ValueError: If it is less than `0`.
     """
 
     hover_color: Optional[ColorValue] = None

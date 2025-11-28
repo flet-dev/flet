@@ -25,12 +25,18 @@ class SearchBar(LayoutControl):
     """
     Manages a "search view" route that allows the user to select one of the suggested
     completions for a search query.
+
+    ```python
+    ft.SearchBar(bar_hint_text="Search...")
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)
     """
     The list of controls to be displayed below the search bar when in search view.
-    These controls are usually [`ListTile`][flet.]s and will be displayed
+
+    Typically [`ListTile`][flet.]s and will be displayed
     in a [`ListView`][flet.].
     """
 
@@ -42,7 +48,8 @@ class SearchBar(LayoutControl):
     bar_leading: Optional[Control] = None
     """
     A control to display before the text input field when the search view is close.
-    This is typically an `Icon` or an `IconButton`.
+
+    Typically an [`Icon`][flet.] or an [`IconButton`][flet.].
     """
 
     bar_trailing: Optional[list[Control]] = None
@@ -89,7 +96,7 @@ class SearchBar(LayoutControl):
     """
     The color and weight of the search bar's outline.
 
-    This value is combined with [`SearchBar.bar_shape`][flet.] to
+    This value is combined with [`bar_shape`][(c).] to
     create a shape decorated with an outline.
     """
 
@@ -97,8 +104,7 @@ class SearchBar(LayoutControl):
     """
     The shape of the search bar.
 
-    This shape is combined with
-    [`SearchBar.bar_border_side`][flet.] to create a shape
+    This shape is combined with [`bar_border_side`][(c).] to create a shape
     decorated with an outline.
     """
 
@@ -134,7 +140,8 @@ class SearchBar(LayoutControl):
     view_leading: Optional[Control] = None
     """
     A `Control` to display before the text input field when the search view is open.
-    Typically an `Icon` or an `IconButton`.
+
+    Typically an [`Icon`][flet.] or an [`IconButton`][flet.].
 
     Defaults to a back button which closes/pops the search view.
     """
@@ -154,8 +161,7 @@ class SearchBar(LayoutControl):
 
     view_bgcolor: Optional[ColorValue] = None
     """
-    Defines the background color of the
-    search view.
+    Defines the background color of the search view.
     """
 
     view_hint_text: Optional[str] = None
@@ -175,14 +181,12 @@ class SearchBar(LayoutControl):
 
     view_header_text_style: Optional[TextStyle] = None
     """
-    Defines the [`TextStyle`][flet.] of the
-    text being edited on the search view.
+    Defines the text style of the text being edited on the search view.
     """
 
     view_hint_text_style: Optional[TextStyle] = None
     """
-    Defines the [`TextStyle`][flet.] of
-    `view_hint_text`.
+    Defines the text style of [`view_hint_text`][(c).].
     """
 
     view_size_constraints: Optional[BoxConstraints] = None
@@ -232,7 +236,7 @@ class SearchBar(LayoutControl):
     full_screen: bool = False
     """
     Defines whether the search view grows to fill the entire screen when the search
-    bar is tapped. Defaults to `False`.
+    bar is tapped.
     """
 
     keyboard_type: KeyboardType = KeyboardType.TEXT
@@ -243,8 +247,6 @@ class SearchBar(LayoutControl):
     autofocus: bool = False
     """
     Whether the text field should focus itself if nothing else is already focused.
-
-    Defaults to `False`.
     """
 
     on_tap: Optional[ControlEventHandler["SearchBar"]] = None
@@ -254,7 +256,7 @@ class SearchBar(LayoutControl):
 
     on_tap_outside_bar: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    TBD
+    Fired when the user taps outside the search bar while the search view is open.
     """
 
     on_submit: Optional[ControlEventHandler["SearchBar"]] = None
@@ -269,12 +271,12 @@ class SearchBar(LayoutControl):
 
     on_focus: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    TBD
+    Fired when the search bar gains focus.
     """
 
     on_blur: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    TBD
+    Fired when the search bar loses focus.
     """
 
     def __contains__(self, item):
@@ -285,15 +287,21 @@ class SearchBar(LayoutControl):
 
     # Public methods
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")
 
-    async def blur(self):
-        await self._invoke_method("blur")
-
     async def open_view(self):
+        """Opens the search view."""
         await self._invoke_method("open_view")
 
     async def close_view(self, text: Optional[str] = None):
+        """
+        Closes an opened search view.
+
+        Args:
+            text: The text to set in the search bar when closing the view. If not
+                provided, the current [`value`][(c).] of the search bar will be used.
+        """
         await self._invoke_method(
             "close_view", {"text": text if text is not None else self.value}
         )

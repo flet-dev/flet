@@ -19,14 +19,17 @@ def main(page: ft.Page):
             ft.SnackBar(
                 duration=1000,
                 content=ft.Text(
-                    f"ExpansionTile was {'expanded' if e.data == 'true' else 'collapsed'}"
+                    value=(
+                        f"ExpansionTile was "
+                        f"{'expanded' if e.data == 'true' else 'collapsed'}"
+                    )
                 ),
             )
         )
         if e.control.trailing:
-            e.control.trailing.name = (
+            e.control.trailing.icon = (
                 ft.Icons.ARROW_DROP_DOWN
-                if e.control.trailing.name == ft.Icons.ARROW_DROP_DOWN_CIRCLE
+                if e.control.trailing.icon == ft.Icons.ARROW_DROP_DOWN_CIRCLE
                 else ft.Icons.ARROW_DROP_DOWN_CIRCLE
             )
             page.update()
@@ -63,7 +66,7 @@ def main(page: ft.Page):
             title=ft.Text("ExpansionTile 3"),
             subtitle=ft.Text("Leading expansion arrow icon"),
             affinity=ft.TileAffinity.LEADING,
-            initially_expanded=True,
+            expanded=True,
             collapsed_text_color=ft.Colors.BLUE_800,
             text_color=ft.Colors.BLUE_200,
             controls=[
@@ -87,4 +90,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

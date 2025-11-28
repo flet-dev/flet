@@ -28,22 +28,27 @@ __all__ = ["Dropdown", "DropdownOption"]
 @control("DropdownOption")
 class DropdownOption(Control):
     """
-    Represents an item in a dropdown. Either `key` or `text` must be specified, else an
-    A `ValueError` will be raised.
+    Represents an item in a dropdown.
     """
 
     key: Optional[str] = None
     """
-    Option's key. If not specified [`text`][(c).] will
-    be used as fallback.
+    Option's key.
+
+    If not specified [`text`][(c).] will be used as fallback.
+
+    Raises:
+        ValueError: If neither `key` nor [`text`][(c).] are provided.
     """
 
     text: Optional[str] = None
     """
-    Option's display text. If not specified `key` will be used as fallback.
+    Option's display text.
+
+    If not specified [`key`][(c).] will be used as fallback.
 
     Raises:
-        ValueError: If neither [`key`][(c).] nor [`text`][(c).] are provided.
+        ValueError: If neither [`key`][(c).] nor `text` are provided.
     """
 
     content: Optional[Control] = None
@@ -79,16 +84,17 @@ Option = DropdownOption
 @control("Dropdown")
 class Dropdown(LayoutControl):
     """
-    A dropdown control that allows users to select a single option from a list of
-    options.
+    A dropdown control that allows users to select a single option
+    from a list of [`options`][(c).].
 
+    Example:
     ```python
     ft.Dropdown(
         width=220,
         value="alice",
         options=[
-            ft.dropdown.Option(key="alice", text="Alice"),
-            ft.dropdown.Option(key="bob", text="Bob"),
+            ft.DropdownOption(key="alice", text="Alice"),
+            ft.DropdownOption(key="bob", text="Bob"),
         ],
     )
     ```
@@ -96,7 +102,8 @@ class Dropdown(LayoutControl):
 
     value: Optional[str] = None
     """
-    [`key`][(c).] value of the selected option.
+    The [`key`][flet.DropdownOption.] of the dropdown [`options`][(c).]
+    corresponding to the selected option.
     """
 
     options: list[DropdownOption] = field(default_factory=list)
@@ -220,9 +227,9 @@ class Dropdown(LayoutControl):
     Called when the selected item of this dropdown has changed.
     """
 
-    on_change: Optional[ControlEventHandler["Dropdown"]] = None
+    on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Called when the text input of this dropdown has changed.
+    Called when the [`text`][(c).] input of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
@@ -388,4 +395,5 @@ class Dropdown(LayoutControl):
         return item in self.options
 
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")

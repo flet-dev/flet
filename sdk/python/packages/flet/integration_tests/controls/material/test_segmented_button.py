@@ -52,8 +52,7 @@ async def test_theme(flet_app: ftt.FletTestApp):
         )
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
 
     scr_1 = ft.Screenshot(
         ft.SegmentedButton(
@@ -82,7 +81,6 @@ async def test_theme(flet_app: ftt.FletTestApp):
         key="sb",
     )
     flet_app.page.add(scr_1)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

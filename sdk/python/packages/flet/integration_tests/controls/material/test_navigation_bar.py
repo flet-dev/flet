@@ -50,8 +50,7 @@ async def test_theme(flet_app: ftt.FletTestApp):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
 
     scr_1 = ft.Screenshot(
         ft.NavigationBar(
@@ -59,16 +58,18 @@ async def test_theme(flet_app: ftt.FletTestApp):
             elevation=100,
             destinations=[
                 ft.NavigationBarDestination(icon=ft.Icons.EXPLORE, label="Explore"),
-                ft.NavigationBarDestination(key="add", icon=ft.Icon(ft.Icons.ADD)),
                 ft.NavigationBarDestination(
+                    key="add", icon=ft.Icon(ft.Icons.ADD), label="Add"
+                ),
+                ft.NavigationBarDestination(
+                    key="phone",
                     icon=ft.Icons.PHONE_ENABLED,
-                    label="Explore",
+                    label="Phone",
                 ),
             ],
         )
     )
     flet_app.page.add(scr_1)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
@@ -89,7 +90,6 @@ async def test_theme(flet_app: ftt.FletTestApp):
 
     # click to check label behaviour
     await flet_app.tester.tap(add)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(

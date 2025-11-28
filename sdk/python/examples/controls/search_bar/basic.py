@@ -1,33 +1,47 @@
 import flet as ft
 
+colors = [
+    "Amber",
+    "Blue Grey",
+    "Brown",
+    "Deep Orange",
+    "Green",
+    "Light Blue",
+    "Orange",
+    "Red",
+]
+
 
 def main(page: ft.Page):
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    def build_tiles(items: list[str]) -> list[ft.Control]:
+        return [
+            ft.ListTile(
+                title=ft.Text(item),
+                data=item,
+                on_click=handle_tile_click,
+            )
+            for item in items
+        ]
+
     async def handle_tile_click(e: ft.Event[ft.ListTile]):
-        await anchor.close_view(e.control.title.value)
+        await anchor.close_view()
 
-    async def open_click():
-        await anchor.open_view()
-
-    def handle_change(e: ft.Event[ft.SearchBar]):
-        print(f"handle_change e.data: {e.data}")
+    async def handle_change(e: ft.Event[ft.SearchBar]):
+        query = e.control.value.strip().lower()
+        matching = (
+            [color for color in colors if query in color.lower()] if query else colors
+        )
+        anchor.controls = build_tiles(matching)
 
     def handle_submit(e: ft.Event[ft.SearchBar]):
-        print(f"handle_submit e.data: {e.data}")
+        print(f"Submit: {e.data}")
 
     async def handle_tap(e: ft.Event[ft.SearchBar]):
-        print("handle_tap")
         await anchor.open_view()
 
     page.add(
-        ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[
-                ft.OutlinedButton(
-                    content="Open Search View",
-                    on_click=open_click,
-                ),
-            ],
-        ),
         anchor := ft.SearchBar(
             view_elevation=4,
             divider_color=ft.Colors.AMBER,
@@ -36,12 +50,10 @@ def main(page: ft.Page):
             on_change=handle_change,
             on_submit=handle_submit,
             on_tap=handle_tap,
-            controls=[
-                ft.ListTile(title=ft.Text(f"Color {i}"), on_click=handle_tile_click)
-                for i in range(10)
-            ],
+            controls=build_tiles(colors),
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

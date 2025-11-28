@@ -3,9 +3,10 @@ import os
 from datetime import datetime, timezone
 from typing import Optional
 
-import flet_web.fastapi as flet_fastapi
 from anyio import open_file
-from fastapi import Request
+from fastapi import HTTPException, Request, status
+
+import flet_web.fastapi as flet_fastapi
 from flet_web.uploads import build_upload_query_string, get_upload_signature
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -18,7 +19,8 @@ class FletUpload:
     Parameters:
 
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
-    * `max_upload_size` (str, int) - maximum size of a single upload, bytes. Unlimited if `None`.
+    * `max_upload_size` (str, int) - maximum size of a single upload, bytes.
+       Unlimited if `None`.
     * `secret_key` (str, optional) - secret key to sign and verify upload requests.
     """
 
@@ -50,14 +52,24 @@ class FletUpload:
     """
 
     async def handle(self, request: Request):
-        file_name = request.query_params["f"]
-        expire_str = request.query_params["e"]
-        signature = request.query_params["s"]
+        query_params = request.query_params
+        file_name = query_params.get("f")
+        expire_str = query_params.get("e")
+        signature = query_params.get("s")
 
         if not file_name or not expire_str or not signature:
-            raise Exception("Invalid request")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Missing upload parameters",
+            )
 
-        expire_date = datetime.fromisoformat(expire_str)
+        try:
+            expire_date = datetime.fromisoformat(expire_str)
+        except ValueError as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid expiration parameter",
+            ) from e
 
         # verify signature
         query_string = build_upload_query_string(file_name, expire_date)
@@ -67,17 +79,26 @@ class FletUpload:
             )
             != signature
         ):
-            raise Exception("Invalid request")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid upload signature",
+            )
 
         # check expiration date
         if datetime.now(timezone.utc) >= expire_date:
-            raise Exception("Invalid request")
+            raise HTTPException(
+                status_code=status.HTTP_410_GONE,
+                detail="Upload URL has expired",
+            )
 
         # build/validate dest path
         joined_path = os.path.join(self.__upload_dir, file_name)
         full_path = os.path.realpath(joined_path)
         if os.path.commonpath([full_path, self.__upload_dir]) != self.__upload_dir:
-            raise Exception("Invalid request")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid upload destination",
+            )
 
         # create directory if not exists
         dest_dir = os.path.dirname(full_path)
@@ -89,7 +110,9 @@ class FletUpload:
             async for chunk in request.stream():
                 size += len(chunk)
                 if self.__max_upload_size and size > self.__max_upload_size:
-                    raise Exception(
-                        f"Max upload size reached: {self.__max_upload_size}"
+                    raise HTTPException(
+                        status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                        detail="Max upload size exceeded: "
+                        f"{self.__max_upload_size} bytes",
                     )
                 await f.write(chunk)

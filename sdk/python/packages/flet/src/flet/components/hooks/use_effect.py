@@ -66,7 +66,8 @@ def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     Run exactly once after the component mounts.
 
     Args:
-        fn: A function to run after the component mounts.
+        fn (Callable[[], Any | Awaitable[Any]]): A function to run after the component
+            mounts.
     """
     use_effect(fn, dependencies=[])
 
@@ -76,7 +77,8 @@ def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     Run exactly once when the component unmounts.
 
     Args:
-        fn: A function to run when the component unmounts.
+        fn (Callable[[], Any | Awaitable[Any]]): A function to run when the component
+            unmounts.
     """
     # No-op setup; only need cleanup to fire on unmount
     use_effect(lambda: None, dependencies=[], cleanup=fn)
@@ -91,10 +93,11 @@ def on_updated(
     on changes.
 
     Args:
-        fn: A function to run after each post-mount render (or when dependencies
-            change).
-        dependencies: If present, fn is only run when one of the dependencies has
-            changed. If absent, fn is run after every render.
+        fn (Callable[[], Any | Awaitable[Any]]): A function to run after each
+            post-mount render (or when dependencies change).
+        dependencies (Sequence[Any] | None): If present, `fn` is only run when one
+            of the dependencies has changed. If absent, `fn` is run after every
+            render.
     """
     use_effect(fn, dependencies=dependencies)
 

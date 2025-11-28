@@ -36,7 +36,7 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.35.5")
+MINIMAL_FLUTTER_VERSION = version.Version("3.38.2")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -53,7 +53,10 @@ verbose2_style = Style(color="bright_black", bold=False)
 
 class Command(BaseCommand):
     """
-    Build an executable app or install bundle.
+    Build a Flet Python app into a platform-specific executable or
+    installable bundle. It supports building for desktop (macOS, Linux, Windows), web,
+    Android (APK/AAB), and iOS (IPA), with a wide range of customization options for
+    metadata, assets, splash screens, and signing.
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
@@ -235,306 +238,310 @@ class Command(BaseCommand):
             "target_platform",
             type=str,
             choices=["macos", "linux", "windows", "web", "apk", "aab", "ipa"],
-            help="the type of a package or target platform to build",
+            help="The target platform or type of package to build",
         )
         parser.add_argument(
             "python_app_path",
             type=str,
             nargs="?",
             default=".",
-            help="path to a directory with a Python program",
+            help="Path to a directory with a Flet Python program",
         )
         parser.add_argument(
             "--arch",
             dest="target_arch",
             nargs="+",
             default=[],
-            help="package for specific architectures only. Used with Android and macOS "
-            "builds only.",
+            help="Build for specific CPU architectures "
+            "(used in macOS and Android builds only). Example: `--arch arm64 x64`",
         )
         parser.add_argument(
             "--exclude",
             dest="exclude",
             nargs="+",
             default=[],
-            help="exclude files and directories from a Python app package",
+            help="Files and/or directories to exclude from the package",
         )
         parser.add_argument(
             "-o",
             "--output",
             dest="output_dir",
-            help="where to put resulting executable or bundle (default is "
-            "<python_app_directory>/build/<target_platform>)",
             required=False,
+            help="Output directory for the final executable/bundle "
+            "(default: <python_app_path>/build/<target_platform>)",
         )
         parser.add_argument(
             "--clear-cache",
             dest="clear_cache",
             action="store_true",
             default=None,
-            help="clear build cache",
+            help="Remove any existing build cache before starting the build process",
         )
         parser.add_argument(
             "--project",
             dest="project_name",
-            help="project name for executable or bundle",
             required=False,
+            help="Project name for the executable/bundle. "
+            "It is used in metadata and bundle IDs",
         )
         parser.add_argument(
             "--description",
             dest="description",
-            help="the description to use for executable or bundle",
             required=False,
+            help="Short description of the application",
         )
         parser.add_argument(
             "--product",
             dest="product_name",
-            help="project display name that is shown in window titles and about "
-            "app dialogs",
             required=False,
+            help="Display name of the app that is shown in window titles "
+            "and about app dialogs",
         )
         parser.add_argument(
             "--org",
             dest="org_name",
-            help='org name in reverse domain name notation, e.g. "com.mycompany" - "'
-            '"combined with project name and used as an iOS and Android bundle ID',
             required=False,
+            help="Organization name in reverse domain name notation, "
+            "e.g. `com.mycompany`, combined with project name and "
+            "used in bundle IDs and signing",
         )
         parser.add_argument(
             "--bundle-id",
             dest="bundle_id",
-            help='bundle ID for the application, e.g. "com.mycompany.app-name" - used '
-            "as an iOS, Android, macOS and Linux bundle ID",
             required=False,
+            help="Bundle ID for the application, e.g. `com.mycompany.app-name`. "
+            "It is used as an iOS, Android, macOS and Linux bundle ID",
         )
         parser.add_argument(
             "--company",
             dest="company_name",
-            help="company name to display in about app dialogs",
             required=False,
+            help="Company name to display in about app dialogs",
         )
         parser.add_argument(
             "--copyright",
             dest="copyright",
-            help="copyright text to display in about app dialogs",
             required=False,
+            help="Copyright text to display in about app dialogs",
         )
         parser.add_argument(
             "--android-adaptive-icon-background",
             dest="android_adaptive_icon_background",
-            help="the color which will be used to fill out the background of the "
-            "adaptive icon",
             required=False,
+            help="The color to be used to fill out the background of "
+            "Android adaptive icons",
         )
         parser.add_argument(
             "--splash-color",
             dest="splash_color",
-            help="background color of app splash screen on iOS, Android and web",
             required=False,
+            help="Background color of app splash screen on iOS, Android and web",
         )
         parser.add_argument(
             "--splash-dark-color",
             dest="splash_dark_color",
-            help="background color in dark mode of app splash screen on iOS, Android "
-            "and web",
             required=False,
+            help="Background color in dark mode of app splash screen on "
+            "iOS, Android and web",
         )
         parser.add_argument(
             "--no-web-splash",
             dest="no_web_splash",
             action="store_true",
             default=None,
-            help="disable web app splash screen",
+            help="Disable splash screen on web platform",
         )
         parser.add_argument(
             "--no-ios-splash",
             dest="no_ios_splash",
             action="store_true",
             default=None,
-            help="disable iOS app splash screen",
+            help="Disable splash screen on iOS platform",
         )
         parser.add_argument(
             "--no-android-splash",
             dest="no_android_splash",
             action="store_true",
             default=None,
-            help="disable Android app splash screen",
+            help="Disable splash screen on Android platform",
         )
         parser.add_argument(
             "--ios-team-id",
             dest="ios_team_id",
             type=str,
-            help="team ID to sign iOS bundle (ipa only)",
+            help="Apple developer team ID for signing iOS app bundle (ipa only)",
             required=False,
         )
         parser.add_argument(
             "--ios-export-method",
             dest="ios_export_method",
             type=str,
-            help='export method for iOS app. Default is "debugging"',
             required=False,
+            help="Export method for iOS app bundle (default: debugging)",
         )
         parser.add_argument(
             "--ios-provisioning-profile",
             dest="ios_provisioning_profile",
             type=str,
-            help="provisioning profile name or UUID that used to sign and "
-            "export iOS app",
             required=False,
+            help="Provisioning profile name or UUID that should be used to sign and "
+            "export iOS app bundle",
         )
         parser.add_argument(
             "--ios-signing-certificate",
             dest="ios_signing_certificate",
             type=str,
-            help="provide a certificate name, SHA-1 hash, or automatic selector to use "
-            "for signing iOS app bundle",
             required=False,
+            help="Signing certificate name, SHA-1 hash, or automatic selector to use "
+            "for signing iOS app bundle",
         )
         parser.add_argument(
             "--base-url",
             dest="base_url",
             type=str,
-            help="base URL for the app (web only)",
+            help="Base URL from which the app is served (web only)",
         )
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
             choices=["auto", "canvaskit", "skwasm"],
-            help="renderer to use (web only)",
+            help="Flutter web renderer to use (web only)",
         )
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
             choices=["path", "hash"],
-            help="URL routing strategy (web only)",
+            help="Base URL path to serve the app from. "
+            "Useful if the app is hosted in a subdirectory (web only)",
         )
         parser.add_argument(
             "--pwa-background-color",
             dest="pwa_background_color",
-            help="an initial background color for your web application",
             required=False,
+            help="Initial background color for your web app (web only)",
         )
         parser.add_argument(
             "--pwa-theme-color",
             dest="pwa_theme_color",
-            help="default color for your web application's user interface",
             required=False,
+            help="Default color for your web app's user interface (web only)",
         )
         parser.add_argument(
             "--no-wasm",
             dest="no_wasm",
             action="store_true",
             default=False,
-            help="disable WASM target for web build.",
+            help="Disable WASM target for web build (web only)",
         )
         parser.add_argument(
             "--no-cdn",
             dest="no_cdn",
             action="store_true",
             default=False,
-            help="disable loading of CanvasKit, Pyodide and fonts from CDN.",
+            help="Disable loading of CanvasKit, Pyodide and fonts from CDN",
         )
         parser.add_argument(
             "--split-per-abi",
             dest="split_per_abi",
             action="store_true",
             default=None,
-            help="whether to split the APKs per ABIs.",
+            help="Split the APKs per ABIs (Android only)",
         )
         parser.add_argument(
             "--compile-app",
             dest="compile_app",
             action="store_true",
             default=None,
-            help="compile app's .py files to .pyc",
+            help="Pre-compile app's `.py` files to `.pyc`",
         )
         parser.add_argument(
             "--compile-packages",
             dest="compile_packages",
             action="store_true",
             default=None,
-            help="compile site packages' .py files to .pyc",
+            help="Pre-compile site packages' `.py` files to `.pyc`",
         )
         parser.add_argument(
             "--cleanup-app",
             dest="cleanup_app",
             action="store_true",
             default=None,
-            help="remove unnecessary app files upon packaging",
+            help="Remove unnecessary app files upon packaging",
         )
         parser.add_argument(
             "--cleanup-app-files",
             dest="cleanup_app_files",
             action="append",
             nargs="*",
-            help="the list of globs to delete extra app files and directories",
+            help="The list of globs to delete extra app files and directories",
         )
         parser.add_argument(
             "--cleanup-packages",
             dest="cleanup_packages",
             action="store_true",
             default=None,
-            help="remove unnecessary package files upon packaging",
+            help="Remove unnecessary package files upon packaging",
         )
         parser.add_argument(
             "--cleanup-package-files",
             dest="cleanup_package_files",
             action="append",
             nargs="*",
-            help="the list of globs to delete extra package files and directories",
+            help="The list of globs to delete extra package files and directories",
         )
         parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
             action="append",
             nargs="*",
-            help="additional arguments for flutter build command",
+            help="Additional arguments for flutter build command",
         )
         parser.add_argument(
             "--source-packages",
             dest="source_packages",
             nargs="+",
             default=[],
-            help="the list of Python packages to install from source distributions",
+            help="The list of Python packages to install from source distributions",
         )
         parser.add_argument(
             "--info-plist",
             dest="info_plist",
             nargs="+",
             default=[],
-            help='the list of "<key>=<value>|True|False" pairs to add to Info.plist '
-            "for macOS and iOS builds",
+            help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
+            "for macOS and iOS builds (macos and ipa only)",
         )
         parser.add_argument(
             "--macos-entitlements",
             dest="macos_entitlements",
             nargs="+",
             default=[],
-            help='the list of "<key>=<value>|True|False" entitlements for macOS builds',
+            help="The list of `<key>=<value>|True|False` entitlements for "
+            "macOS builds (macos only)",
         )
         parser.add_argument(
             "--android-features",
             dest="android_features",
             nargs="+",
             default=[],
-            help='the list of "<feature_name>=True|False" features to add to '
-            "AndroidManifest.xml",
+            help="The list of `<feature_name>=True|False` features to add to "
+            "AndroidManifest.xml for Android builds (android only)",
         )
         parser.add_argument(
             "--android-permissions",
             dest="android_permissions",
             nargs="+",
             default=[],
-            help='the list of "<permission_name>=True|False" permissions to add to '
-            "AndroidManifest.xml",
+            help="The list of `<permission_name>=True|False` permissions to add to "
+            "AndroidManifest.xml for Android builds (android only)",
         )
         parser.add_argument(
             "--android-meta-data",
             dest="android_meta_data",
             nargs="+",
             default=[],
-            help='the list of "<name>=<value>" app meta-data entries to add to '
-            "AndroidManifest.xml",
+            help="The list of `<name>=<value>` app meta-data entries to add to "
+            "AndroidManifest.xml for Android builds (android only)",
         )
         parser.add_argument(
             "--permissions",
@@ -542,24 +549,24 @@ class Command(BaseCommand):
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],
-            help="the list of cross-platform permissions for iOS, Android "
-            "and macOS apps",
+            help="The list of pre-defined cross-platform permissions for iOS, Android "
+            "and macOS builds",
         )
         parser.add_argument(
             "--deep-linking-scheme",
             dest="deep_linking_scheme",
-            help="deep linking URL scheme to configure for iOS and Android builds, "
-            'i.g. "https" or "myapp"',
+            help="Deep linking URL scheme to configure for iOS and Android builds, "
+            "i.g. `https` or `myapp`",
         )
         parser.add_argument(
             "--deep-linking-host",
             dest="deep_linking_host",
-            help="deep linking URL host for iOS and Android builds",
+            help="Deep linking URL host for iOS and Android builds",
         )
         parser.add_argument(
             "--android-signing-key-store",
             dest="android_signing_key_store",
-            help="path to an upload keystore .jks file for Android apps",
+            help="path to an upload keystore `.jks` file for Android apps",
         )
         parser.add_argument(
             "--android-signing-key-store-password",
@@ -575,62 +582,62 @@ class Command(BaseCommand):
             "--android-signing-key-alias",
             dest="android_signing_key_alias",
             default="upload",
-            help='Android signing key alias. Default is "upload".',
+            help="Android signing key alias (default: upload)",
         )
         parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
-            help="build number - an identifier used as an internal version number",
+            help="Build number - an identifier used as an internal version number",
         )
         parser.add_argument(
             "--build-version",
             dest="build_version",
-            help='build version - a "x.y.z" string used as the version number '
+            help="Build version - a `x.y.z` string used as the version number "
             "shown to users",
         )
         parser.add_argument(
             "--module-name",
             dest="module_name",
-            help="python module name with an app entry point",
+            help="Python module name with an app entry point",
         )
         parser.add_argument(
             "--template",
             dest="template",
             type=str,
-            help="a directory containing Flutter bootstrap template, or a URL "
+            help="Directory containing Flutter bootstrap template, or a URL "
             "to a git repository template",
         )
         parser.add_argument(
             "--template-dir",
             dest="template_dir",
             type=str,
-            help="relative path to a Flutter bootstrap template in a repository",
+            help="Relative path to a Flutter bootstrap template in a repository",
         )
         parser.add_argument(
             "--template-ref",
             dest="template_ref",
             type=str,
-            help="the branch, tag or commit ID to checkout after cloning "
+            help="The branch, tag or commit ID to checkout after cloning "
             "the repository with Flutter bootstrap template",
         )
         parser.add_argument(
             "--show-platform-matrix",
             action="store_true",
             default=False,
-            help="displays the build platform matrix in a table, then exits",
+            help="Display the build platform matrix in a table, then exit",
         )
         parser.add_argument(
             "--no-rich-output",
             action="store_true",
             default=False,
-            help="disables rich output and uses plain text instead",
+            help="Disable rich output and prefer plain text. Useful on Windows builds",
         )
         parser.add_argument(
             "--skip-flutter-doctor",
             action="store_true",
             default=False,
-            help="whether to skip running Flutter doctor in failed builds",
+            help="Skip running Flutter doctor upon failed builds",
         )
 
     def handle(self, options: argparse.Namespace) -> None:

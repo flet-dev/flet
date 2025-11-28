@@ -9,8 +9,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     page = flet_app_function.page
     page.theme_mode = ft.ThemeMode.LIGHT
     page.enable_screenshots = True
-    page.window.width = 400
-    page.window.height = 400
+    flet_app_function.resize_page(400, 400)
+    page.update()
+    await flet_app_function.tester.pump_and_settle()
+
     sheet = ft.CupertinoActionSheet(
         title=ft.Text("Choose an option"),
         message=ft.Text("Select what you would like to do."),
@@ -21,12 +23,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         cancel=ft.CupertinoActionSheetAction(content=ft.Text("Cancel")),
     )
     page.add(sheet)
-    page.update()
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "test_image_for_docs",
+        request.node.name,
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    page.update()

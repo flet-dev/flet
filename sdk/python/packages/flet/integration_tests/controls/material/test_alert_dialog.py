@@ -14,7 +14,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     ad = ft.AlertDialog(
         key="ad",
         title=ft.Text("Hello"),
@@ -24,14 +24,13 @@ async def test_alert_dialog_basic(flet_app: ftt.FletTestApp, request):
         title_padding=ft.Padding.all(25),
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(ad)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "alert_dialog_basic",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -57,8 +56,7 @@ async def test_update_body(flet_app: ftt.FletTestApp, request):
         ],
     )
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
     flet_app.page.show_dialog(ad)
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
@@ -78,8 +76,8 @@ async def test_update_body(flet_app: ftt.FletTestApp, request):
     cancel.disabled = not cancel.disabled  # disable button
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
-    assert (await flet_app.tester.find_by_text("OK")).count == 0
 
+    assert (await flet_app.tester.find_by_text("OK")).count == 0
     flet_app.assert_screenshot(
         "update_body_2",
         await flet_app.page.take_screenshot(

@@ -45,7 +45,7 @@ class SnackBarAction(Control):
     Note:
         - Snack bar actions are always enabled. Instead of disabling a snack bar
             action, avoid including it in the snack bar in the first place.
-        -  Snack bar actions can will only respond to first click.
+        - Snack bar actions will only respond to first click.
             Subsequent clicks/presses are ignored.
     """
 
@@ -93,6 +93,11 @@ class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the
     bottom of the screen.
+
+    ```python
+    page.show_dialog(ft.SnackBar(ft.Text("Opened snack bar")))
+    ```
+
     """
 
     content: StrOrControl
@@ -221,6 +226,19 @@ class SnackBar(DialogControl):
 
     Raises:
         ValueError: If it is not between `0.0` and `1.0` inclusive.
+    """
+
+    persist: Optional[bool] = None
+    """
+    Whether the snack bar will stay or auto-dismiss after timeout.
+
+    If `True`, the snack bar remains visible even after the timeout,
+    until the user taps the action button or the close icon.
+
+    If `False`, the snack bar will be dismissed after the timeout.
+
+    If not provided, but the snackbar ['action'][c.] is not null,
+    the snackbar will persist as well.
     """
 
     on_action: Optional[ControlEventHandler["SnackBar"]] = None

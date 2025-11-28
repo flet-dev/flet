@@ -1,10 +1,10 @@
 ---
 class_name: flet.SubmenuButton
 examples: ../../examples/controls/submenu_button
-example_images: ../examples/controls/submenu_button/media
+example_images: ../test-images/examples/material/golden/macos/submenu_button
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Activated submenu button") }}
 
 ## Examples
 
@@ -16,7 +16,7 @@ example_images: ../examples/controls/submenu_button/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
 
 
 {{ class_members(class_name) }}

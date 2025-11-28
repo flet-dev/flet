@@ -46,7 +46,7 @@ def control(
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
-    **dataclass_kwargs,
+    **dataclass_kwargs: Any,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
     Decorator to optionally set widget name and 'isolated' while behaving
@@ -116,6 +116,7 @@ class BaseControl:
     """
     Arbitrary data of any type.
     """
+
     key: Optional[KeyValue] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
@@ -124,13 +125,16 @@ class BaseControl:
     _internals: dict = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
+    """
+    A dictionary for storing internal control configuration.
+    """
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
         self._i = ControlId.next()
         if not hasattr(self, "_c") or self._c is None:
             cls_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
-            raise Exception(
+            raise ValueError(
                 f"Control {cls_name} must have @control decorator with "
                 "type_name specified."
             )
@@ -232,7 +236,7 @@ class BaseControl:
     # public methods
     def update(self) -> None:
         if hasattr(self, "_frozen"):
-            raise Exception("Frozen control cannot be updated.")
+            raise RuntimeError("Frozen control cannot be updated.")
         if not self.page:
             raise RuntimeError(
                 f"{self.__class__.__qualname__} Control must be added to the page first"

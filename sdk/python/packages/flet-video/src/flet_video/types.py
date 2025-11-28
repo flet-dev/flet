@@ -189,7 +189,7 @@ class VideoSubtitleConfiguration:
             word_spacing=0.0,
             color=ft.Colors.WHITE,
             weight=ft.FontWeight.NORMAL,
-            bgcolor=ft.Colors.BLACK54,
+            bgcolor=ft.Colors.BLACK_54,
         )
     )
     """The text style to be used for the subtitles."""

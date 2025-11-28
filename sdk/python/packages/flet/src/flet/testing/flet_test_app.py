@@ -104,6 +104,9 @@ class FletTestApp:
             test harness through the remote tester bridge. Env override:
             `FLET_TEST_MODE`.
 
+        skip_pump_and_settle:
+            If `True`, the initial `pump_and_settle` after app start is skipped.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -132,6 +135,7 @@ class FletTestApp:
         use_http: bool = False,
         disable_fvm: bool = False,
         mode: FletTestMode = FletTestMode.FLET,
+        skip_pump_and_settle: bool = False,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -155,6 +159,7 @@ class FletTestApp:
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
+        self.__skip_pump_and_settle = skip_pump_and_settle
         self.__flutter_app_dir = flutter_app_dir
         self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
@@ -198,12 +203,12 @@ class FletTestApp:
                 self.__tester = Tester()
                 page.theme_mode = ft.ThemeMode.LIGHT
                 page.update()
-
                 if asyncio.iscoroutinefunction(self.__flet_app_main):
                     await self.__flet_app_main(page)
                 elif callable(self.__flet_app_main):
                     self.__flet_app_main(page)
-                await self.__tester.pump_and_settle()
+                if not self.__skip_pump_and_settle:
+                    await self.__tester.pump_and_settle()
                 ready.set()
 
             if not self.__tcp_port:
@@ -329,7 +334,24 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
-    async def wrap_page_controls_in_screenshot(self, margin=10):
+    def resize_page(self, width: int, height: int):
+        """
+        Resizes the page window to the specified width and height.
+        """
+        if self.page.window.width is None or self.page.window.height is None:
+            return
+
+        chrome_width = self.page.window.width - self.page.width
+        chrome_height = self.page.window.height - self.page.height
+        self.page.window.width = width + chrome_width
+        self.page.window.height = height + chrome_height
+
+    async def wrap_page_controls_in_screenshot(
+        self,
+        margin=10,
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ) -> ft.Screenshot:
         """
         Wraps provided controls in a Screenshot control.
         """
@@ -341,16 +363,22 @@ class FletTestApp:
         ]  # type: ignore
         self.page.update()
         await self.tester.pump_and_settle()
+        for _ in range(0, pump_times):
+            await self.tester.pump(duration=pump_duration)
         return scr
 
     async def take_page_controls_screenshot(
         self,
         pixel_ratio: Optional[float] = None,
-    ):
+        pump_times: int = 0,
+        pump_duration: Optional[ft.DurationValue] = None,
+    ) -> bytes:
         """
         Takes a screenshot of all controls on the current page.
         """
-        scr = await self.wrap_page_controls_in_screenshot()
+        scr = await self.wrap_page_controls_in_screenshot(
+            pump_times=pump_times, pump_duration=pump_duration
+        )
         return await scr.capture(
             pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
         )
@@ -422,7 +450,7 @@ class FletTestApp:
                 f.write(screenshot)
         else:
             if not golden_image_path.exists():
-                raise Exception(
+                raise RuntimeError(
                     f"Golden image for {name} not found: {golden_image_path}"
                 )
             golden_img = self._load_image_from_file(golden_image_path)
@@ -439,7 +467,8 @@ class FletTestApp:
                 with open(actual_image_path, "bw") as f:
                     f.write(screenshot)
             assert similarity > similarity_threshold, (
-                f"{name} screenshots are not identical"
+                f"{name} screenshots are not identical "
+                f"(similarity: {similarity}% <= {similarity_threshold}%)"
             )
 
     def _load_image_from_file(self, file_name):
@@ -508,7 +537,16 @@ class FletTestApp:
                 path = golden_dir / f"{name}.png"
                 if not path.exists():
                     raise FileNotFoundError(path)
-                frames.append(Image.open(path))
+
+                frames.append(
+                    Image.open(path)
+                    .convert("RGB")
+                    .convert(
+                        "P",
+                        palette=Image.ADAPTIVE,
+                        colors=256,
+                    )
+                )
 
             first, *rest = frames
             first.save(
@@ -517,6 +555,7 @@ class FletTestApp:
                 append_images=rest,
                 duration=duration,
                 loop=loop,
+                optimize=True,
             )
         finally:
             for frame in frames:

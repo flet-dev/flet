@@ -5,7 +5,7 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_menu_bar_basic(flet_app: ftt.FletTestApp, request):
+async def test_basic(flet_app: ftt.FletTestApp, request):
     pb = ft.MenuBar(
         expand=True,
         style=ft.MenuStyle(
@@ -39,15 +39,13 @@ async def test_menu_bar_basic(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
-    flet_app.page.controls = [pb]
-    flet_app.page.update()
+    flet_app.resize_page(400, 600)
+    flet_app.page.add(pb)
     await flet_app.tester.pump_and_settle()
 
     # normal state
     flet_app.assert_screenshot(
-        "menu_bar_basic",
+        "basic",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -57,7 +55,7 @@ async def test_menu_bar_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.tap(await flet_app.tester.find_by_key("sb"))
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "menu_bar_basic_open",
+        "basic_open",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

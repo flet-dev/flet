@@ -26,6 +26,7 @@ from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
+from flet.controls.services.service import Service
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -61,7 +62,7 @@ class PageMediaData:
 
     view_padding: Padding
     """
-    Similar to `padding`, but includes padding that is always reserved
+    Similar to [`padding`][(c).], but includes padding that is always reserved
     (even when the system UI is hidden).
     """
 
@@ -79,6 +80,22 @@ class PageMediaData:
     orientation: Orientation
     """
     The orientation of the page.
+    """
+
+    always_use_24_hour_format: bool = False
+    """
+    Whether to use 24-hour format when formatting time.
+
+    Note:
+        The behavior of this flag is different across platforms:
+
+        - On Android this flag is reported directly from the user settings called
+            "Use 24-hour format". It applies to any locale used by the application,
+            whether it is the system-wide locale, or the custom locale set by the
+            application.
+        - On iOS this flag is set to true when the user setting called "24-Hour Time"
+            is set or the system-wide locale's default uses 24-hour
+            formatting.
     """
 
 
@@ -177,15 +194,16 @@ class BasePage(AdaptiveControl):
 
     on_resize: Optional[EventHandler["PageResizeEvent"]] = None
     """
-    Called when a user resizes a browser or native OS window containing Flet app, for
-    example:
+    Called when a user resizes a browser or native OS window containing Flet app
 
-    ```python
-    def page_resize(e):
-        print("New page size:", page.window.width, page.window_height)
+    Example:
+        ```python
+        def main(page: ft.Page):
+            def handle_page_size(e):
+                print("New page size:", page.window.width, page.window_height)
 
-    page.on_resize = page_resize
-    ```
+            page.on_resize = handle_page_size
+        ```
     """
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None
@@ -200,6 +218,7 @@ class BasePage(AdaptiveControl):
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
             orientation=Orientation.PORTRAIT,
+            always_use_24_hour_format=False,
         )
     )
     """
@@ -234,13 +253,19 @@ class BasePage(AdaptiveControl):
             [`Page.window`][flet.Page.window] instead.
     """
 
+    services: list[Service] = field(default_factory=list, metadata={"skip": True})
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
-    def __default_view(self) -> View:
+    def __root_view(self) -> View:
         if len(self.views) == 0:
             raise RuntimeError("views list is empty.")
         return self.views[0]
+
+    def __top_view(self) -> View:
+        if len(self.views) == 0:
+            raise RuntimeError("views list is empty.")
+        return self.views[-1]
 
     def update(self, *controls) -> None:
         if len(controls) == 0:
@@ -303,7 +328,7 @@ class BasePage(AdaptiveControl):
         See [`Column.scroll_to()`][flet.Column.scroll_to] for method details
         and examples.
         """
-        await self.__default_view().scroll_to(
+        await self.__root_view().scroll_to(
             offset=offset,
             delta=delta,
             scroll_key=scroll_key,
@@ -316,20 +341,20 @@ class BasePage(AdaptiveControl):
         Displays a dialog and manages its dismissal lifecycle.
 
         This method adds the specified `dialog` to the active dialog stack
-        and renders it on the page. If the dialog is already open, an exception
+        and renders it on the page. If the dialog is already open, a `RuntimeError`
         is raised.
         The [`on_dismiss`][flet.DialogControl.] handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 
         Args:
-            dialog: The dialog instance to display. Must not already be open.
+            dialog: The dialog instance to display. Must not yet be open.
 
         Raises:
-            Exception: If the specified dialog is already open.
+            RuntimeError: If the specified dialog is already open.
         """
         if dialog in self._dialogs.controls:
-            raise Exception("Dialog is already opened")
+            raise RuntimeError("Dialog is already opened")
 
         original_on_dismiss = dialog.on_dismiss
 
@@ -372,6 +397,36 @@ class BasePage(AdaptiveControl):
         dialog.update()
         return dialog
 
+    async def show_drawer(self):
+        """
+        Show the drawer.
+
+        Raises:
+            ValueError: If no [`drawer`][(c).] is defined.
+        """
+        await self.__top_view().show_drawer()
+
+    async def close_drawer(self):
+        """
+        Close the drawer.
+        """
+        await self.__top_view().close_drawer()
+
+    async def show_end_drawer(self):
+        """
+        Show the end drawer.
+
+        Raises:
+            ValueError: If no [`end_drawer`][(c).] is defined.
+        """
+        await self.__top_view().show_end_drawer()
+
+    async def close_end_drawer(self):
+        """
+        Close the end drawer.
+        """
+        await self.__top_view().close_end_drawer()
+
     async def take_screenshot(
         self,
         pixel_ratio: Optional[Number] = None,
@@ -401,11 +456,11 @@ class BasePage(AdaptiveControl):
     # controls
     @property
     def controls(self) -> list[BaseControl]:
-        return self.__default_view().controls
+        return self.__root_view().controls
 
     @controls.setter
     def controls(self, value: list[BaseControl]):
-        self.__default_view().controls = value
+        self.__root_view().controls = value
 
     # appbar
     @property
@@ -417,153 +472,153 @@ class BasePage(AdaptiveControl):
         The app bar typically displays the page title and optional actions
         such as navigation icons, menus, or other interactive elements.
         """
-        return self.__default_view().appbar
+        return self.__root_view().appbar
 
     @appbar.setter
     def appbar(self, value: Union[AppBar, CupertinoAppBar, None]):
-        self.__default_view().appbar = value
+        self.__root_view().appbar = value
 
     # bottom_appbar
     @property
     def bottom_appbar(self) -> Optional[BottomAppBar]:
-        return self.__default_view().bottom_appbar
+        return self.__root_view().bottom_appbar
 
     @bottom_appbar.setter
     def bottom_appbar(self, value: Optional[BottomAppBar]):
-        self.__default_view().bottom_appbar = value
+        self.__root_view().bottom_appbar = value
 
     # navigation_bar
     @property
     def navigation_bar(self) -> Optional[Union[NavigationBar, CupertinoNavigationBar]]:
-        return self.__default_view().navigation_bar
+        return self.__root_view().navigation_bar
 
     @navigation_bar.setter
     def navigation_bar(
         self,
         value: Optional[Union[NavigationBar, CupertinoNavigationBar]],
     ):
-        self.__default_view().navigation_bar = value
+        self.__root_view().navigation_bar = value
 
     # drawer
     @property
     def drawer(self) -> Optional[NavigationDrawer]:
-        return self.__default_view().drawer
+        return self.__root_view().drawer
 
     @drawer.setter
     def drawer(self, value: Optional[NavigationDrawer]):
-        self.__default_view().drawer = value
+        self.__root_view().drawer = value
 
     # end_drawer
     @property
     def end_drawer(self) -> Optional[NavigationDrawer]:
-        return self.__default_view().end_drawer
+        return self.__root_view().end_drawer
 
     @end_drawer.setter
     def end_drawer(self, value: Optional[NavigationDrawer]):
-        self.__default_view().end_drawer = value
+        self.__root_view().end_drawer = value
 
     # decoration
     @property
     def decoration(self) -> Optional[BoxDecoration]:
-        return self.__default_view().decoration
+        return self.__root_view().decoration
 
     @decoration.setter
     def decoration(self, value: Optional[BoxDecoration]):
-        self.__default_view().decoration = value
+        self.__root_view().decoration = value
 
     # foreground_decoration
     @property
     def foreground_decoration(self) -> Optional[BoxDecoration]:
-        return self.__default_view().foreground_decoration
+        return self.__root_view().foreground_decoration
 
     @foreground_decoration.setter
     def foreground_decoration(self, value: Optional[BoxDecoration]):
-        self.__default_view().foreground_decoration = value
+        self.__root_view().foreground_decoration = value
 
     # floating_action_button
     @property
     def floating_action_button(self) -> Optional[FloatingActionButton]:
-        return self.__default_view().floating_action_button
+        return self.__root_view().floating_action_button
 
     @floating_action_button.setter
     def floating_action_button(self, value: Optional[FloatingActionButton]):
-        self.__default_view().floating_action_button = value
+        self.__root_view().floating_action_button = value
 
     # floating_action_button_location
     @property
     def floating_action_button_location(
         self,
     ) -> Optional[Union[FloatingActionButtonLocation, OffsetValue]]:
-        return self.__default_view().floating_action_button_location
+        return self.__root_view().floating_action_button_location
 
     @floating_action_button_location.setter
     def floating_action_button_location(
         self, value: Optional[Union[FloatingActionButtonLocation, OffsetValue]]
     ):
-        self.__default_view().floating_action_button_location = value
+        self.__root_view().floating_action_button_location = value
 
     # horizontal_alignment
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
-        return self.__default_view().horizontal_alignment
+        return self.__root_view().horizontal_alignment
 
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
-        self.__default_view().horizontal_alignment = value
+        self.__root_view().horizontal_alignment = value
 
     # vertical_alignment
     @property
     def vertical_alignment(self) -> MainAxisAlignment:
-        return self.__default_view().vertical_alignment
+        return self.__root_view().vertical_alignment
 
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
-        self.__default_view().vertical_alignment = value
+        self.__root_view().vertical_alignment = value
 
     # spacing
     @property
     def spacing(self) -> Number:
-        return self.__default_view().spacing
+        return self.__root_view().spacing
 
     @spacing.setter
     def spacing(self, value: Number):
-        self.__default_view().spacing = value
+        self.__root_view().spacing = value
 
     # padding
     @property
     def padding(self) -> Optional[PaddingValue]:
-        return self.__default_view().padding
+        return self.__root_view().padding
 
     @padding.setter
     def padding(self, value: Optional[PaddingValue]):
-        self.__default_view().padding = value
+        self.__root_view().padding = value
 
     # bgcolor
     @property
     def bgcolor(self) -> Optional[ColorValue]:
-        return self.__default_view().bgcolor
+        return self.__root_view().bgcolor
 
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
-        self.__default_view().bgcolor = value
+        self.__root_view().bgcolor = value
 
     # scroll
     @property
     def scroll(self) -> Optional[ScrollMode]:
-        return self.__default_view().scroll
+        return self.__root_view().scroll
 
     @scroll.setter
     def scroll(self, value: Optional[ScrollMode]):
-        self.__default_view().scroll = value
+        self.__root_view().scroll = value
 
     # auto_scroll
     @property
     def auto_scroll(self) -> bool:
-        return self.__default_view().auto_scroll
+        return self.__root_view().auto_scroll
 
     @auto_scroll.setter
     def auto_scroll(self, value: bool):
-        self.__default_view().auto_scroll = value
+        self.__root_view().auto_scroll = value
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

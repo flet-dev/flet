@@ -618,7 +618,16 @@ class DiffBuilder:
 
         # ----- helper: get keys quickly -----
         def k(obj):
-            return get_control_key(obj)
+            # In frozen mode we rely on real control keys. Otherwise we treat every
+            # dataclass instance as keyed by its identity so we can reason about
+            # reorder/move operations without requiring user-provided keys.
+            return (
+                get_control_key(obj)
+                if frozen
+                else id(obj)
+                if dataclasses.is_dataclass(obj)
+                else None
+            )
 
         src_keys = [k(item) for item in src]
         dst_keys = [k(item) for item in dst]
@@ -755,17 +764,41 @@ class DiffBuilder:
                 _reindex(idx + 1)
 
         def emit_replace_at(idx, old_item, new_item):
-            # For dataclasses we delegate to your existing field diff.
-            if (
-                dataclasses.is_dataclass(old_item)
-                and dataclasses.is_dataclass(new_item)
-                and old_item is not new_item
+            # Keying by identity means old_item is often new_item, so we explicitly run
+            # the dataclass diff even when the instance pointer matches to surface
+            # property mutations captured by __changes.
+            if dataclasses.is_dataclass(old_item) and dataclasses.is_dataclass(
+                new_item
             ):
-                # Force field-wise compare even if different instances:
-                self._compare_dataclasses(
-                    parent, _path_join(path, idx), old_item, new_item, True
+                frozen_local = (
+                    (old_item is not None and hasattr(old_item, "_frozen"))
+                    or (new_item is not None and hasattr(new_item, "_frozen"))
+                    or frozen
                 )
-            elif type(old_item) is not type(new_item) or old_item != new_item:
+                old_control_key = get_control_key(old_item)
+                new_control_key = get_control_key(new_item)
+
+                def _keys_match():
+                    return (
+                        old_control_key is None
+                        or new_control_key is None
+                        or old_control_key == new_control_key
+                    )
+
+                same_type = type(old_item) is type(new_item)
+
+                if (not frozen_local and old_item is new_item) or (
+                    frozen_local
+                    and old_item is not new_item
+                    and same_type
+                    and _keys_match()
+                ):
+                    self._compare_dataclasses(
+                        parent, _path_join(path, idx), old_item, new_item, frozen_local
+                    )
+                    return
+
+            if type(old_item) is not type(new_item) or old_item != new_item:
                 self._item_replaced(path, idx, new_item)
 
         # Scan forward through desired new order.
@@ -782,7 +815,7 @@ class DiffBuilder:
                 if cur_key not in new_keys_set:
                     # remove disappearing item at i
                     self._item_removed(
-                        path, i, work[i], item_key=(cur_key, path), frozen=True
+                        path, i, work[i], item_key=(cur_key, path), frozen=frozen
                     )
                     _remove_from_work(i)
                     continue
@@ -792,7 +825,7 @@ class DiffBuilder:
                     # before.
                     # remove it here; it will be re-inserted (moved) where needed.
                     self._item_removed(
-                        path, i, work[i], item_key=(cur_key, path), frozen=True
+                        path, i, work[i], item_key=(cur_key, path), frozen=frozen
                     )
                     _remove_from_work(i)
                     continue
@@ -834,7 +867,7 @@ class DiffBuilder:
                     i,
                     dst[i],
                     item_key=(target_key, path),
-                    frozen=True,
+                    frozen=frozen,
                 )
                 _insert_into_work(i, dst[i], target_key)
 
@@ -847,7 +880,7 @@ class DiffBuilder:
             key_j = work_keys[j]
             if key_j not in new_keys_set:
                 self._item_removed(
-                    path, j, work[j], item_key=(key_j, path), frozen=True
+                    path, j, work[j], item_key=(key_j, path), frozen=frozen
                 )
                 _remove_from_work(j)
             j -= 1
@@ -889,6 +922,12 @@ class DiffBuilder:
                 if field_name in fields:
                     old = change[0]
                     new = change[1]
+
+                    if field_name.startswith("on_") and fields[field_name].metadata.get(
+                        "event", True
+                    ):
+                        old = old is not None
+                        new = new is not None
 
                     logger.debug("\n\n_compare_values:changes %s %s", old, new)
 
@@ -963,7 +1002,9 @@ class DiffBuilder:
                 if "skip" not in field.metadata:
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
-                    if field.name.startswith("on_"):
+                    if field.name.startswith("on_") and field.metadata.get(
+                        "event", True
+                    ):
                         old = old is not None
                         new = new is not None
                     self._compare_values(dst, path, field.name, old, new, frozen)
@@ -1052,7 +1093,7 @@ class DiffBuilder:
             if parent:
                 logger.debug("\n\nAdding parent %s to item: %s", parent, item)
                 if parent is item:
-                    raise Exception(f"Parent is the same as item: {item}")
+                    raise ObjectPatchException(f"Parent is the same as item: {item}")
                 item._parent = weakref.ref(parent)
             else:
                 logger.debug("\n\nSkip adding parent to item: %s", item)
@@ -1105,7 +1146,7 @@ class DiffBuilder:
 
             if parent:
                 if parent is item:
-                    raise Exception(f"Parent is the same as item: {item}")
+                    raise ObjectPatchException(f"Parent is the same as item: {item}")
                 item._parent = weakref.ref(parent)
 
             if hasattr(item, "_frozen"):
@@ -1122,24 +1163,21 @@ class DiffBuilder:
                     or not isinstance(obj, control_cls)
                 ):
                     if hasattr(obj, "_frozen"):
-                        raise Exception("Frozen controls cannot be updated.") from None
+                        raise RuntimeError(
+                            "Frozen controls cannot be updated."
+                        ) from None
 
                     if hasattr(obj, "__changes"):
                         old_value = getattr(obj, name, None)
-                        if name.startswith("on_"):
-                            old_value = old_value is not None
-                        new_value = (
-                            value if not name.startswith("on_") else value is not None
-                        )
-                        if old_value != new_value:
+                        if old_value != value:
                             # logger.debug(
                             #     f"\n\nset_attr: {obj.__class__.__name__}.{name} = "
                             #     f"{new_value}, old: {old_value}"
                             # )
                             changes = getattr(obj, "__changes")
-                            changes[name] = (old_value, new_value)
+                            changes[name] = (old_value, value)
                             if hasattr(obj, "_notify"):
-                                obj._notify(name, new_value)
+                                obj._notify(name, value)
                 object.__setattr__(obj, name, value)
 
             item.__class__.__setattr__ = control_setattr  # type: ignore

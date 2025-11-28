@@ -1,5 +1,13 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
+
+import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
+import 'transforms.dart';
 
 extension BadgeParsers on Control {
   Widget wrapWithBadge(String propertyName, Widget child, ThemeData theme) {

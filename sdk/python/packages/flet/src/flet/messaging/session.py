@@ -191,9 +191,9 @@ class Session:
 
         try:
             await control._trigger_event(event_name, event_data)
-        except Exception as ex:
-            tb = traceback.format_exc()
-            self.error(f"Exception in 'on_{event_name}': {ex}\n{tb}")
+        except Exception as e:
+            logger.error(f"Unhandled error in 'on_{event_name}' handler", exc_info=True)
+            self.error(f"{e}\n{traceback.format_exc()}")
 
     async def invoke_method(
         self,
@@ -229,7 +229,7 @@ class Session:
 
         result, err = self.__method_call_results.pop(evt)
         if err:
-            raise Exception(err)
+            raise RuntimeError(err)
         return result
 
     def handle_invoke_method_results(
@@ -242,7 +242,7 @@ class Session:
             self.__method_call_results[evt] = (result, error)
             evt.set()
         else:
-            raise Exception(
+            raise RuntimeError(
                 f"Error handling invoke method results. Control with ID {control_id} "
                 "is not registered."
             )
@@ -346,6 +346,7 @@ class Session:
                     # print(f"**** Running effect: {hook} {is_cleanup}")
                     if hook and hook.setup and not is_cleanup:
                         hook.cancel()
+                        res = None
                         if asyncio.iscoroutinefunction(hook.setup):
                             hook._setup_task = asyncio.create_task(hook.setup())
                         else:

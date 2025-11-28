@@ -29,8 +29,7 @@ class FilePickerFileType(Enum):
 
     MEDIA = "media"
     """
-    A combination of [`VIDEO`][(c).] and
-    [`IMAGE`][(c).].
+    A combination of [`VIDEO`][(c).] and [`IMAGE`][(c).].
     """
 
     IMAGE = "image"
@@ -158,8 +157,11 @@ class FilePicker(Service):
             dialog_title: The title of the dialog window. Defaults to [`FilePicker.
             initial_directory: The initial directory where the dialog should open.
 
+        Returns:
+            The selected directory path or `None` if the dialog was cancelled.
+
         Raises:
-            NotImplementedError: If called in web app.
+            FletUnsupportedPlatformException: If called in web mode.
         """
         if self.page.web:
             raise FletUnsupportedPlatformException(
@@ -213,7 +215,7 @@ class FilePicker(Service):
         if (self.page.web or self.page.platform.is_mobile()) and not src_bytes:
             raise ValueError(
                 '"src_bytes" is required when saving a file in web mode,'
-                "on Android and iOS."
+                "or on mobile (Android & iOS)."
             )
         if self.page.web and not file_name:
             raise ValueError('"file_name" is required when saving a file in web mode.')
@@ -248,8 +250,10 @@ class FilePicker(Service):
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is
-                [`FilePickerFileType.CUSTOM`][flet.].
+                `file_type` is [`FilePickerFileType.CUSTOM`][flet.].
+
+        Returns:
+            A list of selected files.
         """
         files = await self._invoke_method(
             "pick_files",

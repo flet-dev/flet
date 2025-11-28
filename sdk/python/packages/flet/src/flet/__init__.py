@@ -10,6 +10,7 @@ from flet.components.hooks.use_effect import (
     use_effect,
 )
 from flet.components.hooks.use_memo import use_memo
+from flet.components.hooks.use_ref import use_ref
 from flet.components.hooks.use_state import use_state
 from flet.components.memo import memo
 from flet.components.observable import Observable, observable
@@ -122,13 +123,14 @@ from flet.controls.core.markdown import (
 from flet.controls.core.merge_semantics import MergeSemantics
 from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
-from flet.controls.core.reorderable_draggable import ReorderableDraggable
+from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
 from flet.controls.core.responsive_row import ResponsiveRow
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
+from flet.controls.core.shimmer import Shimmer, ShimmerDirection
 from flet.controls.core.stack import Stack, StackFit
 from flet.controls.core.text import (
     Text,
@@ -214,11 +216,15 @@ from flet.controls.duration import (
     DurationValue,
 )
 from flet.controls.events import (
+    DragDownEvent,
     DragEndEvent,
     DragStartEvent,
     DragUpdateEvent,
+    ForcePressEvent,
     HoverEvent,
+    LongPressDownEvent,
     LongPressEndEvent,
+    LongPressMoveUpdateEvent,
     LongPressStartEvent,
     MultiTapEvent,
     PointerEvent,
@@ -227,6 +233,7 @@ from flet.controls.events import (
     ScaleUpdateEvent,
     ScrollEvent,
     TapEvent,
+    TapMoveEvent,
 )
 from flet.controls.exceptions import (
     FletException,
@@ -265,6 +272,12 @@ from flet.controls.material.checkbox import Checkbox
 from flet.controls.material.chip import Chip
 from flet.controls.material.circle_avatar import CircleAvatar
 from flet.controls.material.container import Container
+from flet.controls.material.context_menu import (
+    ContextMenu,
+    ContextMenuDismissEvent,
+    ContextMenuSelectEvent,
+    ContextMenuTrigger,
+)
 from flet.controls.material.datatable import (
     DataCell,
     DataColumn,
@@ -311,7 +324,6 @@ from flet.controls.material.navigation_bar import (
 from flet.controls.material.navigation_drawer import (
     NavigationDrawer,
     NavigationDrawerDestination,
-    NavigationDrawerPosition,
 )
 from flet.controls.material.navigation_rail import (
     NavigationRail,
@@ -369,6 +381,7 @@ from flet.controls.material.time_picker import (
     TimePicker,
     TimePickerEntryMode,
     TimePickerEntryModeChangeEvent,
+    TimePickerHourFormat,
 )
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
@@ -607,6 +620,10 @@ __all__ = [
     "ConstrainedControl",
     "Container",
     "Context",
+    "ContextMenu",
+    "ContextMenuDismissEvent",
+    "ContextMenuSelectEvent",
+    "ContextMenuTrigger",
     "ContinuousRectangleBorder",
     "Control",
     "ControlEvent",
@@ -668,6 +685,7 @@ __all__ = [
     "DismissibleUpdateEvent",
     "Divider",
     "DividerTheme",
+    "DragDownEvent",
     "DragEndEvent",
     "DragStartEvent",
     "DragTarget",
@@ -710,6 +728,7 @@ __all__ = [
     "FloatingActionButtonLocation",
     "FloatingActionButtonTheme",
     "FontWeight",
+    "ForcePressEvent",
     "FormFieldControl",
     "GestureDetector",
     "Gradient",
@@ -752,7 +771,9 @@ __all__ = [
     "Locale",
     "LocaleConfiguration",
     "LoginEvent",
+    "LongPressDownEvent",
     "LongPressEndEvent",
+    "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
     "MacOsDeviceInfo",
     "MainAxisAlignment",
@@ -778,7 +799,6 @@ __all__ = [
     "NavigationBarTheme",
     "NavigationDrawer",
     "NavigationDrawerDestination",
-    "NavigationDrawerPosition",
     "NavigationDrawerTheme",
     "NavigationRail",
     "NavigationRailDestination",
@@ -834,7 +854,7 @@ __all__ = [
     "RangeSlider",
     "Rect",
     "Ref",
-    "ReorderableDraggable",
+    "ReorderableDragHandle",
     "ReorderableListView",
     "ResponsiveNumber",
     "ResponsiveRow",
@@ -873,6 +893,8 @@ __all__ = [
     "ShakeDetector",
     "ShapeBorder",
     "SharedPreferences",
+    "Shimmer",
+    "ShimmerDirection",
     "Size",
     "Slider",
     "SliderInteraction",
@@ -905,6 +927,7 @@ __all__ = [
     "TabIndicatorAnimation",
     "Tabs",
     "TapEvent",
+    "TapMoveEvent",
     "TemplateRoute",
     "Text",
     "TextAffinity",
@@ -931,6 +954,7 @@ __all__ = [
     "TimePicker",
     "TimePickerEntryMode",
     "TimePickerEntryModeChangeEvent",
+    "TimePickerHourFormat",
     "TimePickerTheme",
     "Tooltip",
     "TooltipTheme",
@@ -984,5 +1008,6 @@ __all__ = [
     "use_context",
     "use_effect",
     "use_memo",
+    "use_ref",
     "use_state",
 ]

@@ -18,7 +18,7 @@ class PieChartEventData extends Equatable {
   factory PieChartEventData.fromDetails(
       FlTouchEvent event, PieTouchResponse? response) {
     return PieChartEventData(
-      eventType: eventMap[event.runtimeType.toString()] ?? "undefined",
+      eventType: resolveFlTouchEventType(event),
       sectionIndex: response?.touchedSection?.touchedSectionIndex,
       localPosition: event.localPosition,
     );
@@ -51,7 +51,7 @@ PieChartSectionData parsePieChartSectionData(
     borderSide: section.getBorderSide("border_side", theme,
         defaultValue: BorderSide.none)!,
     titlePositionPercentageOffset: section.getDouble("title_position"),
-    badgeWidget: section.buildWidget("badge_content"),
+    badgeWidget: section.buildWidget("badge"),
     badgePositionPercentageOffset: section.getDouble("badge_position"),
   );
 }

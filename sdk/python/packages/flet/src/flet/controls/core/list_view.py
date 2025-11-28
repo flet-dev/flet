@@ -54,6 +54,10 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     A fixed height or width (when [`horizontal`][(c).] is `True`)
     of an item to optimize rendering.
+
+    Note:
+        This property has effect only when [`build_controls_on_demand`][(c).]
+        is `True` or [`spacing`][(c).] is `0`.
     """
 
     first_item_prototype: bool = False
@@ -61,6 +65,16 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     Whether the dimensions of the first item of [`controls`][(c).]
     should be used as a "prototype" for all other items,
     i.e. their `height` or `width` will be the same as the first item.
+    """
+
+    prototype_item: Optional[Control] = None
+    """
+    A control to be used as a "prototype" for all items,
+    i.e. their `height` or `width` will be the same as the `prototype_item`.
+
+    Note:
+        This property has effect only when [`build_controls_on_demand`][(c).]
+        is `True` or [`spacing`][(c).] is `0`.
     """
 
     divider_thickness: Number = 0

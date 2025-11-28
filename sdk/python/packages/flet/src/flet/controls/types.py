@@ -50,7 +50,7 @@ class RouteUrlStrategy(Enum):
 
 class UrlTarget(Enum):
     """
-    TBD
+    Specifies where to open a URL.
     """
 
     BLANK = "blank"
@@ -197,15 +197,41 @@ class AutomaticNotchShape(NotchShape):
 
 class ResponsiveRowBreakpoint(Enum):
     """
-    Breakpoints for responsive design.
+    Breakpoint names used by [`ResponsiveRow`][flet.] and responsive
+    properties such as [`Control.col`][flet.Control.].
+
+    To define custom breakpoints, see [`ResponsiveRow.breakpoints`][flet.].
     """
 
     XS = "xs"
+    """
+    Extra small screens. Default min width: `0` px.
+    """
+
     SM = "sm"
+    """
+    Small screens. Default min width: `576` px.
+    """
+
     MD = "md"
+    """
+    Medium screens. Default min width: `768` px.
+    """
+
     LG = "lg"
+    """
+    Large screens. Default min width: `992` px.
+    """
+
     XL = "xl"
+    """
+    Extra-large screens. Default min width: `1200` px.
+    """
+
     XXL = "xxl"
+    """
+    Double extra-large screens. Default min width: `1400` px.
+    """
 
 
 Number = Union[int, float]
@@ -426,7 +452,9 @@ class ScrollMode(Enum):
 
 class ClipBehavior(Enum):
     """
-    Different ways to clip content. See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html)
+    Different ways to clip content.
+
+    See [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html)
     from Flutter documentation for ClipBehavior examples.
     """
 
@@ -466,9 +494,16 @@ class ImageRepeat(Enum):
     """
 
     NO_REPEAT = "noRepeat"
+    """Leave uncovered portions of the box transparent."""
+
     REPEAT = "repeat"
+    """Repeat the image in both the x and y directions until the box is filled."""
+
     REPEAT_X = "repeatX"
+    """Repeat the image in the x direction until the box is filled horizontally."""
+
     REPEAT_Y = "repeatY"
+    """Repeat the image in the y direction until the box is filled vertically."""
 
 
 class PagePlatform(Enum):
@@ -1000,39 +1035,44 @@ class VisualDensity(Enum):
 
     STANDARD = "standard"
     """
-    The default profile for VisualDensity. This default value represents a visual
-    density that is less dense than either `comfortable` or `compact`, and corresponds
-    to density values of zero in both axes.
+    The default/standard profile for visual density.
+
+    This default value represents a visual density that is less dense than
+    either [`COMFORTABLE`][(c).] or [`COMPACT`][(c).], and corresponds to
+    density values of zero in both axes.
     """
 
     COMPACT = "compact"
     """
-    The profile for a "compact" interpretation of VisualDensity.
+    The profile for a "compact" interpretation of visual density.
 
     Individual components will interpret the density value independently, making
-    themselves more visually dense than `standard` and `comfortable` to different
-    degrees based on the Material Design specification of the `comfortable` setting for
-    their particular use case.
+    themselves more visually dense than [`STANDARD`][(c).] and [`COMFORTABLE`][(c).] to
+    different degrees based on the Material Design specification of the
+    [`COMFORTABLE`][(c).] setting for their particular use case.
 
-    It corresponds to a density value of -2 in both axes.
+    It corresponds to a density value of `-2` in both axes.
     """
 
     COMFORTABLE = "comfortable"
     """
-    The profile for a `comfortable` interpretation of `VisualDensity`. Individual
-    components will interpret the density value independently, making themselves more
-    visually dense than `standard` and less dense than `compact` to different degrees
-    based on the Material Design specification of the `comfortable` setting for their
-    particular use case.
+    The profile for a "comfortable" interpretation of visual density.
 
-    It corresponds to a density value of -1 in both axes.
+    Individual
+    components will interpret the density value independently, making themselves more
+    visually dense than [`STANDARD`][(c).] and less dense than [`COMPACT`][(c).]
+    to different degrees based on the Material Design specification of the
+    comfortable setting for their particular use case.
+
+    It corresponds to a density value of `-1` in both axes.
     """
 
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
     """
-    Visual density that is adaptive based on the given platform. For desktop platforms,
-    this returns `compact`, and for other platforms, it returns a default-constructed
-    VisualDensity.
+    Visual density that is adaptive based on the given platform.
+
+    For desktop platforms, this returns [`COMPACT`][(c).], and for other platforms,
+    it returns a default-constructed visual density.
     """
 
 
@@ -1098,7 +1138,6 @@ Type alias for string or control values.
 Represents a string or a control and can be:
 - a string, which will be converted internally into a [`Text`][flet.] control,
 - or a control.
-
 """
 
 # Wrapper

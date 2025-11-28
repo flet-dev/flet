@@ -8,6 +8,20 @@ import msgpack
 from flet.controls.duration import Duration
 
 
+def _get_root_dataclass_field(cls, field_name):
+    """
+    Returns the field definition from the earliest dataclass in the MRO
+    that declares `field_name`. This lets us recover defaults configured
+    on base controls before subclasses override them.
+    """
+
+    for base in reversed(cls.__mro__):
+        dataclass_fields = getattr(base, "__dataclass_fields__", None)
+        if dataclass_fields and field_name in dataclass_fields:
+            return dataclass_fields[field_name]
+    return None
+
+
 def configure_encode_object_for_msgpack(control_cls):
     def encode_object_for_msgpack(obj):
         if is_dataclass(obj):
@@ -29,17 +43,25 @@ def configure_encode_object_for_msgpack(control_cls):
                     if len(v) > 0:
                         r[field.name] = v
                     prev_dicts[field.name] = v
-                elif field.name.startswith("on_"):
+                elif field.name.startswith("on_") and field.metadata.get("event", True):
                     v = v is not None
                     if v:
                         r[field.name] = v
                 elif is_dataclass(v):
                     r[field.name] = v
                     prev_classes[field.name] = v
-                elif v is not None and (
-                    v != field.default or not isinstance(obj, control_cls)
-                ):
-                    r[field.name] = v
+                else:
+                    default_value = field.default
+                    if isinstance(obj, control_cls):
+                        root_field = _get_root_dataclass_field(
+                            obj.__class__, field.name
+                        )
+                        if root_field is not None:
+                            default_value = root_field.default
+                    if v is not None and (
+                        v != default_value or not isinstance(obj, control_cls)
+                    ):
+                        r[field.name] = v
 
             if not hasattr(obj, "_frozen"):
                 setattr(obj, "__prev_lists", prev_lists)
@@ -59,7 +81,7 @@ def configure_encode_object_for_msgpack(control_cls):
         elif isinstance(obj, Duration):
             return msgpack.ExtType(3, obj.in_microseconds)
         elif callable(obj):
-            raise Exception(f"Cannot serialize method: {obj}") from None
+            raise RuntimeError(f"Cannot serialize method: {obj}") from None
         return obj
 
     return encode_object_for_msgpack

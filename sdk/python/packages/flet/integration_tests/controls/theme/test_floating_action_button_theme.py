@@ -12,7 +12,7 @@ def flet_app(flet_app_function):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_theme(flet_app: ftt.FletTestApp, request):
+async def test_theme_1(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme = ft.Theme(
         floating_action_button_theme=ft.FloatingActionButtonTheme(
             bgcolor=ft.Colors.ORANGE,
@@ -48,8 +48,7 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     )
 
     flet_app.page.enable_screenshots = True
-    flet_app.page.window.width = 400
-    flet_app.page.window.height = 600
+    flet_app.resize_page(400, 600)
 
     fab1 = ft.FloatingActionButton(
         key="fab1",
@@ -60,11 +59,10 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     fab3 = ft.FloatingActionButton("Text", disabled=True)
     fab4 = ft.FloatingActionButton("Long Long Long Long Text", disabled=True)
     flet_app.page.add(fab1, fab2, fab3, fab4)
-    flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme_normal",
+        "theme_1_normal",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -77,22 +75,20 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme_focus_disabled",
+        "theme_1_focus_disabled",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
 
     # test hover
-    flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
     button = await flet_app.tester.find_by_key("fab1")
     assert button.count == 1
     await flet_app.tester.mouse_hover(button)
     await flet_app.tester.pump_and_settle()
 
     flet_app.assert_screenshot(
-        "theme_hover",
+        "theme_1_hover",
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

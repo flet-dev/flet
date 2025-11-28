@@ -38,7 +38,9 @@ dependencies:
   screenshot: ^3.0.0
   sensors_plus: ^6.1.1
   shared_preferences: 2.5.3
+  shimmer: ^3.0.0
   url_launcher: 6.3.2
+  vector_math: ^2.2.0
   web: ^1.1.1
   web_socket_channel: ^3.0.2
   window_manager: ^0.5.1
