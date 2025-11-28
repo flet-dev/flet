@@ -23,8 +23,8 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
                     },
                 )
                 for i in range(1, 6)
-            ], 
-        )
+            ],
+        ),
     )
 
 
@@ -44,7 +44,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
         "responsive1",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio,
-            delay=ft.Duration(seconds=1)
+            delay=ft.Duration(seconds=1),
         ),
     )
     flet_app_function.resize_page(800, 500)
@@ -55,8 +55,8 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
         "responsive2",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio,
-            delay=ft.Duration(seconds=1)
-        )
+            delay=ft.Duration(seconds=1),
+        ),
     )
     flet_app_function.resize_page(200, 500)
     flet_app_function.page.update()
@@ -66,13 +66,14 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
         "responsive3",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio,
-            delay=ft.Duration(seconds=1)
+            delay=ft.Duration(seconds=1),
         ),
     )
     flet_app_function.create_gif(
         ["responsive1", "responsive2", "responsive3"],
         "responsive_row_basic",
         duration=1600,
+        disposal=ftt.DisposalMode.BACKGROUND,
     )
 
 
@@ -118,4 +119,5 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
         ["responsive_custom_1", "responsive_custom_2", "responsive_custom_3"],
         "responsive_row_custom_breakpoint",
         duration=1600,
+        disposal=ftt.DisposalMode.BACKGROUND,
     )
