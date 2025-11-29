@@ -75,8 +75,8 @@ def _version_from_specifiers(specifiers) -> tuple[Optional[str], bool]:
     Returns (version, lower_only_flag).
     - If an exact pin or upper bound exists, returns that version and False.
     - If only lower bounds exist (>=, >, ~=), returns (None, True) so callers
-      can opt for a fallback (e.g., latest pre-release) instead of trying a
-      nonexistent lower bound.
+        can opt for a fallback (e.g., latest pre-release) instead of trying a
+        nonexistent lower bound.
     """
     for operator in ("==", "==="):
         for spec in specifiers:
@@ -376,6 +376,7 @@ class ExamplesGalleryPlugin(BasePlugin):
         src = docs_dir / self.config["src"]
         dist_dir = docs_dir / self.config["dist"]
         dist_index = dist_dir / "index.html"
+        strict_mode = bool(config.get("strict", False))
 
         if not src.exists():
             return
@@ -395,10 +396,10 @@ class ExamplesGalleryPlugin(BasePlugin):
         if dist_mtime >= src_mtime:
             return
 
-        # Prepare a staging directory to ease bundling
-        # external examples alongside the app.
         staging_dir: Optional[Path] = None
         try:
+            # Prepare a staging directory to ease bundling
+            # external examples alongside the app.
             staging_dir = Path(tempfile.mkdtemp(prefix="flet-examples-gallery-"))
             source_root = src_root.parent
             shutil.copytree(
@@ -412,7 +413,7 @@ class ExamplesGalleryPlugin(BasePlugin):
 
             staged_src_root = staging_dir / src_root.name
 
-            # Copy examples/controls to staged app
+            # Copy examples/controls to the staged app
             # so imports work in the packaged build.
             repo_examples_controls = (
                 docs_dir.resolve().parents[2] / "examples" / "controls"
@@ -424,41 +425,43 @@ class ExamplesGalleryPlugin(BasePlugin):
                 shutil.copytree(repo_examples_controls, dest_controls)
 
             staged_entry = staging_dir / src.relative_to(source_root)
-        except Exception as exc:  # noqa: BLE001
-            if staging_dir:
-                shutil.rmtree(staging_dir, ignore_errors=True)
-            raise RuntimeError(
-                f"Unable to stage examples gallery sources: {exc}"
-            ) from exc
 
-        cmd: Optional[list[str]] = self.config.get("command")
-        if not cmd:
-            cmd = [
-                "uv",
-                "run",
-                "--active",
-                "flet",
-                "publish",
-                str(staged_entry or src),
-                "--distpath",
-                str(dist_dir),
-                "--base-url",
-                self.config["base_url"],
-                "--route-url-strategy",
-                "hash",
-                "--pre",
-            ]
+            cmd: Optional[list[str]] = self.config.get("command")
+            if not cmd:
+                cmd = [
+                    "uv",
+                    "run",
+                    "--active",
+                    "flet",
+                    "publish",
+                    str(staged_entry or src),
+                    "--distpath",
+                    str(dist_dir),
+                    "--base-url",
+                    self.config["base_url"],
+                    "--route-url-strategy",
+                    "hash",
+                    "--pre",
+                ]
 
-        env: dict[str, str] = dict(os.environ)
-        extra_env = self.config.get("env") or {}
-        env.update({k: str(v) for k, v in extra_env.items()})
+            env: dict[str, str] = dict(os.environ)
+            extra_env = self.config.get("env") or {}
+            env.update({k: str(v) for k, v in extra_env.items()})
 
-        web_client_path = _ensure_web_client(env, src_root, docs_dir)
-        env["FLET_WEB_PATH"] = str(web_client_path)
+            web_client_path = _ensure_web_client(env, src_root, docs_dir)
+            env["FLET_WEB_PATH"] = str(web_client_path)
 
-        _ensure_pip_available()
-        try:
+            _ensure_pip_available()
             subprocess.run(cmd, cwd=docs_dir, check=True, env=env)
+        except Exception as exc:
+            if strict_mode:
+                raise
+            logger.warning(
+                "Examples gallery build failed; "
+                "skipping because mkdocs strict mode is off. Reason: %s",
+                exc,
+            )
+            return
         finally:
             # cleanup
             if staging_dir:
