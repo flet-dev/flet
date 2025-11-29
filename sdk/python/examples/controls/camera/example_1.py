@@ -1,7 +1,10 @@
+import logging
 from dataclasses import dataclass, field
 
 import flet as ft
 import flet_camera as fc
+
+logging.basicConfig(level=logging.INFO)
 
 
 @dataclass
@@ -24,7 +27,7 @@ async def main(page: ft.Page):
             alignment=ft.Alignment.CENTER,
             content=ft.Icon(
                 ft.Icons.CENTER_FOCUS_STRONG,
-                color=ft.Colors.WHITE70,
+                color=ft.Colors.WHITE_70,
                 size=48,
             ),
         ),
@@ -40,7 +43,6 @@ async def main(page: ft.Page):
 
     async def get_cameras():
         state.cameras = await preview.get_available_cameras()
-        print("Available cameras:", state.cameras)
         selector.options = [ft.DropdownOption(c.name) for c in state.cameras]
         if state.cameras and selector.value is None:
             selector.value = state.cameras[0].name
@@ -107,6 +109,8 @@ async def main(page: ft.Page):
     async def resume_preview():
         await preview.resume_preview()
 
+    page.on_connect = get_cameras
+
     page.add(
         ft.Row(
             [
@@ -123,7 +127,6 @@ async def main(page: ft.Page):
         status,
         ft.Row(
             [
-                ft.Button("Initialize", on_click=init_camera),
                 ft.Button("Take photo", on_click=take_photo),
                 ft.Button("Start streaming", on_click=start_streaming),
                 ft.Button("Stop streaming", on_click=stop_streaming),
@@ -140,8 +143,6 @@ async def main(page: ft.Page):
     )
 
     await get_cameras()
-    if selector.value:
-        await init_camera()
 
 
 if __name__ == "__main__":
