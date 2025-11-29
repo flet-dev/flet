@@ -13,6 +13,7 @@ dependencies = [
     "flet-ads",
     "flet-audio",
     "flet-audio-recorder",
+    "flet-camera",
     "flet-charts",
     "flet-datatable2",
     "flet-flashlight",
@@ -33,6 +34,7 @@ flet-web = { workspace = true }
 flet-ads = { workspace = true }
 flet-audio = { workspace = true }
 flet-audio-recorder = { workspace = true }
+flet-camera = { workspace = true }
 flet-charts = { workspace = true }
 flet-datatable2 = { workspace = true }
 flet-flashlight = { workspace = true }
@@ -113,6 +115,7 @@ isort = { known-first-party = [
     "flet_ads",
     "flet_audio",
     "flet_audio_recorder",
+    "flet_camera",
     "flet_charts",
     "flet_datatable2",
     "flet_flashlight",

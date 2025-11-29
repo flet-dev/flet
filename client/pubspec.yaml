@@ -39,6 +39,9 @@ dependencies:
   flet_audio:
     path: ../sdk/python/packages/flet-audio/src/flutter/flet_audio
 
+  flet_camera:
+    path: ../sdk/python/packages/flet-camera/src/flutter/flet_camera
+
   flet_video:
     path: ../sdk/python/packages/flet-video/src/flutter/flet_video
 # --FAT_CLIENT_END--

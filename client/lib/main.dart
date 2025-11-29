@@ -5,6 +5,7 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
+import 'package:flet_camera/flet_camera.dart' as flet_camera;
 import 'package:flet_charts/flet_charts.dart' as flet_charts;
 import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
@@ -36,17 +37,18 @@ void main([List<String>? args]) async {
 
   WidgetsFlutterBinding.ensureInitialized();
   List<FletExtension> extensions = [
+    flet_ads.Extension(),
     flet_audio_recorder.Extension(),
+    flet_camera.Extension(),
+    flet_charts.Extension(),
+    flet_datatable2.Extension(),
+    flet_flashlight.Extension(),
     flet_geolocator.Extension(),
-    flet_permission_handler.Extension(),
     flet_lottie.Extension(),
     flet_map.Extension(),
-    flet_ads.Extension(),
+    flet_permission_handler.Extension(),
     flet_rive.Extension(),
     flet_webview.Extension(),
-    flet_flashlight.Extension(),
-    flet_datatable2.Extension(),
-    flet_charts.Extension(),
   ];
 
   // --FAT_CLIENT_START--
