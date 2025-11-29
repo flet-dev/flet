@@ -3,9 +3,19 @@ name: macOS Integration Tests
 on:
   push:
     paths:
+      - '.github/workflows/macos-integration-tests.yml'
+      - 'sdk/python/packages/flet/src/**'
+      - 'sdk/python/packages/flet/integration_tests/**'
+      - 'packages/flet/**'
+      - 'client/**'
       - '.fvmrc'
   pull_request:
     paths:
+      - '.github/workflows/macos-integration-tests.yml'
+      - 'sdk/python/packages/flet/src/**'
+      - 'sdk/python/packages/flet/integration_tests/**'
+      - 'packages/flet/**'
+      - 'client/**'
       - '.fvmrc'
   workflow_dispatch:
 
