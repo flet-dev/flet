@@ -21,6 +21,7 @@ __all__ = ["Camera"]
 
 
 def _enum_to_value(value):
+    """Return enum value or the value itself when already primitive."""
     return value.value if hasattr(value, "value") else value
 
 
@@ -51,6 +52,9 @@ class Camera(ft.LayoutControl):
     async def get_available_cameras(self) -> list[CameraDescription]:
         """
         Lists the available camera devices on the current platform.
+
+        Returns:
+            A list of available camera descriptions.
         """
         cameras = await self._invoke_method("get_available_cameras")
         return [CameraDescription(**c) for c in cameras or []]
@@ -67,11 +71,23 @@ class Camera(ft.LayoutControl):
     ) -> CameraState:
         """
         Initializes a new camera controller for the given description.
+
+        Args:
+            description: Camera device to bind to.
+            resolution_preset: Desired resolution preset.
+            enable_audio: Whether audio is enabled for recordings.
+            fps: Optional target frames per second.
+            video_bitrate: Optional video bitrate.
+            audio_bitrate: Optional audio bitrate.
+            image_format_group: Optional image format group override.
+
+        Returns:
+            The initial camera state.
         """
         state = await self._invoke_method(
             "initialize",
             {
-                "description": description,
+                "description": description.to_dict(),
                 "resolution_preset": _enum_to_value(resolution_preset),
                 "enable_audio": enable_audio,
                 "fps": fps,
@@ -107,6 +123,10 @@ class Camera(ft.LayoutControl):
     ):
         """
         Locks capture orientation to the specified device orientation.
+
+        Args:
+            orientation: Specific orientation to lock, or current
+            device orientation if None.
         """
         await self._invoke_method(
             "lock_capture_orientation",
@@ -128,6 +148,9 @@ class Camera(ft.LayoutControl):
     async def take_picture(self) -> bytes:
         """
         Captures a still image and returns the encoded bytes.
+
+        Returns:
+            Encoded image bytes.
         """
         return await self._invoke_method("take_picture")
 
@@ -150,6 +173,9 @@ class Camera(ft.LayoutControl):
     async def stop_video_recording(self) -> bytes:
         """
         Stops video recording and returns the recorded bytes.
+
+        Returns:
+            Encoded video file bytes.
         """
         return await self._invoke_method("stop_video_recording")
 
@@ -164,42 +190,77 @@ class Camera(ft.LayoutControl):
     async def set_description(self, description: CameraDescription):
         """
         Switches to another camera description.
+
+        Args:
+            description: Camera to switch to.
         """
-        await self._invoke_method("set_description", {"description": description})
+        await self._invoke_method(
+            "set_description", {"description": description.to_dict()}
+        )
 
     async def set_exposure_mode(self, mode: ExposureMode):
-        """Changes the exposure mode."""
+        """Changes the exposure mode.
+
+        Args:
+            mode: Exposure mode to apply.
+        """
         await self._invoke_method("set_exposure_mode", {"mode": _enum_to_value(mode)})
 
     async def set_exposure_offset(self, offset: float) -> float:
-        """Sets exposure offset in EV units."""
+        """Sets exposure offset in EV units.
+
+        Args:
+            offset: Exposure offset to apply.
+
+        Returns:
+            The offset value that was set.
+        """
         return await self._invoke_method("set_exposure_offset", {"offset": offset})
 
     async def set_exposure_point(self, point: Optional[ft.OffsetValue]):
         """
         Sets the exposure metering point.
+
+        Args:
+            point: Normalized offset (0..1) or None to reset.
         """
         await self._invoke_method("set_exposure_point", {"point": point})
 
     async def set_flash_mode(self, mode: FlashMode):
-        """Changes the flash mode."""
+        """Changes the flash mode.
+
+        Args:
+            mode: Flash mode to apply.
+        """
         await self._invoke_method("set_flash_mode", {"mode": _enum_to_value(mode)})
 
     async def set_focus_mode(self, mode: FocusMode):
-        """Changes the focus mode."""
+        """Changes the focus mode.
+
+        Args:
+            mode: Focus mode to apply.
+        """
         await self._invoke_method("set_focus_mode", {"mode": _enum_to_value(mode)})
 
     async def set_focus_point(self, point: Optional[ft.OffsetValue]):
         """
         Sets the focus metering point.
+
+        Args:
+            point: Normalized offset (0..1) or None to reset.
         """
         await self._invoke_method("set_focus_point", {"point": point})
 
     async def set_zoom_level(self, zoom: float):
-        """Applies the provided zoom level."""
+        """Applies the provided zoom level.
+
+        Args:
+            zoom: Zoom level to set.
+        """
         await self._invoke_method("set_zoom_level", {"zoom": zoom})
 
     def before_update(self):
+        """Validate platform support prior to sending updates."""
         super().before_update()
 
         # validate platform
