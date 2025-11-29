@@ -1,5 +1,4 @@
 import importlib.util
-import logging
 import os
 import shutil
 import subprocess
@@ -11,7 +10,7 @@ from typing import Optional
 
 from mkdocs.config import config_options
 from mkdocs.config.defaults import MkDocsConfig
-from mkdocs.plugins import BasePlugin
+from mkdocs.plugins import BasePlugin, get_plugin_logger
 from packaging.requirements import Requirement
 
 try:  # Python 3.11+
@@ -19,7 +18,7 @@ try:  # Python 3.11+
 except ModuleNotFoundError:  # pragma: no cover - fallback for 3.10
     import tomli as tomllib  # type: ignore[no-redef]
 
-logger = logging.getLogger("flet.docs.examples_gallery")
+log = get_plugin_logger("examples_gallery")
 
 
 def _is_relative_to(path: Path, base: Path) -> bool:
@@ -47,7 +46,7 @@ def _ensure_pip_available() -> None:
     """Bootstrap pip into the active virtualenv when it's missing."""
     if _has_pip():
         return
-    logger.info("Installing pip in the current environment for `flet publish`.")
+    log.info("Installing pip...")
     subprocess.run([sys.executable, "-m", "ensurepip", "--upgrade"], check=True)
 
 
@@ -104,7 +103,7 @@ def _version_from_pyproject(pyproject: Path) -> tuple[Optional[str], bool]:
     try:
         data = tomllib.loads(pyproject.read_text())
     except Exception as exc:  # noqa: BLE001
-        logger.debug("Unable to parse %s: %s", pyproject, exc)
+        log.debug("Unable to parse %s: %s", pyproject, exc)
         return None, False
 
     deps = data.get("project", {}).get("dependencies") or []
@@ -142,7 +141,7 @@ def _resolve_flet_version(
 
         default_version = getattr(flet_version, "DEFAULT_VERSION", None)
     except Exception as exc:  # noqa: BLE001
-        logger.debug("Unable to preload flet version defaults: %s", exc)
+        log.debug("Unable to preload flet version defaults: %s", exc)
 
     if env.get("FLET_WEB_VERSION"):
         return str(env["FLET_WEB_VERSION"]), False
@@ -166,7 +165,7 @@ def _resolve_flet_version(
         if resolved:
             return str(resolved), False
     except Exception as exc:  # noqa: BLE001
-        logger.debug("Unable to resolve flet version from package: %s", exc)
+        log.debug("Unable to resolve flet version from package: %s", exc)
 
     if default_version:
         return str(default_version), False
@@ -184,20 +183,20 @@ def _locate_existing_web_client(env: Mapping[str, str]) -> Optional[Path]:
         candidate = Path(configured).expanduser()
         if _web_path_ready(candidate):
             return candidate
-        logger.warning(
+        log.warning(
             "FLET_WEB_PATH is set to %s but no web client was found.", candidate
         )
 
     try:
         from flet_web import get_package_web_dir
     except Exception as exc:  # noqa: BLE001
-        logger.debug("Unable to import flet_web: %s", exc)
+        log.debug("Unable to import flet_web: %s", exc)
         return None
 
     try:
         package_web = Path(get_package_web_dir())
     except Exception as exc:  # noqa: BLE001
-        logger.debug("Unable to resolve packaged web client: %s", exc)
+        log.debug("Unable to resolve packaged web client: %s", exc)
         return None
 
     return package_web if _web_path_ready(package_web) else None
@@ -246,11 +245,11 @@ def _download_packaged_web_client(
             )
             return True
         except subprocess.CalledProcessError as exc2:
-            logger.warning("Unable to download a fallback flet-web wheel: %s", exc2)
+            log.warning("Unable to download a fallback flet-web wheel: %s", exc2)
             return False
 
     if not pre_only and version:
-        logger.info("Downloading flet-web==%s into %s", version, target_root)
+        log.info("Downloading flet-web==%s into %s", version, target_root)
         try:
             subprocess.run(
                 [
@@ -268,12 +267,12 @@ def _download_packaged_web_client(
                 check=True,
             )
         except subprocess.CalledProcessError as exc:
-            logger.warning("Unable to download flet-web==%s: %s", version, exc)
-            logger.info("Falling back to latest available pre-release flet-web wheel.")
+            log.warning("Unable to download flet-web==%s: %s", version, exc)
+            log.info("Falling back to latest available pre-release flet-web wheel.")
             if not _install_latest_pre():
                 return None
     else:
-        logger.info("No exact flet-web version to install; using latest pre-release.")
+        log.info("No exact flet-web version to install; using latest pre-release.")
         if not _install_latest_pre():
             return None
 
@@ -394,6 +393,7 @@ class ExamplesGalleryPlugin(BasePlugin):
         src_mtime = _latest_mtime(src_root, ignore_roots)
         dist_mtime = dist_index.stat().st_mtime if dist_index.exists() else 0.0
         if dist_mtime >= src_mtime:
+            log.info("Skipping build; dist is up-to-date at %s", dist_index)
             return
 
         staging_dir: Optional[Path] = None
@@ -401,6 +401,7 @@ class ExamplesGalleryPlugin(BasePlugin):
             # Prepare a staging directory to ease bundling
             # external examples alongside the app.
             staging_dir = Path(tempfile.mkdtemp(prefix="flet-examples-gallery-"))
+            log.info("Staging examples gallery into %s", staging_dir)
             source_root = src_root.parent
             shutil.copytree(
                 source_root,
@@ -452,13 +453,13 @@ class ExamplesGalleryPlugin(BasePlugin):
             env["FLET_WEB_PATH"] = str(web_client_path)
 
             _ensure_pip_available()
+            log.info("Running publish: %s", " ".join(cmd))
             subprocess.run(cmd, cwd=docs_dir, check=True, env=env)
         except Exception as exc:
             if strict_mode:
                 raise
-            logger.warning(
-                "Examples gallery build failed; "
-                "skipping because mkdocs strict mode is off. Reason: %s",
+            log.warning(
+                "Build failed; skipping because mkdocs strict mode is off. Reason: %s",
                 exc,
             )
             return
