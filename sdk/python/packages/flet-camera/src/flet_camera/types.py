@@ -150,17 +150,6 @@ class CameraDescription:
     lens_type: CameraLensType = CameraLensType.UNKNOWN
     """Lens hardware type (wide, telephoto, ultra-wide, or unknown)."""
 
-    def to_dict(self) -> dict:
-        """Serialize the description for transport."""
-        return {
-            "name": self.name,
-            "lens_direction": getattr(
-                self.lens_direction, "value", self.lens_direction
-            ),
-            "sensor_orientation": self.sensor_orientation,
-            "lens_type": getattr(self.lens_type, "value", self.lens_type),
-        }
-
 
 @dataclass
 class CameraState(ft.Event["Camera"]):

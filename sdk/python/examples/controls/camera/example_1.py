@@ -1,11 +1,21 @@
+from dataclasses import dataclass, field
+
 import flet as ft
 import flet_camera as fc
+
+
+@dataclass
+class State:
+    cameras: list[fc.CameraDescription] = field(default_factory=list)
+    selected_camera: fc.CameraDescription | None = None
 
 
 async def main(page: ft.Page):
     page.title = "Camera control"
     page.padding = 16
     page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
+
+    state = State()
 
     preview = fc.Camera(
         expand=True,
@@ -26,81 +36,110 @@ async def main(page: ft.Page):
         height=200,
         fit=ft.BoxFit.CONTAIN,
     )
-    cameras: list[fc.CameraDescription] = []
-    selector = ft.Dropdown(label="Camera", options=[], expand=True)
+    selector = ft.Dropdown(label="Camera", options=[])
 
-    async def refresh_cameras(_=None):
-        nonlocal cameras
-        cameras = await preview.get_available_cameras()
-        selector.options = [ft.dropdown.Option(c.name) for c in cameras]
-        if cameras and selector.value is None:
-            selector.value = cameras[0].name
-        selector.update()
+    async def get_cameras():
+        state.cameras = await preview.get_available_cameras()
+        print("Available cameras:", state.cameras)
+        selector.options = [ft.DropdownOption(c.name) for c in state.cameras]
+        if state.cameras and selector.value is None:
+            selector.value = state.cameras[0].name
+        if selector.value:
+            await init_camera()
 
     async def init_camera(e=None):
-        selected = next(
-            (c for c in cameras if c.name == selector.value),
+        state.selected_camera = next(
+            (c for c in state.cameras if c.name == selector.value),
             None,
         )
-        if not selected:
+        if not state.selected_camera:
             status.value = "No camera selected"
-            status.update()
             return
-        state = await preview.initialize(
-            description=selected,
+
+        status.value = f"Initializing {state.selected_camera.name}"
+        status.update()
+        await preview.initialize(
+            description=state.selected_camera,
             resolution_preset=fc.ResolutionPreset.MEDIUM,
             enable_audio=True,
         )
-        if state.preview_size:
-            status.value = (
-                f"Initialized {selected.name} "
-                f"({state.preview_size.width}x{state.preview_size.height})"
-            )
-        else:
-            status.value = f"Initialized {selected.name}"
-        status.update()
 
     async def take_photo(_):
         data = await preview.take_picture()
         last_image.src = data
         last_image.update()
 
-    async def on_state_change(e):
-        state = e.data if hasattr(e, "data") else e
-        if isinstance(state, dict):
-            state = fc.CameraState(**state)
-        if isinstance(state, fc.CameraState) and state.has_error:
-            status.value = f"Camera error: {state.error_description}"
-            status.update()
+    async def on_state_change(e: ft.Event[fc.CameraState]):
+        if e.description == state.selected_camera:
+            print("Camera state changed:", e)
+            if e.has_error:
+                status.value = f"Camera error: {e.error_description}"
+            elif e.is_taking_picture:
+                status.value = "Taking picture..."
+            elif e.is_recording_video:
+                status.value = "Recording video..."
+            elif e.is_recording_paused:
+                status.value = "Recording paused"
+            elif e.is_streaming_images:
+                status.value = "Streaming images..."
+            elif e.is_preview_paused:
+                status.value = "Preview paused"
+            else:
+                status.value = "Camera ready"
 
     preview.on_state_change = on_state_change
     selector.on_select = init_camera
 
+    async def start_streaming():
+        await preview.start_image_stream()
+
+    async def stop_streaming():
+        await preview.stop_image_stream()
+
+    def on_stream_image(e: ft.Event[fc.CameraImage]):
+        print("Stream image received:", e)
+
+    preview.on_stream_image = on_stream_image
+
+    async def pause_preview():
+        await preview.pause_preview()
+
+    async def resume_preview():
+        await preview.resume_preview()
+
     page.add(
         ft.Row(
-            [selector, ft.ElevatedButton("Refresh", on_click=refresh_cameras)],
-            spacing=12,
+            [
+                selector,
+                ft.IconButton(ft.Icons.REFRESH, on_click=get_cameras),
+            ],
         ),
         ft.Container(
             height=320,
             bgcolor=ft.Colors.BLACK,
-            border_radius=12,
-            padding=8,
+            border_radius=3,
             content=preview,
+        ),
+        status,
+        ft.Row(
+            [
+                ft.Button("Initialize", on_click=init_camera),
+                ft.Button("Take photo", on_click=take_photo),
+                ft.Button("Start streaming", on_click=start_streaming),
+                ft.Button("Stop streaming", on_click=stop_streaming),
+            ],
         ),
         ft.Row(
             [
-                ft.ElevatedButton("Initialize", on_click=init_camera),
-                ft.ElevatedButton("Take photo", on_click=take_photo),
-            ],
-            spacing=12,
+                ft.Button("Pause preview", on_click=pause_preview),
+                ft.Button("Resume preview", on_click=resume_preview),
+            ]
         ),
-        status,
         ft.Text("Last photo"),
         last_image,
     )
 
-    await refresh_cameras()
+    await get_cameras()
     if selector.value:
         await init_camera()
 

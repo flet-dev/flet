@@ -68,8 +68,8 @@ class _CameraControlState extends State<CameraControl> {
       return;
     }
     if (widget.control.getBool("on_state_change", false)!) {
-      widget.control.triggerEvent(
-          "state_change", cameraValueToMap(controller.value));
+      widget.control
+          .triggerEvent("state_change", cameraValueToMap(controller.value));
     }
     if (mounted) {
       setState(() {});
@@ -93,11 +93,9 @@ class _CameraControlState extends State<CameraControl> {
 
     final resolutionPreset =
         parseResolutionPreset(args["resolution_preset"] ?? "max");
-    final enableAudio = args["enable_audio"] is bool
-        ? args["enable_audio"] as bool
-        : true;
-    final fps =
-        args["fps"] is num ? (args["fps"] as num).round() : null;
+    final enableAudio =
+        args["enable_audio"] is bool ? args["enable_audio"] as bool : true;
+    final fps = args["fps"] is num ? (args["fps"] as num).round() : null;
     final videoBitrate = args["video_bitrate"] is num
         ? (args["video_bitrate"] as num).round()
         : null;
@@ -157,7 +155,7 @@ class _CameraControlState extends State<CameraControl> {
         final cameras = await availableCameras();
         return cameras.map((c) => cameraDescriptionToMap(c)).toList();
       case "initialize":
-        return await _initializeController(args is Map ? args : {});
+        await _initializeController(args is Map ? args : {});
       case "get_exposure_offset_step_size":
         return await _requireController().getExposureOffsetStepSize();
       case "get_max_exposure_offset":
@@ -199,6 +197,8 @@ class _CameraControlState extends State<CameraControl> {
       case "stop_video_recording":
         final file = await _requireController().stopVideoRecording();
         return await file.readAsBytes();
+      case "supports_image_streaming":
+        return _requireController().supportsImageStreaming();
       case "start_image_stream":
         await _startImageStream();
         break;
@@ -264,7 +264,9 @@ class _CameraControlState extends State<CameraControl> {
     Widget preview = const SizedBox.shrink();
     final controller = _controller;
 
-    if (_previewEnabled && controller != null && controller.value.isInitialized) {
+    if (_previewEnabled &&
+        controller != null &&
+        controller.value.isInitialized) {
       final contentCtrl = widget.control.child("content");
       final contentWidget =
           contentCtrl != null ? ControlWidget(control: contentCtrl) : null;
