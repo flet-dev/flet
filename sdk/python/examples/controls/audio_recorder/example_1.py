@@ -38,7 +38,7 @@ def main(page: ft.Page):
             await recorder.pause_recording()
 
     async def handle_resume(e: ft.Event[ft.Button]):
-        print(f"isPaused: {await recorder.is_paused()}")
+        print(f"is_paused: {await recorder.is_paused()}")
         if await recorder.is_paused():
             await recorder.resume_recording()
 

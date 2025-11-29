@@ -1,7 +1,6 @@
 ---
 class_name: flet_charts.line_chart.LineChart
 examples: ../../examples/controls/charts/line_chart
-example_images: ../examples/controls/charts/line_chart/media
 diagram: assets/line-chart-diagram.svg
 ---
 
@@ -11,18 +10,10 @@ diagram: assets/line-chart-diagram.svg
 
 ### Example 1
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
-
-{{ image(example_images + "/example_1.gif", width="80%") }}
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 ### Example 2
 
-```python
---8<-- "{{ examples }}/example_2.py"
-```
-
-{{ image(example_images + "/example_2.gif", width="80%") }}
+{{ code_and_demo(examples + "/example_2.py", demo_height="420", demo_width="80%") }}
 
 {{ class_members(class_name) }}

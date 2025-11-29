@@ -1,8 +1,13 @@
 import importlib
+import inspect
 import sys
+from collections.abc import Awaitable
 from pathlib import Path
+from typing import Callable, Union
 
 import flet as ft
+
+Runner = Callable[[ft.Page], Union[None, Awaitable[None]]]
 
 
 def _resolve_examples_root() -> tuple[Path, Path, str]:
@@ -30,13 +35,14 @@ if str(PROJECT_PY_ROOT) not in sys.path:
 def discover_examples():
     controls: dict[str, list[dict[str, object]]] = {}
     for path in sorted(EXAMPLES_ROOT.rglob("*.py")):
-        if path.name.startswith("_"):
-            continue
-        if any(
-            part.startswith("__")
-            or part == "media"
-            or part in {"ads", "video", "webview"}
-            for part in path.parts
+        # skip files/folders not supported on pyodide or otherwise excluded
+        non_pyodide = {"matplotlib_chart"}
+        exclude = (
+            {"media", "ads"} | non_pyodide if sys.platform == "emscripten" else set()
+        )
+
+        if path.name.startswith("_") or any(
+            part.startswith("__") or part in exclude for part in path.parts
         ):
             continue
 
@@ -51,9 +57,11 @@ def discover_examples():
 
         try:
             mod = importlib.import_module(module_name)
-        except Exception:
+        except Exception as e:
+            print(f"Failed to import example module: {module_name}: {e}")
             continue
 
+        # get the main() function from the module
         runner = getattr(mod, "main", None)
         if runner is None:
             continue
@@ -90,7 +98,7 @@ def pretty_example_title(slug: str) -> str:
     return f"{prettify(groups[-1])} / {prettify(leaf)}"
 
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.title = "Flet Examples"
     page.padding = 20
     page.theme_mode = ft.ThemeMode.LIGHT
@@ -99,7 +107,7 @@ def main(page: ft.Page):
     search_ref: ft.Ref[ft.TextField] = ft.Ref()
 
     def open_example(slug: str):
-        page.go(f"/{slug}")
+        page.run_task(page.push_route, route=f"/{slug}")
 
     def filter_controls(query: str) -> dict[str, list[dict[str, object]]]:
         q = query.strip().lower()
@@ -209,30 +217,36 @@ def main(page: ft.Page):
         page.pop_dialog()
         page.theme = page.dark_theme = page.floating_action_button = None
         page.theme_mode = ft.ThemeMode.LIGHT
+        page.scroll = None
         page.update()
 
-    def render_example(slug: str):
+    async def render_example(slug: str):
         info = EXAMPLES_BY_SLUG.get(slug)
         if not info:
-            page.go("/")
+            await page.push_route("/")
             return
 
         # Show only the example content.
         reset_page()
-        info["runner"](page)
+
+        runner: Runner = info["runner"]
+        if inspect.iscoroutinefunction(runner):
+            await runner(page)
+        else:
+            runner(page)
         page.update()
 
-    def handle_route_change(e=None):
+    async def handle_route_change(e: ft.RouteChangeEvent = None):
         route = page.route.lstrip("/")
         if route == "":
             render_home()
         elif route in EXAMPLES_BY_SLUG:
-            render_example(route)
+            await render_example(route)
         else:
-            page.go("/")
+            await page.push_route("/")
 
     page.on_route_change = handle_route_change
-    handle_route_change()
+    await handle_route_change()
 
 
 if __name__ == "__main__":

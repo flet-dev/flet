@@ -8,9 +8,9 @@ Display interactive maps in your [Flet](https://flet.dev) apps with markers, ove
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -34,9 +34,7 @@ pip install flet-map  # (1)!
 
 ## Example
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 ## Reference
 

@@ -1,7 +1,6 @@
 ---
 class_name: flet_charts.plotly_chart.PlotlyChart
 examples: ../../examples/controls/charts/plotly_chart
-example_images: ../examples/controls/charts/plotly_chart/media
 ---
 
 {{ class_summary(class_name) }}
@@ -12,40 +11,25 @@ example_images: ../examples/controls/charts/plotly_chart/media
 
 Based on an official [Plotly example](https://plotly.com/python/line-charts).
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
-
-{{ image(example_images + "/example_1.png", width="80%") }}
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 ### Example 2
 
-Based on an official [Plotly example](https://plotly.com/python/bar-charts).
+Based on [this](https://plotly.com/python/bar-charts) official Plotly example.
 
-```python
---8<-- "{{ examples }}/example_2.py"
-```
-
-{{ image(example_images + "/example_2.png", width="80%") }}
+{{ code_and_demo(examples + "/example_2.py", demo_height="420", demo_width="80%") }}
 
 ### Example 3
 
-Based on an official [Plotly example](https://plotly.com/python/pie-charts).
+Based on [this](https://plotly.com/python/pie-charts) official Plotly example.
 
-```python
---8<-- "{{ examples }}/example_3.py"
-```
-
-{{ image(example_images + "/example_3.png", width="80%") }}
+{{ code_and_demo(examples + "/example_3.py", demo_height="420", demo_width="80%") }}
 
 ### Example 4
 
-Based on an official [Plotly example](https://plotly.com/python/box-plots).
+Based on [this](https://plotly.com/python/box-plots) official Plotly example.
 
-```python
---8<-- "{{ examples }}/example_4.py"
-```
+{{ code_and_demo(examples + "/example_4.py", demo_height="420", demo_width="80%") }}
 
-{{ image(example_images + "/example_4.png", width="80%") }}
 
 {{ class_members(class_name) }}

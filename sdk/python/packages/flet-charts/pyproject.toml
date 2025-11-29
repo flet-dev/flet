@@ -10,6 +10,11 @@ dependencies = [
     "flet",
 ]
 
+[project.optional-dependencies]
+all = ["matplotlib>=3.10.7", "plotly>=6.4.0", "kaleido>=1.2.0"]
+plotly = ["plotly>=6.4.0", "kaleido>=1.2.0"]
+matplotlib = ["matplotlib>=3.10.7"]
+
 [project.urls]
 Homepage = "https://flet.dev"
 Documentation = "https://docs.flet.dev/charts"

@@ -10,11 +10,7 @@ example_images: ../test-images/examples/core/golden/macos/pagelet
 
 ### Basic example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("pagelet/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="525", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

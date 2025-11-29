@@ -10,11 +10,7 @@ example_images: ../test-images/examples/material/golden/macos/card
 
 ### Music card
 
-```python
---8<-- "{{ examples }}/music_info.py"
-```
-
-{{ demo("card/music_info", height="420", width="80%") }}
+{{ code_and_demo(examples + "/music_info.py", demo_height="380", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

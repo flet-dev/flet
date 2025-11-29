@@ -32,6 +32,11 @@ def main(page: ft.Page):
                     border_radius=10,
                     on_click=lambda e: print("Clickable without Ink clicked!"),
                 ),
+            ],
+        ),
+        ft.Row(
+            alignment=ft.MainAxisAlignment.CENTER,
+            controls=[
                 ft.Container(
                     content=ft.Text("Clickable with Ink"),
                     margin=10,

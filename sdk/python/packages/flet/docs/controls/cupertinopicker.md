@@ -1,7 +1,6 @@
 ---
 class_name: flet.CupertinoPicker
 examples: ../../examples/controls/cupertino_picker
-example_images: ../examples/controls/cupertino_picker/media
 ---
 
 {{ class_summary(class_name) }}
@@ -10,11 +9,7 @@ example_images: ../examples/controls/cupertino_picker/media
 
 ### Fruit selection
 
-```python
---8<-- "{{ examples }}/fruit_selection.py"
-```
-
-{{ demo("cupertino_picker/fruit_selection", height="420", width="80%") }}
+{{ code_and_demo(examples + "/fruit_selection.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

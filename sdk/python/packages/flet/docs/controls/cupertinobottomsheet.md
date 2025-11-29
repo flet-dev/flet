@@ -1,7 +1,6 @@
 ---
 class_name: flet.CupertinoBottomSheet
 examples: ../../examples/controls/cupertino_action_sheet
-example_images: ../examples/controls/cupertino_action_sheet/media
 ---
 
 {{ class_summary(class_name) }}
@@ -10,11 +9,7 @@ example_images: ../examples/controls/cupertino_action_sheet/media
 
 ### Displaying a `CupertinoActionSheet`
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("cupertinobottomsheet/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

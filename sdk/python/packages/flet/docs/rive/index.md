@@ -9,9 +9,9 @@ Render [Rive](https://rive.app/) animations in your [Flet](https://flet.dev) app
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -38,9 +38,7 @@ Host `.riv` files locally or load them from a CDN. Use `placeholder` to keep lay
 
 ## Example
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="450", demo_width="80%") }}
 
 ## Description
 

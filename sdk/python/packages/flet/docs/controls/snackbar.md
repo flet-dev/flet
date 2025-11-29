@@ -11,27 +11,15 @@ snack_bar_action_class_name: flet.SnackBarAction
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("snackbar/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 ### Counter
 
-```python
---8<-- "{{ examples }}/counter.py"
-```
-
-{{ demo("snackbar/counter", height="420", width="80%") }}
+{{ code_and_demo(examples + "/counter.py", demo_height="420", demo_width="80%") }}
 
 ### Action
 
-```python
---8<-- "{{ examples }}/action.py"
-```
-
-{{ demo("snackbar/action", height="420", width="80%") }}
+{{ code_and_demo(examples + "/action.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

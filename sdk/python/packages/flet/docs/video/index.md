@@ -11,9 +11,9 @@ It is powered by the [media_kit](https://pub.dev/packages/media_kit) Flutter pac
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -47,9 +47,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
 
 ## Example
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="550", demo_width="100%") }}
 
 ## Description
 

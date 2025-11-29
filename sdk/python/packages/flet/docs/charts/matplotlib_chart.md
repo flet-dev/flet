@@ -46,10 +46,7 @@ Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/
 
 ### Animated chart
 
-```python
---8<-- "{{ examples }}/animate.py"
-```
+{{ code_and_demo(examples + "/animate.py", demo_height="420", demo_width="80%") }}
 
-{{ image(example_images + "/animate.png", width="80%") }}
 
 {{ class_members(class_name) }}

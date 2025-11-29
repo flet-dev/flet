@@ -1,7 +1,6 @@
 ---
 class_name: flet.Dismissible
 examples: ../../examples/controls/dismissible
-example_images: ../examples/controls/dismissible/media
 ---
 
 {{ class_summary(class_name) }}
@@ -10,11 +9,7 @@ example_images: ../examples/controls/dismissible/media
 
 ### Dismissible `ListTile`s
 
-```python
---8<-- "{{ examples }}/dismissible_list_tiles.py"
-```
-
-{{ demo("dismissible/dismissible_list_tiles", height="420", width="80%") }}
+{{ code_and_demo(examples + "/dismissible_list_tiles.py", demo_height="420", demo_width="80%") }}
 
 ### Remove Dismissible `on_dismiss` inside component
 
@@ -39,11 +34,6 @@ On Flutter’s side, though, the already-dismissed `Dismissible` widget in the m
 
 Example:
 
-```python
---8<-- "{{ examples }}/remove_on_dismiss_declarative.py"
-```
-
-
-{{ demo("dismissible/remove_on_dismiss_declarative", height="420", width="80%") }}
+{{ code_and_demo(examples + "/remove_on_dismiss_declarative.py", demo_height="420", demo_width="80%") }}
 
 {{ class_members(class_name) }}

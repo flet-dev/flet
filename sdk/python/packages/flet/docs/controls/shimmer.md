@@ -10,27 +10,15 @@ example_images: ../test-images/examples/core/golden/macos/shimmer
 
 ### Basic
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("shimmer/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 ### Skeleton list placeholders
 
-```python
---8<-- "{{ examples }}/basic_placeholder.py"
-```
-
-{{ demo("shimmer/basic_placeholder", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic_placeholder.py", demo_height="420", demo_width="80%") }}
 
 ### Custom gradients and directions
 
-```python
---8<-- "{{ examples }}/custom_gradient.py"
-```
-
-{{ demo("shimmer/custom_gradient", height="420", width="80%") }}
+{{ code_and_demo(examples + "/custom_gradient.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

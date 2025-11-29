@@ -419,7 +419,9 @@ nav:
           - Page: controls/page.md
           - Pagelet: controls/pagelet.md
           - Placeholder: controls/placeholder.md
-          - PopupMenuButton: controls/popupmenubutton.md
+          - PopupMenuButton:
+              - controls/popupmenubutton/index.md
+              - PopupMenuItem: controls/popupmenuitem.md
           - PermissionHandler: permission_handler/index.md
           - ProgressBar: controls/progressbar.md
           - ProgressRing: controls/progressring.md
@@ -434,7 +436,7 @@ nav:
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
           - SegmentedButton:
-              - controls/segmentedbutton.md
+              - controls/segmentedbutton/index.md
               - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md

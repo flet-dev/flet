@@ -1,7 +1,6 @@
 ---
 class_name: flet.Draggable
 examples: ../../examples/controls/drag_target_and_draggable
-example_images: ../examples/controls/drag_target_and_draggable/media
 ---
 
 {{ class_summary(class_name) }}
@@ -12,19 +11,11 @@ example_images: ../examples/controls/drag_target_and_draggable/media
 
 #### Imperative
 
-```python
---8<-- "{{ examples }}/drag_and_drop_containers.py"
-```
-
-{{ demo("draggable/drag_and_drop_containers", height="420", width="80%") }}
+{{ code_and_demo(examples + "/drag_and_drop_containers.py", demo_height="420", demo_width="80%") }}
 
 #### Declarative
 
-```python
---8<-- "{{ examples }}/drag_and_drop_containers_declarative.py"
-```
-
-{{ demo("drag_target_and_draggable/drag_and_drop_containers", height="420", width="80%") }}
+{{ code_and_demo(examples + "/drag_and_drop_containers_declarative.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

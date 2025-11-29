@@ -1,1 +1,1 @@
-# MkDocs integration helpers (e.g., examples gallery plugin).
+# MkDocs integration helpers

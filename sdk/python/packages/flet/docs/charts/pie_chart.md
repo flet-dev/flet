@@ -1,7 +1,6 @@
 ---
 class_name: flet_charts.pie_chart.PieChart
 examples: ../../examples/controls/charts/pie_chart
-example_images: ../examples/controls/charts/pie_chart/media
 diagram: assets/pie-chart-diagram.svg
 ---
 
@@ -11,26 +10,15 @@ diagram: assets/pie-chart-diagram.svg
 
 ### Example 1
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
-
-{{ image(example_images + "/example_1.gif", width="80%") }}
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 ### Example 2
 
-```python
---8<-- "{{ examples }}/example_2.py"
-```
-
-{{ image(example_images + "/example_2.gif", width="80%") }}
+{{ code_and_demo(examples + "/example_2.py", demo_height="420", demo_width="80%") }}
 
 ### Example 3
 
-```python
---8<-- "{{ examples }}/example_3.py"
-```
+{{ code_and_demo(examples + "/example_3.py", demo_height="420", demo_width="80%") }}
 
-{{ image(example_images + "/example_3.gif", width="80%") }}
 
 {{ class_members(class_name) }}

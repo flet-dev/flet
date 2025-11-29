@@ -8,15 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/badge
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/badge)
-
 ### Badge decorating an icon on a NavigationBar
 
 ```python
 --8<-- "{{ examples }}/basic.py"
 ```
 
+{{ demo("badge/basic", height="420", width="80%") }}
 
-{{ image(example_images + "/badge-navigation-bar.png", alt="badge-navigation-bar", width="80%") }}
 
 {{ class_members(class_name) }}

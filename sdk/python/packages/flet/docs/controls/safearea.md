@@ -9,11 +9,7 @@ examples: ../../examples/controls/safe_area
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("safearea/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

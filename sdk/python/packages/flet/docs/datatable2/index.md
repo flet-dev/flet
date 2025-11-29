@@ -10,9 +10,9 @@ It wraps the Flutter [`data_table_2`](https://pub.dev/packages/data_table_2) pac
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -32,17 +32,15 @@ pip install flet-datatable2  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-## Example
+## Examples
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+### Example 1
 
-```python
---8<-- "{{ examples }}/example_2.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
-![DataTable2 example]({{ examples }}/media/example_2.gif)
+### Example 2
+
+{{ code_and_demo(examples + "/example_2.py", demo_height="420", demo_width="80%") }}
 
 ## Description
 

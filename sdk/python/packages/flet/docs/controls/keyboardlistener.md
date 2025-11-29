@@ -9,11 +9,6 @@ examples: ../../examples/controls/keyboard_listener
 
 ### Press any keys
 
-```python
---8<-- "{{ examples }}/detect_keys.py"
-```
-
-
-{{ demo("keyboardlistener/detect_keys", height="420", width="80%") }}
+{{ code_and_demo(examples + "/detect_keys.py", demo_height="420", demo_width="80%") }}
 
 {{ class_members(class_name) }}

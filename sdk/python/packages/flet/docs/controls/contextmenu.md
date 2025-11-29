@@ -10,27 +10,15 @@ example_images: ../test-images/examples/material/golden/macos/context_menu
 
 ### Triggers
 
-```python
---8<-- "{{ examples }}/triggers.py"
-```
-
-{{ demo("context_menu/triggers", height="360", width="80%") }}
+{{ code_and_demo(examples + "/triggers.py", demo_height="360", demo_width="80%") }}
 
 ## Programmatic open
 
-```python
---8<-- "{{ examples }}/programmatic_open.py"
-```
-
-{{ demo("context_menu/programmatic_open", height="360", width="80%") }}
+{{ code_and_demo(examples + "/programmatic_open.py", demo_height="360", demo_width="80%") }}
 
 ## Programmatic open with custom trigger
 
-```python
---8<-- "{{ examples }}/custom_trigger.py"
-```
-
-{{ demo("context_menu/custom_trigger", height="360", width="80%") }}
+{{ code_and_demo(examples + "/custom_trigger.py", demo_height="360", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

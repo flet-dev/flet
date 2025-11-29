@@ -3,7 +3,11 @@ import flet_audio as fta
 
 
 def main(page: ft.Page):
-    url = "https://github.com/mdn/webaudio-examples/blob/main/audio-analyser/viper.mp3?raw=true"
+    url = "https://luan.xyz/files/audio/ambient_c_motion.mp3"
+
+    def log(message: str):
+        page.show_dialog(ft.SnackBar(content=message))
+        print(message)
 
     async def play():
         await audio.play()
@@ -19,6 +23,7 @@ def main(page: ft.Page):
 
     def set_volume(value: float):
         audio.volume += value
+        log(f"Volume: {audio.volume}")
 
     def set_balance(value: float):
         audio.balance += value
@@ -28,22 +33,22 @@ def main(page: ft.Page):
 
     async def get_duration():
         duration = await audio.get_duration()
-        print("Duration:", duration)
+        log(f"Duration: {duration}")
 
     async def on_get_current_position():
         position = await audio.get_current_position()
-        print("Current position:", position)
+        log(f"Current position: {position}")
 
     audio = fta.Audio(
         src=url,
         autoplay=False,
         volume=1,
         balance=0,
-        on_loaded=lambda _: print("Loaded"),
-        on_duration_change=lambda e: print("Duration changed:", e.duration),
-        on_position_change=lambda e: print("Position changed:", e.position),
-        on_state_change=lambda e: print("State changed:", e.state),
-        on_seek_complete=lambda _: print("Seek complete"),
+        on_loaded=lambda _: log("Loaded"),
+        on_duration_change=lambda e: print(f"Duration changed: {e.duration}"),
+        on_position_change=lambda e: print(f"Position changed: {e.position}"),
+        on_state_change=lambda e: log(f"State changed: {e.state}"),
+        on_seek_complete=lambda _: log("Seek complete"),
     )
 
     page.add(

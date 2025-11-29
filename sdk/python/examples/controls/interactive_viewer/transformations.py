@@ -31,7 +31,7 @@ def main(page: ft.Page):
             min_scale=0.1,
             max_scale=5,
             boundary_margin=ft.Margin.all(20),
-            content=ft.Image(src="https://picsum.photos/500/500"),
+            content=ft.Image(src="https://picsum.photos/300/300"),
         ),
         ft.Row(
             wrap=True,

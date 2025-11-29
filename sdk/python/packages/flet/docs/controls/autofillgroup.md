@@ -1,7 +1,6 @@
 ---
 class_name: flet.AutofillGroup
 examples: ../../examples/controls/autofill_group
-example_images: ../examples/controls/autofill_group/media
 ---
 
 {{ class_summary(class_name) }}
@@ -10,11 +9,7 @@ example_images: ../examples/controls/autofill_group/media
 
 ### Basic example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("autofill_group/basic", height="380", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="380", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

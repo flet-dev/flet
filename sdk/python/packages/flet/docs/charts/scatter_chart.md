@@ -10,10 +10,7 @@ example_images: ../examples/controls/charts/scatter_chart/media
 
 ### Basic Scatter Chart
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
-{{ image(example_images + "/example_1.png", width="80%") }}
 
 {{ class_members(class_name) }}

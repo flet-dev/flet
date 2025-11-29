@@ -4,11 +4,26 @@ version = "0.1.0"
 description = "Live demo of Flet examples."
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [
-    { name = "Flet developer", email = "you@example.com" }
-]
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 dependencies = [
     "flet>=0.70.0.dev0",
+    "flet-charts>=0.70.0.dev0",
+    "flet-ads>=0.70.0.dev0",
+    "flet-audio>=0.70.0.dev0",
+    "flet-audio-recorder>=0.70.0.dev0",
+    "flet-charts>=0.70.0.dev0",
+    "plotly[express]",
+    "pandas",
+    "flet-datatable2>=0.70.0.dev0",
+    "flet-flashlight>=0.70.0.dev0",
+    "flet-geolocator>=0.70.0.dev0",
+    "flet-lottie>=0.70.0.dev0",
+    "flet-map>=0.70.0.dev0",
+    "flet-permission-handler>=0.70.0.dev0",
+    "flet-rive>=0.70.0.dev0",
+    "flet-video>=0.70.0.dev0",
+    "flet-webview>=0.70.0.dev0",
+    "typing_extensions",
 ]
 
 [tool.uv]
@@ -16,10 +31,8 @@ prerelease = "allow"
 
 [tool.flet]
 # Docs: https://flet.dev/docs/publish
-org = "com.mycompany"
 product = "Examples Gallery"
 company = "Flet"
-copyright = "Copyright (C) 2025 by Flet"
 
 [tool.flet.app]
 path = "src"

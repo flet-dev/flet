@@ -9,9 +9,9 @@ Access device location services in your [Flet](https://flet.dev) app using the `
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -38,9 +38,7 @@ Request permissions with `request_permission` or `get_permission_status` before 
 
 ## Example
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 ## Description
 

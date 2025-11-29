@@ -10,27 +10,15 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("checkbox/basic", height="400", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="380", demo_width="80%") }}
 
 ### Handling events
 
-```python
---8<-- "{{ examples }}/handling_events.py"
-```
-
-{{ demo("checkbox/handling_events", height="200", width="80%") }}
+{{ code_and_demo(examples + "/handling_events.py", demo_height="380", demo_width="80%") }}
 
 ### Styled checkboxes
 
-```python
---8<-- "{{ examples }}/styled.py"
-```
-
-{{ demo("checkbox/styled", height="200", width="80%") }}
+{{ code_and_demo(examples + "/styled.py", demo_height="200", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

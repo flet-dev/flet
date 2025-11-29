@@ -1,7 +1,6 @@
 ---
 class_name: flet.Tabs
 examples: ../../examples/controls/tabs
-example_images: ../../examples/controls/tabs/media
 ---
 
 {{ class_summary(class_name) }}
@@ -10,43 +9,23 @@ example_images: ../../examples/controls/tabs/media
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("tabs/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 ### Nesting tabs
 
-```python
---8<-- "{{ examples }}/nested.py"
-```
-
-{{ demo("tabs/nested", height="420", width="80%") }}
+{{ code_and_demo(examples + "/nested.py", demo_height="420", demo_width="80%") }}
 
 ### Dynamic tab addition
 
-```python
---8<-- "{{ examples }}/dynamic-tab-addition.py"
-```
-
-{{ demo("tabs/dynamic-tab-addition", height="420", width="80%") }}
+{{ code_and_demo(examples + "/dynamic_tab_addition.py", demo_height="420", demo_width="80%") }}
 
 ### Custom indicator
 
-```python
---8<-- "{{ examples }}/custom-indicator.py"
-```
-
-{{ demo("tabs/custom-indicator", height="420", width="80%") }}
+{{ code_and_demo(examples + "/custom_indicator.py", demo_height="420", demo_width="80%") }}
 
 ### Programmatical Tab switch
 
-```python
---8<-- "{{ examples }}/move-to.py"
-```
-
-{{ demo("tabs/move-to", height="420", width="80%") }}
+{{ code_and_demo(examples + "/move_to.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

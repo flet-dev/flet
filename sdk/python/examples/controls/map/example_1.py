@@ -45,7 +45,7 @@ def main(page: ft.Page):
             on_event=print,
             layers=[
                 ftm.TileLayer(
-                    url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    url_template="https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png",
                     on_image_error=lambda e: print("TileLayer Error"),
                 ),
                 ftm.RichAttribution(

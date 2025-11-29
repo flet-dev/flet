@@ -11,9 +11,9 @@ It is backed by the [lottie](https://pub.dev/packages/lottie) Flutter package.
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -35,9 +35,7 @@ pip install flet-lottie  # (1)!
 
 ## Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 ## Description
 

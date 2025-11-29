@@ -10,11 +10,7 @@ example_images: ../test-images/examples/core/golden/macos/window_drag_area
 
 ### No frame window
 
-```python
---8<-- "{{ examples }}/no_frame_window.py"
-```
-
-{{ demo("window_drag_area/no_frame_window", height="420", width="80%") }}
+{{ code(examples + "/no_frame_window.py") }}
 
 
 {{ class_members(class_name) }}

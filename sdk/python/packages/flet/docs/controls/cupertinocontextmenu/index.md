@@ -1,7 +1,6 @@
 ---
 class_name: flet.CupertinoContextMenu
 examples: ../../examples/controls/cupertino_context_menu
-example_images: ../../examples/controls/cupertino_context_menu/media
 ---
 
 # CupertinoContextMenu
@@ -12,11 +11,7 @@ example_images: ../../examples/controls/cupertino_context_menu/media
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("cupertino_context_menu/basic", height="360", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="360", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

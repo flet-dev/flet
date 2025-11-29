@@ -10,36 +10,20 @@ example_images: ../test-images/examples/material/golden/macos/text_button
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("textbutton/basic", height="420", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
 
 ### Icons
 
-```python
---8<-- "{{ examples }}/icons.py"
-```
-
-{{ demo("textbutton/icons", height="420", width="80%") }}
+{{ code_and_demo(examples + "/icons.py", demo_height="420", demo_width="80%") }}
 
 
 ### Handling clicks
 
-```python
---8<-- "{{ examples }}/handling_clicks.py"
-```
-
-{{ demo("textbutton/handling_clicks", height="420", width="80%") }}
+{{ code_and_demo(examples + "/handling_clicks.py", demo_height="420", demo_width="80%") }}
 
 ### Custom content
 
-```python
---8<-- "{{ examples }}/custom_content.py"
-```
-
-{{ demo("textbutton/custom_content", height="420", width="80%") }}
+{{ code_and_demo(examples + "/custom_content.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

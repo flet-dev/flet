@@ -10,11 +10,7 @@ example_images: ../test-images/examples/material/golden/macos/alert_dialog
 
 ### Modal and non-modal dialogs
 
-```python
---8<-- "{{ examples }}/modal_and_non_modal.py"
-```
-
-{{ demo("alert_dialog/modal_and_non_modal", height="420", width="80%") }}
+{{ code_and_demo(examples + "/modal_and_non_modal.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

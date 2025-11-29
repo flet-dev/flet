@@ -10,59 +10,31 @@ example_images: ../test-images/examples/material/golden/macos/button
 
 ### Button
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("button/basic", height="340", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="280", demo_width="50%") }}
 
 ### Icons
 
-```python
---8<-- "{{ examples }}/icons.py"
-```
-
-{{ demo("button/icons", height="340", width="80%") }}
+{{ code_and_demo(examples + "/icons.py", demo_height="280", demo_width="50%") }}
 
 ### Handling clicks
 
-```python
---8<-- "{{ examples }}/handling_clicks.py"
-```
-
-{{ demo("button/handling_clicks", height="360", width="80%") }}
+{{ code_and_demo(examples + "/handling_clicks.py", demo_height="280", demo_width="50%") }}
 
 ### Custom content
 
-```python
---8<-- "{{ examples }}/custom_content.py"
-```
-
-{{ demo("button/custom_content", height="360", width="80%") }}
+{{ code_and_demo(examples + "/custom_content.py", demo_height="280", demo_width="50%") }}
 
 ### Shapes
 
-```python
---8<-- "{{ examples }}/button_shapes.py"
-```
-
-{{ demo("button/button_shapes", height="380", width="80%") }}
+{{ code_and_demo(examples + "/button_shapes.py", demo_height="400", demo_width="80%") }}
 
 ### Styling
 
-```python
---8<-- "{{ examples }}/styling.py"
-```
-
-{{ demo("button/styling", height="420", width="80%") }}
+{{ code_and_demo(examples + "/styling.py", demo_height="280", demo_width="50%") }}
 
 ### Animate on hover
 
-```python
---8<-- "{{ examples }}/animate_on_hover.py"
-```
-
-{{ demo("button/animate_on_hover", height="420", width="80%") }}
+{{ code_and_demo(examples + "/animate_on_hover.py", demo_height="280", demo_width="50%") }}
 
 
 {{ class_members(class_name) }}

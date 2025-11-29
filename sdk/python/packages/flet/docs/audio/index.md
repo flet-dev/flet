@@ -9,9 +9,9 @@ Allows playing audio in [Flet](https://flet.dev) apps.
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -33,9 +33,7 @@ pip install flet-audio  # (1)!
 
 ## Example
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 /// admonition | Linux/WSL (Windows Subsystem for Linux)
     type: note

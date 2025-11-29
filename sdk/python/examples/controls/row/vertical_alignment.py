@@ -28,6 +28,8 @@ class RowWithVerticalAlignment(ft.Column):
 
 
 def main(page: ft.Page):
+    page.scroll = ft.ScrollMode.AUTO
+
     page.add(
         RowWithVerticalAlignment(ft.CrossAxisAlignment.START),
         RowWithVerticalAlignment(ft.CrossAxisAlignment.CENTER),

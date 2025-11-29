@@ -408,7 +408,13 @@ class ExamplesGalleryPlugin(BasePlugin):
                 staging_dir,
                 dirs_exist_ok=True,
                 ignore=shutil.ignore_patterns(
-                    "build", "dist", "__pycache__", ".venv", ".git"
+                    "dist",
+                    "media",
+                    "build",
+                    "__pycache__",
+                    ".venv",
+                    ".git",
+                    "*cpython-*.pyc",
                 ),
             )
 

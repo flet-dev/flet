@@ -37,6 +37,10 @@ def define_env(env):
         separate_signature=True,
         **extra_options,
     ):
+        """
+        Return a full directive block for a class including bases,
+        summary and extra options.
+        """
         options = {
             "show_root_toc_entry": True,
             "show_bases": True,
@@ -57,6 +61,9 @@ def define_env(env):
 
     @env.macro
     def image(src, alt=None, width=None, caption=None, link=None):
+        """
+        Return a markdown image block with optional width, caption and link wrappers.
+        """
         if alt is None:
             parsed_src = urlparse(src)
             path = parsed_src.path or src
@@ -85,6 +92,7 @@ def define_env(env):
         image_caption=None,
         **options,
     ):
+        """Render a compact class summary with optional image and summary directive."""
         summary_options = {
             "show_bases": True,
             "summary": {
@@ -116,6 +124,7 @@ def define_env(env):
 
     @env.macro
     def class_members(class_name):
+        """Render a directive showing the members/children of the given class."""
         options = {
             "extra": {
                 "show_children": True,
@@ -125,36 +134,28 @@ def define_env(env):
 
     @env.macro
     def flet_cli_as_markdown(command: str = "", subcommands_only: bool = True):
+        """Render the Flet CLI help for a command as Markdown."""
         return render_flet_cli_as_markdown(
             command=command, subcommands_only=subcommands_only
         )
 
     @env.macro
     def controls_overview():
+        """Return the pre-rendered controls overview content."""
         return render_controls_overview()
 
     @env.macro
-    def iframe(
-        src=None,
-        *,
-        route=None,
-        base="/apps/examples-gallery/dist/index.html#/",
-        width="100%",
-        height="480",
-        title=None,
-        allow=None,
-        loading="lazy",
-    ):
-        return render_iframe(
-            src=src,
-            route=route,
-            base=base,
-            width=width,
-            height=height,
-            title=title,
-            allow=allow,
-            loading=loading,
-        )
+    def code(path: str):
+        """
+        Renders a python code snippet from the filepath.
+        """
+        lines = [
+            "````python",
+            f'--8<-- "{path if path.endswith(".py") else path + ".py"}"',
+            "````",
+        ]
+
+        return "\n".join(lines)
 
     @env.macro
     def demo(
@@ -165,7 +166,7 @@ def define_env(env):
         title: Optional[str] = None,
     ):
         """
-        Embed an examples gallery route as a centered demo iframe.
+        Embed an examples gallery route as an iframe.
 
         `route_or_path` may be:
         - a gallery route, e.g. "slider/basic"
@@ -174,21 +175,63 @@ def define_env(env):
         route = route_or_path
 
         # Strip known prefixes
-        for prefix in ("../../examples/controls/",):
+        for prefix in ["../../examples/controls/"]:
             if route.startswith(prefix):
                 route = route.removeprefix(prefix)
                 break
 
         # Strip known suffixes
-        for suffix in (".py", "/"):
+        for suffix in [".py", "/"]:
             if route.endswith(suffix):
                 route = route.removesuffix(suffix)
                 break
 
         return render_iframe(
             route=route,
-            base="/apps/examples-gallery/dist/index.html#/",
+            base="/apps/examples-gallery/dist/#/",
             width=width,
             height=height,
             title=title,
+        )
+
+    @env.macro
+    def code_and_demo(
+        path: str,
+        *,
+        demo_width: str = "100%",
+        demo_height: str = "350",
+        demo_title: str = None,
+    ):
+        """
+        Renders a python code snippet from the filepath together with its demo iframe.
+        """
+        return (
+            code(path)
+            + "\n\n"
+            + demo(path, width=demo_width, height=demo_height, title=demo_title)
+            + "\n"
+        )
+
+    @env.macro
+    def iframe(
+        src=None,
+        *,
+        route=None,
+        base="/apps/examples-gallery/dist/#/",
+        width="100%",
+        height="480",
+        title=None,
+        allow=None,
+        loading="lazy",
+    ):
+        """Render an iframe for a route or external source."""
+        return render_iframe(
+            src=src,
+            route=route,
+            base=base,
+            width=width,
+            height=height,
+            title=title,
+            allow=allow,
+            loading=loading,
         )

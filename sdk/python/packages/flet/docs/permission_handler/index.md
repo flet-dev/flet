@@ -9,9 +9,9 @@ Manage runtime permissions in your [Flet](https://flet.dev) apps using the `flet
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ❌   |   ❌   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ❌     | ❌     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -38,9 +38,9 @@ On mobile platforms you must also declare permissions in the native project file
 
 ## Example
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
+### Example 1
+
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
 
 ## Description
 

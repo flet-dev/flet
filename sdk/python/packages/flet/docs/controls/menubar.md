@@ -1,7 +1,6 @@
 ---
 class_name: flet.MenuBar
 examples: ../../examples/controls/menu_bar
-example_images: ../examples/controls/menu_bar/media
 ---
 
 {{ class_summary(class_name) }}
@@ -10,11 +9,7 @@ example_images: ../examples/controls/menu_bar/media
 
 ### `MenuBar` with Nested Submenus
 
-```python
---8<-- "{{ examples }}/nested_submenus.py"
-```
-
-{{ demo("menubar/nested_submenus", height="420", width="80%") }}
+{{ code_and_demo(examples + "/nested_submenus.py", demo_height="420", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}

@@ -23,10 +23,15 @@ def main(page: ft.Page):
     ph = fph.PermissionHandler()
 
     page.add(
-        ft.OutlinedButton("Open app settings", on_click=open_app_settings),
         ft.OutlinedButton("Request Microphone permission", on_click=request_permission),
         ft.OutlinedButton(
-            "Get Microphone permission status", on_click=get_permission_status
+            "Get Microphone permission status",
+            on_click=get_permission_status,
+        ),
+        ft.OutlinedButton(
+            "Open app settings",
+            on_click=open_app_settings,
+            disabled=page.web,
         ),
     )
 

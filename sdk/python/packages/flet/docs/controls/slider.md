@@ -10,27 +10,15 @@ example_images: ../test-images/examples/material/golden/macos/slider
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ demo("slider/basic", height="320", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="320", demo_width="80%") }}
 
 ### Setting a custom label
 
-```python
---8<-- "{{ examples }}/custom_label.py"
-```
-
-{{ demo("slider/custom_label", height="320", width="80%") }}
+{{ code_and_demo(examples + "/custom_label.py", demo_height="320", demo_width="80%") }}
 
 ### Handling events
 
-```python
---8<-- "{{ examples }}/handling_events.py"
-```
-
-{{ demo("slider/handling_events", height="360", width="80%") }}
+{{ code_and_demo(examples + "/handling_events.py", demo_height="360", demo_width="80%") }}
 
 
 {{ class_members(class_name) }}
