@@ -20,7 +20,6 @@ making reusable UI components, and publishing options.
 
 The tutorial consists of the following steps:
 
-* [Getting started with Flet](#getting-started-with-flet)
 * [Adding page controls and handling events](#adding-page-controls-and-handling-events)
 * [View, edit and delete list items](#view-edit-and-delete-list-items)
 * [Filtering list items](#filtering-list-items)
@@ -30,7 +29,6 @@ The tutorial consists of the following steps:
 /// details | For beginners
     type: info
 To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but
-
 you do need a basic knowledge of Python and object-oriented programming.
 
 Before you can create your first Flet app, you need to
@@ -52,7 +50,6 @@ ft.run(main)
 Run this app, and you will see a new window with a greeting:
 
 {{ image("../examples/tutorials/todo/media/hello-world.png", alt="hello-world", width="80%") }}
-
 
 ///
 

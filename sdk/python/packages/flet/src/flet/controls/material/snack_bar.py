@@ -230,15 +230,14 @@ class SnackBar(DialogControl):
 
     persist: Optional[bool] = None
     """
-    Whether the snack bar will stay or auto-dismiss after timeout.
+    Whether this snack bar will stay or auto-dismiss after [`duration`][(c).] times out.
 
-    If `True`, the snack bar remains visible even after the timeout,
+    If `True`, this snack bar remains visible even after [`duration`][(c).] times out,
     until the user taps the action button or the close icon.
 
-    If `False`, the snack bar will be dismissed after the timeout.
+    If `False`, this snack bar will be dismissed after [`duration`][(c).] times out.
 
-    If not provided, but the snackbar ['action'][c.] is not null,
-    the snackbar will persist as well.
+    If `None` and [`action`][(c).] is not `None`, this snack bar will persist.
     """
 
     on_action: Optional[ControlEventHandler["SnackBar"]] = None

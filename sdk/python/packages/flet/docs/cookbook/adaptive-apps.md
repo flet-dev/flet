@@ -108,152 +108,65 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 
 -   [:octicons-arrow-right-24: `AlertDialog`][flet.AlertDialog]
 
-    ---
-    ![AlertDialog](../examples/controls/alert_dialog/media/index.png){width="85%"}
-
 -   [:octicons-arrow-right-24: `CupertinoAlertDialog`][flet.CupertinoAlertDialog]
-
-    ---
-    ![CupertinoAlertDialog](../examples/controls/cupertino_alert_dialog/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `Any button in Dialog actions`][flet.Button]
 
-    ---
-    ![Dialog actions](../examples/controls/alert_dialog/media/adaptive_dialog_action.png){width="85%"}
-
 -   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
-
-    ---
-    ![CupertinoDialogAction](../examples/controls/cupertino_alert_dialog/media/adaptive_dialog_action.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `AppBar`][flet.AppBar]
 
-    ---
-    ![AppBar](../examples/controls/app_bar/media/index.png){width="85%"}
-
 -   [:octicons-arrow-right-24: `CupertinoAppBar`][flet.CupertinoAppBar]
-
-    ---
-    ![CupertinoAppBar](../examples/controls/cupertino_app_bar/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `NavigationBar`][flet.NavigationBar]
 
-    ---
-    ![NavigationBar](../examples/controls/navigation_bar/media/adaptive.png){width="85%"}
-
 -   [:octicons-arrow-right-24: `CupertinoNavigationBar`][flet.CupertinoNavigationBar]
-
-    ---
-    ![CupertinoNavigationBar](../examples/controls/cupertino_navigation_bar/media/adaptive.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `ListTile`][flet.ListTile]
 
-    ---
-    ![ListTile](../examples/controls/list_tile/media/index.png){width="85%"}
-
 -   [:octicons-arrow-right-24: `CupertinoListTile`][flet.CupertinoListTile]
-
-    ---
-    ![CupertinoListTile](../examples/controls/cupertino_list_tile/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `TextField`][flet.TextField]
 
-    ---
-    ![TextField](../examples/controls/text_field/media/index.png){width="85%"}
-
 -   [:octicons-arrow-right-24: `CupertinoTextField`][flet.CupertinoTextField]
-
-    ---
-    ![CupertinoTextField](../examples/controls/cupertino_text_field/media/index.png){width="85%"}
 
 -   [:octicons-arrow-right-24: `Checkbox`][flet.Checkbox]
 
-    ---
-    ![Checkbox](../examples/controls/checkbox/media/index.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoCheckbox`][flet.CupertinoCheckbox]
-
-    ---
-    ![CupertinoCheckbox](../examples/controls/cupertino_checkbox/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Slider`][flet.Slider]
 
-    ---
-    ![Slider](../examples/controls/slider/media/index.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
-
-    ---
-    ![CupertinoSlider](../examples/controls/cupertino_slider/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Switch`][flet.Switch]
 
-    ---
-    ![Switch](../examples/controls/switch/media/index.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoSwitch`][flet.CupertinoSwitch]
-
-    ---
-    ![CupertinoSwitch](../examples/controls/cupertino_switch/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `Radio`][flet.Radio]
 
-    ---
-    ![Radio](../examples/controls/radio/media/index.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoRadio`][flet.CupertinoRadio]
-
-    ---
-    ![CupertinoRadio](../examples/controls/cupertino_radio/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
 
-    ---
-    ![FilledButton](../examples/controls/filled_button/media/adaptive.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
-
-    ---
-    ![CupertinoFilledButton](../examples/controls/cupertino_filled_button/media/adaptive.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `FilledTonalButton`][flet.FilledTonalButton]
 
-    ---
-    ![FilledTonalButton](../examples/controls/filled_tonal_button/media/adaptive.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
-
-    ---
-    ![CupertinoButtonTonal](../examples/controls/cupertino_button/media/adaptive_tonal_button.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `IconButton`][flet.IconButton]
 
-    ---
-    ![IconButton](../examples/controls/icon_button/media/adaptive.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
 
-    ---
-    ![CupertinoIconButton](../examples/controls/cupertino_button/media/adaptive_icon_button.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `Button`][flet.Button]
-
-    ![Button](../examples/controls/button/media/adaptive.png){width="45%"}
 
     ---
     [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
 
-    ![OutlinedButton](../examples/controls/outlined_button/media/adaptive.png){width="45%"}
-
     ---
     [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
 
-    ![TextButton](../examples/controls/text_button/media/adaptive.png){width="45%"}
-
 -   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
-
-    ---
-    ![CupertinoButton](../examples/controls/cupertino_button/media/adaptive.png){width="45%"}
 
 </div>
 

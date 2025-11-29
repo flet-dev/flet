@@ -1,11 +1,12 @@
-{{ class_all_options("flet.Tooltip") }}
+---
+class_name: flet.Tooltip
+examples: ../../examples/controls/types/tooltip
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Tooltip with decoration
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/tooltip/with_decoration.py"
-```
-
-{{ image("../examples/controls/types/tooltip/media/with_decoration.gif", alt="with-decoration", width="80%") }}
+{{ code_and_demo(examples + "/with_decoration.py", demo_height="420", demo_width="80%") }}

@@ -1,10 +1,17 @@
-#
-# Example of picking and uploading files with progress indication
-#
-# Run this example with:
-#    export FLET_SECRET_KEY=<some_secret_key>
-#    uv run flet run --web examples/controls/file_picker/pick_and_upload.py
-#
+"""Pick and upload files with progress (Flet Web only).
+
+Requires the FLET_SECRET_KEY environment variable to upload files.
+
+Set the environment variable:
+- macOS / Linux:
+    export FLET_SECRET_KEY=<your_secret_key>
+- Windows (Command Prompt / PowerShell):
+    setx FLET_SECRET_KEY <your_secret_key>
+
+Run in Web mode:
+    flet run --web pick_and_upload.py
+"""
+
 from dataclasses import dataclass, field
 
 import flet as ft
@@ -27,8 +34,7 @@ def main(page: ft.Page):
                 "\n"
                 "Run this example with:\n"
                 "    export FLET_SECRET_KEY=<some_secret_key>\n"
-                "    flet run --web "
-                "examples/controls/file_picker/pick_and_upload.py",
+                "    flet run --web pick_and_upload.py",
                 color=ft.Colors.RED,
                 selectable=True,
             )
