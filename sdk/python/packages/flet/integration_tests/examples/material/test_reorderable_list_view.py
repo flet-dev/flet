@@ -19,6 +19,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
                 )
                 for i in range(1, 6)
             ],
+            show_default_drag_handles=True,
         ),
     )
 
