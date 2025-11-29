@@ -1,7 +1,6 @@
 name: Build docs
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
