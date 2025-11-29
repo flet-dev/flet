@@ -18,6 +18,7 @@ import flet_cli.utils.processes as processes
 from flet.utils import cleanup_path, is_windows
 from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -118,6 +119,24 @@ class BaseFlutterCommand(BaseCommand):
             or not self.dart_exe
             or not self.flutter_version_valid()
         ):
+            if not self.assume_yes:
+                console.log(
+                    "Flutter SDK not found or invalid version installed.",
+                    style=warning_style,
+                )
+                prompt = (
+                    "Flutter SDK "
+                    f"{MINIMAL_FLUTTER_VERSION} is required. It will be installed now. "
+                    "Proceed? [y/n] "
+                )
+
+                if not self._prompt_input(prompt):
+                    self.skip_flutter_doctor = True
+                    self.cleanup(
+                        1,
+                        "Flutter SDK installation is required. "
+                        "Re-run with --yes to install automatically.",
+                    )
             self.install_flutter()
 
         if self.verbose > 0:
@@ -164,7 +183,6 @@ class BaseFlutterCommand(BaseCommand):
         self.update_status(
             f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION}..."
         )
-        from flet_cli.utils.flutter import install_flutter
 
         flutter_dir = install_flutter(
             str(MINIMAL_FLUTTER_VERSION), self.log_stdout, progress=self.progress
@@ -270,7 +288,7 @@ class BaseFlutterCommand(BaseCommand):
 
         prompt = (
             "\nAndroid SDK is required. If it's missing or incomplete, "
-            "it will be installed now. Proceed? [y/N] "
+            "it will be installed now. Proceed? [y/n] "
         )
 
         if self._prompt_input(prompt):
@@ -286,6 +304,12 @@ class BaseFlutterCommand(BaseCommand):
             self.live.start()
 
     def find_flutter_batch(self, exe_filename: str):
+        install_dir = get_flutter_dir(str(MINIMAL_FLUTTER_VERSION))
+        ext = ".bat" if is_windows() else ""
+        batch_path = os.path.join(install_dir, "bin", f"{exe_filename}{ext}")
+        if os.path.exists(batch_path):
+            return batch_path
+
         batch_path = shutil.which(exe_filename)
         if not batch_path:
             return None
