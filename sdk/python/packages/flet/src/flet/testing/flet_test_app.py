@@ -452,7 +452,7 @@ class FletTestApp:
         *,
         duration: int = 1000,
         loop: int = 0,
-        disposal: DisposalMode = 0,
+        disposal: DisposalMode = DisposalMode.DEFAULT,
     ) -> Path:
         """Create an animated GIF from a sequence of image files.
 
