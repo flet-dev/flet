@@ -1,11 +1,12 @@
-{{ class_all_options("flet.LinearGradient") }}
+---
+class_name: flet.LinearGradient
+examples: ../../examples/controls/types/gradient/linear_gradient
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Container with linear gradient
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/gradient/linear_gradient/container.py"
-```
-
-{{ image("../examples/controls/types/gradient/linear_gradient/media/container.png", alt="container", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

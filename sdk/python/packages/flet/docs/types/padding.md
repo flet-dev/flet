@@ -1,11 +1,12 @@
-{{ class_all_options("flet.Padding") }}
+---
+class_name: flet.Padding
+examples: ../../examples/controls/types/padding
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Example 1
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/padding/container.py"
-```
-
-{{ image("../examples/controls/types/padding/media/container.png", alt="container", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

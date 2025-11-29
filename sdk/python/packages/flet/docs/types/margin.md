@@ -1,9 +1,12 @@
-{{ class_all_options("flet.Margin") }}
+---
+class_name: flet.Margin
+examples: ../../examples/controls/types/margin
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Example 1
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/margin/container.py"
-```
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

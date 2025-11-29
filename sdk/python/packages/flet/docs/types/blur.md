@@ -1,11 +1,12 @@
-{{ class_all_options("flet.Blur") }}
+---
+class_name: flet.Blur
+examples: ../../examples/controls/types/blur
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Example 1
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/blur/container.py"
-```
-
-{{ image("../examples/controls/types/blur/media/container.gif", alt="container", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

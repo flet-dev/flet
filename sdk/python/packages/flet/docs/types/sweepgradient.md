@@ -1,11 +1,12 @@
-{{ class_all_options("flet.SweepGradient") }}
+---
+class_name: flet.SweepGradient
+examples: ../../examples/controls/types/gradient/sweep_gradient
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Container with sweep gradient
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/gradient/sweep_gradient/container.py"
-```
-
-{{ image("../examples/controls/types/gradient/sweep_gradient/media/container.png", alt="container", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

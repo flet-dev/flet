@@ -1,11 +1,12 @@
-{{ class_all_options("flet.Alignment", members_order="source") }}
+---
+class_name: flet.Alignment
+examples: ../../examples/controls/types/alignment
+---
+
+{{ class_all_options(class_name, members_order="source") }}
 
 ## Examples
 
-### Example 1
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/alignment/container.py"
-```
-
-{{ image("../examples/controls/types/alignment/media/container.png", alt="container", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

@@ -1,9 +1,12 @@
-{{ class_all_options("flet.Gradient") }}
+---
+class_name: flet.Gradient
+examples: ../../examples/controls/types/gradient
+---
+
+{{ class_all_options(class_name) }}
 
 ### Examples
 
-### Containers with gradients
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/gradient/container.py"
-```
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

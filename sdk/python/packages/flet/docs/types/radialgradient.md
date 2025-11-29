@@ -1,11 +1,12 @@
-{{ class_all_options("flet.RadialGradient") }}
+---
+class_name: flet.RadialGradient
+examples: ../../examples/controls/types/gradient/radial_gradient
+---
+
+{{ class_all_options(class_name) }}
 
 ## Examples
 
-### Container with radial gradient
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/gradient/radial_gradient/container.py"
-```
-
-{{ image("../examples/controls/types/gradient/radial_gradient/media/container.png", alt="container", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

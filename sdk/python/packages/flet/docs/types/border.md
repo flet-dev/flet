@@ -1,9 +1,12 @@
+---
+class_name: flet.Border
+examples: ../../examples/controls/types/border
+---
+
 {{ class_all_options("flet.Border") }}
 
 ## Examples
 
-### Example 1
+### Basic example
 
-```python
---8<-- "../../examples/controls/types/border/container.py"
-```
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}

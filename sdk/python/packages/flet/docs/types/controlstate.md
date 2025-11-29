@@ -16,14 +16,14 @@ ft.Radio(fill_color=ft.Colors.GREEN)
 
 For more control, you can provide a dictionary where the key is the state name and the value is the corresponding color.
 
-#### **Ordering Matters**
+#### Ordering Matters
 
 - The order in which states appear in the dictionary will determine their priority, allowing for flexibility and
   customization.
 - The position of `DEFAULT` does not affect behavior—it always has the least priority and can be placed anywhere in the
   dictionary.
 
-#### **Example**
+#### Example
 
 To configure different fill colors of a [`Radio`][flet.Radio] button for `ControlState.HOVERED` and
 `ControlState.FOCUSED`, with a fallback color for all other states:
