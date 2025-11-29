@@ -243,12 +243,12 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 -   **iOS**
 
     ---
-    ![CupertinoNavigationBar](../examples/controls/navigation_bar/media/adaptive.png){width="90%"}
+    ![CupertinoNavigationBar](../assets/cookbook/adaptive-apps/navigation-bar-cupertino.png){width="90%"}
 
 -   **Android**
 
     ---
-    ![CupertinoNavigationBar](../examples/controls/navigation_bar/media/adaptive.png){width="90%"}
+    ![CupertinoNavigationBar](../assets/cookbook/adaptive-apps/navigation-bar-material.png){width="90%"}
 
 </div>
 

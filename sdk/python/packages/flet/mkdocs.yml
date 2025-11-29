@@ -222,6 +222,9 @@ markdown_extensions:
           case: lower
 
 # Navigation
+not_in_nav: |
+  apps/examples-gallery/README.md
+  ads/nativead.md
 nav:
   - Learn:
       - Getting started:
@@ -258,6 +261,7 @@ nav:
       - Extending Flet:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
+      - Contributing: contributing.md
   - API Reference:
       - Controls:
           - Overview: controls/index.md

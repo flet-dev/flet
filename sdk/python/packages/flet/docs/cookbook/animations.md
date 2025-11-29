@@ -7,7 +7,7 @@ Animation produces interpolated values between the old and the new value over th
 
 By default, the animation is *linearly* increasing the animation value, however, a *curve* can be
 applied to the animation which changes the value according to the provided curve.
-For example, `AnimationCurve.EASE_OUT_CUBIC` curve increases the animation value quickly at the
+For example, [`AnimationCurve.EASE_OUT_CUBIC`][flet.AnimationCurve.EASE_OUT_CUBIC] curve increases the animation value quickly at the
 beginning of the animation and then slows down until the target value is reached:
 
 <video controls>
@@ -30,56 +30,30 @@ properties, described below, to enable implicit animation of its appearance:
 
 * Instance of [`Animation`][flet.Animation] - allows configuring the duration and the curve of the
 * animation, for example `animate_rotation=Animation(duration=300, curve=AnimationCurve.BOUNCE_OUT)`.
-  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is `linear`.
-* `int` value - enables animation with specified duration in milliseconds and `linear` curve.
-* `bool` value - enables animation with the duration of 1000 milliseconds and `linear` curve.
-
-
-```python
---8<-- "../../examples/controls/time_picker/basic.py"
-```
-
-{{ image("../examples/controls/time_picker/media/basic.png", alt="basic", width="80%") }}
-
-
-
-
+  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is [`AnimationCurve.LINEAR`][flet.AnimationCurve.LINEAR].
+* `int` value - enables animation with specified duration in milliseconds and [`AnimationCurve.LINEAR`][flet.AnimationCurve.LINEAR] curve.
+* `bool` value - enables animation with the duration of 1000 milliseconds and [`AnimationCurve.LINEAR`][flet.AnimationCurve.LINEAR] curve.
 
 ### Opacity animation
 
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.opacity`][flet.LayoutControl.opacity] property.
 
-```python
---8<-- "../../examples/controls/layout_control/animate_opacity.py"
-```
-
-{{ image("../examples/controls/layout_control/media/animate_opacity.gif", alt="animate-opacity", width="80%") }}
-
+{{ code_and_demo("../../examples/controls/layout_control/animate_opacity.py", demo_height="420", demo_width="80%") }}
 
 ### Rotation animation
 
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate] property.
 
-```python
---8<-- "../../examples/controls/constrained-control/animate_rotation.py"
-```
-
-{{ image("../examples/controls/layout_control/media/animate_rotation.gif", alt="animate-rotation", width="80%") }}
-
+{{ code_and_demo("../../examples/controls/layout_control/animate_rotation.py", demo_height="420", demo_width="80%") }}
 
 ### Scale animation
 
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] property.
 
-```python
---8<-- "../../examples/controls/layout_control/animate_scale.py"
-```
-
-{{ image("../examples/controls/layout_control/media/animate_scale.gif", alt="animate-scale", width="80%") }}
-
+{{ code_and_demo("../../examples/controls/layout_control/animate_scale.py", demo_height="420", demo_width="80%") }}
 
 ### Offset animation
 
@@ -92,12 +66,7 @@ a horizontal translation of one quarter the width of the control.
 
 Offset animation is used for various sliding effects:
 
-```python
---8<-- "../../examples/controls/layout_control/animate_offset.py"
-```
-
-{{ image("../examples/controls/layout_control/media/animate_offset.gif", alt="animate-offset", width="80%") }}
-
+{{ code_and_demo("../../examples/controls/layout_control/animate_offset.py", demo_height="420", demo_width="80%") }}
 
 ### Position animation
 
@@ -113,62 +82,20 @@ Note:
     - [`Stack`][flet.Stack] control
     - [`Page.overlay`][flet.Page.overlay] list
 
-```python
---8<-- "../../examples/controls/layout_control/animate_position.py"
-```
-
-{{ image("../examples/controls/layout_control/media/animate_position.gif", alt="animate-position", width="80%") }}
-
+{{ code_and_demo("../../examples/controls/layout_control/animate_position.py", demo_height="420", demo_width="80%") }}
 
 ### Animate
 
 Setting [`Container.animate`][flet.Container.animate] to [`AnimationValue`][flet.AnimationValue]
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
-```python
---8<-- "../../examples/controls/container/animate.py"
-```
-
-{{ image("../examples/controls/container/media/animate_1.gif", alt="animate", width="80%") }}
-
+{{ code_and_demo("../../examples/controls/container/animate.py", demo_height="420", demo_width="80%") }}
 
 ### Animated content switcher
 
-[`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between a new control and
-the control previously set on the `AnimatedSwitcher` as a `content`.
+[`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between two controls ('new' and 'old').
 
-```python
-import time
-
-import flet as ft
-
-def main(page: ft.Page):
-    i = ft.Image(src="https://picsum.photos/150/150", width=150, height=150)
-
-    def animate(e):
-        sw.content = ft.Image(
-            src=f"https://picsum.photos/150/150?{time.time()}", width=150, height=150
-        )
-        page.update()
-
-    sw = ft.AnimatedSwitcher(
-        i,
-        transition=ft.AnimatedSwitcherTransition.SCALE,
-        duration=500,
-        reverse_duration=500,
-        switch_in_curve=ft.AnimationCurve.BOUNCE_OUT,
-        switch_out_curve=ft.AnimationCurve.BOUNCE_IN,
-    )
-
-    page.add(
-        sw,
-        ft.Button("Animate!", on_click=animate),
-    )
-
-ft.run(main)
-```
-
-{{ image("../assets/cookbook/animations/animated-switcher.gif", alt="animated-switcher", width="80%") }}
+{{ code_and_demo("../../examples/controls/animated_switcher/scale_effect.py", demo_height="420", demo_width="80%") }}
 
 
 ### Animation end callback

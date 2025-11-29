@@ -11,10 +11,9 @@ example_images: ../test-images/examples/material/golden/macos/chip
 ### Assist chips
 
 Assist chips are chips with [`leading`][flet.Chip.leading] icon and [`on_click`][flet.Chip.on_click] event specified.
-
 They represent smart or automated actions that appear dynamically and contextually in a UI.
 
-An alternative to assist chips are [buttons](buttons/index.md), which should appear persistently and consistently.
+An alternative to assist chips are buttons, which should appear persistently and consistently.
 
 {{ code_and_demo(examples + "/assist_chips.py", demo_height="190", demo_width="80%") }}
 
