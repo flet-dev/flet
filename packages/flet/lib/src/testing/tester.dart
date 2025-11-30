@@ -13,6 +13,7 @@ abstract class Tester {
   TestFinder findByTooltip(String value);
   TestFinder findByIcon(IconData icon);
   Future<Uint8List> takeScreenshot(String name);
+  Future<void> tapAt(Offset offset);
   Future<void> tap(TestFinder finder, int finderIndex);
   Future<void> longPress(TestFinder finder, int finderIndex);
   Future<void> enterText(TestFinder finder, int finderIndex, String text);

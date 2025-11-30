@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/events.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/events.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 

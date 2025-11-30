@@ -1,5 +1,3 @@
-import 'package:flet/src/utils/geometry.dart';
-import 'package:flet/src/utils/mouse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
@@ -9,7 +7,9 @@ import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/geometry.dart';
 import '../utils/launch_url.dart';
+import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
 

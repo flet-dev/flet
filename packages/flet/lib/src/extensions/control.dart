@@ -1,9 +1,9 @@
-import 'package:flet/src/utils/icons.dart';
-import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/material.dart';
 
 import '../controls/control_widget.dart';
 import '../models/control.dart';
+import '../utils/icons.dart';
+import '../widgets/error.dart';
 
 /// Extension on [Control] to easily convert child or children controls
 /// into corresponding [Widget]s using [ControlWidget].
