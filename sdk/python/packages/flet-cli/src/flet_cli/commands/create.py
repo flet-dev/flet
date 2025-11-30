@@ -47,6 +47,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
+            type=str.lower,
             choices=["app", "extension"],
             default="app",
             required=False,
@@ -111,7 +112,7 @@ class Command(BaseCommand):
 
         if self.verbose > 0:
             console.print(f"[cyan]Files created at[/cyan] {out_dir}:\n")
-            for root, dirs, files in os.walk(out_dir):
+            for root, _, files in os.walk(out_dir):
                 for file in files:
                     rel_path = os.path.relpath(os.path.join(root, file), out_dir)
                     console.print(rel_path)

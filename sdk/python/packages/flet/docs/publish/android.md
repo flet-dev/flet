@@ -375,10 +375,6 @@ And it will be translated accordingly into this in the `AndroidManifest.xml`:
 </application>
 ```
 
-Below are default/pre-configured meta-data:
-
-- `"io.flutter.embedding.android.EnableImpeller" = false`
-
 ### Features
 
 A hardware or software feature that is used by the application.
