@@ -10,6 +10,6 @@ example_images: ../test-images/examples/material/golden/macos/circle_avatar
 
 ### User avatars
 
-{{ code_and_demo(examples + "/user_avatars.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/user_avatars.py", demo_height="360", demo_width="100%") }}
 
 {{ class_members(class_name) }}

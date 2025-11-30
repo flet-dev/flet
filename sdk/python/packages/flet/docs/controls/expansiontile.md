@@ -10,23 +10,23 @@ example_images: ../test-images/examples/material/golden/macos/expansion_tile
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 ## Programmatic expansion/collapse
 
-{{ code_and_demo(examples + "/programmatic_expansion.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/programmatic_expansion.py", demo_height="420", demo_width="100%") }}
 
 ## Custom animations
 
-{{ code_and_demo(examples + "/custom_animations.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/custom_animations.py", demo_height="420", demo_width="100%") }}
 
 ### Theme mode toggle
 
-{{ code_and_demo(examples + "/theme_mode_toggle.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/theme_mode_toggle.py", demo_height="420", demo_width="100%") }}
 
 ### Borders
 
-{{ code_and_demo(examples + "/borders.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/borders.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

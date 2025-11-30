@@ -12,7 +12,7 @@ example_images: ../../test-images/examples/material/golden/macos/segmented_butto
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/single_multiple_selection.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/single_multiple_selection.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

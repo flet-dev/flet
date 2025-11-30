@@ -86,14 +86,14 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 
 ### Pick, save, and get directory paths
 
-{{ code_and_demo(examples + "/pick_save_and_get_directory_path.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/pick_save_and_get_directory_path.py", demo_height="420", demo_width="100%") }}
 
 ### Pick and upload files
 
 The following example demonstrates multi-file [pick][flet.FilePicker.pick_files]
 and [upload][flet.FilePicker.upload] app.
 
-{{ code_and_demo(examples + "/pick_and_upload.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/pick_and_upload.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

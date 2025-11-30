@@ -9,7 +9,7 @@ examples: ../../examples/controls/dismissible
 
 ### Dismissible `ListTile`s
 
-{{ code_and_demo(examples + "/dismissible_list_tiles.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/dismissible_list_tiles.py", demo_height="420", demo_width="100%") }}
 
 ### Remove Dismissible `on_dismiss` inside component
 
@@ -34,6 +34,6 @@ On Flutter’s side, though, the already-dismissed `Dismissible` widget in the m
 
 Example:
 
-{{ code_and_demo(examples + "/remove_on_dismiss_declarative.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/remove_on_dismiss_declarative.py", demo_height="420", demo_width="100%") }}
 
 {{ class_members(class_name) }}

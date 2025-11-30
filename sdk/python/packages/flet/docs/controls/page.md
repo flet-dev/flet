@@ -9,7 +9,7 @@ examples: ../../examples/controls/page
 
 ### Listening to keyboard events
 
-{{ code_and_demo(examples + "/keyboard_events.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/keyboard_events.py", demo_height="420", demo_width="100%") }}
 
 ### Mobile device orientation configuration
 

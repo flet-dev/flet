@@ -9,6 +9,6 @@ examples: ../../examples/controls/keyboard_listener
 
 ### Press any keys
 
-{{ code_and_demo(examples + "/detect_keys.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/detect_keys.py", demo_height="420", demo_width="100%") }}
 
 {{ class_members(class_name) }}

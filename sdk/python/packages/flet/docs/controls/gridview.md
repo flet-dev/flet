@@ -10,7 +10,7 @@ example_images: ../test-images/examples/core/golden/macos/grid_view
 
 ### Photo gallery
 
-{{ code_and_demo(examples + "/photo_gallery.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/photo_gallery.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

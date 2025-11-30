@@ -10,7 +10,7 @@ example_images: ../test-images/examples/core/golden/macos/vertical_divider
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

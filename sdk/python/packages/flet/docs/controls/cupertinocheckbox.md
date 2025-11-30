@@ -10,12 +10,12 @@ example_images: ../test-images/examples/cupertino/golden/macos/cupertino_checkbo
 
 ### Cupertino, Material and Adaptive Checkboxes
 
-{{ code_and_demo(examples + "/cupertino_material_and_adaptive.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/cupertino_material_and_adaptive.py", demo_height="360", demo_width="100%") }}
 
 
 ### Styled checkboxes
 
-{{ code_and_demo(examples + "/styled.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/styled.py", demo_height="360", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

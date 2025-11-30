@@ -26,7 +26,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 
 ### Shapes
 
-{{ code_and_demo(examples + "/button_shapes.py", demo_height="400", demo_width="80%") }}
+{{ code_and_demo(examples + "/button_shapes.py", demo_height="400", demo_width="100%") }}
 
 ### Styling
 

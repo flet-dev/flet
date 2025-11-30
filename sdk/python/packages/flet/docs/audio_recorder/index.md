@@ -38,7 +38,7 @@ Audio encoding on Linux is provided by [fmedia](https://stsaz.github.io/fmedia/)
 
 ## Example
 
-{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="100%") }}
 
 ## Description
 

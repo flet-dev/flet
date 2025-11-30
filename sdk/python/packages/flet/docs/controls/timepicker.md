@@ -10,11 +10,11 @@ example_images: ../test-images/examples/material/golden/macos/time_picker
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 ### Hour Formats
 
-{{ code_and_demo(examples + "/hour_formats.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/hour_formats.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

@@ -10,15 +10,15 @@ example_images: ../test-images/examples/core/golden/macos/markdown
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 ### Code syntax highlight
 
-{{ code_and_demo(examples + "/code_syntax_highlight.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/code_syntax_highlight.py", demo_height="420", demo_width="100%") }}
 
 ### Custom text theme
 
-{{ code_and_demo(examples + "/custom_text_theme.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/custom_text_theme.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

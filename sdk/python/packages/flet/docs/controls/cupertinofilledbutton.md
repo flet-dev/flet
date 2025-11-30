@@ -10,7 +10,7 @@ example_images: ../test-images/examples/cupertino/golden/macos/cupertino_filled_
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="340", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="340", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

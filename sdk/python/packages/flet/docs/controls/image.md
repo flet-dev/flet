@@ -10,23 +10,23 @@ example_images: ../test-images/examples/core/golden/macos/image
 
 ### Image gallery
 
-{{ code_and_demo(examples + "/gallery.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/gallery.py", demo_height="420", demo_width="100%") }}
 
 ### Displaying images from base64 strings and byte data
 
-{{ code_and_demo(examples + "/src_base64_and_bytes.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/src_base64_and_bytes.py", demo_height="420", demo_width="100%") }}
 
 ### Displaying a static SVG image
 
-{{ code_and_demo(examples + "/static_svg.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/static_svg.py", demo_height="420", demo_width="100%") }}
 
 ### Displaying a dynamic SVG image
 
-{{ code_and_demo(examples + "/dynamic_svg.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/dynamic_svg.py", demo_height="420", demo_width="100%") }}
 
 ### Displaying a Lucide icon
 
-{{ code_and_demo(examples + "/lucide_icons.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/lucide_icons.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

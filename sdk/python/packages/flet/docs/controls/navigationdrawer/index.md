@@ -11,11 +11,11 @@ examples: ../../examples/controls/navigation_drawer
 
 ### Start-aligned drawer
 
-{{ code_and_demo(examples + "/position_start.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/position_start.py", demo_height="420", demo_width="100%") }}
 
 ### End-aligned drawer
 
-{{ code_and_demo(examples + "/position_end.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/position_end.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

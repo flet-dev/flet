@@ -9,7 +9,7 @@ examples: ../../examples/controls/list_view
 
 ### Auto-scrolling and dynamical items addition
 
-{{ code_and_demo(examples + "/autoscroll_and_dynamic_items.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/autoscroll_and_dynamic_items.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

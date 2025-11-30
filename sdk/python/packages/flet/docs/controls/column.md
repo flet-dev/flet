@@ -10,32 +10,32 @@ example_images: ../test-images/examples/core/golden/macos/column
 
 ### Column `spacing`
 
-{{ code_and_demo(examples + "/spacing.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/spacing.py", demo_height="420", demo_width="100%") }}
 
 ### Column wrapping
 
-{{ code_and_demo(examples + "/wrap.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/wrap.py", demo_height="420", demo_width="100%") }}
 
 ### Column vertical alignments
 
-{{ code_and_demo(examples + "/alignment.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/alignment.py", demo_height="420", demo_width="100%") }}
 
 ### Column horizontal alignments
 
-{{ code_and_demo(examples + "/horizontal_alignment.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/horizontal_alignment.py", demo_height="420", demo_width="100%") }}
 
 ### Infinite scrolling
 
 This example demonstrates adding of list items on-the-fly, as user scroll to the bottom,
 creating the illusion of infinite list:
 
-{{ code_and_demo(examples + "/infinite_scrolling.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/infinite_scrolling.py", demo_height="420", demo_width="100%") }}
 
 ### Scrolling programmatically
 
 This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
 
-{{ code_and_demo(examples + "/programmatic_scroll.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/programmatic_scroll.py", demo_height="420", demo_width="100%") }}
 
 
 [//]: # (### Custom scrollbar)

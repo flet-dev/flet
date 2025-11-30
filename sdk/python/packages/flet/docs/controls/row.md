@@ -10,19 +10,19 @@ example_images: ../test-images/examples/core/golden/macos/row
 
 ### Spacing children
 
-{{ code_and_demo(examples + "/spacing.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/spacing.py", demo_height="420", demo_width="100%") }}
 
 ### Wrapping children
 
-{{ code_and_demo(examples + "/wrap.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/wrap.py", demo_height="420", demo_width="100%") }}
 
 ### Horizontal alignment
 
-{{ code_and_demo(examples + "/alignment.py", demo_height="570", demo_width="80%") }}
+{{ code_and_demo(examples + "/alignment.py", demo_height="570", demo_width="100%") }}
 
 ### Vertical alignment
 
-{{ code_and_demo(examples + "/vertical_alignment.py", demo_height="570", demo_width="80%") }}
+{{ code_and_demo(examples + "/vertical_alignment.py", demo_height="570", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

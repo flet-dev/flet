@@ -10,11 +10,11 @@ example_images: ../test-images/examples/cupertino/golden/macos/cupertino_segment
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="360", demo_width="100%") }}
 
 ### Adjusting segments padding
 
-{{ code_and_demo(examples + "/segments_padding.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/segments_padding.py", demo_height="360", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

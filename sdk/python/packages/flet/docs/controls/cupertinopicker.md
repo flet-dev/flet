@@ -9,7 +9,7 @@ examples: ../../examples/controls/cupertino_picker
 
 ### Fruit selection
 
-{{ code_and_demo(examples + "/fruit_selection.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/fruit_selection.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

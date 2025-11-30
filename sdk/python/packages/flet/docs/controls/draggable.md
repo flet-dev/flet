@@ -11,11 +11,11 @@ examples: ../../examples/controls/drag_target_and_draggable
 
 #### Imperative
 
-{{ code_and_demo(examples + "/drag_and_drop_containers.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/drag_and_drop_containers.py", demo_height="420", demo_width="100%") }}
 
 #### Declarative
 
-{{ code_and_demo(examples + "/drag_and_drop_containers_declarative.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/drag_and_drop_containers_declarative.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

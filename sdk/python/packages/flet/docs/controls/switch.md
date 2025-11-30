@@ -10,11 +10,11 @@ example_images: ../test-images/examples/material/golden/macos/switch
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="320", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="320", demo_width="100%") }}
 
 ### Handling change events
 
-{{ code_and_demo(examples + "/handling_events.py", demo_height="340", demo_width="80%") }}
+{{ code_and_demo(examples + "/handling_events.py", demo_height="340", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

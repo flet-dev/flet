@@ -9,4 +9,4 @@ examples: ../../examples/controls/types/margin
 
 ### Basic example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}

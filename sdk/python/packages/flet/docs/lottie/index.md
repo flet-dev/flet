@@ -35,7 +35,7 @@ pip install flet-lottie  # (1)!
 
 ## Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 ## Description
 

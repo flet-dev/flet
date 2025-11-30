@@ -9,7 +9,7 @@ examples: ../../examples/controls/autofill_group
 
 ### Basic example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="380", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="380", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

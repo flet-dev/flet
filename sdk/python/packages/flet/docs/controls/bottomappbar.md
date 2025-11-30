@@ -10,11 +10,11 @@ example_images: ../test-images/examples/material/golden/macos/bottom_app_bar
 
 ### Notched `FloatingActionButton`
 
-{{ code_and_demo(examples + "/notched_fab.py", demo_height="380", demo_width="80%") }}
+{{ code_and_demo(examples + "/notched_fab.py", demo_height="380", demo_width="100%") }}
 
 ### Custom border radius
 
-{{ code_and_demo(examples + "/border_radius.py", demo_height="380", demo_width="80%") }}
+{{ code_and_demo(examples + "/border_radius.py", demo_height="380", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

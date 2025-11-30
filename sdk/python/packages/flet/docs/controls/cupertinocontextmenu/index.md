@@ -11,7 +11,7 @@ examples: ../../examples/controls/cupertino_context_menu
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="360", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

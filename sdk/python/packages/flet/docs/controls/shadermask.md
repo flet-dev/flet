@@ -10,15 +10,15 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 
 ### Pink glow around image edges
 
-{{ code_and_demo(examples + "/pink_radial_glow.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/pink_radial_glow.py", demo_height="420", demo_width="100%") }}
 
 ### Fade out bottom edge of an image
 
-{{ code_and_demo(examples + "/fade_out_image_bottom.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/fade_out_image_bottom.py", demo_height="420", demo_width="100%") }}
 
 ### Applying linear and radial gradients/shaders
 
-{{ code_and_demo(examples + "/linear_and_radial_gradients.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/linear_and_radial_gradients.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

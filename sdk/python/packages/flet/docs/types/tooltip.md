@@ -9,4 +9,4 @@ examples: ../../examples/controls/types/tooltip
 
 ### Basic example
 
-{{ code_and_demo(examples + "/with_decoration.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/with_decoration.py", demo_height="420", demo_width="100%") }}

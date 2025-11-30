@@ -40,7 +40,7 @@ On mobile platforms you must also declare permissions in the native project file
 
 ### Example 1
 
-{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/example_1.py", demo_height="420", demo_width="100%") }}
 
 ## Description
 

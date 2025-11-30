@@ -10,11 +10,11 @@ example_images: ../test-images/examples/core/golden/macos/stack
 
 ### Avatar with online status
 
-{{ code_and_demo(examples + "/online_avatar.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/online_avatar.py", demo_height="420", demo_width="100%") }}
 
 ### Absolute positioning
 
-{{ code_and_demo(examples + "/absolute_positioning.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/absolute_positioning.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

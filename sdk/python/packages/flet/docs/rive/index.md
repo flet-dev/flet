@@ -38,7 +38,7 @@ Host `.riv` files locally or load them from a CDN. Use `placeholder` to keep lay
 
 ## Example
 
-{{ code_and_demo(examples + "/example_1.py", demo_height="450", demo_width="80%") }}
+{{ code_and_demo(examples + "/example_1.py", demo_height="450", demo_width="100%") }}
 
 ## Description
 

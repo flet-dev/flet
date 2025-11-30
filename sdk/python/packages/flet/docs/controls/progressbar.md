@@ -9,7 +9,7 @@ examples: ../../examples/controls/progress_bar
 
 ### Determinate and indeterminate progress bars
 
-{{ code_and_demo(examples + "/determinate_and_indeterminate.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/determinate_and_indeterminate.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

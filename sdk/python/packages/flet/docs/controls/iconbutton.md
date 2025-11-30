@@ -10,11 +10,11 @@ example_images: ../test-images/examples/material/golden/macos/icon_button
 
 ### Handling clicks
 
-{{ code_and_demo(examples + "/handling_clicks.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/handling_clicks.py", demo_height="420", demo_width="100%") }}
 
 ### Selected icon
 
-{{ code_and_demo(examples + "/selected_icon.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/selected_icon.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

@@ -10,7 +10,7 @@ example_images: ../test-images/examples/cupertino/golden/macos/cupertino_radio
 
 ### Cupertino, Material and Adaptive Radios
 
-{{ code_and_demo(examples + "/cupertino_material_and_adaptive.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/cupertino_material_and_adaptive.py", demo_height="360", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

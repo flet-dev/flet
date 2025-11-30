@@ -39,21 +39,21 @@ properties, described below, to enable implicit animation of its appearance:
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.opacity`][flet.LayoutControl.opacity] property.
 
-{{ code_and_demo("../../examples/controls/layout_control/animate_opacity.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/layout_control/animate_opacity.py", demo_height="420", demo_width="100%") }}
 
 ### Rotation animation
 
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate] property.
 
-{{ code_and_demo("../../examples/controls/layout_control/animate_rotation.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/layout_control/animate_rotation.py", demo_height="420", demo_width="100%") }}
 
 ### Scale animation
 
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] property.
 
-{{ code_and_demo("../../examples/controls/layout_control/animate_scale.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/layout_control/animate_scale.py", demo_height="420", demo_width="100%") }}
 
 ### Offset animation
 
@@ -66,7 +66,7 @@ a horizontal translation of one quarter the width of the control.
 
 Offset animation is used for various sliding effects:
 
-{{ code_and_demo("../../examples/controls/layout_control/animate_offset.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/layout_control/animate_offset.py", demo_height="420", demo_width="100%") }}
 
 ### Position animation
 
@@ -82,20 +82,20 @@ Note:
     - [`Stack`][flet.Stack] control
     - [`Page.overlay`][flet.Page.overlay] list
 
-{{ code_and_demo("../../examples/controls/layout_control/animate_position.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/layout_control/animate_position.py", demo_height="420", demo_width="100%") }}
 
 ### Animate
 
 Setting [`Container.animate`][flet.Container.animate] to [`AnimationValue`][flet.AnimationValue]
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
-{{ code_and_demo("../../examples/controls/container/animate.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/container/animate.py", demo_height="420", demo_width="100%") }}
 
 ### Animated content switcher
 
 [`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between two controls ('new' and 'old').
 
-{{ code_and_demo("../../examples/controls/animated_switcher/scale_effect.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo("../../examples/controls/animated_switcher/scale_effect.py", demo_height="420", demo_width="100%") }}
 
 
 ### Animation end callback

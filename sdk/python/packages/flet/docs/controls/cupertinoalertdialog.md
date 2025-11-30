@@ -9,11 +9,11 @@ examples: ../../examples/controls/cupertino_alert_dialog
 
 ### File deletion confirmation
 
-{{ code_and_demo(examples + "/file_deletion_confirmation.py", demo_height="380", demo_width="80%") }}
+{{ code_and_demo(examples + "/file_deletion_confirmation.py", demo_height="380", demo_width="100%") }}
 
 ### Cupertino, material and adaptive alert dialogs
 
-{{ code_and_demo(examples + "/cupertino_material_and_adaptive.py", demo_height="380", demo_width="80%") }}
+{{ code_and_demo(examples + "/cupertino_material_and_adaptive.py", demo_height="380", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

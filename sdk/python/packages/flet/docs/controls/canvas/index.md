@@ -12,31 +12,31 @@ example_images: ../../test-images/examples/core/golden/macos/canvas
 
 ### Smiling face
 
-{{ code_and_demo(examples + "/smiling_face.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/smiling_face.py", demo_height="420", demo_width="100%") }}
 
 ### Flet logo
 
-{{ code_and_demo(examples + "/flet_logo.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/flet_logo.py", demo_height="420", demo_width="100%") }}
 
 ### Triangles
 
-{{ code_and_demo(examples + "/triangles.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/triangles.py", demo_height="420", demo_width="100%") }}
 
 ### Bezier curves
 
-{{ code_and_demo(examples + "/bezier_curves.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/bezier_curves.py", demo_height="420", demo_width="100%") }}
 
 ### Text
 
-{{ code_and_demo(examples + "/text.py", demo_height="510", demo_width="80%") }}
+{{ code_and_demo(examples + "/text.py", demo_height="510", demo_width="100%") }}
 
 ### Free-hand drawing with image capture
 
-{{ code_and_demo(examples + "/brush.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/brush.py", demo_height="420", demo_width="100%") }}
 
 ### Gradients
 
-{{ code_and_demo(examples + "/gradients.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/gradients.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

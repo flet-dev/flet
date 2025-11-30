@@ -10,11 +10,11 @@ example_images: ../test-images/examples/material/golden/macos/app_bar
 
 ### Actions and Popup Menu
 
-{{ code_and_demo(examples + "/actions_and_popup_menu.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/actions_and_popup_menu.py", demo_height="420", demo_width="100%") }}
 
 ### Theme and Material Mode Toggles
 
-{{ code_and_demo(examples + "/theme_and_material_mode_toggles.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/theme_and_material_mode_toggles.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

@@ -10,15 +10,15 @@ example_images: ../test-images/examples/material/golden/macos/slider
 
 ### Basic Example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="320", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="320", demo_width="100%") }}
 
 ### Setting a custom label
 
-{{ code_and_demo(examples + "/custom_label.py", demo_height="320", demo_width="80%") }}
+{{ code_and_demo(examples + "/custom_label.py", demo_height="320", demo_width="100%") }}
 
 ### Handling events
 
-{{ code_and_demo(examples + "/handling_events.py", demo_height="360", demo_width="80%") }}
+{{ code_and_demo(examples + "/handling_events.py", demo_height="360", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

@@ -9,11 +9,11 @@ examples: ../../examples/controls/progress_ring
 
 ### Determinate and indeterminate progress rings
 
-{{ code_and_demo(examples + "/determinate_and_indeterminate.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/determinate_and_indeterminate.py", demo_height="420", demo_width="100%") }}
 
 ### Gauge with progress
 
-{{ code_and_demo(examples + "/gauge_with_progress.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/gauge_with_progress.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

@@ -10,11 +10,11 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 
 ### Basic example
 
-{{ code_and_demo(examples + "/basic.py", demo_height="380", demo_width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="380", demo_width="100%") }}
 
 ### Fullscreen
 
-{{ code_and_demo(examples + "/fullscreen.py", demo_height="420", demo_width="80%") }}
+{{ code_and_demo(examples + "/fullscreen.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}
