@@ -3,7 +3,7 @@ import pytest
 import flet as ft
 import flet.testing as ftt
 
-from examples.controls.radio import basic, handling_selection_changes, styled
+from examples.controls.radio import basic, handling_selection_changes
 
 
 @pytest.mark.asyncio(loop_scope="function")
