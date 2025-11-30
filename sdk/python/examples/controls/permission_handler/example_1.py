@@ -1,6 +1,5 @@
-import flet_permission_handler as fph
-
 import flet as ft
+import flet_permission_handler as fph
 
 
 def main(page: ft.Page):
@@ -24,12 +23,18 @@ def main(page: ft.Page):
     ph = fph.PermissionHandler()
 
     page.add(
-        ft.OutlinedButton("Open app settings", on_click=open_app_settings),
         ft.OutlinedButton("Request Microphone permission", on_click=request_permission),
         ft.OutlinedButton(
-            "Get Microphone permission status", on_click=get_permission_status
+            "Get Microphone permission status",
+            on_click=get_permission_status,
+        ),
+        ft.OutlinedButton(
+            "Open app settings",
+            on_click=open_app_settings,
+            disabled=page.web,
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

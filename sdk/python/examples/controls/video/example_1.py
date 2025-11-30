@@ -33,6 +33,7 @@ sample_media = [
 def main(page: ft.Page):
     page.spacing = 20
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.scroll = ft.ScrollMode.AUTO
 
     async def handle_pause(e: ft.Event[ft.Button]):
         await video.pause()
@@ -79,6 +80,7 @@ def main(page: ft.Page):
             expand=True,
             content=ft.Column(
                 expand=True,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
                     video := ftv.Video(
                         expand=True,
@@ -137,4 +139,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

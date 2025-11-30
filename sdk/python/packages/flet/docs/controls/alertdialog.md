@@ -8,15 +8,9 @@ example_images: ../test-images/examples/material/golden/macos/alert_dialog
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/alertdialog)
-
 ### Modal and non-modal dialogs
 
-```python
---8<-- "{{ examples }}/modal_and_non_modal.py"
-```
-
-{{ image(example_images + "/alert_dialog_flow.gif", alt="Modal and non-modal dialogs", caption="Modal and non-modal dialogs",width="50%") }}
+{{ code_and_demo(examples + "/modal_and_non_modal.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

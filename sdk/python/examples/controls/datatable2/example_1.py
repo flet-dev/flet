@@ -1,6 +1,5 @@
-import flet_datatable2 as fdt
-
 import flet as ft
+import flet_datatable2 as fdt
 
 
 def main(page: ft.Page):
@@ -16,4 +15,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

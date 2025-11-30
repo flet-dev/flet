@@ -96,7 +96,6 @@ watch:
   - ../../../../LICENSE
   - ../../../../README.md
 
-
 # Plugins
 plugins:
   # - footnotes
@@ -163,6 +162,10 @@ plugins:
         - source_dir: integration_tests
           target_url_path: test-images
           include_exts: [".png", ".gif", ".svg"]
+  - examples_gallery:
+      src: apps/examples-gallery/src
+      dist: apps/examples-gallery/dist
+      base_url: apps/examples-gallery/dist
 
 # Markdown Extensions
 markdown_extensions:
@@ -219,6 +222,9 @@ markdown_extensions:
           case: lower
 
 # Navigation
+not_in_nav: |
+  apps/examples-gallery/README.md
+  ads/nativead.md
 nav:
   - Learn:
       - Getting started:
@@ -255,6 +261,7 @@ nav:
       - Extending Flet:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
+      - Contributing: contributing.md
   - API Reference:
       - Controls:
           - Overview: controls/index.md
@@ -416,7 +423,9 @@ nav:
           - Page: controls/page.md
           - Pagelet: controls/pagelet.md
           - Placeholder: controls/placeholder.md
-          - PopupMenuButton: controls/popupmenubutton.md
+          - PopupMenuButton:
+              - controls/popupmenubutton/index.md
+              - PopupMenuItem: controls/popupmenuitem.md
           - PermissionHandler: permission_handler/index.md
           - ProgressBar: controls/progressbar.md
           - ProgressRing: controls/progressring.md
@@ -431,7 +440,7 @@ nav:
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
           - SegmentedButton:
-              - controls/segmentedbutton.md
+              - controls/segmentedbutton/index.md
               - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
@@ -918,7 +927,6 @@ nav:
       - Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
       - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
       - Expanding Controls: cookbook/expanding-controls.md
-      - File Picker and Uploads: cookbook/file-picker-and-uploads.md
       - Fonts: cookbook/fonts.md
       - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
       - Large Lists: cookbook/large-lists.md

@@ -16,4 +16,5 @@ def main(page: ft.Page):
     page.window.update()
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

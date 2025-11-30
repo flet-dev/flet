@@ -1,8 +1,7 @@
 import random
 
-import flet_map as ftm
-
 import flet as ft
+import flet_map as ftm
 
 
 def main(page: ft.Page):
@@ -46,7 +45,7 @@ def main(page: ft.Page):
             on_event=print,
             layers=[
                 ftm.TileLayer(
-                    url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    url_template="https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png",
                     on_image_error=lambda e: print("TileLayer Error"),
                 ),
                 ftm.RichAttribution(
@@ -135,4 +134,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

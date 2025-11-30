@@ -198,7 +198,7 @@ class AutomaticNotchShape(NotchShape):
 class ResponsiveRowBreakpoint(Enum):
     """
     Breakpoint names used by [`ResponsiveRow`][flet.] and responsive
-    properties such as [`Control.col`][flet.Control.].
+    properties such as [`Control.col`][flet.].
 
     To define custom breakpoints, see [`ResponsiveRow.breakpoints`][flet.].
     """

@@ -31,4 +31,5 @@ def main(page: ft.Page):
     page.add(ft.Text('Try exiting this app by clicking window\'s "Close" button!'))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

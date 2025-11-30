@@ -53,7 +53,7 @@ class PlotlyChart(ft.Container):
     def init(self):
         _require_plotly()
         self.alignment = ft.Alignment.CENTER
-        self.__img = ft.Image(fit=ft.BoxFit.FILL)
+        self.__img = ft.Image(src="", fit=ft.BoxFit.FILL)
         self.content = self.__img
 
     def before_update(self):

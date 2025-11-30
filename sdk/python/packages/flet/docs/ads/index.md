@@ -11,9 +11,9 @@ Based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flu
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ❌    |   ❌   |   ❌   |  ✅  |    ✅    |  ❌  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ❌       | ❌     | ❌     | ✅   | ✅       | ❌   |
 
 ## Usage
 
@@ -39,7 +39,7 @@ pip install flet-ads  # (1)!
 --8<-- "{{ examples }}/example_1.py"
 ```
 
-{{ image(example_images + "/example_1.gif", alt="example_1", width="80%") }}
+{{ image(example_images + "/example_1.gif", width="80%") }}
 
 
 ## Packaging

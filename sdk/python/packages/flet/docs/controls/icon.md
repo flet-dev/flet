@@ -2,7 +2,6 @@
 class_name: flet.Icon
 examples: ../../examples/controls/icon
 example_images: ../test-images/examples/core/golden/macos/icon
-example_media: ../examples/controls/icon/media
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic Icon") }}
@@ -12,15 +11,9 @@ example_media: ../examples/controls/icon/media
 To browse and visualize all available icons,
 visit our [icons browser](https://gallery.flet.dev/icons-browser/)
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/icon)
-
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

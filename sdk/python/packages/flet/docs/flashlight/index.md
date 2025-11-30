@@ -9,9 +9,9 @@ Control the device torch/flashlight in your [Flet](https://flet.dev) app via the
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ❌    |   ❌   |   ❌   |  ✅  |    ✅    |  ❌  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ❌       | ❌     | ❌     | ✅   | ✅       | ❌   |
 
 ## Usage
 

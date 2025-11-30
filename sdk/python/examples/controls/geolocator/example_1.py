@@ -1,8 +1,7 @@
 from typing import Callable
 
-import flet_geolocator as ftg
-
 import flet as ft
+import flet_geolocator as ftg
 
 
 async def main(page: ft.Page):
@@ -28,7 +27,7 @@ async def main(page: ft.Page):
         page.show_dialog(ft.SnackBar(ft.Text(message)))
 
     async def handle_permission_request(e: ft.Event[ft.OutlinedButton]):
-        p = await geo.request_permission(timeout=60)
+        p = await geo.request_permission()
         page.add(ft.Text(f"request_permission: {p}"))
         show_snackbar(f"Permission request sent: {p}")
 
@@ -51,7 +50,7 @@ async def main(page: ft.Page):
     async def handle_open_location_settings(e: ft.Event[ft.OutlinedButton]):
         p = await geo.open_location_settings()
         page.pop_dialog()
-        if p is True:
+        if p:
             show_snackbar("Location settings opened successfully.")
         else:
             show_snackbar("Location settings could not be opened.")
@@ -93,7 +92,7 @@ async def main(page: ft.Page):
                 ),
                 ft.OutlinedButton(
                     content="Get Last Known Position",
-                    visible=not page.web,
+                    disabled=page.web,
                     on_click=handle_get_last_known_position,
                 ),
                 ft.OutlinedButton(
@@ -102,12 +101,12 @@ async def main(page: ft.Page):
                 ),
                 ft.OutlinedButton(
                     content="Open Location Settings",
-                    visible=not page.web,  # (1)!
+                    disabled=page.web,  # (1)!
                     on_click=lambda e: page.show_dialog(location_settings_dlg),
                 ),
                 ft.OutlinedButton(
                     content="Open App Settings",
-                    visible=not page.web,  # (1)!
+                    disabled=page.web,  # (1)!
                     on_click=lambda e: page.show_dialog(app_settings_dlg),
                 ),
             ],
@@ -115,4 +114,5 @@ async def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

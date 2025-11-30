@@ -8,34 +8,17 @@ example_images: ../test-images/examples/material/golden/macos/slider
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/slider/basic)
-
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
-
+{{ code_and_demo(examples + "/basic.py", demo_height="320", demo_width="100%") }}
 
 ### Setting a custom label
 
-```python
---8<-- "{{ examples }}/custom_label.py"
-```
-
-{{ image(example_images + "/custom_label.png", alt="custom-label", width="80%") }}
-
+{{ code_and_demo(examples + "/custom_label.py", demo_height="320", demo_width="100%") }}
 
 ### Handling events
 
-```python
---8<-- "{{ examples }}/handling_events.py"
-```
-
-{{ image(example_images + "/handling_events.png", alt="handling-events", width="80%") }}
-
+{{ code_and_demo(examples + "/handling_events.py", demo_height="360", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

@@ -1,6 +1,5 @@
-import flet_ads as fta
-
 import flet as ft
+import flet_ads as fta
 
 
 def main(page: ft.Page):
@@ -77,4 +76,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

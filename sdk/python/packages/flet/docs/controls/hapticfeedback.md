@@ -9,8 +9,6 @@ examples: ../../examples/controls/haptic_feedback
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 {{ class_members(class_name) }}

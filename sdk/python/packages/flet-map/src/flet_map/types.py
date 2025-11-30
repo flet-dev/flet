@@ -185,7 +185,7 @@ class DashedStrokePattern(StrokePattern):
 	values must be strictly positive.
 
 	'Units' refers to pixels, unless the pattern has been scaled due to the
-	use of [`pattern_fit`][(c).] [`PatternFit.SCALE_UP`][flet.].
+	[`pattern_fit`][(c).] being [`PatternFit.SCALE_UP`][flet_map.].
 
 	If more than two items are specified, then each segments will
 	alternate/iterate through the values.

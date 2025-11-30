@@ -7,18 +7,13 @@ examples: ../../examples/controls/interactive_viewer
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/interactiveviewer)
-
 ### Handling events
 
-```python
---8<-- "{{ examples }}/handling_events.py"
-```
+{{ code_and_demo(examples + "/handling_events.py", demo_height="420", demo_width="100%") }}
 
 ### Programmatic transformations
 
-```python
---8<-- "{{ examples }}/transformations.py"
-```
+{{ code_and_demo(examples + "/transformations.py", demo_height="510", demo_width="100%") }}
+
 
 {{ class_members(class_name) }}
