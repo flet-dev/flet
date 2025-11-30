@@ -1,10 +1,10 @@
 ---
 class_name: flet.RangeSlider
 examples: ../../examples/controls/range_slider
-example_images: ../examples/controls/range_slider/media
+example_images: ../test-images/examples/material/golden/macos/range_slider
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Range Slider") }}
 
 ## Examples
 
@@ -24,5 +24,7 @@ example_images: ../examples/controls/range_slider/media
 ```python
 --8<-- "{{ examples }}/handling_change_events.py"
 ```
+
+{{ image(example_images + "/handling_events.gif", alt="handling_events", width="80%") }}
 
 {{ class_members(class_name) }}

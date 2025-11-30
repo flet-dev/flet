@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
+from enum import Enum
 
 import numpy as np
 from PIL import Image
@@ -19,6 +20,32 @@ from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
 __all__ = ["FletTestApp"]
+
+
+class DisposalMode(Enum):
+    """
+    Indicates the way in which a frame is treated after being displayed.
+    """
+
+    DEFAULT = 0
+    """
+    No disposal method specified
+    """
+
+    NONE = 1
+    """
+    Do not dispose
+    """
+
+    BACKGROUND = 2
+    """
+    Restore to background color.
+    """
+
+    PREVIOUS = 3
+    """
+    Restore to previous content.
+    """
 
 
 class FletTestApp:
@@ -425,6 +452,7 @@ class FletTestApp:
         *,
         duration: int = 1000,
         loop: int = 0,
+        disposal: DisposalMode = DisposalMode.DEFAULT,
     ) -> Path:
         """Create an animated GIF from a sequence of image files.
 
@@ -489,6 +517,7 @@ class FletTestApp:
                 duration=duration,
                 loop=loop,
                 optimize=True,
+                disposal=disposal.value,
             )
         finally:
             for frame in frames:

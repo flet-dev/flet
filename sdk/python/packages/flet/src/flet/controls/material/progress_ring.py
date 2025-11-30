@@ -16,6 +16,11 @@ class ProgressRing(LayoutControl):
     application is busy.
 
     A control that shows progress along a circle.
+
+    ```python
+    ft.ProgressRing(value=0.4, padding=ft.Padding.all(10))
+    ```
+
     """
 
     value: Optional[Number] = None

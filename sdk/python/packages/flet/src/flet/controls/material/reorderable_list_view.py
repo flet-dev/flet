@@ -40,6 +40,19 @@ class ReorderableListView(ListView):
         automatically created drag handle (see [`show_default_drag_handles`][(c).]).
         To customize the draggable area, use the [`ReorderableDragHandle`][flet.] to
         define your own drag handle or region.
+
+    ```python
+    ft.ReorderableListView(
+        controls=[
+            ft.ListTile(
+                title=ft.Text(f"Item {i}"),
+                bgcolor=ft.Colors.BLUE_GREY_300,
+            )
+            for i in range(1, 6)
+        ],
+    )
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)

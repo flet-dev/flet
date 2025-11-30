@@ -5,6 +5,7 @@ def main(page: ft.Page):
     def handle_page_resize(e: ft.PageResizeEvent):
         pw.value = f"{page.width} px"
         pw.update()
+        page.update()
 
     page.on_resize = handle_page_resize
 
@@ -75,7 +76,7 @@ def main(page: ft.Page):
         ),
         pw,
     )
-    handle_page_resize(None)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

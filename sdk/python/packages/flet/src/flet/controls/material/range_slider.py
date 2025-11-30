@@ -20,6 +20,17 @@ class RangeSlider(LayoutControl):
     A range slider can be used to select from either a continuous or a discrete
     set of values.
     The default is to use a continuous range of values from min to max.
+
+    ```python
+    ft.RangeSlider(
+        min=0,
+        max=10,
+        start_value=2,
+        divisions=10,
+        end_value=7,
+    )
+    ```
+
     """
 
     start_value: Number

@@ -26,6 +26,24 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     Similar to `expand` property, every control has [`col`][flet.Control.]
     property which allows specifying how many columns a control should span.
+
+    ```python
+    ft.ResponsiveRow(
+        controls=[
+            ft.Button(
+                f"Button {i}",
+                color=ft.Colors.BLUE_GREY_300,
+                col={
+                    ft.ResponsiveRowBreakpoint.XS: 12,
+                    ft.ResponsiveRowBreakpoint.MD: 6,
+                    ft.ResponsiveRowBreakpoint.LG: 3,
+                },
+            )
+            for i in range(1, 6)
+        ], 
+    )
+    ```
+    
     """
 
     controls: list[Control] = field(default_factory=list)
