@@ -14,8 +14,7 @@ from rich.table import Column, Table
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import copy_tree, is_windows, slugify
-from flet.version import update_version
+from flet.utils import copy_tree, slugify
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -50,6 +49,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.target_platform = None
         self.package_platform = None
         self.config_platform = None
+        self.debug_platform = None
         self.flutter_dependencies = {}
         self.package_app_path = None
         self.template_data = None
@@ -1019,7 +1019,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             template_ref = (
                 version.Version(flet.version.version).base_version
                 if flet.version.version
-                else update_version()
+                else flet.version.from_git()
             )
         hash.update(template_ref)
 
@@ -1623,7 +1623,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
         else:
             flet_version = (
-                flet.version.version if flet.version.version else update_version()
+                flet.version.version
+                if flet.version.version
+                else flet.version.from_git()
             )
             package_args.extend(["-r", f"flet=={flet_version}"])
 
@@ -1939,14 +1941,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             return Path(images[0]).name
         return None
 
-    def find_flutter_batch(self, exe_filename: str):
-        batch_path = shutil.which(exe_filename)
-        if not batch_path:
-            return None
-        if is_windows() and batch_path.endswith(".file"):
-            return batch_path.replace(".file", ".bat")
-        return batch_path
-
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
         if self.verbose > 0:
             console.log(f"Run subprocess: {args}", style=verbose1_style)
@@ -1958,30 +1952,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             capture_output=capture_output,
             log=self.log_stdout,
         )
-
-    def run_flutter_doctor(self):
-        flutter_doctor = self.run(
-            [self.flutter_exe, "doctor", "--no-version-check", "--suppress-analytics"],
-            cwd=os.getcwd(),
-            capture_output=True,
-        )
-        if flutter_doctor.returncode == 0 and flutter_doctor.stdout:
-            console.log(flutter_doctor.stdout, style=verbose1_style)
-
-    def update_status(self, status):
-        if self.no_rich_output:
-            console.log(status)
-        else:
-            self.status.update(status)
-
-    def log_stdout(self, message):
-        if self.verbose > 0:
-            console.log(
-                message,
-                end="",
-                style=verbose2_style,
-                markup=False,
-            )
 
     def load_yaml(self, path):
         with open(str(path), encoding="utf-8") as f:

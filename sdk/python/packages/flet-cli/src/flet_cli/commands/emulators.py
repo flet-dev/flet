@@ -8,7 +8,7 @@ from rich.live import Live
 from rich.panel import Panel
 from rich.table import Column, Table
 
-from flet_cli.commands.build_base import BaseFlutterCommand, console, verbose2_style
+from flet_cli.commands.flutter_base import BaseFlutterCommand, console, verbose2_style
 from flet_cli.utils.android_sdk import AndroidSDK
 
 

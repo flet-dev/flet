@@ -6,7 +6,7 @@ from rich.live import Live
 from rich.panel import Panel
 from rich.table import Column, Table
 
-from flet_cli.commands.build_base import BaseFlutterCommand, console, verbose2_style
+from flet_cli.commands.flutter_base import BaseFlutterCommand, console, verbose2_style
 
 
 class Command(BaseFlutterCommand):
@@ -63,10 +63,6 @@ class Command(BaseFlutterCommand):
         )
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_command()
-            # if self.options.show_devices:
-            #     self.run_flutter_devices()
-            #     self.live.update("", refresh=True)
-            #     return
             self.run_flutter_devices()
             self.cleanup(0)
 

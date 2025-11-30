@@ -12,7 +12,6 @@ import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
 import flet_cli.commands.serve
-from flet.version import update_version
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -72,7 +71,9 @@ def get_parser() -> argparse.ArgumentParser:
         "--version",
         "-V",
         action="version",
-        version=flet.version.version if flet.version.version else update_version(),
+        version=flet.version.version
+        if flet.version.version
+        else flet.version.from_git(),
     )
 
     sp = parser.add_subparsers(dest="command")
