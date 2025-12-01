@@ -3,7 +3,7 @@ import inspect
 import logging
 import sys
 from dataclasses import InitVar, dataclass, field
-from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overload
 
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
@@ -38,6 +38,20 @@ def skip_field():
 
 
 T = TypeVar("T", bound="BaseControl")
+
+
+@overload
+def control(cls: type[T]) -> type[T]: ...
+
+
+@overload
+def control(
+    dart_widget_name: Optional[Union[type[T], str]] = None,
+    *,
+    isolated: Optional[bool] = None,
+    post_init_args: int = 1,
+    **dataclass_kwargs: Any,
+) -> Callable[[type[T]], type[T]]: ...
 
 
 @dataclass_transform()
