@@ -1,3 +1,5 @@
+from dataclasses import field
+
 import flet as ft
 
 
@@ -5,77 +7,72 @@ def main(page: ft.Page):
     page.title = "Calc App"
     result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
 
+    @ft.control
     class CalcButton(ft.Button):
-        def __init__(self, text, expand=1):
-            super().__init__()
-            self.text = text
-            self.expand = expand
+        expand: int = field(default_factory=lambda: 1)
 
+    @ft.control
     class DigitButton(CalcButton):
-        def __init__(self, text, expand=1):
-            CalcButton.__init__(self, text, expand)
-            self.bgcolor = ft.Colors.WHITE24
-            self.color = ft.Colors.WHITE
+        bgcolor: ft.Colors = ft.Colors.WHITE_24
+        color: ft.Colors = ft.Colors.WHITE
 
+    @ft.control
     class ActionButton(CalcButton):
-        def __init__(self, text):
-            CalcButton.__init__(self, text)
-            self.bgcolor = ft.Colors.ORANGE
-            self.color = ft.Colors.WHITE
+        bgcolor: ft.Colors = ft.Colors.ORANGE
+        color: ft.Colors = ft.Colors.WHITE
 
+    @ft.control
     class ExtraActionButton(CalcButton):
-        def __init__(self, text):
-            CalcButton.__init__(self, text)
-            self.bgcolor = ft.Colors.BLUE_GREY_100
-            self.color = ft.Colors.BLACK
+        bgcolor: ft.Colors = ft.Colors.BLUE_GREY_100
+        color: ft.Colors = ft.Colors.BLACK
 
     page.add(
         ft.Container(
             width=350,
             bgcolor=ft.Colors.BLACK,
-            border_radius=ft.border_radius.all(20),
+            border_radius=ft.BorderRadius.all(20),
             padding=20,
             content=ft.Column(
                 controls=[
-                    ft.Row(controls=[result], alignment="end"),
+                    ft.Row(controls=[result], alignment=ft.MainAxisAlignment.END),
                     ft.Row(
                         controls=[
-                            ExtraActionButton(text="AC"),
-                            ExtraActionButton(text="+/-"),
-                            ExtraActionButton(text="%"),
-                            ActionButton(text="/"),
+                            ExtraActionButton(content="AC"),
+                            ExtraActionButton(content="+/-"),
+                            ExtraActionButton(content="%"),
+                            ActionButton(content="/"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="7"),
-                            DigitButton(text="8"),
-                            DigitButton(text="9"),
-                            ActionButton(text="*"),
+                            DigitButton(content="7"),
+                            DigitButton(content="8"),
+                            DigitButton(content="9"),
+                            ActionButton(content="*"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="4"),
-                            DigitButton(text="5"),
-                            DigitButton(text="6"),
-                            ActionButton(text="-"),
+                            DigitButton(content="4"),
+                            DigitButton(content="5"),
+                            DigitButton(content="6"),
+                            ActionButton(content="-"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="1"),
-                            DigitButton(text="2"),
-                            DigitButton(text="3"),
-                            ActionButton(text="+"),
+                            DigitButton(content="1"),
+                            DigitButton(content="2"),
+                            DigitButton(content="3"),
+                            ActionButton(content="+"),
                         ]
                     ),
                     ft.Row(
                         controls=[
-                            DigitButton(text="0", expand=2),
-                            DigitButton(text="."),
-                            ActionButton(text="="),
-                        ]
+                            DigitButton(content="0", expand=2),
+                            DigitButton(content="."),
+                            ActionButton(content="="),
+                        ],
                     ),
                 ]
             ),
@@ -83,4 +80,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
