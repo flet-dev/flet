@@ -7,13 +7,11 @@ requires-python = ">=3.10"
 authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 dependencies = [
     "flet>=0.70.0.dev0",
-    "flet-charts>=0.70.0.dev0",
+    "flet-web>=0.70.0.dev0",
     "flet-ads>=0.70.0.dev0",
     "flet-audio>=0.70.0.dev0",
     "flet-audio-recorder>=0.70.0.dev0",
     "flet-charts>=0.70.0.dev0",
-    "plotly[express]",
-    "pandas",
     "flet-datatable2>=0.70.0.dev0",
     "flet-flashlight>=0.70.0.dev0",
     "flet-geolocator>=0.70.0.dev0",
@@ -24,9 +22,15 @@ dependencies = [
     "flet-video>=0.70.0.dev0",
     "flet-webview>=0.70.0.dev0",
     "typing_extensions",
+    "plotly[express]",
+    "pandas",
+    "matplotlib"
 ]
 
 [tool.uv]
+dev-dependencies = [
+  "flet[all]>=0.70.0.dev0",
+]
 prerelease = "allow"
 
 [tool.flet]
