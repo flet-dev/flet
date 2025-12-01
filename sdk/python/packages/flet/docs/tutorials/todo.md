@@ -2,10 +2,8 @@
 title: ToDo Tutorial
 ---
 
-In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and
-
-then publish it as a desktop, mobile or web app. The app is a single-file console program of just
-[172 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py),
+In this tutorial we will show you, step-by-step, how to create a To-Do app in Python using Flet framework and then publish it as a desktop, mobile or web app. The app is a single-file console program of just
+[163 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py),
 yet it is a multi-platform application with rich, responsive UI:
 
 {{ image("../examples/tutorials/todo/media/complete-demo-web.gif", alt="complete-demo-web.gif", width="80%") }}
@@ -13,10 +11,7 @@ yet it is a multi-platform application with rich, responsive UI:
 
 You can see the live demo [here](https://gallery.flet.dev/todo/).
 
-We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a
-
-Flet app: building a page layout, adding controls, handling events, displaying and editing lists,
-making reusable UI components, and publishing options.
+We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a Flet app: building a page layout, adding controls, handling events, displaying and editing lists, making reusable UI components, and publishing options.
 
 The tutorial consists of the following steps:
 
@@ -29,9 +24,7 @@ The tutorial consists of the following steps:
 
 /// details | For beginners
     type: info
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but
-
-you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
 
 Before you can create your first Flet app, you need to
 [setup your development environment](../getting-started/installation.md).
