@@ -1,4 +1,5 @@
 from dataclasses import field
+from typing import Callable
 
 import flet as ft
 
@@ -6,10 +7,7 @@ import flet as ft
 @ft.control
 class Task(ft.Column):
     task_name: str = ""
-    # task_delete: Callable[["Task"], None] = field(
-    #     default=lambda task: None, metadata={"skip": True}
-    # )
-    task_delete: ft.ControlEventHandler = field(default=lambda e: None)
+    on_task_delete: Callable[["Task"], None] = field(default=lambda task: None)
 
     def init(self):
         self.display_task = ft.Checkbox(value=False, label=self.task_name)
@@ -31,7 +29,7 @@ class Task(ft.Column):
                         ft.IconButton(
                             ft.Icons.DELETE_OUTLINE,
                             tooltip="Delete To-Do",
-                            # on_click=self.delete_clicked,
+                            on_click=self.delete_clicked,
                         ),
                     ],
                 ),
@@ -66,8 +64,8 @@ class Task(ft.Column):
         self.edit_view.visible = False
         self.update()
 
-    # def delete_clicked(self, e):
-    #     self.task_delete(self)
+    def delete_clicked(self, e):
+        self.on_task_delete(self)
 
 
 @ft.control
@@ -90,8 +88,7 @@ class TodoApp(ft.Column):
         ]
 
     def add_clicked(self, e):
-        # task = Task(self.new_task.value, self.task_delete)
-        task = Task(task_name=self.new_task.value)
+        task = Task(task_name=self.new_task.value, on_task_delete=self.task_delete)
         self.tasks.controls.append(task)
         self.new_task.value = ""
         self.update()
