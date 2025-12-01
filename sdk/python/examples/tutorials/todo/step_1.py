@@ -13,4 +13,4 @@ def main(page: Page):
     page.add(new_task, FloatingActionButton(icon=Icons.ADD, on_click=add_clicked))
 
 
-flet.app(target=main)
+flet.run(main)

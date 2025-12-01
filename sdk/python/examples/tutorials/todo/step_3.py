@@ -1,10 +1,10 @@
 import flet as ft
 
 
+@ft.control
 class TodoApp(ft.Column):
     # application's root control is a Column containing all other controls
-    def __init__(self):
-        super().__init__()
+    def init(self):
         self.new_task = ft.TextField(hint_text="What needs to be done?", expand=True)
         self.tasks_view = ft.Column()
         self.width = 600
