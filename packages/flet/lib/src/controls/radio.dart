@@ -9,6 +9,7 @@ import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
+import 'list_tile.dart';
 
 class RadioControl extends StatefulWidget {
   final Control control;
@@ -22,6 +23,7 @@ class RadioControl extends StatefulWidget {
 
 class _RadioControlState extends State<RadioControl> {
   late final FocusNode _focusNode;
+  Listenable? _tileClicksNotifier;
 
   @override
   void initState() {
@@ -30,13 +32,38 @@ class _RadioControlState extends State<RadioControl> {
     _focusNode.addListener(_onFocusChange);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newNotifier = ListTileClicks.of(context)?.notifier;
+
+    // If the inherited source changed, swap listeners
+    if (!identical(_tileClicksNotifier, newNotifier)) {
+      _tileClicksNotifier?.removeListener(_handleTileClick);
+      _tileClicksNotifier = newNotifier;
+      _tileClicksNotifier?.addListener(_handleTileClick);
+    }
+  }
+
   void _onFocusChange() {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  void _handleTileClick() {
+    if (widget.control.disabled) {
+      return;
+    }
+    final radioGroup = RadioGroup.maybeOf<String>(context);
+    if (radioGroup != null) {
+      final value = widget.control.getString("value", "")!;
+      radioGroup.onChanged(value);
+    }
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    _tileClicksNotifier?.removeListener(_handleTileClick);
     _focusNode.dispose();
     super.dispose();
   }
