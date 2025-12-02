@@ -75,19 +75,25 @@ async def test_handling_clicks(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     ob = await flet_app_function.tester.find_by_text_containing("event")
     await flet_app_function.tester.tap(ob)
-    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
     flet_app_function.assert_screenshot(
         "handling_clicks1",
         await flet_app_function.page.take_screenshot(),
     )
     await flet_app_function.tester.tap(ob)
-    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
     flet_app_function.assert_screenshot(
         "handling_clicks2",
         await flet_app_function.page.take_screenshot(),
     )
     await flet_app_function.tester.tap(ob)
-    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
     flet_app_function.assert_screenshot(
         "handling_clicks3",
         await flet_app_function.page.take_screenshot(),
