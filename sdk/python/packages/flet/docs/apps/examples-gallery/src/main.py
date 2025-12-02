@@ -38,7 +38,7 @@ def discover_examples():
         # skip files/folders not supported on pyodide or otherwise excluded
         non_pyodide = {"matplotlib_chart"}
         exclude = (
-            {"media", "ads"} | non_pyodide if sys.platform == "emscripten" else set()
+            {"media", "ads"} | (non_pyodide if sys.platform == "emscripten" else set())
         )
 
         if path.name.startswith("_") or any(
