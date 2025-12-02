@@ -138,7 +138,7 @@ Run the app and try to edit and delete tasks:
 We already have a functional To-Do app where we can create, edit, and delete tasks.
 To be even more productive, we want to be able to filter tasks by their status.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/todo/to-do-5.py).
+Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/todo/todo.py).
 Below we will explain the changes we've done to implement filtering.
 
 `Tabs` control is used to display filter:
@@ -148,17 +148,9 @@ Below we will explain the changes we've done to implement filtering.
 
 class TodoApp(ft.Column):
     # application's root control is a Column containing all other controls
-    def __init__(self):
-        super().__init__()
-        self.new_task = ft.TextField(hint_text="What's needs to be done?", expand=True)
+    def init(self):
+        self.new_task = ft.TextField(hint_text="Whats needs to be done?", expand=True)
         self.tasks = ft.Column()
-
-        self.filter_tabs = ft.Tabs(
-            length=3,
-            selected_index=0,
-            on_change=lambda e: self.update(),
-            content=self.filter,
-        )
 
         self.filter = ft.TabBar(
             scrollable=False,
@@ -169,16 +161,19 @@ class TodoApp(ft.Column):
             ],
         )
 
+        self.filter_tabs = ft.Tabs(
+            length=3,
+            selected_index=0,
+            on_change=lambda e: self.update(),
+            content=self.filter,
+        )
+
     # ...
 ```
 
-To display different lists of tasks depending on their statuses, we could maintain three
-lists with "All", "Active" and "Completed" tasks. We, however, chose an easier approach
-where we maintain the same list and only change a task's visibility depending on its status.
+To display different lists of tasks depending on their statuses, we could maintain three lists with "All", "Active" and "Completed" tasks. We, however, chose an easier approach where we maintain the same list and only change a task's visibility depending on its status.
 
-In `TodoApp` class we overrided [`before_update()`](../cookbook/custom-controls.md#before_update)
-method alled every time when the control is being updated. It iterates through all the tasks and updates their `visible`
-property depending on the status of the task:
+In `TodoApp` class we overrided [`before_update()`](../cookbook/custom-controls.md#before_update) method alled every time when the control is being updated. It iterates through all the tasks and updates their `visible` property depending on the status of the task:
 
 ```python title="todo.py"
 class TodoApp(ft.Column):
@@ -195,8 +190,7 @@ class TodoApp(ft.Column):
             )
 ```
 
-Filtering should occur when we click on a tab or change a task status. `TodoApp.before_update()` method
-is called when Tabs selected value is changed or Task item checkbox is clicked:
+Filtering should occur when we click on a tab or change a task status. `TodoApp.before_update()` method is called when Tabs selected value is changed or Task item checkbox is clicked:
 
 ```python title="todo.py"
 class TodoApp(ft.Column):
@@ -209,21 +203,24 @@ class TodoApp(ft.Column):
     def task_status_change(self, e):
         self.update()
 
+
     def add_clicked(self, e):
-        task = Task(self.new_task.value, self.task_status_change, self.task_delete)
+        task = Task(
+            task_name=self.new_task.value,
+            on_status_change=self.task_status_change,
+            on_delete=self.task_delete,
+        )
+        self.tasks.controls.append(task)
+        self.new_task.value = ""
+        self.update()
     # ...
 
 class Task(ft.Column):
-    def __init__(self, task_name, task_status_change, task_delete):
-        super().__init__()
-        self.completed = False
-        self.task_name = task_name
-        self.task_status_change = task_status_change
-        self.task_delete = task_delete
-        self.display_task = ft.Checkbox(
-            value=False, label=self.task_name, on_change=self.status_changed
-        )
-        # ...
+    task_name: str = ""
+    on_status_change: Callable[[], None] = field(default=lambda: None)
+    on_delete: Callable[["Task"], None] = field(default=lambda task: None)
+
+    # ...
 
     def status_changed(self, e):
         self.completed = self.display_task.value
@@ -234,11 +231,7 @@ Run the app and try filtering tasks by clicking on the tabs:
 
 {{ image("../examples/tutorials/todo/media/filtering.gif", alt="filtering", width="80%") }}
 
-
-## Final touches
-
-Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control)
-displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
+Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control) displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
 
 /// details | Full code
     type: example
