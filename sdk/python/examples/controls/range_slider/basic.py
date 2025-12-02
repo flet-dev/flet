@@ -21,7 +21,7 @@ def main(page: ft.Page):
                     inactive_color=ft.Colors.GREEN_300,
                     active_color=ft.Colors.GREEN_700,
                     overlay_color=ft.Colors.GREEN_100,
-                    label="{value}%",
+                    label="{value}",
                 ),
             ],
         )

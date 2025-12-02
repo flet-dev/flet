@@ -80,7 +80,7 @@ async def test_hour_formats(flet_app_function: ftt.FletTestApp):
         )
 
     async def _settle():
-        await flet_app_function.tester.pump_and_settle()
+        await flet_app_function.tester.pump_and_settle(ft.Duration(milliseconds=500))
 
     async def _open_picker():
         await flet_app_function.tester.tap(

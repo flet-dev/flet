@@ -88,6 +88,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
+            type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
             default="auto",
             help="Flutter web renderer to use",
@@ -95,6 +96,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
+            type=str.lower,
             choices=["path", "hash"],
             default="path",
             help="Controls how routes are handled in the browser",
