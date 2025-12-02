@@ -62,7 +62,7 @@ def main(page: ft.Page):
             join_user_name.error_text = "Name cannot be blank!"
             join_user_name.update()
         else:
-            page.session.set("user_name", join_user_name.value)
+            page.session.store.set("user_name", join_user_name.value)
             welcome_dlg.open = False
             new_message.prefix = ft.Text(f"{join_user_name.value}: ")
             page.pubsub.send_all(
@@ -78,7 +78,7 @@ def main(page: ft.Page):
         if new_message.value != "":
             page.pubsub.send_all(
                 Message(
-                    page.session.get("user_name"),
+                    page.session.store.get("user_name"),
                     new_message.value,
                     message_type="chat_message",
                 )
