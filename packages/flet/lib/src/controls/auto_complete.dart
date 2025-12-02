@@ -1,8 +1,8 @@
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/auto_complete.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class AutoCompleteControl extends StatefulWidget {

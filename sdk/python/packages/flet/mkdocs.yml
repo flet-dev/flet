@@ -434,11 +434,14 @@ nav:
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
           - SearchBar: controls/searchbar.md
-          - SegmentedButton: controls/segmentedbutton.md
+          - SegmentedButton:
+              - controls/segmentedbutton.md
+              - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
           - ShaderMask: controls/shadermask.md
+          - Shimmer: controls/shimmer.md
           - ShakeDetector: controls/shakedetector.md
           - Screenshot: controls/screenshot.md
           - Slider: controls/slider.md
@@ -466,7 +469,10 @@ nav:
           - Overview: cli/index.md
           - flet build: cli/flet-build.md
           - flet create: cli/flet-create.md
+          - flet debug: cli/flet-debug.md
+          - flet devices: cli/flet-devices.md
           - flet doctor: cli/flet-doctor.md
+          - flet emulators: cli/flet-emulators.md
           - flet pack: cli/flet-pack.md
           - flet publish: cli/flet-publish.md
           - flet run: cli/flet-run.md

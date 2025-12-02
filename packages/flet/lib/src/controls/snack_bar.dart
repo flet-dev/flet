@@ -79,6 +79,7 @@ class SnackBarControl extends StatelessWidget {
       elevation: control.getDouble("elevation"),
       duration:
           control.getDuration("duration", const Duration(milliseconds: 4000))!,
+      persist: control.getBool("persist"),
     );
   }
 

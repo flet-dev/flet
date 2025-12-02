@@ -42,6 +42,7 @@ class _ViewControlState extends State<ViewControl> {
   Control? _overlay;
   Control? _dialogs;
   Completer<bool>? _popCompleter;
+  bool _allowPop = false;
 
   @override
   void initState() {
@@ -64,6 +65,7 @@ class _ViewControlState extends State<ViewControl> {
   void dispose() {
     debugPrint("View.dispose: ${widget.control.id}");
     _overlay?.removeListener(_overlayOrDialogsChanged);
+    _dialogs?.removeListener(_overlayOrDialogsChanged);
     widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
@@ -92,6 +94,9 @@ class _ViewControlState extends State<ViewControl> {
   }
 
   void _overlayOrDialogsChanged() {
+    if (!mounted) {
+      return;
+    }
     setState(() {});
   }
 
@@ -168,10 +173,6 @@ class _ViewControlState extends State<ViewControl> {
         overlayWidgets.add(PageMedia(view: widget.control.parent));
       }
 
-      var windowControl = control.parent?.get("window");
-      if (windowControl != null && isRootView && isDesktopPlatform()) {
-        overlayWidgets.add(ControlWidget(control: windowControl));
-      }
     }
 
     Widget body = Stack(children: [
@@ -243,22 +244,21 @@ class _ViewControlState extends State<ViewControl> {
 
     var backend = FletBackend.of(context);
     var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage =
-        backend.appStartupScreenMessage ?? "";
+    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage =
-        backend.formatAppErrorMessage(appStatus.error);
+    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     Widget? loadingPage;
     if ((appStatus.isLoading || appStatus.error != "") &&
         showAppStartupScreen) {
       loadingPage = LoadingPage(
         isLoading: appStatus.isLoading,
-        message:
-            appStatus.isLoading ? appStartupScreenMessage : formattedErrorMessage,
+        message: appStatus.isLoading
+            ? appStartupScreenMessage
+            : formattedErrorMessage,
       );
     }
 
@@ -282,7 +282,7 @@ class _ViewControlState extends State<ViewControl> {
     }
 
     result = PopScope(
-        canPop: control.getBool("can_pop", true)!,
+        canPop: _allowPop || control.getBool("can_pop", true)!,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop || !control.getBool("on_confirm_pop", false)!) {
             return;
@@ -303,7 +303,22 @@ class _ViewControlState extends State<ViewControl> {
               if (isRootView) {
                 SystemNavigator.pop();
               } else {
-                Navigator.pop(context);
+                if (mounted) {
+                  setState(() {
+                    _allowPop = true;
+                  });
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted) {
+                      return;
+                    }
+                    Navigator.pop(context, true);
+                    if (mounted) {
+                      setState(() {
+                        _allowPop = false;
+                      });
+                    }
+                  });
+                }
               }
             }
           }).onError((e, st) {/* do nothing */});

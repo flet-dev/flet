@@ -13,7 +13,7 @@ DEFAULT_VERSION = "0.1.0"
 version = ""
 
 
-def update_version():
+def from_git():
     """Try to get the version from Git tags."""
     working = Path().absolute()
     try:
@@ -64,7 +64,7 @@ def find_repo_root(start_path: Path) -> Path | None:
 if not version and not is_mobile():
     # Only try to get the version from Git if the pre-set version is empty
     # This is more likely to happen in a development/source environment
-    version = update_version() or DEFAULT_VERSION  # Fallback to a default if Git fails
+    version = from_git() or DEFAULT_VERSION  # Fallback to a default if Git fails
 
 # If 'version' is still empty after the above (e.g., in a built package
 # where CI didn't replace it), it might be appropriate to have another

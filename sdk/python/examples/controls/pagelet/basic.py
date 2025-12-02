@@ -4,32 +4,28 @@ import flet as ft
 
 
 def main(page: ft.Page):
+    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+    page.vertical_alignment = ft.CrossAxisAlignment.CENTER
+
     async def handle_show_drawer(e: ft.Event[ft.FloatingActionButton]):
         await pagelet.show_drawer()
 
-    async def handle_show_end_drawer():
+    async def handle_show_end_drawer(e: ft.Event[ft.Button]):
         await pagelet.show_end_drawer()
         await asyncio.sleep(3)
         await pagelet.close_end_drawer()
 
     page.add(
         pagelet := ft.Pagelet(
-            width=400,
-            height=400,
+            width=500,
+            height=500,
             appbar=ft.AppBar(
-                title=ft.Text("Pagelet AppBar Title"),
-                bgcolor=ft.Colors.AMBER_ACCENT,
+                title=ft.Text("Pagelet AppBar"),
+                center_title=True,
+                bgcolor=ft.Colors.RED_500,
             ),
-            content=ft.Container(
-                ft.Column(
-                    [
-                        ft.Text("Pagelet Body"),
-                        ft.Button("Show end drawer", on_click=handle_show_end_drawer),
-                    ]
-                ),
-                padding=ft.Padding.all(16),
-            ),
-            bgcolor=ft.Colors.AMBER_100,
+            content=ft.Text("Pagelet Body"),
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             bottom_appbar=ft.BottomAppBar(
                 bgcolor=ft.Colors.BLUE,
                 shape=ft.CircularRectangleNotchShape(),
@@ -71,13 +67,13 @@ def main(page: ft.Page):
                 ],
             ),
             floating_action_button=ft.FloatingActionButton(
-                content="Open",
+                icon=ft.Icons.ADD,
                 shape=ft.CircleBorder(),
-                on_click=handle_show_drawer,
             ),
             floating_action_button_location=ft.FloatingActionButtonLocation.CENTER_DOCKED,
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

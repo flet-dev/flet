@@ -4,13 +4,11 @@ import 'package:markdown/markdown.dart' as md;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
 import '../utils/numbers.dart';
 import '../utils/uri.dart';
-import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'highlight_view.dart';
 
@@ -51,17 +49,9 @@ class MarkdownControl extends StatelessWidget {
         },
         styleSheet: mdStyleSheet,
         imageBuilder: (Uri uri, String? title, String? alt) {
-          String s = uri.toString();
-          var srcBase64 = isBase64ImageString(s) ? s : null;
-          var src = isUrlOrPath(s) ? s : null;
-          if (src == null && srcBase64 == null) {
-            return ErrorControl("Invalid image URI: $s");
-          }
-
           return buildImage(
               context: context,
-              src: src,
-              srcBase64: srcBase64,
+              src: uri.toString(),
               semanticsLabel: alt,
               disabled: control.disabled,
               errorCtrl: control.buildWidget("image_error_content"));
