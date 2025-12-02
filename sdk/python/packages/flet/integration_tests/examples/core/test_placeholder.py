@@ -6,16 +6,16 @@ import flet.testing as ftt
 from examples.controls.placeholder import basic
 
 
-# @pytest.mark.asyncio(loop_scope="function")
-# async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
-#     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-#     await flet_app_function.assert_control_screenshot(
-#         request.node.name,
-#         ft.Placeholder(
-#             expand=True,
-#             color=ft.Colors.RED_500,
-#         ),
-#     )
+@pytest.mark.asyncio(loop_scope="function")
+async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Placeholder(
+            expand=True,
+            color=ft.Colors.RED_500,
+        ),
+    )
 
 
 @pytest.mark.parametrize(
