@@ -10,14 +10,20 @@ def main(page: ft.Page):
         message.value = f"Button clicked {button.data} time(s)"
         page.update()
 
+    button = ft.OutlinedButton(
+        content="Button with 'click' event",
+        data=0,
+        on_click=handle_button_click,
+    )
+    message = ft.Text()
+
     page.add(
-        button := ft.OutlinedButton(
-            content="Button with 'click' event",
-            data=0,
-            on_click=handle_button_click,
-        ),
-        message := ft.Text(),
+        ft.Container(
+            content=ft.Column(controls=[button, message]),
+            alignment=ft.Alignment.CENTER,
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -28,8 +28,6 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     pb = await flet_app_function.tester.find_by_key("popup")
     await flet_app_function.tester.tap(pb)
     await flet_app_function.tester.pump_and_settle()
-    # for _ in range(5):
-    #     await flet_app_function.tester.pump(100)
     flet_app_function.page.update()
     flet_app_function.assert_screenshot(
         request.node.name,
