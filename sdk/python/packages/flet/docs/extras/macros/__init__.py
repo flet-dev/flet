@@ -188,7 +188,7 @@ def define_env(env):
 
         return render_iframe(
             route=route,
-            base="/apps/examples-gallery/dist/#/",
+            base="https://flet-examples-gallery.fly.dev/",
             width=width,
             height=height,
             title=title,
@@ -217,12 +217,12 @@ def define_env(env):
         src=None,
         *,
         route=None,
-        base="/apps/examples-gallery/dist/#/",
-        width="100%",
-        height="480",
-        title=None,
-        allow=None,
-        loading="lazy",
+        base: Optional[str] = None,
+        width: str = "100%",
+        height: str = "480",
+        title: Optional[str] = None,
+        allow: Optional[str] = None,
+        loading: str = "lazy",
     ):
         """Render an iframe for a route or external source."""
         return render_iframe(

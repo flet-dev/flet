@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Callable, Union
 
 import flet as ft
+import flet.version
 
 Runner = Callable[[ft.Page], Union[None, Awaitable[None]]]
 
@@ -37,8 +38,8 @@ def discover_examples():
     for path in sorted(EXAMPLES_ROOT.rglob("*.py")):
         # skip files/folders not supported on pyodide or otherwise excluded
         non_pyodide = {"matplotlib_chart"}
-        exclude = (
-            {"media", "ads"} | (non_pyodide if sys.platform == "emscripten" else set())
+        exclude = {"media", "ads"} | (
+            non_pyodide if sys.platform == "emscripten" else set()
         )
 
         if path.name.startswith("_") or any(
@@ -127,10 +128,16 @@ async def main(page: ft.Page):
 
     def render_home():
         page.appbar = ft.AppBar(
-            title=ft.Text("Flet examples", weight=ft.FontWeight.W_600),
+            title=ft.Text("Flet Examples Gallery", weight=ft.FontWeight.W_600),
             center_title=False,
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             automatically_imply_leading=False,
+            actions=[
+                ft.Container(
+                    padding=10,
+                    content=ft.Text(f"Flet version: {ft.version.version}", size=12),
+                )
+            ],
         )
         page.clean()
 
@@ -212,6 +219,9 @@ async def main(page: ft.Page):
 
     def reset_page():
         page.appbar = None
+        page.bottom_appbar = None
+        page.drawer = None
+        page.end_drawer = None
         page.clean()
         page.overlay.clear()
         page.pop_dialog()

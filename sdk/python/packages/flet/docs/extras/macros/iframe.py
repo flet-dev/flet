@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 # Default iframe base can be overridden for local dev via FLET_IFRAME_BASE.
 # Points to the published examples gallery bundled with the docs.
 DEFAULT_IFRAME_BASE = os.environ.get(
-    "FLET_IFRAME_BASE", "/apps/examples-gallery/dist/index.html#/"
+    "FLET_IFRAME_BASE", "https://flet-examples-gallery.fly.dev/"
 )
 
 
