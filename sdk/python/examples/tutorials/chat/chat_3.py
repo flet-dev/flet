@@ -19,7 +19,7 @@ def main(page: ft.Page):
             chat.controls.append(ft.Text(f"{message.user}: {message.text}"))
         elif message.message_type == "login_message":
             chat.controls.append(
-                ft.Text(message.text, italic=True, color=ft.Colors.BLACK45, size=12)
+                ft.Text(message.text, italic=True, color=ft.Colors.BLACK_45, size=12)
             )
         page.update()
 
@@ -28,7 +28,7 @@ def main(page: ft.Page):
     def send_click(e):
         page.pubsub.send_all(
             Message(
-                user=page.session.get("user_name"),
+                user=page.session.store.get("user_name"),
                 text=new_message.value,
                 message_type="chat_message",
             )
@@ -43,8 +43,9 @@ def main(page: ft.Page):
             user_name.error_text = "Name cannot be blank!"
             user_name.update()
         else:
-            page.session.set("user_name", user_name.value)
-            page.dialog.open = False
+            page.session.store.set("user_name", user_name.value)
+            # page.dialog.open = False
+            page.pop_dialog()
             page.pubsub.send_all(
                 Message(
                     user=user_name.value,
@@ -54,13 +55,15 @@ def main(page: ft.Page):
             )
             page.update()
 
-    page.dialog = ft.AlertDialog(
-        open=True,
-        modal=True,
-        title=ft.Text("Welcome!"),
-        content=ft.Column([user_name], tight=True),
-        actions=[ft.Button(content="Join chat", on_click=join_click)],
-        actions_alignment=ft.MainAxisAlignment.END,
+    page.show_dialog(
+        ft.AlertDialog(
+            open=True,
+            modal=True,
+            title=ft.Text("Welcome!"),
+            content=ft.Column([user_name], tight=True),
+            actions=[ft.Button(content="Join chat", on_click=join_click)],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
     )
 
     page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
