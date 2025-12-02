@@ -36,11 +36,7 @@ if str(PROJECT_PY_ROOT) not in sys.path:
 def discover_examples():
     controls: dict[str, list[dict[str, object]]] = {}
     for path in sorted(EXAMPLES_ROOT.rglob("*.py")):
-        # skip files/folders not supported on pyodide or otherwise excluded
-        non_pyodide = {"matplotlib_chart"}
-        exclude = {"media", "ads"} | (
-            non_pyodide if sys.platform == "emscripten" else set()
-        )
+        exclude = {"media", "ads"}
 
         if path.name.startswith("_") or any(
             part.startswith("__") or part in exclude for part in path.parts

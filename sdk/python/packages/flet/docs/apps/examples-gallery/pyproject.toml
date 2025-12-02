@@ -29,7 +29,7 @@ dependencies = [
 
 [tool.uv]
 dev-dependencies = [
-  "flet[all]>=0.70.0.dev0",
+    "flet[all]>=0.70.0.dev0",
 ]
 prerelease = "allow"
 
