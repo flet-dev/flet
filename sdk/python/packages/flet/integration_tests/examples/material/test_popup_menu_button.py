@@ -46,13 +46,13 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
-async def test_determinate_and_indeterminate(flet_app_function: ftt.FletTestApp):
+async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
     pb = await flet_app_function.tester.find_by_key("popup")
     await flet_app_function.tester.tap(pb)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "determinate_and_indeterminate",
+        "basic",
         await flet_app_function.page.take_screenshot(delay=ft.Duration(seconds=15)),
     )
