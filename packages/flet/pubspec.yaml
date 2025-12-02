@@ -36,7 +36,7 @@ dependencies:
   path_provider: ^2.1.5
   provider: ^6.1.2
   screenshot: ^3.0.0
-  sensors_plus: ^6.1.1
+  sensors_plus: ^7.0.0
   shared_preferences: 2.5.3
   shimmer: ^3.0.0
   url_launcher: 6.3.2
@@ -50,10 +50,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-
-flutter:
-
-  # To add assets to your package, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg

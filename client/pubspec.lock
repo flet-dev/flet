@@ -1122,10 +1122,10 @@ packages:
     dependency: transitive
     description:
       name: sensors_plus
-      sha256: "89e2bfc3d883743539ce5774a2b93df61effde40ff958ecad78cd66b1a8b8d52"
+      sha256: "56e8cd4260d9ed8e00ecd8da5d9fdc8a1b2ec12345a750dfa51ff83fcf12e3fa"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "7.0.0"
   sensors_plus_platform_interface:
     dependency: transitive
     description:
