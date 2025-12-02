@@ -1,19 +1,9 @@
-import asyncio
-
 import flet as ft
 
 
 def main(page: ft.Page):
     page.horizontal_alignment = ft.MainAxisAlignment.CENTER
     page.vertical_alignment = ft.CrossAxisAlignment.CENTER
-
-    async def handle_show_drawer(e: ft.Event[ft.FloatingActionButton]):
-        await pagelet.show_drawer()
-
-    async def handle_show_end_drawer(e: ft.Event[ft.Button]):
-        await pagelet.show_end_drawer()
-        await asyncio.sleep(3)
-        await pagelet.close_end_drawer()
 
     page.add(
         pagelet := ft.Pagelet(

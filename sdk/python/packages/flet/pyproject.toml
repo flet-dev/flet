@@ -31,6 +31,9 @@ web = ["flet-web"]
 [project.scripts]
 flet = "flet.cli:main"
 
+[project.entry-points."mkdocs.plugins"]
+examples_gallery = "flet.docs_plugins.examples_gallery:ExamplesGalleryPlugin"
+
 [dependency-groups]
 extensions = [
     "flet-ads",
@@ -87,6 +90,7 @@ docs = [
     "mkdocs-external-images",
     "mkdocs-macros-plugin>=1.5.0",
     "flet-cli",
+    "flet-web",
     { include-group = 'extensions' },
     { include-group = 'docs-coverage' },
 ]

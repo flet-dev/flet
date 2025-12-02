@@ -1,22 +1,15 @@
 ---
 class_name: flet.ProgressBar
 examples: ../../examples/controls/progress_bar
-example_images: ../examples/controls/progress_bar/media
 ---
 
 {{ class_summary(class_name) }}
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/progressbar)
-
 ### Determinate and indeterminate progress bars
 
-```python
---8<-- "{{ examples }}/determinate_and_indeterminate.py"
-```
-
-{{ image(example_images + "/determinate_and_indeterminate.gif", alt="determinate-and-indeterminate", width="80%") }}
+{{ code_and_demo(examples + "/determinate_and_indeterminate.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

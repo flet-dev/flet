@@ -8,26 +8,13 @@ example_images: ../test-images/examples/core/golden/macos/stack
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/stack)
-
-
-
 ### Avatar with online status
 
-```python
---8<-- "{{ examples }}/online_avatar.py"
-```
-
-{{ image(example_images + "/online_avatar.png", alt="online-avatar", width="80%") }}
-
+{{ code_and_demo(examples + "/online_avatar.py", demo_height="420", demo_width="100%") }}
 
 ### Absolute positioning
 
-```python
---8<-- "{{ examples }}/absolute_positioning.py"
-```
-
-{{ image(example_images + "/absolute_positioning.png", alt="absolute-positioning", width="80%") }}
+{{ code_and_demo(examples + "/absolute_positioning.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

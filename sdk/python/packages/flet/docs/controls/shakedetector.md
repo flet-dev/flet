@@ -9,8 +9,6 @@ examples: ../../examples/controls/shake_detector
 
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
+{{ code(examples + "/basic.py") }}
 
 {{ class_members(class_name) }}

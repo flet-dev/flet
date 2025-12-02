@@ -1,7 +1,7 @@
-import flet_charts as fch
 import plotly.graph_objects as go
 
 import flet as ft
+import flet_charts as fch
 
 
 def main(page: ft.Page):
@@ -13,4 +13,5 @@ def main(page: ft.Page):
     page.add(fch.PlotlyChart(figure=fig, expand=True))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

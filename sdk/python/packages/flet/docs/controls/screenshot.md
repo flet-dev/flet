@@ -9,8 +9,7 @@ examples: ../../examples/controls/screenshot
 
 ### Taking control screenshot
 
-```python
---8<-- "{{ examples }}/taking_screenshot.py"
-```
+{{ code_and_demo(examples + "/taking_screenshot.py", demo_height="420", demo_width="100%") }}
+
 
 {{ class_members(class_name) }}

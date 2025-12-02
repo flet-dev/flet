@@ -1,12 +1,8 @@
-import logging
-
 import matplotlib.pyplot as plt
 import numpy as np
 
 import flet as ft
 import flet_charts
-
-logging.basicConfig(level=logging.INFO)
 
 
 def main(page: ft.Page):
@@ -33,4 +29,5 @@ def main(page: ft.Page):
     page.add(flet_charts.MatplotlibChartWithToolbar(figure=fig))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

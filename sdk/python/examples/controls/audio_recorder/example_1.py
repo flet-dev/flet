@@ -1,10 +1,5 @@
-import logging
-
-import flet_audio_recorder as far
-
 import flet as ft
-
-logging.basicConfig(level=logging.DEBUG)
+import flet_audio_recorder as far
 
 
 def main(page: ft.Page):
@@ -43,7 +38,7 @@ def main(page: ft.Page):
             await recorder.pause_recording()
 
     async def handle_resume(e: ft.Event[ft.Button]):
-        print(f"isPaused: {await recorder.is_paused()}")
+        print(f"is_paused: {await recorder.is_paused()}")
         if await recorder.is_paused():
             await recorder.resume_recording()
 
@@ -69,4 +64,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

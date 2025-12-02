@@ -1,8 +1,10 @@
 import os
+from typing import Optional
 from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
 from .controls_overview import render_controls_overview
+from .iframe import render_iframe
 
 
 def define_env(env):
@@ -35,6 +37,10 @@ def define_env(env):
         separate_signature=True,
         **extra_options,
     ):
+        """
+        Return a full directive block for a class including bases,
+        summary and extra options.
+        """
         options = {
             "show_root_toc_entry": True,
             "show_bases": True,
@@ -55,6 +61,9 @@ def define_env(env):
 
     @env.macro
     def image(src, alt=None, width=None, caption=None, link=None):
+        """
+        Return a markdown image block with optional width, caption and link wrappers.
+        """
         if alt is None:
             parsed_src = urlparse(src)
             path = parsed_src.path or src
@@ -83,6 +92,7 @@ def define_env(env):
         image_caption=None,
         **options,
     ):
+        """Render a compact class summary with optional image and summary directive."""
         summary_options = {
             "show_bases": True,
             "summary": {
@@ -114,6 +124,7 @@ def define_env(env):
 
     @env.macro
     def class_members(class_name):
+        """Render a directive showing the members/children of the given class."""
         options = {
             "extra": {
                 "show_children": True,
@@ -123,10 +134,104 @@ def define_env(env):
 
     @env.macro
     def flet_cli_as_markdown(command: str = "", subcommands_only: bool = True):
+        """Render the Flet CLI help for a command as Markdown."""
         return render_flet_cli_as_markdown(
             command=command, subcommands_only=subcommands_only
         )
 
     @env.macro
     def controls_overview():
+        """Return the pre-rendered controls overview content."""
         return render_controls_overview()
+
+    @env.macro
+    def code(path: str):
+        """
+        Renders a python code snippet from the filepath.
+        """
+        lines = [
+            "````python",
+            f'--8<-- "{path if path.endswith(".py") else path + ".py"}"',
+            "````",
+        ]
+
+        return "\n".join(lines)
+
+    @env.macro
+    def demo(
+        route_or_path: str,
+        *,
+        width: str = "100%",
+        height: str = "350",
+        title: Optional[str] = None,
+    ):
+        """
+        Embed an examples gallery route as an iframe.
+
+        `route_or_path` may be:
+        - a gallery route, e.g. "slider/basic"
+        - or a file path like "../../examples/controls/slider/basic.py"
+        """
+        route = route_or_path
+
+        # Strip known prefixes
+        for prefix in ["../../examples/controls/"]:
+            if route.startswith(prefix):
+                route = route.removeprefix(prefix)
+                break
+
+        # Strip known suffixes
+        for suffix in [".py", "/"]:
+            if route.endswith(suffix):
+                route = route.removesuffix(suffix)
+                break
+
+        return render_iframe(
+            route=route,
+            base="https://flet-examples-gallery.fly.dev/",
+            width=width,
+            height=height,
+            title=title,
+        )
+
+    @env.macro
+    def code_and_demo(
+        path: str,
+        *,
+        demo_width: str = "100%",
+        demo_height: str = "350",
+        demo_title: str = None,
+    ):
+        """
+        Renders a python code snippet from the filepath together with its demo iframe.
+        """
+        return (
+            code(path)
+            + "\n\n"
+            + demo(path, width=demo_width, height=demo_height, title=demo_title)
+            + "\n"
+        )
+
+    @env.macro
+    def iframe(
+        src=None,
+        *,
+        route=None,
+        base: Optional[str] = None,
+        width: str = "100%",
+        height: str = "480",
+        title: Optional[str] = None,
+        allow: Optional[str] = None,
+        loading: str = "lazy",
+    ):
+        """Render an iframe for a route or external source."""
+        return render_iframe(
+            src=src,
+            route=route,
+            base=base,
+            width=width,
+            height=height,
+            title=title,
+            allow=allow,
+            loading=loading,
+        )

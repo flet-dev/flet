@@ -9,8 +9,6 @@ examples: ../../examples/controls/semantics_service
 
 ### Retrieve accessibility features
 
-```python
---8<-- "{{ examples }}/accessibility_features.py"
-```
+{{ code_and_demo(examples + "/accessibility_features.py", demo_height="420", demo_width="100%") }}
 
 {{ class_members(class_name) }}

@@ -10,6 +10,7 @@ dependencies = [
     "flet-cli",
     "flet-desktop",
     "flet-web",
+    # extensions
     "flet-ads",
     "flet-audio",
     "flet-audio-recorder",

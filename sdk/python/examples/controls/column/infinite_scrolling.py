@@ -37,4 +37,5 @@ def main(page: ft.Page):
     page.add(ft.Container(cl, border=ft.Border.all(1)))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -8,23 +8,13 @@ example_images: ../test-images/examples/material/golden/macos/time_picker
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/timepicker)
-
 ### Basic Example
 
-```python
---8<-- "{{ examples }}/basic.py"
-```
-
-{{ image(example_images + "/basic.png", width="80%") }}
+{{ code_and_demo(examples + "/basic.py", demo_height="420", demo_width="100%") }}
 
 ### Hour Formats
 
-```python
---8<-- "{{ examples }}/hour_formats.py"
-```
-
-{{ image(example_images + "/hour_formats.gif", width="80%") }}
+{{ code_and_demo(examples + "/hour_formats.py", demo_height="420", demo_width="100%") }}
 
 
 {{ class_members(class_name) }}

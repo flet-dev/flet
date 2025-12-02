@@ -16,4 +16,5 @@ async def main(page: ft.Page):
     page.update()
 
 
-ft.run(main, view=ft.AppView.FLET_APP_HIDDEN)
+if __name__ == "__main__":
+    ft.run(main, view=ft.AppView.FLET_APP_HIDDEN)
