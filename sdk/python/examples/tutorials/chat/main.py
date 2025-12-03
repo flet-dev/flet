@@ -1,29 +1,35 @@
+from dataclasses import dataclass
+
 import flet as ft
 
 
+@dataclass
 class Message:  # noqa: B903
-    def __init__(self, user_name: str, text: str, message_type: str):
-        self.user_name = user_name
-        self.text = text
-        self.message_type = message_type
+    user_name: str
+    text: str
+    message_type: str
 
 
+# @ft.control
 class ChatMessage(ft.Row):
+    # message: Message | None = field(default_factory=lambda: None)
+
     def __init__(self, message: Message):
         super().__init__()
+        self.message = message
         self.vertical_alignment = ft.CrossAxisAlignment.START
         self.controls = [
             ft.CircleAvatar(
-                content=ft.Text(self.get_initials(message.user_name)),
+                content=ft.Text(self.get_initials(self.message.user_name)),
                 color=ft.Colors.WHITE,
-                bgcolor=self.get_avatar_color(message.user_name),
+                bgcolor=self.get_avatar_color(self.message.user_name),
             ),
             ft.Column(
                 tight=True,
                 spacing=5,
                 controls=[
-                    ft.Text(message.user_name, weight=ft.FontWeight.BOLD),
-                    ft.Text(message.text, selectable=True),
+                    ft.Text(self.message.user_name, weight=ft.FontWeight.BOLD),
+                    ft.Text(self.message.text, selectable=True),
                 ],
             ),
         ]
@@ -91,7 +97,7 @@ def main(page: ft.Page):
         if message.message_type == "chat_message":
             m = ChatMessage(message)
         elif message.message_type == "login_message":
-            m = ft.Text(message.text, italic=True, color=ft.Colors.BLACK45, size=12)
+            m = ft.Text(message.text, italic=True, color=ft.Colors.BLACK_45, size=12)
         chat.controls.append(m)
         page.update()
 
@@ -137,7 +143,7 @@ def main(page: ft.Page):
     page.add(
         ft.Container(
             content=chat,
-            border=ft.border.all(1, ft.Colors.OUTLINE),
+            border=ft.Border.all(1, ft.Colors.OUTLINE),
             border_radius=5,
             padding=10,
             expand=True,
