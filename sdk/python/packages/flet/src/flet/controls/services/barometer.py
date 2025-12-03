@@ -20,9 +20,27 @@ class Barometer(Service):
     and weather-related experiences.
 
     Note:
-        Supported platforms: Android, iOS. Barometer APIs are not exposed on the Web
-        or desktop platforms and iOS ignores custom sampling intervals.
-    """
+        * Supported platforms: Android, iOS.
+        * Barometer APIs are not exposed on the web or desktop platforms.
+        * iOS ignores custom sampling intervals.
+
+    /// admonition | Running on iOS
+        type: danger
+    On iOS you must also include a key called `NSMotionUsageDescription`
+    in your app's `Info.plist` file. This key provides a message that tells
+    the user why the app is requesting access to the device's motion data.
+    Barometer service needs access to motion data to get barometer data.
+
+    For example, add the following to your `pyproject.toml` file:
+    ```toml
+    [tool.flet.ios.info]
+    NSMotionUsageDescription = "This app requires access to the barometer to provide altitude information."
+    ```
+
+    **Adding `NSMotionUsageDescription` is a requirement and not doing so will
+    crash your app when it attempts to access motion data.**
+    ///
+    """  # noqa: E501
 
     enabled: bool = True
     """

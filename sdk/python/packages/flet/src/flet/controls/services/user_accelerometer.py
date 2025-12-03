@@ -26,8 +26,8 @@ class UserAccelerometer(Service):
     from [`AccelerometerReadingEvent`][flet.].
 
     Note:
-        Supported platforms: Android, iOS, Web. Web ignores requested sampling
-        intervals and iOS apps must declare `NSMotionUsageDescription`.
+        * Supported platforms: Android, iOS, web.
+        * Web ignores requested sampling intervals.
     """
 
     enabled: bool = True

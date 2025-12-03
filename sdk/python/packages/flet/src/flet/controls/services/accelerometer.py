@@ -33,8 +33,8 @@ class Accelerometer(Service):
     Accelerometer reports zero acceleration if the device is free falling.
 
     Note:
-        Supported platforms: Android, iOS, Web. Web ignores requested sampling
-        intervals and iOS apps must declare `NSMotionUsageDescription`.
+        * Supported platforms: Android, iOS, web.
+        * Web ignores requested sampling intervals.
     """
 
     enabled: bool = True

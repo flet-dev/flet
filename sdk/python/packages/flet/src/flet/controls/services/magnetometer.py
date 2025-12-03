@@ -20,8 +20,9 @@ class Magnetometer(Service):
     use cases.
 
     Note:
-        Supported platforms: Android, iOS. Magnetometer APIs are not available on Web
-        or desktop, so always handle `on_error` to detect unsupported hardware.
+        * Supported platforms: Android, iOS.
+        * Magnetometer APIs are not available on web
+          or desktop, so always handle `on_error` to detect unsupported hardware.
     """
 
     enabled: bool = True

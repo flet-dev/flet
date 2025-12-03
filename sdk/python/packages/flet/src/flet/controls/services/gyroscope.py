@@ -19,8 +19,8 @@ class Gyroscope(Service):
     reporting device rotation rate around each axis in `rad/s`.
 
     Note:
-        Supported platforms: Android, iOS, Web (sampling interval
-        hints are ignored on Web).
+        * Supported platforms: Android, iOS, web.
+        * Web ignores requested sampling intervals.
     """
 
     enabled: bool = True

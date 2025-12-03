@@ -12,16 +12,15 @@ def main(page: ft.Page):
     def handle_error(e: ft.SensorErrorEvent):
         page.add(ft.Text(f"Magnetometer error: {e.message}"))
 
-    page.session.store.set(
-        "magnetometer_service",
+    page.services = [
         ft.Magnetometer(
             on_reading=handle_reading,
             on_error=handle_error,
             interval=ft.Duration(milliseconds=200),
         ),
-    )
+    ]
 
-    page.add(intro, reading)
+    page.controls = [intro, reading]
 
 
 ft.run(main)

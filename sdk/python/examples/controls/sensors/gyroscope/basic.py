@@ -12,16 +12,15 @@ def main(page: ft.Page):
     def handle_error(e: ft.SensorErrorEvent):
         page.add(ft.Text(f"Gyroscope error: {e.message}"))
 
-    page.session.store.set(
-        "gyroscope_service",
+    page.services = [
         ft.Gyroscope(
             on_reading=handle_reading,
             on_error=handle_error,
-            interval=ft.Duration(milliseconds=50),
+            interval=ft.Duration(milliseconds=100),
         ),
-    )
+    ]
 
-    page.add(intro, reading)
+    page.controls = [intro, reading]
 
 
 ft.run(main)

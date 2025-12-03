@@ -15,16 +15,15 @@ def main(page: ft.Page):
     def handle_error(e: ft.SensorErrorEvent):
         page.add(ft.Text(f"UserAccelerometer error: {e.message}"))
 
-    page.session.store.set(
-        "user_accelerometer_service",
+    page.services = [
         ft.UserAccelerometer(
             on_reading=handle_reading,
             on_error=handle_error,
             interval=ft.Duration(milliseconds=100),
         ),
-    )
+    ]
 
-    page.add(intro, reading)
+    page.controls = [intro, reading]
 
 
 ft.run(main)
