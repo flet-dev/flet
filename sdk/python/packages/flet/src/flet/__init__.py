@@ -447,6 +447,7 @@ from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.services.user_accelerometer import UserAccelerometer
+from flet.controls.services.wakelock import Wakelock
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     StrutStyle,
@@ -1001,6 +1002,7 @@ __all__ = [
     "View",
     "ViewPopEvent",
     "VisualDensity",
+    "Wakelock",
     "WebBrowserName",
     "WebDeviceInfo",
     "WebRenderer",

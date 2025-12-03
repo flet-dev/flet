@@ -118,6 +118,7 @@ import 'services/screen_brightness.dart';
 import 'services/storage_paths.dart';
 import 'services/tester.dart';
 import 'services/url_launcher.dart';
+import 'services/wakelock.dart';
 import 'services/window.dart';
 import 'utils/cupertino_icons.dart';
 import 'utils/material_icons.dart';
@@ -404,6 +405,8 @@ class FletCoreExtension extends FletExtension {
         return UserAccelerometerService(control: control);
       case "UrlLauncher":
         return UrlLauncherService(control: control);
+      case "Wakelock":
+        return WakelockService(control: control);
       default:
         return null;
     }

@@ -464,6 +464,7 @@ nav:
           - VerticalDivider: controls/verticaldivider.md
           - Video: video/index.md
           - View: controls/view.md
+          - Wakelock: controls/wakelock.md
           - WebView: webview/index.md
           - WindowDragArea: controls/windowdragarea.md
       - CLI:
