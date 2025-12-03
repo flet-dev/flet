@@ -33,7 +33,7 @@ class Accelerometer(Service):
     Accelerometer reports zero acceleration if the device is free falling.
 
     Note:
-        * Supported platforms: Android, iOS, web.
+        * Supported platforms: Android, iOS.
         * Web ignores requested sampling intervals.
     """
 

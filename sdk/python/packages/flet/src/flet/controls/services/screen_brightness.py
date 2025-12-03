@@ -12,12 +12,28 @@ __all__ = ["ScreenBrightness", "ScreenBrightnessChangeEvent"]
 @dataclass
 class ScreenBrightnessChangeEvent(Event["ScreenBrightness"]):
     brightness: float
+    """
+    The new screen brightness, in range `0.0..1.0`.
+    """
 
 
 @control("ScreenBrightness")
 class ScreenBrightness(Service):
     """
     Provides access to control and observe system and application screen brightness.
+
+    Note:
+        * Supported platforms: Android, iOS.
+
+    /// admonition | Running on Android
+        type: warning
+    To adjust the system brightness on Android, add the following permission
+    in your `pyproject.toml` file:
+    ```toml
+    [tool.flet.android.permission]
+    "android.permission.WRITE_SETTINGS" = true
+    ```
+    ///
     """
 
     on_system_screen_brightness_change: Optional[

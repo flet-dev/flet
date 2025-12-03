@@ -1,6 +1,6 @@
 ---
 class_name: flet.ScreenBrightness
-examples: ../../../../examples/controls/screen_brightness
+examples: ../../examples/controls/screen_brightness
 ---
 
 {{ class_summary(class_name) }}

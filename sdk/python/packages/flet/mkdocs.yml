@@ -441,10 +441,10 @@ nav:
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
           - ScreenBrightness: controls/screenbrightness.md
+          - Screenshot: controls/screenshot.md
           - ShaderMask: controls/shadermask.md
           - Shimmer: controls/shimmer.md
           - ShakeDetector: controls/shakedetector.md
-          - Screenshot: controls/screenshot.md
           - Slider: controls/slider.md
           - SnackBar: controls/snackbar.md
           - Stack: controls/stack.md
@@ -890,6 +890,7 @@ nav:
               - ScaleEndEvent: types/scaleendevent.md
               - ScaleStartEvent: types/scalestartevent.md
               - ScaleUpdateEvent: types/scaleupdateevent.md
+              - ScreenBrightnessChangeEvent: types/screenbrightnesschangeevent.md
               - ScrollEvent: types/scrollevent.md
               - TabBarHoverEvent: types/tabbarhoverevent.md
               - TapEvent: types/tapevent.md

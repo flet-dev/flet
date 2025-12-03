@@ -26,7 +26,7 @@ class UserAccelerometer(Service):
     from [`AccelerometerReadingEvent`][flet.].
 
     Note:
-        * Supported platforms: Android, iOS, web.
+        * Supported platforms: Android, iOS.
         * Web ignores requested sampling intervals.
     """
 
