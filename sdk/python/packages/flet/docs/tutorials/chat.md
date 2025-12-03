@@ -1,5 +1,6 @@
 ---
 title: Chat Tutorial
+examples: ../../examples/tutorials/chat
 ---
 
 In this tutorial we are going to create a trivial in-memory Chat app that will help you understand Flet framework basics.
@@ -25,8 +26,7 @@ You can try the live demo [here](https://flet-chat.fly.dev).
 
 It's a tradition to start with "Hello, world!" app!
 
-To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript,
-but you do need a basic knowledge of Python and object-oriented programming.
+To create a multi-platform app in Python with Flet, you don't need to know HTML, CSS or JavaScript, but you do need a basic knowledge of Python and object-oriented programming.
 
 Before you can create your first Flet app, you need to [setup your development environment](../getting-started/installation.md).
 
@@ -57,6 +57,7 @@ The layout for this step could look like this:
 
 
 To implement this layout, we will be using these Flet controls:
+
 * [`Column`][flet.Column] - a container to display chat messages (`Text` controls) vertically.
 * [`Text`][flet.Text] - chat message displayed in the chat Column.
 * [`TextField`][flet.TextField] - input control used for taking new message input from the user.
@@ -65,31 +66,15 @@ To implement this layout, we will be using these Flet controls:
 
 Create `chat.py` with the following contents:
 
-```python title="chat.py"
-import flet as ft
-
-def main(page: ft.Page):
-    chat = ft.Column()
-    new_message = ft.TextField()
-
-    def send_click(e):
-        chat.controls.append(ft.Text(new_message.value))
-        new_message.value = ""
-        page.update()
-
-    page.add(
-        chat, ft.Row(controls=[new_message, ft.Button("Send", on_click=send_click)])
-    )
-
-ft.run(main)
+```python
+--8<-- "{{ examples }}/chat_1.py"
 ```
 
 When user clicks on the "Send" button, it triggers [`on_click`][flet.Button.on_click] event which calls `send_click` method. `send_click`
 then adds new [`Text`][flet.Text] control to the list of [`Column.controls`][flet.Column.controls] and clears `new_message` text field value.
 
 /// admonition | Note
-After any properties of a control are updated, an `update()` method of the control (or its parent control)
-should be called for the update to take effect.
+After any properties of a control are updated in event handler, there is no need to call an `update()` method as the update will be done automatically, but it should be called in case properties are updated outside of the event.
 ///
 
 Chat app now looks like this:
@@ -134,7 +119,7 @@ In the `handler` we will be adding new message (`Text`) to the list of chat `con
 Finally, you need to call `pubsub.send_all()` method when the user clicks on "Send" button:
 ```python
     def send_click(e):
-        page.pubsub.send_all(Message(user=page.session_id, text=new_message.value))
+        page.pubsub.send_all(Message(user=page.session.id, text=new_message.value))
         new_message.value = ""
         page.update()
 
@@ -145,33 +130,8 @@ Finally, you need to call `pubsub.send_all()` method when the user clicks on "Se
 
 Here is the full code for this step:
 
-```python title="chat.py"
-import flet as ft
-
-class Message():
-    def __init__(self, user: str, text: str):
-        self.user = user
-        self.text = text
-
-def main(page: ft.Page):
-
-    chat = ft.Column()
-    new_message = ft.TextField()
-
-    def on_message(message: Message):
-        chat.controls.append(ft.Text(f"{message.user}: {message.text}"))
-        page.update()
-
-    page.pubsub.subscribe(on_message)
-
-    def send_click(e):
-        page.pubsub.send_all(Message(user=page.session_id, text=new_message.value))
-        new_message.value = ""
-        page.update()
-
-    page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
-
-ft.run(main)
+```python
+--8<-- "{{ examples }}/chat_2.py"
 ```
 
 {{ image("../examples/tutorials/chat/media/chat-2.gif", alt="chat-2", width="80%") }}
@@ -179,23 +139,22 @@ ft.run(main)
 
 ## User name dialog
 
-Chat app that you have created in the previous step has basic functionality needed to exchange messages
-between user sessions. It is not very user-friendly though, since it shows `session_id` that sent a message,
-which doesn't tell much about who you are communicating with.
+Chat app that you have created in the previous step has basic functionality needed to exchange messages between user sessions. It is not very user-friendly though, since it shows `session.id` that sent a message, which doesn't tell much about who you are communicating with.
 
-Let's improve our app to show user name instead of `session_id` for each message. To capture user name,
-we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the page:
+Let's improve our app to show user name instead of `session.id` for each message. To capture user name we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the page:
 
 ```python
     user_name = ft.TextField(label="Enter your name")
 
-    page.dialog = ft.AlertDialog(
-        open=True,
-        modal=True,
-        title=ft.Text("Welcome!"),
-        content=ft.Column([user_name], tight=True),
-        actions=[ft.Button(text="Join chat", on_click=join_click)],
-        actions_alignment="end",
+    page.show_dialog(
+        ft.AlertDialog(
+            open=True,
+            modal=True,
+            title=ft.Text("Welcome!"),
+            content=ft.Column([user_name], tight=True),
+            actions=[ft.Button(content="Join chat", on_click=join_click)],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
     )
 ```
 
@@ -206,9 +165,7 @@ A dialog will be opened on the start of the program since we have set its `open`
 {{ image("../examples/tutorials/chat/media/username-dialog.png", alt="username-dialog", width="80%") }}
 
 
-When the user clicks on "Join chat" button, it will call `join_click` method that should send a message to
-all subscribers, informing them that the user has joined the chat. This message should look different
-from the regular chat message, for example, like this:
+When the user clicks on "Join chat" button, it will call `join_click` method that should send a message to all subscribers, informing them that the user has joined the chat. This message should look different from the regular chat message, for example, like this:
 
 {{ image("../examples/tutorials/chat/media/chat-4.png", alt="chat-4", width="80%") }}
 
@@ -216,11 +173,11 @@ from the regular chat message, for example, like this:
 Let's add `message_type` property to the `Message` class to differentiate between login and chat messages:
 
 ```python
-class Message():
-    def __init__(self, user: str, text: str, message_type: str):
-        self.user = user
-        self.text = text
-        self.message_type = message_type
+@dataclass
+class Message:
+    user: str
+    text: str
+    message_type: str
 ```
 
 We will be checking `message_type` in `on_message` method:
@@ -248,16 +205,14 @@ def join_click(e):
         user_name.update()
     else:
         page.session.set("user_name", user_name.value)
-        page.dialog.open = False
+        page.pop_dialog()
         page.pubsub.send_all(Message(user=user_name.value, text=f"{user_name.value} has joined the chat.", message_type="login_message"))
-        page.update()
 ```
 
-We used [page session storage](../cookbook/session-storage.md) to store user_name for its future use in
-`send_click` method to send chat messages.
+We used [page session storage](../cookbook/session-storage.md) to store user_name for its future use in `send_click` method to send chat messages.
 
 /// admonition | Note
-User name dialog will close as soon as we set its `open` property to `False` and call `update()` method.
+User name dialog will close as soon as we call `page.pop_dialog()` method.
 ///
 
 Finally, let's update `send_click` method to use `user_name` that we previously saved using `page.session`:
@@ -266,7 +221,6 @@ Finally, let's update `send_click` method to use `user_name` that we previously 
 def send_click(e):
     page.pubsub.send_all(Message(user=page.session.get('user_name'), text=new_message.value, message_type="chat_message"))
     new_message.value = ""
-    page.update()
 ```
 
 /// details | Code
@@ -285,8 +239,7 @@ def send_click(e):
 Chat app that you have created in the previous step already serves its purpose of
 exchanging messages between users with basic login functionality.
 
-Before moving on to [deploying your app](#deploying-the-app), we suggest adding some extra features
-to it that will improve user experience and make the app look more professional.
+Before moving on to [deploying your app](#deploying-the-app), we suggest adding some extra features to it that will improve user experience and make the app look more professional.
 
 ### Reusable user controls
 
@@ -298,36 +251,38 @@ You may want to show messages in a different format, like this:
 Chat message will now be a [`Row`][flet.Row] containing [`CircleAvatar`][flet.CircleAvatar] with username initials and
 [`Column`][flet.Column] that contains two [`Text`][flet.Text] controls: user name and message text.
 
-We will need to show quite a few chat messages in the chat app, so it makes sense to create
-your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage`
-class that will inherit from [`Row`][flet.Row].
+We will need to show quite a few chat messages in the chat app, so it makes sense to create your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage` dataclass that will inherit from [`Row`][flet.Row].
 
-When creating an instance of `ChatMessage` class, we will pass a `Message` object as an
-argument and then `ChatMessage` will display itself based on `message.user_name` and `message.text`:
+When creating an instance of `ChatMessage` class, we will pass a `Message` object as an argument and then `ChatMessage` will display itself based on `message.user_name` and `message.text`:
 
 ```python
+@ft.control
 class ChatMessage(ft.Row):
     def __init__(self, message: Message):
         super().__init__()
+        self.message = message
         self.vertical_alignment = ft.CrossAxisAlignment.START
-        self.controls=[
-                ft.CircleAvatar(
-                    content=ft.Text(self.get_initials(message.user_name)),
-                    color=ft.Colors.WHITE,
-                    bgcolor=self.get_avatar_color(message.user_name),
-                ),
-                ft.Column(
-                    [
-                        ft.Text(message.user_name, weight="bold"),
-                        ft.Text(message.text, selectable=True),
-                    ],
-                    tight=True,
-                    spacing=5,
-                ),
-            ]
+        self.controls = [
+            ft.CircleAvatar(
+                content=ft.Text(self.get_initials(self.message.user_name)),
+                color=ft.Colors.WHITE,
+                bgcolor=self.get_avatar_color(self.message.user_name),
+            ),
+            ft.Column(
+                tight=True,
+                spacing=5,
+                controls=[
+                    ft.Text(self.message.user_name, weight=ft.FontWeight.BOLD),
+                    ft.Text(self.message.text, selectable=True),
+                ],
+            ),
+        ]
 
     def get_initials(self, user_name: str):
-        return user_name[:1].capitalize()
+        if user_name:
+            return user_name[:1].capitalize()
+        else:
+            return "Unknown"  # or any default value you prefer
 
     def get_avatar_color(self, user_name: str):
         colors_lookup = [
@@ -437,11 +392,9 @@ Below you can read more about the enhancements that we have made.
 #### Focusing input controls
 
 All data entry controls have `autofocus` property which when set to `True` moves
-initial focus to the control. If there is more than one control on a page with `autofocus` set,
-then the first one added to the page will get focus.
+initial focus to the control. If there is more than one control on a page with `autofocus` set, then the first one added to the page will get focus.
 
-We set `autofocus=True` on a username TextField inside a dialog and then on a TextField
-for entering chat message to set initial focus on it when the dialog is closed.
+We set `autofocus=True` on a username TextField inside a dialog and then on a TextField for entering chat message to set initial focus on it when the dialog is closed.
 
 When a user click "Send" button or presses Enter to submit a chat message, TextField loses focus.
 To programmatically set control focus we used [`TextField.focus()`][flet.TextField.focus] method.
@@ -449,18 +402,14 @@ To programmatically set control focus we used [`TextField.focus()`][flet.TextFie
 #### Submitting forms on `Enter`
 
 It's so tempting to submit forms with just pushing `Enter` button on the keyboard!
-Type your name in the dialog, hit `Enter`, type a new message, hit `Enter`, type another,
-hit `Enter` - no mouse involved at all! 🚀
+Type your name in the dialog, hit `Enter`, type a new message, hit `Enter`, type another, hit `Enter` - no mouse involved at all! 🚀
 
-Flet has support for that by providing [`TextField.on_submit`][flet.TextField.on_submit] event handler which fires
-when a user press `Enter` button while the focus is on the TextField.
+Flet has support for that by providing [`TextField.on_submit`][flet.TextField.on_submit] event handler which fires when a user press `Enter` button while the focus is on the TextField.
 
 #### Entering multiline messages
 
 What about multiline TextFields where `Enter` must advance a cursor to the next line?
-We've got that covered too! `TextField` control has [`shift_enter`][flet.TextField.shift_enter] property which when set
-to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while
-hitting just `Enter` submits a form.
+We've got that covered too! `TextField` control has [`shift_enter`][flet.TextField.shift_enter] property which when set to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while hitting just `Enter` submits a form.
 
 ### Animated scrolling to the last message
 

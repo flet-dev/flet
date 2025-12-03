@@ -34,14 +34,12 @@ def main(page: ft.Page):
             )
         )
         new_message.value = ""
-        page.update()
 
     user_name = ft.TextField(label="Enter your name")
 
     def join_click(e):
         if not user_name.value:
             user_name.error_text = "Name cannot be blank!"
-            user_name.update()
         else:
             page.session.store.set("user_name", user_name.value)
             # page.dialog.open = False
@@ -53,7 +51,6 @@ def main(page: ft.Page):
                     message_type="login_message",
                 )
             )
-            page.update()
 
     page.show_dialog(
         ft.AlertDialog(

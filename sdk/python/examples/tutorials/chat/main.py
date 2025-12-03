@@ -10,10 +10,8 @@ class Message:  # noqa: B903
     message_type: str
 
 
-# @ft.control
+@ft.control
 class ChatMessage(ft.Row):
-    # message: Message | None = field(default_factory=lambda: None)
-
     def __init__(self, message: Message):
         super().__init__()
         self.message = message
@@ -78,7 +76,6 @@ def main(page: ft.Page):
                     message_type="login_message",
                 )
             )
-            page.update()
 
     async def send_message_click(e):
         if new_message.value != "":
@@ -91,7 +88,6 @@ def main(page: ft.Page):
             )
             new_message.value = ""
             await new_message.focus()
-            page.update()
 
     def on_message(message: Message):
         if message.message_type == "chat_message":
