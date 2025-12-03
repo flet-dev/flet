@@ -79,6 +79,18 @@ class NavigationDrawer(AdaptiveControl):
 
     Navigation Drawer is a panel slides in horizontally from the left or right edge of
     a page to show primary destinations in an app.
+
+    ```python
+    ft.NavigationDrawer(
+        controls=[
+            ft.NavigationDrawerDestination(label="Item 1"),
+            ft.NavigationDrawerDestination(label="Item 2"),
+            ft.NavigationDrawerDestination(label="Item 3"),
+        ],
+        tile_padding=ft.Padding(top=10),
+    )
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)
