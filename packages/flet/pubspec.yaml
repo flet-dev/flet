@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^2.1.5
   provider: ^6.1.2
   screenshot: ^3.0.0
+  screen_brightness: ^2.1.0
   sensors_plus: ^7.0.0
   shared_preferences: 2.5.3
   shimmer: ^3.0.0

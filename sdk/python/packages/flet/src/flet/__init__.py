@@ -428,6 +428,10 @@ from flet.controls.services.file_picker import (
 from flet.controls.services.gyroscope import Gyroscope
 from flet.controls.services.haptic_feedback import HapticFeedback
 from flet.controls.services.magnetometer import Magnetometer
+from flet.controls.services.screen_brightness import (
+    ScreenBrightness,
+    ScreenBrightnessChangeEvent,
+)
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
 from flet.controls.services.sensor_events import (
     AccelerometerReadingEvent,
@@ -892,6 +896,8 @@ __all__ = [
     "ScaleStartEvent",
     "ScaleUpdateEvent",
     "ScaleValue",
+    "ScreenBrightness",
+    "ScreenBrightnessChangeEvent",
     "Screenshot",
     "ScrollDirection",
     "ScrollEvent",

@@ -10,6 +10,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   permission_handler_windows
   record_windows
   rive_common
+  screen_brightness_windows
   screen_retriever_windows
   url_launcher_windows
   volume_controller

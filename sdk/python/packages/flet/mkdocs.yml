@@ -440,6 +440,7 @@ nav:
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
+          - ScreenBrightness: controls/screenbrightness.md
           - ShaderMask: controls/shadermask.md
           - Shimmer: controls/shimmer.md
           - ShakeDetector: controls/shakedetector.md

@@ -114,6 +114,7 @@ import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/sensors.dart';
 import 'services/shared_preferences.dart';
+import 'services/screen_brightness.dart';
 import 'services/storage_paths.dart';
 import 'services/tester.dart';
 import 'services/url_launcher.dart';
@@ -391,6 +392,8 @@ class FletCoreExtension extends FletExtension {
         return SemanticsServiceControl(control: control);
       case "Magnetometer":
         return MagnetometerService(control: control);
+      case "ScreenBrightness":
+        return ScreenBrightnessService(control: control);
       case "StoragePaths":
         return StoragePaths(control: control);
       case "Window":
