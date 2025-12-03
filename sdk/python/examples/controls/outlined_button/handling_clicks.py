@@ -18,9 +18,11 @@ def main(page: ft.Page):
     message = ft.Text()
 
     page.add(
-        ft.Container(
-            content=ft.Column(controls=[button, message]),
-            alignment=ft.Alignment.CENTER,
+        ft.Column(
+            controls=[button, message],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            expand=True,
         )
     )
 
