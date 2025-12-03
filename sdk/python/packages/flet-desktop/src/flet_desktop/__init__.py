@@ -210,9 +210,8 @@ def __download_flet_client(file_name):
     ver = flet_desktop.version.version
     if not ver:
         import flet.version
-        from flet.version import update_version
 
-        ver = flet.version.version or update_version()
+        ver = flet.version.version or flet.version.from_git()
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
     logger.info(f"Downloading Flet v{ver} from {flet_url} to {temp_arch}")
