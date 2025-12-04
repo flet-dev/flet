@@ -13,6 +13,14 @@ __all__ = ["Placeholder"]
 class Placeholder(LayoutControl):
     """
     A placeholder box.
+
+    ```python
+    ft.Placeholder(
+        expand=True,
+        color=ft.Colors.RED_500,
+    )
+    ```
+
     """
 
     content: Optional[Control] = None
