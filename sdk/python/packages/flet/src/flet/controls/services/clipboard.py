@@ -8,30 +8,18 @@ __all__ = ["Clipboard"]
 
 @control("Clipboard")
 class Clipboard(Service):
+    """
+    Provides access to the system clipboard.
+    """
+
     async def set(self, value: str) -> None:
         """
-        Set clipboard data on a client side (user's web browser or a desktop).
-
-        /// details | Example
-            type: example
-
-        ```python
-        Example - TBD
-        ```
-        ///
+        Stores the given clipboard data on the clipboard.
         """
         await self._invoke_method("set", {"data": value})
 
     async def get(self) -> Optional[str]:
         """
-        Set clipboard data on a client side (user's web browser or a desktop).
-
-        /// details | Example
-            type: example
-
-        ```python
-        Example - TBD
-        ```
-        ///
+        Retrieves data from the clipboard.
         """
         return await self._invoke_method("get")

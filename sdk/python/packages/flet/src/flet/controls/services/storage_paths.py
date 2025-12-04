@@ -11,6 +11,8 @@ __all__ = ["StoragePaths"]
 @control("StoragePaths")
 class StoragePaths(Service):
     """
+    Provides access to commonly used storage paths on the device.
+
     Note:
         Its methods are not supported in web mode.
     """

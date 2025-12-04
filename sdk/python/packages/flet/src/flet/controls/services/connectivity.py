@@ -10,13 +10,38 @@ __all__ = ["Connectivity", "ConnectivityChangeEvent", "ConnectivityResult"]
 
 
 class ConnectivityResult(Enum):
+    """
+    Connectivity states.
+    """
+
     BLUETOOTH = "bluetooth"
+    """
+    Bluetooth connectivity.
+    """
     ETHERNET = "ethernet"
+    """
+    Ethernet connectivity.
+    """
     MOBILE = "mobile"
+    """
+    Mobile data connectivity.
+    """
     NONE = "none"
+    """
+    No connectivity.
+    """
     OTHER = "other"
+    """
+    Other connectivity.
+    """
     VPN = "vpn"
+    """
+    VPN connectivity.
+    """
     WIFI = "wifi"
+    """
+    Wi-Fi connectivity.
+    """
 
 
 @dataclass
@@ -32,7 +57,7 @@ class ConnectivityChangeEvent(Event["Connectivity"]):
 @control("Connectivity")
 class Connectivity(Service):
     """
-    Provides connectivity status and change notifications.
+    Provides device connectivity status and change notifications.
     """
 
     on_connectivity_change: Optional[EventHandler[ConnectivityChangeEvent]] = None

@@ -9,6 +9,10 @@ __all__ = ["Service"]
 
 @dataclass(kw_only=True)
 class Service(BaseControl):
+    """
+    Base class for user services.
+    """
+
     def init(self):
         super().init()
         with contextlib.suppress(RuntimeError):

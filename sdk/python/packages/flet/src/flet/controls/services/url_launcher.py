@@ -9,6 +9,10 @@ __all__ = ["UrlLauncher"]
 
 @control("UrlLauncher")
 class UrlLauncher(Service):
+    """
+    Provides access to URL launching capabilities.
+    """
+
     async def launch_url(
         self,
         url: Union[str, Url],

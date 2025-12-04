@@ -10,11 +10,30 @@ __all__ = ["Battery", "BatteryState", "BatteryStateChangeEvent"]
 
 
 class BatteryState(Enum):
+    """
+    Battery state.
+    """
+
     CHARGING = "charging"
+    """
+    The battery is currently charging.
+    """
     CONNECTED_NOT_CHARGING = "connectedNotCharging"
+    """
+    The battery is connected to a power source but not charging.
+    """
     DISCHARGING = "discharging"
+    """
+    The battery is discharging.
+    """
     FULL = "full"
+    """
+    The battery is fully charged.
+    """
     UNKNOWN = "unknown"
+    """
+    The battery state is unknown.
+    """
 
 
 @dataclass
