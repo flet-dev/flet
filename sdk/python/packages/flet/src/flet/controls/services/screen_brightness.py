@@ -11,6 +11,10 @@ __all__ = ["ScreenBrightness", "ScreenBrightnessChangeEvent"]
 
 @dataclass
 class ScreenBrightnessChangeEvent(Event["ScreenBrightness"]):
+    """
+    Event fired when screen brightness changes.
+    """
+
     brightness: float
     """
     The new screen brightness, in range `0.0..1.0`.

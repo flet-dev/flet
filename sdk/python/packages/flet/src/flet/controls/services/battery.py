@@ -19,7 +19,14 @@ class BatteryState(Enum):
 
 @dataclass
 class BatteryStateChangeEvent(Event["Battery"]):
+    """
+    Event fired when battery state changes.
+    """
+
     state: BatteryState
+    """
+    Current battery state.
+    """
 
 
 @control("Battery")

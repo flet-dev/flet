@@ -276,6 +276,7 @@ nav:
           - Banner: controls/banner.md
           - Barometer: controls/barometer.md
           - Battery: controls/battery.md
+          - Connectivity: controls/connectivity.md
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
           - Button: controls/button.md
@@ -855,6 +856,8 @@ nav:
               - BarometerReadingEvent: types/barometerreadingevent.md
               - BatteryState: types/batterystate.md
               - BatteryStateChangeEvent: types/batterystatechangeevent.md
+              - ConnectivityResult: types/connectivityresult.md
+              - ConnectivityChangeEvent: types/connectivitychangeevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
               - ContextMenuDismissEvent: types/contextmenudismissevent.md
               - ContextMenuSelectEvent: types/contextmenuselectevent.md

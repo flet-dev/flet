@@ -423,6 +423,11 @@ from flet.controls.services.battery import (
 )
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.clipboard import Clipboard
+from flet.controls.services.connectivity import (
+    Connectivity,
+    ConnectivityChangeEvent,
+    ConnectivityResult,
+)
 from flet.controls.services.file_picker import (
     FilePicker,
     FilePickerFile,
@@ -647,6 +652,9 @@ __all__ = [
     "Colors",
     "Column",
     "Component",
+    "Connectivity",
+    "ConnectivityChangeEvent",
+    "ConnectivityResult",
     "ConstrainedControl",
     "Container",
     "Context",
