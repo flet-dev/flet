@@ -454,8 +454,8 @@ from flet.controls.services.sensor_events import (
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.share import (
-    CupertinoActivityType,
     Share,
+    ShareCupertinoActivityType,
     ShareFile,
     ShareResult,
     ShareResultStatus,
@@ -679,7 +679,6 @@ __all__ = [
     "CupertinoActionSheet",
     "CupertinoActionSheetAction",
     "CupertinoActivityIndicator",
-    "CupertinoActivityType",
     "CupertinoAlertDialog",
     "CupertinoAppBar",
     "CupertinoBottomSheet",
@@ -946,6 +945,7 @@ __all__ = [
     "ShakeDetector",
     "ShapeBorder",
     "Share",
+    "ShareCupertinoActivityType",
     "ShareFile",
     "ShareResult",
     "ShareResultStatus",

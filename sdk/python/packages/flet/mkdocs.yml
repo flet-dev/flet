@@ -902,7 +902,7 @@ nav:
               - ShareResult: types/shareresult.md
               - ShareResultStatus: types/shareresultstatus.md
               - ShareFile: types/sharefile.md
-              - CupertinoActivityType: types/cupertinoactivitytype.md
+              - ShareCupertinoActivityType: types/sharecupertinoactivitytype.md
               - ScrollEvent: types/scrollevent.md
               - TabBarHoverEvent: types/tabbarhoverevent.md
               - TapEvent: types/tapevent.md
