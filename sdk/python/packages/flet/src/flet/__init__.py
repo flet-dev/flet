@@ -453,6 +453,13 @@ from flet.controls.services.sensor_events import (
 )
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
+from flet.controls.services.share import (
+    CupertinoActivityType,
+    Share,
+    ShareFile,
+    ShareResult,
+    ShareResultStatus,
+)
 from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.services.url_launcher import UrlLauncher
@@ -672,6 +679,7 @@ __all__ = [
     "CupertinoActionSheet",
     "CupertinoActionSheetAction",
     "CupertinoActivityIndicator",
+    "CupertinoActivityType",
     "CupertinoAlertDialog",
     "CupertinoAppBar",
     "CupertinoBottomSheet",
@@ -937,6 +945,10 @@ __all__ = [
     "ShaderMask",
     "ShakeDetector",
     "ShapeBorder",
+    "Share",
+    "ShareFile",
+    "ShareResult",
+    "ShareResultStatus",
     "SharedPreferences",
     "Shimmer",
     "ShimmerDirection",

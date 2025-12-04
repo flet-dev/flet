@@ -443,6 +443,7 @@ nav:
           - Semantics: controls/semantics.md
           - SemanticsService: controls/semanticsservice.md
           - ScreenBrightness: controls/screenbrightness.md
+          - Share: controls/share.md
           - Screenshot: controls/screenshot.md
           - ShaderMask: controls/shadermask.md
           - Shimmer: controls/shimmer.md
@@ -898,6 +899,10 @@ nav:
               - ScaleStartEvent: types/scalestartevent.md
               - ScaleUpdateEvent: types/scaleupdateevent.md
               - ScreenBrightnessChangeEvent: types/screenbrightnesschangeevent.md
+              - ShareResult: types/shareresult.md
+              - ShareResultStatus: types/shareresultstatus.md
+              - ShareFile: types/sharefile.md
+              - CupertinoActivityType: types/cupertinoactivitytype.md
               - ScrollEvent: types/scrollevent.md
               - TabBarHoverEvent: types/tabbarhoverevent.md
               - TapEvent: types/tapevent.md

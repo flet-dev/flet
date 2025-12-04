@@ -112,6 +112,7 @@ import 'services/clipboard.dart';
 import 'services/connectivity.dart';
 import 'services/file_picker.dart';
 import 'services/haptic_feedback.dart';
+import 'services/share.dart';
 import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/sensors.dart';
@@ -385,6 +386,8 @@ class FletCoreExtension extends FletExtension {
         return ClipboardService(control: control);
       case "Connectivity":
         return ConnectivityService(control: control);
+      case "Share":
+        return ShareService(control: control);
       case "FilePicker":
         return FilePickerService(control: control);
       case "HapticFeedback":
