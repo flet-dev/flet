@@ -81,7 +81,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../packages/flet
-  # webview_flutter_android: ^4.0.0
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:
