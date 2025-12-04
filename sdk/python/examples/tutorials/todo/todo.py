@@ -1,13 +1,17 @@
+from dataclasses import field
+from typing import Callable
+
 import flet as ft
 
 
+@ft.control
 class Task(ft.Column):
-    def __init__(self, task_name, task_status_change, task_delete):
-        super().__init__()
+    task_name: str = ""
+    on_status_change: Callable[[], None] = field(default=lambda: None)
+    on_delete: Callable[["Task"], None] = field(default=lambda task: None)
+
+    def init(self):
         self.completed = False
-        self.task_name = task_name
-        self.task_status_change = task_status_change
-        self.task_delete = task_delete
         self.display_task = ft.Checkbox(
             value=False, label=self.task_name, on_change=self.status_changed
         )
@@ -66,16 +70,16 @@ class Task(ft.Column):
 
     def status_changed(self, e):
         self.completed = self.display_task.value
-        self.task_status_change()
+        self.on_status_change()
 
     def delete_clicked(self, e):
-        self.task_delete(self)
+        self.on_delete(self)
 
 
+@ft.control
 class TodoApp(ft.Column):
     # application's root control is a Column containing all other controls
-    def __init__(self):
-        super().__init__()
+    def init(self):
         self.new_task = ft.TextField(hint_text="Whats needs to be done?", expand=True)
         self.tasks = ft.Column()
 
@@ -115,7 +119,11 @@ class TodoApp(ft.Column):
         ]
 
     def add_clicked(self, e):
-        task = Task(self.new_task.value, self.task_status_change, self.task_delete)
+        task = Task(
+            task_name=self.new_task.value,
+            on_status_change=self.task_status_change,
+            on_delete=self.task_delete,
+        )
         self.tasks.controls.append(task)
         self.new_task.value = ""
         self.update()
