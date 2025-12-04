@@ -46,7 +46,7 @@ dependencies:
   web_socket_channel: ^3.0.2
   window_manager: ^0.5.1
   window_to_front: ^0.0.3
-  wakelock_plus: ^1.4.0
+  wakelock_plus: ^1.2.8
 
 dev_dependencies:
   flutter_test:

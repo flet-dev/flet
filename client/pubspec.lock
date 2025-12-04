@@ -783,7 +783,7 @@ packages:
     source: hosted
     version: "1.0.0"
   package_info_plus:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       name: package_info_plus
       sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
@@ -1468,7 +1468,7 @@ packages:
     source: hosted
     version: "3.4.0"
   wakelock_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: wakelock_plus
       sha256: "9296d40c9adbedaba95d1e704f4e0b434be446e2792948d0e4aa977048104228"
