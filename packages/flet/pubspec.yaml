@@ -21,6 +21,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  battery_plus: ^6.2.2
   collection: ^1.19.0
   device_info_plus: ^12.1.0
   equatable: ^2.0.3

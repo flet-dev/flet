@@ -107,6 +107,7 @@ import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
 import 'services/browser_context_menu.dart';
+import 'services/battery.dart';
 import 'services/clipboard.dart';
 import 'services/file_picker.dart';
 import 'services/haptic_feedback.dart';
@@ -377,6 +378,8 @@ class FletCoreExtension extends FletExtension {
         return AccelerometerService(control: control);
       case "Barometer":
         return BarometerService(control: control);
+      case "Battery":
+        return BatteryService(control: control);
       case "Clipboard":
         return ClipboardService(control: control);
       case "FilePicker":

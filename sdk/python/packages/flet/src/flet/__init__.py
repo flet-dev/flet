@@ -416,6 +416,11 @@ from flet.controls.scrollable_control import (
 )
 from flet.controls.services.accelerometer import Accelerometer
 from flet.controls.services.barometer import Barometer
+from flet.controls.services.battery import (
+    Battery,
+    BatteryState,
+    BatteryStateChangeEvent,
+)
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.file_picker import (
@@ -593,6 +598,9 @@ __all__ = [
     "BarometerReadingEvent",
     "BaseControl",
     "BasePage",
+    "Battery",
+    "BatteryState",
+    "BatteryStateChangeEvent",
     "BeveledRectangleBorder",
     "BlendMode",
     "Blur",

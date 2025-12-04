@@ -275,6 +275,7 @@ nav:
           - Badge: types/badge.md
           - Banner: controls/banner.md
           - Barometer: controls/barometer.md
+          - Battery: controls/battery.md
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
           - Button: controls/button.md
@@ -852,6 +853,8 @@ nav:
               - AppLifecycleStateChangeEvent: types/applifecyclestatechangeevent.md
               - AutoCompleteSelectEvent: types/autocompleteselectevent.md
               - BarometerReadingEvent: types/barometerreadingevent.md
+              - BatteryState: types/batterystate.md
+              - BatteryStateChangeEvent: types/batterystatechangeevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
               - ContextMenuDismissEvent: types/contextmenudismissevent.md
               - ContextMenuSelectEvent: types/contextmenuselectevent.md
