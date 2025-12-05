@@ -1,6 +1,6 @@
 ---
 class_name: flet.Barometer
-examples: ../../examples/controls/sensors/barometer
+examples: ../../examples/services/barometer
 ---
 
 {{ class_summary(class_name) }}

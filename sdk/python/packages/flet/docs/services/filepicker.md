@@ -1,7 +1,7 @@
 ---
 class_name: flet.FilePicker
-examples: ../../examples/controls/file_picker
-example_images: ../examples/controls/file_picker/media
+examples: ../../examples/services/file_picker
+example_images: ../examples/services/file_picker/media
 ---
 
 {{ class_summary(class_name) }}

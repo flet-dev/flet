@@ -1,6 +1,5 @@
-import flet_permission_handler as fph
-
 import flet as ft
+import flet_permission_handler as fph
 
 
 def main(page: ft.Page):

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 CONTROLS_INDEX_PATH = "controls/index.md"
+SERVICES_INDEX_PATH = "services/index.md"
 
 
 def _relative_markdown_path(path: str, base_dir: str) -> str:
@@ -145,7 +146,7 @@ def render_sub_nav_overview(nav_name: str) -> str:
     return render_nav_overview(
         ["API Reference", nav_name],
         base_dir=nav_name.lower(),
-        skip_paths={CONTROLS_INDEX_PATH},
+        skip_paths={CONTROLS_INDEX_PATH, SERVICES_INDEX_PATH},
     )
 
 
@@ -154,6 +155,6 @@ if __name__ == "__main__":
         render_nav_overview(
             ["API Reference", "Controls"],
             base_dir="controls",
-            skip_paths={CONTROLS_INDEX_PATH},
+            skip_paths={CONTROLS_INDEX_PATH, SERVICES_INDEX_PATH},
         )
     )

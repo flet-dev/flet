@@ -1,6 +1,6 @@
 ---
 class_name: flet.Gyroscope
-examples: ../../examples/controls/sensors/gyroscope
+examples: ../../examples/services/gyroscope
 ---
 
 {{ class_summary(class_name) }}

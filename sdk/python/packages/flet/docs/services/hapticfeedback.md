@@ -1,6 +1,6 @@
 ---
 class_name: flet.HapticFeedback
-examples: ../../examples/controls/haptic_feedback
+examples: ../../examples/services/haptic_feedback
 ---
 
 {{ class_summary(class_name) }}

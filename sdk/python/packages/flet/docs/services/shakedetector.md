@@ -1,6 +1,6 @@
 ---
 class_name: flet.ShakeDetector
-examples: ../../examples/controls/shake_detector
+examples: ../../examples/services/shake_detector
 ---
 
 {{ class_summary(class_name) }}

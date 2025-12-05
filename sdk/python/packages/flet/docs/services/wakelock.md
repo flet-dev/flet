@@ -1,6 +1,6 @@
 ---
 class_name: flet.Wakelock
-examples: ../../examples/controls/wakelock
+examples: ../../examples/services/wakelock
 ---
 
 {{ class_summary(class_name) }}

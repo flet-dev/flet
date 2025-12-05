@@ -1,6 +1,6 @@
 ---
 class_name: flet.Connectivity
-examples: ../../examples/controls/connectivity
+examples: ../../examples/services/connectivity
 ---
 
 {{ class_summary(class_name) }}

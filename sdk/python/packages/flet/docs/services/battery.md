@@ -1,6 +1,6 @@
 ---
 class_name: flet.Battery
-examples: ../../examples/controls/battery
+examples: ../../examples/services/battery
 ---
 
 {{ class_summary(class_name) }}

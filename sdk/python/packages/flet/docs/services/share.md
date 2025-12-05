@@ -1,6 +1,6 @@
 ---
 class_name: flet.Share
-examples: ../../examples/controls/share
+examples: ../../examples/services/share
 ---
 
 {{ class_summary(class_name) }}

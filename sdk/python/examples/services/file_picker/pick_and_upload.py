@@ -3,7 +3,7 @@
 #
 # Run this example with:
 #    export FLET_SECRET_KEY=<some_secret_key>
-#    uv run flet run --web examples/controls/file_picker/pick_and_upload.py
+#    uv run flet run --web examples/services/file_picker/pick_and_upload.py
 #
 from dataclasses import dataclass, field
 
@@ -28,7 +28,7 @@ def main(page: ft.Page):
                 "Run this example with:\n"
                 "    export FLET_SECRET_KEY=<some_secret_key>\n"
                 "    flet run --web "
-                "examples/controls/file_picker/pick_and_upload.py",
+                "examples/services/file_picker/pick_and_upload.py",
                 color=ft.Colors.RED,
                 selectable=True,
             )

@@ -1,6 +1,6 @@
 ---
 class_name: flet.Magnetometer
-examples: ../../examples/controls/sensors/magnetometer
+examples: ../../examples/services/magnetometer
 ---
 
 {{ class_summary(class_name) }}

@@ -1,8 +1,7 @@
 import logging
 
-import flet_audio_recorder as far
-
 import flet as ft
+import flet_audio_recorder as far
 
 logging.basicConfig(level=logging.DEBUG)
 

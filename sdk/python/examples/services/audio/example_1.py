@@ -1,6 +1,5 @@
-import flet_audio as fta
-
 import flet as ft
+import flet_audio as fta
 
 
 def main(page: ft.Page):

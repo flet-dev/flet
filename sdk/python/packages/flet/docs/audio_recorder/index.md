@@ -1,6 +1,6 @@
 ---
 class_name: flet_audio_recorder.AudioRecorder
-examples: ../../examples/controls/audio_recorder
+examples: ../../examples/services/audio_recorder
 ---
 
 # Audio Recorder

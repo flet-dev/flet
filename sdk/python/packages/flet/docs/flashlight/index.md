@@ -1,6 +1,6 @@
 ---
 class_name: flet_flashlight.Flashlight
-examples: ../../examples/controls/flashlight
+examples: ../../examples/services/flashlight
 ---
 
 # Flashlight

@@ -1,6 +1,5 @@
-import flet_flashlight as ffl
-
 import flet as ft
+import flet_flashlight as ffl
 
 
 def main(page: ft.Page):

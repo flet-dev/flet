@@ -1,6 +1,6 @@
 ---
 class_name: flet.SemanticsService
-examples: ../../examples/controls/semantics_service
+examples: ../../examples/services/semantics_service
 ---
 
 {{ class_summary(class_name) }}

@@ -1,6 +1,6 @@
 ---
 class_name: flet.UserAccelerometer
-examples: ../../examples/controls/sensors/user_accelerometer
+examples: ../../examples/services/user_accelerometer
 ---
 
 {{ class_summary(class_name) }}

@@ -1,8 +1,7 @@
 from typing import Callable
 
-import flet_geolocator as ftg
-
 import flet as ft
+import flet_geolocator as ftg
 
 
 async def main(page: ft.Page):
