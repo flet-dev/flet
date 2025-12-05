@@ -742,8 +742,10 @@ nav:
                   - TextTheme: types/texttheme.md
                   - TimePickerTheme: types/timepickertheme.md
                   - TooltipTheme: types/tooltiptheme.md
+              - BrowserConfiguration: types/browserconfiguration.md
               - Tooltip: types/tooltip.md
               - Url: types/url.md
+              - WebViewConfiguration: types/webviewconfiguration.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
               - Video:
                   - PlaylistMode: video/types/playlist_mode.md
@@ -845,6 +847,7 @@ nav:
               - TimePickerEntryMode: types/timepickerentrymode.md
               - TimePickerHourFormat: types/timepickerhourformat.md
               - TooltipTriggerMode: types/tooltiptriggermode.md
+              - LaunchMode: types/launchmode.md
               - UrlTarget: types/urltarget.md
               - VerticalAlignment: types/verticalalignment.md
               - VisualDensity: types/visualdensity.md

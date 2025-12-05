@@ -28,30 +28,34 @@ class Url {
 /// ```
 Future<void> openWebBrowser(
   Url urlObj, {
-  bool webPopupWindow = false,
-  String? webPopupWindowName,
-  int? webPopupWindowWidth,
-  int? webPopupWindowHeight,
+  LaunchMode mode = LaunchMode.platformDefault,
+  WebViewConfiguration? webViewConfiguration,
+  BrowserConfiguration? browserConfiguration,
+  String? webOnlyWindowName,
 }) async {
-  if (webPopupWindow == true) {
-    // Open a popup browser window (web only)
-    openPopupBrowserWindow(
-      urlObj.url,
-      webPopupWindowName ?? "Flet",
-      webPopupWindowWidth ?? 1200,
-      webPopupWindowHeight ?? 800,
-    );
-  } else {
-    // Open the URL in the default browser or app
-    var target = urlObj.target ?? webPopupWindowName;
-    await launchUrl(
-      Uri.parse(urlObj.url),
-      webOnlyWindowName: target,
-      mode: (target == "_blank")
-          ? LaunchMode.externalApplication
-          : LaunchMode.platformDefault,
-    );
-  }
+  // Open the URL in the default browser or app
+  var target = urlObj.target ?? webOnlyWindowName;
+  var resolvedMode = (target == "_blank" && mode == LaunchMode.platformDefault)
+      ? LaunchMode.externalApplication
+      : mode;
+  await launchUrl(
+    Uri.parse(urlObj.url),
+    mode: resolvedMode,
+    webViewConfiguration: webViewConfiguration ?? const WebViewConfiguration(),
+    browserConfiguration:
+        browserConfiguration ?? const BrowserConfiguration(),
+    webOnlyWindowName: target,
+  );
+}
+
+Future<void> openWindow(
+  Url urlObj, {
+  String? title,
+  double? width,
+  double? height,
+}) async {
+  openPopupBrowserWindow(urlObj.url, title ?? "Flet", (width ?? 1200).round(),
+      (height ?? 800).round());
 }
 
 Url? parseUrl(dynamic value, [Url? defaultValue]) {

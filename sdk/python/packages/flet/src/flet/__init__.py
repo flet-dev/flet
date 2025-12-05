@@ -462,7 +462,12 @@ from flet.controls.services.share import (
 )
 from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.services.url_launcher import UrlLauncher
+from flet.controls.services.url_launcher import (
+    BrowserConfiguration,
+    LaunchMode,
+    UrlLauncher,
+    WebViewConfiguration,
+)
 from flet.controls.services.user_accelerometer import UserAccelerometer
 from flet.controls.services.wakelock import Wakelock
 from flet.controls.template_route import TemplateRoute
@@ -637,6 +642,8 @@ __all__ = [
     "BoxShadowValue",
     "BoxShape",
     "Brightness",
+    "BrowserConfiguration",
+    "BrowserConfiguration",
     "BrowserContextMenu",
     "Button",
     "ButtonStyle",
@@ -807,6 +814,7 @@ __all__ = [
     "KeyboardListener",
     "KeyboardType",
     "LabelPosition",
+    "LaunchMode",
     "LayoutControl",
     "LinearGradient",
     "LinuxDeviceInfo",
@@ -1034,6 +1042,7 @@ __all__ = [
     "WebBrowserName",
     "WebDeviceInfo",
     "WebRenderer",
+    "WebViewConfiguration",
     "Window",
     "WindowDragArea",
     "WindowEvent",
