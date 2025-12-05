@@ -19,6 +19,12 @@ example_media: ../examples/controls/image/media
 
 {{ image(example_media + "/gallery.gif", width="80%") }}
 
+### Fade-in images with a placeholder
+
+```python
+--8<-- "{{ examples }}/fade_in.py"
+```
+
 ### Displaying images from base64 strings and byte data
 
 ```python
