@@ -1,5 +1,16 @@
 ---
 class_name: flet.SharedPreferences
+examples: ../../examples/services/sharedpreferences
 ---
 
-{{ class_all_options(class_name) }}
+{{ class_summary(class_name) }}
+
+## Examples
+
+### Basic Example
+
+```python
+--8<-- "{{ examples }}/basic.py"
+```
+
+{{ class_members(class_name) }}
