@@ -16,4 +16,4 @@ class Service(BaseControl):
     def init(self):
         super().init()
         with contextlib.suppress(RuntimeError):
-            context.page._user_services.register_service(self)
+            context.page._services.register_service(self)
