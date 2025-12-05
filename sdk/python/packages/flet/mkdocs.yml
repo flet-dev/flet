@@ -256,6 +256,7 @@ nav:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
   - API Reference:
+      - Overview: api-reference/index.md
       - Controls:
           - Overview: controls/index.md
           - Ads:
@@ -489,7 +490,8 @@ nav:
           - flet publish: cli/flet-publish.md
           - flet run: cli/flet-run.md
           - flet serve: cli/flet-serve.md
-      - API:
+      - Types:
+          - Overview: types/index.md
           - Aliases: types/aliases.md
           - Base Controls:
               - AdaptiveControl: controls/adaptivecontrol.md
