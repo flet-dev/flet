@@ -67,7 +67,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
-  List<DeviceOrientation>? _appliedDeviceOrientations;
 
   @override
   void initState() {
@@ -154,9 +153,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var backend = FletBackend.of(context);
 
     _pageServices ??= ServiceRegistry(
-        control: widget.control,
-        propertyName: "_services",
-        backend: backend);
+        control: widget.control, propertyName: "_services", backend: backend);
 
     var userServicesControl = widget.control.child("_user_services");
     if (userServicesControl != null) {

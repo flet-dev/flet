@@ -102,7 +102,7 @@ def _format_nav_list(nodes: list[dict[str, Any]], depth: int = 0) -> list[str]:
     return lines
 
 
-def render_controls_overview() -> str:
+def render_sub_nav_overview(nav_name: str) -> str:
     """Produce the controls overview section from mkdocs.yml."""
     from mkdocs.config import load_config
 
@@ -111,8 +111,8 @@ def render_controls_overview() -> str:
     nav_items = config.get("nav") or []
 
     api_reference = _find_nav_branch(nav_items, "API Reference")
-    controls = _find_nav_branch(api_reference, "Controls") if api_reference else None
-    nodes = _build_nav_nodes(controls) if isinstance(controls, list) else []
+    api_section = _find_nav_branch(api_reference, nav_name) if api_reference else None
+    nodes = _build_nav_nodes(api_section) if isinstance(api_section, list) else []
     if not nodes:
         return ""
     lines = _format_nav_list(nodes)
@@ -120,4 +120,4 @@ def render_controls_overview() -> str:
 
 
 if __name__ == "__main__":
-    print(render_controls_overview())
+    print(render_sub_nav_overview("Controls"))

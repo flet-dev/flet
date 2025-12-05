@@ -264,9 +264,6 @@ nav:
               - BaseAd: ads/basead.md
               - InterstitialAd: ads/interstitialad.md
               # - NativeAd: ads/nativead.md
-          - Audio: audio/index.md
-          - AudioRecorder: audio_recorder/index.md
-          - Accelerometer: controls/accelerometer.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -274,9 +271,6 @@ nav:
           - AutofillGroup: controls/autofillgroup.md
           - Badge: types/badge.md
           - Banner: controls/banner.md
-          - Barometer: controls/barometer.md
-          - Battery: controls/battery.md
-          - Connectivity: controls/connectivity.md
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
           - Button: controls/button.md
@@ -360,19 +354,14 @@ nav:
           - ExpansionPanel: controls/expansionpanel.md
           - ExpansionPanelList: controls/expansionpanellist.md
           - ExpansionTile: controls/expansiontile.md
-          - FilePicker: controls/filepicker.md
           - FilledButton: controls/filledbutton.md
           - FilledIconButton: controls/fillediconbutton.md
           - FilledTonalButton: controls/filledtonalbutton.md
           - FilledTonalIconButton: controls/filledtonaliconbutton.md
-          - Flashlight: flashlight/index.md
           - FletApp: controls/fletapp.md
           - FloatingActionButton: controls/floatingactionbutton.md
           - GestureDetector: controls/gesturedetector.md
-          - Geolocator: geolocator/index.md
           - GridView: controls/gridview.md
-          - Gyroscope: controls/gyroscope.md
-          - HapticFeedback: controls/hapticfeedback.md
           - Icon: controls/icon.md
           - IconButton: controls/iconbutton.md
           - Image: controls/image.md
@@ -403,7 +392,6 @@ nav:
                   - TextSourceAttribution: map/text_source_attribution.md
                   - ImageSourceAttribution: map/image_source_attribution.md
           - Markdown: controls/markdown.md
-          - Magnetometer: controls/magnetometer.md
           - MenuBar: controls/menubar.md
           - MenuItemButton: controls/menuitembutton.md
           - MergeSemantics: controls/mergesemantics.md
@@ -423,7 +411,6 @@ nav:
           - Pagelet: controls/pagelet.md
           - Placeholder: controls/placeholder.md
           - PopupMenuButton: controls/popupmenubutton.md
-          - PermissionHandler: permission_handler/index.md
           - ProgressBar: controls/progressbar.md
           - ProgressRing: controls/progressring.md
           - Radio: controls/radio.md
@@ -441,13 +428,9 @@ nav:
               - Segment: controls/segment.md
           - SelectionArea: controls/selectionarea.md
           - Semantics: controls/semantics.md
-          - SemanticsService: controls/semanticsservice.md
-          - ScreenBrightness: controls/screenbrightness.md
-          - Share: controls/share.md
           - Screenshot: controls/screenshot.md
           - ShaderMask: controls/shadermask.md
           - Shimmer: controls/shimmer.md
-          - ShakeDetector: controls/shakedetector.md
           - Slider: controls/slider.md
           - SnackBar: controls/snackbar.md
           - Stack: controls/stack.md
@@ -463,13 +446,37 @@ nav:
           - TextField: controls/textfield.md
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
-          - UserAccelerometer: controls/useraccelerometer.md
           - VerticalDivider: controls/verticaldivider.md
           - Video: video/index.md
           - View: controls/view.md
-          - Wakelock: controls/wakelock.md
           - WebView: webview/index.md
           - WindowDragArea: controls/windowdragarea.md
+      - Services:
+          - Overview: services/index.md
+          - Accelerometer: services/accelerometer.md
+          - Audio: audio/index.md
+          - AudioRecorder: audio_recorder/index.md
+          - Barometer: services/barometer.md
+          - Battery: services/battery.md
+          - BrowserContextMenu: services/browsercontextmenu.md
+          - Clipboard: services/clipboard.md
+          - Connectivity: services/connectivity.md
+          - FilePicker: services/filepicker.md
+          - Flashlight: flashlight/index.md
+          - Geolocator: geolocator/index.md
+          - Gyroscope: services/gyroscope.md
+          - HapticFeedback: services/hapticfeedback.md
+          - Magnetometer: services/magnetometer.md
+          - PermissionHandler: permission_handler/index.md
+          - ScreenBrightness: services/screenbrightness.md
+          - SemanticsService: services/semanticsservice.md
+          - ShakeDetector: services/shakedetector.md
+          - Share: services/share.md
+          - SharedPreferences: services/sharedpreferences.md
+          - StoragePaths: services/storagepaths.md
+          - UrlLauncher: services/urllauncher.md
+          - UserAccelerometer: services/useraccelerometer.md
+          - Wakelock: services/wakelock.md
       - CLI:
           - Overview: cli/index.md
           - flet build: cli/flet-build.md
@@ -526,7 +533,6 @@ nav:
               - BoxConstraints: types/boxconstraints.md
               - BoxDecoration: types/boxdecoration.md
               - BoxShadow: types/boxshadow.md
-              - BrowserContextMenu: types/browsercontextmenu.md
               - ButtonStyle: types/buttonstyle.md
               - Charts:
                   - BarChartEvent: charts/types/bar_chart_event.md
@@ -568,7 +574,6 @@ nav:
                   - ScatterChartSpot: charts/types/scatter_chart_spot.md
                   - ScatterChartSpotTooltip: charts/types/scatter_chart_spot_tooltip.md
                   - ScatterChartTooltip: charts/types/scatter_chart_tooltip.md
-              - Clipboard: controls/clipboard.md
               - ColorFilter: types/colorfilter.md
               - Context: types/context.md
               - ControlState: types/controlstate.md
@@ -681,9 +686,7 @@ nav:
               - Rotate: types/rotate.md
               - Scale: types/scale.md
               - ShapeBorder: types/shapeborder.md
-              - SharedPreferences: controls/sharedpreferences.md
               - Size: types/size.md
-              - StoragePaths: controls/storagepaths.md
               - StrutStyle: types/strutstyle.md
               - TemplateRoute: types/templateroute.md
               - Tester: types/tester.md
@@ -739,7 +742,6 @@ nav:
                   - TooltipTheme: types/tooltiptheme.md
               - Tooltip: types/tooltip.md
               - Url: types/url.md
-              - UrlLauncher: controls/urllauncher.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
               - Video:
                   - PlaylistMode: video/types/playlist_mode.md

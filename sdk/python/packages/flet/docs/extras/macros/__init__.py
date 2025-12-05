@@ -2,7 +2,7 @@ import os
 from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
-from .controls_overview import render_controls_overview
+from .controls_overview import render_sub_nav_overview
 
 
 def define_env(env):
@@ -129,4 +129,8 @@ def define_env(env):
 
     @env.macro
     def controls_overview():
-        return render_controls_overview()
+        return render_sub_nav_overview("Controls")
+
+    @env.macro
+    def services_overview():
+        return render_sub_nav_overview("Services")
