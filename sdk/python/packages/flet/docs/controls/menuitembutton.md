@@ -1,10 +1,10 @@
 ---
 class_name: flet.MenuItemButton
 examples: ../../examples/controls/menu_item_button
-example_images: ../examples/controls/menu_item_button/media
+example_images: ../test-images/examples/material/golden/macos/menu_item_button
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Menu item buttons outside of menubar") }}
 
 ## Examples
 
