@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import sys
 import threading
@@ -424,6 +425,18 @@ class Page(BasePage):
     """
     TBD
     """
+
+    on_first_frame: Optional[ControlEventHandler["Page"]] = None
+    """
+    Called once after the client renders the very first frame.
+
+    Useful for starting implicit animations or other work that must wait until
+    the initial layout completes.
+
+    Pair with [`Page.post_frame_callback()`][flet.Page.post_frame_callback] to register
+    callbacks without wiring up an explicit event handler.
+    """
+
     _services: list[Service] = field(default_factory=list)
     _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
 
@@ -447,6 +460,8 @@ class Page(BasePage):
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__authorization: Optional[Authorization] = None
+        self.__first_frame_callbacks: list[Callable[[], Any]] = []
+        self.__first_frame_fired = False
 
     def get_control(self, id: int) -> Optional[BaseControl]:
         """
@@ -523,7 +538,55 @@ class Page(BasePage):
             if view_index is not None:
                 e.view = views[view_index]
 
+        elif e.name == "first_frame":
+            self.__handle_first_frame_event()
+
         return super().before_event(e)
+
+    def post_frame_callback(self, callback: Callable[[], Any]):
+        """
+        Schedule a callable to run immediately after the page finishes
+        rendering its very first frame.
+
+        Args:
+            callback: A synchronous function or coroutine function to execute after the
+                initial layout completes. Already-rendered pages trigger the callback
+                immediately.
+
+        Raises:
+            TypeError: If `callback` is not callable.
+        """
+        if not callable(callback):
+            raise TypeError("callback must be callable")
+
+        if self.__first_frame_fired:
+            self.__run_first_frame_callback(callback)
+        else:
+            self.__first_frame_callbacks.append(callback)
+
+    def __handle_first_frame_event(self):
+        """Drain and execute callbacks when the Flutter client signals first frame."""
+        if self.__first_frame_fired:
+            return
+
+        self.__first_frame_fired = True
+        callbacks = self.__first_frame_callbacks[:]
+        self.__first_frame_callbacks.clear()
+        for cb in callbacks:
+            self.__run_first_frame_callback(cb)
+
+    def __run_first_frame_callback(self, callback: Callable[[], Any]):
+        """Execute a queued callback asynchronously, awaiting it if needed."""
+
+        async def _runner():
+            try:
+                result = callback()
+                if inspect.isawaitable(result):
+                    await result
+            except Exception:
+                logger.exception("Error running post_frame_callback callback")
+
+        self.run_task(_runner)
 
     def run_task(
         self,
