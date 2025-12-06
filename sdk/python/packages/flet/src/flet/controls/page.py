@@ -385,7 +385,7 @@ class Page(BasePage):
     """
     TBD
     """
-    _services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _services: ServiceRegistry = field(default_factory=ServiceRegistry)
 
     def __post_init__(
         self,
@@ -395,8 +395,6 @@ class Page(BasePage):
         BasePage.__post_init__(self, ref)
         self._i = 1
         self.__session = weakref.ref(sess)
-
-        # page services
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__authorization: Optional[Authorization] = None

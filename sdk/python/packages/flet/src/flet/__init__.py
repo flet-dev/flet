@@ -643,7 +643,6 @@ __all__ = [
     "BoxShape",
     "Brightness",
     "BrowserConfiguration",
-    "BrowserConfiguration",
     "BrowserContextMenu",
     "Button",
     "ButtonStyle",
