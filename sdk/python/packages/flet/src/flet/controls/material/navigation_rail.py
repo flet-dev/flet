@@ -81,6 +81,20 @@ class NavigationRail(LayoutControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to
     navigate between a small number of views, typically between three and five.
+
+    ```python
+    ft.NavigationRail(
+        selected_index=0,
+        destinations=[
+            ft.NavigationRailDestination(icon=ft.Icons.STAR, label="Star"),
+            ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.ADD),label="Add"),
+            ft.NavigationRailDestination(icon=ft.Icons.DELETE, label=ft.Text("Delete")
+        ],
+        height=200,
+        width=100,
+    )
+    ```
+
     """
 
     destinations: list[NavigationRailDestination] = field(default_factory=list)
