@@ -1,6 +1,6 @@
 ---
 class_name: flet_geolocator.Geolocator
-examples: ../../examples/controls/geolocator
+examples: ../../examples/services/geolocator
 ---
 
 # Geolocator

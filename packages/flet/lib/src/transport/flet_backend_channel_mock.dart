@@ -50,8 +50,7 @@ class FletMockBackendChannel implements FletBackendChannel {
             {"_c": "Text", "_i": 20, "text": "OFF1"}
           ]
         },
-        "_user_services": {"_c": "ServiceRegistry", "_i": 10, "services": []},
-        "_page_services": {"_c": "ServiceRegistry", "_i": 11, "services": []},
+        "_services": {"_c": "ServiceRegistry", "_i": 10, "services": []},
         "views": [
           {
             "_c": "View",

@@ -43,4 +43,4 @@ To install the `flet-geolocator` package and add it to your project dependencies
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/examples/controls/geolocator).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/examples/services/geolocator).

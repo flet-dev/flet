@@ -253,7 +253,6 @@ class BasePage(AdaptiveControl):
             [`Page.window`][flet.Page.window] instead.
     """
 
-    services: list[Service] = field(default_factory=list, metadata={"skip": True})
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
@@ -619,6 +618,15 @@ class BasePage(AdaptiveControl):
     @auto_scroll.setter
     def auto_scroll(self, value: bool):
         self.__root_view().auto_scroll = value
+
+    # services
+    @property
+    def services(self) -> list[Service]:
+        return self.__root_view().services
+
+    @services.setter
+    def services(self, value: list[Service]):
+        self.__root_view().services = value
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

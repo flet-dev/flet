@@ -2,10 +2,10 @@
 
 It works on all platforms: Web, macOS, Window, Linux, iOS and Android.
 
-{{ image("../examples/controls/file_picker/media/pick_save_and_get_directory_path.png", alt="File picker all modes demo", width="80%") }}
+{{ image("../examples/services/file_picker/media/pick_save_and_get_directory_path.png", alt="File picker all modes demo", width="80%") }}
 
 
-Check out [source code of the demo above](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/controls/file-picker/pick-save-and-get-directory-path.py).
+Check out [source code of the demo above](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/services/file_picker/pick_save_and_get_directory_path.py).
 
 File picker allows opening three dialogs:
 
@@ -159,10 +159,10 @@ reported for every 10% uploaded.
 The following example demonstrates multiple file uploads:
 
 ```python
---8<-- "../../examples/controls/file_picker/pick_and_upload.py"
+--8<-- "../../examples/services/file_picker/pick_and_upload.py"
 ```
 
-{{ image("../examples/controls/file_picker/media/pick_and_upload.png", alt="File picker multiple uploads", width="80%") }}
+{{ image("../examples/services/file_picker/media/pick_and_upload.png", alt="File picker multiple uploads", width="80%") }}
 
 
 See [`FilePicker`][flet.FilePicker] control docs for all its properties and examples.

@@ -258,7 +258,7 @@ class Session:
             await self.__auto_update(control)
 
         # unregister unreferenced services
-        self.page._user_services.unregister_services()
+        self.page._services.unregister_services()
 
     async def __auto_update(self, control: BaseControl | None):
         while control:

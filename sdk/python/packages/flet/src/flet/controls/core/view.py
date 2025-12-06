@@ -15,6 +15,7 @@ from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
+from flet.controls.services.service import Service
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
     ColorValue,
@@ -160,8 +161,22 @@ class View(ScrollableControl, LayoutControl):
     If `True`, the view is a fullscreen modal dialog.
     """
 
+    services: list[Service] = field(default_factory=list, metadata={"skip": True})
+    """
+    A list of [`Service`][flet.] controls associated with this view.
+    """
+
     can_pop: bool = True
+    """
+    Whether the view can be popped.
+    """
+
     on_confirm_pop: Optional[ControlEventHandler["View"]] = None
+    """
+    An event handler that is called when the view is about to be popped.
+    You can use this event to confirm or cancel the pop action by calling
+    [`confirm_pop`][(c).] method.
+    """
 
     def init(self):
         super().init()

@@ -1,6 +1,6 @@
 ---
 class_name: flet_permission_handler.PermissionHandler
-examples: ../../examples/controls/permission_handler
+examples: ../../examples/services/permission_handler
 ---
 
 # Permission Handler

@@ -113,7 +113,7 @@ def test_simple_page():
     page.bgcolor = Colors.GREEN
     page.fonts = {"font1": "font_url_1", "font2": "font_url_2"}
     page.on_login = lambda e: print("on login")
-    page._user_services._services.append(MyService(prop_1="Hello", prop_2=[1, 2, 3]))
+    page._services._services.append(MyService(prop_1="Hello", prop_2=[1, 2, 3]))
 
     # page and window have hard-coded IDs
     assert page._i == 1
@@ -121,14 +121,11 @@ def test_simple_page():
 
     msg, _, _, added_controls, removed_controls = make_msg(page, {}, show_details=True)
     u_msg = b_unpack(msg)
-    assert len(added_controls) == 13
+    assert len(added_controls) == 8
     assert len(removed_controls) == 0
 
     assert page.parent is None
     assert page.controls[0].parent == page.views[0]
-    assert page.clipboard
-    assert page.clipboard.parent
-    assert page.clipboard.page
 
     print(u_msg)
 
@@ -172,7 +169,7 @@ def test_simple_page():
     #             "clipboard": {"_i": 23, "_c": "Clipboard"},
     #             "storage_paths": {"_i": 24, "_c": "StoragePaths"},
     #             "url_launcher": {"_i": 25, "_c": "UrlLauncher"},
-    #             "_user_services": {
+    #             "_services": {
     #                 "_i": 26,
     #                 "_c": "ServiceRegistry",
     #                 "services": [
@@ -182,17 +179,6 @@ def test_simple_page():
     #                         "prop_1": "Hello",
     #                         "prop_2": [1, 2, 3],
     #                     }
-    #                 ],
-    #             },
-    #             "_page_services": {
-    #                 "_i": 27,
-    #                 "_c": "ServiceRegistry",
-    #                 "services": [
-    #                     {"_i": 21, "_c": "BrowserContextMenu"},
-    #                     {"_i": 22, "_c": "SharedPreferences"},
-    #                     {"_i": 23, "_c": "Clipboard"},
-    #                     {"_i": 25, "_c": "UrlLauncher"},
-    #                     {"_i": 24, "_c": "StoragePaths"},
     #                 ],
     #             },
     #             "fonts": {"font1": "font_url_1", "font2": "font_url_2"},
@@ -218,7 +204,7 @@ def test_simple_page():
     with raises(RuntimeError):
         assert page.controls[0].controls[0].page is None
 
-    page._user_services._services[0].prop_2 = [2, 6]
+    page._services._services[0].prop_2 = [2, 6]
 
     # add 2 new buttons to a list
     _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
@@ -243,17 +229,17 @@ def test_simple_page():
             {"op": "remove", "path": ["fonts", "font2"], "value": "font_url_2"},
             {
                 "op": "remove",
-                "path": ["_user_services", "_services", 0, "prop_2", 0],
+                "path": ["_services", "_services", 0, "prop_2", 0],
                 "value": 1,
             },
             {
                 "op": "add",
-                "path": ["_user_services", "_services", 0, "prop_2", 1],
+                "path": ["_services", "_services", 0, "prop_2", 1],
                 "value": 6,
             },
             {
                 "op": "remove",
-                "path": ["_user_services", "_services", 0, "prop_2", 2],
+                "path": ["_services", "_services", 0, "prop_2", 2],
                 "value": 3,
             },
         ],

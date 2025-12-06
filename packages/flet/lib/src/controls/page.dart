@@ -56,9 +56,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
   late final AppLifecycleListener _appLifecycleListener;
-  ServiceRegistry? _pageServices;
-  ServiceRegistry? _userServices;
-  String? _userServicesUid;
+  ServiceRegistry? _services;
+  String? _servicesUid;
   ServiceBinding? _windowService;
   Control? _windowControl;
   bool? _prevOnKeyboardEvent;
@@ -67,7 +66,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
-  List<DeviceOrientation>? _appliedDeviceOrientations;
 
   @override
   void initState() {
@@ -137,8 +135,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     widget.control.removeInvokeMethodListener(_invokeMethod);
     widget.control.removeListener(_onPageControlChanged);
-    _pageServices?.dispose();
-    _userServices?.dispose();
+    _services?.dispose();
     _windowService?.dispose();
     super.dispose();
   }
@@ -153,26 +150,21 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     var backend = FletBackend.of(context);
 
-    _pageServices ??= ServiceRegistry(
-        control: widget.control,
-        propertyName: "_services",
-        backend: backend);
-
-    var userServicesControl = widget.control.child("_user_services");
-    if (userServicesControl != null) {
-      var uid = userServicesControl.internals?["uid"];
-      if (_userServices == null || _userServicesUid != uid) {
-        _userServices?.dispose();
-        _userServices = ServiceRegistry(
-            control: userServicesControl,
+    var servicesControl = widget.control.child("_services");
+    if (servicesControl != null) {
+      var uid = servicesControl.internals?["uid"];
+      if (_services == null || _servicesUid != uid) {
+        _services?.dispose();
+        _services = ServiceRegistry(
+            control: servicesControl,
             propertyName: "_services",
             backend: backend);
-        _userServicesUid = uid;
+        _servicesUid = uid;
       }
-    } else if (_userServices != null) {
-      _userServices?.dispose();
-      _userServices = null;
-      _userServicesUid = null;
+    } else if (_services != null) {
+      _services?.dispose();
+      _services = null;
+      _servicesUid = null;
     }
 
     var windowControl = widget.control.child("window", visibleOnly: false);

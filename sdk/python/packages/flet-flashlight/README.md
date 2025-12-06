@@ -39,4 +39,4 @@ To install the `flet-flashlight` package and add it to your project dependencies
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/examples/controls/flashlight).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/examples/services/flashlight).
