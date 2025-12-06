@@ -414,8 +414,11 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
-from flet.controls.services.accelerometer import Accelerometer
-from flet.controls.services.barometer import Barometer
+from flet.controls.services.accelerometer import (
+    Accelerometer,
+    AccelerometerReadingEvent,
+)
+from flet.controls.services.barometer import Barometer, BarometerReadingEvent
 from flet.controls.services.battery import (
     Battery,
     BatteryState,
@@ -435,22 +438,15 @@ from flet.controls.services.file_picker import (
     FilePickerUploadEvent,
     FilePickerUploadFile,
 )
-from flet.controls.services.gyroscope import Gyroscope
+from flet.controls.services.gyroscope import Gyroscope, GyroscopeReadingEvent
 from flet.controls.services.haptic_feedback import HapticFeedback
-from flet.controls.services.magnetometer import Magnetometer
+from flet.controls.services.magnetometer import Magnetometer, MagnetometerReadingEvent
 from flet.controls.services.screen_brightness import (
     ScreenBrightness,
     ScreenBrightnessChangeEvent,
 )
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
-from flet.controls.services.sensor_events import (
-    AccelerometerReadingEvent,
-    BarometerReadingEvent,
-    GyroscopeReadingEvent,
-    MagnetometerReadingEvent,
-    SensorErrorEvent,
-    UserAccelerometerReadingEvent,
-)
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
 from flet.controls.services.share import (
@@ -468,7 +464,10 @@ from flet.controls.services.url_launcher import (
     UrlLauncher,
     WebViewConfiguration,
 )
-from flet.controls.services.user_accelerometer import UserAccelerometer
+from flet.controls.services.user_accelerometer import (
+    UserAccelerometer,
+    UserAccelerometerReadingEvent,
+)
 from flet.controls.services.wakelock import Wakelock
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (

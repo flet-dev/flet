@@ -1,15 +1,36 @@
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
-from flet.controls.services.sensor_events import (
-    AccelerometerReadingEvent,
-    SensorErrorEvent,
-)
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 
-__all__ = ["Accelerometer"]
+__all__ = ["Accelerometer", "AccelerometerReadingEvent"]
+
+
+@dataclass(kw_only=True)
+class AccelerometerReadingEvent(Event["Accelerometer"]):
+    """
+    Discrete reading from an accelerometer. Accelerometers measure the velocity
+    of the device. Note that these readings include the effects of gravity.
+    Put simply, you can use accelerometer readings to tell if the device
+    is moving in a particular direction.
+    """
+
+    x: float
+    """Acceleration along the X axis, in `m/s^2`."""
+
+    y: float
+    """Acceleration along the Y axis, in `m/s^2`."""
+
+    z: float
+    """Acceleration along the Z axis, in `m/s^2`."""
+
+    timestamp: datetime
+    """Event timestamp."""
 
 
 @control("Accelerometer")

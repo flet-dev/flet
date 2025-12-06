@@ -1,15 +1,36 @@
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
-from flet.controls.services.sensor_events import (
-    SensorErrorEvent,
-    UserAccelerometerReadingEvent,
-)
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 
-__all__ = ["UserAccelerometer"]
+__all__ = ["UserAccelerometer", "UserAccelerometerReadingEvent"]
+
+
+@dataclass(kw_only=True)
+class UserAccelerometerReadingEvent(Event["UserAccelerometer"]):
+    """
+    Like [`AccelerometerReadingEvent`][flet.], this is a discrete reading from
+    an accelerometer and measures the velocity of the device. However,
+    unlike [`AccelerometerReadingEvent`][flet.], this event does not include
+    the effects of gravity.
+    """
+
+    x: float
+    """Linear acceleration along the X axis, gravity removed, in `m/s^2`."""
+
+    y: float
+    """Linear acceleration along the Y axis, gravity removed, in `m/s^2`."""
+
+    z: float
+    """Linear acceleration along the Z axis, gravity removed, in `m/s^2`."""
+
+    timestamp: datetime
+    """Event timestamp."""
 
 
 @control("UserAccelerometer")

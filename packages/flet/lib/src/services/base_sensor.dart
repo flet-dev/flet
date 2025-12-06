@@ -7,8 +7,8 @@ import '../flet_service.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
 
-abstract class _SensorStreamService<T> extends FletService {
-  _SensorStreamService({required super.control});
+abstract class BaseSensorService<T> extends FletService {
+  BaseSensorService({required super.control});
 
   StreamSubscription<T>? _subscription;
   bool _enabled = true;
@@ -100,99 +100,5 @@ abstract class _SensorStreamService<T> extends FletService {
     _subscription?.cancel();
     _subscription = null;
     super.dispose();
-  }
-}
-
-class AccelerometerService extends _SensorStreamService<AccelerometerEvent> {
-  AccelerometerService({required super.control});
-
-  @override
-  Stream<AccelerometerEvent> sensorStream(Duration samplingPeriod) {
-    return accelerometerEventStream(samplingPeriod: samplingPeriod);
-  }
-
-  @override
-  Map<String, dynamic> serializeEvent(AccelerometerEvent event) {
-    return {
-      "x": event.x,
-      "y": event.y,
-      "z": event.z,
-      "timestamp": event.timestamp.microsecondsSinceEpoch,
-    };
-  }
-}
-
-class UserAccelerometerService
-    extends _SensorStreamService<UserAccelerometerEvent> {
-  UserAccelerometerService({required super.control});
-
-  @override
-  Stream<UserAccelerometerEvent> sensorStream(Duration samplingPeriod) {
-    return userAccelerometerEventStream(samplingPeriod: samplingPeriod);
-  }
-
-  @override
-  Map<String, dynamic> serializeEvent(UserAccelerometerEvent event) {
-    return {
-      "x": event.x,
-      "y": event.y,
-      "z": event.z,
-      "timestamp": event.timestamp.microsecondsSinceEpoch,
-    };
-  }
-}
-
-class GyroscopeService extends _SensorStreamService<GyroscopeEvent> {
-  GyroscopeService({required super.control});
-
-  @override
-  Stream<GyroscopeEvent> sensorStream(Duration samplingPeriod) {
-    return gyroscopeEventStream(samplingPeriod: samplingPeriod);
-  }
-
-  @override
-  Map<String, dynamic> serializeEvent(GyroscopeEvent event) {
-    return {
-      "x": event.x,
-      "y": event.y,
-      "z": event.z,
-      "timestamp": event.timestamp.microsecondsSinceEpoch,
-    };
-  }
-}
-
-class MagnetometerService extends _SensorStreamService<MagnetometerEvent> {
-  MagnetometerService({required super.control});
-
-  @override
-  Stream<MagnetometerEvent> sensorStream(Duration samplingPeriod) {
-    return magnetometerEventStream(samplingPeriod: samplingPeriod);
-  }
-
-  @override
-  Map<String, dynamic> serializeEvent(MagnetometerEvent event) {
-    return {
-      "x": event.x,
-      "y": event.y,
-      "z": event.z,
-      "timestamp": event.timestamp.microsecondsSinceEpoch,
-    };
-  }
-}
-
-class BarometerService extends _SensorStreamService<BarometerEvent> {
-  BarometerService({required super.control});
-
-  @override
-  Stream<BarometerEvent> sensorStream(Duration samplingPeriod) {
-    return barometerEventStream(samplingPeriod: samplingPeriod);
-  }
-
-  @override
-  Map<String, dynamic> serializeEvent(BarometerEvent event) {
-    return {
-      "pressure": event.pressure,
-      "timestamp": event.timestamp.microsecondsSinceEpoch,
-    };
   }
 }

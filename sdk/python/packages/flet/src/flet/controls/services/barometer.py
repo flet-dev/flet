@@ -1,15 +1,39 @@
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
-from flet.controls.services.sensor_events import (
-    BarometerReadingEvent,
-    SensorErrorEvent,
-)
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 
-__all__ = ["Barometer"]
+__all__ = ["Barometer", "BarometerReadingEvent"]
+
+
+@dataclass(kw_only=True)
+class BarometerReadingEvent(Event["Barometer"]):
+    """
+    A sensor sample from a barometer.
+
+    Barometers measure the atmospheric pressure surrounding the sensor,
+    returning values in hectopascals `hPa`.
+
+    Consider that these samples may be affected by altitude and weather conditions,
+    and can be used to predict short-term weather changes or determine altitude.
+
+    Note that water-resistant phones or similar sealed devices may experience
+    pressure fluctuations as the device is held or used, due to changes
+    in pressure caused by handling the device.
+
+    An altimeter is an example of a general utility for barometer data.
+    """
+
+    pressure: float
+    """Atmospheric pressure reading, in hectopascals (`hPa`)."""
+
+    timestamp: datetime
+    """Event timestamp."""
 
 
 @control("Barometer")

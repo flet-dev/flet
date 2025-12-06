@@ -1,15 +1,36 @@
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
-from flet.controls.services.sensor_events import (
-    GyroscopeReadingEvent,
-    SensorErrorEvent,
-)
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 
-__all__ = ["Gyroscope"]
+__all__ = ["Gyroscope", "GyroscopeReadingEvent"]
+
+
+@dataclass(kw_only=True)
+class GyroscopeReadingEvent(Event["Gyroscope"]):
+    """
+    Discrete reading from a gyroscope.
+
+    Gyroscope sample containing device rotation rate (`rad/s`) around each
+    axis plus the microsecond timestamp.
+    """
+
+    x: float
+    """Rotation rate around the X axis, in `rad/s`."""
+
+    y: float
+    """Rotation rate around the Y axis, in `rad/s`."""
+
+    z: float
+    """Rotation rate around the Z axis, in `rad/s`."""
+
+    timestamp: datetime
+    """Event timestamp."""
 
 
 @control("Gyroscope")

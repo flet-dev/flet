@@ -1,15 +1,42 @@
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import EventHandler
+from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
-from flet.controls.services.sensor_events import (
-    MagnetometerReadingEvent,
-    SensorErrorEvent,
-)
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 
-__all__ = ["Magnetometer"]
+__all__ = ["Magnetometer", "MagnetometerReadingEvent"]
+
+
+@dataclass(kw_only=True)
+class MagnetometerReadingEvent(Event["Magnetometer"]):
+    """
+    A sensor sample from a magnetometer.
+
+    Magnetometers measure the ambient magnetic field surrounding the sensor,
+    returning values in microteslas `μT` for each three-dimensional axis.
+
+    Consider that these samples may bear effects of Earth's magnetic field
+    as well as local factors such as the metal of the device itself
+    or nearby magnets, though most devices compensate for these factors.
+
+    A compass is an example of a general utility for magnetometer data.
+    """
+
+    x: float
+    """Ambient magnetic field on the X axis, in microteslas (`uT`)."""
+
+    y: float
+    """Ambient magnetic field on the Y axis, in `uT`."""
+
+    z: float
+    """Ambient magnetic field on the Z axis, in `uT`."""
+
+    timestamp: datetime
+    """Event timestamp."""
 
 
 @control("Magnetometer")
