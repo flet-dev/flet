@@ -169,7 +169,7 @@ def test_simple_page():
     #             "clipboard": {"_i": 23, "_c": "Clipboard"},
     #             "storage_paths": {"_i": 24, "_c": "StoragePaths"},
     #             "url_launcher": {"_i": 25, "_c": "UrlLauncher"},
-    #             "_user_services": {
+    #             "_services": {
     #                 "_i": 26,
     #                 "_c": "ServiceRegistry",
     #                 "services": [
