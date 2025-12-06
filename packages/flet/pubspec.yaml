@@ -21,10 +21,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  battery_plus: ^6.2.2
+  battery_plus: ^7.0.0
   collection: ^1.19.0
-  connectivity_plus: ^6.1.2
-  device_info_plus: ^12.1.0
+  connectivity_plus: ^7.0.0
+  device_info_plus: ^12.3.0
   equatable: ^2.0.3
   file_picker: ^10.3.3
   flutter_highlight: 0.7.0
@@ -38,7 +38,7 @@ dependencies:
   path_provider: ^2.1.5
   provider: ^6.1.2
   screenshot: ^3.0.0
-  screen_brightness: ^2.1.0
+  screen_brightness: ^2.1.7
   sensors_plus: ^7.0.0
   shared_preferences: 2.5.3
   share_plus: ^12.0.1
