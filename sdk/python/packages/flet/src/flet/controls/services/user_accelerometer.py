@@ -5,6 +5,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 
@@ -47,7 +48,7 @@ class UserAccelerometer(Service):
     from [`AccelerometerReadingEvent`][flet.].
 
     Note:
-        * Supported platforms: Android, iOS.
+        * Supported platforms: Android, iOS and web.
         * Web ignores requested sampling intervals.
     """
 
@@ -80,3 +81,9 @@ class UserAccelerometer(Service):
     Fired when the platform reports a sensor error. `event.message` is the error
     description.
     """
+
+    def before_update(self):
+        if not (self.page.web or self.page.platform.is_mobile()):
+            raise FletUnsupportedPlatformException(
+                f"{self.__class__.__name__} is only supported on Android, iOS and web."
+            )

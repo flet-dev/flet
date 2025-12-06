@@ -3,6 +3,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
 from flet.controls.types import Number
 
@@ -125,3 +126,9 @@ class ScreenBrightness(Service):
         """
 
         await self._invoke_method("set_auto_reset", {"value": auto_reset})
+
+    def before_update(self):
+        if self.page.web or not self.page.platform.is_mobile():
+            raise FletUnsupportedPlatformException(
+                f"{self.__class__.__name__} is only supported on Android and iOS."
+            )

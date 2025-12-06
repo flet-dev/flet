@@ -429,7 +429,7 @@ from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.connectivity import (
     Connectivity,
     ConnectivityChangeEvent,
-    ConnectivityResult,
+    ConnectivityType,
 )
 from flet.controls.services.file_picker import (
     FilePicker,
@@ -666,7 +666,7 @@ __all__ = [
     "Component",
     "Connectivity",
     "ConnectivityChangeEvent",
-    "ConnectivityResult",
+    "ConnectivityType",
     "ConstrainedControl",
     "Container",
     "Context",

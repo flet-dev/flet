@@ -27,7 +27,7 @@ class ConnectivityService extends FletService {
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     switch (name) {
-      case "check_connectivity":
+      case "get_connectivity":
         final results = await _connectivity.checkConnectivity();
         return results.map((r) => r.name).toList();
       default:
@@ -36,12 +36,12 @@ class ConnectivityService extends FletService {
   }
 
   void _updateListeners() {
-    final listenChange = control.getBool("on_connectivity_change") == true;
+    final listenChange = control.getBool("on_change") == true;
     if (listenChange && _subscription == null) {
       _subscription = _connectivity.onConnectivityChanged.listen(
           (List<ConnectivityResult> result) {
-        control.triggerEvent("connectivity_change",
-            {"connectivity": result.map((r) => r.name).toList()});
+        control.triggerEvent(
+            "change", {"connectivity": result.map((r) => r.name).toList()});
       }, onError: (error) {
         debugPrint(
             "ConnectivityService: error listening to connectivity: $error");

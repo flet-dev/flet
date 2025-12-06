@@ -6,10 +6,10 @@ from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.services.service import Service
 
-__all__ = ["Connectivity", "ConnectivityChangeEvent", "ConnectivityResult"]
+__all__ = ["Connectivity", "ConnectivityChangeEvent", "ConnectivityType"]
 
 
-class ConnectivityResult(Enum):
+class ConnectivityType(Enum):
     """
     Connectivity states.
     """
@@ -48,9 +48,9 @@ class ConnectivityResult(Enum):
 class ConnectivityChangeEvent(Event["Connectivity"]):
     """Event fired when connectivity changes."""
 
-    connectivity: list[ConnectivityResult]
+    connectivity: list[ConnectivityType]
     """
-    Current connectivity state(s).
+    Current connectivity type(s).
     """
 
 
@@ -60,15 +60,15 @@ class Connectivity(Service):
     Provides device connectivity status and change notifications.
     """
 
-    on_connectivity_change: Optional[EventHandler[ConnectivityChangeEvent]] = None
+    on_change: Optional[EventHandler[ConnectivityChangeEvent]] = None
     """
     Called when connectivity changes.
     """
 
-    async def check_connectivity(self) -> list[ConnectivityResult]:
+    async def get_connectivity(self) -> list[ConnectivityType]:
         """
-        Returns the current connectivity state(s).
+        Returns the current connectivity type(s).
         """
 
-        result = await self._invoke_method("check_connectivity")
-        return [ConnectivityResult(r) for r in result]
+        result = await self._invoke_method("get_connectivity")
+        return [ConnectivityType(r) for r in result]

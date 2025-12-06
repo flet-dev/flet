@@ -8,7 +8,7 @@ async def main(page: ft.Page):
     changes = ft.Text()
 
     async def refresh(_=None):
-        results = await connectivity.check_connectivity()
+        results = await connectivity.get_connectivity()
         status.value = "Current connectivity: " + ", ".join(r.value for r in results)
 
     async def on_change(e: ft.ConnectivityChangeEvent):
@@ -17,7 +17,7 @@ async def main(page: ft.Page):
         )
         await refresh()
 
-    connectivity.on_connectivity_change = on_change
+    connectivity.on_change = on_change
 
     await refresh()
 

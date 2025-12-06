@@ -7,6 +7,7 @@ from flet.controls.control_event import Event, EventHandler
 from flet.controls.duration import Duration
 from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
+from flet.utils.platform_utils import FletUnsupportedPlatformException
 
 __all__ = ["Accelerometer", "AccelerometerReadingEvent"]
 
@@ -54,7 +55,7 @@ class Accelerometer(Service):
     Accelerometer reports zero acceleration if the device is free falling.
 
     Note:
-        * Supported platforms: Android, iOS.
+        * Supported platforms: Android, iOS and web.
         * Web ignores requested sampling intervals.
     """
 
@@ -90,3 +91,9 @@ class Accelerometer(Service):
     Fired when the platform reports a sensor error (for example when the device
     does not expose the accelerometer). `event.message` contains the error text.
     """
+
+    def before_update(self):
+        if not (self.page.web or self.page.platform.is_mobile()):
+            raise FletUnsupportedPlatformException(
+                f"{self.__class__.__name__} is only supported on Android, iOS and web."
+            )
