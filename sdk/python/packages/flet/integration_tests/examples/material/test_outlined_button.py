@@ -77,19 +77,25 @@ async def test_handling_clicks(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "handling_clicks1",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )
     await flet_app_function.tester.tap(ob)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "handling_clicks2",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )
     await flet_app_function.tester.tap(ob)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "handling_clicks3",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )
 
     flet_app_function.create_gif(

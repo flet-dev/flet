@@ -17,7 +17,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
             ft.NavigationBarDestination(icon=ft.Icons.HEXAGON, label="Item 3"),
         ],
     )
-    flet_app_function.resize_page(300, 100)
+    flet_app_function.resize_page(400, 100)
     flet_app_function.page.navigation_bar = nvb
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle(
@@ -25,7 +25,9 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     )
     flet_app_function.assert_screenshot(
         "image_for_docs",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )
 
 
@@ -43,5 +45,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )

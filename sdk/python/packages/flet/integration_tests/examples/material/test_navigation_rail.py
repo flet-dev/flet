@@ -47,5 +47,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )

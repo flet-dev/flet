@@ -33,7 +33,9 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
     flet_app_function.assert_screenshot(
         "image_for_docs",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )
 
 
