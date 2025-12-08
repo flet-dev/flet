@@ -25,6 +25,11 @@ class CupertinoTimerPicker(LayoutControl):
 
     It can show a countdown duration with hour, minute and second spinners. The
     duration is bound between `0` and `23` hours `59` minutes `59` seconds.
+
+    ```python
+    ft.CupertinoTimerPicker(value=1000)
+    ```
+
     """
 
     value: DurationValue = field(default_factory=lambda: Duration())
