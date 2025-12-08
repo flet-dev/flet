@@ -10,7 +10,7 @@ from examples.controls.menu_bar import nested_submenus
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(100, 200)
+    flet_app_function.resize_page(150, 200)
     flet_app_function.page.update()
     mb = ft.MenuBar(
         controls=[

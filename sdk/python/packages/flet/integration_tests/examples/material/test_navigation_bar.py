@@ -17,7 +17,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
             ft.NavigationBarDestination(icon=ft.Icons.HEXAGON, label="Item 3"),
         ],
     )
-    flet_app_function.resize_page(400, 100)
+    flet_app_function.resize_page(300, 100)
     flet_app_function.page.navigation_bar = nvb
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle(
