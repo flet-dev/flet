@@ -237,7 +237,7 @@ class SnackBar(DialogControl):
 
     If `False`, the snack bar will be dismissed after the timeout.
 
-    If not provided, but the snackbar ['action'][c.] is not null,
+    If not provided, but the snackbar [`action`][(c).] is not null,
     the snackbar will persist as well.
     """
 

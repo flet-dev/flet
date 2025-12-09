@@ -107,16 +107,26 @@ import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
 import 'services/browser_context_menu.dart';
+import 'services/battery.dart';
+import 'services/accelerometer.dart';
 import 'services/clipboard.dart';
+import 'services/connectivity.dart';
 import 'services/file_picker.dart';
+import 'services/barometer.dart';
 import 'services/haptic_feedback.dart';
+import 'services/gyroscope.dart';
+import 'services/magnetometer.dart';
+import 'services/share.dart';
 import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
+import 'services/screen_brightness.dart';
 import 'services/storage_paths.dart';
 import 'services/tester.dart';
 import 'services/url_launcher.dart';
+import 'services/wakelock.dart';
 import 'services/window.dart';
+import 'services/user_accelerometer.dart';
 import 'utils/cupertino_icons.dart';
 import 'utils/material_icons.dart';
 
@@ -370,26 +380,46 @@ class FletCoreExtension extends FletExtension {
     switch (control.type) {
       case "BrowserContextMenu":
         return BrowserContextMenuService(control: control);
+      case "Accelerometer":
+        return AccelerometerService(control: control);
+      case "Barometer":
+        return BarometerService(control: control);
+      case "Battery":
+        return BatteryService(control: control);
       case "Clipboard":
         return ClipboardService(control: control);
+      case "Connectivity":
+        return ConnectivityService(control: control);
+      case "Share":
+        return ShareService(control: control);
       case "FilePicker":
         return FilePickerService(control: control);
       case "HapticFeedback":
         return HapticFeedbackService(control: control);
+      case "Gyroscope":
+        return GyroscopeService(control: control);
       case "ShakeDetector":
         return ShakeDetectorService(control: control);
       case "SharedPreferences":
         return SharedPreferencesService(control: control);
       case "SemanticsService":
         return SemanticsServiceControl(control: control);
+      case "Magnetometer":
+        return MagnetometerService(control: control);
+      case "ScreenBrightness":
+        return ScreenBrightnessService(control: control);
       case "StoragePaths":
         return StoragePaths(control: control);
       case "Window":
         return WindowService(control: control);
       case "Tester":
         return TesterService(control: control);
+      case "UserAccelerometer":
+        return UserAccelerometerService(control: control);
       case "UrlLauncher":
         return UrlLauncherService(control: control);
+      case "Wakelock":
+        return WakelockService(control: control);
       default:
         return null;
     }

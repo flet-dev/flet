@@ -48,4 +48,4 @@ To install the `flet-audio` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/audio).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/services/audio).
