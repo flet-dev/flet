@@ -97,6 +97,17 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     Navigation bars offer a persistent and convenient way to switch between primary
     destinations in an app.
+
+    ```python
+    ft.NavigationBar(
+        destinations=[
+            ft.NavigationBarDestination(icon=ft.Icons.CIRCLE, label="Item 1"),
+            ft.NavigationBarDestination(icon=ft.Icons.SQUARE, label="Item 2"),
+            ft.NavigationBarDestination(icon=ft.Icons.HEXAGON, label="Item 3"),
+        ],
+    )
+    ```
+
     """
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)

@@ -1,10 +1,11 @@
 ---
 class_name: flet.ListView
 examples: ../../examples/controls/list_view
-example_images: ../examples/controls/list_view/media
+example_media: ../examples/controls/list_view/media
+example_images: ../test-images/examples/core/golden/macos/list_view
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic list view") }}
 
 ## Examples
 
@@ -16,7 +17,7 @@ example_images: ../examples/controls/list_view/media
 --8<-- "{{ examples }}/autoscroll_and_dynamic_items.py"
 ```
 
-{{ image(example_images + "/autoscroll_and_dynamic_items.gif", alt="autoscroll-and-dynamic-items", width="80%") }}
+{{ image(example_media + "/autoscroll_and_dynamic_items.gif", alt="autoscroll-and-dynamic-items", width="80%") }}
 
 
 {{ class_members(class_name) }}
