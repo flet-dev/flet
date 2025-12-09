@@ -864,7 +864,7 @@ nav:
               - BarometerReadingEvent: types/barometerreadingevent.md
               - BatteryState: types/batterystate.md
               - BatteryStateChangeEvent: types/batterystatechangeevent.md
-              - ConnectivityResult: types/connectivityresult.md
+              - ConnectivityType: types/connectivitytype.md
               - ConnectivityChangeEvent: types/connectivitychangeevent.md
               - CanvasResizeEvent: types/canvasresizeevent.md
               - ContextMenuDismissEvent: types/contextmenudismissevent.md
