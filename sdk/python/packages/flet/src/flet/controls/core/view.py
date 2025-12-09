@@ -22,6 +22,7 @@ from flet.controls.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     Number,
+    ViewTransition,
 )
 
 __all__ = ["View"]
@@ -158,6 +159,14 @@ class View(ScrollableControl, LayoutControl):
     fullscreen_dialog: bool = False
     """
     If `True`, the view is a fullscreen modal dialog.
+    """
+
+    transition: Optional[ViewTransition] = None
+    """
+    A transition animation to use when navigating to this view. Set to
+    [`ViewTransition.NONE`][flet.ViewTransition.NONE] to disable animation or
+    [`ViewTransition.FADE`][flet.ViewTransition.FADE] to fade between views.
+    Defaults to the platform's standard transition.
     """
 
     can_pop: bool = True

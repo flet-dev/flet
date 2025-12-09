@@ -63,6 +63,26 @@ def AppBar():
 
 
 @ft.component
+def NavBar():
+    tabs = [
+        ("Home", "/", ft.Icons.HOME),
+        ("Travel", "/travel", ft.Icons.EMOJI_TRANSPORTATION),
+        ("Settings", "/settings", ft.Icons.SETTINGS),
+    ]
+
+    async def navigate_to(e: ft.Event[ft.NavigationBar]):
+        await ft.context.page.push_route(tabs[e.control.selected_index][1])
+
+    return ft.NavigationBar(
+        selected_index=next(
+            (i for i, t in enumerate(tabs) if t[1] == ft.context.page.route), 0
+        ),
+        on_change=navigate_to,
+        destinations=[ft.NavigationBarDestination(icon=t[2], label=t[0]) for t in tabs],
+    )
+
+
+@ft.component
 def RoutingExample():
     app, _ = ft.use_state(AppModel(route=ft.context.page.route))
 
@@ -93,8 +113,30 @@ def RoutingExample():
         theme_value,
         lambda: [
             ft.View(
+                route="/travel",
+                appbar=AppBar(),
+                navigation_bar=NavBar(),
+                transition=ft.ViewTransition.NONE,
+                controls=[
+                    ft.Text("Welcome to the Travel page!"),
+                ],
+            )
+            if app.route == "/travel"
+            else ft.View(
+                route="/settings",
+                appbar=AppBar(),
+                navigation_bar=NavBar(),
+                transition=ft.ViewTransition.NONE,
+                controls=[
+                    ft.Text("Welcome to the Settings page!"),
+                ],
+            )
+            if app.route == "/settings"
+            else ft.View(
                 route="/",
                 appbar=AppBar(),
+                navigation_bar=NavBar(),
+                transition=ft.ViewTransition.NONE,
                 controls=[
                     ft.Button(
                         "Visit Store",

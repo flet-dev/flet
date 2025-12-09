@@ -884,6 +884,7 @@ nav:
               - TapEvent: types/tapevent.md
               - TextSelectionChangeEvent: types/textselectionchangeevent.md
               - TimePickerEntryModeChangeEvent: types/timepickerentrymodechangeevent.md
+              - ViewTransition: types/viewtransition.md
               - ViewPopEvent: types/viewpopevent.md
               - WindowEvent: types/windowevent.md
           - Exceptions:

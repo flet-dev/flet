@@ -39,6 +39,8 @@ import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
 
+enum _ViewTransition { theme, fade, none }
+
 class PageControl extends StatefulWidget {
   final Control control;
 
@@ -154,9 +156,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var backend = FletBackend.of(context);
 
     _pageServices ??= ServiceRegistry(
-        control: widget.control,
-        propertyName: "_services",
-        backend: backend);
+        control: widget.control, propertyName: "_services", backend: backend);
 
     var userServicesControl = widget.control.child("_user_services");
     if (userServicesControl != null) {
@@ -589,19 +589,24 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         var key = ValueKey(view.getString("route", view.id.toString()));
         var child = ControlWidget(control: view);
 
-        //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
+        var transition = _ViewTransition.values.firstWhere(
+            (t) =>
+                t.name.toLowerCase() ==
+                view.getString("transition")?.toLowerCase(),
+            orElse: () => _ViewTransition.theme);
+        var isInitialBuild = _prevViewRoutes == null;
+        var duration = isInitialBuild || transition == _ViewTransition.none
+            ? Duration.zero
+            : const Duration(milliseconds: 300);
+        var fadeTransition =
+            isInitialBuild || transition == _ViewTransition.fade;
 
-        return _prevViewRoutes == null
-            ? AnimatedTransitionPage(
-                key: key,
-                child: child,
-                fadeTransition: true,
-                duration: Duration.zero,
-              )
-            : AnimatedTransitionPage(
-                key: key,
-                child: child,
-                fullscreenDialog: view.getBool("fullscreen_dialog", false)!);
+        return AnimatedTransitionPage(
+            key: key,
+            child: child,
+            fadeTransition: fadeTransition,
+            duration: duration,
+            fullscreenDialog: view.getBool("fullscreen_dialog", false)!);
       }).toList();
 
       _prevViewRoutes = viewRoutes;

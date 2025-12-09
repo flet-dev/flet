@@ -450,6 +450,27 @@ class ScrollMode(Enum):
     """
 
 
+class ViewTransition(Enum):
+    """
+    Controls the transition animation when navigating between views.
+    """
+
+    DEFAULT = "default"
+    """
+    Use the platform's default page transition animation.
+    """
+
+    FADE = "fade"
+    """
+    Cross-fade between views instead of using the platform default transition.
+    """
+
+    NONE = "none"
+    """
+    Disable animation when changing views.
+    """
+
+
 class ClipBehavior(Enum):
     """
     Different ways to clip content.

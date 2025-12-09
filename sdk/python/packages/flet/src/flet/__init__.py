@@ -532,6 +532,7 @@ from flet.controls.types import (
     Url,
     UrlTarget,
     VerticalAlignment,
+    ViewTransition,
     VisualDensity,
     WebRenderer,
 )
@@ -970,6 +971,7 @@ __all__ = [
     "VerticalDivider",
     "View",
     "ViewPopEvent",
+    "ViewTransition",
     "VisualDensity",
     "WebBrowserName",
     "WebDeviceInfo",
