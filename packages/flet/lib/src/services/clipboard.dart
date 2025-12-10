@@ -22,7 +22,7 @@ class ClipboardService extends FletService {
     debugPrint("ClipboardService.$name($args)");
     switch (name) {
       case "set":
-        Clipboard.setData(ClipboardData(text: args["data"]));
+        await Clipboard.setData(ClipboardData(text: args["data"]));
       case "get":
         var data = await Clipboard.getData(Clipboard.kTextPlain);
         return data?.text;
