@@ -178,6 +178,7 @@ class AudioService extends FletService {
     _onStateChangedSubscription?.cancel();
     _onPositionChangedSubscription?.cancel();
     _onSeekCompleteSubscription?.cancel();
+    player.dispose();
     super.dispose();
   }
 }

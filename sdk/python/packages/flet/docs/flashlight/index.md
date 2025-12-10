@@ -40,8 +40,3 @@ pip install flet-flashlight  # (1)!
 ## Description
 
 {{ class_all_options(class_name) }}
-
-See also:
-- [`FlashlightException`](exceptions/flashlight_exception.md)
-- [`FlashlightEnableException`](exceptions/flashlight_enable_exception.md)
-- [`FlashlightDisableException`](exceptions/flashlight_disable_exception.md)

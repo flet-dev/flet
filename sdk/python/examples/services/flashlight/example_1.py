@@ -3,11 +3,16 @@ import flet_flashlight as ffl
 
 
 def main(page: ft.Page):
-    async def toggle_flashlight():
-        flashlight = ffl.Flashlight()
-        await flashlight.toggle()
+    async def turn_on_flashlight():
+        await ffl.Flashlight().on()
 
-    page.add(ft.TextButton("toggle", on_click=toggle_flashlight))
+    async def turn_off_flashlight():
+        await ffl.Flashlight().off()
+
+    page.add(
+        ft.Button("Turn On Flashlight", on_click=turn_on_flashlight),
+        ft.Button("Turn Off Flashlight", on_click=turn_off_flashlight),
+    )
 
 
 ft.run(main)
