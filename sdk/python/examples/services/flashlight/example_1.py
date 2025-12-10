@@ -10,8 +10,8 @@ def main(page: ft.Page):
         await ffl.Flashlight().off()
 
     page.add(
-        ft.ElevatedButton("Turn On Flashlight", on_click=turn_on_flashlight),
-        ft.ElevatedButton("Turn Off Flashlight", on_click=turn_off_flashlight),
+        ft.Button("Turn On Flashlight", on_click=turn_on_flashlight),
+        ft.Button("Turn Off Flashlight", on_click=turn_off_flashlight),
     )
 
 
