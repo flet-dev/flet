@@ -13,7 +13,7 @@ def App():
 
     audio, _ = ft.use_state(
         lambda: fta.Audio(
-            src="https://luan.xyz/files/audio/ambient_c_motion.mp3",
+            src="https://github.com/flet-dev/media/raw/refs/heads/main/sounds/sweet-life-luxury-chill-438146.mp3",
             autoplay=False,
             on_duration_change=lambda e: set_duration(e.duration.in_milliseconds),
             on_position_change=lambda e: set_position(e.position),
