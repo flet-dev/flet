@@ -9,13 +9,13 @@ class Flashlight(ft.Service):
     A control to use FlashLight. Works on iOS and Android.
     """
 
-    async def turn_on(self):
+    async def on(self):
         """
         Turns the flashlight on.
         """
         await self._invoke_method("on")
 
-    async def turn_off(self):
+    async def off(self):
         """
         Turns the flashlight off.
         """
