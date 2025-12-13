@@ -27,6 +27,7 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     Similar to `expand` property, every control has [`col`][flet.Control.]
     property which allows specifying how many columns a control should span.
 
+    Example:
     ```python
     ft.ResponsiveRow(
         controls=[
@@ -40,10 +41,10 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
                 },
             )
             for i in range(1, 6)
-        ], 
+        ],
     )
     ```
-    
+
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -64,8 +65,13 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed
-    vertically.
+    Defines how the child [`controls`][(c).] should be placed vertically.
+
+    Note:
+        When [`wrap`][(c).] is `True`, this property doesn't support
+        [`CrossAxisAlignment.STRETCH`][flet.] or
+        [`CrossAxisAlignment.BASELINE`][flet.]. If either is used,
+        [`CrossAxisAlignment.START`][flet.] will be applied instead.
     """
 
     spacing: ResponsiveNumber = 10
@@ -80,7 +86,7 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     run_spacing: ResponsiveNumber = 10
     """
-    The spacing between runs when row content is wrapped on multiple lines.
+    The spacing between runs when [`wrap`][(c).] is `True`.
     """
 
     breakpoints: dict[Union[ResponsiveRowBreakpoint, str], Number] = field(
